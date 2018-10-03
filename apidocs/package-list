@@ -4,3 +4,4 @@ org.influxdata.flux.error
 org.influxdata.flux.impl
 org.influxdata.platform
 org.influxdata.platform.error
+org.influxdata.platform.rest
