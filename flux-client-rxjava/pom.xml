@@ -26,7 +26,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <artifactId>influxdata-platform-java</artifactId>
         <groupId>org.influxdata</groupId>
@@ -37,10 +37,7 @@
     <packaging>jar</packaging>
 
     <name>The Flux client - RxJava (reactive)</name>
-    <description>
-        The Flux client - the client for the new data scripting language centered on querying
-        and manipulating time series data by a reactive way.
-    </description>
+    <description>The client that allow perform Flux Query against the InfluxDB by a reactive way.</description>
 
     <dependencies>
 

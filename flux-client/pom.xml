@@ -37,11 +37,7 @@
     <packaging>jar</packaging>
 
     <name>The Flux client</name>
-    <description>
-        The Flux client - the client for the new data scripting language centered on querying
-        and manipulating time series data.
-    </description>
-
+    <description>The client that allow perform Flux Query against the InfluxDB.</description>
     <dependencies>
 
         <dependency>

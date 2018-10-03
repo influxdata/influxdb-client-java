@@ -49,6 +49,7 @@ import org.apache.commons.csv.CSVRecord;
 
 /**
  * This class us used to construct FluxResult from CSV.
+ * @see org.influxdata.flux
  */
 class FluxCsvParser {
 

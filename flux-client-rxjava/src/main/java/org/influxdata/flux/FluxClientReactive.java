@@ -27,13 +27,11 @@ import org.influxdata.flux.domain.FluxRecord;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
-import okhttp3.ResponseBody;
+import io.reactivex.Single;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Response;
 
 /**
- * The client for the new data scripting language centered on querying
- * and manipulating time series data by a reactive way.
+ * The client that allow perform Flux Query against the InfluxDB by a reactive way.
  *
  * @author Jakub Bednar (bednar@github) (01/10/2018 12:38)
  */
@@ -50,46 +48,33 @@ public interface FluxClientReactive {
     Flowable<FluxRecord> query(@Nonnull final String query);
 
     /**
-     * Returns {@link Maybe} emitting a raw {@code Response<ResponseBody>} which are matched the query.
+     * Returns {@link Flowable} emitting raw response from InfluxDB server line by line.
      *
      * @param query the flux query to execute
      * @return {@link Maybe} of a raw {@code Response<ResponseBody>}
      */
     @Nonnull
-    Maybe<Response<ResponseBody>> raw(@Nonnull final String query);
+    Flowable<String> raw(@Nonnull final String query);
 
     /**
-     * Enable Gzip compress for http request body.
-     *
-     * @return the FluxClient instance to be able to use it in a fluent manner.
-     */
-    @Nonnull
-    FluxClientReactive enableGzip();
-
-    /**
-     * Disable Gzip compress for http request body.
-     *
-     * @return the FluxClient instance to be able to use it in a fluent manner.
-     */
-    @Nonnull
-    FluxClientReactive disableGzip();
-
-    /**
-     * Returns whether Gzip compress for http request body is enabled.
-     *
-     * @return true if gzip is enabled.
-     */
-    boolean isGzipEnabled();
-
-    /**
-     * Check the status of Flux Server.
+     * Check the status of InfluxDB Server.
      *
      * @return {@link Boolean#TRUE} if server is healthy otherwise return {@link Boolean#FALSE}
      */
     @Nonnull
-    Maybe<Boolean> ping();
+    Single<Boolean> ping();
 
     /**
+     * Return the version of the connected InfluxDB Server.
+     *
+     * @return the version String, otherwise unknown.
+     */
+    @Nonnull
+    Single<String> version();
+
+    /**
+     * The {@link HttpLoggingInterceptor.Level} that is used for logging requests and responses.
+     *
      * @return the {@link HttpLoggingInterceptor.Level} that is used for logging requests and responses
      */
     @Nonnull

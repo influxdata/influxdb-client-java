@@ -43,7 +43,7 @@
 
     <name>Java client for InfluxData Platform</name>
     <description>
-        The Flux client - new data scripting language centered on querying and manipulating time series data.
+        The Flux - new data scripting language centered on querying and manipulating time series data.
         The Platform (a.k.a. Influx 2.0 OSS) client - managing users, organizations, tokens, ...
     </description>
 

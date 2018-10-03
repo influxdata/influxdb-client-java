@@ -32,7 +32,7 @@
         <links>
             <item name="${project.name}" href="./" />
         </links>
-        <menu name="Overview" inherit="bottom">
+        <menu name="Overview" inherit="top">
             <item name="Structure" href="structure.html" />
         </menu>
         <menu ref="parent" inherit="top" />

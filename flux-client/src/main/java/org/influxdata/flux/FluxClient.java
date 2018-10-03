@@ -28,11 +28,12 @@ import javax.annotation.Nonnull;
 
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
+import org.influxdata.platform.rest.Cancellable;
 
 import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
- * The client for the new data scripting language centered on querying and manipulating time series data.
+ * The client that allow perform Flux Query against the InfluxDB.
  *
  * @author Jakub Bednar (bednar@github) (01/10/2018 12:17)
  */
@@ -48,18 +49,43 @@ public interface FluxClient {
     List<FluxTable> query(@Nonnull final String query);
 
     /**
-     * Execute a Flux query against the InfluxDB and asynchronous stream {@link FluxRecord}s to {@code onNext}.
+     * Execute a Flux query against the InfluxDB and asynchronously stream {@link FluxRecord}s
+     * to {@code onNext} consumer.
      *
      * @param query      the flux query to execute
      * @param onNext     callback to consume result which are matched the query
      *                   with capability to discontinue a streaming query
-     * @param onComplete callback to consume a notification about successfully end of stream
+     */
+    void query(@Nonnull final String query,
+               @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext);
+
+    /**
+     * Execute a Flux query against the InfluxDB and asynchronously stream {@link FluxRecord}s
+     * to {@code onNext} consumer.
+     *
+     * @param query      the flux query to execute
+     * @param onNext     callback to consume result which are matched the query
+     *                   with capability to discontinue a streaming query
      * @param onError    callback to consume any error notification
      */
     void query(@Nonnull final String query,
                @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
-               @Nonnull final Runnable onComplete,
                @Nonnull final Consumer<? super Throwable> onError);
+
+    /**
+     * Execute a Flux query against the InfluxDB and asynchronously stream {@link FluxRecord}s
+     * to {@code onNext} consumer.
+     *
+     * @param query      the flux query to execute
+     * @param onNext     callback to consume result which are matched the query
+     *                   with capability to discontinue a streaming query
+     * @param onError    callback to consume any error notification
+     * @param onComplete callback to consume a notification about successfully end of stream
+     */
+    void query(@Nonnull final String query,
+               @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
+               @Nonnull final Consumer<? super Throwable> onError,
+               @Nonnull final Runnable onComplete);
 
     /**
      * Execute a Flux query against the InfluxDB and synchronously map whole response to {@link String} result.
@@ -71,18 +97,19 @@ public interface FluxClient {
     String raw(@Nonnull final String query);
 
     /**
-     * Execute a Flux query against the InfluxDB and asynchronous stream the lines to {@code onResponse}.
+     * Execute a Flux query against the InfluxDB and asynchronously stream response
+     * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
      * @param onResponse callback to consume the raw response which are matched the query.
      *                   The callback call contains the one line of the response.
-     * @param onComplete callback to consume a notification about successfully end of stream
      * @param onError    callback to consume any error notification
+     * @param onComplete callback to consume a notification about successfully end of stream
      */
     void raw(@Nonnull final String query,
              @Nonnull final BiConsumer<Cancellable, String> onResponse,
-             @Nonnull final Runnable onComplete,
-             @Nonnull final Consumer<? super Throwable> onError);
+             @Nonnull final Consumer<? super Throwable> onError,
+             @Nonnull final Runnable onComplete);
 
     /**
      * Check the status of InfluxDB Server.
@@ -100,6 +127,8 @@ public interface FluxClient {
     String version();
 
     /**
+     * The {@link HttpLoggingInterceptor.Level} that is used for logging requests and responses.
+     *
      * @return the {@link HttpLoggingInterceptor.Level} that is used for logging requests and responses
      */
     @Nonnull
@@ -113,23 +142,4 @@ public interface FluxClient {
      */
     @Nonnull
     FluxClient setLogLevel(@Nonnull final HttpLoggingInterceptor.Level logLevel);
-
-    /**
-     * Cancellation is performed by the cancel method. Additional methods are provided to determine if the query
-     * completed normally or was cancelled.
-     */
-    interface Cancellable {
-
-        /**
-         * Attempt to cancel execution of this query.
-         */
-        void cancel();
-
-        /**
-         * Returns {@link Boolean#TRUE} if query was cancelled.
-         *
-         * @return {@link Boolean#TRUE} if query was cancelled
-         */
-        boolean isCancelled();
-    }
 }
