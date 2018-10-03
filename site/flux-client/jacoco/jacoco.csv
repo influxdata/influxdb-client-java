@@ -1,0 +1,10 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+The Flux client,org.influxdata.flux.domain,FluxColumn,0,110,0,0,0,23,0,12,0,12
+The Flux client,org.influxdata.flux.domain,FluxRecord,25,77,0,0,5,15,5,7,5,7
+The Flux client,org.influxdata.flux.domain,FluxTable,0,66,0,0,0,10,0,5,0,5
+The Flux client,org.influxdata.flux.impl,FluxCsvParser.new FluxCsvParser.FluxResponseConsumer() {...},0,27,0,0,0,6,0,4,0,4
+The Flux client,org.influxdata.flux.impl,FluxCsvParser.new FluxCsvParser.FluxResponseConsumer() {...},0,24,0,0,0,5,0,4,0,4
+The Flux client,org.influxdata.flux.impl,FluxCsvParser.ParsingState,0,24,0,0,0,3,0,1,0,1
+The Flux client,org.influxdata.flux.impl,FluxCsvParser,15,526,5,54,2,133,5,41,0,13
+The Flux client,org.influxdata.flux.error,FluxCsvParserException,4,0,0,0,2,0,1,0,1,0
+The Flux client,org.influxdata.flux.error,FluxQueryException,0,10,0,0,0,4,0,2,0,2
