@@ -58,7 +58,7 @@
     <licenses>
         <license>
             <name>The MIT License (MIT)</name>
-            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <url>https://raw.githubusercontent.com/bonitoo-io/influxdata-platform-java/master/LICENSE</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -93,13 +93,21 @@
             <id>ossrh</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
+        <site>
+            <id>gp</id>
+            <url>https://influxdata.github.io/platform-java</url>
+        </site>
     </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <maven-surefire.version>2.22.0</maven-surefire.version>
-        <retrofit.version>2.4.0</retrofit.version>
+        <dependency.retrofit.version>2.4.0</dependency.retrofit.version>
+
+        <plugin.surefire.version>2.22.0</plugin.surefire.version>
+        <plugin.javadoc.version>3.0.1</plugin.javadoc.version>
+        <plugin.checkstyle.version>3.0.0</plugin.checkstyle.version>
+        <plugin.jacoco.version>0.8.1</plugin.jacoco.version>
     </properties>
 
     <dependencies>
@@ -139,7 +147,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>${plugin.javadoc.version}</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -153,7 +161,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>${plugin.checkstyle.version}</version>
                 <configuration>
                     <failsOnError>true</failsOnError>
                     <configLocation>config/checkstyle.xml</configLocation>
@@ -207,13 +215,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire.version}</version>
+                <version>${plugin.surefire.version}</version>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${maven-surefire.version}</version>
+                <version>${plugin.surefire.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -227,7 +235,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.1</version>
+                <version>${plugin.jacoco.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -258,9 +266,85 @@
                 <version>2.8.2</version>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+                <configuration>
+                    <siteDirectory>config/site/</siteDirectory>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <dependencyDetailsEnabled>true</dependencyDetailsEnabled>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${plugin.javadoc.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <id>default</id>
+                        <reports>
+                            <report>javadoc</report>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${plugin.surefire.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${plugin.checkstyle.version}</version>
+                <configuration>
+                    <failsOnError>true</failsOnError>
+                    <configLocation>config/checkstyle.xml</configLocation>
+                    <consoleOutput>true</consoleOutput>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${plugin.jacoco.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>dependency-updates-report</report>
+                            <report>plugin-updates-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
     <dependencyManagement>
         <dependencies>
 
@@ -279,13 +363,13 @@
             <dependency>
                 <groupId>com.squareup.retrofit2</groupId>
                 <artifactId>retrofit</artifactId>
-                <version>${retrofit.version}</version>
+                <version>${dependency.retrofit.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.squareup.retrofit2</groupId>
                 <artifactId>converter-moshi</artifactId>
-                <version>${retrofit.version}</version>
+                <version>${dependency.retrofit.version}</version>
             </dependency>
 
             <dependency>
@@ -303,7 +387,7 @@
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>logging-interceptor</artifactId>
-                <version>3.11.0</version>
+                <version>3.10.0</version>
             </dependency>
 
             <dependency>
