@@ -1,6 +1,0 @@
-org.influxdata.flux
-org.influxdata.flux.domain
-org.influxdata.flux.error
-org.influxdata.flux.impl
-org.influxdata.platform
-org.influxdata.platform.error
