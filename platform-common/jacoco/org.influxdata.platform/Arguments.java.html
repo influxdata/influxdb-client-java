@@ -47,7 +47,7 @@ public final class Arguments {
      * @return {@code string}
      * @throws IllegalArgumentException if the string is empty
      */
-    public static String checkNonEmptyString(final String string, final String name) throws IllegalArgumentException {
+    public static String checkNonEmpty(final String string, final String name) throws IllegalArgumentException {
 <span class="fc bfc" id="L51" title="All 4 branches covered.">        if (string == null || string.isEmpty()) {</span>
 <span class="fc" id="L52">            throw new IllegalArgumentException(&quot;Expecting a non-empty string for &quot; + name);</span>
         }
@@ -138,7 +138,7 @@ public final class Arguments {
      */
     public static void checkNotNull(final Object obj, final String name) throws NullPointerException {
 
-<span class="pc" id="L141">        Objects.requireNonNull(obj, () -&gt; &quot;Expecting a not null reference for &quot; + name);</span>
-<span class="nc" id="L142">    }</span>
+<span class="fc" id="L141">        Objects.requireNonNull(obj, () -&gt; &quot;Expecting a not null reference for &quot; + name);</span>
+<span class="fc" id="L142">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FluxConnectionOptions.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Flux client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.flux.option</a> &gt; <span class="el_source">FluxConnectionOptions.java</span></div><h1>FluxConnectionOptions.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.flux.option;
+
+import java.util.Objects;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
+
+import org.influxdata.platform.Arguments;
+
+import okhttp3.OkHttpClient;
+
+/**
+ * FluxConnectionOptions are used to configure queries to the Flux.
+ *
+ * @author Jakub Bednar (bednar@github) (26/06/2018 08:59)
+ */
+@ThreadSafe
+public final class FluxConnectionOptions {
+
+    private final String url;
+    private OkHttpClient.Builder okHttpClient;
+
+<span class="fc" id="L44">    private FluxConnectionOptions(@Nonnull final Builder builder) {</span>
+<span class="fc" id="L45">        Objects.requireNonNull(builder, &quot;FluxConnectionOptions.Builder is required&quot;);</span>
+
+<span class="fc" id="L47">        url = builder.url;</span>
+<span class="fc" id="L48">        okHttpClient = builder.okHttpClient;</span>
+<span class="fc" id="L49">    }</span>
+
+    /**
+     * Creates a builder instance.
+     *
+     * @return a builder
+     * @since 1.0.0
+     */
+    @Nonnull
+    public static FluxConnectionOptions.Builder builder() {
+<span class="fc" id="L59">        return new FluxConnectionOptions.Builder();</span>
+    }
+
+    /**
+     * @return the url to connect to Flux
+     * @see FluxConnectionOptions.Builder#url(String)
+     * @since 1.0.0
+     */
+    @Nonnull
+    public String getUrl() {
+<span class="fc" id="L69">        return url;</span>
+    }
+
+    /**
+     * @return HTTP client to use for communication with Flux
+     * @see FluxConnectionOptions.Builder#okHttpClient(OkHttpClient.Builder)
+     * @since 1.0.0
+     */
+    @Nonnull
+    public OkHttpClient.Builder getOkHttpClient() {
+<span class="fc" id="L79">        return okHttpClient;</span>
+    }
+
+    /**
+     * A builder for {@code FluxConnectionOptions}.
+     *
+     * @since 1.0.0
+     */
+    @NotThreadSafe
+<span class="fc" id="L88">    public static class Builder {</span>
+
+        private String url;
+<span class="fc" id="L91">        private OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();</span>
+
+        /**
+         * Set the url to connect to Flux.
+         *
+         * @param url the url to connect to Flux. It must be defined.
+         * @return {@code this}
+         * @since 1.0.0
+         */
+        @Nonnull
+        public Builder url(@Nonnull final String url) {
+<span class="fc" id="L102">            Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
+<span class="fc" id="L103">            this.url = url;</span>
+<span class="fc" id="L104">            return this;</span>
+        }
+
+        /**
+         * Set the HTTP client to use for communication with Flux.
+         *
+         * @param okHttpClient the HTTP client to use.
+         * @return {@code this}
+         * @since 1.0.0
+         */
+        @Nonnull
+        public Builder okHttpClient(@Nonnull final OkHttpClient.Builder okHttpClient) {
+<span class="fc" id="L116">            Objects.requireNonNull(okHttpClient, &quot;OkHttpClient.Builder is required&quot;);</span>
+<span class="fc" id="L117">            this.okHttpClient = okHttpClient;</span>
+<span class="fc" id="L118">            return this;</span>
+        }
+
+        /**
+         * Build an instance of FluxConnectionOptions.
+         *
+         * @return {@link FluxConnectionOptions}
+         */
+        @Nonnull
+        public FluxConnectionOptions build() {
+
+<span class="fc bfc" id="L129" title="All 2 branches covered.">            if (url == null) {</span>
+<span class="fc" id="L130">                throw new IllegalStateException(&quot;The url to connect to Flux has to be defined.&quot;);</span>
+            }
+
+<span class="fc" id="L133">            return new FluxConnectionOptions(this);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

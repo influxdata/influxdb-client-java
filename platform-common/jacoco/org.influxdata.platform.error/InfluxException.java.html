@@ -37,7 +37,7 @@ import retrofit2.Response;
  */
 public class InfluxException extends RuntimeException {
 
-    private final Response response;
+    private final Response&lt;?&gt; response;
 
     public InfluxException(@Nullable final String message) {
 
@@ -56,6 +56,12 @@ public class InfluxException extends RuntimeException {
         }
 <span class="fc" id="L57">    }</span>
 
+    public InfluxException(@Nullable final Response&lt;?&gt; cause) {
+
+<span class="fc" id="L61">        super((errorMessage(cause)));</span>
+<span class="fc" id="L62">        response = cause;</span>
+<span class="fc" id="L63">    }</span>
+
     /**
      * Gets the reference code unique to the error type. It the reference code is not present than return &quot;0&quot;.
      *
@@ -63,16 +69,16 @@ public class InfluxException extends RuntimeException {
      */
     public int reference() {
 
-<span class="fc" id="L66">        String reference = null;</span>
-<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (response != null) {</span>
-<span class="fc" id="L68">            reference = this.response.headers().get(&quot;X-Influx-Reference&quot;);</span>
+<span class="fc" id="L72">        String reference = null;</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        if (response != null) {</span>
+<span class="fc" id="L74">            reference = this.response.headers().get(&quot;X-Influx-Reference&quot;);</span>
         }
 
-<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (reference != null) {</span>
-<span class="fc" id="L72">            return Integer.valueOf(reference);</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (reference != null) {</span>
+<span class="fc" id="L78">            return Integer.valueOf(reference);</span>
         }
 
-<span class="fc" id="L75">        return 0;</span>
+<span class="fc" id="L81">        return 0;</span>
     }
 
     /**
@@ -83,11 +89,11 @@ public class InfluxException extends RuntimeException {
      */
     public int status() {
 
-<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (response != null) {</span>
-<span class="fc" id="L87">            return response.code();</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if (response != null) {</span>
+<span class="fc" id="L93">            return response.code();</span>
         }
 
-<span class="fc" id="L90">        return 0;</span>
+<span class="fc" id="L96">        return 0;</span>
     }
 
     /**
@@ -98,33 +104,48 @@ public class InfluxException extends RuntimeException {
     @Nonnull
     public String errorBody() throws IOException {
 
-<span class="fc bfc" id="L101" title="All 2 branches covered.">        if (response != null) {</span>
-<span class="fc" id="L102">            ResponseBody body = response.errorBody();</span>
-<span class="pc bpc" id="L103" title="1 of 2 branches missed.">            if (body == null) {</span>
-<span class="nc" id="L104">                return &quot;&quot;;</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        if (response != null) {</span>
+<span class="fc" id="L108">            ResponseBody body = response.errorBody();</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">            if (body == null) {</span>
+<span class="nc" id="L110">                return &quot;&quot;;</span>
             }
-<span class="fc" id="L106">            return body.source().readUtf8();</span>
+<span class="fc" id="L112">            return body.source().readUtf8();</span>
         }
 
-<span class="fc" id="L109">        return &quot;&quot;;</span>
+<span class="fc" id="L115">        return &quot;&quot;;</span>
     }
 
     @Nullable
     private static String errorMessage(@Nullable final Throwable cause) {
 
-<span class="fc bfc" id="L115" title="All 2 branches covered.">        if (cause == null) {</span>
-<span class="fc" id="L116">            return &quot;&quot;;</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        if (cause == null) {</span>
+<span class="fc" id="L122">            return &quot;&quot;;</span>
         }
 
-<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (cause instanceof HttpException) {</span>
-<span class="fc" id="L120">            Response&lt;?&gt; response = ((HttpException) cause).response();</span>
-<span class="fc" id="L121">            String message = response.headers().get(&quot;X-Influx-Error&quot;);</span>
-<span class="fc bfc" id="L122" title="All 4 branches covered.">            if (message != null &amp;&amp; !message.isEmpty()) {</span>
-<span class="fc" id="L123">                return message;</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        if (cause instanceof HttpException) {</span>
+<span class="fc" id="L126">            Response&lt;?&gt; response = ((HttpException) cause).response();</span>
+<span class="fc" id="L127">            String message = errorMessage(response);</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">            if (message != null) {</span>
+<span class="fc" id="L129">                return message;</span>
             }
         }
 
-<span class="fc" id="L127">        return cause.getMessage();</span>
+<span class="fc" id="L133">        return cause.getMessage();</span>
+    }
+
+    @Nullable
+    private static String errorMessage(@Nullable final Response&lt;?&gt; response) {
+
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        if (response == null) {</span>
+<span class="fc" id="L140">            return null;</span>
+        }
+
+<span class="fc" id="L143">        String message = response.headers().get(&quot;X-Influx-Error&quot;);</span>
+<span class="fc bfc" id="L144" title="All 4 branches covered.">        if (message != null &amp;&amp; !message.isEmpty()) {</span>
+<span class="fc" id="L145">            return message;</span>
+        }
+
+<span class="fc" id="L148">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

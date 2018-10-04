@@ -2,6 +2,8 @@ org.influxdata.flux
 org.influxdata.flux.domain
 org.influxdata.flux.error
 org.influxdata.flux.impl
+org.influxdata.flux.option
 org.influxdata.platform
 org.influxdata.platform.error
+org.influxdata.platform.error.rest
 org.influxdata.platform.rest
