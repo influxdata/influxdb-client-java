@@ -22,6 +22,7 @@
 package org.influxdata.flux.impl;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.time.Duration;
 import java.time.Instant;
@@ -31,8 +32,6 @@ import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -42,13 +41,16 @@ import org.influxdata.flux.domain.FluxTable;
 import org.influxdata.flux.error.FluxCsvParserException;
 import org.influxdata.flux.error.FluxQueryException;
 import org.influxdata.platform.Arguments;
+import org.influxdata.platform.rest.Cancellable;
 
+import okio.BufferedSource;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 /**
  * This class us used to construct FluxResult from CSV.
+ *
  * @see org.influxdata.flux
  */
 class FluxCsvParser {
@@ -71,94 +73,67 @@ class FluxCsvParser {
 
     private static final int ERROR_RECORD_INDEX = 4;
 
-    /**
-     * Synchronously parse Flux CSV response to {@link FluxTable}s.
-     *
-     * @param reader with data
-     * @return parsed data to {@link FluxTable}s
-     * @throws IOException throw by {@link CSVParser}
-     */
-    @Nonnull
-    List<FluxTable> parseFluxResponse(@Nonnull final Reader reader) throws IOException {
-
-        Arguments.checkNotNull(reader, "reader");
-
-        final List<FluxTable> tables = new ArrayList<>();
-
-        parseFluxResponse(reader, new FluxResponseConsumer() {
-            @Override
-            public void addTable(final int tableIndex, @Nonnull final FluxTable table) {
-                tables.add(tableIndex, table);
-            }
-
-            @Override
-            public void addRecord(final int tableIndex, @Nonnull final FluxRecord record) {
-
-                tables.get(tableIndex).getRecords().add(record);
-            }
-
-            @Override
-            public boolean isRequiredNext() {
-                return true;
-            }
-        });
-
-        return tables;
-    }
-
-    /**
-     * Asynchronously parse Flux CSV response to {@link FluxColumn}s.
-     *
-     * @param reader       with data
-     * @param consumer     of response
-     * @param requiredNext it the supplier return {@link Boolean#FALSE} than the processing of record end
-     * @throws IOException throw by {@link CSVParser}
-     */
-    void parseFluxResponse(@Nonnull final Reader reader,
-                           @Nonnull final Consumer<FluxRecord> consumer,
-                           @Nonnull final Supplier<Boolean> requiredNext) throws IOException {
-
-        Arguments.checkNotNull(reader, "reader");
-        Arguments.checkNotNull(consumer, "consumer");
-        Arguments.checkNotNull(requiredNext, "requiredNext");
-
-        parseFluxResponse(reader, new FluxResponseConsumer() {
-            @Override
-            public void addTable(final int tableIndex, @Nonnull final FluxTable fluxTable) {
-
-            }
-
-            @Override
-            public void addRecord(final int tableIndex, @Nonnull final FluxRecord fluxRecord) {
-                consumer.accept(fluxRecord);
-            }
-
-            @Override
-            public boolean isRequiredNext() {
-                return requiredNext.get();
-            }
-        });
-
-    }
-
     private enum ParsingState {
         NORMAL,
 
         IN_ERROR
     }
 
-    private interface FluxResponseConsumer {
-        void addTable(final int tableIndex, @Nonnull final FluxTable fluxTable);
+    interface FluxResponseConsumer {
 
-        void addRecord(final int tableIndex, @Nonnull final FluxRecord fluxRecord);
+        /**
+         * Add new {@link FluxTable} to consumer.
+         *
+         * @param index       index of table
+         * @param cancellable cancellable
+         * @param table       new {@link FluxTable}
+         */
+        void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxTable table);
 
-        boolean isRequiredNext();
+        /**
+         * Add new {@link FluxRecord} to consumer.
+         *
+         * @param index       index of table
+         * @param cancellable cancellable
+         * @param record      new {@link FluxRecord}
+         */
+
+        void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxRecord record);
     }
 
-    private void parseFluxResponse(@Nonnull final Reader reader,
-                                   @Nonnull final FluxResponseConsumer consumer) throws IOException {
+    /**
+     * Asynchronously parse Flux CSV response to {@link FluxResponseConsumer}.
+     *
+     * @param bufferedSource with data
+     * @param cancellable    to cancel parsing
+     * @param consumer       to accept {@link FluxTable}s and {@link FluxRecord}s
+     * @throws IOException If there is a problem with reading CSV
+     */
+    void parseFluxResponse(@Nonnull final BufferedSource bufferedSource,
+                           @Nonnull final Cancellable cancellable,
+                           @Nonnull final FluxResponseConsumer consumer) throws IOException {
+
+        Arguments.checkNotNull(bufferedSource, "bufferedSource");
+
+        Reader reader = new InputStreamReader(bufferedSource.inputStream());
+
+        parseFluxResponse(reader, cancellable, consumer);
+    }
+
+    /**
+     * Asynchronously parse Flux CSV response to {@link FluxResponseConsumer}.
+     *
+     * @param reader      with data
+     * @param cancellable to cancel parsing
+     * @param consumer    to accept {@link FluxTable}s and {@link FluxRecord}s
+     * @throws IOException If there is a problem with reading CSV
+     */
+    void parseFluxResponse(@Nonnull final Reader reader,
+                           @Nonnull final Cancellable cancellable,
+                           @Nonnull final FluxResponseConsumer consumer) throws IOException {
 
         Arguments.checkNotNull(reader, "reader");
+        Arguments.checkNotNull(cancellable, "cancellable");
         Arguments.checkNotNull(consumer, "consumer");
 
         ParsingState parsingState = ParsingState.NORMAL;
@@ -171,7 +146,7 @@ class FluxCsvParser {
 
         for (CSVRecord csvRecord : parser) {
 
-            if (!consumer.isRequiredNext()) {
+            if (cancellable.isCancelled()) {
                 return;
             }
 
@@ -208,7 +183,7 @@ class FluxCsvParser {
                 startNewTable = true;
 
                 table = new FluxTable();
-                consumer.addTable(tableIndex, table);
+                consumer.accept(tableIndex, cancellable, table);
                 tableIndex++;
 
             } else if (table == null) {
@@ -242,17 +217,17 @@ class FluxCsvParser {
                     List<FluxColumn> fluxColumns = table.getColumns();
                     table = new FluxTable();
                     table.getColumns().addAll(fluxColumns);
-                    consumer.addTable(tableIndex, table);
+                    consumer.accept(tableIndex, cancellable, table);
                     tableIndex++;
                 }
 
                 FluxRecord fluxRecord = parseRecord(tableIndex - 1, table, csvRecord);
-                consumer.addRecord(tableIndex - 1, fluxRecord);
+                consumer.accept(tableIndex - 1, cancellable, fluxRecord);
             }
         }
     }
 
-    private FluxRecord parseRecord(final int tableIndex, final FluxTable table, final CSVRecord csvRecord)  {
+    private FluxRecord parseRecord(final int tableIndex, final FluxTable table, final CSVRecord csvRecord) {
 
         FluxRecord record = new FluxRecord(tableIndex);
 

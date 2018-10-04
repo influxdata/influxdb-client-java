@@ -47,7 +47,7 @@ public final class Arguments {
      * @return {@code string}
      * @throws IllegalArgumentException if the string is empty
      */
-    public static String checkNonEmptyString(final String string, final String name) throws IllegalArgumentException {
+    public static String checkNonEmpty(final String string, final String name) throws IllegalArgumentException {
         if (string == null || string.isEmpty()) {
             throw new IllegalArgumentException("Expecting a non-empty string for " + name);
         }

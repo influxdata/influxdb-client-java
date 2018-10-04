@@ -246,6 +246,25 @@ class InfluxExceptionTest {
 
     }
 
+    @Test
+    void nullResponse() {
+        Assertions.assertThatThrownBy(() -> {
+            throw new InfluxException((Response<?>) null);
+        })
+                .isInstanceOf(InfluxException.class)
+                .hasMessage(null)
+                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).status() == 0)
+                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).reference() == 0)
+                .matches((Predicate<Throwable>) throwable -> {
+                    try {
+                        return ((InfluxException) throwable).errorBody().equals("");
+                    } catch (IOException e) {
+                        Assertions.fail(e.getMessage(), e);
+                        return false;
+                    }
+                });
+    }
+
     @Nonnull
     private Response<Object> errorResponse(@Nullable final String influxError) {
         return errorResponse(influxError, 500);

@@ -29,11 +29,13 @@ import java.util.Base64;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 
 import org.influxdata.flux.domain.FluxColumn;
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
 import org.influxdata.flux.error.FluxQueryException;
+import org.influxdata.platform.rest.Cancellable;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
@@ -75,7 +77,7 @@ class FluxCsvParserTest {
                 + ",,2,1677-09-21T00:12:43.145224192Z,2018-07-16T11:21:02.547596934Z,usage_system,cpu,A,west,1444,38,test\n"
                 + ",,3,1677-09-21T00:12:43.145224192Z,2018-07-16T11:21:02.547596934Z,user_usage,cpu,A,west,2401,49,test";
 
-        List<FluxTable> tables = parser.parseFluxResponse(new StringReader(data));
+        List<FluxTable> tables = parseFluxResponse(data);
 
         List<FluxColumn> columnHeaders = tables.get(0).getColumns();
         Assertions.assertThat(columnHeaders).hasSize(11);
@@ -186,7 +188,7 @@ class FluxCsvParserTest {
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,x\n"
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,\n";
 
-        List<FluxTable> tables = parser.parseFluxResponse(new StringReader(data));
+        List<FluxTable> tables = parseFluxResponse(data);
         Assertions.assertThat(tables.get(0).getRecords().get(0).getValueByKey("value")).isEqualTo(true);
         Assertions.assertThat(tables.get(0).getRecords().get(1).getValueByKey("value")).isEqualTo(false);
         Assertions.assertThat(tables.get(0).getRecords().get(2).getValueByKey("value")).isEqualTo(false);
@@ -205,7 +207,7 @@ class FluxCsvParserTest {
 
         long expected = Long.parseUnsignedLong("17916881237904312345");
 
-        List<FluxTable> tables = parser.parseFluxResponse(new StringReader(data));
+        List<FluxTable> tables = parseFluxResponse(data);
         Assertions.assertThat(tables.get(0).getRecords().get(0).getValueByKey("value")).isEqualTo(expected);
         Assertions.assertThat(tables.get(0).getRecords().get(1).getValueByKey("value")).isNull();
     }
@@ -220,7 +222,7 @@ class FluxCsvParserTest {
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,12.25\n"
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,\n";
 
-        List<FluxTable> tables = parser.parseFluxResponse(new StringReader(data));
+        List<FluxTable> tables = parseFluxResponse(data);
         Assertions.assertThat(tables.get(0).getRecords().get(0).getValueByKey("value")).isEqualTo(12.25D);
         Assertions.assertThat(tables.get(0).getRecords().get(1).getValueByKey("value")).isNull();
     }
@@ -238,7 +240,7 @@ class FluxCsvParserTest {
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A," + encodedString + "\n"
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,\n";
 
-        List<FluxTable> tables = parser.parseFluxResponse(new StringReader(data));
+        List<FluxTable> tables = parseFluxResponse(data);
 
         byte[] value = (byte[]) tables.get(0).getRecords().get(0).getValueByKey("value");
         Assertions.assertThat(value).isNotEmpty();
@@ -257,7 +259,7 @@ class FluxCsvParserTest {
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,1970-01-01T00:00:10Z\n"
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,\n";
 
-        List<FluxTable> tables = parser.parseFluxResponse(new StringReader(data));
+        List<FluxTable> tables = parseFluxResponse(data);
         Assertions.assertThat(tables.get(0).getRecords().get(0).getValueByKey("value")).isEqualTo(Instant.ofEpochSecond(10));
         Assertions.assertThat(tables.get(0).getRecords().get(1).getValueByKey("value")).isNull();
     }
@@ -272,7 +274,7 @@ class FluxCsvParserTest {
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,1970-01-01T00:00:10.999999999Z+07:00\n"
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,\n";
 
-        List<FluxTable> tables = parser.parseFluxResponse(new StringReader(data));
+        List<FluxTable> tables = parseFluxResponse(data);
 
         Assertions.assertThat(tables.get(0).getRecords().get(0).getValueByKey("value"))
                 .isEqualTo(Instant.ofEpochSecond(10).plusNanos(999999999));
@@ -290,7 +292,7 @@ class FluxCsvParserTest {
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,125\n"
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,\n";
 
-        List<FluxTable> tables = parser.parseFluxResponse(new StringReader(data));
+        List<FluxTable> tables = parseFluxResponse(data);
 
         Assertions.assertThat(tables.get(0).getRecords().get(0).getValueByKey("value"))
                 .isEqualTo(Duration.ofNanos(125));
@@ -308,7 +310,7 @@ class FluxCsvParserTest {
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,125\n"
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,\n";
 
-        List<FluxTable> tables = parser.parseFluxResponse(new StringReader(data));
+        List<FluxTable> tables = parseFluxResponse(data);
 
         Assertions.assertThat(tables.get(0).getColumns()).hasSize(10);
         Assertions.assertThat(tables.get(0).getGroupKey()).hasSize(2);
@@ -324,7 +326,7 @@ class FluxCsvParserTest {
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,12.25\n"
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,\n";
 
-        List<FluxTable> tables = parser.parseFluxResponse(new StringReader(data));
+        List<FluxTable> tables = parseFluxResponse(data);
         Assertions.assertThat(tables.get(0).getRecords().get(0).getValueByKey("value")).isEqualTo("12.25");
         Assertions.assertThat(tables.get(0).getRecords().get(1).getValueByKey("value")).isNull();
     }
@@ -339,7 +341,7 @@ class FluxCsvParserTest {
                         + ",error,reference\n"
                         + ",failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,897";
 
-        Assertions.assertThatThrownBy(() -> parser.parseFluxResponse(new StringReader(data)))
+        Assertions.assertThatThrownBy(() -> parseFluxResponse(data))
                 .isInstanceOf(FluxQueryException.class)
                 .hasMessage("failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time")
                 .matches((Predicate<Throwable>) throwable -> ((FluxQueryException) throwable).reference() == 897);
@@ -355,7 +357,7 @@ class FluxCsvParserTest {
                         + ",error,reference\n"
                         + ",failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,";
 
-        Assertions.assertThatThrownBy(() -> parser.parseFluxResponse(new StringReader(data)))
+        Assertions.assertThatThrownBy(() -> parseFluxResponse(data))
                 .isInstanceOf(FluxQueryException.class)
                 .hasMessage("failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time")
                 .matches((Predicate<Throwable>) throwable -> ((FluxQueryException) throwable).reference() == 0);
@@ -373,7 +375,40 @@ class FluxCsvParserTest {
 
         List<FluxRecord> records = Lists.newArrayList();
 
-        parser.parseFluxResponse(new StringReader(data), records::add, records::isEmpty);
-        Assertions.assertThat(records).hasSize(1);
+        FluxCsvParser.FluxResponseConsumer consumer = new FluxCsvParser.FluxResponseConsumer() {
+            @Override
+            public void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxTable table) {
+
+            }
+
+            @Override
+            public void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxRecord record) {
+                records.add(record);
+            }
+        };
+
+        parser.parseFluxResponse(new StringReader(data), new DefaultCancellable(), consumer);
+        Assertions.assertThat(records).hasSize(2);
+    }
+
+    @Nonnull
+    private List<FluxTable> parseFluxResponse(@Nonnull final String data) throws IOException {
+
+        FluxResponseConsumerTable consumer = new FluxResponseConsumerTable();
+        parser.parseFluxResponse(new StringReader(data), new DefaultCancellable(), consumer);
+
+        return consumer.getTables();
+    }
+
+    private static class DefaultCancellable implements Cancellable {
+        @Override
+        public void cancel() {
+
+        }
+
+        @Override
+        public boolean isCancelled() {
+            return false;
+        }
     }
 }

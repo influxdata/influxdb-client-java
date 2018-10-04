@@ -37,7 +37,7 @@ import retrofit2.Response;
  */
 public class InfluxException extends RuntimeException {
 
-    private final Response response;
+    private final Response<?> response;
 
     public InfluxException(@Nullable final String message) {
 
@@ -54,6 +54,12 @@ public class InfluxException extends RuntimeException {
         } else {
             response = null;
         }
+    }
+
+    public InfluxException(@Nullable final Response<?> cause) {
+
+        super((errorMessage(cause)));
+        response = cause;
     }
 
     /**
@@ -118,12 +124,27 @@ public class InfluxException extends RuntimeException {
 
         if (cause instanceof HttpException) {
             Response<?> response = ((HttpException) cause).response();
-            String message = response.headers().get("X-Influx-Error");
-            if (message != null && !message.isEmpty()) {
+            String message = errorMessage(response);
+            if (message != null) {
                 return message;
             }
         }
 
         return cause.getMessage();
+    }
+
+    @Nullable
+    private static String errorMessage(@Nullable final Response<?> response) {
+
+        if (response == null) {
+            return null;
+        }
+
+        String message = response.headers().get("X-Influx-Error");
+        if (message != null && !message.isEmpty()) {
+            return message;
+        }
+
+        return null;
     }
 }

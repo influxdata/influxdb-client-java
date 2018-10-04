@@ -142,7 +142,7 @@ public final class FluxRecord {
     @Nullable
     public Object getValueByKey(@Nonnull final String key) {
 
-        Arguments.checkNonEmptyString(key, "key");
+        Arguments.checkNonEmpty(key, "key");
 
         return values.get(key);
     }

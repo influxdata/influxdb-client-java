@@ -36,13 +36,13 @@ class ArgumentsTest {
     @Test
     void checkNonEmptyString() {
 
-        Arguments.checkNonEmptyString("valid", "property");
+        Arguments.checkNonEmpty("valid", "property");
     }
 
     @Test
     void checkNonEmptyStringEmpty() {
 
-        Assertions.assertThatThrownBy(() -> Arguments.checkNonEmptyString("", "property"))
+        Assertions.assertThatThrownBy(() -> Arguments.checkNonEmpty("", "property"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Expecting a non-empty string for property");
     }
@@ -50,7 +50,7 @@ class ArgumentsTest {
     @Test
     void checkNonEmptyStringNull() {
 
-        Assertions.assertThatThrownBy(() -> Arguments.checkNonEmptyString(null, "property"))
+        Assertions.assertThatThrownBy(() -> Arguments.checkNonEmpty(null, "property"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Expecting a non-empty string for property");
     }
