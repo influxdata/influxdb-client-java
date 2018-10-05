@@ -173,10 +173,9 @@ class ITFluxClientReactive extends AbstractITFluxClientReactive {
     }
 
     @Test
-    @Disabled
     void manyToOne() {
 
-        String flux = "from(bucket:\"flux_database\")\n"
+        String flux = FROM_FLUX_DATABASE + "\n"
                 + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
                 + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" AND r[\"_field\"] == \"free\"))\n"
                 + "\t|> window(every: 10s)\n"
