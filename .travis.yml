@@ -22,7 +22,9 @@
 
 language: java
 
-jdk: oraclejdk8
+jdk:
+  - oraclejdk8
+  - openjdk8
 
 sudo: required
 
@@ -37,25 +39,35 @@ services:
 env:
   - INFLUXDB_VERSION=nightly INFLUX_PLATFORM_VERSION=nightly CODE_COV=true SNAPSHOT=Y
 
+script: skip
+
 jobs:
   include:
+
   - stage: compile
-    script:
-    - "mvn -U clean compile"
+    script: "mvn -U clean compile"
+
   - stage: test
     script:
       - "./config/platform-restart.sh"
-      - "mvn clean install"
-      - "./config/publish-site.sh"
+      - "mvn -B clean install"
 
-deploy:
-  provider: script
-  script: "mvn clean deploy -DskipTests -s config/deploy-settings.xml"
-  skip_cleanup: true
-  on:
-    repo: bonitoo-io/influxdata-platform-java
-    condition: $SNAPSHOT == "Y"
-    branch: travis-java
+  - stage: publish-site
+    jdk: oraclejdk8
+    script: "./config/publish-site.sh"
+
+  - stage: deploy
+    jdk: oraclejdk8
+    script: skip
+    deploy:
+      provider: script
+      script: "mvn clean deploy -DskipTests -s config/deploy-settings.xml"
+      skip_cleanup: true
+      on:
+        repo: bonitoo-io/influxdata-platform-java
+        condition: $SNAPSHOT == "Y"
+        stagex:  ewfwefwef
+        branch: travis-java
 
 after_success:
   - test "true" = ${CODE_COV:=false} && bash <(curl -s https://codecov.io/bash)
