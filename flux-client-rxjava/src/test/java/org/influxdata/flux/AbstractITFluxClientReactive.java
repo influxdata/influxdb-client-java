@@ -21,47 +21,45 @@
  */
 package org.influxdata.flux;
 
-import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.influxdata.platform.error.InfluxException;
+import org.influxdata.flux.option.FluxConnectionOptions;
+import org.influxdata.platform.AbstractTest;
 
-import okhttp3.mockwebserver.MockResponse;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
- * @author Jakub Bednar (bednar@github) (03/10/2018 15:08)
+ * @author Jakub Bednar (bednar@github) (28/06/2018 08:20)
  */
-@RunWith(JUnitPlatform.class)
-class FluxClientVersionTest extends AbstractFluxClientTest {
+public abstract class AbstractITFluxClientReactive extends AbstractTest {
 
-    @Test
-    void version() {
+    private static final Logger LOG = Logger.getLogger(AbstractITFluxClientReactive.class.getName());
 
-        MockResponse response = new MockResponse()
-                .setResponseCode(204)
-                .setHeader("X-Influxdb-Version", "1.7.0");
-        mockServer.enqueue(response);
+    static final String DATABASE_NAME = "flux_react_database";
 
-        Assertions.assertThat(fluxClient.version()).isEqualTo("1.7.0");
+    FluxClientReactive fluxClient;
+
+    @BeforeEach
+    protected void setUp() {
+
+        String influxURL = getInfluxDbURL();
+
+        LOG.log(Level.FINEST, "Influx URL: {0}", influxURL);
+
+        FluxConnectionOptions options = FluxConnectionOptions.builder()
+                .url(influxURL)
+                .build();
+
+        fluxClient = FluxClientReactiveFactory.connect(options);
+
+        influxDBQuery("CREATE DATABASE " + DATABASE_NAME, DATABASE_NAME);
     }
 
-    @Test
-    void versionUnknown() {
+    @AfterEach
+    protected void after() {
 
-        MockResponse response = new MockResponse()
-                .setResponseCode(204);
-        mockServer.enqueue(response);
-
-        Assertions.assertThat(fluxClient.version()).isEqualTo("unknown");
-    }
-
-    @Test
-    void error() throws IOException {
-        mockServer.shutdown();
-
-        Assertions.assertThatThrownBy(() -> fluxClient.version()).isInstanceOf(InfluxException.class);
+        influxDBQuery("DROP DATABASE " + DATABASE_NAME, DATABASE_NAME);
     }
 }

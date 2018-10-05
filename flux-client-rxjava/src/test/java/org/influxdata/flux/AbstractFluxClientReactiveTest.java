@@ -23,7 +23,6 @@ package org.influxdata.flux;
 
 import javax.annotation.Nonnull;
 
-import org.influxdata.flux.impl.FluxClientImpl;
 import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.AbstractMockServerTest;
 
@@ -31,30 +30,30 @@ import okhttp3.mockwebserver.MockResponse;
 import org.junit.jupiter.api.BeforeEach;
 
 /**
- * @author Jakub Bednar (bednar@github) (31/07/2018 07:06)
+ * @author Jakub Bednar (bednar@github) (26/06/2018 13:15)
  */
-public abstract class AbstractFluxClientTest extends AbstractMockServerTest {
+public abstract class AbstractFluxClientReactiveTest extends AbstractMockServerTest {
 
     static final String SUCCESS_DATA =
-            "#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,long,string,string,string,string\n"
-            + "#group,false,false,false,false,false,false,false,false,false,true\n"
-            + "#default,_result,,,,,,,,,\n"
-            + ",result,table,_start,_stop,_time,_value,_field,_measurement,host,region\n"
-            + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,west\n"
-            + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,20,free,mem,B,west\n"
-            + ",,0,1970-01-01T00:00:20Z,1970-01-01T00:00:30Z,1970-01-01T00:00:20Z,11,free,mem,A,west\n"
-            + ",,0,1970-01-01T00:00:20Z,1970-01-01T00:00:30Z,1970-01-01T00:00:20Z,22,free,mem,B,west";
+            "#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,string,string,double\n"
+                    + ",result,table,_start,_stop,_time,region,host,_value\n"
+                    + ",mean,0,2018-05-08T20:50:00Z,2018-05-08T20:51:00Z,2018-05-08T20:50:00Z,east,A,15.43\n"
+                    + ",mean,0,2018-05-08T20:50:00Z,2018-05-08T20:51:00Z,2018-05-08T20:50:20Z,east,B,59.25\n"
+                    + ",mean,0,2018-05-08T20:50:00Z,2018-05-08T20:51:00Z,2018-05-08T20:50:40Z,east,C,52.62\n"
+                    + ",mean,1,2018-05-08T20:50:00Z,2018-05-08T20:51:00Z,2018-05-08T20:50:00Z,west,A,62.73\n"
+                    + ",mean,1,2018-05-08T20:50:00Z,2018-05-08T20:51:00Z,2018-05-08T20:50:20Z,west,B,12.83\n"
+                    + ",mean,1,2018-05-08T20:50:00Z,2018-05-08T20:51:00Z,2018-05-08T20:50:40Z,west,C,51.62";
 
-    FluxClient fluxClient;
+    FluxClientReactive fluxClient;
 
     @BeforeEach
     protected void setUp() {
 
-        FluxConnectionOptions fluxConnectionOptions = FluxConnectionOptions.builder()
+        FluxConnectionOptions options = FluxConnectionOptions.builder()
                 .url(startMockServer())
                 .build();
 
-        fluxClient = new FluxClientImpl(fluxConnectionOptions);
+        fluxClient = FluxClientReactiveFactory.connect(options);
     }
 
     @Nonnull

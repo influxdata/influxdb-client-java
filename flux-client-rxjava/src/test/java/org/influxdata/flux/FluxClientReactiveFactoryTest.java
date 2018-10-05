@@ -21,40 +21,22 @@
  */
 package org.influxdata.flux;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import javax.annotation.Nonnull;
-
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 /**
- * @author Jakub Bednar (bednar@github) (03/10/2018 14:54)
+ * @author Jakub Bednar (bednar@github) (26/06/2018 12:11)
  */
-public abstract class AbstractTest {
+@RunWith(JUnitPlatform.class)
+class FluxClientReactiveFactoryTest {
+    
+    @Test
+    void connect() {
 
-    protected CountDownLatch countDownLatch;
+        FluxClientReactive fluxClient = FluxClientReactiveFactory.connect("http://localhost:8093");
 
-    @BeforeEach
-    protected void prepare() {
-        countDownLatch = new CountDownLatch(1);
-    }
-
-    protected void waitToCallback() {
-        waitToCallback(10);
-    }
-
-    protected void waitToCallback(final int seconds) {
-        waitToCallback(countDownLatch, seconds);
-    }
-
-    protected void waitToCallback(@Nonnull final CountDownLatch countDownLatch, final int seconds) {
-        try {
-            Assertions.assertThat(countDownLatch.await(seconds, TimeUnit.SECONDS))
-                    .overridingErrorMessage("The countDown wasn't counted to zero. Before elapsed: %s seconds.", seconds)
-                    .isTrue();
-        } catch (InterruptedException e) {
-            Assertions.fail("Unexpected exception", e);
-        }
+        Assertions.assertThat(fluxClient).isNotNull();
     }
 }

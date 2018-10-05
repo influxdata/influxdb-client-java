@@ -35,7 +35,7 @@
     <artifactId>platform-client-rxjava</artifactId>
     <packaging>jar</packaging>
 
-    <name>The Platform Client - RxJava (reactive)</name>
+    <name>The Platform Client - RxJava</name>
     <description>
         The client for the InfluxData Platform (a.k.a. Influx 2.0 OSS).
         The client supports managing organizations, users, authorizations, buckets by a reactive way.

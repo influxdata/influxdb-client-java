@@ -26,9 +26,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -54,22 +51,6 @@ import org.apache.commons.csv.CSVRecord;
  * @see org.influxdata.flux
  */
 class FluxCsvParser {
-
-    private static final int FRACTION_MIN_WIDTH = 0;
-    private static final int FRACTION_MAX_WIDTH = 9;
-    private static final boolean ADD_DECIMAL_POINT = true;
-
-    private static final DateTimeFormatter RFC3339_FORMATTER = new DateTimeFormatterBuilder()
-            .append(DateTimeFormatter.ISO_INSTANT)
-            .appendPattern("[.SSSSSSSSS][.SSSSSS][.SSS][.]")
-            .appendOffset("+HH:mm", "Z")
-            .toFormatter();
-
-    private static final DateTimeFormatter RFC3339_NANO_FORMATTER = new DateTimeFormatterBuilder()
-            .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
-            .appendFraction(ChronoField.NANO_OF_SECOND, FRACTION_MIN_WIDTH, FRACTION_MAX_WIDTH, ADD_DECIMAL_POINT)
-            .appendPattern("X")
-            .toFormatter();
 
     private static final int ERROR_RECORD_INDEX = 4;
 
@@ -187,9 +168,7 @@ class FluxCsvParser {
                 tableIndex++;
 
             } else if (table == null) {
-                String message = "Unable to parse CSV response. FluxTable definition was not found. Record: %d";
-
-                throw new FluxCsvParserException(String.format(message, recordNumber));
+                throw new FluxCsvParserException("Unable to parse CSV response. FluxTable definition was not found.");
             }
 
             //#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string
@@ -282,9 +261,8 @@ class FluxCsvParser {
             case "base64Binary":
                 return Base64.getDecoder().decode(strValue);
             case "dateTime:RFC3339":
-                return RFC3339_NANO_FORMATTER.parse(strValue, Instant::from);
             case "dateTime:RFC3339Nano":
-                return RFC3339_FORMATTER.parse(strValue, Instant::from);
+                return Instant.parse(strValue);
             case "duration":
                 return Duration.ofNanos(Long.parseUnsignedLong(strValue));
             default:

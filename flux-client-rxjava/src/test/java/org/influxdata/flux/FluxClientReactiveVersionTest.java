@@ -26,16 +26,15 @@ import java.io.IOException;
 import org.influxdata.platform.error.InfluxException;
 
 import okhttp3.mockwebserver.MockResponse;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 /**
- * @author Jakub Bednar (bednar@github) (03/10/2018 15:08)
+ * @author Jakub Bednar (bednar@github) (26/07/2018 09:52)
  */
 @RunWith(JUnitPlatform.class)
-class FluxClientVersionTest extends AbstractFluxClientTest {
+class FluxClientReactiveVersionTest extends AbstractFluxClientReactiveTest {
 
     @Test
     void version() {
@@ -45,7 +44,7 @@ class FluxClientVersionTest extends AbstractFluxClientTest {
                 .setHeader("X-Influxdb-Version", "1.7.0");
         mockServer.enqueue(response);
 
-        Assertions.assertThat(fluxClient.version()).isEqualTo("1.7.0");
+        fluxClient.version().test().assertValue("1.7.0");
     }
 
     @Test
@@ -55,13 +54,13 @@ class FluxClientVersionTest extends AbstractFluxClientTest {
                 .setResponseCode(204);
         mockServer.enqueue(response);
 
-        Assertions.assertThat(fluxClient.version()).isEqualTo("unknown");
+        fluxClient.version().test().assertValue("unknown");
     }
 
     @Test
     void error() throws IOException {
         mockServer.shutdown();
 
-        Assertions.assertThatThrownBy(() -> fluxClient.version()).isInstanceOf(InfluxException.class);
+        fluxClient.version().test().assertError(InfluxException.class);
     }
 }

@@ -38,74 +38,29 @@ import org.influxdata.flux.impl.FluxCsvParser.FluxResponseConsumer;
 import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.error.InfluxException;
-import org.influxdata.platform.rest.AbstractRestClient;
 import org.influxdata.platform.rest.Cancellable;
 
-import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okio.BufferedSource;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * @author Jakub Bednar (bednar@github) (03/10/2018 14:20)
  */
-public class FluxClientImpl extends AbstractRestClient implements FluxClient {
+public class FluxClientImpl extends AbstractFluxClient<FluxService> implements FluxClient {
 
     private static final Logger LOG = Logger.getLogger(FluxClientImpl.class.getName());
-
-    private static final Consumer<Throwable> ERROR_CONSUMER = throwable -> {
-//        Thread currentThread = Thread.currentThread();
-//        Thread.UncaughtExceptionHandler handler = currentThread.getUncaughtExceptionHandler();
-//        handler.uncaughtException(currentThread, throwable);
-        if (throwable instanceof InfluxException) {
-            throw (InfluxException) throwable;
-        } else {
-            throw new InfluxException(throwable);
-        }
-    };
 
     private static final Runnable EMPTY_ACTION = () -> {
 
     };
 
-    private static final JSONObject DEFAULT_DIALECT = new JSONObject()
-            .put("header", true)
-            .put("delimiter", ",")
-            .put("quoteChar", "\"")
-            .put("commentPrefix", "#")
-            .put("annotations", new JSONArray().put("datatype").put("group").put("default"));
-
-    private final FluxService fluxService;
-    private final FluxCsvParser fluxCsvParser;
-
-    private final HttpLoggingInterceptor loggingInterceptor;
-
     public FluxClientImpl(@Nonnull final FluxConnectionOptions options) {
 
-        Arguments.checkNotNull(options, "options");
-
-        this.fluxCsvParser = new FluxCsvParser();
-
-        this.loggingInterceptor = new HttpLoggingInterceptor();
-        this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
-
-        OkHttpClient okHttpClient = options.getOkHttpClient()
-                .addInterceptor(loggingInterceptor)
-                .build();
-
-        Retrofit.Builder serviceBuilder = new Retrofit.Builder()
-                .baseUrl(options.getUrl())
-                .client(okHttpClient);
-
-        this.fluxService = serviceBuilder
-                .build()
-                .create(FluxService.class);
+        super(options, FluxService.class);
     }
 
     @Nonnull
@@ -177,7 +132,7 @@ public class FluxClientImpl extends AbstractRestClient implements FluxClient {
 
         Arguments.checkNonEmpty(query, "query");
 
-        return raw(query, DEFAULT_DIALECT.toString());
+        return raw(query, (String) null);
     }
 
     @Nonnull
@@ -225,7 +180,7 @@ public class FluxClientImpl extends AbstractRestClient implements FluxClient {
         Arguments.checkNotNull(onResponse, "onNext");
         Arguments.checkNotNull(onError, "onError");
 
-        raw(query, null, onResponse, onError);
+        raw(query, onResponse, onError, EMPTY_ACTION);
     }
 
     @Override
@@ -293,11 +248,7 @@ public class FluxClientImpl extends AbstractRestClient implements FluxClient {
 
         try {
             Response<ResponseBody> execute = ping.execute();
-            String version = execute.headers().get("X-Influxdb-Version");
-            if (version == null) {
-                return "unknown";
-            }
-            return version;
+            return getVersion(execute);
         } catch (IOException e) {
             throw new InfluxException(e);
         }
@@ -348,10 +299,7 @@ public class FluxClientImpl extends AbstractRestClient implements FluxClient {
         BiConsumer<Cancellable, BufferedSource> consumer = (cancellable, bufferedSource) -> {
 
             try {
-                String line;
-                while ((line = bufferedSource.readUtf8Line()) != null) {
-                    onResponse.accept(cancellable, line);
-                }
+                parseFluxResponseToLines(line -> onResponse.accept(cancellable, line), cancellable, bufferedSource);
             } catch (IOException e) {
                 catchOrPropagateException(e, onError);
             }
@@ -373,14 +321,7 @@ public class FluxClientImpl extends AbstractRestClient implements FluxClient {
         Arguments.checkNotNull(onComplete, "onComplete");
         Arguments.checkNotNull(asynchronously, "asynchronously");
 
-        JSONObject json = new JSONObject()
-                .put("query", query);
-
-        if (dialect != null) {
-            json.put("dialect", new JSONObject(dialect));
-        }
-
-        Call<ResponseBody> call = fluxService.query(createBody(json));
+        Call<ResponseBody> call = fluxService.query(createBody(dialect, query));
 
         DefaultCancellable cancellable = new DefaultCancellable();
 

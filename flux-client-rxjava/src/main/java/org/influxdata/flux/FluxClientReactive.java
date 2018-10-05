@@ -22,6 +22,7 @@
 package org.influxdata.flux;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.influxdata.flux.domain.FluxRecord;
 
@@ -29,9 +30,10 @@ import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.reactivestreams.Publisher;
 
 /**
- * The client that allow perform Flux Query against the InfluxDB by a reactive way.
+ * The client that allow perform Flux query against the InfluxDB by a reactive way.
  *
  * @author Jakub Bednar (bednar@github) (01/10/2018 12:38)
  */
@@ -41,20 +43,62 @@ public interface FluxClientReactive {
      * Returns {@link Flowable} emitting {@link FluxRecord}s which are matched the query.
      * If none found than return {@link Flowable#empty()}.
      *
-     * @param query the flux query to execute
+     * @param query the Flux query to execute
      * @return {@link Flowable} of {@link FluxRecord}s
      */
     @Nonnull
     Flowable<FluxRecord> query(@Nonnull final String query);
 
     /**
+     * Returns {@link Flowable} emitting {@link FluxRecord}s which are matched the query.
+     * If none found than return {@link Flowable#empty()}.
+     *
+     * @param queryStream the Flux query publisher
+     * @return {@link Flowable} of {@link FluxRecord}s
+     */
+    @Nonnull
+    Flowable<FluxRecord> query(@Nonnull final Publisher<String> queryStream);
+
+    /**
      * Returns {@link Flowable} emitting raw response from InfluxDB server line by line.
      *
-     * @param query the flux query to execute
+     * @param query the Flux query to execute
      * @return {@link Maybe} of a raw {@code Response<ResponseBody>}
      */
     @Nonnull
     Flowable<String> raw(@Nonnull final String query);
+
+
+    /**
+     * Returns {@link Flowable} emitting raw response from InfluxDB server line by line.
+     *
+     * @param queryStream the Flux query publisher
+     * @return {@link Maybe} of a raw {@code Response<ResponseBody>}
+     */
+    @Nonnull
+    Flowable<String> raw(@Nonnull final Publisher<String> queryStream);
+
+    /**
+     * Returns {@link Flowable} emitting raw response from InfluxDB server line by line.
+     *
+     * @param dialect Dialect is an object defining the options to use when encoding the response.
+     *                <a href="https://bit.ly/2PbCM8G">See dialect SPEC.</a>.
+     * @param query   the Flux query to execute
+     * @return {@link Maybe} of a raw {@code Response<ResponseBody>}
+     */
+    @Nonnull
+    Flowable<String> raw(@Nonnull final String query, @Nullable final String dialect);
+
+    /**
+     * Returns {@link Flowable} emitting raw response from InfluxDB server line by line.
+     *
+     * @param dialect     Dialect is an object defining the options to use when encoding the response.
+     *                    <a href="https://bit.ly/2PbCM8G">See dialect SPEC.</a>.
+     * @param queryStream the Flux query publisher
+     * @return {@link Maybe} of a raw {@code Response<ResponseBody>}
+     */
+    @Nonnull
+    Flowable<String> raw(@Nonnull final Publisher<String> queryStream, @Nullable final String dialect);
 
     /**
      * Check the status of InfluxDB Server.

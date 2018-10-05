@@ -38,7 +38,7 @@ class FluxClientPingTest extends AbstractFluxClientTest {
     @Test
     void healthy() {
 
-        fluxServer.enqueue(new MockResponse().setResponseCode(204));
+        mockServer.enqueue(new MockResponse().setResponseCode(204));
 
         Assertions.assertThat(fluxClient.ping()).isTrue();
     }
@@ -46,7 +46,7 @@ class FluxClientPingTest extends AbstractFluxClientTest {
     @Test
     void serverError() {
 
-        fluxServer.enqueue(createErrorResponse(""));
+        mockServer.enqueue(createErrorResponse(""));
 
         Assertions.assertThat(fluxClient.ping()).isFalse();
     }
@@ -54,7 +54,7 @@ class FluxClientPingTest extends AbstractFluxClientTest {
     @Test
     void notRunningServer() throws IOException {
 
-        fluxServer.shutdown();
+        mockServer.shutdown();
 
         Assertions.assertThat(fluxClient.ping()).isFalse();
     }

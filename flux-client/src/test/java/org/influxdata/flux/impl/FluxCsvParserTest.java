@@ -34,6 +34,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.domain.FluxColumn;
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
+import org.influxdata.flux.error.FluxCsvParserException;
 import org.influxdata.flux.error.FluxQueryException;
 import org.influxdata.platform.rest.Cancellable;
 
@@ -271,7 +272,7 @@ class FluxCsvParserTest {
                 + "#group,false,false,false,false,false,false,false,false,false,true\n"
                 + "#default,_result,,,,,,,,,\n"
                 + ",result,table,_start,_stop,_time,_value,_field,_measurement,host,value\n"
-                + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,1970-01-01T00:00:10.999999999Z+07:00\n"
+                + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,1970-01-01T00:00:10.999999999Z\n"
                 + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,\n";
 
         List<FluxTable> tables = parseFluxResponse(data);
@@ -391,6 +392,19 @@ class FluxCsvParserTest {
         Assertions.assertThat(records).hasSize(2);
     }
 
+
+    @Test
+    void parsingWithoutTableDefinition() {
+
+        String data = ",result,table,_start,_stop,_time,_value,_field,_measurement,host,value\n"
+                + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,12.25\n"
+                + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,\n";
+
+        Assertions.assertThatThrownBy(() -> parseFluxResponse(data))
+                .isInstanceOf(FluxCsvParserException.class)
+                .hasMessage("Unable to parse CSV response. FluxTable definition was not found.");
+    }
+    
     @Nonnull
     private List<FluxTable> parseFluxResponse(@Nonnull final String data) throws IOException {
 

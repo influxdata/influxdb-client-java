@@ -45,7 +45,7 @@ class FluxClientQueryRawTest extends AbstractFluxClientTest {
     @Test
     void queryRaw() {
 
-        fluxServer.enqueue(createResponse());
+        mockServer.enqueue(createResponse());
 
         String result = fluxClient.raw("from(bucket:\"telegraf\")");
 
@@ -55,7 +55,7 @@ class FluxClientQueryRawTest extends AbstractFluxClientTest {
     @Test
     void queryRawError() {
 
-        fluxServer.enqueue(createErrorResponse());
+        mockServer.enqueue(createErrorResponse());
 
         Assertions.assertThatThrownBy(() -> fluxClient.raw("from(bucket:\"telegraf\")"))
                 .hasMessage("Flux query is not valid")
@@ -67,7 +67,7 @@ class FluxClientQueryRawTest extends AbstractFluxClientTest {
 
         countDownLatch = new CountDownLatch(8);
 
-        fluxServer.enqueue(createResponse());
+        mockServer.enqueue(createResponse());
 
         List<String> results = new ArrayList<>();
         fluxClient.raw("from(bucket:\"telegraf\")", (cancellable, result) -> {
@@ -85,7 +85,7 @@ class FluxClientQueryRawTest extends AbstractFluxClientTest {
     void queryRawCallbackOnComplete() {
 
         countDownLatch = new CountDownLatch(1);
-        fluxServer.enqueue(createResponse());
+        mockServer.enqueue(createResponse());
 
         List<String> results = new ArrayList<>();
         fluxClient.raw("from(bucket:\"telegraf\")", null,
@@ -100,7 +100,7 @@ class FluxClientQueryRawTest extends AbstractFluxClientTest {
     @Test
     void queryRawCallbackOnError() throws IOException {
 
-        fluxServer.shutdown();
+        mockServer.shutdown();
 
         fluxClient.raw("from(bucket:\"telegraf\")",
                 (cancellable, result) -> Assertions.fail("Unreachable"),

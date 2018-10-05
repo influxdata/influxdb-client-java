@@ -45,7 +45,7 @@ class FluxClientQueryTest extends AbstractFluxClientTest {
     @Test
     void query() {
 
-        fluxServer.enqueue(createResponse());
+        mockServer.enqueue(createResponse());
 
         List<FluxTable> result = fluxClient.query("from(bucket:\"telegraf\")");
 
@@ -56,7 +56,7 @@ class FluxClientQueryTest extends AbstractFluxClientTest {
     @Test
     void queryError() {
 
-        fluxServer.enqueue(createErrorResponse("Flux query is not valid"));
+        mockServer.enqueue(createErrorResponse("Flux query is not valid"));
 
         Assertions.assertThatThrownBy(() -> fluxClient.query("from(bucket:\"telegraf\")"))
                 .isInstanceOf(InfluxException.class)
@@ -73,7 +73,7 @@ class FluxClientQueryTest extends AbstractFluxClientTest {
                 + ",error,reference\n"
                 + ",failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,897";
 
-        fluxServer.enqueue(createResponse(error));
+        mockServer.enqueue(createResponse(error));
 
         Assertions.assertThatThrownBy(() -> fluxClient.query("from(bucket:\"telegraf\")"))
                 .isInstanceOf(InfluxException.class)
@@ -91,7 +91,7 @@ class FluxClientQueryTest extends AbstractFluxClientTest {
                         + ",error,reference\n"
                         + ",failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,";
 
-        fluxServer.enqueue(createResponse(error));
+        mockServer.enqueue(createResponse(error));
 
         Assertions.assertThatThrownBy(() -> fluxClient.query("from(bucket:\"telegraf\")"))
                 .isInstanceOf(InfluxException.class)
@@ -103,7 +103,7 @@ class FluxClientQueryTest extends AbstractFluxClientTest {
 
         countDownLatch = new CountDownLatch(4);
 
-        fluxServer.enqueue(createResponse());
+        mockServer.enqueue(createResponse());
 
         List<FluxRecord> records = new ArrayList<>();
         fluxClient.query("from(bucket:\"telegraf\")", (cancellable, result) -> {
@@ -122,7 +122,7 @@ class FluxClientQueryTest extends AbstractFluxClientTest {
 
         countDownLatch = new CountDownLatch(5);
 
-        fluxServer.enqueue(createResponse());
+        mockServer.enqueue(createResponse());
 
         List<FluxRecord> records = new ArrayList<>();
         fluxClient.query("from(bucket:\"telegraf\")", (cancellable, result) -> {
@@ -139,7 +139,7 @@ class FluxClientQueryTest extends AbstractFluxClientTest {
     @Test
     void queryCallbackError() {
 
-        fluxServer.enqueue(createErrorResponse("Flux query is not valid", true));
+        mockServer.enqueue(createErrorResponse("Flux query is not valid", true));
 
         fluxClient.query("from(bucket:\"telegraf\")", (cancellable, result) -> {
 

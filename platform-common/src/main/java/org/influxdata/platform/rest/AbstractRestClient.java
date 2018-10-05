@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.error.InfluxException;
@@ -121,10 +122,31 @@ public abstract class AbstractRestClient {
         //
         // Socket closed by remote server or end of data
         //
-        if ("Socket closed".equals(exception.getMessage()) || exception instanceof EOFException) {
+        if (isCloseException(exception)) {
             LOG.log(Level.FINEST, "Socket closed by remote server or end of data", exception);
         } else {
             onError.accept(exception);
         }
+    }
+
+    protected boolean isCloseException(@Nonnull final Exception exception) {
+
+        Arguments.checkNotNull(exception, "exception");
+
+        return "Socket closed".equals(exception.getMessage()) || exception instanceof EOFException;
+    }
+
+    @Nonnull
+    protected RequestBody createBody(@Nullable final String dialect, @Nonnull final String query) {
+
+        Arguments.checkNonEmpty(query, "Flux query");
+        JSONObject json = new JSONObject()
+                .put("query", query);
+
+        if (dialect != null) {
+            json.put("dialect", new JSONObject(dialect));
+        }
+
+        return createBody(json);
     }
 }

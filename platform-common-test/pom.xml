@@ -33,35 +33,50 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>flux-client-rxjava</artifactId>
+    <artifactId>platform-common-test</artifactId>
     <packaging>jar</packaging>
 
-    <name>The Flux client - RxJava</name>
-    <description>The client that allow perform Flux Query against the InfluxDB by a reactive way.</description>
+    <name>The Platform Commons Test</name>
+    <description>The Platform commons test - mocking InfluxDB, mocking Influx Platform, mocking HTTP responses
+    </description>
 
     <dependencies>
 
         <dependency>
-            <groupId>org.influxdata</groupId>
-            <artifactId>flux-client</artifactId>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>mockwebserver</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.influxdata</groupId>
-            <artifactId>platform-common-test</artifactId>
-            <scope>test</scope>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>io.reactivex.rxjava2</groupId>
-            <artifactId>rxjava</artifactId>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>adapter-rxjava2</artifactId>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
         </dependency>
 
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>${plugin.plugin.version}</version>
+                <configuration>
+                    <generateReports>false</generateReports>
+                    <skip>true</skip>
+                    <skipDeploy>true</skipDeploy>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
 </project>

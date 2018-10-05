@@ -33,6 +33,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>platform-common-test</module>
         <module>platform-common</module>
         <module>flux-client</module>
         <module>flux-client-rxjava</module>
@@ -108,6 +109,7 @@
         <plugin.javadoc.version>3.0.1</plugin.javadoc.version>
         <plugin.checkstyle.version>3.0.0</plugin.checkstyle.version>
         <plugin.jacoco.version>0.8.1</plugin.jacoco.version>
+        <plugin.plugin.version>3.7.1</plugin.plugin.version>
     </properties>
 
     <dependencies>
@@ -269,7 +271,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.7.1</version>
+                <version>${plugin.plugin.version}</version>
                 <configuration>
                     <siteDirectory>config/site/</siteDirectory>
                 </configuration>
@@ -350,6 +352,13 @@
 
             <dependency>
                 <groupId>org.influxdata</groupId>
+                <artifactId>platform-common-test</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.influxdata</groupId>
                 <artifactId>platform-common</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
@@ -418,28 +427,24 @@
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
                 <version>5.2.0</version>
-                <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-runner</artifactId>
                 <version>1.2.0</version>
-                <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>3.10.0</version>
-                <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>mockwebserver</artifactId>
                 <version>3.10.0</version>
-                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

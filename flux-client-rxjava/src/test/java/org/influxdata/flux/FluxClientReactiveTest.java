@@ -21,47 +21,28 @@
  */
 package org.influxdata.flux;
 
-import java.io.IOException;
-
-import org.influxdata.platform.error.InfluxException;
-
-import okhttp3.mockwebserver.MockResponse;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 /**
- * @author Jakub Bednar (bednar@github) (03/10/2018 15:08)
+ * @author Jakub Bednar (bednar@github) (26/06/2018 13:13)
  */
 @RunWith(JUnitPlatform.class)
-class FluxClientVersionTest extends AbstractFluxClientTest {
+class FluxClientReactiveTest extends AbstractFluxClientReactiveTest {
 
     @Test
-    void version() {
+    void logLevel() {
 
-        MockResponse response = new MockResponse()
-                .setResponseCode(204)
-                .setHeader("X-Influxdb-Version", "1.7.0");
-        mockServer.enqueue(response);
+        // default NONE
+        Assertions.assertThat(this.fluxClient.getLogLevel()).isEqualTo(HttpLoggingInterceptor.Level.NONE);
 
-        Assertions.assertThat(fluxClient.version()).isEqualTo("1.7.0");
-    }
+        // set HEADERS
+        FluxClientReactive fluxClient = this.fluxClient.setLogLevel(HttpLoggingInterceptor.Level.HEADERS);
+        Assertions.assertThat(fluxClient).isEqualTo(this.fluxClient);
 
-    @Test
-    void versionUnknown() {
-
-        MockResponse response = new MockResponse()
-                .setResponseCode(204);
-        mockServer.enqueue(response);
-
-        Assertions.assertThat(fluxClient.version()).isEqualTo("unknown");
-    }
-
-    @Test
-    void error() throws IOException {
-        mockServer.shutdown();
-
-        Assertions.assertThatThrownBy(() -> fluxClient.version()).isInstanceOf(InfluxException.class);
+        Assertions.assertThat(this.fluxClient.getLogLevel()).isEqualTo(HttpLoggingInterceptor.Level.HEADERS);
     }
 }

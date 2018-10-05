@@ -21,7 +21,6 @@
  */
 package org.influxdata.flux.option;
 
-import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
@@ -42,7 +41,8 @@ public final class FluxConnectionOptions {
     private OkHttpClient.Builder okHttpClient;
 
     private FluxConnectionOptions(@Nonnull final Builder builder) {
-        Objects.requireNonNull(builder, "FluxConnectionOptions.Builder is required");
+
+        Arguments.checkNotNull(builder, "FluxConnectionOptions.Builder");
 
         url = builder.url;
         okHttpClient = builder.okHttpClient;
@@ -113,7 +113,7 @@ public final class FluxConnectionOptions {
          */
         @Nonnull
         public Builder okHttpClient(@Nonnull final OkHttpClient.Builder okHttpClient) {
-            Objects.requireNonNull(okHttpClient, "OkHttpClient.Builder is required");
+            Arguments.checkNotNull(okHttpClient, "OkHttpClient.Builder");
             this.okHttpClient = okHttpClient;
             return this;
         }

@@ -49,18 +49,20 @@ import org.junit.runner.RunWith;
 class ITFluxClient extends AbstractITFluxClient {
 
     private static final Logger LOG = Logger.getLogger(ITFluxClient.class.getName());
-    private static final String FROM_FLUX_DATABASE = String.format("from(bucket:\"%s\")", AbstractITFluxClient.DATABASE_NAME);
+
+    private static final String FROM_FLUX_DATABASE = String
+            .format("from(bucket:\"%s\")", AbstractITFluxClient.DATABASE_NAME);
 
     @BeforeEach
     void prepareDate() {
 
-        influxDBWrite("mem,host=A,region=west free=10i 10000000000");
-        influxDBWrite("mem,host=A,region=west free=11i 20000000000");
-        influxDBWrite("mem,host=B,region=west free=20i 10000000000");
-        influxDBWrite("mem,host=B,region=west free=22i 20000000000");
-        influxDBWrite("cpu,host=A,region=west usage_system=35i,user_usage=45i 10000000000");
-        influxDBWrite("cpu,host=A,region=west usage_system=38i,user_usage=49i 20000000000");
-        influxDBWrite("cpu,host=A,hyper-threading=true,region=west usage_system=38i,user_usage=49i 20000000000");
+        influxDBWrite("mem,host=A,region=west free=10i 10000000000", DATABASE_NAME);
+        influxDBWrite("mem,host=A,region=west free=11i 20000000000", DATABASE_NAME);
+        influxDBWrite("mem,host=B,region=west free=20i 10000000000", DATABASE_NAME);
+        influxDBWrite("mem,host=B,region=west free=22i 20000000000", DATABASE_NAME);
+        influxDBWrite("cpu,host=A,region=west usage_system=35i,user_usage=45i 10000000000", DATABASE_NAME);
+        influxDBWrite("cpu,host=A,region=west usage_system=38i,user_usage=49i 20000000000", DATABASE_NAME);
+        influxDBWrite("cpu,host=A,hyper-threading=true,region=west usage_system=38i,user_usage=49i 20000000000", DATABASE_NAME);
     }
 
     @Test
@@ -231,6 +233,11 @@ class ITFluxClient extends AbstractITFluxClient {
         Assertions.assertThat(fluxClient.ping()).isTrue();
     }
 
+    @Test
+    void version() {
+        Assertions.assertThat(fluxClient.version()).isNotBlank();
+    }
+
     private void assertFluxResult(@Nonnull final List<FluxTable> tables) {
 
         Assertions.assertThat(tables).isNotNull();
@@ -325,7 +332,7 @@ class ITFluxClient extends AbstractITFluxClient {
             points.add(format);
 
             if (i % 100_000 == 0) {
-                influxDBWrite(points.stream().collect(Collectors.joining("\n")));
+                influxDBWrite(points.stream().collect(Collectors.joining("\n")), DATABASE_NAME);
             }
         });
     }

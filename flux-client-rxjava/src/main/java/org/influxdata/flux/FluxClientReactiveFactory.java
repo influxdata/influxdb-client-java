@@ -23,29 +23,31 @@ package org.influxdata.flux;
 
 import javax.annotation.Nonnull;
 
-import org.influxdata.flux.impl.FluxClientImpl;
+import org.influxdata.flux.impl.FluxClientReactiveImpl;
 import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
 
 /**
- * The Factory that create a instance of a Flux client.
+ * The Factory that create a reactive instance of a Flux client.
  *
- * @author Jakub Bednar (bednar@github) (31/07/2018 13:11)
+ * @author Jakub Bednar (bednar@github) (26/06/2018 11:13)
  */
-public final class FluxClientFactory {
+public final class FluxClientReactiveFactory {
 
-    private FluxClientFactory() {
+    private FluxClientReactiveFactory() {
     }
 
     /**
-     * Create a instance of the Flux client.
+     * Create a instance of the Flux reactive client.
      *
      * @param url the url to connect to InfluxDB.
      * @return client
      * @see FluxConnectionOptions.Builder#url(String)
      */
     @Nonnull
-    public static FluxClient connect(@Nonnull final String url) {
+    public static FluxClientReactive connect(@Nonnull final String url) {
+
+        Arguments.checkNonEmpty(url, "InfluxDB url");
 
         FluxConnectionOptions options = FluxConnectionOptions.builder()
                 .url(url)
@@ -55,16 +57,16 @@ public final class FluxClientFactory {
     }
 
     /**
-     * Create a instance of the Flux client.
+     * Create a instance of the Flux reactive client.
      *
      * @param options the connection configuration
      * @return client
      */
     @Nonnull
-    public static FluxClient connect(@Nonnull final FluxConnectionOptions options) {
+    public static FluxClientReactive connect(@Nonnull final FluxConnectionOptions options) {
 
         Arguments.checkNotNull(options, "FluxConnectionOptions");
 
-        return new FluxClientImpl(options);
+        return new FluxClientReactiveImpl(options);
     }
 }

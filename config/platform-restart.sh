@@ -36,7 +36,9 @@ INFLUX_PLATFORM_IMAGE=${DOCKER_REGISTRY}influx:${INFLUX_PLATFORM_VERSION}
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-echo "Restarting InfluxDB [${INFLUXDB_IMAGE}]..."
+echo
+echo "Restarting InfluxDB [${INFLUXDB_IMAGE}] ..."
+echo
 
 #
 # InfluxDB
@@ -59,8 +61,9 @@ sleep 5
 #
 # InfluxData Platform
 #
-
-echo "Restarting InfluxData Platform..."
+echo
+echo "Restarting InfluxData Platform [${INFLUX_PLATFORM_IMAGE}] ... "
+echo
 
 docker kill influxdata-platform || true
 docker rm influxdata-platform || true

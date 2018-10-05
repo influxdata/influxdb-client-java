@@ -23,8 +23,6 @@ package org.influxdata.flux;
 
 import java.io.IOException;
 
-import org.influxdata.platform.error.InfluxException;
-
 import okhttp3.mockwebserver.MockResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,36 +30,60 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 /**
- * @author Jakub Bednar (bednar@github) (03/10/2018 15:08)
+ * @author Jakub Bednar (bednar@github) (26/07/2018 09:52)
  */
 @RunWith(JUnitPlatform.class)
-class FluxClientVersionTest extends AbstractFluxClientTest {
+class FluxClientReactivePingTest extends AbstractFluxClientReactiveTest {
 
     @Test
-    void version() {
+    void serverError() {
 
-        MockResponse response = new MockResponse()
-                .setResponseCode(204)
-                .setHeader("X-Influxdb-Version", "1.7.0");
-        mockServer.enqueue(response);
+        mockServer.enqueue(createErrorResponse(""));
 
-        Assertions.assertThat(fluxClient.version()).isEqualTo("1.7.0");
+        fluxClient
+                .ping()
+                .test()
+                .assertValueCount(1)
+                .assertValue(running -> {
+
+                    Assertions.assertThat(running).isFalse();
+
+                    return true;
+                });
+
     }
 
     @Test
-    void versionUnknown() {
+    void healthy() {
 
-        MockResponse response = new MockResponse()
-                .setResponseCode(204);
-        mockServer.enqueue(response);
+        mockServer.enqueue(new MockResponse().setResponseCode(204));
 
-        Assertions.assertThat(fluxClient.version()).isEqualTo("unknown");
+        fluxClient
+                .ping()
+                .test()
+                .assertValueCount(1)
+                .assertValue(running -> {
+
+                    Assertions.assertThat(running).isTrue();
+
+                    return true;
+                });
     }
 
     @Test
-    void error() throws IOException {
+    void notRunningServer() throws IOException {
+
         mockServer.shutdown();
 
-        Assertions.assertThatThrownBy(() -> fluxClient.version()).isInstanceOf(InfluxException.class);
+        fluxClient
+                .ping()
+                .test()
+                .assertValueCount(1)
+                .assertValue(running -> {
+
+                    Assertions.assertThat(running).isFalse();
+
+                    return true;
+                });
     }
 }

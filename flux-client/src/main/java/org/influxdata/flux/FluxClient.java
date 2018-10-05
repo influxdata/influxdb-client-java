@@ -102,7 +102,7 @@ public interface FluxClient {
      *
      * @param query   the flux query to execute
      * @param dialect Dialect is an object defining the options to use when encoding the response.
-     *                <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#dialect-options">See</a>
+     *                <a href="https://bit.ly/2PbCM8G">See dialect SPEC.</a>.
      * @return the raw response that matched the query
      */
     @Nonnull
@@ -125,7 +125,7 @@ public interface FluxClient {
      *
      * @param query      the flux query to execute
      * @param dialect    Dialect is an object defining the options to use when encoding the response.
-     *                   <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#dialect-options">See</a>
+     *                   <a href="https://bit.ly/2PbCM8G">See dialect SPEC.</a>.
      * @param onResponse callback to consume the raw response which are matched the query.
      *                   The callback call contains the one line of the response.
      */
@@ -152,7 +152,7 @@ public interface FluxClient {
      *
      * @param query      the flux query to execute
      * @param dialect    Dialect is an object defining the options to use when encoding the response.
-     *                   <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#dialect-options">See</a>
+     *                   <a href="https://bit.ly/2PbCM8G">See dialect SPEC.</a>.
      * @param onResponse callback to consume the raw response which are matched the query.
      *                   The callback call contains the one line of the response.
      * @param onError    callback to consume any error notification
@@ -184,7 +184,7 @@ public interface FluxClient {
      *
      * @param query      the flux query to execute
      * @param dialect    Dialect is an object defining the options to use when encoding the response.
-     *                   <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#dialect-options">See</a>
+     *                   <a href="https://bit.ly/2PbCM8G">See dialect SPEC.</a>.
      * @param onResponse callback to consume the raw response which are matched the query.
      *                   The callback call contains the one line of the response.
      * @param onError    callback to consume any error notification

@@ -32,11 +32,18 @@
         <links>
             <item name="${project.name}" href="./" />
         </links>
-        <menu name="Overview" inherit="top">
+        <menu name="Overview" inheritAsRef="true">
             <item name="Structure" href="structure.html" />
+            <item name="Flux DSL" href="./flux-dsl/index.html" />
+            <item name="Platform Commons" href="./platform-common/index.html" />
+        </menu>
+        <menu name="Clients" inheritAsRef="true">
+            <item name="Flux client" href="./flux-client/index.html" />
+            <item name="Flux client - RxJava" href="./flux-client-rxjava/index.html" />
+            <item name="Platform Client" href="./platform-client/index.html" />
+            <item name="Platform Client - RxJava" href="./platform-client-rxjava/index.html" />
         </menu>
         <menu ref="parent" inherit="top" />
-        <menu ref="modules" inherit="bottom" />
         <menu ref="reports" inherit="top" />
     </body>
 

@@ -23,16 +23,10 @@ package org.influxdata.flux;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 
 import org.influxdata.flux.option.FluxConnectionOptions;
+import org.influxdata.platform.AbstractTest;
 
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -46,71 +40,26 @@ public abstract class AbstractITFluxClient extends AbstractTest {
     static final String DATABASE_NAME = "flux_database";
 
     FluxClient fluxClient;
-    private String influxURL;
 
     @BeforeEach
     protected void setUp() {
 
-        String fluxIP = System.getenv().getOrDefault("FLUX_IP", "127.0.0.1");
-        String fluxPort = System.getenv().getOrDefault("FLUX_PORT_API", "8086");
-        String fluxURL = "http://" + fluxIP + ":" + fluxPort;
-        LOG.log(Level.FINEST, "Flux URL: {0}", fluxURL);
+        String influxURL = getInfluxDbURL();
+        
+        LOG.log(Level.FINEST, "Influx URL: {0}", influxURL);
 
         FluxConnectionOptions options = FluxConnectionOptions.builder()
-                .url(fluxURL)
+                .url(influxURL)
                 .build();
 
         fluxClient = FluxClientFactory.connect(options);
 
-        String influxdbIP = System.getenv().getOrDefault("INFLUXDB_IP", "127.0.0.1");
-        String influxdbPort = System.getenv().getOrDefault("INFLUXDB_PORT_API", "8086");
-        influxURL = "http://" + influxdbIP + ":" + influxdbPort;
-        LOG.log(Level.FINEST, "Influx URL: {0}", influxURL);
-
-        influxDBQuery("CREATE DATABASE " + DATABASE_NAME);
+        influxDBQuery("CREATE DATABASE " + DATABASE_NAME, DATABASE_NAME);
     }
 
     @AfterEach
     protected void after() {
 
-        influxDBQuery("DROP DATABASE " + DATABASE_NAME);
-    }
-
-    void influxDBWrite(@Nonnull final String lineProtocol) {
-
-        Request request = new Request.Builder()
-                .url(influxURL + "/write?db=" + DATABASE_NAME )
-                .addHeader("accept", "application/json")
-                .post(RequestBody.create(MediaType.parse("text/plain"), lineProtocol))
-                .build();
-
-        influxDBRequest(request);
-    }
-
-    private void influxDBQuery(@Nonnull final String query) {
-
-        Request request = new Request.Builder()
-                .url(influxURL + "/query?db=" + DATABASE_NAME + ";q=" + query)
-                .addHeader("accept", "application/json")
-                .get()
-                .build();
-
-        influxDBRequest(request);
-    }
-
-    private void influxDBRequest(@Nonnull final Request request) {
-
-        Assertions.assertThat(request).isNotNull();
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
-        Response response;
-        try {
-            response = okHttpClient.newCall(request).execute();
-            Assertions.assertThat(response.isSuccessful()).isTrue();
-
-            Thread.sleep(100);
-        } catch (Exception e) {
-            Assertions.fail("Unexpected exception", e);
-        }
+        influxDBQuery("DROP DATABASE " + DATABASE_NAME, DATABASE_NAME);
     }
 }

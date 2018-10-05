@@ -34,11 +34,12 @@ class FluxClientTest extends AbstractFluxClientTest {
     void logLevel() {
 
         // default NONE
-        Assertions.assertThat(fluxClient.getLogLevel()).isEqualTo(HttpLoggingInterceptor.Level.NONE);
+        Assertions.assertThat(this.fluxClient.getLogLevel()).isEqualTo(HttpLoggingInterceptor.Level.NONE);
 
         // set HEADERS
-        fluxClient.setLogLevel(HttpLoggingInterceptor.Level.HEADERS);
+        FluxClient fluxClient = this.fluxClient.setLogLevel(HttpLoggingInterceptor.Level.HEADERS);
+        Assertions.assertThat(fluxClient).isEqualTo(this.fluxClient);
 
-        Assertions.assertThat(fluxClient.getLogLevel()).isEqualTo(HttpLoggingInterceptor.Level.HEADERS);
+        Assertions.assertThat(this.fluxClient.getLogLevel()).isEqualTo(HttpLoggingInterceptor.Level.HEADERS);
     }
 }

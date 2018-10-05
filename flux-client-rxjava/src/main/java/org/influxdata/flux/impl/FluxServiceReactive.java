@@ -19,52 +19,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.flux;
+package org.influxdata.flux.impl;
 
 import javax.annotation.Nonnull;
 
-import org.influxdata.flux.impl.FluxClientImpl;
-import org.influxdata.flux.option.FluxConnectionOptions;
-import org.influxdata.platform.Arguments;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
+import retrofit2.http.Streaming;
 
 /**
- * The Factory that create a instance of a Flux client.
- *
- * @author Jakub Bednar (bednar@github) (31/07/2018 13:11)
+ * @author Jakub Bednar (bednar@github) (26/06/2018 12:33)
  */
-public final class FluxClientFactory {
+interface FluxServiceReactive {
 
-    private FluxClientFactory() {
-    }
-
-    /**
-     * Create a instance of the Flux client.
-     *
-     * @param url the url to connect to InfluxDB.
-     * @return client
-     * @see FluxConnectionOptions.Builder#url(String)
-     */
     @Nonnull
-    public static FluxClient connect(@Nonnull final String url) {
+    @Streaming
+    @POST("/v2/query")
+    @Headers("Content-Type: application/json")
+    Observable<ResponseBody> query(@Nonnull @Body final RequestBody query);
 
-        FluxConnectionOptions options = FluxConnectionOptions.builder()
-                .url(url)
-                .build();
-
-        return connect(options);
-    }
-
-    /**
-     * Create a instance of the Flux client.
-     *
-     * @param options the connection configuration
-     * @return client
-     */
     @Nonnull
-    public static FluxClient connect(@Nonnull final FluxConnectionOptions options) {
+    @Streaming
+    @POST("/v2/query")
+    @Headers("Content-Type: application/json")
+    Observable<Response<ResponseBody>> queryRaw(@Nonnull @Body final RequestBody query);
 
-        Arguments.checkNotNull(options, "FluxConnectionOptions");
-
-        return new FluxClientImpl(options);
-    }
+    @GET("/ping")
+    Single<Response<ResponseBody>> ping();
 }
