@@ -20,29 +20,36 @@
 # THE SOFTWARE.
 #
 
+language: java
+
+jdk: oraclejdk8
+
 sudo: required
 
 cache:
   timeout: 10000
   directories:
-  - ${PWD}/.m2
+  - $HOME/.m2
 
 services:
   - docker
 
 env:
-  - MAVEN_JAVA_VERSION=3-jdk-10-slim INFLUXDB_VERSION=nightly INFLUX_PLATFORM_VERSION=nightly
-  - MAVEN_JAVA_VERSION=3-jdk-8-slim INFLUXDB_VERSION=nightly INFLUX_PLATFORM_VERSION=nightly CODE_COV=true
+  - INFLUXDB_VERSION=nightly INFLUX_PLATFORM_VERSION=nightly CODE_COV=true SNAPSHOT=Y
 
-script: ./config/compile-and-test.sh
+script:
+  - "mvn clean compile"
+  - "./config/platform-restart.sh"
+  - "mvn clean install"
 
-jobs:
-  include:
-  - stage: deploy
-    script:
-      - docker run -it --rm --volume ${PWD}:/usr/src/mymaven --volume ${PWD}/.m2:/root/.m2 --workdir /usr/src/mymaven maven:${MAVEN_JAVA_VERSION} mvn clean deploy -DskipTests -s config/deploy-settings.xml -U -Denv.BONITOO_SNAPSHOT_USER=${BONITOO_SNAPSHOT_USER} -Denv.BONITOO_SNAPSHOT_PASSWORD=${BONITOO_SNAPSHOT_PASSWORD}
-      - ./config/publish-site.sh
-    env: MAVEN_JAVA_VERSION=3-jdk-8-slim
+deploy:
+  provider: script
+  script: "mvn clean deploy -DskipTests -s config/deploy-settings.xml -U && ./config/publish-site.sh"
+  skip_cleanup: true
+  on:
+    repo: bonitoo-io/influxdata-platform-java
+    condition: $SNAPSHOT == "Y"
+    branch: travis-java
 
 after_success:
   - test "true" = ${CODE_COV:=false} && bash <(curl -s https://codecov.io/bash)
