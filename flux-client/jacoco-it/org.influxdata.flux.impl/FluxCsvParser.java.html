@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FluxCsvParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Flux client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.flux.impl</a> &gt; <span class="el_source">FluxCsvParser.java</span></div><h1>FluxCsvParser.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.flux.impl;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.flux.domain.FluxColumn;
+import org.influxdata.flux.domain.FluxRecord;
+import org.influxdata.flux.domain.FluxTable;
+import org.influxdata.flux.error.FluxCsvParserException;
+import org.influxdata.flux.error.FluxQueryException;
+import org.influxdata.platform.Arguments;
+import org.influxdata.platform.rest.Cancellable;
+
+import okio.BufferedSource;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+
+/**
+ * This class us used to construct FluxResult from CSV.
+ *
+ * @see org.influxdata.flux
+ */
+<span class="fc" id="L56">class FluxCsvParser {</span>
+
+    private static final int FRACTION_MIN_WIDTH = 0;
+    private static final int FRACTION_MAX_WIDTH = 9;
+    private static final boolean ADD_DECIMAL_POINT = true;
+
+<span class="fc" id="L62">    private static final DateTimeFormatter RFC3339_FORMATTER = new DateTimeFormatterBuilder()</span>
+<span class="fc" id="L63">            .append(DateTimeFormatter.ISO_INSTANT)</span>
+<span class="fc" id="L64">            .appendPattern(&quot;[.SSSSSSSSS][.SSSSSS][.SSS][.]&quot;)</span>
+<span class="fc" id="L65">            .appendOffset(&quot;+HH:mm&quot;, &quot;Z&quot;)</span>
+<span class="fc" id="L66">            .toFormatter();</span>
+
+<span class="fc" id="L68">    private static final DateTimeFormatter RFC3339_NANO_FORMATTER = new DateTimeFormatterBuilder()</span>
+<span class="fc" id="L69">            .appendPattern(&quot;yyyy-MM-dd'T'HH:mm:ss&quot;)</span>
+<span class="fc" id="L70">            .appendFraction(ChronoField.NANO_OF_SECOND, FRACTION_MIN_WIDTH, FRACTION_MAX_WIDTH, ADD_DECIMAL_POINT)</span>
+<span class="fc" id="L71">            .appendPattern(&quot;X&quot;)</span>
+<span class="fc" id="L72">            .toFormatter();</span>
+
+    private static final int ERROR_RECORD_INDEX = 4;
+
+<span class="fc" id="L76">    private enum ParsingState {</span>
+<span class="fc" id="L77">        NORMAL,</span>
+
+<span class="fc" id="L79">        IN_ERROR</span>
+    }
+
+    interface FluxResponseConsumer {
+
+        /**
+         * Add new {@link FluxTable} to consumer.
+         *
+         * @param index       index of table
+         * @param cancellable cancellable
+         * @param table       new {@link FluxTable}
+         */
+        void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxTable table);
+
+        /**
+         * Add new {@link FluxRecord} to consumer.
+         *
+         * @param index       index of table
+         * @param cancellable cancellable
+         * @param record      new {@link FluxRecord}
+         */
+
+        void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxRecord record);
+    }
+
+    /**
+     * Asynchronously parse Flux CSV response to {@link FluxResponseConsumer}.
+     *
+     * @param bufferedSource with data
+     * @param cancellable    to cancel parsing
+     * @param consumer       to accept {@link FluxTable}s and {@link FluxRecord}s
+     * @throws IOException If there is a problem with reading CSV
+     */
+    void parseFluxResponse(@Nonnull final BufferedSource bufferedSource,
+                           @Nonnull final Cancellable cancellable,
+                           @Nonnull final FluxResponseConsumer consumer) throws IOException {
+
+<span class="fc" id="L116">        Arguments.checkNotNull(bufferedSource, &quot;bufferedSource&quot;);</span>
+
+<span class="fc" id="L118">        Reader reader = new InputStreamReader(bufferedSource.inputStream());</span>
+
+<span class="fc" id="L120">        parseFluxResponse(reader, cancellable, consumer);</span>
+<span class="fc" id="L121">    }</span>
+
+    /**
+     * Asynchronously parse Flux CSV response to {@link FluxResponseConsumer}.
+     *
+     * @param reader      with data
+     * @param cancellable to cancel parsing
+     * @param consumer    to accept {@link FluxTable}s and {@link FluxRecord}s
+     * @throws IOException If there is a problem with reading CSV
+     */
+    void parseFluxResponse(@Nonnull final Reader reader,
+                           @Nonnull final Cancellable cancellable,
+                           @Nonnull final FluxResponseConsumer consumer) throws IOException {
+
+<span class="fc" id="L135">        Arguments.checkNotNull(reader, &quot;reader&quot;);</span>
+<span class="fc" id="L136">        Arguments.checkNotNull(cancellable, &quot;cancellable&quot;);</span>
+<span class="fc" id="L137">        Arguments.checkNotNull(consumer, &quot;consumer&quot;);</span>
+
+<span class="fc" id="L139">        ParsingState parsingState = ParsingState.NORMAL;</span>
+
+<span class="fc" id="L141">        final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);</span>
+
+<span class="fc" id="L143">        int tableIndex = 0;</span>
+<span class="fc" id="L144">        boolean startNewTable = false;</span>
+<span class="fc" id="L145">        FluxTable table = null;</span>
+
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        for (CSVRecord csvRecord : parser) {</span>
+
+<span class="fc bfc" id="L149" title="All 2 branches covered.">            if (cancellable.isCancelled()) {</span>
+<span class="fc" id="L150">                return;</span>
+            }
+
+<span class="fc" id="L153">            long recordNumber = csvRecord.getRecordNumber();</span>
+
+            //
+            // Response has HTTP status ok, but response is error.
+            //
+<span class="fc bfc" id="L158" title="All 4 branches covered.">            if (ERROR_RECORD_INDEX == recordNumber &amp;&amp; csvRecord.get(1).equals(&quot;error&quot;)</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">                    &amp;&amp; csvRecord.get(2).equals(&quot;reference&quot;)) {</span>
+
+<span class="fc" id="L161">                parsingState = ParsingState.IN_ERROR;</span>
+<span class="fc" id="L162">                continue;</span>
+            }
+
+            //
+            // Throw InfluxException with error response
+            //
+<span class="fc bfc" id="L168" title="All 2 branches covered.">            if (ParsingState.IN_ERROR.equals(parsingState)) {</span>
+<span class="fc" id="L169">                String error = csvRecord.get(1);</span>
+<span class="fc" id="L170">                String referenceValue = csvRecord.get(2);</span>
+
+<span class="fc" id="L172">                int reference = 0;</span>
+<span class="pc bpc" id="L173" title="2 of 4 branches missed.">                if (referenceValue != null &amp;&amp; !referenceValue.isEmpty()) {</span>
+<span class="nc" id="L174">                    reference = Integer.valueOf(referenceValue);</span>
+                }
+
+<span class="fc" id="L177">                throw new FluxQueryException(error, reference);</span>
+            }
+
+<span class="fc" id="L180">            String token = csvRecord.get(0);</span>
+            //// start new table
+<span class="fc bfc" id="L182" title="All 2 branches covered.">            if (&quot;#datatype&quot;.equals(token)) {</span>
+<span class="fc" id="L183">                startNewTable = true;</span>
+
+<span class="fc" id="L185">                table = new FluxTable();</span>
+<span class="fc" id="L186">                consumer.accept(tableIndex, cancellable, table);</span>
+<span class="fc" id="L187">                tableIndex++;</span>
+
+<span class="pc bpc" id="L189" title="1 of 2 branches missed.">            } else if (table == null) {</span>
+<span class="nc" id="L190">                String message = &quot;Unable to parse CSV response. FluxTable definition was not found. Record: %d&quot;;</span>
+
+<span class="nc" id="L192">                throw new FluxCsvParserException(String.format(message, recordNumber));</span>
+            }
+
+            //#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string
+<span class="fc bfc" id="L196" title="All 2 branches covered.">            if (&quot;#datatype&quot;.equals(token)) {</span>
+<span class="fc" id="L197">                addDataTypes(table, toList(csvRecord));</span>
+
+<span class="fc bfc" id="L199" title="All 2 branches covered.">            } else if (&quot;#group&quot;.equals(token)) {</span>
+<span class="fc" id="L200">                addGroups(table, toList(csvRecord));</span>
+
+<span class="fc bfc" id="L202" title="All 2 branches covered.">            } else if (&quot;#default&quot;.equals(token)) {</span>
+<span class="fc" id="L203">                addDefaultEmptyValues(table, toList(csvRecord));</span>
+
+            } else {
+                // parse column names
+<span class="fc bfc" id="L207" title="All 2 branches covered.">                if (startNewTable) {</span>
+<span class="fc" id="L208">                    addColumnNamesAndTags(table, toList(csvRecord));</span>
+<span class="fc" id="L209">                    startNewTable = false;</span>
+<span class="fc" id="L210">                    continue;</span>
+                }
+
+<span class="fc" id="L213">                int currentIndex = Integer.parseInt(csvRecord.get(1 + 1));</span>
+
+<span class="fc bfc" id="L215" title="All 2 branches covered.">                if (currentIndex &gt; (tableIndex - 1)) {</span>
+                    //create new table with previous column headers settings
+<span class="fc" id="L217">                    List&lt;FluxColumn&gt; fluxColumns = table.getColumns();</span>
+<span class="fc" id="L218">                    table = new FluxTable();</span>
+<span class="fc" id="L219">                    table.getColumns().addAll(fluxColumns);</span>
+<span class="fc" id="L220">                    consumer.accept(tableIndex, cancellable, table);</span>
+<span class="fc" id="L221">                    tableIndex++;</span>
+                }
+
+<span class="fc" id="L224">                FluxRecord fluxRecord = parseRecord(tableIndex - 1, table, csvRecord);</span>
+<span class="fc" id="L225">                consumer.accept(tableIndex - 1, cancellable, fluxRecord);</span>
+            }
+<span class="fc" id="L227">        }</span>
+<span class="fc" id="L228">    }</span>
+
+    private FluxRecord parseRecord(final int tableIndex, final FluxTable table, final CSVRecord csvRecord) {
+
+<span class="fc" id="L232">        FluxRecord record = new FluxRecord(tableIndex);</span>
+
+<span class="fc bfc" id="L234" title="All 2 branches covered.">        for (FluxColumn fluxColumn : table.getColumns()) {</span>
+
+<span class="fc" id="L236">            String columnName = fluxColumn.getLabel();</span>
+
+<span class="fc" id="L238">            String strValue = csvRecord.get(fluxColumn.getIndex() + 1);</span>
+
+<span class="fc" id="L240">            record.getValues().put(columnName, toValue(strValue, fluxColumn));</span>
+<span class="fc" id="L241">        }</span>
+<span class="fc" id="L242">        return record;</span>
+    }
+
+    @Nonnull
+    private List&lt;String&gt; toList(final CSVRecord csvRecord) {
+<span class="fc" id="L247">        List&lt;String&gt; ret = new ArrayList&lt;&gt;(csvRecord.size());</span>
+<span class="fc" id="L248">        int size = csvRecord.size();</span>
+
+<span class="fc bfc" id="L250" title="All 2 branches covered.">        for (int i = 1; i &lt; size; i++) {</span>
+<span class="fc" id="L251">            String rec = csvRecord.get(i);</span>
+<span class="fc" id="L252">            ret.add(rec);</span>
+        }
+<span class="fc" id="L254">        return ret;</span>
+    }
+
+    @Nullable
+    private Object toValue(@Nullable final String strValue, final @Nonnull FluxColumn column) {
+
+<span class="fc" id="L260">        Arguments.checkNotNull(column, &quot;column&quot;);</span>
+
+        // Default value
+<span class="pc bpc" id="L263" title="1 of 4 branches missed.">        if (strValue == null || strValue.isEmpty()) {</span>
+<span class="fc" id="L264">            String defaultValue = column.getDefaultValue();</span>
+<span class="pc bpc" id="L265" title="2 of 4 branches missed.">            if (defaultValue == null || defaultValue.isEmpty()) {</span>
+<span class="nc" id="L266">                return null;</span>
+            }
+
+<span class="fc" id="L269">            return toValue(defaultValue, column);</span>
+        }
+
+<span class="fc" id="L272">        String dataType = column.getDataType();</span>
+<span class="pc bpc" id="L273" title="6 of 9 branches missed.">        switch (dataType) {</span>
+            case &quot;boolean&quot;:
+<span class="nc" id="L275">                return Boolean.valueOf(strValue);</span>
+            case &quot;unsignedLong&quot;:
+<span class="nc" id="L277">                return Long.parseUnsignedLong(strValue);</span>
+            case &quot;long&quot;:
+<span class="fc" id="L279">                return Long.parseLong(strValue);</span>
+            case &quot;double&quot;:
+<span class="nc" id="L281">                return Double.parseDouble(strValue);</span>
+            case &quot;base64Binary&quot;:
+<span class="nc" id="L283">                return Base64.getDecoder().decode(strValue);</span>
+            case &quot;dateTime:RFC3339&quot;:
+<span class="fc" id="L285">                return RFC3339_NANO_FORMATTER.parse(strValue, Instant::from);</span>
+            case &quot;dateTime:RFC3339Nano&quot;:
+<span class="nc" id="L287">                return RFC3339_FORMATTER.parse(strValue, Instant::from);</span>
+            case &quot;duration&quot;:
+<span class="nc" id="L289">                return Duration.ofNanos(Long.parseUnsignedLong(strValue));</span>
+            default:
+            case &quot;string&quot;:
+<span class="fc" id="L292">                return strValue;</span>
+        }
+    }
+
+    private void addDataTypes(@Nonnull final FluxTable table,
+                              @Nonnull final List&lt;String&gt; dataTypes) {
+
+<span class="fc" id="L299">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
+<span class="fc" id="L300">        Arguments.checkNotNull(dataTypes, &quot;dataTypes&quot;);</span>
+
+<span class="fc bfc" id="L302" title="All 2 branches covered.">        for (int index = 0; index &lt; dataTypes.size(); index++) {</span>
+<span class="fc" id="L303">            String dataType = dataTypes.get(index);</span>
+
+<span class="fc" id="L305">            FluxColumn columnDef = new FluxColumn();</span>
+<span class="fc" id="L306">            columnDef.setDataType(dataType);</span>
+<span class="fc" id="L307">            columnDef.setIndex(index);</span>
+
+<span class="fc" id="L309">            table.getColumns().add(columnDef);</span>
+        }
+<span class="fc" id="L311">    }</span>
+
+    private void addGroups(@Nonnull final FluxTable table, @Nonnull final List&lt;String&gt; groups) {
+
+<span class="fc" id="L315">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
+<span class="fc" id="L316">        Arguments.checkNotNull(groups, &quot;groups&quot;);</span>
+
+<span class="fc bfc" id="L318" title="All 2 branches covered.">        for (int i = 0; i &lt; groups.size(); i++) {</span>
+
+<span class="fc" id="L320">            FluxColumn fluxColumn = getFluxColumn(i, table);</span>
+
+<span class="fc" id="L322">            String group = groups.get(i);</span>
+<span class="fc" id="L323">            fluxColumn.setGroup(Boolean.valueOf(group));</span>
+        }
+<span class="fc" id="L325">    }</span>
+
+    private void addDefaultEmptyValues(@Nonnull final FluxTable table, @Nonnull final List&lt;String&gt; defaultEmptyValues) {
+
+<span class="fc" id="L329">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
+<span class="fc" id="L330">        Arguments.checkNotNull(defaultEmptyValues, &quot;defaultEmptyValues&quot;);</span>
+
+<span class="fc bfc" id="L332" title="All 2 branches covered.">        for (int i = 0; i &lt; defaultEmptyValues.size(); i++) {</span>
+
+<span class="fc" id="L334">            FluxColumn fluxColumn = getFluxColumn(i, table);</span>
+
+<span class="fc" id="L336">            String defaultValue = defaultEmptyValues.get(i);</span>
+<span class="fc" id="L337">            fluxColumn.setDefaultValue(defaultValue);</span>
+        }
+
+<span class="fc" id="L340">    }</span>
+
+    private void addColumnNamesAndTags(@Nonnull final FluxTable table, @Nonnull final List&lt;String&gt; columnNames) {
+
+<span class="fc" id="L344">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
+<span class="fc" id="L345">        Arguments.checkNotNull(columnNames, &quot;columnNames&quot;);</span>
+
+<span class="fc" id="L347">        int size = columnNames.size();</span>
+
+<span class="fc bfc" id="L349" title="All 2 branches covered.">        for (int i = 0; i &lt; size; i++) {</span>
+
+<span class="fc" id="L351">            FluxColumn fluxColumn = getFluxColumn(i, table);</span>
+
+<span class="fc" id="L353">            String columnName = columnNames.get(i);</span>
+<span class="fc" id="L354">            fluxColumn.setLabel(columnName);</span>
+        }
+<span class="fc" id="L356">    }</span>
+
+    @Nonnull
+    private FluxColumn getFluxColumn(final int columnIndex, final @Nonnull FluxTable table) {
+
+<span class="fc" id="L361">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
+
+<span class="fc" id="L363">        return table.getColumns().get(columnIndex);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

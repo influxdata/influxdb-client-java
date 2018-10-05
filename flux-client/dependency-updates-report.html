@@ -37,6 +37,8 @@
         <div id="leftColumn" class="span2">
           <div class="well sidebar-nav">
     <ul class="nav nav-list">
+      <li class="nav-header">Overview</li>
+    <li><a href="../structure.html" title="Structure"><span class="none"></span>Structure</a></li>
       <li class="nav-header">Parent Project</li>
     <li><a href="../index.html" title="Java client for InfluxData Platform"><span class="none"></span>Java client for InfluxData Platform</a></li>
       <li class="nav-header">Project Documentation</li>
@@ -44,6 +46,7 @@
     <li><a href="project-reports.html" title="Project Reports"><span class="icon-chevron-down"></span>Project Reports</a>
     <ul class="nav nav-list">
     <li><a href="apidocs/index.html" title="Javadoc"><span class="none"></span>Javadoc</a></li>
+    <li><a href="failsafe-report.html" title="Failsafe Report"><span class="none"></span>Failsafe Report</a></li>
     <li><a href="surefire-report.html" title="Surefire Report"><span class="none"></span>Surefire Report</a></li>
     <li><a href="checkstyle.html" title="Checkstyle"><span class="none"></span>Checkstyle</a></li>
     <li><a href="jacoco/index.html" title="JaCoCo"><span class="none"></span>JaCoCo</a></li>
@@ -70,7 +73,7 @@
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td># of dependencies using the latest version available</td>
-<td>10</td></tr>
+<td>9</td></tr>
 <tr class="b">
 <td><img src="images/icon_warning_sml.gif" alt="" /></td>
 <td># of dependencies where the next version available is smaller than an incremental version update</td>
@@ -131,7 +134,7 @@
 <td>com.squareup.okhttp3</td>
 <td>mockwebserver</td>
 <td>3.10.0</td>
-<td></td>
+<td>test</td>
 <td></td>
 <td>jar</td>
 <td></td>
@@ -203,7 +206,7 @@
 <td>org.assertj</td>
 <td>assertj-core</td>
 <td>3.10.0</td>
-<td></td>
+<td>test</td>
 <td></td>
 <td>jar</td>
 <td></td>
@@ -236,18 +239,6 @@
 <td></td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>org.influxdata</td>
-<td>platform-common-test</td>
-<td>1.0-SNAPSHOT</td>
-<td>test</td>
-<td></td>
-<td>jar</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>org.json</td>
 <td>json</td>
 <td>20180813</td>
@@ -258,31 +249,31 @@
 <td></td>
 <td></td>
 <td></td></tr>
-<tr class="b">
+<tr class="a">
 <td><img src="images/icon_warning_sml.gif" alt="" /></td>
 <td>org.junit.jupiter</td>
 <td>junit-jupiter-engine</td>
 <td>5.2.0</td>
-<td></td>
+<td>test</td>
 <td></td>
 <td>jar</td>
 <td></td>
 <td><b>5.3.0-M1</b></td>
 <td><b>5.3.0</b></td>
 <td></td></tr>
-<tr class="a">
+<tr class="b">
 <td><img src="images/icon_warning_sml.gif" alt="" /></td>
 <td>org.junit.platform</td>
 <td>junit-platform-runner</td>
 <td>1.2.0</td>
-<td></td>
+<td>test</td>
 <td></td>
 <td>jar</td>
 <td></td>
 <td><b>1.3.0-M1</b></td>
 <td><b>1.3.0</b></td>
 <td></td></tr>
-<tr class="b">
+<tr class="a">
 <th>Status</th>
 <th>Group Id</th>
 <th>Artifact Id</th>
@@ -303,25 +294,25 @@
 <div class="section">
 <h3><a name="com.google.code.findbugs:jsr305"></a>com.google.code.findbugs:jsr305</h3>
 <table border="0" class="table table-striped">
-<tr class="a">
+<tr class="b">
 <th width="80%">Status</th>
 <td><img src="images/icon_success_sml.gif" alt="" />&#160;No newer versions available.</td></tr>
-<tr class="b">
+<tr class="a">
 <th width="80%">Group Id</th>
 <td>com.google.code.findbugs</td></tr>
-<tr class="a">
+<tr class="b">
 <th width="80%">Artifact Id</th>
 <td>jsr305</td></tr>
-<tr class="b">
+<tr class="a">
 <th width="80%">Current Version</th>
 <td>3.0.2</td></tr>
-<tr class="a">
+<tr class="b">
 <th width="80%">Scope</th>
 <td></td></tr>
-<tr class="b">
+<tr class="a">
 <th width="80%">Classifier</th>
 <td></td></tr>
-<tr class="a">
+<tr class="b">
 <th width="80%">Type</th>
 <td>jar</td></tr></table></div>
 <div class="section">
@@ -368,7 +359,7 @@
 <td>3.10.0</td></tr>
 <tr class="a">
 <th width="80%">Scope</th>
-<td></td></tr>
+<td>test</td></tr>
 <tr class="b">
 <th width="80%">Classifier</th>
 <td></td></tr>
@@ -515,7 +506,7 @@
 <td>3.10.0</td></tr>
 <tr class="a">
 <th width="80%">Scope</th>
-<td></td></tr>
+<td>test</td></tr>
 <tr class="b">
 <th width="80%">Classifier</th>
 <td></td></tr>
@@ -574,30 +565,6 @@
 <th width="80%">Type</th>
 <td>jar</td></tr></table></div>
 <div class="section">
-<h3><a name="org.influxdata:platform-common-test"></a>org.influxdata:platform-common-test</h3>
-<table border="0" class="table table-striped">
-<tr class="a">
-<th width="80%">Status</th>
-<td><img src="images/icon_success_sml.gif" alt="" />&#160;No newer versions available.</td></tr>
-<tr class="b">
-<th width="80%">Group Id</th>
-<td>org.influxdata</td></tr>
-<tr class="a">
-<th width="80%">Artifact Id</th>
-<td>platform-common-test</td></tr>
-<tr class="b">
-<th width="80%">Current Version</th>
-<td>1.0-SNAPSHOT</td></tr>
-<tr class="a">
-<th width="80%">Scope</th>
-<td>test</td></tr>
-<tr class="b">
-<th width="80%">Classifier</th>
-<td></td></tr>
-<tr class="a">
-<th width="80%">Type</th>
-<td>jar</td></tr></table></div>
-<div class="section">
 <h3><a name="org.json:json"></a>org.json:json</h3>
 <table border="0" class="table table-striped">
 <tr class="a">
@@ -638,7 +605,7 @@
 <td>5.2.0</td></tr>
 <tr class="a">
 <th width="80%">Scope</th>
-<td></td></tr>
+<td>test</td></tr>
 <tr class="b">
 <th width="80%">Classifier</th>
 <td></td></tr>
@@ -665,7 +632,7 @@
 <td>1.2.0</td></tr>
 <tr class="a">
 <th width="80%">Scope</th>
-<td></td></tr>
+<td>test</td></tr>
 <tr class="b">
 <th width="80%">Classifier</th>
 <td></td></tr>

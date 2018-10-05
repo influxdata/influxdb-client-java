@@ -14,4 +14,4 @@ The Platform Commons,org.influxdata.platform.error.rest,MethodNotAllowedExceptio
 The Platform Commons,org.influxdata.platform.error.rest,ProxyAuthenticationRequiredException,0,4,0,0,0,2,0,1,0,1
 The Platform Commons,org.influxdata.platform.error.rest,ForbiddenException,0,4,0,0,0,2,0,1,0,1
 The Platform Commons,org.influxdata.platform,Arguments,16,139,1,27,1,20,1,22,0,9
-The Platform Commons,org.influxdata.platform.rest,AbstractRestClient,25,140,2,20,6,32,2,23,1,7
+The Platform Commons,org.influxdata.platform.rest,AbstractRestClient,0,129,0,18,0,30,0,21,0,6

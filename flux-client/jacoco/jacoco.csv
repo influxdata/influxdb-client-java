@@ -2,16 +2,15 @@ GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_
 The Flux client,org.influxdata.flux.domain,FluxColumn,0,110,0,0,0,23,0,12,0,12
 The Flux client,org.influxdata.flux.domain,FluxRecord,25,77,0,0,5,15,5,7,5,7
 The Flux client,org.influxdata.flux.domain,FluxTable,0,66,0,0,0,10,0,5,0,5
-The Flux client,org.influxdata.flux.impl,FluxClientImpl,14,396,0,2,6,102,0,27,0,26
+The Flux client,org.influxdata.flux.impl,FluxClientImpl,40,467,1,9,13,126,2,29,1,25
 The Flux client,org.influxdata.flux.impl,FluxCsvParser.ParsingState,0,24,0,0,0,3,0,1,0,1
 The Flux client,org.influxdata.flux.impl,FluxClientImpl.DefaultCancellable,4,12,0,0,2,3,1,2,1,2
-The Flux client,org.influxdata.flux.impl,AbstractFluxClient,5,116,2,6,1,37,2,8,0,6
-The Flux client,org.influxdata.flux.impl,FluxCsvParser,1,481,5,53,1,118,5,38,0,11
+The Flux client,org.influxdata.flux.impl,FluxCsvParser,16,510,6,53,3,128,6,39,0,12
 The Flux client,org.influxdata.flux.impl,FluxResponseConsumerTable,0,27,0,0,0,7,0,4,0,4
 The Flux client,org.influxdata.flux.impl,FluxClientImpl.new Callback() {...},7,68,3,7,2,16,3,5,0,3
 The Flux client,org.influxdata.flux.impl,FluxClientImpl.new FluxCsvParser.FluxResponseConsumer() {...},0,16,0,0,0,4,0,3,0,3
-The Flux client,org.influxdata.flux.error,FluxCsvParserException,0,4,0,0,0,2,0,1,0,1
+The Flux client,org.influxdata.flux.error,FluxCsvParserException,4,0,0,0,2,0,1,0,1,0
 The Flux client,org.influxdata.flux.error,FluxQueryException,0,10,0,0,0,4,0,2,0,2
-The Flux client,org.influxdata.flux.option,FluxConnectionOptions.Builder,0,39,0,2,0,11,0,5,0,4
-The Flux client,org.influxdata.flux.option,FluxConnectionOptions,0,24,0,0,0,8,0,4,0,4
-The Flux client,org.influxdata.flux,FluxClientFactory,0,16,0,0,0,6,0,2,0,2
+The Flux client,org.influxdata.flux.option,FluxConnectionOptions.Builder,0,40,0,2,0,11,0,5,0,4
+The Flux client,org.influxdata.flux.option,FluxConnectionOptions,0,25,0,0,0,8,0,4,0,4
+The Flux client,org.influxdata.flux,FluxClientFactory,0,17,0,0,0,6,0,2,0,2
