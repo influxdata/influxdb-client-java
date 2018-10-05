@@ -30,10 +30,11 @@ echo ${TRAVIS_BRANCH}
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-if [ "$TRAVIS_REPO_SLUG" == "bonitoo-io/influxdata-platform-java" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then
+if [ "$TRAVIS_REPO_SLUG" == "bonitoo-io/influxdata-platform-java" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "travis-java" ]; then
 
     # Generate Site
-    docker run -it --rm --volume ${SCRIPT_PATH}/../:/usr/src/mymaven --volume ${SCRIPT_PATH}/../.m2:/root/.m2 --workdir /usr/src/mymaven maven:${MAVEN_JAVA_VERSION} mvn site site:stage
+    cd ${SCRIPT_PATH}/..
+    mvn site site:stage
     cp -R ${SCRIPT_PATH}/../target/staging ${HOME}/site
 
     # Clone GitHub pages
@@ -52,4 +53,6 @@ if [ "$TRAVIS_REPO_SLUG" == "bonitoo-io/influxdata-platform-java" ] && [ "$TRAVI
     git commit -m "Pushed the latest Maven site to GitHub pages"
     git push -fq origin gh-pages > /dev/null
 
+else
+    echo "Skip publishing site..."
 fi

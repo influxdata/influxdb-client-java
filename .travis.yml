@@ -37,14 +37,20 @@ services:
 env:
   - INFLUXDB_VERSION=nightly INFLUX_PLATFORM_VERSION=nightly CODE_COV=true SNAPSHOT=Y
 
-script:
-  - "mvn clean compile"
-  - "./config/platform-restart.sh"
-  - "mvn clean install"
+jobs:
+  include:
+  - stage: compile
+    script:
+    - "mvn -U clean compile"
+  - stage: test
+    script:
+      - "./config/platform-restart.sh"
+      - "mvn clean install"
+      - "./config/publish-site.sh"
 
 deploy:
   provider: script
-  script: "mvn clean deploy -DskipTests -s config/deploy-settings.xml -U && ./config/publish-site.sh"
+  script: "mvn clean deploy -DskipTests -s config/deploy-settings.xml"
   skip_cleanup: true
   on:
     repo: bonitoo-io/influxdata-platform-java
