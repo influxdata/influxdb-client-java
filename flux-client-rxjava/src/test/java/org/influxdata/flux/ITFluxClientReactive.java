@@ -28,7 +28,6 @@ import org.influxdata.flux.domain.FluxRecord;
 import io.reactivex.Flowable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -50,7 +49,6 @@ class ITFluxClientReactive extends AbstractITFluxClientReactive {
         influxDBWrite("mem,host=B,region=west free=22i 20000000000", DATABASE_NAME);
         influxDBWrite("cpu,host=A,region=west usage_system=35i,user_usage=45i 10000000000", DATABASE_NAME);
         influxDBWrite("cpu,host=A,region=west usage_system=38i,user_usage=49i 20000000000", DATABASE_NAME);
-        influxDBWrite("cpu,host=A,hyper-threading=true,region=west usage_system=38i,user_usage=49i 20000000000", DATABASE_NAME);
     }
 
     @Test
@@ -104,13 +102,12 @@ class ITFluxClientReactive extends AbstractITFluxClientReactive {
     }
 
     @Test
-    @Disabled
     void oneToManyTable() {
 
         String flux = FROM_FLUX_DATABASE + "\n"
-                + "\t|> filter(fn: (r) => r[\"_measurement\"] == \"chunked\")\n"
                 + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
-                + "\t|> window(every: 10m)";
+                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" AND r[\"_field\"] == \"free\"))\n"
+                + "\t|> window(every: 10s)";
 
         Flowable<FluxRecord> results = fluxClient.query(flux);
 
