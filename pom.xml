@@ -108,7 +108,7 @@
         <plugin.surefire.version>2.22.0</plugin.surefire.version>
         <plugin.javadoc.version>3.0.1</plugin.javadoc.version>
         <plugin.checkstyle.version>3.0.0</plugin.checkstyle.version>
-        <plugin.jacoco.version>0.8.1</plugin.jacoco.version>
+        <plugin.jacoco.version>0.8.2</plugin.jacoco.version>
         <plugin.plugin.version>3.7.1</plugin.plugin.version>
     </properties>
 
