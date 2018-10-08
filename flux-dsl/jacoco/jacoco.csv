@@ -1,7 +1,6 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 The Flux DSL,org.influxdata.flux.functions.properties,OperatorProperties,10,217,4,22,4,56,4,24,0,15
 The Flux DSL,org.influxdata.flux.functions.properties,OperatorProperties.NamedProperty,0,37,0,2,0,9,0,3,0,2
-The Flux DSL,org.influxdata.flux.functions.properties,TimeInterval.new Object() {...},11,71,0,0,0,1,0,1,0,1
 The Flux DSL,org.influxdata.flux.functions.properties,OperatorProperties.StringProperty,2,24,1,1,1,5,1,2,0,2
 The Flux DSL,org.influxdata.flux.functions.properties,TimeInterval,15,68,5,7,10,24,5,8,0,2
 The Flux DSL,org.influxdata.flux.functions,ToStringFlux,0,6,0,0,0,3,0,2,0,2
@@ -22,7 +21,7 @@ The Flux DSL,org.influxdata.flux.functions,MinFlux,0,14,0,0,0,5,0,3,0,3
 The Flux DSL,org.influxdata.flux.functions,YieldFlux,0,17,0,0,0,6,0,3,0,3
 The Flux DSL,org.influxdata.flux.functions,MapFlux,0,19,0,0,0,7,0,4,0,4
 The Flux DSL,org.influxdata.flux.functions,SumFlux,0,14,0,0,0,5,0,3,0,3
-The Flux DSL,org.influxdata.flux.functions,DropFlux,0,60,1,5,0,15,1,8,0,6
+The Flux DSL,org.influxdata.flux.functions,DropFlux,0,53,0,2,0,15,0,7,0,6
 The Flux DSL,org.influxdata.flux.functions,MaxFlux,0,14,0,0,0,5,0,3,0,3
 The Flux DSL,org.influxdata.flux.functions,SetFlux,0,26,0,0,0,8,0,3,0,3
 The Flux DSL,org.influxdata.flux.functions,LimitFlux,0,18,0,0,0,6,0,3,0,3
@@ -43,9 +42,9 @@ The Flux DSL,org.influxdata.flux.functions,IntegralFlux,0,33,0,0,0,10,0,4,0,4
 The Flux DSL,org.influxdata.flux.functions,SpreadFlux,0,14,0,0,0,5,0,3,0,3
 The Flux DSL,org.influxdata.flux.functions,ExpressionFlux,0,24,0,0,0,8,0,2,0,2
 The Flux DSL,org.influxdata.flux.functions,ToDurationFlux,0,6,0,0,0,3,0,2,0,2
-The Flux DSL,org.influxdata.flux.functions,KeepFlux,0,60,1,5,0,15,1,8,0,6
-The Flux DSL,org.influxdata.flux.functions,RenameFlux,0,49,1,5,0,12,1,7,0,5
-The Flux DSL,org.influxdata.flux.functions,JoinFlux,175,0,6,0,33,0,16,0,13,0
+The Flux DSL,org.influxdata.flux.functions,KeepFlux,0,53,0,2,0,15,0,7,0,6
+The Flux DSL,org.influxdata.flux.functions,RenameFlux,0,42,0,2,0,12,0,6,0,5
+The Flux DSL,org.influxdata.flux.functions,JoinFlux,168,0,2,0,33,0,14,0,13,0
 The Flux DSL,org.influxdata.flux.functions.restriction,ColumnRestriction.OperatorRestrictions,0,55,0,2,0,9,0,3,0,2
 The Flux DSL,org.influxdata.flux.functions.restriction,Restrictions.Logical,0,31,0,0,0,7,0,2,0,2
 The Flux DSL,org.influxdata.flux.functions.restriction,ColumnRestriction,15,35,0,0,3,8,3,5,3,5
