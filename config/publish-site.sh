@@ -41,7 +41,7 @@ if [ "$TRAVIS_REPO_SLUG" == "bonitoo-io/influxdata-platform-java" ] && [ "$TRAVI
     cd ${HOME}
     git config --global user.email "travis@travis-ci.org"
     git config --global user.name "travis-ci"
-    git clone --quiet --branch=gh-pages https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG} ${HOME}/gh-pages > /dev/null
+    git clone --branch=gh-pages https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG} ${HOME}/gh-pages > /dev/null
 
     # Push Site
     rm -rf ${HOME}/gh-pages/*
