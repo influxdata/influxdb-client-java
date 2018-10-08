@@ -49,12 +49,17 @@ jobs:
       - mvn -B clean install
       - test "true" = ${CODE_COV:=false} && bash <(curl -s https://codecov.io/bash)
 
+  - stage: site
+    jdk: oraclejdk8
+    script:
+      - test "true" = ${CODE_COV:=false} && ./config/publish-site.sh
+
   - stage: deploy
     jdk: oraclejdk8
     script: skip
     deploy:
       provider: script
-      script: bash config/deploy.sh
+      script: mvn clean deploy -DskipTests -s config/deploy-settings.xml
       skip_cleanup: true
       on:
         repo: bonitoo-io/influxdata-platform-java
