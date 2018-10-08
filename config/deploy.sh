@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 #
 # The MIT License
 #
@@ -22,6 +22,10 @@
 #
 
 set -e
+
+SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd ${SCRIPT_PATH}/..
+
 
 ## deploy artifacts to maven repository
 mvn clean deploy -DskipTests -s config/deploy-settings.xml
