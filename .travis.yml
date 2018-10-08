@@ -23,7 +23,8 @@
 language: java
 
 jdk:
-  - oraclejdk8
+  - openjdk8
+  - oraclejdk10
 
 sudo: required
 
@@ -36,7 +37,7 @@ services:
   - docker
 
 env:
-  - INFLUXDB_VERSION=nightly INFLUX_PLATFORM_VERSION=nightly CODE_COV=true SNAPSHOT=Y
+  - INFLUXDB_VERSION=nightly INFLUX_PLATFORM_VERSION=nightly CODE_COV=true
 
 jobs:
   include:
@@ -45,22 +46,19 @@ jobs:
     script:
       - ./config/platform-restart.sh
       - mvn -B clean install
-      - bash <(curl -s https://codecov.io/bash)
-
-  - stage: publish-site
-    jdk: oraclejdk8
-    script: ./config/publish-site.sh
+      - test "true" = ${CODE_COV:=false} && bash <(curl -s https://codecov.io/bash)
 
   - stage: deploy
-    jdk: oraclejdk8
+    jdk: openjdk8
     script: skip
     deploy:
       provider: script
-      script: mvn clean deploy -DskipTests -s config/deploy-settings.xml
+      script:
+        - mvn clean deploy -DskipTests -s config/deploy-settings.xml
+        - ./config/publish-site.sh
       skip_cleanup: true
       on:
         repo: bonitoo-io/influxdata-platform-java
-        condition: $SNAPSHOT == "Y"
         branch: travis-java
 
 after_failure:
