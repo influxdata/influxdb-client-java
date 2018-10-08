@@ -38,6 +38,8 @@ services:
 env:
   - INFLUXDB_VERSION=nightly INFLUX_PLATFORM_VERSION=nightly CODE_COV=true
 
+install: skip
+
 jobs:
   include:
 
