@@ -24,6 +24,7 @@ language: java
 
 jdk:
   - oraclejdk8
+  - oraclejdk10
 
 sudo: required
 
@@ -63,7 +64,7 @@ jobs:
       skip_cleanup: true
       on:
         repo: bonitoo-io/influxdata-platform-java
-        branch: travis-java
+        branch: master
 
 after_failure:
   - cat target/surefire-reports/*.txt
