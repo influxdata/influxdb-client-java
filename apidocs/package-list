@@ -1,9 +1,6 @@
 org.influxdata.flux
 org.influxdata.flux.domain
 org.influxdata.flux.error
-org.influxdata.flux.functions
-org.influxdata.flux.functions.properties
-org.influxdata.flux.functions.restriction
 org.influxdata.flux.impl
 org.influxdata.flux.option
 org.influxdata.platform

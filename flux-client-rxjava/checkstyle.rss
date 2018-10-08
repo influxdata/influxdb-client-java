@@ -19,13 +19,13 @@ under the License.
 -->
 <rss version="0.91">
   <channel>
-    <title>The Flux client - RxJava - Checkstyle report</title>
+    <title>The Flux client - RxJava (reactive) - Checkstyle report</title>
     <link>https://github.com/influxdata/platform-java/flux-client-rxjava</link>
-    <description>The Flux client - RxJava - Checkstyle report</description>
+    <description>The Flux client - RxJava (reactive) - Checkstyle report</description>
     <language>en-us</language>
     <copyright>&#169;2018 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 0,
+      <title>File: 1,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -44,6 +44,20 @@ under the License.
             </tr>
           </thead>
           <tbody>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/flux-client-rxjava/checkstyle.html#org.influxdata.flux.FluxClientReactive.java">org/influxdata/flux/FluxClientReactive.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
                       </tbody>
         </table>
         
