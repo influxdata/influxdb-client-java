@@ -21,11 +21,11 @@
  */
 package org.influxdata.flux;
 
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.impl.FluxClientImpl;
 import org.influxdata.flux.option.FluxConnectionOptions;
+import org.influxdata.platform.Arguments;
 
 /**
  * The Factory that create a instance of a Flux client.
@@ -40,7 +40,7 @@ public final class FluxClientFactory {
     /**
      * Create a instance of the Flux client.
      *
-     * @param url   the url to connect to Flux.
+     * @param url the url to connect to InfluxDB.
      * @return client
      * @see FluxConnectionOptions.Builder#url(String)
      */
@@ -63,7 +63,7 @@ public final class FluxClientFactory {
     @Nonnull
     public static FluxClient connect(@Nonnull final FluxConnectionOptions options) {
 
-<span class="fc" id="L66">        Objects.requireNonNull(options, &quot;FluxConnectionOptions are required&quot;);</span>
+<span class="fc" id="L66">        Arguments.checkNotNull(options, &quot;FluxConnectionOptions&quot;);</span>
 
 <span class="fc" id="L68">        return new FluxClientImpl(options);</span>
     }

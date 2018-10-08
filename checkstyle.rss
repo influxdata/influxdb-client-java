@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 30,
+      <title>File: 82,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -44,6 +44,34 @@ under the License.
             </tr>
           </thead>
           <tbody>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.DistinctFlux.java">org/influxdata/flux/functions/DistinctFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.AbstractMockServerTest.java">org/influxdata/platform/AbstractMockServerTest.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.error.rest.PaymentRequiredException.java">org/influxdata/platform/error/rest/PaymentRequiredException.java</a>
@@ -74,20 +102,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.impl.FluxCsvParser.java">org/influxdata/flux/impl/FluxCsvParser.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.impl.FluxClientImpl.java">org/influxdata/flux/impl/FluxClientImpl.java</a>
                 </td>
                 <td>
@@ -102,49 +116,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.impl.FluxResponseConsumerTable.java">org/influxdata/flux/impl/FluxResponseConsumerTable.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.error.rest.BadRequestException.java">org/influxdata/platform/error/rest/BadRequestException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.error.rest.ProxyAuthenticationRequiredException.java">org/influxdata/platform/error/rest/ProxyAuthenticationRequiredException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.error.rest.MethodNotAllowedException.java">org/influxdata/platform/error/rest/MethodNotAllowedException.java</a>
                 </td>
                 <td>
                   0
@@ -214,7 +186,63 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.FluxClient.java">org/influxdata/flux/FluxClient.java</a>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.DifferenceFlux.java">org/influxdata/flux/functions/DifferenceFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.RenameFlux.java">org/influxdata/flux/functions/RenameFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.AbstractParametrizedFlux.java">org/influxdata/flux/functions/AbstractParametrizedFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.ToTimeFlux.java">org/influxdata/flux/functions/ToTimeFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.SortFlux.java">org/influxdata/flux/functions/SortFlux.java</a>
                 </td>
                 <td>
                   0
@@ -242,7 +270,595 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.ToFloatFlux.java">org/influxdata/flux/functions/ToFloatFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.FluxClientReactiveFactory.java">org/influxdata/flux/FluxClientReactiveFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.CovarianceFlux.java">org/influxdata/flux/functions/CovarianceFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.JoinFlux.java">org/influxdata/flux/functions/JoinFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.MaxFlux.java">org/influxdata/flux/functions/MaxFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.error.rest.UnauthorizedException.java">org/influxdata/platform/error/rest/UnauthorizedException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.KeepFlux.java">org/influxdata/flux/functions/KeepFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.YieldFlux.java">org/influxdata/flux/functions/YieldFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.ExpressionFlux.java">org/influxdata/flux/functions/ExpressionFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.ShiftFlux.java">org/influxdata/flux/functions/ShiftFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.error.FluxQueryException.java">org/influxdata/flux/error/FluxQueryException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.impl.FluxService.java">org/influxdata/flux/impl/FluxService.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.properties.TimeInterval.java">org/influxdata/flux/functions/properties/TimeInterval.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.LastFlux.java">org/influxdata/flux/functions/LastFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.error.rest.RequestTimeoutException.java">org/influxdata/platform/error/rest/RequestTimeoutException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.domain.FluxRecord.java">org/influxdata/flux/domain/FluxRecord.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.impl.FluxClientReactiveImpl.java">org/influxdata/flux/impl/FluxClientReactiveImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.WindowFlux.java">org/influxdata/flux/functions/WindowFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.SpreadFlux.java">org/influxdata/flux/functions/SpreadFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.impl.FluxCsvParser.java">org/influxdata/flux/impl/FluxCsvParser.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.ToUIntFlux.java">org/influxdata/flux/functions/ToUIntFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.AbstractTest.java">org/influxdata/platform/AbstractTest.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.impl.FluxResponseConsumerTable.java">org/influxdata/flux/impl/FluxResponseConsumerTable.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.FromFlux.java">org/influxdata/flux/functions/FromFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.error.rest.BadRequestException.java">org/influxdata/platform/error/rest/BadRequestException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.error.rest.MethodNotAllowedException.java">org/influxdata/platform/error/rest/MethodNotAllowedException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.restriction.Restrictions.java">org/influxdata/flux/functions/restriction/Restrictions.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.properties.OperatorProperties.java">org/influxdata/flux/functions/properties/OperatorProperties.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.MeanFlux.java">org/influxdata/flux/functions/MeanFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.SkewFlux.java">org/influxdata/flux/functions/SkewFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.impl.AbstractFluxClient.java">org/influxdata/flux/impl/AbstractFluxClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.FluxClient.java">org/influxdata/flux/FluxClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.ToStringFlux.java">org/influxdata/flux/functions/ToStringFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.FilterFlux.java">org/influxdata/flux/functions/FilterFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.SumFlux.java">org/influxdata/flux/functions/SumFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.SampleFlux.java">org/influxdata/flux/functions/SampleFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.AbstractFluxWithUpstream.java">org/influxdata/flux/functions/AbstractFluxWithUpstream.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.StddevFlux.java">org/influxdata/flux/functions/StddevFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.SetFlux.java">org/influxdata/flux/functions/SetFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.MinFlux.java">org/influxdata/flux/functions/MinFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.ToBoolFlux.java">org/influxdata/flux/functions/ToBoolFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.Arguments.java">org/influxdata/platform/Arguments.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.DerivativeFlux.java">org/influxdata/flux/functions/DerivativeFlux.java</a>
                 </td>
                 <td>
                   0
@@ -298,6 +914,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.FirstFlux.java">org/influxdata/flux/functions/FirstFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.error.rest.NotFoundException.java">org/influxdata/platform/error/rest/NotFoundException.java</a>
                 </td>
                 <td>
@@ -312,7 +942,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.error.rest.UnauthorizedException.java">org/influxdata/platform/error/rest/UnauthorizedException.java</a>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.ToDurationFlux.java">org/influxdata/flux/functions/ToDurationFlux.java</a>
                 </td>
                 <td>
                   0
@@ -354,6 +984,62 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.ToIntFlux.java">org/influxdata/flux/functions/ToIntFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.impl.FluxServiceReactive.java">org/influxdata/flux/impl/FluxServiceReactive.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.DropFlux.java">org/influxdata/flux/functions/DropFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.restriction.ColumnRestriction.java">org/influxdata/flux/functions/restriction/ColumnRestriction.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.option.FluxConnectionOptions.java">org/influxdata/flux/option/FluxConnectionOptions.java</a>
                 </td>
                 <td>
@@ -382,6 +1068,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.MapFlux.java">org/influxdata/flux/functions/MapFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.error.rest.InternalServerErrorException.java">org/influxdata/platform/error/rest/InternalServerErrorException.java</a>
                 </td>
                 <td>
@@ -396,7 +1096,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.error.FluxQueryException.java">org/influxdata/flux/error/FluxQueryException.java</a>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.Flux.java">org/influxdata/flux/Flux.java</a>
                 </td>
                 <td>
                   0
@@ -410,7 +1110,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.impl.FluxService.java">org/influxdata/flux/impl/FluxService.java</a>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.LimitFlux.java">org/influxdata/flux/functions/LimitFlux.java</a>
                 </td>
                 <td>
                   0
@@ -424,7 +1124,21 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.error.rest.RequestTimeoutException.java">org/influxdata/platform/error/rest/RequestTimeoutException.java</a>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.RangeFlux.java">org/influxdata/flux/functions/RangeFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.GroupFlux.java">org/influxdata/flux/functions/GroupFlux.java</a>
                 </td>
                 <td>
                   0
@@ -452,7 +1166,21 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.domain.FluxRecord.java">org/influxdata/flux/domain/FluxRecord.java</a>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.IntegralFlux.java">org/influxdata/flux/functions/IntegralFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.CountFlux.java">org/influxdata/flux/functions/CountFlux.java</a>
                 </td>
                 <td>
                   0

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JoinFlux.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Flux DSL</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.flux.functions</a> &gt; <span class="el_source">JoinFlux.java</span></div><h1>JoinFlux.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.flux.functions;
+
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
+import java.util.function.Supplier;
+import javax.annotation.Nonnull;
+
+import org.influxdata.flux.Flux;
+import org.influxdata.platform.Arguments;
+
+/**
+ * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#join&quot;&gt;join&lt;/a&gt; -
+ * Join two time series together on time and the list of &lt;i&gt;on&lt;/i&gt; keys.
+ *
+ * &lt;h3&gt;Options&lt;/h3&gt;
+ * &lt;ul&gt;
+ * &lt;li&gt;&lt;b&gt;tables&lt;/b&gt; - Map of tables to join. Currently only two tables are allowed. [map of tables]&lt;/li&gt;
+ * &lt;li&gt;&lt;b&gt;on&lt;/b&gt; - List of tag keys that when equal produces a result set. [array of strings]&lt;/li&gt;
+ * &lt;li&gt;
+ * &lt;b&gt;method&lt;/b&gt; - An optional parameter that specifies the type of join to be performed. &lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * &lt;h3&gt;Example&lt;/h3&gt;
+ * &lt;pre&gt;
+ * Flux cpu = Flux.from(&quot;telegraf&quot;)
+ *     .filter(Restrictions.and(Restrictions.measurement().equal(&quot;cpu&quot;), Restrictions.field().equal(&quot;usage_user&quot;)))
+ *     .range(-30L, ChronoUnit.MINUTES);
+ *
+ * Flux mem = Flux.from(&quot;telegraf&quot;)
+ *     .filter(Restrictions.and(Restrictions.measurement().equal(&quot;mem&quot;), Restrictions.field().equal(&quot;used_percent&quot;)))
+ *     .range(-30L, ChronoUnit.MINUTES);
+ *
+ * Flux flux = Flux.join()
+ *     .withTable(&quot;cpu&quot;, cpu)
+ *     .withTable(&quot;mem&quot;, mem)
+ *     .withOn(&quot;host&quot;)
+ *     .withMethod(&quot;outer&quot;);
+ * &lt;/pre&gt;
+ *
+ * @author Jakub Bednar (bednar@github) (17/07/2018 14:47)
+ * @since 1.0.0
+ */
+public final class JoinFlux extends AbstractParametrizedFlux {
+
+<span class="nc" id="L69">    private Map&lt;String, Flux&gt; tables = new LinkedHashMap&lt;&gt;();</span>
+
+    public JoinFlux() {
+<span class="nc" id="L72">        super();</span>
+
+        // add tables: property
+<span class="nc" id="L75">        withPropertyValue(&quot;tables&quot;, (Supplier&lt;String&gt;) () -&gt; {</span>
+
+<span class="nc" id="L77">            StringJoiner tablesValue = new StringJoiner(&quot;, &quot;, &quot;{&quot;, &quot;}&quot;);</span>
+
+<span class="nc" id="L79">            tables.keySet().forEach(key -&gt; tablesValue.add(String.format(&quot;%s:%s&quot;, key, key)));</span>
+<span class="nc" id="L80">            return tablesValue.toString();</span>
+        });
+<span class="nc" id="L82">    }</span>
+
+<span class="nc" id="L84">    public enum MethodType {</span>
+
+        /**
+         * inner join.
+         */
+<span class="nc" id="L89">        INNER,</span>
+
+        /**
+         * cross product.
+         */
+<span class="nc" id="L94">        CROSS,</span>
+
+        /**
+         * left outer join.
+         */
+<span class="nc" id="L99">        LEFT,</span>
+
+        /**
+         * right outer join.
+         */
+<span class="nc" id="L104">        RIGHT,</span>
+
+        /**
+         * full outer join.
+         */
+<span class="nc" id="L109">        OUTER</span>
+    }
+
+    @Nonnull
+    @Override
+    protected String operatorName() {
+<span class="nc" id="L115">        return &quot;join&quot;;</span>
+    }
+
+    @Override
+    protected void beforeAppendOperatorName(@Nonnull final StringBuilder operator,
+                                            @Nonnull final Map&lt;String, Object&gt; parameters) {
+
+        // add tables Flux scripts
+<span class="nc" id="L123">        tables.keySet().forEach(key -&gt; {</span>
+
+<span class="nc" id="L125">            operator.append(String.format(&quot;%s = %s\n&quot;, key, tables.get(key).toString(parameters)));</span>
+<span class="nc" id="L126">        });</span>
+<span class="nc" id="L127">    }</span>
+
+    @Nonnull
+    @Override
+    protected String propertyDelimiter(@Nonnull final String operatorName) {
+
+<span class="nc bnc" id="L133" title="All 6 branches missed.">        switch (operatorName) {</span>
+            case &quot;fn: (tables)&quot;:
+<span class="nc" id="L135">                return &quot; =&gt; &quot;;</span>
+
+            default:
+<span class="nc" id="L138">                return super.propertyDelimiter(operatorName);</span>
+        }
+    }
+
+    /**
+     * Map of table to join. Currently only two tables are allowed.
+     *
+     * @param name  table name
+     * @param table Flux script to map table
+     * @return this
+     */
+    @Nonnull
+    public JoinFlux withTable(@Nonnull final String name, @Nonnull final Flux table) {
+
+<span class="nc" id="L152">        Arguments.checkNonEmpty(name, &quot;FluxTable name&quot;);</span>
+<span class="nc" id="L153">        Objects.requireNonNull(table, &quot;Flux script to map table&quot;);</span>
+
+<span class="nc" id="L155">        tables.put(name, table);</span>
+
+<span class="nc" id="L157">        return this;</span>
+    }
+
+    /**
+     * @param tag Tag key that when equal produces a result set.
+     * @return this
+     */
+    @Nonnull
+    public JoinFlux withOn(@Nonnull final String tag) {
+
+<span class="nc" id="L167">        Arguments.checkNonEmpty(tag, &quot;Tag name&quot;);</span>
+
+<span class="nc" id="L169">        return withOn(new String[]{tag});</span>
+    }
+
+    /**
+     * @param tags List of tag keys that when equal produces a result set.
+     * @return this
+     */
+    @Nonnull
+    public JoinFlux withOn(@Nonnull final String[] tags) {
+
+<span class="nc" id="L179">        Objects.requireNonNull(tags, &quot;Tags are required&quot;);</span>
+
+<span class="nc" id="L181">        withPropertyValue(&quot;on&quot;, tags);</span>
+
+<span class="nc" id="L183">        return this;</span>
+    }
+
+    /**
+     * @param tags List of tag keys that when equal produces a result set.
+     * @return this
+     */
+    @Nonnull
+    public JoinFlux withOn(@Nonnull final Collection&lt;String&gt; tags) {
+
+<span class="nc" id="L193">        Objects.requireNonNull(tags, &quot;Tags are required&quot;);</span>
+
+<span class="nc" id="L195">        withPropertyValue(&quot;on&quot;, tags);</span>
+
+<span class="nc" id="L197">        return this;</span>
+    }
+
+    /**
+     * @param method the type of join to be performed
+     * @return this
+     */
+    @Nonnull
+    public JoinFlux withMethod(@Nonnull final String method) {
+
+<span class="nc" id="L207">        Arguments.checkNonEmpty(method, &quot;Method&quot;);</span>
+
+<span class="nc" id="L209">        this.withPropertyValueEscaped(&quot;method&quot;, method);</span>
+
+<span class="nc" id="L211">        return this;</span>
+    }
+
+    /**
+     * @param method the type of join to be performed
+     * @return this
+     */
+    @Nonnull
+    public JoinFlux withMethod(@Nonnull final MethodType method) {
+
+<span class="nc" id="L221">        Objects.requireNonNull(method, &quot;Method&quot;);</span>
+
+<span class="nc" id="L223">        this.withPropertyValueEscaped(&quot;method&quot;, method.toString().toLowerCase());</span>
+
+<span class="nc" id="L225">        return this;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>
