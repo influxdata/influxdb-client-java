@@ -54,9 +54,7 @@ jobs:
     script: skip
     deploy:
       provider: script
-      script:
-        - mvn clean deploy -DskipTests -s config/deploy-settings.xml
-        - ./config/publish-site.sh
+      script: mvn clean deploy -DskipTests -s config/deploy-settings.xml && ./config/publish-site.sh
       skip_cleanup: true
       on:
         repo: bonitoo-io/influxdata-platform-java
