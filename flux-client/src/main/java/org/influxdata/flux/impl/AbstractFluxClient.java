@@ -24,6 +24,7 @@ package org.influxdata.flux.impl;
 import java.io.IOException;
 import java.util.function.Consumer;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
@@ -32,6 +33,7 @@ import org.influxdata.platform.rest.AbstractRestClient;
 import org.influxdata.platform.rest.Cancellable;
 
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okio.BufferedSource;
@@ -110,6 +112,20 @@ class AbstractFluxClient<T> extends AbstractRestClient {
         }
 
         return "unknown";
+    }
+
+    @Nonnull
+    RequestBody createBody(@Nullable final String dialect, @Nonnull final String query) {
+
+        Arguments.checkNonEmpty(query, "Flux query");
+        JSONObject json = new JSONObject()
+                .put("query", query);
+
+        if (dialect != null) {
+            json.put("dialect", new JSONObject(dialect));
+        }
+
+        return createBody(json.toString());
     }
 
     void parseFluxResponseToLines(@Nonnull final Consumer<String> onResponse,

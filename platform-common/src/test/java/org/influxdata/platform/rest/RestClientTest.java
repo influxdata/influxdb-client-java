@@ -47,7 +47,6 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.Buffer;
 import org.assertj.core.api.Assertions;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -67,23 +66,6 @@ class RestClientTest {
     {
         restClient = new AbstractRestClient() {
         };
-    }
-
-    @Test
-    void createBodyJSON() throws IOException {
-
-        JSONObject json= new JSONObject()
-                .put("name", "John")
-                .put("male", true);
-
-        RequestBody body = restClient.createBody(json);
-        Assertions.assertThat(body).isNotNull();
-        Assertions.assertThat(body.contentLength()).isEqualTo(27L);
-
-        Buffer buffer = new Buffer();
-        body.writeTo(buffer);
-
-        Assertions.assertThat(buffer.readUtf8()).isEqualTo("{\"name\":\"John\",\"male\":true}");
     }
 
     @Test

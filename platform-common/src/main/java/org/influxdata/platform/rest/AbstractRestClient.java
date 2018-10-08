@@ -26,7 +26,6 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.error.InfluxException;
@@ -47,7 +46,6 @@ import org.influxdata.platform.error.rest.UnauthorizedException;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import org.json.JSONObject;
 import retrofit2.Response;
 
 /**
@@ -57,15 +55,6 @@ public abstract class AbstractRestClient {
 
     private static final Logger LOG = Logger.getLogger(AbstractRestClient.class.getName());
     private static final MediaType CONTENT_TYPE_JSON = MediaType.parse("application/json");
-
-    @Nonnull
-    protected RequestBody createBody(@Nonnull final JSONObject json) {
-
-        Arguments.checkNotNull(json, "json");
-
-        String content = json.toString();
-        return createBody(content);
-    }
 
     @Nonnull
     protected RequestBody createBody(@Nonnull final String content) {
@@ -134,19 +123,5 @@ public abstract class AbstractRestClient {
         Arguments.checkNotNull(exception, "exception");
 
         return "Socket closed".equals(exception.getMessage()) || exception instanceof EOFException;
-    }
-
-    @Nonnull
-    protected RequestBody createBody(@Nullable final String dialect, @Nonnull final String query) {
-
-        Arguments.checkNonEmpty(query, "Flux query");
-        JSONObject json = new JSONObject()
-                .put("query", query);
-
-        if (dialect != null) {
-            json.put("dialect", new JSONObject(dialect));
-        }
-
-        return createBody(json);
     }
 }

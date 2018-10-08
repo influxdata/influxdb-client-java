@@ -46,6 +46,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.influxdata</groupId>
             <artifactId>platform-common-test</artifactId>
             <scope>test</scope>
