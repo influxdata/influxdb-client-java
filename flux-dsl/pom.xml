@@ -26,7 +26,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <artifactId>influxdata-platform-java</artifactId>
         <groupId>org.influxdata</groupId>
@@ -39,4 +39,24 @@
     <name>The Flux DSL</name>
     <description>Specify the Flux query by the Query Builder.</description>
 
+    <dependencies>
+        
+        <dependency>
+            <groupId>org.influxdata</groupId>
+            <artifactId>platform-common</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.squareup.retrofit2</groupId>
+                    <artifactId>retrofit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.influxdata</groupId>
+            <artifactId>platform-common-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
 </project>
