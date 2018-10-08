@@ -37,9 +37,11 @@ services:
   - docker
 
 env:
-  - INFLUXDB_VERSION=nightly INFLUX_PLATFORM_VERSION=nightly CODE_COV=true
+  matrix:
+    - INFLUXDB_VERSION=nightly INFLUX_PLATFORM_VERSION=nightly CODE_COV=true
 
 install: true
+script: true
 
 jobs:
   include:
