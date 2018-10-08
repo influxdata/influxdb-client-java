@@ -41,17 +41,14 @@ env:
     - INFLUXDB_VERSION=nightly INFLUX_PLATFORM_VERSION=nightly CODE_COV=true
 
 install: true
-script: true
+
+script:
+  - ./config/platform-restart.sh
+  - mvn -B clean install
+  - test "true" = ${CODE_COV:=false} && bash <(curl -s https://codecov.io/bash)
 
 jobs:
   include:
-
-  - stage: test
-    script:
-      - ./config/platform-restart.sh
-      - mvn -B clean install
-      - test "true" = ${CODE_COV:=false} && bash <(curl -s https://codecov.io/bash)
-
   - stage: site
     jdk: oraclejdk8
     script:
