@@ -1,0 +1,1945 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Flux.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Flux DSL</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.flux</a> &gt; <span class="el_source">Flux.java</span></div><h1>Flux.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.flux;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.flux.functions.AbstractParametrizedFlux;
+import org.influxdata.flux.functions.CountFlux;
+import org.influxdata.flux.functions.CovarianceFlux;
+import org.influxdata.flux.functions.DerivativeFlux;
+import org.influxdata.flux.functions.DifferenceFlux;
+import org.influxdata.flux.functions.DistinctFlux;
+import org.influxdata.flux.functions.DropFlux;
+import org.influxdata.flux.functions.ExpressionFlux;
+import org.influxdata.flux.functions.FilterFlux;
+import org.influxdata.flux.functions.FirstFlux;
+import org.influxdata.flux.functions.FromFlux;
+import org.influxdata.flux.functions.GroupFlux;
+import org.influxdata.flux.functions.IntegralFlux;
+import org.influxdata.flux.functions.JoinFlux;
+import org.influxdata.flux.functions.KeepFlux;
+import org.influxdata.flux.functions.LastFlux;
+import org.influxdata.flux.functions.LimitFlux;
+import org.influxdata.flux.functions.MapFlux;
+import org.influxdata.flux.functions.MaxFlux;
+import org.influxdata.flux.functions.MeanFlux;
+import org.influxdata.flux.functions.MinFlux;
+import org.influxdata.flux.functions.RangeFlux;
+import org.influxdata.flux.functions.RenameFlux;
+import org.influxdata.flux.functions.SampleFlux;
+import org.influxdata.flux.functions.SetFlux;
+import org.influxdata.flux.functions.ShiftFlux;
+import org.influxdata.flux.functions.SkewFlux;
+import org.influxdata.flux.functions.SortFlux;
+import org.influxdata.flux.functions.SpreadFlux;
+import org.influxdata.flux.functions.StddevFlux;
+import org.influxdata.flux.functions.SumFlux;
+import org.influxdata.flux.functions.ToBoolFlux;
+import org.influxdata.flux.functions.ToDurationFlux;
+import org.influxdata.flux.functions.ToFloatFlux;
+import org.influxdata.flux.functions.ToIntFlux;
+import org.influxdata.flux.functions.ToStringFlux;
+import org.influxdata.flux.functions.ToTimeFlux;
+import org.influxdata.flux.functions.ToUIntFlux;
+import org.influxdata.flux.functions.WindowFlux;
+import org.influxdata.flux.functions.YieldFlux;
+import org.influxdata.flux.functions.properties.OperatorProperties;
+import org.influxdata.flux.functions.restriction.Restrictions;
+import org.influxdata.platform.Arguments;
+
+/**
+ * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#basic-syntax&quot;&gt;Flux&lt;/a&gt; - Data Scripting Language.
+ * &lt;br&gt;
+ * &lt;a href=&quot;https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md&quot;&gt;Flux Specification&lt;/a&gt;
+ *
+ * &lt;h3&gt;The operators:&lt;/h3&gt;
+ * &lt;ul&gt;
+ * &lt;li&gt;{@link FromFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link CountFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link CovarianceFlux}&lt;/li&gt;
+ * &lt;li&gt;cumulativeSum - Not defined in documentation or SPEC&lt;/li&gt;
+ * &lt;li&gt;{@link DerivativeFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link DifferenceFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link DistinctFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link DropFlux}&lt;/li&gt;
+ * &lt;li&gt;TODO - duplicate&lt;/li&gt;
+ * &lt;li&gt;{@link FilterFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link FirstFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link GroupFlux}&lt;/li&gt;
+ * &lt;li&gt;TODO - histogram&lt;/li&gt;
+ * &lt;li&gt;{@link IntegralFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link JoinFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link KeepFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link LastFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link LimitFlux}&lt;/li&gt;
+ * &lt;li&gt;TODO - LinearBuckets&lt;/li&gt;
+ * &lt;li&gt;TODO - LogrithmicBuckets&lt;/li&gt;
+ * &lt;li&gt;{@link MapFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link MaxFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link MeanFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link MinFlux}&lt;/li&gt;
+ * &lt;li&gt;percentile - Not defined in documentation or SPEC&lt;/li&gt;
+ * &lt;li&gt;TODO - pivot&lt;/li&gt;
+ * &lt;li&gt;{@link RangeFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link RenameFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link SampleFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link SetFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link ShiftFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link SkewFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link SortFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link SpreadFlux}&lt;/li&gt;
+ * &lt;li&gt;stateTracking - Not defined in documentation or SPEC&lt;/li&gt;
+ * &lt;li&gt;{@link StddevFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link SumFlux}&lt;/li&gt;
+ * &lt;li&gt;TODO - to&lt;/li&gt;
+ * &lt;li&gt;{@link ToBoolFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link ToIntFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link ToFloatFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link ToDurationFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link ToStringFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link ToTimeFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link ToUIntFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link WindowFlux}&lt;/li&gt;
+ * &lt;li&gt;{@link YieldFlux}&lt;/li&gt;
+ * &lt;li&gt;toHttp - Not defined in documentation or SPEC&lt;/li&gt;
+ * &lt;li&gt;toKafka - Not defined in documentation or SPEC&lt;/li&gt;
+ * &lt;li&gt;{@link ExpressionFlux}&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * @author Jakub Bednar (bednar@github) (22/06/2018 10:16)
+ * @since 1.0.0
+ */
+@SuppressWarnings({&quot;FileLength&quot;})
+<span class="fc" id="L139">public abstract class Flux {</span>
+
+<span class="fc" id="L141">    protected OperatorProperties operatorProperties = OperatorProperties.of();</span>
+
+    /**
+     * Get data from the specified database.
+     *
+     * @param bucket Bucket name
+     * @return {@link FromFlux}
+     */
+    @Nonnull
+    public static Flux from(@Nonnull final String bucket) {
+<span class="fc" id="L151">        Arguments.checkNonEmpty(bucket, &quot;Bucket name&quot;);</span>
+
+<span class="fc" id="L153">        return new FromFlux().withPropertyValueEscaped(&quot;bucket&quot;, bucket);</span>
+    }
+
+    /**
+     * Get data from the specified database.
+     *
+     * @param bucket Bucket name
+     * @param hosts  the Fluxd hosts
+     * @return {@link FromFlux}
+     */
+    @Nonnull
+    public static Flux from(@Nonnull final String bucket, @Nonnull final Collection&lt;String&gt; hosts) {
+<span class="fc" id="L165">        Arguments.checkNonEmpty(bucket, &quot;Bucket name&quot;);</span>
+<span class="fc" id="L166">        Arguments.checkNotNull(hosts, &quot;Hosts are required&quot;);</span>
+
+<span class="fc" id="L168">        return new FromFlux()</span>
+<span class="fc" id="L169">                .withPropertyValueEscaped(&quot;bucket&quot;, bucket)</span>
+<span class="fc" id="L170">                .withPropertyValue(&quot;hosts&quot;, hosts);</span>
+    }
+
+    /**
+     * Get data from the specified database.
+     *
+     * @param bucket Bucket name
+     * @param hosts  the Fluxd hosts
+     * @return {@link FromFlux}
+     */
+    @Nonnull
+    public static Flux from(@Nonnull final String bucket, @Nonnull final String[] hosts) {
+<span class="fc" id="L182">        Arguments.checkNonEmpty(bucket, &quot;Database name&quot;);</span>
+<span class="fc" id="L183">        Arguments.checkNotNull(hosts, &quot;Hosts are required&quot;);</span>
+
+<span class="fc" id="L185">        return new FromFlux()</span>
+<span class="fc" id="L186">                .withPropertyValueEscaped(&quot;bucket&quot;, bucket)</span>
+<span class="fc" id="L187">                .withPropertyValue(&quot;hosts&quot;, hosts);</span>
+    }
+
+    /**
+     * Join two time series together on time and the list of tags.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link JoinFlux#withTable(String, Flux)}&lt;/li&gt;
+     * &lt;li&gt;{@link JoinFlux#withOn(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link JoinFlux#withOn(String[])}&lt;/li&gt;
+     * &lt;li&gt;{@link JoinFlux#withOn(Collection)}&lt;/li&gt;
+     * &lt;li&gt;{@link JoinFlux#withMethod(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link JoinFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link JoinFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link JoinFlux}
+     */
+    @Nonnull
+    public static JoinFlux join() {
+
+<span class="nc" id="L209">        return new JoinFlux();</span>
+    }
+
+    /**
+     * Join two time series together on time and the list of tags.
+     *
+     * @param name1  table 1 name
+     * @param table1 table 1 Flux script
+     * @param name2  table 2 name
+     * @param table2 table 2 Flux script
+     * @param tag    tag key to join
+     * @param method the type of join to be performed
+     * @return {@link JoinFlux}
+     */
+    @Nonnull
+    public static JoinFlux join(@Nonnull final String name1,
+                                @Nonnull final Flux table1,
+                                @Nonnull final String name2,
+                                @Nonnull final Flux table2,
+                                @Nonnull final String tag,
+                                @Nonnull final String method) {
+
+<span class="nc" id="L231">        return new JoinFlux()</span>
+<span class="nc" id="L232">                .withTable(name1, table1)</span>
+<span class="nc" id="L233">                .withTable(name2, table2)</span>
+<span class="nc" id="L234">                .withOn(tag)</span>
+<span class="nc" id="L235">                .withMethod(method);</span>
+    }
+
+    /**
+     * It will return a table containing only columns that are specified.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link KeepFlux#withColumns(String[])}&lt;/li&gt;
+     * &lt;li&gt;{@link KeepFlux#withFunction(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link KeepFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link KeepFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link KeepFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link KeepFlux}
+     */
+    @Nonnull
+    public final KeepFlux keep() {
+<span class="fc" id="L254">        return new KeepFlux(this);</span>
+    }
+
+    /**
+     * It will return a table containing only columns that are specified.
+     *
+     * @param columns The list of columns that should be included in the resulting table.
+     * @return {@link KeepFlux}
+     */
+    @Nonnull
+    public final KeepFlux keep(@Nonnull final Collection&lt;String&gt; columns) {
+<span class="fc" id="L265">        return new KeepFlux(this).withColumns(columns);</span>
+    }
+
+    /**
+     * It will return a table containing only columns that are specified.
+     *
+     * @param columns The list of columns that should be included in the resulting table.
+     * @return {@link DropFlux}
+     */
+    @Nonnull
+    public final KeepFlux keep(@Nonnull final String[] columns) {
+<span class="fc" id="L276">        return new KeepFlux(this).withColumns(columns);</span>
+    }
+
+    /**
+     * It will return a table containing only columns that are specified.
+     *
+     * @param function The function which takes a column name as a parameter and returns a boolean indicating whether
+     *                 or not the column should be included in the resulting table.
+     * @return {@link DropFlux}
+     */
+    @Nonnull
+    public final KeepFlux keep(@Nonnull final String function) {
+<span class="fc" id="L288">        return new KeepFlux(this).withFunction(function);</span>
+    }
+
+    /**
+     * Counts the number of results.
+     *
+     * @return {@link CountFlux}
+     */
+    @Nonnull
+    public final CountFlux count() {
+<span class="fc" id="L298">        return new CountFlux(this);</span>
+    }
+
+    /**
+     * Counts the number of results.
+     *
+     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @return {@link CountFlux}
+     */
+    @Nonnull
+    public final CountFlux count(final boolean useStartTime) {
+<span class="fc" id="L309">        return new CountFlux(this)</span>
+<span class="fc" id="L310">                .withUseStartTime(useStartTime);</span>
+    }
+
+    /**
+     * Covariance computes the covariance between two columns.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link CovarianceFlux#withColumns(String[])}&lt;/li&gt;
+     * &lt;li&gt;{@link CovarianceFlux#withColumns(Collection)}&lt;/li&gt;
+     * &lt;li&gt;{@link CovarianceFlux#withPearsonr(boolean)}&lt;/li&gt;
+     * &lt;li&gt;{@link CovarianceFlux#withValueDst(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link CovarianceFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link CovarianceFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link CovarianceFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link CovarianceFlux}
+     */
+    @Nonnull
+    public final CovarianceFlux covariance() {
+<span class="fc" id="L331">        return new CovarianceFlux(this);</span>
+    }
+
+    /**
+     * Covariance computes the covariance between two columns.
+     *
+     * @param columns list of columns on which to compute the covariance. Exactly two columns must be provided.
+     * @return {@link CovarianceFlux}
+     */
+    @Nonnull
+    public final CovarianceFlux covariance(@Nonnull final Collection&lt;String&gt; columns) {
+<span class="fc" id="L342">        return new CovarianceFlux(this).withColumns(columns);</span>
+    }
+
+    /**
+     * Covariance computes the covariance between two columns.
+     *
+     * @param columns list of columns on which to compute the covariance. Exactly two columns must be provided.
+     * @return {@link CovarianceFlux}
+     */
+    @Nonnull
+    public final CovarianceFlux covariance(@Nonnull final String[] columns) {
+<span class="fc" id="L353">        return new CovarianceFlux(this).withColumns(columns);</span>
+    }
+
+    /**
+     * Covariance computes the covariance between two columns.
+     *
+     * @param columns  list of columns on which to compute the covariance. Exactly two columns must be provided.
+     * @param pearsonr indicates whether the result should be normalized to be the Pearson R coefficient
+     * @return {@link CovarianceFlux}
+     */
+    @Nonnull
+    public final CovarianceFlux covariance(@Nonnull final Collection&lt;String&gt; columns, final boolean pearsonr) {
+<span class="fc" id="L365">        return new CovarianceFlux(this).withColumns(columns).withPearsonr(pearsonr);</span>
+    }
+
+    /**
+     * Covariance computes the covariance between two columns.
+     *
+     * @param columns  list of columns on which to compute the covariance. Exactly two columns must be provided.
+     * @param pearsonr indicates whether the result should be normalized to be the Pearson R coefficient
+     * @return {@link CovarianceFlux}
+     */
+    @Nonnull
+    public final CovarianceFlux covariance(@Nonnull final String[] columns, final boolean pearsonr) {
+<span class="fc" id="L377">        return new CovarianceFlux(this).withColumns(columns).withPearsonr(pearsonr);</span>
+    }
+
+    /**
+     * Covariance computes the covariance between two columns.
+     *
+     * @param columns  list of columns on which to compute the covariance. Exactly two columns must be provided.
+     * @param valueDst column into which the result will be placed.
+     * @return {@link CovarianceFlux}
+     */
+    @Nonnull
+    public final CovarianceFlux covariance(@Nonnull final Collection&lt;String&gt; columns,
+                                           @Nonnull final String valueDst) {
+<span class="fc" id="L390">        return new CovarianceFlux(this).withColumns(columns).withValueDst(valueDst);</span>
+    }
+
+    /**
+     * Covariance computes the covariance between two columns.
+     *
+     * @param columns  list of columns on which to compute the covariance. Exactly two columns must be provided.
+     * @param valueDst column into which the result will be placed.
+     * @return {@link CovarianceFlux}
+     */
+    @Nonnull
+    public final CovarianceFlux covariance(@Nonnull final String[] columns,
+                                           @Nonnull final String valueDst) {
+<span class="fc" id="L403">        return new CovarianceFlux(this).withColumns(columns).withValueDst(valueDst);</span>
+    }
+
+    /**
+     * Covariance computes the covariance between two columns.
+     *
+     * @param columns  list of columns on which to compute the covariance. Exactly two columns must be provided.
+     * @param pearsonr indicates whether the result should be normalized to be the Pearson R coefficient
+     * @param valueDst column into which the result will be placed.
+     * @return {@link CovarianceFlux}
+     */
+    @Nonnull
+    public final CovarianceFlux covariance(@Nonnull final Collection&lt;String&gt; columns,
+                                           final boolean pearsonr,
+                                           @Nonnull final String valueDst) {
+<span class="fc" id="L418">        return new CovarianceFlux(this).withColumns(columns).withPearsonr(pearsonr).withValueDst(valueDst);</span>
+    }
+
+    /**
+     * Covariance computes the covariance between two columns.
+     *
+     * @param columns  list of columns on which to compute the covariance. Exactly two columns must be provided.
+     * @param pearsonr indicates whether the result should be normalized to be the Pearson R coefficient
+     * @param valueDst column into which the result will be placed.
+     * @return {@link CovarianceFlux}
+     */
+    @Nonnull
+    public final CovarianceFlux covariance(@Nonnull final String[] columns,
+                                           final boolean pearsonr,
+                                           @Nonnull final String valueDst) {
+<span class="fc" id="L433">        return new CovarianceFlux(this).withColumns(columns).withPearsonr(pearsonr).withValueDst(valueDst);</span>
+    }
+
+    /**
+     * Computes the time based difference between subsequent non null records.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link DerivativeFlux#withUnit(Long, ChronoUnit)}&lt;/li&gt;
+     * &lt;li&gt;{@link DerivativeFlux#withNonNegative(boolean)}&lt;/li&gt;
+     * &lt;li&gt;{@link DerivativeFlux#withColumns(String[])}&lt;/li&gt;
+     * &lt;li&gt;{@link DerivativeFlux#withTimeSrc(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link DerivativeFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link DerivativeFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link DerivativeFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link DerivativeFlux}
+     */
+    @Nonnull
+    public final DerivativeFlux derivative() {
+<span class="fc" id="L454">        return new DerivativeFlux(this);</span>
+    }
+
+    /**
+     * Computes the time based difference between subsequent non null records.
+     *
+     * @param duration the time duration to use for the result
+     * @param unit     a {@code ChronoUnit} determining how to interpret the {@code duration} parameter
+     * @return {@link DerivativeFlux}
+     */
+    @Nonnull
+    public final DerivativeFlux derivative(@Nonnull final Long duration, @Nonnull final ChronoUnit unit) {
+<span class="fc" id="L466">        return new DerivativeFlux(this).withUnit(duration, unit);</span>
+    }
+
+    /**
+     * Difference computes the difference between subsequent non null records.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link DifferenceFlux#withNonNegative(boolean)}&lt;/li&gt;
+     * &lt;li&gt;{@link DifferenceFlux#withColumns(String[])}&lt;/li&gt;
+     * &lt;li&gt;{@link DifferenceFlux#withColumns(Collection)}&lt;/li&gt;
+     * &lt;li&gt;{@link DifferenceFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link DifferenceFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link DifferenceFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link DifferenceFlux}
+     */
+    @Nonnull
+    public final DifferenceFlux difference() {
+<span class="fc" id="L486">        return new DifferenceFlux(this);</span>
+    }
+
+    /**
+     * Difference computes the difference between subsequent non null records.
+     *
+     * @param nonNegative indicates if the derivative is allowed to be negative
+     * @return {@link DifferenceFlux}
+     */
+    @Nonnull
+    public final DifferenceFlux difference(final boolean nonNegative) {
+<span class="fc" id="L497">        return new DifferenceFlux(this).withNonNegative(nonNegative);</span>
+    }
+
+    /**
+     * Difference computes the difference between subsequent non null records.
+     *
+     * @param columns list of columns on which to compute the difference
+     * @return {@link DifferenceFlux}
+     */
+    @Nonnull
+    public final DifferenceFlux difference(@Nonnull final Collection&lt;String&gt; columns) {
+<span class="fc" id="L508">        return new DifferenceFlux(this).withColumns(columns);</span>
+    }
+
+    /**
+     * Difference computes the difference between subsequent non null records.
+     *
+     * @param columns list of columns on which to compute the difference
+     * @return {@link DifferenceFlux}
+     */
+    @Nonnull
+    public final DifferenceFlux difference(@Nonnull final String[] columns) {
+<span class="fc" id="L519">        return new DifferenceFlux(this).withColumns(columns);</span>
+    }
+
+    /**
+     * Difference computes the difference between subsequent non null records.
+     *
+     * @param nonNegative indicates if the derivative is allowed to be negative
+     * @param columns     list of columns on which to compute the difference
+     * @return {@link DifferenceFlux}
+     */
+    @Nonnull
+    public final DifferenceFlux difference(@Nonnull final Collection&lt;String&gt; columns, final boolean nonNegative) {
+<span class="fc" id="L531">        return new DifferenceFlux(this).withColumns(columns).withNonNegative(nonNegative);</span>
+    }
+
+    /**
+     * Difference computes the difference between subsequent non null records.
+     *
+     * @param nonNegative indicates if the derivative is allowed to be negative
+     * @param columns     list of columns on which to compute the difference
+     * @return {@link DifferenceFlux}
+     */
+    @Nonnull
+    public final DifferenceFlux difference(@Nonnull final String[] columns, final boolean nonNegative) {
+<span class="fc" id="L543">        return new DifferenceFlux(this).withColumns(columns).withNonNegative(nonNegative);</span>
+    }
+
+    /**
+     * Distinct produces the unique values for a given column.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link DistinctFlux#withColumn(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link DistinctFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link DistinctFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link DistinctFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link DistinctFlux}
+     */
+    @Nonnull
+    public final DistinctFlux distinct() {
+<span class="fc" id="L561">        return new DistinctFlux(this);</span>
+    }
+
+    /**
+     * Distinct produces the unique values for a given column.
+     *
+     * @param column The column on which to track unique values.
+     * @return {@link DistinctFlux}
+     */
+    @Nonnull
+    public final DistinctFlux distinct(@Nonnull final String column) {
+<span class="fc" id="L572">        return new DistinctFlux(this).withColumn(column);</span>
+    }
+
+    /**
+     * Drop will exclude specified columns from a table.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link DropFlux#withColumns(String[])}&lt;/li&gt;
+     * &lt;li&gt;{@link DropFlux#withFunction(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link DropFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link DropFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link DropFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link DropFlux}
+     */
+    @Nonnull
+    public final DropFlux drop() {
+<span class="fc" id="L591">        return new DropFlux(this);</span>
+    }
+
+    /**
+     * Drop will exclude specified columns from a table.
+     *
+     * @param columns The list of columns which should be excluded from the resulting table.
+     * @return {@link DropFlux}
+     */
+    @Nonnull
+    public final DropFlux drop(@Nonnull final Collection&lt;String&gt; columns) {
+<span class="fc" id="L602">        return new DropFlux(this).withColumns(columns);</span>
+    }
+
+    /**
+     * Drop will exclude specified columns from a table.
+     *
+     * @param columns The list of columns which should be excluded from the resulting table.
+     * @return {@link DropFlux}
+     */
+    @Nonnull
+    public final DropFlux drop(@Nonnull final String[] columns) {
+<span class="fc" id="L613">        return new DropFlux(this).withColumns(columns);</span>
+    }
+
+    /**
+     * Drop will exclude specified columns from a table.
+     *
+     * @param function The function which takes a column name as a parameter and returns a boolean indicating whether
+     *                 or not the column should be excluded from the resulting table.
+     * @return {@link DropFlux}
+     */
+    @Nonnull
+    public final DropFlux drop(@Nonnull final String function) {
+<span class="fc" id="L625">        return new DropFlux(this).withFunction(function);</span>
+    }
+
+    /**
+     * Returns the first result of the query.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link FilterFlux#withRestrictions(Restrictions)}&lt;/li&gt;
+     * &lt;li&gt;{@link FilterFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link FilterFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link FilterFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link FilterFlux}
+     */
+    @Nonnull
+    public final FilterFlux filter() {
+<span class="nc" id="L643">        return new FilterFlux(this);</span>
+    }
+
+    /**
+     * Returns the first result of the query.
+     *
+     * @param restrictions filter restrictions
+     * @return {@link FilterFlux}
+     */
+    @Nonnull
+    public final FilterFlux filter(@Nonnull final Restrictions restrictions) {
+
+<span class="fc" id="L655">        Arguments.checkNotNull(restrictions, &quot;Restrictions are required&quot;);</span>
+
+<span class="fc" id="L657">        return new FilterFlux(this).withRestrictions(restrictions);</span>
+    }
+
+    /**
+     * Returns the first result of the query.
+     *
+     * @return {@link FirstFlux}
+     */
+    @Nonnull
+    public final FirstFlux first() {
+<span class="fc" id="L667">        return new FirstFlux(this);</span>
+    }
+
+    /**
+     * Returns the first result of the query.
+     *
+     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @return {@link FirstFlux}
+     */
+    @Nonnull
+    public final FirstFlux first(final boolean useStartTime) {
+<span class="fc" id="L678">        return new FirstFlux(this)</span>
+<span class="fc" id="L679">                .withUseStartTime(useStartTime);</span>
+    }
+
+    /**
+     * Groups results by a user-specified set of tags.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link GroupFlux#withBy(String[])}&lt;/li&gt;
+     * &lt;li&gt;{@link GroupFlux#withBy(Collection)}&lt;/li&gt;
+     * &lt;li&gt;{@link GroupFlux#withKeep(String[])}&lt;/li&gt;
+     * &lt;li&gt;{@link GroupFlux#withKeep(Collection)}&lt;/li&gt;
+     * &lt;li&gt;{@link GroupFlux#withExcept(String[])}&lt;/li&gt;
+     * &lt;li&gt;{@link GroupFlux#withExcept(Collection)}&lt;/li&gt;
+     * &lt;li&gt;{@link GroupFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link GroupFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link GroupFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link GroupFlux}
+     */
+    @Nonnull
+    public final GroupFlux group() {
+
+<span class="fc" id="L703">        return new GroupFlux(this);</span>
+    }
+
+    /**
+     * Groups results by a user-specified set of tags.
+     *
+     * @param groupBy Group by these specific tag name.
+     * @return {@link GroupFlux}
+     */
+    @Nonnull
+    public final GroupFlux groupBy(@Nonnull final String groupBy) {
+<span class="fc" id="L714">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+
+<span class="fc" id="L716">        return new GroupFlux(this).withBy(groupBy);</span>
+    }
+
+    /**
+     * Groups results by a user-specified set of tags.
+     *
+     * @param groupBy Group by these specific tag names.
+     * @return {@link GroupFlux}
+     */
+    @Nonnull
+    public final GroupFlux groupBy(@Nonnull final Collection&lt;String&gt; groupBy) {
+<span class="fc" id="L727">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+
+<span class="fc" id="L729">        return new GroupFlux(this).withBy(groupBy);</span>
+    }
+
+    /**
+     * Groups results by a user-specified set of tags.
+     *
+     * @param groupBy Group by these specific tag names.
+     * @param keep    Keep specific tag keys that were not in {@code groupBy} in the results.
+     * @return {@link GroupFlux}
+     */
+    @Nonnull
+    public final GroupFlux groupBy(@Nonnull final Collection&lt;String&gt; groupBy, @Nonnull final Collection&lt;String&gt; keep) {
+<span class="fc" id="L741">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+<span class="fc" id="L742">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
+
+<span class="fc" id="L744">        return new GroupFlux(this).withBy(groupBy).withKeep(keep);</span>
+    }
+
+    /**
+     * Groups results by a user-specified set of tags.
+     *
+     * @param groupBy Group by these specific tag names.
+     * @return {@link GroupFlux}
+     */
+    @Nonnull
+    public final GroupFlux groupBy(@Nonnull final String[] groupBy) {
+<span class="fc" id="L755">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+
+<span class="fc" id="L757">        return new GroupFlux(this).withBy(groupBy);</span>
+    }
+
+    /**
+     * Groups results by a user-specified set of tags.
+     *
+     * @param groupBy Group by these specific tag names.
+     * @param keep    Keep specific tag keys that were not in {@code groupBy} in the results.
+     * @return {@link GroupFlux}
+     */
+    @Nonnull
+    public final GroupFlux groupBy(@Nonnull final String[] groupBy, @Nonnull final String[] keep) {
+<span class="fc" id="L769">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+<span class="fc" id="L770">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
+
+<span class="fc" id="L772">        return new GroupFlux(this).withBy(groupBy).withKeep(keep);</span>
+    }
+
+    /**
+     * Groups results by a user-specified set of tags.
+     *
+     * @param except Group by all but these tag keys Cannot be used.
+     * @return {@link GroupFlux}
+     */
+    @Nonnull
+    public final GroupFlux groupExcept(@Nonnull final Collection&lt;String&gt; except) {
+<span class="fc" id="L783">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
+
+<span class="fc" id="L785">        return new GroupFlux(this).withExcept(except);</span>
+    }
+
+    /**
+     * Groups results by a user-specified set of tags.
+     *
+     * @param except Group by all but these tag keys Cannot be used.
+     * @param keep   Keep specific tag keys that were not in {@code groupBy} in the results.
+     * @return {@link GroupFlux}
+     */
+    @Nonnull
+    public final GroupFlux groupExcept(@Nonnull final Collection&lt;String&gt; except,
+                                       @Nonnull final Collection&lt;String&gt; keep) {
+
+<span class="fc" id="L799">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
+<span class="fc" id="L800">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
+
+<span class="fc" id="L802">        return new GroupFlux(this).withExcept(except).withKeep(keep);</span>
+    }
+
+    /**
+     * Groups results by a user-specified set of tags.
+     *
+     * @param except Group by all but these tag keys Cannot be used.
+     * @return {@link GroupFlux}
+     */
+    @Nonnull
+    public final GroupFlux groupExcept(@Nonnull final String[] except) {
+<span class="fc" id="L813">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
+
+<span class="fc" id="L815">        return new GroupFlux(this).withExcept(except);</span>
+    }
+
+    /**
+     * Groups results by a user-specified set of tags.
+     *
+     * @param except Group by all but these tag keys Cannot be used.
+     * @param keep   Keep specific tag keys that were not in {@code groupBy} in the results.
+     * @return {@link GroupFlux}
+     */
+    @Nonnull
+    public final GroupFlux groupExcept(@Nonnull final String[] except, @Nonnull final String[] keep) {
+<span class="fc" id="L827">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
+<span class="fc" id="L828">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
+
+<span class="fc" id="L830">        return new GroupFlux(this).withExcept(except).withKeep(keep);</span>
+    }
+
+    /**
+     * For each aggregate column, it outputs the area under the curve of non null records.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link IntegralFlux#withUnit(Long, ChronoUnit)}&lt;/li&gt;
+     * &lt;li&gt;{@link IntegralFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link IntegralFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link IntegralFlux}
+     */
+    @Nonnull
+    public final IntegralFlux integral() {
+
+<span class="fc" id="L848">        return new IntegralFlux(this);</span>
+    }
+
+    /**
+     * For each aggregate column, it outputs the area under the curve of non null records.
+     *
+     * @param duration Time duration to use when computing the integral
+     * @param unit     a {@code ChronoUnit} determining how to interpret the {@code duration} parameter
+     * @return {@link IntegralFlux}
+     */
+    @Nonnull
+    public final IntegralFlux integral(@Nonnull final Long duration, @Nonnull final ChronoUnit unit) {
+
+<span class="fc" id="L861">        Arguments.checkNotNull(duration, &quot;Duration is required&quot;);</span>
+<span class="fc" id="L862">        Arguments.checkNotNull(unit, &quot;ChronoUnit is required&quot;);</span>
+
+<span class="fc" id="L864">        return new IntegralFlux(this).withUnit(duration, unit);</span>
+    }
+
+    /**
+     * Returns the last result of the query.
+     *
+     * @return {@link LastFlux}
+     */
+    @Nonnull
+    public final LastFlux last() {
+<span class="fc" id="L874">        return new LastFlux(this);</span>
+    }
+
+    /**
+     * Returns the last result of the query.
+     *
+     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @return {@link LastFlux}
+     */
+    @Nonnull
+    public final LastFlux last(final boolean useStartTime) {
+<span class="fc" id="L885">        return new LastFlux(this).withUseStartTime(useStartTime);</span>
+    }
+
+    /**
+     * Restricts the number of rows returned in the results.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link LimitFlux#withN(int)}&lt;/li&gt;
+     * &lt;li&gt;{@link LimitFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link LimitFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link LimitFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link LimitFlux}
+     */
+    @Nonnull
+    public final LimitFlux limit() {
+
+<span class="fc" id="L904">        return new LimitFlux(this);</span>
+    }
+
+    /**
+     * Restricts the number of rows returned in the results.
+     *
+     * @param numberOfResults The number of results
+     * @return {@link LimitFlux}
+     */
+    @Nonnull
+    public final LimitFlux limit(final int numberOfResults) {
+
+<span class="fc" id="L916">        return new LimitFlux(this).withN(numberOfResults);</span>
+    }
+
+    /**
+     * Applies a function to each row of the table.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link MapFlux#withFunction(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link MapFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link MapFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link MapFlux}
+     */
+    @Nonnull
+    public final MapFlux map() {
+
+<span class="fc" id="L934">        return new MapFlux(this);</span>
+    }
+
+    /**
+     * Applies a function to each row of the table.
+     *
+     * @param function The function for map row of table. Example: &quot;r._value * r._value&quot;.
+     * @return {@link MapFlux}
+     */
+    @Nonnull
+    public final MapFlux map(@Nonnull final String function) {
+
+<span class="fc" id="L946">        return new MapFlux(this).withFunction(function);</span>
+    }
+
+    /**
+     * Returns the max value within the results.
+     *
+     * @return {@link MaxFlux}
+     */
+    @Nonnull
+    public final MaxFlux max() {
+<span class="fc" id="L956">        return new MaxFlux(this);</span>
+    }
+
+    /**
+     * Returns the max value within the results.
+     *
+     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @return {@link MaxFlux}
+     */
+    @Nonnull
+    public final MaxFlux max(final boolean useStartTime) {
+<span class="fc" id="L967">        return new MaxFlux(this).withUseStartTime(useStartTime);</span>
+    }
+
+    /**
+     * Returns the mean of the values within the results.
+     *
+     * @return {@link MeanFlux}
+     */
+    @Nonnull
+    public final MeanFlux mean() {
+<span class="fc" id="L977">        return new MeanFlux(this);</span>
+    }
+
+    /**
+     * Returns the mean of the values within the results.
+     *
+     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @return {@link MeanFlux}
+     */
+    @Nonnull
+    public final MeanFlux mean(final boolean useStartTime) {
+<span class="fc" id="L988">        return new MeanFlux(this).withUseStartTime(useStartTime);</span>
+    }
+
+    /**
+     * Returns the min value within the results.
+     *
+     * @return {@link MinFlux}
+     */
+    @Nonnull
+    public final MinFlux min() {
+<span class="fc" id="L998">        return new MinFlux(this);</span>
+    }
+
+    /**
+     * Returns the min value within the results.
+     *
+     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @return {@link MinFlux}
+     */
+    @Nonnull
+    public final MinFlux min(final boolean useStartTime) {
+<span class="fc" id="L1009">        return new MinFlux(this).withUseStartTime(useStartTime);</span>
+    }
+
+    /**
+     * Filters the results by time boundaries.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link RangeFlux#withStart(Instant)}&lt;/li&gt;
+     * &lt;li&gt;{@link RangeFlux#withStart(Long, ChronoUnit)}&lt;/li&gt;
+     * &lt;li&gt;{@link RangeFlux#withStop(Instant)}&lt;/li&gt;
+     * &lt;li&gt;{@link RangeFlux#withStop(Long, ChronoUnit)}&lt;/li&gt;
+     * &lt;li&gt;{@link RangeFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link RangeFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link RangeFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link RangeFlux}
+     */
+    @Nonnull
+    public final RangeFlux range() {
+
+<span class="fc" id="L1031">        return new RangeFlux(this);</span>
+    }
+
+    /**
+     * Filters the results by time boundaries.
+     *
+     * @param start Specifies the oldest time to be included in the results
+     * @return {@link RangeFlux}
+     */
+    @Nonnull
+    public final RangeFlux range(@Nonnull final Instant start) {
+<span class="fc" id="L1042">        Arguments.checkNotNull(start, &quot;Start is required&quot;);</span>
+
+<span class="fc" id="L1044">        return new RangeFlux(this).withStart(start);</span>
+    }
+
+    /**
+     * Filters the results by time boundaries.
+     *
+     * @param start Specifies the oldest time to be included in the results
+     * @param stop  Specifies the exclusive newest time to be included in the results
+     * @return {@link RangeFlux}
+     */
+    @Nonnull
+    public final RangeFlux range(@Nonnull final Instant start, @Nonnull final Instant stop) {
+<span class="fc" id="L1056">        Arguments.checkNotNull(start, &quot;Start is required&quot;);</span>
+<span class="fc" id="L1057">        Arguments.checkNotNull(stop, &quot;Stop is required&quot;);</span>
+
+<span class="fc" id="L1059">        return new RangeFlux(this).withStart(start).withStop(stop);</span>
+    }
+
+    /**
+     * Filters the results by time boundaries.
+     *
+     * @param start Specifies the oldest time to be included in the results
+     * @param unit  a {@code ChronoUnit} determining how to interpret the {@code start} parameter
+     * @return {@link RangeFlux}
+     */
+    @Nonnull
+    public final RangeFlux range(@Nonnull final Long start, @Nonnull final ChronoUnit unit) {
+<span class="fc" id="L1071">        Arguments.checkNotNull(start, &quot;Start is required&quot;);</span>
+<span class="fc" id="L1072">        Arguments.checkNotNull(unit, &quot;ChronoUnit is required&quot;);</span>
+
+<span class="fc" id="L1074">        return new RangeFlux(this).withStart(start, unit);</span>
+    }
+
+    /**
+     * Filters the results by time boundaries.
+     *
+     * @param start Specifies the oldest time to be included in the results
+     * @param stop  Specifies the exclusive newest time to be included in the results
+     * @param unit  a {@code ChronoUnit} determining how to interpret the {@code start} and {@code stop} parameter
+     * @return {@link RangeFlux}
+     */
+    @Nonnull
+    public final RangeFlux range(@Nonnull final Long start, @Nonnull final Long stop, @Nonnull final ChronoUnit unit) {
+<span class="fc" id="L1087">        Arguments.checkNotNull(start, &quot;Start is required&quot;);</span>
+<span class="fc" id="L1088">        Arguments.checkNotNull(stop, &quot;Stop is required&quot;);</span>
+<span class="fc" id="L1089">        Arguments.checkNotNull(unit, &quot;ChronoUnit is required&quot;);</span>
+
+<span class="fc" id="L1091">        return new RangeFlux(this).withStart(start, unit).withStop(stop, unit);</span>
+    }
+
+    /**
+     * Rename will rename specified columns in a table.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link RenameFlux#withColumns(Map)} &lt;/li&gt;
+     * &lt;li&gt;{@link RenameFlux#withFunction(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link RenameFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link RenameFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link RenameFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link RenameFlux}
+     */
+    @Nonnull
+    public final RenameFlux rename() {
+<span class="fc" id="L1110">        return new RenameFlux(this);</span>
+    }
+
+    /**
+     * Rename will rename specified columns in a table.
+     *
+     * @param columns The map of columns to rename and their corresponding new names.
+     * @return {@link RenameFlux}
+     */
+    @Nonnull
+    public final RenameFlux rename(@Nonnull final Map&lt;String, String&gt; columns) {
+<span class="fc" id="L1121">        return new RenameFlux(this).withColumns(columns);</span>
+    }
+
+    /**
+     * Rename will rename specified columns in a table.
+     *
+     * @param function The function which takes a single string parameter (the old column name) and
+     *                 returns a string representing the new column name.
+     * @return {@link RenameFlux}
+     */
+    @Nonnull
+    public final RenameFlux rename(@Nonnull final String function) {
+<span class="fc" id="L1133">        return new RenameFlux(this).withFunction(function);</span>
+    }
+
+    /**
+     * Sample values from a table.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link SampleFlux#withN(int)}&lt;/li&gt;
+     * &lt;li&gt;{@link SampleFlux#withPos(int)}&lt;/li&gt;
+     * &lt;li&gt;{@link SampleFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link SampleFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link SampleFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link SampleFlux}
+     */
+    @Nonnull
+    public final SampleFlux sample() {
+
+<span class="fc" id="L1153">        return new SampleFlux(this);</span>
+    }
+
+    /**
+     * Sample values from a table.
+     *
+     * @param n Sample every Nth element.
+     * @return {@link SampleFlux}
+     */
+    @Nonnull
+    public final SampleFlux sample(final int n) {
+
+<span class="fc" id="L1165">        return new SampleFlux(this)</span>
+<span class="fc" id="L1166">                .withN(n);</span>
+    }
+
+    /**
+     * Sample values from a table.
+     *
+     * @param n   Sample every Nth element.
+     * @param pos Position offset from start of results to begin sampling. Must be less than @{code n}.
+     * @return {@link SampleFlux}
+     */
+    @Nonnull
+    public final SampleFlux sample(final int n, final int pos) {
+
+<span class="fc bfc" id="L1179" title="All 2 branches covered.">        if (pos &gt;= n) {</span>
+<span class="fc" id="L1180">            throw new IllegalArgumentException(&quot;pos must be less than n&quot;);</span>
+        }
+
+<span class="fc" id="L1183">        return new SampleFlux(this)</span>
+<span class="fc" id="L1184">                .withN(n)</span>
+<span class="fc" id="L1185">                .withPos(pos);</span>
+    }
+
+    /**
+     * Assigns a static value to each record.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link SetFlux#withKeyValue(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link SetFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link SetFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link SetFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link SetFlux}
+     */
+    @Nonnull
+    public final SetFlux set() {
+<span class="fc" id="L1203">        return new SetFlux(this);</span>
+    }
+
+    /**
+     * Assigns a static value to each record.
+     *
+     * @param key   label for the column. Has to be defined.
+     * @param value value for the column. Has to be defined.
+     * @return {@link SetFlux}
+     */
+    @Nonnull
+    public final SetFlux set(@Nonnull final String key, @Nonnull final String value) {
+<span class="fc" id="L1215">        return new SetFlux(this).withKeyValue(key, value);</span>
+    }
+
+    /**
+     * Shift add a fixed duration to time columns.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link ShiftFlux#withShift(Long, ChronoUnit)}&lt;/li&gt;
+     * &lt;li&gt;{@link ShiftFlux#withColumns(String[])}&lt;/li&gt;
+     * &lt;li&gt;{@link ShiftFlux#withColumns(Collection)} )}&lt;/li&gt;
+     * &lt;li&gt;{@link ShiftFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link ShiftFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link ShiftFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link ShiftFlux}
+     */
+    @Nonnull
+    public final ShiftFlux shift() {
+<span class="fc" id="L1235">        return new ShiftFlux(this);</span>
+    }
+
+    /**
+     * Shift add a fixed duration to time columns.
+     *
+     * @param amount The amount to add to each time value
+     * @param unit   a {@code ChronoUnit} determining how to interpret the {@code amount} parameter
+     * @return {@link ShiftFlux}
+     */
+    @Nonnull
+    public final ShiftFlux shift(@Nonnull final Long amount,
+                                 @Nonnull final ChronoUnit unit) {
+
+<span class="fc" id="L1249">        return new ShiftFlux(this).withShift(amount, unit);</span>
+    }
+
+    /**
+     * Shift add a fixed duration to time columns.
+     *
+     * @param amount  The amount to add to each time value
+     * @param unit    a {@code ChronoUnit} determining how to interpret the {@code amount} parameter
+     * @param columns The list of all columns that should be shifted.
+     * @return {@link ShiftFlux}
+     */
+    @Nonnull
+    public final ShiftFlux shift(@Nonnull final Long amount,
+                                 @Nonnull final ChronoUnit unit,
+                                 @Nonnull final String[] columns) {
+
+<span class="fc" id="L1265">        return new ShiftFlux(this).withShift(amount, unit).withColumns(columns);</span>
+    }
+
+    /**
+     * Shift add a fixed duration to time columns.
+     *
+     * @param amount  The amount to add to each time value
+     * @param unit    a {@code ChronoUnit} determining how to interpret the {@code amount} parameter
+     * @param columns The list of all columns that should be shifted.
+     * @return {@link ShiftFlux}
+     */
+    @Nonnull
+    public final ShiftFlux shift(@Nonnull final Long amount,
+                                 @Nonnull final ChronoUnit unit,
+                                 @Nonnull final Collection&lt;String&gt; columns) {
+
+<span class="fc" id="L1281">        return new ShiftFlux(this).withShift(amount, unit).withColumns(columns);</span>
+    }
+
+    /**
+     * Skew of the results.
+     *
+     * @return {@link SkewFlux}
+     */
+    @Nonnull
+    public final SkewFlux skew() {
+<span class="fc" id="L1291">        return new SkewFlux(this);</span>
+    }
+
+    /**
+     * Skew of the results.
+     *
+     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @return {@link SkewFlux}
+     */
+    @Nonnull
+    public final SkewFlux skew(final boolean useStartTime) {
+<span class="fc" id="L1302">        return new SkewFlux(this).withUseStartTime(useStartTime);</span>
+    }
+
+    /**
+     * Sorts the results by the specified columns Default sort is ascending.
+     *
+     * @return {@link SortFlux}
+     */
+    @Nonnull
+    public final SortFlux sort() {
+<span class="fc" id="L1312">        return new SortFlux(this);</span>
+    }
+
+    /**
+     * Sorts the results by the specified columns Default sort is ascending.
+     *
+     * @param desc use the descending sorting
+     * @return {@link SortFlux}
+     */
+    @Nonnull
+    public final SortFlux sort(final boolean desc) {
+<span class="fc" id="L1323">        return new SortFlux(this).withDesc(desc);</span>
+    }
+
+    /**
+     * Sorts the results by the specified columns Default sort is ascending.
+     *
+     * @param columns columns used to sort
+     * @return {@link SortFlux}
+     */
+    @Nonnull
+    public final SortFlux sort(@Nonnull final String[] columns) {
+<span class="fc" id="L1334">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+
+<span class="fc" id="L1336">        return new SortFlux(this).withCols(columns);</span>
+    }
+
+    /**
+     * Sorts the results by the specified columns Default sort is ascending.
+     *
+     * @param columns columns used to sort
+     * @return {@link SortFlux}
+     */
+    @Nonnull
+    public final SortFlux sort(@Nonnull final Collection&lt;String&gt; columns) {
+<span class="fc" id="L1347">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+
+<span class="fc" id="L1349">        return new SortFlux(this).withCols(columns);</span>
+    }
+
+    /**
+     * Sorts the results by the specified columns Default sort is ascending.
+     *
+     * @param columns columns used to sort
+     * @param desc    use the descending sorting
+     * @return {@link SortFlux}
+     */
+    @Nonnull
+    public final SortFlux sort(@Nonnull final String[] columns, final boolean desc) {
+<span class="fc" id="L1361">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+
+<span class="fc" id="L1363">        return new SortFlux(this)</span>
+<span class="fc" id="L1364">                .withCols(columns)</span>
+<span class="fc" id="L1365">                .withDesc(desc);</span>
+    }
+
+    /**
+     * Sorts the results by the specified columns Default sort is ascending.
+     *
+     * @param columns columns used to sort
+     * @param desc    use the descending sorting
+     * @return {@link SortFlux}
+     */
+    @Nonnull
+    public final SortFlux sort(@Nonnull final Collection&lt;String&gt; columns, final boolean desc) {
+<span class="fc" id="L1377">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+
+<span class="fc" id="L1379">        return new SortFlux(this)</span>
+<span class="fc" id="L1380">                .withCols(columns)</span>
+<span class="fc" id="L1381">                .withDesc(desc);</span>
+    }
+
+    /**
+     * Difference between min and max values.
+     *
+     * @return {@link SpreadFlux}
+     */
+    @Nonnull
+    public final SpreadFlux spread() {
+<span class="fc" id="L1391">        return new SpreadFlux(this);</span>
+    }
+
+    /**
+     * Difference between min and max values.
+     *
+     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @return {@link SpreadFlux}
+     */
+    @Nonnull
+    public final SpreadFlux spread(final boolean useStartTime) {
+<span class="fc" id="L1402">        return new SpreadFlux(this).withUseStartTime(useStartTime);</span>
+    }
+
+    /**
+     * Standard Deviation of the results.
+     *
+     * @return {@link StddevFlux}
+     */
+    @Nonnull
+    public final StddevFlux stddev() {
+<span class="fc" id="L1412">        return new StddevFlux(this);</span>
+    }
+
+    /**
+     * Standard Deviation of the results.
+     *
+     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @return {@link StddevFlux}
+     */
+    @Nonnull
+    public final StddevFlux stddev(final boolean useStartTime) {
+<span class="fc" id="L1423">        return new StddevFlux(this).withUseStartTime(useStartTime);</span>
+    }
+
+    /**
+     * Sum of the results.
+     *
+     * @return {@link SumFlux}
+     */
+    @Nonnull
+    public final SumFlux sum() {
+<span class="fc" id="L1433">        return new SumFlux(this);</span>
+    }
+
+    /**
+     * Sum of the results.
+     *
+     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @return {@link SumFlux}
+     */
+    @Nonnull
+    public final SumFlux sum(final boolean useStartTime) {
+<span class="fc" id="L1444">        return new SumFlux(this).withUseStartTime(useStartTime);</span>
+    }
+
+    /**
+     * Convert a value to a bool.
+     *
+     * @return {@link ToBoolFlux}
+     */
+    @Nonnull
+    public final ToBoolFlux toBool() {
+<span class="fc" id="L1454">        return new ToBoolFlux(this);</span>
+    }
+
+    /**
+     * Convert a value to a int.
+     *
+     * @return {@link ToIntFlux}
+     */
+    @Nonnull
+    public final ToIntFlux toInt() {
+<span class="fc" id="L1464">        return new ToIntFlux(this);</span>
+    }
+
+    /**
+     * Convert a value to a float.
+     *
+     * @return {@link ToFloatFlux}
+     */
+    @Nonnull
+    public final ToFloatFlux toFloat() {
+<span class="fc" id="L1474">        return new ToFloatFlux(this);</span>
+    }
+
+    /**
+     * Convert a value to a duration.
+     *
+     * @return {@link ToDurationFlux}
+     */
+    @Nonnull
+    public final ToDurationFlux toDuration() {
+<span class="fc" id="L1484">        return new ToDurationFlux(this);</span>
+    }
+
+    /**
+     * Convert a value to a string.
+     *
+     * @return {@link ToStringFlux}
+     */
+    @Nonnull
+    public final ToStringFlux toStringConvert() {
+<span class="fc" id="L1494">        return new ToStringFlux(this);</span>
+    }
+
+    /**
+     * Convert a value to a time.
+     *
+     * @return {@link ToTimeFlux}
+     */
+    @Nonnull
+    public final ToTimeFlux toTime() {
+<span class="fc" id="L1504">        return new ToTimeFlux(this);</span>
+    }
+
+    /**
+     * Convert a value to a uint.
+     *
+     * @return {@link ToUIntFlux}
+     */
+    @Nonnull
+    public final ToUIntFlux toUInt() {
+<span class="fc" id="L1514">        return new ToUIntFlux(this);</span>
+    }
+
+    /**
+     * Groups the results by a given time range.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link WindowFlux#withEvery(Long, ChronoUnit)}&lt;/li&gt;
+     * &lt;li&gt;{@link WindowFlux#withPeriod(Long, ChronoUnit)}&lt;/li&gt;
+     * &lt;li&gt;{@link WindowFlux#withOffset(Long, ChronoUnit)}&lt;/li&gt;
+     * &lt;li&gt;{@link WindowFlux#withOffset(Instant)}&lt;/li&gt;
+     * &lt;li&gt;{@link WindowFlux#withColumn(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link WindowFlux#withStartCol(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link WindowFlux#withStartCol(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link WindowFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link WindowFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link WindowFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link WindowFlux}
+     */
+    @Nonnull
+    public final WindowFlux window() {
+<span class="fc" id="L1538">        return new WindowFlux(this);</span>
+    }
+
+    /**
+     * Groups the results by a given time range.
+     *
+     * @param every     duration of time between windows
+     * @param everyUnit a {@code ChronoUnit} determining how to interpret the {@code every}
+     * @return {@link WindowFlux}
+     */
+    @Nonnull
+    public final WindowFlux window(@Nonnull final Long every,
+                                   @Nonnull final ChronoUnit everyUnit) {
+
+<span class="fc" id="L1552">        Arguments.checkNotNull(every, &quot;Every is required&quot;);</span>
+<span class="fc" id="L1553">        Arguments.checkNotNull(everyUnit, &quot;Every ChronoUnit is required&quot;);</span>
+
+<span class="fc" id="L1555">        return new WindowFlux(this).withEvery(every, everyUnit);</span>
+    }
+
+    /**
+     * Groups the results by a given time range.
+     *
+     * @param every      duration of time between windows
+     * @param everyUnit  a {@code ChronoUnit} determining how to interpret the {@code every}
+     * @param period     duration of the windowed partition
+     * @param periodUnit a {@code ChronoUnit} determining how to interpret the {@code period}
+     * @return {@link WindowFlux}
+     */
+    @Nonnull
+    public final WindowFlux window(@Nonnull final Long every,
+                                   @Nonnull final ChronoUnit everyUnit,
+                                   @Nonnull final Long period,
+                                   @Nonnull final ChronoUnit periodUnit) {
+
+<span class="fc" id="L1573">        Arguments.checkNotNull(every, &quot;Every is required&quot;);</span>
+<span class="fc" id="L1574">        Arguments.checkNotNull(everyUnit, &quot;Every ChronoUnit is required&quot;);</span>
+
+<span class="fc" id="L1576">        Arguments.checkNotNull(period, &quot;Period is required&quot;);</span>
+<span class="fc" id="L1577">        Arguments.checkNotNull(periodUnit, &quot;Period ChronoUnit is required&quot;);</span>
+
+<span class="fc" id="L1579">        return new WindowFlux(this)</span>
+<span class="fc" id="L1580">                .withEvery(every, everyUnit)</span>
+<span class="fc" id="L1581">                .withPeriod(period, periodUnit);</span>
+    }
+
+    /**
+     * Groups the results by a given time range.
+     *
+     * @param every      duration of time between windows
+     * @param everyUnit  a {@code ChronoUnit} determining how to interpret the {@code every}
+     * @param period     duration of the windowed partition
+     * @param periodUnit a {@code ChronoUnit} determining how to interpret the {@code period}
+     * @param offset     The offset duration relative to the location offset
+     * @return {@link WindowFlux}
+     */
+    @Nonnull
+    public final WindowFlux window(@Nonnull final Long every,
+                                   @Nonnull final ChronoUnit everyUnit,
+                                   @Nonnull final Long period,
+                                   @Nonnull final ChronoUnit periodUnit,
+                                   @Nonnull final Instant offset) {
+
+<span class="fc" id="L1601">        return new WindowFlux(this)</span>
+<span class="fc" id="L1602">                .withEvery(every, everyUnit)</span>
+<span class="fc" id="L1603">                .withPeriod(period, periodUnit)</span>
+<span class="fc" id="L1604">                .withOffset(offset);</span>
+    }
+
+    /**
+     * Groups the results by a given time range.
+     *
+     * @param every      duration of time between windows
+     * @param everyUnit  a {@code ChronoUnit} determining how to interpret the {@code every}
+     * @param period     duration of the windowed partition
+     * @param periodUnit a {@code ChronoUnit} determining how to interpret the {@code period}
+     * @param offset     The offset duration relative to the location offset
+     * @param offsetUnit a {@code ChronoUnit} determining how to interpret the {@code offset}
+     * @return {@link WindowFlux}
+     */
+    @Nonnull
+    public final WindowFlux window(@Nonnull final Long every,
+                                   @Nonnull final ChronoUnit everyUnit,
+                                   @Nonnull final Long period,
+                                   @Nonnull final ChronoUnit periodUnit,
+                                   @Nonnull final Long offset,
+                                   @Nonnull final ChronoUnit offsetUnit) {
+
+<span class="fc" id="L1626">        return new WindowFlux(this)</span>
+<span class="fc" id="L1627">                .withEvery(every, everyUnit)</span>
+<span class="fc" id="L1628">                .withPeriod(period, periodUnit)</span>
+<span class="fc" id="L1629">                .withOffset(offset, offsetUnit);</span>
+    }
+
+    /**
+     * Partitions the results by a given time range.
+     *
+     * @param every      duration of time between windows
+     * @param everyUnit  a {@code ChronoUnit} determining how to interpret the {@code every}
+     * @param period     duration of the windowed partition
+     * @param periodUnit a {@code ChronoUnit} determining how to interpret the {@code period}
+     * @param offset     The offset duration relative to the location offset
+     * @param offsetUnit a {@code ChronoUnit} determining how to interpret the {@code offset}
+     * @param timeColumn name of the time column to use
+     * @param startCol   name of the column containing the window start time
+     * @param stopCol    name of the column containing the window stop time
+     * @return {@link WindowFlux}
+     */
+    @Nonnull
+    public final WindowFlux window(@Nonnull final Long every,
+                                   @Nonnull final ChronoUnit everyUnit,
+                                   @Nonnull final Long period,
+                                   @Nonnull final ChronoUnit periodUnit,
+                                   @Nonnull final Long offset,
+                                   @Nonnull final ChronoUnit offsetUnit,
+                                   @Nonnull final String timeColumn,
+                                   @Nonnull final String startCol,
+                                   @Nonnull final String stopCol) {
+
+<span class="fc" id="L1657">        return new WindowFlux(this)</span>
+<span class="fc" id="L1658">                .withEvery(every, everyUnit)</span>
+<span class="fc" id="L1659">                .withPeriod(period, periodUnit)</span>
+<span class="fc" id="L1660">                .withOffset(offset, offsetUnit)</span>
+<span class="fc" id="L1661">                .withColumn(timeColumn)</span>
+<span class="fc" id="L1662">                .withStartCol(startCol)</span>
+<span class="fc" id="L1663">                .withStopCol(stopCol);</span>
+
+    }
+
+    /**
+     * Partitions the results by a given time range.
+     *
+     * @param every      duration of time between windows
+     * @param everyUnit  a {@code ChronoUnit} determining how to interpret the {@code every}
+     * @param period     duration of the windowed partition
+     * @param periodUnit a {@code ChronoUnit} determining how to interpret the {@code period}
+     * @param offset     The offset duration relative to the location offset
+     * @param timeColumn name of the time column to use
+     * @param startCol   name of the column containing the window start time
+     * @param stopCol    name of the column containing the window stop time
+     * @return {@link WindowFlux}
+     */
+    @Nonnull
+    public final WindowFlux window(@Nonnull final Long every,
+                                   @Nonnull final ChronoUnit everyUnit,
+                                   @Nonnull final Long period,
+                                   @Nonnull final ChronoUnit periodUnit,
+                                   @Nonnull final Instant offset,
+                                   @Nonnull final String timeColumn,
+                                   @Nonnull final String startCol,
+                                   @Nonnull final String stopCol) {
+
+<span class="fc" id="L1690">        return new WindowFlux(this)</span>
+<span class="fc" id="L1691">                .withEvery(every, everyUnit)</span>
+<span class="fc" id="L1692">                .withPeriod(period, periodUnit)</span>
+<span class="fc" id="L1693">                .withOffset(offset)</span>
+<span class="fc" id="L1694">                .withColumn(timeColumn)</span>
+<span class="fc" id="L1695">                .withStartCol(startCol)</span>
+<span class="fc" id="L1696">                .withStopCol(stopCol);</span>
+    }
+
+    /**
+     * Yield a query results to yielded results.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link YieldFlux#withName(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link YieldFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link YieldFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link YieldFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link YieldFlux}
+     */
+    @Nonnull
+    public final YieldFlux yield() {
+<span class="fc" id="L1714">        return new YieldFlux(this);</span>
+    }
+
+    /**
+     * Yield a query results to yielded results.
+     *
+     * @param name The unique name to give to yielded results. Has to be defined.
+     * @return {@link YieldFlux}
+     */
+    @Nonnull
+    public final YieldFlux yield(@Nonnull final String name) {
+<span class="fc" id="L1725">        return new YieldFlux(this).withName(name);</span>
+    }
+
+    /**
+     * Write the custom Flux expression.
+     *
+     * @param expression flux expression
+     * @return {@link ExpressionFlux}
+     */
+    @Nonnull
+    public final ExpressionFlux expression(@Nonnull final String expression) {
+
+<span class="fc" id="L1737">        Arguments.checkNonEmpty(expression, &quot;Expression&quot;);</span>
+
+<span class="fc" id="L1739">        return new ExpressionFlux(this, expression);</span>
+    }
+
+    /**
+     * Create new operator with type {@code type}.
+     *
+     * &lt;pre&gt;
+     * Flux flux = Flux
+     *      .from(&quot;telegraf&quot;)
+     *      .operator(FilterMeasurement.class)
+     *          .withName(&quot;cpu&quot;)
+     *      .sum();
+     * &lt;/pre&gt;
+     *
+     * @param type operator type
+     * @param &lt;F&gt;  operator type
+     * @return operator with {@code type}
+     */
+    @Nonnull
+    public final &lt;F extends AbstractParametrizedFlux&gt; F operator(@Nonnull final Class&lt;F&gt; type) {
+
+<span class="nc" id="L1760">        Arguments.checkNotNull(type, &quot;Operator type is required&quot;);</span>
+
+        try {
+<span class="nc" id="L1763">            return type.getConstructor(Flux.class).newInstance(this);</span>
+<span class="nc" id="L1764">        } catch (Exception e) {</span>
+<span class="nc" id="L1765">            throw new RuntimeException(e);</span>
+        }
+    }
+
+    /**
+     * Add named property to current operator.
+     *
+     * &lt;pre&gt;
+     *  FluxChain fluxChain = new FluxChain()
+     *      .withPropertyNamed(&quot;every&quot;, 15, ChronoUnit.MINUTES)
+     *      .withPropertyNamed(&quot;period&quot;, 20L, ChronoUnit.SECONDS)
+     *      .withPropertyNamed(&quot;start&quot;, -50, ChronoUnit.DAYS)
+     *      .withPropertyNamed(&quot;round&quot;, 1L, ChronoUnit.HOURS);
+     *
+     *  Flux flux = Flux.from(&quot;telegraf&quot;)
+     *      .window()
+     *          .withPropertyNamed(&quot;every&quot;)
+     *          .withPropertyNamed(&quot;period&quot;)
+     *          .withPropertyNamed(&quot;start&quot;)
+     *          .withPropertyNamed(&quot;round&quot;)
+     *      .sum();
+     *
+     * flux.print(fluxChain);
+     * &lt;/pre&gt;
+     *
+     * @param property name in Flux query and in named properties
+     * @return a current operator.
+     */
+    @Nonnull
+    public final Flux withPropertyNamed(@Nonnull final String property) {
+<span class="fc" id="L1795">        return withPropertyNamed(property, property);</span>
+    }
+
+    /**
+     * Add named property to current operator.
+     *
+     * &lt;pre&gt;
+     * Flux flux = Flux
+     *      .from(&quot;telegraf&quot;)
+     *      .limit()
+     *          .withPropertyNamed(&quot;n&quot;, &quot;limit&quot;)
+     *      .sum();
+     *
+     * FluxChain fluxChain = new FluxChain()
+     *      .withPropertyNamed(&quot;limit&quot;, 15);
+     *
+     * flux.print(fluxChain);
+     * &lt;/pre&gt;
+     *
+     * @param fluxName      name in Flux query
+     * @param namedProperty name in named properties
+     * @return a current operator
+     */
+    @Nonnull
+    public final Flux withPropertyNamed(@Nonnull final String fluxName, @Nonnull final String namedProperty) {
+
+<span class="fc" id="L1821">        Arguments.checkNonEmpty(fluxName, &quot;Flux property name&quot;);</span>
+<span class="fc" id="L1822">        Arguments.checkNonEmpty(namedProperty, &quot;Named property&quot;);</span>
+
+<span class="fc" id="L1824">        this.operatorProperties.putPropertyNamed(fluxName, namedProperty);</span>
+
+<span class="fc" id="L1826">        return this;</span>
+    }
+
+    /**
+     * Add property value to current operator.
+     *
+     * &lt;pre&gt;
+     * Flux flux = Flux
+     *      .from(&quot;telegraf&quot;)
+     *      .limit()
+     *          .withPropertyValue(&quot;n&quot;, 5)
+     *      .sum();
+     * &lt;/pre&gt;
+     *
+     * @param propertyName name in Flux query
+     * @param value        value of property. If null than ignored.
+     * @return a current operator
+     */
+    @Nonnull
+    public final Flux withPropertyValue(@Nonnull final String propertyName, @Nullable final Object value) {
+
+<span class="fc" id="L1847">        Arguments.checkNonEmpty(propertyName, &quot;Flux property name&quot;);</span>
+
+<span class="fc" id="L1849">        this.operatorProperties.putPropertyValue(propertyName, value);</span>
+
+<span class="fc" id="L1851">        return this;</span>
+    }
+
+    /**
+     * Add string property value to current operator that will be quoted (value =&amp;gt; &quot;value&quot;).
+     *
+     * &lt;pre&gt;
+     * Flux flux = Flux
+     *      .from(&quot;telegraf&quot;)
+     *      .window(5, ChronoUnit.MINUTES)
+     *          .withPropertyValueEscaped(&quot;startCol&quot;, &quot;differentCol&quot;)
+     *      .sum();
+     * &lt;/pre&gt;
+     *
+     * @param property name of property in Flux query
+     * @param amount   the amount of the duration, measured in terms of the unit, positive or negative
+     * @param unit     the unit that the duration is measured in, must have an exact duration.  If null than ignored.
+     * @return a current operator
+     */
+    @Nonnull
+    public final Flux withPropertyValue(@Nonnull final String property,
+                                        @Nullable final Long amount,
+                                        @Nullable final ChronoUnit unit) {
+
+<span class="fc" id="L1875">        Arguments.checkNonEmpty(property, &quot;Flux property name&quot;);</span>
+
+<span class="fc" id="L1877">        this.operatorProperties.putPropertyValue(property, amount, unit);</span>
+
+<span class="fc" id="L1879">        return this;</span>
+    }
+
+    /**
+     * Add string property value to current operator that will be quoted (value =&amp;gt; &quot;value&quot;).
+     *
+     * &lt;pre&gt;
+     * Flux flux = Flux
+     *      .from(&quot;telegraf&quot;)
+     *      .window(5, ChronoUnit.MINUTES)
+     *          .withPropertyValueEscaped(&quot;startCol&quot;, &quot;differentCol&quot;)
+     *      .sum();
+     * &lt;/pre&gt;
+     *
+     * @param property name of property in Flux query
+     * @param value    value of property. If null than ignored.
+     * @return a current operator
+     */
+    @Nonnull
+    public final Flux withPropertyValueEscaped(@Nonnull final String property, @Nullable final String value) {
+
+<span class="fc" id="L1900">        Arguments.checkNonEmpty(property, &quot;Flux property name&quot;);</span>
+
+<span class="fc" id="L1902">        this.operatorProperties.putPropertyValueString(property, value);</span>
+
+<span class="fc" id="L1904">        return this;</span>
+    }
+
+    /**
+     * Append actual Flux function to Flux query.
+     *
+     * @param parameters named parameters for Flux query
+     * @param builder    Flux query chaing
+     */
+    public abstract void appendActual(@Nonnull final Map&lt;String, Object&gt; parameters,
+                                      @Nonnull final StringBuilder builder);
+
+    /**
+     * Create the Flux query that can be executed by FluxService.
+     *
+     * @return Flux query
+     */
+    @Nonnull
+    @Override
+    public String toString() {
+<span class="fc" id="L1924">        return toString(new HashMap&lt;&gt;());</span>
+    }
+
+    /**
+     * Create the Flux query that can be executed by FluxService.
+     *
+     * @param parameters flux query named parameters
+     * @return Flux query
+     */
+    @Nonnull
+    public String toString(@Nonnull final Map&lt;String, Object&gt; parameters) {
+
+<span class="fc" id="L1936">        Arguments.checkNotNull(parameters, &quot;Parameters are required&quot;);</span>
+
+<span class="fc" id="L1938">        StringBuilder builder = new StringBuilder();</span>
+
+<span class="fc" id="L1940">        appendActual(parameters, builder);</span>
+
+<span class="fc" id="L1942">        return builder.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

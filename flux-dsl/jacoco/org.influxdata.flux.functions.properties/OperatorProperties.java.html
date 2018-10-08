@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OperatorProperties.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Flux DSL</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.flux.functions.properties</a> &gt; <span class="el_source">OperatorProperties.java</span></div><h1>OperatorProperties.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.flux.functions.properties;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.StringJoiner;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.flux.Flux;
+import org.influxdata.platform.Arguments;
+
+/**
+ * The operator properties. Support named-property, property with values.
+ *
+ * @author Jakub Bednar (bednar@github) (28/06/2018 05:32)
+ */
+public final class OperatorProperties {
+
+<span class="fc" id="L48">    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter</span>
+<span class="fc" id="L49">            .ofPattern(&quot;yyyy-MM-dd'T'HH:mm:ss.nnnnnnnnn'Z'&quot;)</span>
+<span class="fc" id="L50">            .withZone(ZoneId.of(&quot;UTC&quot;));</span>
+<span class="fc" id="L51">    private Map&lt;String, Property&gt; properties = new LinkedHashMap&lt;&gt;();</span>
+
+<span class="fc" id="L53">    private OperatorProperties() {</span>
+<span class="fc" id="L54">    }</span>
+
+    @Nonnull
+    public static OperatorProperties of() {
+<span class="fc" id="L58">        return new OperatorProperties();</span>
+    }
+
+    /**
+     * Serialize value for Flux property.
+     *
+     * @param value to serialize
+     * @return serialized value
+     */
+    @Nullable
+    public static String serializeValue(@Nonnull final Object value) {
+
+<span class="fc" id="L70">        Object serializedValue = value;</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (serializedValue.getClass().isArray()) {</span>
+<span class="fc" id="L72">            serializedValue = Arrays.asList((Object[]) value);</span>
+        }
+
+        // collection to delimited string [&quot;one&quot;, &quot;two&quot;, &quot;three&quot;]
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (serializedValue instanceof Collection) {</span>
+
+            //noinspection unchecked
+<span class="fc" id="L79">            Collection&lt;Object&gt; collection = (Collection&lt;Object&gt;) serializedValue;</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">            if (collection.isEmpty()) {</span>
+<span class="fc" id="L81">                return null;</span>
+            }
+
+<span class="fc" id="L84">            serializedValue = collection.stream()</span>
+<span class="fc" id="L85">                    .map(host -&gt; &quot;\&quot;&quot; + host + &quot;\&quot;&quot;)</span>
+<span class="fc" id="L86">                    .collect(Collectors.joining(&quot;, &quot;, &quot;[&quot;, &quot;]&quot;));</span>
+        }
+
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (serializedValue instanceof Map) {</span>
+
+<span class="fc" id="L91">            StringJoiner joiner = new StringJoiner(&quot;, &quot;, &quot;{&quot;, &quot;}&quot;);</span>
+
+<span class="fc" id="L93">            Map map = (Map) serializedValue;</span>
+            //noinspection unchecked
+<span class="fc" id="L95">            map.keySet().forEach(key -&gt; {</span>
+<span class="fc" id="L96">                joiner.add(String.format(&quot;%s: \&quot;%s\&quot;&quot;, key, map.get(key)));</span>
+<span class="fc" id="L97">            });</span>
+
+<span class="fc" id="L99">            serializedValue = joiner;</span>
+        }
+
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        if (serializedValue instanceof Instant) {</span>
+<span class="fc" id="L103">            serializedValue = DATE_FORMATTER.format((Instant) value);</span>
+        }
+
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">        if (serializedValue instanceof Supplier) {</span>
+<span class="nc" id="L107">            return serializeValue(((Supplier) serializedValue).get());</span>
+        }
+
+<span class="fc" id="L110">        return serializedValue.toString();</span>
+    }
+
+    /**
+     * @param fluxName      name in Flux query
+     * @param namedProperty name in named properties
+     * @see Flux#withPropertyNamed(String, String)
+     */
+    public void putPropertyNamed(@Nonnull final String fluxName, @Nonnull final String namedProperty) {
+
+<span class="fc" id="L120">        Arguments.checkNonEmpty(fluxName, &quot;Flux property name&quot;);</span>
+<span class="fc" id="L121">        Arguments.checkNonEmpty(namedProperty, &quot;Named property&quot;);</span>
+
+<span class="fc" id="L123">        put(fluxName, new NamedProperty&lt;&gt;(namedProperty));</span>
+<span class="fc" id="L124">    }</span>
+
+    /**
+     * @param fluxName name in Flux query
+     * @param value    value of property. If null than ignored.
+     * @see Flux#withPropertyValue(String, Object)
+     */
+    public void putPropertyValue(@Nonnull final String fluxName, @Nullable final Object value) {
+
+<span class="fc" id="L133">        Arguments.checkNonEmpty(fluxName, &quot;Flux property name&quot;);</span>
+
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        if (value == null) {</span>
+<span class="fc" id="L136">            return;</span>
+        }
+
+<span class="fc" id="L139">        put(fluxName, (m) -&gt; value);</span>
+<span class="fc" id="L140">    }</span>
+
+    /**
+     * @param fluxName name of property in Flux query
+     * @param amount   the amount of the duration, measured in terms of the unit, positive or negative
+     * @param unit     the unit that the duration is measured in, must have an exact duration.  If null than ignored.
+     * @see Flux#withPropertyValue(String, Long, ChronoUnit)
+     */
+    public void putPropertyValue(@Nonnull final String fluxName,
+                                 @Nullable final Long amount,
+                                 @Nullable final ChronoUnit unit) {
+
+<span class="fc" id="L152">        Arguments.checkNonEmpty(fluxName, &quot;Flux property name&quot;);</span>
+
+<span class="fc bfc" id="L154" title="All 4 branches covered.">        if (amount == null || unit == null) {</span>
+<span class="fc" id="L155">            return;</span>
+        }
+
+<span class="fc" id="L158">        put(fluxName, (m) -&gt; new TimeInterval(amount, unit));</span>
+<span class="fc" id="L159">    }</span>
+
+    /**
+     * @param fluxName name of property in Flux query
+     * @param value    value of property. If null than ignored.
+     * @see Flux#withPropertyValueEscaped(String, String)
+     */
+    public void putPropertyValueString(@Nonnull final String fluxName, @Nullable final String value) {
+
+<span class="fc" id="L168">        Arguments.checkNonEmpty(fluxName, &quot;Flux property name&quot;);</span>
+
+<span class="fc bfc" id="L170" title="All 2 branches covered.">        if (value == null) {</span>
+<span class="fc" id="L171">            return;</span>
+        }
+
+<span class="fc" id="L174">        put(fluxName, new StringProperty(value));</span>
+<span class="fc" id="L175">    }</span>
+
+    @Nonnull
+    public Collection&lt;String&gt; keys() {
+<span class="fc" id="L179">        return properties.keySet();</span>
+    }
+
+    @Nullable
+    public String get(@Nonnull final String key, @Nonnull final Map&lt;String, Object&gt; namedProperties) {
+
+<span class="fc" id="L185">        Property property = properties.get(key);</span>
+<span class="pc bpc" id="L186" title="1 of 2 branches missed.">        if (property == null) {</span>
+<span class="nc" id="L187">            return null;</span>
+        }
+
+<span class="fc" id="L190">        Object value = property.value(namedProperties);</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">        if (value == null) {</span>
+<span class="nc" id="L192">            return null;</span>
+        }
+
+        // array to collection
+<span class="fc" id="L196">        return serializeValue(value);</span>
+    }
+
+    private void put(@Nonnull final String name, @Nullable final Property property) {
+
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">        if (property == null) {</span>
+<span class="nc" id="L202">            return;</span>
+        }
+
+<span class="fc" id="L205">        properties.put(name, property);</span>
+<span class="fc" id="L206">    }</span>
+
+    private interface Property&lt;T&gt; {
+
+        /**
+         * @param namedProperties named property values
+         * @return value of property
+         */
+        @Nullable
+        T value(@Nonnull final Map&lt;String, Object&gt; namedProperties);
+    }
+
+    private final class NamedProperty&lt;T&gt; implements Property&lt;T&gt; {
+
+        private final String parameterName;
+
+<span class="fc" id="L222">        private NamedProperty(@Nonnull final String parameterName) {</span>
+
+<span class="fc" id="L224">            Arguments.checkNonEmpty(parameterName, &quot;Parameter name&quot;);</span>
+
+<span class="fc" id="L226">            this.parameterName = parameterName;</span>
+<span class="fc" id="L227">        }</span>
+
+        @Nonnull
+        @Override
+        @SuppressWarnings(&quot;unchecked&quot;)
+        public T value(@Nonnull final Map&lt;String, Object&gt; namedProperties) {
+
+<span class="fc" id="L234">            Object parameterValue = namedProperties.get(parameterName);</span>
+            // parameter must be defined
+<span class="fc bfc" id="L236" title="All 2 branches covered.">            if (parameterValue == null) {</span>
+<span class="fc" id="L237">                String message = String.format(&quot;The parameter '%s' is not defined.&quot;, parameterName);</span>
+
+<span class="fc" id="L239">                throw new IllegalStateException(message);</span>
+            }
+
+<span class="fc" id="L242">            return (T) parameterValue;</span>
+        }
+    }
+
+    private final class StringProperty implements Property&lt;String&gt; {
+
+        private final String value;
+
+<span class="fc" id="L250">        private StringProperty(@Nullable final String value) {</span>
+<span class="fc" id="L251">            this.value = value;</span>
+<span class="fc" id="L252">        }</span>
+
+        @Nullable
+        @Override
+        public String value(@Nonnull final Map&lt;String, Object&gt; namedProperties) {
+
+<span class="pc bpc" id="L258" title="1 of 2 branches missed.">            if (value == null) {</span>
+<span class="nc" id="L259">                return null;</span>
+            }
+
+<span class="fc" id="L262">            return &quot;\&quot;&quot; + value + &quot;\&quot;&quot;;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

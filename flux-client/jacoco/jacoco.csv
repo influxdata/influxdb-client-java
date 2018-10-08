@@ -5,7 +5,7 @@ The Flux client,org.influxdata.flux.domain,FluxTable,0,66,0,0,0,10,0,5,0,5
 The Flux client,org.influxdata.flux.impl,FluxClientImpl,14,396,0,2,6,102,0,27,0,26
 The Flux client,org.influxdata.flux.impl,FluxCsvParser.ParsingState,0,24,0,0,0,3,0,1,0,1
 The Flux client,org.influxdata.flux.impl,FluxClientImpl.DefaultCancellable,4,12,0,0,2,3,1,2,1,2
-The Flux client,org.influxdata.flux.impl,AbstractFluxClient,5,116,2,6,1,37,2,8,0,6
+The Flux client,org.influxdata.flux.impl,AbstractFluxClient,5,142,2,8,1,43,2,10,0,7
 The Flux client,org.influxdata.flux.impl,FluxCsvParser,1,481,5,53,1,118,5,38,0,11
 The Flux client,org.influxdata.flux.impl,FluxResponseConsumerTable,0,27,0,0,0,7,0,4,0,4
 The Flux client,org.influxdata.flux.impl,FluxClientImpl.new Callback() {...},7,68,3,7,2,16,3,5,0,3
