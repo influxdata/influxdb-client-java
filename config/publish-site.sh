@@ -45,7 +45,7 @@ if [ "$TRAVIS_REPO_SLUG" == "bonitoo-io/influxdata-platform-java" ] && [ "$TRAVI
     echo "Clone: ${GITHUB_TOKEN} ${TRAVIS_REPO_SLUG} ${HOME}/gh-pages"
 
     rm -rf ${HOME}/gh-pages
-    git clone --branch=gh-pages https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG} ${HOME}/gh-pages
+    git clone --quiet --branch=gh-pages https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG} ${HOME}/gh-pages > /dev/null
 
     # Push Site
     rm -rf ${HOME}/gh-pages/*
