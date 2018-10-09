@@ -23,7 +23,6 @@ package org.influxdata.flux.functions;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
@@ -71,7 +70,7 @@ public final class RangeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public RangeFlux withStart(@Nonnull final Instant start) {
 
-        Objects.requireNonNull(start, "Start is required");
+        Arguments.checkNotNull(start, "Start is required");
 
         this.withPropertyValue("start", start);
 
@@ -86,8 +85,8 @@ public final class RangeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public RangeFlux withStart(@Nonnull final Long start, @Nonnull final ChronoUnit unit) {
 
-        Objects.requireNonNull(start, "Start is required");
-        Objects.requireNonNull(unit, "ChronoUnit is required");
+        Arguments.checkNotNull(start, "Start is required");
+        Arguments.checkNotNull(unit, "ChronoUnit is required");
 
         this.withPropertyValue("start", start, unit);
 
@@ -115,7 +114,7 @@ public final class RangeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public RangeFlux withStop(@Nonnull final Instant stop) {
 
-        Objects.requireNonNull(stop, "Stop is required");
+        Arguments.checkNotNull(stop, "Stop is required");
 
         this.withPropertyValue("stop", stop);
 
@@ -130,8 +129,8 @@ public final class RangeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public RangeFlux withStop(@Nonnull final Long stop, @Nonnull final ChronoUnit unit) {
 
-        Objects.requireNonNull(stop, "Stop is required");
-        Objects.requireNonNull(unit, "ChronoUnit is required");
+        Arguments.checkNotNull(stop, "Stop is required");
+        Arguments.checkNotNull(unit, "ChronoUnit is required");
 
         this.withPropertyValue("stop", stop, unit);
 

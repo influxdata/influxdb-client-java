@@ -22,14 +22,13 @@
 package org.influxdata.flux.functions;
 
 import java.util.Map;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#rename">rename</a> -
+ * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#rename">rename</a> -
  * Rename will rename specified columns in a table. If a column is renamed and is part of the group key,
  * the column name in the group key will be updated
  *
@@ -81,7 +80,7 @@ public final class RenameFlux extends AbstractParametrizedFlux {
     @Nonnull
     public RenameFlux withColumns(@Nonnull final Map<String, String> columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         this.withPropertyValue("columns", columns);
 

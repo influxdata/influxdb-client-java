@@ -23,14 +23,13 @@ package org.influxdata.flux.functions;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#derivative">derivative</a> -
+ * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#derivative">derivative</a> -
  * Computes the time based difference between subsequent non null records.
  *
  * <h3>Options</h3>
@@ -79,8 +78,8 @@ public final class DerivativeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DerivativeFlux withUnit(@Nonnull final Long duration, @Nonnull final ChronoUnit unit) {
 
-        Objects.requireNonNull(duration, "Duration is required");
-        Objects.requireNonNull(unit, "ChronoUnit is required");
+        Arguments.checkNotNull(duration, "Duration is required");
+        Arguments.checkNotNull(unit, "ChronoUnit is required");
 
         this.withPropertyValue("unit", duration, unit);
 
@@ -120,7 +119,7 @@ public final class DerivativeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DerivativeFlux withColumns(@Nonnull final String[] columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         this.withPropertyValue("columns", columns);
 
@@ -134,7 +133,7 @@ public final class DerivativeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DerivativeFlux withColumns(@Nonnull final Collection<String> columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         this.withPropertyValue("columns", columns);
 

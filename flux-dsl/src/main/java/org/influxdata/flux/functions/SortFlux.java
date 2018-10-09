@@ -22,10 +22,10 @@
 package org.influxdata.flux.functions;
 
 import java.util.Collection;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
+import org.influxdata.platform.Arguments;
 
 /**
  * <a href="https://github.com/influxdata/platform/tree/master/query#sort">sort</a> - Sorts the results by the
@@ -86,7 +86,7 @@ public final class SortFlux extends AbstractParametrizedFlux {
     @Nonnull
     public SortFlux withCols(@Nonnull final String[] columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         this.withPropertyValue("cols", columns);
 
@@ -100,7 +100,7 @@ public final class SortFlux extends AbstractParametrizedFlux {
     @Nonnull
     public SortFlux withCols(@Nonnull final Collection<String> columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         this.withPropertyValue("cols", columns);
 

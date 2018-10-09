@@ -34,7 +34,7 @@ import org.influxdata.platform.Arguments;
 /**
  * A record is a tuple of values. Each record in the table represents a single point in the series.
  *
- * <a href="https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#record">Specification</a>.
+ * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#record">Specification</a>.
  */
 public final class FluxRecord {
 

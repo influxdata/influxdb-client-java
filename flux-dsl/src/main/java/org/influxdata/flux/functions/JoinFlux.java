@@ -24,7 +24,6 @@ package org.influxdata.flux.functions;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.function.Supplier;
 import javax.annotation.Nonnull;
@@ -150,7 +149,7 @@ public final class JoinFlux extends AbstractParametrizedFlux {
     public JoinFlux withTable(@Nonnull final String name, @Nonnull final Flux table) {
 
         Arguments.checkNonEmpty(name, "FluxTable name");
-        Objects.requireNonNull(table, "Flux script to map table");
+        Arguments.checkNotNull(table, "Flux script to map table");
 
         tables.put(name, table);
 
@@ -176,7 +175,7 @@ public final class JoinFlux extends AbstractParametrizedFlux {
     @Nonnull
     public JoinFlux withOn(@Nonnull final String[] tags) {
 
-        Objects.requireNonNull(tags, "Tags are required");
+        Arguments.checkNotNull(tags, "Tags are required");
 
         withPropertyValue("on", tags);
 
@@ -190,7 +189,7 @@ public final class JoinFlux extends AbstractParametrizedFlux {
     @Nonnull
     public JoinFlux withOn(@Nonnull final Collection<String> tags) {
 
-        Objects.requireNonNull(tags, "Tags are required");
+        Arguments.checkNotNull(tags, "Tags are required");
 
         withPropertyValue("on", tags);
 
@@ -218,7 +217,7 @@ public final class JoinFlux extends AbstractParametrizedFlux {
     @Nonnull
     public JoinFlux withMethod(@Nonnull final MethodType method) {
 
-        Objects.requireNonNull(method, "Method");
+        Arguments.checkNotNull(method, "Method");
 
         this.withPropertyValueEscaped("method", method.toString().toLowerCase());
 

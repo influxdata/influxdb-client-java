@@ -36,6 +36,7 @@ import org.influxdata.flux.functions.DerivativeFlux;
 import org.influxdata.flux.functions.DifferenceFlux;
 import org.influxdata.flux.functions.DistinctFlux;
 import org.influxdata.flux.functions.DropFlux;
+import org.influxdata.flux.functions.DuplicateFlux;
 import org.influxdata.flux.functions.ExpressionFlux;
 import org.influxdata.flux.functions.FilterFlux;
 import org.influxdata.flux.functions.FirstFlux;
@@ -76,36 +77,37 @@ import org.influxdata.platform.Arguments;
 /**
  * <a href="https://github.com/influxdata/platform/tree/master/query#basic-syntax">Flux</a> - Data Scripting Language.
  * <br>
- * <a href="https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md">Flux Specification</a>
+ * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md">Flux Specification</a>
  *
  * <h3>The operators:</h3>
  * <ul>
  * <li>{@link FromFlux}</li>
  * <li>{@link CountFlux}</li>
  * <li>{@link CovarianceFlux}</li>
- * <li>cumulativeSum - Not defined in documentation or SPEC</li>
+ * <li>TODO cumulativeSum - Not defined in documentation or SPEC</li>
  * <li>{@link DerivativeFlux}</li>
  * <li>{@link DifferenceFlux}</li>
  * <li>{@link DistinctFlux}</li>
  * <li>{@link DropFlux}</li>
- * <li>TODO - duplicate</li>
+ * <li>{@link DuplicateFlux}</li>
  * <li>{@link FilterFlux}</li>
  * <li>{@link FirstFlux}</li>
  * <li>{@link GroupFlux}</li>
- * <li>TODO - histogram</li>
+ * <li>!TODO - histogram</li>
+ * <li>!TODO - histogramQuantile</li>
  * <li>{@link IntegralFlux}</li>
  * <li>{@link JoinFlux}</li>
  * <li>{@link KeepFlux}</li>
  * <li>{@link LastFlux}</li>
  * <li>{@link LimitFlux}</li>
- * <li>TODO - LinearBuckets</li>
+ * <li>!TODO - LinearBuckets</li>
  * <li>TODO - LogrithmicBuckets</li>
  * <li>{@link MapFlux}</li>
  * <li>{@link MaxFlux}</li>
  * <li>{@link MeanFlux}</li>
  * <li>{@link MinFlux}</li>
- * <li>percentile - Not defined in documentation or SPEC</li>
- * <li>TODO - pivot</li>
+ * <li>!TODO percentile - Not defined in documentation or SPEC</li>
+ * <li>!TODO - pivot</li>
  * <li>{@link RangeFlux}</li>
  * <li>{@link RenameFlux}</li>
  * <li>{@link SampleFlux}</li>
@@ -114,10 +116,10 @@ import org.influxdata.platform.Arguments;
  * <li>{@link SkewFlux}</li>
  * <li>{@link SortFlux}</li>
  * <li>{@link SpreadFlux}</li>
- * <li>stateTracking - Not defined in documentation or SPEC</li>
+ * <li>!TODO stateTracking - Not defined in documentation or SPEC</li>
  * <li>{@link StddevFlux}</li>
  * <li>{@link SumFlux}</li>
- * <li>TODO - to</li>
+ * <li>!TODO - to</li>
  * <li>{@link ToBoolFlux}</li>
  * <li>{@link ToIntFlux}</li>
  * <li>{@link ToFloatFlux}</li>
@@ -127,8 +129,6 @@ import org.influxdata.platform.Arguments;
  * <li>{@link ToUIntFlux}</li>
  * <li>{@link WindowFlux}</li>
  * <li>{@link YieldFlux}</li>
- * <li>toHttp - Not defined in documentation or SPEC</li>
- * <li>toKafka - Not defined in documentation or SPEC</li>
  * <li>{@link ExpressionFlux}</li>
  * </ul>
  *
@@ -623,6 +623,46 @@ public abstract class Flux {
     @Nonnull
     public final DropFlux drop(@Nonnull final String function) {
         return new DropFlux(this).withFunction(function);
+    }
+
+    /**
+     * Duplicate will duplicate a specified column in a table.
+     *
+     * <h3>The parameters had to be defined by:</h3>
+     * <ul>
+     * <li>{@link DuplicateFlux#withAs(String)}</li>
+     * <li>{@link DuplicateFlux#withColumn(String)} (String)}</li>
+     * <li>{@link DuplicateFlux#withPropertyNamed(String)}</li>
+     * <li>{@link DuplicateFlux#withPropertyNamed(String, String)}</li>
+     * <li>{@link DuplicateFlux#withPropertyValueEscaped(String, String)}</li>
+     * </ul>
+     *
+     * @return {@link DuplicateFlux}
+     */
+    @Nonnull
+    public final DuplicateFlux duplicate() {
+        return new DuplicateFlux(this);
+    }
+
+    /**
+     * Duplicate will duplicate a specified column in a table.
+     *
+     * <h3>The parameters had to be defined by:</h3>
+     * <ul>
+     * <li>{@link DuplicateFlux#withAs(String)}</li>
+     * <li>{@link DuplicateFlux#withColumn(String)} (String)}</li>
+     * <li>{@link DuplicateFlux#withPropertyNamed(String)}</li>
+     * <li>{@link DuplicateFlux#withPropertyNamed(String, String)}</li>
+     * <li>{@link DuplicateFlux#withPropertyValueEscaped(String, String)}</li>
+     * </ul>
+     *
+     * @param column the column to duplicate
+     * @param as     the name that should be assigned to the duplicate column
+     * @return {@link DuplicateFlux}
+     */
+    @Nonnull
+    public final DuplicateFlux duplicate(@Nonnull final String column, @Nonnull final String as) {
+        return new DuplicateFlux(this).withColumn(column).withAs(as);
     }
 
     /**

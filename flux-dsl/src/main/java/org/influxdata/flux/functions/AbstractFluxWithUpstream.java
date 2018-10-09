@@ -22,11 +22,11 @@
 package org.influxdata.flux.functions;
 
 import java.util.Map;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.flux.Flux;
+import org.influxdata.platform.Arguments;
 
 /**
  * Abstract base class for operators that take an upstream source of {@link Flux}.
@@ -43,7 +43,7 @@ abstract class AbstractFluxWithUpstream extends Flux {
 
     AbstractFluxWithUpstream(@Nonnull final Flux source) {
 
-        Objects.requireNonNull(source, "Source is required");
+        Arguments.checkNotNull(source, "Source is required");
 
         this.source = source;
     }

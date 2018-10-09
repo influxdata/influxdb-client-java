@@ -22,14 +22,13 @@
 package org.influxdata.flux.functions;
 
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#integral">integral</a> -
+ * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#integral">integral</a> -
  * For each aggregate column, it outputs the area under the curve of non null records.
  * The curve is defined as function where the domain is the record times and the range is the record values.
  *
@@ -68,8 +67,8 @@ public final class IntegralFlux extends AbstractParametrizedFlux {
     @Nonnull
     public IntegralFlux withUnit(@Nonnull final Long duration, @Nonnull final ChronoUnit unit) {
 
-        Objects.requireNonNull(duration, "Duration is required");
-        Objects.requireNonNull(unit, "ChronoUnit is required");
+        Arguments.checkNotNull(duration, "Duration is required");
+        Arguments.checkNotNull(unit, "ChronoUnit is required");
 
         this.withPropertyValue("unit", duration, unit);
 

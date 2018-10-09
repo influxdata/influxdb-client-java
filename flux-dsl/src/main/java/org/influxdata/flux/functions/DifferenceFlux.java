@@ -22,13 +22,13 @@
 package org.influxdata.flux.functions;
 
 import java.util.Collection;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
+import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#difference">difference</a> -
+ * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#difference">difference</a> -
  * Difference computes the difference between subsequent non null records.
  *
  * <h3>Options</h3>
@@ -91,7 +91,7 @@ public final class DifferenceFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DifferenceFlux withColumns(@Nonnull final String[] columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         this.withPropertyValue("columns", columns);
 
@@ -105,7 +105,7 @@ public final class DifferenceFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DifferenceFlux withColumns(@Nonnull final Collection<String> columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         this.withPropertyValue("columns", columns);
 

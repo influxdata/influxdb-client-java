@@ -22,10 +22,10 @@
 package org.influxdata.flux.functions;
 
 import java.util.Collection;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
+import org.influxdata.platform.Arguments;
 
 /**
  * <a href="https://github.com/influxdata/platform/tree/master/query#group">group</a> - Groups results by
@@ -76,7 +76,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withBy(@Nonnull final String groupBy) {
 
-        Objects.requireNonNull(groupBy, "GroupBy Column are required");
+        Arguments.checkNotNull(groupBy, "GroupBy Column are required");
 
         this.withPropertyValue("by", new String[]{groupBy});
 
@@ -90,7 +90,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withBy(@Nonnull final String[] groupBy) {
 
-        Objects.requireNonNull(groupBy, "GroupBy Columns are required");
+        Arguments.checkNotNull(groupBy, "GroupBy Columns are required");
 
         this.withPropertyValue("by", groupBy);
 
@@ -104,7 +104,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withBy(@Nonnull final Collection<String> groupBy) {
 
-        Objects.requireNonNull(groupBy, "GroupBy Columns are required");
+        Arguments.checkNotNull(groupBy, "GroupBy Columns are required");
 
         this.withPropertyValue("by", groupBy);
 
@@ -118,7 +118,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withKeep(@Nonnull final String[] keep) {
 
-        Objects.requireNonNull(keep, "Keep Columns are required");
+        Arguments.checkNotNull(keep, "Keep Columns are required");
 
         this.withPropertyValue("keep", keep);
 
@@ -132,7 +132,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withKeep(@Nonnull final Collection<String> keep) {
 
-        Objects.requireNonNull(keep, "Keep Columns are required");
+        Arguments.checkNotNull(keep, "Keep Columns are required");
 
         this.withPropertyValue("keep", keep);
 
@@ -146,7 +146,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withExcept(@Nonnull final String[] except) {
 
-        Objects.requireNonNull(except, "GroupBy Except Columns are required");
+        Arguments.checkNotNull(except, "GroupBy Except Columns are required");
 
         this.withPropertyValue("except", except);
 
@@ -160,7 +160,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withExcept(@Nonnull final Collection<String> except) {
 
-        Objects.requireNonNull(except, "GroupBy Except Columns are required");
+        Arguments.checkNotNull(except, "GroupBy Except Columns are required");
 
         this.withPropertyValue("except", except);
 

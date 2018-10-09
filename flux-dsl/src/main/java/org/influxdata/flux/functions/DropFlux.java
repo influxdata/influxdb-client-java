@@ -22,16 +22,14 @@
 package org.influxdata.flux.functions;
 
 import java.util.Collection;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#drop">drop</a> - Drop will exclude
- * specified columns from a table. Columns to exclude can be specified either through a list, or a predicate function.
- * When a dropped column is part of the group key it will also be dropped from the key.
+ * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#duplicate">duplicate</a> - Duplicate will
+ * duplicate a specified column in a table.
  *
  * <h3>Options</h3>
  * <ul>
@@ -79,7 +77,7 @@ public final class DropFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DropFlux withColumns(@Nonnull final String[] columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         this.withPropertyValue("columns", columns);
 
@@ -93,7 +91,7 @@ public final class DropFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DropFlux withColumns(@Nonnull final Collection<String> columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         this.withPropertyValue("columns", columns);
 

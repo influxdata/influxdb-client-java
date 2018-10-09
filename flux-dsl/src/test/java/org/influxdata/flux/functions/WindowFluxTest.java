@@ -51,18 +51,6 @@ class WindowFluxTest {
     }
 
     @Test
-    void unSupportedChronoUnit() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .window(15L, ChronoUnit.DECADES);
-
-        Assertions.assertThatThrownBy(flux::toString)
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Unit must be one of: NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS, HALF_DAYS, DAYS, WEEKS, MONTHS, YEARS");
-    }
-
-    @Test
     void windowEveryPeriodChronoUnit() {
 
         Flux flux = Flux

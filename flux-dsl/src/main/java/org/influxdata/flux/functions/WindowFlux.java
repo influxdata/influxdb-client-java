@@ -23,7 +23,6 @@ package org.influxdata.flux.functions;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
@@ -84,8 +83,8 @@ public final class WindowFlux extends AbstractParametrizedFlux {
     @Nonnull
     public WindowFlux withEvery(@Nonnull final Long every, @Nonnull final ChronoUnit everyUnit) {
 
-        Objects.requireNonNull(every, "Every is required");
-        Objects.requireNonNull(everyUnit, "Every ChronoUnit is required");
+        Arguments.checkNotNull(every, "Every is required");
+        Arguments.checkNotNull(everyUnit, "Every ChronoUnit is required");
 
         this.withPropertyValue("every", every, everyUnit);
 
@@ -114,8 +113,8 @@ public final class WindowFlux extends AbstractParametrizedFlux {
     @Nonnull
     public WindowFlux withPeriod(@Nonnull final Long period, @Nonnull final ChronoUnit periodUnit) {
 
-        Objects.requireNonNull(period, "Period is required");
-        Objects.requireNonNull(periodUnit, "Period ChronoUnit is required");
+        Arguments.checkNotNull(period, "Period is required");
+        Arguments.checkNotNull(periodUnit, "Period ChronoUnit is required");
 
         this.withPropertyValue("period", period, periodUnit);
 
@@ -144,8 +143,8 @@ public final class WindowFlux extends AbstractParametrizedFlux {
     @Nonnull
     public WindowFlux withOffset(@Nonnull final Long offset, @Nonnull final ChronoUnit offsetUnit) {
 
-        Objects.requireNonNull(offset, "Offset is required");
-        Objects.requireNonNull(offsetUnit, "Offset ChronoUnit is required");
+        Arguments.checkNotNull(offset, "Offset is required");
+        Arguments.checkNotNull(offsetUnit, "Offset ChronoUnit is required");
 
         this.withPropertyValue("start", offset, offsetUnit);
 
@@ -159,7 +158,7 @@ public final class WindowFlux extends AbstractParametrizedFlux {
     @Nonnull
     public WindowFlux withOffset(@Nonnull final Instant start) {
 
-        Objects.requireNonNull(start, "Offset is required");
+        Arguments.checkNotNull(start, "Offset is required");
 
         this.withPropertyValue("offset", start);
 

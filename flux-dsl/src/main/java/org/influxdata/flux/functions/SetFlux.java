@@ -27,7 +27,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#yield">yield</a> - Assigns a static
+ * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#yield">yield</a> - Assigns a static
  * value to each record.
  *
  * <h3>Options</h3>

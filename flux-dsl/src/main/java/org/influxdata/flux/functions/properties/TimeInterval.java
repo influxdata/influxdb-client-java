@@ -21,13 +21,15 @@
  */
 package org.influxdata.flux.functions.properties;
 
+import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import javax.annotation.Nonnull;
+
+import org.influxdata.platform.Arguments;
 
 /**
  * Flux duration literal -
- * <a href="https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#duration-literals">spec</a>.
+ * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#duration-literals">spec</a>.
  * <p>
  * A duration literal is a representation of a length of time. It has an integer part and a duration unit part.
  *
@@ -35,21 +37,20 @@ import javax.annotation.Nonnull;
  */
 public class TimeInterval {
 
-    private static final int HOURS_IN_HALF_DAY = 12;
-
     private Long interval;
     private ChronoUnit chronoUnit;
 
     public TimeInterval(@Nonnull final Long interval, @Nonnull final ChronoUnit chronoUnit) {
 
-        Objects.requireNonNull(interval, "Interval is required");
-        Objects.requireNonNull(chronoUnit, "ChronoUnit is required");
+        Arguments.checkNotNull(interval, "Interval is required");
+        Arguments.checkNotNull(chronoUnit, "ChronoUnit is required");
 
         this.interval = interval;
         this.chronoUnit = chronoUnit;
     }
 
     @Override
+    @SuppressWarnings("MagicNumber")
     public String toString() {
 
         String unit;
@@ -75,7 +76,7 @@ public class TimeInterval {
                 break;
             case HALF_DAYS:
                 unit = "h";
-                calculatedInterval = HOURS_IN_HALF_DAY * interval;
+                calculatedInterval = Duration.of(interval, ChronoUnit.HALF_DAYS).toHours();
                 break;
             case DAYS:
                 unit = "d";
@@ -89,9 +90,25 @@ public class TimeInterval {
             case YEARS:
                 unit = "y";
                 break;
+            case DECADES:
+                unit = "y";
+                calculatedInterval = Math.multiplyExact(interval, 10);
+                break;
+            case CENTURIES:
+                unit = "y";
+                calculatedInterval = Math.multiplyExact(interval, 100);
+                break;
+            case MILLENNIA:
+                unit = "y";
+                calculatedInterval = Math.multiplyExact(interval, 1000);
+                break;
+            case ERAS:
+                unit = "y";
+                calculatedInterval = Math.multiplyExact(interval, 1000_000_000);
+                break;
+            case FOREVER:
             default:
-                String message = "Unit must be one of: "
-                        + "NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS, HALF_DAYS, DAYS, WEEKS, MONTHS, YEARS";
+                String message = String.format("The ChronoUnit.%s is not supported.", chronoUnit);
 
                 throw new IllegalArgumentException(message);
         }

@@ -22,14 +22,13 @@
 package org.influxdata.flux.functions;
 
 import java.util.Collection;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#keep">keep</a> -
+ * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#keep">keep</a> -
  * Keep is the inverse of drop. It will return a table containing only columns that are specified, ignoring all others.
  * Only columns in the group key that are also specified in keep will be kept in the resulting group key.
  *
@@ -79,7 +78,7 @@ public final class KeepFlux extends AbstractParametrizedFlux {
     @Nonnull
     public KeepFlux withColumns(@Nonnull final String[] columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         this.withPropertyValue("columns", columns);
 
@@ -93,7 +92,7 @@ public final class KeepFlux extends AbstractParametrizedFlux {
     @Nonnull
     public KeepFlux withColumns(@Nonnull final Collection<String> columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         this.withPropertyValue("columns", columns);
 

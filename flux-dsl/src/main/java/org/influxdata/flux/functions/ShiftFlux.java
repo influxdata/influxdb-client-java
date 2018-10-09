@@ -23,14 +23,13 @@ package org.influxdata.flux.functions;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#shift">shift</a> -
+ * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#shift">shift</a> -
  * Shift add a fixed duration to time columns.
  *
  * <h3>Options</h3>
@@ -73,8 +72,8 @@ public final class ShiftFlux extends AbstractParametrizedFlux {
      */
     @Nonnull
     public ShiftFlux withShift(@Nonnull final Long amount, @Nonnull final ChronoUnit unit) {
-        Objects.requireNonNull(amount, "Amount is required");
-        Objects.requireNonNull(unit, "ChronoUnit is required");
+        Arguments.checkNotNull(amount, "Amount is required");
+        Arguments.checkNotNull(unit, "ChronoUnit is required");
 
         this.withPropertyValue("shift", amount, unit);
 
@@ -101,7 +100,7 @@ public final class ShiftFlux extends AbstractParametrizedFlux {
     @Nonnull
     public ShiftFlux withColumns(@Nonnull final String[] columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         this.withPropertyValue("columns", columns);
 
@@ -115,7 +114,7 @@ public final class ShiftFlux extends AbstractParametrizedFlux {
     @Nonnull
     public ShiftFlux withColumns(@Nonnull final Collection<String> columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         this.withPropertyValue("columns", columns);
 

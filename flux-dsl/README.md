@@ -161,6 +161,12 @@ Flux flux = Flux
     .drop()
         .withFunction("col =~ /free*/");
 ```
+
+### duplicate
+Duplicate will duplicate a specified column in a table [[doc](https://github.com/influxdata/flux/blob/master/docs/SPEC.md#duplicate)].
+- `column` - The column to duplicate. [string]
+- `as` The name that should be assigned to the duplicate column. [string]
+
 ### filter
 
 Filters the results using an expression [[doc](https://github.com/influxdata/platform/tree/master/query#filter)].

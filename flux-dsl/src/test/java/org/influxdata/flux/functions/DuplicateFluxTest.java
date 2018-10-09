@@ -21,56 +21,38 @@
  */
 package org.influxdata.flux.functions;
 
-import javax.annotation.Nonnull;
-
 import org.influxdata.flux.Flux;
-import org.influxdata.platform.Arguments;
+
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 /**
- * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#distinct">distinct</a> - Distinct
- * produces the unique values for a given column.
- *
- * <h3>Options</h3>
- * <ul>
- * <li>
- * <b>column</b> - The column on which to track unique values [string]
- * </li>
- * </ul>
- *
- * <h3>Example</h3>
- * <pre>
- * Flux flux = Flux
- *     .from("telegraf")
- *     .groupBy("_measurement")
- *     .distinct("_measurement");
- * </pre>
- *
- * @author Jakub Bednar (bednar@github) (17/07/2018 12:08)
- * @since 1.0.0
+ * @author Jakub Bednar (bednar@github) (09/10/2018 13:27)
  */
-public final class DistinctFlux extends AbstractParametrizedFlux {
+@RunWith(JUnitPlatform.class)
+class DuplicateFluxTest {
 
-    public DistinctFlux(@Nonnull final Flux source) {
-        super(source);
+    @Test
+    void duplicate() {
+
+        Flux flux = Flux
+                .from("telegraf")
+                .duplicate("host", "server");
+
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> duplicate(column: \"host\", as: \"server\")");
     }
 
-    @Nonnull
-    @Override
-    protected String operatorName() {
-        return "distinct";
-    }
+    @Test
+    void duplicateByParameters() {
 
-    /**
-     * @param column The column on which to track unique values.
-     * @return this
-     */
-    @Nonnull
-    public DistinctFlux withColumn(@Nonnull final String column) {
+        Flux flux = Flux
+                .from("telegraf")
+                .duplicate()
+                    .withColumn("time")
+                    .withAs("timestamp");
 
-        Arguments.checkNonEmpty(column, "Column");
-
-        this.withPropertyValueEscaped("column", column);
-
-        return this;
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> duplicate(column: \"time\", as: \"timestamp\")");
     }
 }

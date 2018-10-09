@@ -22,14 +22,13 @@
 package org.influxdata.flux.functions;
 
 import java.util.Collection;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#covariance">covariance</a> -
+ * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#covariance">covariance</a> -
  * Covariance is an aggregate operation. Covariance computes the covariance between two columns.
  *
  * <h3>Options</h3>
@@ -74,7 +73,7 @@ public final class CovarianceFlux extends AbstractParametrizedFlux {
     @Nonnull
     public CovarianceFlux withColumns(@Nonnull final String[] columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         if (columns.length != 2) {
             throw new IllegalArgumentException("Exactly two columns must be provided.");
@@ -92,7 +91,7 @@ public final class CovarianceFlux extends AbstractParametrizedFlux {
     @Nonnull
     public CovarianceFlux withColumns(@Nonnull final Collection<String> columns) {
 
-        Objects.requireNonNull(columns, "Columns are required");
+        Arguments.checkNotNull(columns, "Columns are required");
 
         if (columns.size() != 2) {
             throw new IllegalArgumentException("Exactly two columns must be provided.");
