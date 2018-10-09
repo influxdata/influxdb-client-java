@@ -22,16 +22,14 @@
 package org.influxdata.flux.functions;
 
 import java.util.Collection;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#drop&quot;&gt;drop&lt;/a&gt; - Drop will exclude
- * specified columns from a table. Columns to exclude can be specified either through a list, or a predicate function.
- * When a dropped column is part of the group key it will also be dropped from the key.
+ * &lt;a href=&quot;https://github.com/influxdata/flux/blob/master/docs/SPEC.md#duplicate&quot;&gt;duplicate&lt;/a&gt; - Duplicate will
+ * duplicate a specified column in a table.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
  * &lt;ul&gt;
@@ -63,13 +61,13 @@ import org.influxdata.platform.Arguments;
 public final class DropFlux extends AbstractParametrizedFlux {
 
     public DropFlux(@Nonnull final Flux source) {
-<span class="fc" id="L66">        super(source);</span>
-<span class="fc" id="L67">    }</span>
+<span class="fc" id="L64">        super(source);</span>
+<span class="fc" id="L65">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L72">        return &quot;drop&quot;;</span>
+<span class="fc" id="L70">        return &quot;drop&quot;;</span>
     }
 
     /**
@@ -79,11 +77,11 @@ public final class DropFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DropFlux withColumns(@Nonnull final String[] columns) {
 
-<span class="fc" id="L82">        Objects.requireNonNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L80">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L84">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
+<span class="fc" id="L82">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
-<span class="fc" id="L86">        return this;</span>
+<span class="fc" id="L84">        return this;</span>
     }
 
     /**
@@ -93,11 +91,11 @@ public final class DropFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DropFlux withColumns(@Nonnull final Collection&lt;String&gt; columns) {
 
-<span class="fc" id="L96">        Objects.requireNonNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L94">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L98">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
+<span class="fc" id="L96">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
-<span class="fc" id="L100">        return this;</span>
+<span class="fc" id="L98">        return this;</span>
     }
 
 
@@ -109,23 +107,23 @@ public final class DropFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DropFlux withFunction(@Nonnull final String function) {
 
-<span class="fc" id="L112">        Arguments.checkNonEmpty(function, &quot;Function&quot;);</span>
+<span class="fc" id="L110">        Arguments.checkNonEmpty(function, &quot;Function&quot;);</span>
 
-<span class="fc" id="L114">        this.withPropertyValue(&quot;fn: (col)&quot;, function);</span>
+<span class="fc" id="L112">        this.withPropertyValue(&quot;fn: (col)&quot;, function);</span>
 
-<span class="fc" id="L116">        return this;</span>
+<span class="fc" id="L114">        return this;</span>
     }
 
     @Nonnull
     @Override
     protected String propertyDelimiter(@Nonnull final String operatorName) {
 
-<span class="fc bfc" id="L123" title="All 2 branches covered.">        switch (operatorName) {</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        switch (operatorName) {</span>
             case &quot;fn: (col)&quot;:
-<span class="fc" id="L125">                return &quot; =&gt; &quot;;</span>
+<span class="fc" id="L123">                return &quot; =&gt; &quot;;</span>
 
             default:
-<span class="fc" id="L128">                return super.propertyDelimiter(operatorName);</span>
+<span class="fc" id="L126">                return super.propertyDelimiter(operatorName);</span>
         }
     }
 }

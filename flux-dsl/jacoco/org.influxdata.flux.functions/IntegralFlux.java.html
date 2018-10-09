@@ -22,14 +22,13 @@
 package org.influxdata.flux.functions;
 
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#integral&quot;&gt;integral&lt;/a&gt; -
+ * &lt;a href=&quot;https://github.com/influxdata/flux/blob/master/docs/SPEC.md#integral&quot;&gt;integral&lt;/a&gt; -
  * For each aggregate column, it outputs the area under the curve of non null records.
  * The curve is defined as function where the domain is the record times and the range is the record values.
  *
@@ -51,13 +50,13 @@ import org.influxdata.platform.Arguments;
 public final class IntegralFlux extends AbstractParametrizedFlux {
 
     public IntegralFlux(@Nonnull final Flux source) {
-<span class="fc" id="L54">        super(source);</span>
-<span class="fc" id="L55">    }</span>
+<span class="fc" id="L53">        super(source);</span>
+<span class="fc" id="L54">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L60">        return &quot;integral&quot;;</span>
+<span class="fc" id="L59">        return &quot;integral&quot;;</span>
     }
 
     /**
@@ -68,12 +67,12 @@ public final class IntegralFlux extends AbstractParametrizedFlux {
     @Nonnull
     public IntegralFlux withUnit(@Nonnull final Long duration, @Nonnull final ChronoUnit unit) {
 
-<span class="fc" id="L71">        Objects.requireNonNull(duration, &quot;Duration is required&quot;);</span>
-<span class="fc" id="L72">        Objects.requireNonNull(unit, &quot;ChronoUnit is required&quot;);</span>
+<span class="fc" id="L70">        Arguments.checkNotNull(duration, &quot;Duration is required&quot;);</span>
+<span class="fc" id="L71">        Arguments.checkNotNull(unit, &quot;ChronoUnit is required&quot;);</span>
 
-<span class="fc" id="L74">        this.withPropertyValue(&quot;unit&quot;, duration, unit);</span>
+<span class="fc" id="L73">        this.withPropertyValue(&quot;unit&quot;, duration, unit);</span>
 
-<span class="fc" id="L76">        return this;</span>
+<span class="fc" id="L75">        return this;</span>
     }
 
     /**
@@ -83,11 +82,11 @@ public final class IntegralFlux extends AbstractParametrizedFlux {
     @Nonnull
     public IntegralFlux withUnit(@Nonnull final String unit) {
 
-<span class="fc" id="L86">        Arguments.checkDuration(unit, &quot;Unit&quot;);</span>
+<span class="fc" id="L85">        Arguments.checkDuration(unit, &quot;Unit&quot;);</span>
 
-<span class="fc" id="L88">        this.withPropertyValue(&quot;unit&quot;, unit);</span>
+<span class="fc" id="L87">        this.withPropertyValue(&quot;unit&quot;, unit);</span>
 
-<span class="fc" id="L90">        return this;</span>
+<span class="fc" id="L89">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

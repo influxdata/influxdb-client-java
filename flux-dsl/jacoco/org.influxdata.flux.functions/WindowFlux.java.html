@@ -23,7 +23,6 @@ package org.influxdata.flux.functions;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
@@ -66,14 +65,14 @@ import org.influxdata.platform.Arguments;
 public final class WindowFlux extends AbstractParametrizedFlux {
 
     public WindowFlux(@Nonnull final Flux flux) {
-<span class="fc" id="L69">        super(flux);</span>
-<span class="fc" id="L70">    }</span>
+<span class="fc" id="L68">        super(flux);</span>
+<span class="fc" id="L69">    }</span>
 
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L76">        return &quot;window&quot;;</span>
+<span class="fc" id="L75">        return &quot;window&quot;;</span>
     }
 
     /**
@@ -84,12 +83,12 @@ public final class WindowFlux extends AbstractParametrizedFlux {
     @Nonnull
     public WindowFlux withEvery(@Nonnull final Long every, @Nonnull final ChronoUnit everyUnit) {
 
-<span class="fc" id="L87">        Objects.requireNonNull(every, &quot;Every is required&quot;);</span>
-<span class="fc" id="L88">        Objects.requireNonNull(everyUnit, &quot;Every ChronoUnit is required&quot;);</span>
+<span class="fc" id="L86">        Arguments.checkNotNull(every, &quot;Every is required&quot;);</span>
+<span class="fc" id="L87">        Arguments.checkNotNull(everyUnit, &quot;Every ChronoUnit is required&quot;);</span>
 
-<span class="fc" id="L90">        this.withPropertyValue(&quot;every&quot;, every, everyUnit);</span>
+<span class="fc" id="L89">        this.withPropertyValue(&quot;every&quot;, every, everyUnit);</span>
 
-<span class="fc" id="L92">        return this;</span>
+<span class="fc" id="L91">        return this;</span>
     }
 
     /**
@@ -99,11 +98,11 @@ public final class WindowFlux extends AbstractParametrizedFlux {
     @Nonnull
     public WindowFlux withEvery(@Nonnull final String every) {
 
-<span class="fc" id="L102">        Arguments.checkDuration(every, &quot;Every&quot;);</span>
+<span class="fc" id="L101">        Arguments.checkDuration(every, &quot;Every&quot;);</span>
 
-<span class="fc" id="L104">        this.withPropertyValue(&quot;every&quot;, every);</span>
+<span class="fc" id="L103">        this.withPropertyValue(&quot;every&quot;, every);</span>
 
-<span class="fc" id="L106">        return this;</span>
+<span class="fc" id="L105">        return this;</span>
     }
 
     /**
@@ -114,12 +113,12 @@ public final class WindowFlux extends AbstractParametrizedFlux {
     @Nonnull
     public WindowFlux withPeriod(@Nonnull final Long period, @Nonnull final ChronoUnit periodUnit) {
 
-<span class="fc" id="L117">        Objects.requireNonNull(period, &quot;Period is required&quot;);</span>
-<span class="fc" id="L118">        Objects.requireNonNull(periodUnit, &quot;Period ChronoUnit is required&quot;);</span>
+<span class="fc" id="L116">        Arguments.checkNotNull(period, &quot;Period is required&quot;);</span>
+<span class="fc" id="L117">        Arguments.checkNotNull(periodUnit, &quot;Period ChronoUnit is required&quot;);</span>
 
-<span class="fc" id="L120">        this.withPropertyValue(&quot;period&quot;, period, periodUnit);</span>
+<span class="fc" id="L119">        this.withPropertyValue(&quot;period&quot;, period, periodUnit);</span>
 
-<span class="fc" id="L122">        return this;</span>
+<span class="fc" id="L121">        return this;</span>
     }
 
     /**
@@ -129,11 +128,11 @@ public final class WindowFlux extends AbstractParametrizedFlux {
     @Nonnull
     public WindowFlux withPeriod(@Nonnull final String period) {
 
-<span class="fc" id="L132">        Arguments.checkDuration(period, &quot;Period&quot;);</span>
+<span class="fc" id="L131">        Arguments.checkDuration(period, &quot;Period&quot;);</span>
 
-<span class="fc" id="L134">        this.withPropertyValue(&quot;period&quot;, period);</span>
+<span class="fc" id="L133">        this.withPropertyValue(&quot;period&quot;, period);</span>
 
-<span class="fc" id="L136">        return this;</span>
+<span class="fc" id="L135">        return this;</span>
     }
 
     /**
@@ -144,12 +143,12 @@ public final class WindowFlux extends AbstractParametrizedFlux {
     @Nonnull
     public WindowFlux withOffset(@Nonnull final Long offset, @Nonnull final ChronoUnit offsetUnit) {
 
-<span class="fc" id="L147">        Objects.requireNonNull(offset, &quot;Offset is required&quot;);</span>
-<span class="fc" id="L148">        Objects.requireNonNull(offsetUnit, &quot;Offset ChronoUnit is required&quot;);</span>
+<span class="fc" id="L146">        Arguments.checkNotNull(offset, &quot;Offset is required&quot;);</span>
+<span class="fc" id="L147">        Arguments.checkNotNull(offsetUnit, &quot;Offset ChronoUnit is required&quot;);</span>
 
-<span class="fc" id="L150">        this.withPropertyValue(&quot;start&quot;, offset, offsetUnit);</span>
+<span class="fc" id="L149">        this.withPropertyValue(&quot;start&quot;, offset, offsetUnit);</span>
 
-<span class="fc" id="L152">        return this;</span>
+<span class="fc" id="L151">        return this;</span>
     }
 
     /**
@@ -159,11 +158,11 @@ public final class WindowFlux extends AbstractParametrizedFlux {
     @Nonnull
     public WindowFlux withOffset(@Nonnull final Instant start) {
 
-<span class="fc" id="L162">        Objects.requireNonNull(start, &quot;Offset is required&quot;);</span>
+<span class="fc" id="L161">        Arguments.checkNotNull(start, &quot;Offset is required&quot;);</span>
 
-<span class="fc" id="L164">        this.withPropertyValue(&quot;offset&quot;, start);</span>
+<span class="fc" id="L163">        this.withPropertyValue(&quot;offset&quot;, start);</span>
 
-<span class="fc" id="L166">        return this;</span>
+<span class="fc" id="L165">        return this;</span>
     }
 
     /**
@@ -173,11 +172,11 @@ public final class WindowFlux extends AbstractParametrizedFlux {
     @Nonnull
     public WindowFlux withOffset(@Nonnull final String offset) {
 
-<span class="fc" id="L176">        Arguments.checkDuration(offset, &quot;offset&quot;);</span>
+<span class="fc" id="L175">        Arguments.checkDuration(offset, &quot;offset&quot;);</span>
 
-<span class="fc" id="L178">        this.withPropertyValue(&quot;offset&quot;, offset);</span>
+<span class="fc" id="L177">        this.withPropertyValue(&quot;offset&quot;, offset);</span>
 
-<span class="fc" id="L180">        return this;</span>
+<span class="fc" id="L179">        return this;</span>
     }
 
     /**
@@ -187,11 +186,11 @@ public final class WindowFlux extends AbstractParametrizedFlux {
     @Nonnull
     public WindowFlux withColumn(@Nonnull final String timeColumn) {
 
-<span class="fc" id="L190">        Arguments.checkNonEmpty(timeColumn, &quot;Time column&quot;);</span>
+<span class="fc" id="L189">        Arguments.checkNonEmpty(timeColumn, &quot;Time column&quot;);</span>
 
-<span class="fc" id="L192">        this.withPropertyValueEscaped(&quot;column&quot;, timeColumn);</span>
+<span class="fc" id="L191">        this.withPropertyValueEscaped(&quot;column&quot;, timeColumn);</span>
 
-<span class="fc" id="L194">        return this;</span>
+<span class="fc" id="L193">        return this;</span>
     }
 
     /**
@@ -201,11 +200,11 @@ public final class WindowFlux extends AbstractParametrizedFlux {
     @Nonnull
     public WindowFlux withStartCol(@Nonnull final String startCol) {
 
-<span class="fc" id="L204">        Arguments.checkNonEmpty(startCol, &quot;Start column&quot;);</span>
+<span class="fc" id="L203">        Arguments.checkNonEmpty(startCol, &quot;Start column&quot;);</span>
 
-<span class="fc" id="L206">        this.withPropertyValueEscaped(&quot;startCol&quot;, startCol);</span>
+<span class="fc" id="L205">        this.withPropertyValueEscaped(&quot;startCol&quot;, startCol);</span>
 
-<span class="fc" id="L208">        return this;</span>
+<span class="fc" id="L207">        return this;</span>
     }
 
     /**
@@ -215,11 +214,11 @@ public final class WindowFlux extends AbstractParametrizedFlux {
     @Nonnull
     public WindowFlux withStopCol(@Nonnull final String stopCol) {
 
-<span class="fc" id="L218">        Arguments.checkNonEmpty(stopCol, &quot;Strop column&quot;);</span>
+<span class="fc" id="L217">        Arguments.checkNonEmpty(stopCol, &quot;Strop column&quot;);</span>
 
-<span class="fc" id="L220">        this.withPropertyValueEscaped(&quot;stopCol&quot;, stopCol);</span>
+<span class="fc" id="L219">        this.withPropertyValueEscaped(&quot;stopCol&quot;, stopCol);</span>
 
-<span class="fc" id="L222">        return this;</span>
+<span class="fc" id="L221">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

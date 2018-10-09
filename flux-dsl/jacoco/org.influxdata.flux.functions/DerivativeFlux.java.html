@@ -23,14 +23,13 @@ package org.influxdata.flux.functions;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#derivative&quot;&gt;derivative&lt;/a&gt; -
+ * &lt;a href=&quot;https://github.com/influxdata/flux/blob/master/docs/SPEC.md#derivative&quot;&gt;derivative&lt;/a&gt; -
  * Computes the time based difference between subsequent non null records.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -62,13 +61,13 @@ import org.influxdata.platform.Arguments;
 public final class DerivativeFlux extends AbstractParametrizedFlux {
 
     public DerivativeFlux(@Nonnull final Flux source) {
-<span class="fc" id="L65">        super(source);</span>
-<span class="fc" id="L66">    }</span>
+<span class="fc" id="L64">        super(source);</span>
+<span class="fc" id="L65">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L71">        return &quot;derivative&quot;;</span>
+<span class="fc" id="L70">        return &quot;derivative&quot;;</span>
     }
 
     /**
@@ -79,12 +78,12 @@ public final class DerivativeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DerivativeFlux withUnit(@Nonnull final Long duration, @Nonnull final ChronoUnit unit) {
 
-<span class="fc" id="L82">        Objects.requireNonNull(duration, &quot;Duration is required&quot;);</span>
-<span class="fc" id="L83">        Objects.requireNonNull(unit, &quot;ChronoUnit is required&quot;);</span>
+<span class="fc" id="L81">        Arguments.checkNotNull(duration, &quot;Duration is required&quot;);</span>
+<span class="fc" id="L82">        Arguments.checkNotNull(unit, &quot;ChronoUnit is required&quot;);</span>
 
-<span class="fc" id="L85">        this.withPropertyValue(&quot;unit&quot;, duration, unit);</span>
+<span class="fc" id="L84">        this.withPropertyValue(&quot;unit&quot;, duration, unit);</span>
 
-<span class="fc" id="L87">        return this;</span>
+<span class="fc" id="L86">        return this;</span>
     }
 
     /**
@@ -94,11 +93,11 @@ public final class DerivativeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DerivativeFlux withUnit(@Nonnull final String unit) {
 
-<span class="fc" id="L97">        Arguments.checkDuration(unit, &quot;Unit&quot;);</span>
+<span class="fc" id="L96">        Arguments.checkDuration(unit, &quot;Unit&quot;);</span>
 
-<span class="fc" id="L99">        this.withPropertyValue(&quot;unit&quot;, unit);</span>
+<span class="fc" id="L98">        this.withPropertyValue(&quot;unit&quot;, unit);</span>
 
-<span class="fc" id="L101">        return this;</span>
+<span class="fc" id="L100">        return this;</span>
     }
 
     /**
@@ -108,9 +107,9 @@ public final class DerivativeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DerivativeFlux withNonNegative(final boolean useStartTime) {
 
-<span class="fc" id="L111">        this.withPropertyValue(&quot;nonNegative&quot;, useStartTime);</span>
+<span class="fc" id="L110">        this.withPropertyValue(&quot;nonNegative&quot;, useStartTime);</span>
 
-<span class="fc" id="L113">        return this;</span>
+<span class="fc" id="L112">        return this;</span>
     }
 
     /**
@@ -120,11 +119,11 @@ public final class DerivativeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DerivativeFlux withColumns(@Nonnull final String[] columns) {
 
-<span class="fc" id="L123">        Objects.requireNonNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L122">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L125">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
+<span class="fc" id="L124">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
-<span class="fc" id="L127">        return this;</span>
+<span class="fc" id="L126">        return this;</span>
     }
 
     /**
@@ -134,11 +133,11 @@ public final class DerivativeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DerivativeFlux withColumns(@Nonnull final Collection&lt;String&gt; columns) {
 
-<span class="fc" id="L137">        Objects.requireNonNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L136">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L139">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
+<span class="fc" id="L138">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
-<span class="fc" id="L141">        return this;</span>
+<span class="fc" id="L140">        return this;</span>
     }
 
     /**
@@ -148,11 +147,11 @@ public final class DerivativeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DerivativeFlux withTimeSrc(@Nonnull final String timeSrc) {
 
-<span class="fc" id="L151">        Arguments.checkNonEmpty(timeSrc, &quot;Time column&quot;);</span>
+<span class="fc" id="L150">        Arguments.checkNonEmpty(timeSrc, &quot;Time column&quot;);</span>
 
-<span class="fc" id="L153">        this.withPropertyValueEscaped(&quot;timeSrc&quot;, timeSrc);</span>
+<span class="fc" id="L152">        this.withPropertyValueEscaped(&quot;timeSrc&quot;, timeSrc);</span>
 
-<span class="fc" id="L155">        return this;</span>
+<span class="fc" id="L154">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

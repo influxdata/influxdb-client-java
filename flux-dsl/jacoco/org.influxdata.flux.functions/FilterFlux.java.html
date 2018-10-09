@@ -21,11 +21,11 @@
  */
 package org.influxdata.flux.functions;
 
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
 import org.influxdata.flux.functions.restriction.Restrictions;
+import org.influxdata.platform.Arguments;
 
 /**
  * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#filter&quot;&gt;filter&lt;/a&gt; -
@@ -83,7 +83,7 @@ public final class FilterFlux extends AbstractParametrizedFlux {
     @Nonnull
     public FilterFlux withRestrictions(@Nonnull final Restrictions restrictions) {
 
-<span class="fc" id="L86">        Objects.requireNonNull(restrictions, &quot;Restrictions are required&quot;);</span>
+<span class="fc" id="L86">        Arguments.checkNotNull(restrictions, &quot;Restrictions are required&quot;);</span>
 
 <span class="fc" id="L88">        this.withPropertyValue(&quot;fn: (r)&quot;, restrictions);</span>
 

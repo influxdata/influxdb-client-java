@@ -22,10 +22,10 @@
 package org.influxdata.flux.functions;
 
 import java.util.Collection;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
+import org.influxdata.platform.Arguments;
 
 /**
  * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#group&quot;&gt;group&lt;/a&gt; - Groups results by
@@ -76,7 +76,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withBy(@Nonnull final String groupBy) {
 
-<span class="fc" id="L79">        Objects.requireNonNull(groupBy, &quot;GroupBy Column are required&quot;);</span>
+<span class="fc" id="L79">        Arguments.checkNotNull(groupBy, &quot;GroupBy Column are required&quot;);</span>
 
 <span class="fc" id="L81">        this.withPropertyValue(&quot;by&quot;, new String[]{groupBy});</span>
 
@@ -90,7 +90,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withBy(@Nonnull final String[] groupBy) {
 
-<span class="fc" id="L93">        Objects.requireNonNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+<span class="fc" id="L93">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
 
 <span class="fc" id="L95">        this.withPropertyValue(&quot;by&quot;, groupBy);</span>
 
@@ -104,7 +104,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withBy(@Nonnull final Collection&lt;String&gt; groupBy) {
 
-<span class="fc" id="L107">        Objects.requireNonNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+<span class="fc" id="L107">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
 
 <span class="fc" id="L109">        this.withPropertyValue(&quot;by&quot;, groupBy);</span>
 
@@ -118,7 +118,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withKeep(@Nonnull final String[] keep) {
 
-<span class="fc" id="L121">        Objects.requireNonNull(keep, &quot;Keep Columns are required&quot;);</span>
+<span class="fc" id="L121">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
 
 <span class="fc" id="L123">        this.withPropertyValue(&quot;keep&quot;, keep);</span>
 
@@ -132,7 +132,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withKeep(@Nonnull final Collection&lt;String&gt; keep) {
 
-<span class="fc" id="L135">        Objects.requireNonNull(keep, &quot;Keep Columns are required&quot;);</span>
+<span class="fc" id="L135">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
 
 <span class="fc" id="L137">        this.withPropertyValue(&quot;keep&quot;, keep);</span>
 
@@ -146,7 +146,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withExcept(@Nonnull final String[] except) {
 
-<span class="fc" id="L149">        Objects.requireNonNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
+<span class="fc" id="L149">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
 
 <span class="fc" id="L151">        this.withPropertyValue(&quot;except&quot;, except);</span>
 
@@ -160,7 +160,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withExcept(@Nonnull final Collection&lt;String&gt; except) {
 
-<span class="fc" id="L163">        Objects.requireNonNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
+<span class="fc" id="L163">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
 
 <span class="fc" id="L165">        this.withPropertyValue(&quot;except&quot;, except);</span>
 

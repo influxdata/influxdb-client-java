@@ -22,13 +22,13 @@
 package org.influxdata.flux.functions;
 
 import java.util.Collection;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
+import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#difference&quot;&gt;difference&lt;/a&gt; -
+ * &lt;a href=&quot;https://github.com/influxdata/flux/blob/master/docs/SPEC.md#difference&quot;&gt;difference&lt;/a&gt; -
  * Difference computes the difference between subsequent non null records.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -91,7 +91,7 @@ public final class DifferenceFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DifferenceFlux withColumns(@Nonnull final String[] columns) {
 
-<span class="fc" id="L94">        Objects.requireNonNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L94">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
 <span class="fc" id="L96">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
@@ -105,7 +105,7 @@ public final class DifferenceFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DifferenceFlux withColumns(@Nonnull final Collection&lt;String&gt; columns) {
 
-<span class="fc" id="L108">        Objects.requireNonNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L108">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
 <span class="fc" id="L110">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 

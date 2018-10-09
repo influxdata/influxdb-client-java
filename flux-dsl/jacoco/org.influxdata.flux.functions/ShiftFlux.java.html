@@ -23,14 +23,13 @@ package org.influxdata.flux.functions;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#shift&quot;&gt;shift&lt;/a&gt; -
+ * &lt;a href=&quot;https://github.com/influxdata/flux/blob/master/docs/SPEC.md#shift&quot;&gt;shift&lt;/a&gt; -
  * Shift add a fixed duration to time columns.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -57,13 +56,13 @@ import org.influxdata.platform.Arguments;
 public final class ShiftFlux extends AbstractParametrizedFlux {
 
     public ShiftFlux(@Nonnull final Flux source) {
-<span class="fc" id="L60">        super(source);</span>
-<span class="fc" id="L61">    }</span>
+<span class="fc" id="L59">        super(source);</span>
+<span class="fc" id="L60">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L66">        return &quot;shift&quot;;</span>
+<span class="fc" id="L65">        return &quot;shift&quot;;</span>
     }
 
     /**
@@ -73,12 +72,12 @@ public final class ShiftFlux extends AbstractParametrizedFlux {
      */
     @Nonnull
     public ShiftFlux withShift(@Nonnull final Long amount, @Nonnull final ChronoUnit unit) {
-<span class="fc" id="L76">        Objects.requireNonNull(amount, &quot;Amount is required&quot;);</span>
-<span class="fc" id="L77">        Objects.requireNonNull(unit, &quot;ChronoUnit is required&quot;);</span>
+<span class="fc" id="L75">        Arguments.checkNotNull(amount, &quot;Amount is required&quot;);</span>
+<span class="fc" id="L76">        Arguments.checkNotNull(unit, &quot;ChronoUnit is required&quot;);</span>
 
-<span class="fc" id="L79">        this.withPropertyValue(&quot;shift&quot;, amount, unit);</span>
+<span class="fc" id="L78">        this.withPropertyValue(&quot;shift&quot;, amount, unit);</span>
 
-<span class="fc" id="L81">        return this;</span>
+<span class="fc" id="L80">        return this;</span>
     }
 
     /**
@@ -87,11 +86,11 @@ public final class ShiftFlux extends AbstractParametrizedFlux {
      */
     @Nonnull
     public ShiftFlux withShift(@Nonnull final String amount) {
-<span class="fc" id="L90">        Arguments.checkDuration(amount, &quot;Amount&quot;);</span>
+<span class="fc" id="L89">        Arguments.checkDuration(amount, &quot;Amount&quot;);</span>
 
-<span class="fc" id="L92">        this.withPropertyValue(&quot;shift&quot;, amount);</span>
+<span class="fc" id="L91">        this.withPropertyValue(&quot;shift&quot;, amount);</span>
 
-<span class="fc" id="L94">        return this;</span>
+<span class="fc" id="L93">        return this;</span>
     }
 
     /**
@@ -101,11 +100,11 @@ public final class ShiftFlux extends AbstractParametrizedFlux {
     @Nonnull
     public ShiftFlux withColumns(@Nonnull final String[] columns) {
 
-<span class="fc" id="L104">        Objects.requireNonNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L103">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L106">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
+<span class="fc" id="L105">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
-<span class="fc" id="L108">        return this;</span>
+<span class="fc" id="L107">        return this;</span>
     }
 
     /**
@@ -115,11 +114,11 @@ public final class ShiftFlux extends AbstractParametrizedFlux {
     @Nonnull
     public ShiftFlux withColumns(@Nonnull final Collection&lt;String&gt; columns) {
 
-<span class="fc" id="L118">        Objects.requireNonNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L117">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L120">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
+<span class="fc" id="L119">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
-<span class="fc" id="L122">        return this;</span>
+<span class="fc" id="L121">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

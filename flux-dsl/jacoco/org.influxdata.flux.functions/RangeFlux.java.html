@@ -23,7 +23,6 @@ package org.influxdata.flux.functions;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.Flux;
@@ -55,13 +54,13 @@ import org.influxdata.platform.Arguments;
 public final class RangeFlux extends AbstractParametrizedFlux {
 
     public RangeFlux(@Nonnull final Flux flux) {
-<span class="fc" id="L58">        super(flux);</span>
-<span class="fc" id="L59">    }</span>
+<span class="fc" id="L57">        super(flux);</span>
+<span class="fc" id="L58">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L64">        return &quot;range&quot;;</span>
+<span class="fc" id="L63">        return &quot;range&quot;;</span>
     }
 
     /**
@@ -71,11 +70,11 @@ public final class RangeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public RangeFlux withStart(@Nonnull final Instant start) {
 
-<span class="fc" id="L74">        Objects.requireNonNull(start, &quot;Start is required&quot;);</span>
+<span class="fc" id="L73">        Arguments.checkNotNull(start, &quot;Start is required&quot;);</span>
 
-<span class="fc" id="L76">        this.withPropertyValue(&quot;start&quot;, start);</span>
+<span class="fc" id="L75">        this.withPropertyValue(&quot;start&quot;, start);</span>
 
-<span class="fc" id="L78">        return this;</span>
+<span class="fc" id="L77">        return this;</span>
     }
 
     /**
@@ -86,12 +85,12 @@ public final class RangeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public RangeFlux withStart(@Nonnull final Long start, @Nonnull final ChronoUnit unit) {
 
-<span class="fc" id="L89">        Objects.requireNonNull(start, &quot;Start is required&quot;);</span>
-<span class="fc" id="L90">        Objects.requireNonNull(unit, &quot;ChronoUnit is required&quot;);</span>
+<span class="fc" id="L88">        Arguments.checkNotNull(start, &quot;Start is required&quot;);</span>
+<span class="fc" id="L89">        Arguments.checkNotNull(unit, &quot;ChronoUnit is required&quot;);</span>
 
-<span class="fc" id="L92">        this.withPropertyValue(&quot;start&quot;, start, unit);</span>
+<span class="fc" id="L91">        this.withPropertyValue(&quot;start&quot;, start, unit);</span>
 
-<span class="fc" id="L94">        return this;</span>
+<span class="fc" id="L93">        return this;</span>
     }
 
     /**
@@ -101,11 +100,11 @@ public final class RangeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public RangeFlux withStart(@Nonnull final String start) {
 
-<span class="fc" id="L104">        Arguments.checkDuration(start, &quot;Start&quot;);</span>
+<span class="fc" id="L103">        Arguments.checkDuration(start, &quot;Start&quot;);</span>
 
-<span class="fc" id="L106">        this.withPropertyValue(&quot;start&quot;, start);</span>
+<span class="fc" id="L105">        this.withPropertyValue(&quot;start&quot;, start);</span>
 
-<span class="fc" id="L108">        return this;</span>
+<span class="fc" id="L107">        return this;</span>
     }
 
     /**
@@ -115,11 +114,11 @@ public final class RangeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public RangeFlux withStop(@Nonnull final Instant stop) {
 
-<span class="fc" id="L118">        Objects.requireNonNull(stop, &quot;Stop is required&quot;);</span>
+<span class="fc" id="L117">        Arguments.checkNotNull(stop, &quot;Stop is required&quot;);</span>
 
-<span class="fc" id="L120">        this.withPropertyValue(&quot;stop&quot;, stop);</span>
+<span class="fc" id="L119">        this.withPropertyValue(&quot;stop&quot;, stop);</span>
 
-<span class="fc" id="L122">        return this;</span>
+<span class="fc" id="L121">        return this;</span>
     }
 
     /**
@@ -130,12 +129,12 @@ public final class RangeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public RangeFlux withStop(@Nonnull final Long stop, @Nonnull final ChronoUnit unit) {
 
-<span class="fc" id="L133">        Objects.requireNonNull(stop, &quot;Stop is required&quot;);</span>
-<span class="fc" id="L134">        Objects.requireNonNull(unit, &quot;ChronoUnit is required&quot;);</span>
+<span class="fc" id="L132">        Arguments.checkNotNull(stop, &quot;Stop is required&quot;);</span>
+<span class="fc" id="L133">        Arguments.checkNotNull(unit, &quot;ChronoUnit is required&quot;);</span>
 
-<span class="fc" id="L136">        this.withPropertyValue(&quot;stop&quot;, stop, unit);</span>
+<span class="fc" id="L135">        this.withPropertyValue(&quot;stop&quot;, stop, unit);</span>
 
-<span class="fc" id="L138">        return this;</span>
+<span class="fc" id="L137">        return this;</span>
     }
 
     /**
@@ -145,11 +144,11 @@ public final class RangeFlux extends AbstractParametrizedFlux {
     @Nonnull
     public RangeFlux withStop(@Nonnull final String stop) {
 
-<span class="fc" id="L148">        Arguments.checkDuration(stop, &quot;Stop&quot;);</span>
+<span class="fc" id="L147">        Arguments.checkDuration(stop, &quot;Stop&quot;);</span>
 
-<span class="fc" id="L150">        this.withPropertyValue(&quot;stop&quot;, stop);</span>
+<span class="fc" id="L149">        this.withPropertyValue(&quot;stop&quot;, stop);</span>
 
-<span class="fc" id="L152">        return this;</span>
+<span class="fc" id="L151">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
