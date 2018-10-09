@@ -45,13 +45,13 @@ public final class FluxClientFactory {
      * @see FluxConnectionOptions.Builder#url(String)
      */
     @Nonnull
-    public static FluxClient connect(@Nonnull final String url) {
+    public static FluxClient create(@Nonnull final String url) {
 
         FluxConnectionOptions options = FluxConnectionOptions.builder()
                 .url(url)
                 .build();
 
-        return connect(options);
+        return create(options);
     }
 
     /**
@@ -61,7 +61,7 @@ public final class FluxClientFactory {
      * @return client
      */
     @Nonnull
-    public static FluxClient connect(@Nonnull final FluxConnectionOptions options) {
+    public static FluxClient create(@Nonnull final FluxConnectionOptions options) {
 
         Arguments.checkNotNull(options, "FluxConnectionOptions");
 

@@ -52,7 +52,7 @@ public abstract class AbstractITFluxClientReactive extends AbstractTest {
                 .url(influxURL)
                 .build();
 
-        fluxClient = FluxClientReactiveFactory.connect(options);
+        fluxClient = FluxClientReactiveFactory.create(options);
 
         influxDBQuery("CREATE DATABASE " + DATABASE_NAME, DATABASE_NAME);
     }

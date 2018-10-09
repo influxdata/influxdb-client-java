@@ -35,7 +35,7 @@ class FluxClientReactiveFactoryTest {
     @Test
     void connect() {
 
-        FluxClientReactive fluxClient = FluxClientReactiveFactory.connect("http://localhost:8093");
+        FluxClientReactive fluxClient = FluxClientReactiveFactory.create("http://localhost:8093");
 
         Assertions.assertThat(fluxClient).isNotNull();
     }

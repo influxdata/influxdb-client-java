@@ -53,7 +53,7 @@ public abstract class AbstractFluxClientReactiveTest extends AbstractMockServerT
                 .url(startMockServer())
                 .build();
 
-        fluxClient = FluxClientReactiveFactory.connect(options);
+        fluxClient = FluxClientReactiveFactory.create(options);
     }
 
     @Nonnull

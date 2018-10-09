@@ -45,7 +45,7 @@ public final class FluxClientReactiveFactory {
      * @see FluxConnectionOptions.Builder#url(String)
      */
     @Nonnull
-    public static FluxClientReactive connect(@Nonnull final String url) {
+    public static FluxClientReactive create(@Nonnull final String url) {
 
         Arguments.checkNonEmpty(url, "InfluxDB url");
 
@@ -53,7 +53,7 @@ public final class FluxClientReactiveFactory {
                 .url(url)
                 .build();
 
-        return connect(options);
+        return create(options);
     }
 
     /**
@@ -63,7 +63,7 @@ public final class FluxClientReactiveFactory {
      * @return client
      */
     @Nonnull
-    public static FluxClientReactive connect(@Nonnull final FluxConnectionOptions options) {
+    public static FluxClientReactive create(@Nonnull final FluxConnectionOptions options) {
 
         Arguments.checkNotNull(options, "FluxConnectionOptions");
 

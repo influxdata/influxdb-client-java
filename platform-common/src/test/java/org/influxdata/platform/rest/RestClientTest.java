@@ -116,9 +116,13 @@ class RestClientTest {
     }
 
     @Test
-    void catchOrPropagateCatchSocketClosed() {
+    void catchOrPropagateCatchSocketClosed() throws InterruptedException {
 
-        restClient.catchOrPropagateException(new IOException("Socket closed"), throwable -> Assertions.fail("Unreachable", throwable));
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        restClient.catchOrPropagateException(new IOException("Socket closed"), throwable -> countDownLatch.countDown());
+
+        countDownLatch.await();
     }
 
     private void errorResponse(final int code)

@@ -122,6 +122,6 @@ public abstract class AbstractRestClient {
 
         Arguments.checkNotNull(exception, "exception");
 
-        return "Socket closed".equals(exception.getMessage()) || exception instanceof EOFException;
+        return exception instanceof EOFException;
     }
 }

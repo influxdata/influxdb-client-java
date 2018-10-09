@@ -218,7 +218,7 @@ class ITFluxClient extends AbstractITFluxClient {
                 .url("http://localhost:8003")
                 .build();
 
-        FluxClient fluxClient = FluxClientFactory.connect(options);
+        FluxClient fluxClient = FluxClientFactory.create(options);
         fluxClient.query(FROM_FLUX_DATABASE + " |> last()",
                 (cancellable, record) -> {
                 },

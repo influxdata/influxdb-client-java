@@ -54,7 +54,7 @@ jobs:
   - stage: site
     jdk: oraclejdk8
     script:
-      - test "true" = ${CODE_COV:=false} && ./config/publish-site.sh
+      - ./config/publish-site.sh
 
   - stage: deploy
     jdk: oraclejdk8

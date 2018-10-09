@@ -19,47 +19,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.flux;
+package org.influxdata.flux.functions.restriction;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.influxdata.flux.option.FluxConnectionOptions;
-import org.influxdata.platform.AbstractTest;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 /**
- * @author Jakub Bednar (bednar@github) (31/07/2018 09:35)
+ * @author Jakub Bednar (bednar@github) (09/10/2018 10:33)
  */
-public abstract class AbstractITFluxClient extends AbstractTest {
+@RunWith(JUnitPlatform.class)
+class RestrictionsTest {
 
-    private static final Logger LOG = Logger.getLogger(AbstractITFluxClient.class.getName());
+    @Test
+    void notEqual() {
 
-    static final String DATABASE_NAME = "flux_database";
+        Restrictions restrictions = Restrictions.start().notEqual(10);
 
-    FluxClient fluxClient;
-
-    @BeforeEach
-    protected void setUp() {
-
-        String influxURL = getInfluxDbURL();
-        
-        LOG.log(Level.FINEST, "Influx URL: {0}", influxURL);
-
-        FluxConnectionOptions options = FluxConnectionOptions.builder()
-                .url(influxURL)
-                .build();
-
-        fluxClient = FluxClientFactory.create(options);
-
-        influxDBQuery("CREATE DATABASE " + DATABASE_NAME, DATABASE_NAME);
+        Assertions.assertThat(restrictions.toString()).isEqualTo("r[\"_start\"] != 10");
     }
 
-    @AfterEach
-    protected void after() {
+    @Test
+    void less() {
 
-        influxDBQuery("DROP DATABASE " + DATABASE_NAME, DATABASE_NAME);
+        Restrictions restrictions = Restrictions.stop().less(10);
+
+        Assertions.assertThat(restrictions.toString()).isEqualTo("r[\"_stop\"] < 10");
+    }
+
+    @Test
+    void greaterOrEqual() {
+
+        Restrictions restrictions = Restrictions.value().greaterOrEqual(10);
+
+        Assertions.assertThat(restrictions.toString()).isEqualTo("r[\"_value\"] >= 10");
     }
 }
