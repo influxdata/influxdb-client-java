@@ -122,7 +122,7 @@ import retrofit2.Response;
 
 <span class="fc" id="L123">        Arguments.checkNotNull(exception, &quot;exception&quot;);</span>
 
-<span class="fc bfc" id="L125" title="All 4 branches covered.">        return &quot;Socket closed&quot;.equals(exception.getMessage()) || exception instanceof EOFException;</span>
+<span class="fc" id="L125">        return exception instanceof EOFException;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
