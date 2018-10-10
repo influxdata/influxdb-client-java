@@ -2160,6 +2160,59 @@ import org.influxdata.platform.Arguments;
     }
 
     /**
+     * Add named function to current function.
+     *
+     * &lt;pre&gt;
+     * Flux flux = Flux
+     *      .from(&quot;telegraf&quot;)
+     *      .drop()
+     *           .withFunction(&quot;fn&quot;, &quot;col =~ free*&quot;);
+     * &lt;/pre&gt;
+     *
+     * @param functionName name in Flux query
+     * @param function     defined function
+     * @return a current function
+     */
+    @Nonnull
+    public final Flux withFunction(@Nonnull final String functionName, @Nullable final Object function) {
+
+<span class="fc" id="L2179">        Arguments.checkNonEmpty(functionName, &quot;functionName&quot;);</span>
+
+<span class="fc" id="L2181">        this.functionsParameters.putFunctionValue(functionName, function);</span>
+
+<span class="fc" id="L2183">        return this;</span>
+    }
+
+    /**
+     * Add named function to current function.
+     *
+     * &lt;pre&gt;
+     * Map&amp;lt;String, Object&amp;gt; parameters = new HashMap&amp;lt;&amp;gt;();
+     * parameters.put(&quot;function&quot;, &quot;r._value * 10&quot;);
+     *
+     * Flux flux = Flux
+     *     .from(&quot;telegraf&quot;)
+     *     .range(-12L, ChronoUnit.HOURS)
+     *     .map()
+     *          .withFunctionNamed(&quot;fn: (r)&quot;, &quot;function&quot;);
+     * &lt;/pre&gt;
+     *
+     * @param functionName  name in Flux query
+     * @param namedProperty name in named properties
+     * @return a current function
+     */
+    @Nonnull
+    public final Flux withFunctionNamed(@Nonnull final String functionName, @Nonnull final String namedProperty) {
+
+<span class="fc" id="L2207">        Arguments.checkNonEmpty(functionName, &quot;functionName&quot;);</span>
+<span class="fc" id="L2208">        Arguments.checkNonEmpty(namedProperty, &quot;namedProperty&quot;);</span>
+
+<span class="fc" id="L2210">        this.functionsParameters.putFunctionNamed(functionName, namedProperty);</span>
+
+<span class="fc" id="L2212">        return this;</span>
+    }
+
+    /**
      * Add string property value to current function that will be quoted (value =&amp;gt; &quot;value&quot;).
      *
      * &lt;pre&gt;
@@ -2180,11 +2233,11 @@ import org.influxdata.platform.Arguments;
                                         @Nullable final Long amount,
                                         @Nullable final ChronoUnit unit) {
 
-<span class="fc" id="L2183">        Arguments.checkNonEmpty(property, &quot;Flux property name&quot;);</span>
+<span class="fc" id="L2236">        Arguments.checkNonEmpty(property, &quot;Flux property name&quot;);</span>
 
-<span class="fc" id="L2185">        this.functionsParameters.putPropertyValue(property, amount, unit);</span>
+<span class="fc" id="L2238">        this.functionsParameters.putPropertyValue(property, amount, unit);</span>
 
-<span class="fc" id="L2187">        return this;</span>
+<span class="fc" id="L2240">        return this;</span>
     }
 
     /**
@@ -2205,11 +2258,11 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final Flux withPropertyValueEscaped(@Nonnull final String property, @Nullable final String value) {
 
-<span class="fc" id="L2208">        Arguments.checkNonEmpty(property, &quot;Flux property name&quot;);</span>
+<span class="fc" id="L2261">        Arguments.checkNonEmpty(property, &quot;Flux property name&quot;);</span>
 
-<span class="fc" id="L2210">        this.functionsParameters.putPropertyValueString(property, value);</span>
+<span class="fc" id="L2263">        this.functionsParameters.putPropertyValueString(property, value);</span>
 
-<span class="fc" id="L2212">        return this;</span>
+<span class="fc" id="L2265">        return this;</span>
     }
 
     /**
@@ -2229,7 +2282,7 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     @Override
     public String toString() {
-<span class="fc" id="L2232">        return toString(new HashMap&lt;&gt;());</span>
+<span class="fc" id="L2285">        return toString(new HashMap&lt;&gt;());</span>
     }
 
     /**
@@ -2241,13 +2294,13 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public String toString(@Nonnull final Map&lt;String, Object&gt; parameters) {
 
-<span class="fc" id="L2244">        Arguments.checkNotNull(parameters, &quot;Parameters are required&quot;);</span>
+<span class="fc" id="L2297">        Arguments.checkNotNull(parameters, &quot;Parameters are required&quot;);</span>
 
-<span class="fc" id="L2246">        StringBuilder builder = new StringBuilder();</span>
+<span class="fc" id="L2299">        StringBuilder builder = new StringBuilder();</span>
 
-<span class="fc" id="L2248">        appendActual(parameters, builder);</span>
+<span class="fc" id="L2301">        appendActual(parameters, builder);</span>
 
-<span class="fc" id="L2250">        return builder.toString();</span>
+<span class="fc" id="L2303">        return builder.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

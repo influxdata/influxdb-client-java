@@ -82,18 +82,6 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
     protected abstract String operatorName();
 
     /**
-     * For value property it is &quot;: &quot;, but for function it is &quot;=&amp;gt;&quot;.
-     *
-     * @param operatorName function name
-     * @return property value delimiter
-     * @see AbstractParametrizedFlux#propertyDelimiter(String)
-     */
-    @Nonnull
-    protected String propertyDelimiter(@Nonnull final String operatorName) {
-<span class="fc" id="L93">        return &quot;: &quot;;</span>
-    }
-
-    /**
      * Possibility to customize function.
      *
      * @param operator   current Flux function
@@ -102,7 +90,7 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
      */
     protected void beforeAppendOperatorName(@Nonnull final StringBuilder operator,
                                             @Nonnull final Map&lt;String, Object&gt; parameters) {
-<span class="fc" id="L105">    }</span>
+<span class="fc" id="L93">    }</span>
 
     /**
      * @return {@link Boolean#TRUE} if was appended parameter
@@ -112,22 +100,22 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
                                       @Nonnull final StringBuilder operator,
                                       final boolean wasAppendProperty) {
 
-<span class="fc bfc" id="L115" title="All 2 branches covered.">        if (propertyValue == null) {</span>
-<span class="fc" id="L116">            return wasAppendProperty;</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        if (propertyValue == null) {</span>
+<span class="fc" id="L104">            return wasAppendProperty;</span>
         }
 
         // delimit previously appended parameter
-<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (wasAppendProperty) {</span>
-<span class="fc" id="L121">            operator.append(&quot;, &quot;);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (wasAppendProperty) {</span>
+<span class="fc" id="L109">            operator.append(&quot;, &quot;);</span>
         }
 
         // n: 5
-<span class="fc" id="L125">        operator</span>
-<span class="fc" id="L126">                .append(operatorName)</span>
-<span class="fc" id="L127">                .append(propertyDelimiter(operatorName))</span>
-<span class="fc" id="L128">                .append(propertyValue);</span>
+<span class="fc" id="L113">        operator</span>
+<span class="fc" id="L114">                .append(operatorName)</span>
+<span class="fc" id="L115">                .append(functionsParameters.getDelimiter(operatorName))</span>
+<span class="fc" id="L116">                .append(propertyValue);</span>
 
-<span class="fc" id="L130">        return true;</span>
+<span class="fc" id="L118">        return true;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

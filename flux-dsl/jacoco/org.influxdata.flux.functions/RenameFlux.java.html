@@ -56,7 +56,7 @@ import org.influxdata.platform.Arguments;
  *
  * Flux flux = Flux
  *     .from(&quot;telegraf&quot;)
- *     .rename(&quot;{col}_new&quot;);
+ *     .rename(&quot;\&quot;{col}_new\&quot;&quot;);
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (02/08/2018 11:48)
@@ -97,22 +97,9 @@ public final class RenameFlux extends AbstractParametrizedFlux {
 
 <span class="fc" id="L98">        Arguments.checkNonEmpty(function, &quot;Function&quot;);</span>
 
-<span class="fc" id="L100">        this.withPropertyValueEscaped(&quot;fn: (col)&quot;, function);</span>
+<span class="fc" id="L100">        this.withFunction(&quot;fn: (col)&quot;, function);</span>
 
 <span class="fc" id="L102">        return this;</span>
-    }
-
-    @Nonnull
-    @Override
-    protected String propertyDelimiter(@Nonnull final String operatorName) {
-
-<span class="fc bfc" id="L109" title="All 2 branches covered.">        switch (operatorName) {</span>
-            case &quot;fn: (col)&quot;:
-<span class="fc" id="L111">                return &quot; =&gt; &quot;;</span>
-
-            default:
-<span class="fc" id="L114">                return super.propertyDelimiter(operatorName);</span>
-        }
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

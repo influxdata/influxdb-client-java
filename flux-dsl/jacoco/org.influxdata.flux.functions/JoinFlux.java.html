@@ -124,19 +124,6 @@ public final class JoinFlux extends AbstractParametrizedFlux {
 <span class="nc" id="L124">        });</span>
 <span class="nc" id="L125">    }</span>
 
-    @Nonnull
-    @Override
-    protected String propertyDelimiter(@Nonnull final String operatorName) {
-
-<span class="nc bnc" id="L131" title="All 2 branches missed.">        switch (operatorName) {</span>
-            case &quot;fn: (tables)&quot;:
-<span class="nc" id="L133">                return &quot; =&gt; &quot;;</span>
-
-            default:
-<span class="nc" id="L136">                return super.propertyDelimiter(operatorName);</span>
-        }
-    }
-
     /**
      * Map of table to join. Currently only two tables are allowed.
      *
@@ -147,12 +134,12 @@ public final class JoinFlux extends AbstractParametrizedFlux {
     @Nonnull
     public JoinFlux withTable(@Nonnull final String name, @Nonnull final Flux table) {
 
-<span class="nc" id="L150">        Arguments.checkNonEmpty(name, &quot;FluxTable name&quot;);</span>
-<span class="nc" id="L151">        Arguments.checkNotNull(table, &quot;Flux script to map table&quot;);</span>
+<span class="nc" id="L137">        Arguments.checkNonEmpty(name, &quot;FluxTable name&quot;);</span>
+<span class="nc" id="L138">        Arguments.checkNotNull(table, &quot;Flux script to map table&quot;);</span>
 
-<span class="nc" id="L153">        tables.put(name, table);</span>
+<span class="nc" id="L140">        tables.put(name, table);</span>
 
-<span class="nc" id="L155">        return this;</span>
+<span class="nc" id="L142">        return this;</span>
     }
 
     /**
@@ -162,9 +149,9 @@ public final class JoinFlux extends AbstractParametrizedFlux {
     @Nonnull
     public JoinFlux withOn(@Nonnull final String tag) {
 
-<span class="nc" id="L165">        Arguments.checkNonEmpty(tag, &quot;Tag name&quot;);</span>
+<span class="nc" id="L152">        Arguments.checkNonEmpty(tag, &quot;Tag name&quot;);</span>
 
-<span class="nc" id="L167">        return withOn(new String[]{tag});</span>
+<span class="nc" id="L154">        return withOn(new String[]{tag});</span>
     }
 
     /**
@@ -174,11 +161,11 @@ public final class JoinFlux extends AbstractParametrizedFlux {
     @Nonnull
     public JoinFlux withOn(@Nonnull final String[] tags) {
 
-<span class="nc" id="L177">        Arguments.checkNotNull(tags, &quot;Tags are required&quot;);</span>
+<span class="nc" id="L164">        Arguments.checkNotNull(tags, &quot;Tags are required&quot;);</span>
 
-<span class="nc" id="L179">        withPropertyValue(&quot;on&quot;, tags);</span>
+<span class="nc" id="L166">        withPropertyValue(&quot;on&quot;, tags);</span>
 
-<span class="nc" id="L181">        return this;</span>
+<span class="nc" id="L168">        return this;</span>
     }
 
     /**
@@ -188,11 +175,11 @@ public final class JoinFlux extends AbstractParametrizedFlux {
     @Nonnull
     public JoinFlux withOn(@Nonnull final Collection&lt;String&gt; tags) {
 
-<span class="nc" id="L191">        Arguments.checkNotNull(tags, &quot;Tags are required&quot;);</span>
+<span class="nc" id="L178">        Arguments.checkNotNull(tags, &quot;Tags are required&quot;);</span>
 
-<span class="nc" id="L193">        withPropertyValue(&quot;on&quot;, tags);</span>
+<span class="nc" id="L180">        withPropertyValue(&quot;on&quot;, tags);</span>
 
-<span class="nc" id="L195">        return this;</span>
+<span class="nc" id="L182">        return this;</span>
     }
 
     /**
@@ -202,11 +189,11 @@ public final class JoinFlux extends AbstractParametrizedFlux {
     @Nonnull
     public JoinFlux withMethod(@Nonnull final String method) {
 
-<span class="nc" id="L205">        Arguments.checkNonEmpty(method, &quot;Method&quot;);</span>
+<span class="nc" id="L192">        Arguments.checkNonEmpty(method, &quot;Method&quot;);</span>
 
-<span class="nc" id="L207">        this.withPropertyValueEscaped(&quot;method&quot;, method);</span>
+<span class="nc" id="L194">        this.withPropertyValueEscaped(&quot;method&quot;, method);</span>
 
-<span class="nc" id="L209">        return this;</span>
+<span class="nc" id="L196">        return this;</span>
     }
 
     /**
@@ -216,11 +203,11 @@ public final class JoinFlux extends AbstractParametrizedFlux {
     @Nonnull
     public JoinFlux withMethod(@Nonnull final MethodType method) {
 
-<span class="nc" id="L219">        Arguments.checkNotNull(method, &quot;Method&quot;);</span>
+<span class="nc" id="L206">        Arguments.checkNotNull(method, &quot;Method&quot;);</span>
 
-<span class="nc" id="L221">        this.withPropertyValueEscaped(&quot;method&quot;, method.toString().toLowerCase());</span>
+<span class="nc" id="L208">        this.withPropertyValueEscaped(&quot;method&quot;, method.toString().toLowerCase());</span>
 
-<span class="nc" id="L223">        return this;</span>
+<span class="nc" id="L210">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
