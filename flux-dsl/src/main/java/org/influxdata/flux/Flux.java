@@ -52,6 +52,7 @@ import org.influxdata.flux.functions.MapFlux;
 import org.influxdata.flux.functions.MaxFlux;
 import org.influxdata.flux.functions.MeanFlux;
 import org.influxdata.flux.functions.MinFlux;
+import org.influxdata.flux.functions.PercentileFlux;
 import org.influxdata.flux.functions.PivotFlux;
 import org.influxdata.flux.functions.RangeFlux;
 import org.influxdata.flux.functions.RenameFlux;
@@ -109,7 +110,7 @@ import org.influxdata.platform.Arguments;
  * <li>{@link MaxFlux}</li>
  * <li>{@link MeanFlux}</li>
  * <li>{@link MinFlux}</li>
- * <li>!TODO percentile - Not defined in documentation or SPEC</li>
+ * <li>{@link PercentileFlux}</li>
  * <li>{@link PivotFlux}</li>
  * <li>{@link RangeFlux}</li>
  * <li>{@link RenameFlux}</li>
@@ -1090,6 +1091,123 @@ public abstract class Flux {
     @Nonnull
     public final MinFlux min(final boolean useStartTime) {
         return new MinFlux(this).withUseStartTime(useStartTime);
+    }
+
+    /**
+     * Percentile is both an aggregate operation and a selector operation depending on selected options.
+     *
+     * <h3>The parameters had to be defined by:</h3>
+     * <ul>
+     * <li>{@link PercentileFlux#withColumns(String[])}</li>
+     * <li>{@link PercentileFlux#withColumns(Collection)}</li>
+     * <li>{@link PercentileFlux#withPercentile(Float)}</li>
+     * <li>{@link PercentileFlux#withCompression(Float)}</li>
+     * <li>{@link PercentileFlux#withMethod(String)}</li>
+     * <li>{@link PercentileFlux#withMethod(PercentileFlux.MethodType)}</li>
+     * <li>{@link PercentileFlux#withPropertyNamed(String)}</li>
+     * <li>{@link PercentileFlux#withPropertyNamed(String, String)}</li>
+     * <li>{@link PercentileFlux#withPropertyValueEscaped(String, String)}</li>
+     * <li>{@link PercentileFlux#withFunction(String, Object)}</li>
+     * <li>{@link PercentileFlux#withFunctionNamed(String, String)}</li>
+     * </ul>
+     *
+     * @return {@link PivotFlux}
+     */
+    @Nonnull
+    public final PercentileFlux percentile() {
+        return new PercentileFlux(this);
+    }
+
+    /**
+     * Percentile is both an aggregate operation and a selector operation depending on selected options.
+     *
+     * @param percentile  value between 0 and 1 indicating the desired percentile
+     * @return {@link PivotFlux}
+     */
+    @Nonnull
+    public final PercentileFlux percentile(@Nonnull final Float percentile) {
+
+        return new PercentileFlux(this)
+                .withPercentile(percentile);
+    }
+
+    /**
+     * Percentile is both an aggregate operation and a selector operation depending on selected options.
+     *
+     * @param percentile  value between 0 and 1 indicating the desired percentile
+     * @param method      method to aggregate
+     * @return {@link PivotFlux}
+     */
+    @Nonnull
+    public final PercentileFlux percentile(@Nonnull final Float percentile,
+                                           @Nonnull final PercentileFlux.MethodType method) {
+
+        return new PercentileFlux(this)
+                .withPercentile(percentile)
+                .withMethod(method);
+    }
+
+    /**
+     * Percentile is both an aggregate operation and a selector operation depending on selected options.
+     *
+     * @param percentile  value between 0 and 1 indicating the desired percentile
+     * @param method      method to aggregate
+     * @param compression indicates how many centroids to use when compressing the dataset
+     * @return {@link PivotFlux}
+     */
+    @Nonnull
+    public final PercentileFlux percentile(@Nonnull final Float percentile,
+                                           @Nonnull final PercentileFlux.MethodType method,
+                                           @Nonnull final Float compression) {
+
+        return new PercentileFlux(this)
+                .withPercentile(percentile)
+                .withMethod(method)
+                .withCompression(compression);
+    }
+
+    /**
+     * Percentile is both an aggregate operation and a selector operation depending on selected options.
+     *
+     * @param columns     specifies a list of columns to aggregate
+     * @param percentile  value between 0 and 1 indicating the desired percentile
+     * @param method      method to aggregate
+     * @param compression indicates how many centroids to use when compressing the dataset.
+     * @return {@link PivotFlux}
+     */
+    @Nonnull
+    public final PercentileFlux percentile(@Nonnull final String[] columns,
+                                           @Nonnull final Float percentile,
+                                           @Nonnull final PercentileFlux.MethodType method,
+                                           @Nonnull final Float compression) {
+
+        return new PercentileFlux(this)
+                .withColumns(columns)
+                .withPercentile(percentile)
+                .withMethod(method)
+                .withCompression(compression);
+    }
+
+    /**
+     * Percentile is both an aggregate operation and a selector operation depending on selected options.
+     *
+     * @param columns     specifies a list of columns to aggregate
+     * @param percentile  value between 0 and 1 indicating the desired percentile
+     * @param method      method to aggregate
+     * @param compression indicates how many centroids to use when compressing the dataset.
+     * @return {@link PivotFlux}
+     */
+    @Nonnull
+    public final PercentileFlux percentile(@Nonnull final Collection<String> columns,
+                                           @Nonnull final Float percentile,
+                                           @Nonnull final PercentileFlux.MethodType method,
+                                           @Nonnull final Float compression) {
+
+        return new PercentileFlux(this)
+                .withColumns(columns)
+                .withPercentile(percentile)
+                .withMethod(method)
+                .withCompression(compression);
     }
 
     /**
