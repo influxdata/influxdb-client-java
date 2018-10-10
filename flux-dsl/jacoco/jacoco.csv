@@ -6,7 +6,7 @@ The Flux DSL,org.influxdata.flux.functions.properties,FunctionsParameters.new Fu
 The Flux DSL,org.influxdata.flux.functions.properties,FunctionsParameters.StringProperty,2,26,1,1,1,5,1,2,0,2
 The Flux DSL,org.influxdata.flux.functions.properties,FunctionsParameters,13,260,6,24,6,67,6,25,0,16
 The Flux DSL,org.influxdata.flux.functions.properties,TimeInterval,0,130,0,16,0,46,0,17,0,2
-The Flux DSL,org.influxdata.flux.functions,PercentileFlux,10,58,0,0,3,18,1,7,1,7
+The Flux DSL,org.influxdata.flux.functions,PercentileFlux,0,68,0,0,0,21,0,8,0,8
 The Flux DSL,org.influxdata.flux.functions,PercentileFlux.MethodType,0,34,0,0,0,4,0,1,0,1
 The Flux DSL,org.influxdata.flux.functions,ToStringFlux,0,6,0,0,0,3,0,2,0,2
 The Flux DSL,org.influxdata.flux.functions,CountFlux,0,14,0,0,0,5,0,3,0,3
