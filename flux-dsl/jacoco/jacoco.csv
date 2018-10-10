@@ -1,7 +1,7 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-The Flux DSL,org.influxdata.flux.functions.properties,OperatorProperties,10,217,4,22,4,56,4,24,0,15
-The Flux DSL,org.influxdata.flux.functions.properties,OperatorProperties.NamedProperty,0,37,0,2,0,9,0,3,0,2
-The Flux DSL,org.influxdata.flux.functions.properties,OperatorProperties.StringProperty,2,24,1,1,1,5,1,2,0,2
+The Flux DSL,org.influxdata.flux.functions.properties,FunctionsParameters.NamedProperty,0,37,0,2,0,9,0,3,0,2
+The Flux DSL,org.influxdata.flux.functions.properties,FunctionsParameters.StringProperty,2,24,1,1,1,5,1,2,0,2
+The Flux DSL,org.influxdata.flux.functions.properties,FunctionsParameters,10,217,4,22,4,56,4,24,0,15
 The Flux DSL,org.influxdata.flux.functions.properties,TimeInterval,0,130,0,16,0,46,0,17,0,2
 The Flux DSL,org.influxdata.flux.functions,ToStringFlux,0,6,0,0,0,3,0,2,0,2
 The Flux DSL,org.influxdata.flux.functions,CountFlux,0,14,0,0,0,5,0,3,0,3

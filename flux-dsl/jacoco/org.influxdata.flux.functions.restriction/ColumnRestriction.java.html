@@ -23,7 +23,7 @@ package org.influxdata.flux.functions.restriction;
 
 import javax.annotation.Nonnull;
 
-import org.influxdata.flux.functions.properties.OperatorProperties;
+import org.influxdata.flux.functions.properties.FunctionsParameters;
 import org.influxdata.platform.Arguments;
 
 /**
@@ -140,7 +140,7 @@ public final class ColumnRestriction {
 <span class="fc bfc" id="L140" title="All 2 branches covered.">            if (fieldValue instanceof String) {</span>
 <span class="fc" id="L141">                value = &quot;\&quot;&quot; + fieldValue + &quot;\&quot;&quot;;</span>
             } else {
-<span class="fc" id="L143">                value = OperatorProperties.serializeValue(fieldValue);</span>
+<span class="fc" id="L143">                value = FunctionsParameters.serializeValue(fieldValue);</span>
             }
 
 <span class="fc" id="L146">            return &quot;r[\&quot;&quot; + fieldName + &quot;\&quot;] &quot; + operator + &quot; &quot; + value;</span>

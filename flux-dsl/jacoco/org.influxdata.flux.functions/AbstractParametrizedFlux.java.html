@@ -52,7 +52,7 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
         //
 
         //
-        // operator(
+        // function(
         //
 <span class="fc" id="L57">        operator.append(operatorName()).append(&quot;(&quot;);</span>
         //
@@ -60,9 +60,9 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
         // parameters: false
 <span class="fc" id="L61">        boolean wasAppended = false;</span>
 
-<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (String name : operatorProperties.keys()) {</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (String name : functionsParameters.keys()) {</span>
 
-<span class="fc" id="L65">            String propertyValue = operatorProperties.get(name, parameters);</span>
+<span class="fc" id="L65">            String propertyValue = functionsParameters.get(name, parameters);</span>
 
 <span class="fc" id="L67">            wasAppended = appendParameterTo(name, propertyValue, operator, wasAppended);</span>
 <span class="fc" id="L68">        }</span>
@@ -76,7 +76,7 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
 <span class="fc" id="L76">    }</span>
 
     /**
-     * @return name of operator
+     * @return name of function
      */
     @Nonnull
     protected abstract String operatorName();
@@ -84,7 +84,7 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
     /**
      * For value property it is &quot;: &quot;, but for function it is &quot;=&amp;gt;&quot;.
      *
-     * @param operatorName operator name
+     * @param operatorName function name
      * @return property value delimiter
      * @see AbstractParametrizedFlux#propertyDelimiter(String)
      */
@@ -94,9 +94,9 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
     }
 
     /**
-     * Possibility to customize operator.
+     * Possibility to customize function.
      *
-     * @param operator   current Flux operator
+     * @param operator   current Flux function
      * @param parameters parameters
      * @see JoinFlux
      */

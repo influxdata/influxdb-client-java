@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OperatorProperties.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Flux DSL</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.flux.functions.properties</a> &gt; <span class="el_source">OperatorProperties.java</span></div><h1>OperatorProperties.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FunctionsParameters.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Flux DSL</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.flux.functions.properties</a> &gt; <span class="el_source">FunctionsParameters.java</span></div><h1>FunctionsParameters.java</h1><pre class="source lang-java linenums">/*
  * The MIT License
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,23 +39,23 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * The operator properties. Support named-property, property with values.
+ * The function properties. Support named-property, property with values.
  *
  * @author Jakub Bednar (bednar@github) (28/06/2018 05:32)
  */
-public final class OperatorProperties {
+public final class FunctionsParameters {
 
 <span class="fc" id="L48">    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter</span>
 <span class="fc" id="L49">            .ofPattern(&quot;yyyy-MM-dd'T'HH:mm:ss.nnnnnnnnn'Z'&quot;)</span>
 <span class="fc" id="L50">            .withZone(ZoneId.of(&quot;UTC&quot;));</span>
 <span class="fc" id="L51">    private Map&lt;String, Property&gt; properties = new LinkedHashMap&lt;&gt;();</span>
 
-<span class="fc" id="L53">    private OperatorProperties() {</span>
+<span class="fc" id="L53">    private FunctionsParameters() {</span>
 <span class="fc" id="L54">    }</span>
 
     @Nonnull
-    public static OperatorProperties of() {
-<span class="fc" id="L58">        return new OperatorProperties();</span>
+    public static FunctionsParameters of() {
+<span class="fc" id="L58">        return new FunctionsParameters();</span>
     }
 
     /**

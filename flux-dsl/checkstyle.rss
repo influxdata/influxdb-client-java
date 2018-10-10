@@ -88,6 +88,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/flux-dsl/checkstyle.html#org.influxdata.flux.functions.properties.FunctionsParameters.java">org/influxdata/flux/functions/properties/FunctionsParameters.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/flux-dsl/checkstyle.html#org.influxdata.flux.functions.FromFlux.java">org/influxdata/flux/functions/FromFlux.java</a>
                 </td>
                 <td>
@@ -117,20 +131,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/flux-dsl/checkstyle.html#org.influxdata.flux.functions.restriction.Restrictions.java">org/influxdata/flux/functions/restriction/Restrictions.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/flux-dsl/checkstyle.html#org.influxdata.flux.functions.properties.OperatorProperties.java">org/influxdata/flux/functions/properties/OperatorProperties.java</a>
                 </td>
                 <td>
                   0

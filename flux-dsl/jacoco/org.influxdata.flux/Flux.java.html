@@ -71,7 +71,7 @@ import org.influxdata.flux.functions.ToTimeFlux;
 import org.influxdata.flux.functions.ToUIntFlux;
 import org.influxdata.flux.functions.WindowFlux;
 import org.influxdata.flux.functions.YieldFlux;
-import org.influxdata.flux.functions.properties.OperatorProperties;
+import org.influxdata.flux.functions.properties.FunctionsParameters;
 import org.influxdata.flux.functions.restriction.Restrictions;
 import org.influxdata.platform.Arguments;
 
@@ -80,7 +80,7 @@ import org.influxdata.platform.Arguments;
  * &lt;br&gt;
  * &lt;a href=&quot;http://bit.ly/flux-spec&quot;&gt;Flux Specification&lt;/a&gt;
  *
- * &lt;h3&gt;The operators:&lt;/h3&gt;
+ * &lt;h3&gt;The functions:&lt;/h3&gt;
  * &lt;ul&gt;
  * &lt;li&gt;{@link FromFlux}&lt;/li&gt;
  * &lt;li&gt;{@link CountFlux}&lt;/li&gt;
@@ -138,7 +138,7 @@ import org.influxdata.platform.Arguments;
 @SuppressWarnings({&quot;FileLength&quot;})
 <span class="fc" id="L139">public abstract class Flux {</span>
 
-<span class="fc" id="L141">    protected OperatorProperties operatorProperties = OperatorProperties.of();</span>
+<span class="fc" id="L141">    protected FunctionsParameters functionsParameters = FunctionsParameters.of();</span>
 
     /**
      * Get data from the specified database.
@@ -1837,24 +1837,24 @@ import org.influxdata.platform.Arguments;
     }
 
     /**
-     * Create new operator with type {@code type}.
+     * Create new function with type {@code type}.
      *
      * &lt;pre&gt;
      * Flux flux = Flux
      *      .from(&quot;telegraf&quot;)
-     *      .operator(FilterMeasurement.class)
+     *      .function(FilterMeasurement.class)
      *          .withName(&quot;cpu&quot;)
      *      .sum();
      * &lt;/pre&gt;
      *
-     * @param type operator type
-     * @param &lt;F&gt;  operator type
-     * @return operator with {@code type}
+     * @param type function type
+     * @param &lt;F&gt;  function type
+     * @return function with {@code type}
      */
     @Nonnull
-    public final &lt;F extends AbstractParametrizedFlux&gt; F operator(@Nonnull final Class&lt;F&gt; type) {
+    public final &lt;F extends AbstractParametrizedFlux&gt; F function(@Nonnull final Class&lt;F&gt; type) {
 
-<span class="nc" id="L1857">        Arguments.checkNotNull(type, &quot;Operator type is required&quot;);</span>
+<span class="nc" id="L1857">        Arguments.checkNotNull(type, &quot;Function type&quot;);</span>
 
         try {
 <span class="nc" id="L1860">            return type.getConstructor(Flux.class).newInstance(this);</span>
@@ -1864,7 +1864,7 @@ import org.influxdata.platform.Arguments;
     }
 
     /**
-     * Add named property to current operator.
+     * Add named property to current function.
      *
      * &lt;pre&gt;
      *  FluxChain fluxChain = new FluxChain()
@@ -1885,7 +1885,7 @@ import org.influxdata.platform.Arguments;
      * &lt;/pre&gt;
      *
      * @param property name in Flux query and in named properties
-     * @return a current operator.
+     * @return a current function.
      */
     @Nonnull
     public final Flux withPropertyNamed(@Nonnull final String property) {
@@ -1893,7 +1893,7 @@ import org.influxdata.platform.Arguments;
     }
 
     /**
-     * Add named property to current operator.
+     * Add named property to current function.
      *
      * &lt;pre&gt;
      * Flux flux = Flux
@@ -1910,7 +1910,7 @@ import org.influxdata.platform.Arguments;
      *
      * @param fluxName      name in Flux query
      * @param namedProperty name in named properties
-     * @return a current operator
+     * @return a current function
      */
     @Nonnull
     public final Flux withPropertyNamed(@Nonnull final String fluxName, @Nonnull final String namedProperty) {
@@ -1918,13 +1918,13 @@ import org.influxdata.platform.Arguments;
 <span class="fc" id="L1918">        Arguments.checkNonEmpty(fluxName, &quot;Flux property name&quot;);</span>
 <span class="fc" id="L1919">        Arguments.checkNonEmpty(namedProperty, &quot;Named property&quot;);</span>
 
-<span class="fc" id="L1921">        this.operatorProperties.putPropertyNamed(fluxName, namedProperty);</span>
+<span class="fc" id="L1921">        this.functionsParameters.putPropertyNamed(fluxName, namedProperty);</span>
 
 <span class="fc" id="L1923">        return this;</span>
     }
 
     /**
-     * Add property value to current operator.
+     * Add property value to current function.
      *
      * &lt;pre&gt;
      * Flux flux = Flux
@@ -1936,20 +1936,20 @@ import org.influxdata.platform.Arguments;
      *
      * @param propertyName name in Flux query
      * @param value        value of property. If null than ignored.
-     * @return a current operator
+     * @return a current function
      */
     @Nonnull
     public final Flux withPropertyValue(@Nonnull final String propertyName, @Nullable final Object value) {
 
 <span class="fc" id="L1944">        Arguments.checkNonEmpty(propertyName, &quot;Flux property name&quot;);</span>
 
-<span class="fc" id="L1946">        this.operatorProperties.putPropertyValue(propertyName, value);</span>
+<span class="fc" id="L1946">        this.functionsParameters.putPropertyValue(propertyName, value);</span>
 
 <span class="fc" id="L1948">        return this;</span>
     }
 
     /**
-     * Add string property value to current operator that will be quoted (value =&amp;gt; &quot;value&quot;).
+     * Add string property value to current function that will be quoted (value =&amp;gt; &quot;value&quot;).
      *
      * &lt;pre&gt;
      * Flux flux = Flux
@@ -1962,7 +1962,7 @@ import org.influxdata.platform.Arguments;
      * @param property name of property in Flux query
      * @param amount   the amount of the duration, measured in terms of the unit, positive or negative
      * @param unit     the unit that the duration is measured in, must have an exact duration.  If null than ignored.
-     * @return a current operator
+     * @return a current function
      */
     @Nonnull
     public final Flux withPropertyValue(@Nonnull final String property,
@@ -1971,13 +1971,13 @@ import org.influxdata.platform.Arguments;
 
 <span class="fc" id="L1972">        Arguments.checkNonEmpty(property, &quot;Flux property name&quot;);</span>
 
-<span class="fc" id="L1974">        this.operatorProperties.putPropertyValue(property, amount, unit);</span>
+<span class="fc" id="L1974">        this.functionsParameters.putPropertyValue(property, amount, unit);</span>
 
 <span class="fc" id="L1976">        return this;</span>
     }
 
     /**
-     * Add string property value to current operator that will be quoted (value =&amp;gt; &quot;value&quot;).
+     * Add string property value to current function that will be quoted (value =&amp;gt; &quot;value&quot;).
      *
      * &lt;pre&gt;
      * Flux flux = Flux
@@ -1989,14 +1989,14 @@ import org.influxdata.platform.Arguments;
      *
      * @param property name of property in Flux query
      * @param value    value of property. If null than ignored.
-     * @return a current operator
+     * @return a current function
      */
     @Nonnull
     public final Flux withPropertyValueEscaped(@Nonnull final String property, @Nullable final String value) {
 
 <span class="fc" id="L1997">        Arguments.checkNonEmpty(property, &quot;Flux property name&quot;);</span>
 
-<span class="fc" id="L1999">        this.operatorProperties.putPropertyValueString(property, value);</span>
+<span class="fc" id="L1999">        this.functionsParameters.putPropertyValueString(property, value);</span>
 
 <span class="fc" id="L2001">        return this;</span>
     }
