@@ -26,7 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * &lt;a href=&quot;http://bit.ly/flux-spec#skew&quot;&gt;skew&lt;/a&gt; - Skew of the results.
+ * Skew of the results.
+ * &lt;a href=&quot;http://bit.ly/flux-spec#skew&quot;&gt;See SPEC&lt;/a&gt;.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
  * &lt;ul&gt;
@@ -46,13 +47,13 @@ import org.influxdata.flux.Flux;
 public final class SkewFlux extends AbstractParametrizedFlux {
 
     public SkewFlux(@Nonnull final Flux source) {
-<span class="fc" id="L49">        super(source);</span>
-<span class="fc" id="L50">    }</span>
+<span class="fc" id="L50">        super(source);</span>
+<span class="fc" id="L51">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L55">        return &quot;skew&quot;;</span>
+<span class="fc" id="L56">        return &quot;skew&quot;;</span>
     }
 
     /**
@@ -62,9 +63,9 @@ public final class SkewFlux extends AbstractParametrizedFlux {
     @Nonnull
     public SkewFlux withUseStartTime(final boolean useStartTime) {
 
-<span class="fc" id="L65">        this.withPropertyValue(&quot;useStartTime&quot;, useStartTime);</span>
+<span class="fc" id="L66">        this.withPropertyValue(&quot;useStartTime&quot;, useStartTime);</span>
 
-<span class="fc" id="L67">        return this;</span>
+<span class="fc" id="L68">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

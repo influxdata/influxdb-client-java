@@ -28,8 +28,9 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;http://bit.ly/flux-spec#pivot&quot;&gt;pivot&lt;/a&gt; - Pivot collects values stored vertically (column-wise) in a table
- * and aligns them horizontally (row-wise) into logical sets.
+ * Pivot collects values stored vertically (column-wise) in a table and aligns them horizontally (row-wise)
+ * into logical sets.
+ * &lt;a href=&quot;http://bit.ly/flux-spec#pivot&quot;&gt;See SPEC&lt;/a&gt;.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
  * &lt;ul&gt;
@@ -53,13 +54,13 @@ import org.influxdata.platform.Arguments;
 public final class PivotFlux extends AbstractParametrizedFlux {
 
     public PivotFlux(@Nonnull final Flux source) {
-<span class="fc" id="L56">        super(source);</span>
-<span class="fc" id="L57">    }</span>
+<span class="fc" id="L57">        super(source);</span>
+<span class="fc" id="L58">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L62">        return &quot;pivot&quot;;</span>
+<span class="fc" id="L63">        return &quot;pivot&quot;;</span>
     }
 
     /**
@@ -69,11 +70,11 @@ public final class PivotFlux extends AbstractParametrizedFlux {
     @Nonnull
     public PivotFlux withRowKey(@Nonnull final String[] rowKey) {
 
-<span class="fc" id="L72">        Arguments.checkNotNull(rowKey, &quot;rowKey&quot;);</span>
+<span class="fc" id="L73">        Arguments.checkNotNull(rowKey, &quot;rowKey&quot;);</span>
 
-<span class="fc" id="L74">        this.withPropertyValue(&quot;rowKey&quot;, rowKey);</span>
+<span class="fc" id="L75">        this.withPropertyValue(&quot;rowKey&quot;, rowKey);</span>
 
-<span class="fc" id="L76">        return this;</span>
+<span class="fc" id="L77">        return this;</span>
     }
 
     /**
@@ -83,11 +84,11 @@ public final class PivotFlux extends AbstractParametrizedFlux {
     @Nonnull
     public PivotFlux withRowKey(@Nonnull final Collection&lt;String&gt; rowKey) {
 
-<span class="fc" id="L86">        Arguments.checkNotNull(rowKey, &quot;rowKey&quot;);</span>
+<span class="fc" id="L87">        Arguments.checkNotNull(rowKey, &quot;rowKey&quot;);</span>
 
-<span class="fc" id="L88">        this.withPropertyValue(&quot;rowKey&quot;, rowKey);</span>
+<span class="fc" id="L89">        this.withPropertyValue(&quot;rowKey&quot;, rowKey);</span>
 
-<span class="fc" id="L90">        return this;</span>
+<span class="fc" id="L91">        return this;</span>
     }
 
     /**
@@ -97,11 +98,11 @@ public final class PivotFlux extends AbstractParametrizedFlux {
     @Nonnull
     public PivotFlux withColKey(@Nonnull final String[] colKey) {
 
-<span class="fc" id="L100">        Arguments.checkNotNull(colKey, &quot;colKey&quot;);</span>
+<span class="fc" id="L101">        Arguments.checkNotNull(colKey, &quot;colKey&quot;);</span>
 
-<span class="fc" id="L102">        this.withPropertyValue(&quot;colKey&quot;, colKey);</span>
+<span class="fc" id="L103">        this.withPropertyValue(&quot;colKey&quot;, colKey);</span>
 
-<span class="fc" id="L104">        return this;</span>
+<span class="fc" id="L105">        return this;</span>
     }
 
     /**
@@ -111,11 +112,11 @@ public final class PivotFlux extends AbstractParametrizedFlux {
     @Nonnull
     public PivotFlux withColKey(@Nonnull final Collection&lt;String&gt; colKey) {
 
-<span class="fc" id="L114">        Arguments.checkNotNull(colKey, &quot;colKey&quot;);</span>
+<span class="fc" id="L115">        Arguments.checkNotNull(colKey, &quot;colKey&quot;);</span>
 
-<span class="fc" id="L116">        this.withPropertyValue(&quot;colKey&quot;, colKey);</span>
+<span class="fc" id="L117">        this.withPropertyValue(&quot;colKey&quot;, colKey);</span>
 
-<span class="fc" id="L118">        return this;</span>
+<span class="fc" id="L119">        return this;</span>
     }
 
     /**
@@ -125,11 +126,11 @@ public final class PivotFlux extends AbstractParametrizedFlux {
     @Nonnull
     public PivotFlux withValueCol(@Nonnull final String valueCol) {
 
-<span class="fc" id="L128">        Arguments.checkNonEmpty(valueCol, &quot;valueCol&quot;);</span>
+<span class="fc" id="L129">        Arguments.checkNonEmpty(valueCol, &quot;valueCol&quot;);</span>
 
-<span class="fc" id="L130">        this.withPropertyValueEscaped(&quot;valueCol&quot;, valueCol);</span>
+<span class="fc" id="L131">        this.withPropertyValueEscaped(&quot;valueCol&quot;, valueCol);</span>
 
-<span class="fc" id="L132">        return this;</span>
+<span class="fc" id="L133">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

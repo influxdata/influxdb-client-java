@@ -66,6 +66,7 @@ import org.influxdata.flux.functions.SumFlux;
 import org.influxdata.flux.functions.ToBoolFlux;
 import org.influxdata.flux.functions.ToDurationFlux;
 import org.influxdata.flux.functions.ToFloatFlux;
+import org.influxdata.flux.functions.ToFlux;
 import org.influxdata.flux.functions.ToIntFlux;
 import org.influxdata.flux.functions.ToStringFlux;
 import org.influxdata.flux.functions.ToTimeFlux;
@@ -121,7 +122,7 @@ import org.influxdata.platform.Arguments;
  * &lt;li&gt;!TODO stateTracking - Not defined in documentation or SPEC&lt;/li&gt;
  * &lt;li&gt;{@link StddevFlux}&lt;/li&gt;
  * &lt;li&gt;{@link SumFlux}&lt;/li&gt;
- * &lt;li&gt;!TODO - to&lt;/li&gt;
+ * &lt;li&gt;{@link ToFlux}&lt;/li&gt;
  * &lt;li&gt;{@link ToBoolFlux}&lt;/li&gt;
  * &lt;li&gt;{@link ToIntFlux}&lt;/li&gt;
  * &lt;li&gt;{@link ToFloatFlux}&lt;/li&gt;
@@ -137,9 +138,9 @@ import org.influxdata.platform.Arguments;
  * @author Jakub Bednar (bednar@github) (22/06/2018 10:16)
  */
 @SuppressWarnings({&quot;FileLength&quot;})
-<span class="fc" id="L140">public abstract class Flux {</span>
+<span class="fc" id="L141">public abstract class Flux {</span>
 
-<span class="fc" id="L142">    protected FunctionsParameters functionsParameters = FunctionsParameters.of();</span>
+<span class="fc" id="L143">    protected FunctionsParameters functionsParameters = FunctionsParameters.of();</span>
 
     /**
      * Get data from the specified database.
@@ -149,9 +150,9 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public static Flux from(@Nonnull final String bucket) {
-<span class="fc" id="L152">        Arguments.checkNonEmpty(bucket, &quot;Bucket name&quot;);</span>
+<span class="fc" id="L153">        Arguments.checkNonEmpty(bucket, &quot;Bucket name&quot;);</span>
 
-<span class="fc" id="L154">        return new FromFlux().withPropertyValueEscaped(&quot;bucket&quot;, bucket);</span>
+<span class="fc" id="L155">        return new FromFlux().withPropertyValueEscaped(&quot;bucket&quot;, bucket);</span>
     }
 
     /**
@@ -163,12 +164,12 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public static Flux from(@Nonnull final String bucket, @Nonnull final Collection&lt;String&gt; hosts) {
-<span class="fc" id="L166">        Arguments.checkNonEmpty(bucket, &quot;Bucket name&quot;);</span>
-<span class="fc" id="L167">        Arguments.checkNotNull(hosts, &quot;Hosts are required&quot;);</span>
+<span class="fc" id="L167">        Arguments.checkNonEmpty(bucket, &quot;Bucket name&quot;);</span>
+<span class="fc" id="L168">        Arguments.checkNotNull(hosts, &quot;Hosts are required&quot;);</span>
 
-<span class="fc" id="L169">        return new FromFlux()</span>
-<span class="fc" id="L170">                .withPropertyValueEscaped(&quot;bucket&quot;, bucket)</span>
-<span class="fc" id="L171">                .withPropertyValue(&quot;hosts&quot;, hosts);</span>
+<span class="fc" id="L170">        return new FromFlux()</span>
+<span class="fc" id="L171">                .withPropertyValueEscaped(&quot;bucket&quot;, bucket)</span>
+<span class="fc" id="L172">                .withPropertyValue(&quot;hosts&quot;, hosts);</span>
     }
 
     /**
@@ -180,12 +181,12 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public static Flux from(@Nonnull final String bucket, @Nonnull final String[] hosts) {
-<span class="fc" id="L183">        Arguments.checkNonEmpty(bucket, &quot;Database name&quot;);</span>
-<span class="fc" id="L184">        Arguments.checkNotNull(hosts, &quot;Hosts are required&quot;);</span>
+<span class="fc" id="L184">        Arguments.checkNonEmpty(bucket, &quot;Database name&quot;);</span>
+<span class="fc" id="L185">        Arguments.checkNotNull(hosts, &quot;Hosts are required&quot;);</span>
 
-<span class="fc" id="L186">        return new FromFlux()</span>
-<span class="fc" id="L187">                .withPropertyValueEscaped(&quot;bucket&quot;, bucket)</span>
-<span class="fc" id="L188">                .withPropertyValue(&quot;hosts&quot;, hosts);</span>
+<span class="fc" id="L187">        return new FromFlux()</span>
+<span class="fc" id="L188">                .withPropertyValueEscaped(&quot;bucket&quot;, bucket)</span>
+<span class="fc" id="L189">                .withPropertyValue(&quot;hosts&quot;, hosts);</span>
     }
 
     /**
@@ -207,7 +208,7 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public static JoinFlux join() {
 
-<span class="nc" id="L210">        return new JoinFlux();</span>
+<span class="nc" id="L211">        return new JoinFlux();</span>
     }
 
     /**
@@ -229,11 +230,11 @@ import org.influxdata.platform.Arguments;
                                 @Nonnull final String tag,
                                 @Nonnull final String method) {
 
-<span class="nc" id="L232">        return new JoinFlux()</span>
-<span class="nc" id="L233">                .withTable(name1, table1)</span>
-<span class="nc" id="L234">                .withTable(name2, table2)</span>
-<span class="nc" id="L235">                .withOn(tag)</span>
-<span class="nc" id="L236">                .withMethod(method);</span>
+<span class="nc" id="L233">        return new JoinFlux()</span>
+<span class="nc" id="L234">                .withTable(name1, table1)</span>
+<span class="nc" id="L235">                .withTable(name2, table2)</span>
+<span class="nc" id="L236">                .withOn(tag)</span>
+<span class="nc" id="L237">                .withMethod(method);</span>
     }
 
     /**
@@ -252,7 +253,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final KeepFlux keep() {
-<span class="fc" id="L255">        return new KeepFlux(this);</span>
+<span class="fc" id="L256">        return new KeepFlux(this);</span>
     }
 
     /**
@@ -263,7 +264,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final KeepFlux keep(@Nonnull final Collection&lt;String&gt; columns) {
-<span class="fc" id="L266">        return new KeepFlux(this).withColumns(columns);</span>
+<span class="fc" id="L267">        return new KeepFlux(this).withColumns(columns);</span>
     }
 
     /**
@@ -274,7 +275,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final KeepFlux keep(@Nonnull final String[] columns) {
-<span class="fc" id="L277">        return new KeepFlux(this).withColumns(columns);</span>
+<span class="fc" id="L278">        return new KeepFlux(this).withColumns(columns);</span>
     }
 
     /**
@@ -286,7 +287,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final KeepFlux keep(@Nonnull final String function) {
-<span class="fc" id="L289">        return new KeepFlux(this).withFunction(function);</span>
+<span class="fc" id="L290">        return new KeepFlux(this).withFunction(function);</span>
     }
 
     /**
@@ -296,7 +297,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final CountFlux count() {
-<span class="fc" id="L299">        return new CountFlux(this);</span>
+<span class="fc" id="L300">        return new CountFlux(this);</span>
     }
 
     /**
@@ -307,8 +308,8 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final CountFlux count(final boolean useStartTime) {
-<span class="fc" id="L310">        return new CountFlux(this)</span>
-<span class="fc" id="L311">                .withUseStartTime(useStartTime);</span>
+<span class="fc" id="L311">        return new CountFlux(this)</span>
+<span class="fc" id="L312">                .withUseStartTime(useStartTime);</span>
     }
 
     /**
@@ -329,7 +330,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final CovarianceFlux covariance() {
-<span class="fc" id="L332">        return new CovarianceFlux(this);</span>
+<span class="fc" id="L333">        return new CovarianceFlux(this);</span>
     }
 
     /**
@@ -340,7 +341,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final CovarianceFlux covariance(@Nonnull final Collection&lt;String&gt; columns) {
-<span class="fc" id="L343">        return new CovarianceFlux(this).withColumns(columns);</span>
+<span class="fc" id="L344">        return new CovarianceFlux(this).withColumns(columns);</span>
     }
 
     /**
@@ -351,7 +352,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final CovarianceFlux covariance(@Nonnull final String[] columns) {
-<span class="fc" id="L354">        return new CovarianceFlux(this).withColumns(columns);</span>
+<span class="fc" id="L355">        return new CovarianceFlux(this).withColumns(columns);</span>
     }
 
     /**
@@ -363,7 +364,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final CovarianceFlux covariance(@Nonnull final Collection&lt;String&gt; columns, final boolean pearsonr) {
-<span class="fc" id="L366">        return new CovarianceFlux(this).withColumns(columns).withPearsonr(pearsonr);</span>
+<span class="fc" id="L367">        return new CovarianceFlux(this).withColumns(columns).withPearsonr(pearsonr);</span>
     }
 
     /**
@@ -375,7 +376,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final CovarianceFlux covariance(@Nonnull final String[] columns, final boolean pearsonr) {
-<span class="fc" id="L378">        return new CovarianceFlux(this).withColumns(columns).withPearsonr(pearsonr);</span>
+<span class="fc" id="L379">        return new CovarianceFlux(this).withColumns(columns).withPearsonr(pearsonr);</span>
     }
 
     /**
@@ -388,7 +389,7 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final CovarianceFlux covariance(@Nonnull final Collection&lt;String&gt; columns,
                                            @Nonnull final String valueDst) {
-<span class="fc" id="L391">        return new CovarianceFlux(this).withColumns(columns).withValueDst(valueDst);</span>
+<span class="fc" id="L392">        return new CovarianceFlux(this).withColumns(columns).withValueDst(valueDst);</span>
     }
 
     /**
@@ -401,7 +402,7 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final CovarianceFlux covariance(@Nonnull final String[] columns,
                                            @Nonnull final String valueDst) {
-<span class="fc" id="L404">        return new CovarianceFlux(this).withColumns(columns).withValueDst(valueDst);</span>
+<span class="fc" id="L405">        return new CovarianceFlux(this).withColumns(columns).withValueDst(valueDst);</span>
     }
 
     /**
@@ -416,7 +417,7 @@ import org.influxdata.platform.Arguments;
     public final CovarianceFlux covariance(@Nonnull final Collection&lt;String&gt; columns,
                                            final boolean pearsonr,
                                            @Nonnull final String valueDst) {
-<span class="fc" id="L419">        return new CovarianceFlux(this).withColumns(columns).withPearsonr(pearsonr).withValueDst(valueDst);</span>
+<span class="fc" id="L420">        return new CovarianceFlux(this).withColumns(columns).withPearsonr(pearsonr).withValueDst(valueDst);</span>
     }
 
     /**
@@ -431,7 +432,7 @@ import org.influxdata.platform.Arguments;
     public final CovarianceFlux covariance(@Nonnull final String[] columns,
                                            final boolean pearsonr,
                                            @Nonnull final String valueDst) {
-<span class="fc" id="L434">        return new CovarianceFlux(this).withColumns(columns).withPearsonr(pearsonr).withValueDst(valueDst);</span>
+<span class="fc" id="L435">        return new CovarianceFlux(this).withColumns(columns).withPearsonr(pearsonr).withValueDst(valueDst);</span>
     }
 
     /**
@@ -450,7 +451,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final CumulativeSumFlux cumulativeSum() {
-<span class="fc" id="L453">        return new CumulativeSumFlux(this);</span>
+<span class="fc" id="L454">        return new CumulativeSumFlux(this);</span>
     }
 
     /**
@@ -461,7 +462,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final CumulativeSumFlux cumulativeSum(@Nonnull final String[] columns) {
-<span class="fc" id="L464">        return new CumulativeSumFlux(this).withColumns(columns);</span>
+<span class="fc" id="L465">        return new CumulativeSumFlux(this).withColumns(columns);</span>
     }
 
     /**
@@ -472,7 +473,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final CumulativeSumFlux cumulativeSum(@Nonnull final Collection&lt;String&gt; columns) {
-<span class="fc" id="L475">        return new CumulativeSumFlux(this).withColumns(columns);</span>
+<span class="fc" id="L476">        return new CumulativeSumFlux(this).withColumns(columns);</span>
     }
 
     /**
@@ -493,7 +494,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DerivativeFlux derivative() {
-<span class="fc" id="L496">        return new DerivativeFlux(this);</span>
+<span class="fc" id="L497">        return new DerivativeFlux(this);</span>
     }
 
     /**
@@ -505,7 +506,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DerivativeFlux derivative(@Nonnull final Long duration, @Nonnull final ChronoUnit unit) {
-<span class="fc" id="L508">        return new DerivativeFlux(this).withUnit(duration, unit);</span>
+<span class="fc" id="L509">        return new DerivativeFlux(this).withUnit(duration, unit);</span>
     }
 
     /**
@@ -525,7 +526,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DifferenceFlux difference() {
-<span class="fc" id="L528">        return new DifferenceFlux(this);</span>
+<span class="fc" id="L529">        return new DifferenceFlux(this);</span>
     }
 
     /**
@@ -536,7 +537,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DifferenceFlux difference(final boolean nonNegative) {
-<span class="fc" id="L539">        return new DifferenceFlux(this).withNonNegative(nonNegative);</span>
+<span class="fc" id="L540">        return new DifferenceFlux(this).withNonNegative(nonNegative);</span>
     }
 
     /**
@@ -547,7 +548,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DifferenceFlux difference(@Nonnull final Collection&lt;String&gt; columns) {
-<span class="fc" id="L550">        return new DifferenceFlux(this).withColumns(columns);</span>
+<span class="fc" id="L551">        return new DifferenceFlux(this).withColumns(columns);</span>
     }
 
     /**
@@ -558,7 +559,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DifferenceFlux difference(@Nonnull final String[] columns) {
-<span class="fc" id="L561">        return new DifferenceFlux(this).withColumns(columns);</span>
+<span class="fc" id="L562">        return new DifferenceFlux(this).withColumns(columns);</span>
     }
 
     /**
@@ -570,7 +571,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DifferenceFlux difference(@Nonnull final Collection&lt;String&gt; columns, final boolean nonNegative) {
-<span class="fc" id="L573">        return new DifferenceFlux(this).withColumns(columns).withNonNegative(nonNegative);</span>
+<span class="fc" id="L574">        return new DifferenceFlux(this).withColumns(columns).withNonNegative(nonNegative);</span>
     }
 
     /**
@@ -582,7 +583,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DifferenceFlux difference(@Nonnull final String[] columns, final boolean nonNegative) {
-<span class="fc" id="L585">        return new DifferenceFlux(this).withColumns(columns).withNonNegative(nonNegative);</span>
+<span class="fc" id="L586">        return new DifferenceFlux(this).withColumns(columns).withNonNegative(nonNegative);</span>
     }
 
     /**
@@ -600,7 +601,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DistinctFlux distinct() {
-<span class="fc" id="L603">        return new DistinctFlux(this);</span>
+<span class="fc" id="L604">        return new DistinctFlux(this);</span>
     }
 
     /**
@@ -611,7 +612,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DistinctFlux distinct(@Nonnull final String column) {
-<span class="fc" id="L614">        return new DistinctFlux(this).withColumn(column);</span>
+<span class="fc" id="L615">        return new DistinctFlux(this).withColumn(column);</span>
     }
 
     /**
@@ -630,7 +631,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DropFlux drop() {
-<span class="fc" id="L633">        return new DropFlux(this);</span>
+<span class="fc" id="L634">        return new DropFlux(this);</span>
     }
 
     /**
@@ -641,7 +642,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DropFlux drop(@Nonnull final Collection&lt;String&gt; columns) {
-<span class="fc" id="L644">        return new DropFlux(this).withColumns(columns);</span>
+<span class="fc" id="L645">        return new DropFlux(this).withColumns(columns);</span>
     }
 
     /**
@@ -652,7 +653,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DropFlux drop(@Nonnull final String[] columns) {
-<span class="fc" id="L655">        return new DropFlux(this).withColumns(columns);</span>
+<span class="fc" id="L656">        return new DropFlux(this).withColumns(columns);</span>
     }
 
     /**
@@ -664,7 +665,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DropFlux drop(@Nonnull final String function) {
-<span class="fc" id="L667">        return new DropFlux(this).withFunction(function);</span>
+<span class="fc" id="L668">        return new DropFlux(this).withFunction(function);</span>
     }
 
     /**
@@ -683,7 +684,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DuplicateFlux duplicate() {
-<span class="fc" id="L686">        return new DuplicateFlux(this);</span>
+<span class="fc" id="L687">        return new DuplicateFlux(this);</span>
     }
 
     /**
@@ -704,7 +705,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final DuplicateFlux duplicate(@Nonnull final String column, @Nonnull final String as) {
-<span class="fc" id="L707">        return new DuplicateFlux(this).withColumn(column).withAs(as);</span>
+<span class="fc" id="L708">        return new DuplicateFlux(this).withColumn(column).withAs(as);</span>
     }
 
     /**
@@ -722,7 +723,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final FilterFlux filter() {
-<span class="nc" id="L725">        return new FilterFlux(this);</span>
+<span class="nc" id="L726">        return new FilterFlux(this);</span>
     }
 
     /**
@@ -734,9 +735,9 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final FilterFlux filter(@Nonnull final Restrictions restrictions) {
 
-<span class="fc" id="L737">        Arguments.checkNotNull(restrictions, &quot;Restrictions are required&quot;);</span>
+<span class="fc" id="L738">        Arguments.checkNotNull(restrictions, &quot;Restrictions are required&quot;);</span>
 
-<span class="fc" id="L739">        return new FilterFlux(this).withRestrictions(restrictions);</span>
+<span class="fc" id="L740">        return new FilterFlux(this).withRestrictions(restrictions);</span>
     }
 
     /**
@@ -746,7 +747,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final FirstFlux first() {
-<span class="fc" id="L749">        return new FirstFlux(this);</span>
+<span class="fc" id="L750">        return new FirstFlux(this);</span>
     }
 
     /**
@@ -757,8 +758,8 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final FirstFlux first(final boolean useStartTime) {
-<span class="fc" id="L760">        return new FirstFlux(this)</span>
-<span class="fc" id="L761">                .withUseStartTime(useStartTime);</span>
+<span class="fc" id="L761">        return new FirstFlux(this)</span>
+<span class="fc" id="L762">                .withUseStartTime(useStartTime);</span>
     }
 
     /**
@@ -782,7 +783,7 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final GroupFlux group() {
 
-<span class="fc" id="L785">        return new GroupFlux(this);</span>
+<span class="fc" id="L786">        return new GroupFlux(this);</span>
     }
 
     /**
@@ -793,9 +794,9 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final GroupFlux groupBy(@Nonnull final String groupBy) {
-<span class="fc" id="L796">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+<span class="fc" id="L797">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
 
-<span class="fc" id="L798">        return new GroupFlux(this).withBy(groupBy);</span>
+<span class="fc" id="L799">        return new GroupFlux(this).withBy(groupBy);</span>
     }
 
     /**
@@ -806,9 +807,9 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final GroupFlux groupBy(@Nonnull final Collection&lt;String&gt; groupBy) {
-<span class="fc" id="L809">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+<span class="fc" id="L810">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
 
-<span class="fc" id="L811">        return new GroupFlux(this).withBy(groupBy);</span>
+<span class="fc" id="L812">        return new GroupFlux(this).withBy(groupBy);</span>
     }
 
     /**
@@ -820,10 +821,10 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final GroupFlux groupBy(@Nonnull final Collection&lt;String&gt; groupBy, @Nonnull final Collection&lt;String&gt; keep) {
-<span class="fc" id="L823">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
-<span class="fc" id="L824">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
+<span class="fc" id="L824">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+<span class="fc" id="L825">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
 
-<span class="fc" id="L826">        return new GroupFlux(this).withBy(groupBy).withKeep(keep);</span>
+<span class="fc" id="L827">        return new GroupFlux(this).withBy(groupBy).withKeep(keep);</span>
     }
 
     /**
@@ -834,9 +835,9 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final GroupFlux groupBy(@Nonnull final String[] groupBy) {
-<span class="fc" id="L837">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+<span class="fc" id="L838">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
 
-<span class="fc" id="L839">        return new GroupFlux(this).withBy(groupBy);</span>
+<span class="fc" id="L840">        return new GroupFlux(this).withBy(groupBy);</span>
     }
 
     /**
@@ -848,10 +849,10 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final GroupFlux groupBy(@Nonnull final String[] groupBy, @Nonnull final String[] keep) {
-<span class="fc" id="L851">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
-<span class="fc" id="L852">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
+<span class="fc" id="L852">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+<span class="fc" id="L853">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
 
-<span class="fc" id="L854">        return new GroupFlux(this).withBy(groupBy).withKeep(keep);</span>
+<span class="fc" id="L855">        return new GroupFlux(this).withBy(groupBy).withKeep(keep);</span>
     }
 
     /**
@@ -862,9 +863,9 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final GroupFlux groupExcept(@Nonnull final Collection&lt;String&gt; except) {
-<span class="fc" id="L865">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
+<span class="fc" id="L866">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
 
-<span class="fc" id="L867">        return new GroupFlux(this).withExcept(except);</span>
+<span class="fc" id="L868">        return new GroupFlux(this).withExcept(except);</span>
     }
 
     /**
@@ -878,10 +879,10 @@ import org.influxdata.platform.Arguments;
     public final GroupFlux groupExcept(@Nonnull final Collection&lt;String&gt; except,
                                        @Nonnull final Collection&lt;String&gt; keep) {
 
-<span class="fc" id="L881">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
-<span class="fc" id="L882">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
+<span class="fc" id="L882">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
+<span class="fc" id="L883">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
 
-<span class="fc" id="L884">        return new GroupFlux(this).withExcept(except).withKeep(keep);</span>
+<span class="fc" id="L885">        return new GroupFlux(this).withExcept(except).withKeep(keep);</span>
     }
 
     /**
@@ -892,9 +893,9 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final GroupFlux groupExcept(@Nonnull final String[] except) {
-<span class="fc" id="L895">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
+<span class="fc" id="L896">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
 
-<span class="fc" id="L897">        return new GroupFlux(this).withExcept(except);</span>
+<span class="fc" id="L898">        return new GroupFlux(this).withExcept(except);</span>
     }
 
     /**
@@ -906,10 +907,10 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final GroupFlux groupExcept(@Nonnull final String[] except, @Nonnull final String[] keep) {
-<span class="fc" id="L909">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
-<span class="fc" id="L910">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
+<span class="fc" id="L910">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
+<span class="fc" id="L911">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
 
-<span class="fc" id="L912">        return new GroupFlux(this).withExcept(except).withKeep(keep);</span>
+<span class="fc" id="L913">        return new GroupFlux(this).withExcept(except).withKeep(keep);</span>
     }
 
     /**
@@ -927,7 +928,7 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final IntegralFlux integral() {
 
-<span class="fc" id="L930">        return new IntegralFlux(this);</span>
+<span class="fc" id="L931">        return new IntegralFlux(this);</span>
     }
 
     /**
@@ -940,10 +941,10 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final IntegralFlux integral(@Nonnull final Long duration, @Nonnull final ChronoUnit unit) {
 
-<span class="fc" id="L943">        Arguments.checkNotNull(duration, &quot;Duration is required&quot;);</span>
-<span class="fc" id="L944">        Arguments.checkNotNull(unit, &quot;ChronoUnit is required&quot;);</span>
+<span class="fc" id="L944">        Arguments.checkNotNull(duration, &quot;Duration is required&quot;);</span>
+<span class="fc" id="L945">        Arguments.checkNotNull(unit, &quot;ChronoUnit is required&quot;);</span>
 
-<span class="fc" id="L946">        return new IntegralFlux(this).withUnit(duration, unit);</span>
+<span class="fc" id="L947">        return new IntegralFlux(this).withUnit(duration, unit);</span>
     }
 
     /**
@@ -953,7 +954,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final LastFlux last() {
-<span class="fc" id="L956">        return new LastFlux(this);</span>
+<span class="fc" id="L957">        return new LastFlux(this);</span>
     }
 
     /**
@@ -964,7 +965,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final LastFlux last(final boolean useStartTime) {
-<span class="fc" id="L967">        return new LastFlux(this).withUseStartTime(useStartTime);</span>
+<span class="fc" id="L968">        return new LastFlux(this).withUseStartTime(useStartTime);</span>
     }
 
     /**
@@ -983,7 +984,7 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final LimitFlux limit() {
 
-<span class="fc" id="L986">        return new LimitFlux(this);</span>
+<span class="fc" id="L987">        return new LimitFlux(this);</span>
     }
 
     /**
@@ -995,7 +996,7 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final LimitFlux limit(final int numberOfResults) {
 
-<span class="fc" id="L998">        return new LimitFlux(this).withN(numberOfResults);</span>
+<span class="fc" id="L999">        return new LimitFlux(this).withN(numberOfResults);</span>
     }
 
     /**
@@ -1013,7 +1014,7 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final MapFlux map() {
 
-<span class="fc" id="L1016">        return new MapFlux(this);</span>
+<span class="fc" id="L1017">        return new MapFlux(this);</span>
     }
 
     /**
@@ -1025,7 +1026,7 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final MapFlux map(@Nonnull final String function) {
 
-<span class="fc" id="L1028">        return new MapFlux(this).withFunction(function);</span>
+<span class="fc" id="L1029">        return new MapFlux(this).withFunction(function);</span>
     }
 
     /**
@@ -1035,7 +1036,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final MaxFlux max() {
-<span class="fc" id="L1038">        return new MaxFlux(this);</span>
+<span class="fc" id="L1039">        return new MaxFlux(this);</span>
     }
 
     /**
@@ -1046,7 +1047,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final MaxFlux max(final boolean useStartTime) {
-<span class="fc" id="L1049">        return new MaxFlux(this).withUseStartTime(useStartTime);</span>
+<span class="fc" id="L1050">        return new MaxFlux(this).withUseStartTime(useStartTime);</span>
     }
 
     /**
@@ -1056,7 +1057,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final MeanFlux mean() {
-<span class="fc" id="L1059">        return new MeanFlux(this);</span>
+<span class="fc" id="L1060">        return new MeanFlux(this);</span>
     }
 
     /**
@@ -1067,7 +1068,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final MeanFlux mean(final boolean useStartTime) {
-<span class="fc" id="L1070">        return new MeanFlux(this).withUseStartTime(useStartTime);</span>
+<span class="fc" id="L1071">        return new MeanFlux(this).withUseStartTime(useStartTime);</span>
     }
 
     /**
@@ -1077,7 +1078,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final MinFlux min() {
-<span class="fc" id="L1080">        return new MinFlux(this);</span>
+<span class="fc" id="L1081">        return new MinFlux(this);</span>
     }
 
     /**
@@ -1088,7 +1089,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final MinFlux min(final boolean useStartTime) {
-<span class="fc" id="L1091">        return new MinFlux(this).withUseStartTime(useStartTime);</span>
+<span class="fc" id="L1092">        return new MinFlux(this).withUseStartTime(useStartTime);</span>
     }
 
     /**
@@ -1111,7 +1112,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final PivotFlux pivot() {
-<span class="fc" id="L1114">        return new PivotFlux(this);</span>
+<span class="fc" id="L1115">        return new PivotFlux(this);</span>
     }
 
     /**
@@ -1128,7 +1129,7 @@ import org.influxdata.platform.Arguments;
                                  @Nonnull final String[] colKey,
                                  @Nonnull final String valueCol) {
 
-<span class="fc" id="L1131">        return new PivotFlux(this).withRowKey(rowKey).withColKey(colKey).withValueCol(valueCol);</span>
+<span class="fc" id="L1132">        return new PivotFlux(this).withRowKey(rowKey).withColKey(colKey).withValueCol(valueCol);</span>
     }
 
     /**
@@ -1145,7 +1146,7 @@ import org.influxdata.platform.Arguments;
                                  @Nonnull final Collection&lt;String&gt; colKey,
                                  @Nonnull final String valueCol) {
 
-<span class="fc" id="L1148">        return new PivotFlux(this).withRowKey(rowKey).withColKey(colKey).withValueCol(valueCol);</span>
+<span class="fc" id="L1149">        return new PivotFlux(this).withRowKey(rowKey).withColKey(colKey).withValueCol(valueCol);</span>
     }
 
     /**
@@ -1167,7 +1168,7 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final RangeFlux range() {
 
-<span class="fc" id="L1170">        return new RangeFlux(this);</span>
+<span class="fc" id="L1171">        return new RangeFlux(this);</span>
     }
 
     /**
@@ -1178,9 +1179,9 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final RangeFlux range(@Nonnull final Instant start) {
-<span class="fc" id="L1181">        Arguments.checkNotNull(start, &quot;Start is required&quot;);</span>
+<span class="fc" id="L1182">        Arguments.checkNotNull(start, &quot;Start is required&quot;);</span>
 
-<span class="fc" id="L1183">        return new RangeFlux(this).withStart(start);</span>
+<span class="fc" id="L1184">        return new RangeFlux(this).withStart(start);</span>
     }
 
     /**
@@ -1192,10 +1193,10 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final RangeFlux range(@Nonnull final Instant start, @Nonnull final Instant stop) {
-<span class="fc" id="L1195">        Arguments.checkNotNull(start, &quot;Start is required&quot;);</span>
-<span class="fc" id="L1196">        Arguments.checkNotNull(stop, &quot;Stop is required&quot;);</span>
+<span class="fc" id="L1196">        Arguments.checkNotNull(start, &quot;Start is required&quot;);</span>
+<span class="fc" id="L1197">        Arguments.checkNotNull(stop, &quot;Stop is required&quot;);</span>
 
-<span class="fc" id="L1198">        return new RangeFlux(this).withStart(start).withStop(stop);</span>
+<span class="fc" id="L1199">        return new RangeFlux(this).withStart(start).withStop(stop);</span>
     }
 
     /**
@@ -1207,10 +1208,10 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final RangeFlux range(@Nonnull final Long start, @Nonnull final ChronoUnit unit) {
-<span class="fc" id="L1210">        Arguments.checkNotNull(start, &quot;Start is required&quot;);</span>
-<span class="fc" id="L1211">        Arguments.checkNotNull(unit, &quot;ChronoUnit is required&quot;);</span>
+<span class="fc" id="L1211">        Arguments.checkNotNull(start, &quot;Start is required&quot;);</span>
+<span class="fc" id="L1212">        Arguments.checkNotNull(unit, &quot;ChronoUnit is required&quot;);</span>
 
-<span class="fc" id="L1213">        return new RangeFlux(this).withStart(start, unit);</span>
+<span class="fc" id="L1214">        return new RangeFlux(this).withStart(start, unit);</span>
     }
 
     /**
@@ -1223,11 +1224,11 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final RangeFlux range(@Nonnull final Long start, @Nonnull final Long stop, @Nonnull final ChronoUnit unit) {
-<span class="fc" id="L1226">        Arguments.checkNotNull(start, &quot;Start is required&quot;);</span>
-<span class="fc" id="L1227">        Arguments.checkNotNull(stop, &quot;Stop is required&quot;);</span>
-<span class="fc" id="L1228">        Arguments.checkNotNull(unit, &quot;ChronoUnit is required&quot;);</span>
+<span class="fc" id="L1227">        Arguments.checkNotNull(start, &quot;Start is required&quot;);</span>
+<span class="fc" id="L1228">        Arguments.checkNotNull(stop, &quot;Stop is required&quot;);</span>
+<span class="fc" id="L1229">        Arguments.checkNotNull(unit, &quot;ChronoUnit is required&quot;);</span>
 
-<span class="fc" id="L1230">        return new RangeFlux(this).withStart(start, unit).withStop(stop, unit);</span>
+<span class="fc" id="L1231">        return new RangeFlux(this).withStart(start, unit).withStop(stop, unit);</span>
     }
 
     /**
@@ -1246,7 +1247,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final RenameFlux rename() {
-<span class="fc" id="L1249">        return new RenameFlux(this);</span>
+<span class="fc" id="L1250">        return new RenameFlux(this);</span>
     }
 
     /**
@@ -1257,7 +1258,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final RenameFlux rename(@Nonnull final Map&lt;String, String&gt; columns) {
-<span class="fc" id="L1260">        return new RenameFlux(this).withColumns(columns);</span>
+<span class="fc" id="L1261">        return new RenameFlux(this).withColumns(columns);</span>
     }
 
     /**
@@ -1269,7 +1270,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final RenameFlux rename(@Nonnull final String function) {
-<span class="fc" id="L1272">        return new RenameFlux(this).withFunction(function);</span>
+<span class="fc" id="L1273">        return new RenameFlux(this).withFunction(function);</span>
     }
 
     /**
@@ -1289,7 +1290,7 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final SampleFlux sample() {
 
-<span class="fc" id="L1292">        return new SampleFlux(this);</span>
+<span class="fc" id="L1293">        return new SampleFlux(this);</span>
     }
 
     /**
@@ -1301,8 +1302,8 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final SampleFlux sample(final int n) {
 
-<span class="fc" id="L1304">        return new SampleFlux(this)</span>
-<span class="fc" id="L1305">                .withN(n);</span>
+<span class="fc" id="L1305">        return new SampleFlux(this)</span>
+<span class="fc" id="L1306">                .withN(n);</span>
     }
 
     /**
@@ -1315,13 +1316,13 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final SampleFlux sample(final int n, final int pos) {
 
-<span class="fc bfc" id="L1318" title="All 2 branches covered.">        if (pos &gt;= n) {</span>
-<span class="fc" id="L1319">            throw new IllegalArgumentException(&quot;pos must be less than n&quot;);</span>
+<span class="fc bfc" id="L1319" title="All 2 branches covered.">        if (pos &gt;= n) {</span>
+<span class="fc" id="L1320">            throw new IllegalArgumentException(&quot;pos must be less than n&quot;);</span>
         }
 
-<span class="fc" id="L1322">        return new SampleFlux(this)</span>
-<span class="fc" id="L1323">                .withN(n)</span>
-<span class="fc" id="L1324">                .withPos(pos);</span>
+<span class="fc" id="L1323">        return new SampleFlux(this)</span>
+<span class="fc" id="L1324">                .withN(n)</span>
+<span class="fc" id="L1325">                .withPos(pos);</span>
     }
 
     /**
@@ -1339,7 +1340,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final SetFlux set() {
-<span class="fc" id="L1342">        return new SetFlux(this);</span>
+<span class="fc" id="L1343">        return new SetFlux(this);</span>
     }
 
     /**
@@ -1351,7 +1352,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final SetFlux set(@Nonnull final String key, @Nonnull final String value) {
-<span class="fc" id="L1354">        return new SetFlux(this).withKeyValue(key, value);</span>
+<span class="fc" id="L1355">        return new SetFlux(this).withKeyValue(key, value);</span>
     }
 
     /**
@@ -1371,7 +1372,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final ShiftFlux shift() {
-<span class="fc" id="L1374">        return new ShiftFlux(this);</span>
+<span class="fc" id="L1375">        return new ShiftFlux(this);</span>
     }
 
     /**
@@ -1385,7 +1386,7 @@ import org.influxdata.platform.Arguments;
     public final ShiftFlux shift(@Nonnull final Long amount,
                                  @Nonnull final ChronoUnit unit) {
 
-<span class="fc" id="L1388">        return new ShiftFlux(this).withShift(amount, unit);</span>
+<span class="fc" id="L1389">        return new ShiftFlux(this).withShift(amount, unit);</span>
     }
 
     /**
@@ -1401,7 +1402,7 @@ import org.influxdata.platform.Arguments;
                                  @Nonnull final ChronoUnit unit,
                                  @Nonnull final String[] columns) {
 
-<span class="fc" id="L1404">        return new ShiftFlux(this).withShift(amount, unit).withColumns(columns);</span>
+<span class="fc" id="L1405">        return new ShiftFlux(this).withShift(amount, unit).withColumns(columns);</span>
     }
 
     /**
@@ -1417,7 +1418,7 @@ import org.influxdata.platform.Arguments;
                                  @Nonnull final ChronoUnit unit,
                                  @Nonnull final Collection&lt;String&gt; columns) {
 
-<span class="fc" id="L1420">        return new ShiftFlux(this).withShift(amount, unit).withColumns(columns);</span>
+<span class="fc" id="L1421">        return new ShiftFlux(this).withShift(amount, unit).withColumns(columns);</span>
     }
 
     /**
@@ -1427,7 +1428,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final SkewFlux skew() {
-<span class="fc" id="L1430">        return new SkewFlux(this);</span>
+<span class="fc" id="L1431">        return new SkewFlux(this);</span>
     }
 
     /**
@@ -1438,7 +1439,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final SkewFlux skew(final boolean useStartTime) {
-<span class="fc" id="L1441">        return new SkewFlux(this).withUseStartTime(useStartTime);</span>
+<span class="fc" id="L1442">        return new SkewFlux(this).withUseStartTime(useStartTime);</span>
     }
 
     /**
@@ -1448,7 +1449,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final SortFlux sort() {
-<span class="fc" id="L1451">        return new SortFlux(this);</span>
+<span class="fc" id="L1452">        return new SortFlux(this);</span>
     }
 
     /**
@@ -1459,7 +1460,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final SortFlux sort(final boolean desc) {
-<span class="fc" id="L1462">        return new SortFlux(this).withDesc(desc);</span>
+<span class="fc" id="L1463">        return new SortFlux(this).withDesc(desc);</span>
     }
 
     /**
@@ -1470,9 +1471,9 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final SortFlux sort(@Nonnull final String[] columns) {
-<span class="fc" id="L1473">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L1474">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L1475">        return new SortFlux(this).withCols(columns);</span>
+<span class="fc" id="L1476">        return new SortFlux(this).withCols(columns);</span>
     }
 
     /**
@@ -1483,9 +1484,9 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final SortFlux sort(@Nonnull final Collection&lt;String&gt; columns) {
-<span class="fc" id="L1486">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L1487">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L1488">        return new SortFlux(this).withCols(columns);</span>
+<span class="fc" id="L1489">        return new SortFlux(this).withCols(columns);</span>
     }
 
     /**
@@ -1497,11 +1498,11 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final SortFlux sort(@Nonnull final String[] columns, final boolean desc) {
-<span class="fc" id="L1500">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L1501">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L1502">        return new SortFlux(this)</span>
-<span class="fc" id="L1503">                .withCols(columns)</span>
-<span class="fc" id="L1504">                .withDesc(desc);</span>
+<span class="fc" id="L1503">        return new SortFlux(this)</span>
+<span class="fc" id="L1504">                .withCols(columns)</span>
+<span class="fc" id="L1505">                .withDesc(desc);</span>
     }
 
     /**
@@ -1513,11 +1514,11 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final SortFlux sort(@Nonnull final Collection&lt;String&gt; columns, final boolean desc) {
-<span class="fc" id="L1516">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L1517">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L1518">        return new SortFlux(this)</span>
-<span class="fc" id="L1519">                .withCols(columns)</span>
-<span class="fc" id="L1520">                .withDesc(desc);</span>
+<span class="fc" id="L1519">        return new SortFlux(this)</span>
+<span class="fc" id="L1520">                .withCols(columns)</span>
+<span class="fc" id="L1521">                .withDesc(desc);</span>
     }
 
     /**
@@ -1527,7 +1528,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final SpreadFlux spread() {
-<span class="fc" id="L1530">        return new SpreadFlux(this);</span>
+<span class="fc" id="L1531">        return new SpreadFlux(this);</span>
     }
 
     /**
@@ -1538,7 +1539,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final SpreadFlux spread(final boolean useStartTime) {
-<span class="fc" id="L1541">        return new SpreadFlux(this).withUseStartTime(useStartTime);</span>
+<span class="fc" id="L1542">        return new SpreadFlux(this).withUseStartTime(useStartTime);</span>
     }
 
     /**
@@ -1548,7 +1549,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final StddevFlux stddev() {
-<span class="fc" id="L1551">        return new StddevFlux(this);</span>
+<span class="fc" id="L1552">        return new StddevFlux(this);</span>
     }
 
     /**
@@ -1559,7 +1560,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final StddevFlux stddev(final boolean useStartTime) {
-<span class="fc" id="L1562">        return new StddevFlux(this).withUseStartTime(useStartTime);</span>
+<span class="fc" id="L1563">        return new StddevFlux(this).withUseStartTime(useStartTime);</span>
     }
 
     /**
@@ -1569,7 +1570,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final SumFlux sum() {
-<span class="fc" id="L1572">        return new SumFlux(this);</span>
+<span class="fc" id="L1573">        return new SumFlux(this);</span>
     }
 
     /**
@@ -1580,7 +1581,175 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final SumFlux sum(final boolean useStartTime) {
-<span class="fc" id="L1583">        return new SumFlux(this).withUseStartTime(useStartTime);</span>
+<span class="fc" id="L1584">        return new SumFlux(this).withUseStartTime(useStartTime);</span>
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * &lt;h3&gt;The parameters had to be defined by:&lt;/h3&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link ToFlux#withBucket(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link ToFlux#withBucketID(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link ToFlux#withOrg(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link ToFlux#withOrgID(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link ToFlux#withHost(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link ToFlux#withToken(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link ToFlux#withTimeColumn(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link ToFlux#withTagColumns(Collection)}&lt;/li&gt;
+     * &lt;li&gt;{@link ToFlux#withTagColumns(String[])}&lt;/li&gt;
+     * &lt;li&gt;{@link ToFlux#withFieldFunction(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link ToFlux#withPropertyNamed(String)}&lt;/li&gt;
+     * &lt;li&gt;{@link ToFlux#withPropertyNamed(String, String)}&lt;/li&gt;
+     * &lt;li&gt;{@link ToFlux#withPropertyValueEscaped(String, String)}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to() {
+<span class="fc" id="L1611">        return new ToFlux(this);</span>
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * @param bucket The bucket to which data will be written.
+     * @param org    The organization name of the above bucket.
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to(@Nonnull final String bucket,
+                           @Nonnull final String org) {
+
+<span class="fc" id="L1625">        return new ToFlux(this)</span>
+<span class="fc" id="L1626">                .withBucket(bucket)</span>
+<span class="fc" id="L1627">                .withOrg(org);</span>
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * @param bucket  The bucket to which data will be written.
+     * @param org     The organization name of the above bucket.
+     * @param fieldFn Function that takes a record from the input table and returns an object.
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to(@Nonnull final String bucket,
+                           @Nonnull final String org,
+                           @Nonnull final String fieldFn) {
+
+<span class="fc" id="L1643">        return new ToFlux(this)</span>
+<span class="fc" id="L1644">                .withBucket(bucket)</span>
+<span class="fc" id="L1645">                .withOrg(org)</span>
+<span class="fc" id="L1646">                .withFieldFunction(fieldFn);</span>
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * @param bucket     The bucket to which data will be written.
+     * @param org        The organization name of the above bucket.
+     * @param tagColumns The tag columns of the output.
+     * @param fieldFn    Function that takes a record from the input table and returns an object.
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to(@Nonnull final String bucket,
+                           @Nonnull final String org,
+                           @Nonnull final String[] tagColumns,
+                           @Nonnull final String fieldFn) {
+
+<span class="fc" id="L1664">        return new ToFlux(this)</span>
+<span class="fc" id="L1665">                .withBucket(bucket)</span>
+<span class="fc" id="L1666">                .withOrg(org)</span>
+<span class="fc" id="L1667">                .withTagColumns(tagColumns)</span>
+<span class="fc" id="L1668">                .withFieldFunction(fieldFn);</span>
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * @param bucket     The bucket to which data will be written.
+     * @param org        The organization name of the above bucket.
+     * @param tagColumns The tag columns of the output.
+     * @param fieldFn    Function that takes a record from the input table and returns an object.
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to(@Nonnull final String bucket,
+                           @Nonnull final String org,
+                           @Nonnull final Collection&lt;String&gt; tagColumns,
+                           @Nonnull final String fieldFn) {
+
+<span class="fc" id="L1686">        return new ToFlux(this)</span>
+<span class="fc" id="L1687">                .withBucket(bucket)</span>
+<span class="fc" id="L1688">                .withOrg(org)</span>
+<span class="fc" id="L1689">                .withTagColumns(tagColumns)</span>
+<span class="fc" id="L1690">                .withFieldFunction(fieldFn);</span>
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * @param bucket     The bucket to which data will be written.
+     * @param org        The organization name of the above bucket.
+     * @param host       The remote host to write to.
+     * @param token      The authorization token to use when writing to a remote host.
+     * @param timeColumn The time column of the output.
+     * @param tagColumns The tag columns of the output.
+     * @param fieldFn    Function that takes a record from the input table and returns an object.
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to(@Nonnull final String bucket,
+                           @Nonnull final String org,
+                           @Nonnull final String host,
+                           @Nonnull final String token,
+                           @Nonnull final String timeColumn,
+                           @Nonnull final String[] tagColumns,
+                           @Nonnull final String fieldFn) {
+
+<span class="fc" id="L1714">        return new ToFlux(this)</span>
+<span class="fc" id="L1715">                .withBucket(bucket)</span>
+<span class="fc" id="L1716">                .withOrg(org)</span>
+<span class="fc" id="L1717">                .withHost(host)</span>
+<span class="fc" id="L1718">                .withToken(token)</span>
+<span class="fc" id="L1719">                .withTimeColumn(timeColumn)</span>
+<span class="fc" id="L1720">                .withTagColumns(tagColumns)</span>
+<span class="fc" id="L1721">                .withFieldFunction(fieldFn);</span>
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * @param bucket     The bucket to which data will be written.
+     * @param org        The organization name of the above bucket.
+     * @param host       The remote host to write to.
+     * @param token      The authorization token to use when writing to a remote host.
+     * @param timeColumn The time column of the output.
+     * @param tagColumns The tag columns of the output.
+     * @param fieldFn    Function that takes a record from the input table and returns an object.
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to(@Nonnull final String bucket,
+                           @Nonnull final String org,
+                           @Nonnull final String host,
+                           @Nonnull final String token,
+                           @Nonnull final String timeColumn,
+                           @Nonnull final Collection&lt;String&gt; tagColumns,
+                           @Nonnull final String fieldFn) {
+
+<span class="fc" id="L1745">        return new ToFlux(this)</span>
+<span class="fc" id="L1746">                .withBucket(bucket)</span>
+<span class="fc" id="L1747">                .withOrg(org)</span>
+<span class="fc" id="L1748">                .withHost(host)</span>
+<span class="fc" id="L1749">                .withToken(token)</span>
+<span class="fc" id="L1750">                .withTimeColumn(timeColumn)</span>
+<span class="fc" id="L1751">                .withTagColumns(tagColumns)</span>
+<span class="fc" id="L1752">                .withFieldFunction(fieldFn);</span>
     }
 
     /**
@@ -1590,7 +1759,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final ToBoolFlux toBool() {
-<span class="fc" id="L1593">        return new ToBoolFlux(this);</span>
+<span class="fc" id="L1762">        return new ToBoolFlux(this);</span>
     }
 
     /**
@@ -1600,7 +1769,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final ToIntFlux toInt() {
-<span class="fc" id="L1603">        return new ToIntFlux(this);</span>
+<span class="fc" id="L1772">        return new ToIntFlux(this);</span>
     }
 
     /**
@@ -1610,7 +1779,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final ToFloatFlux toFloat() {
-<span class="fc" id="L1613">        return new ToFloatFlux(this);</span>
+<span class="fc" id="L1782">        return new ToFloatFlux(this);</span>
     }
 
     /**
@@ -1620,7 +1789,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final ToDurationFlux toDuration() {
-<span class="fc" id="L1623">        return new ToDurationFlux(this);</span>
+<span class="fc" id="L1792">        return new ToDurationFlux(this);</span>
     }
 
     /**
@@ -1630,7 +1799,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final ToStringFlux toStringConvert() {
-<span class="fc" id="L1633">        return new ToStringFlux(this);</span>
+<span class="fc" id="L1802">        return new ToStringFlux(this);</span>
     }
 
     /**
@@ -1640,7 +1809,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final ToTimeFlux toTime() {
-<span class="fc" id="L1643">        return new ToTimeFlux(this);</span>
+<span class="fc" id="L1812">        return new ToTimeFlux(this);</span>
     }
 
     /**
@@ -1650,7 +1819,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final ToUIntFlux toUInt() {
-<span class="fc" id="L1653">        return new ToUIntFlux(this);</span>
+<span class="fc" id="L1822">        return new ToUIntFlux(this);</span>
     }
 
     /**
@@ -1674,7 +1843,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final WindowFlux window() {
-<span class="fc" id="L1677">        return new WindowFlux(this);</span>
+<span class="fc" id="L1846">        return new WindowFlux(this);</span>
     }
 
     /**
@@ -1688,10 +1857,10 @@ import org.influxdata.platform.Arguments;
     public final WindowFlux window(@Nonnull final Long every,
                                    @Nonnull final ChronoUnit everyUnit) {
 
-<span class="fc" id="L1691">        Arguments.checkNotNull(every, &quot;Every is required&quot;);</span>
-<span class="fc" id="L1692">        Arguments.checkNotNull(everyUnit, &quot;Every ChronoUnit is required&quot;);</span>
+<span class="fc" id="L1860">        Arguments.checkNotNull(every, &quot;Every is required&quot;);</span>
+<span class="fc" id="L1861">        Arguments.checkNotNull(everyUnit, &quot;Every ChronoUnit is required&quot;);</span>
 
-<span class="fc" id="L1694">        return new WindowFlux(this).withEvery(every, everyUnit);</span>
+<span class="fc" id="L1863">        return new WindowFlux(this).withEvery(every, everyUnit);</span>
     }
 
     /**
@@ -1709,15 +1878,15 @@ import org.influxdata.platform.Arguments;
                                    @Nonnull final Long period,
                                    @Nonnull final ChronoUnit periodUnit) {
 
-<span class="fc" id="L1712">        Arguments.checkNotNull(every, &quot;Every is required&quot;);</span>
-<span class="fc" id="L1713">        Arguments.checkNotNull(everyUnit, &quot;Every ChronoUnit is required&quot;);</span>
+<span class="fc" id="L1881">        Arguments.checkNotNull(every, &quot;Every is required&quot;);</span>
+<span class="fc" id="L1882">        Arguments.checkNotNull(everyUnit, &quot;Every ChronoUnit is required&quot;);</span>
 
-<span class="fc" id="L1715">        Arguments.checkNotNull(period, &quot;Period is required&quot;);</span>
-<span class="fc" id="L1716">        Arguments.checkNotNull(periodUnit, &quot;Period ChronoUnit is required&quot;);</span>
+<span class="fc" id="L1884">        Arguments.checkNotNull(period, &quot;Period is required&quot;);</span>
+<span class="fc" id="L1885">        Arguments.checkNotNull(periodUnit, &quot;Period ChronoUnit is required&quot;);</span>
 
-<span class="fc" id="L1718">        return new WindowFlux(this)</span>
-<span class="fc" id="L1719">                .withEvery(every, everyUnit)</span>
-<span class="fc" id="L1720">                .withPeriod(period, periodUnit);</span>
+<span class="fc" id="L1887">        return new WindowFlux(this)</span>
+<span class="fc" id="L1888">                .withEvery(every, everyUnit)</span>
+<span class="fc" id="L1889">                .withPeriod(period, periodUnit);</span>
     }
 
     /**
@@ -1737,10 +1906,10 @@ import org.influxdata.platform.Arguments;
                                    @Nonnull final ChronoUnit periodUnit,
                                    @Nonnull final Instant offset) {
 
-<span class="fc" id="L1740">        return new WindowFlux(this)</span>
-<span class="fc" id="L1741">                .withEvery(every, everyUnit)</span>
-<span class="fc" id="L1742">                .withPeriod(period, periodUnit)</span>
-<span class="fc" id="L1743">                .withOffset(offset);</span>
+<span class="fc" id="L1909">        return new WindowFlux(this)</span>
+<span class="fc" id="L1910">                .withEvery(every, everyUnit)</span>
+<span class="fc" id="L1911">                .withPeriod(period, periodUnit)</span>
+<span class="fc" id="L1912">                .withOffset(offset);</span>
     }
 
     /**
@@ -1762,10 +1931,10 @@ import org.influxdata.platform.Arguments;
                                    @Nonnull final Long offset,
                                    @Nonnull final ChronoUnit offsetUnit) {
 
-<span class="fc" id="L1765">        return new WindowFlux(this)</span>
-<span class="fc" id="L1766">                .withEvery(every, everyUnit)</span>
-<span class="fc" id="L1767">                .withPeriod(period, periodUnit)</span>
-<span class="fc" id="L1768">                .withOffset(offset, offsetUnit);</span>
+<span class="fc" id="L1934">        return new WindowFlux(this)</span>
+<span class="fc" id="L1935">                .withEvery(every, everyUnit)</span>
+<span class="fc" id="L1936">                .withPeriod(period, periodUnit)</span>
+<span class="fc" id="L1937">                .withOffset(offset, offsetUnit);</span>
     }
 
     /**
@@ -1793,13 +1962,13 @@ import org.influxdata.platform.Arguments;
                                    @Nonnull final String startCol,
                                    @Nonnull final String stopCol) {
 
-<span class="fc" id="L1796">        return new WindowFlux(this)</span>
-<span class="fc" id="L1797">                .withEvery(every, everyUnit)</span>
-<span class="fc" id="L1798">                .withPeriod(period, periodUnit)</span>
-<span class="fc" id="L1799">                .withOffset(offset, offsetUnit)</span>
-<span class="fc" id="L1800">                .withColumn(timeColumn)</span>
-<span class="fc" id="L1801">                .withStartCol(startCol)</span>
-<span class="fc" id="L1802">                .withStopCol(stopCol);</span>
+<span class="fc" id="L1965">        return new WindowFlux(this)</span>
+<span class="fc" id="L1966">                .withEvery(every, everyUnit)</span>
+<span class="fc" id="L1967">                .withPeriod(period, periodUnit)</span>
+<span class="fc" id="L1968">                .withOffset(offset, offsetUnit)</span>
+<span class="fc" id="L1969">                .withColumn(timeColumn)</span>
+<span class="fc" id="L1970">                .withStartCol(startCol)</span>
+<span class="fc" id="L1971">                .withStopCol(stopCol);</span>
 
     }
 
@@ -1826,13 +1995,13 @@ import org.influxdata.platform.Arguments;
                                    @Nonnull final String startCol,
                                    @Nonnull final String stopCol) {
 
-<span class="fc" id="L1829">        return new WindowFlux(this)</span>
-<span class="fc" id="L1830">                .withEvery(every, everyUnit)</span>
-<span class="fc" id="L1831">                .withPeriod(period, periodUnit)</span>
-<span class="fc" id="L1832">                .withOffset(offset)</span>
-<span class="fc" id="L1833">                .withColumn(timeColumn)</span>
-<span class="fc" id="L1834">                .withStartCol(startCol)</span>
-<span class="fc" id="L1835">                .withStopCol(stopCol);</span>
+<span class="fc" id="L1998">        return new WindowFlux(this)</span>
+<span class="fc" id="L1999">                .withEvery(every, everyUnit)</span>
+<span class="fc" id="L2000">                .withPeriod(period, periodUnit)</span>
+<span class="fc" id="L2001">                .withOffset(offset)</span>
+<span class="fc" id="L2002">                .withColumn(timeColumn)</span>
+<span class="fc" id="L2003">                .withStartCol(startCol)</span>
+<span class="fc" id="L2004">                .withStopCol(stopCol);</span>
     }
 
     /**
@@ -1850,7 +2019,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final YieldFlux yield() {
-<span class="fc" id="L1853">        return new YieldFlux(this);</span>
+<span class="fc" id="L2022">        return new YieldFlux(this);</span>
     }
 
     /**
@@ -1861,7 +2030,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final YieldFlux yield(@Nonnull final String name) {
-<span class="fc" id="L1864">        return new YieldFlux(this).withName(name);</span>
+<span class="fc" id="L2033">        return new YieldFlux(this).withName(name);</span>
     }
 
     /**
@@ -1873,9 +2042,9 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final ExpressionFlux expression(@Nonnull final String expression) {
 
-<span class="fc" id="L1876">        Arguments.checkNonEmpty(expression, &quot;Expression&quot;);</span>
+<span class="fc" id="L2045">        Arguments.checkNonEmpty(expression, &quot;Expression&quot;);</span>
 
-<span class="fc" id="L1878">        return new ExpressionFlux(this, expression);</span>
+<span class="fc" id="L2047">        return new ExpressionFlux(this, expression);</span>
     }
 
     /**
@@ -1896,12 +2065,12 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final &lt;F extends AbstractParametrizedFlux&gt; F function(@Nonnull final Class&lt;F&gt; type) {
 
-<span class="nc" id="L1899">        Arguments.checkNotNull(type, &quot;Function type&quot;);</span>
+<span class="nc" id="L2068">        Arguments.checkNotNull(type, &quot;Function type&quot;);</span>
 
         try {
-<span class="nc" id="L1902">            return type.getConstructor(Flux.class).newInstance(this);</span>
-<span class="nc" id="L1903">        } catch (Exception e) {</span>
-<span class="nc" id="L1904">            throw new RuntimeException(e);</span>
+<span class="nc" id="L2071">            return type.getConstructor(Flux.class).newInstance(this);</span>
+<span class="nc" id="L2072">        } catch (Exception e) {</span>
+<span class="nc" id="L2073">            throw new RuntimeException(e);</span>
         }
     }
 
@@ -1931,7 +2100,7 @@ import org.influxdata.platform.Arguments;
      */
     @Nonnull
     public final Flux withPropertyNamed(@Nonnull final String property) {
-<span class="fc" id="L1934">        return withPropertyNamed(property, property);</span>
+<span class="fc" id="L2103">        return withPropertyNamed(property, property);</span>
     }
 
     /**
@@ -1957,12 +2126,12 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final Flux withPropertyNamed(@Nonnull final String fluxName, @Nonnull final String namedProperty) {
 
-<span class="fc" id="L1960">        Arguments.checkNonEmpty(fluxName, &quot;Flux property name&quot;);</span>
-<span class="fc" id="L1961">        Arguments.checkNonEmpty(namedProperty, &quot;Named property&quot;);</span>
+<span class="fc" id="L2129">        Arguments.checkNonEmpty(fluxName, &quot;Flux property name&quot;);</span>
+<span class="fc" id="L2130">        Arguments.checkNonEmpty(namedProperty, &quot;Named property&quot;);</span>
 
-<span class="fc" id="L1963">        this.functionsParameters.putPropertyNamed(fluxName, namedProperty);</span>
+<span class="fc" id="L2132">        this.functionsParameters.putPropertyNamed(fluxName, namedProperty);</span>
 
-<span class="fc" id="L1965">        return this;</span>
+<span class="fc" id="L2134">        return this;</span>
     }
 
     /**
@@ -1983,11 +2152,11 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final Flux withPropertyValue(@Nonnull final String propertyName, @Nullable final Object value) {
 
-<span class="fc" id="L1986">        Arguments.checkNonEmpty(propertyName, &quot;Flux property name&quot;);</span>
+<span class="fc" id="L2155">        Arguments.checkNonEmpty(propertyName, &quot;Flux property name&quot;);</span>
 
-<span class="fc" id="L1988">        this.functionsParameters.putPropertyValue(propertyName, value);</span>
+<span class="fc" id="L2157">        this.functionsParameters.putPropertyValue(propertyName, value);</span>
 
-<span class="fc" id="L1990">        return this;</span>
+<span class="fc" id="L2159">        return this;</span>
     }
 
     /**
@@ -2011,11 +2180,11 @@ import org.influxdata.platform.Arguments;
                                         @Nullable final Long amount,
                                         @Nullable final ChronoUnit unit) {
 
-<span class="fc" id="L2014">        Arguments.checkNonEmpty(property, &quot;Flux property name&quot;);</span>
+<span class="fc" id="L2183">        Arguments.checkNonEmpty(property, &quot;Flux property name&quot;);</span>
 
-<span class="fc" id="L2016">        this.functionsParameters.putPropertyValue(property, amount, unit);</span>
+<span class="fc" id="L2185">        this.functionsParameters.putPropertyValue(property, amount, unit);</span>
 
-<span class="fc" id="L2018">        return this;</span>
+<span class="fc" id="L2187">        return this;</span>
     }
 
     /**
@@ -2036,11 +2205,11 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public final Flux withPropertyValueEscaped(@Nonnull final String property, @Nullable final String value) {
 
-<span class="fc" id="L2039">        Arguments.checkNonEmpty(property, &quot;Flux property name&quot;);</span>
+<span class="fc" id="L2208">        Arguments.checkNonEmpty(property, &quot;Flux property name&quot;);</span>
 
-<span class="fc" id="L2041">        this.functionsParameters.putPropertyValueString(property, value);</span>
+<span class="fc" id="L2210">        this.functionsParameters.putPropertyValueString(property, value);</span>
 
-<span class="fc" id="L2043">        return this;</span>
+<span class="fc" id="L2212">        return this;</span>
     }
 
     /**
@@ -2060,7 +2229,7 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     @Override
     public String toString() {
-<span class="fc" id="L2063">        return toString(new HashMap&lt;&gt;());</span>
+<span class="fc" id="L2232">        return toString(new HashMap&lt;&gt;());</span>
     }
 
     /**
@@ -2072,13 +2241,13 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public String toString(@Nonnull final Map&lt;String, Object&gt; parameters) {
 
-<span class="fc" id="L2075">        Arguments.checkNotNull(parameters, &quot;Parameters are required&quot;);</span>
+<span class="fc" id="L2244">        Arguments.checkNotNull(parameters, &quot;Parameters are required&quot;);</span>
 
-<span class="fc" id="L2077">        StringBuilder builder = new StringBuilder();</span>
+<span class="fc" id="L2246">        StringBuilder builder = new StringBuilder();</span>
 
-<span class="fc" id="L2079">        appendActual(parameters, builder);</span>
+<span class="fc" id="L2248">        appendActual(parameters, builder);</span>
 
-<span class="fc" id="L2081">        return builder.toString();</span>
+<span class="fc" id="L2250">        return builder.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

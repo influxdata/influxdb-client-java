@@ -33,6 +33,7 @@ The Flux DSL,org.influxdata.flux.functions,ToBoolFlux,0,6,0,0,0,3,0,2,0,2
 The Flux DSL,org.influxdata.flux.functions,ShiftFlux,0,51,0,0,0,16,0,6,0,6
 The Flux DSL,org.influxdata.flux.functions,StddevFlux,0,14,0,0,0,5,0,3,0,3
 The Flux DSL,org.influxdata.flux.functions,FirstFlux,0,14,0,0,0,5,0,3,0,3
+The Flux DSL,org.influxdata.flux.functions,ToFlux,0,128,0,2,0,36,0,14,0,13
 The Flux DSL,org.influxdata.flux.functions,JoinFlux.MethodType,54,0,0,0,6,0,1,0,1,0
 The Flux DSL,org.influxdata.flux.functions,DerivativeFlux,0,70,0,0,0,21,0,8,0,8
 The Flux DSL,org.influxdata.flux.functions,SkewFlux,0,14,0,0,0,5,0,3,0,3
@@ -52,4 +53,4 @@ The Flux DSL,org.influxdata.flux.functions.restriction,ColumnRestriction.Operato
 The Flux DSL,org.influxdata.flux.functions.restriction,Restrictions.Logical,0,31,0,0,0,7,0,2,0,2
 The Flux DSL,org.influxdata.flux.functions.restriction,ColumnRestriction,0,50,0,0,0,11,0,8,0,8
 The Flux DSL,org.influxdata.flux.functions.restriction,Restrictions,0,53,0,0,0,12,0,11,0,11
-The Flux DSL,org.influxdata.flux,Flux,49,1050,0,2,11,211,4,124,4,123
+The Flux DSL,org.influxdata.flux,Flux,49,1139,0,2,11,245,4,131,4,130

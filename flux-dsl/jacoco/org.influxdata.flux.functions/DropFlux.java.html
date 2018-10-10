@@ -28,8 +28,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;http://bit.ly/flux-spec#duplicate&quot;&gt;duplicate&lt;/a&gt; - Duplicate will
- * duplicate a specified column in a table.
+ * Drop will exclude specified columns from a table.
+ * &lt;a href=&quot;http://bit.ly/flux-spec#drop&quot;&gt;See SPEC&lt;/a&gt;.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
  * &lt;ul&gt;
@@ -97,7 +97,6 @@ public final class DropFlux extends AbstractParametrizedFlux {
 <span class="fc" id="L97">        return this;</span>
     }
 
-
     /**
      * @param function The function which takes a column name as a parameter and returns a boolean indicating whether
      *                 or not the column should be excluded from the resulting table.
@@ -106,23 +105,23 @@ public final class DropFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DropFlux withFunction(@Nonnull final String function) {
 
-<span class="fc" id="L109">        Arguments.checkNonEmpty(function, &quot;Function&quot;);</span>
+<span class="fc" id="L108">        Arguments.checkNonEmpty(function, &quot;Function&quot;);</span>
 
-<span class="fc" id="L111">        this.withPropertyValue(&quot;fn: (col)&quot;, function);</span>
+<span class="fc" id="L110">        this.withPropertyValue(&quot;fn: (col)&quot;, function);</span>
 
-<span class="fc" id="L113">        return this;</span>
+<span class="fc" id="L112">        return this;</span>
     }
 
     @Nonnull
     @Override
     protected String propertyDelimiter(@Nonnull final String operatorName) {
 
-<span class="fc bfc" id="L120" title="All 2 branches covered.">        switch (operatorName) {</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        switch (operatorName) {</span>
             case &quot;fn: (col)&quot;:
-<span class="fc" id="L122">                return &quot; =&gt; &quot;;</span>
+<span class="fc" id="L121">                return &quot; =&gt; &quot;;</span>
 
             default:
-<span class="fc" id="L125">                return super.propertyDelimiter(operatorName);</span>
+<span class="fc" id="L124">                return super.propertyDelimiter(operatorName);</span>
         }
     }
 }

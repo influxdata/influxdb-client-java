@@ -28,9 +28,9 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;http://bit.ly/flux-spec#rename&quot;&gt;rename&lt;/a&gt; -
  * Rename will rename specified columns in a table. If a column is renamed and is part of the group key,
- * the column name in the group key will be updated
+ * the column name in the group key will be updated.
+ * &lt;a href=&quot;http://bit.ly/flux-spec#rename&quot;&gt;See SPEC&lt;/a&gt;.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
  * &lt;ul&gt;
@@ -87,7 +87,6 @@ public final class RenameFlux extends AbstractParametrizedFlux {
 <span class="fc" id="L87">        return this;</span>
     }
 
-
     /**
      * @param function The function which takes a single string parameter (the old column name) and
      *                 returns a string representing the new column name.
@@ -96,23 +95,23 @@ public final class RenameFlux extends AbstractParametrizedFlux {
     @Nonnull
     public RenameFlux withFunction(@Nonnull final String function) {
 
-<span class="fc" id="L99">        Arguments.checkNonEmpty(function, &quot;Function&quot;);</span>
+<span class="fc" id="L98">        Arguments.checkNonEmpty(function, &quot;Function&quot;);</span>
 
-<span class="fc" id="L101">        this.withPropertyValueEscaped(&quot;fn: (col)&quot;, function);</span>
+<span class="fc" id="L100">        this.withPropertyValueEscaped(&quot;fn: (col)&quot;, function);</span>
 
-<span class="fc" id="L103">        return this;</span>
+<span class="fc" id="L102">        return this;</span>
     }
 
     @Nonnull
     @Override
     protected String propertyDelimiter(@Nonnull final String operatorName) {
 
-<span class="fc bfc" id="L110" title="All 2 branches covered.">        switch (operatorName) {</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        switch (operatorName) {</span>
             case &quot;fn: (col)&quot;:
-<span class="fc" id="L112">                return &quot; =&gt; &quot;;</span>
+<span class="fc" id="L111">                return &quot; =&gt; &quot;;</span>
 
             default:
-<span class="fc" id="L115">                return super.propertyDelimiter(operatorName);</span>
+<span class="fc" id="L114">                return super.propertyDelimiter(operatorName);</span>
         }
     }
 }

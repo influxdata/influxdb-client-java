@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ToFlux.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Flux DSL</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.flux.functions</a> &gt; <span class="el_source">ToFlux.java</span></div><h1>ToFlux.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.flux.functions;
+
+import java.util.Collection;
+import javax.annotation.Nonnull;
+
+import org.influxdata.flux.Flux;
+import org.influxdata.platform.Arguments;
+
+/**
+ * The To operation takes data from a stream and writes it to a bucket.
+ * &lt;a href=&quot;http://bit.ly/flux-spec#to&quot;&gt;See SPEC&lt;/a&gt;.
+ *
+ * &lt;h3&gt;Options&lt;/h3&gt;
+ * &lt;ul&gt;
+ *     &lt;li&gt;&lt;b&gt;bucket&lt;/b&gt; - The bucket to which data will be written. [string]&lt;/li&gt;
+ *     &lt;li&gt;&lt;b&gt;bucketID&lt;/b&gt; - The bucket to which data will be written. [string]&lt;/li&gt;
+ *     &lt;li&gt;&lt;b&gt;org&lt;/b&gt; - The organization name of the above bucket. [string]&lt;/li&gt;
+ *     &lt;li&gt;&lt;b&gt;orgID&lt;/b&gt; - The organization ID of the above bucket. [string]&lt;/li&gt;
+ *     &lt;li&gt;&lt;b&gt;host&lt;/b&gt; - The remote host to write to. [string]&lt;/li&gt;
+ *     &lt;li&gt;&lt;b&gt;token&lt;/b&gt; - The authorization token to use when writing to a remote host. [string]&lt;/li&gt;
+ *     &lt;li&gt;&lt;b&gt;timeColumn&lt;/b&gt; - The time column of the output. [string]&lt;/li&gt;
+ *     &lt;li&gt;&lt;b&gt;tagColumns&lt;/b&gt; - The tag columns of the output.&lt;/li&gt;
+ *     &lt;li&gt;&lt;b&gt;fieldFn&lt;/b&gt; - Function that takes a record from the input table and returns an object.&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * @author Jakub Bednar (10/10/2018 07:58)
+ */
+public final class ToFlux extends AbstractParametrizedFlux {
+
+    public ToFlux(@Nonnull final Flux source) {
+<span class="fc" id="L52">        super(source);</span>
+<span class="fc" id="L53">    }</span>
+
+    @Nonnull
+    @Override
+    protected String operatorName() {
+<span class="fc" id="L58">        return &quot;to&quot;;</span>
+    }
+
+    /**
+     * @param bucket The bucket to which data will be written.
+     * @return this
+     */
+    @Nonnull
+    public ToFlux withBucket(@Nonnull final String bucket) {
+
+<span class="fc" id="L68">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+
+<span class="fc" id="L70">        this.withPropertyValueEscaped(&quot;bucket&quot;, bucket);</span>
+
+<span class="fc" id="L72">        return this;</span>
+    }
+
+    /**
+     * @param bucketID The ID of the bucket to which data will be written.
+     * @return this
+     */
+    @Nonnull
+    public ToFlux withBucketID(@Nonnull final String bucketID) {
+
+<span class="fc" id="L82">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
+
+<span class="fc" id="L84">        this.withPropertyValueEscaped(&quot;bucketID&quot;, bucketID);</span>
+
+<span class="fc" id="L86">        return this;</span>
+    }
+
+    /**
+     * @param org The organization name of the above bucket.
+     * @return this
+     */
+    @Nonnull
+    public ToFlux withOrg(@Nonnull final String org) {
+
+<span class="fc" id="L96">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+
+<span class="fc" id="L98">        this.withPropertyValueEscaped(&quot;org&quot;, org);</span>
+
+<span class="fc" id="L100">        return this;</span>
+    }
+
+    /**
+     * @param orgID The organization name of the above bucket.
+     * @return this
+     */
+    @Nonnull
+    public ToFlux withOrgID(@Nonnull final String orgID) {
+
+<span class="fc" id="L110">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+
+<span class="fc" id="L112">        this.withPropertyValueEscaped(&quot;orgID&quot;, orgID);</span>
+
+<span class="fc" id="L114">        return this;</span>
+    }
+
+    /**
+     * @param host The remote host to write to.
+     * @return this
+     */
+    @Nonnull
+    public ToFlux withHost(@Nonnull final String host) {
+
+<span class="fc" id="L124">        Arguments.checkNonEmpty(host, &quot;host&quot;);</span>
+
+<span class="fc" id="L126">        this.withPropertyValueEscaped(&quot;host&quot;, host);</span>
+
+<span class="fc" id="L128">        return this;</span>
+    }
+
+    /**
+     * @param token The authorization token to use when writing to a remote host.
+     * @return this
+     */
+    @Nonnull
+    public ToFlux withToken(@Nonnull final String token) {
+
+<span class="fc" id="L138">        Arguments.checkNonEmpty(token, &quot;token&quot;);</span>
+
+<span class="fc" id="L140">        this.withPropertyValueEscaped(&quot;token&quot;, token);</span>
+
+<span class="fc" id="L142">        return this;</span>
+    }
+
+    /**
+     * @param timeColumn The time column of the output.
+     * @return this
+     */
+    @Nonnull
+    public ToFlux withTimeColumn(@Nonnull final String timeColumn) {
+
+<span class="fc" id="L152">        Arguments.checkNonEmpty(timeColumn, &quot;timeColumn&quot;);</span>
+
+<span class="fc" id="L154">        this.withPropertyValueEscaped(&quot;timeColumn&quot;, timeColumn);</span>
+
+<span class="fc" id="L156">        return this;</span>
+    }
+
+    /**
+     * @param tagColumns The tag columns of the output.
+     * @return this
+     */
+    @Nonnull
+    public ToFlux withTagColumns(@Nonnull final String[] tagColumns) {
+
+<span class="fc" id="L166">        Arguments.checkNotNull(tagColumns, &quot;tagColumns&quot;);</span>
+
+<span class="fc" id="L168">        this.withPropertyValue(&quot;tagColumns&quot;, tagColumns);</span>
+
+<span class="fc" id="L170">        return this;</span>
+    }
+
+    /**
+     * @param tagColumns The tag columns of the output.
+     * @return this
+     */
+    @Nonnull
+    public ToFlux withTagColumns(@Nonnull final Collection&lt;String&gt; tagColumns) {
+
+<span class="fc" id="L180">        Arguments.checkNotNull(tagColumns, &quot;tagColumns&quot;);</span>
+
+<span class="fc" id="L182">        this.withPropertyValue(&quot;tagColumns&quot;, tagColumns);</span>
+
+<span class="fc" id="L184">        return this;</span>
+    }
+
+    /**
+     * @param fieldFn Function that takes a record from the input table and returns an object.
+     * @return this
+     */
+    @Nonnull
+    public ToFlux withFieldFunction(@Nonnull final String fieldFn) {
+
+<span class="fc" id="L194">        Arguments.checkNonEmpty(fieldFn, &quot;fieldFn&quot;);</span>
+
+<span class="fc" id="L196">        this.withPropertyValue(&quot;fieldFn: (r)&quot;, fieldFn);</span>
+
+<span class="fc" id="L198">        return this;</span>
+    }
+
+    @Nonnull
+    @Override
+    protected String propertyDelimiter(@Nonnull final String operatorName) {
+
+<span class="fc bfc" id="L205" title="All 2 branches covered.">        switch (operatorName) {</span>
+            case &quot;fieldFn: (r)&quot;:
+<span class="fc" id="L207">                return &quot; =&gt; &quot;;</span>
+
+            default:
+<span class="fc" id="L210">                return super.propertyDelimiter(operatorName);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

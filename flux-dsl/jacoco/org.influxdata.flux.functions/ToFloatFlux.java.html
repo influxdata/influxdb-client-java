@@ -26,7 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * &lt;a href=&quot;http://bit.ly/flux-spec#tofloat&quot;&gt;toFloat&lt;/a&gt; - Convert a value to a float.
+ * Convert a value to a float.
+ * &lt;a href=&quot;http://bit.ly/flux-spec#tofloat&quot;&gt;See SPEC&lt;/a&gt;.
  *
  * &lt;h3&gt;Example&lt;/h3&gt;
  * &lt;pre&gt;
@@ -41,13 +42,13 @@ import org.influxdata.flux.Flux;
 public final class ToFloatFlux extends AbstractParametrizedFlux {
 
     public ToFloatFlux(@Nonnull final Flux source) {
-<span class="fc" id="L44">        super(source);</span>
-<span class="fc" id="L45">    }</span>
+<span class="fc" id="L45">        super(source);</span>
+<span class="fc" id="L46">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L50">        return &quot;toFloat&quot;;</span>
+<span class="fc" id="L51">        return &quot;toFloat&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
