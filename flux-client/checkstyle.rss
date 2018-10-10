@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 13,
+      <title>File: 10,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -46,62 +46,6 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/flux-client/checkstyle.html#org.influxdata.flux.impl.FluxCsvParser.java">org/influxdata/flux/impl/FluxCsvParser.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/flux-client/checkstyle.html#org.influxdata.flux.impl.FluxClientImpl.java">org/influxdata/flux/impl/FluxClientImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/flux-client/checkstyle.html#org.influxdata.flux.impl.FluxResponseConsumerTable.java">org/influxdata/flux/impl/FluxResponseConsumerTable.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/flux-client/checkstyle.html#org.influxdata.flux.error.FluxCsvParserException.java">org/influxdata/flux/error/FluxCsvParserException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/platform-java/flux-client/checkstyle.html#org.influxdata.flux.option.FluxConnectionOptions.java">org/influxdata/flux/option/FluxConnectionOptions.java</a>
                 </td>
                 <td>
@@ -117,34 +61,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/flux-client/checkstyle.html#org.influxdata.flux.impl.AbstractFluxClient.java">org/influxdata/flux/impl/AbstractFluxClient.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/flux-client/checkstyle.html#org.influxdata.flux.domain.FluxTable.java">org/influxdata/flux/domain/FluxTable.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/flux-client/checkstyle.html#org.influxdata.flux.domain.FluxColumn.java">org/influxdata/flux/domain/FluxColumn.java</a>
                 </td>
                 <td>
                   0
@@ -200,6 +116,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/flux-client/checkstyle.html#org.influxdata.flux.impl.FluxCsvParser.java">org/influxdata/flux/impl/FluxCsvParser.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/flux-client/checkstyle.html#org.influxdata.flux.impl.FluxService.java">org/influxdata/flux/impl/FluxService.java</a>
                 </td>
                 <td>
@@ -214,7 +144,35 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/flux-client/checkstyle.html#org.influxdata.flux.domain.FluxRecord.java">org/influxdata/flux/domain/FluxRecord.java</a>
+                  <a href="https://github.com/influxdata/platform-java/flux-client/checkstyle.html#org.influxdata.flux.impl.FluxClientImpl.java">org/influxdata/flux/impl/FluxClientImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/flux-client/checkstyle.html#org.influxdata.flux.impl.FluxResponseConsumerTable.java">org/influxdata/flux/impl/FluxResponseConsumerTable.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/flux-client/checkstyle.html#org.influxdata.flux.error.FluxCsvParserException.java">org/influxdata/flux/error/FluxCsvParserException.java</a>
                 </td>
                 <td>
                   0
