@@ -24,7 +24,7 @@ package org.influxdata.flux.functions;
 import javax.annotation.Nonnull;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#from&quot;&gt;from&lt;/a&gt; - starting point
+ * &lt;a href=&quot;http://bit.ly/flux-spec#from&quot;&gt;from&lt;/a&gt; - starting point
  * for all queries. Get data from the specified bucket.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -43,17 +43,16 @@ import javax.annotation.Nonnull;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (22/06/2018 10:20)
- * @since 1.0.0
  */
 public final class FromFlux extends AbstractParametrizedFlux {
 
-<span class="fc" id="L50">    public FromFlux() {</span>
-<span class="fc" id="L51">    }</span>
+<span class="fc" id="L49">    public FromFlux() {</span>
+<span class="fc" id="L50">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L56">        return &quot;from&quot;;</span>
+<span class="fc" id="L55">        return &quot;from&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

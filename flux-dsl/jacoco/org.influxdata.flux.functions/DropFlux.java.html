@@ -28,7 +28,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/flux/blob/master/docs/SPEC.md#duplicate&quot;&gt;duplicate&lt;/a&gt; - Duplicate will
+ * &lt;a href=&quot;http://bit.ly/flux-spec#duplicate&quot;&gt;duplicate&lt;/a&gt; - Duplicate will
  * duplicate a specified column in a table.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -56,18 +56,17 @@ import org.influxdata.platform.Arguments;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (02/08/2018 09:47)
- * @since 1.0.0
  */
 public final class DropFlux extends AbstractParametrizedFlux {
 
     public DropFlux(@Nonnull final Flux source) {
-<span class="fc" id="L64">        super(source);</span>
-<span class="fc" id="L65">    }</span>
+<span class="fc" id="L63">        super(source);</span>
+<span class="fc" id="L64">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L70">        return &quot;drop&quot;;</span>
+<span class="fc" id="L69">        return &quot;drop&quot;;</span>
     }
 
     /**
@@ -77,11 +76,11 @@ public final class DropFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DropFlux withColumns(@Nonnull final String[] columns) {
 
-<span class="fc" id="L80">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L79">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L82">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
+<span class="fc" id="L81">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
-<span class="fc" id="L84">        return this;</span>
+<span class="fc" id="L83">        return this;</span>
     }
 
     /**
@@ -91,11 +90,11 @@ public final class DropFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DropFlux withColumns(@Nonnull final Collection&lt;String&gt; columns) {
 
-<span class="fc" id="L94">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L93">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L96">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
+<span class="fc" id="L95">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
-<span class="fc" id="L98">        return this;</span>
+<span class="fc" id="L97">        return this;</span>
     }
 
 
@@ -107,23 +106,23 @@ public final class DropFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DropFlux withFunction(@Nonnull final String function) {
 
-<span class="fc" id="L110">        Arguments.checkNonEmpty(function, &quot;Function&quot;);</span>
+<span class="fc" id="L109">        Arguments.checkNonEmpty(function, &quot;Function&quot;);</span>
 
-<span class="fc" id="L112">        this.withPropertyValue(&quot;fn: (col)&quot;, function);</span>
+<span class="fc" id="L111">        this.withPropertyValue(&quot;fn: (col)&quot;, function);</span>
 
-<span class="fc" id="L114">        return this;</span>
+<span class="fc" id="L113">        return this;</span>
     }
 
     @Nonnull
     @Override
     protected String propertyDelimiter(@Nonnull final String operatorName) {
 
-<span class="fc bfc" id="L121" title="All 2 branches covered.">        switch (operatorName) {</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        switch (operatorName) {</span>
             case &quot;fn: (col)&quot;:
-<span class="fc" id="L123">                return &quot; =&gt; &quot;;</span>
+<span class="fc" id="L122">                return &quot; =&gt; &quot;;</span>
 
             default:
-<span class="fc" id="L126">                return super.propertyDelimiter(operatorName);</span>
+<span class="fc" id="L125">                return super.propertyDelimiter(operatorName);</span>
         }
     }
 }

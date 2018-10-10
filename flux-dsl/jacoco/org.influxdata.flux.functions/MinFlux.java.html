@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#min&quot;&gt;min&lt;/a&gt; - Returns the min value within
+ * &lt;a href=&quot;http://bit.ly/flux-spec#min&quot;&gt;min&lt;/a&gt; - Returns the min value within
  * the results.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -44,18 +44,17 @@ import org.influxdata.flux.Flux;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 10:00)
- * @since 1.0.0
  */
 public final class MinFlux extends AbstractParametrizedFlux {
 
     public MinFlux(@Nonnull final Flux source) {
-<span class="fc" id="L52">        super(source);</span>
-<span class="fc" id="L53">    }</span>
+<span class="fc" id="L51">        super(source);</span>
+<span class="fc" id="L52">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L58">        return &quot;min&quot;;</span>
+<span class="fc" id="L57">        return &quot;min&quot;;</span>
     }
 
     /**
@@ -65,9 +64,9 @@ public final class MinFlux extends AbstractParametrizedFlux {
     @Nonnull
     public MinFlux withUseStartTime(final boolean useStartTime) {
 
-<span class="fc" id="L68">        this.withPropertyValue(&quot;useStartTime&quot;, useStartTime);</span>
+<span class="fc" id="L67">        this.withPropertyValue(&quot;useStartTime&quot;, useStartTime);</span>
 
-<span class="fc" id="L70">        return this;</span>
+<span class="fc" id="L69">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

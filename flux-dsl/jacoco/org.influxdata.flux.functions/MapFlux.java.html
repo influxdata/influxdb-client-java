@@ -27,7 +27,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#map&quot;&gt;map&lt;/a&gt; - Applies a function to
+ * &lt;a href=&quot;http://bit.ly/flux-spec#map&quot;&gt;map&lt;/a&gt; - Applies a function to
  * each row of the table.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -62,24 +62,23 @@ import org.influxdata.platform.Arguments;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (17/07/2018 07:48)
- * @since 1.0.0
  */
 public final class MapFlux extends AbstractParametrizedFlux {
 
     public MapFlux(@Nonnull final Flux source) {
-<span class="fc" id="L70">        super(source);</span>
-<span class="fc" id="L71">    }</span>
+<span class="fc" id="L69">        super(source);</span>
+<span class="fc" id="L70">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L76">        return &quot;map&quot;;</span>
+<span class="fc" id="L75">        return &quot;map&quot;;</span>
     }
 
     @Nonnull
     @Override
     protected String propertyDelimiter(@Nonnull final String operatorName) {
-<span class="fc" id="L82">        return &quot; =&gt; &quot;;</span>
+<span class="fc" id="L81">        return &quot; =&gt; &quot;;</span>
     }
 
     /**
@@ -89,11 +88,11 @@ public final class MapFlux extends AbstractParametrizedFlux {
     @Nonnull
     public MapFlux withFunction(@Nonnull final String function) {
 
-<span class="fc" id="L92">        Arguments.checkNonEmpty(function, &quot;Function&quot;);</span>
+<span class="fc" id="L91">        Arguments.checkNonEmpty(function, &quot;Function&quot;);</span>
 
-<span class="fc" id="L94">        this.withPropertyValue(&quot;fn: (r)&quot;, function);</span>
+<span class="fc" id="L93">        this.withPropertyValue(&quot;fn: (r)&quot;, function);</span>
 
-<span class="fc" id="L96">        return this;</span>
+<span class="fc" id="L95">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

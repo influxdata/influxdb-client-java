@@ -28,7 +28,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/flux/blob/master/docs/SPEC.md#covariance&quot;&gt;covariance&lt;/a&gt; -
+ * &lt;a href=&quot;http://bit.ly/flux-spec#covariance&quot;&gt;covariance&lt;/a&gt; -
  * Covariance is an aggregate operation. Covariance computes the covariance between two columns.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -52,18 +52,17 @@ import org.influxdata.platform.Arguments;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (17/07/2018 13:13)
- * @since 1.0.0
  */
 public final class CovarianceFlux extends AbstractParametrizedFlux {
 
     public CovarianceFlux(@Nonnull final Flux source) {
-<span class="fc" id="L60">        super(source);</span>
-<span class="fc" id="L61">    }</span>
+<span class="fc" id="L59">        super(source);</span>
+<span class="fc" id="L60">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L66">        return &quot;covariance&quot;;</span>
+<span class="fc" id="L65">        return &quot;covariance&quot;;</span>
     }
 
     /**
@@ -73,15 +72,15 @@ public final class CovarianceFlux extends AbstractParametrizedFlux {
     @Nonnull
     public CovarianceFlux withColumns(@Nonnull final String[] columns) {
 
-<span class="fc" id="L76">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L75">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (columns.length != 2) {</span>
-<span class="fc" id="L79">            throw new IllegalArgumentException(&quot;Exactly two columns must be provided.&quot;);</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (columns.length != 2) {</span>
+<span class="fc" id="L78">            throw new IllegalArgumentException(&quot;Exactly two columns must be provided.&quot;);</span>
         }
 
-<span class="fc" id="L82">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
+<span class="fc" id="L81">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
-<span class="fc" id="L84">        return this;</span>
+<span class="fc" id="L83">        return this;</span>
     }
 
     /**
@@ -91,15 +90,15 @@ public final class CovarianceFlux extends AbstractParametrizedFlux {
     @Nonnull
     public CovarianceFlux withColumns(@Nonnull final Collection&lt;String&gt; columns) {
 
-<span class="fc" id="L94">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L93">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (columns.size() != 2) {</span>
-<span class="fc" id="L97">            throw new IllegalArgumentException(&quot;Exactly two columns must be provided.&quot;);</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (columns.size() != 2) {</span>
+<span class="fc" id="L96">            throw new IllegalArgumentException(&quot;Exactly two columns must be provided.&quot;);</span>
         }
 
-<span class="fc" id="L100">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
+<span class="fc" id="L99">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
-<span class="fc" id="L102">        return this;</span>
+<span class="fc" id="L101">        return this;</span>
     }
 
     /**
@@ -109,9 +108,9 @@ public final class CovarianceFlux extends AbstractParametrizedFlux {
     @Nonnull
     public CovarianceFlux withPearsonr(final boolean pearsonr) {
 
-<span class="fc" id="L112">        this.withPropertyValue(&quot;pearsonr&quot;, pearsonr);</span>
+<span class="fc" id="L111">        this.withPropertyValue(&quot;pearsonr&quot;, pearsonr);</span>
 
-<span class="fc" id="L114">        return this;</span>
+<span class="fc" id="L113">        return this;</span>
     }
 
     /**
@@ -121,11 +120,11 @@ public final class CovarianceFlux extends AbstractParametrizedFlux {
     @Nonnull
     public CovarianceFlux withValueDst(@Nonnull final String valueDst) {
 
-<span class="fc" id="L124">        Arguments.checkNonEmpty(valueDst, &quot;Value destination&quot;);</span>
+<span class="fc" id="L123">        Arguments.checkNonEmpty(valueDst, &quot;Value destination&quot;);</span>
 
-<span class="fc" id="L126">        this.withPropertyValueEscaped(&quot;valueDst&quot;, valueDst);</span>
+<span class="fc" id="L125">        this.withPropertyValueEscaped(&quot;valueDst&quot;, valueDst);</span>
 
-<span class="fc" id="L128">        return this;</span>
+<span class="fc" id="L127">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

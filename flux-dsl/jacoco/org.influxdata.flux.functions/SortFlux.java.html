@@ -28,7 +28,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#sort&quot;&gt;sort&lt;/a&gt; - Sorts the results by the
+ * &lt;a href=&quot;http://bit.ly/flux-spec#sort&quot;&gt;sort&lt;/a&gt; - Sorts the results by the
  * specified columns Default sort is ascending.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -53,18 +53,17 @@ import org.influxdata.platform.Arguments;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 13:20)
- * @since 1.0.0
  */
 public final class SortFlux extends AbstractParametrizedFlux {
 
     public SortFlux(@Nonnull final Flux flux) {
-<span class="fc" id="L61">        super(flux);</span>
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L60">        super(flux);</span>
+<span class="fc" id="L61">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L67">        return &quot;sort&quot;;</span>
+<span class="fc" id="L66">        return &quot;sort&quot;;</span>
     }
 
     /**
@@ -74,9 +73,9 @@ public final class SortFlux extends AbstractParametrizedFlux {
     @Nonnull
     public SortFlux withDesc(final boolean desc) {
 
-<span class="fc" id="L77">        this.withPropertyValue(&quot;desc&quot;, desc);</span>
+<span class="fc" id="L76">        this.withPropertyValue(&quot;desc&quot;, desc);</span>
 
-<span class="fc" id="L79">        return this;</span>
+<span class="fc" id="L78">        return this;</span>
     }
 
     /**
@@ -86,11 +85,11 @@ public final class SortFlux extends AbstractParametrizedFlux {
     @Nonnull
     public SortFlux withCols(@Nonnull final String[] columns) {
 
-<span class="fc" id="L89">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L88">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L91">        this.withPropertyValue(&quot;cols&quot;, columns);</span>
+<span class="fc" id="L90">        this.withPropertyValue(&quot;cols&quot;, columns);</span>
 
-<span class="fc" id="L93">        return this;</span>
+<span class="fc" id="L92">        return this;</span>
     }
 
     /**
@@ -100,11 +99,11 @@ public final class SortFlux extends AbstractParametrizedFlux {
     @Nonnull
     public SortFlux withCols(@Nonnull final Collection&lt;String&gt; columns) {
 
-<span class="fc" id="L103">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L102">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L105">        this.withPropertyValue(&quot;cols&quot;, columns);</span>
+<span class="fc" id="L104">        this.withPropertyValue(&quot;cols&quot;, columns);</span>
 
-<span class="fc" id="L107">        return this;</span>
+<span class="fc" id="L106">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

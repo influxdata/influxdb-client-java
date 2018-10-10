@@ -38,27 +38,26 @@ import org.influxdata.platform.Arguments;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (27/06/2018 11:21)
- * @since 1.0.0
  */
 public final class ExpressionFlux extends AbstractFluxWithUpstream {
 
     private final String expression;
 
     public ExpressionFlux(@Nonnull final Flux source, @Nonnull final String expression) {
-<span class="fc" id="L48">        super(source);</span>
+<span class="fc" id="L47">        super(source);</span>
 
-<span class="fc" id="L50">        Arguments.checkNonEmpty(expression, &quot;Expression&quot;);</span>
+<span class="fc" id="L49">        Arguments.checkNonEmpty(expression, &quot;Expression&quot;);</span>
 
-<span class="fc" id="L52">        this.expression = expression;</span>
-<span class="fc" id="L53">    }</span>
+<span class="fc" id="L51">        this.expression = expression;</span>
+<span class="fc" id="L52">    }</span>
 
     @Override
     public void appendActual(@Nonnull final Map&lt;String, Object&gt; parameters, @Nonnull final StringBuilder builder) {
 
-<span class="fc" id="L58">        super.appendActual(parameters, builder);</span>
+<span class="fc" id="L57">        super.appendActual(parameters, builder);</span>
 
-<span class="fc" id="L60">        appendDelimiter(builder);</span>
-<span class="fc" id="L61">        builder.append(expression);</span>
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L59">        appendDelimiter(builder);</span>
+<span class="fc" id="L60">        builder.append(expression);</span>
+<span class="fc" id="L61">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#totime&quot;&gt;toTime&lt;/a&gt; - Convert a value to a time.
+ * &lt;a href=&quot;http://bit.ly/flux-spec#totime&quot;&gt;toTime&lt;/a&gt; - Convert a value to a time.
  *
  * &lt;h3&gt;Example&lt;/h3&gt;
  * &lt;pre&gt;
@@ -37,18 +37,17 @@ import org.influxdata.flux.Flux;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (26/06/2018 06:37)
- * @since 1.0.0
  */
 public final class ToTimeFlux extends AbstractParametrizedFlux {
 
     public ToTimeFlux(@Nonnull final Flux source) {
-<span class="fc" id="L45">        super(source);</span>
-<span class="fc" id="L46">    }</span>
+<span class="fc" id="L44">        super(source);</span>
+<span class="fc" id="L45">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L51">        return &quot;toTime&quot;;</span>
+<span class="fc" id="L50">        return &quot;toTime&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

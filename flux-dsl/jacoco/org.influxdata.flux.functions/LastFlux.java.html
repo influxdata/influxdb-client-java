@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#last&quot;&gt;last&lt;/a&gt; - Returns the last result of
+ * &lt;a href=&quot;http://bit.ly/flux-spec#last&quot;&gt;last&lt;/a&gt; - Returns the last result of
  * the query.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -42,18 +42,17 @@ import org.influxdata.flux.Flux;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 09:43)
- * @since 1.0.0
  */
 public final class LastFlux extends AbstractParametrizedFlux {
 
     public LastFlux(@Nonnull final Flux source) {
-<span class="fc" id="L50">        super(source);</span>
-<span class="fc" id="L51">    }</span>
+<span class="fc" id="L49">        super(source);</span>
+<span class="fc" id="L50">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L56">        return &quot;last&quot;;</span>
+<span class="fc" id="L55">        return &quot;last&quot;;</span>
     }
 
     /**
@@ -63,9 +62,9 @@ public final class LastFlux extends AbstractParametrizedFlux {
     @Nonnull
     public LastFlux withUseStartTime(final boolean useStartTime) {
 
-<span class="fc" id="L66">        this.withPropertyValue(&quot;useStartTime&quot;, useStartTime);</span>
+<span class="fc" id="L65">        this.withPropertyValue(&quot;useStartTime&quot;, useStartTime);</span>
 
-<span class="fc" id="L68">        return this;</span>
+<span class="fc" id="L67">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

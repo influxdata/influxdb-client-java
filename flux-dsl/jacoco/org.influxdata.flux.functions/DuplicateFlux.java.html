@@ -27,7 +27,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/flux/blob/master/docs/SPEC.md#duplicate&quot;&gt;duplicate&lt;/a&gt; -Duplicate will
+ * &lt;a href=&quot;http://bit.ly/flux-spec#duplicate&quot;&gt;duplicate&lt;/a&gt; -Duplicate will
  * duplicate a specified column in a table.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -42,6 +42,9 @@ import org.influxdata.platform.Arguments;
  *
  * &lt;h3&gt;Example&lt;/h3&gt;
  * &lt;pre&gt;
+ * Flux flux = Flux
+ *     .from(&quot;telegraf&quot;)
+ *     .duplicate(&quot;host&quot;, &quot;server&quot;);
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (09/10/2018 13:13)
@@ -49,13 +52,13 @@ import org.influxdata.platform.Arguments;
 public final class DuplicateFlux extends AbstractParametrizedFlux {
 
     public DuplicateFlux(@Nonnull final Flux source) {
-<span class="fc" id="L52">        super(source);</span>
-<span class="fc" id="L53">    }</span>
+<span class="fc" id="L55">        super(source);</span>
+<span class="fc" id="L56">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L58">        return &quot;duplicate&quot;;</span>
+<span class="fc" id="L61">        return &quot;duplicate&quot;;</span>
     }
 
     /**
@@ -65,11 +68,11 @@ public final class DuplicateFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DuplicateFlux withColumn(@Nonnull final String column) {
 
-<span class="fc" id="L68">        Arguments.checkNonEmpty(column, &quot;column&quot;);</span>
+<span class="fc" id="L71">        Arguments.checkNonEmpty(column, &quot;column&quot;);</span>
 
-<span class="fc" id="L70">        this.withPropertyValueEscaped(&quot;column&quot;, column);</span>
+<span class="fc" id="L73">        this.withPropertyValueEscaped(&quot;column&quot;, column);</span>
 
-<span class="fc" id="L72">        return this;</span>
+<span class="fc" id="L75">        return this;</span>
     }
 
     /**
@@ -79,11 +82,11 @@ public final class DuplicateFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DuplicateFlux withAs(@Nonnull final String as) {
 
-<span class="fc" id="L82">        Arguments.checkNonEmpty(as, &quot;as&quot;);</span>
+<span class="fc" id="L85">        Arguments.checkNonEmpty(as, &quot;as&quot;);</span>
 
-<span class="fc" id="L84">        this.withPropertyValueEscaped(&quot;as&quot;, as);</span>
+<span class="fc" id="L87">        this.withPropertyValueEscaped(&quot;as&quot;, as);</span>
 
-<span class="fc" id="L86">        return this;</span>
+<span class="fc" id="L89">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

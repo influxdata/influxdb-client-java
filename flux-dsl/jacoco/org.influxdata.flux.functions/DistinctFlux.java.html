@@ -27,7 +27,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/flux/blob/master/docs/SPEC.md#distinct&quot;&gt;distinct&lt;/a&gt; - Distinct
+ * &lt;a href=&quot;http://bit.ly/flux-spec#distinct&quot;&gt;distinct&lt;/a&gt; - Distinct
  * produces the unique values for a given column.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -46,18 +46,17 @@ import org.influxdata.platform.Arguments;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (17/07/2018 12:08)
- * @since 1.0.0
  */
 public final class DistinctFlux extends AbstractParametrizedFlux {
 
     public DistinctFlux(@Nonnull final Flux source) {
-<span class="fc" id="L54">        super(source);</span>
-<span class="fc" id="L55">    }</span>
+<span class="fc" id="L53">        super(source);</span>
+<span class="fc" id="L54">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L60">        return &quot;distinct&quot;;</span>
+<span class="fc" id="L59">        return &quot;distinct&quot;;</span>
     }
 
     /**
@@ -67,11 +66,11 @@ public final class DistinctFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DistinctFlux withColumn(@Nonnull final String column) {
 
-<span class="fc" id="L70">        Arguments.checkNonEmpty(column, &quot;Column&quot;);</span>
+<span class="fc" id="L69">        Arguments.checkNonEmpty(column, &quot;Column&quot;);</span>
 
-<span class="fc" id="L72">        this.withPropertyValueEscaped(&quot;column&quot;, column);</span>
+<span class="fc" id="L71">        this.withPropertyValueEscaped(&quot;column&quot;, column);</span>
 
-<span class="fc" id="L74">        return this;</span>
+<span class="fc" id="L73">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -27,7 +27,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/flux/blob/master/docs/SPEC.md#yield&quot;&gt;yield&lt;/a&gt; - Assigns a static
+ * &lt;a href=&quot;http://bit.ly/flux-spec#yield&quot;&gt;yield&lt;/a&gt; - Assigns a static
  * value to each record.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -44,18 +44,17 @@ import org.influxdata.platform.Arguments;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (29/06/2018 09:19)
- * @since 1.0.0
  */
 public final class SetFlux extends AbstractParametrizedFlux {
 
     public SetFlux(@Nonnull final Flux source) {
-<span class="fc" id="L52">        super(source);</span>
-<span class="fc" id="L53">    }</span>
+<span class="fc" id="L51">        super(source);</span>
+<span class="fc" id="L52">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L58">        return &quot;set&quot;;</span>
+<span class="fc" id="L57">        return &quot;set&quot;;</span>
     }
 
     /**
@@ -66,13 +65,13 @@ public final class SetFlux extends AbstractParametrizedFlux {
     @Nonnull
     public SetFlux withKeyValue(@Nonnull final String key, @Nonnull final String value) {
 
-<span class="fc" id="L69">        Arguments.checkNonEmpty(key, &quot;Key&quot;);</span>
-<span class="fc" id="L70">        Arguments.checkNonEmpty(value, &quot;Value&quot;);</span>
+<span class="fc" id="L68">        Arguments.checkNonEmpty(key, &quot;Key&quot;);</span>
+<span class="fc" id="L69">        Arguments.checkNonEmpty(value, &quot;Value&quot;);</span>
 
-<span class="fc" id="L72">        withPropertyValueEscaped(&quot;key&quot;, key);</span>
-<span class="fc" id="L73">        withPropertyValueEscaped(&quot;value&quot;, value);</span>
+<span class="fc" id="L71">        withPropertyValueEscaped(&quot;key&quot;, key);</span>
+<span class="fc" id="L72">        withPropertyValueEscaped(&quot;value&quot;, value);</span>
 
-<span class="fc" id="L75">        return this;</span>
+<span class="fc" id="L74">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

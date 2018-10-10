@@ -52,56 +52,50 @@ public final class FluxConnectionOptions {
      * Creates a builder instance.
      *
      * @return a builder
-     * @since 1.0.0
      */
     @Nonnull
     public static FluxConnectionOptions.Builder builder() {
-<span class="fc" id="L59">        return new FluxConnectionOptions.Builder();</span>
+<span class="fc" id="L58">        return new FluxConnectionOptions.Builder();</span>
     }
 
     /**
      * @return the url to connect to Flux
      * @see FluxConnectionOptions.Builder#url(String)
-     * @since 1.0.0
      */
     @Nonnull
     public String getUrl() {
-<span class="fc" id="L69">        return url;</span>
+<span class="fc" id="L67">        return url;</span>
     }
 
     /**
      * @return HTTP client to use for communication with Flux
      * @see FluxConnectionOptions.Builder#okHttpClient(OkHttpClient.Builder)
-     * @since 1.0.0
      */
     @Nonnull
     public OkHttpClient.Builder getOkHttpClient() {
-<span class="fc" id="L79">        return okHttpClient;</span>
+<span class="fc" id="L76">        return okHttpClient;</span>
     }
 
     /**
      * A builder for {@code FluxConnectionOptions}.
-     *
-     * @since 1.0.0
      */
     @NotThreadSafe
-<span class="fc" id="L88">    public static class Builder {</span>
+<span class="fc" id="L83">    public static class Builder {</span>
 
         private String url;
-<span class="fc" id="L91">        private OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();</span>
+<span class="fc" id="L86">        private OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();</span>
 
         /**
          * Set the url to connect to Flux.
          *
          * @param url the url to connect to Flux. It must be defined.
          * @return {@code this}
-         * @since 1.0.0
          */
         @Nonnull
         public Builder url(@Nonnull final String url) {
-<span class="fc" id="L102">            Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
-<span class="fc" id="L103">            this.url = url;</span>
-<span class="fc" id="L104">            return this;</span>
+<span class="fc" id="L96">            Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
+<span class="fc" id="L97">            this.url = url;</span>
+<span class="fc" id="L98">            return this;</span>
         }
 
         /**
@@ -109,13 +103,12 @@ public final class FluxConnectionOptions {
          *
          * @param okHttpClient the HTTP client to use.
          * @return {@code this}
-         * @since 1.0.0
          */
         @Nonnull
         public Builder okHttpClient(@Nonnull final OkHttpClient.Builder okHttpClient) {
-<span class="fc" id="L116">            Arguments.checkNotNull(okHttpClient, &quot;OkHttpClient.Builder&quot;);</span>
-<span class="fc" id="L117">            this.okHttpClient = okHttpClient;</span>
-<span class="fc" id="L118">            return this;</span>
+<span class="fc" id="L109">            Arguments.checkNotNull(okHttpClient, &quot;OkHttpClient.Builder&quot;);</span>
+<span class="fc" id="L110">            this.okHttpClient = okHttpClient;</span>
+<span class="fc" id="L111">            return this;</span>
         }
 
         /**
@@ -126,11 +119,11 @@ public final class FluxConnectionOptions {
         @Nonnull
         public FluxConnectionOptions build() {
 
-<span class="fc bfc" id="L129" title="All 2 branches covered.">            if (url == null) {</span>
-<span class="fc" id="L130">                throw new IllegalStateException(&quot;The url to connect to Flux has to be defined.&quot;);</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">            if (url == null) {</span>
+<span class="fc" id="L123">                throw new IllegalStateException(&quot;The url to connect to Flux has to be defined.&quot;);</span>
             }
 
-<span class="fc" id="L133">            return new FluxConnectionOptions(this);</span>
+<span class="fc" id="L126">            return new FluxConnectionOptions(this);</span>
         }
     }
 }

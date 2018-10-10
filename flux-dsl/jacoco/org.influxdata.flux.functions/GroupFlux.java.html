@@ -28,7 +28,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#group&quot;&gt;group&lt;/a&gt; - Groups results by
+ * &lt;a href=&quot;http://bit.ly/flux-spec#group&quot;&gt;group&lt;/a&gt; - Groups results by
  * a user-specified set of tags.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -54,19 +54,18 @@ import org.influxdata.platform.Arguments;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 14:56)
- * @since 1.0.0
  */
 public final class GroupFlux extends AbstractParametrizedFlux {
 
     public GroupFlux(@Nonnull final Flux source) {
 
-<span class="fc" id="L63">        super(source);</span>
-<span class="fc" id="L64">    }</span>
+<span class="fc" id="L62">        super(source);</span>
+<span class="fc" id="L63">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L69">        return &quot;group&quot;;</span>
+<span class="fc" id="L68">        return &quot;group&quot;;</span>
     }
 
     /**
@@ -76,11 +75,11 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withBy(@Nonnull final String groupBy) {
 
-<span class="fc" id="L79">        Arguments.checkNotNull(groupBy, &quot;GroupBy Column are required&quot;);</span>
+<span class="fc" id="L78">        Arguments.checkNotNull(groupBy, &quot;GroupBy Column are required&quot;);</span>
 
-<span class="fc" id="L81">        this.withPropertyValue(&quot;by&quot;, new String[]{groupBy});</span>
+<span class="fc" id="L80">        this.withPropertyValue(&quot;by&quot;, new String[]{groupBy});</span>
 
-<span class="fc" id="L83">        return this;</span>
+<span class="fc" id="L82">        return this;</span>
     }
 
     /**
@@ -90,11 +89,11 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withBy(@Nonnull final String[] groupBy) {
 
-<span class="fc" id="L93">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+<span class="fc" id="L92">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
 
-<span class="fc" id="L95">        this.withPropertyValue(&quot;by&quot;, groupBy);</span>
+<span class="fc" id="L94">        this.withPropertyValue(&quot;by&quot;, groupBy);</span>
 
-<span class="fc" id="L97">        return this;</span>
+<span class="fc" id="L96">        return this;</span>
     }
 
     /**
@@ -104,11 +103,11 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withBy(@Nonnull final Collection&lt;String&gt; groupBy) {
 
-<span class="fc" id="L107">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+<span class="fc" id="L106">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
 
-<span class="fc" id="L109">        this.withPropertyValue(&quot;by&quot;, groupBy);</span>
+<span class="fc" id="L108">        this.withPropertyValue(&quot;by&quot;, groupBy);</span>
 
-<span class="fc" id="L111">        return this;</span>
+<span class="fc" id="L110">        return this;</span>
     }
 
     /**
@@ -118,11 +117,11 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withKeep(@Nonnull final String[] keep) {
 
-<span class="fc" id="L121">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
+<span class="fc" id="L120">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
 
-<span class="fc" id="L123">        this.withPropertyValue(&quot;keep&quot;, keep);</span>
+<span class="fc" id="L122">        this.withPropertyValue(&quot;keep&quot;, keep);</span>
 
-<span class="fc" id="L125">        return this;</span>
+<span class="fc" id="L124">        return this;</span>
     }
 
     /**
@@ -132,11 +131,11 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withKeep(@Nonnull final Collection&lt;String&gt; keep) {
 
-<span class="fc" id="L135">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
+<span class="fc" id="L134">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
 
-<span class="fc" id="L137">        this.withPropertyValue(&quot;keep&quot;, keep);</span>
+<span class="fc" id="L136">        this.withPropertyValue(&quot;keep&quot;, keep);</span>
 
-<span class="fc" id="L139">        return this;</span>
+<span class="fc" id="L138">        return this;</span>
     }
 
     /**
@@ -146,11 +145,11 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withExcept(@Nonnull final String[] except) {
 
-<span class="fc" id="L149">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
+<span class="fc" id="L148">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
 
-<span class="fc" id="L151">        this.withPropertyValue(&quot;except&quot;, except);</span>
+<span class="fc" id="L150">        this.withPropertyValue(&quot;except&quot;, except);</span>
 
-<span class="fc" id="L153">        return this;</span>
+<span class="fc" id="L152">        return this;</span>
     }
 
     /**
@@ -160,11 +159,11 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withExcept(@Nonnull final Collection&lt;String&gt; except) {
 
-<span class="fc" id="L163">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
+<span class="fc" id="L162">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
 
-<span class="fc" id="L165">        this.withPropertyValue(&quot;except&quot;, except);</span>
+<span class="fc" id="L164">        this.withPropertyValue(&quot;except&quot;, except);</span>
 
-<span class="fc" id="L167">        return this;</span>
+<span class="fc" id="L166">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#tostring&quot;&gt;toString&lt;/a&gt; - Convert a value
+ * &lt;a href=&quot;http://bit.ly/flux-spec#tostring&quot;&gt;toString&lt;/a&gt; - Convert a value
  * to a string.
  *
  * &lt;h3&gt;Example&lt;/h3&gt;
@@ -38,18 +38,17 @@ import org.influxdata.flux.Flux;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (26/06/2018 06:32)
- * @since 1.0.0
  */
 public final class ToStringFlux extends AbstractParametrizedFlux {
 
     public ToStringFlux(@Nonnull final Flux source) {
-<span class="fc" id="L46">        super(source);</span>
-<span class="fc" id="L47">    }</span>
+<span class="fc" id="L45">        super(source);</span>
+<span class="fc" id="L46">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L52">        return &quot;toString&quot;;</span>
+<span class="fc" id="L51">        return &quot;toString&quot;;</span>
     }
 }
 

@@ -28,7 +28,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/flux/blob/master/docs/SPEC.md#difference&quot;&gt;difference&lt;/a&gt; -
+ * &lt;a href=&quot;http://bit.ly/flux-spec#difference&quot;&gt;difference&lt;/a&gt; -
  * Difference computes the difference between subsequent non null records.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -58,18 +58,17 @@ import org.influxdata.platform.Arguments;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (17/07/2018 12:28)
- * @since 1.0.0
  */
 public final class DifferenceFlux extends AbstractParametrizedFlux {
 
     public DifferenceFlux(@Nonnull final Flux source) {
-<span class="fc" id="L66">        super(source);</span>
-<span class="fc" id="L67">    }</span>
+<span class="fc" id="L65">        super(source);</span>
+<span class="fc" id="L66">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L72">        return &quot;difference&quot;;</span>
+<span class="fc" id="L71">        return &quot;difference&quot;;</span>
     }
 
     /**
@@ -79,9 +78,9 @@ public final class DifferenceFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DifferenceFlux withNonNegative(final boolean nonNegative) {
 
-<span class="fc" id="L82">        this.withPropertyValue(&quot;nonNegative&quot;, nonNegative);</span>
+<span class="fc" id="L81">        this.withPropertyValue(&quot;nonNegative&quot;, nonNegative);</span>
 
-<span class="fc" id="L84">        return this;</span>
+<span class="fc" id="L83">        return this;</span>
     }
 
     /**
@@ -91,11 +90,11 @@ public final class DifferenceFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DifferenceFlux withColumns(@Nonnull final String[] columns) {
 
-<span class="fc" id="L94">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L93">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L96">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
+<span class="fc" id="L95">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
-<span class="fc" id="L98">        return this;</span>
+<span class="fc" id="L97">        return this;</span>
     }
 
     /**
@@ -105,11 +104,11 @@ public final class DifferenceFlux extends AbstractParametrizedFlux {
     @Nonnull
     public DifferenceFlux withColumns(@Nonnull final Collection&lt;String&gt; columns) {
 
-<span class="fc" id="L108">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+<span class="fc" id="L107">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L110">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
+<span class="fc" id="L109">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
-<span class="fc" id="L112">        return this;</span>
+<span class="fc" id="L111">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

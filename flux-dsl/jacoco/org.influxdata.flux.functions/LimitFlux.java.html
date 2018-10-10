@@ -27,7 +27,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#limit&quot;&gt;limit&lt;/a&gt; - Restricts the number of rows
+ * &lt;a href=&quot;http://bit.ly/flux-spec#limit&quot;&gt;limit&lt;/a&gt; - Restricts the number of rows
  * returned in the results.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -43,18 +43,17 @@ import org.influxdata.platform.Arguments;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 11:22)
- * @since 1.0.0
  */
 public final class LimitFlux extends AbstractParametrizedFlux {
 
     public LimitFlux(@Nonnull final Flux flux) {
-<span class="fc" id="L51">        super(flux);</span>
-<span class="fc" id="L52">    }</span>
+<span class="fc" id="L50">        super(flux);</span>
+<span class="fc" id="L51">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L57">        return &quot;limit&quot;;</span>
+<span class="fc" id="L56">        return &quot;limit&quot;;</span>
     }
 
     /**
@@ -64,11 +63,11 @@ public final class LimitFlux extends AbstractParametrizedFlux {
     @Nonnull
     public LimitFlux withN(final int numberOfResults) {
 
-<span class="fc" id="L67">        Arguments.checkPositiveNumber(numberOfResults, &quot;Number of results&quot;);</span>
+<span class="fc" id="L66">        Arguments.checkPositiveNumber(numberOfResults, &quot;Number of results&quot;);</span>
 
-<span class="fc" id="L69">        this.withPropertyValue(&quot;n&quot;, numberOfResults);</span>
+<span class="fc" id="L68">        this.withPropertyValue(&quot;n&quot;, numberOfResults);</span>
 
-<span class="fc" id="L71">        return this;</span>
+<span class="fc" id="L70">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

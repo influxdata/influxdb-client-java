@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#count&quot;&gt;count&lt;/a&gt; - Counts the number of results.
+ * &lt;a href=&quot;http://bit.ly/flux-spec#count&quot;&gt;count&lt;/a&gt; - Counts the number of results.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
  * &lt;ul&gt;
@@ -41,18 +41,17 @@ import org.influxdata.flux.Flux;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (22/06/2018 11:06)
- * @since 1.0.0
  */
 public final class CountFlux extends AbstractParametrizedFlux {
 
     public CountFlux(@Nonnull final Flux source) {
-<span class="fc" id="L49">        super(source);</span>
-<span class="fc" id="L50">    }</span>
+<span class="fc" id="L48">        super(source);</span>
+<span class="fc" id="L49">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L55">        return &quot;count&quot;;</span>
+<span class="fc" id="L54">        return &quot;count&quot;;</span>
     }
 
     /**
@@ -62,9 +61,9 @@ public final class CountFlux extends AbstractParametrizedFlux {
     @Nonnull
     public CountFlux withUseStartTime(final boolean useStartTime) {
 
-<span class="fc" id="L65">        this.withPropertyValue(&quot;useStartTime&quot;, useStartTime);</span>
+<span class="fc" id="L64">        this.withPropertyValue(&quot;useStartTime&quot;, useStartTime);</span>
 
-<span class="fc" id="L67">        return this;</span>
+<span class="fc" id="L66">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#toduration&quot;&gt;toDuration&lt;/a&gt; -
+ * &lt;a href=&quot;http://bit.ly/flux-spec#toduration&quot;&gt;toDuration&lt;/a&gt; -
  * Convert a value to a duration.
  *
  * &lt;h3&gt;Example&lt;/h3&gt;
@@ -38,18 +38,17 @@ import org.influxdata.flux.Flux;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (26/06/2018 06:40)
- * @since 1.0.0
  */
 public final class ToUIntFlux extends AbstractParametrizedFlux {
 
     public ToUIntFlux(@Nonnull final Flux source) {
-<span class="fc" id="L46">        super(source);</span>
-<span class="fc" id="L47">    }</span>
+<span class="fc" id="L45">        super(source);</span>
+<span class="fc" id="L46">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L52">        return &quot;toUInt&quot;;</span>
+<span class="fc" id="L51">        return &quot;toUInt&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

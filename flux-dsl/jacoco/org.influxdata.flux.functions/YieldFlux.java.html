@@ -27,7 +27,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * &lt;a href=&quot;https://github.com/influxdata/platform/tree/master/query#set&quot;&gt;set&lt;/a&gt; - Yield a query results
+ * &lt;a href=&quot;http://bit.ly/flux-spec#set&quot;&gt;set&lt;/a&gt; - Yield a query results
  * to yielded results.
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
@@ -43,18 +43,17 @@ import org.influxdata.platform.Arguments;
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (29/06/2018 09:55)
- * @since 1.0.0
  */
 public final class YieldFlux extends AbstractParametrizedFlux {
 
     public YieldFlux(@Nonnull final Flux source) {
-<span class="fc" id="L51">        super(source);</span>
-<span class="fc" id="L52">    }</span>
+<span class="fc" id="L50">        super(source);</span>
+<span class="fc" id="L51">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L57">        return &quot;yield&quot;;</span>
+<span class="fc" id="L56">        return &quot;yield&quot;;</span>
     }
 
     /**
@@ -63,11 +62,11 @@ public final class YieldFlux extends AbstractParametrizedFlux {
      */
     @Nonnull
     public final YieldFlux withName(@Nonnull final String name) {
-<span class="fc" id="L66">        Arguments.checkNonEmpty(name, &quot;Result name&quot;);</span>
+<span class="fc" id="L65">        Arguments.checkNonEmpty(name, &quot;Result name&quot;);</span>
 
-<span class="fc" id="L68">        withPropertyValueEscaped(&quot;name&quot;, name);</span>
+<span class="fc" id="L67">        withPropertyValueEscaped(&quot;name&quot;, name);</span>
 
-<span class="fc" id="L70">        return this;</span>
+<span class="fc" id="L69">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
