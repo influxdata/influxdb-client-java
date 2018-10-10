@@ -27,8 +27,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#distinct">distinct</a> - Distinct
- * produces the unique values for a given column.
+ * Distinct produces the unique values for a given column.
+ * <a href="http://bit.ly/flux-spec#distinct">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

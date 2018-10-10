@@ -28,8 +28,9 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#cumulative-sum">cumulativeSum</a> - Cumulative sum computes a running sum
- * for non null records in the table. The output table schema will be the same as the input table
+ * Cumulative sum computes a running sum for non null records in the table.
+ * The output table schema will be the same as the input table.
+ * <a href="http://bit.ly/flux-spec#cumulative-sum">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

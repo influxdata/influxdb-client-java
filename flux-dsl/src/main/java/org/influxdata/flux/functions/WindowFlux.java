@@ -29,8 +29,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#window">window</a> - Groups the results by
- * a given time range.
+ * Groups the results by a given time range.
+ * <a href="http://bit.ly/flux-spec#window">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

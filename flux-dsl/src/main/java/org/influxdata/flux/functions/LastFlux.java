@@ -26,8 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="http://bit.ly/flux-spec#last">last</a> - Returns the last result of
- * the query.
+ * Returns the last result of the query.
+ * <a href="http://bit.ly/flux-spec#last">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

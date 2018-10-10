@@ -28,8 +28,9 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#pivot">pivot</a> - Pivot collects values stored vertically (column-wise) in a table
- * and aligns them horizontally (row-wise) into logical sets.
+ * Pivot collects values stored vertically (column-wise) in a table and aligns them horizontally (row-wise)
+ * into logical sets.
+ * <a href="http://bit.ly/flux-spec#pivot">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

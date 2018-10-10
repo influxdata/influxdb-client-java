@@ -28,8 +28,8 @@ import org.influxdata.flux.functions.restriction.Restrictions;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#filter">filter</a> -
  * Filters the results using an expression.
+ * <a href="http://bit.ly/flux-spec#filter">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

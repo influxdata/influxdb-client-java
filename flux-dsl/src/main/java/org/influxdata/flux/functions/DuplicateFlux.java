@@ -27,8 +27,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#duplicate">duplicate</a> -Duplicate will
- * duplicate a specified column in a table.
+ * Duplicate will duplicate a specified column in a table.
+ * <a href="http://bit.ly/flux-spec#duplicate">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

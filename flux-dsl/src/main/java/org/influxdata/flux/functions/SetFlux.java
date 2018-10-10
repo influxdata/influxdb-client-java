@@ -27,8 +27,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#yield">yield</a> - Assigns a static
- * value to each record.
+ * Assigns a static value to each record.
+ * <a href="http://bit.ly/flux-spec#set">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

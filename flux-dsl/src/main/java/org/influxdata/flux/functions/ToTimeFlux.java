@@ -26,7 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="http://bit.ly/flux-spec#totime">toTime</a> - Convert a value to a time.
+ * Convert a value to a time.
+ * <a href="http://bit.ly/flux-spec#totime">See SPEC</a>.
  *
  * <h3>Example</h3>
  * <pre>

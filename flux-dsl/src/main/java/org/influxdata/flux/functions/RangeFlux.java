@@ -29,8 +29,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#range">range</a> - Filters the results by
- * time boundaries.
+ * Filters the results by time boundaries.
+ * <a href="http://bit.ly/flux-spec#range">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

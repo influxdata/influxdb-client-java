@@ -28,8 +28,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#group">group</a> - Groups results by
- * a user-specified set of tags.
+ * Groups results by a user-specified set of tags.
+ * <a href="http://bit.ly/flux-spec#group">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

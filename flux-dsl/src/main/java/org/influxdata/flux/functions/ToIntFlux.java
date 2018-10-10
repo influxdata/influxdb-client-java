@@ -26,7 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="http://bit.ly/flux-spec#toint">toInt</a> - Convert a value to a int.
+ * Convert a value to a int.
+ * <a href="http://bit.ly/flux-spec#toint">See SPEC</a>.
  *
  * <h3>Example</h3>
  * <pre>

@@ -26,7 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="http://bit.ly/flux-spec#sample">sample</a> - Sample values from a table.
+ * Sample values from a table.
+ * <a href="http://bit.ly/flux-spec#sample">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

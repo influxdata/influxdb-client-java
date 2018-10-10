@@ -26,8 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="http://bit.ly/flux-spec#mean">mean</a> - Returns the mean of the
- * within the results.
+ * Returns the mean of the within the results.
+ * <a href="http://bit.ly/flux-spec#mean">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

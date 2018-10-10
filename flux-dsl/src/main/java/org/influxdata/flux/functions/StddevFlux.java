@@ -26,8 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="http://bit.ly/flux-spec#stddev">stddev</a> - Standard Deviation of
- * the results.
+ * Standard Deviation of the results.
+ * <a href="http://bit.ly/flux-spec#stddev">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

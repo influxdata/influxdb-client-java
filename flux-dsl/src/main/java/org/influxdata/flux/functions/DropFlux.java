@@ -28,8 +28,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#duplicate">duplicate</a> - Duplicate will
- * duplicate a specified column in a table.
+ * Drop will exclude specified columns from a table.
+ * <a href="http://bit.ly/flux-spec#drop">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>
@@ -96,7 +96,6 @@ public final class DropFlux extends AbstractParametrizedFlux {
 
         return this;
     }
-
 
     /**
      * @param function The function which takes a column name as a parameter and returns a boolean indicating whether

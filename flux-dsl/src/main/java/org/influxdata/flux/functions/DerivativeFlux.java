@@ -29,8 +29,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#derivative">derivative</a> -
  * Computes the time based difference between subsequent non null records.
+ * <a href="http://bit.ly/flux-spec#derivative">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

@@ -26,7 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="http://bit.ly/flux-spec#tobool">toBool</a> - Convert a value to a bool.
+ * Convert a value to a bool.
+ * <a href="http://bit.ly/flux-spec#tobool">See SPEC</a>.
  *
  * <h3>Example</h3>
  * <pre>

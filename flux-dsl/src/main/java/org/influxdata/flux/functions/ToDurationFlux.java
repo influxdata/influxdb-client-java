@@ -26,8 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="http://bit.ly/flux-spec#toduration">toDuration</a> -
  * Convert a value to a duration.
+ * <a href="http://bit.ly/flux-spec#toduration">See SPEC</a>.
  *
  * <h3>Example</h3>
  * <pre>

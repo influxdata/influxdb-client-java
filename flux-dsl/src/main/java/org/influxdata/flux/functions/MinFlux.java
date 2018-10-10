@@ -26,8 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="http://bit.ly/flux-spec#min">min</a> - Returns the min value within
- * the results.
+ * Returns the min value within the results.
+ * <a href="http://bit.ly/flux-spec#min">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

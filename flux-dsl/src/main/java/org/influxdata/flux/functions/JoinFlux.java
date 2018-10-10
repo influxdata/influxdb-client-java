@@ -32,8 +32,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#join">join</a> -
  * Join two time series together on time and the list of <i>on</i> keys.
+ * <a href="http://bit.ly/flux-spec#join">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

@@ -28,8 +28,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#sort">sort</a> - Sorts the results by the
- * specified columns Default sort is ascending.
+ * Sorts the results by the specified columns Default sort is ascending.
+ * <a href="http://bit.ly/flux-spec#sort">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

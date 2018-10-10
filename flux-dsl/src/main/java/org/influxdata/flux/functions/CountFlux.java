@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="http://bit.ly/flux-spec#count">count</a> - Counts the number of results.
+ * Counts the number of results. <a href="http://bit.ly/flux-spec#count">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

@@ -27,8 +27,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#set">set</a> - Yield a query results
- * to yielded results.
+ * Yield a query results to yielded results.
+ * <a href="http://bit.ly/flux-spec#yield">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

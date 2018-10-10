@@ -28,8 +28,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#covariance">covariance</a> -
  * Covariance is an aggregate operation. Covariance computes the covariance between two columns.
+ * <a href="http://bit.ly/flux-spec#covariance">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

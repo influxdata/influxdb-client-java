@@ -27,8 +27,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#map">map</a> - Applies a function to
- * each row of the table.
+ * Applies a function to each row of the table.
+ * <a href="http://bit.ly/flux-spec#map">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

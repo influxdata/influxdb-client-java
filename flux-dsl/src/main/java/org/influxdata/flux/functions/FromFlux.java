@@ -24,8 +24,8 @@ package org.influxdata.flux.functions;
 import javax.annotation.Nonnull;
 
 /**
- * <a href="http://bit.ly/flux-spec#from">from</a> - starting point
- * for all queries. Get data from the specified bucket.
+ * From produces a stream of tables from the specified bucket.
+ * <a href="http://bit.ly/flux-spec#from">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

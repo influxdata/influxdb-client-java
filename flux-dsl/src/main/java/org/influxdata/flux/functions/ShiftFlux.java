@@ -29,8 +29,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#shift">shift</a> -
  * Shift add a fixed duration to time columns.
+ * <a href="http://bit.ly/flux-spec#shift">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

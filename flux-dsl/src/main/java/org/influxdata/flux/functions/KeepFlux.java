@@ -28,9 +28,9 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#keep">keep</a> -
  * Keep is the inverse of drop. It will return a table containing only columns that are specified, ignoring all others.
  * Only columns in the group key that are also specified in keep will be kept in the resulting group key.
+ * <a href="http://bit.ly/flux-spec#keep">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

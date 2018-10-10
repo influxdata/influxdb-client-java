@@ -28,9 +28,9 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#integral">integral</a> -
  * For each aggregate column, it outputs the area under the curve of non null records.
  * The curve is defined as function where the domain is the record times and the range is the record values.
+ * <a href="http://bit.ly/flux-spec#integral">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

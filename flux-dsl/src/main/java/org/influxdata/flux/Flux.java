@@ -66,6 +66,7 @@ import org.influxdata.flux.functions.SumFlux;
 import org.influxdata.flux.functions.ToBoolFlux;
 import org.influxdata.flux.functions.ToDurationFlux;
 import org.influxdata.flux.functions.ToFloatFlux;
+import org.influxdata.flux.functions.ToFlux;
 import org.influxdata.flux.functions.ToIntFlux;
 import org.influxdata.flux.functions.ToStringFlux;
 import org.influxdata.flux.functions.ToTimeFlux;
@@ -121,7 +122,7 @@ import org.influxdata.platform.Arguments;
  * <li>!TODO stateTracking - Not defined in documentation or SPEC</li>
  * <li>{@link StddevFlux}</li>
  * <li>{@link SumFlux}</li>
- * <li>!TODO - to</li>
+ * <li>{@link ToFlux}</li>
  * <li>{@link ToBoolFlux}</li>
  * <li>{@link ToIntFlux}</li>
  * <li>{@link ToFloatFlux}</li>
@@ -1581,6 +1582,174 @@ public abstract class Flux {
     @Nonnull
     public final SumFlux sum(final boolean useStartTime) {
         return new SumFlux(this).withUseStartTime(useStartTime);
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * <h3>The parameters had to be defined by:</h3>
+     * <ul>
+     * <li>{@link ToFlux#withBucket(String)}</li>
+     * <li>{@link ToFlux#withBucketID(String)}</li>
+     * <li>{@link ToFlux#withOrg(String)}</li>
+     * <li>{@link ToFlux#withOrgID(String)}</li>
+     * <li>{@link ToFlux#withHost(String)}</li>
+     * <li>{@link ToFlux#withToken(String)}</li>
+     * <li>{@link ToFlux#withTimeColumn(String)}</li>
+     * <li>{@link ToFlux#withTagColumns(Collection)}</li>
+     * <li>{@link ToFlux#withTagColumns(String[])}</li>
+     * <li>{@link ToFlux#withFieldFunction(String)}</li>
+     * <li>{@link ToFlux#withPropertyNamed(String)}</li>
+     * <li>{@link ToFlux#withPropertyNamed(String, String)}</li>
+     * <li>{@link ToFlux#withPropertyValueEscaped(String, String)}</li>
+     * </ul>
+     *
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to() {
+        return new ToFlux(this);
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * @param bucket The bucket to which data will be written.
+     * @param org    The organization name of the above bucket.
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to(@Nonnull final String bucket,
+                           @Nonnull final String org) {
+
+        return new ToFlux(this)
+                .withBucket(bucket)
+                .withOrg(org);
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * @param bucket  The bucket to which data will be written.
+     * @param org     The organization name of the above bucket.
+     * @param fieldFn Function that takes a record from the input table and returns an object.
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to(@Nonnull final String bucket,
+                           @Nonnull final String org,
+                           @Nonnull final String fieldFn) {
+
+        return new ToFlux(this)
+                .withBucket(bucket)
+                .withOrg(org)
+                .withFieldFunction(fieldFn);
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * @param bucket     The bucket to which data will be written.
+     * @param org        The organization name of the above bucket.
+     * @param tagColumns The tag columns of the output.
+     * @param fieldFn    Function that takes a record from the input table and returns an object.
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to(@Nonnull final String bucket,
+                           @Nonnull final String org,
+                           @Nonnull final String[] tagColumns,
+                           @Nonnull final String fieldFn) {
+
+        return new ToFlux(this)
+                .withBucket(bucket)
+                .withOrg(org)
+                .withTagColumns(tagColumns)
+                .withFieldFunction(fieldFn);
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * @param bucket     The bucket to which data will be written.
+     * @param org        The organization name of the above bucket.
+     * @param tagColumns The tag columns of the output.
+     * @param fieldFn    Function that takes a record from the input table and returns an object.
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to(@Nonnull final String bucket,
+                           @Nonnull final String org,
+                           @Nonnull final Collection<String> tagColumns,
+                           @Nonnull final String fieldFn) {
+
+        return new ToFlux(this)
+                .withBucket(bucket)
+                .withOrg(org)
+                .withTagColumns(tagColumns)
+                .withFieldFunction(fieldFn);
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * @param bucket     The bucket to which data will be written.
+     * @param org        The organization name of the above bucket.
+     * @param host       The remote host to write to.
+     * @param token      The authorization token to use when writing to a remote host.
+     * @param timeColumn The time column of the output.
+     * @param tagColumns The tag columns of the output.
+     * @param fieldFn    Function that takes a record from the input table and returns an object.
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to(@Nonnull final String bucket,
+                           @Nonnull final String org,
+                           @Nonnull final String host,
+                           @Nonnull final String token,
+                           @Nonnull final String timeColumn,
+                           @Nonnull final String[] tagColumns,
+                           @Nonnull final String fieldFn) {
+
+        return new ToFlux(this)
+                .withBucket(bucket)
+                .withOrg(org)
+                .withHost(host)
+                .withToken(token)
+                .withTimeColumn(timeColumn)
+                .withTagColumns(tagColumns)
+                .withFieldFunction(fieldFn);
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * @param bucket     The bucket to which data will be written.
+     * @param org        The organization name of the above bucket.
+     * @param host       The remote host to write to.
+     * @param token      The authorization token to use when writing to a remote host.
+     * @param timeColumn The time column of the output.
+     * @param tagColumns The tag columns of the output.
+     * @param fieldFn    Function that takes a record from the input table and returns an object.
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to(@Nonnull final String bucket,
+                           @Nonnull final String org,
+                           @Nonnull final String host,
+                           @Nonnull final String token,
+                           @Nonnull final String timeColumn,
+                           @Nonnull final Collection<String> tagColumns,
+                           @Nonnull final String fieldFn) {
+
+        return new ToFlux(this)
+                .withBucket(bucket)
+                .withOrg(org)
+                .withHost(host)
+                .withToken(token)
+                .withTimeColumn(timeColumn)
+                .withTagColumns(tagColumns)
+                .withFieldFunction(fieldFn);
     }
 
     /**

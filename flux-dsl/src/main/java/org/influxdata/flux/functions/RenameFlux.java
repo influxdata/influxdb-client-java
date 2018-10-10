@@ -28,9 +28,9 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#rename">rename</a> -
  * Rename will rename specified columns in a table. If a column is renamed and is part of the group key,
- * the column name in the group key will be updated
+ * the column name in the group key will be updated.
+ * <a href="http://bit.ly/flux-spec#rename">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>
@@ -86,7 +86,6 @@ public final class RenameFlux extends AbstractParametrizedFlux {
 
         return this;
     }
-
 
     /**
      * @param function The function which takes a single string parameter (the old column name) and

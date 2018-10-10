@@ -27,8 +27,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#limit">limit</a> - Restricts the number of rows
- * returned in the results.
+ * Restricts the number of rows returned in the results.
+ * <a href="http://bit.ly/flux-spec#limit">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

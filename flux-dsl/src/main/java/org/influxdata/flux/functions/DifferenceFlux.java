@@ -28,8 +28,8 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="http://bit.ly/flux-spec#difference">difference</a> -
  * Difference computes the difference between subsequent non null records.
+ * <a href="http://bit.ly/flux-spec#difference">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

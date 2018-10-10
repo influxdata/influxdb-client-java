@@ -570,6 +570,20 @@ Flux flux = Flux
     .from("telegraf")
     .sum();
 ```
+### to
+The To operation takes data from a stream and writes it to a bucket [[doc](http://bit.ly/flux-spec#to)].
+- `bucket` - The bucket to which data will be written. [string]
+- `bucketID` - The ID of the bucket to which data will be written. [string]
+- `org` - The organization name of the above bucket. [string]
+- `orgID` - The organization ID of the above bucket. [string]
+- `host` - The remote host to write to. [string]
+- `token` - The authorization token to use when writing to a remote host. [string]
+- `timeColumn` - The time column of the output. [string]
+- `tagColumns` - The tag columns of the output. **Default:** All columns of type string, excluding all value columns and the `_field` column if present. [array of strings]
+- `fieldFn` - Function that takes a record from the input table and returns an object. For each record from the input table fieldFn returns on object that maps output field key to output value. **Default:** `(r) => ({ [r._field]: r._value })` [function(record) object]
+```java
+
+```
 
 ### toBool
 Convert a value to a bool [[doc](http://bit.ly/flux-spec#tobool)].

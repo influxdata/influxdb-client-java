@@ -26,7 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="http://bit.ly/flux-spec#tofloat">toFloat</a> - Convert a value to a float.
+ * Convert a value to a float.
+ * <a href="http://bit.ly/flux-spec#tofloat">See SPEC</a>.
  *
  * <h3>Example</h3>
  * <pre>

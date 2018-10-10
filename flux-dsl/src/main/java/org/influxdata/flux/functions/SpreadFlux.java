@@ -26,8 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="http://bit.ly/flux-spec#spread">spread</a> - Difference between min
- * and max values.
+ * Difference between min and max values.
+ * <a href="http://bit.ly/flux-spec#spread">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

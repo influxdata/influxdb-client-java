@@ -26,7 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="http://bit.ly/flux-spec#sum">sum</a> - Sum of the results.
+ * Sum of the results.
+ * <a href="http://bit.ly/flux-spec#sum">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>

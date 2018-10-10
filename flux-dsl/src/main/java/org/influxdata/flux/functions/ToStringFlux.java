@@ -26,8 +26,8 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="http://bit.ly/flux-spec#tostring">toString</a> - Convert a value
- * to a string.
+ * Convert a value to a string.
+ * <a href="http://bit.ly/flux-spec#tostring">See SPEC</a>.
  *
  * <h3>Example</h3>
  * <pre>
