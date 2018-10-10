@@ -45,7 +45,7 @@ class PercentileFluxTest {
                 .percentile()
                     .withColumns(new String[]{"value2"})
                     .withPercentile(0.75F)
-                    .withMethod(MethodType.EXACT_MEAN)
+                    .withMethod("exact_mean")
                     .withCompression(2_000F);
 
         String expected = "from(bucket:\"telegraf\") |> "
