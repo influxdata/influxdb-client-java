@@ -1,4 +1,4 @@
-# Build-in Flux operators
+# Build-in Flux functions
 
 ## Operator properties
 There are four possibilities how to add properties to the functions.

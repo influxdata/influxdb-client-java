@@ -71,7 +71,7 @@ import org.influxdata.flux.functions.ToTimeFlux;
 import org.influxdata.flux.functions.ToUIntFlux;
 import org.influxdata.flux.functions.WindowFlux;
 import org.influxdata.flux.functions.YieldFlux;
-import org.influxdata.flux.functions.properties.OperatorProperties;
+import org.influxdata.flux.functions.properties.FunctionsParameters;
 import org.influxdata.flux.functions.restriction.Restrictions;
 import org.influxdata.platform.Arguments;
 
@@ -80,7 +80,7 @@ import org.influxdata.platform.Arguments;
  * <br>
  * <a href="http://bit.ly/flux-spec">Flux Specification</a>
  *
- * <h3>The operators:</h3>
+ * <h3>The functions:</h3>
  * <ul>
  * <li>{@link FromFlux}</li>
  * <li>{@link CountFlux}</li>
@@ -138,7 +138,7 @@ import org.influxdata.platform.Arguments;
 @SuppressWarnings({"FileLength"})
 public abstract class Flux {
 
-    protected OperatorProperties operatorProperties = OperatorProperties.of();
+    protected FunctionsParameters functionsParameters = FunctionsParameters.of();
 
     /**
      * Get data from the specified database.
@@ -1837,24 +1837,24 @@ public abstract class Flux {
     }
 
     /**
-     * Create new operator with type {@code type}.
+     * Create new function with type {@code type}.
      *
      * <pre>
      * Flux flux = Flux
      *      .from("telegraf")
-     *      .operator(FilterMeasurement.class)
+     *      .function(FilterMeasurement.class)
      *          .withName("cpu")
      *      .sum();
      * </pre>
      *
-     * @param type operator type
-     * @param <F>  operator type
-     * @return operator with {@code type}
+     * @param type function type
+     * @param <F>  function type
+     * @return function with {@code type}
      */
     @Nonnull
-    public final <F extends AbstractParametrizedFlux> F operator(@Nonnull final Class<F> type) {
+    public final <F extends AbstractParametrizedFlux> F function(@Nonnull final Class<F> type) {
 
-        Arguments.checkNotNull(type, "Operator type is required");
+        Arguments.checkNotNull(type, "Function type");
 
         try {
             return type.getConstructor(Flux.class).newInstance(this);
@@ -1864,7 +1864,7 @@ public abstract class Flux {
     }
 
     /**
-     * Add named property to current operator.
+     * Add named property to current function.
      *
      * <pre>
      *  FluxChain fluxChain = new FluxChain()
@@ -1885,7 +1885,7 @@ public abstract class Flux {
      * </pre>
      *
      * @param property name in Flux query and in named properties
-     * @return a current operator.
+     * @return a current function.
      */
     @Nonnull
     public final Flux withPropertyNamed(@Nonnull final String property) {
@@ -1893,7 +1893,7 @@ public abstract class Flux {
     }
 
     /**
-     * Add named property to current operator.
+     * Add named property to current function.
      *
      * <pre>
      * Flux flux = Flux
@@ -1910,7 +1910,7 @@ public abstract class Flux {
      *
      * @param fluxName      name in Flux query
      * @param namedProperty name in named properties
-     * @return a current operator
+     * @return a current function
      */
     @Nonnull
     public final Flux withPropertyNamed(@Nonnull final String fluxName, @Nonnull final String namedProperty) {
@@ -1918,13 +1918,13 @@ public abstract class Flux {
         Arguments.checkNonEmpty(fluxName, "Flux property name");
         Arguments.checkNonEmpty(namedProperty, "Named property");
 
-        this.operatorProperties.putPropertyNamed(fluxName, namedProperty);
+        this.functionsParameters.putPropertyNamed(fluxName, namedProperty);
 
         return this;
     }
 
     /**
-     * Add property value to current operator.
+     * Add property value to current function.
      *
      * <pre>
      * Flux flux = Flux
@@ -1936,20 +1936,20 @@ public abstract class Flux {
      *
      * @param propertyName name in Flux query
      * @param value        value of property. If null than ignored.
-     * @return a current operator
+     * @return a current function
      */
     @Nonnull
     public final Flux withPropertyValue(@Nonnull final String propertyName, @Nullable final Object value) {
 
         Arguments.checkNonEmpty(propertyName, "Flux property name");
 
-        this.operatorProperties.putPropertyValue(propertyName, value);
+        this.functionsParameters.putPropertyValue(propertyName, value);
 
         return this;
     }
 
     /**
-     * Add string property value to current operator that will be quoted (value =&gt; "value").
+     * Add string property value to current function that will be quoted (value =&gt; "value").
      *
      * <pre>
      * Flux flux = Flux
@@ -1962,7 +1962,7 @@ public abstract class Flux {
      * @param property name of property in Flux query
      * @param amount   the amount of the duration, measured in terms of the unit, positive or negative
      * @param unit     the unit that the duration is measured in, must have an exact duration.  If null than ignored.
-     * @return a current operator
+     * @return a current function
      */
     @Nonnull
     public final Flux withPropertyValue(@Nonnull final String property,
@@ -1971,13 +1971,13 @@ public abstract class Flux {
 
         Arguments.checkNonEmpty(property, "Flux property name");
 
-        this.operatorProperties.putPropertyValue(property, amount, unit);
+        this.functionsParameters.putPropertyValue(property, amount, unit);
 
         return this;
     }
 
     /**
-     * Add string property value to current operator that will be quoted (value =&gt; "value").
+     * Add string property value to current function that will be quoted (value =&gt; "value").
      *
      * <pre>
      * Flux flux = Flux
@@ -1989,14 +1989,14 @@ public abstract class Flux {
      *
      * @param property name of property in Flux query
      * @param value    value of property. If null than ignored.
-     * @return a current operator
+     * @return a current function
      */
     @Nonnull
     public final Flux withPropertyValueEscaped(@Nonnull final String property, @Nullable final String value) {
 
         Arguments.checkNonEmpty(property, "Flux property name");
 
-        this.operatorProperties.putPropertyValueString(property, value);
+        this.functionsParameters.putPropertyValueString(property, value);
 
         return this;
     }

@@ -39,23 +39,23 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * The operator properties. Support named-property, property with values.
+ * The function properties. Support named-property, property with values.
  *
  * @author Jakub Bednar (bednar@github) (28/06/2018 05:32)
  */
-public final class OperatorProperties {
+public final class FunctionsParameters {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
             .ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnnnnnnnn'Z'")
             .withZone(ZoneId.of("UTC"));
     private Map<String, Property> properties = new LinkedHashMap<>();
 
-    private OperatorProperties() {
+    private FunctionsParameters() {
     }
 
     @Nonnull
-    public static OperatorProperties of() {
-        return new OperatorProperties();
+    public static FunctionsParameters of() {
+        return new FunctionsParameters();
     }
 
     /**

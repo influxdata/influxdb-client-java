@@ -52,7 +52,7 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
         //
 
         //
-        // operator(
+        // function(
         //
         operator.append(operatorName()).append("(");
         //
@@ -60,9 +60,9 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
         // parameters: false
         boolean wasAppended = false;
 
-        for (String name : operatorProperties.keys()) {
+        for (String name : functionsParameters.keys()) {
 
-            String propertyValue = operatorProperties.get(name, parameters);
+            String propertyValue = functionsParameters.get(name, parameters);
 
             wasAppended = appendParameterTo(name, propertyValue, operator, wasAppended);
         }
@@ -76,7 +76,7 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
     }
 
     /**
-     * @return name of operator
+     * @return name of function
      */
     @Nonnull
     protected abstract String operatorName();
@@ -84,7 +84,7 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
     /**
      * For value property it is ": ", but for function it is "=&gt;".
      *
-     * @param operatorName operator name
+     * @param operatorName function name
      * @return property value delimiter
      * @see AbstractParametrizedFlux#propertyDelimiter(String)
      */
@@ -94,9 +94,9 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
     }
 
     /**
-     * Possibility to customize operator.
+     * Possibility to customize function.
      *
-     * @param operator   current Flux operator
+     * @param operator   current Flux function
      * @param parameters parameters
      * @see JoinFlux
      */

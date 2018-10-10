@@ -23,7 +23,7 @@ package org.influxdata.flux.functions.restriction;
 
 import javax.annotation.Nonnull;
 
-import org.influxdata.flux.functions.properties.OperatorProperties;
+import org.influxdata.flux.functions.properties.FunctionsParameters;
 import org.influxdata.platform.Arguments;
 
 /**
@@ -140,7 +140,7 @@ public final class ColumnRestriction {
             if (fieldValue instanceof String) {
                 value = "\"" + fieldValue + "\"";
             } else {
-                value = OperatorProperties.serializeValue(fieldValue);
+                value = FunctionsParameters.serializeValue(fieldValue);
             }
 
             return "r[\"" + fieldName + "\"] " + operator + " " + value;
