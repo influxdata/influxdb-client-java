@@ -56,7 +56,7 @@ import org.influxdata.platform.Arguments;
  *
  * Flux flux = Flux
  *     .from("telegraf")
- *     .rename("{col}_new");
+ *     .rename("\"{col}_new\"");
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (02/08/2018 11:48)
@@ -97,21 +97,8 @@ public final class RenameFlux extends AbstractParametrizedFlux {
 
         Arguments.checkNonEmpty(function, "Function");
 
-        this.withPropertyValueEscaped("fn: (col)", function);
+        this.withFunction("fn: (col)", function);
 
         return this;
-    }
-
-    @Nonnull
-    @Override
-    protected String propertyDelimiter(@Nonnull final String operatorName) {
-
-        switch (operatorName) {
-            case "fn: (col)":
-                return " => ";
-
-            default:
-                return super.propertyDelimiter(operatorName);
-        }
     }
 }

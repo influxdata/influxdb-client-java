@@ -23,6 +23,7 @@ package org.influxdata.flux.functions;
 
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.influxdata.flux.Flux;
 import org.influxdata.flux.functions.restriction.Restrictions;
@@ -87,14 +88,14 @@ class MapFluxTest {
     @Test
     void mapByParameter() {
 
-        HashMap<String, Object> parameters = new HashMap<>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("function", "r._value * 10");
 
         Flux flux = Flux
                 .from("telegraf")
                 .range(-12L, ChronoUnit.HOURS)
                 .map()
-                .withPropertyNamed("fn: (r)", "function");
+                    .withFunctionNamed("fn: (r)", "function");
 
         String expected = "from(bucket:\"telegraf\") "
                 + "|> range(start: -12h) "

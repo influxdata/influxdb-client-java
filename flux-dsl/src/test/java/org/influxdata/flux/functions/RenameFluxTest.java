@@ -57,7 +57,7 @@ class RenameFluxTest {
 
         Flux flux = Flux
                 .from("telegraf")
-                .rename("{col}_new");
+                .rename("\"{col}_new\"");
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> rename(fn: (col) => \"{col}_new\")");
     }
@@ -68,7 +68,7 @@ class RenameFluxTest {
         Flux flux = Flux
                 .from("telegraf")
                 .rename()
-                .withFunction("{col}_new");
+                .withFunction("\"{col}_new\"");
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> rename(fn: (col) => \"{col}_new\")");
     }

@@ -2160,6 +2160,59 @@ public abstract class Flux {
     }
 
     /**
+     * Add named function to current function.
+     *
+     * <pre>
+     * Flux flux = Flux
+     *      .from("telegraf")
+     *      .drop()
+     *           .withFunction("fn", "col =~ free*");
+     * </pre>
+     *
+     * @param functionName name in Flux query
+     * @param function     defined function
+     * @return a current function
+     */
+    @Nonnull
+    public final Flux withFunction(@Nonnull final String functionName, @Nullable final Object function) {
+
+        Arguments.checkNonEmpty(functionName, "functionName");
+
+        this.functionsParameters.putFunctionValue(functionName, function);
+
+        return this;
+    }
+
+    /**
+     * Add named function to current function.
+     *
+     * <pre>
+     * Map&lt;String, Object&gt; parameters = new HashMap&lt;&gt;();
+     * parameters.put("function", "r._value * 10");
+     *
+     * Flux flux = Flux
+     *     .from("telegraf")
+     *     .range(-12L, ChronoUnit.HOURS)
+     *     .map()
+     *          .withFunctionNamed("fn: (r)", "function");
+     * </pre>
+     *
+     * @param functionName  name in Flux query
+     * @param namedProperty name in named properties
+     * @return a current function
+     */
+    @Nonnull
+    public final Flux withFunctionNamed(@Nonnull final String functionName, @Nonnull final String namedProperty) {
+
+        Arguments.checkNonEmpty(functionName, "functionName");
+        Arguments.checkNonEmpty(namedProperty, "namedProperty");
+
+        this.functionsParameters.putFunctionNamed(functionName, namedProperty);
+
+        return this;
+    }
+
+    /**
      * Add string property value to current function that will be quoted (value =&gt; "value").
      *
      * <pre>

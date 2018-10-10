@@ -48,6 +48,10 @@ public final class FunctionsParameters {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
             .ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnnnnnnnn'Z'")
             .withZone(ZoneId.of("UTC"));
+
+    private static final String DEFAULT_DELIMITER = ":";
+    private static final String FUNCTION_DELIMITER = " => ";
+
     private Map<String, Property> properties = new LinkedHashMap<>();
 
     private FunctionsParameters() {
@@ -120,7 +124,20 @@ public final class FunctionsParameters {
         Arguments.checkNonEmpty(fluxName, "Flux property name");
         Arguments.checkNonEmpty(namedProperty, "Named property");
 
-        put(fluxName, new NamedProperty<>(namedProperty));
+        put(fluxName, new NamedProperty<>(namedProperty, DEFAULT_DELIMITER));
+    }
+
+    /**
+     * @param functionName  name in Flux query
+     * @param namedProperty name in named properties
+     * @see Flux#withPropertyNamed(String, String)
+     */
+    public void putFunctionNamed(@Nonnull final String functionName, @Nonnull final String namedProperty) {
+
+        Arguments.checkNonEmpty(functionName, "functionName");
+        Arguments.checkNonEmpty(namedProperty, "Named property");
+
+        put(functionName, new NamedProperty(namedProperty, FUNCTION_DELIMITER));
     }
 
     /**
@@ -136,7 +153,41 @@ public final class FunctionsParameters {
             return;
         }
 
-        put(fluxName, (m) -> value);
+        put(fluxName, new AbstractProperty<Object>() {
+            @Nonnull
+            @Override
+            public Object value(@Nonnull final Map<String, Object> namedProperties) {
+                return value;
+            }
+        });
+    }
+
+    /**
+     * @param functionName name in Flux query
+     * @param function     defined function
+     * @see Flux#withPropertyValue(String, Object)
+     */
+    public void putFunctionValue(@Nonnull final String functionName, @Nullable final Object function) {
+
+        Arguments.checkNonEmpty(functionName, "functionName");
+
+        if (function == null) {
+            return;
+        }
+
+        put(functionName, new Property() {
+            @Nonnull
+            @Override
+            public Object value(@Nonnull final Map namedProperties) {
+                return function;
+            }
+
+            @Nonnull
+            @Override
+            public String delimiter() {
+                return FUNCTION_DELIMITER;
+            }
+        });
     }
 
     /**
@@ -155,7 +206,7 @@ public final class FunctionsParameters {
             return;
         }
 
-        put(fluxName, (m) -> new TimeInterval(amount, unit));
+        putPropertyValue(fluxName, new TimeInterval(amount, unit));
     }
 
     /**
@@ -205,6 +256,17 @@ public final class FunctionsParameters {
         properties.put(name, property);
     }
 
+    @Nonnull
+    public String getDelimiter(@Nonnull final String key) {
+
+        Property property = properties.get(key);
+        if (property == null) {
+            return DEFAULT_DELIMITER;
+        }
+
+        return property.delimiter();
+    }
+
     private interface Property<T> {
 
         /**
@@ -213,17 +275,27 @@ public final class FunctionsParameters {
          */
         @Nullable
         T value(@Nonnull final Map<String, Object> namedProperties);
+
+        /**
+         * @return For value property it is ": ", but for function it is "=&gt;".
+         */
+        @Nonnull
+        String delimiter();
     }
 
     private final class NamedProperty<T> implements Property<T> {
 
         private final String parameterName;
+        private final String delimiter;
 
-        private NamedProperty(@Nonnull final String parameterName) {
+        private NamedProperty(@Nonnull final String parameterName,
+                              @Nonnull final String delimiter) {
 
             Arguments.checkNonEmpty(parameterName, "Parameter name");
+            Arguments.checkNonEmpty(delimiter, "delimiter");
 
             this.parameterName = parameterName;
+            this.delimiter = delimiter;
         }
 
         @Nonnull
@@ -241,9 +313,15 @@ public final class FunctionsParameters {
 
             return (T) parameterValue;
         }
+
+        @Nonnull
+        @Override
+        public String delimiter() {
+            return delimiter;
+        }
     }
 
-    private final class StringProperty implements Property<String> {
+    private final class StringProperty extends AbstractProperty<String> {
 
         private final String value;
 
@@ -260,6 +338,18 @@ public final class FunctionsParameters {
             }
 
             return "\"" + value + "\"";
+        }
+    }
+
+    private abstract class AbstractProperty<T> implements Property<T> {
+
+        /**
+         * @return For value property it is ": ", but for function it is "=&gt;".
+         */
+        @Nonnull
+        @Override
+        public String delimiter() {
+            return DEFAULT_DELIMITER;
         }
     }
 }

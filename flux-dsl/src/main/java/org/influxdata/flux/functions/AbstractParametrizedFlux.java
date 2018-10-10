@@ -82,18 +82,6 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
     protected abstract String operatorName();
 
     /**
-     * For value property it is ": ", but for function it is "=&gt;".
-     *
-     * @param operatorName function name
-     * @return property value delimiter
-     * @see AbstractParametrizedFlux#propertyDelimiter(String)
-     */
-    @Nonnull
-    protected String propertyDelimiter(@Nonnull final String operatorName) {
-        return ": ";
-    }
-
-    /**
      * Possibility to customize function.
      *
      * @param operator   current Flux function
@@ -124,7 +112,7 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
         // n: 5
         operator
                 .append(operatorName)
-                .append(propertyDelimiter(operatorName))
+                .append(functionsParameters.getDelimiter(operatorName))
                 .append(propertyValue);
 
         return true;

@@ -124,19 +124,6 @@ public final class JoinFlux extends AbstractParametrizedFlux {
         });
     }
 
-    @Nonnull
-    @Override
-    protected String propertyDelimiter(@Nonnull final String operatorName) {
-
-        switch (operatorName) {
-            case "fn: (tables)":
-                return " => ";
-
-            default:
-                return super.propertyDelimiter(operatorName);
-        }
-    }
-
     /**
      * Map of table to join. Currently only two tables are allowed.
      *

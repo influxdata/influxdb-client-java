@@ -44,6 +44,13 @@ import org.influxdata.platform.Arguments;
  *     <li><b>fieldFn</b> - Function that takes a record from the input table and returns an object.</li>
  * </ul>
  *
+ * <h3>Example</h3>
+ * <pre>
+ * Flux flux = Flux
+ *     .from("telegraf")
+ *     .to("my-bucket", "my-org");
+ * </pre>
+ *
  * @author Jakub Bednar (10/10/2018 07:58)
  */
 public final class ToFlux extends AbstractParametrizedFlux {
@@ -193,21 +200,8 @@ public final class ToFlux extends AbstractParametrizedFlux {
 
         Arguments.checkNonEmpty(fieldFn, "fieldFn");
 
-        this.withPropertyValue("fieldFn: (r)", fieldFn);
+        this.withFunction("fieldFn: (r)", fieldFn);
 
         return this;
-    }
-
-    @Nonnull
-    @Override
-    protected String propertyDelimiter(@Nonnull final String operatorName) {
-
-        switch (operatorName) {
-            case "fieldFn: (r)":
-                return " => ";
-
-            default:
-                return super.propertyDelimiter(operatorName);
-        }
     }
 }

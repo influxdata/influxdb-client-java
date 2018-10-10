@@ -75,12 +75,6 @@ public final class MapFlux extends AbstractParametrizedFlux {
         return "map";
     }
 
-    @Nonnull
-    @Override
-    protected String propertyDelimiter(@Nonnull final String operatorName) {
-        return " => ";
-    }
-
     /**
      * @param function The function for map row of table. Example: "r._value * r._value".
      * @return this
@@ -90,7 +84,7 @@ public final class MapFlux extends AbstractParametrizedFlux {
 
         Arguments.checkNonEmpty(function, "Function");
 
-        this.withPropertyValue("fn: (r)", function);
+        this.withFunction("fn: (r)", function);
 
         return this;
     }

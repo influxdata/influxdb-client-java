@@ -470,7 +470,7 @@ Flux flux = Flux
 ```java
 Flux flux = Flux
     .from("telegraf")
-    .rename("{col}_new");
+    .rename("\"{col}_new\"");
 ```
 
 ### sample
@@ -582,7 +582,9 @@ The To operation takes data from a stream and writes it to a bucket [[doc](http:
 - `tagColumns` - The tag columns of the output. **Default:** All columns of type string, excluding all value columns and the `_field` column if present. [array of strings]
 - `fieldFn` - Function that takes a record from the input table and returns an object. For each record from the input table fieldFn returns on object that maps output field key to output value. **Default:** `(r) => ({ [r._field]: r._value })` [function(record) object]
 ```java
-
+Flux flux = Flux
+    .from("telegraf")
+    .to("my-bucket", "my-org");
 ```
 
 ### toBool
