@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#toint">toInt</a> - Convert a value to a int.
+ * <a href="http://bit.ly/flux-spec#toint">toInt</a> - Convert a value to a int.
  *
  * <h3>Example</h3>
  * <pre>

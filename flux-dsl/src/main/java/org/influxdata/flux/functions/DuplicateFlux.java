@@ -27,7 +27,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#duplicate">duplicate</a> -Duplicate will
+ * <a href="http://bit.ly/flux-spec#duplicate">duplicate</a> -Duplicate will
  * duplicate a specified column in a table.
  *
  * <h3>Options</h3>
@@ -42,6 +42,9 @@ import org.influxdata.platform.Arguments;
  *
  * <h3>Example</h3>
  * <pre>
+ * Flux flux = Flux
+ *     .from("telegraf")
+ *     .duplicate("host", "server");
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (09/10/2018 13:13)

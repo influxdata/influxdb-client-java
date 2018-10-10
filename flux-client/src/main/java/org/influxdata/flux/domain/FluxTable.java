@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 /**
  * This class represents table structure of Flux CSV Response.
  *
- * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#table">Specification</a>.
+ * <a href="http://bit.ly/flux-spec#table">Specification</a>.
  */
 public final class FluxTable {
 

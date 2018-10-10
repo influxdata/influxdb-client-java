@@ -29,7 +29,7 @@ import org.influxdata.platform.Arguments;
 
 /**
  * Flux duration literal -
- * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#duration-literals">spec</a>.
+ * <a href="http://bit.ly/flux-spec#duration-literals">spec</a>.
  * <p>
  * A duration literal is a representation of a length of time. It has an integer part and a duration unit part.
  *

@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#sample">sample</a> - Sample values from a table.
+ * <a href="http://bit.ly/flux-spec#sample">sample</a> - Sample values from a table.
  *
  * <h3>Options</h3>
  * <ul>
@@ -51,7 +51,6 @@ import org.influxdata.flux.Flux;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (29/06/2018 07:25)
- * @since 1.0.0
  */
 public final class SampleFlux extends AbstractParametrizedFlux {
 

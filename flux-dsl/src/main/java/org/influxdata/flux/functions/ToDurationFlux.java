@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#toduration">toDuration</a> -
+ * <a href="http://bit.ly/flux-spec#toduration">toDuration</a> -
  * Convert a value to a duration.
  *
  * <h3>Example</h3>

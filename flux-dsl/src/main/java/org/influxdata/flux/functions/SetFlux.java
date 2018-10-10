@@ -27,7 +27,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#yield">yield</a> - Assigns a static
+ * <a href="http://bit.ly/flux-spec#yield">yield</a> - Assigns a static
  * value to each record.
  *
  * <h3>Options</h3>
@@ -44,7 +44,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (29/06/2018 09:19)
- * @since 1.0.0
  */
 public final class SetFlux extends AbstractParametrizedFlux {
 

@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#stddev">stddev</a> - Standard Deviation of
+ * <a href="http://bit.ly/flux-spec#stddev">stddev</a> - Standard Deviation of
  * the results.
  *
  * <h3>Options</h3>
@@ -42,7 +42,6 @@ import org.influxdata.flux.Flux;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 10:15)
- * @since 1.0.0
  */
 public final class StddevFlux extends AbstractParametrizedFlux {
 

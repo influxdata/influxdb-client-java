@@ -28,7 +28,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#sort">sort</a> - Sorts the results by the
+ * <a href="http://bit.ly/flux-spec#sort">sort</a> - Sorts the results by the
  * specified columns Default sort is ascending.
  *
  * <h3>Options</h3>
@@ -53,7 +53,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 13:20)
- * @since 1.0.0
  */
 public final class SortFlux extends AbstractParametrizedFlux {
 

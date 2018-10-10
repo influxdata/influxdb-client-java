@@ -28,7 +28,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#group">group</a> - Groups results by
+ * <a href="http://bit.ly/flux-spec#group">group</a> - Groups results by
  * a user-specified set of tags.
  *
  * <h3>Options</h3>
@@ -54,7 +54,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 14:56)
- * @since 1.0.0
  */
 public final class GroupFlux extends AbstractParametrizedFlux {
 

@@ -28,7 +28,7 @@ import org.influxdata.flux.functions.restriction.Restrictions;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#filter">filter</a> -
+ * <a href="http://bit.ly/flux-spec#filter">filter</a> -
  * Filters the results using an expression.
  *
  * <h3>Options</h3>
@@ -56,7 +56,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (28/06/2018 14:12)
- * @since 1.0.0
  */
 public final class FilterFlux extends AbstractParametrizedFlux {
 

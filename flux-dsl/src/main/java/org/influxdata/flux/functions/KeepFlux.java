@@ -28,7 +28,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#keep">keep</a> -
+ * <a href="http://bit.ly/flux-spec#keep">keep</a> -
  * Keep is the inverse of drop. It will return a table containing only columns that are specified, ignoring all others.
  * Only columns in the group key that are also specified in keep will be kept in the resulting group key.
  *
@@ -57,7 +57,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (02/08/2018 11:22)
- * @since 1.0.0
  */
 public final class KeepFlux extends AbstractParametrizedFlux {
 

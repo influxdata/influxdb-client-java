@@ -27,7 +27,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#set">set</a> - Yield a query results
+ * <a href="http://bit.ly/flux-spec#set">set</a> - Yield a query results
  * to yielded results.
  *
  * <h3>Options</h3>
@@ -43,7 +43,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (29/06/2018 09:55)
- * @since 1.0.0
  */
 public final class YieldFlux extends AbstractParametrizedFlux {
 

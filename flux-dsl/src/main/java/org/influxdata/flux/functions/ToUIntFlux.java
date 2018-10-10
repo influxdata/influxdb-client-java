@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#toduration">toDuration</a> -
+ * <a href="http://bit.ly/flux-spec#toduration">toDuration</a> -
  * Convert a value to a duration.
  *
  * <h3>Example</h3>
@@ -38,7 +38,6 @@ import org.influxdata.flux.Flux;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (26/06/2018 06:40)
- * @since 1.0.0
  */
 public final class ToUIntFlux extends AbstractParametrizedFlux {
 

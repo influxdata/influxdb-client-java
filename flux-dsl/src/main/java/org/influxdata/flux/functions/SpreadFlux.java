@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#spread">spread</a> - Difference between min
+ * <a href="http://bit.ly/flux-spec#spread">spread</a> - Difference between min
  * and max values.
  *
  * <h3>Options</h3>
@@ -42,7 +42,6 @@ import org.influxdata.flux.Flux;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 10:10)
- * @since 1.0.0
  */
 public final class SpreadFlux extends AbstractParametrizedFlux {
 

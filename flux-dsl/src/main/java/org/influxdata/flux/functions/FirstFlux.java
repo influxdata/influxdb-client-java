@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#first">first</a> - Returns the first result of
+ * <a href="http://bit.ly/flux-spec#first">first</a> - Returns the first result of
  * the query.
  *
  * <h3>Options</h3>
@@ -42,7 +42,6 @@ import org.influxdata.flux.Flux;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 09:28)
- * @since 1.0.0
  */
 public final class FirstFlux extends AbstractParametrizedFlux {
 

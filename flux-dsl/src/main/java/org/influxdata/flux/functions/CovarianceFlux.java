@@ -28,7 +28,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#covariance">covariance</a> -
+ * <a href="http://bit.ly/flux-spec#covariance">covariance</a> -
  * Covariance is an aggregate operation. Covariance computes the covariance between two columns.
  *
  * <h3>Options</h3>
@@ -52,7 +52,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (17/07/2018 13:13)
- * @since 1.0.0
  */
 public final class CovarianceFlux extends AbstractParametrizedFlux {
 

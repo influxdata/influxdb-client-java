@@ -29,7 +29,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#window">window</a> - Groups the results by
+ * <a href="http://bit.ly/flux-spec#window">window</a> - Groups the results by
  * a given time range.
  *
  * <h3>Options</h3>
@@ -60,7 +60,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (27/06/2018 12:01)
- * @since 1.0.0
  */
 public final class WindowFlux extends AbstractParametrizedFlux {
 

@@ -29,7 +29,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#range">range</a> - Filters the results by
+ * <a href="http://bit.ly/flux-spec#range">range</a> - Filters the results by
  * time boundaries.
  *
  * <h3>Options</h3>
@@ -49,7 +49,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (26/06/2018 07:04)
- * @since 1.0.0
  */
 public final class RangeFlux extends AbstractParametrizedFlux {
 

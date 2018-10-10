@@ -28,7 +28,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#duplicate">duplicate</a> - Duplicate will
+ * <a href="http://bit.ly/flux-spec#duplicate">duplicate</a> - Duplicate will
  * duplicate a specified column in a table.
  *
  * <h3>Options</h3>
@@ -56,7 +56,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (02/08/2018 09:47)
- * @since 1.0.0
  */
 public final class DropFlux extends AbstractParametrizedFlux {
 

@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#tobool">toBool</a> - Convert a value to a bool.
+ * <a href="http://bit.ly/flux-spec#tobool">toBool</a> - Convert a value to a bool.
  *
  * <h3>Example</h3>
  * <pre>
@@ -37,7 +37,6 @@ import org.influxdata.flux.Flux;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 15:57)
- * @since 1.0.0
  */
 public final class ToBoolFlux extends AbstractParametrizedFlux {
 

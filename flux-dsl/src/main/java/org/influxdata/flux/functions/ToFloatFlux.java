@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#tofloat">toFloat</a> - Convert a value to a float.
+ * <a href="http://bit.ly/flux-spec#tofloat">toFloat</a> - Convert a value to a float.
  *
  * <h3>Example</h3>
  * <pre>

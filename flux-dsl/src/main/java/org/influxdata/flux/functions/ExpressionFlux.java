@@ -38,7 +38,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (27/06/2018 11:21)
- * @since 1.0.0
  */
 public final class ExpressionFlux extends AbstractFluxWithUpstream {
 

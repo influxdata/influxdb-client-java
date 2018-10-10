@@ -51,6 +51,7 @@ import org.influxdata.flux.functions.MapFlux;
 import org.influxdata.flux.functions.MaxFlux;
 import org.influxdata.flux.functions.MeanFlux;
 import org.influxdata.flux.functions.MinFlux;
+import org.influxdata.flux.functions.PivotFlux;
 import org.influxdata.flux.functions.RangeFlux;
 import org.influxdata.flux.functions.RenameFlux;
 import org.influxdata.flux.functions.SampleFlux;
@@ -75,9 +76,9 @@ import org.influxdata.flux.functions.restriction.Restrictions;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#basic-syntax">Flux</a> - Data Scripting Language.
+ * <a href="http://bit.ly/flux-spec#basic-syntax">Flux</a> - Data Scripting Language.
  * <br>
- * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md">Flux Specification</a>
+ * <a href="http://bit.ly/flux-spec">Flux Specification</a>
  *
  * <h3>The operators:</h3>
  * <ul>
@@ -107,7 +108,7 @@ import org.influxdata.platform.Arguments;
  * <li>{@link MeanFlux}</li>
  * <li>{@link MinFlux}</li>
  * <li>!TODO percentile - Not defined in documentation or SPEC</li>
- * <li>!TODO - pivot</li>
+ * <li>{@link PivotFlux}</li>
  * <li>{@link RangeFlux}</li>
  * <li>{@link RenameFlux}</li>
  * <li>{@link SampleFlux}</li>
@@ -133,7 +134,6 @@ import org.influxdata.platform.Arguments;
  * </ul>
  *
  * @author Jakub Bednar (bednar@github) (22/06/2018 10:16)
- * @since 1.0.0
  */
 @SuppressWarnings({"FileLength"})
 public abstract class Flux {
@@ -1047,6 +1047,63 @@ public abstract class Flux {
     @Nonnull
     public final MinFlux min(final boolean useStartTime) {
         return new MinFlux(this).withUseStartTime(useStartTime);
+    }
+
+    /**
+     * Pivot collects values stored vertically (column-wise) in a table
+     * and aligns them horizontally (row-wise) into logical sets.
+     *
+     * <h3>The parameters had to be defined by:</h3>
+     * <ul>
+     * <li>{@link PivotFlux#withRowKey(String[])}</li>
+     * <li>{@link PivotFlux#withRowKey(Collection)}</li>
+     * <li>{@link PivotFlux#withColKey(String[])}</li>
+     * <li>{@link PivotFlux#withColKey(Collection)}</li>
+     * <li>{@link PivotFlux#withValueCol(String)}</li>
+     * <li>{@link PivotFlux#withPropertyNamed(String)}</li>
+     * <li>{@link PivotFlux#withPropertyNamed(String, String)}</li>
+     * <li>{@link PivotFlux#withPropertyValueEscaped(String, String)}</li>
+     * </ul>
+     *
+     * @return {@link PivotFlux}
+     */
+    @Nonnull
+    public final PivotFlux pivot() {
+        return new PivotFlux(this);
+    }
+
+    /**
+     * Pivot collects values stored vertically (column-wise) in a table
+     * and aligns them horizontally (row-wise) into logical sets.
+     *
+     * @param rowKey   the columns used to uniquely identify a row for the output
+     * @param colKey   the columns used to pivot values onto each row identified by the rowKey.
+     * @param valueCol the single column that contains the value to be moved around the pivot
+     * @return {@link PivotFlux}
+     */
+    @Nonnull
+    public final PivotFlux pivot(@Nonnull final String[] rowKey,
+                                 @Nonnull final String[] colKey,
+                                 @Nonnull final String valueCol) {
+
+        return new PivotFlux(this).withRowKey(rowKey).withColKey(colKey).withValueCol(valueCol);
+    }
+
+    /**
+     * Pivot collects values stored vertically (column-wise) in a table
+     * and aligns them horizontally (row-wise) into logical sets.
+     *
+     * @param rowKey   the columns used to uniquely identify a row for the output
+     * @param colKey   the columns used to pivot values onto each row identified by the rowKey.
+     * @param valueCol the single column that contains the value to be moved around the pivot
+     * @return {@link PivotFlux}
+     */
+    @Nonnull
+    public final PivotFlux pivot(@Nonnull final Collection<String> rowKey,
+                                 @Nonnull final Collection<String>  colKey,
+                                 @Nonnull final String valueCol) {
+
+        return new PivotFlux(this).withRowKey(rowKey).withColKey(colKey).withValueCol(valueCol);
     }
 
     /**

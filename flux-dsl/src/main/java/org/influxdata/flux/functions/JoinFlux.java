@@ -32,7 +32,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#join">join</a> -
+ * <a href="http://bit.ly/flux-spec#join">join</a> -
  * Join two time series together on time and the list of <i>on</i> keys.
  *
  * <h3>Options</h3>
@@ -61,7 +61,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (17/07/2018 14:47)
- * @since 1.0.0
  */
 public final class JoinFlux extends AbstractParametrizedFlux {
 

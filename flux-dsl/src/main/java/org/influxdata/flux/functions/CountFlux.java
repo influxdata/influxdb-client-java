@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#count">count</a> - Counts the number of results.
+ * <a href="http://bit.ly/flux-spec#count">count</a> - Counts the number of results.
  *
  * <h3>Options</h3>
  * <ul>
@@ -41,7 +41,6 @@ import org.influxdata.flux.Flux;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (22/06/2018 11:06)
- * @since 1.0.0
  */
 public final class CountFlux extends AbstractParametrizedFlux {
 

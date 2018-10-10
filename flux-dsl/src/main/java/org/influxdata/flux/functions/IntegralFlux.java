@@ -28,7 +28,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#integral">integral</a> -
+ * <a href="http://bit.ly/flux-spec#integral">integral</a> -
  * For each aggregate column, it outputs the area under the curve of non null records.
  * The curve is defined as function where the domain is the record times and the range is the record values.
  *
@@ -45,7 +45,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (03/07/2018 12:33)
- * @since 1.0.0
  */
 public final class IntegralFlux extends AbstractParametrizedFlux {
 

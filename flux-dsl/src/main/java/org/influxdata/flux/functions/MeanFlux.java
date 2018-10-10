@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#mean">mean</a> - Returns the mean of the
+ * <a href="http://bit.ly/flux-spec#mean">mean</a> - Returns the mean of the
  * within the results.
  *
  * <h3>Options</h3>
@@ -44,7 +44,6 @@ import org.influxdata.flux.Flux;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 09:55)
- * @since 1.0.0
  */
 public final class MeanFlux extends AbstractParametrizedFlux {
 

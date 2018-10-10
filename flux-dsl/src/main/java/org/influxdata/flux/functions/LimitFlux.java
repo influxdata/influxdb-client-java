@@ -27,7 +27,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#limit">limit</a> - Restricts the number of rows
+ * <a href="http://bit.ly/flux-spec#limit">limit</a> - Restricts the number of rows
  * returned in the results.
  *
  * <h3>Options</h3>
@@ -43,7 +43,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 11:22)
- * @since 1.0.0
  */
 public final class LimitFlux extends AbstractParametrizedFlux {
 

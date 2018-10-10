@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#totime">toTime</a> - Convert a value to a time.
+ * <a href="http://bit.ly/flux-spec#totime">toTime</a> - Convert a value to a time.
  *
  * <h3>Example</h3>
  * <pre>
@@ -37,7 +37,6 @@ import org.influxdata.flux.Flux;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (26/06/2018 06:37)
- * @since 1.0.0
  */
 public final class ToTimeFlux extends AbstractParametrizedFlux {
 

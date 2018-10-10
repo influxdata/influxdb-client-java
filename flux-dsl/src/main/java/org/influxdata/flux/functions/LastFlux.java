@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.flux.Flux;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#last">last</a> - Returns the last result of
+ * <a href="http://bit.ly/flux-spec#last">last</a> - Returns the last result of
  * the query.
  *
  * <h3>Options</h3>
@@ -42,7 +42,6 @@ import org.influxdata.flux.Flux;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 09:43)
- * @since 1.0.0
  */
 public final class LastFlux extends AbstractParametrizedFlux {
 

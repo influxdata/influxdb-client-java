@@ -29,7 +29,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#derivative">derivative</a> -
+ * <a href="http://bit.ly/flux-spec#derivative">derivative</a> -
  * Computes the time based difference between subsequent non null records.
  *
  * <h3>Options</h3>
@@ -56,7 +56,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (03/07/2018 14:28)
- * @since 1.0.0
  */
 public final class DerivativeFlux extends AbstractParametrizedFlux {
 

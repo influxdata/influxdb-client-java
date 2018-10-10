@@ -52,7 +52,6 @@ public final class FluxConnectionOptions {
      * Creates a builder instance.
      *
      * @return a builder
-     * @since 1.0.0
      */
     @Nonnull
     public static FluxConnectionOptions.Builder builder() {
@@ -62,7 +61,6 @@ public final class FluxConnectionOptions {
     /**
      * @return the url to connect to Flux
      * @see FluxConnectionOptions.Builder#url(String)
-     * @since 1.0.0
      */
     @Nonnull
     public String getUrl() {
@@ -72,7 +70,6 @@ public final class FluxConnectionOptions {
     /**
      * @return HTTP client to use for communication with Flux
      * @see FluxConnectionOptions.Builder#okHttpClient(OkHttpClient.Builder)
-     * @since 1.0.0
      */
     @Nonnull
     public OkHttpClient.Builder getOkHttpClient() {
@@ -81,8 +78,6 @@ public final class FluxConnectionOptions {
 
     /**
      * A builder for {@code FluxConnectionOptions}.
-     *
-     * @since 1.0.0
      */
     @NotThreadSafe
     public static class Builder {
@@ -95,7 +90,6 @@ public final class FluxConnectionOptions {
          *
          * @param url the url to connect to Flux. It must be defined.
          * @return {@code this}
-         * @since 1.0.0
          */
         @Nonnull
         public Builder url(@Nonnull final String url) {
@@ -109,7 +103,6 @@ public final class FluxConnectionOptions {
          *
          * @param okHttpClient the HTTP client to use.
          * @return {@code this}
-         * @since 1.0.0
          */
         @Nonnull
         public Builder okHttpClient(@Nonnull final OkHttpClient.Builder okHttpClient) {

@@ -28,7 +28,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#rename">rename</a> -
+ * <a href="http://bit.ly/flux-spec#rename">rename</a> -
  * Rename will rename specified columns in a table. If a column is renamed and is part of the group key,
  * the column name in the group key will be updated
  *

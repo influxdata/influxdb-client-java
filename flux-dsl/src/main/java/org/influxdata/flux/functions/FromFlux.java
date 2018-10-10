@@ -24,7 +24,7 @@ package org.influxdata.flux.functions;
 import javax.annotation.Nonnull;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#from">from</a> - starting point
+ * <a href="http://bit.ly/flux-spec#from">from</a> - starting point
  * for all queries. Get data from the specified bucket.
  *
  * <h3>Options</h3>
@@ -43,7 +43,6 @@ import javax.annotation.Nonnull;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (22/06/2018 10:20)
- * @since 1.0.0
  */
 public final class FromFlux extends AbstractParametrizedFlux {
 

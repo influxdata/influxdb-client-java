@@ -29,7 +29,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#shift">shift</a> -
+ * <a href="http://bit.ly/flux-spec#shift">shift</a> -
  * Shift add a fixed duration to time columns.
  *
  * <h3>Options</h3>
@@ -51,7 +51,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (29/06/2018 10:27)
- * @since 1.0.0
  */
 public final class ShiftFlux extends AbstractParametrizedFlux {
 

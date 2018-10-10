@@ -27,7 +27,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/flux/blob/master/docs/SPEC.md#distinct">distinct</a> - Distinct
+ * <a href="http://bit.ly/flux-spec#distinct">distinct</a> - Distinct
  * produces the unique values for a given column.
  *
  * <h3>Options</h3>
@@ -46,7 +46,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (17/07/2018 12:08)
- * @since 1.0.0
  */
 public final class DistinctFlux extends AbstractParametrizedFlux {
 

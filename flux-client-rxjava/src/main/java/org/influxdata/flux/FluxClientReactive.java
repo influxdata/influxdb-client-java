@@ -82,7 +82,7 @@ public interface FluxClientReactive {
      * Returns {@link Flowable} emitting raw response from InfluxDB server line by line.
      *
      * @param dialect Dialect is an object defining the options to use when encoding the response.
-     *                <a href="https://bit.ly/2PbCM8G">See dialect SPEC.</a>.
+     *                <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
      * @param query   the Flux query to execute
      * @return {@link Maybe} of a raw {@code Response<ResponseBody>}
      */
@@ -93,7 +93,7 @@ public interface FluxClientReactive {
      * Returns {@link Flowable} emitting raw response from InfluxDB server line by line.
      *
      * @param dialect     Dialect is an object defining the options to use when encoding the response.
-     *                    <a href="https://bit.ly/2PbCM8G">See dialect SPEC.</a>.
+     *                    <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
      * @param queryStream the Flux query publisher
      * @return {@link Maybe} of a raw {@code Response<ResponseBody>}
      */

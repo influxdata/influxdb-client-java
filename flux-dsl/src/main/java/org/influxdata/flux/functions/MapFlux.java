@@ -27,7 +27,7 @@ import org.influxdata.flux.Flux;
 import org.influxdata.platform.Arguments;
 
 /**
- * <a href="https://github.com/influxdata/platform/tree/master/query#map">map</a> - Applies a function to
+ * <a href="http://bit.ly/flux-spec#map">map</a> - Applies a function to
  * each row of the table.
  *
  * <h3>Options</h3>
@@ -62,7 +62,6 @@ import org.influxdata.platform.Arguments;
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (17/07/2018 07:48)
- * @since 1.0.0
  */
 public final class MapFlux extends AbstractParametrizedFlux {
 
