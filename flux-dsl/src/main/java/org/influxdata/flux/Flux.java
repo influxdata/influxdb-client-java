@@ -32,6 +32,7 @@ import javax.annotation.Nullable;
 import org.influxdata.flux.functions.AbstractParametrizedFlux;
 import org.influxdata.flux.functions.CountFlux;
 import org.influxdata.flux.functions.CovarianceFlux;
+import org.influxdata.flux.functions.CumulativeSumFlux;
 import org.influxdata.flux.functions.DerivativeFlux;
 import org.influxdata.flux.functions.DifferenceFlux;
 import org.influxdata.flux.functions.DistinctFlux;
@@ -85,7 +86,7 @@ import org.influxdata.platform.Arguments;
  * <li>{@link FromFlux}</li>
  * <li>{@link CountFlux}</li>
  * <li>{@link CovarianceFlux}</li>
- * <li>TODO cumulativeSum - Not defined in documentation or SPEC</li>
+ * <li>{@link CumulativeSumFlux}</li>
  * <li>{@link DerivativeFlux}</li>
  * <li>{@link DifferenceFlux}</li>
  * <li>{@link DistinctFlux}</li>
@@ -431,6 +432,47 @@ public abstract class Flux {
                                            final boolean pearsonr,
                                            @Nonnull final String valueDst) {
         return new CovarianceFlux(this).withColumns(columns).withPearsonr(pearsonr).withValueDst(valueDst);
+    }
+
+    /**
+     * Computes a running sum for non null records in the table.
+     *
+     * <h3>The parameters had to be defined by:</h3>
+     * <ul>
+     * <li>{@link CumulativeSumFlux#withColumns(String[])}</li>
+     * <li>{@link CumulativeSumFlux#withColumns(Collection)}</li>
+     * <li>{@link CumulativeSumFlux#withPropertyNamed(String)}</li>
+     * <li>{@link CumulativeSumFlux#withPropertyNamed(String, String)}</li>
+     * <li>{@link CumulativeSumFlux#withPropertyValueEscaped(String, String)}</li>
+     * </ul>
+     *
+     * @return {@link CumulativeSumFlux}
+     */
+    @Nonnull
+    public final CumulativeSumFlux cumulativeSum() {
+        return new CumulativeSumFlux(this);
+    }
+
+    /**
+     * Computes a running sum for non null records in the table.
+     *
+     * @param columns the columns on which to operate
+     * @return {@link CumulativeSumFlux}
+     */
+    @Nonnull
+    public final CumulativeSumFlux cumulativeSum(@Nonnull final String[] columns) {
+        return new CumulativeSumFlux(this).withColumns(columns);
+    }
+
+    /**
+     * Computes a running sum for non null records in the table.
+     *
+     * @param columns the columns on which to operate
+     * @return {@link CumulativeSumFlux}
+     */
+    @Nonnull
+    public final CumulativeSumFlux cumulativeSum(@Nonnull final Collection<String> columns) {
+        return new CumulativeSumFlux(this).withColumns(columns);
     }
 
     /**
@@ -1100,7 +1142,7 @@ public abstract class Flux {
      */
     @Nonnull
     public final PivotFlux pivot(@Nonnull final Collection<String> rowKey,
-                                 @Nonnull final Collection<String>  colKey,
+                                 @Nonnull final Collection<String> colKey,
                                  @Nonnull final String valueCol) {
 
         return new PivotFlux(this).withRowKey(rowKey).withColKey(colKey).withValueCol(valueCol);

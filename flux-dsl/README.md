@@ -75,7 +75,7 @@ Flux flux = Flux
 ```
 
 ### covariance
-Covariance is an aggregate operation. Covariance computes the covariance between two columns [[doc](https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#covariance)].
+Covariance is an aggregate operation. Covariance computes the covariance between two columns [[doc](http://bit.ly/flux-spec#covariance)].
 - `columns` - List of columns on which to compute the covariance. Exactly two columns must be provided. [array of strings]
 - `pearsonr` -  Indicates whether the result should be normalized to be the [Pearson R coefficient](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient). [boolean]
 - `valueDst` - The column into which the result will be placed. Defaults to `_value`. [string]
@@ -93,8 +93,18 @@ Flux flux = Flux
         .withValueDst("_newColumn");
 ```
 
+### cumulativeSum
+Cumulative sum computes a running sum for non null records in the table. 
+The output table schema will be the same as the input table [[doc](http://bit.ly/flux-spec#cumulative-sum)].
+- `columns` - a list of columns on which to operate [array of strings]
+```java
+Flux flux = Flux
+    .from("telegraf")
+    .cumulativeSum(new String[]{"_value"});
+```
+
 ### derivative
-Computes the time based difference between subsequent non null records [[doc](https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#derivative)].
+Computes the time based difference between subsequent non null records [[doc](http://bit.ly/flux-spec#derivative)].
 - `unit` - The time duration to use for the result. [duration]
 - `nonNegative` - Indicates if the derivative is allowed to be negative. [boolean]
 - `columns` - List of columns on which to compute the derivative. [array of strings]
@@ -117,7 +127,7 @@ Flux flux = Flux
 ```
 
 ### difference
-Difference computes the difference between subsequent non null records [[doc](https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#difference)].
+Difference computes the difference between subsequent non null records [[doc](http://bit.ly/flux-spec#difference)].
 - `nonNegative` - Indicates if the derivative is allowed to be negative. If a value is encountered which is less than the previous value then it is assumed the previous value should have been a zero. [boolean]
 - `columns` -  The list of columns on which to compute the difference. Defaults `["_value"]`. [array of strings]
 ```java
@@ -134,7 +144,7 @@ Flux flux = Flux
 ```
 
 ### distinct
-Distinct produces the unique values for a given column [[doc](https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#distinct)].
+Distinct produces the unique values for a given column [[doc](http://bit.ly/flux-spec#distinct)].
 - `column` - The column on which to track unique values. [string]
 ```java
 Flux flux = Flux
@@ -145,7 +155,7 @@ Flux flux = Flux
 
 ### drop
 Drop will exclude specified columns from a table. Columns to exclude can be specified either through a list, or a predicate function. 
-When a dropped column is part of the group key it will also be dropped from the key [[doc](https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#drop)].
+When a dropped column is part of the group key it will also be dropped from the key [[doc](http://bit.ly/flux-spec#drop)].
 - `columns` -  The list of columns which should be excluded from the resulting table. Cannot be used with `fn`. [array of strings]
 - `fn` - The function which takes a column name as a parameter and returns a boolean indicating whether or not the column should be excluded from the resulting table. Cannot be used with `columns`. [function(column)]
 
@@ -260,7 +270,7 @@ Flux.from("telegraf")
 
 ### integral
 For each aggregate column, it outputs the area under the curve of non null records. 
-The curve is defined as function where the domain is the record times and the range is the record values. [[doc](https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#integral)].
+The curve is defined as function where the domain is the record times and the range is the record values. [[doc](http://bit.ly/flux-spec#integral)].
 - `unit` - Time duration to use when computing the integral. [duration]
 ```java
 Flux flux = Flux
@@ -300,7 +310,7 @@ Flux flux = Flux.join()
 
 ### keep
 Keep is the inverse of drop. It will return a table containing only columns that are specified, ignoring all others. 
-Only columns in the group key that are also specified in `keep` will be kept in the resulting group key [[doc](https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#keep)].
+Only columns in the group key that are also specified in `keep` will be kept in the resulting group key [[doc](http://bit.ly/flux-spec#keep)].
 - `columns` -  The list of columns that should be included in the resulting table. Cannot be used with `fn`. [array of strings]
 - `fn` - The function which takes a column name as a parameter and returns a boolean indicating whether or not the column should be included in the resulting table. Cannot be used with `columns`. [function(column)]
 
@@ -443,7 +453,7 @@ Flux flux = Flux
 ```
 
 ### rename
-Rename will rename specified columns in a table. If a column is renamed and is part of the group key, the column name in the group key will be updated [[doc](https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#range)].
+Rename will rename specified columns in a table. If a column is renamed and is part of the group key, the column name in the group key will be updated [[doc](http://bit.ly/flux-spec#range)].
 - `columns` -  The map of columns to rename and their corresponding new names. Cannot be used with `fn`. [map of columns]
 - `fn` - The function which takes a single string parameter (the old column name) and returns a string representing the new column name. Cannot be used with `columns`. [function(column)]
 
@@ -492,7 +502,7 @@ Flux flux = Flux
 ```
 
 ### shift
-Shift add a fixed duration to time columns [[doc](https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#shift)].
+Shift add a fixed duration to time columns [[doc](http://bit.ly/flux-spec#shift)].
 - `shift` - The amount to add to each time value. [duration]
 - `columns` - The list of all columns that should be shifted. Defaults `["_start", "_stop", "_time"]`. [array of strings]
 ```java
@@ -650,7 +660,7 @@ Flux flux = Flux
 ```
 
 ### yield
-Yield a query results to yielded results [[doc](https://github.com/influxdata/platform/blob/master/query/docs/SPEC.md#yield)].
+Yield a query results to yielded results [[doc](http://bit.ly/flux-spec#yield)].
 - `name` - The unique name to give to yielded results. [string]
 ```java
 Flux flux = Flux
