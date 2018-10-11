@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 12,
+      <title>File: 33,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -46,7 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.PlatformClientFactory.java">org/influxdata/platform/PlatformClientFactory.java</a>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Health.java">org/influxdata/platform/domain/Health.java</a>
                 </td>
                 <td>
                   0
@@ -74,35 +74,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.PlatformClient.java">org/influxdata/platform/PlatformClient.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.write.event.WriteErrorEvent.java">org/influxdata/platform/write/event/WriteErrorEvent.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.write.event.WriteSuccessEvent.java">org/influxdata/platform/write/event/WriteSuccessEvent.java</a>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Authorization.java">org/influxdata/platform/domain/Authorization.java</a>
                 </td>
                 <td>
                   0
@@ -144,6 +116,90 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.option.PlatformOptions.java">org/influxdata/platform/option/PlatformOptions.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Permission.java">org/influxdata/platform/domain/Permission.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Users.java">org/influxdata/platform/domain/Users.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.write.event.BackpressureEvent.java">org/influxdata/platform/write/event/BackpressureEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.TaskClient.java">org/influxdata/platform/TaskClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.PlatformClientFactory.java">org/influxdata/platform/PlatformClientFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.impl.PlatformClientImpl.java">org/influxdata/platform/impl/PlatformClientImpl.java</a>
                 </td>
                 <td>
@@ -172,7 +228,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.option.PlatformOptions.java">org/influxdata/platform/option/PlatformOptions.java</a>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Buckets.java">org/influxdata/platform/domain/Buckets.java</a>
                 </td>
                 <td>
                   0
@@ -186,7 +242,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.write.event.BackpressureEvent.java">org/influxdata/platform/write/event/BackpressureEvent.java</a>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Organizations.java">org/influxdata/platform/domain/Organizations.java</a>
                 </td>
                 <td>
                   0
@@ -201,6 +257,244 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.option.WriteOptions.java">org/influxdata/platform/option/WriteOptions.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.User.java">org/influxdata/platform/domain/User.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Task.java">org/influxdata/platform/domain/Task.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.write.event.WriteErrorEvent.java">org/influxdata/platform/write/event/WriteErrorEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.SourceClient.java">org/influxdata/platform/SourceClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Organization.java">org/influxdata/platform/domain/Organization.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Sources.java">org/influxdata/platform/domain/Sources.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Authorizations.java">org/influxdata/platform/domain/Authorizations.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.BucketClient.java">org/influxdata/platform/BucketClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.UserClient.java">org/influxdata/platform/UserClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Bucket.java">org/influxdata/platform/domain/Bucket.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Status.java">org/influxdata/platform/domain/Status.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.AbstractHasLinks.java">org/influxdata/platform/domain/AbstractHasLinks.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.OrganizationClient.java">org/influxdata/platform/OrganizationClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.PlatformClient.java">org/influxdata/platform/PlatformClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.write.event.WriteSuccessEvent.java">org/influxdata/platform/write/event/WriteSuccessEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.AuthorizationClient.java">org/influxdata/platform/AuthorizationClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Source.java">org/influxdata/platform/domain/Source.java</a>
                 </td>
                 <td>
                   0

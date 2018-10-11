@@ -7,6 +7,7 @@ org.influxdata.flux.functions.restriction
 org.influxdata.flux.impl
 org.influxdata.flux.option
 org.influxdata.platform
+org.influxdata.platform.domain
 org.influxdata.platform.error
 org.influxdata.platform.error.rest
 org.influxdata.platform.impl

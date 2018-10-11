@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Permission.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Platform Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.platform.domain</a> &gt; <span class="el_source">Permission.java</span></div><h1>Permission.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.platform.domain;
+
+import java.util.StringJoiner;
+import javax.annotation.Nonnull;
+
+import org.influxdata.platform.Arguments;
+
+
+/**
+ * Permission defines an action and a resource.
+ *
+ * @author Jakub Bednar (bednar@github) (17/09/2018 09:48)
+ */
+<span class="nc" id="L35">public final class Permission {</span>
+
+    /**
+     * Action for reading.
+     */
+    public static final String READ_ACTION = &quot;read&quot;;
+
+    /**
+     * Action for writing.
+     */
+    public static final String WRITE_ACTION = &quot;write&quot;;
+
+    /**
+     * Action for creating new resources.
+     */
+    public static final String CREATE_ACTION = &quot;create&quot;;
+
+    /**
+     * Deleting an existing resource.
+     */
+    public static final String DELETE_ACTION = &quot;delete&quot;;
+
+    /**
+     * Represents the user resource actions can apply to.
+     */
+    public static final String USER_RESOURCE = &quot;user&quot;;
+
+    /**
+     * Represents the org resource actions can apply to.
+     */
+    public static final String ORGANIZATION_RESOURCE = &quot;org&quot;;
+
+
+    /**
+     * Represents the task resource scoped to an organization.
+     *
+     * @param orgID organization scope
+     * @return task resource
+     */
+    @Nonnull
+    public static String taskResource(@Nonnull final String orgID) {
+
+<span class="nc" id="L77">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+
+<span class="nc" id="L79">        return String.format(&quot;org/%s/task&quot;, orgID);</span>
+    }
+
+    /**
+     * BucketResource constructs a bucket resource.
+     *
+     * @param bucketID bucket scope
+     * @return bucket resource
+     */
+    public static String bucketResource(@Nonnull final String bucketID) {
+
+<span class="nc" id="L90">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
+
+<span class="nc" id="L92">        return String.format(&quot;bucket/%s&quot;, bucketID);</span>
+    }
+
+    private String resource;
+    private String action;
+
+    public String getResource() {
+<span class="nc" id="L99">        return resource;</span>
+    }
+
+    public void setResource(final String resource) {
+<span class="nc" id="L103">        this.resource = resource;</span>
+<span class="nc" id="L104">    }</span>
+
+    public String getAction() {
+<span class="nc" id="L107">        return action;</span>
+    }
+
+    public void setAction(final String action) {
+<span class="nc" id="L111">        this.action = action;</span>
+<span class="nc" id="L112">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L116">        return new StringJoiner(&quot;, &quot;, Permission.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
+<span class="nc" id="L117">                .add(&quot;resource='&quot; + resource + &quot;'&quot;)</span>
+<span class="nc" id="L118">                .add(&quot;action='&quot; + action + &quot;'&quot;)</span>
+<span class="nc" id="L119">                .toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

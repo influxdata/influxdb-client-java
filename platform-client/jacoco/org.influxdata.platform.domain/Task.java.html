@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Task.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Platform Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.platform.domain</a> &gt; <span class="el_source">Task.java</span></div><h1>Task.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.platform.domain;
+
+import java.io.Serializable;
+import java.util.StringJoiner;
+
+import com.squareup.moshi.Json;
+
+/**
+ * Task is a task.
+ *
+ * @author Jakub Bednar (bednar@github) (05/09/2018 08:09)
+ */
+<span class="nc" id="L34">public final class Task implements Serializable {</span>
+
+    private String id;
+
+    /**
+     * A read-only description of the task.
+     */
+    private String name;
+
+    /**
+     * The {@link User} that owns this Task.
+     */
+    private User owner;
+
+    /**
+     * The ID of the organization that owns this Task.
+     */
+    private String organizationId;
+
+    /**
+     * The current status of the task. When updated to 'disabled', cancels all queued jobs of this task.
+     */
+    private TaskStatus status;
+
+    /**
+     * @see Task#status
+     */
+<span class="nc" id="L61">    public enum TaskStatus {</span>
+
+<span class="nc" id="L63">        @Json(name = &quot;enabled&quot;)</span>
+        ENABLED,
+
+<span class="nc" id="L66">        @Json(name = &quot;disabled&quot;)</span>
+        DISABLED
+    }
+
+    /**
+     * The Flux script to run for this task.
+     */
+    private String flux;
+
+    /**
+     * A simple task repetition schedule (duration type); parsed from Flux.
+     */
+    private String every;
+
+    /**
+     * A task repetition schedule in the form '* * * * * *'; parsed from Flux.
+     */
+    private String cron;
+
+    public String getId() {
+<span class="nc" id="L86">        return id;</span>
+    }
+
+    public void setId(final String id) {
+<span class="nc" id="L90">        this.id = id;</span>
+<span class="nc" id="L91">    }</span>
+
+    public String getName() {
+<span class="nc" id="L94">        return name;</span>
+    }
+
+    public void setName(final String name) {
+<span class="nc" id="L98">        this.name = name;</span>
+<span class="nc" id="L99">    }</span>
+
+    public User getOwner() {
+<span class="nc" id="L102">        return owner;</span>
+    }
+
+    public void setOwner(final User owner) {
+<span class="nc" id="L106">        this.owner = owner;</span>
+<span class="nc" id="L107">    }</span>
+
+    public String getOrganizationId() {
+<span class="nc" id="L110">        return organizationId;</span>
+    }
+
+    public void setOrganizationId(final String organizationId) {
+<span class="nc" id="L114">        this.organizationId = organizationId;</span>
+<span class="nc" id="L115">    }</span>
+
+    public TaskStatus getStatus() {
+<span class="nc" id="L118">        return status;</span>
+    }
+
+    public void setStatus(final TaskStatus status) {
+<span class="nc" id="L122">        this.status = status;</span>
+<span class="nc" id="L123">    }</span>
+
+    public String getFlux() {
+<span class="nc" id="L126">        return flux;</span>
+    }
+
+    public void setFlux(final String flux) {
+<span class="nc" id="L130">        this.flux = flux;</span>
+<span class="nc" id="L131">    }</span>
+
+    public String getEvery() {
+<span class="nc" id="L134">        return every;</span>
+    }
+
+    public void setEvery(final String every) {
+<span class="nc" id="L138">        this.every = every;</span>
+<span class="nc" id="L139">    }</span>
+
+    public String getCron() {
+<span class="nc" id="L142">        return cron;</span>
+    }
+
+    public void setCron(final String cron) {
+<span class="nc" id="L146">        this.cron = cron;</span>
+<span class="nc" id="L147">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L151">        return new StringJoiner(&quot;, &quot;, Task.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
+<span class="nc" id="L152">                .add(&quot;id='&quot; + id + &quot;'&quot;)</span>
+<span class="nc" id="L153">                .add(&quot;name='&quot; + name + &quot;'&quot;)</span>
+<span class="nc" id="L154">                .add(&quot;owner=&quot; + owner)</span>
+<span class="nc" id="L155">                .add(&quot;organizationId='&quot; + organizationId + &quot;'&quot;)</span>
+<span class="nc" id="L156">                .add(&quot;status=&quot; + status)</span>
+<span class="nc" id="L157">                .add(&quot;flux='&quot; + flux + &quot;'&quot;)</span>
+<span class="nc" id="L158">                .add(&quot;every='&quot; + every + &quot;'&quot;)</span>
+<span class="nc" id="L159">                .add(&quot;cron='&quot; + cron + &quot;'&quot;)</span>
+<span class="nc" id="L160">                .toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

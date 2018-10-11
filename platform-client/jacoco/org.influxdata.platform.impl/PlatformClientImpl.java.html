@@ -24,7 +24,13 @@ package org.influxdata.platform.impl;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.Arguments;
+import org.influxdata.platform.AuthorizationClient;
+import org.influxdata.platform.BucketClient;
+import org.influxdata.platform.OrganizationClient;
 import org.influxdata.platform.PlatformClient;
+import org.influxdata.platform.SourceClient;
+import org.influxdata.platform.TaskClient;
+import org.influxdata.platform.UserClient;
 import org.influxdata.platform.WriteClient;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.option.WriteOptions;
@@ -36,37 +42,73 @@ import okhttp3.logging.HttpLoggingInterceptor;
  */
 public class PlatformClientImpl implements PlatformClient {
 
-<span class="fc" id="L39">    public PlatformClientImpl(@Nonnull final PlatformOptions options) {</span>
-<span class="fc" id="L40">        Arguments.checkNotNull(options, &quot;PlatformOptions&quot;);</span>
-<span class="fc" id="L41">    }</span>
+<span class="fc" id="L45">    public PlatformClientImpl(@Nonnull final PlatformOptions options) {</span>
+<span class="fc" id="L46">        Arguments.checkNotNull(options, &quot;PlatformOptions&quot;);</span>
+<span class="fc" id="L47">    }</span>
 
     @Nonnull
     @Override
     public WriteClient createWriteClient() {
-<span class="fc" id="L46">        throw new TodoException();</span>
-    }
-
-    @Nonnull
-    @Override
-    public WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions) {
 <span class="fc" id="L52">        throw new TodoException();</span>
     }
 
     @Nonnull
     @Override
-    public HttpLoggingInterceptor.Level getLogLevel() {
+    public WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions) {
 <span class="fc" id="L58">        throw new TodoException();</span>
     }
 
     @Nonnull
     @Override
-    public PlatformClient setLogLevel(@Nonnull final HttpLoggingInterceptor.Level logLevel) {
+    public AuthorizationClient createAuthorizationClient() {
 <span class="fc" id="L64">        throw new TodoException();</span>
+    }
+
+    @Nonnull
+    @Override
+    public BucketClient createBucketClient() {
+<span class="fc" id="L70">        throw new TodoException();</span>
+    }
+
+    @Nonnull
+    @Override
+    public OrganizationClient createOrganizationClient() {
+<span class="fc" id="L76">        throw new TodoException();</span>
+    }
+
+    @Nonnull
+    @Override
+    public SourceClient createSourceClient() {
+<span class="fc" id="L82">        throw new TodoException();</span>
+    }
+
+    @Nonnull
+    @Override
+    public TaskClient createTaskClient() {
+<span class="fc" id="L88">        throw new TodoException();</span>
+    }
+
+    @Nonnull
+    @Override
+    public UserClient createUserClient() {
+<span class="fc" id="L94">        throw new TodoException();</span>
+    }
+
+    @Nonnull
+    @Override
+    public HttpLoggingInterceptor.Level getLogLevel() {
+<span class="fc" id="L100">        throw new TodoException();</span>
+    }
+
+    @Nonnull
+    @Override
+    public PlatformClient setLogLevel(@Nonnull final HttpLoggingInterceptor.Level logLevel) {
+<span class="fc" id="L106">        throw new TodoException();</span>
     }
 
     @Override
     public void close() {
-<span class="fc" id="L69">        throw new TodoException();</span>
+<span class="fc" id="L111">        throw new TodoException();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -80,29 +80,54 @@
 <div class="section">
 <h2><a name="Reactor_Dependency_Convergence"></a>Reactor Dependency Convergence</h2>
 <table border="0" class="table table-striped"><caption>
-  <b>Statistics:</b>
+  <b>Legend:</b>
 </caption>
 <tr class="a">
+<td><img alt="[Error]" src="images/icon_error_sml.gif" /></td>
+<td>At least one dependency has a differing version of the dependency or has SNAPSHOT dependencies.</td></tr></table><br />
+<table border="0" class="table table-striped"><caption>
+  <b>Statistics:</b>
+</caption>
+<tr class="b">
 <th>Number of modules:</th>
 <td>8</td></tr>
-<tr class="b">
+<tr class="a">
 <th>Number of dependencies (NOD):</th>
-<td>27</td></tr>
-<tr class="a">
-<th>Number of unique artifacts (NOA):</th>
-<td>27</td></tr>
+<td>29</td></tr>
 <tr class="b">
-<th>Number of version-conflicting artifacts (NOC):</th>
-<td>0</td></tr>
+<th>Number of unique artifacts (NOA):</th>
+<td>30</td></tr>
 <tr class="a">
+<th>Number of version-conflicting artifacts (NOC):</th>
+<td>1</td></tr>
+<tr class="b">
 <th>Number of SNAPSHOT artifacts (NOS):</th>
 <td>0</td></tr>
-<tr class="b">
-<th>Convergence (NOD/NOA):</th>
-<td><img alt="[Success]" src="images/icon_success_sml.gif" />&#160;<b>100 %</b></td></tr>
 <tr class="a">
+<th>Convergence (NOD/NOA):</th>
+<td><img alt="[Error]" src="images/icon_error_sml.gif" />&#160;<b>96 %</b></td></tr>
+<tr class="b">
 <th>Ready for release (100% convergence and no SNAPSHOTS):</th>
-<td><img alt="[Success]" src="images/icon_success_sml.gif" />&#160;<b>Success</b></td></tr></table></div>
+<td><img alt="[Error]" src="images/icon_error_sml.gif" />&#160;<b>Error</b><br />You do not have 100% convergence.</td></tr></table></div>
+<div class="section">
+<h3><a name="Dependencies_used_in_modules"></a>Dependencies used in modules</h3>
+<div class="section">
+<h4><a name="com.squareup.okio:okio"></a>com.squareup.okio:okio</h4>
+<table border="0" class="table table-striped">
+<tr class="a">
+<td><img alt="[Error]" src="images/icon_error_sml.gif" /></td>
+<td>
+<table border="0" class="table table-striped">
+<tr class="b">
+<td width="25%">1.13.0</td>
+<td>
+<ol style="list-style-type: decimal">
+<li>org.influxdata:platform-client:jar:1.0-SNAPSHOT<br />\-&#160;com.squareup.retrofit2:converter-moshi:jar:2.4.0:compile<br />&#160;&#160;&#160;\-&#160;com.squareup.moshi:moshi:jar:1.5.0:compile<br />&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;(com.squareup.okio:okio:jar:1.13.0:compile - omitted for conflict with 1.14.0)<br /></li><br /></ol></td></tr>
+<tr class="a">
+<td width="25%">1.14.0</td>
+<td>
+<ol style="list-style-type: decimal">
+<li>org.influxdata:platform-client:jar:1.0-SNAPSHOT<br />\-&#160;com.squareup.okhttp3:logging-interceptor:jar:3.10.0:compile<br />&#160;&#160;&#160;\-&#160;com.squareup.okhttp3:okhttp:jar:3.10.0:compile<br />&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;com.squareup.okio:okio:jar:1.14.0:compile<br /></li><br /></ol></td></tr></table></td></tr></table></div></div>
         </div>
       </div>
     </div>
