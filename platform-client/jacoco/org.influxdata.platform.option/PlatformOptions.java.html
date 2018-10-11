@@ -21,7 +21,6 @@
  */
 package org.influxdata.platform.option;
 
-import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -40,29 +39,29 @@ public final class PlatformOptions {
     private final AuthScheme authScheme;
     private final OkHttpClient.Builder okHttpClient;
 
-<span class="fc" id="L43">    private PlatformOptions(@Nonnull final PlatformOptions.Builder builder) {</span>
+<span class="fc" id="L42">    private PlatformOptions(@Nonnull final PlatformOptions.Builder builder) {</span>
 
-<span class="fc" id="L45">        Objects.requireNonNull(builder, &quot;PlatformOptions.Builder is required&quot;);</span>
+<span class="fc" id="L44">        Arguments.checkNotNull(builder, &quot;PlatformOptions.Builder&quot;);</span>
 
-<span class="fc" id="L47">        this.url = builder.url;</span>
-<span class="fc" id="L48">        this.authScheme = builder.authScheme;</span>
-<span class="fc" id="L49">        this.okHttpClient = builder.okHttpClient;</span>
-<span class="fc" id="L50">    }</span>
+<span class="fc" id="L46">        this.url = builder.url;</span>
+<span class="fc" id="L47">        this.authScheme = builder.authScheme;</span>
+<span class="fc" id="L48">        this.okHttpClient = builder.okHttpClient;</span>
+<span class="fc" id="L49">    }</span>
 
     /**
      * The scheme uses to Authentication.
      */
-<span class="fc" id="L55">    public enum AuthScheme {</span>
+<span class="fc" id="L54">    public enum AuthScheme {</span>
 
         /**
          * Basic auth.
          */
-<span class="fc" id="L60">        SESSION,</span>
+<span class="fc" id="L59">        SESSION,</span>
 
         /**
          * Authentication token.
          */
-<span class="fc" id="L65">        TOKEN</span>
+<span class="fc" id="L64">        TOKEN</span>
     }
 
     /**
@@ -71,7 +70,7 @@ public final class PlatformOptions {
      */
     @Nonnull
     public String getUrl() {
-<span class="fc" id="L74">        return url;</span>
+<span class="fc" id="L73">        return url;</span>
     }
 
     /**
@@ -81,7 +80,7 @@ public final class PlatformOptions {
      */
     @Nonnull
     public AuthScheme getAuthScheme() {
-<span class="fc" id="L84">        return authScheme;</span>
+<span class="fc" id="L83">        return authScheme;</span>
     }
 
     /**
@@ -90,7 +89,7 @@ public final class PlatformOptions {
      */
     @Nonnull
     public OkHttpClient.Builder getOkHttpClient() {
-<span class="fc" id="L93">        return okHttpClient;</span>
+<span class="fc" id="L92">        return okHttpClient;</span>
     }
 
     /**
@@ -100,17 +99,17 @@ public final class PlatformOptions {
      */
     @Nonnull
     public static PlatformOptions.Builder builder() {
-<span class="fc" id="L103">        return new PlatformOptions.Builder();</span>
+<span class="fc" id="L102">        return new PlatformOptions.Builder();</span>
     }
 
     /**
      * A builder for {@code PlatformOptions}.
      */
     @NotThreadSafe
-<span class="fc" id="L110">    public static class Builder {</span>
+<span class="fc" id="L109">    public static class Builder {</span>
 
         private String url;
-<span class="fc" id="L113">        private OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();</span>
+<span class="fc" id="L112">        private OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();</span>
         private AuthScheme authScheme;
 
         /**
@@ -121,9 +120,9 @@ public final class PlatformOptions {
          */
         @Nonnull
         public PlatformOptions.Builder url(@Nonnull final String url) {
-<span class="fc" id="L124">            Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
-<span class="fc" id="L125">            this.url = url;</span>
-<span class="fc" id="L126">            return this;</span>
+<span class="fc" id="L123">            Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
+<span class="fc" id="L124">            this.url = url;</span>
+<span class="fc" id="L125">            return this;</span>
         }
 
         /**
@@ -134,9 +133,9 @@ public final class PlatformOptions {
          */
         @Nonnull
         public PlatformOptions.Builder okHttpClient(@Nonnull final OkHttpClient.Builder okHttpClient) {
-<span class="fc" id="L137">            Arguments.checkNotNull(okHttpClient, &quot;OkHttpClient.Builder&quot;);</span>
-<span class="fc" id="L138">            this.okHttpClient = okHttpClient;</span>
-<span class="fc" id="L139">            return this;</span>
+<span class="fc" id="L136">            Arguments.checkNotNull(okHttpClient, &quot;OkHttpClient.Builder&quot;);</span>
+<span class="fc" id="L137">            this.okHttpClient = okHttpClient;</span>
+<span class="fc" id="L138">            return this;</span>
         }
 
         /**
@@ -150,12 +149,12 @@ public final class PlatformOptions {
         public PlatformOptions.Builder authenticate(@Nonnull final String username,
                                                     @Nonnull final char[] password) {
 
-<span class="fc" id="L153">            Arguments.checkNonEmpty(username, &quot;username&quot;);</span>
-<span class="fc" id="L154">            Arguments.checkNotNull(password, &quot;password&quot;);</span>
+<span class="fc" id="L152">            Arguments.checkNonEmpty(username, &quot;username&quot;);</span>
+<span class="fc" id="L153">            Arguments.checkNotNull(password, &quot;password&quot;);</span>
 
-<span class="fc" id="L156">            this.authScheme = AuthScheme.SESSION;</span>
+<span class="fc" id="L155">            this.authScheme = AuthScheme.SESSION;</span>
 
-<span class="fc" id="L158">            return this;</span>
+<span class="fc" id="L157">            return this;</span>
         }
 
         /**
@@ -167,11 +166,11 @@ public final class PlatformOptions {
         @Nonnull
         public PlatformOptions.Builder authenticateToken(final char[] token) {
 
-<span class="fc" id="L170">            Arguments.checkNotNull(token, &quot;token&quot;);</span>
+<span class="fc" id="L169">            Arguments.checkNotNull(token, &quot;token&quot;);</span>
 
-<span class="fc" id="L172">            this.authScheme = AuthScheme.TOKEN;</span>
+<span class="fc" id="L171">            this.authScheme = AuthScheme.TOKEN;</span>
 
-<span class="fc" id="L174">            return this;</span>
+<span class="fc" id="L173">            return this;</span>
         }
 
         /**
@@ -182,15 +181,15 @@ public final class PlatformOptions {
         @Nonnull
         public PlatformOptions build() {
 
-<span class="fc bfc" id="L185" title="All 2 branches covered.">            if (url == null) {</span>
-<span class="fc" id="L186">                throw new IllegalStateException(&quot;The url to connect to Platform has to be defined.&quot;);</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">            if (url == null) {</span>
+<span class="fc" id="L185">                throw new IllegalStateException(&quot;The url to connect to Platform has to be defined.&quot;);</span>
             }
 
-<span class="fc bfc" id="L189" title="All 2 branches covered.">            if (authScheme == null) {</span>
-<span class="fc" id="L190">                throw new IllegalStateException(&quot;The username, password or authenticate token has to be defined.&quot;);</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">            if (authScheme == null) {</span>
+<span class="fc" id="L189">                throw new IllegalStateException(&quot;The username, password or authenticate token has to be defined.&quot;);</span>
             }
 
-<span class="fc" id="L193">            return new PlatformOptions(this);</span>
+<span class="fc" id="L192">            return new PlatformOptions(this);</span>
         }
     }
 

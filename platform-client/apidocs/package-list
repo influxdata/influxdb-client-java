@@ -1,3 +1,5 @@
 org.influxdata.platform
 org.influxdata.platform.impl
 org.influxdata.platform.option
+org.influxdata.platform.write
+org.influxdata.platform.write.event

@@ -12,3 +12,5 @@ org.influxdata.platform.error.rest
 org.influxdata.platform.impl
 org.influxdata.platform.option
 org.influxdata.platform.rest
+org.influxdata.platform.write
+org.influxdata.platform.write.event

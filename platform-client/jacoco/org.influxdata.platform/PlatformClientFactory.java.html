@@ -21,7 +21,6 @@
  */
 package org.influxdata.platform;
 
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.impl.PlatformClientImpl;
@@ -51,12 +50,12 @@ public final class PlatformClientFactory {
                                         @Nonnull final String username,
                                         @Nonnull final char[] password) {
 
-<span class="fc" id="L54">        PlatformOptions options = PlatformOptions.builder()</span>
-<span class="fc" id="L55">                .url(url)</span>
-<span class="fc" id="L56">                .authenticate(username, password)</span>
-<span class="fc" id="L57">                .build();</span>
+<span class="fc" id="L53">        PlatformOptions options = PlatformOptions.builder()</span>
+<span class="fc" id="L54">                .url(url)</span>
+<span class="fc" id="L55">                .authenticate(username, password)</span>
+<span class="fc" id="L56">                .build();</span>
 
-<span class="fc" id="L59">        return create(options);</span>
+<span class="fc" id="L58">        return create(options);</span>
     }
 
     /**
@@ -71,12 +70,12 @@ public final class PlatformClientFactory {
     public static PlatformClient create(@Nonnull final String url,
                                         @Nonnull final char[] token) {
 
-<span class="fc" id="L74">        PlatformOptions options = PlatformOptions.builder()</span>
-<span class="fc" id="L75">                .url(url)</span>
-<span class="fc" id="L76">                .authenticateToken(token)</span>
-<span class="fc" id="L77">                .build();</span>
+<span class="fc" id="L73">        PlatformOptions options = PlatformOptions.builder()</span>
+<span class="fc" id="L74">                .url(url)</span>
+<span class="fc" id="L75">                .authenticateToken(token)</span>
+<span class="fc" id="L76">                .build();</span>
 
-<span class="fc" id="L79">        return create(options);</span>
+<span class="fc" id="L78">        return create(options);</span>
     }
 
     /**
@@ -88,9 +87,9 @@ public final class PlatformClientFactory {
     @Nonnull
     public static PlatformClient create(@Nonnull final PlatformOptions options) {
 
-<span class="fc" id="L91">        Objects.requireNonNull(options, &quot;PlatformOptions are required&quot;);</span>
+<span class="fc" id="L90">        Arguments.checkNotNull(options, &quot;PlatformOptions&quot;);</span>
 
-<span class="fc" id="L93">        return new PlatformClientImpl(options);</span>
+<span class="fc" id="L92">        return new PlatformClientImpl(options);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
