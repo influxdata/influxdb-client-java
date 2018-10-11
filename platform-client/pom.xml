@@ -41,4 +41,19 @@
         The client supports managing organizations, users, authorizations, buckets.
     </description>
 
+    <dependencies>
+        
+        <dependency>
+            <groupId>org.influxdata</groupId>
+            <artifactId>platform-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.influxdata</groupId>
+            <artifactId>platform-common-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
+    </dependencies>
+
 </project>
