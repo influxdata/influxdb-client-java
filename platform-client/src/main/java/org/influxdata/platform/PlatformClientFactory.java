@@ -21,7 +21,6 @@
  */
 package org.influxdata.platform;
 
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.impl.PlatformClientImpl;
@@ -88,7 +87,7 @@ public final class PlatformClientFactory {
     @Nonnull
     public static PlatformClient create(@Nonnull final PlatformOptions options) {
 
-        Objects.requireNonNull(options, "PlatformOptions are required");
+        Arguments.checkNotNull(options, "PlatformOptions");
 
         return new PlatformClientImpl(options);
     }

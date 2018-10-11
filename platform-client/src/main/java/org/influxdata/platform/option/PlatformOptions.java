@@ -21,7 +21,6 @@
  */
 package org.influxdata.platform.option;
 
-import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -42,7 +41,7 @@ public final class PlatformOptions {
 
     private PlatformOptions(@Nonnull final PlatformOptions.Builder builder) {
 
-        Objects.requireNonNull(builder, "PlatformOptions.Builder is required");
+        Arguments.checkNotNull(builder, "PlatformOptions.Builder");
 
         this.url = builder.url;
         this.authScheme = builder.authScheme;

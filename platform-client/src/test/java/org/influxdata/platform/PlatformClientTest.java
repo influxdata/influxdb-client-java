@@ -19,53 +19,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.platform.impl;
+package org.influxdata.platform;
 
 import javax.annotation.Nonnull;
 
-import org.influxdata.platform.Arguments;
-import org.influxdata.platform.PlatformClient;
-import org.influxdata.platform.WriteClient;
-import org.influxdata.platform.option.PlatformOptions;
+import org.influxdata.platform.impl.TodoException;
 import org.influxdata.platform.option.WriteOptions;
 
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.assertj.core.api.Assertions;
+import org.assertj.core.api.ThrowableAssert;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 /**
- * @author Jakub Bednar (bednar@github) (11/10/2018 09:36)
+ * @author Jakub Bednar (bednar@github) (05/09/2018 14:00)
  */
-public class PlatformClientImpl implements PlatformClient {
+@RunWith(JUnitPlatform.class)
+class PlatformClientTest extends AbstractPlatformClientTest {
 
-    public PlatformClientImpl(@Nonnull final PlatformOptions options) {
-        Arguments.checkNotNull(options, "PlatformOptions");
+    @Test
+    void writeClient() {
+
+        todo(() -> platformClient.createWriteClient());
+        todo(() -> platformClient.createWriteClient(WriteOptions.DEFAULTS));
     }
 
-    @Nonnull
-    @Override
-    public WriteClient createWriteClient() {
-        throw new TodoException();
+    @Test
+    void logLevel() {
+
+        todo(platformClient::getLogLevel);
+        todo(() -> platformClient.setLogLevel(HttpLoggingInterceptor.Level.BODY));
     }
 
-    @Nonnull
-    @Override
-    public WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions) {
-        throw new TodoException();
+    @Test
+    void close() {
+        todo(() -> platformClient.close());
     }
 
-    @Nonnull
-    @Override
-    public HttpLoggingInterceptor.Level getLogLevel() {
-        throw new TodoException();
-    }
-
-    @Nonnull
-    @Override
-    public PlatformClient setLogLevel(@Nonnull final HttpLoggingInterceptor.Level logLevel) {
-        throw new TodoException();
-    }
-
-    @Override
-    public void close() {
-        throw new TodoException();
+    private void todo(@Nonnull final ThrowableAssert.ThrowingCallable callable) {
+        Assertions.assertThatThrownBy(callable)
+                .isInstanceOf(TodoException.class)
+                .hasMessage("TODO");
     }
 }

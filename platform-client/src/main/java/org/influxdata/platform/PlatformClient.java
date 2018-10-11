@@ -21,11 +21,48 @@
  */
 package org.influxdata.platform;
 
+import javax.annotation.Nonnull;
+
+import org.influxdata.platform.option.WriteOptions;
+
+import okhttp3.logging.HttpLoggingInterceptor;
+
 /**
  * The client of the InfluxData Platform for Time Series that implements HTTP API defined by
  * <a href="https://github.com/influxdata/platform/blob/master/http/swagger.yml">Influx API Service swagger.yml</a>.
  *
  * @author Jakub Bednar (bednar@github) (11/10/2018 08:56)
  */
-public interface PlatformClient {
+public interface PlatformClient extends AutoCloseable {
+
+    /**
+     * Get the Write client..
+     *
+     * @return the new client instance for the Write API
+     */
+    @Nonnull
+    WriteClient createWriteClient();
+
+    /**
+     * Get the Write client..
+     *
+     * @return the new client instance for the Write API
+     */
+    @Nonnull
+    WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions);
+
+    /**
+     * @return the {@link HttpLoggingInterceptor.Level} that is used for logging requests and responses
+     */
+    @Nonnull
+    HttpLoggingInterceptor.Level getLogLevel();
+
+    /**
+     * Set the log level for the request and response information.
+     *
+     * @param logLevel the log level to set.
+     * @return the PlatformClient instance to be able to use it in a fluent manner.
+     */
+    @Nonnull
+    PlatformClient setLogLevel(@Nonnull final HttpLoggingInterceptor.Level logLevel);
 }

@@ -19,53 +19,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.platform.impl;
+package org.influxdata.platform.write.event;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.Arguments;
-import org.influxdata.platform.PlatformClient;
-import org.influxdata.platform.WriteClient;
-import org.influxdata.platform.option.PlatformOptions;
-import org.influxdata.platform.option.WriteOptions;
-
-import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
- * @author Jakub Bednar (bednar@github) (11/10/2018 09:36)
+ * The event is published when occurs a write exception.
+ *
+ * @author Jakub Bednar (bednar@github) (30/07/2018 14:57)
  */
-public class PlatformClientImpl implements PlatformClient {
+public final class WriteErrorEvent extends AbstractWriteEvent {
 
-    public PlatformClientImpl(@Nonnull final PlatformOptions options) {
-        Arguments.checkNotNull(options, "PlatformOptions");
+    private static final Logger LOG = Logger.getLogger(WriteErrorEvent.class.getName());
+
+    private final Throwable throwable;
+
+    public WriteErrorEvent(@Nonnull final Throwable throwable) {
+
+        Arguments.checkNotNull(throwable, "Throwable");
+
+        this.throwable = throwable;
     }
 
+    /**
+     * @return the exception that was throw
+     */
     @Nonnull
-    @Override
-    public WriteClient createWriteClient() {
-        throw new TodoException();
-    }
-
-    @Nonnull
-    @Override
-    public WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions) {
-        throw new TodoException();
-    }
-
-    @Nonnull
-    @Override
-    public HttpLoggingInterceptor.Level getLogLevel() {
-        throw new TodoException();
-    }
-
-    @Nonnull
-    @Override
-    public PlatformClient setLogLevel(@Nonnull final HttpLoggingInterceptor.Level logLevel) {
-        throw new TodoException();
+    public Throwable getThrowable() {
+        return throwable;
     }
 
     @Override
-    public void close() {
-        throw new TodoException();
+    public void logEvent() {
+        LOG.log(Level.SEVERE, "Write error", throwable);
     }
 }

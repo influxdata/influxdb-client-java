@@ -83,6 +83,8 @@ import org.influxdata.platform.Arguments;
  * <br>
  * <a href="http://bit.ly/flux-spec">Flux Specification</a>
  *
+ * TODO integration tests.
+ *
  * <h3>The functions:</h3>
  * <ul>
  * <li>{@link FromFlux}</li>
