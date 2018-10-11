@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 87,
+      <title>File: 91,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -200,7 +200,35 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.PlatformClientFactory.java">org/influxdata/platform/PlatformClientFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.RenameFlux.java">org/influxdata/flux/functions/RenameFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.impl.PlatformClientImpl.java">org/influxdata/platform/impl/PlatformClientImpl.java</a>
                 </td>
                 <td>
                   0
@@ -579,6 +607,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.properties.FunctionsParameters.java">org/influxdata/flux/functions/properties/FunctionsParameters.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.option.PlatformOptions.java">org/influxdata/platform/option/PlatformOptions.java</a>
                 </td>
                 <td>
                   0
@@ -1167,6 +1209,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.Flux.java">org/influxdata/flux/Flux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.PlatformClient.java">org/influxdata/platform/PlatformClient.java</a>
                 </td>
                 <td>
                   0

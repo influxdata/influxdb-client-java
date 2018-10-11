@@ -9,4 +9,6 @@ org.influxdata.flux.option
 org.influxdata.platform
 org.influxdata.platform.error
 org.influxdata.platform.error.rest
+org.influxdata.platform.impl
+org.influxdata.platform.option
 org.influxdata.platform.rest

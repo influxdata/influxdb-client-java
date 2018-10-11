@@ -1,0 +1,6 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+The Platform Client,org.influxdata.platform.impl,PlatformClientImpl,0,6,0,0,0,3,0,1,0,1
+The Platform Client,org.influxdata.platform,PlatformClientFactory,0,30,0,0,0,12,0,3,0,3
+The Platform Client,org.influxdata.platform.option,PlatformOptions.AuthScheme,0,24,0,0,0,3,0,1,0,1
+The Platform Client,org.influxdata.platform.option,PlatformOptions.Builder,0,67,0,4,0,20,0,8,0,6
+The Platform Client,org.influxdata.platform.option,PlatformOptions,0,32,0,0,0,10,0,5,0,5
