@@ -28,6 +28,7 @@ import org.influxdata.platform.AuthorizationClient;
 import org.influxdata.platform.BucketClient;
 import org.influxdata.platform.OrganizationClient;
 import org.influxdata.platform.PlatformClient;
+import org.influxdata.platform.QueryClient;
 import org.influxdata.platform.SourceClient;
 import org.influxdata.platform.TaskClient;
 import org.influxdata.platform.UserClient;
@@ -44,6 +45,12 @@ public class PlatformClientImpl implements PlatformClient {
 
     public PlatformClientImpl(@Nonnull final PlatformOptions options) {
         Arguments.checkNotNull(options, "PlatformOptions");
+    }
+
+    @Nonnull
+    @Override
+    public QueryClient createQueryClient() {
+        throw new TodoException();
     }
 
     @Nonnull

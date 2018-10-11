@@ -36,6 +36,14 @@ import okhttp3.logging.HttpLoggingInterceptor;
 public interface PlatformClient extends AutoCloseable {
 
     /**
+     * Get the Query client.
+     *
+     * @return the new client instance for the Query API
+     */
+    @Nonnull
+    QueryClient createQueryClient();
+
+    /**
      * Get the Write client.
      *
      * @return the new client instance for the Write API
@@ -50,6 +58,7 @@ public interface PlatformClient extends AutoCloseable {
      */
     @Nonnull
     WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions);
+
 
     /**
      * Get the {@link org.influxdata.platform.domain.Authorization} client.

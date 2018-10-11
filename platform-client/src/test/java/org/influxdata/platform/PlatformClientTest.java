@@ -40,7 +40,12 @@ import org.junit.runner.RunWith;
 class PlatformClientTest extends AbstractPlatformClientTest {
 
     @Test
-    void writeClient() {
+    void createQueryClient() {
+        todo(() -> platformClient.createQueryClient());
+    }
+
+    @Test
+    void createWriteClient() {
 
         todo(() -> platformClient.createWriteClient());
         todo(() -> platformClient.createWriteClient(WriteOptions.DEFAULTS));
