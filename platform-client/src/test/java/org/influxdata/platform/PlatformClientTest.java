@@ -47,6 +47,36 @@ class PlatformClientTest extends AbstractPlatformClientTest {
     }
 
     @Test
+    void createAuthorizationClient() {
+        todo(() -> platformClient.createAuthorizationClient());
+    }
+
+    @Test
+    void createBucketClient() {
+        todo(() -> platformClient.createBucketClient());
+    }
+
+    @Test
+    void createOrganizationClient() {
+        todo(() -> platformClient.createOrganizationClient());
+    }
+
+    @Test
+    void createSourceClient() {
+        todo(() -> platformClient.createSourceClient());
+    }
+
+    @Test
+    void createTaskClient() {
+        todo(() -> platformClient.createTaskClient());
+    }
+
+    @Test
+    void createUserClient() {
+        todo(() -> platformClient.createUserClient());
+    }
+
+    @Test
     void logLevel() {
 
         todo(platformClient::getLogLevel);

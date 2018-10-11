@@ -17,8 +17,8 @@ This repository contains the Java client for the InfluxData Platform.
 - InfluxData Platform OSS 2.0 client
     - Querying data using Flux language
     - Writing data points using
-        - [lineprotocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/) 
-        - Point object 
+        - [Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/) 
+        - [Point object](https://github.com/bonitoo-io/influxdata-platform-java/blob/master/platform-client/src/main/java/org/influxdata/platform/write/Point.java#L76) 
         - POJO
     - InfluxData Platform Management API client for managing
         - sources, buckets
@@ -43,7 +43,7 @@ This repository contains the Java client for the InfluxData Platform.
 - **[flux-dsl](./flux-dsl)** - The Java query builder for Flux language   
     - [javadoc](https://bonitoo-io.github.io/influxdata-platform-java/flux-dsl/apidocs/index.html), [readme](./flux-dsl/)
        
-### The flux queries in InfluxDB 1.7+
+### The Flux queries in InfluxDB 1.7+
 
 The REST endpoint "/v2/query" for querying using **Flux** language is introduces in InfluxDB 1.7.
 

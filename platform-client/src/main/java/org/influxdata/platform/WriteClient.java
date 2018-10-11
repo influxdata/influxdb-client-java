@@ -34,7 +34,7 @@ import io.reactivex.Observable;
 /**
  * Write time-series data into InfluxData Platform 2.0.
  * <p>
- * The data are formatted in <a href="https://bit.ly/2QL99fu">InfluxDB Line Protocol</a>.
+ * The data are formatted in <a href="https://bit.ly/2QL99fu">Line Protocol</a>.
  *
  * @author Jakub Bednar (bednar@github) (20/09/2018 10:58)
  */

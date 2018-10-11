@@ -24,7 +24,13 @@ package org.influxdata.platform.impl;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.Arguments;
+import org.influxdata.platform.AuthorizationClient;
+import org.influxdata.platform.BucketClient;
+import org.influxdata.platform.OrganizationClient;
 import org.influxdata.platform.PlatformClient;
+import org.influxdata.platform.SourceClient;
+import org.influxdata.platform.TaskClient;
+import org.influxdata.platform.UserClient;
 import org.influxdata.platform.WriteClient;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.option.WriteOptions;
@@ -49,6 +55,42 @@ public class PlatformClientImpl implements PlatformClient {
     @Nonnull
     @Override
     public WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions) {
+        throw new TodoException();
+    }
+
+    @Nonnull
+    @Override
+    public AuthorizationClient createAuthorizationClient() {
+        throw new TodoException();
+    }
+
+    @Nonnull
+    @Override
+    public BucketClient createBucketClient() {
+        throw new TodoException();
+    }
+
+    @Nonnull
+    @Override
+    public OrganizationClient createOrganizationClient() {
+        throw new TodoException();
+    }
+
+    @Nonnull
+    @Override
+    public SourceClient createSourceClient() {
+        throw new TodoException();
+    }
+
+    @Nonnull
+    @Override
+    public TaskClient createTaskClient() {
+        throw new TodoException();
+    }
+
+    @Nonnull
+    @Override
+    public UserClient createUserClient() {
         throw new TodoException();
     }
 

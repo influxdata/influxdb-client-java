@@ -36,7 +36,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 public interface PlatformClient extends AutoCloseable {
 
     /**
-     * Get the Write client..
+     * Get the Write client.
      *
      * @return the new client instance for the Write API
      */
@@ -44,12 +44,60 @@ public interface PlatformClient extends AutoCloseable {
     WriteClient createWriteClient();
 
     /**
-     * Get the Write client..
+     * Get the Write client.
      *
      * @return the new client instance for the Write API
      */
     @Nonnull
     WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions);
+
+    /**
+     * Get the {@link org.influxdata.platform.domain.Authorization} client.
+     *
+     * @return the new client instance for Authorization API
+     */
+    @Nonnull
+    AuthorizationClient createAuthorizationClient();
+
+    /**
+     * Get the {@link org.influxdata.platform.domain.Bucket} client.
+     *
+     * @return the new client instance for Bucket API
+     */
+    @Nonnull
+    BucketClient createBucketClient();
+
+    /**
+     * Get the {@link org.influxdata.platform.domain.Organization} client.
+     *
+     * @return the new client instance for Organization API
+     */
+    @Nonnull
+    OrganizationClient createOrganizationClient();
+
+    /**
+     * Get the {@link org.influxdata.platform.domain.Source} client.
+     *
+     * @return the new client instance for Source API
+     */
+    @Nonnull
+    SourceClient createSourceClient();
+
+    /**
+     * Get the {@link org.influxdata.platform.domain.Task} client.
+     *
+     * @return the new client instance for Task API
+     */
+    @Nonnull
+    TaskClient createTaskClient();
+
+    /**
+     * Get the {@link org.influxdata.platform.domain.User} client.
+     *
+     * @return the new client instance for User API
+     */
+    @Nonnull
+    UserClient createUserClient();
 
     /**
      * @return the {@link HttpLoggingInterceptor.Level} that is used for logging requests and responses
