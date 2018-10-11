@@ -28,7 +28,7 @@ import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
 
 /**
- * The Factory that create a instance of a Flux client.
+ * The Factory that creates a instance of a Flux client.
  *
  * @author Jakub Bednar (bednar@github) (31/07/2018 13:11)
  */
@@ -40,18 +40,17 @@ public final class FluxClientFactory {
     /**
      * Create a instance of the Flux client.
      *
-     * @param url the url to connect to InfluxDB.
+     * @param connectionString the connectionString to connect to InfluxDB.
      * @return client
      * @see FluxConnectionOptions.Builder#url(String)
      */
     @Nonnull
-    public static FluxClient create(@Nonnull final String url) {
+    public static FluxClient create(@Nonnull final String connectionString) {
 
-<span class="fc" id="L50">        FluxConnectionOptions options = FluxConnectionOptions.builder()</span>
-<span class="fc" id="L51">                .url(url)</span>
-<span class="fc" id="L52">                .build();</span>
+<span class="fc" id="L50">        FluxConnectionOptions options = FluxConnectionOptions.builder(connectionString)</span>
+<span class="fc" id="L51">        .build();</span>
 
-<span class="fc" id="L54">        return create(options);</span>
+<span class="fc" id="L53">        return create(options);</span>
     }
 
     /**
@@ -63,9 +62,9 @@ public final class FluxClientFactory {
     @Nonnull
     public static FluxClient create(@Nonnull final FluxConnectionOptions options) {
 
-<span class="fc" id="L66">        Arguments.checkNotNull(options, &quot;FluxConnectionOptions&quot;);</span>
+<span class="fc" id="L65">        Arguments.checkNotNull(options, &quot;FluxConnectionOptions&quot;);</span>
 
-<span class="fc" id="L68">        return new FluxClientImpl(options);</span>
+<span class="fc" id="L67">        return new FluxClientImpl(options);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

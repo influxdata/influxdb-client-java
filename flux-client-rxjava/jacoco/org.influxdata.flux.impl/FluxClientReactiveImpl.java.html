@@ -105,34 +105,34 @@ public class FluxClientReactiveImpl extends AbstractFluxClient&lt;FluxServiceRea
 
     @Nonnull
     @Override
-    public Flowable&lt;String&gt; raw(@Nonnull final String query) {
+    public Flowable&lt;String&gt; queryRaw(@Nonnull final String query) {
 
 <span class="fc" id="L110">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
 
-<span class="fc" id="L112">        return raw(query, null);</span>
+<span class="fc" id="L112">        return queryRaw(query, null);</span>
     }
 
     @Nonnull
     @Override
-    public Flowable&lt;String&gt; raw(@Nonnull final Publisher&lt;String&gt; queryStream) {
+    public Flowable&lt;String&gt; queryRaw(@Nonnull final Publisher&lt;String&gt; queryStream) {
 
 <span class="fc" id="L119">        Arguments.checkNotNull(queryStream, &quot;Flux query stream&quot;);</span>
 
-<span class="fc" id="L121">        return raw(queryStream, null);</span>
+<span class="fc" id="L121">        return queryRaw(queryStream, null);</span>
     }
 
     @Nonnull
     @Override
-    public Flowable&lt;String&gt; raw(@Nonnull final String query, @Nullable final String dialect) {
+    public Flowable&lt;String&gt; queryRaw(@Nonnull final String query, @Nullable final String dialect) {
 
 <span class="fc" id="L128">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
 
-<span class="fc" id="L130">        return raw(Flowable.just(query), dialect);</span>
+<span class="fc" id="L130">        return queryRaw(Flowable.just(query), dialect);</span>
     }
 
     @Nonnull
     @Override
-    public Flowable&lt;String&gt; raw(@Nonnull final Publisher&lt;String&gt; queryStream, @Nullable final String dialect) {
+    public Flowable&lt;String&gt; queryRaw(@Nonnull final Publisher&lt;String&gt; queryStream, @Nullable final String dialect) {
 
 <span class="fc" id="L137">        Arguments.checkNotNull(queryStream, &quot;Flux query stream&quot;);</span>
 
