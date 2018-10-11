@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 /**
- * This class represents table structure of Flux CSV Response.
+ * This class represents the table structure of the Flux CSV Response.
  *
  * <a href="http://bit.ly/flux-spec#table">Specification</a>.
  */

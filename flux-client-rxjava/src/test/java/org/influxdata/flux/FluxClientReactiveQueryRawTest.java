@@ -39,7 +39,7 @@ class FluxClientReactiveQueryRawTest extends AbstractFluxClientReactiveTest {
 
         mockServer.enqueue(createResponse());
 
-        Flowable<String> result = fluxClient.raw("from(bucket:\"telegraf\")");
+        Flowable<String> result = fluxClient.queryRaw("from(bucket:\"telegraf\")");
 
         assertResult(result);
     }
@@ -49,7 +49,7 @@ class FluxClientReactiveQueryRawTest extends AbstractFluxClientReactiveTest {
 
         mockServer.enqueue(createResponse());
 
-        Flowable<String> result = fluxClient.raw(Flowable.just("from(bucket:\"telegraf\")"));
+        Flowable<String> result = fluxClient.queryRaw(Flowable.just("from(bucket:\"telegraf\")"));
 
         assertResult(result);
     }

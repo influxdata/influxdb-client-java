@@ -24,8 +24,7 @@ package org.influxdata.platform;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.option.WriteOptions;
-
-import okhttp3.logging.HttpLoggingInterceptor;
+import org.influxdata.platform.rest.LogLevel;
 
 /**
  * The client of the InfluxData Platform for Time Series that implements HTTP API defined by
@@ -109,10 +108,10 @@ public interface PlatformClient extends AutoCloseable {
     UserClient createUserClient();
 
     /**
-     * @return the {@link HttpLoggingInterceptor.Level} that is used for logging requests and responses
+     * @return the {@link LogLevel} that is used for logging requests and responses
      */
     @Nonnull
-    HttpLoggingInterceptor.Level getLogLevel();
+    LogLevel getLogLevel();
 
     /**
      * Set the log level for the request and response information.
@@ -121,5 +120,5 @@ public interface PlatformClient extends AutoCloseable {
      * @return the PlatformClient instance to be able to use it in a fluent manner.
      */
     @Nonnull
-    PlatformClient setLogLevel(@Nonnull final HttpLoggingInterceptor.Level logLevel);
+    PlatformClient setLogLevel(@Nonnull final LogLevel logLevel);
 }

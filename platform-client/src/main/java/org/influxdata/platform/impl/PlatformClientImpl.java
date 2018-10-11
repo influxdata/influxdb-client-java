@@ -36,7 +36,7 @@ import org.influxdata.platform.WriteClient;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.option.WriteOptions;
 
-import okhttp3.logging.HttpLoggingInterceptor;
+import org.influxdata.platform.rest.LogLevel;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/10/2018 09:36)
@@ -103,13 +103,13 @@ public class PlatformClientImpl implements PlatformClient {
 
     @Nonnull
     @Override
-    public HttpLoggingInterceptor.Level getLogLevel() {
+    public LogLevel getLogLevel() {
         throw new TodoException();
     }
 
     @Nonnull
     @Override
-    public PlatformClient setLogLevel(@Nonnull final HttpLoggingInterceptor.Level logLevel) {
+    public PlatformClient setLogLevel(@Nonnull final LogLevel logLevel) {
         throw new TodoException();
     }
 

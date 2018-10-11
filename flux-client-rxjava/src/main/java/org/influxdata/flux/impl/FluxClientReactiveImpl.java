@@ -105,34 +105,34 @@ public class FluxClientReactiveImpl extends AbstractFluxClient<FluxServiceReacti
 
     @Nonnull
     @Override
-    public Flowable<String> raw(@Nonnull final String query) {
+    public Flowable<String> queryRaw(@Nonnull final String query) {
 
         Arguments.checkNonEmpty(query, "Flux query");
 
-        return raw(query, null);
+        return queryRaw(query, null);
     }
 
     @Nonnull
     @Override
-    public Flowable<String> raw(@Nonnull final Publisher<String> queryStream) {
+    public Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream) {
 
         Arguments.checkNotNull(queryStream, "Flux query stream");
 
-        return raw(queryStream, null);
+        return queryRaw(queryStream, null);
     }
 
     @Nonnull
     @Override
-    public Flowable<String> raw(@Nonnull final String query, @Nullable final String dialect) {
+    public Flowable<String> queryRaw(@Nonnull final String query, @Nullable final String dialect) {
 
         Arguments.checkNonEmpty(query, "Flux query");
 
-        return raw(Flowable.just(query), dialect);
+        return queryRaw(Flowable.just(query), dialect);
     }
 
     @Nonnull
     @Override
-    public Flowable<String> raw(@Nonnull final Publisher<String> queryStream, @Nullable final String dialect) {
+    public Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream, @Nullable final String dialect) {
 
         Arguments.checkNotNull(queryStream, "Flux query stream");
 

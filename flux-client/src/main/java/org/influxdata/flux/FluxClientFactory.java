@@ -28,7 +28,7 @@ import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
 
 /**
- * The Factory that create a instance of a Flux client.
+ * The Factory that creates a instance of a Flux client.
  *
  * @author Jakub Bednar (bednar@github) (31/07/2018 13:11)
  */
@@ -40,16 +40,15 @@ public final class FluxClientFactory {
     /**
      * Create a instance of the Flux client.
      *
-     * @param url the url to connect to InfluxDB.
+     * @param connectionString the connectionString to connect to InfluxDB.
      * @return client
      * @see FluxConnectionOptions.Builder#url(String)
      */
     @Nonnull
-    public static FluxClient create(@Nonnull final String url) {
+    public static FluxClient create(@Nonnull final String connectionString) {
 
-        FluxConnectionOptions options = FluxConnectionOptions.builder()
-                .url(url)
-                .build();
+        FluxConnectionOptions options = FluxConnectionOptions.builder(connectionString)
+        .build();
 
         return create(options);
     }

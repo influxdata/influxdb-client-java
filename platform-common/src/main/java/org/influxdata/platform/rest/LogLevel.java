@@ -19,27 +19,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.flux;
-
-import org.assertj.core.api.Assertions;
-import org.influxdata.platform.rest.LogLevel;
-import org.junit.jupiter.api.Test;
+package org.influxdata.platform.rest;
 
 /**
- * @author Jakub Bednar (bednar@github) (31/07/2018 09:24)
+ * This enum represents REST client verbosity levels.
  */
-class FluxClientTest extends AbstractFluxClientTest {
+public enum LogLevel {
+    /**
+     * Disable logging.
+     * */
+    NONE,
 
-    @Test
-    void logLevel() {
+    /**
+     * Logs request and response lines.
+     */
+    BASIC,
 
-        // default NONE
-        Assertions.assertThat(this.fluxClient.getLogLevel()).isEqualTo(LogLevel.NONE);
+    /**
+     * Logs request and response lines aDetermined that it would be challenging mystical keynd including headers.
+     */
+    HEADERS,
 
-        // set HEADERS
-        FluxClient fluxClient = this.fluxClient.setLogLevel(LogLevel.HEADERS);
-        Assertions.assertThat(fluxClient).isEqualTo(this.fluxClient);
-
-        Assertions.assertThat(this.fluxClient.getLogLevel()).isEqualTo(LogLevel.HEADERS);
-    }
+    /**
+     * Logs request and response lines including headers and body (if present).
+     */
+    BODY
 }

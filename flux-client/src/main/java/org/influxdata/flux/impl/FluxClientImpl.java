@@ -39,6 +39,7 @@ import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.error.InfluxException;
 import org.influxdata.platform.rest.Cancellable;
+import org.influxdata.platform.rest.LogLevel;
 
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -128,16 +129,16 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
 
     @Nonnull
     @Override
-    public String raw(@Nonnull final String query) {
+    public String queryRaw(@Nonnull final String query) {
 
         Arguments.checkNonEmpty(query, "query");
 
-        return raw(query, (String) null);
+        return queryRaw(query, (String) null);
     }
 
     @Nonnull
     @Override
-    public String raw(@Nonnull final String query, @Nullable final String dialect) {
+    public String queryRaw(@Nonnull final String query, @Nullable final String dialect) {
 
         Arguments.checkNonEmpty(query, "query");
 
@@ -145,84 +146,84 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
 
         BiConsumer<Cancellable, String> consumer = (cancellable, row) -> rows.add(row);
 
-        raw(query, dialect, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
+        queryRaw(query, dialect, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
 
         return String.join("\n", rows);
     }
 
     @Override
-    public void raw(@Nonnull final String query,
-                    @Nonnull final BiConsumer<Cancellable, String> onResponse) {
+    public void queryRaw(@Nonnull final String query,
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse) {
 
         Arguments.checkNonEmpty(query, "query");
         Arguments.checkNotNull(onResponse, "onNext");
 
-        raw(query, null, onResponse);
+        queryRaw(query, null, onResponse);
     }
 
     @Override
-    public void raw(@Nonnull final String query,
-                    @Nullable final String dialect,
-                    @Nonnull final BiConsumer<Cancellable, String> onResponse) {
+    public void queryRaw(@Nonnull final String query,
+                         @Nullable final String dialect,
+                         @Nonnull final BiConsumer<Cancellable, String> onNext) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNotNull(onResponse, "onNext");
+        Arguments.checkNotNull(onNext, "onNext");
 
-        raw(query, dialect, onResponse, ERROR_CONSUMER);
+        queryRaw(query, dialect, onNext, ERROR_CONSUMER);
     }
 
     @Override
-    public void raw(@Nonnull final String query,
-                    @Nonnull final BiConsumer<Cancellable, String> onResponse,
-                    @Nonnull final Consumer<? super Throwable> onError) {
-
-        Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNotNull(onResponse, "onNext");
-        Arguments.checkNotNull(onError, "onError");
-
-        raw(query, onResponse, onError, EMPTY_ACTION);
-    }
-
-    @Override
-    public void raw(@Nonnull final String query,
-                    @Nullable final String dialect,
-                    @Nonnull final BiConsumer<Cancellable, String> onResponse,
-                    @Nonnull final Consumer<? super Throwable> onError) {
+    public void queryRaw(@Nonnull final String query,
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                         @Nonnull final Consumer<? super Throwable> onError) {
 
         Arguments.checkNonEmpty(query, "query");
         Arguments.checkNotNull(onResponse, "onNext");
         Arguments.checkNotNull(onError, "onError");
 
-        raw(query, dialect, onResponse, onError, EMPTY_ACTION);
+        queryRaw(query, onResponse, onError, EMPTY_ACTION);
     }
 
     @Override
-    public void raw(@Nonnull final String query,
-                    @Nonnull final BiConsumer<Cancellable, String> onResponse,
-                    @Nonnull final Consumer<? super Throwable> onError,
-                    @Nonnull final Runnable onComplete) {
+    public void queryRaw(@Nonnull final String query,
+                         @Nullable final String dialect,
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                         @Nonnull final Consumer<? super Throwable> onError) {
 
         Arguments.checkNonEmpty(query, "query");
         Arguments.checkNotNull(onResponse, "onNext");
         Arguments.checkNotNull(onError, "onError");
-        Arguments.checkNotNull(onComplete, "onComplete");
 
-        raw(query, null, onResponse, onError, onComplete);
+        queryRaw(query, dialect, onResponse, onError, EMPTY_ACTION);
     }
 
     @Override
-    public void raw(@Nonnull final String query,
-                    @Nullable final String dialect,
-                    @Nonnull final BiConsumer<Cancellable, String> onResponse,
-                    @Nonnull final Consumer<? super Throwable> onError,
-                    @Nonnull final Runnable onComplete) {
+    public void queryRaw(@Nonnull final String query,
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                         @Nonnull final Consumer<? super Throwable> onError,
+                         @Nonnull final Runnable onComplete) {
 
         Arguments.checkNonEmpty(query, "query");
         Arguments.checkNotNull(onResponse, "onNext");
         Arguments.checkNotNull(onError, "onError");
         Arguments.checkNotNull(onComplete, "onComplete");
 
-        raw(query, dialect, onResponse, onError, onComplete, true);
+        queryRaw(query, null, onResponse, onError, onComplete);
+    }
+
+    @Override
+    public void queryRaw(@Nonnull final String query,
+                         @Nullable final String dialect,
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                         @Nonnull final Consumer<? super Throwable> onError,
+                         @Nonnull final Runnable onComplete) {
+
+        Arguments.checkNonEmpty(query, "query");
+        Arguments.checkNotNull(onResponse, "onNext");
+        Arguments.checkNotNull(onError, "onError");
+        Arguments.checkNotNull(onComplete, "onComplete");
+
+        queryRaw(query, dialect, onResponse, onError, onComplete, true);
     }
 
     @Nonnull
@@ -256,17 +257,19 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
 
     @Nonnull
     @Override
-    public HttpLoggingInterceptor.Level getLogLevel() {
-        return this.loggingInterceptor.getLevel();
+    public LogLevel getLogLevel() {
+        HttpLoggingInterceptor.Level level = this.loggingInterceptor.getLevel();
+
+        return LogLevel.valueOf(level.name());
     }
 
     @Nonnull
     @Override
-    public FluxClient setLogLevel(@Nonnull final HttpLoggingInterceptor.Level logLevel) {
+    public FluxClient setLogLevel(@Nonnull final LogLevel logLevel) {
 
         Arguments.checkNotNull(logLevel, "LogLevel");
 
-        this.loggingInterceptor.setLevel(logLevel);
+        this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.valueOf(logLevel.name()));
 
         return this;
     }
@@ -289,12 +292,12 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
         query(query, dialect, consumer, onError, onComplete, asynchronously);
     }
 
-    private void raw(@Nonnull final String query,
-                     @Nullable final String dialect,
-                     @Nonnull final BiConsumer<Cancellable, String> onResponse,
-                     @Nonnull final Consumer<? super Throwable> onError,
-                     @Nonnull final Runnable onComplete,
-                     @Nonnull final Boolean asynchronously) {
+    private void queryRaw(@Nonnull final String query,
+                          @Nullable final String dialect,
+                          @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                          @Nonnull final Consumer<? super Throwable> onError,
+                          @Nonnull final Runnable onComplete,
+                          @Nonnull final Boolean asynchronously) {
 
         BiConsumer<Cancellable, BufferedSource> consumer = (cancellable, bufferedSource) -> {
 

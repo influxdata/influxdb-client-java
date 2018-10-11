@@ -197,8 +197,8 @@
                     </mapping>
                     <useDefaultExcludes>false</useDefaultExcludes>
                     <includes>**, **/META-INF/services/**</includes>
-                    <excludes>**/target/**, **/*.jar, **/.git/**, **/.*, **/*.png, *.iml, **/*.bolt, .idea/**,
-                        **/*nightly*/**, **/.m2/**, LICENSE, **/*.md, **/PLACEHOLDER
+                    <excludes>**/target/**, **/*.jar, **/.git/**, **/.*, **/*.png, **/*.iml, **/*.bolt, .idea/**,
+                        **/*nightly*/**, **/.m2/**, LICENSE, **/*.md, **/PLACEHOLDER, **/.influxdb/**
                     </excludes>
                     <properties>
                         <organizationName>${project.organization.name}</organizationName>

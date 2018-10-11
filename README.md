@@ -105,5 +105,43 @@ Or when using Gradle:
 dependencies {
     compile "org.influxdata:flux-client:1.0.0-SNAPSHOT"
 }
+```
 
+### Build Requirements
+
+* Java 1.8+ (tested with jdk8)
+* Maven 3.0+ (tested with maven 3.5.0)
+* Docker daemon running
+* Latest Platform and InfluxDB docker instances can be started using `./config/platform-restart.sh` script
+
+
+Now you can build influxdata-platform-java with all tests with:
+
+
+```bash
+$ mvn clean install
+```
+
+If you don't have Docker running locally, you can skip tests with -DskipTests flag set to true:
+
+```bash
+$ mvn clean install -DskipTests=true
+```
+
+If you have Docker running, but it is not at localhost (e.g. you are on a Mac and using `docker-machine`) you can set an optional environments to point to the correct IP addresses and ports:
+
+- `INFLUXDB_IP`
+- `INFLUXDB_PORT_API`
+- `FLUX_IP`
+- `FLUX_PORT_API`
+
+```bash
+$ export INFLUXDB_IP=192.168.99.100
+$ mvn test
+```
+
+For convenience we provide a small shell script which starts a InfluxDB and Flux server inside Docker containers and executes `mvn clean install` with all tests locally.
+
+```bash
+$ ./config/compile-and-test.sh
 ```

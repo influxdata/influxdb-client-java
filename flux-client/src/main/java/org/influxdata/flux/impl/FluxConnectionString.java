@@ -19,27 +19,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.flux;
-
-import org.assertj.core.api.Assertions;
-import org.influxdata.platform.rest.LogLevel;
-import org.junit.jupiter.api.Test;
+package org.influxdata.flux.impl;
 
 /**
- * @author Jakub Bednar (bednar@github) (31/07/2018 09:24)
+ * <p>Represents a connection string, that describes the hosts and connection attributes.</p>
+ *
+ *  <p>The format of the Connection String is:</p>
+ *  http[s]://[username:password@]host[:port][?options]]
+ *
+ *  Connection parameters are encoded into URL.
+ *
  */
-class FluxClientTest extends AbstractFluxClientTest {
+public class FluxConnectionString {
 
-    @Test
-    void logLevel() {
+  //TODO
+  public FluxConnectionString(final String connectionString) {
 
-        // default NONE
-        Assertions.assertThat(this.fluxClient.getLogLevel()).isEqualTo(LogLevel.NONE);
+  }
 
-        // set HEADERS
-        FluxClient fluxClient = this.fluxClient.setLogLevel(LogLevel.HEADERS);
-        Assertions.assertThat(fluxClient).isEqualTo(this.fluxClient);
-
-        Assertions.assertThat(this.fluxClient.getLogLevel()).isEqualTo(LogLevel.HEADERS);
-    }
 }

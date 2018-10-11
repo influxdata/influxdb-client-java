@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.influxdata.flux.impl.FluxConnectionString;
 import org.influxdata.platform.Arguments;
 
 import okhttp3.OkHttpClient;
@@ -56,6 +57,15 @@ public final class FluxConnectionOptions {
     @Nonnull
     public static FluxConnectionOptions.Builder builder() {
         return new FluxConnectionOptions.Builder();
+    }
+
+    public static Builder builder(final String connectionString) {
+        Builder builder = new Builder();
+        builder.url(connectionString);
+
+        //todo connection string parsing
+        FluxConnectionString fluxConnectionString = new FluxConnectionString(connectionString);
+        return builder;
     }
 
     /**

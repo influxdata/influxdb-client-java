@@ -30,18 +30,20 @@ import javax.annotation.Nullable;
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
 import org.influxdata.platform.rest.Cancellable;
-
-import okhttp3.logging.HttpLoggingInterceptor;
+import org.influxdata.platform.rest.LogLevel;
 
 /**
- * The client that allow perform Flux Query against the InfluxDB.
+ * The client that allows perform Flux queries against the InfluxDB /v2/query endpoint.
  *
  * @author Jakub Bednar (bednar@github) (01/10/2018 12:17)
  */
 public interface FluxClient {
 
     /**
-     * Execute a Flux query against the InfluxDB and synchronously map whole response to {@link FluxTable}s.
+     * Executes the Flux query against the InfluxDB and synchronously map whole response to {@code List<FluxTable>}.
+     *
+     * NOTE: This method is not intended for large query results.
+     * Use {@link FluxClient#query(String, BiConsumer, Consumer, Runnable)} for large data streaming.
      *
      * @param query the flux query to execute
      * @return {@code List<FluxTable>} which are matched the query
@@ -50,38 +52,35 @@ public interface FluxClient {
     List<FluxTable> query(@Nonnull final String query);
 
     /**
-     * Execute a Flux query against the InfluxDB and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * @param query  the flux query to execute
-     * @param onNext callback to consume result which are matched the query
-     *               with capability to discontinue a streaming query
+     * @param onNext the callback to consume the FluxRecord result with capability to discontinue a streaming query
      */
     void query(@Nonnull final String query,
                @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext);
 
     /**
-     * Execute a Flux query against the InfluxDB and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * @param query   the flux query to execute
-     * @param onNext  callback to consume result which are matched the query
-     *                with capability to discontinue a streaming query
-     * @param onError callback to consume any error notification
+     * @param onNext the callback to consume FluxRecord result with capability to discontinue a streaming query
+     * @param onError the callback to consume any error notification
      */
     void query(@Nonnull final String query,
                @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
                @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Execute a Flux query against the InfluxDB and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * @param query      the flux query to execute
-     * @param onNext     callback to consume result which are matched the query
-     *                   with capability to discontinue a streaming query
-     * @param onError    callback to consume any error notification
-     * @param onComplete callback to consume a notification about successfully end of stream
+     * @param onNext     the callback to consume FluxRecord result with capability to discontinue a streaming query
+     * @param onError    the callback to consume any error notification
+     * @param onComplete the callback to consume a notification about successfully end of stream
      */
     void query(@Nonnull final String query,
                @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
@@ -89,16 +88,22 @@ public interface FluxClient {
                @Nonnull final Runnable onComplete);
 
     /**
-     * Execute a Flux query against the InfluxDB and synchronously map whole response to {@link String} result.
+     * Executes the Flux query against the InfluxDB and synchronously map whole response to {@link String} result.
+     *
+     * NOTE: This method is not intended for large responses, that do not fit into memory.
+     * Use {@link FluxClient#queryRaw(String, BiConsumer, Consumer, Runnable)} for large data streaming.
      *
      * @param query the flux query to execute
      * @return the raw response that matched the query
      */
     @Nonnull
-    String raw(@Nonnull final String query);
+    String queryRaw(@Nonnull final String query);
 
     /**
-     * Execute a Flux query against the InfluxDB and synchronously map whole response to {@link String} result.
+     * Executes the Flux query against the InfluxDB and synchronously map whole response to {@link String} result.
+     *
+     * NOTE: This method is not intended for large responses, that do not fit into memory.
+     * Use {@link FluxClient#queryRaw(String, String, BiConsumer, Consumer, Runnable)} for large data streaming.
      *
      * @param query   the flux query to execute
      * @param dialect Dialect is an object defining the options to use when encoding the response.
@@ -106,95 +111,97 @@ public interface FluxClient {
      * @return the raw response that matched the query
      */
     @Nonnull
-    String raw(@Nonnull final String query, @Nullable final String dialect);
+    String queryRaw(@Nonnull final String query, @Nullable final String dialect);
 
     /**
-     * Execute a Flux query against the InfluxDB and asynchronously stream response
+     * Executes the Flux query against the InfluxDB and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
-     * @param onResponse callback to consume the raw response which are matched the query.
-     *                   The callback call contains the one line of the response.
+     * @param onResponse callback to consume the response line by line with capability to discontinue a streaming query
      */
-    void raw(@Nonnull final String query,
-             @Nonnull final BiConsumer<Cancellable, String> onResponse);
+    void queryRaw(@Nonnull final String query,
+                  @Nonnull final BiConsumer<Cancellable, String> onResponse);
 
     /**
-     * Execute a Flux query against the InfluxDB and asynchronously stream response
+     * Executes the Flux query against the InfluxDB and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
      * @param dialect    Dialect is an object defining the options to use when encoding the response.
      *                   <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
-     * @param onResponse callback to consume the raw response which are matched the query.
-     *                   The callback call contains the one line of the response.
+     * @param onResponse  the callback to consume the response line by line
+     *                    with capability to discontinue a streaming query
      */
-    void raw(@Nonnull final String query,
-             @Nullable final String dialect,
-             @Nonnull final BiConsumer<Cancellable, String> onResponse);
+    void queryRaw(@Nonnull final String query,
+                  @Nullable final String dialect,
+                  @Nonnull final BiConsumer<Cancellable, String> onResponse);
 
     /**
-     * Execute a Flux query against the InfluxDB and asynchronously stream response
+     * Executes the Flux query against the InfluxDB and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
-     * @param onResponse callback to consume the raw response which are matched the query.
-     *                   The callback call contains the one line of the response.
+     * @param onResponse the callback to consume the response line by line
+     *                   with capability to discontinue a streaming query
      * @param onError    callback to consume any error notification
      */
-    void raw(@Nonnull final String query,
-             @Nonnull final BiConsumer<Cancellable, String> onResponse,
-             @Nonnull final Consumer<? super Throwable> onError);
+    void queryRaw(@Nonnull final String query,
+                  @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                  @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Execute a Flux query against the InfluxDB and asynchronously stream response
+     * Executes the Flux query against the InfluxDB and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
      * @param dialect    Dialect is an object defining the options to use when encoding the response.
      *                   <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
-     * @param onResponse callback to consume the raw response which are matched the query.
-     *                   The callback call contains the one line of the response.
+     * @param onResponse the callback to consume the response line by line
+     *                   with capability to discontinue a streaming query
+     *
      * @param onError    callback to consume any error notification
      */
-    void raw(@Nonnull final String query,
-             @Nullable final String dialect,
-             @Nonnull final BiConsumer<Cancellable, String> onResponse,
-             @Nonnull final Consumer<? super Throwable> onError);
+    void queryRaw(@Nonnull final String query,
+                  @Nullable final String dialect,
+                  @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                  @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Execute a Flux query against the InfluxDB and asynchronously stream response
+     * Executes the Flux query against the InfluxDB and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
-     * @param onResponse callback to consume the raw response which are matched the query.
+     * @param onResponse the callback to consume the response line by line
+     *                   with capability to discontinue a streaming query
+     *
+     * @param onError    callback to consume any error notification
+     * @param onComplete callback to consume a notification about successfully end of stream
+     */
+    void queryRaw(@Nonnull final String query,
+                  @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                  @Nonnull final Consumer<? super Throwable> onError,
+                  @Nonnull final Runnable onComplete);
+
+
+    /**
+     * Executes the Flux query against the InfluxDB and asynchronously stream response
+     * (line by line) to {@code onResponse}.
+     *
+     * @param query      the flux query to execute
+     * @param dialect    Dialect is an object defining the options to use when encoding the response.
+     *                   <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
+     * @param onResponse the callback to consume the response line by line
+     *                   with capability to discontinue a streaming query
      *                   The callback call contains the one line of the response.
      * @param onError    callback to consume any error notification
      * @param onComplete callback to consume a notification about successfully end of stream
      */
-    void raw(@Nonnull final String query,
-             @Nonnull final BiConsumer<Cancellable, String> onResponse,
-             @Nonnull final Consumer<? super Throwable> onError,
-             @Nonnull final Runnable onComplete);
-
-
-    /**
-     * Execute a Flux query against the InfluxDB and asynchronously stream response
-     * (line by line) to {@code onResponse}.
-     *
-     * @param query      the flux query to execute
-     * @param dialect    Dialect is an object defining the options to use when encoding the response.
-     *                   <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
-     * @param onResponse callback to consume the raw response which are matched the query.
-     *                   The callback call contains the one line of the response.
-     * @param onError    callback to consume any error notification
-     * @param onComplete callback to consume a notification about successfully end of stream
-     */
-    void raw(@Nonnull final String query,
-             @Nullable final String dialect,
-             @Nonnull final BiConsumer<Cancellable, String> onResponse,
-             @Nonnull final Consumer<? super Throwable> onError,
-             @Nonnull final Runnable onComplete);
+    void queryRaw(@Nonnull final String query,
+                  @Nullable final String dialect,
+                  @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                  @Nonnull final Consumer<? super Throwable> onError,
+                  @Nonnull final Runnable onComplete);
 
     /**
      * Check the status of InfluxDB Server.
@@ -205,7 +212,7 @@ public interface FluxClient {
     Boolean ping();
 
     /**
-     * Return the version of the connected InfluxDB Server.
+     * Returns the version of the connected InfluxDB Server.
      *
      * @return the version String, otherwise unknown.
      */
@@ -213,19 +220,20 @@ public interface FluxClient {
     String version();
 
     /**
-     * The {@link HttpLoggingInterceptor.Level} that is used for logging requests and responses.
+     * Gets the {@link LogLevel} that is used for logging requests and responses.
      *
-     * @return the {@link HttpLoggingInterceptor.Level} that is used for logging requests and responses
+     * @return the {@link LogLevel} that is used for logging requests and responses
      */
     @Nonnull
-    HttpLoggingInterceptor.Level getLogLevel();
+    LogLevel getLogLevel();
 
     /**
-     * Set the log level for the request and response information.
+     * Sets the log level for the request and response information.
      *
      * @param logLevel the log level to set.
+     *
      * @return the FluxClient instance to be able to use it in a fluent manner.
      */
     @Nonnull
-    FluxClient setLogLevel(@Nonnull final HttpLoggingInterceptor.Level logLevel);
+    FluxClient setLogLevel(@Nonnull final LogLevel logLevel);
 }

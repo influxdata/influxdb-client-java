@@ -29,6 +29,7 @@ import org.influxdata.platform.option.WriteOptions;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert;
+import org.influxdata.platform.rest.LogLevel;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -85,7 +86,7 @@ class PlatformClientTest extends AbstractPlatformClientTest {
     void logLevel() {
 
         todo(platformClient::getLogLevel);
-        todo(() -> platformClient.setLogLevel(HttpLoggingInterceptor.Level.BODY));
+        todo(() -> platformClient.setLogLevel(LogLevel.BODY));
     }
 
     @Test
