@@ -40,6 +40,23 @@ public final class PlatformClientFactory {
      * Create a instance of the Platform client.
      *
      * @param url      the url to connect to the Platform
+     * @return client
+     * @see PlatformOptions.Builder#url(String)
+     */
+    @Nonnull
+    public static PlatformClient create(@Nonnull final String url) {
+
+<span class="fc" id="L49">        PlatformOptions options = PlatformOptions.builder()</span>
+<span class="fc" id="L50">                .url(url)</span>
+<span class="fc" id="L51">                .build();</span>
+
+<span class="fc" id="L53">        return create(options);</span>
+    }
+
+    /**
+     * Create a instance of the Platform client.
+     *
+     * @param url      the url to connect to the Platform
      * @param username the username to use in the basic auth
      * @param password the password to use in the basic auth
      * @return client
@@ -50,12 +67,12 @@ public final class PlatformClientFactory {
                                         @Nonnull final String username,
                                         @Nonnull final char[] password) {
 
-<span class="fc" id="L53">        PlatformOptions options = PlatformOptions.builder()</span>
-<span class="fc" id="L54">                .url(url)</span>
-<span class="fc" id="L55">                .authenticate(username, password)</span>
-<span class="fc" id="L56">                .build();</span>
+<span class="fc" id="L70">        PlatformOptions options = PlatformOptions.builder()</span>
+<span class="fc" id="L71">                .url(url)</span>
+<span class="fc" id="L72">                .authenticate(username, password)</span>
+<span class="fc" id="L73">                .build();</span>
 
-<span class="fc" id="L58">        return create(options);</span>
+<span class="fc" id="L75">        return create(options);</span>
     }
 
     /**
@@ -70,12 +87,12 @@ public final class PlatformClientFactory {
     public static PlatformClient create(@Nonnull final String url,
                                         @Nonnull final char[] token) {
 
-<span class="fc" id="L73">        PlatformOptions options = PlatformOptions.builder()</span>
-<span class="fc" id="L74">                .url(url)</span>
-<span class="fc" id="L75">                .authenticateToken(token)</span>
-<span class="fc" id="L76">                .build();</span>
+<span class="fc" id="L90">        PlatformOptions options = PlatformOptions.builder()</span>
+<span class="fc" id="L91">                .url(url)</span>
+<span class="fc" id="L92">                .authenticateToken(token)</span>
+<span class="fc" id="L93">                .build();</span>
 
-<span class="fc" id="L78">        return create(options);</span>
+<span class="fc" id="L95">        return create(options);</span>
     }
 
     /**
@@ -87,9 +104,9 @@ public final class PlatformClientFactory {
     @Nonnull
     public static PlatformClient create(@Nonnull final PlatformOptions options) {
 
-<span class="fc" id="L90">        Arguments.checkNotNull(options, &quot;PlatformOptions&quot;);</span>
+<span class="fc" id="L107">        Arguments.checkNotNull(options, &quot;PlatformOptions&quot;);</span>
 
-<span class="fc" id="L92">        return new PlatformClientImpl(options);</span>
+<span class="fc" id="L109">        return new PlatformClientImpl(options);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

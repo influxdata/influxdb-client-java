@@ -21,12 +21,17 @@
  */
 package org.influxdata.platform.option;
 
+import java.io.IOException;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.influxdata.platform.Arguments;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * PlatformOptions are used to configure the InfluxData Platform connections.
@@ -39,29 +44,29 @@ public final class PlatformOptions {
     private final AuthScheme authScheme;
     private final OkHttpClient.Builder okHttpClient;
 
-<span class="fc" id="L42">    private PlatformOptions(@Nonnull final PlatformOptions.Builder builder) {</span>
+<span class="fc" id="L47">    private PlatformOptions(@Nonnull final PlatformOptions.Builder builder) {</span>
 
-<span class="fc" id="L44">        Arguments.checkNotNull(builder, &quot;PlatformOptions.Builder&quot;);</span>
+<span class="fc" id="L49">        Arguments.checkNotNull(builder, &quot;PlatformOptions.Builder&quot;);</span>
 
-<span class="fc" id="L46">        this.url = builder.url;</span>
-<span class="fc" id="L47">        this.authScheme = builder.authScheme;</span>
-<span class="fc" id="L48">        this.okHttpClient = builder.okHttpClient;</span>
-<span class="fc" id="L49">    }</span>
+<span class="fc" id="L51">        this.url = builder.url;</span>
+<span class="fc" id="L52">        this.authScheme = builder.authScheme;</span>
+<span class="fc" id="L53">        this.okHttpClient = builder.okHttpClient;</span>
+<span class="fc" id="L54">    }</span>
 
     /**
      * The scheme uses to Authentication.
      */
-<span class="fc" id="L54">    public enum AuthScheme {</span>
+<span class="fc" id="L59">    public enum AuthScheme {</span>
 
         /**
          * Basic auth.
          */
-<span class="fc" id="L59">        SESSION,</span>
+<span class="fc" id="L64">        SESSION,</span>
 
         /**
          * Authentication token.
          */
-<span class="fc" id="L64">        TOKEN</span>
+<span class="fc" id="L69">        TOKEN</span>
     }
 
     /**
@@ -70,7 +75,7 @@ public final class PlatformOptions {
      */
     @Nonnull
     public String getUrl() {
-<span class="fc" id="L73">        return url;</span>
+<span class="fc" id="L78">        return url;</span>
     }
 
     /**
@@ -80,16 +85,16 @@ public final class PlatformOptions {
      */
     @Nonnull
     public AuthScheme getAuthScheme() {
-<span class="fc" id="L83">        return authScheme;</span>
+<span class="fc" id="L88">        return authScheme;</span>
     }
 
     /**
      * @return HTTP client to use for communication with Platform
-     * @see PlatformOptions.Builder#okHttpClient(OkHttpClient.Builder)
+     * @see PlatformOptions.Builder#okHttpClient(OkHttpClient.Builder, Boolean)
      */
     @Nonnull
     public OkHttpClient.Builder getOkHttpClient() {
-<span class="fc" id="L92">        return okHttpClient;</span>
+<span class="fc" id="L97">        return okHttpClient;</span>
     }
 
     /**
@@ -99,18 +104,21 @@ public final class PlatformOptions {
      */
     @Nonnull
     public static PlatformOptions.Builder builder() {
-<span class="fc" id="L102">        return new PlatformOptions.Builder();</span>
+<span class="fc" id="L107">        return new PlatformOptions.Builder();</span>
     }
 
     /**
      * A builder for {@code PlatformOptions}.
      */
     @NotThreadSafe
-<span class="fc" id="L109">    public static class Builder {</span>
+<span class="fc" id="L114">    public static class Builder {</span>
 
         private String url;
-<span class="fc" id="L112">        private OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();</span>
+        private OkHttpClient.Builder okHttpClient;
+
+        @Nullable
         private AuthScheme authScheme;
+        private char[] token;
 
         /**
          * Set the url to connect to Platform.
@@ -120,22 +128,31 @@ public final class PlatformOptions {
          */
         @Nonnull
         public PlatformOptions.Builder url(@Nonnull final String url) {
-<span class="fc" id="L123">            Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
-<span class="fc" id="L124">            this.url = url;</span>
-<span class="fc" id="L125">            return this;</span>
+<span class="fc" id="L131">            Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
+<span class="fc" id="L132">            this.url = url;</span>
+<span class="fc" id="L133">            return this;</span>
         }
 
         /**
          * Set the HTTP client to use for communication with Platform.
          *
          * @param okHttpClient the HTTP client to use.
+         * @param authenticate if {@link Boolean#TRUE} than the {@link OkHttpClient.Builder} uses
+         *                     the {@link AuthenticateInterceptor} for authentication of requests
          * @return {@code this}
          */
         @Nonnull
-        public PlatformOptions.Builder okHttpClient(@Nonnull final OkHttpClient.Builder okHttpClient) {
-<span class="fc" id="L136">            Arguments.checkNotNull(okHttpClient, &quot;OkHttpClient.Builder&quot;);</span>
-<span class="fc" id="L137">            this.okHttpClient = okHttpClient;</span>
-<span class="fc" id="L138">            return this;</span>
+        public PlatformOptions.Builder okHttpClient(@Nonnull final OkHttpClient.Builder okHttpClient,
+                                                    @Nonnull final Boolean authenticate) {
+
+<span class="fc" id="L148">            Arguments.checkNotNull(okHttpClient, &quot;OkHttpClient.Builder&quot;);</span>
+<span class="fc" id="L149">            Arguments.checkNotNull(authenticate, &quot;authenticate&quot;);</span>
+
+<span class="fc" id="L151">            this.okHttpClient = okHttpClient;</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">            if (authenticate) {</span>
+<span class="fc" id="L153">                this.okHttpClient.addInterceptor(new AuthenticateInterceptor());</span>
+            }
+<span class="fc" id="L155">            return this;</span>
         }
 
         /**
@@ -149,12 +166,12 @@ public final class PlatformOptions {
         public PlatformOptions.Builder authenticate(@Nonnull final String username,
                                                     @Nonnull final char[] password) {
 
-<span class="fc" id="L152">            Arguments.checkNonEmpty(username, &quot;username&quot;);</span>
-<span class="fc" id="L153">            Arguments.checkNotNull(password, &quot;password&quot;);</span>
+<span class="fc" id="L169">            Arguments.checkNonEmpty(username, &quot;username&quot;);</span>
+<span class="fc" id="L170">            Arguments.checkNotNull(password, &quot;password&quot;);</span>
 
-<span class="fc" id="L155">            this.authScheme = AuthScheme.SESSION;</span>
+<span class="fc" id="L172">            this.authScheme = AuthScheme.SESSION;</span>
 
-<span class="fc" id="L157">            return this;</span>
+<span class="fc" id="L174">            return this;</span>
         }
 
         /**
@@ -166,11 +183,12 @@ public final class PlatformOptions {
         @Nonnull
         public PlatformOptions.Builder authenticateToken(final char[] token) {
 
-<span class="fc" id="L169">            Arguments.checkNotNull(token, &quot;token&quot;);</span>
+<span class="fc" id="L186">            Arguments.checkNotNull(token, &quot;token&quot;);</span>
 
-<span class="fc" id="L171">            this.authScheme = AuthScheme.TOKEN;</span>
+<span class="fc" id="L188">            this.authScheme = AuthScheme.TOKEN;</span>
+<span class="fc" id="L189">            this.token = token;</span>
 
-<span class="fc" id="L173">            return this;</span>
+<span class="fc" id="L191">            return this;</span>
         }
 
         /**
@@ -181,17 +199,34 @@ public final class PlatformOptions {
         @Nonnull
         public PlatformOptions build() {
 
-<span class="fc bfc" id="L184" title="All 2 branches covered.">            if (url == null) {</span>
-<span class="fc" id="L185">                throw new IllegalStateException(&quot;The url to connect to Platform has to be defined.&quot;);</span>
+<span class="fc bfc" id="L202" title="All 2 branches covered.">            if (url == null) {</span>
+<span class="fc" id="L203">                throw new IllegalStateException(&quot;The url to connect to Platform has to be defined.&quot;);</span>
             }
 
-<span class="fc bfc" id="L188" title="All 2 branches covered.">            if (authScheme == null) {</span>
-<span class="fc" id="L189">                throw new IllegalStateException(&quot;The username, password or authenticate token has to be defined.&quot;);</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">            if (okHttpClient == null) {</span>
+<span class="fc" id="L207">                okHttpClient = new OkHttpClient.Builder().addInterceptor(new AuthenticateInterceptor());</span>
             }
 
-<span class="fc" id="L192">            return new PlatformOptions(this);</span>
+<span class="fc" id="L210">            return new PlatformOptions(this);</span>
+        }
+
+<span class="fc" id="L213">        private class AuthenticateInterceptor implements Interceptor {</span>
+
+            @Override
+            public Response intercept(@Nonnull final Chain chain) throws IOException {
+
+<span class="fc bfc" id="L218" title="All 2 branches covered.">                if (AuthScheme.TOKEN.equals(authScheme)) {</span>
+
+<span class="fc" id="L220">                    Request authorizedRequest = chain.request()</span>
+<span class="fc" id="L221">                            .newBuilder().header(&quot;Authorization&quot;, &quot;Token &quot; + String.valueOf(token))</span>
+<span class="fc" id="L222">                            .build();</span>
+
+<span class="fc" id="L224">                    return chain.proceed(authorizedRequest);</span>
+                }
+
+<span class="fc" id="L227">                return chain.proceed(chain.request());</span>
+            }
         }
     }
-
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -23,9 +23,10 @@ The Platform Client,org.influxdata.platform.domain,Sources,15,0,0,0,5,0,3,0,3,0
 The Platform Client,org.influxdata.platform.write,Point,0,364,1,33,0,89,1,35,0,19
 The Platform Client,org.influxdata.platform.impl,PlatformClientImpl,0,54,0,0,0,15,0,13,0,13
 The Platform Client,org.influxdata.platform.impl,TodoException,0,4,0,0,0,2,0,1,0,1
-The Platform Client,org.influxdata.platform,PlatformClientFactory,0,29,0,0,0,12,0,3,0,3
+The Platform Client,org.influxdata.platform,PlatformClientFactory,0,37,0,0,0,16,0,4,0,4
+The Platform Client,org.influxdata.platform.option,PlatformOptions.Builder.AuthenticateInterceptor,0,39,0,2,0,7,0,3,0,2
 The Platform Client,org.influxdata.platform.option,WriteOptions,0,72,0,0,0,21,0,11,0,11
 The Platform Client,org.influxdata.platform.option,PlatformOptions,0,31,0,0,0,10,0,5,0,5
 The Platform Client,org.influxdata.platform.option,WriteOptions.Builder,0,91,0,0,0,30,0,9,0,9
 The Platform Client,org.influxdata.platform.option,PlatformOptions.AuthScheme,0,24,0,0,0,3,0,1,0,1
-The Platform Client,org.influxdata.platform.option,PlatformOptions.Builder,0,67,0,4,0,20,0,8,0,6
+The Platform Client,org.influxdata.platform.option,PlatformOptions.Builder,0,86,0,6,0,23,0,9,0,6
