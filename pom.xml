@@ -171,6 +171,8 @@
                     <configLocation>config/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <linkXRef>false</linkXRef>
+
+                    <excludes>**/example/**</excludes>
                 </configuration>
                 <executions>
                     <execution>
