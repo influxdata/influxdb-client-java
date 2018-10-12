@@ -33,6 +33,14 @@ import org.junit.runner.RunWith;
 class PlatformClientFactoryTest {
 
     @Test
+    void createInstance() {
+
+        PlatformClient client = PlatformClientFactory.create("http://localhost:9999");
+
+        Assertions.assertThat(client).isNotNull();
+    }
+
+    @Test
     void createInstanceUsername() {
 
         PlatformClient client = PlatformClientFactory.create("http://localhost:9999", "user", "secret".toCharArray());

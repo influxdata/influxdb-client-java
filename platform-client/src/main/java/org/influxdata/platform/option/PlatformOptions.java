@@ -21,12 +21,17 @@
  */
 package org.influxdata.platform.option;
 
+import java.io.IOException;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.influxdata.platform.Arguments;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * PlatformOptions are used to configure the InfluxData Platform connections.
@@ -85,7 +90,7 @@ public final class PlatformOptions {
 
     /**
      * @return HTTP client to use for communication with Platform
-     * @see PlatformOptions.Builder#okHttpClient(OkHttpClient.Builder)
+     * @see PlatformOptions.Builder#okHttpClient(OkHttpClient.Builder, Boolean)
      */
     @Nonnull
     public OkHttpClient.Builder getOkHttpClient() {
@@ -109,8 +114,11 @@ public final class PlatformOptions {
     public static class Builder {
 
         private String url;
-        private OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
+        private OkHttpClient.Builder okHttpClient;
+
+        @Nullable
         private AuthScheme authScheme;
+        private char[] token;
 
         /**
          * Set the url to connect to Platform.
@@ -129,12 +137,21 @@ public final class PlatformOptions {
          * Set the HTTP client to use for communication with Platform.
          *
          * @param okHttpClient the HTTP client to use.
+         * @param authenticate if {@link Boolean#TRUE} than the {@link OkHttpClient.Builder} uses
+         *                     the {@link AuthenticateInterceptor} for authentication of requests
          * @return {@code this}
          */
         @Nonnull
-        public PlatformOptions.Builder okHttpClient(@Nonnull final OkHttpClient.Builder okHttpClient) {
+        public PlatformOptions.Builder okHttpClient(@Nonnull final OkHttpClient.Builder okHttpClient,
+                                                    @Nonnull final Boolean authenticate) {
+
             Arguments.checkNotNull(okHttpClient, "OkHttpClient.Builder");
+            Arguments.checkNotNull(authenticate, "authenticate");
+
             this.okHttpClient = okHttpClient;
+            if (authenticate) {
+                this.okHttpClient.addInterceptor(new AuthenticateInterceptor());
+            }
             return this;
         }
 
@@ -169,6 +186,7 @@ public final class PlatformOptions {
             Arguments.checkNotNull(token, "token");
 
             this.authScheme = AuthScheme.TOKEN;
+            this.token = token;
 
             return this;
         }
@@ -185,12 +203,29 @@ public final class PlatformOptions {
                 throw new IllegalStateException("The url to connect to Platform has to be defined.");
             }
 
-            if (authScheme == null) {
-                throw new IllegalStateException("The username, password or authenticate token has to be defined.");
+            if (okHttpClient == null) {
+                okHttpClient = new OkHttpClient.Builder().addInterceptor(new AuthenticateInterceptor());
             }
 
             return new PlatformOptions(this);
         }
-    }
 
+        private class AuthenticateInterceptor implements Interceptor {
+
+            @Override
+            public Response intercept(@Nonnull final Chain chain) throws IOException {
+
+                if (AuthScheme.TOKEN.equals(authScheme)) {
+
+                    Request authorizedRequest = chain.request()
+                            .newBuilder().header("Authorization", "Token " + String.valueOf(token))
+                            .build();
+
+                    return chain.proceed(authorizedRequest);
+                }
+
+                return chain.proceed(chain.request());
+            }
+        }
+    }
 }

@@ -40,6 +40,23 @@ public final class PlatformClientFactory {
      * Create a instance of the Platform client.
      *
      * @param url      the url to connect to the Platform
+     * @return client
+     * @see PlatformOptions.Builder#url(String)
+     */
+    @Nonnull
+    public static PlatformClient create(@Nonnull final String url) {
+
+        PlatformOptions options = PlatformOptions.builder()
+                .url(url)
+                .build();
+
+        return create(options);
+    }
+
+    /**
+     * Create a instance of the Platform client.
+     *
+     * @param url      the url to connect to the Platform
      * @param username the username to use in the basic auth
      * @param password the password to use in the basic auth
      * @return client
