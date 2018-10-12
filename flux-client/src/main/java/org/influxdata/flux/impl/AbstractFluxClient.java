@@ -66,6 +66,7 @@ class AbstractFluxClient<T> extends AbstractRestClient {
     final FluxCsvParser fluxCsvParser;
 
     final HttpLoggingInterceptor loggingInterceptor;
+    OkHttpClient okHttpClient;
 
     AbstractFluxClient(@Nonnull final FluxConnectionOptions options,
                        @Nonnull final Class<T> serviceType) {
@@ -78,7 +79,7 @@ class AbstractFluxClient<T> extends AbstractRestClient {
         this.loggingInterceptor = new HttpLoggingInterceptor();
         this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
 
-        OkHttpClient okHttpClient = options.getOkHttpClient()
+        okHttpClient = options.getOkHttpClient()
                 .addInterceptor(loggingInterceptor)
                 .build();
 
@@ -138,5 +139,14 @@ class AbstractFluxClient<T> extends AbstractRestClient {
             onResponse.accept(line);
             line = bufferedSource.readUtf8Line();
         }
+    }
+
+    /**
+     * Closes the client, initiates shutdown, no new running calls are accepted during shutdown.
+     */
+    public void close() {
+        okHttpClient.connectionPool().evictAll();
+        okHttpClient.dispatcher().executorService().shutdown();
+
     }
 }

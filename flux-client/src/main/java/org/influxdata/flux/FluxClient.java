@@ -41,7 +41,7 @@ public interface FluxClient {
 
     /**
      * Executes the Flux query against the InfluxDB and synchronously map whole response to {@code List<FluxTable>}.
-     *
+     * <p>
      * NOTE: This method is not intended for large query results.
      * Use {@link FluxClient#query(String, BiConsumer, Consumer, Runnable)} for large data streaming.
      *
@@ -66,7 +66,7 @@ public interface FluxClient {
      * to {@code onNext} consumer.
      *
      * @param query   the flux query to execute
-     * @param onNext the callback to consume FluxRecord result with capability to discontinue a streaming query
+     * @param onNext  the callback to consume FluxRecord result with capability to discontinue a streaming query
      * @param onError the callback to consume any error notification
      */
     void query(@Nonnull final String query,
@@ -87,9 +87,10 @@ public interface FluxClient {
                @Nonnull final Consumer<? super Throwable> onError,
                @Nonnull final Runnable onComplete);
 
+
     /**
      * Executes the Flux query against the InfluxDB and synchronously map whole response to {@link String} result.
-     *
+     * <p>
      * NOTE: This method is not intended for large responses, that do not fit into memory.
      * Use {@link FluxClient#queryRaw(String, BiConsumer, Consumer, Runnable)} for large data streaming.
      *
@@ -101,7 +102,7 @@ public interface FluxClient {
 
     /**
      * Executes the Flux query against the InfluxDB and synchronously map whole response to {@link String} result.
-     *
+     * <p>
      * NOTE: This method is not intended for large responses, that do not fit into memory.
      * Use {@link FluxClient#queryRaw(String, String, BiConsumer, Consumer, Runnable)} for large data streaming.
      *
@@ -130,8 +131,8 @@ public interface FluxClient {
      * @param query      the flux query to execute
      * @param dialect    Dialect is an object defining the options to use when encoding the response.
      *                   <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
-     * @param onResponse  the callback to consume the response line by line
-     *                    with capability to discontinue a streaming query
+     * @param onResponse the callback to consume the response line by line
+     *                   with capability to discontinue a streaming query
      */
     void queryRaw(@Nonnull final String query,
                   @Nullable final String dialect,
@@ -159,7 +160,6 @@ public interface FluxClient {
      *                   <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
      * @param onResponse the callback to consume the response line by line
      *                   with capability to discontinue a streaming query
-     *
      * @param onError    callback to consume any error notification
      */
     void queryRaw(@Nonnull final String query,
@@ -174,7 +174,6 @@ public interface FluxClient {
      * @param query      the flux query to execute
      * @param onResponse the callback to consume the response line by line
      *                   with capability to discontinue a streaming query
-     *
      * @param onError    callback to consume any error notification
      * @param onComplete callback to consume a notification about successfully end of stream
      */
@@ -231,9 +230,13 @@ public interface FluxClient {
      * Sets the log level for the request and response information.
      *
      * @param logLevel the log level to set.
-     *
      * @return the FluxClient instance to be able to use it in a fluent manner.
      */
     @Nonnull
     FluxClient setLogLevel(@Nonnull final LogLevel logLevel);
+
+    /**
+     * Shutdown and close the client.
+     */
+    void close();
 }

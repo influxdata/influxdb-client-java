@@ -53,6 +53,9 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
  */
 public class FluxClientReactiveImpl extends AbstractFluxClient<FluxServiceReactive> implements FluxClientReactive {
 
+    protected final FluxResultMapper mapper = new FluxResultMapper();
+
+
     public FluxClientReactiveImpl(@Nonnull final FluxConnectionOptions options) {
         super(options, FluxServiceReactive.class);
     }
@@ -71,7 +74,15 @@ public class FluxClientReactiveImpl extends AbstractFluxClient<FluxServiceReacti
         return query(Flowable.just(query));
     }
 
-    @Nonnull
+  @Override
+  public <M> Flowable<M> query(final @Nonnull String query, final @Nonnull Class<M> recordType) {
+
+    return query(query)
+        .map(fluxResults -> mapper.toPOJO(fluxResults, recordType));
+
+  }
+
+  @Nonnull
     @Override
     public Flowable<FluxRecord> query(@Nonnull final Publisher<String> queryStream) {
 

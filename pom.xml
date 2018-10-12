@@ -40,6 +40,7 @@
         <module>flux-dsl</module>
         <module>platform-client</module>
         <module>platform-client-rxjava</module>
+        <module>examples</module>
     </modules>
 
     <name>Java client for InfluxData Platform</name>
@@ -110,6 +111,7 @@
         <plugin.checkstyle.version>3.0.0</plugin.checkstyle.version>
         <plugin.jacoco.version>0.8.2</plugin.jacoco.version>
         <plugin.plugin.version>3.7.1</plugin.plugin.version>
+        <myproject.root>${basedir}</myproject.root>
     </properties>
 
     <dependencies>
