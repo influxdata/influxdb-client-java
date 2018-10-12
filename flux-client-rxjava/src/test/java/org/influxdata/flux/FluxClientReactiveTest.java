@@ -21,7 +21,8 @@
  */
 package org.influxdata.flux;
 
-import okhttp3.logging.HttpLoggingInterceptor;
+import org.influxdata.platform.rest.LogLevel;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -37,12 +38,12 @@ class FluxClientReactiveTest extends AbstractFluxClientReactiveTest {
     void logLevel() {
 
         // default NONE
-        Assertions.assertThat(this.fluxClient.getLogLevel()).isEqualTo(HttpLoggingInterceptor.Level.NONE);
+        Assertions.assertThat(this.fluxClient.getLogLevel()).isEqualTo(LogLevel.NONE);
 
         // set HEADERS
-        FluxClientReactive fluxClient = this.fluxClient.setLogLevel(HttpLoggingInterceptor.Level.HEADERS);
+        FluxClientReactive fluxClient = this.fluxClient.setLogLevel(LogLevel.HEADERS);
         Assertions.assertThat(fluxClient).isEqualTo(this.fluxClient);
 
-        Assertions.assertThat(this.fluxClient.getLogLevel()).isEqualTo(HttpLoggingInterceptor.Level.HEADERS);
+        Assertions.assertThat(this.fluxClient.getLogLevel()).isEqualTo(LogLevel.HEADERS);
     }
 }

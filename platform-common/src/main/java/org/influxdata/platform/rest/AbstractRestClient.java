@@ -22,10 +22,12 @@
 package org.influxdata.platform.rest;
 
 import java.io.EOFException;
+import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.error.InfluxException;
@@ -46,6 +48,8 @@ import org.influxdata.platform.error.rest.UnauthorizedException;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
 import retrofit2.Response;
 
 /**
@@ -62,6 +66,39 @@ public abstract class AbstractRestClient {
         Arguments.checkNonEmpty(content, "content");
 
         return RequestBody.create(CONTENT_TYPE_JSON, content);
+    }
+
+    protected <T> T execute(@Nonnull final Call<T> call) throws InfluxException {
+        return execute(call, null);
+    }
+
+    protected <T> T execute(@Nonnull final Call<T> call, @Nullable final String nullError) throws InfluxException {
+
+        Arguments.checkNotNull(call, "call");
+
+        try {
+            Response<T> response = call.execute();
+            if (response.isSuccessful()) {
+                return response.body();
+            } else {
+
+                String error = new InfluxException(response).getMessage();
+
+                //
+                // The error message signal not found on the server => return null
+                //
+                if (nullError != null && nullError.equals(error)) {
+
+                    LOG.log(Level.WARNING, "Error is considered as null response: {0}", error);
+
+                    return null;
+                }
+
+                throw new InfluxException(error);
+            }
+        } catch (IOException e) {
+            throw new InfluxException(e);
+        }
     }
 
     @Nonnull
@@ -123,5 +160,21 @@ public abstract class AbstractRestClient {
         Arguments.checkNotNull(exception, "exception");
 
         return exception instanceof EOFException;
+    }
+
+    protected void setLogLevel(@Nonnull final HttpLoggingInterceptor interceptor, @Nonnull final LogLevel logLevel) {
+
+        Arguments.checkNotNull(logLevel, "LogLevel");
+        Arguments.checkNotNull(interceptor, "HttpLogging interceptor");
+
+        interceptor.setLevel(HttpLoggingInterceptor.Level.valueOf(logLevel.name()));
+    }
+
+    @Nonnull
+    protected LogLevel getLogLevel(@Nonnull final HttpLoggingInterceptor interceptor) {
+
+        Arguments.checkNotNull(interceptor, "HttpLogging interceptor");
+
+        return LogLevel.valueOf(interceptor.getLevel().name());
     }
 }

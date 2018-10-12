@@ -21,6 +21,9 @@
  */
 package org.influxdata.platform.impl;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.Arguments;
@@ -35,16 +38,52 @@ import org.influxdata.platform.UserClient;
 import org.influxdata.platform.WriteClient;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.option.WriteOptions;
-
+import org.influxdata.platform.rest.AbstractRestClient;
 import org.influxdata.platform.rest.LogLevel;
+
+import com.squareup.moshi.Moshi;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.moshi.MoshiConverterFactory;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/10/2018 09:36)
  */
-public class PlatformClientImpl implements PlatformClient {
+public class PlatformClientImpl extends AbstractRestClient implements PlatformClient {
+
+    private static final Logger LOG = Logger.getLogger(PlatformClientImpl.class.getName());
+
+    private final Moshi moshi;
+    private final PlatformService platformService;
+
+    private final HttpLoggingInterceptor loggingInterceptor;
+    private final AuthenticateInterceptor authenticateInterceptor;
+
 
     public PlatformClientImpl(@Nonnull final PlatformOptions options) {
         Arguments.checkNotNull(options, "PlatformOptions");
+
+        this.loggingInterceptor = new HttpLoggingInterceptor();
+        this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+        this.authenticateInterceptor = new AuthenticateInterceptor(options);
+
+        OkHttpClient okHttpClient = options.getOkHttpClient()
+                .addInterceptor(this.loggingInterceptor)
+                .addInterceptor(this.authenticateInterceptor)
+                .build();
+
+        this.authenticateInterceptor.initToken(okHttpClient);
+
+        this.moshi = new Moshi.Builder().build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(options.getUrl())
+                .client(okHttpClient)
+                .addConverterFactory(MoshiConverterFactory.create(this.moshi).asLenient())
+                .build();
+
+        this.platformService = retrofit.create(PlatformService.class);
     }
 
     @Nonnull
@@ -98,23 +137,34 @@ public class PlatformClientImpl implements PlatformClient {
     @Nonnull
     @Override
     public UserClient createUserClient() {
-        throw new TodoException();
+        return new UserClientImpl(platformService, moshi);
     }
 
     @Nonnull
     @Override
     public LogLevel getLogLevel() {
-        throw new TodoException();
+        return getLogLevel(this.loggingInterceptor);
     }
 
     @Nonnull
     @Override
     public PlatformClient setLogLevel(@Nonnull final LogLevel logLevel) {
-        throw new TodoException();
+
+        setLogLevel(this.loggingInterceptor, logLevel);
+
+        return this;
     }
 
     @Override
     public void close() {
-        throw new TodoException();
+
+        //
+        // signout
+        //
+        try {
+            this.authenticateInterceptor.signout();
+        } catch (IOException e) {
+            LOG.log(Level.FINEST, "The signout exception", e);
+        }
     }
 }

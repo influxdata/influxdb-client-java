@@ -21,18 +21,45 @@
  */
 package org.influxdata.platform;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 /**
- * @author Jakub Bednar (bednar@github) (05/09/2018 12:29)
+ * @author Jakub Bednar (bednar@github) (11/09/2018 10:29)
  */
-public class AbstractPlatformClientTest extends AbstractMockServerTest {
+abstract class AbstractITClientTest {
 
-    PlatformClient platformClient;
+    private static final Logger LOG = Logger.getLogger(AbstractITClientTest.class.getName());
+
+    PlatformClient platformService;
 
     @BeforeEach
-    protected void setUp() {
+    void setUp() {
 
-        platformClient = PlatformClientFactory.create(startMockServer());
+        String platformIP = System.getenv().getOrDefault("PLATFORM_IP", "127.0.0.1");
+        String platformPort = System.getenv().getOrDefault("PLATFORM_PORT", "9999");
+
+        String platformURL = "http://" + platformIP + ":" + platformPort;
+        LOG.log(Level.FINEST, "Platform URL: {0}", platformURL);
+
+        platformService = PlatformClientFactory.create(platformURL, "my-user", "my-password".toCharArray());
+    }
+
+    @AfterEach
+    void logout() throws Exception {
+        platformService.close();
+    }
+
+    @Nonnull
+    String generateName(@Nonnull final String prefix) {
+
+        Assertions.assertThat(prefix).isNotBlank();
+
+        return prefix + System.currentTimeMillis();
     }
 }

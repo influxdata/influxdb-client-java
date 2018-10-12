@@ -33,6 +33,7 @@ import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.error.InfluxException;
 import org.influxdata.platform.rest.Cancellable;
+import org.influxdata.platform.rest.LogLevel;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -41,7 +42,6 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.Single;
 import io.reactivex.functions.BiConsumer;
 import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import okio.BufferedSource;
 import org.reactivestreams.Publisher;
 import retrofit2.Response;
@@ -163,17 +163,18 @@ public class FluxClientReactiveImpl extends AbstractFluxClient<FluxServiceReacti
 
     @Nonnull
     @Override
-    public HttpLoggingInterceptor.Level getLogLevel() {
-        return loggingInterceptor.getLevel();
+    public LogLevel getLogLevel() {
+        return getLogLevel(this.loggingInterceptor);
     }
 
     @Nonnull
     @Override
-    public FluxClientReactive setLogLevel(@Nonnull final HttpLoggingInterceptor.Level logLevel) {
+    public FluxClientReactive setLogLevel(@Nonnull final LogLevel logLevel) {
 
-        Arguments.checkNotNull(logLevel, "Http Log Level");
+        Arguments.checkNotNull(logLevel, "LogLevel");
 
-        this.loggingInterceptor.setLevel(logLevel);
+        setLogLevel(this.loggingInterceptor, logLevel);
+
         return this;
     }
 

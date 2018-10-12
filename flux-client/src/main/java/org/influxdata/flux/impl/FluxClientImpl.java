@@ -42,7 +42,6 @@ import org.influxdata.platform.rest.Cancellable;
 import org.influxdata.platform.rest.LogLevel;
 
 import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import okio.BufferedSource;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -258,9 +257,7 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
     @Nonnull
     @Override
     public LogLevel getLogLevel() {
-        HttpLoggingInterceptor.Level level = this.loggingInterceptor.getLevel();
-
-        return LogLevel.valueOf(level.name());
+        return getLogLevel(this.loggingInterceptor);
     }
 
     @Nonnull
@@ -269,7 +266,7 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
 
         Arguments.checkNotNull(logLevel, "LogLevel");
 
-        this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.valueOf(logLevel.name()));
+        setLogLevel(this.loggingInterceptor, logLevel);
 
         return this;
     }

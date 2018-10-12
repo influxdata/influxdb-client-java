@@ -37,20 +37,20 @@ public interface UserClient {
     /**
      * Creates a new user and sets {@link User#id} with the new identifier.
      *
-     * @param user the user to create
-     * @return User created
-     */
-    @Nonnull
-    User createUser(@Nonnull final User user);
-
-    /**
-     * Creates a new user and sets {@link User#id} with the new identifier.
-     *
      * @param name name of the user
      * @return User created
      */
     @Nonnull
     User createUser(@Nonnull final String name);
+
+    /**
+     * Creates a new user and sets {@link User#id} with the new identifier.
+     *
+     * @param user the user to create
+     * @return User created
+     */
+    @Nonnull
+    User createUser(@Nonnull final User user);
 
     /**
      * Update a user.
@@ -74,6 +74,14 @@ public interface UserClient {
      * @param userID ID of user to delete
      */
     void deleteUser(@Nonnull final String userID);
+
+    /**
+     * Returns currently authenticated user.
+     *
+     * @return user
+     */
+    @Nullable
+    User me();
 
     /**
      * Retrieve a user.

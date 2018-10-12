@@ -25,11 +25,12 @@ import javax.annotation.Nonnull;
 
 import org.influxdata.platform.impl.TodoException;
 import org.influxdata.platform.option.WriteOptions;
+import org.influxdata.platform.rest.LogLevel;
 
-import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert;
-import org.influxdata.platform.rest.LogLevel;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -79,19 +80,47 @@ class PlatformClientTest extends AbstractPlatformClientTest {
 
     @Test
     void createUserClient() {
-        todo(() -> platformClient.createUserClient());
+        Assertions.assertThat(platformClient.createUserClient()).isNotNull();
     }
 
     @Test
     void logLevel() {
 
-        todo(platformClient::getLogLevel);
-        todo(() -> platformClient.setLogLevel(LogLevel.BODY));
+        // default NONE
+        Assertions.assertThat(this.platformClient.getLogLevel()).isEqualTo(LogLevel.NONE);
+
+        // set HEADERS
+        PlatformClient platformClient = this.platformClient.setLogLevel(LogLevel.HEADERS);
+        Assertions.assertThat(platformClient).isEqualTo(this.platformClient);
+
+        Assertions.assertThat(this.platformClient.getLogLevel()).isEqualTo(LogLevel.HEADERS);
     }
 
     @Test
-    void close() {
-        todo(() -> platformClient.close());
+    void close() throws Exception {
+
+        platformClient.close();
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(0);
+    }
+
+    @Test
+    void closeWithSignout() throws Exception {
+
+        mockServer.enqueue(new MockResponse());
+        mockServer.enqueue(new MockResponse());
+
+        PlatformClient platformClient = PlatformClientFactory
+                .create(mockServer.url("/").toString(), "user", "password".toCharArray());
+
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(1);
+        platformClient.close();
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(2);
+
+        // sign in
+        mockServer.takeRequest();
+        // request to signout
+        RecordedRequest signOut = mockServer.takeRequest();
+        Assertions.assertThat(signOut.getPath()).endsWith("/api/v2/signout");
     }
 
     private void todo(@Nonnull final ThrowableAssert.ThrowingCallable callable) {

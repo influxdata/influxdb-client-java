@@ -25,10 +25,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.flux.domain.FluxRecord;
+import org.influxdata.platform.rest.LogLevel;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
-import okhttp3.logging.HttpLoggingInterceptor;
 import org.reactivestreams.Publisher;
 
 /**
@@ -116,19 +116,20 @@ public interface FluxClientReactive {
     Single<String> version();
 
     /**
-     * The {@link HttpLoggingInterceptor.Level} that is used for logging requests and responses.
+     * Gets the {@link LogLevel} that is used for logging requests and responses.
      *
-     * @return the {@link HttpLoggingInterceptor.Level} that is used for logging requests and responses
+     * @return the {@link LogLevel} that is used for logging requests and responses
      */
     @Nonnull
-    HttpLoggingInterceptor.Level getLogLevel();
+    LogLevel getLogLevel();
 
     /**
-     * Set the log level for the request and response information.
+     * Sets the log level for the request and response information.
      *
      * @param logLevel the log level to set.
+     *
      * @return the FluxClient instance to be able to use it in a fluent manner.
      */
     @Nonnull
-    FluxClientReactive setLogLevel(@Nonnull final HttpLoggingInterceptor.Level logLevel);
+    FluxClientReactive setLogLevel(@Nonnull final LogLevel logLevel);
 }
