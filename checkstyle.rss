@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 123,
+      <title>File: 126,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -956,6 +956,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.impl.PlatformService.java">org/influxdata/platform/impl/PlatformService.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.DistinctFlux.java">org/influxdata/flux/functions/DistinctFlux.java</a>
                 </td>
                 <td>
@@ -1236,6 +1250,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.impl.UserClientImpl.java">org/influxdata/platform/impl/UserClientImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.BucketClient.java">org/influxdata/platform/BucketClient.java</a>
                 </td>
                 <td>
@@ -1251,6 +1279,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.UserClient.java">org/influxdata/platform/UserClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.impl.AuthenticateInterceptor.java">org/influxdata/platform/impl/AuthenticateInterceptor.java</a>
                 </td>
                 <td>
                   0

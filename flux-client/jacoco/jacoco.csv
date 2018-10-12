@@ -1,5 +1,5 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-The Flux client,org.influxdata.flux.impl,FluxClientImpl,14,402,0,2,6,103,0,27,0,26
+The Flux client,org.influxdata.flux.impl,FluxClientImpl,14,397,0,2,6,102,0,27,0,26
 The Flux client,org.influxdata.flux.impl,FluxCsvParser.ParsingState,0,24,0,0,0,3,0,1,0,1
 The Flux client,org.influxdata.flux.impl,FluxClientImpl.DefaultCancellable,4,12,0,0,2,3,1,2,1,2
 The Flux client,org.influxdata.flux.impl,AbstractFluxClient,5,142,2,8,1,43,2,10,0,7

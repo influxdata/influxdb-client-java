@@ -21,6 +21,9 @@
  */
 package org.influxdata.platform.impl;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.Arguments;
@@ -35,87 +38,134 @@ import org.influxdata.platform.UserClient;
 import org.influxdata.platform.WriteClient;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.option.WriteOptions;
-
+import org.influxdata.platform.rest.AbstractRestClient;
 import org.influxdata.platform.rest.LogLevel;
+
+import com.squareup.moshi.Moshi;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.moshi.MoshiConverterFactory;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/10/2018 09:36)
  */
-public class PlatformClientImpl implements PlatformClient {
+public class PlatformClientImpl extends AbstractRestClient implements PlatformClient {
 
-<span class="fc" id="L46">    public PlatformClientImpl(@Nonnull final PlatformOptions options) {</span>
-<span class="fc" id="L47">        Arguments.checkNotNull(options, &quot;PlatformOptions&quot;);</span>
-<span class="fc" id="L48">    }</span>
+<span class="fc" id="L55">    private static final Logger LOG = Logger.getLogger(PlatformClientImpl.class.getName());</span>
+
+    private final Moshi moshi;
+    private final PlatformService platformService;
+
+    private final HttpLoggingInterceptor loggingInterceptor;
+    private final AuthenticateInterceptor authenticateInterceptor;
+
+
+<span class="fc" id="L64">    public PlatformClientImpl(@Nonnull final PlatformOptions options) {</span>
+<span class="fc" id="L65">        Arguments.checkNotNull(options, &quot;PlatformOptions&quot;);</span>
+
+<span class="fc" id="L67">        this.loggingInterceptor = new HttpLoggingInterceptor();</span>
+<span class="fc" id="L68">        this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);</span>
+<span class="fc" id="L69">        this.authenticateInterceptor = new AuthenticateInterceptor(options);</span>
+
+<span class="fc" id="L71">        OkHttpClient okHttpClient = options.getOkHttpClient()</span>
+<span class="fc" id="L72">                .addInterceptor(this.loggingInterceptor)</span>
+<span class="fc" id="L73">                .addInterceptor(this.authenticateInterceptor)</span>
+<span class="fc" id="L74">                .build();</span>
+
+<span class="fc" id="L76">        this.authenticateInterceptor.initToken(okHttpClient);</span>
+
+<span class="fc" id="L78">        this.moshi = new Moshi.Builder().build();</span>
+
+<span class="fc" id="L80">        Retrofit retrofit = new Retrofit.Builder()</span>
+<span class="fc" id="L81">                .baseUrl(options.getUrl())</span>
+<span class="fc" id="L82">                .client(okHttpClient)</span>
+<span class="fc" id="L83">                .addConverterFactory(MoshiConverterFactory.create(this.moshi).asLenient())</span>
+<span class="fc" id="L84">                .build();</span>
+
+<span class="fc" id="L86">        this.platformService = retrofit.create(PlatformService.class);</span>
+<span class="fc" id="L87">    }</span>
 
     @Nonnull
     @Override
     public QueryClient createQueryClient() {
-<span class="fc" id="L53">        throw new TodoException();</span>
+<span class="fc" id="L92">        throw new TodoException();</span>
     }
 
     @Nonnull
     @Override
     public WriteClient createWriteClient() {
-<span class="fc" id="L59">        throw new TodoException();</span>
+<span class="fc" id="L98">        throw new TodoException();</span>
     }
 
     @Nonnull
     @Override
     public WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions) {
-<span class="fc" id="L65">        throw new TodoException();</span>
+<span class="fc" id="L104">        throw new TodoException();</span>
     }
 
     @Nonnull
     @Override
     public AuthorizationClient createAuthorizationClient() {
-<span class="fc" id="L71">        throw new TodoException();</span>
+<span class="fc" id="L110">        throw new TodoException();</span>
     }
 
     @Nonnull
     @Override
     public BucketClient createBucketClient() {
-<span class="fc" id="L77">        throw new TodoException();</span>
+<span class="fc" id="L116">        throw new TodoException();</span>
     }
 
     @Nonnull
     @Override
     public OrganizationClient createOrganizationClient() {
-<span class="fc" id="L83">        throw new TodoException();</span>
+<span class="fc" id="L122">        throw new TodoException();</span>
     }
 
     @Nonnull
     @Override
     public SourceClient createSourceClient() {
-<span class="fc" id="L89">        throw new TodoException();</span>
+<span class="fc" id="L128">        throw new TodoException();</span>
     }
 
     @Nonnull
     @Override
     public TaskClient createTaskClient() {
-<span class="fc" id="L95">        throw new TodoException();</span>
+<span class="fc" id="L134">        throw new TodoException();</span>
     }
 
     @Nonnull
     @Override
     public UserClient createUserClient() {
-<span class="fc" id="L101">        throw new TodoException();</span>
+<span class="fc" id="L140">        return new UserClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public LogLevel getLogLevel() {
-<span class="fc" id="L107">        throw new TodoException();</span>
+<span class="fc" id="L146">        return getLogLevel(this.loggingInterceptor);</span>
     }
 
     @Nonnull
     @Override
     public PlatformClient setLogLevel(@Nonnull final LogLevel logLevel) {
-<span class="fc" id="L113">        throw new TodoException();</span>
+
+<span class="fc" id="L153">        setLogLevel(this.loggingInterceptor, logLevel);</span>
+
+<span class="fc" id="L155">        return this;</span>
     }
 
     @Override
     public void close() {
-<span class="fc" id="L118">        throw new TodoException();</span>
-    }
+
+        //
+        // signout
+        //
+        try {
+<span class="fc" id="L165">            this.authenticateInterceptor.signout();</span>
+<span class="fc" id="L166">        } catch (IOException e) {</span>
+<span class="fc" id="L167">            LOG.log(Level.FINEST, &quot;The signout exception&quot;, e);</span>
+<span class="fc" id="L168">        }</span>
+<span class="fc" id="L169">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

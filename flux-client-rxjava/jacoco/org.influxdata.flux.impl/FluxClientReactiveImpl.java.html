@@ -33,6 +33,7 @@ import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.error.InfluxException;
 import org.influxdata.platform.rest.Cancellable;
+import org.influxdata.platform.rest.LogLevel;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -41,7 +42,6 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.Single;
 import io.reactivex.functions.BiConsumer;
 import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import okio.BufferedSource;
 import org.reactivestreams.Publisher;
 import retrofit2.Response;
@@ -163,18 +163,19 @@ public class FluxClientReactiveImpl extends AbstractFluxClient&lt;FluxServiceRea
 
     @Nonnull
     @Override
-    public HttpLoggingInterceptor.Level getLogLevel() {
-<span class="fc" id="L167">        return loggingInterceptor.getLevel();</span>
+    public LogLevel getLogLevel() {
+<span class="fc" id="L167">        return getLogLevel(this.loggingInterceptor);</span>
     }
 
     @Nonnull
     @Override
-    public FluxClientReactive setLogLevel(@Nonnull final HttpLoggingInterceptor.Level logLevel) {
+    public FluxClientReactive setLogLevel(@Nonnull final LogLevel logLevel) {
 
-<span class="fc" id="L174">        Arguments.checkNotNull(logLevel, &quot;Http Log Level&quot;);</span>
+<span class="fc" id="L174">        Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;);</span>
 
-<span class="fc" id="L176">        this.loggingInterceptor.setLevel(logLevel);</span>
-<span class="fc" id="L177">        return this;</span>
+<span class="fc" id="L176">        setLogLevel(this.loggingInterceptor, logLevel);</span>
+
+<span class="fc" id="L178">        return this;</span>
     }
 
     @Nonnull
@@ -182,14 +183,14 @@ public class FluxClientReactiveImpl extends AbstractFluxClient&lt;FluxServiceRea
                                   @Nullable final String dialect,
                                   @Nonnull final BiConsumer&lt;BufferedSource, ObservableEmitter&lt;T&gt;&gt; consumer) {
 
-<span class="fc" id="L185">        return Flowable</span>
-<span class="fc" id="L186">                .fromPublisher(queryStream)</span>
-<span class="fc" id="L187">                .concatMap(query -&gt; fluxService</span>
-<span class="fc" id="L188">                        .query(createBody(dialect, query))</span>
-<span class="fc" id="L189">                        .flatMap(responseBody -&gt; chunkReader(responseBody, consumer))</span>
-<span class="fc" id="L190">                        .toFlowable(BackpressureStrategy.BUFFER))</span>
-<span class="fc" id="L191">                .onErrorResumeNext(throwable -&gt; {</span>
-<span class="fc" id="L192">                    return Flowable.error(toInfluxException(throwable));</span>
+<span class="fc" id="L186">        return Flowable</span>
+<span class="fc" id="L187">                .fromPublisher(queryStream)</span>
+<span class="fc" id="L188">                .concatMap(query -&gt; fluxService</span>
+<span class="fc" id="L189">                        .query(createBody(dialect, query))</span>
+<span class="fc" id="L190">                        .flatMap(responseBody -&gt; chunkReader(responseBody, consumer))</span>
+<span class="fc" id="L191">                        .toFlowable(BackpressureStrategy.BUFFER))</span>
+<span class="fc" id="L192">                .onErrorResumeNext(throwable -&gt; {</span>
+<span class="fc" id="L193">                    return Flowable.error(toInfluxException(throwable));</span>
                 });
     }
 
@@ -197,71 +198,71 @@ public class FluxClientReactiveImpl extends AbstractFluxClient&lt;FluxServiceRea
     private &lt;T&gt; Observable&lt;T&gt; chunkReader(@Nonnull final ResponseBody body,
                                           @Nonnull final BiConsumer&lt;BufferedSource, ObservableEmitter&lt;T&gt;&gt; consumer) {
 
-<span class="fc" id="L200">        Arguments.checkNotNull(body, &quot;ResponseBody&quot;);</span>
-<span class="fc" id="L201">        Arguments.checkNotNull(consumer, &quot;BufferedSource consumer&quot;);</span>
+<span class="fc" id="L201">        Arguments.checkNotNull(body, &quot;ResponseBody&quot;);</span>
+<span class="fc" id="L202">        Arguments.checkNotNull(consumer, &quot;BufferedSource consumer&quot;);</span>
 
-<span class="fc" id="L203">        return Observable.create(subscriber -&gt; {</span>
+<span class="fc" id="L204">        return Observable.create(subscriber -&gt; {</span>
 
-<span class="fc" id="L205">            boolean isCompleted = false;</span>
+<span class="fc" id="L206">            boolean isCompleted = false;</span>
             try {
-<span class="fc" id="L207">                BufferedSource source = body.source();</span>
+<span class="fc" id="L208">                BufferedSource source = body.source();</span>
 
                 //
                 // Subscriber is not disposed &amp;&amp; source has data =&gt; parse
                 //
-<span class="fc bfc" id="L212" title="All 4 branches covered.">                while (!subscriber.isDisposed() &amp;&amp; !source.exhausted()) {</span>
+<span class="fc bfc" id="L213" title="All 4 branches covered.">                while (!subscriber.isDisposed() &amp;&amp; !source.exhausted()) {</span>
 
-<span class="fc" id="L214">                    consumer.accept(source, subscriber);</span>
+<span class="fc" id="L215">                    consumer.accept(source, subscriber);</span>
                 }
 
-<span class="nc" id="L217">            } catch (IOException e) {</span>
+<span class="nc" id="L218">            } catch (IOException e) {</span>
 
                 //
                 // Socket close by remote server or end of data
                 //
-<span class="nc bnc" id="L222" title="All 2 branches missed.">                if (isCloseException(e)) {</span>
-<span class="nc" id="L223">                    isCompleted = true;</span>
-<span class="nc" id="L224">                    subscriber.onComplete();</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">                if (isCloseException(e)) {</span>
+<span class="nc" id="L224">                    isCompleted = true;</span>
+<span class="nc" id="L225">                    subscriber.onComplete();</span>
                 } else {
-<span class="nc" id="L226">                    throw new UncheckedIOException(e);</span>
+<span class="nc" id="L227">                    throw new UncheckedIOException(e);</span>
                 }
-<span class="fc" id="L228">            }</span>
+<span class="fc" id="L229">            }</span>
 
             //if response end we get here
-<span class="pc bpc" id="L231" title="1 of 2 branches missed.">            if (!isCompleted) {</span>
-<span class="fc" id="L232">                subscriber.onComplete();</span>
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">            if (!isCompleted) {</span>
+<span class="fc" id="L233">                subscriber.onComplete();</span>
             }
 
-<span class="fc" id="L235">            body.close();</span>
-<span class="fc" id="L236">        });</span>
+<span class="fc" id="L236">            body.close();</span>
+<span class="fc" id="L237">        });</span>
     }
 
     @Nonnull
     private InfluxException toInfluxException(@Nonnull final Throwable throwable) {
 
-<span class="fc bfc" id="L242" title="All 2 branches covered.">        if (throwable instanceof InfluxException) {</span>
-<span class="fc" id="L243">            return (InfluxException) throwable;</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">        if (throwable instanceof InfluxException) {</span>
+<span class="fc" id="L244">            return (InfluxException) throwable;</span>
         }
 
-<span class="fc" id="L246">        return new InfluxException(throwable);</span>
+<span class="fc" id="L247">        return new InfluxException(throwable);</span>
     }
 
     private final class ObservableCancellable implements Cancellable {
 
         private final ObservableEmitter&lt;?&gt; observable;
 
-<span class="fc" id="L253">        private ObservableCancellable(@Nonnull final ObservableEmitter&lt;?&gt; observable) {</span>
-<span class="fc" id="L254">            this.observable = observable;</span>
-<span class="fc" id="L255">        }</span>
+<span class="fc" id="L254">        private ObservableCancellable(@Nonnull final ObservableEmitter&lt;?&gt; observable) {</span>
+<span class="fc" id="L255">            this.observable = observable;</span>
+<span class="fc" id="L256">        }</span>
 
         @Override
         public void cancel() {
 
-<span class="nc" id="L260">        }</span>
+<span class="nc" id="L261">        }</span>
 
         @Override
         public boolean isCancelled() {
-<span class="fc" id="L264">            return observable.isDisposed();</span>
+<span class="fc" id="L265">            return observable.isDisposed();</span>
         }
     }
 }

@@ -42,7 +42,6 @@ import org.influxdata.platform.rest.Cancellable;
 import org.influxdata.platform.rest.LogLevel;
 
 import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import okio.BufferedSource;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,50 +52,50 @@ import retrofit2.Response;
  */
 public class FluxClientImpl extends AbstractFluxClient&lt;FluxService&gt; implements FluxClient {
 
-<span class="fc" id="L56">    private static final Logger LOG = Logger.getLogger(FluxClientImpl.class.getName());</span>
+<span class="fc" id="L55">    private static final Logger LOG = Logger.getLogger(FluxClientImpl.class.getName());</span>
 
-<span class="fc" id="L58">    private static final Runnable EMPTY_ACTION = () -&gt; {</span>
+<span class="fc" id="L57">    private static final Runnable EMPTY_ACTION = () -&gt; {</span>
 
-<span class="fc" id="L60">    };</span>
+<span class="fc" id="L59">    };</span>
 
     public FluxClientImpl(@Nonnull final FluxConnectionOptions options) {
 
-<span class="fc" id="L64">        super(options, FluxService.class);</span>
-<span class="fc" id="L65">    }</span>
+<span class="fc" id="L63">        super(options, FluxService.class);</span>
+<span class="fc" id="L64">    }</span>
 
     @Nonnull
     @Override
     public List&lt;FluxTable&gt; query(@Nonnull final String query) {
 
-<span class="fc" id="L71">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="fc" id="L70">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
 
-<span class="fc" id="L73">        FluxResponseConsumerTable consumer = new FluxResponseConsumerTable();</span>
+<span class="fc" id="L72">        FluxResponseConsumerTable consumer = new FluxResponseConsumerTable();</span>
 
-<span class="fc" id="L75">        query(query, DEFAULT_DIALECT.toString(), consumer, ERROR_CONSUMER, EMPTY_ACTION, false);</span>
+<span class="fc" id="L74">        query(query, DEFAULT_DIALECT.toString(), consumer, ERROR_CONSUMER, EMPTY_ACTION, false);</span>
 
-<span class="fc" id="L77">        return consumer.getTables();</span>
+<span class="fc" id="L76">        return consumer.getTables();</span>
     }
 
     @Override
     public void query(@Nonnull final String query, @Nonnull final BiConsumer&lt;Cancellable, FluxRecord&gt; onNext) {
 
-<span class="fc" id="L83">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
-<span class="fc" id="L84">        Arguments.checkNotNull(onNext, &quot;onNext&quot;);</span>
+<span class="fc" id="L82">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="fc" id="L83">        Arguments.checkNotNull(onNext, &quot;onNext&quot;);</span>
 
-<span class="fc" id="L86">        query(query, onNext, ERROR_CONSUMER);</span>
-<span class="fc" id="L87">    }</span>
+<span class="fc" id="L85">        query(query, onNext, ERROR_CONSUMER);</span>
+<span class="fc" id="L86">    }</span>
 
     @Override
     public void query(@Nonnull final String query,
                       @Nonnull final BiConsumer&lt;Cancellable, FluxRecord&gt; onNext,
                       @Nonnull final Consumer&lt;? super Throwable&gt; onError) {
 
-<span class="fc" id="L94">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
-<span class="fc" id="L95">        Arguments.checkNotNull(onNext, &quot;onNext&quot;);</span>
-<span class="fc" id="L96">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="fc" id="L93">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="fc" id="L94">        Arguments.checkNotNull(onNext, &quot;onNext&quot;);</span>
+<span class="fc" id="L95">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
 
-<span class="fc" id="L98">        query(query, onNext, onError, EMPTY_ACTION);</span>
-<span class="fc" id="L99">    }</span>
+<span class="fc" id="L97">        query(query, onNext, onError, EMPTY_ACTION);</span>
+<span class="fc" id="L98">    }</span>
 
     @Override
     public void query(@Nonnull final String query,
@@ -104,85 +103,85 @@ public class FluxClientImpl extends AbstractFluxClient&lt;FluxService&gt; implem
                       @Nonnull final Consumer&lt;? super Throwable&gt; onError,
                       @Nonnull final Runnable onComplete) {
 
-<span class="fc" id="L107">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
-<span class="fc" id="L108">        Arguments.checkNotNull(onNext, &quot;onNext&quot;);</span>
-<span class="fc" id="L109">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
-<span class="fc" id="L110">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
+<span class="fc" id="L106">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="fc" id="L107">        Arguments.checkNotNull(onNext, &quot;onNext&quot;);</span>
+<span class="fc" id="L108">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="fc" id="L109">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
 
-<span class="fc" id="L112">        FluxResponseConsumer consumer = new FluxResponseConsumer() {</span>
+<span class="fc" id="L111">        FluxResponseConsumer consumer = new FluxResponseConsumer() {</span>
             @Override
             public void accept(final int index,
                                @Nonnull final Cancellable cancellable,
                                @Nonnull final FluxTable table) {
-<span class="fc" id="L117">            }</span>
+<span class="fc" id="L116">            }</span>
 
             @Override
             public void accept(final int index,
                                @Nonnull final Cancellable cancellable,
                                @Nonnull final FluxRecord record) {
-<span class="fc" id="L123">                onNext.accept(cancellable, record);</span>
-<span class="fc" id="L124">            }</span>
+<span class="fc" id="L122">                onNext.accept(cancellable, record);</span>
+<span class="fc" id="L123">            }</span>
         };
 
-<span class="fc" id="L127">        query(query, DEFAULT_DIALECT.toString(), consumer, onError, onComplete, true);</span>
-<span class="fc" id="L128">    }</span>
+<span class="fc" id="L126">        query(query, DEFAULT_DIALECT.toString(), consumer, onError, onComplete, true);</span>
+<span class="fc" id="L127">    }</span>
 
     @Nonnull
     @Override
     public String queryRaw(@Nonnull final String query) {
 
-<span class="fc" id="L134">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="fc" id="L133">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
 
-<span class="fc" id="L136">        return queryRaw(query, (String) null);</span>
+<span class="fc" id="L135">        return queryRaw(query, (String) null);</span>
     }
 
     @Nonnull
     @Override
     public String queryRaw(@Nonnull final String query, @Nullable final String dialect) {
 
-<span class="fc" id="L143">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="fc" id="L142">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
 
-<span class="fc" id="L145">        List&lt;String&gt; rows = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L144">        List&lt;String&gt; rows = new ArrayList&lt;&gt;();</span>
 
-<span class="fc" id="L147">        BiConsumer&lt;Cancellable, String&gt; consumer = (cancellable, row) -&gt; rows.add(row);</span>
+<span class="fc" id="L146">        BiConsumer&lt;Cancellable, String&gt; consumer = (cancellable, row) -&gt; rows.add(row);</span>
 
-<span class="fc" id="L149">        queryRaw(query, dialect, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);</span>
+<span class="fc" id="L148">        queryRaw(query, dialect, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);</span>
 
-<span class="fc" id="L151">        return String.join(&quot;\n&quot;, rows);</span>
+<span class="fc" id="L150">        return String.join(&quot;\n&quot;, rows);</span>
     }
 
     @Override
     public void queryRaw(@Nonnull final String query,
                          @Nonnull final BiConsumer&lt;Cancellable, String&gt; onResponse) {
 
-<span class="fc" id="L158">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
-<span class="fc" id="L159">        Arguments.checkNotNull(onResponse, &quot;onNext&quot;);</span>
+<span class="fc" id="L157">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="fc" id="L158">        Arguments.checkNotNull(onResponse, &quot;onNext&quot;);</span>
 
-<span class="fc" id="L161">        queryRaw(query, null, onResponse);</span>
-<span class="fc" id="L162">    }</span>
+<span class="fc" id="L160">        queryRaw(query, null, onResponse);</span>
+<span class="fc" id="L161">    }</span>
 
     @Override
     public void queryRaw(@Nonnull final String query,
                          @Nullable final String dialect,
                          @Nonnull final BiConsumer&lt;Cancellable, String&gt; onNext) {
 
-<span class="fc" id="L169">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
-<span class="fc" id="L170">        Arguments.checkNotNull(onNext, &quot;onNext&quot;);</span>
+<span class="fc" id="L168">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="fc" id="L169">        Arguments.checkNotNull(onNext, &quot;onNext&quot;);</span>
 
-<span class="fc" id="L172">        queryRaw(query, dialect, onNext, ERROR_CONSUMER);</span>
-<span class="fc" id="L173">    }</span>
+<span class="fc" id="L171">        queryRaw(query, dialect, onNext, ERROR_CONSUMER);</span>
+<span class="fc" id="L172">    }</span>
 
     @Override
     public void queryRaw(@Nonnull final String query,
                          @Nonnull final BiConsumer&lt;Cancellable, String&gt; onResponse,
                          @Nonnull final Consumer&lt;? super Throwable&gt; onError) {
 
-<span class="fc" id="L180">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
-<span class="fc" id="L181">        Arguments.checkNotNull(onResponse, &quot;onNext&quot;);</span>
-<span class="fc" id="L182">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="fc" id="L179">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="fc" id="L180">        Arguments.checkNotNull(onResponse, &quot;onNext&quot;);</span>
+<span class="fc" id="L181">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
 
-<span class="fc" id="L184">        queryRaw(query, onResponse, onError, EMPTY_ACTION);</span>
-<span class="fc" id="L185">    }</span>
+<span class="fc" id="L183">        queryRaw(query, onResponse, onError, EMPTY_ACTION);</span>
+<span class="fc" id="L184">    }</span>
 
     @Override
     public void queryRaw(@Nonnull final String query,
@@ -190,12 +189,12 @@ public class FluxClientImpl extends AbstractFluxClient&lt;FluxService&gt; implem
                          @Nonnull final BiConsumer&lt;Cancellable, String&gt; onResponse,
                          @Nonnull final Consumer&lt;? super Throwable&gt; onError) {
 
-<span class="fc" id="L193">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
-<span class="fc" id="L194">        Arguments.checkNotNull(onResponse, &quot;onNext&quot;);</span>
-<span class="fc" id="L195">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="fc" id="L192">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="fc" id="L193">        Arguments.checkNotNull(onResponse, &quot;onNext&quot;);</span>
+<span class="fc" id="L194">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
 
-<span class="fc" id="L197">        queryRaw(query, dialect, onResponse, onError, EMPTY_ACTION);</span>
-<span class="fc" id="L198">    }</span>
+<span class="fc" id="L196">        queryRaw(query, dialect, onResponse, onError, EMPTY_ACTION);</span>
+<span class="fc" id="L197">    }</span>
 
     @Override
     public void queryRaw(@Nonnull final String query,
@@ -203,13 +202,13 @@ public class FluxClientImpl extends AbstractFluxClient&lt;FluxService&gt; implem
                          @Nonnull final Consumer&lt;? super Throwable&gt; onError,
                          @Nonnull final Runnable onComplete) {
 
-<span class="fc" id="L206">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
-<span class="fc" id="L207">        Arguments.checkNotNull(onResponse, &quot;onNext&quot;);</span>
-<span class="fc" id="L208">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
-<span class="fc" id="L209">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
+<span class="fc" id="L205">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="fc" id="L206">        Arguments.checkNotNull(onResponse, &quot;onNext&quot;);</span>
+<span class="fc" id="L207">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="fc" id="L208">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
 
-<span class="fc" id="L211">        queryRaw(query, null, onResponse, onError, onComplete);</span>
-<span class="fc" id="L212">    }</span>
+<span class="fc" id="L210">        queryRaw(query, null, onResponse, onError, onComplete);</span>
+<span class="fc" id="L211">    }</span>
 
     @Override
     public void queryRaw(@Nonnull final String query,
@@ -218,26 +217,26 @@ public class FluxClientImpl extends AbstractFluxClient&lt;FluxService&gt; implem
                          @Nonnull final Consumer&lt;? super Throwable&gt; onError,
                          @Nonnull final Runnable onComplete) {
 
-<span class="fc" id="L221">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
-<span class="fc" id="L222">        Arguments.checkNotNull(onResponse, &quot;onNext&quot;);</span>
-<span class="fc" id="L223">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
-<span class="fc" id="L224">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
+<span class="fc" id="L220">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="fc" id="L221">        Arguments.checkNotNull(onResponse, &quot;onNext&quot;);</span>
+<span class="fc" id="L222">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="fc" id="L223">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
 
-<span class="fc" id="L226">        queryRaw(query, dialect, onResponse, onError, onComplete, true);</span>
-<span class="fc" id="L227">    }</span>
+<span class="fc" id="L225">        queryRaw(query, dialect, onResponse, onError, onComplete, true);</span>
+<span class="fc" id="L226">    }</span>
 
     @Nonnull
     @Override
     public Boolean ping() {
 
-<span class="fc" id="L233">        Call&lt;ResponseBody&gt; ping = fluxService.ping();</span>
+<span class="fc" id="L232">        Call&lt;ResponseBody&gt; ping = fluxService.ping();</span>
 
         try {
-<span class="fc" id="L236">            return ping.execute().isSuccessful();</span>
-<span class="fc" id="L237">        } catch (IOException e) {</span>
+<span class="fc" id="L235">            return ping.execute().isSuccessful();</span>
+<span class="fc" id="L236">        } catch (IOException e) {</span>
 
-<span class="fc" id="L239">            LOG.log(Level.WARNING, &quot;Ping request wasn't successful&quot;, e);</span>
-<span class="fc" id="L240">            return false;</span>
+<span class="fc" id="L238">            LOG.log(Level.WARNING, &quot;Ping request wasn't successful&quot;, e);</span>
+<span class="fc" id="L239">            return false;</span>
         }
     }
 
@@ -245,33 +244,31 @@ public class FluxClientImpl extends AbstractFluxClient&lt;FluxService&gt; implem
     @Nonnull
     public String version() {
 
-<span class="fc" id="L248">        Call&lt;ResponseBody&gt; ping = fluxService.ping();</span>
+<span class="fc" id="L247">        Call&lt;ResponseBody&gt; ping = fluxService.ping();</span>
 
         try {
-<span class="fc" id="L251">            Response&lt;ResponseBody&gt; execute = ping.execute();</span>
-<span class="fc" id="L252">            return getVersion(execute);</span>
-<span class="fc" id="L253">        } catch (IOException e) {</span>
-<span class="fc" id="L254">            throw new InfluxException(e);</span>
+<span class="fc" id="L250">            Response&lt;ResponseBody&gt; execute = ping.execute();</span>
+<span class="fc" id="L251">            return getVersion(execute);</span>
+<span class="fc" id="L252">        } catch (IOException e) {</span>
+<span class="fc" id="L253">            throw new InfluxException(e);</span>
         }
     }
 
     @Nonnull
     @Override
     public LogLevel getLogLevel() {
-<span class="fc" id="L261">        HttpLoggingInterceptor.Level level = this.loggingInterceptor.getLevel();</span>
-
-<span class="fc" id="L263">        return LogLevel.valueOf(level.name());</span>
+<span class="fc" id="L260">        return getLogLevel(this.loggingInterceptor);</span>
     }
 
     @Nonnull
     @Override
     public FluxClient setLogLevel(@Nonnull final LogLevel logLevel) {
 
-<span class="fc" id="L270">        Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;);</span>
+<span class="fc" id="L267">        Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;);</span>
 
-<span class="fc" id="L272">        this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.valueOf(logLevel.name()));</span>
+<span class="fc" id="L269">        setLogLevel(this.loggingInterceptor, logLevel);</span>
 
-<span class="fc" id="L274">        return this;</span>
+<span class="fc" id="L271">        return this;</span>
     }
 
     private void query(@Nonnull final String query,
@@ -281,16 +278,16 @@ public class FluxClientImpl extends AbstractFluxClient&lt;FluxService&gt; implem
                        @Nonnull final Runnable onComplete,
                        @Nonnull final Boolean asynchronously) {
 
-<span class="fc" id="L284">        BiConsumer&lt;Cancellable, BufferedSource&gt; consumer = (cancellable, bufferedSource) -&gt; {</span>
+<span class="fc" id="L281">        BiConsumer&lt;Cancellable, BufferedSource&gt; consumer = (cancellable, bufferedSource) -&gt; {</span>
             try {
-<span class="fc" id="L286">                fluxCsvParser.parseFluxResponse(bufferedSource, cancellable, responseConsumer);</span>
-<span class="nc" id="L287">            } catch (IOException e) {</span>
-<span class="nc" id="L288">                onError.accept(e);</span>
-<span class="fc" id="L289">            }</span>
-<span class="fc" id="L290">        };</span>
+<span class="fc" id="L283">                fluxCsvParser.parseFluxResponse(bufferedSource, cancellable, responseConsumer);</span>
+<span class="nc" id="L284">            } catch (IOException e) {</span>
+<span class="nc" id="L285">                onError.accept(e);</span>
+<span class="fc" id="L286">            }</span>
+<span class="fc" id="L287">        };</span>
 
-<span class="fc" id="L292">        query(query, dialect, consumer, onError, onComplete, asynchronously);</span>
-<span class="fc" id="L293">    }</span>
+<span class="fc" id="L289">        query(query, dialect, consumer, onError, onComplete, asynchronously);</span>
+<span class="fc" id="L290">    }</span>
 
     private void queryRaw(@Nonnull final String query,
                           @Nullable final String dialect,
@@ -299,17 +296,17 @@ public class FluxClientImpl extends AbstractFluxClient&lt;FluxService&gt; implem
                           @Nonnull final Runnable onComplete,
                           @Nonnull final Boolean asynchronously) {
 
-<span class="fc" id="L302">        BiConsumer&lt;Cancellable, BufferedSource&gt; consumer = (cancellable, bufferedSource) -&gt; {</span>
+<span class="fc" id="L299">        BiConsumer&lt;Cancellable, BufferedSource&gt; consumer = (cancellable, bufferedSource) -&gt; {</span>
 
             try {
-<span class="fc" id="L305">                parseFluxResponseToLines(line -&gt; onResponse.accept(cancellable, line), cancellable, bufferedSource);</span>
-<span class="nc" id="L306">            } catch (IOException e) {</span>
-<span class="nc" id="L307">                catchOrPropagateException(e, onError);</span>
-<span class="fc" id="L308">            }</span>
-<span class="fc" id="L309">        };</span>
+<span class="fc" id="L302">                parseFluxResponseToLines(line -&gt; onResponse.accept(cancellable, line), cancellable, bufferedSource);</span>
+<span class="nc" id="L303">            } catch (IOException e) {</span>
+<span class="nc" id="L304">                catchOrPropagateException(e, onError);</span>
+<span class="fc" id="L305">            }</span>
+<span class="fc" id="L306">        };</span>
 
-<span class="fc" id="L311">        query(query, dialect, consumer, onError, onComplete, asynchronously);</span>
-<span class="fc" id="L312">    }</span>
+<span class="fc" id="L308">        query(query, dialect, consumer, onError, onComplete, asynchronously);</span>
+<span class="fc" id="L309">    }</span>
 
     private void query(@Nonnull final String query,
                        @Nullable final String dialect,
@@ -318,88 +315,88 @@ public class FluxClientImpl extends AbstractFluxClient&lt;FluxService&gt; implem
                        @Nonnull final Runnable onComplete,
                        @Nonnull final Boolean asynchronously) {
 
-<span class="fc" id="L321">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
-<span class="fc" id="L322">        Arguments.checkNotNull(consumer, &quot;consumer&quot;);</span>
-<span class="fc" id="L323">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
-<span class="fc" id="L324">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
-<span class="fc" id="L325">        Arguments.checkNotNull(asynchronously, &quot;asynchronously&quot;);</span>
+<span class="fc" id="L318">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="fc" id="L319">        Arguments.checkNotNull(consumer, &quot;consumer&quot;);</span>
+<span class="fc" id="L320">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="fc" id="L321">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
+<span class="fc" id="L322">        Arguments.checkNotNull(asynchronously, &quot;asynchronously&quot;);</span>
 
-<span class="fc" id="L327">        Call&lt;ResponseBody&gt; call = fluxService.query(createBody(dialect, query));</span>
+<span class="fc" id="L324">        Call&lt;ResponseBody&gt; call = fluxService.query(createBody(dialect, query));</span>
 
-<span class="fc" id="L329">        DefaultCancellable cancellable = new DefaultCancellable();</span>
+<span class="fc" id="L326">        DefaultCancellable cancellable = new DefaultCancellable();</span>
 
-<span class="fc" id="L331">        Callback&lt;ResponseBody&gt; callback = new Callback&lt;ResponseBody&gt;() {</span>
+<span class="fc" id="L328">        Callback&lt;ResponseBody&gt; callback = new Callback&lt;ResponseBody&gt;() {</span>
             @Override
             public void onResponse(@Nonnull final Call&lt;ResponseBody&gt; call,
                                    @Nonnull final Response&lt;ResponseBody&gt; response) {
 
-<span class="fc bfc" id="L336" title="All 2 branches covered.">                if (!response.isSuccessful()) {</span>
-<span class="fc" id="L337">                    onError.accept(responseToError(response));</span>
-<span class="fc" id="L338">                    return;</span>
+<span class="fc bfc" id="L333" title="All 2 branches covered.">                if (!response.isSuccessful()) {</span>
+<span class="fc" id="L334">                    onError.accept(responseToError(response));</span>
+<span class="fc" id="L335">                    return;</span>
                 }
 
-<span class="fc" id="L341">                ResponseBody body = response.body();</span>
-<span class="pc bpc" id="L342" title="1 of 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L343">                    return;</span>
+<span class="fc" id="L338">                ResponseBody body = response.body();</span>
+<span class="pc bpc" id="L339" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L340">                    return;</span>
                 }
 
                 try {
-<span class="fc" id="L347">                    BufferedSource source = body.source();</span>
+<span class="fc" id="L344">                    BufferedSource source = body.source();</span>
 
                     //
                     // Source has data =&gt; parse
                     //
-<span class="pc bpc" id="L352" title="1 of 4 branches missed.">                    while (!source.exhausted() &amp;&amp; !cancellable.wasCancelled) {</span>
+<span class="pc bpc" id="L349" title="1 of 4 branches missed.">                    while (!source.exhausted() &amp;&amp; !cancellable.wasCancelled) {</span>
 
-<span class="fc" id="L354">                        consumer.accept(cancellable, source);</span>
+<span class="fc" id="L351">                        consumer.accept(cancellable, source);</span>
                     }
 
-<span class="pc bpc" id="L357" title="1 of 2 branches missed.">                    if (!cancellable.wasCancelled) {</span>
-<span class="fc" id="L358">                        onComplete.run();</span>
+<span class="pc bpc" id="L354" title="1 of 2 branches missed.">                    if (!cancellable.wasCancelled) {</span>
+<span class="fc" id="L355">                        onComplete.run();</span>
                     }
 
-<span class="fc" id="L361">                } catch (Exception e) {</span>
-<span class="nc" id="L362">                    catchOrPropagateException(e, onError);</span>
+<span class="fc" id="L358">                } catch (Exception e) {</span>
+<span class="nc" id="L359">                    catchOrPropagateException(e, onError);</span>
 
                 } finally {
 
-<span class="fc" id="L366">                    body.close();</span>
+<span class="fc" id="L363">                    body.close();</span>
                 }
-<span class="fc" id="L368">            }</span>
+<span class="fc" id="L365">            }</span>
 
             @Override
             public void onFailure(@Nonnull final Call&lt;ResponseBody&gt; call, @Nonnull final Throwable throwable) {
-<span class="fc" id="L372">                onError.accept(throwable);</span>
-<span class="fc" id="L373">            }</span>
+<span class="fc" id="L369">                onError.accept(throwable);</span>
+<span class="fc" id="L370">            }</span>
         };
 
-<span class="fc bfc" id="L376" title="All 2 branches covered.">        if (asynchronously) {</span>
-<span class="fc" id="L377">            call.enqueue(callback);</span>
+<span class="fc bfc" id="L373" title="All 2 branches covered.">        if (asynchronously) {</span>
+<span class="fc" id="L374">            call.enqueue(callback);</span>
         } else {
 
             Response&lt;ResponseBody&gt; response;
             try {
-<span class="fc" id="L382">                response = call.execute();</span>
-<span class="fc" id="L383">                callback.onResponse(call, response);</span>
-<span class="nc" id="L384">            } catch (IOException e) {</span>
-<span class="nc" id="L385">                catchOrPropagateException(e, onError);</span>
-<span class="fc" id="L386">            }</span>
+<span class="fc" id="L379">                response = call.execute();</span>
+<span class="fc" id="L380">                callback.onResponse(call, response);</span>
+<span class="nc" id="L381">            } catch (IOException e) {</span>
+<span class="nc" id="L382">                catchOrPropagateException(e, onError);</span>
+<span class="fc" id="L383">            }</span>
         }
 
-<span class="fc" id="L389">    }</span>
+<span class="fc" id="L386">    }</span>
 
-<span class="fc" id="L391">    private class DefaultCancellable implements Cancellable {</span>
+<span class="fc" id="L388">    private class DefaultCancellable implements Cancellable {</span>
 
-<span class="fc" id="L393">        private volatile boolean wasCancelled = false;</span>
+<span class="fc" id="L390">        private volatile boolean wasCancelled = false;</span>
 
         @Override
         public void cancel() {
-<span class="nc" id="L397">            wasCancelled = true;</span>
-<span class="nc" id="L398">        }</span>
+<span class="nc" id="L394">            wasCancelled = true;</span>
+<span class="nc" id="L395">        }</span>
 
         @Override
         public boolean isCancelled() {
-<span class="fc" id="L402">            return wasCancelled;</span>
+<span class="fc" id="L399">            return wasCancelled;</span>
         }
     }
 }
