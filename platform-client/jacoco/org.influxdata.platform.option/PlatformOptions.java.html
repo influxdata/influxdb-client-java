@@ -22,15 +22,20 @@
 package org.influxdata.platform.option;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.influxdata.platform.Arguments;
 
+import okhttp3.Cookie;
+import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -40,33 +45,35 @@ import okhttp3.Response;
  */
 public final class PlatformOptions {
 
+<span class="fc" id="L48">    private static final List&lt;String&gt; NO_AUTH_ROUTE = Arrays.asList(&quot;/api/v2/signin&quot;, &quot;/api/v2/signout&quot;);</span>
+
     private final String url;
     private final AuthScheme authScheme;
     private final OkHttpClient.Builder okHttpClient;
 
-<span class="fc" id="L47">    private PlatformOptions(@Nonnull final PlatformOptions.Builder builder) {</span>
+<span class="fc" id="L54">    private PlatformOptions(@Nonnull final PlatformOptions.Builder builder) {</span>
 
-<span class="fc" id="L49">        Arguments.checkNotNull(builder, &quot;PlatformOptions.Builder&quot;);</span>
+<span class="fc" id="L56">        Arguments.checkNotNull(builder, &quot;PlatformOptions.Builder&quot;);</span>
 
-<span class="fc" id="L51">        this.url = builder.url;</span>
-<span class="fc" id="L52">        this.authScheme = builder.authScheme;</span>
-<span class="fc" id="L53">        this.okHttpClient = builder.okHttpClient;</span>
-<span class="fc" id="L54">    }</span>
+<span class="fc" id="L58">        this.url = builder.url;</span>
+<span class="fc" id="L59">        this.authScheme = builder.authScheme;</span>
+<span class="fc" id="L60">        this.okHttpClient = builder.okHttpClient;</span>
+<span class="fc" id="L61">    }</span>
 
     /**
      * The scheme uses to Authentication.
      */
-<span class="fc" id="L59">    public enum AuthScheme {</span>
+<span class="fc" id="L66">    public enum AuthScheme {</span>
 
         /**
          * Basic auth.
          */
-<span class="fc" id="L64">        SESSION,</span>
+<span class="fc" id="L71">        SESSION,</span>
 
         /**
          * Authentication token.
          */
-<span class="fc" id="L69">        TOKEN</span>
+<span class="fc" id="L76">        TOKEN</span>
     }
 
     /**
@@ -75,7 +82,7 @@ public final class PlatformOptions {
      */
     @Nonnull
     public String getUrl() {
-<span class="fc" id="L78">        return url;</span>
+<span class="fc" id="L85">        return url;</span>
     }
 
     /**
@@ -85,7 +92,7 @@ public final class PlatformOptions {
      */
     @Nonnull
     public AuthScheme getAuthScheme() {
-<span class="fc" id="L88">        return authScheme;</span>
+<span class="fc" id="L95">        return authScheme;</span>
     }
 
     /**
@@ -94,7 +101,7 @@ public final class PlatformOptions {
      */
     @Nonnull
     public OkHttpClient.Builder getOkHttpClient() {
-<span class="fc" id="L97">        return okHttpClient;</span>
+<span class="fc" id="L104">        return okHttpClient;</span>
     }
 
     /**
@@ -104,14 +111,14 @@ public final class PlatformOptions {
      */
     @Nonnull
     public static PlatformOptions.Builder builder() {
-<span class="fc" id="L107">        return new PlatformOptions.Builder();</span>
+<span class="fc" id="L114">        return new PlatformOptions.Builder();</span>
     }
 
     /**
      * A builder for {@code PlatformOptions}.
      */
     @NotThreadSafe
-<span class="fc" id="L114">    public static class Builder {</span>
+<span class="fc" id="L121">    public static class Builder {</span>
 
         private String url;
         private OkHttpClient.Builder okHttpClient;
@@ -119,6 +126,8 @@ public final class PlatformOptions {
         @Nullable
         private AuthScheme authScheme;
         private char[] token;
+        private String username;
+        private char[] password;
 
         /**
          * Set the url to connect to Platform.
@@ -128,9 +137,9 @@ public final class PlatformOptions {
          */
         @Nonnull
         public PlatformOptions.Builder url(@Nonnull final String url) {
-<span class="fc" id="L131">            Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
-<span class="fc" id="L132">            this.url = url;</span>
-<span class="fc" id="L133">            return this;</span>
+<span class="fc" id="L140">            Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
+<span class="fc" id="L141">            this.url = url;</span>
+<span class="fc" id="L142">            return this;</span>
         }
 
         /**
@@ -145,14 +154,14 @@ public final class PlatformOptions {
         public PlatformOptions.Builder okHttpClient(@Nonnull final OkHttpClient.Builder okHttpClient,
                                                     @Nonnull final Boolean authenticate) {
 
-<span class="fc" id="L148">            Arguments.checkNotNull(okHttpClient, &quot;OkHttpClient.Builder&quot;);</span>
-<span class="fc" id="L149">            Arguments.checkNotNull(authenticate, &quot;authenticate&quot;);</span>
+<span class="fc" id="L157">            Arguments.checkNotNull(okHttpClient, &quot;OkHttpClient.Builder&quot;);</span>
+<span class="fc" id="L158">            Arguments.checkNotNull(authenticate, &quot;authenticate&quot;);</span>
 
-<span class="fc" id="L151">            this.okHttpClient = okHttpClient;</span>
-<span class="fc bfc" id="L152" title="All 2 branches covered.">            if (authenticate) {</span>
-<span class="fc" id="L153">                this.okHttpClient.addInterceptor(new AuthenticateInterceptor());</span>
+<span class="fc" id="L160">            this.okHttpClient = okHttpClient;</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">            if (authenticate) {</span>
+<span class="fc" id="L162">                this.okHttpClient.addInterceptor(new AuthenticateInterceptor());</span>
             }
-<span class="fc" id="L155">            return this;</span>
+<span class="fc" id="L164">            return this;</span>
         }
 
         /**
@@ -166,12 +175,14 @@ public final class PlatformOptions {
         public PlatformOptions.Builder authenticate(@Nonnull final String username,
                                                     @Nonnull final char[] password) {
 
-<span class="fc" id="L169">            Arguments.checkNonEmpty(username, &quot;username&quot;);</span>
-<span class="fc" id="L170">            Arguments.checkNotNull(password, &quot;password&quot;);</span>
+<span class="fc" id="L178">            Arguments.checkNonEmpty(username, &quot;username&quot;);</span>
+<span class="fc" id="L179">            Arguments.checkNotNull(password, &quot;password&quot;);</span>
 
-<span class="fc" id="L172">            this.authScheme = AuthScheme.SESSION;</span>
+<span class="fc" id="L181">            this.authScheme = AuthScheme.SESSION;</span>
+<span class="fc" id="L182">            this.username = username;</span>
+<span class="fc" id="L183">            this.password = password;</span>
 
-<span class="fc" id="L174">            return this;</span>
+<span class="fc" id="L185">            return this;</span>
         }
 
         /**
@@ -183,12 +194,12 @@ public final class PlatformOptions {
         @Nonnull
         public PlatformOptions.Builder authenticateToken(final char[] token) {
 
-<span class="fc" id="L186">            Arguments.checkNotNull(token, &quot;token&quot;);</span>
+<span class="fc" id="L197">            Arguments.checkNotNull(token, &quot;token&quot;);</span>
 
-<span class="fc" id="L188">            this.authScheme = AuthScheme.TOKEN;</span>
-<span class="fc" id="L189">            this.token = token;</span>
+<span class="fc" id="L199">            this.authScheme = AuthScheme.TOKEN;</span>
+<span class="fc" id="L200">            this.token = token;</span>
 
-<span class="fc" id="L191">            return this;</span>
+<span class="fc" id="L202">            return this;</span>
         }
 
         /**
@@ -199,32 +210,74 @@ public final class PlatformOptions {
         @Nonnull
         public PlatformOptions build() {
 
-<span class="fc bfc" id="L202" title="All 2 branches covered.">            if (url == null) {</span>
-<span class="fc" id="L203">                throw new IllegalStateException(&quot;The url to connect to Platform has to be defined.&quot;);</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">            if (url == null) {</span>
+<span class="fc" id="L214">                throw new IllegalStateException(&quot;The url to connect to Platform has to be defined.&quot;);</span>
             }
 
-<span class="fc bfc" id="L206" title="All 2 branches covered.">            if (okHttpClient == null) {</span>
-<span class="fc" id="L207">                okHttpClient = new OkHttpClient.Builder().addInterceptor(new AuthenticateInterceptor());</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">            if (okHttpClient == null) {</span>
+<span class="fc" id="L218">                okHttpClient = new OkHttpClient.Builder().addInterceptor(new AuthenticateInterceptor());</span>
             }
 
-<span class="fc" id="L210">            return new PlatformOptions(this);</span>
+<span class="fc" id="L221">            return new PlatformOptions(this);</span>
         }
 
-<span class="fc" id="L213">        private class AuthenticateInterceptor implements Interceptor {</span>
+<span class="fc" id="L224">        private class AuthenticateInterceptor implements Interceptor {</span>
+
+            private char[] sessionToken;
 
             @Override
             public Response intercept(@Nonnull final Chain chain) throws IOException {
 
-<span class="fc bfc" id="L218" title="All 2 branches covered.">                if (AuthScheme.TOKEN.equals(authScheme)) {</span>
+<span class="fc" id="L231">                Request request = chain.request();</span>
+<span class="fc" id="L232">                final String requestPath = request.url().encodedPath();</span>
 
-<span class="fc" id="L220">                    Request authorizedRequest = chain.request()</span>
-<span class="fc" id="L221">                            .newBuilder().header(&quot;Authorization&quot;, &quot;Token &quot; + String.valueOf(token))</span>
-<span class="fc" id="L222">                            .build();</span>
-
-<span class="fc" id="L224">                    return chain.proceed(authorizedRequest);</span>
+                // Is no authentication path?
+<span class="fc bfc" id="L235" title="All 2 branches covered.">                if (NO_AUTH_ROUTE.stream().anyMatch(requestPath::endsWith)) {</span>
+<span class="fc" id="L236">                    return chain.proceed(request);</span>
                 }
 
-<span class="fc" id="L227">                return chain.proceed(chain.request());</span>
+<span class="fc bfc" id="L239" title="All 2 branches covered.">                if (AuthScheme.TOKEN.equals(authScheme)) {</span>
+
+<span class="fc" id="L241">                    request = request.newBuilder()</span>
+<span class="fc" id="L242">                            .header(&quot;Authorization&quot;, &quot;Token &quot; + string(token))</span>
+<span class="fc" id="L243">                            .build();</span>
+
+<span class="fc bfc" id="L245" title="All 2 branches covered.">                } else if (AuthScheme.SESSION.equals(authScheme)) {</span>
+
+                    //TODO expires
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">                    if (sessionToken == null) {</span>
+
+<span class="fc" id="L250">                        Request authRequest = new Request.Builder()</span>
+<span class="fc" id="L251">                                .url(url + &quot;api/v2/signin&quot;)</span>
+<span class="fc" id="L252">                                .addHeader(&quot;Authorization&quot;, Credentials.basic(username, string(password)))</span>
+<span class="fc" id="L253">                                .post(RequestBody.create(null, &quot;&quot;))</span>
+<span class="fc" id="L254">                                .build();</span>
+
+<span class="fc" id="L256">                        Response authResponse = okHttpClient.build().newCall(authRequest).execute();</span>
+
+<span class="fc" id="L258">                        Cookie sessionCookie = Cookie.parseAll(authRequest.url(), authResponse.headers()).stream()</span>
+<span class="fc" id="L259">                                .filter(cookie -&gt; &quot;session&quot;.equals(cookie.name()))</span>
+<span class="fc" id="L260">                                .findFirst()</span>
+<span class="fc" id="L261">                                .orElse(null);</span>
+
+<span class="fc bfc" id="L263" title="All 2 branches covered.">                        if (sessionCookie != null) {</span>
+<span class="fc" id="L264">                            sessionToken = sessionCookie.value().toCharArray();</span>
+                        }
+
+<span class="fc bfc" id="L267" title="All 2 branches covered.">                        if (sessionToken != null) {</span>
+<span class="fc" id="L268">                            request = request.newBuilder()</span>
+<span class="fc" id="L269">                                    .header(&quot;Cookie&quot;, &quot;session=&quot; + string(sessionToken))</span>
+<span class="fc" id="L270">                                    .build();</span>
+                        }
+                    }
+                }
+
+<span class="fc" id="L275">                return chain.proceed(request);</span>
+            }
+
+            @Nonnull
+            private String string(final char[] password) {
+<span class="fc" id="L280">                return String.valueOf(password);</span>
             }
         }
     }
