@@ -25,6 +25,8 @@ import java.io.IOException;
 
 import org.influxdata.platform.AbstractMockServerTest;
 
+import okhttp3.Cookie;
+import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.mockwebserver.MockResponse;
@@ -138,13 +140,13 @@ class PlatformOptionsTest extends AbstractMockServerTest {
         options.getOkHttpClient().build().newCall(request).execute();
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(1);
-        
+
         RecordedRequest recordedRequest = mockServer.takeRequest();
         Assertions.assertThat(recordedRequest.getHeader("Authorization")).isNull();
     }
 
     @Test
-    void authorizationSession() {
+    void authorizationSession() throws IOException, InterruptedException {
 
         PlatformOptions options = PlatformOptions.builder()
                 .url(platformURL)
@@ -153,25 +155,69 @@ class PlatformOptionsTest extends AbstractMockServerTest {
 
         Assertions.assertThat(options.getAuthScheme()).isEqualTo(PlatformOptions.AuthScheme.SESSION);
 
-//        MockResponse sigInResponse = new MockResponse();
-//        mockServer.enqueue(sigInResponse);
-//        mockServer.enqueue(new MockResponse());
-//
-//        Request request = new Request.Builder()
-//                .url(platformURL + "/tasks")
-//                .get()
-//                .build();
-//
-//        options.getOkHttpClient().build().newCall(request).execute();
-//
-//        // Sig in request
-//        RecordedRequest requestToSigIn = mockServer.takeRequest();
-//        Assertions.assertThat(requestToSigIn.getPath()).isEqualTo("/sigin");
-//        Assertions.assertThat(requestToSigIn.getHeader("Authorization"))
-//                .isEqualTo(Credentials.basic("user", "secret"));
-//
-//        RecordedRequest requestToTasks = mockServer.takeRequest();
-//        Assertions.assertThat(requestToSigIn.getHeader("Authorization")).isEqualTo("x");
+        Cookie session = new Cookie.Builder()
+                .name("session")
+                .value("yCgXaEBF8mYSmJUweRcW0g_5jElMs7mv6_-G1bNcau4Z0ZLQYtj0BkHZYRnBVA6uXHtyuhflcOzyNDNRxnaC0A==")
+                .hostOnlyDomain("127.0.0.1")
+                .path("/api/v2")
+                .build();
+
+        MockResponse sigInResponse = new MockResponse()
+                .addHeader(String.format("Set-Cookie: %s ", session.toString()));
+
+        mockServer.enqueue(sigInResponse);
+        mockServer.enqueue(new MockResponse());
+
+        Request request = new Request.Builder()
+                .url(platformURL + "api/v2/tasks")
+                .get()
+                .build();
+
+        options.getOkHttpClient().build().newCall(request).execute();
+
+        // Sign in request
+        RecordedRequest requestToSignIn = mockServer.takeRequest();
+        Assertions.assertThat(requestToSignIn.getPath()).isEqualTo("/api/v2/signin");
+        Assertions.assertThat(requestToSignIn.getHeader("Authorization"))
+                .isEqualTo(Credentials.basic("user", "secret"));
+
+        RecordedRequest requestToTasks = mockServer.takeRequest();
+        Assertions.assertThat(requestToTasks.getPath()).isEqualTo("/api/v2/tasks");
+        Assertions.assertThat(requestToTasks.getHeader("Cookie"))
+                .isEqualTo("session=yCgXaEBF8mYSmJUweRcW0g_5jElMs7mv6_-G1bNcau4Z0ZLQYtj0BkHZYRnBVA6uXHtyuhflcOzyNDNRxnaC0A==");
+    }
+
+    @Test
+    void authorizationSessionWithoutCookie() throws IOException, InterruptedException {
+
+        PlatformOptions options = PlatformOptions.builder()
+                .url(platformURL)
+                .authenticate("user", "secret".toCharArray())
+                .build();
+
+        Assertions.assertThat(options.getAuthScheme()).isEqualTo(PlatformOptions.AuthScheme.SESSION);
+
+        MockResponse sigInResponse = new MockResponse();
+
+        mockServer.enqueue(sigInResponse);
+        mockServer.enqueue(new MockResponse());
+
+        Request request = new Request.Builder()
+                .url(platformURL + "api/v2/tasks")
+                .get()
+                .build();
+
+        options.getOkHttpClient().build().newCall(request).execute();
+
+        // Sign in request
+        RecordedRequest requestToSignIn = mockServer.takeRequest();
+        Assertions.assertThat(requestToSignIn.getPath()).isEqualTo("/api/v2/signin");
+        Assertions.assertThat(requestToSignIn.getHeader("Authorization"))
+                .isEqualTo(Credentials.basic("user", "secret"));
+
+        RecordedRequest requestToTasks = mockServer.takeRequest();
+        Assertions.assertThat(requestToTasks.getPath()).isEqualTo("/api/v2/tasks");
+        Assertions.assertThat(requestToTasks.getHeader("Cookie")).isNull();
     }
 
     @Test

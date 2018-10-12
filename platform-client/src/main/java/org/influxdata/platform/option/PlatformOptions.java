@@ -22,15 +22,20 @@
 package org.influxdata.platform.option;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.influxdata.platform.Arguments;
 
+import okhttp3.Cookie;
+import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -39,6 +44,8 @@ import okhttp3.Response;
  * @author Jakub Bednar (bednar@github) (05/09/2018 10:22)
  */
 public final class PlatformOptions {
+
+    private static final List<String> NO_AUTH_ROUTE = Arrays.asList("/api/v2/signin", "/api/v2/signout");
 
     private final String url;
     private final AuthScheme authScheme;
@@ -119,6 +126,8 @@ public final class PlatformOptions {
         @Nullable
         private AuthScheme authScheme;
         private char[] token;
+        private String username;
+        private char[] password;
 
         /**
          * Set the url to connect to Platform.
@@ -170,6 +179,8 @@ public final class PlatformOptions {
             Arguments.checkNotNull(password, "password");
 
             this.authScheme = AuthScheme.SESSION;
+            this.username = username;
+            this.password = password;
 
             return this;
         }
@@ -212,19 +223,61 @@ public final class PlatformOptions {
 
         private class AuthenticateInterceptor implements Interceptor {
 
+            private char[] sessionToken;
+
             @Override
             public Response intercept(@Nonnull final Chain chain) throws IOException {
 
-                if (AuthScheme.TOKEN.equals(authScheme)) {
+                Request request = chain.request();
+                final String requestPath = request.url().encodedPath();
 
-                    Request authorizedRequest = chain.request()
-                            .newBuilder().header("Authorization", "Token " + String.valueOf(token))
-                            .build();
-
-                    return chain.proceed(authorizedRequest);
+                // Is no authentication path?
+                if (NO_AUTH_ROUTE.stream().anyMatch(requestPath::endsWith)) {
+                    return chain.proceed(request);
                 }
 
-                return chain.proceed(chain.request());
+                if (AuthScheme.TOKEN.equals(authScheme)) {
+
+                    request = request.newBuilder()
+                            .header("Authorization", "Token " + string(token))
+                            .build();
+
+                } else if (AuthScheme.SESSION.equals(authScheme)) {
+
+                    //TODO expires
+                    if (sessionToken == null) {
+
+                        Request authRequest = new Request.Builder()
+                                .url(url + "api/v2/signin")
+                                .addHeader("Authorization", Credentials.basic(username, string(password)))
+                                .post(RequestBody.create(null, ""))
+                                .build();
+
+                        Response authResponse = okHttpClient.build().newCall(authRequest).execute();
+
+                        Cookie sessionCookie = Cookie.parseAll(authRequest.url(), authResponse.headers()).stream()
+                                .filter(cookie -> "session".equals(cookie.name()))
+                                .findFirst()
+                                .orElse(null);
+
+                        if (sessionCookie != null) {
+                            sessionToken = sessionCookie.value().toCharArray();
+                        }
+
+                        if (sessionToken != null) {
+                            request = request.newBuilder()
+                                    .header("Cookie", "session=" + string(sessionToken))
+                                    .build();
+                        }
+                    }
+                }
+
+                return chain.proceed(request);
+            }
+
+            @Nonnull
+            private String string(final char[] password) {
+                return String.valueOf(password);
             }
         }
     }
