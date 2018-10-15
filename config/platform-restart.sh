@@ -73,6 +73,7 @@ docker run \
        --name influxdata-platform \
        --link=influxdb \
        --publish 9999:9999 \
+       --volume ${SCRIPT_PATH}/entrypoint.sh:/entrypoint.sh \
        ${INFLUX_PLATFORM_IMAGE}
 
 echo "Wait 5s to start InfluxData Platform"

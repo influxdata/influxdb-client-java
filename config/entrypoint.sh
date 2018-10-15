@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # The MIT License
 #
@@ -20,54 +21,15 @@
 # THE SOFTWARE.
 #
 
-language: java
+#TODO remove after fix https://github.com/influxdata/platform/issues/1079
 
-jdk:
-  - oraclejdk8
-  - oraclejdk9
-  - oraclejdk10
-  - oraclejdk11
+set -e
 
-sudo: required
+echo "create directory"
+mkdir /root/.influxdbv2/
 
-cache:
-  timeout: 10000
-  directories:
-  - $HOME/.m2
+if [ "${1:0:1}" = '-' ]; then
+    set -- influxd "$@"
+fi
 
-services:
-  - docker
-
-env:
-  matrix:
-    - INFLUXDB_VERSION=nightly INFLUX_PLATFORM_VERSION=nightly CODE_COV=true
-
-install: true
-
-script:
-  - ./config/platform-restart.sh
-  - mvn -B clean install
-  - echo ${JAVA_HOME}
-  - echo ${ORACLEJDK8_JAVA_HOME}
-  - test "true" = ${CODE_COV:=false} && bash <(curl -s https://codecov.io/bash)
-
-jobs:
-  include:
-  - stage: site
-    jdk: oraclejdk8
-    script:
-      - ./config/publish-site.sh
-
-  - stage: deploy
-    jdk: oraclejdk8
-    script: skip
-    deploy:
-      provider: script
-      script: mvn clean deploy -DskipTests -s config/deploy-settings.xml
-      skip_cleanup: true
-      on:
-        repo: bonitoo-io/influxdata-platform-java
-        branch: master
-
-after_failure:
-  - cat target/surefire-reports/*.txt
+exec "$@"
