@@ -1,7 +1,7 @@
-org.influxdata.flux.annotations
 org.influxdata.flux.domain
 org.influxdata.flux.mapper
 org.influxdata.platform
+org.influxdata.platform.annotations
 org.influxdata.platform.error
 org.influxdata.platform.error.rest
 org.influxdata.platform.rest

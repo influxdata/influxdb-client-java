@@ -46,20 +46,6 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.flux.annotations.Measurement.java">org/influxdata/flux/annotations/Measurement.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.error.rest.NotImplementedException.java">org/influxdata/platform/error/rest/NotImplementedException.java</a>
                 </td>
                 <td>
@@ -117,6 +103,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.rest.Cancellable.java">org/influxdata/platform/rest/Cancellable.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.annotations.Measurement.java">org/influxdata/platform/annotations/Measurement.java</a>
                 </td>
                 <td>
                   0
@@ -326,20 +326,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.flux.annotations.Column.java">org/influxdata/flux/annotations/Column.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.error.rest.RequestTimeoutException.java">org/influxdata/platform/error/rest/RequestTimeoutException.java</a>
                 </td>
                 <td>
@@ -355,6 +341,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.error.rest.ServiceUnavailableException.java">org/influxdata/platform/error/rest/ServiceUnavailableException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.annotations.Column.java">org/influxdata/platform/annotations/Column.java</a>
                 </td>
                 <td>
                   0
