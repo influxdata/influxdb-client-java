@@ -27,6 +27,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
+import org.influxdata.flux.annotations.Column;
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
 import org.influxdata.platform.error.InfluxException;
@@ -52,6 +53,35 @@ class FluxClientQueryTest extends AbstractFluxClientTest {
         assertSuccessResult(result);
     }
 
+    @Test
+    void queryToPOJO() {
+
+        mockServer.enqueue(createResponse());
+
+        List<Free> result = fluxClient.query("from(bucket:\"telegraf\")", Free.class);
+
+        Assertions.assertThat(result).hasSize(4);
+
+        // 1
+        Assertions.assertThat(result.get(0).host).isEqualTo("A");
+        Assertions.assertThat(result.get(0).region).isEqualTo("west");
+        Assertions.assertThat(result.get(0).mem).isEqualTo(10L);
+
+        // 2
+        Assertions.assertThat(result.get(1).host).isEqualTo("B");
+        Assertions.assertThat(result.get(1).region).isEqualTo("west");
+        Assertions.assertThat(result.get(1).mem).isEqualTo(20L);
+
+        // 3
+        Assertions.assertThat(result.get(2).host).isEqualTo("A");
+        Assertions.assertThat(result.get(2).region).isEqualTo("west");
+        Assertions.assertThat(result.get(2).mem).isEqualTo(11L);
+
+        // 4
+        Assertions.assertThat(result.get(3).host).isEqualTo("B");
+        Assertions.assertThat(result.get(3).region).isEqualTo("west");
+        Assertions.assertThat(result.get(3).mem).isEqualTo(22L);
+    }
 
     @Test
     void queryError() {
@@ -68,10 +98,10 @@ class FluxClientQueryTest extends AbstractFluxClientTest {
 
         String error =
                 "#datatype,string,string\n"
-                + "#group,true,true\n"
-                + "#default,,\n"
-                + ",error,reference\n"
-                + ",failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,897";
+                        + "#group,true,true\n"
+                        + "#default,,\n"
+                        + ",error,reference\n"
+                        + ",failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time,897";
 
         mockServer.enqueue(createResponse(error));
 
@@ -159,5 +189,17 @@ class FluxClientQueryTest extends AbstractFluxClientTest {
 
     private void assertRecords(@Nonnull final List<FluxRecord> records) {
         Assertions.assertThat(records).hasSize(4);
+    }
+
+    public static class Free {
+
+        @Column(name = "host")
+        private String host;
+
+        @Column(name = "region")
+        private String region;
+
+        @Column(name = "_value")
+        private Long mem;
     }
 }

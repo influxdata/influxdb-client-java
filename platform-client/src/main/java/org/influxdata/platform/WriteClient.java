@@ -146,29 +146,6 @@ public interface WriteClient {
     <T extends AbstractWriteEvent> Observable<T> listenEvents(@Nonnull final Class<T> eventType);
 
     /**
-     * Enable Gzip compress for http request body.
-     *
-     * @return the {@link WriteClient} instance to be able to use it in a fluent manner.
-     */
-    @Nonnull
-    WriteClient enableGzip();
-
-    /**
-     * Disable Gzip compress for http request body.
-     *
-     * @return the {@link WriteClient} instance to be able to use it in a fluent manner.
-     */
-    @Nonnull
-    WriteClient disableGzip();
-
-    /**
-     * Returns whether Gzip compress for http request body is enabled.
-     *
-     * @return true if gzip is enabled.
-     */
-    boolean isGzipEnabled();
-
-    /**
      * Close threads for asynchronous batch writing.
      *
      * @return the {@link WriteClient} instance to be able to use it in a fluent manner.

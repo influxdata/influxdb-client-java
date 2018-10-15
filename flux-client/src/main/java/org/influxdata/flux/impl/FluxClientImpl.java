@@ -76,6 +76,36 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
         return consumer.getTables();
     }
 
+    @Nonnull
+    @Override
+    public <M> List<M> query(@Nonnull final String query, @Nonnull final Class<M> measurementType) {
+
+        Arguments.checkNonEmpty(query, "query");
+
+        List<M> measurements = new ArrayList<>();
+
+        FluxResponseConsumer consumer = new FluxResponseConsumer() {
+            @Override
+            public void accept(final int index,
+                               @Nonnull final Cancellable cancellable,
+                               @Nonnull final FluxTable table) {
+
+            }
+
+            @Override
+            public void accept(final int index,
+                               @Nonnull final Cancellable cancellable,
+                               @Nonnull final FluxRecord record) {
+
+                measurements.add(resultMapper.toPOJO(record, measurementType));
+            }
+        };
+
+        query(query, DEFAULT_DIALECT.toString(), consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
+
+        return measurements;
+    }
+
     @Override
     public void query(@Nonnull final String query, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext) {
 

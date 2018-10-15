@@ -69,7 +69,7 @@ class AbstractFluxClient<T> extends AbstractRestClient {
     final FluxCsvParser fluxCsvParser;
 
     final HttpLoggingInterceptor loggingInterceptor;
-    OkHttpClient okHttpClient;
+    private OkHttpClient okHttpClient;
 
     AbstractFluxClient(@Nonnull final FluxConnectionOptions options,
                        @Nonnull final Class<T> serviceType) {
@@ -150,6 +150,5 @@ class AbstractFluxClient<T> extends AbstractRestClient {
     public void close() {
         okHttpClient.connectionPool().evictAll();
         okHttpClient.dispatcher().executorService().shutdown();
-
     }
 }

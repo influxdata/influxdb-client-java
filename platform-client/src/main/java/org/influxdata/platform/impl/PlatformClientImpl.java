@@ -45,6 +45,7 @@ import com.squareup.moshi.Moshi;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.moshi.MoshiConverterFactory;
 
 /**
@@ -59,6 +60,7 @@ public class PlatformClientImpl extends AbstractRestClient implements PlatformCl
 
     private final HttpLoggingInterceptor loggingInterceptor;
     private final AuthenticateInterceptor authenticateInterceptor;
+    private final GzipInterceptor gzipInterceptor;
 
 
     public PlatformClientImpl(@Nonnull final PlatformOptions options) {
@@ -67,10 +69,12 @@ public class PlatformClientImpl extends AbstractRestClient implements PlatformCl
         this.loggingInterceptor = new HttpLoggingInterceptor();
         this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         this.authenticateInterceptor = new AuthenticateInterceptor(options);
+        this.gzipInterceptor = new GzipInterceptor();
 
         OkHttpClient okHttpClient = options.getOkHttpClient()
                 .addInterceptor(this.loggingInterceptor)
                 .addInterceptor(this.authenticateInterceptor)
+                .addInterceptor(this.gzipInterceptor)
                 .build();
 
         this.authenticateInterceptor.initToken(okHttpClient);
@@ -81,6 +85,7 @@ public class PlatformClientImpl extends AbstractRestClient implements PlatformCl
                 .baseUrl(options.getUrl())
                 .client(okHttpClient)
                 .addConverterFactory(MoshiConverterFactory.create(this.moshi).asLenient())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
         this.platformService = retrofit.create(PlatformService.class);
@@ -95,13 +100,16 @@ public class PlatformClientImpl extends AbstractRestClient implements PlatformCl
     @Nonnull
     @Override
     public WriteClient createWriteClient() {
-        throw new TodoException();
+        return createWriteClient(WriteOptions.DEFAULTS);
     }
 
     @Nonnull
     @Override
     public WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions) {
-        throw new TodoException();
+
+        Arguments.checkNotNull(writeOptions, "WriteOptions");
+
+        return new WriteClientImpl(writeOptions, platformService);
     }
 
     @Nonnull
@@ -153,6 +161,30 @@ public class PlatformClientImpl extends AbstractRestClient implements PlatformCl
         setLogLevel(this.loggingInterceptor, logLevel);
 
         return this;
+    }
+
+    @Nonnull
+    @Override
+    public PlatformClient enableGzip() {
+
+        this.gzipInterceptor.enableGzip();
+
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public PlatformClient disableGzip() {
+
+        this.gzipInterceptor.disableGzip();
+
+        return this;
+    }
+
+    @Override
+    public boolean isGzipEnabled() {
+
+        return this.gzipInterceptor.isEnabledGzip();
     }
 
     @Override

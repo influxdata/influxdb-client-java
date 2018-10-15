@@ -121,4 +121,29 @@ public interface PlatformClient extends AutoCloseable {
      */
     @Nonnull
     PlatformClient setLogLevel(@Nonnull final LogLevel logLevel);
+
+    /**
+     * Enable Gzip compress for http request body.
+     *
+     * Currently only the "Write" endpoint supports the Gzip compression.
+     *
+     * @return the {@link PlatformClient} instance to be able to use it in a fluent manner.
+     */
+    @Nonnull
+    PlatformClient enableGzip();
+
+    /**
+     * Disable Gzip compress for http request body.
+     *
+     * @return the {@link PlatformClient} instance to be able to use it in a fluent manner.
+     */
+    @Nonnull
+    PlatformClient disableGzip();
+
+    /**
+     * Returns whether Gzip compress for http request body is enabled.
+     *
+     * @return true if gzip is enabled.
+     */
+    boolean isGzipEnabled();
 }

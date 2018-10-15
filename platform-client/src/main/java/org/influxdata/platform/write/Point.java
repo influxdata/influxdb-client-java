@@ -45,9 +45,13 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 @NotThreadSafe
 public final class Point {
 
-    private static final TimeUnit DEFAULT_WRITE_PRECISION = NANOSECONDS;
-    private static final EnumSet<TimeUnit> ALLOWED_PRECISION = EnumSet.of(TimeUnit.NANOSECONDS,
+    /**
+     * The precisions that are allowed to use in the write.
+     */
+    public static final EnumSet<TimeUnit> ALLOWED_PRECISION = EnumSet.of(TimeUnit.NANOSECONDS,
             TimeUnit.MICROSECONDS, TimeUnit.MILLISECONDS, TimeUnit.SECONDS);
+
+    private static final TimeUnit DEFAULT_WRITE_PRECISION = NANOSECONDS;
 
     private static final int MAX_FRACTION_DIGITS = 340;
     private static final ThreadLocal<NumberFormat> NUMBER_FORMATTER =

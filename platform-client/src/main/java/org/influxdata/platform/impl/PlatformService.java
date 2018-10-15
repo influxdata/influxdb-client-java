@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.Users;
 
+import io.reactivex.Completable;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -35,6 +36,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 13:30)
@@ -69,4 +71,15 @@ interface PlatformService {
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<User> me();
+
+    //
+    // Write
+    //
+    @POST("/api/v2/write")
+    @Nonnull
+    Completable writePoints(@Query("org") final String org,
+                            @Query("bucket") final String bucket,
+                            @Query("precision") final String precision,
+                            @Body final RequestBody points);
+
 }

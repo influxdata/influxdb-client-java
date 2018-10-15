@@ -23,6 +23,7 @@ package org.influxdata.platform;
 
 import javax.annotation.Nonnull;
 
+import org.influxdata.platform.impl.AbstractPlatformClientTest;
 import org.influxdata.platform.impl.TodoException;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.LogLevel;
@@ -49,8 +50,8 @@ class PlatformClientTest extends AbstractPlatformClientTest {
     @Test
     void createWriteClient() {
 
-        todo(() -> platformClient.createWriteClient());
-        todo(() -> platformClient.createWriteClient(WriteOptions.DEFAULTS));
+        Assertions.assertThat(platformClient.createWriteClient()).isNotNull();
+        Assertions.assertThat(platformClient.createWriteClient(WriteOptions.DEFAULTS)).isNotNull();
     }
 
     @Test
@@ -94,6 +95,22 @@ class PlatformClientTest extends AbstractPlatformClientTest {
         Assertions.assertThat(platformClient).isEqualTo(this.platformClient);
 
         Assertions.assertThat(this.platformClient.getLogLevel()).isEqualTo(LogLevel.HEADERS);
+    }
+
+    @Test
+    void gzip() {
+
+        Assertions.assertThat(platformClient.isGzipEnabled()).isFalse();
+
+        // Enable GZIP
+        PlatformClient platformClient = this.platformClient.enableGzip();
+        Assertions.assertThat(platformClient).isEqualTo(this.platformClient);
+        Assertions.assertThat(this.platformClient.isGzipEnabled()).isTrue();
+
+        // Disable GZIP
+        platformClient = this.platformClient.disableGzip();
+        Assertions.assertThat(platformClient).isEqualTo(this.platformClient);
+        Assertions.assertThat(this.platformClient.isGzipEnabled()).isFalse();
     }
 
     @Test

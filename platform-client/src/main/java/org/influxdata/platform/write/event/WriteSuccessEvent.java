@@ -38,20 +38,17 @@ public final class WriteSuccessEvent extends AbstractWriteEvent {
     private String organization;
     private String bucket;
     private TimeUnit precision;
-    private String token;
     private String lineProtocol;
 
     public WriteSuccessEvent(@Nonnull final String organization,
                              @Nonnull final String bucket,
                              @Nonnull final TimeUnit precision,
-                             @Nonnull final String token,
                              @Nonnull final String lineProtocol) {
 
 
         this.organization = organization;
         this.bucket = bucket;
         this.precision = precision;
-        this.token = token;
         this.lineProtocol = lineProtocol;
     }
 
@@ -67,13 +64,6 @@ public final class WriteSuccessEvent extends AbstractWriteEvent {
      */
     public String getBucket() {
         return bucket;
-    }
-
-    /**
-     * @return the token used to authorize write to bucket
-     */
-    public String getToken() {
-        return token;
     }
 
     /**
