@@ -21,7 +21,7 @@
  */
 package org.influxdata.platform.impl;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -69,6 +69,8 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
 
     private final PublishProcessor<BatchWriteItem> processor;
     private final PublishSubject<AbstractWriteEvent> eventPublisher;
+
+    private final MeasurementMapper measurementMapper = new MeasurementMapper();
 
     WriteClientImpl(@Nonnull final WriteOptions writeOptions,
                     @Nonnull final PlatformService platformService) {
@@ -124,7 +126,13 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
                         //
                         .reduce("", (lineProtocol, batchWrite) -> {
 
-                            String data = batchWrite.data.toLineProtocol();
+                            String data = null;
+                            try {
+                                data = batchWrite.data.toLineProtocol();
+                            } catch (Exception e) {
+                                publish(new WriteErrorEvent(e));
+                            }
+
                             if (data == null || data.isEmpty()) {
                                 return lineProtocol;
                             }
@@ -164,8 +172,11 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
         Arguments.checkNonEmpty(organization, "organization");
         Arguments.checkNotNull(precision, "TimeUnit.precision is required");
 
-        List<BatchWriteData> data = new ArrayList<>();
-        data.add(new BatchWriteDataRecord(record));
+        if (record == null) {
+            return;
+        }
+
+        List<BatchWriteData> data = Collections.singletonList(new BatchWriteDataRecord(record));
 
         write(bucket, organization, precision, data);
     }
@@ -191,14 +202,23 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
                            @Nonnull final String organization,
                            @Nullable final Point point) {
 
-        throw new TodoException();
+        if (point == null) {
+            return;
+        }
+
+        write(bucket, organization, point.getPrecision(), Collections.singletonList(new BatchWriteDataPoint(point)));
     }
 
     @Override
     public void writePoints(@Nonnull final String bucket,
                             @Nonnull final String organization,
                             @Nonnull final List<Point> points) {
-        throw new TodoException();
+
+        Arguments.checkNonEmpty(bucket, "bucket");
+        Arguments.checkNonEmpty(organization, "organization");
+        Arguments.checkNotNull(points, "points");
+
+        points.forEach(point -> writePoint(bucket, organization, point));
     }
 
     @Override
@@ -206,7 +226,12 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
                                  @Nonnull final String organization,
                                  @Nonnull final TimeUnit precision,
                                  @Nullable final Object measurement) {
-        throw new TodoException();
+
+        if (measurement == null) {
+            return;
+        }
+
+        writeMeasurements(bucket, organization, precision, Collections.singletonList(measurement));
     }
 
     @Override
@@ -214,7 +239,17 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
                                   @Nonnull final String organization,
                                   @Nonnull final TimeUnit precision,
                                   @Nonnull final List<Object> measurements) {
-        throw new TodoException();
+
+        Arguments.checkNonEmpty(bucket, "bucket");
+        Arguments.checkNonEmpty(organization, "organization");
+        Arguments.checkNotNull(precision, "TimeUnit.precision is required");
+        Arguments.checkNotNull(measurements, "records");
+
+        List<BatchWriteData> data = measurements.stream()
+                .map(it -> new BatchWriteDataMeasurement(it, precision))
+                .collect(Collectors.toList());
+
+        write(bucket, organization, precision, data);
     }
 
     @Nonnull
@@ -250,7 +285,6 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
         if (!ALLOWED_PRECISION.contains(precision)) {
             throw new IllegalArgumentException("Precision must be one of: " + ALLOWED_PRECISION);
         }
-
 
         BatchWriteOptions batchWriteOptions = new BatchWriteOptions(bucket, organization, precision);
         data.forEach(it -> {
@@ -336,6 +370,49 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
         @Override
         public String toLineProtocol() {
             return record;
+        }
+    }
+
+    private final class BatchWriteDataPoint implements BatchWriteData {
+
+        private final Point point;
+
+        private BatchWriteDataPoint(@Nullable final Point point) {
+            this.point = point;
+        }
+
+        @Nullable
+        @Override
+        public String toLineProtocol() {
+
+            if (point == null) {
+                return null;
+            }
+
+            return point.toString();
+        }
+    }
+
+    private final class BatchWriteDataMeasurement implements BatchWriteData {
+
+        private final Object measurement;
+        private final TimeUnit precision;
+
+        private BatchWriteDataMeasurement(@Nullable final Object measurement,
+                                          @Nonnull final TimeUnit precision) {
+            this.measurement = measurement;
+            this.precision = precision;
+        }
+
+        @Nullable
+        @Override
+        public String toLineProtocol() {
+
+            if (measurement == null) {
+                return null;
+            }
+
+            return measurementMapper.toPoint(measurement, precision).toString();
         }
     }
 

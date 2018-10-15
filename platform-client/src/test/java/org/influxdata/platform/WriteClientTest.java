@@ -21,13 +21,19 @@
  */
 package org.influxdata.platform;
 
+import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import org.influxdata.platform.annotations.Column;
+import org.influxdata.platform.annotations.Measurement;
 import org.influxdata.platform.error.InfluxException;
 import org.influxdata.platform.impl.AbstractPlatformClientTest;
 import org.influxdata.platform.option.WriteOptions;
+import org.influxdata.platform.write.Point;
 import org.influxdata.platform.write.event.BackpressureEvent;
 import org.influxdata.platform.write.event.WriteErrorEvent;
 import org.influxdata.platform.write.event.WriteSuccessEvent;
@@ -73,6 +79,160 @@ class WriteClientTest extends AbstractPlatformClientTest {
     }
 
     @Test
+    void writePoint() throws InterruptedException {
+
+        mockServer.enqueue(createResponse("{}"));
+
+        writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
+
+        writeClient.writePoint("b1", "org1", Point.name("h2o").addTag("location", "europe").addField("level", 2));
+
+        RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        // value
+        Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("h2o,location=europe level=2i");
+
+        // organization
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("org1");
+        // bucket
+        Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("b1");
+        // precision
+        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
+    }
+
+    @Test
+    void writePointNull() {
+
+        mockServer.enqueue(createResponse("{}"));
+
+        writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
+
+        writeClient.writePoint("b1", "org1", null);
+
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(0);
+    }
+
+    @Test
+    void writePointDifferentPrecision() throws InterruptedException {
+
+        mockServer.enqueue(createResponse("{}"));
+        mockServer.enqueue(createResponse("{}"));
+
+        writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
+
+        Point point1 = Point.name("h2o").addTag("location", "europe").addField("level", 1).time(1L, TimeUnit.MILLISECONDS);
+        Point point2 = Point.name("h2o").addTag("location", "europe").addField("level", 2).time(2L, TimeUnit.SECONDS);
+
+        writeClient.writePoints("b1", "org1", Arrays.asList(point1, point2));
+
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(2);
+
+        RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        // request 1
+        Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("h2o,location=europe level=1i 1");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("ms");
+
+        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("h2o,location=europe level=2i 2");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("s");
+    }
+
+    @Test
+    void writeMeasurement() throws InterruptedException {
+
+        mockServer.enqueue(new MockResponse());
+
+        writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
+
+        H2OFeetMeasurement measurement = new H2OFeetMeasurement(
+                "coyote_creek", 2.927, "below 3 feet", 1440046800L);
+
+        // response
+        writeClient.writeMeasurement("b1", "org1", TimeUnit.NANOSECONDS, measurement);
+
+        RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        // value
+        Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("h2o,location=coyote_creek level\\ description=\"below 3 feet\",water_level=2.927 1440046800000000");
+
+        // organization
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("org1");
+        // bucket
+        Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("b1");
+        // precision
+        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
+    }
+
+    @Test
+    void writeMeasurementNull() {
+
+        mockServer.enqueue(createResponse("{}"));
+
+        writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
+
+        writeClient.writeMeasurement("b1", "org1", TimeUnit.SECONDS, null);
+
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(0);
+    }
+
+    @Test
+    void writeMeasurementWhichIsNotMappableToPoint() {
+
+        writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
+        TestObserver<WriteErrorEvent> listener = writeClient.listenEvents(WriteErrorEvent.class).test();
+
+        writeClient.writeMeasurement("b1", "org1", TimeUnit.SECONDS, 15);
+
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(0);
+
+        listener
+                .assertValue(event -> {
+
+                    Assertions.assertThat(event).isNotNull();
+                    Assertions.assertThat(event.getThrowable()).isNotNull();
+                    Assertions.assertThat(event.getThrowable())
+                            .isInstanceOf(InfluxException.class)
+                            .hasMessage("Measurement type 'class java.lang.Integer' does not have a @Measurement annotation.");
+
+                    return true;
+                })
+                .assertSubscribed()
+                .assertNotComplete();
+    }
+
+    @Test
+    void writeMeasurements() throws InterruptedException {
+
+        writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
+
+        mockServer.enqueue(new MockResponse());
+        mockServer.enqueue(new MockResponse());
+
+        H2OFeetMeasurement measurement1 = new H2OFeetMeasurement(
+                "coyote_creek", 2.927, "below 3 feet", 1440046800L);
+
+        H2OFeetMeasurement measurement2 = new H2OFeetMeasurement(
+                "coyote_creek", 1.927, "below 2 feet", 1440049800L);
+
+        writeClient.writeMeasurements("b1", "org1", TimeUnit.NANOSECONDS, Arrays.asList(measurement1, measurement2));
+
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(2);
+
+        RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        // request 1
+        Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("h2o,location=coyote_creek level\\ description=\"below 3 feet\",water_level=2.927 1440046800000000");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
+
+        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("h2o,location=coyote_creek level\\ description=\"below 2 feet\",water_level=1.927 1440049800000000");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
+    }
+
+    @Test
     void requestParameters() throws InterruptedException {
 
         mockServer.enqueue(createResponse("{}"));
@@ -99,7 +259,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
         TestObserver<WriteErrorEvent> listener = writeClient.listenEvents(WriteErrorEvent.class).test();
 
         writeClient.writeRecords("b1", "org1", TimeUnit.NANOSECONDS, Lists.emptyList());
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, (String) null);
+        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, null);
         writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, "");
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(0);
@@ -402,7 +562,6 @@ class WriteClientTest extends AbstractPlatformClientTest {
                     Assertions.assertThat(event).isNotNull();
                     return true;
                 });
-
     }
 
     @Nonnull
@@ -417,7 +576,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
 
     @Nonnull
-    protected String getRequestBody(@Nonnull final MockWebServer server) {
+    private String getRequestBody(@Nonnull final MockWebServer server) {
 
         Assertions.assertThat(server).isNotNull();
 
@@ -430,5 +589,27 @@ class WriteClientTest extends AbstractPlatformClientTest {
         Assertions.assertThat(recordedRequest).isNotNull();
 
         return recordedRequest.getBody().readUtf8();
+    }
+
+    @Measurement(name = "h2o")
+    private static class H2OFeetMeasurement {
+        @Column(name = "location", tag = true)
+        private String location;
+
+        @Column(name = "water_level")
+        private Double level;
+
+        @Column(name = "level description")
+        private String description;
+
+        @Column(name = "time", timestamp = true)
+        private Instant time;
+
+        private H2OFeetMeasurement(String location, Double level, String description, @Nullable final Long millis) {
+            this.location = location;
+            this.level = level;
+            this.description = description;
+            this.time = millis != null ? Instant.ofEpochMilli(millis) : null;
+        }
     }
 }

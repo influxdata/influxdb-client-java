@@ -23,7 +23,7 @@ package example;
 
 import java.time.Instant;
 
-import org.influxdata.flux.annotations.Column;
+import org.influxdata.platform.annotations.Column;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 

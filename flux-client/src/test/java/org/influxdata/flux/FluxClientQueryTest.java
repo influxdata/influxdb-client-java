@@ -27,9 +27,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
-import org.influxdata.flux.annotations.Column;
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
+import org.influxdata.platform.annotations.Column;
 import org.influxdata.platform.error.InfluxException;
 
 import org.assertj.core.api.Assertions;

@@ -30,8 +30,8 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.influxdata.flux.annotations.Column;
 import org.influxdata.flux.domain.FluxRecord;
+import org.influxdata.platform.annotations.Column;
 import org.influxdata.platform.error.InfluxException;
 
 public class FluxResultMapper {
