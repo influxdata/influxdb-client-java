@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FluxResultMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Flux client - RxJava</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.flux.impl</a> &gt; <span class="el_source">FluxResultMapper.java</span></div><h1>FluxResultMapper.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.flux.impl;
+
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.flux.annotations.Column;
+import org.influxdata.flux.domain.FluxRecord;
+import org.influxdata.platform.error.InfluxException;
+
+<span class="fc" id="L37">public class FluxResultMapper {</span>
+
+<span class="fc" id="L39">    private static final Logger LOG = Logger.getLogger(FluxResultMapper.class.getName());</span>
+
+    /**
+     * Data structure used to cache classes used as measurements.
+     */
+<span class="fc" id="L44">    protected static final ConcurrentMap&lt;String, ConcurrentMap&lt;String, Field&gt;&gt; CLASS_FIELD_CACHE</span>
+        = new ConcurrentHashMap&lt;&gt;();
+
+    /**
+     * Maps FluxRecord into custom POJO class.
+     *
+     * @param record flux record
+     * @param clazz  target class
+     * @param &lt;T&gt;    pojo type
+     * @return
+     */
+
+    @Nonnull
+    public &lt;T&gt; T toPOJO(@Nonnull final FluxRecord record, @Nonnull final Class&lt;T&gt; clazz) {
+
+<span class="nc" id="L59">        Objects.requireNonNull(record, &quot;Record is required&quot;);</span>
+<span class="nc" id="L60">        Objects.requireNonNull(clazz, &quot;Class type is required&quot;);</span>
+
+        try {
+<span class="nc" id="L63">            T pojo = clazz.newInstance();</span>
+
+<span class="nc" id="L65">            Field[] fields = clazz.getDeclaredFields();</span>
+
+<span class="nc bnc" id="L67" title="All 2 branches missed.">            for (Field field : fields) {</span>
+<span class="nc" id="L68">                Column anno = field.getAnnotation(Column.class);</span>
+<span class="nc" id="L69">                String columnName = field.getName();</span>
+<span class="nc bnc" id="L70" title="All 4 branches missed.">                if (anno != null &amp;&amp; !anno.name().isEmpty()) {</span>
+<span class="nc" id="L71">                    columnName = anno.name();</span>
+                }
+
+<span class="nc" id="L74">                Map&lt;String, Object&gt; recordValues = record.getValues();</span>
+
+<span class="nc" id="L76">                String col = null;</span>
+
+<span class="nc bnc" id="L78" title="All 2 branches missed.">                if (recordValues.containsKey(columnName)) {</span>
+<span class="nc" id="L79">                    col = columnName;</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                } else if (recordValues.containsKey(&quot;_&quot; + columnName)) {</span>
+<span class="nc" id="L81">                    col = &quot;_&quot; + columnName;</span>
+                }
+
+<span class="nc bnc" id="L84" title="All 2 branches missed.">                if (col != null) {</span>
+<span class="nc" id="L85">                    Object value = record.getValueByKey(col);</span>
+
+<span class="nc" id="L87">                    setFieldValue(pojo, field, value);</span>
+                }
+            }
+<span class="nc" id="L90">            return pojo;</span>
+<span class="nc" id="L91">        } catch (Exception e) {</span>
+<span class="nc" id="L92">            throw new InfluxException(e);</span>
+        }
+    }
+
+    private void setFieldValue(@Nonnull final Object object,
+                               @Nullable final Field field,
+                               @Nullable final Object value) {
+
+<span class="nc bnc" id="L100" title="All 4 branches missed.">        if (field == null || value == null) {</span>
+<span class="nc" id="L101">            return;</span>
+        }
+<span class="nc" id="L103">        String msg =</span>
+            &quot;Class '%s' field '%s' was defined with a different field type and caused a ClassCastException. &quot;
+                + &quot;The correct type is '%s' (current field value: '%s').&quot;;
+
+        try {
+<span class="nc bnc" id="L108" title="All 2 branches missed.">            if (!field.isAccessible()) {</span>
+<span class="nc" id="L109">                field.setAccessible(true);</span>
+            }
+<span class="nc" id="L111">            Class&lt;?&gt; fieldType = field.getType();</span>
+
+            //the same type
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            if (fieldType.equals(value.getClass())) {</span>
+<span class="nc" id="L115">                field.set(object, value);</span>
+<span class="nc" id="L116">                return;</span>
+            }
+
+            //convert primitives
+<span class="nc bnc" id="L120" title="All 2 branches missed.">            if (double.class.isAssignableFrom(fieldType)) {</span>
+<span class="nc" id="L121">                field.setDouble(object, toDoubleValue(value));</span>
+<span class="nc" id="L122">                return;</span>
+            }
+<span class="nc bnc" id="L124" title="All 2 branches missed.">            if (long.class.isAssignableFrom(fieldType)) {</span>
+<span class="nc" id="L125">                field.setLong(object, toLongValue(value));</span>
+<span class="nc" id="L126">                return;</span>
+            }
+<span class="nc bnc" id="L128" title="All 2 branches missed.">            if (int.class.isAssignableFrom(fieldType)) {</span>
+<span class="nc" id="L129">                field.setInt(object, toIntValue(value));</span>
+<span class="nc" id="L130">                return;</span>
+            }
+<span class="nc bnc" id="L132" title="All 2 branches missed.">            if (boolean.class.isAssignableFrom(fieldType)) {</span>
+<span class="nc" id="L133">                field.setBoolean(object, Boolean.valueOf(String.valueOf(value)));</span>
+<span class="nc" id="L134">                return;</span>
+            }
+
+<span class="nc" id="L137">            field.set(object, value);</span>
+
+<span class="nc" id="L139">        } catch (ClassCastException | IllegalAccessException e) {</span>
+
+<span class="nc" id="L141">            throw new InfluxException(String.format(msg, object.getClass().getName(), field.getName(),</span>
+<span class="nc" id="L142">                value.getClass().getName(), value));</span>
+<span class="nc" id="L143">        }</span>
+<span class="nc" id="L144">    }</span>
+
+    private double toDoubleValue(final Object value) {
+
+<span class="nc bnc" id="L148" title="All 4 branches missed.">        if (double.class.isAssignableFrom(value.getClass()) || Double.class.isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L149">            return (double) value;</span>
+        }
+
+<span class="nc" id="L152">        return (Double) value;</span>
+    }
+
+    private long toLongValue(final Object value) {
+
+<span class="nc bnc" id="L157" title="All 4 branches missed.">        if (long.class.isAssignableFrom(value.getClass()) || Long.class.isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L158">            return (long) value;</span>
+        }
+
+<span class="nc" id="L161">        return ((Double) value).longValue();</span>
+    }
+
+    private int toIntValue(final Object value) {
+
+<span class="nc bnc" id="L166" title="All 4 branches missed.">        if (int.class.isAssignableFrom(value.getClass()) || Integer.class.isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L167">            return (int) value;</span>
+        }
+
+<span class="nc" id="L170">        return ((Double) value).intValue();</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

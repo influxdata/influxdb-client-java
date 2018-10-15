@@ -1,3 +1,4 @@
+org.influxdata.flux.annotations
 org.influxdata.flux.domain
 org.influxdata.platform
 org.influxdata.platform.error

@@ -2,7 +2,7 @@ GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_
 The Flux client,org.influxdata.flux.impl,FluxClientImpl,14,397,0,2,6,102,0,27,0,26
 The Flux client,org.influxdata.flux.impl,FluxCsvParser.ParsingState,0,24,0,0,0,3,0,1,0,1
 The Flux client,org.influxdata.flux.impl,FluxClientImpl.DefaultCancellable,4,12,0,0,2,3,1,2,1,2
-The Flux client,org.influxdata.flux.impl,AbstractFluxClient,5,142,2,8,1,43,2,10,0,7
+The Flux client,org.influxdata.flux.impl,AbstractFluxClient,15,144,2,8,4,43,3,10,1,7
 The Flux client,org.influxdata.flux.impl,FluxConnectionString,0,3,0,0,0,2,0,1,0,1
 The Flux client,org.influxdata.flux.impl,FluxCsvParser,1,481,5,53,1,118,5,38,0,11
 The Flux client,org.influxdata.flux.impl,FluxResponseConsumerTable,0,27,0,0,0,7,0,4,0,4

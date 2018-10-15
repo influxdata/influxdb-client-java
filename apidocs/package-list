@@ -1,4 +1,6 @@
+example
 org.influxdata.flux
+org.influxdata.flux.annotations
 org.influxdata.flux.domain
 org.influxdata.flux.error
 org.influxdata.flux.functions
