@@ -22,6 +22,7 @@
 package org.influxdata.platform;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.influxdata.platform.domain.User;
 
@@ -36,6 +37,8 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnitPlatform.class)
 class ITUserClientTest extends AbstractITClientTest {
+
+    private static final Logger LOG = Logger.getLogger(ITUserClientTest.class.getName());
 
     private UserClient userClient;
 
@@ -53,6 +56,8 @@ class ITUserClientTest extends AbstractITClientTest {
         String userName = generateName("John Ryzen");
 
         User user = userClient.createUser(userName);
+
+        LOG.info("Created User: " + user);
 
         Assertions.assertThat(user).isNotNull();
         Assertions.assertThat(user.getId()).isNotBlank();

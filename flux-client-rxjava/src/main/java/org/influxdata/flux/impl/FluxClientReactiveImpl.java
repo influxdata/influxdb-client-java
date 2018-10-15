@@ -29,7 +29,6 @@ import javax.annotation.Nullable;
 import org.influxdata.flux.FluxClientReactive;
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
-import org.influxdata.flux.mapper.FluxResultMapper;
 import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.error.InfluxException;
@@ -54,9 +53,6 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
  */
 public class FluxClientReactiveImpl extends AbstractFluxClient<FluxServiceReactive> implements FluxClientReactive {
 
-    protected final FluxResultMapper mapper = new FluxResultMapper();
-
-
     public FluxClientReactiveImpl(@Nonnull final FluxConnectionOptions options) {
         super(options, FluxServiceReactive.class);
     }
@@ -78,8 +74,11 @@ public class FluxClientReactiveImpl extends AbstractFluxClient<FluxServiceReacti
     @Override
     public <M> Flowable<M> query(final @Nonnull String query, final @Nonnull Class<M> recordType) {
 
+        Arguments.checkNonEmpty(query, "Flux query");
+        Arguments.checkNotNull(recordType, "The Record type");
+
         return query(query)
-                .map(fluxResults -> mapper.toPOJO(fluxResults, recordType));
+                .map(fluxResults -> resultMapper.toPOJO(fluxResults, recordType));
     }
 
     @Nonnull
@@ -111,7 +110,6 @@ public class FluxClientReactiveImpl extends AbstractFluxClient<FluxServiceReacti
                         });
 
         return query(queryStream, DEFAULT_DIALECT.toString(), consumer);
-
     }
 
     @Nonnull

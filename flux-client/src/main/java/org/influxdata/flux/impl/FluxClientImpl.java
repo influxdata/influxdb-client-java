@@ -35,7 +35,6 @@ import org.influxdata.flux.FluxClient;
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
 import org.influxdata.flux.impl.FluxCsvParser.FluxResponseConsumer;
-import org.influxdata.flux.mapper.FluxResultMapper;
 import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.error.InfluxException;
@@ -54,8 +53,6 @@ import retrofit2.Response;
 public class FluxClientImpl extends AbstractFluxClient<FluxService> implements FluxClient {
 
     private static final Logger LOG = Logger.getLogger(FluxClientImpl.class.getName());
-
-    FluxResultMapper resultMapper = new FluxResultMapper();
 
     private static final Runnable EMPTY_ACTION = () -> {
 

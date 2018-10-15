@@ -79,15 +79,10 @@ public interface WriteClient {
      *
      * @param bucket       specifies the destination bucket ID for writes
      * @param organization specifies the destination organization ID for writes
-     * @param precision    specifies the precision for the unix timestamps within the body line-protocol.
-     *                     Available values : {@link TimeUnit#NANOSECONDS}, {@link TimeUnit#MICROSECONDS},
-     *                     {@link TimeUnit#MILLISECONDS}, {@link TimeUnit#SECONDS}.
-     *                     Default value : {@link TimeUnit#NANOSECONDS}.
      * @param point        specifies the Data point to write into bucket
      */
     void writePoint(@Nonnull final String bucket,
                     @Nonnull final String organization,
-                    @Nonnull final TimeUnit precision,
                     @Nullable final Point point);
 
 
@@ -96,15 +91,10 @@ public interface WriteClient {
      *
      * @param bucket       specifies the destination bucket ID for writes
      * @param organization specifies the destination organization ID for writes
-     * @param precision    specifies the precision for the unix timestamps within the body line-protocol.
-     *                     Available values : {@link TimeUnit#NANOSECONDS}, {@link TimeUnit#MICROSECONDS},
-     *                     {@link TimeUnit#MILLISECONDS}, {@link TimeUnit#SECONDS}.
-     *                     Default value : {@link TimeUnit#NANOSECONDS}.
      * @param points       specifies the Data points to write into bucket
      */
     void writePoints(@Nonnull final String bucket,
                      @Nonnull final String organization,
-                     @Nonnull final TimeUnit precision,
                      @Nonnull final List<Point> points);
 
 
