@@ -29,7 +29,6 @@ import javax.annotation.Nullable;
 import org.influxdata.flux.FluxClientReactive;
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
-import org.influxdata.flux.mapper.FluxResultMapper;
 import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.error.InfluxException;
@@ -54,139 +53,138 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
  */
 public class FluxClientReactiveImpl extends AbstractFluxClient&lt;FluxServiceReactive&gt; implements FluxClientReactive {
 
-<span class="fc" id="L57">    protected final FluxResultMapper mapper = new FluxResultMapper();</span>
-
-
     public FluxClientReactiveImpl(@Nonnull final FluxConnectionOptions options) {
-<span class="fc" id="L61">        super(options, FluxServiceReactive.class);</span>
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L57">        super(options, FluxServiceReactive.class);</span>
+<span class="fc" id="L58">    }</span>
 
     @Override
     protected void configure(@Nonnull final Retrofit.Builder serviceBuilder) {
-<span class="fc" id="L66">        serviceBuilder.addCallAdapterFactory(RxJava2CallAdapterFactory.create());</span>
-<span class="fc" id="L67">    }</span>
+<span class="fc" id="L62">        serviceBuilder.addCallAdapterFactory(RxJava2CallAdapterFactory.create());</span>
+<span class="fc" id="L63">    }</span>
 
     @Nonnull
     @Override
     public Flowable&lt;FluxRecord&gt; query(@Nonnull final String query) {
 
-<span class="fc" id="L73">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
+<span class="fc" id="L69">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
 
-<span class="fc" id="L75">        return query(Flowable.just(query));</span>
+<span class="fc" id="L71">        return query(Flowable.just(query));</span>
     }
 
     @Override
     public &lt;M&gt; Flowable&lt;M&gt; query(final @Nonnull String query, final @Nonnull Class&lt;M&gt; recordType) {
 
-<span class="nc" id="L81">        return query(query)</span>
-<span class="nc" id="L82">                .map(fluxResults -&gt; mapper.toPOJO(fluxResults, recordType));</span>
+<span class="nc" id="L77">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
+<span class="nc" id="L78">        Arguments.checkNotNull(recordType, &quot;The Record type&quot;);</span>
+
+<span class="nc" id="L80">        return query(query)</span>
+<span class="nc" id="L81">                .map(fluxResults -&gt; resultMapper.toPOJO(fluxResults, recordType));</span>
     }
 
     @Nonnull
     @Override
     public Flowable&lt;FluxRecord&gt; query(@Nonnull final Publisher&lt;String&gt; queryStream) {
 
-<span class="fc" id="L89">        Arguments.checkNotNull(queryStream, &quot;Flux query stream&quot;);</span>
+<span class="fc" id="L88">        Arguments.checkNotNull(queryStream, &quot;Flux query stream&quot;);</span>
 
-<span class="fc" id="L91">        BiConsumer&lt;BufferedSource, ObservableEmitter&lt;FluxRecord&gt;&gt; consumer = (source, observable) -&gt;</span>
-<span class="fc" id="L92">                fluxCsvParser.parseFluxResponse(</span>
+<span class="fc" id="L90">        BiConsumer&lt;BufferedSource, ObservableEmitter&lt;FluxRecord&gt;&gt; consumer = (source, observable) -&gt;</span>
+<span class="fc" id="L91">                fluxCsvParser.parseFluxResponse(</span>
                         source,
                         new ObservableCancellable(observable),
-<span class="fc" id="L95">                        new FluxCsvParser.FluxResponseConsumer() {</span>
+<span class="fc" id="L94">                        new FluxCsvParser.FluxResponseConsumer() {</span>
 
                             @Override
                             public void accept(final int index,
                                                @Nonnull final Cancellable cancellable,
                                                @Nonnull final FluxTable table) {
 
-<span class="fc" id="L102">                            }</span>
+<span class="fc" id="L101">                            }</span>
 
                             @Override
                             public void accept(final int index,
                                                @Nonnull final Cancellable cancellable,
                                                @Nonnull final FluxRecord record) {
 
-<span class="fc" id="L109">                                observable.onNext(record);</span>
-<span class="fc" id="L110">                            }</span>
+<span class="fc" id="L108">                                observable.onNext(record);</span>
+<span class="fc" id="L109">                            }</span>
                         });
 
-<span class="fc" id="L113">        return query(queryStream, DEFAULT_DIALECT.toString(), consumer);</span>
-
+<span class="fc" id="L112">        return query(queryStream, DEFAULT_DIALECT.toString(), consumer);</span>
     }
 
     @Nonnull
     @Override
     public Flowable&lt;String&gt; queryRaw(@Nonnull final String query) {
 
-<span class="fc" id="L121">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
+<span class="fc" id="L119">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
 
-<span class="fc" id="L123">        return queryRaw(query, null);</span>
+<span class="fc" id="L121">        return queryRaw(query, null);</span>
     }
 
     @Nonnull
     @Override
     public Flowable&lt;String&gt; queryRaw(@Nonnull final Publisher&lt;String&gt; queryStream) {
 
-<span class="fc" id="L130">        Arguments.checkNotNull(queryStream, &quot;Flux query stream&quot;);</span>
+<span class="fc" id="L128">        Arguments.checkNotNull(queryStream, &quot;Flux query stream&quot;);</span>
 
-<span class="fc" id="L132">        return queryRaw(queryStream, null);</span>
+<span class="fc" id="L130">        return queryRaw(queryStream, null);</span>
     }
 
     @Nonnull
     @Override
     public Flowable&lt;String&gt; queryRaw(@Nonnull final String query, @Nullable final String dialect) {
 
-<span class="fc" id="L139">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
+<span class="fc" id="L137">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
 
-<span class="fc" id="L141">        return queryRaw(Flowable.just(query), dialect);</span>
+<span class="fc" id="L139">        return queryRaw(Flowable.just(query), dialect);</span>
     }
 
     @Nonnull
     @Override
     public Flowable&lt;String&gt; queryRaw(@Nonnull final Publisher&lt;String&gt; queryStream, @Nullable final String dialect) {
 
-<span class="fc" id="L148">        Arguments.checkNotNull(queryStream, &quot;Flux query stream&quot;);</span>
+<span class="fc" id="L146">        Arguments.checkNotNull(queryStream, &quot;Flux query stream&quot;);</span>
 
-<span class="fc" id="L150">        BiConsumer&lt;BufferedSource, ObservableEmitter&lt;String&gt;&gt; consumer = (source, observable) -&gt;</span>
-<span class="fc" id="L151">                parseFluxResponseToLines(observable::onNext, new ObservableCancellable(observable), source);</span>
+<span class="fc" id="L148">        BiConsumer&lt;BufferedSource, ObservableEmitter&lt;String&gt;&gt; consumer = (source, observable) -&gt;</span>
+<span class="fc" id="L149">                parseFluxResponseToLines(observable::onNext, new ObservableCancellable(observable), source);</span>
 
-<span class="fc" id="L153">        return query(queryStream, dialect, consumer);</span>
+<span class="fc" id="L151">        return query(queryStream, dialect, consumer);</span>
     }
 
     @Nonnull
     @Override
     public Single&lt;Boolean&gt; ping() {
-<span class="fc" id="L159">        return fluxService</span>
-<span class="fc" id="L160">                .ping()</span>
-<span class="fc" id="L161">                .map(Response::isSuccessful)</span>
-<span class="fc" id="L162">                .onErrorReturn(throwable -&gt; false);</span>
+<span class="fc" id="L157">        return fluxService</span>
+<span class="fc" id="L158">                .ping()</span>
+<span class="fc" id="L159">                .map(Response::isSuccessful)</span>
+<span class="fc" id="L160">                .onErrorReturn(throwable -&gt; false);</span>
     }
 
     @Nonnull
     @Override
     public Single&lt;String&gt; version() {
 
-<span class="fc" id="L169">        return fluxService</span>
-<span class="fc" id="L170">                .ping()</span>
-<span class="fc" id="L171">                .map(this::getVersion)</span>
-<span class="fc" id="L172">                .onErrorResumeNext(throwable -&gt; Single.error(toInfluxException(throwable)));</span>
+<span class="fc" id="L167">        return fluxService</span>
+<span class="fc" id="L168">                .ping()</span>
+<span class="fc" id="L169">                .map(this::getVersion)</span>
+<span class="fc" id="L170">                .onErrorResumeNext(throwable -&gt; Single.error(toInfluxException(throwable)));</span>
     }
 
     @Nonnull
     @Override
     public LogLevel getLogLevel() {
-<span class="fc" id="L178">        return getLogLevel(this.loggingInterceptor);</span>
+<span class="fc" id="L176">        return getLogLevel(this.loggingInterceptor);</span>
     }
 
     @Nonnull
     @Override
     public FluxClientReactive setLogLevel(@Nonnull final LogLevel logLevel) {
 
-<span class="fc" id="L185">        Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;);</span>
+<span class="fc" id="L183">        Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;);</span>
 
-<span class="fc" id="L187">        setLogLevel(this.loggingInterceptor, logLevel);</span>
+<span class="fc" id="L185">        setLogLevel(this.loggingInterceptor, logLevel);</span>
 
-<span class="fc" id="L189">        return this;</span>
+<span class="fc" id="L187">        return this;</span>
     }
 
     @Nonnull
@@ -194,14 +192,14 @@ public class FluxClientReactiveImpl extends AbstractFluxClient&lt;FluxServiceRea
                                   @Nullable final String dialect,
                                   @Nonnull final BiConsumer&lt;BufferedSource, ObservableEmitter&lt;T&gt;&gt; consumer) {
 
-<span class="fc" id="L197">        return Flowable</span>
-<span class="fc" id="L198">                .fromPublisher(queryStream)</span>
-<span class="fc" id="L199">                .concatMap(query -&gt; fluxService</span>
-<span class="fc" id="L200">                        .query(createBody(dialect, query))</span>
-<span class="fc" id="L201">                        .flatMap(responseBody -&gt; chunkReader(responseBody, consumer))</span>
-<span class="fc" id="L202">                        .toFlowable(BackpressureStrategy.BUFFER))</span>
-<span class="fc" id="L203">                .onErrorResumeNext(throwable -&gt; {</span>
-<span class="fc" id="L204">                    return Flowable.error(toInfluxException(throwable));</span>
+<span class="fc" id="L195">        return Flowable</span>
+<span class="fc" id="L196">                .fromPublisher(queryStream)</span>
+<span class="fc" id="L197">                .concatMap(query -&gt; fluxService</span>
+<span class="fc" id="L198">                        .query(createBody(dialect, query))</span>
+<span class="fc" id="L199">                        .flatMap(responseBody -&gt; chunkReader(responseBody, consumer))</span>
+<span class="fc" id="L200">                        .toFlowable(BackpressureStrategy.BUFFER))</span>
+<span class="fc" id="L201">                .onErrorResumeNext(throwable -&gt; {</span>
+<span class="fc" id="L202">                    return Flowable.error(toInfluxException(throwable));</span>
                 });
     }
 
@@ -209,71 +207,71 @@ public class FluxClientReactiveImpl extends AbstractFluxClient&lt;FluxServiceRea
     private &lt;T&gt; Observable&lt;T&gt; chunkReader(@Nonnull final ResponseBody body,
                                           @Nonnull final BiConsumer&lt;BufferedSource, ObservableEmitter&lt;T&gt;&gt; consumer) {
 
-<span class="fc" id="L212">        Arguments.checkNotNull(body, &quot;ResponseBody&quot;);</span>
-<span class="fc" id="L213">        Arguments.checkNotNull(consumer, &quot;BufferedSource consumer&quot;);</span>
+<span class="fc" id="L210">        Arguments.checkNotNull(body, &quot;ResponseBody&quot;);</span>
+<span class="fc" id="L211">        Arguments.checkNotNull(consumer, &quot;BufferedSource consumer&quot;);</span>
 
-<span class="fc" id="L215">        return Observable.create(subscriber -&gt; {</span>
+<span class="fc" id="L213">        return Observable.create(subscriber -&gt; {</span>
 
-<span class="fc" id="L217">            boolean isCompleted = false;</span>
+<span class="fc" id="L215">            boolean isCompleted = false;</span>
             try {
-<span class="fc" id="L219">                BufferedSource source = body.source();</span>
+<span class="fc" id="L217">                BufferedSource source = body.source();</span>
 
                 //
                 // Subscriber is not disposed &amp;&amp; source has data =&gt; parse
                 //
-<span class="fc bfc" id="L224" title="All 4 branches covered.">                while (!subscriber.isDisposed() &amp;&amp; !source.exhausted()) {</span>
+<span class="fc bfc" id="L222" title="All 4 branches covered.">                while (!subscriber.isDisposed() &amp;&amp; !source.exhausted()) {</span>
 
-<span class="fc" id="L226">                    consumer.accept(source, subscriber);</span>
+<span class="fc" id="L224">                    consumer.accept(source, subscriber);</span>
                 }
 
-<span class="nc" id="L229">            } catch (IOException e) {</span>
+<span class="nc" id="L227">            } catch (IOException e) {</span>
 
                 //
                 // Socket close by remote server or end of data
                 //
-<span class="nc bnc" id="L234" title="All 2 branches missed.">                if (isCloseException(e)) {</span>
-<span class="nc" id="L235">                    isCompleted = true;</span>
-<span class="nc" id="L236">                    subscriber.onComplete();</span>
+<span class="nc bnc" id="L232" title="All 2 branches missed.">                if (isCloseException(e)) {</span>
+<span class="nc" id="L233">                    isCompleted = true;</span>
+<span class="nc" id="L234">                    subscriber.onComplete();</span>
                 } else {
-<span class="nc" id="L238">                    throw new UncheckedIOException(e);</span>
+<span class="nc" id="L236">                    throw new UncheckedIOException(e);</span>
                 }
-<span class="fc" id="L240">            }</span>
+<span class="fc" id="L238">            }</span>
 
             //if response end we get here
-<span class="pc bpc" id="L243" title="1 of 2 branches missed.">            if (!isCompleted) {</span>
-<span class="fc" id="L244">                subscriber.onComplete();</span>
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">            if (!isCompleted) {</span>
+<span class="fc" id="L242">                subscriber.onComplete();</span>
             }
 
-<span class="fc" id="L247">            body.close();</span>
-<span class="fc" id="L248">        });</span>
+<span class="fc" id="L245">            body.close();</span>
+<span class="fc" id="L246">        });</span>
     }
 
     @Nonnull
     private InfluxException toInfluxException(@Nonnull final Throwable throwable) {
 
-<span class="fc bfc" id="L254" title="All 2 branches covered.">        if (throwable instanceof InfluxException) {</span>
-<span class="fc" id="L255">            return (InfluxException) throwable;</span>
+<span class="fc bfc" id="L252" title="All 2 branches covered.">        if (throwable instanceof InfluxException) {</span>
+<span class="fc" id="L253">            return (InfluxException) throwable;</span>
         }
 
-<span class="fc" id="L258">        return new InfluxException(throwable);</span>
+<span class="fc" id="L256">        return new InfluxException(throwable);</span>
     }
 
     private final class ObservableCancellable implements Cancellable {
 
         private final ObservableEmitter&lt;?&gt; observable;
 
-<span class="fc" id="L265">        private ObservableCancellable(@Nonnull final ObservableEmitter&lt;?&gt; observable) {</span>
-<span class="fc" id="L266">            this.observable = observable;</span>
-<span class="fc" id="L267">        }</span>
+<span class="fc" id="L263">        private ObservableCancellable(@Nonnull final ObservableEmitter&lt;?&gt; observable) {</span>
+<span class="fc" id="L264">            this.observable = observable;</span>
+<span class="fc" id="L265">        }</span>
 
         @Override
         public void cancel() {
 
-<span class="nc" id="L272">        }</span>
+<span class="nc" id="L270">        }</span>
 
         @Override
         public boolean isCancelled() {
-<span class="fc" id="L276">            return observable.isDisposed();</span>
+<span class="fc" id="L274">            return observable.isDisposed();</span>
         }
     }
 }
