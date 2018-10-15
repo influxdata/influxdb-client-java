@@ -28,33 +28,33 @@ import org.influxdata.flux.option.FluxConnectionOptions;
 @SuppressWarnings("CheckStyle")
 public class FluxClientFactoryExample {
 
-  public static void main(String[] args) {
+    public static void main(final String[] args) {
 
-    FluxConnectionOptions options = FluxConnectionOptions.builder()
-        .url("http://localhost:8086/")
-        .build();
+        FluxConnectionOptions options = FluxConnectionOptions.builder()
+            .url("http://localhost:8086/")
+            .build();
 
-    FluxClient fluxClient = FluxClientFactory.create(options);
+        FluxClient fluxClient = FluxClientFactory.create(options);
 
-    String fluxQuery = "from(bucket: \"telegraf\")\n"
-        + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
-        + " |> range(start: -1d)"
-        + " |> sample(n: 5, pos: 1)";
+        String fluxQuery = "from(bucket: \"telegraf\")\n"
+            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
+            + " |> range(start: -1d)"
+            + " |> sample(n: 5, pos: 1)";
 
-     fluxClient.query(
-         fluxQuery, (cancellable, record) -> {
-          // process the flux query result record
-           System.out.println(
-               record.getTime() + ": " + record.getValue());
+        fluxClient.query(
+            fluxQuery, (cancellable, record) -> {
+                // process the flux query result record
+                System.out.println(
+                    record.getTime() + ": " + record.getValue());
 
-        }, error -> {
-           // error handling while processing result
-           System.out.println("Error occured: "+ error.getMessage());
+            }, error -> {
+                // error handling while processing result
+                System.out.println("Error occured: " + error.getMessage());
 
-        }, () -> {
-          // on complete
-           System.out.println("Query completed");
-        });
+            }, () -> {
+                // on complete
+                System.out.println("Query completed");
+            });
 
-  }
+    }
 }

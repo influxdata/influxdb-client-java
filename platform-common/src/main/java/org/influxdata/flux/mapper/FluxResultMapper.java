@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.flux.impl;
+package org.influxdata.flux.mapper;
 
 import java.lang.reflect.Field;
 import java.util.Map;

@@ -33,15 +33,14 @@ public class FluxRawExample {
             "http://localhost:8086/");
 
         String fluxQuery = "from(bucket: \"telegraf\")\n"
-            +  " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
+            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
             + " |> range(start: -1d)"
             + " |> sample(n: 5, pos: 1)";
 
         fluxClient.queryRaw(
             fluxQuery, (cancellable, line) -> {
                 // process the flux query result record
-                System.out.println(
-                    line);
+                System.out.println(line);
 
             }, error -> {
                 // error handling while processing result

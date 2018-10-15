@@ -21,25 +21,36 @@
  */
 package example;
 
-import java.time.temporal.ChronoUnit;
-
-import org.influxdata.flux.Flux;
-import org.influxdata.flux.functions.restriction.Restrictions;
+import org.influxdata.flux.FluxClient;
+import org.influxdata.flux.FluxClientFactory;
+import org.influxdata.flux.option.FluxConnectionOptions;
 
 @SuppressWarnings("CheckStyle")
-public class FluxDslExample {
+public class FluxClientPojoExample {
     public static void main(String[] args) {
 
-        Flux sampleFlux = Flux.from("telegraf")
-            .filter(
-                Restrictions.and(
-                    Restrictions.measurement().equal("cpu"),
-                    Restrictions.field().equal("usage_system"))
-            )
-            .range(-1L, ChronoUnit.DAYS)
-            .sample(5, 1);
+        FluxConnectionOptions options = FluxConnectionOptions.builder()
+            .url("http://localhost:8086/")
+            .build();
 
-        System.out.println(sampleFlux.toString());
+        FluxClient fluxClient = FluxClientFactory.create(options);
 
+        String fluxQuery = "from(bucket: \"telegraf\")\n"
+            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
+            + " |> range(start: -1d)"
+            + " |> sample(n: 5, pos: 1)";
+
+        ////Example of additional result stream processing on client side
+        fluxClient.query(fluxQuery, Cpu.class,
+            (cancellable, cpu) -> {
+                //process record
+                System.out.println(cpu);
+            }
+            , error -> {
+                //handle error
+                error.printStackTrace();
+            }, () -> {
+                System.out.println("Query completed.");
+            });
     }
 }

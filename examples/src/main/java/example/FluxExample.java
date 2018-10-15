@@ -40,9 +40,8 @@ public class FluxExample {
 
         fluxClient.query(
             fluxQuery, (cancellable, record) -> {
-                // process the flux query result record
-                System.out.println(
-                    record.getTime() + ": " + record.getValue());
+                // process the flux query records
+                System.out.println(record.getTime() + ": " + record.getValue());
 
             }, error -> {
                 // error handling while processing result

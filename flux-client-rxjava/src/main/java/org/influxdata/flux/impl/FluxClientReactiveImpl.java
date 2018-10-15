@@ -29,6 +29,7 @@ import javax.annotation.Nullable;
 import org.influxdata.flux.FluxClientReactive;
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
+import org.influxdata.flux.mapper.FluxResultMapper;
 import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.error.InfluxException;

@@ -35,6 +35,7 @@ import org.influxdata.flux.FluxClient;
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
 import org.influxdata.flux.impl.FluxCsvParser.FluxResponseConsumer;
+import org.influxdata.flux.mapper.FluxResultMapper;
 import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.error.InfluxException;
@@ -53,6 +54,8 @@ import retrofit2.Response;
 public class FluxClientImpl extends AbstractFluxClient<FluxService> implements FluxClient {
 
     private static final Logger LOG = Logger.getLogger(FluxClientImpl.class.getName());
+
+    FluxResultMapper resultMapper = new FluxResultMapper();
 
     private static final Runnable EMPTY_ACTION = () -> {
 
@@ -124,6 +127,43 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
         };
 
         query(query, DEFAULT_DIALECT.toString(), consumer, onError, onComplete, true);
+    }
+
+
+    @Override
+    public <M> void query(@Nonnull final String query,
+                          @Nonnull final Class<M> measurementType,
+                          @Nonnull final BiConsumer<Cancellable, M> onNext,
+                          @Nonnull final Consumer<? super Throwable> onError,
+                          @Nonnull final Runnable onComplete) {
+
+        Arguments.checkNonEmpty(query, "query");
+        Arguments.checkNotNull(onNext, "onNext");
+        Arguments.checkNotNull(onError, "onError");
+        Arguments.checkNotNull(onComplete, "onComplete");
+        Arguments.checkNotNull(measurementType, "measurementType");
+
+
+        FluxResponseConsumer consumer = new FluxResponseConsumer() {
+            @Override
+            public void accept(final int index,
+                               @Nonnull final Cancellable cancellable,
+                               @Nonnull final FluxTable table) {
+
+            }
+
+            @Override
+            public void accept(final int index,
+                               @Nonnull final Cancellable cancellable,
+                               @Nonnull final FluxRecord record) {
+
+                onNext.accept(cancellable, resultMapper.toPOJO(record, measurementType));
+
+            }
+        };
+
+        query(query, DEFAULT_DIALECT.toString(), consumer, onError, onComplete, true);
+
     }
 
     @Nonnull
