@@ -47,9 +47,7 @@ install: true
 script:
   - ./config/platform-restart.sh
   - mvn -B clean install
-  - echo ${JAVA_HOME}
-  - echo ${ORACLEJDK8_JAVA_HOME}
-  - test "true" = ${CODE_COV:=false} && bash <(curl -s https://codecov.io/bash)
+  - test ${JAVA_HOME} = ${ORACLEJDK8_JAVA_HOME:=""} && bash <(curl -s https://codecov.io/bash)
 
 jobs:
   include:

@@ -74,15 +74,14 @@ public class FluxClientReactiveImpl extends AbstractFluxClient<FluxServiceReacti
         return query(Flowable.just(query));
     }
 
-  @Override
-  public <M> Flowable<M> query(final @Nonnull String query, final @Nonnull Class<M> recordType) {
+    @Override
+    public <M> Flowable<M> query(final @Nonnull String query, final @Nonnull Class<M> recordType) {
 
-    return query(query)
-        .map(fluxResults -> mapper.toPOJO(fluxResults, recordType));
+        return query(query)
+                .map(fluxResults -> mapper.toPOJO(fluxResults, recordType));
+    }
 
-  }
-
-  @Nonnull
+    @Nonnull
     @Override
     public Flowable<FluxRecord> query(@Nonnull final Publisher<String> queryStream) {
 
