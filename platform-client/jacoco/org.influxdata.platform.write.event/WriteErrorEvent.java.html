@@ -34,28 +34,28 @@ import org.influxdata.platform.Arguments;
  */
 public final class WriteErrorEvent extends AbstractWriteEvent {
 
-<span class="nc" id="L37">    private static final Logger LOG = Logger.getLogger(WriteErrorEvent.class.getName());</span>
+<span class="fc" id="L37">    private static final Logger LOG = Logger.getLogger(WriteErrorEvent.class.getName());</span>
 
     private final Throwable throwable;
 
-<span class="nc" id="L41">    public WriteErrorEvent(@Nonnull final Throwable throwable) {</span>
+<span class="fc" id="L41">    public WriteErrorEvent(@Nonnull final Throwable throwable) {</span>
 
-<span class="nc" id="L43">        Arguments.checkNotNull(throwable, &quot;Throwable&quot;);</span>
+<span class="fc" id="L43">        Arguments.checkNotNull(throwable, &quot;Throwable&quot;);</span>
 
-<span class="nc" id="L45">        this.throwable = throwable;</span>
-<span class="nc" id="L46">    }</span>
+<span class="fc" id="L45">        this.throwable = throwable;</span>
+<span class="fc" id="L46">    }</span>
 
     /**
      * @return the exception that was throw
      */
     @Nonnull
     public Throwable getThrowable() {
-<span class="nc" id="L53">        return throwable;</span>
+<span class="fc" id="L53">        return throwable;</span>
     }
 
     @Override
     public void logEvent() {
-<span class="nc" id="L58">        LOG.log(Level.SEVERE, &quot;Write error&quot;, throwable);</span>
-<span class="nc" id="L59">    }</span>
+<span class="fc" id="L58">        LOG.log(Level.SEVERE, &quot;Write error&quot;, throwable);</span>
+<span class="fc" id="L59">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

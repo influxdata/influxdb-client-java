@@ -33,67 +33,57 @@ import javax.annotation.Nonnull;
  */
 public final class WriteSuccessEvent extends AbstractWriteEvent {
 
-<span class="nc" id="L36">    private static final Logger LOG = Logger.getLogger(WriteSuccessEvent.class.getName());</span>
+<span class="fc" id="L36">    private static final Logger LOG = Logger.getLogger(WriteSuccessEvent.class.getName());</span>
 
     private String organization;
     private String bucket;
     private TimeUnit precision;
-    private String token;
     private String lineProtocol;
 
     public WriteSuccessEvent(@Nonnull final String organization,
                              @Nonnull final String bucket,
                              @Nonnull final TimeUnit precision,
-                             @Nonnull final String token,
-<span class="nc" id="L48">                             @Nonnull final String lineProtocol) {</span>
+<span class="fc" id="L46">                             @Nonnull final String lineProtocol) {</span>
 
 
-<span class="nc" id="L51">        this.organization = organization;</span>
-<span class="nc" id="L52">        this.bucket = bucket;</span>
-<span class="nc" id="L53">        this.precision = precision;</span>
-<span class="nc" id="L54">        this.token = token;</span>
-<span class="nc" id="L55">        this.lineProtocol = lineProtocol;</span>
-<span class="nc" id="L56">    }</span>
+<span class="fc" id="L49">        this.organization = organization;</span>
+<span class="fc" id="L50">        this.bucket = bucket;</span>
+<span class="fc" id="L51">        this.precision = precision;</span>
+<span class="fc" id="L52">        this.lineProtocol = lineProtocol;</span>
+<span class="fc" id="L53">    }</span>
 
     /**
      * @return the destination organization name for writes
      */
     public String getOrganization() {
-<span class="nc" id="L62">        return organization;</span>
+<span class="fc" id="L59">        return organization;</span>
     }
 
     /**
      * @return the destination bucket name for writes
      */
     public String getBucket() {
-<span class="nc" id="L69">        return bucket;</span>
-    }
-
-    /**
-     * @return the token used to authorize write to bucket
-     */
-    public String getToken() {
-<span class="nc" id="L76">        return token;</span>
+<span class="fc" id="L66">        return bucket;</span>
     }
 
     /**
      * @return the precision for the write
      */
     public TimeUnit getPrecision() {
-<span class="nc" id="L83">        return precision;</span>
+<span class="fc" id="L73">        return precision;</span>
     }
 
     /**
      * @return the data for the write
      */
     public String getLineProtocol() {
-<span class="nc" id="L90">        return lineProtocol;</span>
+<span class="fc" id="L80">        return lineProtocol;</span>
     }
 
     @Override
     public void logEvent() {
 
-<span class="nc" id="L96">        LOG.log(Level.FINEST, &quot;Success response from InfluxDB&quot;);</span>
-<span class="nc" id="L97">    }</span>
+<span class="fc" id="L86">        LOG.log(Level.FINEST, &quot;Success response from InfluxDB&quot;);</span>
+<span class="fc" id="L87">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

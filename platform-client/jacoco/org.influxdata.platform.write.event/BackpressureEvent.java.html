@@ -29,14 +29,14 @@ import java.util.logging.Logger;
  *
  * @author Jakub Bednar (bednar@github) (25/09/2018 12:27)
  */
-<span class="nc" id="L32">public final class BackpressureEvent extends AbstractWriteEvent {</span>
+<span class="fc" id="L32">public final class BackpressureEvent extends AbstractWriteEvent {</span>
 
-<span class="nc" id="L34">    private static final Logger LOG = Logger.getLogger(BackpressureEvent.class.getName());</span>
+<span class="fc" id="L34">    private static final Logger LOG = Logger.getLogger(BackpressureEvent.class.getName());</span>
 
     @Override
     public void logEvent() {
 
-<span class="nc" id="L39">        LOG.log(Level.WARNING, &quot;Backpressure applied, try increase WriteOptions.bufferLimit&quot;);</span>
-<span class="nc" id="L40">    }</span>
+<span class="fc" id="L39">        LOG.log(Level.WARNING, &quot;Backpressure applied, try increase WriteOptions.bufferLimit&quot;);</span>
+<span class="fc" id="L40">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

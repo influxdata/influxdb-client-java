@@ -69,7 +69,7 @@ class AbstractFluxClient&lt;T&gt; extends AbstractRestClient {
     final FluxCsvParser fluxCsvParser;
 
     final HttpLoggingInterceptor loggingInterceptor;
-    OkHttpClient okHttpClient;
+    private OkHttpClient okHttpClient;
 
     AbstractFluxClient(@Nonnull final FluxConnectionOptions options,
 <span class="fc" id="L75">                       @Nonnull final Class&lt;T&gt; serviceType) {</span>
@@ -150,7 +150,6 @@ class AbstractFluxClient&lt;T&gt; extends AbstractRestClient {
     public void close() {
 <span class="nc" id="L151">        okHttpClient.connectionPool().evictAll();</span>
 <span class="nc" id="L152">        okHttpClient.dispatcher().executorService().shutdown();</span>
-
-<span class="nc" id="L154">    }</span>
+<span class="nc" id="L153">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
