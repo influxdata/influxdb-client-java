@@ -114,6 +114,35 @@ public class FluxClientReactiveImpl extends AbstractFluxClient<FluxServiceReacti
 
     @Nonnull
     @Override
+    public <M> Flowable<M> query(@Nonnull final Publisher<String> queryStream,
+                                 @Nonnull final Class<M> measurementType) {
+        Arguments.checkNotNull(queryStream, "Flux query stream");
+        Arguments.checkNotNull(measurementType, "Record type");
+
+        BiConsumer<BufferedSource, ObservableEmitter<M>> consumer = (source, observable) ->
+            fluxCsvParser.parseFluxResponse(source, new ObservableCancellable(observable),
+                new FluxCsvParser.FluxResponseConsumer() {
+
+                    @Override
+                    public void accept(final int index,
+                                       @Nonnull final Cancellable cancellable,
+                                       @Nonnull final FluxTable table) {
+                    }
+
+                    @Override
+                    public void accept(final int index,
+                                       @Nonnull final Cancellable cancellable,
+                                       @Nonnull final FluxRecord record) {
+                        observable.onNext(resultMapper.toPOJO(record, measurementType));
+                    }
+                });
+
+        return query(queryStream, DEFAULT_DIALECT.toString(), consumer);
+
+    }
+
+    @Nonnull
+    @Override
     public Flowable<String> queryRaw(@Nonnull final String query) {
 
         Arguments.checkNonEmpty(query, "Flux query");

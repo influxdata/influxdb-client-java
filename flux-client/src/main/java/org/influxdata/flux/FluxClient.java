@@ -52,6 +52,20 @@ public interface FluxClient {
     List<FluxTable> query(@Nonnull final String query);
 
     /**
+     * Executes the Flux query against the InfluxDB and synchronously map whole response to list of object with
+     * given type.
+     * <p>
+     * NOTE: This method is not intended for large query results.
+     * Use {@link FluxClient#query(String, Class, BiConsumer, Consumer, Runnable)} for large data streaming.
+     *
+     * @param query the flux query to execute
+     * @param measurementType  the type of measurement
+     * @return {@code List<FluxTable>} which are matched the query
+     */
+    @Nonnull
+    <M> List<M> query(@Nonnull final String query, @Nonnull final Class<M> measurementType);
+
+    /**
      * Executes the Flux query against the InfluxDB and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *

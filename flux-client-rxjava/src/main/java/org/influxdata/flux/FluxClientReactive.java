@@ -59,7 +59,6 @@ public interface FluxClientReactive {
      */
     <M> Flowable<M> query(@Nonnull final String query, @Nonnull final Class<M> recordType);
 
-
     /**
      * Returns {@link Flowable} emitting {@link FluxRecord}s which are matched the query.
      * If none found than return {@link Flowable#empty()}.
@@ -69,6 +68,18 @@ public interface FluxClientReactive {
      */
     @Nonnull
     Flowable<FluxRecord> query(@Nonnull final Publisher<String> queryStream);
+
+    /**
+     * Returns the {@link Flowable} emitting POJO stream.
+     *
+     * If none found than return {@link Flowable#empty()}.
+     * @param measurementType the measurement class (POJO)
+     * @param <M>             the type of the measurement (POJO)
+     * @param queryStream the Flux query publisher
+     * @return {@link Flowable} of {@link FluxRecord}s
+     */
+    @Nonnull
+    <M> Flowable<M> query(@Nonnull final Publisher<String> queryStream, @Nonnull final Class<M> measurementType);
 
     /**
      * Returns {@link Flowable} emitting raw response from InfluxDB server line by line.
