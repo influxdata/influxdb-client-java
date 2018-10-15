@@ -1026,6 +1026,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.mapper.FluxResultMapper.java">org/influxdata/flux/mapper/FluxResultMapper.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.error.FluxCsvParserException.java">org/influxdata/flux/error/FluxCsvParserException.java</a>
                 </td>
                 <td>
@@ -1461,20 +1475,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.impl.FluxResponseConsumerTable.java">org/influxdata/flux/impl/FluxResponseConsumerTable.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.impl.FluxResultMapper.java">org/influxdata/flux/impl/FluxResultMapper.java</a>
                 </td>
                 <td>
                   0
