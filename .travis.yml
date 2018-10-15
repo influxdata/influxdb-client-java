@@ -40,14 +40,14 @@ services:
 
 env:
   matrix:
-    - INFLUXDB_VERSION=nightly INFLUX_PLATFORM_VERSION=nightly CODE_COV=true
+    - INFLUXDB_VERSION=nightly INFLUX_PLATFORM_VERSION=nightly
 
 install: true
 
 script:
   - ./config/platform-restart.sh
   - mvn -B clean install
-  - test ${JAVA_HOME} = ${ORACLEJDK8_JAVA_HOME:=""} && bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
 
 jobs:
   include:
