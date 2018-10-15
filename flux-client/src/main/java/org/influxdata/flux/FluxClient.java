@@ -75,6 +75,20 @@ public interface FluxClient {
     void query(@Nonnull final String query,
                @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext);
 
+
+    /**
+     * Executes the Flux query against the InfluxDB and asynchronously stream POJO classes
+     * to {@code onNext} consumer.
+     *
+     * @param query  the flux query to execute
+     * @param measurementType the measurement type (POJO)
+     * @param onNext the callback to consume the FluxRecord result with capability to discontinue a streaming query
+     * @param <M> the type of the measurement (POJO)
+     */
+    <M> void query(@Nonnull final String query,
+                   @Nonnull final Class<M> measurementType,
+                   @Nonnull final BiConsumer<Cancellable, M> onNext);
+
     /**
      * Executes the Flux query against the InfluxDB and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
@@ -86,6 +100,21 @@ public interface FluxClient {
     void query(@Nonnull final String query,
                @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
                @Nonnull final Consumer<? super Throwable> onError);
+
+    /**
+     * Executes the Flux query against the InfluxDB and asynchronously stream POJO classes
+     * to {@code onNext} consumer.
+     *
+     * @param query   the flux query to execute
+     * @param measurementType the measurement type (POJO)
+     * @param onNext  the callback to consume POJO record with capability to discontinue a streaming query
+     * @param onError the callback to consume any error notification
+     * @param <M> the type of the measurement (POJO)
+     */
+    <M> void query(@Nonnull final String query,
+                   @Nonnull final Class<M> measurementType,
+                   @Nonnull final BiConsumer<Cancellable, M> onNext,
+                   @Nonnull final Consumer<? super Throwable> onError);
 
     /**
      * Executes the Flux query against the InfluxDB and asynchronously stream {@link FluxRecord}s
@@ -103,9 +132,10 @@ public interface FluxClient {
 
     /**
      * Executes the Flux query and asynchronously stream result as POJO.
+     *
      * @param query the flux query to execute
-     * @param measurementType
-     * @param onNext the callback to consume FluxRecord result with capability to discontinue a streaming query
+     * @param measurementType the measurement type (POJO)
+     * @param onNext the callback to consume POJO record with capability to discontinue a streaming query
      * @param onError the callback to consume any error notification
      * @param onComplete the callback to consume a notification about successfully end of stream
      * @param <M> the type of the measurement (POJO)

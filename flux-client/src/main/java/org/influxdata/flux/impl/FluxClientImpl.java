@@ -116,6 +116,17 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
     }
 
     @Override
+    public <M> void query(@Nonnull final String query,
+                          @Nonnull final Class<M> measurementType,
+                          @Nonnull final BiConsumer<Cancellable, M> onNext) {
+        Arguments.checkNonEmpty(query, "query");
+        Arguments.checkNotNull(onNext, "onNext");
+        Arguments.checkNotNull(measurementType, "measurementType");
+
+        query(query, measurementType, onNext, ERROR_CONSUMER);
+    }
+
+    @Override
     public void query(@Nonnull final String query,
                       @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
                       @Nonnull final Consumer<? super Throwable> onError) {
@@ -125,6 +136,20 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
         Arguments.checkNotNull(onError, "onError");
 
         query(query, onNext, onError, EMPTY_ACTION);
+    }
+
+    @Override
+    public <M> void query(@Nonnull final String query,
+                          @Nonnull final Class<M> measurementType,
+                          @Nonnull final BiConsumer<Cancellable, M> onNext,
+                          @Nonnull final Consumer<? super Throwable> onError) {
+
+        Arguments.checkNonEmpty(query, "query");
+        Arguments.checkNotNull(onNext, "onNext");
+        Arguments.checkNotNull(onError, "onError");
+        Arguments.checkNotNull(measurementType, "measurementType");
+
+        query(query, measurementType, onNext, onError, EMPTY_ACTION);
     }
 
     @Override
