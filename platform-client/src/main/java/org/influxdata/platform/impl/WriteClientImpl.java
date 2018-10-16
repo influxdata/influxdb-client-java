@@ -21,6 +21,7 @@
  */
 package org.influxdata.platform.impl;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -53,8 +54,6 @@ import io.reactivex.processors.PublishProcessor;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import okhttp3.RequestBody;
-
-import static org.influxdata.platform.write.Point.ALLOWED_PRECISION;
 
 /**
  * @author Jakub Bednar (bednar@github) (15/10/2018 09:42)
@@ -165,7 +164,7 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
     @Override
     public void writeRecord(@Nonnull final String bucket,
                             @Nonnull final String organization,
-                            @Nonnull final TimeUnit precision,
+                            @Nonnull final ChronoUnit precision,
                             @Nullable final String record) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
@@ -184,7 +183,7 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
     @Override
     public void writeRecords(@Nonnull final String bucket,
                              @Nonnull final String organization,
-                             @Nonnull final TimeUnit precision,
+                             @Nonnull final ChronoUnit precision,
                              @Nonnull final List<String> records) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
@@ -224,7 +223,7 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
     @Override
     public void writeMeasurement(@Nonnull final String bucket,
                                  @Nonnull final String organization,
-                                 @Nonnull final TimeUnit precision,
+                                 @Nonnull final ChronoUnit precision,
                                  @Nullable final Object measurement) {
 
         if (measurement == null) {
@@ -237,7 +236,7 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
     @Override
     public void writeMeasurements(@Nonnull final String bucket,
                                   @Nonnull final String organization,
-                                  @Nonnull final TimeUnit precision,
+                                  @Nonnull final ChronoUnit precision,
                                   @Nonnull final List<Object> measurements) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
@@ -274,17 +273,13 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
 
     private void write(@Nonnull final String bucket,
                        @Nonnull final String organization,
-                       @Nonnull final TimeUnit precision,
+                       @Nonnull final ChronoUnit precision,
                        @Nonnull final List<BatchWriteData> data) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(organization, "organization");
-        Arguments.checkNotNull(precision, "TimeUnit.precision is required");
-        Arguments.checkNotNull(precision, "data to write");
-
-        if (!ALLOWED_PRECISION.contains(precision)) {
-            throw new IllegalArgumentException("Precision must be one of: " + ALLOWED_PRECISION);
-        }
+        Arguments.checkPrecision(precision);
+        Arguments.checkNotNull(data, "data to write");
 
         BatchWriteOptions batchWriteOptions = new BatchWriteOptions(bucket, organization, precision);
         data.forEach(it -> {
@@ -336,19 +331,19 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
     }
 
     @Nonnull
-    private String toPrecisionParameter(@Nonnull final TimeUnit precision) {
+    private String toPrecisionParameter(@Nonnull final ChronoUnit precision) {
 
         switch (precision) {
-            case NANOSECONDS:
+            case NANOS:
                 return "ns";
-            case MICROSECONDS:
+            case MICROS:
                 return "us";
-            case MILLISECONDS:
+            case MILLIS:
                 return "ms";
             case SECONDS:
                 return "s";
             default:
-                throw new IllegalArgumentException("Precision must be one of: " + ALLOWED_PRECISION);
+                throw new IllegalArgumentException("Not supported precision: " + precision);
         }
     }
 
@@ -396,10 +391,10 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
     private final class BatchWriteDataMeasurement implements BatchWriteData {
 
         private final Object measurement;
-        private final TimeUnit precision;
+        private final ChronoUnit precision;
 
         private BatchWriteDataMeasurement(@Nullable final Object measurement,
-                                          @Nonnull final TimeUnit precision) {
+                                          @Nonnull final ChronoUnit precision) {
             this.measurement = measurement;
             this.precision = precision;
         }
@@ -442,11 +437,11 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
 
         private String bucket;
         private String organization;
-        private TimeUnit precision;
+        private ChronoUnit precision;
 
         private BatchWriteOptions(@Nonnull final String bucket,
                                   @Nonnull final String organization,
-                                  @Nonnull final TimeUnit precision) {
+                                  @Nonnull final ChronoUnit precision) {
 
             Arguments.checkNonEmpty(bucket, "bucket");
             Arguments.checkNonEmpty(organization, "organization");

@@ -22,7 +22,7 @@
 package org.influxdata.platform.impl;
 
 import java.time.Instant;
-import java.util.concurrent.TimeUnit;
+import java.time.temporal.ChronoUnit;
 
 import org.influxdata.platform.annotations.Column;
 import org.influxdata.platform.annotations.Measurement;
@@ -58,10 +58,10 @@ class MeasurementMapperTest {
         pojo.value = 15;
         pojo.timestamp = Instant.parse("1970-01-01T00:00:10.999999999Z");
 
-        Assertions.assertThat(mapper.toPoint(pojo, TimeUnit.SECONDS).toString()).isEqualTo("pojo,tag=value value=\"15\" 10");
-        Assertions.assertThat(mapper.toPoint(pojo, TimeUnit.MILLISECONDS).toString()).isEqualTo("pojo,tag=value value=\"15\" 10999");
-        Assertions.assertThat(mapper.toPoint(pojo, TimeUnit.MICROSECONDS).toString()).isEqualTo("pojo,tag=value value=\"15\" 10999999");
-        Assertions.assertThat(mapper.toPoint(pojo, TimeUnit.NANOSECONDS).toString()).isEqualTo("pojo,tag=value value=\"15\" 10999999999");
+        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.SECONDS).toString()).isEqualTo("pojo,tag=value value=\"15\" 10");
+        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.MILLIS).toString()).isEqualTo("pojo,tag=value value=\"15\" 10999");
+        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.MICROS).toString()).isEqualTo("pojo,tag=value value=\"15\" 10999999");
+        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.NANOS).toString()).isEqualTo("pojo,tag=value value=\"15\" 10999999999");
     }
 
     @Test
@@ -76,7 +76,7 @@ class MeasurementMapperTest {
             }
         };
 
-        Point point = mapper.toPoint(pojo, TimeUnit.NANOSECONDS);
+        Point point = mapper.toPoint(pojo, ChronoUnit.NANOS);
         Assertions.assertThat(point.toString()).isEqualTo("pojo,tag=value value=\"to-string\"");
     }
 

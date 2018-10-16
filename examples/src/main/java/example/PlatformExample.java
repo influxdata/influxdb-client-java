@@ -22,8 +22,8 @@
 package example;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 import org.influxdata.platform.PlatformClient;
 import org.influxdata.platform.PlatformClientFactory;
@@ -111,7 +111,7 @@ public class PlatformExample {
         temperature.location = "south";
         temperature.value = 62D;
         temperature.time = Instant.now();
-        writeClient.writeMeasurement("temperature-sensors", "Medical Corp", TimeUnit.NANOSECONDS, temperature);
+        writeClient.writeMeasurement("temperature-sensors", "Medical Corp", ChronoUnit.NANOS, temperature);
 
         //
         // Write by Point
@@ -119,14 +119,14 @@ public class PlatformExample {
         Point point = Point.name("temperature")
             .addTag("location", "west")
             .addField("value", 55D)
-            .time(Instant.now().toEpochMilli(), TimeUnit.MILLISECONDS);
+            .time(Instant.now().toEpochMilli(), ChronoUnit.NANOS);
         writeClient.writePoint("temperature-sensors", "Medical Corp", point);
 
         //
         // Write by LineProtocol
         //
         String record = "temperature,location=north value=60.0";
-        writeClient.writeRecord("temperature-sensors", "Medical Corp", TimeUnit.NANOSECONDS, record);
+        writeClient.writeRecord("temperature-sensors", "Medical Corp", ChronoUnit.NANOS, record);
     }
 
 

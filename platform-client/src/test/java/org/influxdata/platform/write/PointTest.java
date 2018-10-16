@@ -22,7 +22,7 @@
 package org.influxdata.platform.write;
 
 import java.math.BigDecimal;
-import java.util.concurrent.TimeUnit;
+import java.time.temporal.ChronoUnit;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -135,7 +135,7 @@ class PointTest {
         Point point = Point.name("h2o")
                 .addTag("location", "europe")
                 .addField("level", 2)
-                .time(123L, TimeUnit.SECONDS);
+                .time(123L, ChronoUnit.SECONDS);
 
         Assertions.assertThat(point.toString()).isEqualTo("h2o,location=europe level=2i 123");
     }
@@ -147,7 +147,7 @@ class PointTest {
                 .addTag("location", "europe")
                 .addField("level", 2);
 
-        Assertions.assertThat(point.getPrecision()).isEqualTo(TimeUnit.NANOSECONDS);
+        Assertions.assertThat(point.getPrecision()).isEqualTo(ChronoUnit.NANOS);
     }
 
     @Test
@@ -158,8 +158,8 @@ class PointTest {
                 .addField("level", 2);
 
 
-        Assertions.assertThatThrownBy(() -> point.time(123L, TimeUnit.DAYS))
+        Assertions.assertThatThrownBy(() -> point.time(123L, ChronoUnit.DAYS))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Precision must be one of: [NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS]");
+                .hasMessage("Precision must be one of: [Nanos, Micros, Millis, Seconds]");
     }
 }

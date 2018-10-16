@@ -21,7 +21,7 @@
  */
 package org.influxdata.platform.write.event;
 
-import java.util.concurrent.TimeUnit;
+import java.time.temporal.ChronoUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -37,12 +37,12 @@ public final class WriteSuccessEvent extends AbstractWriteEvent {
 
     private String organization;
     private String bucket;
-    private TimeUnit precision;
+    private ChronoUnit precision;
     private String lineProtocol;
 
     public WriteSuccessEvent(@Nonnull final String organization,
                              @Nonnull final String bucket,
-                             @Nonnull final TimeUnit precision,
+                             @Nonnull final ChronoUnit precision,
                              @Nonnull final String lineProtocol) {
 
 
@@ -69,7 +69,7 @@ public final class WriteSuccessEvent extends AbstractWriteEvent {
     /**
      * @return the precision for the write
      */
-    public TimeUnit getPrecision() {
+    public ChronoUnit getPrecision() {
         return precision;
     }
 

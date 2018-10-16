@@ -22,12 +22,10 @@
 package org.influxdata.platform.impl;
 
 import java.lang.reflect.Field;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -49,10 +47,10 @@ class MeasurementMapper {
             = new ConcurrentHashMap<>();
 
     @Nonnull
-    <M> Point toPoint(@Nonnull final M measurement, @Nonnull final TimeUnit precision) throws InfluxException {
+    <M> Point toPoint(@Nonnull final M measurement, @Nonnull final ChronoUnit precision) throws InfluxException {
 
         Arguments.checkNotNull(measurement, "measurement");
-        Arguments.checkNotNull(precision, "precision");
+        Arguments.checkPrecision(precision);
 
         Class<?> measurementType = measurement.getClass();
         cacheMeasurementClass(measurementType);
@@ -90,10 +88,7 @@ class MeasurementMapper {
                 point.addTag(column.name(), value.toString());
             } else if (column.timestamp()) {
                 Instant instant = (Instant) value;
-
-                Duration plus = Duration.ofNanos(instant.getNano()).plus(instant.getEpochSecond(), ChronoUnit.SECONDS);
-                long timeToSet = precision.convert(plus.toNanos(), TimeUnit.NANOSECONDS);
-                point.time(timeToSet, precision);
+                point.time(instant, precision);
             } else if (isNumber(fieldType)) {
                 point.addField(column.name(), (Number) value);
             } else if (Boolean.class.isAssignableFrom(fieldType) || boolean.class.isAssignableFrom(fieldType)) {

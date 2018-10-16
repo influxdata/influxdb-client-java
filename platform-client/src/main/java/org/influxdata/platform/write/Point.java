@@ -23,7 +23,9 @@ package org.influxdata.platform.write;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.EnumSet;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -34,8 +36,6 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import org.influxdata.platform.Arguments;
 
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
-
 /**
  * Point defines the values that will be written to the database.
  * <a href="http://bit.ly/influxdata-point">See Go Implementation</a>.
@@ -45,13 +45,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 @NotThreadSafe
 public final class Point {
 
-    /**
-     * The precisions that are allowed to use in the write.
-     */
-    public static final EnumSet<TimeUnit> ALLOWED_PRECISION = EnumSet.of(TimeUnit.NANOSECONDS,
-            TimeUnit.MICROSECONDS, TimeUnit.MILLISECONDS, TimeUnit.SECONDS);
-
-    private static final TimeUnit DEFAULT_WRITE_PRECISION = NANOSECONDS;
+    private static final ChronoUnit DEFAULT_WRITE_PRECISION = ChronoUnit.NANOS;
 
     private static final int MAX_FRACTION_DIGITS = 340;
     private static final ThreadLocal<NumberFormat> NUMBER_FORMATTER =
@@ -68,7 +62,7 @@ public final class Point {
     private final Map<String, String> tags = new TreeMap<>();
     private final Map<String, Object> fields = new TreeMap<>();
     private Long time;
-    private TimeUnit precision = DEFAULT_WRITE_PRECISION;
+    private ChronoUnit precision = DEFAULT_WRITE_PRECISION;
 
     /**
      * uUpdates the measurement name for the point.
@@ -171,11 +165,49 @@ public final class Point {
      * @return this
      */
     @Nonnull
-    public Point time(@Nullable final Long time, @Nonnull final TimeUnit precision) {
+    public Point time(@Nullable final Instant time, @Nonnull final ChronoUnit precision) {
 
-        if (!ALLOWED_PRECISION.contains(precision)) {
-            throw new IllegalArgumentException("Precision must be one of: " + ALLOWED_PRECISION);
+        Arguments.checkPrecision(precision);
+
+        if (time == null) {
+            return time((Long) null, precision);
         }
+
+        Long longTime = null;
+
+        Duration plus = Duration.ofNanos(time.getNano()).plus(time.getEpochSecond(), ChronoUnit.SECONDS);
+        switch (precision) {
+
+            case NANOS:
+                longTime = TimeUnit.NANOSECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);
+                break;
+            case MICROS:
+                longTime = TimeUnit.MICROSECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);
+                break;
+            case MILLIS:
+                longTime = TimeUnit.MILLISECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);
+                break;
+            case SECONDS:
+                longTime = TimeUnit.SECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);
+                break;
+            default:
+                throw new IllegalStateException("Unsupported precision: " + precision);
+        }
+
+        return time(longTime, precision);
+    }
+
+    /**
+     * Updates the timestamp for the point.
+     *
+     * @param time      the timestamp
+     * @param precision the timestamp precision
+     * @return this
+     */
+    @Nonnull
+    public Point time(@Nullable final Long time, @Nonnull final ChronoUnit precision) {
+
+        Arguments.checkPrecision(precision);
 
         this.time = time;
         this.precision = precision;
@@ -187,7 +219,7 @@ public final class Point {
      * @return the data point precision
      */
     @Nonnull
-    public TimeUnit getPrecision() {
+    public ChronoUnit getPrecision() {
         return precision;
     }
 
@@ -273,7 +305,7 @@ public final class Point {
             return;
         }
 
-        sb.append(" ").append(precision.convert(this.time, this.precision));
+        sb.append(" ").append(this.time);
     }
 
     private void escapeKey(@Nonnull final StringBuilder sb, @Nonnull final String key) {

@@ -21,8 +21,11 @@
  */
 package org.influxdata.platform;
 
+import java.time.temporal.ChronoUnit;
+import java.util.EnumSet;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
 
 /**
  * Functions for parameter validation.
@@ -35,6 +38,12 @@ public final class Arguments {
             Pattern.CASE_INSENSITIVE);
 
     private static final String DURATION_MESSAGE = "Expecting a duration string for %s. But got: %s";
+
+    /**
+     * The precisions that are allowed to use in the write.
+     */
+    private static final EnumSet<ChronoUnit> ALLOWED_PRECISION = EnumSet.of(ChronoUnit.NANOS,
+            ChronoUnit.MICROS, ChronoUnit.MILLIS, ChronoUnit.SECONDS);
 
     private Arguments() {
     }
@@ -139,5 +148,17 @@ public final class Arguments {
     public static void checkNotNull(final Object obj, final String name) throws NullPointerException {
 
         Objects.requireNonNull(obj, () -> "Expecting a not null reference for " + name);
+    }
+
+    /**
+     * Checks that the precision reference to one of {@link Arguments#ALLOWED_PRECISION}.
+     *
+     * @throws IllegalArgumentException if the object is not one of {@link Arguments#ALLOWED_PRECISION}
+     */
+    public static void checkPrecision(@Nullable final ChronoUnit precision) throws IllegalArgumentException {
+
+        if (!ALLOWED_PRECISION.contains(precision)) {
+            throw new IllegalArgumentException("Precision must be one of: " + ALLOWED_PRECISION);
+        }
     }
 }

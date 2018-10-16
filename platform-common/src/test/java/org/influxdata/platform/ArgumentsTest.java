@@ -21,6 +21,8 @@
  */
 package org.influxdata.platform;
 
+import java.time.temporal.ChronoUnit;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -142,5 +144,19 @@ class ArgumentsTest {
         Assertions.assertThatThrownBy(() -> Arguments.checkNotNull(null, "property"))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("Expecting a not null reference for property");
+    }
+
+    @Test
+    void checkPrecision() {
+
+        Arguments.checkPrecision(ChronoUnit.SECONDS);
+    }
+
+    @Test
+    void checkPrecisionNotSupported() {
+
+        Assertions.assertThatThrownBy(() -> Arguments.checkPrecision(ChronoUnit.DAYS))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Precision must be one of: [Nanos, Micros, Millis, Seconds]");
     }
 }

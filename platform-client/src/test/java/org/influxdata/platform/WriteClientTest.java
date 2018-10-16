@@ -22,6 +22,7 @@
 package org.influxdata.platform;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -120,8 +121,8 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
 
-        Point point1 = Point.name("h2o").addTag("location", "europe").addField("level", 1).time(1L, TimeUnit.MILLISECONDS);
-        Point point2 = Point.name("h2o").addTag("location", "europe").addField("level", 2).time(2L, TimeUnit.SECONDS);
+        Point point1 = Point.name("h2o").addTag("location", "europe").addField("level", 1).time(1L, ChronoUnit.MILLIS);
+        Point point2 = Point.name("h2o").addTag("location", "europe").addField("level", 2).time(2L, ChronoUnit.SECONDS);
 
         writeClient.writePoints("b1", "org1", Arrays.asList(point1, point2));
 
@@ -150,7 +151,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
                 "coyote_creek", 2.927, "below 3 feet", 1440046800L);
 
         // response
-        writeClient.writeMeasurement("b1", "org1", TimeUnit.NANOSECONDS, measurement);
+        writeClient.writeMeasurement("b1", "org1", ChronoUnit.NANOS, measurement);
 
         RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
@@ -172,7 +173,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
 
-        writeClient.writeMeasurement("b1", "org1", TimeUnit.SECONDS, null);
+        writeClient.writeMeasurement("b1", "org1", ChronoUnit.SECONDS, null);
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(0);
     }
@@ -183,7 +184,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
         writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
         TestObserver<WriteErrorEvent> listener = writeClient.listenEvents(WriteErrorEvent.class).test();
 
-        writeClient.writeMeasurement("b1", "org1", TimeUnit.SECONDS, 15);
+        writeClient.writeMeasurement("b1", "org1", ChronoUnit.SECONDS, 15);
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(0);
 
@@ -216,7 +217,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
         H2OFeetMeasurement measurement2 = new H2OFeetMeasurement(
                 "coyote_creek", 1.927, "below 2 feet", 1440049800L);
 
-        writeClient.writeMeasurements("b1", "org1", TimeUnit.NANOSECONDS, Arrays.asList(measurement1, measurement2));
+        writeClient.writeMeasurements("b1", "org1", ChronoUnit.NANOS, Arrays.asList(measurement1, measurement2));
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(2);
 
@@ -239,7 +240,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
 
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS,
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS,
                 "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
 
         RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
@@ -258,9 +259,9 @@ class WriteClientTest extends AbstractPlatformClientTest {
         writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
         TestObserver<WriteErrorEvent> listener = writeClient.listenEvents(WriteErrorEvent.class).test();
 
-        writeClient.writeRecords("b1", "org1", TimeUnit.NANOSECONDS, Lists.emptyList());
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, null);
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, "");
+        writeClient.writeRecords("b1", "org1", ChronoUnit.NANOS, Lists.emptyList());
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS, null);
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS, "");
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(0);
 
@@ -278,16 +279,16 @@ class WriteClientTest extends AbstractPlatformClientTest {
         writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
 
         String record1 = "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1";
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, record1);
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS, record1);
 
         String record2 = "h2o_feet,location=coyote_creek level\\ description=\"feet 2\",water_level=2.0 2";
-        writeClient.writeRecord("b1", "org1", TimeUnit.MICROSECONDS, record2);
+        writeClient.writeRecord("b1", "org1", ChronoUnit.MICROS, record2);
 
         String record3 = "h2o_feet,location=coyote_creek level\\ description=\"feet 3\",water_level=3.0 3";
-        writeClient.writeRecord("b1", "org1", TimeUnit.MILLISECONDS, record3);
+        writeClient.writeRecord("b1", "org1", ChronoUnit.MILLIS, record3);
 
         String record4 = "h2o_feet,location=coyote_creek level\\ description=\"feet 4\",water_level=4.0 4";
-        writeClient.writeRecord("b1", "org1", TimeUnit.SECONDS, record4);
+        writeClient.writeRecord("b1", "org1", ChronoUnit.SECONDS, record4);
 
         RecordedRequest request1 = mockServer.takeRequest(10L, TimeUnit.SECONDS);
         Assertions.assertThat(request1.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
@@ -302,19 +303,19 @@ class WriteClientTest extends AbstractPlatformClientTest {
         Assertions.assertThat(request4.getRequestUrl().queryParameter("precision")).isEqualTo("s");
 
         Assertions.assertThatThrownBy(() ->
-                writeClient.writeRecord("b1", "org1", TimeUnit.MINUTES, record1))
+                writeClient.writeRecord("b1", "org1", ChronoUnit.MINUTES, record1))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Precision must be one of: [NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS]");
+                .hasMessage("Precision must be one of: [Nanos, Micros, Millis, Seconds]");
 
         Assertions.assertThatThrownBy(() ->
-                writeClient.writeRecord("b1", "org1", TimeUnit.HOURS, record1))
+                writeClient.writeRecord("b1", "org1", ChronoUnit.HOURS, record1))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Precision must be one of: [NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS]");
+                .hasMessage("Precision must be one of: [Nanos, Micros, Millis, Seconds]");
 
         Assertions.assertThatThrownBy(() ->
-                writeClient.writeRecord("b1", "org1", TimeUnit.DAYS, record1))
+                writeClient.writeRecord("b1", "org1", ChronoUnit.DAYS, record1))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Precision must be one of: [NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS]");
+                .hasMessage("Precision must be one of: [Nanos, Micros, Millis, Seconds]");
     }
 
     @Test
@@ -330,10 +331,10 @@ class WriteClientTest extends AbstractPlatformClientTest {
         String record3 = "h2o_feet,location=coyote_creek level\\ description=\"feet 3\",water_level=3.0 3";
         String record4 = "h2o_feet,location=coyote_creek level\\ description=\"feet 4\",water_level=4.0 4";
 
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, record1);
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, record2);
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, record3);
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, record4);
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS, record1);
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS, record2);
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS, record3);
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS, record4);
 
         String body1 = getRequestBody(mockServer);
         Assertions.assertThat(body1).isEqualTo(record1 + "\n" + record2);
@@ -357,10 +358,10 @@ class WriteClientTest extends AbstractPlatformClientTest {
         String record3 = "h2o_feet,location=coyote_creek level\\ description=\"feet 3\",water_level=3.0 3";
         String record4 = "h2o_feet,location=coyote_creek level\\ description=\"feet 4\",water_level=4.0 4";
 
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, record1);
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, record2);
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, record3);
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, record4);
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS, record1);
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS, record2);
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS, record3);
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS, record4);
 
         String body1 = getRequestBody(mockServer);
         Assertions.assertThat(body1).isEqualTo(record1);
@@ -391,7 +392,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
         String record4 = "h2o_feet,location=coyote_creek level\\ description=\"feet 4\",water_level=4.0 4";
 
         List<String> records = Lists.list(record1, record2, record3, record4);
-        writeClient.writeRecords("b1", "org1", TimeUnit.NANOSECONDS, records);
+        writeClient.writeRecords("b1", "org1", ChronoUnit.NANOS, records);
 
         String body1 = getRequestBody(mockServer);
         Assertions.assertThat(body1).isEqualTo(record1);
@@ -419,7 +420,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         writeClient = createWriteClient(writeOptions);
 
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS,
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS,
                 "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(0);
@@ -444,7 +445,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         writeClient = createWriteClient(writeOptions);
 
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS,
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS,
                 "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
 
         // move time to feature by 10 seconds - flush interval elapsed
@@ -467,7 +468,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         writeClient = createWriteClient();
 
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS,
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS,
                 "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(0);
@@ -489,7 +490,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
         writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
         TestObserver<WriteSuccessEvent> listener = writeClient.listenEvents(WriteSuccessEvent.class).test();
 
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS,
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS,
                 "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
 
         // wait for request
@@ -501,7 +502,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
                     Assertions.assertThat(event).isNotNull();
                     Assertions.assertThat(event.getBucket()).isEqualTo("b1");
                     Assertions.assertThat(event.getOrganization()).isEqualTo("org1");
-                    Assertions.assertThat(event.getPrecision()).isEqualTo(TimeUnit.NANOSECONDS);
+                    Assertions.assertThat(event.getPrecision()).isEqualTo(ChronoUnit.NANOS);
                     Assertions.assertThat(event.getLineProtocol()).isEqualTo("h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
 
                     return true;
@@ -518,7 +519,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
         writeClient = createWriteClient(WriteOptions.DISABLED_BATCHING);
         TestObserver<WriteErrorEvent> listener = writeClient.listenEvents(WriteErrorEvent.class).test();
 
-        writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS,
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS,
                 "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
 
         // wait for request
@@ -554,7 +555,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
                 .range(0, 1005)
                 .map(index -> String.format("h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 %s", index))
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(record -> writeClient.writeRecord("b1", "org1", TimeUnit.NANOSECONDS, record));
+                .subscribe(record -> writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS, record));
 
         listener
                 .awaitCount(1)
