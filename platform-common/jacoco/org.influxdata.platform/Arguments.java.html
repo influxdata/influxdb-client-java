@@ -104,8 +104,8 @@ public final class Arguments {
      */
     public static String checkDurationNotRequired(final String string, final String name)
             throws IllegalArgumentException {
-<span class="pc bpc" id="L107" title="1 of 6 branches missed.">        if (string != null &amp;&amp; !string.isEmpty() &amp;&amp; !DURATION_PATTERN.matcher(string).matches()) {</span>
-<span class="nc" id="L108">            throw new IllegalArgumentException(String.format(DURATION_MESSAGE, name, string));</span>
+<span class="fc bfc" id="L107" title="All 6 branches covered.">        if (string != null &amp;&amp; !string.isEmpty() &amp;&amp; !DURATION_PATTERN.matcher(string).matches()) {</span>
+<span class="fc" id="L108">            throw new IllegalArgumentException(String.format(DURATION_MESSAGE, name, string));</span>
         }
 
 <span class="fc" id="L111">        return string;</span>
