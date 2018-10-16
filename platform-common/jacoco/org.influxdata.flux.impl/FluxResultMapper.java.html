@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FluxResultMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Platform Commons</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.flux.impl</a> &gt; <span class="el_source">FluxResultMapper.java</span></div><h1>FluxResultMapper.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.flux.impl;
+
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Objects;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.flux.domain.FluxRecord;
+import org.influxdata.platform.annotations.Column;
+import org.influxdata.platform.error.InfluxException;
+
+<span class="nc" id="L34">class FluxResultMapper {</span>
+
+    /**
+     * Maps FluxRecord into custom POJO class.
+     *
+     * @param record flux record
+     * @param clazz  target class
+     * @param &lt;T&gt;    pojo type
+     * @return
+     */
+
+    @Nonnull
+    &lt;T&gt; T toPOJO(@Nonnull final FluxRecord record, @Nonnull final Class&lt;T&gt; clazz) {
+
+<span class="nc" id="L48">        Objects.requireNonNull(record, &quot;Record is required&quot;);</span>
+<span class="nc" id="L49">        Objects.requireNonNull(clazz, &quot;Class type is required&quot;);</span>
+
+        try {
+<span class="nc" id="L52">            T pojo = clazz.newInstance();</span>
+
+<span class="nc" id="L54">            Field[] fields = clazz.getDeclaredFields();</span>
+
+<span class="nc bnc" id="L56" title="All 2 branches missed.">            for (Field field : fields) {</span>
+<span class="nc" id="L57">                Column anno = field.getAnnotation(Column.class);</span>
+<span class="nc" id="L58">                String columnName = field.getName();</span>
+<span class="nc bnc" id="L59" title="All 4 branches missed.">                if (anno != null &amp;&amp; !anno.name().isEmpty()) {</span>
+<span class="nc" id="L60">                    columnName = anno.name();</span>
+                }
+
+<span class="nc" id="L63">                Map&lt;String, Object&gt; recordValues = record.getValues();</span>
+
+<span class="nc" id="L65">                String col = null;</span>
+
+<span class="nc bnc" id="L67" title="All 2 branches missed.">                if (recordValues.containsKey(columnName)) {</span>
+<span class="nc" id="L68">                    col = columnName;</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                } else if (recordValues.containsKey(&quot;_&quot; + columnName)) {</span>
+<span class="nc" id="L70">                    col = &quot;_&quot; + columnName;</span>
+                }
+
+<span class="nc bnc" id="L73" title="All 2 branches missed.">                if (col != null) {</span>
+<span class="nc" id="L74">                    Object value = record.getValueByKey(col);</span>
+
+<span class="nc" id="L76">                    setFieldValue(pojo, field, value);</span>
+                }
+            }
+<span class="nc" id="L79">            return pojo;</span>
+<span class="nc" id="L80">        } catch (Exception e) {</span>
+<span class="nc" id="L81">            throw new InfluxException(e);</span>
+        }
+    }
+
+    private void setFieldValue(@Nonnull final Object object,
+                               @Nullable final Field field,
+                               @Nullable final Object value) {
+
+<span class="nc bnc" id="L89" title="All 4 branches missed.">        if (field == null || value == null) {</span>
+<span class="nc" id="L90">            return;</span>
+        }
+<span class="nc" id="L92">        String msg =</span>
+            &quot;Class '%s' field '%s' was defined with a different field type and caused a ClassCastException. &quot;
+                + &quot;The correct type is '%s' (current field value: '%s').&quot;;
+
+        try {
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            if (!field.isAccessible()) {</span>
+<span class="nc" id="L98">                field.setAccessible(true);</span>
+            }
+<span class="nc" id="L100">            Class&lt;?&gt; fieldType = field.getType();</span>
+
+            //the same type
+<span class="nc bnc" id="L103" title="All 2 branches missed.">            if (fieldType.equals(value.getClass())) {</span>
+<span class="nc" id="L104">                field.set(object, value);</span>
+<span class="nc" id="L105">                return;</span>
+            }
+
+            //convert primitives
+<span class="nc bnc" id="L109" title="All 2 branches missed.">            if (double.class.isAssignableFrom(fieldType)) {</span>
+<span class="nc" id="L110">                field.setDouble(object, toDoubleValue(value));</span>
+<span class="nc" id="L111">                return;</span>
+            }
+<span class="nc bnc" id="L113" title="All 2 branches missed.">            if (long.class.isAssignableFrom(fieldType)) {</span>
+<span class="nc" id="L114">                field.setLong(object, toLongValue(value));</span>
+<span class="nc" id="L115">                return;</span>
+            }
+<span class="nc bnc" id="L117" title="All 2 branches missed.">            if (int.class.isAssignableFrom(fieldType)) {</span>
+<span class="nc" id="L118">                field.setInt(object, toIntValue(value));</span>
+<span class="nc" id="L119">                return;</span>
+            }
+<span class="nc bnc" id="L121" title="All 2 branches missed.">            if (boolean.class.isAssignableFrom(fieldType)) {</span>
+<span class="nc" id="L122">                field.setBoolean(object, Boolean.valueOf(String.valueOf(value)));</span>
+<span class="nc" id="L123">                return;</span>
+            }
+
+<span class="nc" id="L126">            field.set(object, value);</span>
+
+<span class="nc" id="L128">        } catch (ClassCastException | IllegalAccessException e) {</span>
+
+<span class="nc" id="L130">            throw new InfluxException(String.format(msg, object.getClass().getName(), field.getName(),</span>
+<span class="nc" id="L131">                value.getClass().getName(), value));</span>
+<span class="nc" id="L132">        }</span>
+<span class="nc" id="L133">    }</span>
+
+    private double toDoubleValue(final Object value) {
+
+<span class="nc bnc" id="L137" title="All 4 branches missed.">        if (double.class.isAssignableFrom(value.getClass()) || Double.class.isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L138">            return (double) value;</span>
+        }
+
+<span class="nc" id="L141">        return (Double) value;</span>
+    }
+
+    private long toLongValue(final Object value) {
+
+<span class="nc bnc" id="L146" title="All 4 branches missed.">        if (long.class.isAssignableFrom(value.getClass()) || Long.class.isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L147">            return (long) value;</span>
+        }
+
+<span class="nc" id="L150">        return ((Double) value).longValue();</span>
+    }
+
+    private int toIntValue(final Object value) {
+
+<span class="nc bnc" id="L155" title="All 4 branches missed.">        if (int.class.isAssignableFrom(value.getClass()) || Integer.class.isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L156">            return (int) value;</span>
+        }
+
+<span class="nc" id="L159">        return ((Double) value).intValue();</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

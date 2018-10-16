@@ -46,14 +46,14 @@ public final class FluxRecord {
     /**
      * The record's values.
      */
-<span class="nc" id="L49">    private LinkedHashMap&lt;String, Object&gt; values = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L49">    private LinkedHashMap&lt;String, Object&gt; values = new LinkedHashMap&lt;&gt;();</span>
 
-<span class="nc" id="L51">    public FluxRecord(@Nonnull final Integer table) {</span>
+<span class="fc" id="L51">    public FluxRecord(@Nonnull final Integer table) {</span>
 
-<span class="nc" id="L53">        Arguments.checkNotNull(table, &quot;Table index&quot;);</span>
+<span class="fc" id="L53">        Arguments.checkNotNull(table, &quot;Table index&quot;);</span>
 
-<span class="nc" id="L55">        this.table = table;</span>
-<span class="nc" id="L56">    }</span>
+<span class="fc" id="L55">        this.table = table;</span>
+<span class="fc" id="L56">    }</span>
 
     /**
      * @return the inclusive lower time bound of all records
@@ -84,7 +84,7 @@ public final class FluxRecord {
      */
     @Nullable
     public Object getValue() {
-<span class="nc" id="L87">        return getValueByKey(&quot;_value&quot;);</span>
+<span class="fc" id="L87">        return getValueByKey(&quot;_value&quot;);</span>
     }
 
     /**
@@ -108,7 +108,7 @@ public final class FluxRecord {
      */
     @Nonnull
     public Integer getTable() {
-<span class="nc" id="L111">        return table;</span>
+<span class="fc" id="L111">        return table;</span>
     }
 
     /**
@@ -116,7 +116,7 @@ public final class FluxRecord {
      */
     @Nonnull
     public Map&lt;String, Object&gt; getValues() {
-<span class="nc" id="L119">        return values;</span>
+<span class="fc" id="L119">        return values;</span>
     }
 
     /**
@@ -130,7 +130,7 @@ public final class FluxRecord {
     public Object getValueByIndex(final int index) {
 
         //noinspection unchecked
-<span class="nc" id="L133">        return values.values().toArray()[index];</span>
+<span class="fc" id="L133">        return values.values().toArray()[index];</span>
     }
 
     /**
@@ -142,17 +142,17 @@ public final class FluxRecord {
     @Nullable
     public Object getValueByKey(@Nonnull final String key) {
 
-<span class="nc" id="L145">        Arguments.checkNonEmpty(key, &quot;key&quot;);</span>
+<span class="fc" id="L145">        Arguments.checkNonEmpty(key, &quot;key&quot;);</span>
 
-<span class="nc" id="L147">        return values.get(key);</span>
+<span class="fc" id="L147">        return values.get(key);</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L152">        return new StringJoiner(&quot;, &quot;, FluxRecord.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
-<span class="nc" id="L153">                .add(&quot;table=&quot; + table)</span>
-<span class="nc" id="L154">                .add(&quot;values=&quot; + values.size())</span>
-<span class="nc" id="L155">                .toString();</span>
+<span class="fc" id="L152">        return new StringJoiner(&quot;, &quot;, FluxRecord.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
+<span class="fc" id="L153">                .add(&quot;table=&quot; + table)</span>
+<span class="fc" id="L154">                .add(&quot;values=&quot; + values.size())</span>
+<span class="fc" id="L155">                .toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

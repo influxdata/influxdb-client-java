@@ -97,12 +97,12 @@ function toggleDisplay(elementId) {
 <th>Success Rate</th>
 <th>Time</th></tr>
 <tr class="b">
-<td>49</td>
+<td>63</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>1.308</td></tr></table><br />
+<td>1.584</td></tr></table><br />
 <p>Note: failures are anticipated and checked for with assertions while errors are unanticipated.</p><br /></div>
 <div class="section">
 <h2><a name="Package_List"></a>Package List</h2><a name="Package_List"></a>
@@ -123,23 +123,31 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.902</td></tr>
+<td>0.821</td></tr>
 <tr class="a">
+<td><a href="#org.influxdata.flux.impl">org.influxdata.flux.impl</a></td>
+<td>14</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.504</td></tr>
+<tr class="b">
 <td><a href="#org.influxdata.platform.error">org.influxdata.platform.error</a></td>
 <td>16</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.349</td></tr>
-<tr class="b">
+<td>0.211</td></tr>
+<tr class="a">
 <td><a href="#org.influxdata.platform">org.influxdata.platform</a></td>
 <td>23</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.057</td></tr></table><br />
+<td>0.048</td></tr></table><br />
 <p>Note: package statistics are not computed recursively, they only sum up all of its testsuites numbers.</p>
 <div class="section">
 <h3><a name="org.influxdata.platform.rest"></a>org.influxdata.platform.rest</h3><a name="org.influxdata.platform.rest"></a>
@@ -161,7 +169,28 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.902</td></tr></table></div>
+<td>0.821</td></tr></table></div>
+<div class="section">
+<h3><a name="org.influxdata.flux.impl"></a>org.influxdata.flux.impl</h3><a name="org.influxdata.flux.impl"></a>
+<table border="1" class="table table-striped">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors</th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#org.influxdata.flux.impl.FluxCsvParserTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.influxdata.flux.impl.FluxCsvParserTest">FluxCsvParserTest</a></td>
+<td>14</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.504</td></tr></table></div>
 <div class="section">
 <h3><a name="org.influxdata.platform.error"></a>org.influxdata.platform.error</h3><a name="org.influxdata.platform.error"></a>
 <table border="1" class="table table-striped">
@@ -182,7 +211,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.349</td></tr></table></div>
+<td>0.211</td></tr></table></div>
 <div class="section">
 <h3><a name="org.influxdata.platform"></a>org.influxdata.platform</h3><a name="org.influxdata.platform"></a>
 <table border="1" class="table table-striped">
@@ -203,7 +232,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.027</td></tr>
+<td>0.033</td></tr>
 <tr class="a">
 <td><a href="#org.influxdata.platform.ArgumentsDurationTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#org.influxdata.platform.ArgumentsDurationTest">ArgumentsDurationTest</a></td>
@@ -212,53 +241,112 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.03</td></tr></table></div><br /></div>
+<td>0.015</td></tr></table></div><br /></div>
 <div class="section">
 <h2><a name="Test_Cases"></a>Test Cases</h2><a name="Test_Cases"></a>
 <p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p>
+<div class="section">
+<h3><a name="FluxCsvParserTest"></a>FluxCsvParserTest</h3><a name="org.influxdata.flux.impl.FluxCsvParserTest"></a>
+<table border="1" class="table table-striped">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.flux.impl.FluxCsvParserTest.unknownTypeAsString"></a>unknownTypeAsString</td>
+<td>0.262</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.flux.impl.FluxCsvParserTest.parsingToConsumer"></a>parsingToConsumer</td>
+<td>0.033</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.flux.impl.FluxCsvParserTest.mappingBase64Binary"></a>mappingBase64Binary</td>
+<td>0.023</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.flux.impl.FluxCsvParserTest.mappingDouble"></a>mappingDouble</td>
+<td>0.009</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.flux.impl.FluxCsvParserTest.mappingDuration"></a>mappingDuration</td>
+<td>0.005</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.flux.impl.FluxCsvParserTest.errorWithoutReference"></a>errorWithoutReference</td>
+<td>0.006</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.flux.impl.FluxCsvParserTest.error"></a>error</td>
+<td>0.003</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.flux.impl.FluxCsvParserTest.groupKey"></a>groupKey</td>
+<td>0.007</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.flux.impl.FluxCsvParserTest.mappingBoolean"></a>mappingBoolean</td>
+<td>0.005</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.flux.impl.FluxCsvParserTest.mappingRFC3339"></a>mappingRFC3339</td>
+<td>0.002</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.flux.impl.FluxCsvParserTest.responseWithMultipleValues"></a>responseWithMultipleValues</td>
+<td>0.107</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.flux.impl.FluxCsvParserTest.mappingUnsignedLong"></a>mappingUnsignedLong</td>
+<td>0.002</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.flux.impl.FluxCsvParserTest.parsingWithoutTableDefinition"></a>parsingWithoutTableDefinition</td>
+<td>0.002</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.flux.impl.FluxCsvParserTest.mappingRFC3339Nano"></a>mappingRFC3339Nano</td>
+<td>0.001</td></tr></table></div>
 <div class="section">
 <h3><a name="RestClientTest"></a>RestClientTest</h3><a name="org.influxdata.platform.rest.RestClientTest"></a>
 <table border="1" class="table table-striped">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.rest.RestClientTest.catchOrPropagateCatchEOFException"></a>catchOrPropagateCatchEOFException</td>
-<td>0.557</td></tr>
+<td>0.552</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.rest.RestClientTest.restCallNullError"></a>restCallNullError</td>
-<td>0.185</td></tr>
+<td>0.143</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.rest.RestClientTest.mappingLogLevel"></a>mappingLogLevel</td>
-<td>0.022</td></tr>
+<td>0.016</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.rest.RestClientTest.catchOrPropagateCatchSocketClosed"></a>catchOrPropagateCatchSocketClosed</td>
-<td>0.006</td></tr>
+<td>0.015</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.rest.RestClientTest.restCall"></a>restCall</td>
-<td>0.029</td></tr>
+<td>0.021</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.rest.RestClientTest.catchOrPropagate"></a>catchOrPropagate</td>
-<td>0.016</td></tr>
+<td>0.007</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.rest.RestClientTest.restCallError"></a>restCallError</td>
-<td>0.025</td></tr>
+<td>0.016</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.rest.RestClientTest.exceptionType"></a>exceptionType</td>
-<td>0.019</td></tr>
+<td>0.015</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.rest.RestClientTest.restCallIOError"></a>restCallIOError</td>
-<td>0.018</td></tr>
+<td>0.012</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.rest.RestClientTest.createBodyString"></a>createBodyString</td>
-<td>0.009</td></tr></table></div>
+<td>0.006</td></tr></table></div>
 <div class="section">
 <h3><a name="ArgumentsTest"></a>ArgumentsTest</h3><a name="org.influxdata.platform.ArgumentsTest"></a>
 <table border="1" class="table table-striped">
@@ -269,11 +357,11 @@ function toggleDisplay(elementId) {
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsTest.checkNotNegativeNumberNegative"></a>checkNotNegativeNumberNegative</td>
-<td>0.001</td></tr>
+<td>0.003</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsTest.checkNotNegativeNumber"></a>checkNotNegativeNumber</td>
-<td>0</td></tr>
+<td>0.001</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsTest.checkPositiveNumberZeroNegative"></a>checkPositiveNumberZeroNegative</td>
@@ -281,7 +369,7 @@ function toggleDisplay(elementId) {
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsTest.checkNotNegativeNumberNull"></a>checkNotNegativeNumberNull</td>
-<td>0.001</td></tr>
+<td>0</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsTest.checkPrecisionNotSupported"></a>checkPrecisionNotSupported</td>
@@ -301,7 +389,7 @@ function toggleDisplay(elementId) {
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsTest.checkOneCharString"></a>checkOneCharString</td>
-<td>0</td></tr>
+<td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsTest.checkOneCharStringEmpty"></a>checkOneCharStringEmpty</td>
@@ -313,34 +401,34 @@ function toggleDisplay(elementId) {
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsTest.checkPositiveNumberNull"></a>checkPositiveNumberNull</td>
-<td>0</td></tr>
+<td>0.001</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsTest.checkPositiveNumberZero"></a>checkPositiveNumberZero</td>
-<td>0.002</td></tr>
+<td>0</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsTest.checkPositiveNumber"></a>checkPositiveNumber</td>
-<td>0.001</td></tr>
+<td>0</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsTest.checkNonEmptyStringNull"></a>checkNonEmptyStringNull</td>
-<td>0.001</td></tr>
+<td>0.002</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsTest.checkNotNull"></a>checkNotNull</td>
-<td>0.002</td></tr></table></div>
+<td>0.001</td></tr></table></div>
 <div class="section">
 <h3><a name="InfluxExceptionTest"></a>InfluxExceptionTest</h3><a name="org.influxdata.platform.error.InfluxExceptionTest"></a>
 <table border="1" class="table table-striped">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.referenceResponseWithoutHeader"></a>referenceResponseWithoutHeader</td>
-<td>0.262</td></tr>
+<td>0.139</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.nullException"></a>nullException</td>
-<td>0.005</td></tr>
+<td>0.002</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.reference"></a>reference</td>
@@ -348,7 +436,7 @@ function toggleDisplay(elementId) {
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.statusResponseNull"></a>statusResponseNull</td>
-<td>0.003</td></tr>
+<td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.messageNull"></a>messageNull</td>
@@ -356,7 +444,7 @@ function toggleDisplay(elementId) {
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.referenceResponseNull"></a>referenceResponseNull</td>
-<td>0.002</td></tr>
+<td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.nullResponse"></a>nullResponse</td>
@@ -364,19 +452,19 @@ function toggleDisplay(elementId) {
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.retrofitHttpExceptionNullError"></a>retrofitHttpExceptionNullError</td>
-<td>0.002</td></tr>
+<td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.errorBody"></a>errorBody</td>
-<td>0.004</td></tr>
+<td>0.003</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.statusResponse"></a>statusResponse</td>
-<td>0.002</td></tr>
+<td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.retrofitHttpExceptionEmptyError"></a>retrofitHttpExceptionEmptyError</td>
-<td>0.002</td></tr>
+<td>0.001</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.message"></a>message</td>
@@ -384,26 +472,26 @@ function toggleDisplay(elementId) {
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.errorBodyResponseWithoutBody"></a>errorBodyResponseWithoutBody</td>
-<td>0.002</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.errorBodyResponseNull"></a>errorBodyResponseNull</td>
-<td>0.002</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.unExpectedError"></a>unExpectedError</td>
 <td>0.001</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.errorBodyResponseNull"></a>errorBodyResponseNull</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.unExpectedError"></a>unExpectedError</td>
+<td>0.008</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.error.InfluxExceptionTest.retrofitHttpException"></a>retrofitHttpException</td>
-<td>0.002</td></tr></table></div>
+<td>0.001</td></tr></table></div>
 <div class="section">
 <h3><a name="ArgumentsDurationTest"></a>ArgumentsDurationTest</h3><a name="org.influxdata.platform.ArgumentsDurationTest"></a>
 <table border="1" class="table table-striped">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsDurationTest.literalEmpty"></a>literalEmpty</td>
-<td>0.002</td></tr>
+<td>0.001</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsDurationTest.notRequiredValid"></a>notRequiredValid</td>
@@ -411,11 +499,11 @@ function toggleDisplay(elementId) {
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsDurationTest.notRequiredNotValid"></a>notRequiredNotValid</td>
-<td>0.006</td></tr>
+<td>0.001</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsDurationTest.literalNotDuration"></a>literalNotDuration</td>
-<td>0.001</td></tr>
+<td>0.006</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsDurationTest.literals"></a>literals</td>
@@ -423,7 +511,7 @@ function toggleDisplay(elementId) {
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td><a name="TC_org.influxdata.platform.ArgumentsDurationTest.literalNull"></a>literalNull</td>
-<td>0.003</td></tr></table></div><br /></div>
+<td>0.001</td></tr></table></div><br /></div>
         </div>
       </div>
     </div>

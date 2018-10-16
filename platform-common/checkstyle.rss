@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 24,
+      <title>File: 28,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -46,63 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.error.rest.NotImplementedException.java">org/influxdata/platform/error/rest/NotImplementedException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.Arguments.java">org/influxdata/platform/Arguments.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.error.InfluxException.java">org/influxdata/platform/error/InfluxException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.error.rest.PaymentRequiredException.java">org/influxdata/platform/error/rest/PaymentRequiredException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.rest.Cancellable.java">org/influxdata/platform/rest/Cancellable.java</a>
                 </td>
                 <td>
                   0
@@ -158,7 +102,175 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.flux.mapper.FluxResultMapper.java">org/influxdata/flux/mapper/FluxResultMapper.java</a>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.flux.impl.FluxCsvParser.java">org/influxdata/flux/impl/FluxCsvParser.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.flux.impl.FluxResponseConsumerTable.java">org/influxdata/flux/impl/FluxResponseConsumerTable.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.error.rest.BadRequestException.java">org/influxdata/platform/error/rest/BadRequestException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.error.rest.ProxyAuthenticationRequiredException.java">org/influxdata/platform/error/rest/ProxyAuthenticationRequiredException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.error.rest.MethodNotAllowedException.java">org/influxdata/platform/error/rest/MethodNotAllowedException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.flux.error.FluxCsvParserException.java">org/influxdata/flux/error/FluxCsvParserException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.flux.impl.FluxResultMapper.java">org/influxdata/flux/impl/FluxResultMapper.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.flux.domain.FluxColumn.java">org/influxdata/flux/domain/FluxColumn.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.rest.AbstractRestClient.java">org/influxdata/platform/rest/AbstractRestClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.error.rest.NotImplementedException.java">org/influxdata/platform/error/rest/NotImplementedException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.Arguments.java">org/influxdata/platform/Arguments.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.error.InfluxException.java">org/influxdata/platform/error/InfluxException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.rest.Cancellable.java">org/influxdata/platform/rest/Cancellable.java</a>
                 </td>
                 <td>
                   0
@@ -228,63 +340,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.error.rest.BadRequestException.java">org/influxdata/platform/error/rest/BadRequestException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.error.rest.ProxyAuthenticationRequiredException.java">org/influxdata/platform/error/rest/ProxyAuthenticationRequiredException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.error.rest.MethodNotAllowedException.java">org/influxdata/platform/error/rest/MethodNotAllowedException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.flux.domain.FluxTable.java">org/influxdata/flux/domain/FluxTable.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.flux.domain.FluxColumn.java">org/influxdata/flux/domain/FluxColumn.java</a>
                 </td>
                 <td>
                   0
@@ -312,7 +368,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.platform.rest.AbstractRestClient.java">org/influxdata/platform/rest/AbstractRestClient.java</a>
+                  <a href="https://github.com/influxdata/platform-java/platform-common/checkstyle.html#org.influxdata.flux.error.FluxQueryException.java">org/influxdata/flux/error/FluxQueryException.java</a>
                 </td>
                 <td>
                   0

@@ -1,4 +1,3 @@
 org.influxdata.flux
-org.influxdata.flux.error
 org.influxdata.flux.impl
 org.influxdata.flux.option
