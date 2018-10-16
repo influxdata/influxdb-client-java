@@ -68,7 +68,7 @@ public class PlatformExample {
     public static void main(final String[] args) {
 
         PlatformClient platform = PlatformClientFactory.create("http://localhost:9999",
-            "my-user", "my-user".toCharArray());
+            "my-user", "my-password".toCharArray());
 
         Organization medicalGMBH = platform.createOrganizationClient().createOrganization("Medical Corp");
 

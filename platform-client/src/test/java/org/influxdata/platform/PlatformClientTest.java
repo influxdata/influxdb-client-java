@@ -61,7 +61,7 @@ class PlatformClientTest extends AbstractPlatformClientTest {
 
     @Test
     void createBucketClient() {
-        todo(() -> platformClient.createBucketClient());
+        Assertions.assertThat(platformClient.createBucketClient()).isNotNull();
     }
 
     @Test

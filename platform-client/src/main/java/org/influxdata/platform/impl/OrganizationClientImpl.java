@@ -227,7 +227,6 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
     @Override
     public UserResourceMapping addOwner(@Nonnull final User owner, @Nonnull final Organization organization) {
 
-
         Arguments.checkNotNull(organization, "Organization");
         Arguments.checkNotNull(owner, "owner");
 

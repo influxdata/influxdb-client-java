@@ -27,6 +27,8 @@ import javax.annotation.Nullable;
 
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.User;
+import org.influxdata.platform.domain.UserResourceMapping;
 
 /**
  * The client of the InfluxData Platform that implement Bucket HTTP API endpoint.
@@ -127,4 +129,112 @@ public interface BucketClient {
      */
     @Nonnull
     List<Bucket> findBucketsByOrganizationName(@Nullable final String organizationName);
+
+    /**
+     * List all users with member privileges for a bucket.
+     *
+     * @param bucketID ID of bucket to get members
+     * @return return the list all users with member privileges for a bucket
+     */
+    @Nonnull
+    List<UserResourceMapping> getMembers(@Nonnull final String bucketID);
+
+    /**
+     * List all users with member privileges for a bucket.
+     *
+     * @param bucket the bucket with members
+     * @return return the list all users with member privileges for a bucket
+     */
+    @Nonnull
+    List<UserResourceMapping> getMembers(@Nonnull final Bucket bucket);
+
+    /**
+     * Add the bucket member.
+     *
+     * @param member the member of an bucket
+     * @param bucket the bucket for the member
+     * @return created mapping
+     */
+    @Nonnull
+    UserResourceMapping addMember(@Nonnull final User member, @Nonnull final Bucket bucket);
+
+    /**
+     * Add the bucket member.
+     *
+     * @param memberID the ID of a member
+     * @param bucketID the ID of a bucket
+     * @return created mapping
+     */
+    @Nonnull
+    UserResourceMapping addMember(@Nonnull final String memberID, @Nonnull final String bucketID);
+
+    /**
+     * Removes a member from a bucket.
+     *
+     * @param member the member of a bucket
+     * @param bucket the bucket
+     */
+    void deleteMember(@Nonnull final User member, @Nonnull final Bucket bucket);
+
+    /**
+     * Removes a member from a bucket.
+     *
+     * @param bucketID the ID of a bucket
+     * @param memberID the ID of a member
+     */
+    void deleteMember(@Nonnull final String memberID, @Nonnull final String bucketID);
+
+    /**
+     * List all owners of a bucket.
+     *
+     * @param bucketID ID of bucket to get owners
+     * @return return List all owners of a bucket
+     */
+    @Nonnull
+    List<UserResourceMapping> getOwners(@Nonnull final String bucketID);
+
+    /**
+     * List all owners of a bucket.
+     *
+     * @param bucket the bucket with owners
+     * @return return List all owners of a bucket.
+     */
+    @Nonnull
+    List<UserResourceMapping> getOwners(@Nonnull final Bucket bucket);
+
+    /**
+     * Add the bucket owner.
+     *
+     * @param owner  the owner of a bucket
+     * @param bucket the bucket
+     * @return created mapping
+     */
+    @Nonnull
+    UserResourceMapping addOwner(@Nonnull final User owner, @Nonnull final Bucket bucket);
+
+    /**
+     * Add the bucket owner.
+     *
+     * @param bucketID the ID of a bucket
+     * @param ownerID  the ID of a owner
+     * @return created mapping
+     */
+    @Nonnull
+    UserResourceMapping addOwner(@Nonnull final String ownerID, @Nonnull final String bucketID);
+
+    /**
+     * Removes a owner from a bucket.
+     *
+     * @param owner  the owner of a bucket
+     * @param bucket the bucket
+     */
+    void deleteOwner(@Nonnull final User owner, @Nonnull final Bucket bucket);
+
+    /**
+     * Removes a owner from a bucket.
+     *
+     * @param bucketID the ID of a bucket
+     * @param ownerID  the ID of a owner
+     */
+    void deleteOwner(@Nonnull final String ownerID, @Nonnull final String bucketID);
 }

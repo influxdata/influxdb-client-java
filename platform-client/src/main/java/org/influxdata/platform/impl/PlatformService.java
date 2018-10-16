@@ -23,7 +23,10 @@ package org.influxdata.platform.impl;
 
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import org.influxdata.platform.domain.Bucket;
+import org.influxdata.platform.domain.Buckets;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
 import org.influxdata.platform.domain.User;
@@ -134,6 +137,64 @@ interface PlatformService {
     @Headers("Content-Type: application/json")
     Call<Void> deleteOrganizationOwner(@Nonnull @Path("id") final String organizationID,
                                        @Nonnull @Path("userID") final String userID);
+
+    //
+    // Bucket
+    //
+    @POST("/api/v2/buckets")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Bucket> createBucket(@Nonnull @Body final RequestBody bucket);
+
+    @DELETE("/api/v2/buckets/{id}")
+    Call<Void> deleteBucket(@Nonnull @Path("id") final String bucketID);
+
+    @PATCH("/api/v2/buckets/{id}")
+    Call<Bucket> updateBucket(@Nonnull @Path("id") final String bucketID, @Nonnull @Body final RequestBody bucket);
+
+    @GET("/api/v2/buckets/{id}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Bucket> findBucketByID(@Nonnull @Path("id") final String bucketID);
+
+    @GET("/api/v2/buckets")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Buckets> findBuckets(@Nullable @Query("org") final String organizationName);
+
+    @GET("/api/v2/buckets/{id}/members")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<UserResourceMapping>> findBucketMembers(@Nonnull @Path("id") final String bucketID);
+
+    @POST("/api/v2/buckets/{id}/members")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<UserResourceMapping> addBucketMember(@Nonnull @Path("id") final String bucketID,
+                                              @Nonnull @Body final RequestBody member);
+
+    @DELETE("/api/v2/buckets/{id}/members/{userID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteBucketMember(@Nonnull @Path("id") final String bucketID,
+                                  @Nonnull @Path("userID") final String userID);
+
+    @GET("/api/v2/buckets/{id}/owners")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<UserResourceMapping>> findBucketOwners(@Nonnull @Path("id") final String bucketID);
+
+    @POST("/api/v2/buckets/{id}/owners")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<UserResourceMapping> addBucketOwner(@Nonnull @Path("id") final String bucketID,
+                                             @Nonnull @Body final RequestBody member);
+
+    @DELETE("/api/v2/buckets/{id}/owners/{userID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteBucketOwner(@Nonnull @Path("id") final String bucketID,
+                                 @Nonnull @Path("userID") final String userID);
 
     //
     // Write

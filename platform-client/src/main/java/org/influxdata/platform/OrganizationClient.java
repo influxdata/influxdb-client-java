@@ -180,7 +180,7 @@ public interface OrganizationClient {
      * Add organization owner.
      *
      * @param organizationID the ID of an organization
-     * @param ownerID        the ID of a member
+     * @param ownerID        the ID of a owner
      * @return created mapping
      */
     @Nonnull
