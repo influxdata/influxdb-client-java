@@ -20,9 +20,9 @@ The Platform Client,org.influxdata.platform.domain,Source.SourceType,34,0,0,0,4,
 The Platform Client,org.influxdata.platform.domain,Buckets,15,0,0,0,5,0,3,0,3,0
 The Platform Client,org.influxdata.platform.domain,Authorization,119,0,0,0,27,0,14,0,14,0
 The Platform Client,org.influxdata.platform.domain,Sources,15,0,0,0,5,0,3,0,3,0
-The Platform Client,org.influxdata.platform.write,Point,18,395,3,36,2,101,3,38,0,20
+The Platform Client,org.influxdata.platform.write,Point,12,401,2,37,1,102,2,39,0,20
 The Platform Client,org.influxdata.platform.impl,WriteClientImpl.BatchWriteDataPoint,2,16,1,1,1,5,1,2,0,2
-The Platform Client,org.influxdata.platform.impl,PlatformClientImpl,0,164,0,0,0,45,0,17,0,17
+The Platform Client,org.influxdata.platform.impl,PlatformClientImpl,0,161,0,0,0,45,0,17,0,17
 The Platform Client,org.influxdata.platform.impl,UserClientImpl,78,59,0,0,18,15,3,7,3,7
 The Platform Client,org.influxdata.platform.impl,GzipInterceptor.new RequestBody() {...},0,28,0,0,0,7,0,4,0,4
 The Platform Client,org.influxdata.platform.impl,MeasurementMapper,15,271,6,28,3,54,6,18,0,7
