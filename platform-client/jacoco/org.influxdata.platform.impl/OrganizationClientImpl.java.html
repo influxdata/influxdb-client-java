@@ -227,45 +227,44 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
     @Override
     public UserResourceMapping addOwner(@Nonnull final User owner, @Nonnull final Organization organization) {
 
+<span class="nc" id="L230">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
+<span class="nc" id="L231">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
 
-<span class="nc" id="L231">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
-<span class="nc" id="L232">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
-
-<span class="nc" id="L234">        return addOwner(owner.getId(), organization.getId());</span>
+<span class="nc" id="L233">        return addOwner(owner.getId(), organization.getId());</span>
     }
 
     @Nonnull
     @Override
     public UserResourceMapping addOwner(@Nonnull final String ownerID, @Nonnull final String organizationID) {
 
-<span class="nc" id="L241">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="nc" id="L242">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L240">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L241">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
 
-<span class="nc" id="L244">        User user = new User();</span>
-<span class="nc" id="L245">        user.setId(ownerID);</span>
+<span class="nc" id="L243">        User user = new User();</span>
+<span class="nc" id="L244">        user.setId(ownerID);</span>
 
-<span class="nc" id="L247">        String json = userAdapter.toJson(user);</span>
-<span class="nc" id="L248">        Call&lt;UserResourceMapping&gt; call = platformService.addOrganizationOwner(organizationID, createBody(json));</span>
+<span class="nc" id="L246">        String json = userAdapter.toJson(user);</span>
+<span class="nc" id="L247">        Call&lt;UserResourceMapping&gt; call = platformService.addOrganizationOwner(organizationID, createBody(json));</span>
 
-<span class="nc" id="L250">        return execute(call);</span>
+<span class="nc" id="L249">        return execute(call);</span>
     }
 
     @Override
     public void deleteOwner(@Nonnull final User owner, @Nonnull final Organization organization) {
-<span class="nc" id="L255">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
-<span class="nc" id="L256">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="nc" id="L254">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
+<span class="nc" id="L255">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
 
-<span class="nc" id="L258">        deleteOwner(owner.getId(), organization.getId());</span>
-<span class="nc" id="L259">    }</span>
+<span class="nc" id="L257">        deleteOwner(owner.getId(), organization.getId());</span>
+<span class="nc" id="L258">    }</span>
 
     @Override
     public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String organizationID) {
 
-<span class="nc" id="L264">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="nc" id="L265">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L263">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L264">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
 
-<span class="nc" id="L267">        Call&lt;Void&gt; call = platformService.deleteOrganizationOwner(organizationID, ownerID);</span>
-<span class="nc" id="L268">        execute(call);</span>
-<span class="nc" id="L269">    }</span>
+<span class="nc" id="L266">        Call&lt;Void&gt; call = platformService.deleteOrganizationOwner(organizationID, ownerID);</span>
+<span class="nc" id="L267">        execute(call);</span>
+<span class="nc" id="L268">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -51,7 +51,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 /**
  * @author Jakub Bednar (bednar@github) (11/10/2018 09:36)
  */
-public class PlatformClientImpl extends AbstractRestClient implements PlatformClient {
+public final class PlatformClientImpl extends AbstractRestClient implements PlatformClient {
 
 <span class="fc" id="L56">    private static final Logger LOG = Logger.getLogger(PlatformClientImpl.class.getName());</span>
 
@@ -120,7 +120,7 @@ public class PlatformClientImpl extends AbstractRestClient implements PlatformCl
     @Nonnull
     @Override
     public BucketClient createBucketClient() {
-<span class="fc" id="L123">        throw new TodoException();</span>
+<span class="fc" id="L123">        return new BucketClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
