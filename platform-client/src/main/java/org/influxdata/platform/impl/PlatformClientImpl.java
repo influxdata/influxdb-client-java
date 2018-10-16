@@ -114,7 +114,7 @@ public final class PlatformClientImpl extends AbstractRestClient implements Plat
     @Nonnull
     @Override
     public AuthorizationClient createAuthorizationClient() {
-        throw new TodoException();
+        return new AuthorizationClientImpl(platformService, moshi);
     }
 
     @Nonnull

@@ -56,7 +56,7 @@ class PlatformClientTest extends AbstractPlatformClientTest {
 
     @Test
     void createAuthorizationClient() {
-        todo(() -> platformClient.createAuthorizationClient());
+        Assertions.assertThat(platformClient.createAuthorizationClient()).isNotNull();;
     }
 
     @Test

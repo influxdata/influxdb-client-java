@@ -25,6 +25,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.influxdata.platform.domain.Authorization;
+import org.influxdata.platform.domain.Authorizations;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Buckets;
 import org.influxdata.platform.domain.Organization;
@@ -195,6 +197,33 @@ interface PlatformService {
     @Headers("Content-Type: application/json")
     Call<Void> deleteBucketOwner(@Nonnull @Path("id") final String bucketID,
                                  @Nonnull @Path("userID") final String userID);
+
+    //
+    // Authorization
+    //
+    @POST("/api/v2/authorizations")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Authorization> createAuthorization(@Nonnull @Body final RequestBody authorization);
+
+    @DELETE("/api/v2/authorizations/{id}")
+    Call<Void> deleteAuthorization(@Nonnull @Path("id") final String authorizationID);
+
+    @PATCH("/api/v2/authorizations/{id}")
+    Call<Authorization> updateAuthorization(@Nonnull @Path("id") final String authorizationID,
+                                            @Nonnull @Body final RequestBody authorization);
+
+    @GET("/api/v2/authorizations/")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Authorizations> findAuthorizations(@Nullable @Query("userID") final String userID,
+                                            @Nullable @Query("user") final String user);
+
+    @GET("/api/v2/authorizations/{id}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Authorization> findAuthorization(@Nonnull @Path("id") final String authorizationID);
+
 
     //
     // Write
