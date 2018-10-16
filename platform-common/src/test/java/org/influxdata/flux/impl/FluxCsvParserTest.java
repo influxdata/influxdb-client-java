@@ -22,7 +22,6 @@
 package org.influxdata.flux.impl;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
@@ -38,6 +37,7 @@ import org.influxdata.flux.error.FluxCsvParserException;
 import org.influxdata.flux.error.FluxQueryException;
 import org.influxdata.platform.rest.Cancellable;
 
+import okio.Buffer;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
@@ -175,6 +175,30 @@ class FluxCsvParserTest {
                 .hasEntrySatisfying("value1", value -> Assertions.assertThat(value).isEqualTo(49L))
                 .hasEntrySatisfying("_value2", value -> Assertions.assertThat(value).isEqualTo(2401L))
                 .hasEntrySatisfying("value_str", value -> Assertions.assertThat(value).isEqualTo("test"));
+    }
+
+    @Test
+    void shortcut() throws IOException {
+
+        String data = "#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,long,string,string,string,boolean\n"
+                + "#group,false,false,false,false,false,false,false,false,false,true\n"
+                + "#default,_result,,,,,,,,,true\n"
+                + ",result,table,_start,_stop,_time,_value,_field,_measurement,host,value\n"
+                + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,true\n";
+
+        List<FluxTable> tables = parseFluxResponse(data);
+
+        Assertions.assertThat(tables).hasSize(1);
+        Assertions.assertThat(tables.get(0).getRecords()).hasSize(1);
+
+        FluxRecord fluxRecord = tables.get(0).getRecords().get(0);
+
+        Assertions.assertThat(fluxRecord.getStart()).isEqualTo(Instant.parse("1970-01-01T00:00:10Z"));
+        Assertions.assertThat(fluxRecord.getStop()).isEqualTo(Instant.parse("1970-01-01T00:00:20Z"));
+        Assertions.assertThat(fluxRecord.getTime()).isEqualTo(Instant.parse("1970-01-01T00:00:10Z"));
+        Assertions.assertThat(fluxRecord.getValue()).isEqualTo(10L);
+        Assertions.assertThat(fluxRecord.getField()).isEqualTo("free");
+        Assertions.assertThat(fluxRecord.getMeasurement()).isEqualTo("mem");
     }
 
     @Test
@@ -388,7 +412,10 @@ class FluxCsvParserTest {
             }
         };
 
-        parser.parseFluxResponse(new StringReader(data), new DefaultCancellable(), consumer);
+        Buffer buffer = new Buffer();
+        buffer.writeUtf8(data);
+
+        parser.parseFluxResponse(buffer, new DefaultCancellable(), consumer);
         Assertions.assertThat(records).hasSize(2);
     }
 
@@ -408,8 +435,12 @@ class FluxCsvParserTest {
     @Nonnull
     private List<FluxTable> parseFluxResponse(@Nonnull final String data) throws IOException {
 
+
+        Buffer buffer = new Buffer();
+        buffer.writeUtf8(data);
+
         FluxResponseConsumerTable consumer = new FluxResponseConsumerTable();
-        parser.parseFluxResponse(new StringReader(data), new DefaultCancellable(), consumer);
+        parser.parseFluxResponse(buffer, new DefaultCancellable(), consumer);
 
         return consumer.getTables();
     }

@@ -98,25 +98,6 @@ class FluxCsvParser {
 
         Reader reader = new InputStreamReader(bufferedSource.inputStream());
 
-        parseFluxResponse(reader, cancellable, consumer);
-    }
-
-    /**
-     * Asynchronously parse Flux CSV response to {@link FluxResponseConsumer}.
-     *
-     * @param reader      with data
-     * @param cancellable to cancel parsing
-     * @param consumer    to accept {@link FluxTable}s and {@link FluxRecord}s
-     * @throws IOException If there is a problem with reading CSV
-     */
-    void parseFluxResponse(@Nonnull final Reader reader,
-                           @Nonnull final Cancellable cancellable,
-                           @Nonnull final FluxResponseConsumer consumer) throws IOException {
-
-        Arguments.checkNotNull(reader, "reader");
-        Arguments.checkNotNull(cancellable, "cancellable");
-        Arguments.checkNotNull(consumer, "consumer");
-
         ParsingState parsingState = ParsingState.NORMAL;
 
         final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);
