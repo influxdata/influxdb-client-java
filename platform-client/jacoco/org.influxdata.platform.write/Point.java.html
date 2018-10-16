@@ -23,7 +23,9 @@ package org.influxdata.platform.write;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.EnumSet;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -34,8 +36,6 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import org.influxdata.platform.Arguments;
 
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
-
 /**
  * Point defines the values that will be written to the database.
  * &lt;a href=&quot;http://bit.ly/influxdata-point&quot;&gt;See Go Implementation&lt;/a&gt;.
@@ -45,30 +45,24 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 @NotThreadSafe
 <span class="fc" id="L46">public final class Point {</span>
 
-    /**
-     * The precisions that are allowed to use in the write.
-     */
-<span class="fc" id="L51">    public static final EnumSet&lt;TimeUnit&gt; ALLOWED_PRECISION = EnumSet.of(TimeUnit.NANOSECONDS,</span>
-            TimeUnit.MICROSECONDS, TimeUnit.MILLISECONDS, TimeUnit.SECONDS);
-
-<span class="fc" id="L54">    private static final TimeUnit DEFAULT_WRITE_PRECISION = NANOSECONDS;</span>
+<span class="fc" id="L48">    private static final ChronoUnit DEFAULT_WRITE_PRECISION = ChronoUnit.NANOS;</span>
 
     private static final int MAX_FRACTION_DIGITS = 340;
-<span class="fc" id="L57">    private static final ThreadLocal&lt;NumberFormat&gt; NUMBER_FORMATTER =</span>
-<span class="fc" id="L58">            ThreadLocal.withInitial(() -&gt; {</span>
-<span class="fc" id="L59">                NumberFormat numberFormat = NumberFormat.getInstance(Locale.ENGLISH);</span>
-<span class="fc" id="L60">                numberFormat.setMaximumFractionDigits(MAX_FRACTION_DIGITS);</span>
-<span class="fc" id="L61">                numberFormat.setGroupingUsed(false);</span>
-<span class="fc" id="L62">                numberFormat.setMinimumFractionDigits(1);</span>
-<span class="fc" id="L63">                return numberFormat;</span>
+<span class="fc" id="L51">    private static final ThreadLocal&lt;NumberFormat&gt; NUMBER_FORMATTER =</span>
+<span class="fc" id="L52">            ThreadLocal.withInitial(() -&gt; {</span>
+<span class="fc" id="L53">                NumberFormat numberFormat = NumberFormat.getInstance(Locale.ENGLISH);</span>
+<span class="fc" id="L54">                numberFormat.setMaximumFractionDigits(MAX_FRACTION_DIGITS);</span>
+<span class="fc" id="L55">                numberFormat.setGroupingUsed(false);</span>
+<span class="fc" id="L56">                numberFormat.setMinimumFractionDigits(1);</span>
+<span class="fc" id="L57">                return numberFormat;</span>
             });
 
 
     private String name;
-<span class="fc" id="L68">    private final Map&lt;String, String&gt; tags = new TreeMap&lt;&gt;();</span>
-<span class="fc" id="L69">    private final Map&lt;String, Object&gt; fields = new TreeMap&lt;&gt;();</span>
+<span class="fc" id="L62">    private final Map&lt;String, String&gt; tags = new TreeMap&lt;&gt;();</span>
+<span class="fc" id="L63">    private final Map&lt;String, Object&gt; fields = new TreeMap&lt;&gt;();</span>
     private Long time;
-<span class="fc" id="L71">    private TimeUnit precision = DEFAULT_WRITE_PRECISION;</span>
+<span class="fc" id="L65">    private ChronoUnit precision = DEFAULT_WRITE_PRECISION;</span>
 
     /**
      * uUpdates the measurement name for the point.
@@ -79,12 +73,12 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
     @Nonnull
     public static Point name(@Nonnull final String name) {
 
-<span class="fc" id="L82">        Arguments.checkNotNull(name, &quot;name&quot;);</span>
+<span class="fc" id="L76">        Arguments.checkNotNull(name, &quot;name&quot;);</span>
 
-<span class="fc" id="L84">        Point point = new Point();</span>
-<span class="fc" id="L85">        point.name = name;</span>
+<span class="fc" id="L78">        Point point = new Point();</span>
+<span class="fc" id="L79">        point.name = name;</span>
 
-<span class="fc" id="L87">        return point;</span>
+<span class="fc" id="L81">        return point;</span>
     }
 
     /**
@@ -97,11 +91,11 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
     @Nonnull
     public Point addTag(@Nonnull final String key, @Nullable final String value) {
 
-<span class="fc" id="L100">        Arguments.checkNotNull(key, &quot;tagName&quot;);</span>
+<span class="fc" id="L94">        Arguments.checkNotNull(key, &quot;tagName&quot;);</span>
 
-<span class="fc" id="L102">        tags.put(key, value);</span>
+<span class="fc" id="L96">        tags.put(key, value);</span>
 
-<span class="fc" id="L104">        return this;</span>
+<span class="fc" id="L98">        return this;</span>
     }
 
     /**
@@ -113,7 +107,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
      */
     @Nonnull
     public Point addField(@Nonnull final String field, final boolean value) {
-<span class="fc" id="L116">        return putField(field, value);</span>
+<span class="fc" id="L110">        return putField(field, value);</span>
     }
 
     /**
@@ -124,7 +118,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
      * @return this
      */
     public Point addField(@Nonnull final String field, final long value) {
-<span class="fc" id="L127">        return putField(field, value);</span>
+<span class="fc" id="L121">        return putField(field, value);</span>
     }
 
     /**
@@ -136,7 +130,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
      */
     @Nonnull
     public Point addField(@Nonnull final String field, final double value) {
-<span class="fc" id="L139">        return putField(field, value);</span>
+<span class="fc" id="L133">        return putField(field, value);</span>
     }
 
     /**
@@ -148,7 +142,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
      */
     @Nonnull
     public Point addField(@Nonnull final String field, @Nullable final Number value) {
-<span class="fc" id="L151">        return putField(field, value);</span>
+<span class="fc" id="L145">        return putField(field, value);</span>
     }
 
     /**
@@ -160,7 +154,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
      */
     @Nonnull
     public Point addField(@Nonnull final String field, @Nullable final String value) {
-<span class="fc" id="L163">        return putField(field, value);</span>
+<span class="fc" id="L157">        return putField(field, value);</span>
     }
 
     /**
@@ -171,134 +165,172 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
      * @return this
      */
     @Nonnull
-    public Point time(@Nullable final Long time, @Nonnull final TimeUnit precision) {
+    public Point time(@Nullable final Instant time, @Nonnull final ChronoUnit precision) {
 
-<span class="fc bfc" id="L176" title="All 2 branches covered.">        if (!ALLOWED_PRECISION.contains(precision)) {</span>
-<span class="fc" id="L177">            throw new IllegalArgumentException(&quot;Precision must be one of: &quot; + ALLOWED_PRECISION);</span>
+<span class="fc" id="L170">        Arguments.checkPrecision(precision);</span>
+
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">        if (time == null) {</span>
+<span class="nc" id="L173">            return time((Long) null, precision);</span>
         }
 
-<span class="fc" id="L180">        this.time = time;</span>
-<span class="fc" id="L181">        this.precision = precision;</span>
+<span class="fc" id="L176">        Long longTime = null;</span>
 
-<span class="fc" id="L183">        return this;</span>
+<span class="fc" id="L178">        Duration plus = Duration.ofNanos(time.getNano()).plus(time.getEpochSecond(), ChronoUnit.SECONDS);</span>
+<span class="pc bpc" id="L179" title="1 of 5 branches missed.">        switch (precision) {</span>
+
+            case NANOS:
+<span class="fc" id="L182">                longTime = TimeUnit.NANOSECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);</span>
+<span class="fc" id="L183">                break;</span>
+            case MICROS:
+<span class="fc" id="L185">                longTime = TimeUnit.MICROSECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);</span>
+<span class="fc" id="L186">                break;</span>
+            case MILLIS:
+<span class="fc" id="L188">                longTime = TimeUnit.MILLISECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);</span>
+<span class="fc" id="L189">                break;</span>
+            case SECONDS:
+<span class="fc" id="L191">                longTime = TimeUnit.SECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);</span>
+<span class="fc" id="L192">                break;</span>
+            default:
+<span class="nc" id="L194">                throw new IllegalStateException(&quot;Unsupported precision: &quot; + precision);</span>
+        }
+
+<span class="fc" id="L197">        return time(longTime, precision);</span>
+    }
+
+    /**
+     * Updates the timestamp for the point.
+     *
+     * @param time      the timestamp
+     * @param precision the timestamp precision
+     * @return this
+     */
+    @Nonnull
+    public Point time(@Nullable final Long time, @Nonnull final ChronoUnit precision) {
+
+<span class="fc" id="L210">        Arguments.checkPrecision(precision);</span>
+
+<span class="fc" id="L212">        this.time = time;</span>
+<span class="fc" id="L213">        this.precision = precision;</span>
+
+<span class="fc" id="L215">        return this;</span>
     }
 
     /**
      * @return the data point precision
      */
     @Nonnull
-    public TimeUnit getPrecision() {
-<span class="fc" id="L191">        return precision;</span>
+    public ChronoUnit getPrecision() {
+<span class="fc" id="L223">        return precision;</span>
     }
 
     @Override
     public String toString() {
 
-<span class="fc" id="L197">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L229">        StringBuilder sb = new StringBuilder();</span>
 
-<span class="fc" id="L199">        escapeKey(sb, name);</span>
-<span class="fc" id="L200">        appendTags(sb);</span>
-<span class="fc" id="L201">        concatenatedFields(sb);</span>
-<span class="fc" id="L202">        formattedTime(sb);</span>
+<span class="fc" id="L231">        escapeKey(sb, name);</span>
+<span class="fc" id="L232">        appendTags(sb);</span>
+<span class="fc" id="L233">        concatenatedFields(sb);</span>
+<span class="fc" id="L234">        formattedTime(sb);</span>
 
-<span class="fc" id="L204">        return sb.toString();</span>
+<span class="fc" id="L236">        return sb.toString();</span>
 
     }
 
     @Nonnull
     private Point putField(@Nonnull final String field, @Nullable final Object value) {
 
-<span class="fc" id="L211">        Arguments.checkNonEmpty(field, &quot;fieldName&quot;);</span>
+<span class="fc" id="L243">        Arguments.checkNonEmpty(field, &quot;fieldName&quot;);</span>
 
-<span class="fc" id="L213">        fields.put(field, value);</span>
-<span class="fc" id="L214">        return this;</span>
+<span class="fc" id="L245">        fields.put(field, value);</span>
+<span class="fc" id="L246">        return this;</span>
     }
 
     private void appendTags(@Nonnull final StringBuilder sb) {
 
-<span class="fc bfc" id="L219" title="All 2 branches covered.">        for (Map.Entry&lt;String, String&gt; tag : this.tags.entrySet()) {</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">        for (Map.Entry&lt;String, String&gt; tag : this.tags.entrySet()) {</span>
 
-<span class="fc" id="L221">            String key = tag.getKey();</span>
-<span class="fc" id="L222">            String value = tag.getValue();</span>
+<span class="fc" id="L253">            String key = tag.getKey();</span>
+<span class="fc" id="L254">            String value = tag.getValue();</span>
 
-<span class="fc bfc" id="L224" title="All 4 branches covered.">            if (key.isEmpty() || value.isEmpty()) {</span>
-<span class="fc" id="L225">                continue;</span>
-            }
-
-<span class="fc" id="L228">            sb.append(',');</span>
-<span class="fc" id="L229">            escapeKey(sb, key);</span>
-<span class="fc" id="L230">            sb.append('=');</span>
-<span class="fc" id="L231">            escapeKey(sb, value);</span>
-<span class="fc" id="L232">        }</span>
-<span class="fc" id="L233">        sb.append(' ');</span>
-<span class="fc" id="L234">    }</span>
-
-    private void concatenatedFields(@Nonnull final StringBuilder sb) {
-
-<span class="fc bfc" id="L238" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; field : this.fields.entrySet()) {</span>
-<span class="fc" id="L239">            Object value = field.getValue();</span>
-<span class="fc bfc" id="L240" title="All 2 branches covered.">            if (value == null) {</span>
-<span class="fc" id="L241">                continue;</span>
-            }
-<span class="fc" id="L243">            escapeKey(sb, field.getKey());</span>
-<span class="fc" id="L244">            sb.append('=');</span>
-<span class="fc bfc" id="L245" title="All 2 branches covered.">            if (value instanceof Number) {</span>
-<span class="fc bfc" id="L246" title="All 6 branches covered.">                if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {</span>
-<span class="fc" id="L247">                    sb.append(NUMBER_FORMATTER.get().format(value));</span>
-                } else {
-<span class="fc" id="L249">                    sb.append(value).append('i');</span>
-                }
-<span class="fc bfc" id="L251" title="All 2 branches covered.">            } else if (value instanceof String) {</span>
-<span class="fc" id="L252">                String stringValue = (String) value;</span>
-<span class="fc" id="L253">                sb.append('&quot;');</span>
-<span class="fc" id="L254">                escapeField(sb, stringValue);</span>
-<span class="fc" id="L255">                sb.append('&quot;');</span>
-<span class="fc" id="L256">            } else {</span>
-<span class="fc" id="L257">                sb.append(value);</span>
+<span class="fc bfc" id="L256" title="All 4 branches covered.">            if (key.isEmpty() || value.isEmpty()) {</span>
+<span class="fc" id="L257">                continue;</span>
             }
 
 <span class="fc" id="L260">            sb.append(',');</span>
-<span class="fc" id="L261">        }</span>
+<span class="fc" id="L261">            escapeKey(sb, key);</span>
+<span class="fc" id="L262">            sb.append('=');</span>
+<span class="fc" id="L263">            escapeKey(sb, value);</span>
+<span class="fc" id="L264">        }</span>
+<span class="fc" id="L265">        sb.append(' ');</span>
+<span class="fc" id="L266">    }</span>
+
+    private void concatenatedFields(@Nonnull final StringBuilder sb) {
+
+<span class="fc bfc" id="L270" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; field : this.fields.entrySet()) {</span>
+<span class="fc" id="L271">            Object value = field.getValue();</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">            if (value == null) {</span>
+<span class="fc" id="L273">                continue;</span>
+            }
+<span class="fc" id="L275">            escapeKey(sb, field.getKey());</span>
+<span class="fc" id="L276">            sb.append('=');</span>
+<span class="fc bfc" id="L277" title="All 2 branches covered.">            if (value instanceof Number) {</span>
+<span class="fc bfc" id="L278" title="All 6 branches covered.">                if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {</span>
+<span class="fc" id="L279">                    sb.append(NUMBER_FORMATTER.get().format(value));</span>
+                } else {
+<span class="fc" id="L281">                    sb.append(value).append('i');</span>
+                }
+<span class="fc bfc" id="L283" title="All 2 branches covered.">            } else if (value instanceof String) {</span>
+<span class="fc" id="L284">                String stringValue = (String) value;</span>
+<span class="fc" id="L285">                sb.append('&quot;');</span>
+<span class="fc" id="L286">                escapeField(sb, stringValue);</span>
+<span class="fc" id="L287">                sb.append('&quot;');</span>
+<span class="fc" id="L288">            } else {</span>
+<span class="fc" id="L289">                sb.append(value);</span>
+            }
+
+<span class="fc" id="L292">            sb.append(',');</span>
+<span class="fc" id="L293">        }</span>
 
         // efficiently chop off the trailing comma
-<span class="fc" id="L264">        int lengthMinusOne = sb.length() - 1;</span>
-<span class="pc bpc" id="L265" title="1 of 2 branches missed.">        if (sb.charAt(lengthMinusOne) == ',') {</span>
-<span class="fc" id="L266">            sb.setLength(lengthMinusOne);</span>
+<span class="fc" id="L296">        int lengthMinusOne = sb.length() - 1;</span>
+<span class="pc bpc" id="L297" title="1 of 2 branches missed.">        if (sb.charAt(lengthMinusOne) == ',') {</span>
+<span class="fc" id="L298">            sb.setLength(lengthMinusOne);</span>
         }
-<span class="fc" id="L268">    }</span>
+<span class="fc" id="L300">    }</span>
 
     private void formattedTime(@Nonnull final StringBuilder sb) {
 
-<span class="fc bfc" id="L272" title="All 2 branches covered.">        if (this.time == null) {</span>
-<span class="fc" id="L273">            return;</span>
+<span class="fc bfc" id="L304" title="All 2 branches covered.">        if (this.time == null) {</span>
+<span class="fc" id="L305">            return;</span>
         }
 
-<span class="fc" id="L276">        sb.append(&quot; &quot;).append(precision.convert(this.time, this.precision));</span>
-<span class="fc" id="L277">    }</span>
+<span class="fc" id="L308">        sb.append(&quot; &quot;).append(this.time);</span>
+<span class="fc" id="L309">    }</span>
 
     private void escapeKey(@Nonnull final StringBuilder sb, @Nonnull final String key) {
-<span class="fc bfc" id="L280" title="All 2 branches covered.">        for (int i = 0; i &lt; key.length(); i++) {</span>
-<span class="fc bfc" id="L281" title="All 2 branches covered.">            switch (key.charAt(i)) {</span>
+<span class="fc bfc" id="L312" title="All 2 branches covered.">        for (int i = 0; i &lt; key.length(); i++) {</span>
+<span class="fc bfc" id="L313" title="All 2 branches covered.">            switch (key.charAt(i)) {</span>
                 case ' ':
                 case ',':
                 case '=':
-<span class="fc" id="L285">                    sb.append('\\');</span>
+<span class="fc" id="L317">                    sb.append('\\');</span>
                 default:
-<span class="fc" id="L287">                    sb.append(key.charAt(i));</span>
+<span class="fc" id="L319">                    sb.append(key.charAt(i));</span>
             }
         }
-<span class="fc" id="L290">    }</span>
+<span class="fc" id="L322">    }</span>
 
     private void escapeField(@Nonnull final StringBuilder sb, @Nonnull final String field) {
-<span class="fc bfc" id="L293" title="All 2 branches covered.">        for (int i = 0; i &lt; field.length(); i++) {</span>
-<span class="fc bfc" id="L294" title="All 2 branches covered.">            switch (field.charAt(i)) {</span>
+<span class="fc bfc" id="L325" title="All 2 branches covered.">        for (int i = 0; i &lt; field.length(); i++) {</span>
+<span class="fc bfc" id="L326" title="All 2 branches covered.">            switch (field.charAt(i)) {</span>
                 case '\\':
                 case '\&quot;':
-<span class="fc" id="L297">                    sb.append('\\');</span>
+<span class="fc" id="L329">                    sb.append('\\');</span>
                 default:
-<span class="fc" id="L299">                    sb.append(field.charAt(i));</span>
+<span class="fc" id="L331">                    sb.append(field.charAt(i));</span>
             }
         }
-<span class="fc" id="L302">    }</span>
+<span class="fc" id="L334">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
