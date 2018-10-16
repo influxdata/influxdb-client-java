@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthorizationClientImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Platform Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.platform.impl</a> &gt; <span class="el_source">AuthorizationClientImpl.java</span></div><h1>AuthorizationClientImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.platform.impl;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.platform.Arguments;
+import org.influxdata.platform.AuthorizationClient;
+import org.influxdata.platform.domain.Authorization;
+import org.influxdata.platform.domain.Authorizations;
+import org.influxdata.platform.domain.Permission;
+import org.influxdata.platform.domain.User;
+import org.influxdata.platform.rest.AbstractRestClient;
+
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (bednar@github) (17/09/2018 12:00)
+ */
+final class AuthorizationClientImpl extends AbstractRestClient implements AuthorizationClient {
+
+<span class="fc" id="L47">    private static final Logger LOG = Logger.getLogger(AuthorizationClientImpl.class.getName());</span>
+
+    private final PlatformService platformService;
+    private final JsonAdapter&lt;Authorization&gt; adapter;
+
+<span class="fc" id="L52">    AuthorizationClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
+
+<span class="fc" id="L54">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
+<span class="fc" id="L55">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
+
+<span class="fc" id="L57">        this.platformService = platformService;</span>
+<span class="fc" id="L58">        this.adapter = moshi.adapter(Authorization.class);</span>
+<span class="fc" id="L59">    }</span>
+
+    @Nonnull
+    @Override
+    public Authorization createAuthorization(@Nonnull final User user, @Nonnull final List&lt;Permission&gt; permissions) {
+
+<span class="nc" id="L65">        Arguments.checkNotNull(user, &quot;User is required&quot;);</span>
+<span class="nc" id="L66">        Arguments.checkNotNull(permissions, &quot;Permissions are required&quot;);</span>
+
+<span class="nc" id="L68">        return createAuthorization(user.getId(), permissions);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Authorization createAuthorization(@Nonnull final String userID,
+                                             @Nonnull final List&lt;Permission&gt; permissions) {
+
+<span class="nc" id="L76">        Arguments.checkNonEmpty(userID, &quot;UserID&quot;);</span>
+<span class="nc" id="L77">        Arguments.checkNotNull(permissions, &quot;Permissions are required&quot;);</span>
+
+<span class="nc" id="L79">        Authorization authorization = new Authorization();</span>
+<span class="nc" id="L80">        authorization.setUserID(userID);</span>
+<span class="nc" id="L81">        authorization.setPermissions(permissions);</span>
+
+<span class="nc" id="L83">        return createAuthorization(authorization);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Authorization createAuthorization(@Nonnull final Authorization authorization) {
+
+<span class="nc" id="L90">        Arguments.checkNotNull(authorization, &quot;Authorization is required&quot;);</span>
+
+<span class="nc" id="L92">        String json = adapter.toJson(authorization);</span>
+
+<span class="nc" id="L94">        Call&lt;Authorization&gt; call = platformService.createAuthorization(createBody(json));</span>
+
+<span class="nc" id="L96">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Authorization&gt; findAuthorizations() {
+<span class="nc" id="L102">        return findAuthorizationsByUserID(null);</span>
+    }
+
+    @Nullable
+    @Override
+    public Authorization findAuthorizationByID(@Nonnull final String authorizationID) {
+
+<span class="nc" id="L109">        Arguments.checkNonEmpty(authorizationID, &quot;authorizationID&quot;);</span>
+
+<span class="nc" id="L111">        Call&lt;Authorization&gt; call = platformService.findAuthorization(authorizationID);</span>
+
+<span class="nc" id="L113">        return execute(call, &quot;authorization not found&quot;);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Authorization&gt; findAuthorizationsByUser(@Nonnull final User user) {
+
+<span class="nc" id="L120">        Arguments.checkNotNull(user, &quot;User is required&quot;);</span>
+
+<span class="nc" id="L122">        return findAuthorizations(user.getId(), null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Authorization&gt; findAuthorizationsByUserID(@Nullable final String userID) {
+<span class="nc" id="L128">        return findAuthorizations(userID, null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Authorization&gt; findAuthorizationsByUserName(@Nullable final String userName) {
+<span class="nc" id="L134">        return findAuthorizations(null, userName);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Authorization updateAuthorizationStatus(@Nonnull final Authorization authorization) {
+
+<span class="nc" id="L141">        Arguments.checkNotNull(authorization, &quot;Authorization is required&quot;);</span>
+
+<span class="nc" id="L143">        String json = adapter.toJson(authorization);</span>
+
+<span class="nc" id="L145">        Call&lt;Authorization&gt; authorizationCall = platformService</span>
+<span class="nc" id="L146">                .updateAuthorization(authorization.getId(), createBody(json));</span>
+
+<span class="nc" id="L148">        return execute(authorizationCall);</span>
+    }
+
+    @Override
+    public void deleteAuthorization(@Nonnull final Authorization authorization) {
+
+<span class="nc" id="L154">        Arguments.checkNotNull(authorization, &quot;Authorization is required&quot;);</span>
+
+<span class="nc" id="L156">        deleteAuthorization(authorization.getId());</span>
+<span class="nc" id="L157">    }</span>
+
+    @Override
+    public void deleteAuthorization(@Nonnull final String authorizationID) {
+
+<span class="nc" id="L162">        Arguments.checkNonEmpty(authorizationID, &quot;authorizationID&quot;);</span>
+
+<span class="nc" id="L164">        Call&lt;Void&gt; call = platformService.deleteAuthorization(authorizationID);</span>
+<span class="nc" id="L165">        execute(call);</span>
+<span class="nc" id="L166">    }</span>
+
+    @Nonnull
+    private List&lt;Authorization&gt; findAuthorizations(@Nullable final String userID, @Nullable final String userName) {
+
+<span class="nc" id="L171">        Call&lt;Authorizations&gt; authorizationsCall = platformService.findAuthorizations(userID, userName);</span>
+
+<span class="nc" id="L173">        Authorizations authorizations = execute(authorizationsCall);</span>
+<span class="nc" id="L174">        LOG.log(Level.FINEST, &quot;findAuthorizations found: {0}&quot;, authorizations);</span>
+
+<span class="nc" id="L176">        return authorizations.getAuths();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
