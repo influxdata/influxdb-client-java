@@ -19,14 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.flux.mapper;
+package org.influxdata.flux.impl;
 
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -34,15 +31,7 @@ import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.platform.annotations.Column;
 import org.influxdata.platform.error.InfluxException;
 
-public class FluxResultMapper {
-
-    private static final Logger LOG = Logger.getLogger(FluxResultMapper.class.getName());
-
-    /**
-     * Data structure used to cache classes used as measurements.
-     */
-    protected static final ConcurrentMap<String, ConcurrentMap<String, Field>> CLASS_FIELD_CACHE
-        = new ConcurrentHashMap<>();
+class FluxResultMapper {
 
     /**
      * Maps FluxRecord into custom POJO class.
@@ -54,7 +43,7 @@ public class FluxResultMapper {
      */
 
     @Nonnull
-    public <T> T toPOJO(@Nonnull final FluxRecord record, @Nonnull final Class<T> clazz) {
+    <T> T toPOJO(@Nonnull final FluxRecord record, @Nonnull final Class<T> clazz) {
 
         Objects.requireNonNull(record, "Record is required");
         Objects.requireNonNull(clazz, "Class type is required");
