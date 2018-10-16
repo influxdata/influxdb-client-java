@@ -48,6 +48,10 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
     private final JsonAdapter<User> adapter;
 
     UserClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {
+
+        Arguments.checkNotNull(platformService, "PlatformService");
+        Arguments.checkNotNull(moshi, "Moshi to create adapter");
+
         this.platformService = platformService;
         this.adapter = moshi.adapter(User.class);
     }

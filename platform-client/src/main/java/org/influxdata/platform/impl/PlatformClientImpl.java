@@ -126,7 +126,7 @@ public class PlatformClientImpl extends AbstractRestClient implements PlatformCl
     @Nonnull
     @Override
     public OrganizationClient createOrganizationClient() {
-        throw new TodoException();
+        return new OrganizationClientImpl(platformService, moshi);
     }
 
     @Nonnull

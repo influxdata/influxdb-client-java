@@ -21,9 +21,13 @@
  */
 package org.influxdata.platform.impl;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 
+import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.Organizations;
 import org.influxdata.platform.domain.User;
+import org.influxdata.platform.domain.UserResourceMapping;
 import org.influxdata.platform.domain.Users;
 
 import io.reactivex.Completable;
@@ -71,6 +75,65 @@ interface PlatformService {
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<User> me();
+
+    //
+    // Organizations
+    //
+    @POST("/api/v2/orgs")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Organization> createOrganization(@Nonnull @Body final RequestBody organization);
+
+    @DELETE("/api/v2/orgs/{id}")
+    Call<Void> deleteOrganization(@Nonnull @Path("id") final String organizationID);
+
+    @PATCH("/api/v2/orgs/{id}")
+    Call<Organization> updateOrganization(@Nonnull @Path("id") final String organizationID,
+                                          @Nonnull @Body final RequestBody organization);
+
+    @GET("/api/v2/orgs/{id}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Organization> findOrganizationByID(@Nonnull @Path("id") final String organizationID);
+
+    @GET("/api/v2/orgs")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Organizations> findOrganizations();
+
+    @GET("/api/v2/orgs/{id}/members")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<UserResourceMapping>> findOrganizationMembers(@Nonnull @Path("id") final String organizationID);
+
+    @POST("/api/v2/orgs/{id}/members")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<UserResourceMapping> addOrganizationMember(@Nonnull @Path("id") final String organizationID,
+                                                    @Nonnull @Body final RequestBody member);
+
+    @DELETE("/api/v2/orgs/{id}/members/{userID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteOrganizationMember(@Nonnull @Path("id") final String organizationID,
+                                        @Nonnull @Path("userID") final String userID);
+
+    @GET("/api/v2/orgs/{id}/owners")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<UserResourceMapping>> findOrganizationOwners(@Nonnull @Path("id") final String organizationID);
+
+    @POST("/api/v2/orgs/{id}/owners")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<UserResourceMapping> addOrganizationOwner(@Nonnull @Path("id") final String organizationID,
+                                                   @Nonnull @Body final RequestBody member);
+
+    @DELETE("/api/v2/orgs/{id}/owners/{userID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteOrganizationOwner(@Nonnull @Path("id") final String organizationID,
+                                       @Nonnull @Path("userID") final String userID);
 
     //
     // Write
