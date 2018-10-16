@@ -42,6 +42,12 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.influxdata</groupId>
+            <artifactId>platform-common-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.squareup.retrofit2</groupId>
             <artifactId>retrofit</artifactId>
         </dependency>

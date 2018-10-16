@@ -75,4 +75,12 @@ class ArgumentsDurationTest {
         Arguments.checkDurationNotRequired("", "duration");
         Arguments.checkDurationNotRequired("1s", "duration");
     }
+
+    @Test
+    void notRequiredNotValid() {
+
+        Assertions.assertThatThrownBy(() -> Arguments.checkDurationNotRequired("x", "duration"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Expecting a duration string for duration. But got: x");
+    }
 }
