@@ -1,6 +1,6 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 The Platform Commons,org.influxdata.flux.domain,FluxColumn,0,110,0,0,0,23,0,12,0,12
-The Platform Commons,org.influxdata.flux.domain,FluxRecord,25,77,0,0,5,15,5,7,5,7
+The Platform Commons,org.influxdata.flux.domain,FluxRecord,0,102,0,0,0,20,0,12,0,12
 The Platform Commons,org.influxdata.flux.domain,FluxTable,0,66,0,0,0,10,0,5,0,5
 The Platform Commons,org.influxdata.platform.error,InfluxException,2,115,1,23,1,39,1,19,0,8
 The Platform Commons,org.influxdata.platform.error.rest,NotImplementedException,0,4,0,0,0,2,0,1,0,1
@@ -16,7 +16,7 @@ The Platform Commons,org.influxdata.platform.error.rest,UnauthorizedException,0,
 The Platform Commons,org.influxdata.platform.error.rest,PaymentRequiredException,0,4,0,0,0,2,0,1,0,1
 The Platform Commons,org.influxdata.platform.error.rest,NotFoundException,0,4,0,0,0,2,0,1,0,1
 The Platform Commons,org.influxdata.platform.error.rest,ForbiddenException,0,4,0,0,0,2,0,1,0,1
-The Platform Commons,org.influxdata.flux.impl,FluxCsvParser,16,466,5,53,5,114,6,37,1,10
+The Platform Commons,org.influxdata.flux.impl,FluxCsvParser,1,466,5,53,1,113,5,37,0,10
 The Platform Commons,org.influxdata.flux.impl,FluxResponseConsumerTable,0,27,0,0,0,7,0,4,0,4
 The Platform Commons,org.influxdata.flux.impl,FluxResultMapper,262,0,40,0,58,0,26,0,6,0
 The Platform Commons,org.influxdata.flux.impl,FluxCsvParser.ParsingState,0,24,0,0,0,3,0,1,0,1
