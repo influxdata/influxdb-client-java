@@ -22,6 +22,7 @@
 package org.influxdata.platform.write;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 import org.assertj.core.api.Assertions;
@@ -161,5 +162,16 @@ class PointTest {
         Assertions.assertThatThrownBy(() -> point.time(123L, ChronoUnit.DAYS))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Precision must be one of: [Nanos, Micros, Millis, Seconds]");
+    }
+
+    @Test
+    void timeInstantNull() {
+
+        Point point = Point.name("h2o")
+                .addTag("location", "europe")
+                .addField("level", 2)
+                .time((Instant) null, ChronoUnit.SECONDS);
+
+        Assertions.assertThat(point.toString()).isEqualTo("h2o,location=europe level=2i");
     }
 }

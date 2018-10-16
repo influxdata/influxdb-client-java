@@ -1,16 +1,16 @@
-# Build-in Flux functions
+# Built-in Flux functions
 
 ## Operator properties
 There are four possibilities how to add properties to the functions.
 
-### Use build-in constructor
+### Use built-in constructor
 ```java
 Flux flux = Flux
     .from("telegraf")
     .window(15L, ChronoUnit.MINUTES, 20L, ChronoUnit.SECONDS)
     .sum();
 ```
-### Use build-in properties
+### Use built-in properties
 ```java
 Flux.from("telegraf")
     .window()

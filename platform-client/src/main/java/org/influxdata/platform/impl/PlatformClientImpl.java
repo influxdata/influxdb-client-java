@@ -58,8 +58,6 @@ public class PlatformClientImpl extends AbstractRestClient implements PlatformCl
     private final Moshi moshi;
     private final PlatformService platformService;
 
-    private final OkHttpClient okHttpClient;
-
     private final HttpLoggingInterceptor loggingInterceptor;
     private final AuthenticateInterceptor authenticateInterceptor;
     private final GzipInterceptor gzipInterceptor;
@@ -72,7 +70,7 @@ public class PlatformClientImpl extends AbstractRestClient implements PlatformCl
         this.authenticateInterceptor = new AuthenticateInterceptor(options);
         this.gzipInterceptor = new GzipInterceptor();
 
-        okHttpClient = options.getOkHttpClient()
+        OkHttpClient okHttpClient = options.getOkHttpClient()
                 .addInterceptor(this.loggingInterceptor)
                 .addInterceptor(this.authenticateInterceptor)
                 .addInterceptor(this.gzipInterceptor)
