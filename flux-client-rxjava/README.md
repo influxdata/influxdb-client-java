@@ -126,7 +126,7 @@ public class FluxClientReactivePojoExample {
   }
 }
 ```
-There is also the possibility to use the `Flowable<String> queryRaw(@Nonnull final String query)` method for line by line 
+There is also the possibility to use the `Flowable<String> queryRaw(@Nonnull final String query)` method for line-by-line 
 parsing, where each line contains comma separated values from the query response.  
 
 ## Version
