@@ -141,11 +141,14 @@ public class InfluxException extends RuntimeException {
         }
 
 <span class="fc" id="L143">        String message = response.headers().get(&quot;X-Influx-Error&quot;);</span>
-<span class="fc bfc" id="L144" title="All 4 branches covered.">        if (message != null &amp;&amp; !message.isEmpty()) {</span>
-<span class="fc" id="L145">            return message;</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        if (message == null) {</span>
+<span class="fc" id="L145">            message = response.headers().get(&quot;X-InfluxDb-Error&quot;);</span>
+        }
+<span class="fc bfc" id="L147" title="All 4 branches covered.">        if (message != null &amp;&amp; !message.isEmpty()) {</span>
+<span class="fc" id="L148">            return message;</span>
         }
 
-<span class="fc" id="L148">        return null;</span>
+<span class="fc" id="L151">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

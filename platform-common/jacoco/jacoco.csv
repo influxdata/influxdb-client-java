@@ -2,7 +2,7 @@ GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_
 The Platform Commons,org.influxdata.flux.domain,FluxColumn,0,110,0,0,0,23,0,12,0,12
 The Platform Commons,org.influxdata.flux.domain,FluxRecord,0,102,0,0,0,20,0,12,0,12
 The Platform Commons,org.influxdata.flux.domain,FluxTable,0,66,0,0,0,10,0,5,0,5
-The Platform Commons,org.influxdata.platform.error,InfluxException,2,115,1,23,1,39,1,19,0,8
+The Platform Commons,org.influxdata.platform.error,InfluxException,2,122,1,25,1,41,1,20,0,8
 The Platform Commons,org.influxdata.platform.error.rest,NotImplementedException,0,4,0,0,0,2,0,1,0,1
 The Platform Commons,org.influxdata.platform.error.rest,InternalServerErrorException,0,4,0,0,0,2,0,1,0,1
 The Platform Commons,org.influxdata.platform.error.rest,BadGatewayException,0,4,0,0,0,2,0,1,0,1
