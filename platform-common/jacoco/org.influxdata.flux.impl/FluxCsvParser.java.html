@@ -82,6 +82,26 @@ import org.apache.commons.csv.CSVRecord;
         void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxRecord record);
     }
 
+<span class="fc" id="L85">    class FluxResponseConsumerTable implements FluxCsvParser.FluxResponseConsumer {</span>
+
+<span class="fc" id="L87">        private List&lt;FluxTable&gt; tables = new ArrayList&lt;&gt;();</span>
+
+        @Override
+        public void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxTable table) {
+<span class="fc" id="L91">            tables.add(index, table);</span>
+<span class="fc" id="L92">        }</span>
+
+        @Override
+        public void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxRecord record) {
+<span class="fc" id="L96">            tables.get(index).getRecords().add(record);</span>
+<span class="fc" id="L97">        }</span>
+
+        @Nonnull
+        List&lt;FluxTable&gt; getTables() {
+<span class="fc" id="L101">            return tables;</span>
+        }
+    }
+
     /**
      * Asynchronously parse Flux CSV response to {@link FluxResponseConsumer}.
      *
@@ -94,232 +114,232 @@ import org.apache.commons.csv.CSVRecord;
                            @Nonnull final Cancellable cancellable,
                            @Nonnull final FluxResponseConsumer consumer) throws IOException {
 
-<span class="fc" id="L97">        Arguments.checkNotNull(bufferedSource, &quot;bufferedSource&quot;);</span>
+<span class="fc" id="L117">        Arguments.checkNotNull(bufferedSource, &quot;bufferedSource&quot;);</span>
 
-<span class="fc" id="L99">        Reader reader = new InputStreamReader(bufferedSource.inputStream());</span>
+<span class="fc" id="L119">        Reader reader = new InputStreamReader(bufferedSource.inputStream());</span>
 
-<span class="fc" id="L101">        ParsingState parsingState = ParsingState.NORMAL;</span>
+<span class="fc" id="L121">        ParsingState parsingState = ParsingState.NORMAL;</span>
 
-<span class="fc" id="L103">        final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);</span>
+<span class="fc" id="L123">        final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);</span>
 
-<span class="fc" id="L105">        int tableIndex = 0;</span>
-<span class="fc" id="L106">        boolean startNewTable = false;</span>
-<span class="fc" id="L107">        FluxTable table = null;</span>
+<span class="fc" id="L125">        int tableIndex = 0;</span>
+<span class="fc" id="L126">        boolean startNewTable = false;</span>
+<span class="fc" id="L127">        FluxTable table = null;</span>
 
-<span class="fc bfc" id="L109" title="All 2 branches covered.">        for (CSVRecord csvRecord : parser) {</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        for (CSVRecord csvRecord : parser) {</span>
 
-<span class="pc bpc" id="L111" title="1 of 2 branches missed.">            if (cancellable.isCancelled()) {</span>
-<span class="nc" id="L112">                return;</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">            if (cancellable.isCancelled()) {</span>
+<span class="fc" id="L132">                return;</span>
             }
 
-<span class="fc" id="L115">            long recordNumber = csvRecord.getRecordNumber();</span>
+<span class="fc" id="L135">            long recordNumber = csvRecord.getRecordNumber();</span>
 
             //
             // Response has HTTP status ok, but response is error.
             //
-<span class="fc bfc" id="L120" title="All 4 branches covered.">            if (ERROR_RECORD_INDEX == recordNumber &amp;&amp; csvRecord.get(1).equals(&quot;error&quot;)</span>
-<span class="pc bpc" id="L121" title="1 of 2 branches missed.">                    &amp;&amp; csvRecord.get(2).equals(&quot;reference&quot;)) {</span>
+<span class="fc bfc" id="L140" title="All 4 branches covered.">            if (ERROR_RECORD_INDEX == recordNumber &amp;&amp; csvRecord.get(1).equals(&quot;error&quot;)</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">                    &amp;&amp; csvRecord.get(2).equals(&quot;reference&quot;)) {</span>
 
-<span class="fc" id="L123">                parsingState = ParsingState.IN_ERROR;</span>
-<span class="fc" id="L124">                continue;</span>
+<span class="fc" id="L143">                parsingState = ParsingState.IN_ERROR;</span>
+<span class="fc" id="L144">                continue;</span>
             }
 
             //
             // Throw InfluxException with error response
             //
-<span class="fc bfc" id="L130" title="All 2 branches covered.">            if (ParsingState.IN_ERROR.equals(parsingState)) {</span>
-<span class="fc" id="L131">                String error = csvRecord.get(1);</span>
-<span class="fc" id="L132">                String referenceValue = csvRecord.get(2);</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">            if (ParsingState.IN_ERROR.equals(parsingState)) {</span>
+<span class="fc" id="L151">                String error = csvRecord.get(1);</span>
+<span class="fc" id="L152">                String referenceValue = csvRecord.get(2);</span>
 
-<span class="fc" id="L134">                int reference = 0;</span>
-<span class="pc bpc" id="L135" title="1 of 4 branches missed.">                if (referenceValue != null &amp;&amp; !referenceValue.isEmpty()) {</span>
-<span class="fc" id="L136">                    reference = Integer.valueOf(referenceValue);</span>
+<span class="fc" id="L154">                int reference = 0;</span>
+<span class="pc bpc" id="L155" title="1 of 4 branches missed.">                if (referenceValue != null &amp;&amp; !referenceValue.isEmpty()) {</span>
+<span class="fc" id="L156">                    reference = Integer.valueOf(referenceValue);</span>
                 }
 
-<span class="fc" id="L139">                throw new FluxQueryException(error, reference);</span>
+<span class="fc" id="L159">                throw new FluxQueryException(error, reference);</span>
             }
 
-<span class="fc" id="L142">            String token = csvRecord.get(0);</span>
+<span class="fc" id="L162">            String token = csvRecord.get(0);</span>
             //// start new table
-<span class="fc bfc" id="L144" title="All 2 branches covered.">            if (&quot;#datatype&quot;.equals(token)) {</span>
-<span class="fc" id="L145">                startNewTable = true;</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">            if (&quot;#datatype&quot;.equals(token)) {</span>
+<span class="fc" id="L165">                startNewTable = true;</span>
 
-<span class="fc" id="L147">                table = new FluxTable();</span>
-<span class="fc" id="L148">                consumer.accept(tableIndex, cancellable, table);</span>
-<span class="fc" id="L149">                tableIndex++;</span>
+<span class="fc" id="L167">                table = new FluxTable();</span>
+<span class="fc" id="L168">                consumer.accept(tableIndex, cancellable, table);</span>
+<span class="fc" id="L169">                tableIndex++;</span>
 
-<span class="fc bfc" id="L151" title="All 2 branches covered.">            } else if (table == null) {</span>
-<span class="fc" id="L152">                throw new FluxCsvParserException(&quot;Unable to parse CSV response. FluxTable definition was not found.&quot;);</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">            } else if (table == null) {</span>
+<span class="fc" id="L172">                throw new FluxCsvParserException(&quot;Unable to parse CSV response. FluxTable definition was not found.&quot;);</span>
             }
 
             //#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string
-<span class="fc bfc" id="L156" title="All 2 branches covered.">            if (&quot;#datatype&quot;.equals(token)) {</span>
-<span class="fc" id="L157">                addDataTypes(table, toList(csvRecord));</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">            if (&quot;#datatype&quot;.equals(token)) {</span>
+<span class="fc" id="L177">                addDataTypes(table, toList(csvRecord));</span>
 
-<span class="fc bfc" id="L159" title="All 2 branches covered.">            } else if (&quot;#group&quot;.equals(token)) {</span>
-<span class="fc" id="L160">                addGroups(table, toList(csvRecord));</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">            } else if (&quot;#group&quot;.equals(token)) {</span>
+<span class="fc" id="L180">                addGroups(table, toList(csvRecord));</span>
 
-<span class="fc bfc" id="L162" title="All 2 branches covered.">            } else if (&quot;#default&quot;.equals(token)) {</span>
-<span class="fc" id="L163">                addDefaultEmptyValues(table, toList(csvRecord));</span>
+<span class="fc bfc" id="L182" title="All 2 branches covered.">            } else if (&quot;#default&quot;.equals(token)) {</span>
+<span class="fc" id="L183">                addDefaultEmptyValues(table, toList(csvRecord));</span>
 
             } else {
                 // parse column names
-<span class="fc bfc" id="L167" title="All 2 branches covered.">                if (startNewTable) {</span>
-<span class="fc" id="L168">                    addColumnNamesAndTags(table, toList(csvRecord));</span>
-<span class="fc" id="L169">                    startNewTable = false;</span>
-<span class="fc" id="L170">                    continue;</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">                if (startNewTable) {</span>
+<span class="fc" id="L188">                    addColumnNamesAndTags(table, toList(csvRecord));</span>
+<span class="fc" id="L189">                    startNewTable = false;</span>
+<span class="fc" id="L190">                    continue;</span>
                 }
 
-<span class="fc" id="L173">                int currentIndex = Integer.parseInt(csvRecord.get(1 + 1));</span>
+<span class="fc" id="L193">                int currentIndex = Integer.parseInt(csvRecord.get(1 + 1));</span>
 
-<span class="fc bfc" id="L175" title="All 2 branches covered.">                if (currentIndex &gt; (tableIndex - 1)) {</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">                if (currentIndex &gt; (tableIndex - 1)) {</span>
                     //create new table with previous column headers settings
-<span class="fc" id="L177">                    List&lt;FluxColumn&gt; fluxColumns = table.getColumns();</span>
-<span class="fc" id="L178">                    table = new FluxTable();</span>
-<span class="fc" id="L179">                    table.getColumns().addAll(fluxColumns);</span>
-<span class="fc" id="L180">                    consumer.accept(tableIndex, cancellable, table);</span>
-<span class="fc" id="L181">                    tableIndex++;</span>
+<span class="fc" id="L197">                    List&lt;FluxColumn&gt; fluxColumns = table.getColumns();</span>
+<span class="fc" id="L198">                    table = new FluxTable();</span>
+<span class="fc" id="L199">                    table.getColumns().addAll(fluxColumns);</span>
+<span class="fc" id="L200">                    consumer.accept(tableIndex, cancellable, table);</span>
+<span class="fc" id="L201">                    tableIndex++;</span>
                 }
 
-<span class="fc" id="L184">                FluxRecord fluxRecord = parseRecord(tableIndex - 1, table, csvRecord);</span>
-<span class="fc" id="L185">                consumer.accept(tableIndex - 1, cancellable, fluxRecord);</span>
+<span class="fc" id="L204">                FluxRecord fluxRecord = parseRecord(tableIndex - 1, table, csvRecord);</span>
+<span class="fc" id="L205">                consumer.accept(tableIndex - 1, cancellable, fluxRecord);</span>
             }
-<span class="fc" id="L187">        }</span>
-<span class="fc" id="L188">    }</span>
+<span class="fc" id="L207">        }</span>
+<span class="fc" id="L208">    }</span>
 
     private FluxRecord parseRecord(final int tableIndex, final FluxTable table, final CSVRecord csvRecord) {
 
-<span class="fc" id="L192">        FluxRecord record = new FluxRecord(tableIndex);</span>
+<span class="fc" id="L212">        FluxRecord record = new FluxRecord(tableIndex);</span>
 
-<span class="fc bfc" id="L194" title="All 2 branches covered.">        for (FluxColumn fluxColumn : table.getColumns()) {</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">        for (FluxColumn fluxColumn : table.getColumns()) {</span>
 
-<span class="fc" id="L196">            String columnName = fluxColumn.getLabel();</span>
+<span class="fc" id="L216">            String columnName = fluxColumn.getLabel();</span>
 
-<span class="fc" id="L198">            String strValue = csvRecord.get(fluxColumn.getIndex() + 1);</span>
+<span class="fc" id="L218">            String strValue = csvRecord.get(fluxColumn.getIndex() + 1);</span>
 
-<span class="fc" id="L200">            record.getValues().put(columnName, toValue(strValue, fluxColumn));</span>
-<span class="fc" id="L201">        }</span>
-<span class="fc" id="L202">        return record;</span>
+<span class="fc" id="L220">            record.getValues().put(columnName, toValue(strValue, fluxColumn));</span>
+<span class="fc" id="L221">        }</span>
+<span class="fc" id="L222">        return record;</span>
     }
 
     @Nonnull
     private List&lt;String&gt; toList(final CSVRecord csvRecord) {
-<span class="fc" id="L207">        List&lt;String&gt; ret = new ArrayList&lt;&gt;(csvRecord.size());</span>
-<span class="fc" id="L208">        int size = csvRecord.size();</span>
+<span class="fc" id="L227">        List&lt;String&gt; ret = new ArrayList&lt;&gt;(csvRecord.size());</span>
+<span class="fc" id="L228">        int size = csvRecord.size();</span>
 
-<span class="fc bfc" id="L210" title="All 2 branches covered.">        for (int i = 1; i &lt; size; i++) {</span>
-<span class="fc" id="L211">            String rec = csvRecord.get(i);</span>
-<span class="fc" id="L212">            ret.add(rec);</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        for (int i = 1; i &lt; size; i++) {</span>
+<span class="fc" id="L231">            String rec = csvRecord.get(i);</span>
+<span class="fc" id="L232">            ret.add(rec);</span>
         }
-<span class="fc" id="L214">        return ret;</span>
+<span class="fc" id="L234">        return ret;</span>
     }
 
     @Nullable
     private Object toValue(@Nullable final String strValue, final @Nonnull FluxColumn column) {
 
-<span class="fc" id="L220">        Arguments.checkNotNull(column, &quot;column&quot;);</span>
+<span class="fc" id="L240">        Arguments.checkNotNull(column, &quot;column&quot;);</span>
 
         // Default value
-<span class="pc bpc" id="L223" title="1 of 4 branches missed.">        if (strValue == null || strValue.isEmpty()) {</span>
-<span class="fc" id="L224">            String defaultValue = column.getDefaultValue();</span>
-<span class="pc bpc" id="L225" title="1 of 4 branches missed.">            if (defaultValue == null || defaultValue.isEmpty()) {</span>
-<span class="fc" id="L226">                return null;</span>
+<span class="pc bpc" id="L243" title="1 of 4 branches missed.">        if (strValue == null || strValue.isEmpty()) {</span>
+<span class="fc" id="L244">            String defaultValue = column.getDefaultValue();</span>
+<span class="pc bpc" id="L245" title="1 of 4 branches missed.">            if (defaultValue == null || defaultValue.isEmpty()) {</span>
+<span class="fc" id="L246">                return null;</span>
             }
 
-<span class="fc" id="L229">            return toValue(defaultValue, column);</span>
+<span class="fc" id="L249">            return toValue(defaultValue, column);</span>
         }
 
-<span class="fc" id="L232">        String dataType = column.getDataType();</span>
-<span class="fc bfc" id="L233" title="All 8 branches covered.">        switch (dataType) {</span>
+<span class="fc" id="L252">        String dataType = column.getDataType();</span>
+<span class="fc bfc" id="L253" title="All 8 branches covered.">        switch (dataType) {</span>
             case &quot;boolean&quot;:
-<span class="fc" id="L235">                return Boolean.valueOf(strValue);</span>
+<span class="fc" id="L255">                return Boolean.valueOf(strValue);</span>
             case &quot;unsignedLong&quot;:
-<span class="fc" id="L237">                return Long.parseUnsignedLong(strValue);</span>
+<span class="fc" id="L257">                return Long.parseUnsignedLong(strValue);</span>
             case &quot;long&quot;:
-<span class="fc" id="L239">                return Long.parseLong(strValue);</span>
+<span class="fc" id="L259">                return Long.parseLong(strValue);</span>
             case &quot;double&quot;:
-<span class="fc" id="L241">                return Double.parseDouble(strValue);</span>
+<span class="fc" id="L261">                return Double.parseDouble(strValue);</span>
             case &quot;base64Binary&quot;:
-<span class="fc" id="L243">                return Base64.getDecoder().decode(strValue);</span>
+<span class="fc" id="L263">                return Base64.getDecoder().decode(strValue);</span>
             case &quot;dateTime:RFC3339&quot;:
             case &quot;dateTime:RFC3339Nano&quot;:
-<span class="fc" id="L246">                return Instant.parse(strValue);</span>
+<span class="fc" id="L266">                return Instant.parse(strValue);</span>
             case &quot;duration&quot;:
-<span class="fc" id="L248">                return Duration.ofNanos(Long.parseUnsignedLong(strValue));</span>
+<span class="fc" id="L268">                return Duration.ofNanos(Long.parseUnsignedLong(strValue));</span>
             default:
             case &quot;string&quot;:
-<span class="fc" id="L251">                return strValue;</span>
+<span class="fc" id="L271">                return strValue;</span>
         }
     }
 
     private void addDataTypes(@Nonnull final FluxTable table,
                               @Nonnull final List&lt;String&gt; dataTypes) {
 
-<span class="fc" id="L258">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
-<span class="fc" id="L259">        Arguments.checkNotNull(dataTypes, &quot;dataTypes&quot;);</span>
+<span class="fc" id="L278">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
+<span class="fc" id="L279">        Arguments.checkNotNull(dataTypes, &quot;dataTypes&quot;);</span>
 
-<span class="fc bfc" id="L261" title="All 2 branches covered.">        for (int index = 0; index &lt; dataTypes.size(); index++) {</span>
-<span class="fc" id="L262">            String dataType = dataTypes.get(index);</span>
+<span class="fc bfc" id="L281" title="All 2 branches covered.">        for (int index = 0; index &lt; dataTypes.size(); index++) {</span>
+<span class="fc" id="L282">            String dataType = dataTypes.get(index);</span>
 
-<span class="fc" id="L264">            FluxColumn columnDef = new FluxColumn();</span>
-<span class="fc" id="L265">            columnDef.setDataType(dataType);</span>
-<span class="fc" id="L266">            columnDef.setIndex(index);</span>
+<span class="fc" id="L284">            FluxColumn columnDef = new FluxColumn();</span>
+<span class="fc" id="L285">            columnDef.setDataType(dataType);</span>
+<span class="fc" id="L286">            columnDef.setIndex(index);</span>
 
-<span class="fc" id="L268">            table.getColumns().add(columnDef);</span>
+<span class="fc" id="L288">            table.getColumns().add(columnDef);</span>
         }
-<span class="fc" id="L270">    }</span>
+<span class="fc" id="L290">    }</span>
 
     private void addGroups(@Nonnull final FluxTable table, @Nonnull final List&lt;String&gt; groups) {
 
-<span class="fc" id="L274">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
-<span class="fc" id="L275">        Arguments.checkNotNull(groups, &quot;groups&quot;);</span>
+<span class="fc" id="L294">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
+<span class="fc" id="L295">        Arguments.checkNotNull(groups, &quot;groups&quot;);</span>
 
-<span class="fc bfc" id="L277" title="All 2 branches covered.">        for (int i = 0; i &lt; groups.size(); i++) {</span>
+<span class="fc bfc" id="L297" title="All 2 branches covered.">        for (int i = 0; i &lt; groups.size(); i++) {</span>
 
-<span class="fc" id="L279">            FluxColumn fluxColumn = getFluxColumn(i, table);</span>
+<span class="fc" id="L299">            FluxColumn fluxColumn = getFluxColumn(i, table);</span>
 
-<span class="fc" id="L281">            String group = groups.get(i);</span>
-<span class="fc" id="L282">            fluxColumn.setGroup(Boolean.valueOf(group));</span>
+<span class="fc" id="L301">            String group = groups.get(i);</span>
+<span class="fc" id="L302">            fluxColumn.setGroup(Boolean.valueOf(group));</span>
         }
-<span class="fc" id="L284">    }</span>
+<span class="fc" id="L304">    }</span>
 
     private void addDefaultEmptyValues(@Nonnull final FluxTable table, @Nonnull final List&lt;String&gt; defaultEmptyValues) {
 
-<span class="fc" id="L288">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
-<span class="fc" id="L289">        Arguments.checkNotNull(defaultEmptyValues, &quot;defaultEmptyValues&quot;);</span>
+<span class="fc" id="L308">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
+<span class="fc" id="L309">        Arguments.checkNotNull(defaultEmptyValues, &quot;defaultEmptyValues&quot;);</span>
 
-<span class="fc bfc" id="L291" title="All 2 branches covered.">        for (int i = 0; i &lt; defaultEmptyValues.size(); i++) {</span>
+<span class="fc bfc" id="L311" title="All 2 branches covered.">        for (int i = 0; i &lt; defaultEmptyValues.size(); i++) {</span>
 
-<span class="fc" id="L293">            FluxColumn fluxColumn = getFluxColumn(i, table);</span>
+<span class="fc" id="L313">            FluxColumn fluxColumn = getFluxColumn(i, table);</span>
 
-<span class="fc" id="L295">            String defaultValue = defaultEmptyValues.get(i);</span>
-<span class="fc" id="L296">            fluxColumn.setDefaultValue(defaultValue);</span>
+<span class="fc" id="L315">            String defaultValue = defaultEmptyValues.get(i);</span>
+<span class="fc" id="L316">            fluxColumn.setDefaultValue(defaultValue);</span>
         }
 
-<span class="fc" id="L299">    }</span>
+<span class="fc" id="L319">    }</span>
 
     private void addColumnNamesAndTags(@Nonnull final FluxTable table, @Nonnull final List&lt;String&gt; columnNames) {
 
-<span class="fc" id="L303">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
-<span class="fc" id="L304">        Arguments.checkNotNull(columnNames, &quot;columnNames&quot;);</span>
+<span class="fc" id="L323">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
+<span class="fc" id="L324">        Arguments.checkNotNull(columnNames, &quot;columnNames&quot;);</span>
 
-<span class="fc" id="L306">        int size = columnNames.size();</span>
+<span class="fc" id="L326">        int size = columnNames.size();</span>
 
-<span class="fc bfc" id="L308" title="All 2 branches covered.">        for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc bfc" id="L328" title="All 2 branches covered.">        for (int i = 0; i &lt; size; i++) {</span>
 
-<span class="fc" id="L310">            FluxColumn fluxColumn = getFluxColumn(i, table);</span>
+<span class="fc" id="L330">            FluxColumn fluxColumn = getFluxColumn(i, table);</span>
 
-<span class="fc" id="L312">            String columnName = columnNames.get(i);</span>
-<span class="fc" id="L313">            fluxColumn.setLabel(columnName);</span>
+<span class="fc" id="L332">            String columnName = columnNames.get(i);</span>
+<span class="fc" id="L333">            fluxColumn.setLabel(columnName);</span>
         }
-<span class="fc" id="L315">    }</span>
+<span class="fc" id="L335">    }</span>
 
     @Nonnull
     private FluxColumn getFluxColumn(final int columnIndex, final @Nonnull FluxTable table) {
 
-<span class="fc" id="L320">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
+<span class="fc" id="L340">        Arguments.checkNotNull(table, &quot;table&quot;);</span>
 
-<span class="fc" id="L322">        return table.getColumns().get(columnIndex);</span>
+<span class="fc" id="L342">        return table.getColumns().get(columnIndex);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
