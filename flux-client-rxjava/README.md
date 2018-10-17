@@ -17,11 +17,11 @@ InfluxDB 1.7 /v2/query REST API using [Flux language](https://github.com/influxd
 ### Create client instance
 
 The `FluxClientReactiveFactory` creates the instance of a RxJava Flux client that can be customized by `FluxConnectionOptions`. 
-For detail information about client configuration look at [flux-java client](https://github.com/bonitoo-io/flux-java#flux-configuration).
+Client configuration is is described in [flux-client](../flux-client/#creating-).
 
 ### Query
 
-Folowing example demonstrates how to create client and execute Flux query and process result using RxJava streams.
+Following example demonstrates how to create client and execute Flux query and process result using RxJava streams.
 
 ```java
 public class FluxClientReactiveFactoryExample {

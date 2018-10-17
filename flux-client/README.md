@@ -14,7 +14,7 @@ The Java library for InfluxDB 1.7 /v2/query REST API using [Flux language](https
 [![GitHub issues](https://img.shields.io/github/issues-raw/bonitoo-io/influxdata-platform-java.svg)](https://github.com/bonitoo-io/influxdata-platform-java/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/bonitoo-io/influxdata-platform-java.svg)](https://github.com/bonitoo-io/influxdata-platform-java/pulls)
 
-### Creating client
+### Create client
 
 The `FluxClientFactory` creates the instance of a `FluxClient` client that can be customized by `FluxConnectionOptions`.
 
@@ -34,8 +34,6 @@ The `FluxClientFactory` creates the instance of a `FluxClient` client that can b
 
     fluxClient.query(...)
      ...
-
-platformClient.close();
 ```
 
 #### Client connection string
@@ -70,16 +68,16 @@ List<FluxTable> tables = fluxClient.flux(query);
 For larger data sets is more effective to stream data and use [asynchronous](#asynchronous-query) or [reactive](../flux-client-rxjava) 
 client based on RxJava2.   
 
-### Constructing queries using [flux-dsl](../flux-dsl) query builder
+### Construct queries using [flux-dsl](../flux-dsl) query builder
 
 [flux-dsl](../flux-dsl) contains java classes representing elements in Flux language to help build Flux queries and expressions. 
 
 All supported operators are documented in [Operators](../flux-dsl) and in javadoc. Custom own functions can be added
-easily, see [Custom operator](OPERATORS.md#custom-operator).
+easily, see [Custom operator](../flux-dsl/README.md#custom-operator).
 
 Example of using `Flux` query builder:
-```java
 
+```java
 Flux.from("telegraf")
         .filter(
             Restrictions.and(
@@ -87,8 +85,7 @@ Flux.from("telegraf")
                 Restrictions.field().equal("usage_system"))
         )
         .range(-1L, ChronoUnit.DAYS)
-        .sample(5, 1);
- 
+        .sample(5, 1); 
 ```
 
 #### Asynchronous query
@@ -142,7 +139,6 @@ It is possible to parse line by line result using `queryRaw` method.
                   @Nonnull final Runnable onComplete);
 
 ```
-
 
 ### Advanced Usage
 
@@ -200,7 +196,6 @@ The snapshot repository is temporally located [here](https://apitea.com/nexus/co
 #### Gradle
 ```
 repositories {
-
     maven { url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot" }
 }
 ```
