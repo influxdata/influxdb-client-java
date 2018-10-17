@@ -1,6 +1,6 @@
 # flux-java
 
-The Java library for InfluxDB 1.7 /v2/query REST API using [Flux language](https://github.com/influxdata/flux/blob/master/docs/SPEC.md). 
+The reference Java library for InfluxDB 1.7 /v2/query REST API using the [Flux language](https://github.com/influxdata/flux/blob/master/docs/SPEC.md). 
 
 
 
@@ -16,12 +16,12 @@ The Java library for InfluxDB 1.7 /v2/query REST API using [Flux language](https
 
 ### Create client
 
-The `FluxClientFactory` creates the instance of a `FluxClient` client that can be customized by `FluxConnectionOptions`.
+The `FluxClientFactory` creates an instance of a `FluxClient` client that can be customized with `FluxConnectionOptions`.
 
 `FluxConnectionOptions` parameters:
  
 - `url` -  the url to connect to Platform
-- `okHttpClient` - custom HTTP client to use for communication with Platform (optional)
+- `okHttpClient` - custom HTTP client to use for communications with Platform (optional)
 
 ```java
     // client creation
@@ -38,12 +38,12 @@ The `FluxClientFactory` creates the instance of a `FluxClient` client that can b
 
 #### Client connection string
 
-Client can be constructed using connection string, that can contain the FluxConnectionOptions parameters encoded into URL.  
+A client can be constructed using a connection string that can contain the FluxConnectionOptions parameters encoded into the URL.  
  
 ```java
     FluxClient fluxClient = FluxClientFactory.create("http://localhost:8086?readTimeout=5000&connectionTimeout=5000&logLevel=BASIC")
 ```
-Following options are supported:
+The following options are supported:
 
 | Property name | default | description |
 | --------------|-------------|-------------| 
@@ -52,11 +52,11 @@ Following options are supported:
 | connectTimeout    | 10000 ms| socket timeout |
 | logLevel          | NONE | rest client verbosity level |
 
-## Query using Flux language
+## Query using the Flux language
 
-Library supports both synchronous and asynchronous queries. 
+The library supports both synchronous and asynchronous queries. 
 
-Simple synchronous example:
+A simple synchronous example:
 
 ```java
 String query = "from(bucket:\"telegraf\") |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_user\") |> sum()";
@@ -65,17 +65,17 @@ String query = "from(bucket:\"telegraf\") |> filter(fn: (r) => r[\"_measurement\
 List<FluxTable> tables = fluxClient.flux(query);
 
 ```
-For larger data sets is more effective to stream data and use [asynchronous](#asynchronous-query) or [reactive](../flux-client-rxjava) 
+For larger data sets it is more effective to stream data and to use [asynchronous](#asynchronous-query) requests or the [reactive](../flux-client-rxjava) 
 client based on RxJava2.   
 
-### Construct queries using [flux-dsl](../flux-dsl) query builder
+### Construct queries using the [flux-dsl](../flux-dsl) query builder
 
-[flux-dsl](../flux-dsl) contains java classes representing elements in Flux language to help build Flux queries and expressions. 
+[Flux-dsl](../flux-dsl) contains java classes representing elements of the Flux language to help build Flux queries and expressions. 
 
-All supported operators are documented in [Operators](../flux-dsl) and in javadoc. Custom own functions can be added
-easily, see [Custom operator](../flux-dsl/README.md#custom-operator).
+All supported operators are documented in [Operators](../flux-dsl) and in javadoc. Custom functions can be added
+easily&mdash;see [Custom operator](../flux-dsl/README.md#custom-operator).
 
-Example of using `Flux` query builder:
+An example of using the `Flux` query builder:
 
 ```java
 Flux.from("telegraf")
@@ -90,15 +90,15 @@ Flux.from("telegraf")
 
 #### Asynchronous query
 
-Asynchronous query API allows streaming of `FluxRecord`s with possibility to implement custom
+The asynchronous query API allows streaming of `FluxRecord`s with the possibility of implementing custom
 error handling and `onComplete` callback notification. 
 
-`Cancellable` object is used for aborting query while processing. 
+A `Cancellable` object is used for aborting a query while processing. 
 
-For developers that are familiar with reactive programming and for more advanced usecases is possible 
-to use [flux-client-rxjava](../flux-client-rxjava) extension.
+For developers that are familiar with reactive programming and for more advanced usecases it is possible 
+to use the [flux-client-rxjava](../flux-client-rxjava) extension.
 
-Asynchronous query example:   
+An asynchronous query example:   
 
 ```java
     String fluxQuery = "from(bucket: \"telegraf\")\n" +
@@ -130,7 +130,7 @@ Asynchronous query example:
 
 #### Raw query response
 
-It is possible to parse line by line result using `queryRaw` method.  
+It is possible to parse a result line by line using the `queryRaw` method.  
 
 ```java
     void queryRaw(@Nonnull final String query,
@@ -142,13 +142,13 @@ It is possible to parse line by line result using `queryRaw` method.
 
 ### Advanced Usage
 
-#### Gzip's support
+#### Gzip support
 
-> Currently unsupported by server.
+> Currently unsupported by the server.
 
 #### Log HTTP Request and Response
-The Requests and Responses can be logged by changing LogLevel. LogLevel values are NONE, BASIC, HEADER, BODY. Note that 
-applying `BODY` LogLevel will disable chunking while streaming a loads whole response into memory.  
+The Requests and Responses can be logged by changing the LogLevel. LogLevel values are NONE, BASIC, HEADER, BODY. Note that 
+applying the `BODY` LogLevel will disable chunking while streaming and will load the whole response into memory.  
 
 ```java
 fluxClient.setLogLevel(Level.HEADERS);
@@ -156,7 +156,7 @@ fluxClient.setLogLevel(Level.HEADERS);
 
 #### Check the server status and version
 
-Server availability can be checked using `fluxClient.ping()` endpoint, server version can be obtained using `fluxClient.version()`.
+Server availability can be checked using the `fluxClient.ping()` endpoint.  Server version can be obtained using `fluxClient.version()`.
  
 ## Version
 
