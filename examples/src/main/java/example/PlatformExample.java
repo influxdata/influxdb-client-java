@@ -35,6 +35,7 @@ import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
 import org.influxdata.platform.domain.User;
+import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.write.Point;
 
 /*
@@ -68,7 +69,7 @@ public class PlatformExample {
     public static void main(final String[] args) {
 
         PlatformClient platform = PlatformClientFactory.create("http://localhost:9999",
-            "my-user", "my-user".toCharArray());
+            "my-user", "my-password".toCharArray());
 
         Organization medicalGMBH = platform.createOrganizationClient().createOrganization("Medical Corp");
 
@@ -102,7 +103,7 @@ public class PlatformExample {
 
         PlatformClient client = PlatformClientFactory.create("http://localhost:9999", token.toCharArray());
 
-        WriteClient writeClient = client.createWriteClient();
+        WriteClient writeClient = client.createWriteClient(WriteOptions.DISABLED_BATCHING);
 
         //
         // Write by POJO

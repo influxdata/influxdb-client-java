@@ -26,6 +26,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.User;
+import org.influxdata.platform.domain.UserResourceMapping;
 
 /**
  * The client of the InfluxData Platform that implement Organization HTTP API endpoint.
@@ -91,4 +93,112 @@ public interface OrganizationClient {
      */
     @Nonnull
     List<Organization> findOrganizations();
+
+    /**
+     * List all members of an organization.
+     *
+     * @param organizationID ID of organization to get members
+     * @return return the List all members of an organization
+     */
+    @Nonnull
+    List<UserResourceMapping> getMembers(@Nonnull final String organizationID);
+
+    /**
+     * List all members of an organization.
+     *
+     * @param organization of the members
+     * @return return the List all members of an organization
+     */
+    @Nonnull
+    List<UserResourceMapping> getMembers(@Nonnull final Organization organization);
+
+    /**
+     * Add organization member.
+     *
+     * @param member       the member of an organization
+     * @param organization the organization for the member
+     * @return created mapping
+     */
+    @Nonnull
+    UserResourceMapping addMember(@Nonnull final User member, @Nonnull final Organization organization);
+
+    /**
+     * Add organization member.
+     *
+     * @param memberID       the ID of a member
+     * @param organizationID the ID of an organization
+     * @return created mapping
+     */
+    @Nonnull
+    UserResourceMapping addMember(@Nonnull final String memberID, @Nonnull final String organizationID);
+
+    /**
+     * Removes a member from an organization.
+     *
+     * @param member       the member of an organization
+     * @param organization the organization of a member
+     */
+    void deleteMember(@Nonnull final User member, @Nonnull final Organization organization);
+
+    /**
+     * Removes a member from an organization.
+     *
+     * @param organizationID the ID of an organization
+     * @param memberID       the ID of a member
+     */
+    void deleteMember(@Nonnull final String memberID, @Nonnull final String organizationID);
+
+    /**
+     * List all owners of an organization.
+     *
+     * @param organizationID ID of organization to get owners
+     * @return return the List all owners of an organization
+     */
+    @Nonnull
+    List<UserResourceMapping> getOwners(@Nonnull final String organizationID);
+
+    /**
+     * List all owners of an organization.
+     *
+     * @param organization of the owners
+     * @return return the List all owners of an organization
+     */
+    @Nonnull
+    List<UserResourceMapping> getOwners(@Nonnull final Organization organization);
+
+    /**
+     * Add organization owner.
+     *
+     * @param owner        the owner of an organization
+     * @param organization the organization of a owner
+     * @return created mapping
+     */
+    @Nonnull
+    UserResourceMapping addOwner(@Nonnull final User owner, @Nonnull final Organization organization);
+
+    /**
+     * Add organization owner.
+     *
+     * @param organizationID the ID of an organization
+     * @param ownerID        the ID of a owner
+     * @return created mapping
+     */
+    @Nonnull
+    UserResourceMapping addOwner(@Nonnull final String ownerID, @Nonnull final String organizationID);
+
+    /**
+     * Removes a owner from an organization.
+     *
+     * @param owner        the owner of an organization
+     * @param organization the organization of a owner
+     */
+    void deleteOwner(@Nonnull final User owner, @Nonnull final Organization organization);
+
+    /**
+     * Removes a owner from an organization.
+     *
+     * @param organizationID the ID of an organization
+     * @param ownerID        the ID of a owner
+     */
+    void deleteOwner(@Nonnull final String ownerID, @Nonnull final String organizationID);
 }

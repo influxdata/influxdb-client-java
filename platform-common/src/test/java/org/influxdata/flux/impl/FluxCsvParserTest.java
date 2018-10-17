@@ -22,7 +22,6 @@
 package org.influxdata.flux.impl;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
@@ -36,8 +35,10 @@ import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
 import org.influxdata.flux.error.FluxCsvParserException;
 import org.influxdata.flux.error.FluxQueryException;
+import org.influxdata.flux.impl.FluxCsvParser.FluxResponseConsumerTable;
 import org.influxdata.platform.rest.Cancellable;
 
+import okio.Buffer;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
@@ -175,6 +176,30 @@ class FluxCsvParserTest {
                 .hasEntrySatisfying("value1", value -> Assertions.assertThat(value).isEqualTo(49L))
                 .hasEntrySatisfying("_value2", value -> Assertions.assertThat(value).isEqualTo(2401L))
                 .hasEntrySatisfying("value_str", value -> Assertions.assertThat(value).isEqualTo("test"));
+    }
+
+    @Test
+    void shortcut() throws IOException {
+
+        String data = "#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,long,string,string,string,boolean\n"
+                + "#group,false,false,false,false,false,false,false,false,false,true\n"
+                + "#default,_result,,,,,,,,,true\n"
+                + ",result,table,_start,_stop,_time,_value,_field,_measurement,host,value\n"
+                + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,true\n";
+
+        List<FluxTable> tables = parseFluxResponse(data);
+
+        Assertions.assertThat(tables).hasSize(1);
+        Assertions.assertThat(tables.get(0).getRecords()).hasSize(1);
+
+        FluxRecord fluxRecord = tables.get(0).getRecords().get(0);
+
+        Assertions.assertThat(fluxRecord.getStart()).isEqualTo(Instant.parse("1970-01-01T00:00:10Z"));
+        Assertions.assertThat(fluxRecord.getStop()).isEqualTo(Instant.parse("1970-01-01T00:00:20Z"));
+        Assertions.assertThat(fluxRecord.getTime()).isEqualTo(Instant.parse("1970-01-01T00:00:10Z"));
+        Assertions.assertThat(fluxRecord.getValue()).isEqualTo(10L);
+        Assertions.assertThat(fluxRecord.getField()).isEqualTo("free");
+        Assertions.assertThat(fluxRecord.getMeasurement()).isEqualTo("mem");
     }
 
     @Test
@@ -388,10 +413,46 @@ class FluxCsvParserTest {
             }
         };
 
-        parser.parseFluxResponse(new StringReader(data), new DefaultCancellable(), consumer);
+        Buffer buffer = new Buffer();
+        buffer.writeUtf8(data);
+
+        parser.parseFluxResponse(buffer, new DefaultCancellable(), consumer);
         Assertions.assertThat(records).hasSize(2);
     }
 
+    @Test
+    void cancelParsing() throws IOException {
+
+        String data = "#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,long,string,string,string,unknown\n"
+                + "#group,false,false,false,false,false,false,false,false,false,true\n"
+                + "#default,_result,,,,,,,,,\n"
+                + ",result,table,_start,_stop,_time,_value,_field,_measurement,host,value\n"
+                + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,12.25\n"
+                + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,\n";
+
+        List<FluxRecord> records = Lists.newArrayList();
+
+        DefaultCancellable defaultCancellable = new DefaultCancellable();
+
+        FluxCsvParser.FluxResponseConsumer consumer = new FluxCsvParser.FluxResponseConsumer() {
+            @Override
+            public void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxTable table) {
+
+            }
+
+            @Override
+            public void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxRecord record) {
+                defaultCancellable.cancel();
+                records.add(record);
+            }
+        };
+
+        Buffer buffer = new Buffer();
+        buffer.writeUtf8(data);
+
+        parser.parseFluxResponse(buffer, defaultCancellable, consumer);
+        Assertions.assertThat(records).hasSize(1);
+    }
 
     @Test
     void parsingWithoutTableDefinition() {
@@ -404,25 +465,32 @@ class FluxCsvParserTest {
                 .isInstanceOf(FluxCsvParserException.class)
                 .hasMessage("Unable to parse CSV response. FluxTable definition was not found.");
     }
-    
+
     @Nonnull
     private List<FluxTable> parseFluxResponse(@Nonnull final String data) throws IOException {
 
-        FluxResponseConsumerTable consumer = new FluxResponseConsumerTable();
-        parser.parseFluxResponse(new StringReader(data), new DefaultCancellable(), consumer);
+
+        Buffer buffer = new Buffer();
+        buffer.writeUtf8(data);
+
+        FluxResponseConsumerTable consumer = parser.new FluxResponseConsumerTable();
+        parser.parseFluxResponse(buffer, new DefaultCancellable(), consumer);
 
         return consumer.getTables();
     }
 
     private static class DefaultCancellable implements Cancellable {
+
+        private boolean cancelled = false;
+
         @Override
         public void cancel() {
-
+            cancelled = true;
         }
 
         @Override
         public boolean isCancelled() {
-            return false;
+            return cancelled;
         }
     }
 }

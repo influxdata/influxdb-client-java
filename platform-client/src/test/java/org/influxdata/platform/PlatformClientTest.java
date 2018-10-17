@@ -56,17 +56,17 @@ class PlatformClientTest extends AbstractPlatformClientTest {
 
     @Test
     void createAuthorizationClient() {
-        todo(() -> platformClient.createAuthorizationClient());
+        Assertions.assertThat(platformClient.createAuthorizationClient()).isNotNull();;
     }
 
     @Test
     void createBucketClient() {
-        todo(() -> platformClient.createBucketClient());
+        Assertions.assertThat(platformClient.createBucketClient()).isNotNull();
     }
 
     @Test
     void createOrganizationClient() {
-        todo(() -> platformClient.createOrganizationClient());
+        Assertions.assertThat(platformClient.createOrganizationClient()).isNotNull();
     }
 
     @Test

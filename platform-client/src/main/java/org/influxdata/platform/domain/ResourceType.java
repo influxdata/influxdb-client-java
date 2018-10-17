@@ -19,35 +19,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.flux.impl;
+package org.influxdata.platform.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Nonnull;
-
-import org.influxdata.flux.domain.FluxRecord;
-import org.influxdata.flux.domain.FluxTable;
-import org.influxdata.platform.rest.Cancellable;
+import com.squareup.moshi.Json;
 
 /**
- * @author Jakub Bednar (bednar@github) (04/10/2018 10:59)
+ * The type of resource.
  */
-class FluxResponseConsumerTable implements FluxCsvParser.FluxResponseConsumer {
+public enum ResourceType {
 
-    private List<FluxTable> tables = new ArrayList<>();
+    @Json(name = "dashboard")
+    DASHBOARD_RESOURCE_TYPE,
 
-    @Override
-    public void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxTable table) {
-        tables.add(index, table);
-    }
+    @Json(name = "bucket")
+    BUCKET_RESOURCE_TYPE,
 
-    @Override
-    public void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxRecord record) {
-        tables.get(index).getRecords().add(record);
-    }
+    @Json(name = "task")
+    TASK_RESOURCE_TYPE,
 
-    @Nonnull
-    List<FluxTable> getTables() {
-        return tables;
-    }
+    @Json(name = "org")
+    ORG_RESOURCE_TYPE,
+
+    @Json(name = "view")
+    VIEW_RESOURCE_TYPE
 }

@@ -26,7 +26,6 @@ import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.influxdata.flux.mapper.FluxResultMapper;
 import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.error.InfluxException;
@@ -63,7 +62,7 @@ class AbstractFluxClient<T> extends AbstractRestClient {
         }
     };
 
-    protected final FluxResultMapper resultMapper = new FluxResultMapper();
+    final FluxResultMapper resultMapper = new FluxResultMapper();
 
     final T fluxService;
     final FluxCsvParser fluxCsvParser;

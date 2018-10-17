@@ -24,7 +24,9 @@ package org.influxdata.platform.rest;
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
+import javax.annotation.Nonnull;
 
+import org.influxdata.platform.AbstractMockServerTest;
 import org.influxdata.platform.error.InfluxException;
 import org.influxdata.platform.error.rest.BadGatewayException;
 import org.influxdata.platform.error.rest.BadRequestException;
@@ -41,31 +43,42 @@ import org.influxdata.platform.error.rest.ServiceUnavailableException;
 import org.influxdata.platform.error.rest.UnauthorizedException;
 
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.mockwebserver.MockResponse;
 import okio.Buffer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.Path;
 
 /**
  * @author Jakub Bednar (bednar@github) (04/10/2018 07:57)
  */
 @RunWith(JUnitPlatform.class)
-class RestClientTest {
+class RestClientTest extends AbstractMockServerTest {
 
     private AbstractRestClient restClient;
 
+    private String serverURL;
+
     @BeforeEach
-    void setUp()
-    {
+    void setUp() {
         restClient = new AbstractRestClient() {
         };
+
+        serverURL = startMockServer();
     }
 
     @Test
@@ -125,8 +138,108 @@ class RestClientTest {
         countDownLatch.await();
     }
 
-    private void errorResponse(final int code)
-    {
+    @Test
+    void mappingLogLevel() {
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+
+        restClient.setLogLevel(interceptor, LogLevel.BODY);
+        Assertions.assertThat(interceptor.getLevel()).isEqualTo(HttpLoggingInterceptor.Level.BODY);
+        Assertions.assertThat(restClient.getLogLevel(interceptor)).isEqualTo(LogLevel.BODY);
+
+        restClient.setLogLevel(interceptor, LogLevel.HEADERS);
+        Assertions.assertThat(interceptor.getLevel()).isEqualTo(HttpLoggingInterceptor.Level.HEADERS);
+        Assertions.assertThat(restClient.getLogLevel(interceptor)).isEqualTo(LogLevel.HEADERS);
+
+        restClient.setLogLevel(interceptor, LogLevel.BASIC);
+        Assertions.assertThat(interceptor.getLevel()).isEqualTo(HttpLoggingInterceptor.Level.BASIC);
+        Assertions.assertThat(restClient.getLogLevel(interceptor)).isEqualTo(LogLevel.BASIC);
+
+        restClient.setLogLevel(interceptor, LogLevel.NONE);
+        Assertions.assertThat(interceptor.getLevel()).isEqualTo(HttpLoggingInterceptor.Level.NONE);
+        Assertions.assertThat(restClient.getLogLevel(interceptor)).isEqualTo(LogLevel.NONE);
+    }
+
+    @Test
+    void restCall() throws IOException {
+
+        mockServer.enqueue(new MockResponse()
+                .setBody("Begonia is a genus of perennial flowering plants in the family Begoniaceae."));
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(serverURL)
+                .client(okHttpClient)
+                .build();
+
+        ServerAPI serverAPI = retrofit.create(ServerAPI.class);
+        Call<ResponseBody> call = serverAPI.findFlowerByID("Begonia");
+
+        ResponseBody response = restClient.execute(call);
+        Assertions.assertThat(response.source().readUtf8()).isEqualTo("Begonia is a genus of perennial flowering plants in the family Begoniaceae.");
+    }
+
+    @Test
+    void restCallError() {
+
+        mockServer.enqueue(createErrorResponse("flower not found"));
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(serverURL)
+                .client(okHttpClient)
+                .build();
+
+        ServerAPI serverAPI = retrofit.create(ServerAPI.class);
+        Call<ResponseBody> call = serverAPI.findFlowerByID("Camellias");
+
+        Assertions.assertThatThrownBy(() -> restClient.execute(call))
+                .isInstanceOf(InfluxException.class)
+                .hasMessage("flower not found");
+    }
+    
+    @Test
+    void restCallIOError() throws IOException {
+
+        mockServer.shutdown();
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(serverURL)
+                .client(okHttpClient)
+                .build();
+
+        ServerAPI serverAPI = retrofit.create(ServerAPI.class);
+        Call<ResponseBody> call = serverAPI.findFlowerByID("Camellias");
+
+        Assertions.assertThatThrownBy(() -> restClient.execute(call))
+                .isInstanceOf(InfluxException.class)
+                .hasMessageStartingWith("Failed to connect to");
+    }
+
+    @Test
+    void restCallNullError() {
+
+        mockServer.enqueue(createErrorResponse("flower not found"));
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(serverURL)
+                .client(okHttpClient)
+                .build();
+
+        ServerAPI serverAPI = retrofit.create(ServerAPI.class);
+        Call<ResponseBody> call = serverAPI.findFlowerByID("Camellias");
+
+        ResponseBody response = restClient.execute(call, "flower not found");
+        Assertions.assertThat(response).isNull();
+    }
+
+    private void errorResponse(final int code) {
         okhttp3.Response.Builder builder = new okhttp3.Response.Builder() //
                 .code(code)
                 .message("Response.error()")
@@ -136,5 +249,13 @@ class RestClientTest {
         ResponseBody body = ResponseBody.create(MediaType.parse("application/json"), "");
 
         throw restClient.responseToError(Response.error(body, builder.build()));
+    }
+
+    private interface ServerAPI {
+
+        @GET("/flowers/{id}")
+        @Nonnull
+        @Headers("Content-Type: application/text")
+        Call<ResponseBody> findFlowerByID(@Nonnull @Path("id") final String flowerName);
     }
 }

@@ -21,9 +21,18 @@
  */
 package org.influxdata.platform.impl;
 
+import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import org.influxdata.platform.domain.Authorization;
+import org.influxdata.platform.domain.Authorizations;
+import org.influxdata.platform.domain.Bucket;
+import org.influxdata.platform.domain.Buckets;
+import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.Organizations;
 import org.influxdata.platform.domain.User;
+import org.influxdata.platform.domain.UserResourceMapping;
 import org.influxdata.platform.domain.Users;
 
 import io.reactivex.Completable;
@@ -71,6 +80,150 @@ interface PlatformService {
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<User> me();
+
+    //
+    // Organizations
+    //
+    @POST("/api/v2/orgs")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Organization> createOrganization(@Nonnull @Body final RequestBody organization);
+
+    @DELETE("/api/v2/orgs/{id}")
+    Call<Void> deleteOrganization(@Nonnull @Path("id") final String organizationID);
+
+    @PATCH("/api/v2/orgs/{id}")
+    Call<Organization> updateOrganization(@Nonnull @Path("id") final String organizationID,
+                                          @Nonnull @Body final RequestBody organization);
+
+    @GET("/api/v2/orgs/{id}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Organization> findOrganizationByID(@Nonnull @Path("id") final String organizationID);
+
+    @GET("/api/v2/orgs")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Organizations> findOrganizations();
+
+    @GET("/api/v2/orgs/{id}/members")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<UserResourceMapping>> findOrganizationMembers(@Nonnull @Path("id") final String organizationID);
+
+    @POST("/api/v2/orgs/{id}/members")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<UserResourceMapping> addOrganizationMember(@Nonnull @Path("id") final String organizationID,
+                                                    @Nonnull @Body final RequestBody member);
+
+    @DELETE("/api/v2/orgs/{id}/members/{userID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteOrganizationMember(@Nonnull @Path("id") final String organizationID,
+                                        @Nonnull @Path("userID") final String userID);
+
+    @GET("/api/v2/orgs/{id}/owners")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<UserResourceMapping>> findOrganizationOwners(@Nonnull @Path("id") final String organizationID);
+
+    @POST("/api/v2/orgs/{id}/owners")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<UserResourceMapping> addOrganizationOwner(@Nonnull @Path("id") final String organizationID,
+                                                   @Nonnull @Body final RequestBody member);
+
+    @DELETE("/api/v2/orgs/{id}/owners/{userID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteOrganizationOwner(@Nonnull @Path("id") final String organizationID,
+                                       @Nonnull @Path("userID") final String userID);
+
+    //
+    // Bucket
+    //
+    @POST("/api/v2/buckets")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Bucket> createBucket(@Nonnull @Body final RequestBody bucket);
+
+    @DELETE("/api/v2/buckets/{id}")
+    Call<Void> deleteBucket(@Nonnull @Path("id") final String bucketID);
+
+    @PATCH("/api/v2/buckets/{id}")
+    Call<Bucket> updateBucket(@Nonnull @Path("id") final String bucketID, @Nonnull @Body final RequestBody bucket);
+
+    @GET("/api/v2/buckets/{id}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Bucket> findBucketByID(@Nonnull @Path("id") final String bucketID);
+
+    @GET("/api/v2/buckets")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Buckets> findBuckets(@Nullable @Query("org") final String organizationName);
+
+    @GET("/api/v2/buckets/{id}/members")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<UserResourceMapping>> findBucketMembers(@Nonnull @Path("id") final String bucketID);
+
+    @POST("/api/v2/buckets/{id}/members")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<UserResourceMapping> addBucketMember(@Nonnull @Path("id") final String bucketID,
+                                              @Nonnull @Body final RequestBody member);
+
+    @DELETE("/api/v2/buckets/{id}/members/{userID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteBucketMember(@Nonnull @Path("id") final String bucketID,
+                                  @Nonnull @Path("userID") final String userID);
+
+    @GET("/api/v2/buckets/{id}/owners")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<UserResourceMapping>> findBucketOwners(@Nonnull @Path("id") final String bucketID);
+
+    @POST("/api/v2/buckets/{id}/owners")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<UserResourceMapping> addBucketOwner(@Nonnull @Path("id") final String bucketID,
+                                             @Nonnull @Body final RequestBody member);
+
+    @DELETE("/api/v2/buckets/{id}/owners/{userID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteBucketOwner(@Nonnull @Path("id") final String bucketID,
+                                 @Nonnull @Path("userID") final String userID);
+
+    //
+    // Authorization
+    //
+    @POST("/api/v2/authorizations")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Authorization> createAuthorization(@Nonnull @Body final RequestBody authorization);
+
+    @DELETE("/api/v2/authorizations/{id}")
+    Call<Void> deleteAuthorization(@Nonnull @Path("id") final String authorizationID);
+
+    @PATCH("/api/v2/authorizations/{id}")
+    Call<Authorization> updateAuthorization(@Nonnull @Path("id") final String authorizationID,
+                                            @Nonnull @Body final RequestBody authorization);
+
+    @GET("/api/v2/authorizations/")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Authorizations> findAuthorizations(@Nullable @Query("userID") final String userID,
+                                            @Nullable @Query("user") final String user);
+
+    @GET("/api/v2/authorizations/{id}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Authorization> findAuthorization(@Nonnull @Path("id") final String authorizationID);
+
 
     //
     // Write
