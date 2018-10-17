@@ -32,7 +32,7 @@ This repository contains the Java client for the InfluxData Platform.
     - [javadoc](https://bonitoo-io.github.io/influxdata-platform-java/flux-client/apidocs/index.html), [readme](./flux-client/)
  
 - **[flux-client-rxjava](./flux-client-rxjava)** - The RxJava client that allow perform Flux Query against the InfluxDB 1.7+ in reactive way.
-    -  [javadoc](https://bonitoo-io.github.io/influxdata-platform-java/flux-client-rxjava/apidocs/index.html), [readme](./flux-client/)
+    -  [javadoc](https://bonitoo-io.github.io/influxdata-platform-java/flux-client-rxjava/apidocs/index.html), [readme](./flux-client-rxjava/)
 
 - **[platform-client](./platform-client)** - The Java client that allows query, write and management for [Influx 2.0 OSS Platform](https://github.com/influxdata/platform).
     - [javadoc](https://bonitoo-io.github.io/influxdata-platform-java/platform-client/apidocs/index.html), [readme](./platform-client/)
