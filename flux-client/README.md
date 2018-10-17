@@ -1,6 +1,6 @@
 # flux-java
 
-The reference Java library for InfluxDB 1.7 /v2/query REST API using the [Flux language](https://github.com/influxdata/flux/blob/master/docs/SPEC.md). 
+The reference Java library for the InfluxDB 1.7 `/v2/query` REST API using the [Flux language](https://github.com/influxdata/flux/blob/master/docs/SPEC.md). 
 
 
 
@@ -130,7 +130,7 @@ An asynchronous query example:
 
 #### Raw query response
 
-It is possible to parse a result line by line using the `queryRaw` method.  
+It is possible to parse a result line-by-line using the `queryRaw` method.  
 
 ```java
     void queryRaw(@Nonnull final String query,
