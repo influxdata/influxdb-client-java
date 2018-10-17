@@ -35,6 +35,7 @@ import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
 import org.influxdata.flux.error.FluxCsvParserException;
 import org.influxdata.flux.error.FluxQueryException;
+import org.influxdata.flux.impl.FluxCsvParser.FluxResponseConsumerTable;
 import org.influxdata.platform.rest.Cancellable;
 
 import okio.Buffer;
@@ -472,7 +473,7 @@ class FluxCsvParserTest {
         Buffer buffer = new Buffer();
         buffer.writeUtf8(data);
 
-        FluxResponseConsumerTable consumer = new FluxResponseConsumerTable();
+        FluxResponseConsumerTable consumer = parser.new FluxResponseConsumerTable();
         parser.parseFluxResponse(buffer, new DefaultCancellable(), consumer);
 
         return consumer.getTables();

@@ -35,6 +35,7 @@ import org.influxdata.flux.FluxClient;
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
 import org.influxdata.flux.impl.FluxCsvParser.FluxResponseConsumer;
+import org.influxdata.flux.impl.FluxCsvParser.FluxResponseConsumerTable;
 import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.error.InfluxException;
@@ -69,7 +70,7 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
 
         Arguments.checkNonEmpty(query, "query");
 
-        FluxResponseConsumerTable consumer = new FluxResponseConsumerTable();
+        FluxResponseConsumerTable consumer = fluxCsvParser.new FluxResponseConsumerTable();
 
         query(query, DEFAULT_DIALECT.toString(), consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
 
@@ -119,6 +120,7 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
     public <M> void query(@Nonnull final String query,
                           @Nonnull final Class<M> measurementType,
                           @Nonnull final BiConsumer<Cancellable, M> onNext) {
+
         Arguments.checkNonEmpty(query, "query");
         Arguments.checkNotNull(onNext, "onNext");
         Arguments.checkNotNull(measurementType, "measurementType");

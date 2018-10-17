@@ -39,7 +39,8 @@ import org.influxdata.platform.rest.Cancellable;
 public interface QueryClient {
 
     /**
-     * Executes the Flux query against the InfluxData Platform and synchronously map whole response to {@code List<FluxTable>}.
+     * Executes the Flux query against the InfluxData Platform and synchronously map whole response
+     * to {@code List<FluxTable>}.
      * <p>
      * NOTE: This method is not intended for large query results.
      * Use {@link QueryClient#query(String, BiConsumer, Consumer, Runnable)} for large data streaming.
@@ -51,14 +52,15 @@ public interface QueryClient {
     List<FluxTable> query(@Nonnull final String query);
 
     /**
-     * Executes the Flux query against the InfluxData Platform and synchronously map whole response to list of object with
-     * given type.
+     * Executes the Flux query against the InfluxData Platform and synchronously map whole response
+     * to list of object with given type.
      * <p>
      * NOTE: This method is not intended for large query results.
      * Use {@link QueryClient#query(String, Class, BiConsumer, Consumer, Runnable)} for large data streaming.
      *
      * @param query           the flux query to execute
      * @param measurementType the type of measurement
+     * @param <M>             the type of the measurement (POJO)
      * @return {@code List<FluxTable>} which are matched the query
      */
     @Nonnull
@@ -81,7 +83,8 @@ public interface QueryClient {
      *
      * @param query           the flux query to execute
      * @param measurementType the measurement type (POJO)
-     * @param onNext          the callback to consume the FluxRecord result with capability to discontinue a streaming query
+     * @param onNext          the callback to consume the FluxRecord result with capability to discontinue
+     *                        a streaming query
      * @param <M>             the type of the measurement (POJO)
      */
     <M> void query(@Nonnull final String query,
@@ -147,10 +150,11 @@ public interface QueryClient {
 
 
     /**
-     * Executes the Flux query against the InfluxData Platform and synchronously map whole response to {@link String} result.
+     * Executes the Flux query against the InfluxData Platform and synchronously map whole response
+     * to {@link String} result.
      * <p>
      * NOTE: This method is not intended for large responses, that do not fit into memory.
-     * Use {@link FluxClient#queryRaw(String, BiConsumer, Consumer, Runnable)} for large data streaming.
+     * Use {@link QueryClient#queryRaw(String, BiConsumer, Consumer, Runnable)} for large data streaming.
      *
      * @param query the flux query to execute
      * @return the raw response that matched the query
@@ -159,7 +163,8 @@ public interface QueryClient {
     String queryRaw(@Nonnull final String query);
 
     /**
-     * Executes the Flux query against the InfluxData Platform and synchronously map whole response to {@link String} result.
+     * Executes the Flux query against the InfluxData Platform and synchronously map whole response
+     * to {@link String} result.
      * <p>
      * NOTE: This method is not intended for large responses, that do not fit into memory.
      * Use {@link QueryClient#queryRaw(String, String, BiConsumer, Consumer, Runnable)} for large data streaming.

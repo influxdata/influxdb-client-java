@@ -82,6 +82,26 @@ class FluxCsvParser {
         void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxRecord record);
     }
 
+    class FluxResponseConsumerTable implements FluxCsvParser.FluxResponseConsumer {
+
+        private List<FluxTable> tables = new ArrayList<>();
+
+        @Override
+        public void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxTable table) {
+            tables.add(index, table);
+        }
+
+        @Override
+        public void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxRecord record) {
+            tables.get(index).getRecords().add(record);
+        }
+
+        @Nonnull
+        List<FluxTable> getTables() {
+            return tables;
+        }
+    }
+
     /**
      * Asynchronously parse Flux CSV response to {@link FluxResponseConsumer}.
      *
