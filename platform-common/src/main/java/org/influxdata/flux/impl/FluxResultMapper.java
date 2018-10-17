@@ -31,7 +31,7 @@ import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.platform.annotations.Column;
 import org.influxdata.platform.error.InfluxException;
 
-class FluxResultMapper {
+public class FluxResultMapper {
 
     /**
      * Maps FluxRecord into custom POJO class.
@@ -43,7 +43,7 @@ class FluxResultMapper {
      */
 
     @Nonnull
-    <T> T toPOJO(@Nonnull final FluxRecord record, @Nonnull final Class<T> clazz) {
+    public <T> T toPOJO(@Nonnull final FluxRecord record, @Nonnull final Class<T> clazz) {
 
         Objects.requireNonNull(record, "Record is required");
         Objects.requireNonNull(clazz, "Class type is required");

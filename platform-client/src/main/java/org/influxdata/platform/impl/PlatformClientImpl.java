@@ -63,6 +63,7 @@ public final class PlatformClientImpl extends AbstractRestClient implements Plat
     private final GzipInterceptor gzipInterceptor;
 
     public PlatformClientImpl(@Nonnull final PlatformOptions options) {
+
         Arguments.checkNotNull(options, "PlatformOptions");
 
         this.loggingInterceptor = new HttpLoggingInterceptor();
@@ -93,7 +94,7 @@ public final class PlatformClientImpl extends AbstractRestClient implements Plat
     @Nonnull
     @Override
     public QueryClient createQueryClient() {
-        throw new TodoException();
+        return new QueryClientImpl(platformService);
     }
 
     @Nonnull

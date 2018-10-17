@@ -21,73 +21,45 @@
  */
 package org.influxdata.flux.impl;
 
-import java.io.IOException;
-import java.util.function.Consumer;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
-import org.influxdata.platform.error.InfluxException;
-import org.influxdata.platform.rest.AbstractRestClient;
-import org.influxdata.platform.rest.Cancellable;
+import org.influxdata.platform.rest.AbstractQueryClient;
 
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
-import okio.BufferedSource;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/10/2018 09:57)
  */
-class AbstractFluxClient<T> extends AbstractRestClient {
-
-    static final JSONObject DEFAULT_DIALECT = new JSONObject()
-            .put("header", true)
-            .put("delimiter", ",")
-            .put("quoteChar", "\"")
-            .put("commentPrefix", "#")
-            .put("annotations", new JSONArray().put("datatype").put("group").put("default"));
-
-    static final Consumer<Throwable> ERROR_CONSUMER = throwable -> {
-        if (throwable instanceof InfluxException) {
-            throw (InfluxException) throwable;
-        } else {
-            throw new InfluxException(throwable);
-        }
-    };
-
-    final FluxResultMapper resultMapper = new FluxResultMapper();
+class AbstractFluxClient<T> extends AbstractQueryClient {
 
     final T fluxService;
-    final FluxCsvParser fluxCsvParser;
 
     final HttpLoggingInterceptor loggingInterceptor;
-    private OkHttpClient okHttpClient;
+    final OkHttpClient okHttpClient;
 
-    AbstractFluxClient(@Nonnull final FluxConnectionOptions options,
+    AbstractFluxClient(@Nonnull final OkHttpClient.Builder okHttpClientBuilder,
+                       @Nonnull final String url,
                        @Nonnull final Class<T> serviceType) {
 
-        Arguments.checkNotNull(options, "options");
+        Arguments.checkNotNull(okHttpClientBuilder, "OkHttpClient.Builder");
+        Arguments.checkNonEmpty(url, "Service url");
         Arguments.checkNotNull(serviceType, "Flux service type");
-
-        this.fluxCsvParser = new FluxCsvParser();
 
         this.loggingInterceptor = new HttpLoggingInterceptor();
         this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
 
-        okHttpClient = options.getOkHttpClient()
-                .addInterceptor(loggingInterceptor)
+        this.okHttpClient = okHttpClientBuilder
+                .addInterceptor(this.loggingInterceptor)
                 .build();
 
         Retrofit.Builder serviceBuilder = new Retrofit.Builder()
-                .baseUrl(options.getUrl())
-                .client(okHttpClient);
+                .baseUrl(url)
+                .client(this.okHttpClient);
 
         configure(serviceBuilder);
 
@@ -115,32 +87,6 @@ class AbstractFluxClient<T> extends AbstractRestClient {
         }
 
         return "unknown";
-    }
-
-    @Nonnull
-    RequestBody createBody(@Nullable final String dialect, @Nonnull final String query) {
-
-        Arguments.checkNonEmpty(query, "Flux query");
-        JSONObject json = new JSONObject()
-                .put("query", query);
-
-        if (dialect != null) {
-            json.put("dialect", new JSONObject(dialect));
-        }
-
-        return createBody(json.toString());
-    }
-
-    void parseFluxResponseToLines(@Nonnull final Consumer<String> onResponse,
-                                  @Nonnull final Cancellable cancellable,
-                                  @Nonnull final BufferedSource bufferedSource) throws IOException {
-
-        String line = bufferedSource.readUtf8Line();
-
-        while (line != null && !cancellable.isCancelled()) {
-            onResponse.accept(line);
-            line = bufferedSource.readUtf8Line();
-        }
     }
 
     /**

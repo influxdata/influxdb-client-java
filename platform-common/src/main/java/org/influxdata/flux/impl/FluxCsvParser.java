@@ -50,7 +50,7 @@ import org.apache.commons.csv.CSVRecord;
  *
  * @see org.influxdata.flux
  */
-class FluxCsvParser {
+public class FluxCsvParser {
 
     private static final int ERROR_RECORD_INDEX = 4;
 
@@ -60,7 +60,7 @@ class FluxCsvParser {
         IN_ERROR
     }
 
-    interface FluxResponseConsumer {
+    public interface FluxResponseConsumer {
 
         /**
          * Add new {@link FluxTable} to consumer.
@@ -82,7 +82,7 @@ class FluxCsvParser {
         void accept(final int index, @Nonnull final Cancellable cancellable, @Nonnull final FluxRecord record);
     }
 
-    class FluxResponseConsumerTable implements FluxCsvParser.FluxResponseConsumer {
+    public class FluxResponseConsumerTable implements FluxCsvParser.FluxResponseConsumer {
 
         private List<FluxTable> tables = new ArrayList<>();
 
@@ -97,7 +97,7 @@ class FluxCsvParser {
         }
 
         @Nonnull
-        List<FluxTable> getTables() {
+        public List<FluxTable> getTables() {
             return tables;
         }
     }
@@ -110,9 +110,9 @@ class FluxCsvParser {
      * @param consumer       to accept {@link FluxTable}s and {@link FluxRecord}s
      * @throws IOException If there is a problem with reading CSV
      */
-    void parseFluxResponse(@Nonnull final BufferedSource bufferedSource,
-                           @Nonnull final Cancellable cancellable,
-                           @Nonnull final FluxResponseConsumer consumer) throws IOException {
+    public void parseFluxResponse(@Nonnull final BufferedSource bufferedSource,
+                                  @Nonnull final Cancellable cancellable,
+                                  @Nonnull final FluxResponseConsumer consumer) throws IOException {
 
         Arguments.checkNotNull(bufferedSource, "bufferedSource");
 

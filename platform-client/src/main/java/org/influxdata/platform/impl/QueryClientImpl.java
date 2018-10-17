@@ -19,43 +19,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.flux.impl;
+package org.influxdata.platform.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.influxdata.flux.FluxClient;
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
-import org.influxdata.flux.impl.FluxCsvParser.FluxResponseConsumer;
-import org.influxdata.flux.impl.FluxCsvParser.FluxResponseConsumerTable;
-import org.influxdata.flux.option.FluxConnectionOptions;
+import org.influxdata.flux.impl.FluxCsvParser;
 import org.influxdata.platform.Arguments;
-import org.influxdata.platform.error.InfluxException;
+import org.influxdata.platform.QueryClient;
+import org.influxdata.platform.rest.AbstractQueryClient;
 import org.influxdata.platform.rest.Cancellable;
-import org.influxdata.platform.rest.LogLevel;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Response;
 
 /**
- * @author Jakub Bednar (bednar@github) (03/10/2018 14:20)
+ * @author Jakub Bednar (bednar@github) (17/10/2018 10:50)
  */
-public class FluxClientImpl extends AbstractFluxClient<FluxService> implements FluxClient {
+final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
 
-    private static final Logger LOG = Logger.getLogger(FluxClientImpl.class.getName());
+    private final FluxCsvParser fluxCsvParser;
+    private final PlatformService platformService;
 
-    public FluxClientImpl(@Nonnull final FluxConnectionOptions options) {
+    QueryClientImpl(@Nonnull final PlatformService platformService) {
 
-        super(options.getOkHttpClient(), options.getUrl(), FluxService.class);
+        Arguments.checkNotNull(platformService, "PlatformService");
+
+        this.platformService = platformService;
+        this.fluxCsvParser = new FluxCsvParser();
     }
 
     @Nonnull
@@ -64,7 +61,7 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
 
         Arguments.checkNonEmpty(query, "query");
 
-        FluxResponseConsumerTable consumer = fluxCsvParser.new FluxResponseConsumerTable();
+        FluxCsvParser.FluxResponseConsumerTable consumer = fluxCsvParser.new FluxResponseConsumerTable();
 
         query(query, DEFAULT_DIALECT.toString(), consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
 
@@ -79,7 +76,7 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
 
         List<M> measurements = new ArrayList<>();
 
-        FluxResponseConsumer consumer = new FluxResponseConsumer() {
+        FluxCsvParser.FluxResponseConsumer consumer = new FluxCsvParser.FluxResponseConsumer() {
 
             @Override
             public void accept(final int index,
@@ -160,7 +157,7 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
         Arguments.checkNotNull(onError, "onError");
         Arguments.checkNotNull(onComplete, "onComplete");
 
-        FluxResponseConsumer consumer = new FluxResponseConsumer() {
+        FluxCsvParser.FluxResponseConsumer consumer = new FluxCsvParser.FluxResponseConsumer() {
 
             @Override
             public void accept(final int index,
@@ -179,7 +176,6 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
         query(query, DEFAULT_DIALECT.toString(), consumer, onError, onComplete, true);
     }
 
-
     @Override
     public <M> void query(@Nonnull final String query,
                           @Nonnull final Class<M> measurementType,
@@ -194,7 +190,7 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
         Arguments.checkNotNull(measurementType, "measurementType");
 
 
-        FluxResponseConsumer consumer = new FluxResponseConsumer() {
+        FluxCsvParser.FluxResponseConsumer consumer = new FluxCsvParser.FluxResponseConsumer() {
 
             @Override
             public void accept(final int index,
@@ -214,13 +210,11 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
         };
 
         query(query, DEFAULT_DIALECT.toString(), consumer, onError, onComplete, true);
-
     }
 
     @Nonnull
     @Override
     public String queryRaw(@Nonnull final String query) {
-
         Arguments.checkNonEmpty(query, "query");
 
         return queryRaw(query, (String) null);
@@ -229,7 +223,6 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
     @Nonnull
     @Override
     public String queryRaw(@Nonnull final String query, @Nullable final String dialect) {
-
         Arguments.checkNonEmpty(query, "query");
 
         List<String> rows = new ArrayList<>();
@@ -242,11 +235,9 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
     }
 
     @Override
-    public void queryRaw(@Nonnull final String query,
-                         @Nonnull final BiConsumer<Cancellable, String> onResponse) {
-
+    public void queryRaw(@Nonnull final String query, @Nonnull final BiConsumer<Cancellable, String> onResponse) {
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNotNull(onResponse, "onNext");
+        Arguments.checkNotNull(onResponse, "onResponse");
 
         queryRaw(query, null, onResponse);
     }
@@ -254,12 +245,12 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
     @Override
     public void queryRaw(@Nonnull final String query,
                          @Nullable final String dialect,
-                         @Nonnull final BiConsumer<Cancellable, String> onNext) {
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNotNull(onNext, "onNext");
+        Arguments.checkNotNull(onResponse, "onResponse");
 
-        queryRaw(query, dialect, onNext, ERROR_CONSUMER);
+        queryRaw(query, dialect, onResponse, ERROR_CONSUMER);
     }
 
     @Override
@@ -316,60 +307,14 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
         queryRaw(query, dialect, onResponse, onError, onComplete, true);
     }
 
-    @Nonnull
-    @Override
-    public Boolean ping() {
-
-        Call<ResponseBody> ping = fluxService.ping();
-
-        try {
-            return ping.execute().isSuccessful();
-        } catch (IOException e) {
-
-            LOG.log(Level.WARNING, "Ping request wasn't successful", e);
-            return false;
-        }
-    }
-
-    @Override
-    @Nonnull
-    public String version() {
-
-        Call<ResponseBody> ping = fluxService.ping();
-
-        try {
-            Response<ResponseBody> execute = ping.execute();
-            return getVersion(execute);
-        } catch (IOException e) {
-            throw new InfluxException(e);
-        }
-    }
-
-    @Nonnull
-    @Override
-    public LogLevel getLogLevel() {
-        return getLogLevel(this.loggingInterceptor);
-    }
-
-    @Nonnull
-    @Override
-    public FluxClient setLogLevel(@Nonnull final LogLevel logLevel) {
-
-        Arguments.checkNotNull(logLevel, "LogLevel");
-
-        setLogLevel(this.loggingInterceptor, logLevel);
-
-        return this;
-    }
-
     private void query(@Nonnull final String query,
                        @Nonnull final String dialect,
-                       @Nonnull final FluxResponseConsumer responseConsumer,
+                       @Nonnull final FluxCsvParser.FluxResponseConsumer responseConsumer,
                        @Nonnull final Consumer<? super Throwable> onError,
                        @Nonnull final Runnable onComplete,
                        @Nonnull final Boolean asynchronously) {
 
-        Call<ResponseBody> queryCall = fluxService.query(createBody(dialect, query));
+        Call<ResponseBody> queryCall = platformService.query(createBody(dialect, query));
 
         query(queryCall, responseConsumer, onError, onComplete, asynchronously);
     }
@@ -381,7 +326,7 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
                           @Nonnull final Runnable onComplete,
                           @Nonnull final Boolean asynchronously) {
 
-        Call<ResponseBody> queryCall = fluxService.query(createBody(dialect, query));
+        Call<ResponseBody> queryCall = platformService.query(createBody(dialect, query));
 
         queryRaw(queryCall, onResponse, onError, onComplete, asynchronously);
     }

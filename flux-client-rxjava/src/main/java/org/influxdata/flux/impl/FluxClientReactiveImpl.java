@@ -54,7 +54,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 public class FluxClientReactiveImpl extends AbstractFluxClient<FluxServiceReactive> implements FluxClientReactive {
 
     public FluxClientReactiveImpl(@Nonnull final FluxConnectionOptions options) {
-        super(options, FluxServiceReactive.class);
+        super(options.getOkHttpClient(), options.getUrl(), FluxServiceReactive.class);
     }
 
     @Override
@@ -248,7 +248,7 @@ public class FluxClientReactiveImpl extends AbstractFluxClient<FluxServiceReacti
                 //
                 // Subscriber is not disposed && source has data => parse
                 //
-                while (!subscriber.isDisposed() && !source.exhausted()) {
+                while (!source.exhausted() && !subscriber.isDisposed()) {
 
                     consumer.accept(source, subscriber);
                 }
@@ -264,14 +264,15 @@ public class FluxClientReactiveImpl extends AbstractFluxClient<FluxServiceReacti
                 } else {
                     throw new UncheckedIOException(e);
                 }
+            } finally {
+
+                body.close();
             }
 
             //if response end we get here
             if (!isCompleted) {
                 subscriber.onComplete();
             }
-
-            body.close();
         });
     }
 

@@ -21,16 +21,12 @@
  */
 package org.influxdata.platform;
 
-import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import org.influxdata.platform.annotations.Column;
-import org.influxdata.platform.annotations.Measurement;
 import org.influxdata.platform.error.InfluxException;
 import org.influxdata.platform.impl.AbstractPlatformClientTest;
 import org.influxdata.platform.option.WriteOptions;
@@ -592,25 +588,4 @@ class WriteClientTest extends AbstractPlatformClientTest {
         return recordedRequest.getBody().readUtf8();
     }
 
-    @Measurement(name = "h2o")
-    private static class H2OFeetMeasurement {
-        @Column(name = "location", tag = true)
-        private String location;
-
-        @Column(name = "water_level")
-        private Double level;
-
-        @Column(name = "level description")
-        private String description;
-
-        @Column(name = "time", timestamp = true)
-        private Instant time;
-
-        private H2OFeetMeasurement(String location, Double level, String description, @Nullable final Long millis) {
-            this.location = location;
-            this.level = level;
-            this.description = description;
-            this.time = millis != null ? Instant.ofEpochMilli(millis) : null;
-        }
-    }
 }

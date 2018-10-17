@@ -37,6 +37,7 @@ import org.influxdata.platform.domain.Users;
 
 import io.reactivex.Completable;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -46,6 +47,7 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Streaming;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 13:30)
@@ -224,7 +226,6 @@ interface PlatformService {
     @Headers("Content-Type: application/json")
     Call<Authorization> findAuthorization(@Nonnull @Path("id") final String authorizationID);
 
-
     //
     // Write
     //
@@ -234,5 +235,14 @@ interface PlatformService {
                             @Query("bucket") final String bucket,
                             @Query("precision") final String precision,
                             @Body final RequestBody points);
+
+    //
+    // Query
+    //
+    @Streaming
+    @POST("/api/v2/query")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<ResponseBody> query(@Nonnull @Body final RequestBody query);
 
 }

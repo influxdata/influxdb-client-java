@@ -44,7 +44,7 @@ class PlatformClientTest extends AbstractPlatformClientTest {
 
     @Test
     void createQueryClient() {
-        todo(() -> platformClient.createQueryClient());
+        Assertions.assertThat(platformClient.createQueryClient()).isNotNull();
     }
 
     @Test
@@ -56,7 +56,7 @@ class PlatformClientTest extends AbstractPlatformClientTest {
 
     @Test
     void createAuthorizationClient() {
-        Assertions.assertThat(platformClient.createAuthorizationClient()).isNotNull();;
+        Assertions.assertThat(platformClient.createAuthorizationClient()).isNotNull();
     }
 
     @Test

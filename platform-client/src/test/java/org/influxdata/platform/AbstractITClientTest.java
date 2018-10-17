@@ -32,11 +32,12 @@ import org.junit.jupiter.api.BeforeEach;
 /**
  * @author Jakub Bednar (bednar@github) (11/09/2018 10:29)
  */
-abstract class AbstractITClientTest {
+abstract class AbstractITClientTest extends AbstractTest {
 
     private static final Logger LOG = Logger.getLogger(AbstractITClientTest.class.getName());
 
     PlatformClient platformService;
+    String platformURL;
 
     @BeforeEach
     void setUp() {
@@ -44,7 +45,7 @@ abstract class AbstractITClientTest {
         String platformIP = System.getenv().getOrDefault("PLATFORM_IP", "127.0.0.1");
         String platformPort = System.getenv().getOrDefault("PLATFORM_PORT", "9999");
 
-        String platformURL = "http://" + platformIP + ":" + platformPort;
+        platformURL = "http://" + platformIP + ":" + platformPort;
         LOG.log(Level.FINEST, "Platform URL: {0}", platformURL);
 
         platformService = PlatformClientFactory.create(platformURL, "my-user", "my-password".toCharArray());
