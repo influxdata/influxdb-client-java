@@ -45,7 +45,7 @@ This repository contains the reference Java client for the InfluxData Platform.
        
 ### Flux queries in InfluxDB 1.7+
 
-The REST endpoint `/v2/query` for querying using the **Flux** language has been introduced in InfluxDB 1.7.
+The REST endpoint `/v2/query` for querying using the **Flux** language has been introduced with InfluxDB 1.7.
 
 The following example demonstrates querying using the Flux language: 
 
