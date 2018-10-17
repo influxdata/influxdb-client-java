@@ -1,7 +1,7 @@
 # flux-java-reactive
 
-RxJava extension of [flux-client](../flux-client) library for 
-InfluxDB 1.7 /v2/query REST API using [Flux language](https://github.com/influxdata/flux/blob/master/docs/SPEC.md).
+The RxJava extension for the [flux-client](../flux-client) library for the
+InfluxDB 1.7 `/v2/query` REST API using the [Flux language](https://github.com/influxdata/flux/blob/master/docs/SPEC.md).
  
 
 > This library is under development and no stable version has been released yet.  
@@ -14,14 +14,14 @@ InfluxDB 1.7 /v2/query REST API using [Flux language](https://github.com/influxd
 [![GitHub issues](https://img.shields.io/github/issues-raw/bonitoo-io/influxdata-platform-java.svg)](https://github.com/bonitoo-io/influxdata-platform-java/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/bonitoo-io/influxdata-platform-java.svg)](https://github.com/bonitoo-io/influxdata-platform-java/pulls)
 
-### Create client instance
+### Create a client instance
 
-The `FluxClientReactiveFactory` creates the instance of a RxJava Flux client that can be customized by `FluxConnectionOptions`. 
-Client configuration is is described in [flux-client](../flux-client/#creating-).
+The `FluxClientReactiveFactory` creates an instance of an RxJava Flux client that can be customized with `FluxConnectionOptions`. 
+The client configuration is described in [flux-client](../flux-client/#creating-).
 
 ### Query
 
-Following example demonstrates how to create client and execute Flux query and process result using RxJava streams.
+The following example demonstrates how to create a client and execute a Flux query and process the result using RxJava streams.
 
 ```java
 public class FluxClientReactiveFactoryExample {
@@ -55,13 +55,12 @@ public class FluxClientReactiveFactoryExample {
 }
 ```
 
-### Mapping query result to custom POJO
+### Mapping a query result to a custom POJO
 
-Another option is to use custom POJO class instead of `FluxRecord`. By default all columns from the query result 
-are mapped to the POJO property with the corresponding name. Alternative column name for mapping can be adjusted by 
-`@Column` annotation.
+Another option is to use a custom POJO class instead of `FluxRecord`. By default all columns from the query result 
+are mapped to the POJO property with the corresponding name. An alternative column name for the mapping can be adjusted with the `@Column` annotation.
 
-Custom POJO example:
+A custom POJO example:
 ```java
 
 public class Cpu {
@@ -90,7 +89,7 @@ public class Cpu {
 }
 ```
 
-Mapping query result to `Cpu` POJO example:
+Mapping query results to a `Cpu` POJO example:
 ```java
 
 import io.reactivex.Flowable;
@@ -127,7 +126,7 @@ public class FluxClientReactivePojoExample {
   }
 }
 ```
-There is also a possibility to use `Flowable<String> queryRaw(@Nonnull final String query)` method for line by line 
+There is also the possibility to use the `Flowable<String> queryRaw(@Nonnull final String query)` method for line by line 
 parsing, where each line contains comma separated values from the query response.  
 
 ## Version
