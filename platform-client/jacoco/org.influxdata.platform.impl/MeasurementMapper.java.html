@@ -85,18 +85,18 @@ import org.influxdata.platform.write.Point;
 
 <span class="fc" id="L86">            Class&lt;?&gt; fieldType = field.getType();</span>
 <span class="fc bfc" id="L87" title="All 2 branches covered.">            if (column.tag()) {</span>
-<span class="fc" id="L88">                point.addTag(column.name(), value.toString());</span>
+<span class="fc" id="L88">                point.addTag(name, value.toString());</span>
 <span class="fc bfc" id="L89" title="All 2 branches covered.">            } else if (column.timestamp()) {</span>
 <span class="fc" id="L90">                Instant instant = (Instant) value;</span>
 <span class="fc" id="L91">                point.time(instant, precision);</span>
 <span class="fc bfc" id="L92" title="All 2 branches covered.">            } else if (isNumber(fieldType)) {</span>
-<span class="fc" id="L93">                point.addField(column.name(), (Number) value);</span>
+<span class="fc" id="L93">                point.addField(name, (Number) value);</span>
 <span class="pc bpc" id="L94" title="2 of 4 branches missed.">            } else if (Boolean.class.isAssignableFrom(fieldType) || boolean.class.isAssignableFrom(fieldType)) {</span>
-<span class="nc" id="L95">                point.addField(column.name(), (Boolean) value);</span>
+<span class="nc" id="L95">                point.addField(name, (Boolean) value);</span>
 <span class="fc bfc" id="L96" title="All 2 branches covered.">            } else if (String.class.isAssignableFrom(fieldType)) {</span>
-<span class="fc" id="L97">                point.addField(column.name(), (String) value);</span>
+<span class="fc" id="L97">                point.addField(name, (String) value);</span>
             } else {
-<span class="fc" id="L99">                point.addField(column.name(), value.toString());</span>
+<span class="fc" id="L99">                point.addField(name, value.toString());</span>
             }
 <span class="fc" id="L101">        });</span>
 
@@ -133,10 +133,14 @@ import org.influxdata.platform.write.Point;
 <span class="fc bfc" id="L133" title="All 2 branches covered.">            for (Field field : measurementType.getDeclaredFields()) {</span>
 <span class="fc" id="L134">                Column colAnnotation = field.getAnnotation(Column.class);</span>
 <span class="fc bfc" id="L135" title="All 2 branches covered.">                if (colAnnotation != null) {</span>
-<span class="fc" id="L136">                    influxColumnAndFieldMap.put(colAnnotation.name(), field);</span>
+<span class="fc" id="L136">                    String name = colAnnotation.name();</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">                    if (name.isEmpty()) {</span>
+<span class="fc" id="L138">                        name = field.getName();</span>
+                    }
+<span class="fc" id="L140">                    influxColumnAndFieldMap.put(name, field);</span>
                 }
             }
         }
-<span class="fc" id="L140">    }</span>
+<span class="fc" id="L144">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
