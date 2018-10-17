@@ -157,7 +157,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         List<FluxRecord> fluxRecords = new ArrayList<>();
 
         CountDownLatch queryCountDown = new CountDownLatch(2);
-        queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000000Z)", (cancellable, fluxRecord) -> {
+        queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", (cancellable, fluxRecord) -> {
             fluxRecords.add(fluxRecord);
             queryCountDown.countDown();
 

@@ -85,18 +85,18 @@ class MeasurementMapper {
 
             Class<?> fieldType = field.getType();
             if (column.tag()) {
-                point.addTag(column.name(), value.toString());
+                point.addTag(name, value.toString());
             } else if (column.timestamp()) {
                 Instant instant = (Instant) value;
                 point.time(instant, precision);
             } else if (isNumber(fieldType)) {
-                point.addField(column.name(), (Number) value);
+                point.addField(name, (Number) value);
             } else if (Boolean.class.isAssignableFrom(fieldType) || boolean.class.isAssignableFrom(fieldType)) {
-                point.addField(column.name(), (Boolean) value);
+                point.addField(name, (Boolean) value);
             } else if (String.class.isAssignableFrom(fieldType)) {
-                point.addField(column.name(), (String) value);
+                point.addField(name, (String) value);
             } else {
-                point.addField(column.name(), value.toString());
+                point.addField(name, value.toString());
             }
         });
 
@@ -133,7 +133,11 @@ class MeasurementMapper {
             for (Field field : measurementType.getDeclaredFields()) {
                 Column colAnnotation = field.getAnnotation(Column.class);
                 if (colAnnotation != null) {
-                    influxColumnAndFieldMap.put(colAnnotation.name(), field);
+                    String name = colAnnotation.name();
+                    if (name.isEmpty()) {
+                        name = field.getName();
+                    }
+                    influxColumnAndFieldMap.put(name, field);
                 }
             }
         }

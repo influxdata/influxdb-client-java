@@ -65,6 +65,18 @@ class MeasurementMapperTest {
     }
 
     @Test
+    void columnWithoutName() {
+
+        Pojo pojo = new Pojo();
+        pojo.tag = "tag val";
+        pojo.value = 15;
+        pojo.valueWithoutDefaultName = 20;
+        pojo.valueWithEmptyName = 25;
+
+        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.SECONDS).toString()).isEqualTo("pojo,tag=tag\\ val value=\"15\",valueWithEmptyName=25i,valueWithoutDefaultName=20i");
+    }
+
+    @Test
     void defaultToString() {
 
         Pojo pojo = new Pojo();
@@ -89,8 +101,13 @@ class MeasurementMapperTest {
         @Column(name = "value")
         private Object value;
 
+        @Column
+        private Integer valueWithoutDefaultName;
+
+        @Column(name = "")
+        private Number valueWithEmptyName;
+
         @Column(timestamp = true)
         private Instant timestamp;
     }
-
 }

@@ -182,6 +182,14 @@ class ITFluxClient extends AbstractITFluxClient {
     }
 
     @Test
+    void error() {
+
+        Assertions.assertThatThrownBy(() -> fluxClient.query("from(bucket:\"telegraf\")"))
+                .isInstanceOf(InfluxException.class)
+                .hasMessage("failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time");
+    }
+
+    @Test
     void errorWithStatusOK() {
 
         Assertions.assertThatThrownBy(() -> fluxClient.query(FROM_FLUX_DATABASE))
