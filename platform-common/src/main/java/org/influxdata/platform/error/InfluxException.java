@@ -141,6 +141,9 @@ public class InfluxException extends RuntimeException {
         }
 
         String message = response.headers().get("X-Influx-Error");
+        if (message == null) {
+            message = response.headers().get("X-InfluxDb-Error");
+        }
         if (message != null && !message.isEmpty()) {
             return message;
         }

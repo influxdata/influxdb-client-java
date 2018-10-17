@@ -44,7 +44,7 @@ public class FluxRawExample {
 
             }, error -> {
                 // error handling while processing result
-                System.out.println("Error occured: " + error.getMessage());
+                error.printStackTrace();
 
             }, () -> {
                 // on complete

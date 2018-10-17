@@ -49,12 +49,14 @@ public class FluxClientFactoryExample {
 
             }, error -> {
                 // error handling while processing result
-                System.out.println("Error occured: " + error.getMessage());
+                error.printStackTrace();
 
             }, () -> {
                 // on complete
                 System.out.println("Query completed");
             });
+
+        fluxClient.close();
 
     }
 }
