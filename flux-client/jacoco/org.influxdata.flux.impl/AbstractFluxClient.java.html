@@ -21,80 +21,52 @@
  */
 package org.influxdata.flux.impl;
 
-import java.io.IOException;
-import java.util.function.Consumer;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.Arguments;
-import org.influxdata.platform.error.InfluxException;
-import org.influxdata.platform.rest.AbstractRestClient;
-import org.influxdata.platform.rest.Cancellable;
+import org.influxdata.platform.rest.AbstractQueryClient;
 
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
-import okio.BufferedSource;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/10/2018 09:57)
  */
-class AbstractFluxClient&lt;T&gt; extends AbstractRestClient {
-
-<span class="fc" id="L50">    static final JSONObject DEFAULT_DIALECT = new JSONObject()</span>
-<span class="fc" id="L51">            .put(&quot;header&quot;, true)</span>
-<span class="fc" id="L52">            .put(&quot;delimiter&quot;, &quot;,&quot;)</span>
-<span class="fc" id="L53">            .put(&quot;quoteChar&quot;, &quot;\&quot;&quot;)</span>
-<span class="fc" id="L54">            .put(&quot;commentPrefix&quot;, &quot;#&quot;)</span>
-<span class="fc" id="L55">            .put(&quot;annotations&quot;, new JSONArray().put(&quot;datatype&quot;).put(&quot;group&quot;).put(&quot;default&quot;));</span>
-
-<span class="fc" id="L57">    static final Consumer&lt;Throwable&gt; ERROR_CONSUMER = throwable -&gt; {</span>
-<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        if (throwable instanceof InfluxException) {</span>
-<span class="fc" id="L59">            throw (InfluxException) throwable;</span>
-        } else {
-<span class="nc" id="L61">            throw new InfluxException(throwable);</span>
-        }
-    };
-
-<span class="fc" id="L65">    final FluxResultMapper resultMapper = new FluxResultMapper();</span>
+class AbstractFluxClient&lt;T&gt; extends AbstractQueryClient {
 
     final T fluxService;
-    final FluxCsvParser fluxCsvParser;
 
     final HttpLoggingInterceptor loggingInterceptor;
-    private OkHttpClient okHttpClient;
+    final OkHttpClient okHttpClient;
 
-    AbstractFluxClient(@Nonnull final FluxConnectionOptions options,
-<span class="fc" id="L74">                       @Nonnull final Class&lt;T&gt; serviceType) {</span>
+    AbstractFluxClient(@Nonnull final OkHttpClient.Builder okHttpClientBuilder,
+                       @Nonnull final String url,
+<span class="fc" id="L47">                       @Nonnull final Class&lt;T&gt; serviceType) {</span>
 
-<span class="fc" id="L76">        Arguments.checkNotNull(options, &quot;options&quot;);</span>
-<span class="fc" id="L77">        Arguments.checkNotNull(serviceType, &quot;Flux service type&quot;);</span>
+<span class="fc" id="L49">        Arguments.checkNotNull(okHttpClientBuilder, &quot;OkHttpClient.Builder&quot;);</span>
+<span class="fc" id="L50">        Arguments.checkNonEmpty(url, &quot;Service url&quot;);</span>
+<span class="fc" id="L51">        Arguments.checkNotNull(serviceType, &quot;Flux service type&quot;);</span>
 
-<span class="fc" id="L79">        this.fluxCsvParser = new FluxCsvParser();</span>
+<span class="fc" id="L53">        this.loggingInterceptor = new HttpLoggingInterceptor();</span>
+<span class="fc" id="L54">        this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);</span>
 
-<span class="fc" id="L81">        this.loggingInterceptor = new HttpLoggingInterceptor();</span>
-<span class="fc" id="L82">        this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);</span>
+<span class="fc" id="L56">        this.okHttpClient = okHttpClientBuilder</span>
+<span class="fc" id="L57">                .addInterceptor(this.loggingInterceptor)</span>
+<span class="fc" id="L58">                .build();</span>
 
-<span class="fc" id="L84">        okHttpClient = options.getOkHttpClient()</span>
-<span class="fc" id="L85">                .addInterceptor(loggingInterceptor)</span>
-<span class="fc" id="L86">                .build();</span>
+<span class="fc" id="L60">        Retrofit.Builder serviceBuilder = new Retrofit.Builder()</span>
+<span class="fc" id="L61">                .baseUrl(url)</span>
+<span class="fc" id="L62">                .client(this.okHttpClient);</span>
 
-<span class="fc" id="L88">        Retrofit.Builder serviceBuilder = new Retrofit.Builder()</span>
-<span class="fc" id="L89">                .baseUrl(options.getUrl())</span>
-<span class="fc" id="L90">                .client(okHttpClient);</span>
+<span class="fc" id="L64">        configure(serviceBuilder);</span>
 
-<span class="fc" id="L92">        configure(serviceBuilder);</span>
-
-<span class="fc" id="L94">        this.fluxService = serviceBuilder</span>
-<span class="fc" id="L95">                .build()</span>
-<span class="fc" id="L96">                .create(serviceType);</span>
-<span class="fc" id="L97">    }</span>
+<span class="fc" id="L66">        this.fluxService = serviceBuilder</span>
+<span class="fc" id="L67">                .build()</span>
+<span class="fc" id="L68">                .create(serviceType);</span>
+<span class="fc" id="L69">    }</span>
 
     /**
      * Configure Retrofit Service Builder.
@@ -102,53 +74,27 @@ class AbstractFluxClient&lt;T&gt; extends AbstractRestClient {
      * @param serviceBuilder builder
      */
     protected void configure(@Nonnull final Retrofit.Builder serviceBuilder) {
-<span class="fc" id="L105">    }</span>
+<span class="fc" id="L77">    }</span>
 
     @Nonnull
     String getVersion(@Nonnull final Response&lt;ResponseBody&gt; response) {
 
-<span class="fc" id="L110">        Arguments.checkNotNull(response, &quot;Response&quot;);</span>
+<span class="fc" id="L82">        Arguments.checkNotNull(response, &quot;Response&quot;);</span>
 
-<span class="fc" id="L112">        String version = response.headers().get(&quot;X-Influxdb-Version&quot;);</span>
-<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (version != null) {</span>
-<span class="fc" id="L114">            return version;</span>
+<span class="fc" id="L84">        String version = response.headers().get(&quot;X-Influxdb-Version&quot;);</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (version != null) {</span>
+<span class="fc" id="L86">            return version;</span>
         }
 
-<span class="fc" id="L117">        return &quot;unknown&quot;;</span>
+<span class="fc" id="L89">        return &quot;unknown&quot;;</span>
     }
-
-    @Nonnull
-    RequestBody createBody(@Nullable final String dialect, @Nonnull final String query) {
-
-<span class="fc" id="L123">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
-<span class="fc" id="L124">        JSONObject json = new JSONObject()</span>
-<span class="fc" id="L125">                .put(&quot;query&quot;, query);</span>
-
-<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (dialect != null) {</span>
-<span class="fc" id="L128">            json.put(&quot;dialect&quot;, new JSONObject(dialect));</span>
-        }
-
-<span class="fc" id="L131">        return createBody(json.toString());</span>
-    }
-
-    void parseFluxResponseToLines(@Nonnull final Consumer&lt;String&gt; onResponse,
-                                  @Nonnull final Cancellable cancellable,
-                                  @Nonnull final BufferedSource bufferedSource) throws IOException {
-
-<span class="fc" id="L138">        String line = bufferedSource.readUtf8Line();</span>
-
-<span class="pc bpc" id="L140" title="1 of 4 branches missed.">        while (line != null &amp;&amp; !cancellable.isCancelled()) {</span>
-<span class="fc" id="L141">            onResponse.accept(line);</span>
-<span class="fc" id="L142">            line = bufferedSource.readUtf8Line();</span>
-        }
-<span class="fc" id="L144">    }</span>
 
     /**
      * Closes the client, initiates shutdown, no new running calls are accepted during shutdown.
      */
     public void close() {
-<span class="nc" id="L150">        okHttpClient.connectionPool().evictAll();</span>
-<span class="nc" id="L151">        okHttpClient.dispatcher().executorService().shutdown();</span>
-<span class="nc" id="L152">    }</span>
+<span class="nc" id="L96">        okHttpClient.connectionPool().evictAll();</span>
+<span class="nc" id="L97">        okHttpClient.dispatcher().executorService().shutdown();</span>
+<span class="nc" id="L98">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractQueryClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Platform Commons</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.platform.rest</a> &gt; <span class="el_source">AbstractQueryClient.java</span></div><h1>AbstractQueryClient.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.platform.rest;
+
+import java.io.IOException;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.flux.impl.FluxCsvParser;
+import org.influxdata.flux.impl.FluxResultMapper;
+import org.influxdata.platform.Arguments;
+import org.influxdata.platform.error.InfluxException;
+
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okio.BufferedSource;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+/**
+ * @author Jakub Bednar (bednar@github) (17/10/2018 11:20)
+ */
+<span class="fc" id="L47">public abstract class AbstractQueryClient extends AbstractRestClient {</span>
+
+
+<span class="fc" id="L50">    protected final FluxCsvParser fluxCsvParser = new FluxCsvParser();</span>
+<span class="fc" id="L51">    protected final FluxResultMapper resultMapper = new FluxResultMapper();</span>
+
+<span class="fc" id="L53">    protected static final Runnable EMPTY_ACTION = () -&gt; {</span>
+
+<span class="nc" id="L55">    };</span>
+
+<span class="fc" id="L57">    protected static final JSONObject DEFAULT_DIALECT = new JSONObject()</span>
+<span class="fc" id="L58">            .put(&quot;header&quot;, true)</span>
+<span class="fc" id="L59">            .put(&quot;delimiter&quot;, &quot;,&quot;)</span>
+<span class="fc" id="L60">            .put(&quot;quoteChar&quot;, &quot;\&quot;&quot;)</span>
+<span class="fc" id="L61">            .put(&quot;commentPrefix&quot;, &quot;#&quot;)</span>
+<span class="fc" id="L62">            .put(&quot;annotations&quot;, new JSONArray().put(&quot;datatype&quot;).put(&quot;group&quot;).put(&quot;default&quot;));</span>
+
+<span class="fc" id="L64">    protected static final Consumer&lt;Throwable&gt; ERROR_CONSUMER = throwable -&gt; {</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (throwable instanceof InfluxException) {</span>
+<span class="fc" id="L66">            throw (InfluxException) throwable;</span>
+        } else {
+<span class="nc" id="L68">            throw new InfluxException(throwable);</span>
+        }
+    };
+
+    @Nonnull
+    protected RequestBody createBody(@Nullable final String dialect, @Nonnull final String query) {
+
+<span class="fc" id="L75">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
+<span class="fc" id="L76">        JSONObject json = new JSONObject()</span>
+<span class="fc" id="L77">                .put(&quot;query&quot;, query);</span>
+
+<span class="fc bfc" id="L79" title="All 4 branches covered.">        if (dialect != null &amp;&amp; !dialect.isEmpty()) {</span>
+<span class="fc" id="L80">            json.put(&quot;dialect&quot;, new JSONObject(dialect));</span>
+        }
+
+<span class="fc" id="L83">        return createBody(json.toString());</span>
+    }
+
+    protected void parseFluxResponseToLines(@Nonnull final Consumer&lt;String&gt; onResponse,
+                                            @Nonnull final Cancellable cancellable,
+                                            @Nonnull final BufferedSource bufferedSource) throws IOException {
+
+<span class="fc" id="L90">        String line = bufferedSource.readUtf8Line();</span>
+
+<span class="pc bpc" id="L92" title="1 of 4 branches missed.">        while (line != null &amp;&amp; !cancellable.isCancelled()) {</span>
+<span class="fc" id="L93">            onResponse.accept(line);</span>
+<span class="fc" id="L94">            line = bufferedSource.readUtf8Line();</span>
+        }
+<span class="fc" id="L96">    }</span>
+
+    protected void query(@Nonnull final Call&lt;ResponseBody&gt; queryCall,
+                         @Nonnull final FluxCsvParser.FluxResponseConsumer responseConsumer,
+                         @Nonnull final Consumer&lt;? super Throwable&gt; onError,
+                         @Nonnull final Runnable onComplete,
+                         @Nonnull final Boolean asynchronously) {
+
+<span class="fc" id="L104">        BiConsumer&lt;Cancellable, BufferedSource&gt; consumer = (cancellable, bufferedSource) -&gt; {</span>
+            try {
+<span class="fc" id="L106">                fluxCsvParser.parseFluxResponse(bufferedSource, cancellable, responseConsumer);</span>
+<span class="nc" id="L107">            } catch (IOException e) {</span>
+<span class="nc" id="L108">                onError.accept(e);</span>
+<span class="fc" id="L109">            }</span>
+<span class="fc" id="L110">        };</span>
+
+<span class="fc" id="L112">        query(queryCall, consumer, onError, onComplete, asynchronously);</span>
+<span class="fc" id="L113">    }</span>
+
+    protected void queryRaw(@Nonnull final Call&lt;ResponseBody&gt; queryCall,
+                            @Nonnull final BiConsumer&lt;Cancellable, String&gt; onResponse,
+                            @Nonnull final Consumer&lt;? super Throwable&gt; onError,
+                            @Nonnull final Runnable onComplete,
+                            @Nonnull final Boolean asynchronously) {
+
+<span class="fc" id="L121">        BiConsumer&lt;Cancellable, BufferedSource&gt; consumer = (cancellable, bufferedSource) -&gt; {</span>
+
+            try {
+<span class="fc" id="L124">                parseFluxResponseToLines(line -&gt; onResponse.accept(cancellable, line), cancellable, bufferedSource);</span>
+<span class="nc" id="L125">            } catch (IOException e) {</span>
+<span class="nc" id="L126">                catchOrPropagateException(e, onError);</span>
+<span class="fc" id="L127">            }</span>
+<span class="fc" id="L128">        };</span>
+
+<span class="fc" id="L130">        query(queryCall, consumer, onError, onComplete, asynchronously);</span>
+<span class="fc" id="L131">    }</span>
+
+    protected void query(@Nonnull final Call&lt;ResponseBody&gt; query,
+                         @Nonnull final BiConsumer&lt;Cancellable, BufferedSource&gt; consumer,
+                         @Nonnull final Consumer&lt;? super Throwable&gt; onError,
+                         @Nonnull final Runnable onComplete,
+                         @Nonnull final Boolean asynchronously) {
+
+<span class="fc" id="L139">        Arguments.checkNotNull(query, &quot;query&quot;);</span>
+<span class="fc" id="L140">        Arguments.checkNotNull(consumer, &quot;consumer&quot;);</span>
+<span class="fc" id="L141">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="fc" id="L142">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
+<span class="fc" id="L143">        Arguments.checkNotNull(asynchronously, &quot;asynchronously&quot;);</span>
+
+<span class="fc" id="L145">        DefaultCancellable cancellable = new DefaultCancellable();</span>
+
+<span class="fc" id="L147">        Callback&lt;ResponseBody&gt; callback = new Callback&lt;ResponseBody&gt;() {</span>
+            @Override
+            public void onResponse(@Nonnull final Call&lt;ResponseBody&gt; call,
+                                   @Nonnull final Response&lt;ResponseBody&gt; response) {
+
+<span class="fc bfc" id="L152" title="All 2 branches covered.">                if (!response.isSuccessful()) {</span>
+<span class="fc" id="L153">                    onError.accept(responseToError(response));</span>
+<span class="fc" id="L154">                    return;</span>
+                }
+
+<span class="fc" id="L157">                ResponseBody body = response.body();</span>
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L159">                    return;</span>
+                }
+
+                try {
+<span class="fc" id="L163">                    BufferedSource source = body.source();</span>
+
+                    //
+                    // Source has data =&gt; parse
+                    //
+<span class="pc bpc" id="L168" title="1 of 4 branches missed.">                    while (!source.exhausted() &amp;&amp; !cancellable.wasCancelled) {</span>
+
+<span class="fc" id="L170">                        consumer.accept(cancellable, source);</span>
+                    }
+
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">                    if (!cancellable.wasCancelled) {</span>
+<span class="fc" id="L174">                        onComplete.run();</span>
+                    }
+
+<span class="nc" id="L177">                } catch (Exception e) {</span>
+<span class="nc" id="L178">                    catchOrPropagateException(e, onError);</span>
+
+                } finally {
+
+<span class="fc" id="L182">                    body.close();</span>
+                }
+<span class="fc" id="L184">            }</span>
+
+            @Override
+            public void onFailure(@Nonnull final Call&lt;ResponseBody&gt; call, @Nonnull final Throwable throwable) {
+<span class="nc" id="L188">                onError.accept(throwable);</span>
+<span class="nc" id="L189">            }</span>
+        };
+
+<span class="fc bfc" id="L192" title="All 2 branches covered.">        if (asynchronously) {</span>
+<span class="fc" id="L193">            query.enqueue(callback);</span>
+        } else {
+
+            Response&lt;ResponseBody&gt; response;
+            try {
+<span class="fc" id="L198">                response = query.execute();</span>
+<span class="fc" id="L199">                callback.onResponse(query, response);</span>
+<span class="nc" id="L200">            } catch (IOException e) {</span>
+<span class="nc" id="L201">                catchOrPropagateException(e, onError);</span>
+<span class="fc" id="L202">            }</span>
+        }
+<span class="fc" id="L204">    }</span>
+
+<span class="fc" id="L206">    private class DefaultCancellable implements Cancellable {</span>
+
+<span class="fc" id="L208">        private volatile boolean wasCancelled = false;</span>
+
+        @Override
+        public void cancel() {
+<span class="nc" id="L212">            wasCancelled = true;</span>
+<span class="nc" id="L213">        }</span>
+
+        @Override
+        public boolean isCancelled() {
+<span class="fc" id="L217">            return wasCancelled;</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

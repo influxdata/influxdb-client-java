@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>QueryClientImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Platform Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.platform.impl</a> &gt; <span class="el_source">QueryClientImpl.java</span></div><h1>QueryClientImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.platform.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.flux.domain.FluxRecord;
+import org.influxdata.flux.domain.FluxTable;
+import org.influxdata.flux.impl.FluxCsvParser;
+import org.influxdata.platform.Arguments;
+import org.influxdata.platform.QueryClient;
+import org.influxdata.platform.rest.AbstractQueryClient;
+import org.influxdata.platform.rest.Cancellable;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (bednar@github) (17/10/2018 10:50)
+ */
+final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
+
+    private final FluxCsvParser fluxCsvParser;
+    private final PlatformService platformService;
+
+<span class="fc" id="L50">    QueryClientImpl(@Nonnull final PlatformService platformService) {</span>
+
+<span class="fc" id="L52">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
+
+<span class="fc" id="L54">        this.platformService = platformService;</span>
+<span class="fc" id="L55">        this.fluxCsvParser = new FluxCsvParser();</span>
+<span class="fc" id="L56">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;FluxTable&gt; query(@Nonnull final String query) {
+
+<span class="nc" id="L62">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+
+<span class="nc" id="L64">        FluxCsvParser.FluxResponseConsumerTable consumer = fluxCsvParser.new FluxResponseConsumerTable();</span>
+
+<span class="nc" id="L66">        query(query, DEFAULT_DIALECT.toString(), consumer, ERROR_CONSUMER, EMPTY_ACTION, false);</span>
+
+<span class="nc" id="L68">        return consumer.getTables();</span>
+    }
+
+    @Nonnull
+    @Override
+    public &lt;M&gt; List&lt;M&gt; query(@Nonnull final String query, @Nonnull final Class&lt;M&gt; measurementType) {
+
+<span class="nc" id="L75">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+
+<span class="nc" id="L77">        List&lt;M&gt; measurements = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L79">        FluxCsvParser.FluxResponseConsumer consumer = new FluxCsvParser.FluxResponseConsumer() {</span>
+
+            @Override
+            public void accept(final int index,
+                               @Nonnull final Cancellable cancellable,
+                               @Nonnull final FluxTable table) {
+
+<span class="nc" id="L86">            }</span>
+
+            @Override
+            public void accept(final int index,
+                               @Nonnull final Cancellable cancellable,
+                               @Nonnull final FluxRecord record) {
+
+<span class="nc" id="L93">                measurements.add(resultMapper.toPOJO(record, measurementType));</span>
+<span class="nc" id="L94">            }</span>
+        };
+
+<span class="nc" id="L97">        query(query, DEFAULT_DIALECT.toString(), consumer, ERROR_CONSUMER, EMPTY_ACTION, false);</span>
+
+<span class="nc" id="L99">        return measurements;</span>
+    }
+
+    @Override
+    public void query(@Nonnull final String query, @Nonnull final BiConsumer&lt;Cancellable, FluxRecord&gt; onNext) {
+
+<span class="nc" id="L105">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="nc" id="L106">        Arguments.checkNotNull(onNext, &quot;onNext&quot;);</span>
+
+<span class="nc" id="L108">        query(query, onNext, ERROR_CONSUMER);</span>
+<span class="nc" id="L109">    }</span>
+
+    @Override
+    public &lt;M&gt; void query(@Nonnull final String query,
+                          @Nonnull final Class&lt;M&gt; measurementType,
+                          @Nonnull final BiConsumer&lt;Cancellable, M&gt; onNext) {
+
+<span class="nc" id="L116">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="nc" id="L117">        Arguments.checkNotNull(onNext, &quot;onNext&quot;);</span>
+<span class="nc" id="L118">        Arguments.checkNotNull(measurementType, &quot;measurementType&quot;);</span>
+
+<span class="nc" id="L120">        query(query, measurementType, onNext, ERROR_CONSUMER);</span>
+<span class="nc" id="L121">    }</span>
+
+    @Override
+    public void query(@Nonnull final String query,
+                      @Nonnull final BiConsumer&lt;Cancellable, FluxRecord&gt; onNext,
+                      @Nonnull final Consumer&lt;? super Throwable&gt; onError) {
+
+<span class="nc" id="L128">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="nc" id="L129">        Arguments.checkNotNull(onNext, &quot;onNext&quot;);</span>
+<span class="nc" id="L130">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+
+<span class="nc" id="L132">        query(query, onNext, onError, EMPTY_ACTION);</span>
+<span class="nc" id="L133">    }</span>
+
+    @Override
+    public &lt;M&gt; void query(@Nonnull final String query,
+                          @Nonnull final Class&lt;M&gt; measurementType,
+                          @Nonnull final BiConsumer&lt;Cancellable, M&gt; onNext,
+                          @Nonnull final Consumer&lt;? super Throwable&gt; onError) {
+
+<span class="nc" id="L141">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="nc" id="L142">        Arguments.checkNotNull(onNext, &quot;onNext&quot;);</span>
+<span class="nc" id="L143">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="nc" id="L144">        Arguments.checkNotNull(measurementType, &quot;measurementType&quot;);</span>
+
+<span class="nc" id="L146">        query(query, measurementType, onNext, onError, EMPTY_ACTION);</span>
+<span class="nc" id="L147">    }</span>
+
+    @Override
+    public void query(@Nonnull final String query,
+                      @Nonnull final BiConsumer&lt;Cancellable, FluxRecord&gt; onNext,
+                      @Nonnull final Consumer&lt;? super Throwable&gt; onError,
+                      @Nonnull final Runnable onComplete) {
+
+<span class="nc" id="L155">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="nc" id="L156">        Arguments.checkNotNull(onNext, &quot;onNext&quot;);</span>
+<span class="nc" id="L157">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="nc" id="L158">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
+
+<span class="nc" id="L160">        FluxCsvParser.FluxResponseConsumer consumer = new FluxCsvParser.FluxResponseConsumer() {</span>
+
+            @Override
+            public void accept(final int index,
+                               @Nonnull final Cancellable cancellable,
+                               @Nonnull final FluxTable table) {
+<span class="nc" id="L166">            }</span>
+
+            @Override
+            public void accept(final int index,
+                               @Nonnull final Cancellable cancellable,
+                               @Nonnull final FluxRecord record) {
+<span class="nc" id="L172">                onNext.accept(cancellable, record);</span>
+<span class="nc" id="L173">            }</span>
+        };
+
+<span class="nc" id="L176">        query(query, DEFAULT_DIALECT.toString(), consumer, onError, onComplete, true);</span>
+<span class="nc" id="L177">    }</span>
+
+    @Override
+    public &lt;M&gt; void query(@Nonnull final String query,
+                          @Nonnull final Class&lt;M&gt; measurementType,
+                          @Nonnull final BiConsumer&lt;Cancellable, M&gt; onNext,
+                          @Nonnull final Consumer&lt;? super Throwable&gt; onError,
+                          @Nonnull final Runnable onComplete) {
+
+<span class="nc" id="L186">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="nc" id="L187">        Arguments.checkNotNull(onNext, &quot;onNext&quot;);</span>
+<span class="nc" id="L188">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="nc" id="L189">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
+<span class="nc" id="L190">        Arguments.checkNotNull(measurementType, &quot;measurementType&quot;);</span>
+
+
+<span class="nc" id="L193">        FluxCsvParser.FluxResponseConsumer consumer = new FluxCsvParser.FluxResponseConsumer() {</span>
+
+            @Override
+            public void accept(final int index,
+                               @Nonnull final Cancellable cancellable,
+                               @Nonnull final FluxTable table) {
+
+<span class="nc" id="L200">            }</span>
+
+            @Override
+            public void accept(final int index,
+                               @Nonnull final Cancellable cancellable,
+                               @Nonnull final FluxRecord record) {
+
+<span class="nc" id="L207">                onNext.accept(cancellable, resultMapper.toPOJO(record, measurementType));</span>
+
+<span class="nc" id="L209">            }</span>
+        };
+
+<span class="nc" id="L212">        query(query, DEFAULT_DIALECT.toString(), consumer, onError, onComplete, true);</span>
+<span class="nc" id="L213">    }</span>
+
+    @Nonnull
+    @Override
+    public String queryRaw(@Nonnull final String query) {
+<span class="nc" id="L218">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+
+<span class="nc" id="L220">        return queryRaw(query, (String) null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public String queryRaw(@Nonnull final String query, @Nullable final String dialect) {
+<span class="nc" id="L226">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+
+<span class="nc" id="L228">        List&lt;String&gt; rows = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L230">        BiConsumer&lt;Cancellable, String&gt; consumer = (cancellable, row) -&gt; rows.add(row);</span>
+
+<span class="nc" id="L232">        queryRaw(query, dialect, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);</span>
+
+<span class="nc" id="L234">        return String.join(&quot;\n&quot;, rows);</span>
+    }
+
+    @Override
+    public void queryRaw(@Nonnull final String query, @Nonnull final BiConsumer&lt;Cancellable, String&gt; onResponse) {
+<span class="nc" id="L239">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="nc" id="L240">        Arguments.checkNotNull(onResponse, &quot;onResponse&quot;);</span>
+
+<span class="nc" id="L242">        queryRaw(query, null, onResponse);</span>
+<span class="nc" id="L243">    }</span>
+
+    @Override
+    public void queryRaw(@Nonnull final String query,
+                         @Nullable final String dialect,
+                         @Nonnull final BiConsumer&lt;Cancellable, String&gt; onResponse) {
+
+<span class="nc" id="L250">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="nc" id="L251">        Arguments.checkNotNull(onResponse, &quot;onResponse&quot;);</span>
+
+<span class="nc" id="L253">        queryRaw(query, dialect, onResponse, ERROR_CONSUMER);</span>
+<span class="nc" id="L254">    }</span>
+
+    @Override
+    public void queryRaw(@Nonnull final String query,
+                         @Nonnull final BiConsumer&lt;Cancellable, String&gt; onResponse,
+                         @Nonnull final Consumer&lt;? super Throwable&gt; onError) {
+
+<span class="nc" id="L261">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="nc" id="L262">        Arguments.checkNotNull(onResponse, &quot;onNext&quot;);</span>
+<span class="nc" id="L263">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+
+<span class="nc" id="L265">        queryRaw(query, onResponse, onError, EMPTY_ACTION);</span>
+<span class="nc" id="L266">    }</span>
+
+    @Override
+    public void queryRaw(@Nonnull final String query,
+                         @Nullable final String dialect,
+                         @Nonnull final BiConsumer&lt;Cancellable, String&gt; onResponse,
+                         @Nonnull final Consumer&lt;? super Throwable&gt; onError) {
+
+<span class="nc" id="L274">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="nc" id="L275">        Arguments.checkNotNull(onResponse, &quot;onNext&quot;);</span>
+<span class="nc" id="L276">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+
+<span class="nc" id="L278">        queryRaw(query, dialect, onResponse, onError, EMPTY_ACTION);</span>
+<span class="nc" id="L279">    }</span>
+
+    @Override
+    public void queryRaw(@Nonnull final String query,
+                         @Nonnull final BiConsumer&lt;Cancellable, String&gt; onResponse,
+                         @Nonnull final Consumer&lt;? super Throwable&gt; onError,
+                         @Nonnull final Runnable onComplete) {
+
+<span class="nc" id="L287">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="nc" id="L288">        Arguments.checkNotNull(onResponse, &quot;onNext&quot;);</span>
+<span class="nc" id="L289">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="nc" id="L290">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
+
+<span class="nc" id="L292">        queryRaw(query, null, onResponse, onError, onComplete);</span>
+<span class="nc" id="L293">    }</span>
+
+    @Override
+    public void queryRaw(@Nonnull final String query,
+                         @Nullable final String dialect,
+                         @Nonnull final BiConsumer&lt;Cancellable, String&gt; onResponse,
+                         @Nonnull final Consumer&lt;? super Throwable&gt; onError,
+                         @Nonnull final Runnable onComplete) {
+
+<span class="nc" id="L302">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="nc" id="L303">        Arguments.checkNotNull(onResponse, &quot;onNext&quot;);</span>
+<span class="nc" id="L304">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="nc" id="L305">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
+
+<span class="nc" id="L307">        queryRaw(query, dialect, onResponse, onError, onComplete, true);</span>
+<span class="nc" id="L308">    }</span>
+
+    private void query(@Nonnull final String query,
+                       @Nonnull final String dialect,
+                       @Nonnull final FluxCsvParser.FluxResponseConsumer responseConsumer,
+                       @Nonnull final Consumer&lt;? super Throwable&gt; onError,
+                       @Nonnull final Runnable onComplete,
+                       @Nonnull final Boolean asynchronously) {
+
+<span class="nc" id="L317">        Call&lt;ResponseBody&gt; queryCall = platformService.query(createBody(dialect, query));</span>
+
+<span class="nc" id="L319">        query(queryCall, responseConsumer, onError, onComplete, asynchronously);</span>
+<span class="nc" id="L320">    }</span>
+
+    private void queryRaw(@Nonnull final String query,
+                          @Nullable final String dialect,
+                          @Nonnull final BiConsumer&lt;Cancellable, String&gt; onResponse,
+                          @Nonnull final Consumer&lt;? super Throwable&gt; onError,
+                          @Nonnull final Runnable onComplete,
+                          @Nonnull final Boolean asynchronously) {
+
+<span class="nc" id="L329">        Call&lt;ResponseBody&gt; queryCall = platformService.query(createBody(dialect, query));</span>
+
+<span class="nc" id="L331">        queryRaw(queryCall, onResponse, onError, onComplete, asynchronously);</span>
+<span class="nc" id="L332">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

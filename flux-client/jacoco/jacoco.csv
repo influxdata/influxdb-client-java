@@ -1,11 +1,9 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-The Flux client,org.influxdata.flux.impl,FluxClientImpl.new Callback() {...},7,68,3,7,2,16,3,5,0,3
 The Flux client,org.influxdata.flux.impl,FluxConnectionString,0,3,0,0,0,2,0,1,0,1
 The Flux client,org.influxdata.flux.impl,FluxClientImpl.new FluxCsvParser.FluxResponseConsumer() {...},25,0,0,0,4,0,3,0,3,0
-The Flux client,org.influxdata.flux.impl,FluxClientImpl,86,429,0,2,25,107,3,28,3,27
-The Flux client,org.influxdata.flux.impl,FluxClientImpl.DefaultCancellable,4,12,0,0,2,3,1,2,1,2
+The Flux client,org.influxdata.flux.impl,FluxClientImpl,72,357,0,0,19,85,3,22,3,22
 The Flux client,org.influxdata.flux.impl,FluxClientImpl.new FluxCsvParser.FluxResponseConsumer() {...},0,16,0,0,0,4,0,3,0,3
-The Flux client,org.influxdata.flux.impl,AbstractFluxClient,15,149,2,8,4,44,3,10,1,7
+The Flux client,org.influxdata.flux.impl,AbstractFluxClient,10,63,0,2,3,23,1,4,1,3
 The Flux client,org.influxdata.flux.impl,FluxClientImpl.new FluxCsvParser.FluxResponseConsumer() {...},0,25,0,0,0,4,0,3,0,3
 The Flux client,org.influxdata.flux.option,FluxConnectionOptions.Builder,0,39,0,2,0,11,0,5,0,4
 The Flux client,org.influxdata.flux.option,FluxConnectionOptions,0,39,0,0,0,12,0,5,0,5

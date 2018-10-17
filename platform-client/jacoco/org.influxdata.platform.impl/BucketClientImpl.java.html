@@ -115,14 +115,14 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
                                @Nonnull final String retentionPeriod,
                                @Nonnull final String organizationName) {
 
-<span class="nc" id="L118">        Arguments.checkNonEmpty(name, &quot;Bucket name&quot;);</span>
-<span class="nc" id="L119">        Arguments.checkNonEmpty(organizationName, &quot;Organization name&quot;);</span>
-<span class="nc" id="L120">        Arguments.checkDuration(retentionPeriod, &quot;Bucket.retentionPeriod&quot;);</span>
+<span class="fc" id="L118">        Arguments.checkNonEmpty(name, &quot;Bucket name&quot;);</span>
+<span class="fc" id="L119">        Arguments.checkNonEmpty(organizationName, &quot;Organization name&quot;);</span>
+<span class="fc" id="L120">        Arguments.checkDuration(retentionPeriod, &quot;Bucket.retentionPeriod&quot;);</span>
 
-<span class="nc" id="L122">        Bucket bucket = new Bucket();</span>
-<span class="nc" id="L123">        bucket.setName(name);</span>
-<span class="nc" id="L124">        bucket.setRetentionPeriod(retentionPeriod);</span>
-<span class="nc" id="L125">        bucket.setOrganizationName(organizationName);</span>
+<span class="fc" id="L122">        Bucket bucket = new Bucket();</span>
+<span class="fc" id="L123">        bucket.setName(name);</span>
+<span class="fc" id="L124">        bucket.setRetentionPeriod(retentionPeriod);</span>
+<span class="fc" id="L125">        bucket.setOrganizationName(organizationName);</span>
 
 <span class="nc" id="L127">        return createBucket(bucket);</span>
     }
@@ -131,12 +131,12 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
     @Override
     public Bucket createBucket(@Nonnull final Bucket bucket) {
 
-<span class="nc" id="L134">        Arguments.checkNotNull(bucket, &quot;Bucket is required&quot;);</span>
-<span class="nc" id="L135">        Arguments.checkNonEmpty(bucket.getName(), &quot;Bucket name&quot;);</span>
-<span class="nc" id="L136">        Arguments.checkNonEmpty(bucket.getOrganizationName(), &quot;Organization name&quot;);</span>
-<span class="nc" id="L137">        Arguments.checkDuration(bucket.getRetentionPeriod(), &quot;Bucket.retentionPeriod&quot;);</span>
+<span class="fc" id="L134">        Arguments.checkNotNull(bucket, &quot;Bucket is required&quot;);</span>
+<span class="fc" id="L135">        Arguments.checkNonEmpty(bucket.getName(), &quot;Bucket name&quot;);</span>
+<span class="fc" id="L136">        Arguments.checkNonEmpty(bucket.getOrganizationName(), &quot;Organization name&quot;);</span>
+<span class="fc" id="L137">        Arguments.checkDuration(bucket.getRetentionPeriod(), &quot;Bucket.retentionPeriod&quot;);</span>
 
-<span class="nc" id="L139">        Call&lt;Bucket&gt; call = platformService.createBucket(createBody(adapter.toJson(bucket)));</span>
+<span class="fc" id="L139">        Call&lt;Bucket&gt; call = platformService.createBucket(createBody(adapter.toJson(bucket)));</span>
 
 <span class="nc" id="L141">        return execute(call);</span>
     }

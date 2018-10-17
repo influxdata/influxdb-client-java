@@ -54,7 +54,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 public class FluxClientReactiveImpl extends AbstractFluxClient&lt;FluxServiceReactive&gt; implements FluxClientReactive {
 
     public FluxClientReactiveImpl(@Nonnull final FluxConnectionOptions options) {
-<span class="fc" id="L57">        super(options, FluxServiceReactive.class);</span>
+<span class="fc" id="L57">        super(options.getOkHttpClient(), options.getUrl(), FluxServiceReactive.class);</span>
 <span class="fc" id="L58">    }</span>
 
     @Override
@@ -248,7 +248,7 @@ public class FluxClientReactiveImpl extends AbstractFluxClient&lt;FluxServiceRea
                 //
                 // Subscriber is not disposed &amp;&amp; source has data =&gt; parse
                 //
-<span class="fc bfc" id="L251" title="All 4 branches covered.">                while (!subscriber.isDisposed() &amp;&amp; !source.exhausted()) {</span>
+<span class="pc bpc" id="L251" title="1 of 4 branches missed.">                while (!source.exhausted() &amp;&amp; !subscriber.isDisposed()) {</span>
 
 <span class="fc" id="L253">                    consumer.accept(source, subscriber);</span>
                 }
@@ -264,43 +264,44 @@ public class FluxClientReactiveImpl extends AbstractFluxClient&lt;FluxServiceRea
                 } else {
 <span class="nc" id="L265">                    throw new UncheckedIOException(e);</span>
                 }
-<span class="fc" id="L267">            }</span>
+            } finally {
 
-            //if response end we get here
-<span class="pc bpc" id="L270" title="1 of 2 branches missed.">            if (!isCompleted) {</span>
-<span class="fc" id="L271">                subscriber.onComplete();</span>
+<span class="fc" id="L269">                body.close();</span>
             }
 
-<span class="fc" id="L274">            body.close();</span>
-<span class="fc" id="L275">        });</span>
+            //if response end we get here
+<span class="pc bpc" id="L273" title="1 of 2 branches missed.">            if (!isCompleted) {</span>
+<span class="fc" id="L274">                subscriber.onComplete();</span>
+            }
+<span class="fc" id="L276">        });</span>
     }
 
     @Nonnull
     private InfluxException toInfluxException(@Nonnull final Throwable throwable) {
 
-<span class="fc bfc" id="L281" title="All 2 branches covered.">        if (throwable instanceof InfluxException) {</span>
-<span class="fc" id="L282">            return (InfluxException) throwable;</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">        if (throwable instanceof InfluxException) {</span>
+<span class="fc" id="L283">            return (InfluxException) throwable;</span>
         }
 
-<span class="fc" id="L285">        return new InfluxException(throwable);</span>
+<span class="fc" id="L286">        return new InfluxException(throwable);</span>
     }
 
     private final class ObservableCancellable implements Cancellable {
 
         private final ObservableEmitter&lt;?&gt; observable;
 
-<span class="fc" id="L292">        private ObservableCancellable(@Nonnull final ObservableEmitter&lt;?&gt; observable) {</span>
-<span class="fc" id="L293">            this.observable = observable;</span>
-<span class="fc" id="L294">        }</span>
+<span class="fc" id="L293">        private ObservableCancellable(@Nonnull final ObservableEmitter&lt;?&gt; observable) {</span>
+<span class="fc" id="L294">            this.observable = observable;</span>
+<span class="fc" id="L295">        }</span>
 
         @Override
         public void cancel() {
 
-<span class="nc" id="L299">        }</span>
+<span class="nc" id="L300">        }</span>
 
         @Override
         public boolean isCancelled() {
-<span class="fc" id="L303">            return observable.isDisposed();</span>
+<span class="fc" id="L304">            return observable.isDisposed();</span>
         }
     }
 }
