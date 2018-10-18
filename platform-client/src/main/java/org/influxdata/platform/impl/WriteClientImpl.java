@@ -259,16 +259,13 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
         return eventPublisher.ofType(eventType);
     }
 
-    @Nonnull
     @Override
-    public WriteClient close() {
+    public void close() {
 
         LOG.log(Level.INFO, "Flushing any cached BatchWrites before shutdown.");
 
         processor.onComplete();
         eventPublisher.onComplete();
-
-        return this;
     }
 
     private void write(@Nonnull final String bucket,

@@ -39,13 +39,13 @@ import io.reactivex.Observable;
  *
  * @author Jakub Bednar (bednar@github) (20/09/2018 10:58)
  */
-public interface WriteClient {
+public interface WriteClient extends AutoCloseable {
 
     /**
      * Write Line Protocol record into specified bucket.
      *
-     * @param bucket       specifies the destination bucket ID for writes
-     * @param organization specifies the destination organization ID for writes
+     * @param bucket       specifies the destination bucket for writes
+     * @param organization specifies the destination organization for writes
      * @param precision    specifies the precision for the unix timestamps within the body line-protocol.
      *                     Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
      *                     {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
@@ -62,8 +62,8 @@ public interface WriteClient {
     /**
      * Write Line Protocol records into specified bucket.
      *
-     * @param bucket       specifies the destination bucket ID for writes
-     * @param organization specifies the destination organization ID for writes
+     * @param bucket       specifies the destination bucket for writes
+     * @param organization specifies the destination organization for writes
      * @param precision    specifies the precision for the unix timestamps within the body line-protocol.
      *                     Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
      *                     {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
@@ -78,8 +78,8 @@ public interface WriteClient {
     /**
      * Write Data point into specified bucket.
      *
-     * @param bucket       specifies the destination bucket ID for writes
-     * @param organization specifies the destination organization ID for writes
+     * @param bucket       specifies the destination bucket for writes
+     * @param organization specifies the destination organization for writes
      * @param point        specifies the Data point to write into bucket
      */
     void writePoint(@Nonnull final String bucket,
@@ -102,8 +102,8 @@ public interface WriteClient {
     /**
      * Write Measurement into specified bucket.
      *
-     * @param bucket       specifies the destination bucket ID for writes
-     * @param organization specifies the destination organization ID for writes
+     * @param bucket       specifies the destination bucket for writes
+     * @param organization specifies the destination organization for writes
      * @param precision    specifies the precision for the unix timestamps within the body line-protocol.
      *                     Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
      *                     {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
@@ -119,8 +119,8 @@ public interface WriteClient {
     /**
      * Write Measurements into specified bucket.
      *
-     * @param bucket       specifies the destination bucket ID for writes
-     * @param organization specifies the destination organization ID for writes
+     * @param bucket       specifies the destination bucket for writes
+     * @param organization specifies the destination organization for writes
      * @param precision    specifies the precision for the unix timestamps within the body line-protocol.
      *                     Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
      *                     {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
@@ -148,11 +148,8 @@ public interface WriteClient {
 
     /**
      * Close threads for asynchronous batch writing.
-     *
-     * @return the {@link WriteClient} instance to be able to use it in a fluent manner.
      */
-    @Nonnull
-    WriteClient close();
+    void close();
 
     //TODO IT test to precision (only Nanoseconds works?)
 }

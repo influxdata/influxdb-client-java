@@ -32,6 +32,7 @@ import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
 import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Bucket;
+import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.option.WriteOptions;
@@ -126,7 +127,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         Assertions.assertThat(countDownLatch.getCount()).isEqualTo(0);
 
-        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> last()");
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> last()", "my-org");
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
@@ -157,7 +158,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         List<FluxRecord> fluxRecords = new ArrayList<>();
 
         CountDownLatch queryCountDown = new CountDownLatch(2);
-        queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", (cancellable, fluxRecord) -> {
+        queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", "my-org", (cancellable, fluxRecord) -> {
             fluxRecords.add(fluxRecord);
             queryCountDown.countDown();
 
@@ -188,12 +189,63 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         waitToCallback();
 
-        List<H2OFeetMeasurement> measurements = queryClient.query("from(bucket:\"" + bucketName + "\") |> last() |> rename(columns:{_value: \"water_level\"})", H2OFeetMeasurement.class);
+        List<H2OFeetMeasurement> measurements = queryClient.query("from(bucket:\"" + bucketName + "\") |> last() |> rename(columns:{_value: \"water_level\"})", "my-org", H2OFeetMeasurement.class);
 
         Assertions.assertThat(measurements).hasSize(1);
         Assertions.assertThat(measurements.get(0).location).isEqualTo("coyote_creek");
         Assertions.assertThat(measurements.get(0).description).isNull();
         Assertions.assertThat(measurements.get(0).level).isEqualTo(2.927);
         Assertions.assertThat(measurements.get(0).time).isEqualTo(measurement.time);
+    }
+
+    @Test
+    void queryDataFromNewOrganization() throws Exception {
+
+        platformClient.close();
+
+        String orgName = generateName("new-org");
+        Organization organization =
+                platformService.createOrganizationClient().createOrganization(orgName);
+
+        Bucket bucket = platformService.createBucketClient()
+                .createBucket(generateName("h2o"), "1h", orgName);
+
+        String bucketResource = Permission.bucketResource(bucket.getId());
+
+        Permission readBucket = new Permission();
+        readBucket.setResource(bucketResource);
+        readBucket.setAction(Permission.READ_ACTION);
+
+        Permission writeBucket = new Permission();
+        writeBucket.setResource(bucketResource);
+        writeBucket.setAction(Permission.WRITE_ACTION);
+
+        User loggedUser = platformService.createUserClient().me();
+        Assertions.assertThat(loggedUser).isNotNull();
+
+        Authorization authorization = platformService.createAuthorizationClient()
+                .createAuthorization(loggedUser, Arrays.asList(readBucket, writeBucket));
+
+        String token = authorization.getToken();
+
+        platformClient = PlatformClientFactory.create(platformURL, token.toCharArray());
+        queryClient = platformClient.createQueryClient();
+
+        Point point = Point.name("h2o_feet")
+                .addTag("location", "atlantic")
+                .addField("water_level", 1)
+                .time(Instant.now(), ChronoUnit.MICROS);
+
+        writeClient = platformClient.createWriteClient();
+        writeClient
+                .listenEvents(WriteSuccessEvent.class)
+                .subscribe(event -> countDownLatch.countDown());
+
+        writeClient.writePoint(bucket.getName(), organization.getName(), point);
+
+        waitToCallback();
+
+        String query = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> last()", organization.getName());
+        Assertions.assertThat(query).endsWith("1,water_level,h2o_feet,atlantic\n");
     }
 }

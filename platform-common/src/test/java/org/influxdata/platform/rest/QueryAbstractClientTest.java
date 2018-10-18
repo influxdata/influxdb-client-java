@@ -62,7 +62,8 @@ class QueryAbstractClientTest extends AbstractMockServerTest {
 
     @BeforeEach
     void setUp() {
-        queryClient = new AbstractQueryClient(){};
+        queryClient = new AbstractQueryClient() {
+        };
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(startMockServer())
@@ -251,10 +252,29 @@ class QueryAbstractClientTest extends AbstractMockServerTest {
         waitToCallback();
     }
 
+    @Test
+    void queryCancel() {
+
+        mockServer.enqueue(createResponse());
+
+        List<String> lines = new ArrayList<>();
+
+        queryClient.queryRaw(createCall(), (cancellable, line) -> {
+
+            lines.add(line);
+            cancellable.cancel();
+            countDownLatch.countDown();
+        }, ERROR_CONSUMER, () -> {
+        }, false);
+
+        waitToCallback();
+
+        Assertions.assertThat(lines).hasSize(1);
+    }
 
     @Nonnull
     private Call<ResponseBody> createCall() {
-        
+
         RequestBody body = queryClient.createBody(null, "from(bucket:\"telegraf\")");
 
         return queryAPI.query(body);

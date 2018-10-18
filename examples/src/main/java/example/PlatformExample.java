@@ -24,7 +24,12 @@ package example;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
+import org.influxdata.flux.domain.FluxRecord;
+import org.influxdata.flux.domain.FluxTable;
 import org.influxdata.platform.PlatformClient;
 import org.influxdata.platform.PlatformClientFactory;
 import org.influxdata.platform.WriteClient;
@@ -37,6 +42,7 @@ import org.influxdata.platform.domain.Permission;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.write.Point;
+import org.influxdata.platform.write.event.WriteSuccessEvent;
 
 /*
   InfluxPlatform OSS2.0 onboarding prequisities (create default user, organization and bucket) :
@@ -53,7 +59,7 @@ import org.influxdata.platform.write.Point;
 @SuppressWarnings("CheckStyle")
 public class PlatformExample {
 
-    @Measurement(name = "h2o")
+    @Measurement(name = "temperature")
     private static class Temperature {
 
         @Column(tag = true)
@@ -66,12 +72,13 @@ public class PlatformExample {
         Instant time;
     }
 
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws Exception {
 
         PlatformClient platform = PlatformClientFactory.create("http://localhost:9999",
             "my-user", "my-password".toCharArray());
 
-        Organization medicalGMBH = platform.createOrganizationClient().createOrganization("Medical Corp");
+        Organization medicalGMBH = platform.createOrganizationClient()
+                .createOrganization("Medical Corp" + System.currentTimeMillis());
 
         //
         // Create New Bucket with retention 1h
@@ -99,36 +106,51 @@ public class PlatformExample {
         String token = authorization.getToken();
         System.out.println("The token to write to temperature-sensors bucket " + token);
 
-//        String token = "VeqpLgMq7d-zZ02jcOeetw75qwpi7XbEikxRIOrFXtTHkNl0HspG7SrO5J9O9-_mdy5BbTp56aVqN_Zzf2JfEw==";
-
         PlatformClient client = PlatformClientFactory.create("http://localhost:9999", token.toCharArray());
 
-        WriteClient writeClient = client.createWriteClient(WriteOptions.DISABLED_BATCHING);
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        try (WriteClient writeClient = client.createWriteClient(WriteOptions.DISABLED_BATCHING)){
 
-        //
-        // Write by POJO
-        //
-        Temperature temperature = new Temperature();
-        temperature.location = "south";
-        temperature.value = 62D;
-        temperature.time = Instant.now();
-        writeClient.writeMeasurement("temperature-sensors", "Medical Corp", ChronoUnit.NANOS, temperature);
+            writeClient.listenEvents(WriteSuccessEvent.class)
+                    .subscribe(writeSuccessEvent -> countDownLatch.countDown());
 
-        //
-        // Write by Point
-        //
-        Point point = Point.name("temperature")
-            .addTag("location", "west")
-            .addField("value", 55D)
-            .time(Instant.now().toEpochMilli(), ChronoUnit.NANOS);
-        writeClient.writePoint("temperature-sensors", "Medical Corp", point);
+            //
+            // Write by POJO
+            //
+            Temperature temperature = new Temperature();
+            temperature.location = "south";
+            temperature.value = 62D;
+            temperature.time = Instant.now();
+            writeClient.writeMeasurement("temperature-sensors", medicalGMBH.getName(), ChronoUnit.NANOS, temperature);
 
-        //
-        // Write by LineProtocol
-        //
-        String record = "temperature,location=north value=60.0";
-        writeClient.writeRecord("temperature-sensors", "Medical Corp", ChronoUnit.NANOS, record);
+            //
+            // Write by Point
+            //
+            Point point = Point.name("temperature")
+                    .addTag("location", "west")
+                    .addField("value", 55D)
+                    .time(Instant.now().toEpochMilli(), ChronoUnit.NANOS);
+            writeClient.writePoint("temperature-sensors", medicalGMBH.getName(), point);
+
+            //
+            // Write by LineProtocol
+            //
+            String record = "temperature,location=north value=60.0";
+            writeClient.writeRecord("temperature-sensors", medicalGMBH.getName(), ChronoUnit.NANOS, record);
+
+            countDownLatch.await(2, TimeUnit.SECONDS);
+        }
+
+        List<FluxTable> tables = client.createQueryClient().query("from(bucket:\"temperature-sensors\") |> range(start: 0)", medicalGMBH.getName());
+
+        for (FluxTable fluxTable : tables) {
+            List<FluxRecord> records = fluxTable.getRecords();
+            for (FluxRecord fluxRecord : records) {
+                System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
+            }
+        }
+
+        client.close();
+        platform.close();
     }
-
-
 }

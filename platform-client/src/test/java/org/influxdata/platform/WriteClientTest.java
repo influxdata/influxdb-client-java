@@ -469,8 +469,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(0);
 
-        WriteClient writeClient = this.writeClient.close();
-        Assertions.assertThat(writeClient).isEqualTo(this.writeClient);
+        writeClient.close();
 
         // wait for request
         getRequestBody(mockServer);
