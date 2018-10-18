@@ -89,7 +89,7 @@ import retrofit2.Response;
 
 <span class="fc" id="L90">        String line = bufferedSource.readUtf8Line();</span>
 
-<span class="pc bpc" id="L92" title="1 of 4 branches missed.">        while (line != null &amp;&amp; !cancellable.isCancelled()) {</span>
+<span class="fc bfc" id="L92" title="All 4 branches covered.">        while (line != null &amp;&amp; !cancellable.isCancelled()) {</span>
 <span class="fc" id="L93">            onResponse.accept(line);</span>
 <span class="fc" id="L94">            line = bufferedSource.readUtf8Line();</span>
         }
@@ -165,12 +165,12 @@ import retrofit2.Response;
                     //
                     // Source has data =&gt; parse
                     //
-<span class="pc bpc" id="L168" title="1 of 4 branches missed.">                    while (!source.exhausted() &amp;&amp; !cancellable.wasCancelled) {</span>
+<span class="fc bfc" id="L168" title="All 4 branches covered.">                    while (!source.exhausted() &amp;&amp; !cancellable.wasCancelled) {</span>
 
 <span class="fc" id="L170">                        consumer.accept(cancellable, source);</span>
                     }
 
-<span class="pc bpc" id="L173" title="1 of 2 branches missed.">                    if (!cancellable.wasCancelled) {</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">                    if (!cancellable.wasCancelled) {</span>
 <span class="fc" id="L174">                        onComplete.run();</span>
                     }
 
@@ -209,8 +209,8 @@ import retrofit2.Response;
 
         @Override
         public void cancel() {
-<span class="nc" id="L212">            wasCancelled = true;</span>
-<span class="nc" id="L213">        }</span>
+<span class="fc" id="L212">            wasCancelled = true;</span>
+<span class="fc" id="L213">        }</span>
 
         @Override
         public boolean isCancelled() {
