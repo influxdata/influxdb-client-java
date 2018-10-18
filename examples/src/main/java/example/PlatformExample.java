@@ -44,8 +44,10 @@ import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.write.Point;
 import org.influxdata.platform.write.event.WriteSuccessEvent;
 
+import io.reactivex.BackpressureOverflowStrategy;
+
 /*
-  InfluxPlatform OSS2.0 onboarding prequisities (create default user, organization and bucket) :
+  InfluxPlatform OSS2.0 onboarding tasks (create default user, organization and bucket) :
 
   curl -i -X POST http://localhost:9999/api/v2/setup -H 'accept: application/json' \
       -d '{
@@ -109,7 +111,14 @@ public class PlatformExample {
         PlatformClient client = PlatformClientFactory.create("http://localhost:9999", token.toCharArray());
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        try (WriteClient writeClient = client.createWriteClient(WriteOptions.DISABLED_BATCHING)){
+        try (WriteClient writeClient = client.createWriteClient(WriteOptions.builder()
+            .batchSize(5000)
+            .flushInterval(1000)
+            .backpressureStrategy(BackpressureOverflowStrategy.DROP_OLDEST)
+            .bufferLimit(10000)
+            .jitterInterval(1000)
+            .retryInterval(5000)
+            .build())) {
 
             writeClient.listenEvents(WriteSuccessEvent.class)
                     .subscribe(writeSuccessEvent -> countDownLatch.countDown());
