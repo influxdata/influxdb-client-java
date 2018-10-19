@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SourceClientImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Platform Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.platform.impl</a> &gt; <span class="el_source">SourceClientImpl.java</span></div><h1>SourceClientImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.platform.impl;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.platform.Arguments;
+import org.influxdata.platform.SourceClient;
+import org.influxdata.platform.domain.Bucket;
+import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.domain.Source;
+import org.influxdata.platform.domain.Sources;
+import org.influxdata.platform.error.InfluxException;
+import org.influxdata.platform.rest.AbstractRestClient;
+
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (bednar@github) (18/09/2018 09:40)
+ */
+final class SourceClientImpl extends AbstractRestClient implements SourceClient {
+
+<span class="fc" id="L49">    private static final Logger LOG = Logger.getLogger(SourceClientImpl.class.getName());</span>
+
+    private final PlatformService platformService;
+    private final JsonAdapter&lt;Source&gt; adapter;
+
+<span class="fc" id="L54">    SourceClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
+
+<span class="fc" id="L56">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
+<span class="fc" id="L57">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
+
+<span class="fc" id="L59">        this.platformService = platformService;</span>
+<span class="fc" id="L60">        this.adapter = moshi.adapter(Source.class);</span>
+<span class="fc" id="L61">    }</span>
+
+    @Nonnull
+    @Override
+    public Source createSource(@Nonnull final Source source) {
+
+<span class="nc" id="L67">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+
+<span class="nc" id="L69">        String json = adapter.toJson(source);</span>
+
+<span class="nc" id="L71">        Call&lt;Source&gt; call = platformService.createSource(createBody(json));</span>
+<span class="nc" id="L72">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Source updateSource(@Nonnull final Source source) {
+
+<span class="nc" id="L79">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+
+<span class="nc" id="L81">        String json = adapter.toJson(source);</span>
+
+<span class="nc" id="L83">        Call&lt;Source&gt; call = platformService.updateSource(source.getId(), createBody(json));</span>
+<span class="nc" id="L84">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteSource(@Nonnull final Source source) {
+
+<span class="nc" id="L90">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+
+<span class="nc" id="L92">        deleteSource(source.getId());</span>
+<span class="nc" id="L93">    }</span>
+
+    @Override
+    public void deleteSource(@Nonnull final String sourceID) {
+
+<span class="nc" id="L98">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
+
+<span class="nc" id="L100">        Call&lt;Void&gt; call = platformService.deleteSource(sourceID);</span>
+<span class="nc" id="L101">        execute(call);</span>
+
+<span class="nc" id="L103">    }</span>
+
+    @Nullable
+    @Override
+    public Source findSourceByID(@Nonnull final String sourceID) {
+
+<span class="nc" id="L109">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
+
+<span class="nc" id="L111">        Call&lt;Source&gt; call = platformService.findSource(sourceID);</span>
+
+<span class="nc" id="L113">        return execute(call, &quot;source not found&quot;);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Source&gt; findSources() {
+<span class="nc" id="L119">        Call&lt;Sources&gt; sourcesCall = platformService.findSources();</span>
+
+<span class="nc" id="L121">        Sources sources = execute(sourcesCall);</span>
+<span class="nc" id="L122">        LOG.log(Level.FINEST, &quot;findSources found: {0}&quot;, sources);</span>
+
+<span class="nc" id="L124">        return sources.getSources();</span>
+    }
+
+    @Nullable
+    @Override
+    public List&lt;Bucket&gt; findBucketsBySource(@Nonnull final Source source) {
+
+<span class="nc" id="L131">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+
+<span class="nc" id="L133">        return findBucketsBySourceID(source.getId());</span>
+    }
+
+    @Nullable
+    @Override
+    public List&lt;Bucket&gt; findBucketsBySourceID(@Nonnull final String sourceID) {
+
+<span class="nc" id="L140">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
+
+<span class="nc" id="L142">        Call&lt;List&lt;Bucket&gt;&gt; call = platformService.findSourceBuckets(sourceID);</span>
+
+<span class="nc" id="L144">        return execute(call, &quot;source not found&quot;);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Health health(@Nonnull final Source source) {
+
+<span class="nc" id="L151">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+
+<span class="nc" id="L153">        return health(source.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Health health(@Nonnull final String sourceID) {
+
+<span class="nc" id="L160">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
+
+<span class="nc" id="L162">        Health health = new Health();</span>
+
+<span class="nc" id="L164">        Call&lt;ResponseBody&gt; call = platformService.findSourceHealth(sourceID);</span>
+        try {
+<span class="nc" id="L166">            execute(call);</span>
+<span class="nc" id="L167">            health.setStatus(Health.HEALTHY_STATUS);</span>
+
+            //TODO check implementation of handleGetSourceHealth failure
+<span class="nc" id="L170">        } catch (InfluxException e) {</span>
+<span class="nc" id="L171">            health.setStatus(&quot;error&quot;);</span>
+<span class="nc" id="L172">            health.setMessage(e.getMessage());</span>
+<span class="nc" id="L173">        }</span>
+
+<span class="nc" id="L175">        return health;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
