@@ -31,6 +31,8 @@ import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Buckets;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
+import org.influxdata.platform.domain.Source;
+import org.influxdata.platform.domain.Sources;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
 import org.influxdata.platform.domain.Users;
@@ -225,6 +227,42 @@ interface PlatformService {
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<Authorization> findAuthorization(@Nonnull @Path("id") final String authorizationID);
+
+
+    //
+    // Source
+    //
+    @POST("/api/v2/sources")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Source> createSource(@Nonnull @Body final RequestBody source);
+
+    @DELETE("/api/v2/sources/{id}")
+    Call<Void> deleteSource(@Nonnull @Path("id") final String sourceID);
+
+    @PATCH("/api/v2/sources/{id}")
+    Call<Source> updateSource(@Nonnull @Path("id") final String sourceID,
+                              @Nonnull @Body final RequestBody source);
+
+    @GET("/api/v2/sources/{id}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Source> findSource(@Nonnull @Path("id") final String sourceID);
+
+    @GET("/api/v2/sources")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Sources> findSources();
+
+    @GET("/api/v2/sources/{id}/buckets")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<Bucket>> findSourceBuckets(@Nonnull @Path("id") final String sourceID);
+
+    @GET("/api/v2/sources/{id}/health")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<ResponseBody> findSourceHealth(@Nonnull @Path("id") final String sourceID);
 
     //
     // Write

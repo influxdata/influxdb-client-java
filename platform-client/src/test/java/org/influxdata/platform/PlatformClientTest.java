@@ -71,7 +71,7 @@ class PlatformClientTest extends AbstractPlatformClientTest {
 
     @Test
     void createSourceClient() {
-        todo(() -> platformClient.createSourceClient());
+        Assertions.assertThat(platformClient.createSourceClient()).isNotNull();
     }
 
     @Test

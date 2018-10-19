@@ -133,7 +133,7 @@ public final class PlatformClientImpl extends AbstractRestClient implements Plat
     @Nonnull
     @Override
     public SourceClient createSourceClient() {
-        throw new TodoException();
+        return new SourceClientImpl(platformService, moshi);
     }
 
     @Nonnull
