@@ -19,15 +19,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.platform.impl;
+package org.influxdata.platform.domain;
+
+import com.squareup.moshi.Json;
 
 /**
- * TODO.
+ * The status of the {@link Run}.
  *
- * @author Jakub Bednar (bednar@github) (11/10/2018 13:40)
+ * @author Jakub Bednar (bednar@github) (22/10/2018 09:08)
  */
-public class TodoException extends RuntimeException {
-    public TodoException() {
-        super("TODO");
-    }
+public enum RunStatus {
+
+    @Json(name = "scheduled")
+    SCHEDULED,
+
+    @Json(name = "executing")
+    EXECUTING,
+
+    @Json(name = "failed")
+    FAILED,
+
+    @Json(name = "success")
+    SUCCESS
 }

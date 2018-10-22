@@ -24,8 +24,6 @@ package org.influxdata.platform.domain;
 import java.io.Serializable;
 import java.util.StringJoiner;
 
-import com.squareup.moshi.Json;
-
 /**
  * Task is a task.
  *
@@ -53,19 +51,7 @@ public final class Task implements Serializable {
     /**
      * The current status of the task. When updated to 'disabled', cancels all queued jobs of this task.
      */
-    private TaskStatus status;
-
-    /**
-     * @see Task#status
-     */
-    public enum TaskStatus {
-
-        @Json(name = "enabled")
-        ENABLED,
-
-        @Json(name = "disabled")
-        DISABLED
-    }
+    private Status status;
 
     /**
      * The Flux script to run for this task.
@@ -114,11 +100,11 @@ public final class Task implements Serializable {
         this.organizationId = organizationId;
     }
 
-    public TaskStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(final TaskStatus status) {
+    public void setStatus(final Status status) {
         this.status = status;
     }
 

@@ -34,6 +34,7 @@ import org.influxdata.flux.domain.FluxColumn;
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
 import org.influxdata.flux.option.FluxConnectionOptions;
+import org.influxdata.platform.annotations.Column;
 import org.influxdata.platform.error.InfluxException;
 
 import org.assertj.core.api.Assertions;
@@ -235,6 +236,47 @@ class ITFluxClient extends AbstractITFluxClient {
         waitToCallback();
     }
 
+
+    @Test
+    void callbackToMeasurement() {
+
+        String flux = FROM_FLUX_DATABASE + "\n"
+                + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
+                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" AND r[\"_field\"] == \"free\"))";
+
+        List<Mem> memory = new ArrayList<>();
+        countDownLatch = new CountDownLatch(4);
+
+        fluxClient.query(flux, Mem.class, (cancellable, mem) -> {
+            memory.add(mem);
+            countDownLatch.countDown();
+        });
+
+        waitToCallback();
+
+        Assertions.assertThat(memory).hasSize(4);
+
+        Assertions.assertThat(memory.get(0).host).isEqualTo("A");
+        Assertions.assertThat(memory.get(0).region).isEqualTo("west");
+        Assertions.assertThat(memory.get(0).free).isEqualTo(10L);
+        Assertions.assertThat(memory.get(0).time).isEqualTo(Instant.ofEpochSecond(10));
+
+        Assertions.assertThat(memory.get(1).host).isEqualTo("A");
+        Assertions.assertThat(memory.get(1).region).isEqualTo("west");
+        Assertions.assertThat(memory.get(1).free).isEqualTo(11L);
+        Assertions.assertThat(memory.get(1).time).isEqualTo(Instant.ofEpochSecond(20));
+
+        Assertions.assertThat(memory.get(2).host).isEqualTo("B");
+        Assertions.assertThat(memory.get(2).region).isEqualTo("west");
+        Assertions.assertThat(memory.get(2).free).isEqualTo(20L);
+        Assertions.assertThat(memory.get(2).time).isEqualTo(Instant.ofEpochSecond(10));
+
+        Assertions.assertThat(memory.get(3).host).isEqualTo("B");
+        Assertions.assertThat(memory.get(3).region).isEqualTo("west");
+        Assertions.assertThat(memory.get(3).free).isEqualTo(22L);
+        Assertions.assertThat(memory.get(3).time).isEqualTo(Instant.ofEpochSecond(20));
+    }
+
     @Test
     void ping() {
 
@@ -343,5 +385,16 @@ class ITFluxClient extends AbstractITFluxClient {
                 influxDBWrite(points.stream().collect(Collectors.joining("\n")), DATABASE_NAME);
             }
         });
+    }
+
+    public static class Mem {
+        
+        private String host;
+        private String region;
+
+        @Column(name = "_value")
+        private Long free;
+        @Column(name = "_time")
+        private Instant time;
     }
 }

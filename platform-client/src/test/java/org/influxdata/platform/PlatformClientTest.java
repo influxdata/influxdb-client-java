@@ -21,17 +21,13 @@
  */
 package org.influxdata.platform;
 
-import javax.annotation.Nonnull;
-
 import org.influxdata.platform.impl.AbstractPlatformClientTest;
-import org.influxdata.platform.impl.TodoException;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.LogLevel;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
-import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -76,7 +72,7 @@ class PlatformClientTest extends AbstractPlatformClientTest {
 
     @Test
     void createTaskClient() {
-        todo(() -> platformClient.createTaskClient());
+        Assertions.assertThat(platformClient.createTaskClient()).isNotNull();
     }
 
     @Test
@@ -138,11 +134,5 @@ class PlatformClientTest extends AbstractPlatformClientTest {
         // request to signout
         RecordedRequest signOut = mockServer.takeRequest();
         Assertions.assertThat(signOut.getPath()).endsWith("/api/v2/signout");
-    }
-
-    private void todo(@Nonnull final ThrowableAssert.ThrowingCallable callable) {
-        Assertions.assertThatThrownBy(callable)
-                .isInstanceOf(TodoException.class)
-                .hasMessage("TODO");
     }
 }

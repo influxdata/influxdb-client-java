@@ -22,9 +22,11 @@
 package org.influxdata.platform.impl;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.AuthorizationClient;
@@ -36,11 +38,16 @@ import org.influxdata.platform.SourceClient;
 import org.influxdata.platform.TaskClient;
 import org.influxdata.platform.UserClient;
 import org.influxdata.platform.WriteClient;
+import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.AbstractRestClient;
 import org.influxdata.platform.rest.LogLevel;
 
+import com.squareup.moshi.FromJson;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonReader;
+import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -79,7 +86,7 @@ public final class PlatformClientImpl extends AbstractRestClient implements Plat
 
         this.authenticateInterceptor.initToken(okHttpClient);
 
-        this.moshi = new Moshi.Builder().build();
+        this.moshi = new Moshi.Builder().add(new StatusAdapter()).add(Instant.class, new InstantAdapter()).build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(options.getUrl())
@@ -139,7 +146,7 @@ public final class PlatformClientImpl extends AbstractRestClient implements Plat
     @Nonnull
     @Override
     public TaskClient createTaskClient() {
-        throw new TodoException();
+        return new TaskClientImpl(platformService, moshi);
     }
 
     @Nonnull
@@ -197,6 +204,44 @@ public final class PlatformClientImpl extends AbstractRestClient implements Plat
             this.authenticateInterceptor.signout();
         } catch (IOException e) {
             LOG.log(Level.FINEST, "The signout exception", e);
+        }
+    }
+
+    private final class InstantAdapter extends JsonAdapter<Instant> {
+
+        @Nullable
+        @Override
+        public Instant fromJson(final JsonReader reader) throws IOException {
+            String value = reader.nextString();
+
+            if (value == null) {
+                return null;
+            }
+            return Instant.parse(value);
+        }
+
+        @Override
+        public void toJson(@Nonnull final JsonWriter writer, @Nullable final Instant value) throws IOException {
+            if (value != null) {
+                writer.value(value.toString());
+            }
+        }
+    }
+
+    private final class StatusAdapter {
+
+        // TODO remove after fix: listed task has empty status
+        @FromJson
+        @Nullable
+        public Status toStatus(final JsonReader jsonReader, final JsonAdapter<Status> delegate)
+                throws IOException {
+
+            String statusValue = jsonReader.nextString();
+            if (statusValue.isEmpty()) {
+                return null;
+            } else {
+                return delegate.fromJsonValue(statusValue);
+            }
         }
     }
 }

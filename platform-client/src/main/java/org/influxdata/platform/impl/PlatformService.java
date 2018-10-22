@@ -21,6 +21,7 @@
  */
 package org.influxdata.platform.impl;
 
+import java.time.Instant;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,8 +32,10 @@ import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Buckets;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
+import org.influxdata.platform.domain.Run;
 import org.influxdata.platform.domain.Source;
 import org.influxdata.platform.domain.Sources;
+import org.influxdata.platform.domain.Task;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
 import org.influxdata.platform.domain.Users;
@@ -265,6 +268,91 @@ interface PlatformService {
     Call<ResponseBody> findSourceHealth(@Nonnull @Path("id") final String sourceID);
 
     //
+    // Task
+    //
+    @POST("/api/v2/tasks")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Task> createTask(@Nonnull @Body final RequestBody task);
+
+    @DELETE("/api/v2/tasks/{id}")
+    Call<Void> deleteTask(@Nonnull @Path("id") final String taskID);
+
+    @PATCH("/api/v2/tasks/{id}")
+    Call<Task> updateTask(@Nonnull @Path("id") final String taskID, @Nonnull @Body final RequestBody task);
+
+    @GET("/api/v2/tasks/")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<Task>> findTasks(@Nullable @Query("after") final String after,
+                               @Nullable @Query("user") final String user,
+                               @Nullable @Query("organization") final String organization);
+
+    @GET("/api/v2/tasks/{id}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Task> findTaskByID(@Nonnull @Path("id") final String taskID);
+
+    @GET("/api/v2/tasks/{id}/members")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<UserResourceMapping>> findTaskMembers(@Nonnull @Path("id") final String taskID);
+
+    @POST("/api/v2/tasks/{id}/members")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<UserResourceMapping> addTaskMember(@Nonnull @Path("id") final String taskID,
+                                            @Nonnull @Body final RequestBody member);
+
+    @DELETE("/api/v2/tasks/{id}/members/{userID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteTaskMember(@Nonnull @Path("id") final String taskID,
+                                @Nonnull @Path("userID") final String userID);
+
+    @GET("/api/v2/tasks/{id}/owners")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<UserResourceMapping>> findTaskOwners(@Nonnull @Path("id") final String taskID);
+
+    @POST("/api/v2/tasks/{id}/owners")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<UserResourceMapping> addTaskOwner(@Nonnull @Path("id") final String taskID,
+                                           @Nonnull @Body final RequestBody member);
+
+    @DELETE("/api/v2/tasks/{id}/owners/{userID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteTaskOwner(@Nonnull @Path("id") final String taskID,
+                               @Nonnull @Path("userID") final String userID);
+
+
+    @GET("/api/v2/tasks/{id}/runs")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<Run>> findTaskRuns(@Nonnull @Path("id") final String taskID,
+                                 @Nullable @Query("afterTime") final Instant afterTime,
+                                 @Nullable @Query("beforeTime") final Instant beforeTime,
+                                 @Nullable @Query("limit") final Integer limit);
+
+    @GET("/api/v2/tasks/{id}/runs/{runID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Run> findTaskRun(@Nonnull @Path("id") final String taskID,
+                          @Nonnull @Path("runID") final String runID);
+
+    @POST("/api/v2/tasks/{id}/runs/{runID}/retry")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Run> retryTaskRun(@Nonnull @Path("id") final String taskID,
+                          @Nonnull @Path("runID") final String runID);
+
+    @GET("/api/v2/tasks/{id}/logs")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<String>> findTaskLogs(@Nonnull @Path("id") final String taskID);
+
     // Write
     //
     @POST("/api/v2/write")

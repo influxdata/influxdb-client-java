@@ -60,6 +60,8 @@ public abstract class AbstractITFluxClient extends AbstractTest {
     @AfterEach
     protected void after() {
 
+        fluxClient.close();
+
         influxDBQuery("DROP DATABASE " + DATABASE_NAME, DATABASE_NAME);
     }
 }

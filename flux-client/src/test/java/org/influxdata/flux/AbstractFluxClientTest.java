@@ -28,6 +28,7 @@ import org.influxdata.flux.option.FluxConnectionOptions;
 import org.influxdata.platform.AbstractMockServerTest;
 
 import okhttp3.mockwebserver.MockResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 /**
@@ -57,7 +58,12 @@ public abstract class AbstractFluxClientTest extends AbstractMockServerTest {
         fluxClient = new FluxClientImpl(fluxConnectionOptions);
     }
 
-    @Nonnull
+    @AfterEach
+    void close() throws Exception {
+        fluxClient.close();
+    }
+
+        @Nonnull
     MockResponse createResponse() {
 
         return createResponse(SUCCESS_DATA);
