@@ -30,7 +30,7 @@ The Platform Client,org.influxdata.platform.impl,WriteClientImpl.ToWritePointsCo
 The Platform Client,org.influxdata.platform.impl,OrganizationClientImpl,273,66,0,0,65,17,15,6,15,6
 The Platform Client,org.influxdata.platform.impl,AuthenticateInterceptor,0,252,0,20,0,57,0,17,0,7
 The Platform Client,org.influxdata.platform.impl,GzipInterceptor,0,87,2,6,0,19,2,10,0,8
-The Platform Client,org.influxdata.platform.impl,TaskClientImpl,747,22,4,0,163,7,42,1,40,1
+The Platform Client,org.influxdata.platform.impl,TaskClientImpl,717,22,4,0,157,7,40,1,38,1
 The Platform Client,org.influxdata.platform.impl,WriteClientImpl.BatchWriteOptions,5,74,5,5,2,14,5,3,0,3
 The Platform Client,org.influxdata.platform.impl,WriteClientImpl.BatchWriteDataPoint,2,16,1,1,1,5,1,2,0,2
 The Platform Client,org.influxdata.platform.impl,QueryClientImpl.new FluxCsvParser.FluxResponseConsumer() {...},25,0,0,0,4,0,3,0,3,0
