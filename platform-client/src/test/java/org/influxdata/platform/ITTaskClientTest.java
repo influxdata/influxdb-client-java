@@ -479,4 +479,38 @@ class ITTaskClientTest extends AbstractITClientTest {
         List<String> runs = taskClient.getLogs("020f755c3c082000");
         Assertions.assertThat(runs).hasSize(0);
     }
+
+    //TODO
+    @Test
+    @Disabled
+    void runLogs() throws Exception {
+
+        String taskName = generateName("it task");
+
+        Task task = taskClient.createTaskEvery(taskName, "from(bucket:\"telegraf\") |> sum()", "1s", user, organization);
+
+        Thread.sleep(5_000);
+
+        List<Run> runs = taskClient.getRuns(task, null, null, 1);
+        Assertions.assertThat(runs).hasSize(1);
+
+        Thread.sleep(5_000);
+
+        List<String> logs = taskClient.getRunLogs(runs.get(0));
+
+        Assertions.assertThat(logs).hasSize(1);
+    }
+
+    //TODO
+    @Test
+    @Disabled
+    void runLogsNotExist() {
+
+        String taskName = generateName("it task");
+
+        Task task = taskClient.createTaskEvery(taskName, "from(bucket:\"telegraf\") |> sum()", "5s", user, organization);
+
+        List<String> logs = taskClient.getRunLogs(task.getId(), "020f755c3c082000");
+        Assertions.assertThat(logs).isEmpty();
+    }
 }

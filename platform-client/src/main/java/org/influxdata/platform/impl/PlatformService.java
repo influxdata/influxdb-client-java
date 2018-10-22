@@ -342,11 +342,17 @@ interface PlatformService {
     Call<Run> findTaskRun(@Nonnull @Path("id") final String taskID,
                           @Nonnull @Path("runID") final String runID);
 
+    @GET("/api/v2/tasks/{id}/runs/{runID}/logs")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<List<String>> findRunLogs(@Nonnull @Path("id") final String taskID,
+                                   @Nonnull @Path("runID") final String runID);
+
     @POST("/api/v2/tasks/{id}/runs/{runID}/retry")
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<Run> retryTaskRun(@Nonnull @Path("id") final String taskID,
-                          @Nonnull @Path("runID") final String runID);
+                           @Nonnull @Path("runID") final String runID);
 
     @GET("/api/v2/tasks/{id}/logs")
     @Nonnull

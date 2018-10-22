@@ -437,6 +437,27 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
         return execute(run, "run not found");
     }
 
+    @Nonnull
+    @Override
+    public List<String> getRunLogs(@Nonnull final Run run) {
+
+        Arguments.checkNotNull(run, "run");
+
+        return getRunLogs(run.getTaskID(), run.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<String> getRunLogs(@Nonnull final String taskID, @Nonnull final String runID) {
+
+        Arguments.checkNonEmpty(taskID, "Task.ID");
+        Arguments.checkNonEmpty(runID, "Run.ID");
+
+        Call<List<String>> logs = platformService.findRunLogs(taskID, runID);
+
+        return execute(logs, "run not found");
+    }
+
     @Nullable
     @Override
     public Run retryRun(@Nonnull final Run run) {

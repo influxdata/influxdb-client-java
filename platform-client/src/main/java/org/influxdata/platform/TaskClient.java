@@ -70,7 +70,7 @@ public interface TaskClient {
      * @param name         description of the task
      * @param flux         the Flux script to run for this task
      * @param cron         a task repetition schedule in the form '* * * * * *'
-     * @param owner         the user that owns this Task
+     * @param owner        the user that owns this Task
      * @param organization the organization that owns this Task
      * @return Task created
      */
@@ -107,7 +107,7 @@ public interface TaskClient {
      * @param name         description of the task
      * @param flux         the Flux script to run for this task
      * @param every        a task repetition by duration expression
-     * @param owner         the user that owns this Task
+     * @param owner        the user that owns this Task
      * @param organization the organization that owns this Task
      * @return Task created
      */
@@ -400,6 +400,25 @@ public interface TaskClient {
      */
     @Nullable
     Run getRun(@Nonnull final String taskID, @Nonnull final String runID);
+
+    /**
+     * Retrieve all logs for a run.
+     *
+     * @param run the run with a taskID and a runID
+     * @return the list of all logs for a run
+     */
+    @Nonnull
+    List<String> getRunLogs(@Nonnull final Run run);
+
+    /**
+     * Retrieve all logs for a run.
+     *
+     * @param taskID ID of task to get logs for it
+     * @param runID  ID of run
+     * @return the list of all logs for a run
+     */
+    @Nonnull
+    List<String> getRunLogs(@Nonnull final String taskID, @Nonnull final String runID);
 
     /**
      * Retry a task run.
