@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 139,
+      <title>File: 141,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -368,6 +368,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.impl.TaskClientImpl.java">org/influxdata/platform/impl/TaskClientImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.domain.Bucket.java">org/influxdata/platform/domain/Bucket.java</a>
                 </td>
                 <td>
@@ -551,6 +565,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.domain.Authorization.java">org/influxdata/platform/domain/Authorization.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.domain.RunStatus.java">org/influxdata/platform/domain/RunStatus.java</a>
                 </td>
                 <td>
                   0
@@ -1097,20 +1125,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.domain.Health.java">org/influxdata/platform/domain/Health.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.impl.TodoException.java">org/influxdata/platform/impl/TodoException.java</a>
                 </td>
                 <td>
                   0
@@ -1895,6 +1909,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.domain.AbstractHasLinks.java">org/influxdata/platform/domain/AbstractHasLinks.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.domain.Run.java">org/influxdata/platform/domain/Run.java</a>
                 </td>
                 <td>
                   0

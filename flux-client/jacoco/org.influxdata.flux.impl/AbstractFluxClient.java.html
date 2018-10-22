@@ -93,8 +93,8 @@ class AbstractFluxClient&lt;T&gt; extends AbstractQueryClient {
      * Closes the client, initiates shutdown, no new running calls are accepted during shutdown.
      */
     public void close() {
-<span class="nc" id="L96">        okHttpClient.connectionPool().evictAll();</span>
-<span class="nc" id="L97">        okHttpClient.dispatcher().executorService().shutdown();</span>
-<span class="nc" id="L98">    }</span>
+<span class="fc" id="L96">        okHttpClient.connectionPool().evictAll();</span>
+<span class="fc" id="L97">        okHttpClient.dispatcher().executorService().shutdown();</span>
+<span class="fc" id="L98">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
