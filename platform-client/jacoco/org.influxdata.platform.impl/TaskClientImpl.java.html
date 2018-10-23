@@ -437,45 +437,66 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 <span class="nc" id="L437">        return execute(run, &quot;run not found&quot;);</span>
     }
 
+    @Nonnull
+    @Override
+    public List&lt;String&gt; getRunLogs(@Nonnull final Run run) {
+
+<span class="nc" id="L444">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+
+<span class="nc" id="L446">        return getRunLogs(run.getTaskID(), run.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;String&gt; getRunLogs(@Nonnull final String taskID, @Nonnull final String runID) {
+
+<span class="nc" id="L453">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L454">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+
+<span class="nc" id="L456">        Call&lt;List&lt;String&gt;&gt; logs = platformService.findRunLogs(taskID, runID);</span>
+
+<span class="nc" id="L458">        return execute(logs, &quot;run not found&quot;);</span>
+    }
+
     @Nullable
     @Override
     public Run retryRun(@Nonnull final Run run) {
 
-<span class="nc" id="L444">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+<span class="nc" id="L465">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
 
-<span class="nc" id="L446">        return retryRun(run.getTaskID(), run.getId());</span>
+<span class="nc" id="L467">        return retryRun(run.getTaskID(), run.getId());</span>
     }
 
     @Nullable
     @Override
     public Run retryRun(@Nonnull final String taskID, @Nonnull final String runID) {
 
-<span class="nc" id="L453">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
-<span class="nc" id="L454">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+<span class="nc" id="L474">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L475">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
 
-<span class="nc" id="L456">        Call&lt;Run&gt; run = platformService.retryTaskRun(taskID, runID);</span>
+<span class="nc" id="L477">        Call&lt;Run&gt; run = platformService.retryTaskRun(taskID, runID);</span>
 
-<span class="nc" id="L458">        return execute(run, &quot;run not found&quot;);</span>
+<span class="nc" id="L479">        return execute(run, &quot;run not found&quot;);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;String&gt; getLogs(@Nonnull final Task task) {
 
-<span class="nc" id="L465">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L486">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="nc" id="L467">        return getLogs(task.getId());</span>
+<span class="nc" id="L488">        return getLogs(task.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;String&gt; getLogs(@Nonnull final String taskID) {
 
-<span class="nc" id="L474">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L495">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="nc" id="L476">        Call&lt;List&lt;String&gt;&gt; execute = platformService.findTaskLogs(taskID);</span>
+<span class="nc" id="L497">        Call&lt;List&lt;String&gt;&gt; execute = platformService.findTaskLogs(taskID);</span>
 
-<span class="nc" id="L478">        return execute(execute, &quot;task not found&quot;);</span>
+<span class="nc" id="L499">        return execute(execute, &quot;task not found&quot;);</span>
     }
 
     @Nonnull
@@ -486,35 +507,35 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                             @Nonnull final User owner,
                             @Nonnull final String organizationID) {
 
-<span class="nc" id="L489">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
-<span class="nc" id="L490">        Arguments.checkNotNull(flux, &quot;Flux script to run&quot;);</span>
-<span class="nc" id="L491">        Arguments.checkNotNull(owner, &quot;User&quot;);</span>
-<span class="nc" id="L492">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
-<span class="nc" id="L493">        Arguments.checkDurationNotRequired(every, &quot;Task.every&quot;);</span>
+<span class="nc" id="L510">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="nc" id="L511">        Arguments.checkNotNull(flux, &quot;Flux script to run&quot;);</span>
+<span class="nc" id="L512">        Arguments.checkNotNull(owner, &quot;User&quot;);</span>
+<span class="nc" id="L513">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L514">        Arguments.checkDurationNotRequired(every, &quot;Task.every&quot;);</span>
 
-<span class="nc" id="L495">        Task task = new Task();</span>
-<span class="nc" id="L496">        task.setName(name);</span>
-<span class="nc" id="L497">        task.setOrganizationId(organizationID);</span>
-<span class="nc" id="L498">        task.setOwner(owner);</span>
-<span class="nc" id="L499">        task.setStatus(Status.ACTIVE);</span>
-<span class="nc" id="L500">        task.setEvery(every);</span>
-<span class="nc" id="L501">        task.setCron(cron);</span>
-<span class="nc" id="L502">        task.setFlux(flux);</span>
+<span class="nc" id="L516">        Task task = new Task();</span>
+<span class="nc" id="L517">        task.setName(name);</span>
+<span class="nc" id="L518">        task.setOrganizationId(organizationID);</span>
+<span class="nc" id="L519">        task.setOwner(owner);</span>
+<span class="nc" id="L520">        task.setStatus(Status.ACTIVE);</span>
+<span class="nc" id="L521">        task.setEvery(every);</span>
+<span class="nc" id="L522">        task.setCron(cron);</span>
+<span class="nc" id="L523">        task.setFlux(flux);</span>
 
-<span class="nc" id="L504">        String repetition = &quot;&quot;;</span>
-<span class="nc bnc" id="L505" title="All 2 branches missed.">        if (every != null) {</span>
-<span class="nc" id="L506">            repetition += &quot;every: &quot;;</span>
-<span class="nc" id="L507">            repetition += every;</span>
+<span class="nc" id="L525">        String repetition = &quot;&quot;;</span>
+<span class="nc bnc" id="L526" title="All 2 branches missed.">        if (every != null) {</span>
+<span class="nc" id="L527">            repetition += &quot;every: &quot;;</span>
+<span class="nc" id="L528">            repetition += every;</span>
         }
-<span class="nc bnc" id="L509" title="All 2 branches missed.">        if (cron != null) {</span>
-<span class="nc" id="L510">            repetition += &quot;cron: &quot;;</span>
-<span class="nc" id="L511">            repetition += &quot;\&quot;&quot; + cron + &quot;\&quot;&quot;;</span>
+<span class="nc bnc" id="L530" title="All 2 branches missed.">        if (cron != null) {</span>
+<span class="nc" id="L531">            repetition += &quot;cron: &quot;;</span>
+<span class="nc" id="L532">            repetition += &quot;\&quot;&quot; + cron + &quot;\&quot;&quot;;</span>
         }
-<span class="nc" id="L513">        String fluxWithOptions = String.format(&quot;option task = {name: \&quot;%s\&quot;, %s} \n %s&quot;, name, repetition, flux);</span>
+<span class="nc" id="L534">        String fluxWithOptions = String.format(&quot;option task = {name: \&quot;%s\&quot;, %s} \n %s&quot;, name, repetition, flux);</span>
 
-<span class="nc" id="L515">        task.setFlux(fluxWithOptions);</span>
+<span class="nc" id="L536">        task.setFlux(fluxWithOptions);</span>
 
-<span class="nc" id="L517">        return task;</span>
+<span class="nc" id="L538">        return task;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
