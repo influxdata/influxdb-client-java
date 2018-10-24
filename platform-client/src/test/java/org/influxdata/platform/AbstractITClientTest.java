@@ -25,6 +25,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
+import org.influxdata.platform.domain.RetentionRule;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,5 +64,13 @@ abstract class AbstractITClientTest extends AbstractTest {
         Assertions.assertThat(prefix).isNotBlank();
 
         return prefix + System.currentTimeMillis();
+    }
+
+    @Nonnull
+    protected RetentionRule retentionRule() {
+        RetentionRule retentionRule = new RetentionRule();
+        retentionRule.setType("expire");
+        retentionRule.setEverySeconds(3600L);
+        return retentionRule;
     }
 }

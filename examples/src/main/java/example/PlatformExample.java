@@ -86,7 +86,7 @@ public class PlatformExample {
         // Create New Bucket with retention 1h
         //
         Bucket temperatureBucket = platform.createBucketClient()
-            .createBucket("temperature-sensors", "1h", medicalGMBH.getName());
+            .createBucket("temperature-sensors", medicalGMBH.getName());
 
         //
         // Add Permissions to read and write to the Bucket

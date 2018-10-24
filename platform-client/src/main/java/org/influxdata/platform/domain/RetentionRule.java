@@ -19,30 +19,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.flux.impl;
-
-import javax.annotation.Nonnull;
-
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.Headers;
-import retrofit2.http.POST;
-import retrofit2.http.Streaming;
+package org.influxdata.platform.domain;
 
 /**
- * @author Jakub Bednar (bednar@github) (04/10/2018 07:47)
+ * The retention rule action for a bucket.
+ *
+ * @author Jakub Bednar (bednar@github) (24/10/2018 10:38)
  */
-interface FluxService {
+public class RetentionRule {
 
-    @Streaming
-    @POST("/api/v2/query")
-    @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<ResponseBody> query(@Nonnull @Body final RequestBody query);
+    private String type;
+    private Long everySeconds;
 
-    @GET("/ping")
-    Call<ResponseBody> ping();
+    public String getType() {
+        return type;
+    }
+
+    public void setType(final String type) {
+        this.type = type;
+    }
+
+    public Long getEverySeconds() {
+        return everySeconds;
+    }
+
+    public void setEverySeconds(final Long everySeconds) {
+        this.everySeconds = everySeconds;
+    }
 }

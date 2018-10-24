@@ -33,7 +33,7 @@ import org.influxdata.platform.rest.Cancellable;
 import org.influxdata.platform.rest.LogLevel;
 
 /**
- * The client that allows perform Flux queries against the InfluxDB /v2/query endpoint.
+ * The client that allows perform Flux queries against the InfluxDB /api/v2/query endpoint.
  *
  * @author Jakub Bednar (bednar@github) (01/10/2018 12:17)
  */

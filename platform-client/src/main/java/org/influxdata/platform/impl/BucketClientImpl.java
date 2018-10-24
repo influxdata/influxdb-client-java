@@ -32,6 +32,7 @@ import org.influxdata.platform.BucketClient;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Buckets;
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.RetentionRule;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
 import org.influxdata.platform.rest.AbstractRestClient;
@@ -100,29 +101,42 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
 
     @Nonnull
     @Override
-    public Bucket createBucket(@Nonnull final String name,
-                               @Nonnull final String retentionPeriod,
-                               @Nonnull final Organization organization) {
-
-        Arguments.checkNotNull(organization, "Organization is required");
-
-        return createBucket(name, retentionPeriod, organization.getName());
+    public Bucket createBucket(@Nonnull final String name, @Nonnull final Organization organization) {
+        return createBucket(name, null, organization);
     }
 
     @Nonnull
     @Override
     public Bucket createBucket(@Nonnull final String name,
-                               @Nonnull final String retentionPeriod,
+                               @Nullable  final RetentionRule retentionRule,
+                               @Nonnull final Organization organization) {
+
+        Arguments.checkNotNull(organization, "Organization is required");
+
+        return createBucket(name, retentionRule, organization.getName());
+    }
+
+    @Nonnull
+    @Override
+    public Bucket createBucket(@Nonnull final String name, @Nonnull final String organizationName) {
+        return createBucket(name, null, organizationName);
+    }
+
+    @Nonnull
+    @Override
+    public Bucket createBucket(@Nonnull final String name,
+                               @Nullable final RetentionRule retentionRule,
                                @Nonnull final String organizationName) {
 
         Arguments.checkNonEmpty(name, "Bucket name");
         Arguments.checkNonEmpty(organizationName, "Organization name");
-        Arguments.checkDuration(retentionPeriod, "Bucket.retentionPeriod");
 
         Bucket bucket = new Bucket();
         bucket.setName(name);
-        bucket.setRetentionPeriod(retentionPeriod);
         bucket.setOrganizationName(organizationName);
+        if (retentionRule != null) {
+            bucket.getRetentionRules().add(retentionRule);
+        }
 
         return createBucket(bucket);
     }
@@ -134,7 +148,6 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
         Arguments.checkNotNull(bucket, "Bucket is required");
         Arguments.checkNonEmpty(bucket.getName(), "Bucket name");
         Arguments.checkNonEmpty(bucket.getOrganizationName(), "Organization name");
-        Arguments.checkDuration(bucket.getRetentionPeriod(), "Bucket.retentionPeriod");
 
         Call<Bucket> call = platformService.createBucket(createBody(adapter.toJson(bucket)));
 
@@ -146,7 +159,6 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
     public Bucket updateBucket(@Nonnull final Bucket bucket) {
 
         Arguments.checkNotNull(bucket, "Bucket is required");
-        Arguments.checkDuration(bucket.getRetentionPeriod(), "Bucket.retentionPeriod");
 
         String json = adapter.toJson(bucket);
 

@@ -73,7 +73,7 @@ class ITSourceClient extends AbstractITClientTest {
         source.setSharedSecret(UUID.randomUUID().toString());
         source.setMetaUrl("/usr/local/var/influxdb/meta");
         source.setDefaultRP("autogen");
-        source.setFluxURL("http://localhost:8082");
+        source.setFluxURL("http://localhost:8086");
 
         Source createdSource = sourceClient.createSource(source);
 

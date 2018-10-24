@@ -468,7 +468,6 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         List<String> runs = taskClient.getLogs(task);
         Assertions.assertThat(runs).hasSize(1);
-
     }
 
     //TODO

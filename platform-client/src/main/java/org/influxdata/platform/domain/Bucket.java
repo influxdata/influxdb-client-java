@@ -21,6 +21,9 @@
  */
 package org.influxdata.platform.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.squareup.moshi.Json;
 
 /**
@@ -45,9 +48,9 @@ public final class Bucket extends AbstractHasLinks {
     private String retentionPolicyName;
 
     /**
-     * The retention period in duration (1m, 24h15).
+     * The retention rules.
      */
-    private String retentionPeriod;
+    private List<RetentionRule> retentionRules = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -89,11 +92,11 @@ public final class Bucket extends AbstractHasLinks {
         this.retentionPolicyName = retentionPolicyName;
     }
 
-    public String getRetentionPeriod() {
-        return retentionPeriod;
+    public List<RetentionRule> getRetentionRules() {
+        return retentionRules;
     }
 
-    public void setRetentionPeriod(final String retentionPeriod) {
-        this.retentionPeriod = retentionPeriod;
+    public void setRetentionRules(final List<RetentionRule> retentionRules) {
+        this.retentionRules = retentionRules;
     }
 }

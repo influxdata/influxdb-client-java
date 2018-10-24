@@ -1,7 +1,7 @@
 # flux-java-reactive
 
 The RxJava extension for the [flux-client](../flux-client) library for the
-InfluxDB 1.7 `/v2/query` REST API using the [Flux language](https://github.com/influxdata/flux/blob/master/docs/SPEC.md).
+InfluxDB 1.7 `/api/v2/query` REST API using the [Flux language](https://github.com/influxdata/flux/blob/master/docs/SPEC.md).
  
 
 > This library is under development and no stable version has been released yet.  

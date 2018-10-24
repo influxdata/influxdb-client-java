@@ -64,7 +64,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         super.setUp();
 
         bucket = platformService.createBucketClient()
-                .createBucket(generateName("h2o"), "1h", "my-org");
+                .createBucket(generateName("h2o"), retentionRule(), "my-org");
 
         //
         // Add Permissions to read and write to the Bucket
@@ -208,7 +208,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
                 platformService.createOrganizationClient().createOrganization(orgName);
 
         Bucket bucket = platformService.createBucketClient()
-                .createBucket(generateName("h2o"), "1h", orgName);
+                .createBucket(generateName("h2o"), retentionRule(), orgName);
 
         String bucketResource = Permission.bucketResource(bucket.getId());
 

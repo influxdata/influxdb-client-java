@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.RetentionRule;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
 
@@ -50,26 +51,48 @@ public interface BucketClient {
      * Creates a new bucket and sets {@link Bucket#id} with the new identifier.
      *
      * @param name            name of the bucket
-     * @param retentionPeriod bucket retention period
      * @param organization    owner of bucket
      * @return Bucket created
      */
     @Nonnull
     Bucket createBucket(@Nonnull final String name,
-                        @Nonnull final String retentionPeriod,
+                        @Nonnull final Organization organization);
+
+    /**
+     * Creates a new bucket and sets {@link Bucket#id} with the new identifier.
+     *
+     * @param name            name of the bucket
+     * @param retentionRule bucket retention period
+     * @param organization    owner of bucket
+     * @return Bucket created
+     */
+    @Nonnull
+    Bucket createBucket(@Nonnull final String name,
+                        @Nullable final RetentionRule retentionRule,
                         @Nonnull final Organization organization);
 
     /**
      * Creates a new bucket and sets {@link Bucket#id} with the new identifier.
      *
      * @param name             name of the bucket
-     * @param retentionPeriod  bucket retention period
      * @param organizationName owner of bucket
      * @return Bucket created
      */
     @Nonnull
     Bucket createBucket(@Nonnull final String name,
-                        @Nonnull final String retentionPeriod,
+                        @Nonnull final String organizationName);
+
+    /**
+     * Creates a new bucket and sets {@link Bucket#id} with the new identifier.
+     *
+     * @param name             name of the bucket
+     * @param retentionRule  bucket retention period
+     * @param organizationName owner of bucket
+     * @return Bucket created
+     */
+    @Nonnull
+    Bucket createBucket(@Nonnull final String name,
+                        @Nullable final RetentionRule retentionRule,
                         @Nonnull final String organizationName);
 
     /**
