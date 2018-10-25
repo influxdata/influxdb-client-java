@@ -35,7 +35,8 @@ import org.influxdata.platform.domain.Organizations;
 import org.influxdata.platform.domain.Run;
 import org.influxdata.platform.domain.Source;
 import org.influxdata.platform.domain.Sources;
-import org.influxdata.platform.domain.Task;
+import org.influxdata.platform.domain.TaskResponse;
+import org.influxdata.platform.domain.Tasks;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
 import org.influxdata.platform.domain.Users;
@@ -273,25 +274,25 @@ interface PlatformService {
     @POST("/api/v2/tasks")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<Task> createTask(@Nonnull @Body final RequestBody task);
+    Call<TaskResponse> createTask(@Nonnull @Body final RequestBody task);
 
     @DELETE("/api/v2/tasks/{id}")
     Call<Void> deleteTask(@Nonnull @Path("id") final String taskID);
 
     @PATCH("/api/v2/tasks/{id}")
-    Call<Task> updateTask(@Nonnull @Path("id") final String taskID, @Nonnull @Body final RequestBody task);
+    Call<TaskResponse> updateTask(@Nonnull @Path("id") final String taskID, @Nonnull @Body final RequestBody task);
 
     @GET("/api/v2/tasks/")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<List<Task>> findTasks(@Nullable @Query("after") final String after,
-                               @Nullable @Query("user") final String user,
-                               @Nullable @Query("organization") final String organization);
+    Call<Tasks> findTasks(@Nullable @Query("after") final String after,
+                          @Nullable @Query("user") final String user,
+                          @Nullable @Query("organization") final String organization);
 
     @GET("/api/v2/tasks/{id}")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<Task> findTaskByID(@Nonnull @Path("id") final String taskID);
+    Call<TaskResponse> findTaskByID(@Nonnull @Path("id") final String taskID);
 
     @GET("/api/v2/tasks/{id}/members")
     @Nonnull

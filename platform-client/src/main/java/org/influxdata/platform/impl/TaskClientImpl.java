@@ -23,6 +23,8 @@ package org.influxdata.platform.impl;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -32,6 +34,8 @@ import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Run;
 import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.domain.Task;
+import org.influxdata.platform.domain.TaskResponse;
+import org.influxdata.platform.domain.Tasks;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
 import org.influxdata.platform.rest.AbstractRestClient;
@@ -44,6 +48,8 @@ import retrofit2.Call;
  * @author Jakub Bednar (bednar@github) (11/09/2018 07:59)
  */
 final class TaskClientImpl extends AbstractRestClient implements TaskClient {
+
+    private static final Logger LOG = Logger.getLogger(TaskClientImpl.class.getName());
 
     private final PlatformService platformService;
     private final JsonAdapter<Task> adapter;
@@ -65,9 +71,14 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNonEmpty(taskID, "taskID");
 
-        Call<Task> task = platformService.findTaskByID(taskID);
+        Call<TaskResponse> call = platformService.findTaskByID(taskID);
+        TaskResponse taskResponse = execute(call, "task not found");
 
-        return execute(task, "task not found");
+        if (taskResponse == null) {
+            return null;
+        }
+
+        return taskResponse.getTask();
     }
 
     @Nonnull
@@ -113,9 +124,12 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                                 @Nullable final String userID,
                                 @Nullable final String organizationID) {
 
-        Call<List<Task>> task = platformService.findTasks(afterID, userID, organizationID);
+        Call<Tasks> call = platformService.findTasks(afterID, userID, organizationID);
 
-        return execute(task);
+        Tasks tasks = execute(call);
+        LOG.log(Level.FINEST, "findTasks found: {0}", tasks);
+
+        return tasks.getTasks();
     }
 
     @Nonnull
@@ -124,9 +138,10 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(task, "task");
 
-        Call<Task> call = platformService.createTask(createBody(adapter.toJson(task)));
+        Call<TaskResponse> call = platformService.createTask(createBody(adapter.toJson(task)));
+        TaskResponse taskResponse = execute(call);
 
-        return execute(call);
+        return taskResponse.getTask();
     }
 
     @Nonnull
@@ -221,9 +236,10 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
         Arguments.checkNotNull(task, "Task is required");
         Arguments.checkDurationNotRequired(task.getEvery(), "Task.every");
 
-        Call<Task> taskCall = platformService.updateTask(task.getId(), createBody(adapter.toJson(task)));
+        Call<TaskResponse> call = platformService.updateTask(task.getId(), createBody(adapter.toJson(task)));
+        TaskResponse taskResponse = execute(call);
 
-        return execute(taskCall);
+        return taskResponse.getTask();
     }
 
     @Override

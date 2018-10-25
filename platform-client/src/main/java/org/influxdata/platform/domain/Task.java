@@ -27,6 +27,8 @@ import java.util.StringJoiner;
 /**
  * Task is a task.
  *
+ * TODO missing links?
+ *
  * @author Jakub Bednar (bednar@github) (05/09/2018 08:09)
  */
 public final class Task implements Serializable {

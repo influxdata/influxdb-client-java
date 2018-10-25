@@ -175,7 +175,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         List<Task> tasks = taskClient.findTasks();
         Assertions.assertThat(tasks).hasSize(size + 1);
-        tasks.forEach(task -> Assertions.assertThat(task.getStatus()).isNull());
+        tasks.forEach(task -> Assertions.assertThat(task.getStatus()).isNotNull());
     }
 
     @Test
