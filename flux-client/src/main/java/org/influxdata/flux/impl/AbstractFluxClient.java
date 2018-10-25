@@ -21,6 +21,7 @@
  */
 package org.influxdata.flux.impl;
 
+import java.util.Map;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.Arguments;
@@ -44,14 +45,21 @@ class AbstractFluxClient<T> extends AbstractQueryClient {
 
     AbstractFluxClient(@Nonnull final OkHttpClient.Builder okHttpClientBuilder,
                        @Nonnull final String url,
-                       @Nonnull final Class<T> serviceType) {
+                       final Map<String, String> parameters, @Nonnull final Class<T> serviceType) {
 
         Arguments.checkNotNull(okHttpClientBuilder, "OkHttpClient.Builder");
         Arguments.checkNonEmpty(url, "Service url");
         Arguments.checkNotNull(serviceType, "Flux service type");
 
         this.loggingInterceptor = new HttpLoggingInterceptor();
-        this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+
+        String logLevelParam = parameters.get("logLevel");
+
+        if (logLevelParam == null) {
+            this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+        } else {
+            this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.valueOf(logLevelParam));
+        }
 
         this.okHttpClient = okHttpClientBuilder
                 .addInterceptor(this.loggingInterceptor)

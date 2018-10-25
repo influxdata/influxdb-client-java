@@ -55,7 +55,7 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
 
     public FluxClientImpl(@Nonnull final FluxConnectionOptions options) {
 
-        super(options.getOkHttpClient(), options.getUrl(), FluxService.class);
+        super(options.getOkHttpClient(), options.getUrl(), options.getParameters(), FluxService.class);
     }
 
     @Nonnull

@@ -21,13 +21,19 @@
  */
 package org.influxdata.flux.option;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
 
-import org.influxdata.flux.impl.FluxConnectionString;
 import org.influxdata.platform.Arguments;
+import org.influxdata.platform.error.InfluxException;
 
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 
 /**
@@ -40,6 +46,7 @@ public final class FluxConnectionOptions {
 
     private final String url;
     private OkHttpClient.Builder okHttpClient;
+    private Map<String, String> parameters = new HashMap<>();
 
     private FluxConnectionOptions(@Nonnull final Builder builder) {
 
@@ -47,6 +54,7 @@ public final class FluxConnectionOptions {
 
         url = builder.url;
         okHttpClient = builder.okHttpClient;
+        parameters = builder.parameters;
     }
 
     /**
@@ -61,10 +69,22 @@ public final class FluxConnectionOptions {
 
     public static Builder builder(final String connectionString) {
         Builder builder = new Builder();
-        builder.url(connectionString);
+        HttpUrl parse = HttpUrl.parse(connectionString);
 
-        //todo connection string parsing
-        FluxConnectionString fluxConnectionString = new FluxConnectionString(connectionString);
+        if (parse == null) {
+            throw new InfluxException("Unable to parse connection string " + connectionString);
+        }
+        HttpUrl url = parse.newBuilder().build();
+
+        String urlWithoutParams = url.scheme() + "://" + url.host() + ":" + url.port() + url.encodedPath();
+        if (!urlWithoutParams.endsWith("/")) {
+            urlWithoutParams += "/";
+        }
+        builder.url(urlWithoutParams);
+
+        Set<String> parameters = url.queryParameterNames();
+        parameters.forEach(paramName -> builder.withParam(paramName, url.queryParameter(paramName)));
+
         return builder;
     }
 
@@ -87,6 +107,13 @@ public final class FluxConnectionOptions {
     }
 
     /**
+     * @return returns the map with connection string parameters
+     */
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    /**
      * A builder for {@code FluxConnectionOptions}.
      */
     @NotThreadSafe
@@ -94,6 +121,7 @@ public final class FluxConnectionOptions {
 
         private String url;
         private OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
+        private Map<String, String> parameters = new HashMap<>();
 
         /**
          * Set the url to connect to Flux.
@@ -105,6 +133,15 @@ public final class FluxConnectionOptions {
         public Builder url(@Nonnull final String url) {
             Arguments.checkNonEmpty(url, "url");
             this.url = url;
+            return this;
+        }
+
+        public Builder withParam(@Nonnull final String paramName, @Nullable final String value) {
+            Arguments.checkNotNull(paramName, "paramName");
+            Arguments.checkNotNull(value, "value");
+
+            parameters.put(paramName, value);
+
             return this;
         }
 
@@ -132,6 +169,28 @@ public final class FluxConnectionOptions {
             if (url == null) {
                 throw new IllegalStateException("The url to connect to Flux has to be defined.");
             }
+
+            //apply parameters from connection string
+            parameters.forEach((key, value) -> {
+                switch (key) {
+                    case "readTimeout":
+                        okHttpClient.readTimeout(Long.parseLong(value), TimeUnit.MILLISECONDS);
+                        break;
+
+                    case "writeTimeout":
+                        okHttpClient.writeTimeout(Long.parseLong(value), TimeUnit.MILLISECONDS);
+                        break;
+
+                    case "connectTimeout":
+                        okHttpClient.connectTimeout(Long.parseLong(value), TimeUnit.MILLISECONDS);
+                        break;
+                    case "logLevel":
+                        //this parameter is handled after instance in client instance constructor
+                        break;
+                    default:
+                        throw new InfluxException("Invalid connection string parameter: " + key);
+                }
+            });
 
             return new FluxConnectionOptions(this);
         }
