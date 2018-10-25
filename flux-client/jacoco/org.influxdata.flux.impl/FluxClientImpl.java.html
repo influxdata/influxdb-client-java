@@ -55,7 +55,7 @@ public class FluxClientImpl extends AbstractFluxClient&lt;FluxService&gt; implem
 
     public FluxClientImpl(@Nonnull final FluxConnectionOptions options) {
 
-<span class="fc" id="L58">        super(options.getOkHttpClient(), options.getUrl(), FluxService.class);</span>
+<span class="fc" id="L58">        super(options.getOkHttpClient(), options.getUrl(), options.getParameters(), FluxService.class);</span>
 <span class="fc" id="L59">    }</span>
 
     @Nonnull

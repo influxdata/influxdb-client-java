@@ -54,7 +54,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 public class FluxClientReactiveImpl extends AbstractFluxClient&lt;FluxServiceReactive&gt; implements FluxClientReactive {
 
     public FluxClientReactiveImpl(@Nonnull final FluxConnectionOptions options) {
-<span class="fc" id="L57">        super(options.getOkHttpClient(), options.getUrl(), FluxServiceReactive.class);</span>
+<span class="fc" id="L57">        super(options.getOkHttpClient(), options.getUrl(), options.getParameters(), FluxServiceReactive.class);</span>
 <span class="fc" id="L58">    }</span>
 
     @Override

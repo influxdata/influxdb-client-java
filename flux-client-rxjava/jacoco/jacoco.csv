@@ -2,5 +2,5 @@ GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_
 The Flux client - RxJava,org.influxdata.flux.impl,FluxClientReactiveImpl.new FluxCsvParser.FluxResponseConsumer() {...},0,15,0,0,0,4,0,3,0,3
 The Flux client - RxJava,org.influxdata.flux.impl,FluxClientReactiveImpl.ObservableCancellable,1,13,0,0,1,4,1,2,1,2
 The Flux client - RxJava,org.influxdata.flux.impl,FluxClientReactiveImpl.new FluxCsvParser.FluxResponseConsumer() {...},24,0,0,0,4,0,3,0,3,0
-The Flux client - RxJava,org.influxdata.flux.impl,FluxClientReactiveImpl,70,230,4,6,14,54,7,25,4,23
+The Flux client - RxJava,org.influxdata.flux.impl,FluxClientReactiveImpl,70,232,4,6,14,54,7,25,4,23
 The Flux client - RxJava,org.influxdata.flux,FluxClientReactiveFactory,0,20,0,0,0,7,0,2,0,2
