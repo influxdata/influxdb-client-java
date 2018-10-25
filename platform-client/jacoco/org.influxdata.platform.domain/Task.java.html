@@ -27,9 +27,11 @@ import java.util.StringJoiner;
 /**
  * Task is a task.
  *
+ * TODO missing links?
+ *
  * @author Jakub Bednar (bednar@github) (05/09/2018 08:09)
  */
-<span class="nc" id="L32">public final class Task implements Serializable {</span>
+<span class="nc" id="L34">public final class Task implements Serializable {</span>
 
     private String id;
 
@@ -69,81 +71,81 @@ import java.util.StringJoiner;
     private String cron;
 
     public String getId() {
-<span class="nc" id="L72">        return id;</span>
+<span class="nc" id="L74">        return id;</span>
     }
 
     public void setId(final String id) {
-<span class="nc" id="L76">        this.id = id;</span>
-<span class="nc" id="L77">    }</span>
+<span class="nc" id="L78">        this.id = id;</span>
+<span class="nc" id="L79">    }</span>
 
     public String getName() {
-<span class="nc" id="L80">        return name;</span>
+<span class="nc" id="L82">        return name;</span>
     }
 
     public void setName(final String name) {
-<span class="nc" id="L84">        this.name = name;</span>
-<span class="nc" id="L85">    }</span>
+<span class="nc" id="L86">        this.name = name;</span>
+<span class="nc" id="L87">    }</span>
 
     public User getOwner() {
-<span class="nc" id="L88">        return owner;</span>
+<span class="nc" id="L90">        return owner;</span>
     }
 
     public void setOwner(final User owner) {
-<span class="nc" id="L92">        this.owner = owner;</span>
-<span class="nc" id="L93">    }</span>
+<span class="nc" id="L94">        this.owner = owner;</span>
+<span class="nc" id="L95">    }</span>
 
     public String getOrganizationId() {
-<span class="nc" id="L96">        return organizationId;</span>
+<span class="nc" id="L98">        return organizationId;</span>
     }
 
     public void setOrganizationId(final String organizationId) {
-<span class="nc" id="L100">        this.organizationId = organizationId;</span>
-<span class="nc" id="L101">    }</span>
+<span class="nc" id="L102">        this.organizationId = organizationId;</span>
+<span class="nc" id="L103">    }</span>
 
     public Status getStatus() {
-<span class="nc" id="L104">        return status;</span>
+<span class="nc" id="L106">        return status;</span>
     }
 
     public void setStatus(final Status status) {
-<span class="nc" id="L108">        this.status = status;</span>
-<span class="nc" id="L109">    }</span>
+<span class="nc" id="L110">        this.status = status;</span>
+<span class="nc" id="L111">    }</span>
 
     public String getFlux() {
-<span class="nc" id="L112">        return flux;</span>
+<span class="nc" id="L114">        return flux;</span>
     }
 
     public void setFlux(final String flux) {
-<span class="nc" id="L116">        this.flux = flux;</span>
-<span class="nc" id="L117">    }</span>
+<span class="nc" id="L118">        this.flux = flux;</span>
+<span class="nc" id="L119">    }</span>
 
     public String getEvery() {
-<span class="nc" id="L120">        return every;</span>
+<span class="nc" id="L122">        return every;</span>
     }
 
     public void setEvery(final String every) {
-<span class="nc" id="L124">        this.every = every;</span>
-<span class="nc" id="L125">    }</span>
+<span class="nc" id="L126">        this.every = every;</span>
+<span class="nc" id="L127">    }</span>
 
     public String getCron() {
-<span class="nc" id="L128">        return cron;</span>
+<span class="nc" id="L130">        return cron;</span>
     }
 
     public void setCron(final String cron) {
-<span class="nc" id="L132">        this.cron = cron;</span>
-<span class="nc" id="L133">    }</span>
+<span class="nc" id="L134">        this.cron = cron;</span>
+<span class="nc" id="L135">    }</span>
 
     @Override
     public String toString() {
-<span class="nc" id="L137">        return new StringJoiner(&quot;, &quot;, Task.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
-<span class="nc" id="L138">                .add(&quot;id='&quot; + id + &quot;'&quot;)</span>
-<span class="nc" id="L139">                .add(&quot;name='&quot; + name + &quot;'&quot;)</span>
-<span class="nc" id="L140">                .add(&quot;owner=&quot; + owner)</span>
-<span class="nc" id="L141">                .add(&quot;organizationId='&quot; + organizationId + &quot;'&quot;)</span>
-<span class="nc" id="L142">                .add(&quot;status=&quot; + status)</span>
-<span class="nc" id="L143">                .add(&quot;flux='&quot; + flux + &quot;'&quot;)</span>
-<span class="nc" id="L144">                .add(&quot;every='&quot; + every + &quot;'&quot;)</span>
-<span class="nc" id="L145">                .add(&quot;cron='&quot; + cron + &quot;'&quot;)</span>
-<span class="nc" id="L146">                .toString();</span>
+<span class="nc" id="L139">        return new StringJoiner(&quot;, &quot;, Task.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
+<span class="nc" id="L140">                .add(&quot;id='&quot; + id + &quot;'&quot;)</span>
+<span class="nc" id="L141">                .add(&quot;name='&quot; + name + &quot;'&quot;)</span>
+<span class="nc" id="L142">                .add(&quot;owner=&quot; + owner)</span>
+<span class="nc" id="L143">                .add(&quot;organizationId='&quot; + organizationId + &quot;'&quot;)</span>
+<span class="nc" id="L144">                .add(&quot;status=&quot; + status)</span>
+<span class="nc" id="L145">                .add(&quot;flux='&quot; + flux + &quot;'&quot;)</span>
+<span class="nc" id="L146">                .add(&quot;every='&quot; + every + &quot;'&quot;)</span>
+<span class="nc" id="L147">                .add(&quot;cron='&quot; + cron + &quot;'&quot;)</span>
+<span class="nc" id="L148">                .toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
