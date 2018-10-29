@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 52,
+      <title>File: 53,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -44,6 +44,20 @@ under the License.
             </tr>
           </thead>
           <tbody>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.UserResourcesResponse.java">org/influxdata/platform/domain/UserResourcesResponse.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Health.java">org/influxdata/platform/domain/Health.java</a>

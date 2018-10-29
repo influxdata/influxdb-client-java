@@ -34,6 +34,7 @@ import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
+import org.influxdata.platform.domain.UserResourcesResponse;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -45,226 +46,231 @@ import retrofit2.Call;
  */
 final class OrganizationClientImpl extends AbstractRestClient implements OrganizationClient {
 
-<span class="fc" id="L48">    private static final Logger LOG = Logger.getLogger(OrganizationClientImpl.class.getName());</span>
+<span class="fc" id="L49">    private static final Logger LOG = Logger.getLogger(OrganizationClientImpl.class.getName());</span>
 
     private final PlatformService platformService;
     private final JsonAdapter&lt;Organization&gt; adapter;
     private final JsonAdapter&lt;User&gt; userAdapter;
 
-<span class="fc" id="L54">    OrganizationClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
+<span class="fc" id="L55">    OrganizationClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
 
-<span class="fc" id="L56">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
-<span class="fc" id="L57">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
+<span class="fc" id="L57">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
+<span class="fc" id="L58">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
 
-<span class="fc" id="L59">        this.platformService = platformService;</span>
-<span class="fc" id="L60">        this.adapter = moshi.adapter(Organization.class);</span>
-<span class="fc" id="L61">        this.userAdapter = moshi.adapter(User.class);</span>
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L60">        this.platformService = platformService;</span>
+<span class="fc" id="L61">        this.adapter = moshi.adapter(Organization.class);</span>
+<span class="fc" id="L62">        this.userAdapter = moshi.adapter(User.class);</span>
+<span class="fc" id="L63">    }</span>
 
     @Nullable
     @Override
     public Organization findOrganizationByID(@Nonnull final String organizationID) {
 
-<span class="fc" id="L68">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L69">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
 
-<span class="fc" id="L70">        Call&lt;Organization&gt; organization = platformService.findOrganizationByID(organizationID);</span>
+<span class="fc" id="L71">        Call&lt;Organization&gt; organization = platformService.findOrganizationByID(organizationID);</span>
 
-<span class="nc" id="L72">        return execute(organization, &quot;organization not found&quot;);</span>
+<span class="nc" id="L73">        return execute(organization, &quot;organization not found&quot;);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Organization&gt; findOrganizations() {
 
-<span class="fc" id="L79">        Call&lt;Organizations&gt; organizationsCall = platformService.findOrganizations();</span>
+<span class="fc" id="L80">        Call&lt;Organizations&gt; organizationsCall = platformService.findOrganizations();</span>
 
-<span class="nc" id="L81">        Organizations organizations = execute(organizationsCall);</span>
-<span class="nc" id="L82">        LOG.log(Level.FINEST, &quot;findOrganizations found: {0}&quot;, organizations);</span>
+<span class="nc" id="L82">        Organizations organizations = execute(organizationsCall);</span>
+<span class="nc" id="L83">        LOG.log(Level.FINEST, &quot;findOrganizations found: {0}&quot;, organizations);</span>
 
-<span class="nc" id="L84">        return organizations.getOrgs();</span>
+<span class="nc" id="L85">        return organizations.getOrgs();</span>
     }
 
     @Nonnull
     @Override
     public Organization createOrganization(@Nonnull final String name) {
 
-<span class="fc" id="L91">        Arguments.checkNonEmpty(name, &quot;Organization name&quot;);</span>
+<span class="fc" id="L92">        Arguments.checkNonEmpty(name, &quot;Organization name&quot;);</span>
 
-<span class="fc" id="L93">        Organization organization = new Organization();</span>
-<span class="fc" id="L94">        organization.setName(name);</span>
+<span class="fc" id="L94">        Organization organization = new Organization();</span>
+<span class="fc" id="L95">        organization.setName(name);</span>
 
-<span class="nc" id="L96">        return createOrganization(organization);</span>
+<span class="nc" id="L97">        return createOrganization(organization);</span>
     }
 
     @Nonnull
     @Override
     public Organization createOrganization(@Nonnull final Organization organization) {
 
-<span class="fc" id="L103">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
+<span class="fc" id="L104">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
 
-<span class="fc" id="L105">        String json = adapter.toJson(organization);</span>
+<span class="fc" id="L106">        String json = adapter.toJson(organization);</span>
 
-<span class="fc" id="L107">        Call&lt;Organization&gt; call = platformService.createOrganization(createBody(json));</span>
+<span class="fc" id="L108">        Call&lt;Organization&gt; call = platformService.createOrganization(createBody(json));</span>
 
-<span class="nc" id="L109">        return execute(call);</span>
+<span class="nc" id="L110">        return execute(call);</span>
     }
 
     @Nonnull
     @Override
     public Organization updateOrganization(@Nonnull final Organization organization) {
 
-<span class="nc" id="L116">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
+<span class="nc" id="L117">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
 
-<span class="nc" id="L118">        String json = adapter.toJson(organization);</span>
+<span class="nc" id="L119">        String json = adapter.toJson(organization);</span>
 
-<span class="nc" id="L120">        Call&lt;Organization&gt; orgCall = platformService.updateOrganization(organization.getId(), createBody(json));</span>
+<span class="nc" id="L121">        Call&lt;Organization&gt; orgCall = platformService.updateOrganization(organization.getId(), createBody(json));</span>
 
-<span class="nc" id="L122">        return execute(orgCall);</span>
+<span class="nc" id="L123">        return execute(orgCall);</span>
     }
 
     @Override
     public void deleteOrganization(@Nonnull final Organization organization) {
 
-<span class="nc" id="L128">        Objects.requireNonNull(organization, &quot;Organization is required&quot;);</span>
+<span class="nc" id="L129">        Objects.requireNonNull(organization, &quot;Organization is required&quot;);</span>
 
-<span class="nc" id="L130">        deleteOrganization(organization.getId());</span>
-<span class="nc" id="L131">    }</span>
+<span class="nc" id="L131">        deleteOrganization(organization.getId());</span>
+<span class="nc" id="L132">    }</span>
 
     @Override
     public void deleteOrganization(@Nonnull final String organizationID) {
 
-<span class="nc" id="L136">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L137">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
 
-<span class="nc" id="L138">        Call&lt;Void&gt; call = platformService.deleteOrganization(organizationID);</span>
-<span class="nc" id="L139">        execute(call);</span>
-<span class="nc" id="L140">    }</span>
+<span class="nc" id="L139">        Call&lt;Void&gt; call = platformService.deleteOrganization(organizationID);</span>
+<span class="nc" id="L140">        execute(call);</span>
+<span class="nc" id="L141">    }</span>
 
     @Nonnull
     @Override
     public List&lt;UserResourceMapping&gt; getMembers(@Nonnull final Organization organization) {
 
-<span class="nc" id="L146">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
+<span class="nc" id="L147">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
 
-<span class="nc" id="L148">        return getMembers(organization.getId());</span>
+<span class="nc" id="L149">        return getMembers(organization.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;UserResourceMapping&gt; getMembers(@Nonnull final String organizationID) {
 
-<span class="nc" id="L155">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L156">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
 
-<span class="nc" id="L157">        Call&lt;List&lt;UserResourceMapping&gt;&gt; call = platformService.findOrganizationMembers(organizationID);</span>
+<span class="nc" id="L158">        Call&lt;UserResourcesResponse&gt; call = platformService.findOrganizationMembers(organizationID);</span>
+<span class="nc" id="L159">        UserResourcesResponse userResourcesResponse = execute(call);</span>
+<span class="nc" id="L160">        LOG.log(Level.FINEST, &quot;findOrganizationMembers found: {0}&quot;, userResourcesResponse);</span>
 
-<span class="nc" id="L159">        return execute(call);</span>
+<span class="nc" id="L162">        return userResourcesResponse.getUserResourceMappings();</span>
     }
 
     @Nonnull
     @Override
     public UserResourceMapping addMember(@Nonnull final User member, @Nonnull final Organization organization) {
 
-<span class="nc" id="L166">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
-<span class="nc" id="L167">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+<span class="nc" id="L169">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
+<span class="nc" id="L170">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
 
-<span class="nc" id="L169">        return addMember(member.getId(), organization.getId());</span>
+<span class="nc" id="L172">        return addMember(member.getId(), organization.getId());</span>
     }
 
     @Nonnull
     @Override
     public UserResourceMapping addMember(@Nonnull final String memberID, @Nonnull final String organizationID) {
 
-<span class="nc" id="L176">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
-<span class="nc" id="L177">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L179">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="nc" id="L180">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
 
-<span class="nc" id="L179">        User user = new User();</span>
-<span class="nc" id="L180">        user.setId(memberID);</span>
+<span class="nc" id="L182">        User user = new User();</span>
+<span class="nc" id="L183">        user.setId(memberID);</span>
 
-<span class="nc" id="L182">        String json = userAdapter.toJson(user);</span>
-<span class="nc" id="L183">        Call&lt;UserResourceMapping&gt; call = platformService.addOrganizationMember(organizationID, createBody(json));</span>
+<span class="nc" id="L185">        String json = userAdapter.toJson(user);</span>
+<span class="nc" id="L186">        Call&lt;UserResourceMapping&gt; call = platformService.addOrganizationMember(organizationID, createBody(json));</span>
 
-<span class="nc" id="L185">        return execute(call);</span>
+<span class="nc" id="L188">        return execute(call);</span>
     }
 
     @Override
     public void deleteMember(@Nonnull final User member, @Nonnull final Organization organization) {
 
-<span class="nc" id="L191">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
-<span class="nc" id="L192">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+<span class="nc" id="L194">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
+<span class="nc" id="L195">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
 
-<span class="nc" id="L194">        deleteMember(member.getId(), organization.getId());</span>
-<span class="nc" id="L195">    }</span>
+<span class="nc" id="L197">        deleteMember(member.getId(), organization.getId());</span>
+<span class="nc" id="L198">    }</span>
 
     @Override
     public void deleteMember(@Nonnull final String memberID, @Nonnull final String organizationID) {
 
-<span class="nc" id="L200">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
-<span class="nc" id="L201">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L203">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="nc" id="L204">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
 
-<span class="nc" id="L203">        Call&lt;Void&gt; call = platformService.deleteOrganizationMember(organizationID, memberID);</span>
-<span class="nc" id="L204">        execute(call);</span>
-<span class="nc" id="L205">    }</span>
+<span class="nc" id="L206">        Call&lt;Void&gt; call = platformService.deleteOrganizationMember(organizationID, memberID);</span>
+<span class="nc" id="L207">        execute(call);</span>
+<span class="nc" id="L208">    }</span>
 
     @Nonnull
     @Override
     public List&lt;UserResourceMapping&gt; getOwners(@Nonnull final Organization organization) {
 
-<span class="nc" id="L211">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
+<span class="nc" id="L214">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
 
-<span class="nc" id="L213">        return getOwners(organization.getId());</span>
+<span class="nc" id="L216">        return getOwners(organization.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;UserResourceMapping&gt; getOwners(@Nonnull final String organizationID) {
 
-<span class="nc" id="L220">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L223">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
 
-<span class="nc" id="L222">        Call&lt;List&lt;UserResourceMapping&gt;&gt; call = platformService.findOrganizationOwners(organizationID);</span>
-<span class="nc" id="L223">        return execute(call);</span>
+<span class="nc" id="L225">        Call&lt;UserResourcesResponse&gt; call = platformService.findOrganizationOwners(organizationID);</span>
+<span class="nc" id="L226">        UserResourcesResponse userResourcesResponse = execute(call);</span>
+<span class="nc" id="L227">        LOG.log(Level.FINEST, &quot;findOrganizationOwners found: {0}&quot;, userResourcesResponse);</span>
+
+<span class="nc" id="L229">        return userResourcesResponse.getUserResourceMappings();</span>
     }
 
     @Nonnull
     @Override
     public UserResourceMapping addOwner(@Nonnull final User owner, @Nonnull final Organization organization) {
 
-<span class="nc" id="L230">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
-<span class="nc" id="L231">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="nc" id="L236">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
+<span class="nc" id="L237">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
 
-<span class="nc" id="L233">        return addOwner(owner.getId(), organization.getId());</span>
+<span class="nc" id="L239">        return addOwner(owner.getId(), organization.getId());</span>
     }
 
     @Nonnull
     @Override
     public UserResourceMapping addOwner(@Nonnull final String ownerID, @Nonnull final String organizationID) {
 
-<span class="nc" id="L240">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="nc" id="L241">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L246">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L247">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
 
-<span class="nc" id="L243">        User user = new User();</span>
-<span class="nc" id="L244">        user.setId(ownerID);</span>
+<span class="nc" id="L249">        User user = new User();</span>
+<span class="nc" id="L250">        user.setId(ownerID);</span>
 
-<span class="nc" id="L246">        String json = userAdapter.toJson(user);</span>
-<span class="nc" id="L247">        Call&lt;UserResourceMapping&gt; call = platformService.addOrganizationOwner(organizationID, createBody(json));</span>
+<span class="nc" id="L252">        String json = userAdapter.toJson(user);</span>
+<span class="nc" id="L253">        Call&lt;UserResourceMapping&gt; call = platformService.addOrganizationOwner(organizationID, createBody(json));</span>
 
-<span class="nc" id="L249">        return execute(call);</span>
+<span class="nc" id="L255">        return execute(call);</span>
     }
 
     @Override
     public void deleteOwner(@Nonnull final User owner, @Nonnull final Organization organization) {
-<span class="nc" id="L254">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
-<span class="nc" id="L255">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="nc" id="L260">        Arguments.checkNotNull(organization, &quot;Organization&quot;);</span>
+<span class="nc" id="L261">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
 
-<span class="nc" id="L257">        deleteOwner(owner.getId(), organization.getId());</span>
-<span class="nc" id="L258">    }</span>
+<span class="nc" id="L263">        deleteOwner(owner.getId(), organization.getId());</span>
+<span class="nc" id="L264">    }</span>
 
     @Override
     public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String organizationID) {
 
-<span class="nc" id="L263">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="nc" id="L264">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L269">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L270">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
 
-<span class="nc" id="L266">        Call&lt;Void&gt; call = platformService.deleteOrganizationOwner(organizationID, ownerID);</span>
-<span class="nc" id="L267">        execute(call);</span>
-<span class="nc" id="L268">    }</span>
+<span class="nc" id="L272">        Call&lt;Void&gt; call = platformService.deleteOrganizationOwner(organizationID, ownerID);</span>
+<span class="nc" id="L273">        execute(call);</span>
+<span class="nc" id="L274">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

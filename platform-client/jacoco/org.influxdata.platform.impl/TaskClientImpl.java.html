@@ -38,6 +38,7 @@ import org.influxdata.platform.domain.TaskResponse;
 import org.influxdata.platform.domain.Tasks;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
+import org.influxdata.platform.domain.UserResourcesResponse;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -49,73 +50,73 @@ import retrofit2.Call;
  */
 final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
-<span class="fc" id="L52">    private static final Logger LOG = Logger.getLogger(TaskClientImpl.class.getName());</span>
+<span class="fc" id="L53">    private static final Logger LOG = Logger.getLogger(TaskClientImpl.class.getName());</span>
 
     private final PlatformService platformService;
     private final JsonAdapter&lt;Task&gt; adapter;
     private final JsonAdapter&lt;User&gt; userAdapter;
 
-<span class="fc" id="L58">    TaskClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
+<span class="fc" id="L59">    TaskClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
 
-<span class="fc" id="L60">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
-<span class="fc" id="L61">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
+<span class="fc" id="L61">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
+<span class="fc" id="L62">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
 
-<span class="fc" id="L63">        this.platformService = platformService;</span>
-<span class="fc" id="L64">        this.adapter = moshi.adapter(Task.class);</span>
-<span class="fc" id="L65">        this.userAdapter = moshi.adapter(User.class);</span>
-<span class="fc" id="L66">    }</span>
+<span class="fc" id="L64">        this.platformService = platformService;</span>
+<span class="fc" id="L65">        this.adapter = moshi.adapter(Task.class);</span>
+<span class="fc" id="L66">        this.userAdapter = moshi.adapter(User.class);</span>
+<span class="fc" id="L67">    }</span>
 
     @Nullable
     @Override
     public Task findTaskByID(@Nonnull final String taskID) {
 
-<span class="nc" id="L72">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+<span class="nc" id="L73">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
 
-<span class="nc" id="L74">        Call&lt;TaskResponse&gt; call = platformService.findTaskByID(taskID);</span>
-<span class="nc" id="L75">        TaskResponse taskResponse = execute(call, &quot;task not found&quot;);</span>
+<span class="nc" id="L75">        Call&lt;TaskResponse&gt; call = platformService.findTaskByID(taskID);</span>
+<span class="nc" id="L76">        TaskResponse taskResponse = execute(call, &quot;task not found&quot;);</span>
 
-<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (taskResponse == null) {</span>
-<span class="nc" id="L78">            return null;</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (taskResponse == null) {</span>
+<span class="nc" id="L79">            return null;</span>
         }
 
-<span class="nc" id="L81">        return taskResponse.getTask();</span>
+<span class="nc" id="L82">        return taskResponse.getTask();</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Task&gt; findTasks() {
-<span class="nc" id="L87">        return findTasks(null, null, null);</span>
+<span class="nc" id="L88">        return findTasks(null, null, null);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Task&gt; findTasksByUser(@Nonnull final User user) {
 
-<span class="nc" id="L94">        Arguments.checkNotNull(user, &quot;user&quot;);</span>
+<span class="nc" id="L95">        Arguments.checkNotNull(user, &quot;user&quot;);</span>
 
-<span class="nc" id="L96">        return findTasksByUserID(user.getId());</span>
+<span class="nc" id="L97">        return findTasksByUserID(user.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Task&gt; findTasksByUserID(@Nullable final String userID) {
 
-<span class="nc" id="L103">        return findTasks(null, userID, null);</span>
+<span class="nc" id="L104">        return findTasks(null, userID, null);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Task&gt; findTasksByOrganization(@Nonnull final Organization organization) {
 
-<span class="nc" id="L110">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+<span class="nc" id="L111">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
 
-<span class="nc" id="L112">        return findTasksByOrganizationID(organization.getId());</span>
+<span class="nc" id="L113">        return findTasksByOrganizationID(organization.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Task&gt; findTasksByOrganizationID(@Nullable final String organizationID) {
-<span class="nc" id="L118">        return findTasks(null, null, organizationID);</span>
+<span class="nc" id="L119">        return findTasks(null, null, organizationID);</span>
     }
 
     @Nonnull
@@ -124,24 +125,24 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                                 @Nullable final String userID,
                                 @Nullable final String organizationID) {
 
-<span class="nc" id="L127">        Call&lt;Tasks&gt; call = platformService.findTasks(afterID, userID, organizationID);</span>
+<span class="nc" id="L128">        Call&lt;Tasks&gt; call = platformService.findTasks(afterID, userID, organizationID);</span>
 
-<span class="nc" id="L129">        Tasks tasks = execute(call);</span>
-<span class="nc" id="L130">        LOG.log(Level.FINEST, &quot;findTasks found: {0}&quot;, tasks);</span>
+<span class="nc" id="L130">        Tasks tasks = execute(call);</span>
+<span class="nc" id="L131">        LOG.log(Level.FINEST, &quot;findTasks found: {0}&quot;, tasks);</span>
 
-<span class="nc" id="L132">        return tasks.getTasks();</span>
+<span class="nc" id="L133">        return tasks.getTasks();</span>
     }
 
     @Nonnull
     @Override
     public Task createTask(@Nonnull final Task task) {
 
-<span class="nc" id="L139">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L140">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="nc" id="L141">        Call&lt;TaskResponse&gt; call = platformService.createTask(createBody(adapter.toJson(task)));</span>
-<span class="nc" id="L142">        TaskResponse taskResponse = execute(call);</span>
+<span class="nc" id="L142">        Call&lt;TaskResponse&gt; call = platformService.createTask(createBody(adapter.toJson(task)));</span>
+<span class="nc" id="L143">        TaskResponse taskResponse = execute(call);</span>
 
-<span class="nc" id="L144">        return taskResponse.getTask();</span>
+<span class="nc" id="L145">        return taskResponse.getTask();</span>
     }
 
     @Nonnull
@@ -152,15 +153,15 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                                @Nonnull final User owner,
                                @Nonnull final Organization organization) {
 
-<span class="nc" id="L155">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
-<span class="nc" id="L156">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
-<span class="nc" id="L157">        Arguments.checkNonEmpty(cron, &quot;cron expression&quot;);</span>
-<span class="nc" id="L158">        Arguments.checkNotNull(owner, &quot;user&quot;);</span>
-<span class="nc" id="L159">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+<span class="nc" id="L156">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="nc" id="L157">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
+<span class="nc" id="L158">        Arguments.checkNonEmpty(cron, &quot;cron expression&quot;);</span>
+<span class="nc" id="L159">        Arguments.checkNotNull(owner, &quot;user&quot;);</span>
+<span class="nc" id="L160">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
 
-<span class="nc" id="L161">        Task task = createTask(name, flux, null, cron, owner, organization.getId());</span>
+<span class="nc" id="L162">        Task task = createTask(name, flux, null, cron, owner, organization.getId());</span>
 
-<span class="nc" id="L163">        return createTask(task);</span>
+<span class="nc" id="L164">        return createTask(task);</span>
     }
 
     @Nonnull
@@ -171,19 +172,19 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                                @Nonnull final String userID,
                                @Nonnull final String organizationID) {
 
-<span class="nc" id="L174">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
-<span class="nc" id="L175">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
-<span class="nc" id="L176">        Arguments.checkNonEmpty(cron, &quot;cron expression&quot;);</span>
-<span class="nc" id="L177">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
-<span class="nc" id="L178">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L175">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="nc" id="L176">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
+<span class="nc" id="L177">        Arguments.checkNonEmpty(cron, &quot;cron expression&quot;);</span>
+<span class="nc" id="L178">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
+<span class="nc" id="L179">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
 
-<span class="nc" id="L180">        User owner = new User();</span>
-<span class="nc" id="L181">        owner.setId(userID);</span>
+<span class="nc" id="L181">        User owner = new User();</span>
+<span class="nc" id="L182">        owner.setId(userID);</span>
 
-<span class="nc" id="L183">        Organization organization = new Organization();</span>
-<span class="nc" id="L184">        organization.setId(organizationID);</span>
+<span class="nc" id="L184">        Organization organization = new Organization();</span>
+<span class="nc" id="L185">        organization.setId(organizationID);</span>
 
-<span class="nc" id="L186">        return createTaskCron(name, flux, cron, owner, organization);</span>
+<span class="nc" id="L187">        return createTaskCron(name, flux, cron, owner, organization);</span>
     }
 
     @Nonnull
@@ -194,15 +195,15 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                                 @Nonnull final User owner,
                                 @Nonnull final Organization organization) {
 
-<span class="nc" id="L197">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
-<span class="nc" id="L198">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
-<span class="nc" id="L199">        Arguments.checkNonEmpty(every, &quot;every&quot;);</span>
-<span class="nc" id="L200">        Arguments.checkNotNull(owner, &quot;user&quot;);</span>
-<span class="nc" id="L201">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+<span class="nc" id="L198">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="nc" id="L199">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
+<span class="nc" id="L200">        Arguments.checkNonEmpty(every, &quot;every&quot;);</span>
+<span class="nc" id="L201">        Arguments.checkNotNull(owner, &quot;user&quot;);</span>
+<span class="nc" id="L202">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
 
-<span class="nc" id="L203">        Task task = createTask(name, flux, every, null, owner, organization.getId());</span>
+<span class="nc" id="L204">        Task task = createTask(name, flux, every, null, owner, organization.getId());</span>
 
-<span class="nc" id="L205">        return createTask(task);</span>
+<span class="nc" id="L206">        return createTask(task);</span>
     }
 
     @Nonnull
@@ -213,19 +214,19 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                                 @Nonnull final String userID,
                                 @Nonnull final String organizationID) {
 
-<span class="nc" id="L216">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
-<span class="nc" id="L217">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
-<span class="nc" id="L218">        Arguments.checkNonEmpty(every, &quot;every expression&quot;);</span>
-<span class="nc" id="L219">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
-<span class="nc" id="L220">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L217">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="nc" id="L218">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
+<span class="nc" id="L219">        Arguments.checkNonEmpty(every, &quot;every expression&quot;);</span>
+<span class="nc" id="L220">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
+<span class="nc" id="L221">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
 
-<span class="nc" id="L222">        User owner = new User();</span>
-<span class="nc" id="L223">        owner.setId(userID);</span>
+<span class="nc" id="L223">        User owner = new User();</span>
+<span class="nc" id="L224">        owner.setId(userID);</span>
 
-<span class="nc" id="L225">        Organization organization = new Organization();</span>
-<span class="nc" id="L226">        organization.setId(organizationID);</span>
+<span class="nc" id="L226">        Organization organization = new Organization();</span>
+<span class="nc" id="L227">        organization.setId(organizationID);</span>
 
-<span class="nc" id="L228">        return createTaskEvery(name, flux, every, owner, organization);</span>
+<span class="nc" id="L229">        return createTaskEvery(name, flux, every, owner, organization);</span>
     }
 
 
@@ -233,168 +234,175 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
     @Override
     public Task updateTask(@Nonnull final Task task) {
 
-<span class="nc" id="L236">        Arguments.checkNotNull(task, &quot;Task is required&quot;);</span>
-<span class="nc" id="L237">        Arguments.checkDurationNotRequired(task.getEvery(), &quot;Task.every&quot;);</span>
+<span class="nc" id="L237">        Arguments.checkNotNull(task, &quot;Task is required&quot;);</span>
+<span class="nc" id="L238">        Arguments.checkDurationNotRequired(task.getEvery(), &quot;Task.every&quot;);</span>
 
-<span class="nc" id="L239">        Call&lt;TaskResponse&gt; call = platformService.updateTask(task.getId(), createBody(adapter.toJson(task)));</span>
-<span class="nc" id="L240">        TaskResponse taskResponse = execute(call);</span>
+<span class="nc" id="L240">        Call&lt;TaskResponse&gt; call = platformService.updateTask(task.getId(), createBody(adapter.toJson(task)));</span>
+<span class="nc" id="L241">        TaskResponse taskResponse = execute(call);</span>
 
-<span class="nc" id="L242">        return taskResponse.getTask();</span>
+<span class="nc" id="L243">        return taskResponse.getTask();</span>
     }
 
     @Override
     public void deleteTask(@Nonnull final Task task) {
 
-<span class="nc" id="L248">        Arguments.checkNotNull(task, &quot;Task is required&quot;);</span>
+<span class="nc" id="L249">        Arguments.checkNotNull(task, &quot;Task is required&quot;);</span>
 
-<span class="nc" id="L250">        deleteTask(task.getId());</span>
-<span class="nc" id="L251">    }</span>
+<span class="nc" id="L251">        deleteTask(task.getId());</span>
+<span class="nc" id="L252">    }</span>
 
     @Override
     public void deleteTask(@Nonnull final String taskID) {
 
-<span class="nc" id="L256">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+<span class="nc" id="L257">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
 
-<span class="nc" id="L258">        Call&lt;Void&gt; call = platformService.deleteTask(taskID);</span>
-<span class="nc" id="L259">        execute(call);</span>
-<span class="nc" id="L260">    }</span>
+<span class="nc" id="L259">        Call&lt;Void&gt; call = platformService.deleteTask(taskID);</span>
+<span class="nc" id="L260">        execute(call);</span>
+<span class="nc" id="L261">    }</span>
 
     @Nonnull
     @Override
     public List&lt;UserResourceMapping&gt; getMembers(@Nonnull final String taskID) {
 
-<span class="nc" id="L266">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L267">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="nc" id="L268">        Call&lt;List&lt;UserResourceMapping&gt;&gt; call = platformService.findTaskMembers(taskID);</span>
+<span class="nc" id="L269">        Call&lt;UserResourcesResponse&gt; call = platformService.findTaskMembers(taskID);</span>
 
-<span class="nc" id="L270">        return execute(call);</span>
+<span class="nc" id="L271">        UserResourcesResponse userResourcesResponse = execute(call);</span>
+<span class="nc" id="L272">        LOG.log(Level.FINEST, &quot;findTaskMembers found: {0}&quot;, userResourcesResponse);</span>
+
+<span class="nc" id="L274">        return userResourcesResponse.getUserResourceMappings();</span>
     }
 
     @Nonnull
     @Override
     public List&lt;UserResourceMapping&gt; getMembers(@Nonnull final Task task) {
 
-<span class="nc" id="L277">        Arguments.checkNotNull(task, &quot;Task&quot;);</span>
+<span class="nc" id="L281">        Arguments.checkNotNull(task, &quot;Task&quot;);</span>
 
-<span class="nc" id="L279">        return getMembers(task.getId());</span>
+<span class="nc" id="L283">        return getMembers(task.getId());</span>
     }
 
     @Nonnull
     @Override
     public UserResourceMapping addMember(@Nonnull final User member, @Nonnull final Task task) {
 
-<span class="nc" id="L286">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
-<span class="nc" id="L287">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+<span class="nc" id="L290">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L291">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
 
-<span class="nc" id="L289">        return addMember(member.getId(), task.getId());</span>
+<span class="nc" id="L293">        return addMember(member.getId(), task.getId());</span>
     }
 
     @Nonnull
     @Override
     public UserResourceMapping addMember(@Nonnull final String memberID, @Nonnull final String taskID) {
 
-<span class="nc" id="L296">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
-<span class="nc" id="L297">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L300">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="nc" id="L301">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="nc" id="L299">        User user = new User();</span>
-<span class="nc" id="L300">        user.setId(memberID);</span>
+<span class="nc" id="L303">        User user = new User();</span>
+<span class="nc" id="L304">        user.setId(memberID);</span>
 
-<span class="nc" id="L302">        String json = userAdapter.toJson(user);</span>
-<span class="nc" id="L303">        Call&lt;UserResourceMapping&gt; call = platformService.addTaskMember(taskID, createBody(json));</span>
+<span class="nc" id="L306">        String json = userAdapter.toJson(user);</span>
+<span class="nc" id="L307">        Call&lt;UserResourceMapping&gt; call = platformService.addTaskMember(taskID, createBody(json));</span>
 
-<span class="nc" id="L305">        return execute(call);</span>
+<span class="nc" id="L309">        return execute(call);</span>
     }
 
     @Override
     public void deleteMember(@Nonnull final User member, @Nonnull final Task task) {
 
-<span class="nc" id="L311">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
-<span class="nc" id="L312">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+<span class="nc" id="L315">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L316">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
 
-<span class="nc" id="L314">        deleteMember(member.getId(), task.getId());</span>
-<span class="nc" id="L315">    }</span>
+<span class="nc" id="L318">        deleteMember(member.getId(), task.getId());</span>
+<span class="nc" id="L319">    }</span>
 
     @Override
     public void deleteMember(@Nonnull final String memberID, @Nonnull final String taskID) {
 
-<span class="nc" id="L320">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
-<span class="nc" id="L321">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L324">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="nc" id="L325">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="nc" id="L323">        Call&lt;Void&gt; call = platformService.deleteTaskMember(taskID, memberID);</span>
-<span class="nc" id="L324">        execute(call);</span>
-<span class="nc" id="L325">    }</span>
+<span class="nc" id="L327">        Call&lt;Void&gt; call = platformService.deleteTaskMember(taskID, memberID);</span>
+<span class="nc" id="L328">        execute(call);</span>
+<span class="nc" id="L329">    }</span>
 
     @Nonnull
     @Override
     public List&lt;UserResourceMapping&gt; getOwners(@Nonnull final String taskID) {
 
-<span class="nc" id="L331">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L335">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="nc" id="L333">        Call&lt;List&lt;UserResourceMapping&gt;&gt; call = platformService.findTaskOwners(taskID);</span>
-<span class="nc" id="L334">        return execute(call);</span>
+<span class="nc" id="L337">        Call&lt;UserResourcesResponse&gt; call = platformService.findTaskOwners(taskID);</span>
+
+<span class="nc" id="L339">        UserResourcesResponse userResourcesResponse = execute(call);</span>
+<span class="nc" id="L340">        LOG.log(Level.FINEST, &quot;findTaskMembers found: {0}&quot;, userResourcesResponse);</span>
+
+<span class="nc" id="L342">        return userResourcesResponse.getUserResourceMappings();</span>
     }
 
     @Nonnull
     @Override
     public List&lt;UserResourceMapping&gt; getOwners(@Nonnull final Task task) {
 
-<span class="nc" id="L341">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L349">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="nc" id="L343">        return getOwners(task.getId());</span>
+<span class="nc" id="L351">        return getOwners(task.getId());</span>
     }
 
     @Nonnull
     @Override
     public UserResourceMapping addOwner(@Nonnull final User owner, @Nonnull final Task task) {
 
-<span class="nc" id="L350">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
-<span class="nc" id="L351">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="nc" id="L358">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L359">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
 
-<span class="nc" id="L353">        return addOwner(owner.getId(), task.getId());</span>
+<span class="nc" id="L361">        return addOwner(owner.getId(), task.getId());</span>
     }
 
     @Nonnull
     @Override
     public UserResourceMapping addOwner(@Nonnull final String ownerID, @Nonnull final String taskID) {
 
-<span class="nc" id="L360">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="nc" id="L361">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L368">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L369">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="nc" id="L363">        User user = new User();</span>
-<span class="nc" id="L364">        user.setId(ownerID);</span>
+<span class="nc" id="L371">        User user = new User();</span>
+<span class="nc" id="L372">        user.setId(ownerID);</span>
 
-<span class="nc" id="L366">        String json = userAdapter.toJson(user);</span>
-<span class="nc" id="L367">        Call&lt;UserResourceMapping&gt; call = platformService.addTaskOwner(taskID, createBody(json));</span>
+<span class="nc" id="L374">        String json = userAdapter.toJson(user);</span>
+<span class="nc" id="L375">        Call&lt;UserResourceMapping&gt; call = platformService.addTaskOwner(taskID, createBody(json));</span>
 
-<span class="nc" id="L369">        return execute(call);</span>
+<span class="nc" id="L377">        return execute(call);</span>
     }
 
     @Override
     public void deleteOwner(@Nonnull final User owner, @Nonnull final Task task) {
 
-<span class="nc" id="L375">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
-<span class="nc" id="L376">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="nc" id="L383">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L384">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
 
-<span class="nc" id="L378">        deleteOwner(owner.getId(), task.getId());</span>
-<span class="nc" id="L379">    }</span>
+<span class="nc" id="L386">        deleteOwner(owner.getId(), task.getId());</span>
+<span class="nc" id="L387">    }</span>
 
     @Override
     public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String taskID) {
 
-<span class="nc" id="L384">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="nc" id="L385">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L392">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L393">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="nc" id="L387">        Call&lt;Void&gt; call = platformService.deleteTaskOwner(taskID, ownerID);</span>
-<span class="nc" id="L388">        execute(call);</span>
-<span class="nc" id="L389">    }</span>
+<span class="nc" id="L395">        Call&lt;Void&gt; call = platformService.deleteTaskOwner(taskID, ownerID);</span>
+<span class="nc" id="L396">        execute(call);</span>
+<span class="nc" id="L397">    }</span>
 
     @Nonnull
     @Override
     public List&lt;Run&gt; getRuns(@Nonnull final Task task) {
 
-<span class="nc" id="L395">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L403">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="nc" id="L397">        return getRuns(task, null, null, null);</span>
+<span class="nc" id="L405">        return getRuns(task, null, null, null);</span>
     }
 
     @Nonnull
@@ -404,18 +412,18 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                              @Nullable final Instant beforeTime,
                              @Nullable final Integer limit) {
 
-<span class="nc" id="L407">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L415">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="nc" id="L409">        return getRuns(task.getId(), afterTime, beforeTime, limit);</span>
+<span class="nc" id="L417">        return getRuns(task.getId(), afterTime, beforeTime, limit);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Run&gt; getRuns(@Nonnull final String taskID) {
 
-<span class="nc" id="L416">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L424">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="nc" id="L418">        return getRuns(taskID, null, null, null);</span>
+<span class="nc" id="L426">        return getRuns(taskID, null, null, null);</span>
     }
 
     @Nonnull
@@ -425,94 +433,94 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                              @Nullable final Instant beforeTime,
                              @Nullable final Integer limit) {
 
-<span class="nc" id="L428">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L436">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="nc" id="L430">        Call&lt;List&lt;Run&gt;&gt; runs = platformService.findTaskRuns(taskID, afterTime, beforeTime, limit);</span>
+<span class="nc" id="L438">        Call&lt;List&lt;Run&gt;&gt; runs = platformService.findTaskRuns(taskID, afterTime, beforeTime, limit);</span>
 
-<span class="nc" id="L432">        return execute(runs);</span>
+<span class="nc" id="L440">        return execute(runs);</span>
     }
 
     @Nullable
     @Override
     public Run getRun(@Nonnull final Run run) {
 
-<span class="nc" id="L439">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+<span class="nc" id="L447">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
 
-<span class="nc" id="L441">        return getRun(run.getTaskID(), run.getId());</span>
+<span class="nc" id="L449">        return getRun(run.getTaskID(), run.getId());</span>
     }
 
     @Nullable
     @Override
     public Run getRun(@Nonnull final String taskID, @Nonnull final String runID) {
 
-<span class="nc" id="L448">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
-<span class="nc" id="L449">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+<span class="nc" id="L456">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L457">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
 
-<span class="nc" id="L451">        Call&lt;Run&gt; run = platformService.findTaskRun(taskID, runID);</span>
+<span class="nc" id="L459">        Call&lt;Run&gt; run = platformService.findTaskRun(taskID, runID);</span>
 
-<span class="nc" id="L453">        return execute(run, &quot;run not found&quot;);</span>
+<span class="nc" id="L461">        return execute(run, &quot;run not found&quot;);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;String&gt; getRunLogs(@Nonnull final Run run) {
 
-<span class="nc" id="L460">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+<span class="nc" id="L468">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
 
-<span class="nc" id="L462">        return getRunLogs(run.getTaskID(), run.getId());</span>
+<span class="nc" id="L470">        return getRunLogs(run.getTaskID(), run.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;String&gt; getRunLogs(@Nonnull final String taskID, @Nonnull final String runID) {
 
-<span class="nc" id="L469">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
-<span class="nc" id="L470">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+<span class="nc" id="L477">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L478">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
 
-<span class="nc" id="L472">        Call&lt;List&lt;String&gt;&gt; logs = platformService.findRunLogs(taskID, runID);</span>
+<span class="nc" id="L480">        Call&lt;List&lt;String&gt;&gt; logs = platformService.findRunLogs(taskID, runID);</span>
 
-<span class="nc" id="L474">        return execute(logs, &quot;run not found&quot;);</span>
+<span class="nc" id="L482">        return execute(logs, &quot;run not found&quot;);</span>
     }
 
     @Nullable
     @Override
     public Run retryRun(@Nonnull final Run run) {
 
-<span class="nc" id="L481">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+<span class="nc" id="L489">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
 
-<span class="nc" id="L483">        return retryRun(run.getTaskID(), run.getId());</span>
+<span class="nc" id="L491">        return retryRun(run.getTaskID(), run.getId());</span>
     }
 
     @Nullable
     @Override
     public Run retryRun(@Nonnull final String taskID, @Nonnull final String runID) {
 
-<span class="nc" id="L490">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
-<span class="nc" id="L491">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+<span class="nc" id="L498">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L499">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
 
-<span class="nc" id="L493">        Call&lt;Run&gt; run = platformService.retryTaskRun(taskID, runID);</span>
+<span class="nc" id="L501">        Call&lt;Run&gt; run = platformService.retryTaskRun(taskID, runID);</span>
 
-<span class="nc" id="L495">        return execute(run, &quot;run not found&quot;);</span>
+<span class="nc" id="L503">        return execute(run, &quot;run not found&quot;);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;String&gt; getLogs(@Nonnull final Task task) {
 
-<span class="nc" id="L502">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L510">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="nc" id="L504">        return getLogs(task.getId());</span>
+<span class="nc" id="L512">        return getLogs(task.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;String&gt; getLogs(@Nonnull final String taskID) {
 
-<span class="nc" id="L511">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L519">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="nc" id="L513">        Call&lt;List&lt;String&gt;&gt; execute = platformService.findTaskLogs(taskID);</span>
+<span class="nc" id="L521">        Call&lt;List&lt;String&gt;&gt; execute = platformService.findTaskLogs(taskID);</span>
 
-<span class="nc" id="L515">        return execute(execute, &quot;task not found&quot;);</span>
+<span class="nc" id="L523">        return execute(execute, &quot;task not found&quot;);</span>
     }
 
     @Nonnull
@@ -523,35 +531,35 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                             @Nonnull final User owner,
                             @Nonnull final String organizationID) {
 
-<span class="nc" id="L526">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
-<span class="nc" id="L527">        Arguments.checkNotNull(flux, &quot;Flux script to run&quot;);</span>
-<span class="nc" id="L528">        Arguments.checkNotNull(owner, &quot;User&quot;);</span>
-<span class="nc" id="L529">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
-<span class="nc" id="L530">        Arguments.checkDurationNotRequired(every, &quot;Task.every&quot;);</span>
+<span class="nc" id="L534">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="nc" id="L535">        Arguments.checkNotNull(flux, &quot;Flux script to run&quot;);</span>
+<span class="nc" id="L536">        Arguments.checkNotNull(owner, &quot;User&quot;);</span>
+<span class="nc" id="L537">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L538">        Arguments.checkDurationNotRequired(every, &quot;Task.every&quot;);</span>
 
-<span class="nc" id="L532">        Task task = new Task();</span>
-<span class="nc" id="L533">        task.setName(name);</span>
-<span class="nc" id="L534">        task.setOrganizationId(organizationID);</span>
-<span class="nc" id="L535">        task.setOwner(owner);</span>
-<span class="nc" id="L536">        task.setStatus(Status.ACTIVE);</span>
-<span class="nc" id="L537">        task.setEvery(every);</span>
-<span class="nc" id="L538">        task.setCron(cron);</span>
-<span class="nc" id="L539">        task.setFlux(flux);</span>
+<span class="nc" id="L540">        Task task = new Task();</span>
+<span class="nc" id="L541">        task.setName(name);</span>
+<span class="nc" id="L542">        task.setOrganizationId(organizationID);</span>
+<span class="nc" id="L543">        task.setOwner(owner);</span>
+<span class="nc" id="L544">        task.setStatus(Status.ACTIVE);</span>
+<span class="nc" id="L545">        task.setEvery(every);</span>
+<span class="nc" id="L546">        task.setCron(cron);</span>
+<span class="nc" id="L547">        task.setFlux(flux);</span>
 
-<span class="nc" id="L541">        String repetition = &quot;&quot;;</span>
-<span class="nc bnc" id="L542" title="All 2 branches missed.">        if (every != null) {</span>
-<span class="nc" id="L543">            repetition += &quot;every: &quot;;</span>
-<span class="nc" id="L544">            repetition += every;</span>
+<span class="nc" id="L549">        String repetition = &quot;&quot;;</span>
+<span class="nc bnc" id="L550" title="All 2 branches missed.">        if (every != null) {</span>
+<span class="nc" id="L551">            repetition += &quot;every: &quot;;</span>
+<span class="nc" id="L552">            repetition += every;</span>
         }
-<span class="nc bnc" id="L546" title="All 2 branches missed.">        if (cron != null) {</span>
-<span class="nc" id="L547">            repetition += &quot;cron: &quot;;</span>
-<span class="nc" id="L548">            repetition += &quot;\&quot;&quot; + cron + &quot;\&quot;&quot;;</span>
+<span class="nc bnc" id="L554" title="All 2 branches missed.">        if (cron != null) {</span>
+<span class="nc" id="L555">            repetition += &quot;cron: &quot;;</span>
+<span class="nc" id="L556">            repetition += &quot;\&quot;&quot; + cron + &quot;\&quot;&quot;;</span>
         }
-<span class="nc" id="L550">        String fluxWithOptions = String.format(&quot;option task = {name: \&quot;%s\&quot;, %s} \n %s&quot;, name, repetition, flux);</span>
+<span class="nc" id="L558">        String fluxWithOptions = String.format(&quot;option task = {name: \&quot;%s\&quot;, %s} \n %s&quot;, name, repetition, flux);</span>
 
-<span class="nc" id="L552">        task.setFlux(fluxWithOptions);</span>
+<span class="nc" id="L560">        task.setFlux(fluxWithOptions);</span>
 
-<span class="nc" id="L554">        return task;</span>
+<span class="nc" id="L562">        return task;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
