@@ -38,13 +38,11 @@ import org.influxdata.platform.SourceClient;
 import org.influxdata.platform.TaskClient;
 import org.influxdata.platform.UserClient;
 import org.influxdata.platform.WriteClient;
-import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.AbstractRestClient;
 import org.influxdata.platform.rest.LogLevel;
 
-import com.squareup.moshi.FromJson;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
@@ -60,7 +58,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
  */
 public final class PlatformClientImpl extends AbstractRestClient implements PlatformClient {
 
-<span class="fc" id="L63">    private static final Logger LOG = Logger.getLogger(PlatformClientImpl.class.getName());</span>
+<span class="fc" id="L61">    private static final Logger LOG = Logger.getLogger(PlatformClientImpl.class.getName());</span>
 
     private final Moshi moshi;
     private final PlatformService platformService;
@@ -69,129 +67,129 @@ public final class PlatformClientImpl extends AbstractRestClient implements Plat
     private final AuthenticateInterceptor authenticateInterceptor;
     private final GzipInterceptor gzipInterceptor;
 
-<span class="fc" id="L72">    public PlatformClientImpl(@Nonnull final PlatformOptions options) {</span>
+<span class="fc" id="L70">    public PlatformClientImpl(@Nonnull final PlatformOptions options) {</span>
 
-<span class="fc" id="L74">        Arguments.checkNotNull(options, &quot;PlatformOptions&quot;);</span>
+<span class="fc" id="L72">        Arguments.checkNotNull(options, &quot;PlatformOptions&quot;);</span>
 
-<span class="fc" id="L76">        this.loggingInterceptor = new HttpLoggingInterceptor();</span>
-<span class="fc" id="L77">        this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);</span>
-<span class="fc" id="L78">        this.authenticateInterceptor = new AuthenticateInterceptor(options);</span>
-<span class="fc" id="L79">        this.gzipInterceptor = new GzipInterceptor();</span>
+<span class="fc" id="L74">        this.loggingInterceptor = new HttpLoggingInterceptor();</span>
+<span class="fc" id="L75">        this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);</span>
+<span class="fc" id="L76">        this.authenticateInterceptor = new AuthenticateInterceptor(options);</span>
+<span class="fc" id="L77">        this.gzipInterceptor = new GzipInterceptor();</span>
 
-<span class="fc" id="L81">        OkHttpClient okHttpClient = options.getOkHttpClient()</span>
-<span class="fc" id="L82">                .addInterceptor(this.loggingInterceptor)</span>
-<span class="fc" id="L83">                .addInterceptor(this.authenticateInterceptor)</span>
-<span class="fc" id="L84">                .addInterceptor(this.gzipInterceptor)</span>
-<span class="fc" id="L85">                .build();</span>
+<span class="fc" id="L79">        OkHttpClient okHttpClient = options.getOkHttpClient()</span>
+<span class="fc" id="L80">                .addInterceptor(this.loggingInterceptor)</span>
+<span class="fc" id="L81">                .addInterceptor(this.authenticateInterceptor)</span>
+<span class="fc" id="L82">                .addInterceptor(this.gzipInterceptor)</span>
+<span class="fc" id="L83">                .build();</span>
 
-<span class="fc" id="L87">        this.authenticateInterceptor.initToken(okHttpClient);</span>
+<span class="fc" id="L85">        this.authenticateInterceptor.initToken(okHttpClient);</span>
 
-<span class="fc" id="L89">        this.moshi = new Moshi.Builder().add(new StatusAdapter()).add(Instant.class, new InstantAdapter()).build();</span>
+<span class="fc" id="L87">        this.moshi = new Moshi.Builder().add(Instant.class, new InstantAdapter()).build();</span>
 
-<span class="fc" id="L91">        Retrofit retrofit = new Retrofit.Builder()</span>
-<span class="fc" id="L92">                .baseUrl(options.getUrl())</span>
-<span class="fc" id="L93">                .client(okHttpClient)</span>
-<span class="fc" id="L94">                .addConverterFactory(MoshiConverterFactory.create(this.moshi).asLenient())</span>
-<span class="fc" id="L95">                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())</span>
-<span class="fc" id="L96">                .build();</span>
+<span class="fc" id="L89">        Retrofit retrofit = new Retrofit.Builder()</span>
+<span class="fc" id="L90">                .baseUrl(options.getUrl())</span>
+<span class="fc" id="L91">                .client(okHttpClient)</span>
+<span class="fc" id="L92">                .addConverterFactory(MoshiConverterFactory.create(this.moshi).asLenient())</span>
+<span class="fc" id="L93">                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())</span>
+<span class="fc" id="L94">                .build();</span>
 
-<span class="fc" id="L98">        this.platformService = retrofit.create(PlatformService.class);</span>
-<span class="fc" id="L99">    }</span>
+<span class="fc" id="L96">        this.platformService = retrofit.create(PlatformService.class);</span>
+<span class="fc" id="L97">    }</span>
 
     @Nonnull
     @Override
     public QueryClient createQueryClient() {
-<span class="fc" id="L104">        return new QueryClientImpl(platformService);</span>
+<span class="fc" id="L102">        return new QueryClientImpl(platformService);</span>
     }
 
     @Nonnull
     @Override
     public WriteClient createWriteClient() {
-<span class="fc" id="L110">        return createWriteClient(WriteOptions.DEFAULTS);</span>
+<span class="fc" id="L108">        return createWriteClient(WriteOptions.DEFAULTS);</span>
     }
 
     @Nonnull
     @Override
     public WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions) {
 
-<span class="fc" id="L117">        Arguments.checkNotNull(writeOptions, &quot;WriteOptions&quot;);</span>
+<span class="fc" id="L115">        Arguments.checkNotNull(writeOptions, &quot;WriteOptions&quot;);</span>
 
-<span class="fc" id="L119">        return new WriteClientImpl(writeOptions, platformService);</span>
+<span class="fc" id="L117">        return new WriteClientImpl(writeOptions, platformService);</span>
     }
 
     @Nonnull
     @Override
     public AuthorizationClient createAuthorizationClient() {
-<span class="fc" id="L125">        return new AuthorizationClientImpl(platformService, moshi);</span>
+<span class="fc" id="L123">        return new AuthorizationClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public BucketClient createBucketClient() {
-<span class="fc" id="L131">        return new BucketClientImpl(platformService, moshi);</span>
+<span class="fc" id="L129">        return new BucketClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public OrganizationClient createOrganizationClient() {
-<span class="fc" id="L137">        return new OrganizationClientImpl(platformService, moshi);</span>
+<span class="fc" id="L135">        return new OrganizationClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public SourceClient createSourceClient() {
-<span class="fc" id="L143">        return new SourceClientImpl(platformService, moshi);</span>
+<span class="fc" id="L141">        return new SourceClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public TaskClient createTaskClient() {
-<span class="fc" id="L149">        return new TaskClientImpl(platformService, moshi);</span>
+<span class="fc" id="L147">        return new TaskClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public UserClient createUserClient() {
-<span class="fc" id="L155">        return new UserClientImpl(platformService, moshi);</span>
+<span class="fc" id="L153">        return new UserClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public LogLevel getLogLevel() {
-<span class="fc" id="L161">        return getLogLevel(this.loggingInterceptor);</span>
+<span class="fc" id="L159">        return getLogLevel(this.loggingInterceptor);</span>
     }
 
     @Nonnull
     @Override
     public PlatformClient setLogLevel(@Nonnull final LogLevel logLevel) {
 
-<span class="fc" id="L168">        setLogLevel(this.loggingInterceptor, logLevel);</span>
+<span class="fc" id="L166">        setLogLevel(this.loggingInterceptor, logLevel);</span>
 
-<span class="fc" id="L170">        return this;</span>
+<span class="fc" id="L168">        return this;</span>
     }
 
     @Nonnull
     @Override
     public PlatformClient enableGzip() {
 
-<span class="fc" id="L177">        this.gzipInterceptor.enableGzip();</span>
+<span class="fc" id="L175">        this.gzipInterceptor.enableGzip();</span>
 
-<span class="fc" id="L179">        return this;</span>
+<span class="fc" id="L177">        return this;</span>
     }
 
     @Nonnull
     @Override
     public PlatformClient disableGzip() {
 
-<span class="fc" id="L186">        this.gzipInterceptor.disableGzip();</span>
+<span class="fc" id="L184">        this.gzipInterceptor.disableGzip();</span>
 
-<span class="fc" id="L188">        return this;</span>
+<span class="fc" id="L186">        return this;</span>
     }
 
     @Override
     public boolean isGzipEnabled() {
 
-<span class="fc" id="L194">        return this.gzipInterceptor.isEnabledGzip();</span>
+<span class="fc" id="L192">        return this.gzipInterceptor.isEnabledGzip();</span>
     }
 
     @Override
@@ -201,48 +199,31 @@ public final class PlatformClientImpl extends AbstractRestClient implements Plat
         // signout
         //
         try {
-<span class="fc" id="L204">            this.authenticateInterceptor.signout();</span>
-<span class="fc" id="L205">        } catch (IOException e) {</span>
-<span class="fc" id="L206">            LOG.log(Level.FINEST, &quot;The signout exception&quot;, e);</span>
-<span class="fc" id="L207">        }</span>
-<span class="fc" id="L208">    }</span>
+<span class="fc" id="L202">            this.authenticateInterceptor.signout();</span>
+<span class="fc" id="L203">        } catch (IOException e) {</span>
+<span class="fc" id="L204">            LOG.log(Level.FINEST, &quot;The signout exception&quot;, e);</span>
+<span class="fc" id="L205">        }</span>
+<span class="fc" id="L206">    }</span>
 
-<span class="fc" id="L210">    private final class InstantAdapter extends JsonAdapter&lt;Instant&gt; {</span>
+<span class="fc" id="L208">    private final class InstantAdapter extends JsonAdapter&lt;Instant&gt; {</span>
 
         @Nullable
         @Override
         public Instant fromJson(final JsonReader reader) throws IOException {
-<span class="nc" id="L215">            String value = reader.nextString();</span>
+<span class="nc" id="L213">            String value = reader.nextString();</span>
 
-<span class="nc bnc" id="L217" title="All 2 branches missed.">            if (value == null) {</span>
-<span class="nc" id="L218">                return null;</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">            if (value == null) {</span>
+<span class="nc" id="L216">                return null;</span>
             }
-<span class="nc" id="L220">            return Instant.parse(value);</span>
+<span class="nc" id="L218">            return Instant.parse(value);</span>
         }
 
         @Override
         public void toJson(@Nonnull final JsonWriter writer, @Nullable final Instant value) throws IOException {
-<span class="nc bnc" id="L225" title="All 2 branches missed.">            if (value != null) {</span>
-<span class="nc" id="L226">                writer.value(value.toString());</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">            if (value != null) {</span>
+<span class="nc" id="L224">                writer.value(value.toString());</span>
             }
-<span class="nc" id="L228">        }</span>
-    }
-
-<span class="fc" id="L231">    private final class StatusAdapter {</span>
-
-        // TODO remove after fix: listed task has empty status
-        @FromJson
-        @Nullable
-        public Status toStatus(final JsonReader jsonReader, final JsonAdapter&lt;Status&gt; delegate)
-                throws IOException {
-
-<span class="nc" id="L239">            String statusValue = jsonReader.nextString();</span>
-<span class="nc bnc" id="L240" title="All 2 branches missed.">            if (statusValue.isEmpty()) {</span>
-<span class="nc" id="L241">                return null;</span>
-            } else {
-<span class="nc" id="L243">                return delegate.fromJsonValue(statusValue);</span>
-            }
-        }
+<span class="nc" id="L226">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

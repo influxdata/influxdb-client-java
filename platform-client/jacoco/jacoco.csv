@@ -27,7 +27,7 @@ The Platform Client,org.influxdata.platform.domain,Status,0,24,0,0,0,3,0,1,0,1
 The Platform Client,org.influxdata.platform.domain,User,50,7,0,0,8,3,4,2,4,2
 The Platform Client,org.influxdata.platform.domain,Organization,60,7,0,0,9,3,4,2,4,2
 The Platform Client,org.influxdata.platform.domain,Authorization,119,0,0,0,27,0,14,0,14,0
-The Platform Client,org.influxdata.platform.impl,PlatformClientImpl,0,196,0,0,0,45,0,17,0,17
+The Platform Client,org.influxdata.platform.impl,PlatformClientImpl,0,190,0,0,0,45,0,17,0,17
 The Platform Client,org.influxdata.platform.impl,UserClientImpl,78,65,0,0,18,17,3,7,3,7
 The Platform Client,org.influxdata.platform.impl,WriteClientImpl.ToWritePointsCompletable,0,76,1,3,0,17,1,5,0,4
 The Platform Client,org.influxdata.platform.impl,OrganizationClientImpl,273,66,0,0,65,17,15,6,15,6
@@ -40,7 +40,6 @@ The Platform Client,org.influxdata.platform.impl,QueryClientImpl.new FluxCsvPars
 The Platform Client,org.influxdata.platform.impl,QueryClientImpl.new FluxCsvParser.FluxResponseConsumer() {...},25,0,0,0,4,0,3,0,3,0
 The Platform Client,org.influxdata.platform.impl,QueryClientImpl.new FluxCsvParser.FluxResponseConsumer() {...},16,0,0,0,4,0,3,0,3,0
 The Platform Client,org.influxdata.platform.impl,GzipInterceptor.new RequestBody() {...},0,28,0,0,0,7,0,4,0,4
-The Platform Client,org.influxdata.platform.impl,PlatformClientImpl.StatusAdapter,13,6,2,0,4,1,2,1,1,1
 The Platform Client,org.influxdata.platform.impl,MeasurementMapper,14,275,6,30,3,57,6,19,0,7
 The Platform Client,org.influxdata.platform.impl,WriteClientImpl.BatchWriteItem,0,18,0,0,0,6,0,1,0,1
 The Platform Client,org.influxdata.platform.impl,BucketClientImpl,320,75,1,1,75,19,23,4,22,4
