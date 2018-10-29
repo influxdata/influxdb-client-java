@@ -165,9 +165,7 @@ class ITBucketClientTest extends AbstractITClientTest {
         Assertions.assertThat(updatedBucket.getRetentionRules().get(0).getEverySeconds()).isEqualTo(1000L);
     }
 
-    //TODO
     @Test
-    @Disabled
     void member() {
 
         Organization organization = organizationClient.createOrganization(generateName("Constant Pro"));
@@ -199,7 +197,7 @@ class ITBucketClientTest extends AbstractITClientTest {
         Assertions.assertThat(members).hasSize(0);
     }
 
-    //TODO
+    //TODO userType will be used
     @Test
     @Disabled
     void owner() {

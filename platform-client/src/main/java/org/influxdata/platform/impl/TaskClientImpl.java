@@ -38,6 +38,7 @@ import org.influxdata.platform.domain.TaskResponse;
 import org.influxdata.platform.domain.Tasks;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
+import org.influxdata.platform.domain.UserResourcesResponse;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -265,9 +266,12 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        Call<List<UserResourceMapping>> call = platformService.findTaskMembers(taskID);
+        Call<UserResourcesResponse> call = platformService.findTaskMembers(taskID);
 
-        return execute(call);
+        UserResourcesResponse userResourcesResponse = execute(call);
+        LOG.log(Level.FINEST, "findTaskMembers found: {0}", userResourcesResponse);
+
+        return userResourcesResponse.getUserResourceMappings();
     }
 
     @Nonnull
@@ -330,8 +334,12 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        Call<List<UserResourceMapping>> call = platformService.findTaskOwners(taskID);
-        return execute(call);
+        Call<UserResourcesResponse> call = platformService.findTaskOwners(taskID);
+
+        UserResourcesResponse userResourcesResponse = execute(call);
+        LOG.log(Level.FINEST, "findTaskMembers found: {0}", userResourcesResponse);
+
+        return userResourcesResponse.getUserResourceMappings();
     }
 
     @Nonnull

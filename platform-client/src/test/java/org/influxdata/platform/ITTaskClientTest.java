@@ -257,7 +257,6 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(updatedTask.getName()).isEqualTo(cronTask.getName());
     }
 
-
     //TODO
     @Test
     @Disabled

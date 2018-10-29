@@ -34,6 +34,7 @@ import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
+import org.influxdata.platform.domain.UserResourcesResponse;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -154,9 +155,11 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
         Arguments.checkNonEmpty(organizationID, "Organization ID");
 
-        Call<List<UserResourceMapping>> call = platformService.findOrganizationMembers(organizationID);
+        Call<UserResourcesResponse> call = platformService.findOrganizationMembers(organizationID);
+        UserResourcesResponse userResourcesResponse = execute(call);
+        LOG.log(Level.FINEST, "findOrganizationMembers found: {0}", userResourcesResponse);
 
-        return execute(call);
+        return userResourcesResponse.getUserResourceMappings();
     }
 
     @Nonnull
@@ -219,8 +222,11 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
         Arguments.checkNonEmpty(organizationID, "Organization ID");
 
-        Call<List<UserResourceMapping>> call = platformService.findOrganizationOwners(organizationID);
-        return execute(call);
+        Call<UserResourcesResponse> call = platformService.findOrganizationOwners(organizationID);
+        UserResourcesResponse userResourcesResponse = execute(call);
+        LOG.log(Level.FINEST, "findOrganizationOwners found: {0}", userResourcesResponse);
+
+        return userResourcesResponse.getUserResourceMappings();
     }
 
     @Nonnull

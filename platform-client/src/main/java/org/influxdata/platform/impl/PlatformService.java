@@ -39,6 +39,7 @@ import org.influxdata.platform.domain.TaskResponse;
 import org.influxdata.platform.domain.Tasks;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
+import org.influxdata.platform.domain.UserResourcesResponse;
 import org.influxdata.platform.domain.Users;
 
 import io.reactivex.Completable;
@@ -117,7 +118,7 @@ interface PlatformService {
     @GET("/api/v2/orgs/{id}/members")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<List<UserResourceMapping>> findOrganizationMembers(@Nonnull @Path("id") final String organizationID);
+    Call<UserResourcesResponse> findOrganizationMembers(@Nonnull @Path("id") final String organizationID);
 
     @POST("/api/v2/orgs/{id}/members")
     @Nonnull
@@ -134,7 +135,7 @@ interface PlatformService {
     @GET("/api/v2/orgs/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<List<UserResourceMapping>> findOrganizationOwners(@Nonnull @Path("id") final String organizationID);
+    Call<UserResourcesResponse> findOrganizationOwners(@Nonnull @Path("id") final String organizationID);
 
     @POST("/api/v2/orgs/{id}/owners")
     @Nonnull
@@ -175,7 +176,7 @@ interface PlatformService {
     @GET("/api/v2/buckets/{id}/members")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<List<UserResourceMapping>> findBucketMembers(@Nonnull @Path("id") final String bucketID);
+    Call<UserResourcesResponse> findBucketMembers(@Nonnull @Path("id") final String bucketID);
 
     @POST("/api/v2/buckets/{id}/members")
     @Nonnull
@@ -192,7 +193,7 @@ interface PlatformService {
     @GET("/api/v2/buckets/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<List<UserResourceMapping>> findBucketOwners(@Nonnull @Path("id") final String bucketID);
+    Call<UserResourcesResponse> findBucketOwners(@Nonnull @Path("id") final String bucketID);
 
     @POST("/api/v2/buckets/{id}/owners")
     @Nonnull
@@ -297,7 +298,7 @@ interface PlatformService {
     @GET("/api/v2/tasks/{id}/members")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<List<UserResourceMapping>> findTaskMembers(@Nonnull @Path("id") final String taskID);
+    Call<UserResourcesResponse> findTaskMembers(@Nonnull @Path("id") final String taskID);
 
     @POST("/api/v2/tasks/{id}/members")
     @Nonnull
@@ -314,7 +315,7 @@ interface PlatformService {
     @GET("/api/v2/tasks/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<List<UserResourceMapping>> findTaskOwners(@Nonnull @Path("id") final String taskID);
+    Call<UserResourcesResponse> findTaskOwners(@Nonnull @Path("id") final String taskID);
 
     @POST("/api/v2/tasks/{id}/owners")
     @Nonnull

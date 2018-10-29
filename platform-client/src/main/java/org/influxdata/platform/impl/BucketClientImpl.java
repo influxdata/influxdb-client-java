@@ -35,6 +35,7 @@ import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.RetentionRule;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
+import org.influxdata.platform.domain.UserResourcesResponse;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -199,9 +200,11 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
 
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        Call<List<UserResourceMapping>> call = platformService.findBucketMembers(bucketID);
+        Call<UserResourcesResponse> call = platformService.findBucketMembers(bucketID);
+        UserResourcesResponse userResourcesResponse = execute(call);
+        LOG.log(Level.FINEST, "findBucketMembers found: {0}", userResourcesResponse);
 
-        return execute(call);
+        return userResourcesResponse.getUserResourceMappings();
     }
 
     @Nonnull
@@ -264,8 +267,11 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
 
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        Call<List<UserResourceMapping>> call = platformService.findBucketOwners(bucketID);
-        return execute(call);
+        Call<UserResourcesResponse> call = platformService.findBucketOwners(bucketID);
+        UserResourcesResponse userResourcesResponse = execute(call);
+        LOG.log(Level.FINEST, "findBucketOwners found: {0}", userResourcesResponse);
+
+        return userResourcesResponse.getUserResourceMappings();
     }
 
     @Nonnull
