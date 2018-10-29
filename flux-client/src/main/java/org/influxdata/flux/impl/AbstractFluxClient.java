@@ -41,7 +41,7 @@ class AbstractFluxClient<T> extends AbstractQueryClient {
     final T fluxService;
 
     final HttpLoggingInterceptor loggingInterceptor;
-    final OkHttpClient okHttpClient;
+    private final OkHttpClient okHttpClient;
 
     AbstractFluxClient(@Nonnull final OkHttpClient.Builder okHttpClientBuilder,
                        @Nonnull final String url,

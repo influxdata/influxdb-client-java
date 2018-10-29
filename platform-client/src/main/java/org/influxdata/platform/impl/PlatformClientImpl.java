@@ -38,13 +38,11 @@ import org.influxdata.platform.SourceClient;
 import org.influxdata.platform.TaskClient;
 import org.influxdata.platform.UserClient;
 import org.influxdata.platform.WriteClient;
-import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.AbstractRestClient;
 import org.influxdata.platform.rest.LogLevel;
 
-import com.squareup.moshi.FromJson;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
@@ -86,7 +84,7 @@ public final class PlatformClientImpl extends AbstractRestClient implements Plat
 
         this.authenticateInterceptor.initToken(okHttpClient);
 
-        this.moshi = new Moshi.Builder().add(new StatusAdapter()).add(Instant.class, new InstantAdapter()).build();
+        this.moshi = new Moshi.Builder().add(Instant.class, new InstantAdapter()).build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(options.getUrl())
@@ -224,23 +222,6 @@ public final class PlatformClientImpl extends AbstractRestClient implements Plat
         public void toJson(@Nonnull final JsonWriter writer, @Nullable final Instant value) throws IOException {
             if (value != null) {
                 writer.value(value.toString());
-            }
-        }
-    }
-
-    private final class StatusAdapter {
-
-        // TODO remove after fix: listed task has empty status
-        @FromJson
-        @Nullable
-        public Status toStatus(final JsonReader jsonReader, final JsonAdapter<Status> delegate)
-                throws IOException {
-
-            String statusValue = jsonReader.nextString();
-            if (statusValue.isEmpty()) {
-                return null;
-            } else {
-                return delegate.fromJsonValue(statusValue);
             }
         }
     }

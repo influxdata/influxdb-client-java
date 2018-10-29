@@ -127,13 +127,83 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         Assertions.assertThat(countDownLatch.getCount()).isEqualTo(0);
 
-        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> last()", "my-org");
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords().get(0).getMeasurement()).isEqualTo("h2o_feet");
         Assertions.assertThat(query.get(0).getRecords().get(0).getValue()).isEqualTo(1.0D);
         Assertions.assertThat(query.get(0).getRecords().get(0).getField()).isEqualTo("level water_level");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getTime()).isEqualTo(Instant.ofEpochSecond(0,1));
+    }
+
+    @Test
+    void writePrecisionMicros() {
+
+        String bucketName = bucket.getName();
+
+        writeClient = platformClient.createWriteClient(WriteOptions.DISABLED_BATCHING);
+
+        String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
+
+        writeClient
+                .listenEvents(WriteSuccessEvent.class)
+                .subscribe(event -> countDownLatch.countDown());
+
+        writeClient.writeRecord(bucketName, "my-org", ChronoUnit.MICROS, record);
+
+        waitToCallback();
+
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getTime()).isEqualTo(Instant.ofEpochSecond(0, 1000));
+    }
+
+    @Test
+    void writePrecisionMillis() {
+
+        String bucketName = bucket.getName();
+
+        writeClient = platformClient.createWriteClient(WriteOptions.DISABLED_BATCHING);
+
+        String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
+
+        writeClient
+                .listenEvents(WriteSuccessEvent.class)
+                .subscribe(event -> countDownLatch.countDown());
+
+        writeClient.writeRecord(bucketName, "my-org", ChronoUnit.MILLIS, record);
+
+        waitToCallback();
+
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getTime()).isEqualTo(Instant.ofEpochMilli(1));
+    }
+
+    @Test
+    void writePrecisionSeconds() {
+
+        String bucketName = bucket.getName();
+
+        writeClient = platformClient.createWriteClient(WriteOptions.DISABLED_BATCHING);
+
+        String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
+
+        writeClient
+                .listenEvents(WriteSuccessEvent.class)
+                .subscribe(event -> countDownLatch.countDown());
+
+        writeClient.writeRecord(bucketName, "my-org", ChronoUnit.SECONDS, record);
+
+        waitToCallback();
+
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getTime()).isEqualTo(Instant.ofEpochSecond(1));
     }
 
     @Test
@@ -148,8 +218,8 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         Instant time = Instant.now();
 
-        Point point1 = Point.name("h2o_feet").addTag("location", "west").addField("water_level", 1).time(time, ChronoUnit.MICROS);
-        Point point2 = Point.name("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusSeconds(10), ChronoUnit.MICROS);
+        Point point1 = Point.name("h2o_feet").addTag("location", "west").addField("water_level", 1).time(time, ChronoUnit.MILLIS);
+        Point point2 = Point.name("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusMillis(10), ChronoUnit.MILLIS);
 
         writeClient.writePoints(bucketName, "my-org", Arrays.asList(point1, point2, point2));
 
@@ -189,7 +259,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         waitToCallback();
 
-        List<H2OFeetMeasurement> measurements = queryClient.query("from(bucket:\"" + bucketName + "\") |> last() |> rename(columns:{_value: \"water_level\"})", "my-org", H2OFeetMeasurement.class);
+        List<H2OFeetMeasurement> measurements = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last() |> rename(columns:{_value: \"water_level\"})", "my-org", H2OFeetMeasurement.class);
 
         Assertions.assertThat(measurements).hasSize(1);
         Assertions.assertThat(measurements.get(0).location).isEqualTo("coyote_creek");
@@ -245,7 +315,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         waitToCallback();
 
-        String query = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> last()", organization.getName());
+        String query = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", organization.getName());
         Assertions.assertThat(query).endsWith("1,water_level,h2o_feet,atlantic\n");
     }
 }

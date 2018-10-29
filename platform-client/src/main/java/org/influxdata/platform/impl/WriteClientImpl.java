@@ -332,9 +332,9 @@ final class WriteClientImpl extends AbstractRestClient implements WriteClient {
 
         switch (precision) {
             case NANOS:
-                return "ns";
+                return "n";
             case MICROS:
-                return "us";
+                return "u";
             case MILLIS:
                 return "ms";
             case SECONDS:

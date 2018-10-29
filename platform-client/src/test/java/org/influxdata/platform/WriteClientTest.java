@@ -94,7 +94,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
         // bucket
         Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("b1");
         // precision
-        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("n");
     }
 
     @Test
@@ -159,7 +159,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
         // bucket
         Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("b1");
         // precision
-        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("n");
     }
 
     @Test
@@ -221,12 +221,12 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         // request 1
         Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("h2o,location=coyote_creek level\\ description=\"below 3 feet\",water_level=2.927 1440046800000000");
-        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("n");
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
         Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("h2o,location=coyote_creek level\\ description=\"below 2 feet\",water_level=1.927 1440049800000000");
-        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("n");
     }
 
     @Test
@@ -246,7 +246,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
         // bucket
         Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("b1");
         // precision
-        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("n");
     }
 
     @Test
@@ -287,10 +287,10 @@ class WriteClientTest extends AbstractPlatformClientTest {
         writeClient.writeRecord("b1", "org1", ChronoUnit.SECONDS, record4);
 
         RecordedRequest request1 = mockServer.takeRequest(10L, TimeUnit.SECONDS);
-        Assertions.assertThat(request1.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
+        Assertions.assertThat(request1.getRequestUrl().queryParameter("precision")).isEqualTo("n");
 
         RecordedRequest request2 = mockServer.takeRequest(10L, TimeUnit.SECONDS);
-        Assertions.assertThat(request2.getRequestUrl().queryParameter("precision")).isEqualTo("us");
+        Assertions.assertThat(request2.getRequestUrl().queryParameter("precision")).isEqualTo("u");
 
         RecordedRequest request3 = mockServer.takeRequest(10L, TimeUnit.SECONDS);
         Assertions.assertThat(request3.getRequestUrl().queryParameter("precision")).isEqualTo("ms");

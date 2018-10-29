@@ -150,6 +150,4 @@ public interface WriteClient extends AutoCloseable {
      * Close threads for asynchronous batch writing.
      */
     void close();
-
-    //TODO IT test to precision (only Nanoseconds works?)
 }
