@@ -26,12 +26,19 @@ import org.influxdata.flux.FluxClientKotlin
 import org.influxdata.flux.domain.FluxRecord
 import org.influxdata.flux.option.FluxConnectionOptions
 import org.influxdata.platform.Arguments
+import org.influxdata.platform.error.InfluxException
 import org.influxdata.platform.rest.LogLevel
+import java.io.IOException
+import java.util.logging.Level
+import java.util.logging.Logger
 
 /**
  * @author Jakub Bednar (bednar@github) (30/10/2018 08:51)
  */
 internal class FluxClientKotlinImpl(options: FluxConnectionOptions) : AbstractFluxClient<FluxService>(options.okHttpClient, options.url, options.parameters, FluxService::class.java), FluxClientKotlin {
+
+    @Suppress("PrivatePropertyName")
+    private val LOG = Logger.getLogger(FluxClientImpl::class.java.name)
 
     override fun query(query: String): Channel<FluxRecord> {
         TODO("not implemented")
@@ -50,11 +57,24 @@ internal class FluxClientKotlinImpl(options: FluxConnectionOptions) : AbstractFl
     }
 
     override fun ping(): Boolean {
-        TODO("not implemented")
+
+        return try {
+            fluxService.ping().execute().isSuccessful
+        } catch (e: IOException) {
+
+            LOG.log(Level.WARNING, "Ping request wasn't successful", e)
+            false
+        }
     }
 
     override fun version(): String {
-        TODO("not implemented")
+
+        try {
+            val execute = fluxService.ping().execute()
+            return getVersion(execute)
+        } catch (e: IOException) {
+            throw InfluxException(e)
+        }
     }
 
     override fun getLogLevel(): LogLevel {
