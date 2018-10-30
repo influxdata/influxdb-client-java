@@ -1,4 +1,4 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-The Flux client - Kotlin,org.influxdata.flux.impl,FluxClientKotlinImpl,130,13,0,0,10,1,8,1,8,1
+The Flux client - Kotlin,org.influxdata.flux.impl,FluxClientKotlinImpl,146,18,0,0,18,2,8,1,8,1
 The Flux client - Kotlin,org.influxdata.flux,FluxClientKotlinFactory.Companion,0,31,0,0,0,7,0,2,0,2
 The Flux client - Kotlin,org.influxdata.flux,FluxClientKotlinFactory,3,0,0,0,1,0,1,0,1,0

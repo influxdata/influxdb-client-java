@@ -26,48 +26,68 @@ import org.influxdata.flux.FluxClientKotlin
 import org.influxdata.flux.domain.FluxRecord
 import org.influxdata.flux.option.FluxConnectionOptions
 import org.influxdata.platform.Arguments
+import org.influxdata.platform.error.InfluxException
 import org.influxdata.platform.rest.LogLevel
+import java.io.IOException
+import java.util.logging.Level
+import java.util.logging.Logger
 
 /**
  * @author Jakub Bednar (bednar@github) (30/10/2018 08:51)
  */
-<span class="fc" id="L34">internal class FluxClientKotlinImpl(options: FluxConnectionOptions) : AbstractFluxClient&lt;FluxService&gt;(options.okHttpClient, options.url, options.parameters, FluxService::class.java), FluxClientKotlin {</span>
+<span class="fc" id="L38">internal class FluxClientKotlinImpl(options: FluxConnectionOptions) : AbstractFluxClient&lt;FluxService&gt;(options.okHttpClient, options.url, options.parameters, FluxService::class.java), FluxClientKotlin {</span>
+
+    @Suppress(&quot;PrivatePropertyName&quot;)
+<span class="fc" id="L41">    private val LOG = Logger.getLogger(FluxClientImpl::class.java.name)</span>
 
     override fun query(query: String): Channel&lt;FluxRecord&gt; {
-<span class="nc" id="L37">        TODO(&quot;not implemented&quot;)</span>
+<span class="nc" id="L44">        TODO(&quot;not implemented&quot;)</span>
     }
 
     override fun &lt;M&gt; query(query: String, measurementType: Class&lt;M&gt;): Channel&lt;M&gt; {
-<span class="nc" id="L41">        TODO(&quot;not implemented&quot;)</span>
+<span class="nc" id="L48">        TODO(&quot;not implemented&quot;)</span>
     }
 
     override fun queryRaw(query: String): Channel&lt;String&gt; {
-<span class="nc" id="L45">        TODO(&quot;not implemented&quot;)</span>
+<span class="nc" id="L52">        TODO(&quot;not implemented&quot;)</span>
     }
 
     override fun queryRaw(query: String, dialect: String): Channel&lt;String&gt; {
-<span class="nc" id="L49">        TODO(&quot;not implemented&quot;)</span>
+<span class="nc" id="L56">        TODO(&quot;not implemented&quot;)</span>
     }
 
     override fun ping(): Boolean {
-<span class="nc" id="L53">        TODO(&quot;not implemented&quot;)</span>
+
+<span class="nc" id="L61">        return try {</span>
+<span class="nc" id="L62">            fluxService.ping().execute().isSuccessful</span>
+<span class="nc" id="L63">        } catch (e: IOException) {</span>
+
+<span class="nc" id="L65">            LOG.log(Level.WARNING, &quot;Ping request wasn't successful&quot;, e)</span>
+<span class="nc" id="L66">            false</span>
+        }
     }
 
     override fun version(): String {
-<span class="nc" id="L57">        TODO(&quot;not implemented&quot;)</span>
+
+<span class="nc" id="L72">        try {</span>
+<span class="nc" id="L73">            val execute = fluxService.ping().execute()</span>
+<span class="nc" id="L74">            return getVersion(execute)</span>
+<span class="nc" id="L75">        } catch (e: IOException) {</span>
+<span class="nc" id="L76">            throw InfluxException(e)</span>
+        }
     }
 
     override fun getLogLevel(): LogLevel {
-<span class="nc" id="L61">        return getLogLevel(this.loggingInterceptor)</span>
+<span class="nc" id="L81">        return getLogLevel(this.loggingInterceptor)</span>
     }
 
     override fun setLogLevel(logLevel: LogLevel): FluxClientKotlin {
         
-<span class="nc" id="L66">        Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;)</span>
+<span class="nc" id="L86">        Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;)</span>
 
-<span class="nc" id="L68">        setLogLevel(this.loggingInterceptor, logLevel)</span>
+<span class="nc" id="L88">        setLogLevel(this.loggingInterceptor, logLevel)</span>
 
-<span class="nc" id="L70">        return this</span>
+<span class="nc" id="L90">        return this</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
