@@ -40,20 +40,18 @@ public final class FluxClientReactiveFactory {
     /**
      * Create a instance of the Flux reactive client.
      *
-     * @param url the url to connect to InfluxDB.
+     * @param connectionString the connectionString to connect to InfluxDB.
      * @return client
-     * @see FluxConnectionOptions.Builder#url(String)
+     * @see FluxConnectionOptions.Builder#builder(String)
      */
     @Nonnull
-    public static FluxClientReactive create(@Nonnull final String url) {
+    public static FluxClientReactive create(@Nonnull final String connectionString) {
 
-<span class="fc" id="L50">        Arguments.checkNonEmpty(url, &quot;InfluxDB url&quot;);</span>
+<span class="fc" id="L50">        FluxConnectionOptions options = FluxConnectionOptions</span>
+<span class="fc" id="L51">                .builder(connectionString)</span>
+<span class="fc" id="L52">                .build();</span>
 
-<span class="fc" id="L52">        FluxConnectionOptions options = FluxConnectionOptions.builder()</span>
-<span class="fc" id="L53">                .url(url)</span>
-<span class="fc" id="L54">                .build();</span>
-
-<span class="fc" id="L56">        return create(options);</span>
+<span class="fc" id="L54">        return create(options);</span>
     }
 
     /**
@@ -65,9 +63,9 @@ public final class FluxClientReactiveFactory {
     @Nonnull
     public static FluxClientReactive create(@Nonnull final FluxConnectionOptions options) {
 
-<span class="fc" id="L68">        Arguments.checkNotNull(options, &quot;FluxConnectionOptions&quot;);</span>
+<span class="fc" id="L66">        Arguments.checkNotNull(options, &quot;FluxConnectionOptions&quot;);</span>
 
-<span class="fc" id="L70">        return new FluxClientReactiveImpl(options);</span>
+<span class="fc" id="L68">        return new FluxClientReactiveImpl(options);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
