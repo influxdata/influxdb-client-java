@@ -46,7 +46,7 @@ public final class FluxConnectionOptions {
 
     private final String url;
     private OkHttpClient.Builder okHttpClient;
-    private Map<String, String> parameters = new HashMap<>();
+    private Map<String, String> parameters;
 
     private FluxConnectionOptions(@Nonnull final Builder builder) {
 

@@ -42,13 +42,14 @@ public final class FluxClientFactory {
      *
      * @param connectionString the connectionString to connect to InfluxDB.
      * @return client
-     * @see FluxConnectionOptions.Builder#url(String)
+     * @see FluxConnectionOptions.Builder#builder(String)
      */
     @Nonnull
     public static FluxClient create(@Nonnull final String connectionString) {
 
-        FluxConnectionOptions options = FluxConnectionOptions.builder(connectionString)
-        .build();
+        FluxConnectionOptions options = FluxConnectionOptions
+                .builder(connectionString)
+                .build();
 
         return create(options);
     }

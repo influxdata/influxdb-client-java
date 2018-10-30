@@ -39,6 +39,18 @@
     <name>The Platform Commons</name>
     <description>The Platform commons - exceptions, validations, REST client</description>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <header>../config/license_header.txt</header>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
 
         <dependency>

@@ -83,6 +83,8 @@ public interface UserClient {
     @Nullable
     User me();
 
+    //TODO me/password, /users/:id/password
+
     /**
      * Retrieve a user.
      *

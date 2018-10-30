@@ -439,6 +439,8 @@ public interface TaskClient {
     @Nullable
     Run retryRun(@Nonnull final String taskID, @Nonnull final String runID);
 
+    //TODO cancel run
+
     /**
      * Retrieve all logs for a task.
      *

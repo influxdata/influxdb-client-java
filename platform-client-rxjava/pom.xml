@@ -41,4 +41,16 @@
         The client supports managing organizations, users, authorizations, buckets by a reactive way.
     </description>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <header>../config/license_header.txt</header>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

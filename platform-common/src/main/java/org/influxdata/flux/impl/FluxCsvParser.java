@@ -103,7 +103,7 @@ public class FluxCsvParser {
     }
 
     /**
-     * Asynchronously parse Flux CSV response to {@link FluxResponseConsumer}.
+     * Parse Flux CSV response to {@link FluxResponseConsumer}.
      *
      * @param bufferedSource with data
      * @param cancellable    to cancel parsing

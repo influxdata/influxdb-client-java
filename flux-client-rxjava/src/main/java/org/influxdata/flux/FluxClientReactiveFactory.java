@@ -40,17 +40,15 @@ public final class FluxClientReactiveFactory {
     /**
      * Create a instance of the Flux reactive client.
      *
-     * @param url the url to connect to InfluxDB.
+     * @param connectionString the connectionString to connect to InfluxDB.
      * @return client
-     * @see FluxConnectionOptions.Builder#url(String)
+     * @see FluxConnectionOptions.Builder#builder(String)
      */
     @Nonnull
-    public static FluxClientReactive create(@Nonnull final String url) {
+    public static FluxClientReactive create(@Nonnull final String connectionString) {
 
-        Arguments.checkNonEmpty(url, "InfluxDB url");
-
-        FluxConnectionOptions options = FluxConnectionOptions.builder()
-                .url(url)
+        FluxConnectionOptions options = FluxConnectionOptions
+                .builder(connectionString)
                 .build();
 
         return create(options);
