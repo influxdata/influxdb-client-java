@@ -187,7 +187,8 @@ class ITFluxClient extends AbstractITFluxClient {
 
         Assertions.assertThatThrownBy(() -> fluxClient.query("from(bucket:\"telegraf\")"))
                 .isInstanceOf(InfluxException.class)
-                .hasMessage("failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time");
+                .hasMessageStartingWith("failed to create physical plan:")
+                .hasMessageEndingWith("Add a 'range' call to bound the query");
     }
 
     @Test
@@ -195,7 +196,8 @@ class ITFluxClient extends AbstractITFluxClient {
 
         Assertions.assertThatThrownBy(() -> fluxClient.query(FROM_FLUX_DATABASE))
                 .isInstanceOf(InfluxException.class)
-                .hasMessage("failed to create physical plan: invalid time bounds from procedure from: bounds contain zero time");
+                .hasMessageStartingWith("failed to create physical plan:")
+                .hasMessageEndingWith("Add a 'range' call to bound the query");
     }
 
     @Test
@@ -383,6 +385,7 @@ class ITFluxClient extends AbstractITFluxClient {
 
             if (i % 100_000 == 0) {
                 influxDBWrite(points.stream().collect(Collectors.joining("\n")), DATABASE_NAME);
+                points.clear();
             }
         });
     }

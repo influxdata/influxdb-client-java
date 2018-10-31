@@ -22,13 +22,20 @@
 package org.influxdata.flux.impl
 
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.runBlocking
 import org.influxdata.flux.FluxClientKotlin
 import org.influxdata.flux.domain.FluxRecord
+import org.influxdata.flux.domain.FluxTable
+import org.influxdata.flux.impl.FluxCsvParser.FluxResponseConsumer
 import org.influxdata.flux.option.FluxConnectionOptions
 import org.influxdata.platform.Arguments
 import org.influxdata.platform.error.InfluxException
+import org.influxdata.platform.rest.AbstractQueryClient
+import org.influxdata.platform.rest.Cancellable
 import org.influxdata.platform.rest.LogLevel
 import java.io.IOException
+import java.util.function.BiConsumer
+import java.util.function.Consumer
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -41,19 +48,62 @@ internal class FluxClientKotlinImpl(options: FluxConnectionOptions) : AbstractFl
     private val LOG = Logger.getLogger(FluxClientImpl::class.java.name)
 
     override fun query(query: String): Channel<FluxRecord> {
-        TODO("not implemented")
+
+        Arguments.checkNonEmpty(query, "query")
+
+        val consumer = BiConsumer { channel: Channel<FluxRecord>, record: FluxRecord ->
+            runBlocking {
+                channel.send(record)
+            }
+        }
+
+        return query(query, AbstractQueryClient.DEFAULT_DIALECT.toString(), consumer)
     }
 
     override fun <M> query(query: String, measurementType: Class<M>): Channel<M> {
-        TODO("not implemented")
+
+        Arguments.checkNonEmpty(query, "query")
+        Arguments.checkNotNull(measurementType, "measurementType")
+
+        val consumer = BiConsumer { channel: Channel<M>, record: FluxRecord ->
+            runBlocking {
+                channel.send(resultMapper.toPOJO(record, measurementType))
+            }
+        }
+
+        return query(query, AbstractQueryClient.DEFAULT_DIALECT.toString(), consumer)
     }
 
     override fun queryRaw(query: String): Channel<String> {
-        TODO("not implemented")
+
+        Arguments.checkNonEmpty(query, "query")
+
+        return queryRaw(query, AbstractQueryClient.DEFAULT_DIALECT.toString())
     }
 
     override fun queryRaw(query: String, dialect: String): Channel<String> {
-        TODO("not implemented")
+
+        Arguments.checkNonEmpty(query, "query")
+        Arguments.checkNonEmpty(dialect, "dialect")
+
+        val channel = Channel<String>()
+
+        val queryCall = fluxService.query(createBody(dialect, query))
+
+        val consumer = BiConsumer { cancellable: Cancellable, line: String ->
+
+            if (channel.isClosedForSend) {
+                cancellable.cancel()
+            } else {
+                runBlocking {
+                    channel.send(line)
+                }
+            }
+        }
+
+        queryRaw(queryCall, consumer, Consumer { channel.close(it) }, Runnable { channel.close() }, true)
+
+        return channel
     }
 
     override fun ping(): Boolean {
@@ -82,11 +132,40 @@ internal class FluxClientKotlinImpl(options: FluxConnectionOptions) : AbstractFl
     }
 
     override fun setLogLevel(logLevel: LogLevel): FluxClientKotlin {
-        
+
         Arguments.checkNotNull(logLevel, "LogLevel")
 
         setLogLevel(this.loggingInterceptor, logLevel)
 
         return this
+    }
+
+    private fun <T> query(query: String, dialect: String, consumer: BiConsumer<Channel<T>, FluxRecord>): Channel<T> {
+
+        Arguments.checkNonEmpty(query, "query")
+        Arguments.checkNonEmpty(dialect, "dialect")
+
+        val channel = Channel<T>()
+
+        val queryCall = fluxService.query(createBody(dialect, query))
+
+        val responseConsumer = object : FluxResponseConsumer {
+
+            override fun accept(index: Int, cancellable: Cancellable, table: FluxTable) {
+
+            }
+
+            override fun accept(index: Int, cancellable: Cancellable, record: FluxRecord) {
+
+                if (channel.isClosedForSend) {
+                    cancellable.cancel()
+                } else {
+                    consumer.accept(channel, record)
+                }
+            }
+        }
+
+        query(queryCall, responseConsumer, { channel.close(it) }, { channel.close() }, true)
+        return channel
     }
 }

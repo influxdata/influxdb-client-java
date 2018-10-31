@@ -76,6 +76,7 @@ public class FluxClientImpl extends AbstractFluxClient<FluxService> implements F
     public <M> List<M> query(@Nonnull final String query, @Nonnull final Class<M> measurementType) {
 
         Arguments.checkNonEmpty(query, "query");
+        Arguments.checkNotNull(measurementType, "measurementType");
 
         List<M> measurements = new ArrayList<>();
 

@@ -1,6 +1,7 @@
 # Maven
 target/**
 .m2/**
+tree.txt
 
 # IntelliJ
 .idea/**

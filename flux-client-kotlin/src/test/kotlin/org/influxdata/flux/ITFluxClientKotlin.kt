@@ -21,31 +21,39 @@
  */
 package org.influxdata.flux
 
-import org.assertj.core.api.Assertions
-import org.assertj.core.api.AssertionsForClassTypes
+import assertk.assert
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
+import assertk.assertions.isInstanceOf
+import assertk.assertions.isNotEmpty
+import assertk.assertions.isTrue
 import org.influxdata.platform.error.InfluxException
 import org.influxdata.platform.rest.LogLevel
 import org.junit.jupiter.api.Test
+import org.junit.platform.runner.JUnitPlatform
+import org.junit.runner.RunWith
+
 
 /**
  * @author Jakub Bednar (bednar@github) (30/10/2018 09:19)
  */
+@RunWith(JUnitPlatform::class)
 internal class ITFluxClientKotlin : AbstractITFluxClientKotlin() {
 
     @Test
     fun logLevel() {
-        AssertionsForClassTypes.assertThat<LogLevel>(fluxClient.getLogLevel()).isEqualTo(LogLevel.NONE)
+        assert(fluxClient.getLogLevel()).isEqualTo(LogLevel.NONE)
 
         // set HEADERS
         fluxClient.setLogLevel(LogLevel.HEADERS)
 
-        AssertionsForClassTypes.assertThat<LogLevel>(this.fluxClient.getLogLevel()).isEqualTo(LogLevel.HEADERS)
+        assert(fluxClient.getLogLevel()).isEqualTo(LogLevel.HEADERS)
     }
 
     @Test
     fun pingHealthy() {
 
-        Assertions.assertThat(fluxClient.ping()).isTrue()
+        assert(fluxClient.ping()).isTrue()
     }
 
     @Test
@@ -53,7 +61,7 @@ internal class ITFluxClientKotlin : AbstractITFluxClientKotlin() {
 
         val clientNotRunning = FluxClientKotlinFactory.create("http://localhost:8099")
 
-        Assertions.assertThat(clientNotRunning.ping()).isFalse()
+        assert(clientNotRunning.ping()).isFalse()
 
         clientNotRunning.close()
     }
@@ -61,7 +69,7 @@ internal class ITFluxClientKotlin : AbstractITFluxClientKotlin() {
     @Test
     fun version() {
 
-        Assertions.assertThat(fluxClient.version()).isNotBlank()
+        assert(fluxClient.version()).isNotEmpty()
     }
 
     @Test
@@ -69,7 +77,8 @@ internal class ITFluxClientKotlin : AbstractITFluxClientKotlin() {
 
         val clientNotRunning = FluxClientKotlinFactory.create("http://localhost:8099")
 
-        Assertions.assertThatThrownBy { clientNotRunning.version() }.isInstanceOf(InfluxException::class.java)
+        assert { clientNotRunning.version() }
+                .thrownError { isInstanceOf(InfluxException::class.java) }
 
         clientNotRunning.close()
     }

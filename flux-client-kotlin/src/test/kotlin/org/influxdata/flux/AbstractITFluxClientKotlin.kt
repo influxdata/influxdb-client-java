@@ -21,18 +21,25 @@
  */
 package org.influxdata.flux
 
+import org.influxdata.flux.impl.FluxClientImpl
 import org.influxdata.platform.AbstractTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import java.util.logging.Logger
 
 /**
  * @author Jakub Bednar (bednar@github) (30/10/2018 09:13)
  */
 internal abstract class AbstractITFluxClientKotlin : AbstractTest() {
 
-    internal val DATABASE_NAME = "flux_database_kotlin"
+    @Suppress("PrivatePropertyName")
+    private val LOG = Logger.getLogger(FluxClientImpl::class.java.name)
+
+    val DATABASE_NAME = "flux_database_kotlin"
 
     internal lateinit var fluxClient: FluxClientKotlin
+    protected val FROM_FLUX_DATABASE = String
+            .format("from(bucket:\"%s\")", DATABASE_NAME)
 
     @BeforeEach
     protected fun setUp() {
@@ -40,6 +47,17 @@ internal abstract class AbstractITFluxClientKotlin : AbstractTest() {
         fluxClient = FluxClientKotlinFactory.create(influxDbURL)
 
         influxDBQuery("CREATE DATABASE $DATABASE_NAME", DATABASE_NAME)
+
+        val lineProtocol = arrayOf("mem,host=A,region=west free=10i 10000000000",
+                "mem,host=A,region=west free=11i 20000000000",
+                "mem,host=B,region=west free=20i 10000000000",
+                "mem,host=B,region=west free=22i 20000000000",
+                "cpu,host=A,region=west usage_system=35i,user_usage=45i 10000000000",
+                "cpu,host=A,region=west usage_system=38i,user_usage=49i 20000000000",
+                "cpu,host=A,hyper-threading=true,region=west usage_system=55i,user_usage=65i 20000000000")
+                .joinToString("\n")
+
+        influxDBWrite(lineProtocol, DATABASE_NAME)
     }
 
     @AfterEach
@@ -48,5 +66,23 @@ internal abstract class AbstractITFluxClientKotlin : AbstractTest() {
         fluxClient.close()
 
         influxDBQuery("DROP DATABASE $DATABASE_NAME", DATABASE_NAME)
+    }
+
+    protected fun prepareChunkRecords() {
+
+        LOG.info("Preparing data...")
+
+        val points = mutableListOf<String>()
+
+        for (i in 1..500000) {
+            points.add("chunked,host=A,region=west free=${i}i $i")
+
+            if (i % 100000 == 0) {
+                influxDBWrite(points.joinToString("\n"), DATABASE_NAME)
+                points.clear()
+            }
+        }
+
+        LOG.info("prepared")
     }
 }
