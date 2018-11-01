@@ -34,7 +34,9 @@ if [ "$TRAVIS_REPO_SLUG" == "bonitoo-io/influxdata-platform-java" ] && [ "$TRAVI
 
     # Generate Site
     cd ${SCRIPT_PATH}/..
-    mvn site site:stage
+    mvn clean site site:stage
+    # Copy Kotlin doc
+    cp -R ${SCRIPT_PATH}/../flux-client-kotlin/target/dokka/ ${SCRIPT_PATH}/../target/staging/flux-client-kotlin/dokka/
     cp -R ${SCRIPT_PATH}/../target/staging ${HOME}/site
 
     # Clone GitHub pages
