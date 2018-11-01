@@ -22,8 +22,6 @@
 package example
 
 import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.channels.filter
-import kotlinx.coroutines.channels.take
 import kotlinx.coroutines.runBlocking
 import org.influxdata.flux.FluxClientKotlinFactory
 
@@ -34,19 +32,14 @@ fun main(args: Array<String>) = runBlocking {
 
     val fluxQuery = ("from(bucket: \"telegraf\")\n"
             + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
-            + " |> range(start: -1d)")
+            + " |> range(start: -5m)"
+            + " |> sample(n: 5, pos: 1)")
 
     //Result is returned as a stream
-    val results = fluxClient.query(fluxQuery)
+    val results = fluxClient.queryRaw(fluxQuery, "{header: false}")
 
-    //Example of additional result stream processing on client side
-    results
-            //filter on client side using `filter` built-in operator
-            .filter { "cpu0" == it.getValueByKey("cpu") }
-            //take first 20 records
-            .take(20)
-            //print results
-            .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
+    //print results
+    results.consumeEach { println("Line: $it") }
 
     fluxClient.close()
 }

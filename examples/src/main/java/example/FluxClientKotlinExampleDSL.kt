@@ -25,25 +25,28 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.filter
 import kotlinx.coroutines.channels.take
 import kotlinx.coroutines.runBlocking
+import org.influxdata.flux.Flux
 import org.influxdata.flux.FluxClientKotlinFactory
+import org.influxdata.flux.functions.restriction.Restrictions
+import java.time.temporal.ChronoUnit
 
 fun main(args: Array<String>) = runBlocking {
 
     val fluxClient = FluxClientKotlinFactory
             .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC")
 
-    val fluxQuery = ("from(bucket: \"telegraf\")\n"
-            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
-            + " |> range(start: -1d)")
+    val mem = Flux.from("telegraf")
+            .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
+            .range(-30L, ChronoUnit.MINUTES)
 
     //Result is returned as a stream
-    val results = fluxClient.query(fluxQuery)
+    val results = fluxClient.query(mem.toString())
 
     //Example of additional result stream processing on client side
     results
             //filter on client side using `filter` built-in operator
-            .filter { "cpu0" == it.getValueByKey("cpu") }
-            //take first 20 records
+            .filter { (it.value as Double) > 55 }
+            // take first 20 records
             .take(20)
             //print results
             .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }

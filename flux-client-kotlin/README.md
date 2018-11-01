@@ -1,8 +1,6 @@
-# flux-java
+# flux-client-kotlin
 
-The reference Java library for the InfluxDB 1.7 `/v2/query` REST API using the [Flux language](https://github.com/influxdata/flux/blob/master/docs/SPEC.md). 
-
-
+The reference Kotlin client that allows you to perform [Flux queries](https://github.com/influxdata/flux/blob/master/docs/SPEC.md) against InfluxDB 1.7+. 
 
 > This library is under development and no stable version has been released yet.  
 > The API can change at any moment.
@@ -16,24 +14,23 @@ The reference Java library for the InfluxDB 1.7 `/v2/query` REST API using the [
 
 ### Create client
 
-The `FluxClientFactory` creates an instance of a `FluxClient` client that can be customized with `FluxConnectionOptions`.
+The `FluxClientKotlinFactory` creates an instance of a `FluxClientKotlin` client that can be customized with `FluxConnectionOptions`.
 
 `FluxConnectionOptions` parameters:
  
 - `url` -  the url to connect to Platform
 - `okHttpClient` - custom HTTP client to use for communications with Platform (optional)
 
-```java
-    // client creation
-    FluxConnectionOptions options = FluxConnectionOptions.builder()
-        .url("http://localhost:8086/")
-        .okHttpClient
-        .build();
+```kotlin
+// client creation
+val options = FluxConnectionOptions.builder()
+            .url("http://localhost:8086/")
+            .build()
 
-    FluxClient fluxClient = FluxClientFactory.create(options);
+val fluxClient = FluxClientKotlinFactory.create(options)
 
-    fluxClient.query(...)
-     ...
+val results = fluxClient.query(fluxQuery)
+...
 ```
 
 #### Client connection string
@@ -41,7 +38,8 @@ The `FluxClientFactory` creates an instance of a `FluxClient` client that can be
 A client can be constructed using a connection string that can contain the FluxConnectionOptions parameters encoded into the URL.  
  
 ```java
-    FluxClient fluxClient = FluxClientFactory.create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC")
+val fluxClient = FluxClientKotlinFactory
+            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC")
 ```
 The following options are supported:
 
@@ -54,20 +52,25 @@ The following options are supported:
 
 ## Query using the Flux language
 
-The library supports both synchronous and asynchronous queries. 
+The library supports asynchronous queries by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html). 
 
-A simple synchronous example:
+```kotlin
+val fluxQuery = ("from(bucket: \"telegraf\")\n"
+            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
+            + " |> range(start: -1d)")
 
-```java
-String query = "from(bucket:\"telegraf\") |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_user\") |> sum()";
+// Result is returned as a stream
+val results = fluxClient.query(fluxQuery)
 
-//simple synchronous query
-List<FluxTable> tables = fluxClient.flux(query);
-
+// Example of additional result stream processing on client side
+results
+    // filter on client side using `filter` built-in operator
+    .filter { "cpu0" == it.getValueByKey("cpu") }
+    // take first 20 records
+    .take(20)
+    // print results
+    .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
 ```
-For larger data sets it is more effective to stream data and to use [asynchronous](#asynchronous-query) requests or the [reactive](../flux-client-rxjava) 
-client based on RxJava2.   
-
 ### Construct queries using the [flux-dsl](../flux-dsl) query builder
 
 [Flux-dsl](../flux-dsl) contains java classes representing elements of the Flux language to help build Flux queries and expressions. 
@@ -77,67 +80,40 @@ easily&mdash;see [Custom operator](../flux-dsl/README.md#custom-operator).
 
 An example of using the `Flux` query builder:
 
-```java
-Flux.from("telegraf")
-        .filter(
-            Restrictions.and(
-                Restrictions.measurement().equal("cpu"),
-                Restrictions.field().equal("usage_system"))
-        )
-        .range(-1L, ChronoUnit.DAYS)
-        .sample(5, 1); 
-```
+```kotlin
+val flux = Flux
+    .from("telegraf")
+    .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
+    .range(-30L, ChronoUnit.MINUTES)
 
-#### Asynchronous query
+// Result is returned as a stream
+val results = fluxClient.query(flux.toString())
 
-The asynchronous query API allows streaming of `FluxRecord`s with the possibility of implementing custom
-error handling and `onComplete` callback notification. 
-
-A `Cancellable` object is used for aborting a query while processing. 
-
-For developers that are familiar with reactive programming and for more advanced usecases it is possible 
-to use the [flux-client-rxjava](../flux-client-rxjava) extension.
-
-An asynchronous query example:   
-
-```java
-    String fluxQuery = "from(bucket: \"telegraf\")\n" +
-        " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))" +
-        " |> range(start: -1d)" +
-        " |> sample(n: 5, pos: 1)";
-
-     fluxClient.query(
-         fluxQuery, (cancellable, record) -> {
-          // process the flux query result record
-           System.out.println(
-               record.getTime() + ": " + record.getValue());
-           // found what I'm looking for ?
-           if (some condition) {
-                 // abort processing
-                 cancellable.cancel();
-           }
-
-           
-        }, error -> {
-           // error handling while processing result
-           System.out.println("Error occured: "+ error.getMessage());
-
-        }, () -> {
-          // on complete notification
-           System.out.println("Query completed");
-        });
+// Example of additional result stream processing on client side
+results
+    // filter on client side using `filter` built-in operator
+    .filter { (it.value as Double) > 55 }
+    // take first 20 records
+    .take(20)
+    // print results
+    .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
 ```
 
 #### Raw query response
 
 It is possible to parse a result line-by-line using the `queryRaw` method.  
 
-```java
-    void queryRaw(@Nonnull final String query,
-                  @Nonnull final BiConsumer<Cancellable, String> onResponse,
-                  @Nonnull final Consumer<? super Throwable> onError,
-                  @Nonnull final Runnable onComplete);
+```kotlin
+val fluxQuery = ("from(bucket: \"telegraf\")\n"
+            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
+            + " |> range(start: -5m)"
+            + " |> sample(n: 5, pos: 1)")
 
+// Result is returned as a stream
+val results = fluxClient.queryRaw(fluxQuery, "{header: false}")
+
+// Print results
+results.consumeEach { println("Line: $it") }
 ```
 
 ### Advanced Usage
@@ -150,8 +126,8 @@ It is possible to parse a result line-by-line using the `queryRaw` method.
 The Requests and Responses can be logged by changing the LogLevel. LogLevel values are NONE, BASIC, HEADER, BODY. Note that 
 applying the `BODY` LogLevel will disable chunking while streaming and will load the whole response into memory.  
 
-```java
-fluxClient.setLogLevel(Level.HEADERS);
+```kotlin
+fluxClient.setLogLevel(LogLevel.HEADERS)
 ```
 
 #### Check the server status and version
@@ -164,7 +140,7 @@ The latest version for Maven dependency:
 ```xml
 <dependency>
   <groupId>org.influxdata</groupId>
-  <artifactId>flux-client</artifactId>
+  <artifactId>flux-client-kotlin</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
@@ -172,7 +148,7 @@ The latest version for Maven dependency:
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "org.influxdata:flux-client:1.0.0-SNAPSHOT"
+    compile "org.influxdata:flux-client-kotlin:1.0.0-SNAPSHOT"
 }
 ```
 
