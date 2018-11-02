@@ -45,19 +45,18 @@ internal class ITFluxClientKotlinQueryRaw : AbstractITFluxClientKotlin() {
 
         val flux = (FROM_FLUX_DATABASE + "\n"
                 + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
-                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" AND r[\"_field\"] == \"free\"))")
+                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" AND r[\"_field\"] == \"free\"))"
+                + "\t|> sum()")
 
         val lines = fluxClient.queryRaw(flux).toList()
-        assert(lines).hasSize(9)
-        assert(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,long,string,string,string,string")
-        assert(lines[1]).isEqualTo("#group,false,false,true,true,false,false,true,true,true,true")
-        assert(lines[2]).isEqualTo("#default,_result,,,,,,,,,")
-        assert(lines[3]).isEqualTo(",result,table,_start,_stop,_time,_value,_field,_measurement,host,region")
-        assert(lines[4]).endsWith("1970-01-01T00:00:10Z,10,free,mem,A,west")
-        assert(lines[5]).endsWith("1970-01-01T00:00:20Z,11,free,mem,A,west")
-        assert(lines[6]).endsWith("1970-01-01T00:00:10Z,20,free,mem,B,west")
-        assert(lines[7]).endsWith("1970-01-01T00:00:20Z,22,free,mem,B,west")
-        assert(lines[8]).isEmpty()
+        assert(lines).hasSize(7)
+        assert(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
+        assert(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
+        assert(lines[2]).isEqualTo("#default,_result,,,,,,,,")
+        assert(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
+        assert(lines[4]).endsWith(",free,mem,A,west,21")
+        assert(lines[5]).endsWith(",free,mem,B,west,42")
+        assert(lines[6]).isEmpty()
     }
 
     @Test
@@ -65,7 +64,8 @@ internal class ITFluxClientKotlinQueryRaw : AbstractITFluxClientKotlin() {
 
         val flux = (FROM_FLUX_DATABASE + "\n"
                 + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
-                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" AND r[\"_field\"] == \"free\"))")
+                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" AND r[\"_field\"] == \"free\"))"
+                + "\t|> sum()")
 
         val dialect = JSONObject()
                 .put("header", false)
@@ -73,15 +73,13 @@ internal class ITFluxClientKotlinQueryRaw : AbstractITFluxClientKotlin() {
 
         val lines = fluxClient.queryRaw(flux, dialect).toList()
 
-        assert(lines).hasSize(8)
-        assert(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,long,string,string,string,string")
-        assert(lines[1]).isEqualTo("#group,false,false,true,true,false,false,true,true,true,true")
-        assert(lines[2]).isEqualTo("#default,_result,,,,,,,,,")
-        assert(lines[3]).endsWith("1970-01-01T00:00:10Z,10,free,mem,A,west")
-        assert(lines[4]).endsWith("1970-01-01T00:00:20Z,11,free,mem,A,west")
-        assert(lines[5]).endsWith("1970-01-01T00:00:10Z,20,free,mem,B,west")
-        assert(lines[6]).endsWith("1970-01-01T00:00:20Z,22,free,mem,B,west")
-        assert(lines[7]).isEmpty()
+        assert(lines).hasSize(6)
+        assert(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
+        assert(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
+        assert(lines[2]).isEqualTo("#default,_result,,,,,,,,")
+        assert(lines[3]).endsWith(",free,mem,A,west,21")
+        assert(lines[4]).endsWith(",free,mem,B,west,42")
+        assert(lines[5]).isEmpty()
     }
 
     @Test
