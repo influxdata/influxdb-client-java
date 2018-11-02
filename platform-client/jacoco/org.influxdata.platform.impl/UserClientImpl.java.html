@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.UserClient;
 import org.influxdata.platform.domain.User;
+import org.influxdata.platform.domain.UserMeResponse;
 import org.influxdata.platform.domain.Users;
 import org.influxdata.platform.rest.AbstractRestClient;
 
@@ -42,105 +43,112 @@ import retrofit2.Call;
  */
 final class UserClientImpl extends AbstractRestClient implements UserClient {
 
-<span class="fc" id="L45">    private static final Logger LOG = Logger.getLogger(UserClientImpl.class.getName());</span>
+<span class="fc" id="L46">    private static final Logger LOG = Logger.getLogger(UserClientImpl.class.getName());</span>
 
     private final PlatformService platformService;
     private final JsonAdapter&lt;User&gt; adapter;
 
-<span class="fc" id="L50">    UserClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
+<span class="fc" id="L51">    UserClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
 
-<span class="fc" id="L52">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
-<span class="fc" id="L53">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
+<span class="fc" id="L53">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
+<span class="fc" id="L54">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
 
-<span class="fc" id="L55">        this.platformService = platformService;</span>
-<span class="fc" id="L56">        this.adapter = moshi.adapter(User.class);</span>
-<span class="fc" id="L57">    }</span>
+<span class="fc" id="L56">        this.platformService = platformService;</span>
+<span class="fc" id="L57">        this.adapter = moshi.adapter(User.class);</span>
+<span class="fc" id="L58">    }</span>
 
     @Nullable
     @Override
     public User findUserByID(@Nonnull final String userID) {
 
-<span class="fc" id="L63">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
+<span class="fc" id="L64">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
 
-<span class="fc" id="L65">        Call&lt;User&gt; user = platformService.findUserByID(userID);</span>
+<span class="fc" id="L66">        Call&lt;User&gt; user = platformService.findUserByID(userID);</span>
 
-<span class="nc" id="L67">        return execute(user, &quot;user not found&quot;);</span>
+<span class="nc" id="L68">        return execute(user, &quot;user not found&quot;);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;User&gt; findUsers() {
 
-<span class="fc" id="L74">        Call&lt;Users&gt; usersCall = platformService.findUsers();</span>
+<span class="fc" id="L75">        Call&lt;Users&gt; usersCall = platformService.findUsers();</span>
 
-<span class="nc" id="L76">        Users users = execute(usersCall);</span>
-<span class="nc" id="L77">        LOG.log(Level.FINEST, &quot;findUsers found: {0}&quot;, users);</span>
+<span class="nc" id="L77">        Users users = execute(usersCall);</span>
+<span class="nc" id="L78">        LOG.log(Level.FINEST, &quot;findUsers found: {0}&quot;, users);</span>
 
-<span class="nc" id="L79">        return users.getUsers();</span>
+<span class="nc" id="L80">        return users.getUsers();</span>
     }
 
     @Nonnull
     @Override
     public User createUser(@Nonnull final String name) {
 
-<span class="fc" id="L86">        Arguments.checkNonEmpty(name, &quot;User name&quot;);</span>
+<span class="fc" id="L87">        Arguments.checkNonEmpty(name, &quot;User name&quot;);</span>
 
-<span class="fc" id="L88">        User user = new User();</span>
-<span class="fc" id="L89">        user.setName(name);</span>
+<span class="fc" id="L89">        User user = new User();</span>
+<span class="fc" id="L90">        user.setName(name);</span>
 
-<span class="nc" id="L91">        return createUser(user);</span>
+<span class="nc" id="L92">        return createUser(user);</span>
     }
 
     @Nonnull
     @Override
     public User createUser(@Nonnull final User user) {
 
-<span class="fc" id="L98">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
+<span class="fc" id="L99">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
 
-<span class="fc" id="L100">        String json = adapter.toJson(user);</span>
+<span class="fc" id="L101">        String json = adapter.toJson(user);</span>
 
-<span class="fc" id="L102">        Call&lt;User&gt; call = platformService.createUser(createBody(json));</span>
+<span class="fc" id="L103">        Call&lt;User&gt; call = platformService.createUser(createBody(json));</span>
 
-<span class="nc" id="L104">        return execute(call);</span>
+<span class="nc" id="L105">        return execute(call);</span>
     }
 
     @Nonnull
     @Override
     public User updateUser(@Nonnull final User user) {
 
-<span class="nc" id="L111">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
+<span class="nc" id="L112">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
 
-<span class="nc" id="L113">        String json = adapter.toJson(user);</span>
+<span class="nc" id="L114">        String json = adapter.toJson(user);</span>
 
-<span class="nc" id="L115">        Call&lt;User&gt; userCall = platformService.updateUser(user.getId(), createBody(json));</span>
+<span class="nc" id="L116">        Call&lt;User&gt; userCall = platformService.updateUser(user.getId(), createBody(json));</span>
 
-<span class="nc" id="L117">        return execute(userCall);</span>
+<span class="nc" id="L118">        return execute(userCall);</span>
     }
 
     @Override
     public void deleteUser(@Nonnull final User user) {
 
-<span class="nc" id="L123">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
+<span class="nc" id="L124">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
 
-<span class="nc" id="L125">        deleteUser(user.getId());</span>
-<span class="nc" id="L126">    }</span>
+<span class="nc" id="L126">        deleteUser(user.getId());</span>
+<span class="nc" id="L127">    }</span>
 
     @Override
     public void deleteUser(@Nonnull final String userID) {
 
-<span class="nc" id="L131">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
+<span class="nc" id="L132">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
 
-<span class="nc" id="L133">        Call&lt;Void&gt; call = platformService.deleteUser(userID);</span>
-<span class="nc" id="L134">        execute(call);</span>
-<span class="nc" id="L135">    }</span>
+<span class="nc" id="L134">        Call&lt;Void&gt; call = platformService.deleteUser(userID);</span>
+<span class="nc" id="L135">        execute(call);</span>
+<span class="nc" id="L136">    }</span>
 
     @Nullable
     @Override
     public User me() {
 
-<span class="fc" id="L141">        Call&lt;User&gt; userCall = platformService.me();</span>
+<span class="fc" id="L142">        Call&lt;UserMeResponse&gt; call = platformService.me();</span>
 
-<span class="nc" id="L143">        return execute(userCall, &quot;token required&quot;);</span>
+<span class="nc" id="L144">        UserMeResponse userMeResponse = execute(call, &quot;token required&quot;);</span>
+<span class="nc" id="L145">        LOG.log(Level.FINEST, &quot;me found: {0}&quot;, call);</span>
+
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        if (userMeResponse == null) {</span>
+<span class="nc" id="L148">            return null;</span>
+        }
+
+<span class="nc" id="L151">        return userMeResponse.getMe();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
