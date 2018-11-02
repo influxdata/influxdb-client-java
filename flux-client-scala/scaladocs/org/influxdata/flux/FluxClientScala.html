@@ -202,10 +202,190 @@
 
         
 
-        
+        <div class="values members">
+              <h3>Abstract Value Members</h3>
+              <ol><li name="org.influxdata.flux.FluxClientScala#close" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="close():Unit"></a>
+      <span class="permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScala.html#close():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">close</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Shutdown and close the client.</p>
+    </li><li name="org.influxdata.flux.FluxClientScala#getLogLevel" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="getLogLevel:org.influxdata.platform.rest.LogLevel"></a><a id="getLogLevel:LogLevel"></a>
+      <span class="permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScala.html#getLogLevel:org.influxdata.platform.rest.LogLevel" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getLogLevel</span><span class="result">: <span class="extype" name="org.influxdata.platform.rest.LogLevel">LogLevel</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Gets the <span class="extype" name="LogLevel">LogLevel</span> that is used for logging requests and responses.</p><div class="fullcomment"><div class="comment cmt"><p>Gets the <span class="extype" name="LogLevel">LogLevel</span> that is used for logging requests and responses.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the <span class="extype" name="LogLevel">LogLevel</span> that is used for logging requests and responses</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.flux.FluxClientScala#ping" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ping:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScala.html#ping:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ping</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Check the status of InfluxDB Server.</p><div class="fullcomment"><div class="comment cmt"><p>Check the status of InfluxDB Server.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p><code>true</code> if server is healthy otherwise return <code>false</code></p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.flux.FluxClientScala#query" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="query[M](query:String,measurementType:Class[M]):Stream[M]"></a><a id="query[M](String,Class[M]):Stream[M]"></a>
+      <span class="permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScala.html#query[M](query:String,measurementType:Class[M]):Stream[M]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">query</span><span class="tparams">[<span name="M">M</span>]</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="measurementType">measurementType: <span class="extype" name="scala.Predef.Class">Class</span>[<span class="extype" name="org.influxdata.flux.FluxClientScala.query.M">M</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="org.influxdata.flux.FluxClientScala.query.M">M</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream measurements to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream measurements to <span class="extype" name="Stream">Stream</span>.
+</p></div><dl class="paramcmts block"><dt class="tparam">M</dt><dd class="cmt"><p>the type of the measurement (POJO)</p></dd><dt class="param">query</dt><dd class="cmt"><p>the flux query to execute</p></dd><dt class="param">measurementType</dt><dd class="cmt"><p>the measurement (POJO)</p></dd><dt>returns</dt><dd class="cmt"><p>the stream of measurements</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.flux.FluxClientScala#query" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="query(query:String):Stream[org.influxdata.flux.domain.FluxRecord]"></a><a id="query(String):Stream[FluxRecord]"></a>
+      <span class="permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScala.html#query(query:String):Stream[org.influxdata.flux.domain.FluxRecord]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">query</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="org.influxdata.flux.domain.FluxRecord">FluxRecord</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream <span class="extype" name="FluxRecord">FluxRecord</span>s to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream <span class="extype" name="FluxRecord">FluxRecord</span>s to <span class="extype" name="Stream">Stream</span>.
+</p></div><dl class="paramcmts block"><dt class="param">query</dt><dd class="cmt"><p>the flux query to execute</p></dd><dt>returns</dt><dd class="cmt"><p>the stream of <span class="extype" name="FluxRecord">FluxRecord</span>s</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.flux.FluxClientScala#queryRaw" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="queryRaw(query:String,dialect:String):Stream[String]"></a><a id="queryRaw(String,String):Stream[String]"></a>
+      <span class="permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScala.html#queryRaw(query:String,dialect:String):Stream[String]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">queryRaw</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="dialect">dialect: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.
+</p></div><dl class="paramcmts block"><dt class="param">query</dt><dd class="cmt"><p>the flux query to execute</p></dd><dt class="param">dialect</dt><dd class="cmt"><p>Dialect is an object defining the options to use when encoding the response.
+               <a href="http://bit.ly/flux-dialect" target="_blank">See dialect SPEC</a>.</p></dd><dt>returns</dt><dd class="cmt"><p>the response stream</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.flux.FluxClientScala#queryRaw" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="queryRaw(query:String):Stream[String]"></a><a id="queryRaw(String):Stream[String]"></a>
+      <span class="permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScala.html#queryRaw(query:String):Stream[String]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">queryRaw</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.
+</p></div><dl class="paramcmts block"><dt class="param">query</dt><dd class="cmt"><p>the flux query to execute</p></dd><dt>returns</dt><dd class="cmt"><p>the response stream</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.flux.FluxClientScala#setLogLevel" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="setLogLevel(logLevel:org.influxdata.platform.rest.LogLevel):org.influxdata.flux.FluxClient"></a><a id="setLogLevel(LogLevel):FluxClient"></a>
+      <span class="permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScala.html#setLogLevel(logLevel:org.influxdata.platform.rest.LogLevel):org.influxdata.flux.FluxClient" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setLogLevel</span><span class="params">(<span name="logLevel">logLevel: <span class="extype" name="org.influxdata.platform.rest.LogLevel">LogLevel</span></span>)</span><span class="result">: <span class="extype" name="org.influxdata.flux.FluxClient">FluxClient</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Sets the log level for the request and response information.</p><div class="fullcomment"><div class="comment cmt"><p>Sets the log level for the request and response information.
+</p></div><dl class="paramcmts block"><dt class="param">logLevel</dt><dd class="cmt"><p>the log level to set.</p></dd><dt>returns</dt><dd class="cmt"><p>the FluxClient instance to be able to use it in a fluent manner.</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.flux.FluxClientScala#version" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="version:String"></a>
+      <span class="permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScala.html#version:String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">version</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Returns the version of the connected InfluxDB Server.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the version of the connected InfluxDB Server.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the version String, otherwise unknown.</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
 
         <div class="values members">
-              <h3>Value Members</h3>
+              <h3>Concrete Value Members</h3>
               <ol>
                 <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
