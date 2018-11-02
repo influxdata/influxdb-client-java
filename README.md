@@ -42,7 +42,7 @@ This repository contains the reference Java client for the InfluxData Platform.
 
 - **[flux-client-scala](./flux-client-scala)** 
     - The reference Scala client that allows you to perform Flux queries against InfluxDB 1.7+.
-    -  [javadoc](https://bonitoo-io.github.io/influxdata-platform-java/flux-client-scala/scaladocs/org/influxdata/flux/index.html), [readme](./flux-client-scala/)
+    -  [Scaladoc](https://bonitoo-io.github.io/influxdata-platform-java/flux-client-scala/scaladocs/org/influxdata/flux/index.html), [readme](./flux-client-scala/)
 
 - **[platform-client](./platform-client)** 
     - The reference Java client that allows query, write and [Influx 2.0 OSS Platform](https://github.com/influxdata/platform) management.
