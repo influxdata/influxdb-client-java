@@ -41,6 +41,7 @@
             <item name="Flux client" href="./flux-client/index.html" />
             <item name="Flux client - RxJava" href="./flux-client-rxjava/index.html" />
             <item name="Flux client - Kotlin" href="./flux-client-kotlin/index.html" />
+            <item name="Flux client - Scala" href="./flux-client-scala/index.html" />
             <item name="Platform Client" href="./platform-client/index.html" />
             <item name="Platform Client - RxJava" href="./platform-client-rxjava/index.html" />
         </menu>
