@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.UserClient;
 import org.influxdata.platform.domain.User;
+import org.influxdata.platform.domain.UserMeResponse;
 import org.influxdata.platform.domain.Users;
 import org.influxdata.platform.rest.AbstractRestClient;
 
@@ -138,8 +139,15 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
     @Override
     public User me() {
 
-        Call<User> userCall = platformService.me();
+        Call<UserMeResponse> call = platformService.me();
 
-        return execute(userCall, "token required");
+        UserMeResponse userMeResponse = execute(call, "token required");
+        LOG.log(Level.FINEST, "me found: {0}", call);
+
+        if (userMeResponse == null) {
+            return null;
+        }
+
+        return userMeResponse.getMe();
     }
 }

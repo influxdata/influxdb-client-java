@@ -38,6 +38,7 @@ import org.influxdata.platform.domain.Sources;
 import org.influxdata.platform.domain.TaskResponse;
 import org.influxdata.platform.domain.Tasks;
 import org.influxdata.platform.domain.User;
+import org.influxdata.platform.domain.UserMeResponse;
 import org.influxdata.platform.domain.UserResourceMapping;
 import org.influxdata.platform.domain.UserResourcesResponse;
 import org.influxdata.platform.domain.Users;
@@ -88,7 +89,7 @@ interface PlatformService {
     @GET("/api/v2/me")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<User> me();
+    Call<UserMeResponse> me();
 
     //
     // Organizations

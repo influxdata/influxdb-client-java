@@ -21,40 +21,18 @@
  */
 package org.influxdata.platform.domain;
 
-import java.io.Serializable;
-import java.util.StringJoiner;
-
 /**
- * User is a user.
- *
- * @author Jakub Bednar (bednar@github) (05/09/2018 07:28)
+ * @author Jakub Bednar (bednar@github) (02/11/2018 07:06)
  */
-public final class User extends AbstractHasLinks implements Serializable {
+public class UserMeResponse extends AbstractHasLinks {
 
-    private String id;
-    private String name;
+    private User me;
 
-    public String getId() {
-        return id;
+    public User getMe() {
+        return me;
     }
 
-    public void setId(final String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
-                .add("id='" + id + "'")
-                .add("name='" + name + "'")
-                .toString();
+    public void setMe(final User me) {
+        this.me = me;
     }
 }
