@@ -143,7 +143,9 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("members", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId() + "/members"));
     }
 
+    //TODO wait to fix a  "/api/v2/orgs/:id/members/:organizationID"
     @Test
+    @Disabled
     void member() {
 
         platformService.setLogLevel(LogLevel.BODY);
