@@ -61,7 +61,7 @@ class ITBucketClientTest extends AbstractITClientTest {
     }
 
     @Test
-    void createBucket() {
+    void createBu3cket() {
 
         String bucketName = generateName("robot sensor");
 
@@ -75,9 +75,10 @@ class ITBucketClientTest extends AbstractITClientTest {
         Assertions.assertThat(bucket.getRetentionRules()).hasSize(1);
         Assertions.assertThat(bucket.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600L);
         Assertions.assertThat(bucket.getRetentionRules().get(0).getType()).isEqualTo("expire");
-        Assertions.assertThat(bucket.getLinks()).hasSize(2);
+        Assertions.assertThat(bucket.getLinks()).hasSize(3);
         Assertions.assertThat(bucket.getLinks()).hasEntrySatisfying("org", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + organization.getId()));
         Assertions.assertThat(bucket.getLinks()).hasEntrySatisfying("self", value -> Assertions.assertThat(value).isEqualTo("/api/v2/buckets/" + bucket.getId()));
+        Assertions.assertThat(bucket.getLinks()).hasEntrySatisfying("log", value -> Assertions.assertThat(value).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/log"));
     }
 
     @Test

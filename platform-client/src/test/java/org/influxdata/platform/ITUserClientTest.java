@@ -63,8 +63,9 @@ class ITUserClientTest extends AbstractITClientTest {
         Assertions.assertThat(user.getId()).isNotBlank();
         Assertions.assertThat(user.getName()).isEqualTo(userName);
         Assertions.assertThat(user.getLinks())
-                .hasSize(1)
-                .hasEntrySatisfying("self", link -> Assertions.assertThat(link).isEqualTo("/api/v2/users/" + user.getId()));
+                .hasSize(2)
+                .hasEntrySatisfying("self", link -> Assertions.assertThat(link).isEqualTo("/api/v2/users/" + user.getId()))
+                .hasEntrySatisfying("log", link -> Assertions.assertThat(link).isEqualTo("/api/v2/users/" + user.getId() + "/log"));
     }
 
     @Test

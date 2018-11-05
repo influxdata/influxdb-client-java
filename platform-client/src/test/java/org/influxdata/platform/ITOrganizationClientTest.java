@@ -70,7 +70,9 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         Assertions.assertThat(organization).isNotNull();
         Assertions.assertThat(organization.getId()).isNotBlank();
         Assertions.assertThat(organization.getName()).isEqualTo(organizationName);
-        Assertions.assertThat(organization.getLinks()).hasSize(5);
+        Assertions.assertThat(organization.getLinks())
+                .hasSize(6)
+                .containsKeys("buckets", "dashboards", "log", "members", "self", "tasks");
     }
 
     @Test
@@ -85,7 +87,9 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         Assertions.assertThat(organizationByID).isNotNull();
         Assertions.assertThat(organizationByID.getId()).isEqualTo(organization.getId());
         Assertions.assertThat(organizationByID.getName()).isEqualTo(organization.getName());
-        Assertions.assertThat(organizationByID.getLinks()).hasSize(5);
+        Assertions.assertThat(organizationByID.getLinks())
+                .hasSize(6)
+                .containsKeys("buckets", "dashboards", "log", "members", "self", "tasks");
     }
 
     @Test
@@ -135,12 +139,13 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         Assertions.assertThat(updatedOrganization.getId()).isEqualTo(createdOrganization.getId());
         Assertions.assertThat(updatedOrganization.getName()).isEqualTo("Master Pb");
 
-        Assertions.assertThat(updatedOrganization.getLinks()).hasSize(5);
+        Assertions.assertThat(updatedOrganization.getLinks()).hasSize(6);
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("buckets", value -> Assertions.assertThat(value).isEqualTo("/api/v2/buckets?org=Master Pb"));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("dashboards", value -> Assertions.assertThat(value).isEqualTo("/api/v2/dashboards?org=Master Pb"));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("self", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId()));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("tasks", value -> Assertions.assertThat(value).isEqualTo("/api/v2/tasks?org=Master Pb"));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("members", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId() + "/members"));
+        Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("log", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId() + "/log"));
     }
 
     //TODO wait to fix a  "/api/v2/orgs/:id/members/:organizationID"
