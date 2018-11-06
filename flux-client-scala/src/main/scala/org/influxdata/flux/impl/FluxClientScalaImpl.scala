@@ -19,20 +19,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.flux
+package org.influxdata.flux.impl
+
+import java.io.IOException
+import java.util.logging.{Level, Logger}
 
 import akka.NotUsed
 import akka.stream.scaladsl.Source
 import javax.annotation.Nonnull
+import org.influxdata.flux.FluxClientScala
 import org.influxdata.flux.domain.FluxRecord
-import org.influxdata.platform.rest.LogLevel
+import org.influxdata.flux.option.FluxConnectionOptions
+import org.influxdata.platform.error.InfluxException
+import org.influxdata.platform.rest.{AbstractQueryClient, LogLevel}
 
 /**
- * The client that allows perform Flux queries against the InfluxDB /api/v2/query endpoint.
- *
- * @author Jakub Bednar (bednar@github) (02/11/2018 09:48)
+ * @author Jakub Bednar (bednar@github) (06/11/2018 08:19)
  */
-trait FluxClientScala {
+class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)
+  extends AbstractFluxClient(options.getOkHttpClient, options.getUrl, options.getParameters, classOf[FluxService])
+    with FluxClientScala {
+
+  private val LOG = Logger.getLogger(classOf[FluxClientScalaImpl].getName)
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
@@ -40,7 +48,9 @@ trait FluxClientScala {
    * @param query the flux query to execute
    * @return the stream of [[FluxRecord]]s
    */
-  @Nonnull def query(@Nonnull query: String): Source[FluxRecord, NotUsed]
+  override def query(query: String): Source[FluxRecord, NotUsed] = {
+    throw new NotImplementedError()
+  }
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
@@ -50,7 +60,9 @@ trait FluxClientScala {
    * @tparam M the type of the measurement (POJO)
    * @return the stream of measurements
    */
-  @Nonnull def query[M](@Nonnull query: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed]
+  override def query[M](query: String, measurementType: Class[M]): Source[M, NotUsed] = {
+    throw new NotImplementedError()
+  }
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
@@ -58,7 +70,10 @@ trait FluxClientScala {
    * @param query the flux query to execute
    * @return the response stream
    */
-  @Nonnull def queryRaw(@Nonnull query: String): Source[String, NotUsed]
+  override def queryRaw(query: String): Source[String, NotUsed] = {
+    val dialect = AbstractQueryClient.DEFAULT_DIALECT.toString
+    queryRaw(query, dialect)
+  }
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
@@ -68,28 +83,47 @@ trait FluxClientScala {
    *                [[http://bit.ly/flux-dialect See dialect SPEC]].
    * @return the response stream
    */
-  @Nonnull def queryRaw(@Nonnull query: String, @Nonnull dialect: String): Source[String, NotUsed]
+  override def queryRaw(query: String, dialect: String): Source[String, NotUsed] = {
+    throw new NotImplementedError()
+  }
 
   /**
    * Check the status of InfluxDB Server.
    *
    * @return `true` if server is healthy otherwise return `false`
    */
-  @Nonnull def ping: Boolean
+  override def ping: Boolean = {
+    try {
+      fluxService.ping().execute().isSuccessful
+    } catch {
+      case e: IOException =>
+        LOG.log(Level.WARNING, "Ping request wasn't successful", e)
+        false
+    }
+  }
 
   /**
    * Returns the version of the connected InfluxDB Server.
    *
    * @return the version String, otherwise unknown.
    */
-  @Nonnull def version: String
+  override def version: String = {
+    try {
+      val response = fluxService.ping().execute()
+      getVersion(response)
+    } catch {
+      case e: IOException => throw new InfluxException(e)
+    }
+  }
 
   /**
    * Gets the [[LogLevel]] that is used for logging requests and responses.
    *
    * @return the [[LogLevel]] that is used for logging requests and responses
    */
-  @Nonnull def getLogLevel: LogLevel
+  override def getLogLevel: LogLevel = {
+    super.getLogLevel(loggingInterceptor)
+  }
 
   /**
    * Sets the log level for the request and response information.
@@ -97,10 +131,8 @@ trait FluxClientScala {
    * @param logLevel the log level to set.
    * @return the FluxClient instance to be able to use it in a fluent manner.
    */
-  @Nonnull def setLogLevel(@Nonnull logLevel: LogLevel): FluxClientScala
-
-  /**
-   * Shutdown and close the client.
-   */
-  def close(): Unit
+  override def setLogLevel(logLevel: LogLevel): FluxClientScala = {
+    super.setLogLevel(loggingInterceptor, logLevel)
+    this
+  }
 }

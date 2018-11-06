@@ -45,10 +45,12 @@ class AbstractFluxClient<T> extends AbstractQueryClient {
 
     AbstractFluxClient(@Nonnull final OkHttpClient.Builder okHttpClientBuilder,
                        @Nonnull final String url,
-                       final Map<String, String> parameters, @Nonnull final Class<T> serviceType) {
+                       @Nonnull final Map<String, String> parameters,
+                       @Nonnull final Class<T> serviceType) {
 
         Arguments.checkNotNull(okHttpClientBuilder, "OkHttpClient.Builder");
         Arguments.checkNonEmpty(url, "Service url");
+        Arguments.checkNotNull(parameters, "parameters");
         Arguments.checkNotNull(serviceType, "Flux service type");
 
         this.loggingInterceptor = new HttpLoggingInterceptor();

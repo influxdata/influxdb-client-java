@@ -38,6 +38,10 @@
     <name>The Flux client - Scala</name>
     <description>The reference Scala client that allows you to perform Flux queries against InfluxDB 1.7+.</description>
 
+    <properties>
+        <scoverage-maven-plugin.version>1.3.0</scoverage-maven-plugin.version>
+    </properties>
+
     <build>
         <sourceDirectory>src/main/scala</sourceDirectory>
         <testSourceDirectory>src/test/scala</testSourceDirectory>
@@ -78,13 +82,12 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
-
+            
             <plugin>
                 <groupId>org.scalatest</groupId>
                 <artifactId>scalatest-maven-plugin</artifactId>
                 <version>2.0.0</version>
                 <configuration>
-                    <skipTests>true</skipTests>
                     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
                     <junitxml>.</junitxml>
                 </configuration>
@@ -93,6 +96,25 @@
                         <id>test</id>
                         <goals>
                             <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.scoverage</groupId>
+                <artifactId>scoverage-maven-plugin</artifactId>
+                <version>${scoverage-maven-plugin.version}</version>
+                <configuration>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                    <!-- other parameters -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -116,6 +138,18 @@
                 <artifactId>scala-maven-plugin</artifactId>
                 <version>${plugin.scala.version}</version>
             </plugin>
+            <plugin>
+                <groupId>org.scoverage</groupId>
+                <artifactId>scoverage-maven-plugin</artifactId>
+                <version>${scoverage-maven-plugin.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
         </plugins>
     </reporting>
 
@@ -137,6 +171,25 @@
             <version>${scala.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-stream_2.12</artifactId>
+            <version>2.5.17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.influxdata</groupId>
+            <artifactId>platform-common-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_2.12</artifactId>
+            <version>3.0.5</version>
+            <scope>test</scope>
+        </dependency>
+        
     </dependencies>
 
 </project>
