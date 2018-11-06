@@ -37,7 +37,7 @@ import org.influxdata.platform.Arguments;
  * &lt;li&gt;&lt;b&gt;unit&lt;/b&gt; - The time duration to use for the result [duration]&lt;/li&gt;
  * &lt;li&gt;&lt;b&gt;nonNegative&lt;/b&gt; - Indicates if the derivative is allowed to be negative [boolean].&lt;/li&gt;
  * &lt;li&gt;&lt;b&gt;columns&lt;/b&gt; - List of columns on which to compute the derivative [array of strings].&lt;/li&gt;
- * &lt;li&gt;&lt;b&gt;timeSrc&lt;/b&gt; - The source column for the time values. Defaults to `_time` [string].&lt;/li&gt;
+ * &lt;li&gt;&lt;b&gt;timeColumn&lt;/b&gt; - The source column for the time values. Defaults to `_time` [string].&lt;/li&gt;
  * &lt;/ul&gt;
  *
  * &lt;h3&gt;Example&lt;/h3&gt;
@@ -52,7 +52,7 @@ import org.influxdata.platform.Arguments;
  *         .withUnit(10L, ChronoUnit.DAYS)
  *         .withNonNegative(true)
  *         .withColumns(new String[]{&quot;columnCompare_1&quot;, &quot;columnCompare_2&quot;})
- *         .withTimeSrc(&quot;_timeColumn&quot;);
+ *         .withTimeColumn(&quot;_timeColumn&quot;);
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (03/07/2018 14:28)
@@ -140,15 +140,15 @@ public final class DerivativeFlux extends AbstractParametrizedFlux {
     }
 
     /**
-     * @param timeSrc The source column for the time values
+     * @param timeColumn The source column for the time values
      * @return this
      */
     @Nonnull
-    public DerivativeFlux withTimeSrc(@Nonnull final String timeSrc) {
+    public DerivativeFlux withTimeColumn(@Nonnull final String timeColumn) {
 
-<span class="fc" id="L149">        Arguments.checkNonEmpty(timeSrc, &quot;Time column&quot;);</span>
+<span class="fc" id="L149">        Arguments.checkNonEmpty(timeColumn, &quot;Time column&quot;);</span>
 
-<span class="fc" id="L151">        this.withPropertyValueEscaped(&quot;timeSrc&quot;, timeSrc);</span>
+<span class="fc" id="L151">        this.withPropertyValueEscaped(&quot;timeColumn&quot;, timeColumn);</span>
 
 <span class="fc" id="L153">        return this;</span>
     }

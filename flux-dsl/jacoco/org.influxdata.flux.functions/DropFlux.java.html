@@ -52,7 +52,7 @@ import org.influxdata.platform.Arguments;
  * Flux flux = Flux
  *     .from(&quot;telegraf&quot;)
  *     .drop()
- *          .withFunction(&quot;col =~ /*free/&quot;);
+ *          .withFunction(&quot;column =~ /*free/&quot;);
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (02/08/2018 09:47)
@@ -107,7 +107,7 @@ public final class DropFlux extends AbstractParametrizedFlux {
 
 <span class="fc" id="L108">        Arguments.checkNonEmpty(function, &quot;Function&quot;);</span>
 
-<span class="fc" id="L110">        this.withFunction(&quot;fn: (col)&quot;, function);</span>
+<span class="fc" id="L110">        this.withFunction(&quot;fn: (column)&quot;, function);</span>
 
 <span class="fc" id="L112">        return this;</span>
     }

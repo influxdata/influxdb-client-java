@@ -34,7 +34,7 @@ import org.influxdata.platform.Arguments;
  * &lt;h3&gt;Options&lt;/h3&gt;
  * &lt;ul&gt;
  * &lt;li&gt;
- * &lt;b&gt;cols&lt;/b&gt; - List of columns used to sort; precedence from left to right.
+ * &lt;b&gt;columns&lt;/b&gt; - List of columns used to sort; precedence from left to right.
  * Default is [&quot;value&quot;] [array of strings]
  * &lt;/li&gt;
  * &lt;li&gt;&lt;b&gt;desc&lt;/b&gt; - Sort results descending. Default false [bool]&lt;/li&gt;
@@ -83,11 +83,11 @@ public final class SortFlux extends AbstractParametrizedFlux {
      * @return this
      */
     @Nonnull
-    public SortFlux withCols(@Nonnull final String[] columns) {
+    public SortFlux withColumns(@Nonnull final String[] columns) {
 
 <span class="fc" id="L88">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L90">        this.withPropertyValue(&quot;cols&quot;, columns);</span>
+<span class="fc" id="L90">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
 <span class="fc" id="L92">        return this;</span>
     }
@@ -97,11 +97,11 @@ public final class SortFlux extends AbstractParametrizedFlux {
      * @return this
      */
     @Nonnull
-    public SortFlux withCols(@Nonnull final Collection&lt;String&gt; columns) {
+    public SortFlux withColumns(@Nonnull final Collection&lt;String&gt; columns) {
 
 <span class="fc" id="L102">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
 
-<span class="fc" id="L104">        this.withPropertyValue(&quot;cols&quot;, columns);</span>
+<span class="fc" id="L104">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
 
 <span class="fc" id="L106">        return this;</span>
     }

@@ -35,9 +35,10 @@ import org.influxdata.platform.Arguments;
  * &lt;h3&gt;Options&lt;/h3&gt;
  * &lt;ul&gt;
  * &lt;li&gt;&lt;b&gt;rowKey&lt;/b&gt; - List of columns used to uniquely identify a row for the output. [array of strings]&lt;/li&gt;
- * &lt;li&gt;&lt;b&gt;colKey&lt;/b&gt; -
+ * &lt;li&gt;&lt;b&gt;columnKey&lt;/b&gt; -
  * List of columns used to pivot values onto each row identified by the rowKey. [array of strings]&lt;/li&gt;
- * &lt;li&gt;&lt;b&gt;valueCol&lt;/b&gt; - Identifies the single column that contains the value to be moved around the pivot [string]&lt;/li&gt;
+ * &lt;li&gt;&lt;b&gt;valueColumn&lt;/b&gt; - Identifies the single column that contains the value to be moved around the pivot [string]
+ * &lt;/li&gt;
  * &lt;/ul&gt;
  *
  * &lt;h3&gt;Example&lt;/h3&gt;
@@ -45,8 +46,8 @@ import org.influxdata.platform.Arguments;
  * Flux flux = Flux.from(&quot;telegraf&quot;)
  *     .pivot()
  *         .withRowKey(new String[]{&quot;_time&quot;})
- *         .withColKey(new String[]{&quot;_field&quot;})
- *         .withValueCol(&quot;_value&quot;);
+ *         .withColumnKey(new String[]{&quot;_field&quot;})
+ *         .withValueColumn(&quot;_value&quot;);
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (10/10/2018 06:16)
@@ -54,13 +55,13 @@ import org.influxdata.platform.Arguments;
 public final class PivotFlux extends AbstractParametrizedFlux {
 
     public PivotFlux(@Nonnull final Flux source) {
-<span class="fc" id="L57">        super(source);</span>
-<span class="fc" id="L58">    }</span>
+<span class="fc" id="L58">        super(source);</span>
+<span class="fc" id="L59">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L63">        return &quot;pivot&quot;;</span>
+<span class="fc" id="L64">        return &quot;pivot&quot;;</span>
     }
 
     /**
@@ -70,11 +71,11 @@ public final class PivotFlux extends AbstractParametrizedFlux {
     @Nonnull
     public PivotFlux withRowKey(@Nonnull final String[] rowKey) {
 
-<span class="fc" id="L73">        Arguments.checkNotNull(rowKey, &quot;rowKey&quot;);</span>
+<span class="fc" id="L74">        Arguments.checkNotNull(rowKey, &quot;rowKey&quot;);</span>
 
-<span class="fc" id="L75">        this.withPropertyValue(&quot;rowKey&quot;, rowKey);</span>
+<span class="fc" id="L76">        this.withPropertyValue(&quot;rowKey&quot;, rowKey);</span>
 
-<span class="fc" id="L77">        return this;</span>
+<span class="fc" id="L78">        return this;</span>
     }
 
     /**
@@ -84,53 +85,53 @@ public final class PivotFlux extends AbstractParametrizedFlux {
     @Nonnull
     public PivotFlux withRowKey(@Nonnull final Collection&lt;String&gt; rowKey) {
 
-<span class="fc" id="L87">        Arguments.checkNotNull(rowKey, &quot;rowKey&quot;);</span>
+<span class="fc" id="L88">        Arguments.checkNotNull(rowKey, &quot;rowKey&quot;);</span>
 
-<span class="fc" id="L89">        this.withPropertyValue(&quot;rowKey&quot;, rowKey);</span>
+<span class="fc" id="L90">        this.withPropertyValue(&quot;rowKey&quot;, rowKey);</span>
 
-<span class="fc" id="L91">        return this;</span>
+<span class="fc" id="L92">        return this;</span>
     }
 
     /**
-     * @param colKey the columns used to pivot values onto each row identified by the rowKey.
+     * @param columnKey the columns used to pivot values onto each row identified by the rowKey.
      * @return this
      */
     @Nonnull
-    public PivotFlux withColKey(@Nonnull final String[] colKey) {
+    public PivotFlux withColumnKey(@Nonnull final String[] columnKey) {
 
-<span class="fc" id="L101">        Arguments.checkNotNull(colKey, &quot;colKey&quot;);</span>
+<span class="fc" id="L102">        Arguments.checkNotNull(columnKey, &quot;columnKey&quot;);</span>
 
-<span class="fc" id="L103">        this.withPropertyValue(&quot;colKey&quot;, colKey);</span>
+<span class="fc" id="L104">        this.withPropertyValue(&quot;columnKey&quot;, columnKey);</span>
 
-<span class="fc" id="L105">        return this;</span>
+<span class="fc" id="L106">        return this;</span>
     }
 
     /**
-     * @param colKey the columns used to pivot values onto each row identified by the rowKey.
+     * @param columnKey the columns used to pivot values onto each row identified by the rowKey.
      * @return this
      */
     @Nonnull
-    public PivotFlux withColKey(@Nonnull final Collection&lt;String&gt; colKey) {
+    public PivotFlux withColumnKey(@Nonnull final Collection&lt;String&gt; columnKey) {
 
-<span class="fc" id="L115">        Arguments.checkNotNull(colKey, &quot;colKey&quot;);</span>
+<span class="fc" id="L116">        Arguments.checkNotNull(columnKey, &quot;columnKey&quot;);</span>
 
-<span class="fc" id="L117">        this.withPropertyValue(&quot;colKey&quot;, colKey);</span>
+<span class="fc" id="L118">        this.withPropertyValue(&quot;columnKey&quot;, columnKey);</span>
 
-<span class="fc" id="L119">        return this;</span>
+<span class="fc" id="L120">        return this;</span>
     }
 
     /**
-     * @param valueCol the single column that contains the value to be moved around the pivot
+     * @param valueColumn the single column that contains the value to be moved around the pivot
      * @return this
      */
     @Nonnull
-    public PivotFlux withValueCol(@Nonnull final String valueCol) {
+    public PivotFlux withValueColumn(@Nonnull final String valueColumn) {
 
-<span class="fc" id="L129">        Arguments.checkNonEmpty(valueCol, &quot;valueCol&quot;);</span>
+<span class="fc" id="L130">        Arguments.checkNonEmpty(valueColumn, &quot;valueColumn&quot;);</span>
 
-<span class="fc" id="L131">        this.withPropertyValueEscaped(&quot;valueCol&quot;, valueCol);</span>
+<span class="fc" id="L132">        this.withPropertyValueEscaped(&quot;valueColumn&quot;, valueColumn);</span>
 
-<span class="fc" id="L133">        return this;</span>
+<span class="fc" id="L134">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

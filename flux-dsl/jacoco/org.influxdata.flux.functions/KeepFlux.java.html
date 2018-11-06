@@ -53,7 +53,7 @@ import org.influxdata.platform.Arguments;
  * Flux flux = Flux
  *     .from(&quot;telegraf&quot;)
  *     .keep()
- *         .withFunction(&quot;col =~ /*inodes/&quot;);
+ *         .withFunction(&quot;column =~ /*inodes/&quot;);
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (02/08/2018 11:22)
@@ -109,7 +109,7 @@ public final class KeepFlux extends AbstractParametrizedFlux {
 
 <span class="fc" id="L110">        Arguments.checkNonEmpty(function, &quot;Function&quot;);</span>
 
-<span class="fc" id="L112">        this.withFunction(&quot;fn: (col)&quot;, function);</span>
+<span class="fc" id="L112">        this.withFunction(&quot;fn: (column)&quot;, function);</span>
 
 <span class="fc" id="L114">        return this;</span>
     }
