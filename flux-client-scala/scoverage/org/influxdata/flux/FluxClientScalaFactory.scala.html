@@ -1,0 +1,183 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          org/influxdata/flux/FluxClientScalaFactory.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>/**
+</span>2 <span style=''> * The MIT License
+</span>3 <span style=''> *
+</span>4 <span style=''> * Permission is hereby granted, free of charge, to any person obtaining a copy
+</span>5 <span style=''> * of this software and associated documentation files (the &quot;Software&quot;), to deal
+</span>6 <span style=''> * in the Software without restriction, including without limitation the rights
+</span>7 <span style=''> * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+</span>8 <span style=''> * copies of the Software, and to permit persons to whom the Software is
+</span>9 <span style=''> * furnished to do so, subject to the following conditions:
+</span>10 <span style=''> *
+</span>11 <span style=''> * The above copyright notice and this permission notice shall be included in
+</span>12 <span style=''> * all copies or substantial portions of the Software.
+</span>13 <span style=''> *
+</span>14 <span style=''> * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+</span>15 <span style=''> * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+</span>16 <span style=''> * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+</span>17 <span style=''> * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+</span>18 <span style=''> * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+</span>19 <span style=''> * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+</span>20 <span style=''> * THE SOFTWARE.
+</span>21 <span style=''> */
+</span>22 <span style=''>package org.influxdata.flux
+</span>23 <span style=''>
+</span>24 <span style=''>import javax.annotation.Nonnull
+</span>25 <span style=''>import org.influxdata.flux.impl.FluxClientScalaImpl
+</span>26 <span style=''>import org.influxdata.flux.option.FluxConnectionOptions
+</span>27 <span style=''>import org.influxdata.platform.Arguments
+</span>28 <span style=''>
+</span>29 <span style=''>/**
+</span>30 <span style=''> * The Factory that creates a instance of a Flux client.
+</span>31 <span style=''> * 
+</span>32 <span style=''> * @author Jakub Bednar (bednar@github) (05/11/2018 10:10)
+</span>33 <span style=''> */
+</span>34 <span style=''>object FluxClientScalaFactory {
+</span>35 <span style=''>
+</span>36 <span style=''>  /**
+</span>37 <span style=''>   * Create a instance of the Flux client.
+</span>38 <span style=''>   *
+</span>39 <span style=''>   * @param connectionString the connectionString to connect to InfluxDB.
+</span>40 <span style=''>   * @return client
+</span>41 <span style=''>   * @see FluxConnectionOptions.Builder#builder(String)
+</span>42 <span style=''>   */
+</span>43 <span style=''>  @Nonnull def create(@Nonnull connectionString: String): FluxClientScala = {
+</span>44 <span style=''>    val options = FluxConnectionOptions.builder(connectionString).build
+</span>45 <span style=''>    create(options)
+</span>46 <span style=''>  }
+</span>47 <span style=''>
+</span>48 <span style=''>  /**
+</span>49 <span style=''>   * Create a instance of the Flux client.
+</span>50 <span style=''>   *
+</span>51 <span style=''>   * @param options the connection configuration
+</span>52 <span style=''>   * @return client
+</span>53 <span style=''>   */
+</span>54 <span style=''>  @Nonnull def create(@Nonnull options: FluxConnectionOptions): FluxClientScala = {
+</span>55 <span style=''>    Arguments.checkNotNull(options, &quot;FluxConnectionOptions&quot;)
+</span>56 <span style=''>    new FluxClientScalaImpl(options)
+</span>57 <span style=''>  }
+</span>58 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          1
+        </td>
+        <td>
+          1828
+          -
+          1828
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.flux.option.FluxConnectionOptions.Builder.build
+        </td>
+        <td style="background: #AEF1AE">
+          org.influxdata.flux.option.FluxConnectionOptions.builder(connectionString).build()
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          2
+        </td>
+        <td>
+          1844
+          -
+          1844
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.flux.FluxClientScalaFactory.create
+        </td>
+        <td style="background: #AEF1AE">
+          FluxClientScalaFactory.this.create(options)
+        </td>
+      </tr><tr>
+        <td>
+          55
+        </td>
+        <td>
+          3
+        </td>
+        <td>
+          2098
+          -
+          2098
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.platform.Arguments.checkNotNull
+        </td>
+        <td style="background: #AEF1AE">
+          org.influxdata.platform.Arguments.checkNotNull(options, &quot;FluxConnectionOptions&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          56
+        </td>
+        <td>
+          4
+        </td>
+        <td>
+          2137
+          -
+          2137
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.flux.impl.FluxClientScalaImpl.&lt;init&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          new org.influxdata.flux.impl.FluxClientScalaImpl(options)
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

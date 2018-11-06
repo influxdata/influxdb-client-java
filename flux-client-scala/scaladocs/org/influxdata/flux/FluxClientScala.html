@@ -117,10 +117,30 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="org.influxdata">influxdata</a></dd></dl></div>
+    </li><li name="org.influxdata.flux.impl" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="impl"></a><a id="impl:impl"></a>
+      <span class="permalink">
+      <a href="../../../org/influxdata/flux/index.html#impl" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="impl/index.html"><span class="name">impl</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="org.influxdata.flux">flux</a></dd></dl></div>
     </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="trait" href="" title="The client that allows perform Flux queries against the InfluxDB /api/v2/query endpoint."></a>
                         <a href="" title="The client that allows perform Flux queries against the InfluxDB /api/v2/query endpoint.">FluxClientScala</a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="FluxClientScalaFactory$.html" title="The Factory that creates a instance of a Flux client."></a>
+                        <a href="FluxClientScalaFactory$.html" title="The Factory that creates a instance of a Flux client.">FluxClientScalaFactory</a>
                       </li>
               </ul>
             </div>
@@ -155,7 +175,12 @@
             Linear Supertypes
           </span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
-        </div></div>
+        </div><div class="toggleContainer block">
+            <span class="toggle">
+              Known Subclasses
+            </span>
+            <div class="subClasses hiddenContent"><a href="impl/FluxClientScalaImpl.html" class="extype" name="org.influxdata.flux.impl.FluxClientScalaImpl">FluxClientScalaImpl</a></div>
+          </div></div>
         
 
       <div id="mbrsel">
@@ -261,9 +286,9 @@
               
         </dd></dl></div>
     </li><li name="org.influxdata.flux.FluxClientScala#query" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="query[M](query:String,measurementType:Class[M]):Stream[M]"></a><a id="query[M](String,Class[M]):Stream[M]"></a>
+      <a id="query[M](query:String,measurementType:Class[M]):akka.stream.scaladsl.Source[M,akka.NotUsed]"></a><a id="query[M](String,Class[M]):Source[M,NotUsed]"></a>
       <span class="permalink">
-      <a href="../../../org/influxdata/flux/FluxClientScala.html#query[M](query:String,measurementType:Class[M]):Stream[M]" title="Permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScala.html#query[M](query:String,measurementType:Class[M]):akka.stream.scaladsl.Source[M,akka.NotUsed]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -272,7 +297,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">query</span><span class="tparams">[<span name="M">M</span>]</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="measurementType">measurementType: <span class="extype" name="scala.Predef.Class">Class</span>[<span class="extype" name="org.influxdata.flux.FluxClientScala.query.M">M</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="org.influxdata.flux.FluxClientScala.query.M">M</span>]</span>
+        <span class="name">query</span><span class="tparams">[<span name="M">M</span>]</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="measurementType">measurementType: <span class="extype" name="scala.Predef.Class">Class</span>[<span class="extype" name="org.influxdata.flux.FluxClientScala.query.M">M</span>]</span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="org.influxdata.flux.FluxClientScala.query.M">M</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream measurements to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream measurements to <span class="extype" name="Stream">Stream</span>.
@@ -281,9 +306,9 @@
               
         </dd></dl></div>
     </li><li name="org.influxdata.flux.FluxClientScala#query" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="query(query:String):Stream[org.influxdata.flux.domain.FluxRecord]"></a><a id="query(String):Stream[FluxRecord]"></a>
+      <a id="query(query:String):akka.stream.scaladsl.Source[org.influxdata.flux.domain.FluxRecord,akka.NotUsed]"></a><a id="query(String):Source[FluxRecord,NotUsed]"></a>
       <span class="permalink">
-      <a href="../../../org/influxdata/flux/FluxClientScala.html#query(query:String):Stream[org.influxdata.flux.domain.FluxRecord]" title="Permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScala.html#query(query:String):akka.stream.scaladsl.Source[org.influxdata.flux.domain.FluxRecord,akka.NotUsed]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -292,7 +317,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">query</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="org.influxdata.flux.domain.FluxRecord">FluxRecord</span>]</span>
+        <span class="name">query</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="org.influxdata.flux.domain.FluxRecord">FluxRecord</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream <span class="extype" name="FluxRecord">FluxRecord</span>s to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream <span class="extype" name="FluxRecord">FluxRecord</span>s to <span class="extype" name="Stream">Stream</span>.
@@ -301,9 +326,9 @@
               
         </dd></dl></div>
     </li><li name="org.influxdata.flux.FluxClientScala#queryRaw" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="queryRaw(query:String,dialect:String):Stream[String]"></a><a id="queryRaw(String,String):Stream[String]"></a>
+      <a id="queryRaw(query:String,dialect:String):akka.stream.scaladsl.Source[String,akka.NotUsed]"></a><a id="queryRaw(String,String):Source[String,NotUsed]"></a>
       <span class="permalink">
-      <a href="../../../org/influxdata/flux/FluxClientScala.html#queryRaw(query:String,dialect:String):Stream[String]" title="Permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScala.html#queryRaw(query:String,dialect:String):akka.stream.scaladsl.Source[String,akka.NotUsed]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -312,7 +337,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">queryRaw</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="dialect">dialect: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+        <span class="name">queryRaw</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="dialect">dialect: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.
@@ -322,9 +347,9 @@
               
         </dd></dl></div>
     </li><li name="org.influxdata.flux.FluxClientScala#queryRaw" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="queryRaw(query:String):Stream[String]"></a><a id="queryRaw(String):Stream[String]"></a>
+      <a id="queryRaw(query:String):akka.stream.scaladsl.Source[String,akka.NotUsed]"></a><a id="queryRaw(String):Source[String,NotUsed]"></a>
       <span class="permalink">
-      <a href="../../../org/influxdata/flux/FluxClientScala.html#queryRaw(query:String):Stream[String]" title="Permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScala.html#queryRaw(query:String):akka.stream.scaladsl.Source[String,akka.NotUsed]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -333,7 +358,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">queryRaw</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+        <span class="name">queryRaw</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.
@@ -342,9 +367,9 @@
               
         </dd></dl></div>
     </li><li name="org.influxdata.flux.FluxClientScala#setLogLevel" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="setLogLevel(logLevel:org.influxdata.platform.rest.LogLevel):org.influxdata.flux.FluxClient"></a><a id="setLogLevel(LogLevel):FluxClient"></a>
+      <a id="setLogLevel(logLevel:org.influxdata.platform.rest.LogLevel):org.influxdata.flux.FluxClientScala"></a><a id="setLogLevel(LogLevel):FluxClientScala"></a>
       <span class="permalink">
-      <a href="../../../org/influxdata/flux/FluxClientScala.html#setLogLevel(logLevel:org.influxdata.platform.rest.LogLevel):org.influxdata.flux.FluxClient" title="Permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScala.html#setLogLevel(logLevel:org.influxdata.platform.rest.LogLevel):org.influxdata.flux.FluxClientScala" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -353,7 +378,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setLogLevel</span><span class="params">(<span name="logLevel">logLevel: <span class="extype" name="org.influxdata.platform.rest.LogLevel">LogLevel</span></span>)</span><span class="result">: <span class="extype" name="org.influxdata.flux.FluxClient">FluxClient</span></span>
+        <span class="name">setLogLevel</span><span class="params">(<span name="logLevel">logLevel: <span class="extype" name="org.influxdata.platform.rest.LogLevel">LogLevel</span></span>)</span><span class="result">: <a href="" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a></span>
       </span>
       
       <p class="shortcomment cmt">Sets the log level for the request and response information.</p><div class="fullcomment"><div class="comment cmt"><p>Sets the log level for the request and response information.

@@ -1,0 +1,623 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          org/influxdata/flux/impl/FluxClientScalaImpl.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>/**
+</span>2 <span style=''> * The MIT License
+</span>3 <span style=''> *
+</span>4 <span style=''> * Permission is hereby granted, free of charge, to any person obtaining a copy
+</span>5 <span style=''> * of this software and associated documentation files (the &quot;Software&quot;), to deal
+</span>6 <span style=''> * in the Software without restriction, including without limitation the rights
+</span>7 <span style=''> * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+</span>8 <span style=''> * copies of the Software, and to permit persons to whom the Software is
+</span>9 <span style=''> * furnished to do so, subject to the following conditions:
+</span>10 <span style=''> *
+</span>11 <span style=''> * The above copyright notice and this permission notice shall be included in
+</span>12 <span style=''> * all copies or substantial portions of the Software.
+</span>13 <span style=''> *
+</span>14 <span style=''> * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+</span>15 <span style=''> * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+</span>16 <span style=''> * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+</span>17 <span style=''> * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+</span>18 <span style=''> * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+</span>19 <span style=''> * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+</span>20 <span style=''> * THE SOFTWARE.
+</span>21 <span style=''> */
+</span>22 <span style=''>package org.influxdata.flux.impl
+</span>23 <span style=''>
+</span>24 <span style=''>import java.io.IOException
+</span>25 <span style=''>import java.util.logging.{Level, Logger}
+</span>26 <span style=''>
+</span>27 <span style=''>import akka.NotUsed
+</span>28 <span style=''>import akka.stream.scaladsl.Source
+</span>29 <span style=''>import javax.annotation.Nonnull
+</span>30 <span style=''>import org.influxdata.flux.FluxClientScala
+</span>31 <span style=''>import org.influxdata.flux.domain.FluxRecord
+</span>32 <span style=''>import org.influxdata.flux.option.FluxConnectionOptions
+</span>33 <span style=''>import org.influxdata.platform.error.InfluxException
+</span>34 <span style=''>import org.influxdata.platform.rest.{AbstractQueryClient, LogLevel}
+</span>35 <span style=''>
+</span>36 <span style=''>/**
+</span>37 <span style=''> * @author Jakub Bednar (bednar@github) (06/11/2018 08:19)
+</span>38 <span style=''> */
+</span>39 <span style=''>class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)
+</span>40 <span style=''>  extends AbstractFluxClient(options.getOkHttpClient, options.getUrl, options.getParameters, classOf[FluxService])
+</span>41 <span style=''>    with FluxClientScala {
+</span>42 <span style=''>
+</span>43 <span style=''>  private val LOG = Logger.getLogger(classOf[FluxClientScalaImpl].getName)
+</span>44 <span style=''>
+</span>45 <span style=''>  /**
+</span>46 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
+</span>47 <span style=''>   *
+</span>48 <span style=''>   * @param query the flux query to execute
+</span>49 <span style=''>   * @return the stream of [[FluxRecord]]s
+</span>50 <span style=''>   */
+</span>51 <span style=''>  override def query(query: String): Source[FluxRecord, NotUsed] = {
+</span>52 <span style=''>    throw new NotImplementedError()
+</span>53 <span style=''>  }
+</span>54 <span style=''>
+</span>55 <span style=''>  /**
+</span>56 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+</span>57 <span style=''>   *
+</span>58 <span style=''>   * @param query           the flux query to execute
+</span>59 <span style=''>   * @param measurementType the measurement (POJO)
+</span>60 <span style=''>   * @tparam M the type of the measurement (POJO)
+</span>61 <span style=''>   * @return the stream of measurements
+</span>62 <span style=''>   */
+</span>63 <span style=''>  override def query[M](query: String, measurementType: Class[M]): Source[M, NotUsed] = {
+</span>64 <span style=''>    throw new NotImplementedError()
+</span>65 <span style=''>  }
+</span>66 <span style=''>
+</span>67 <span style=''>  /**
+</span>68 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>69 <span style=''>   *
+</span>70 <span style=''>   * @param query the flux query to execute
+</span>71 <span style=''>   * @return the response stream
+</span>72 <span style=''>   */
+</span>73 <span style=''>  override def queryRaw(query: String): Source[String, NotUsed] = {
+</span>74 <span style=''>    val dialect = AbstractQueryClient.DEFAULT_DIALECT.toString
+</span>75 <span style=''>    queryRaw(query, dialect)
+</span>76 <span style=''>  }
+</span>77 <span style=''>
+</span>78 <span style=''>  /**
+</span>79 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>80 <span style=''>   *
+</span>81 <span style=''>   * @param query   the flux query to execute
+</span>82 <span style=''>   * @param dialect Dialect is an object defining the options to use when encoding the response.
+</span>83 <span style=''>   *                [[http://bit.ly/flux-dialect See dialect SPEC]].
+</span>84 <span style=''>   * @return the response stream
+</span>85 <span style=''>   */
+</span>86 <span style=''>  override def queryRaw(query: String, dialect: String): Source[String, NotUsed] = {
+</span>87 <span style=''>    throw new NotImplementedError()
+</span>88 <span style=''>  }
+</span>89 <span style=''>
+</span>90 <span style=''>  /**
+</span>91 <span style=''>   * Check the status of InfluxDB Server.
+</span>92 <span style=''>   *
+</span>93 <span style=''>   * @return `true` if server is healthy otherwise return `false`
+</span>94 <span style=''>   */
+</span>95 <span style=''>  override def ping: Boolean = {
+</span>96 <span style=''>    try {
+</span>97 <span style=''>      fluxService.ping().execute().isSuccessful
+</span>98 <span style=''>    } catch {
+</span>99 <span style=''>      case e: IOException =&gt;
+</span>100 <span style=''>        LOG.log(Level.WARNING, &quot;Ping request wasn't successful&quot;, e)
+</span>101 <span style=''>        false
+</span>102 <span style=''>    }
+</span>103 <span style=''>  }
+</span>104 <span style=''>
+</span>105 <span style=''>  /**
+</span>106 <span style=''>   * Returns the version of the connected InfluxDB Server.
+</span>107 <span style=''>   *
+</span>108 <span style=''>   * @return the version String, otherwise unknown.
+</span>109 <span style=''>   */
+</span>110 <span style=''>  override def version: String = {
+</span>111 <span style=''>    try {
+</span>112 <span style=''>      val response = fluxService.ping().execute()
+</span>113 <span style=''>      getVersion(response)
+</span>114 <span style=''>    } catch {
+</span>115 <span style=''>      case e: IOException =&gt; throw new InfluxException(e)
+</span>116 <span style=''>    }
+</span>117 <span style=''>  }
+</span>118 <span style=''>
+</span>119 <span style=''>  /**
+</span>120 <span style=''>   * Gets the [[LogLevel]] that is used for logging requests and responses.
+</span>121 <span style=''>   *
+</span>122 <span style=''>   * @return the [[LogLevel]] that is used for logging requests and responses
+</span>123 <span style=''>   */
+</span>124 <span style=''>  override def getLogLevel: LogLevel = {
+</span>125 <span style=''>    super.getLogLevel(loggingInterceptor)
+</span>126 <span style=''>  }
+</span>127 <span style=''>
+</span>128 <span style=''>  /**
+</span>129 <span style=''>   * Sets the log level for the request and response information.
+</span>130 <span style=''>   *
+</span>131 <span style=''>   * @param logLevel the log level to set.
+</span>132 <span style=''>   * @return the FluxClient instance to be able to use it in a fluent manner.
+</span>133 <span style=''>   */
+</span>134 <span style=''>  override def setLogLevel(logLevel: LogLevel): FluxClientScala = {
+</span>135 <span style=''>    super.setLogLevel(loggingInterceptor, logLevel)
+</span>136 <span style=''>    this
+</span>137 <span style=''>  }
+</span>138 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          5
+        </td>
+        <td>
+          1901
+          -
+          1901
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.Class.getName
+        </td>
+        <td style="background: #AEF1AE">
+          classOf[org.influxdata.flux.impl.FluxClientScalaImpl].getName()
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          6
+        </td>
+        <td>
+          1871
+          -
+          1871
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.util.logging.Logger.getLogger
+        </td>
+        <td style="background: #AEF1AE">
+          java.util.logging.Logger.getLogger(classOf[org.influxdata.flux.impl.FluxClientScalaImpl].getName())
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          7
+        </td>
+        <td>
+          2195
+          -
+          2195
+        </td>
+        <td>
+          Throw
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          throw new scala.NotImplementedError()
+        </td>
+      </tr><tr>
+        <td>
+          64
+        </td>
+        <td>
+          8
+        </td>
+        <td>
+          2642
+          -
+          2642
+        </td>
+        <td>
+          Throw
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          throw new scala.NotImplementedError()
+        </td>
+      </tr><tr>
+        <td>
+          74
+        </td>
+        <td>
+          9
+        </td>
+        <td>
+          2995
+          -
+          2995
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.json.JSONObject.toString
+        </td>
+        <td style="background: #F0ADAD">
+          org.influxdata.platform.rest.AbstractQueryClient.DEFAULT_DIALECT.toString()
+        </td>
+      </tr><tr>
+        <td>
+          75
+        </td>
+        <td>
+          10
+        </td>
+        <td>
+          3016
+          -
+          3016
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.flux.impl.FluxClientScalaImpl.queryRaw
+        </td>
+        <td style="background: #F0ADAD">
+          FluxClientScalaImpl.this.queryRaw(query, dialect)
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          11
+        </td>
+        <td>
+          3489
+          -
+          3489
+        </td>
+        <td>
+          Throw
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          throw new scala.NotImplementedError()
+        </td>
+      </tr><tr>
+        <td>
+          97
+        </td>
+        <td>
+          13
+        </td>
+        <td>
+          3729
+          -
+          3729
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          retrofit2.Response.isSuccessful
+        </td>
+        <td style="background: #AEF1AE">
+          FluxClientScalaImpl.this.fluxService.ping().execute().isSuccessful()
+        </td>
+      </tr><tr>
+        <td>
+          97
+        </td>
+        <td>
+          12
+        </td>
+        <td>
+          3729
+          -
+          3729
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          retrofit2.Response.isSuccessful
+        </td>
+        <td style="background: #AEF1AE">
+          FluxClientScalaImpl.this.fluxService.ping().execute().isSuccessful()
+        </td>
+      </tr><tr>
+        <td>
+          100
+        </td>
+        <td>
+          14
+        </td>
+        <td>
+          3807
+          -
+          3807
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          java.util.logging.Level.WARNING
+        </td>
+        <td style="background: #AEF1AE">
+          java.util.logging.Level.WARNING
+        </td>
+      </tr><tr>
+        <td>
+          100
+        </td>
+        <td>
+          16
+        </td>
+        <td>
+          3800
+          -
+          3800
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.util.logging.Logger.log
+        </td>
+        <td style="background: #AEF1AE">
+          FluxClientScalaImpl.this.LOG.log(java.util.logging.Level.WARNING, &quot;Ping request wasn\'t successful&quot;, e)
+        </td>
+      </tr><tr>
+        <td>
+          100
+        </td>
+        <td>
+          15
+        </td>
+        <td>
+          3816
+          -
+          3816
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;Ping request wasn\'t successful&quot;
+        </td>
+      </tr><tr>
+        <td>
+          101
+        </td>
+        <td>
+          17
+        </td>
+        <td>
+          3861
+          -
+          3861
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          false
+        </td>
+      </tr><tr>
+        <td>
+          111
+        </td>
+        <td>
+          20
+        </td>
+        <td>
+          4045
+          -
+          4045
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          {
+  val response: retrofit2.Response[okhttp3.ResponseBody] = FluxClientScalaImpl.this.fluxService.ping().execute();
+  FluxClientScalaImpl.this.getVersion(response)
+}
+        </td>
+      </tr><tr>
+        <td>
+          112
+        </td>
+        <td>
+          18
+        </td>
+        <td>
+          4098
+          -
+          4098
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          retrofit2.Call.execute
+        </td>
+        <td style="background: #AEF1AE">
+          FluxClientScalaImpl.this.fluxService.ping().execute()
+        </td>
+      </tr><tr>
+        <td>
+          113
+        </td>
+        <td>
+          19
+        </td>
+        <td>
+          4117
+          -
+          4117
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.flux.impl.AbstractFluxClient.getVersion
+        </td>
+        <td style="background: #AEF1AE">
+          FluxClientScalaImpl.this.getVersion(response)
+        </td>
+      </tr><tr>
+        <td>
+          115
+        </td>
+        <td>
+          21
+        </td>
+        <td>
+          4171
+          -
+          4171
+        </td>
+        <td>
+          Throw
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          throw new org.influxdata.platform.error.InfluxException(e)
+        </td>
+      </tr><tr>
+        <td>
+          125
+        </td>
+        <td>
+          23
+        </td>
+        <td>
+          4444
+          -
+          4444
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.platform.rest.AbstractRestClient.getLogLevel
+        </td>
+        <td style="background: #AEF1AE">
+          FluxClientScalaImpl.super.getLogLevel(FluxClientScalaImpl.this.loggingInterceptor)
+        </td>
+      </tr><tr>
+        <td>
+          125
+        </td>
+        <td>
+          22
+        </td>
+        <td>
+          4445
+          -
+          4445
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.flux.impl.AbstractFluxClient.loggingInterceptor
+        </td>
+        <td style="background: #AEF1AE">
+          FluxClientScalaImpl.this.loggingInterceptor
+        </td>
+      </tr><tr>
+        <td>
+          135
+        </td>
+        <td>
+          25
+        </td>
+        <td>
+          4763
+          -
+          4763
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.platform.rest.AbstractRestClient.setLogLevel
+        </td>
+        <td style="background: #AEF1AE">
+          FluxClientScalaImpl.super.setLogLevel(FluxClientScalaImpl.this.loggingInterceptor, logLevel)
+        </td>
+      </tr><tr>
+        <td>
+          135
+        </td>
+        <td>
+          24
+        </td>
+        <td>
+          4764
+          -
+          4764
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.flux.impl.AbstractFluxClient.loggingInterceptor
+        </td>
+        <td style="background: #AEF1AE">
+          FluxClientScalaImpl.this.loggingInterceptor
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

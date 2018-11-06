@@ -1,0 +1,1044 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+          <title>The Flux client - Scala 1.0-SNAPSHOT API  - org.influxdata.flux.impl.FluxClientScalaImpl</title>
+          <meta name="description" content="The Flux client - Scala 1.0 - SNAPSHOT API - org.influxdata.flux.impl.FluxClientScalaImpl" />
+          <meta name="keywords" content="The Flux client Scala 1.0 SNAPSHOT API org.influxdata.flux.impl.FluxClientScalaImpl" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/index.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery.panzoom.min.js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery.mousewheel.min.js"></script>
+      <script type="text/javascript" src="../../../../lib/index.js"></script>
+      <script type="text/javascript" src="../../../../index.js"></script>
+      <script type="text/javascript" src="../../../../lib/scheduler.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+        /* this variable can be used by the JS to determine the path to the root document */
+        var toRoot = '../../../../';
+      </script>
+    
+        </head>
+        <body>
+      <div id="search">
+        <span id="doc-title">The Flux client - Scala 1.0-SNAPSHOT API<span id="doc-version"></span></span>
+        <span class="close-results"><span class="left">&lt;</span> Back</span>
+        <div id="textfilter">
+          <span class="input">
+            <input autocapitalize="none" placeholder="Search" id="index-input" type="text" accesskey="/" />
+            <i class="clear material-icons"></i>
+            <i id="search-icon" class="material-icons"></i>
+          </span>
+        </div>
+    </div>
+      <div id="search-results">
+        <div id="search-progress">
+          <div id="progress-fill"></div>
+        </div>
+        <div id="results-content">
+          <div id="entity-results"></div>
+          <div id="member-results"></div>
+        </div>
+      </div>
+      <div id="content-scroll-container" style="-webkit-overflow-scrolling: touch;">
+        <div id="content-container" style="-webkit-overflow-scrolling: touch;">
+          <div id="subpackage-spacer">
+            <div id="packages">
+              <h1>Packages</h1>
+              <ul>
+                <li name="_root_.root" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="_root_"></a><a id="root:_root_"></a>
+      <span class="permalink">
+      <a href="index.html#_root_" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="../../../../index.html"><span class="name">root</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../../index.html" class="extype" name="_root_">root</a></dd></dl></div>
+    </li><li name="_root_.org" visbl="pub" class="indented1 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="org"></a><a id="org:org"></a>
+      <span class="permalink">
+      <a href="index.html#org" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="../../../index.html"><span class="name">org</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../../index.html" class="extype" name="_root_">root</a></dd></dl></div>
+    </li><li name="org.influxdata" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="influxdata"></a><a id="influxdata:influxdata"></a>
+      <span class="permalink">
+      <a href="../org/index.html#influxdata" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="../../index.html"><span class="name">influxdata</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../index.html" class="extype" name="org">org</a></dd></dl></div>
+    </li><li name="org.influxdata.flux" visbl="pub" class="indented3 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="flux"></a><a id="flux:flux"></a>
+      <span class="permalink">
+      <a href="../../org/influxdata/index.html#flux" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="../index.html"><span class="name">flux</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="org.influxdata">influxdata</a></dd></dl></div>
+    </li><li name="org.influxdata.flux.impl" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="impl"></a><a id="impl:impl"></a>
+      <span class="permalink">
+      <a href="../../../org/influxdata/flux/index.html#impl" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="index.html"><span class="name">impl</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="org.influxdata.flux">flux</a></dd></dl></div>
+    </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="" title=""></a>
+                        <a href="" title="">FluxClientScalaImpl</a>
+                      </li>
+              </ul>
+            </div>
+          </div>
+          <div id="content">
+            <body class="class type">
+      <div id="definition">
+        <div class="big-circle class">c</div>
+        <p id="owner"><a href="../../../index.html" class="extype" name="org">org</a>.<a href="../../index.html" class="extype" name="org.influxdata">influxdata</a>.<a href="../index.html" class="extype" name="org.influxdata.flux">flux</a>.<a href="index.html" class="extype" name="org.influxdata.flux.impl">impl</a></p>
+        <h1>FluxClientScalaImpl<span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span></h1>
+        <h3><span class="morelinks"></span></h3>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">FluxClientScalaImpl</span><span class="result"> extends <span class="extype" name="org.influxdata.flux.impl.AbstractFluxClient">AbstractFluxClient</span>[<span class="extype" name="org.influxdata.flux.impl.FluxService">FluxService</span>] with <a href="../FluxClientScala.html" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a></span>
+      </span>
+      </h4>
+
+      
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"></div><div class="toggleContainer block">
+          <span class="toggle">
+            Linear Supertypes
+          </span>
+          <div class="superTypes hiddenContent"><a href="../FluxClientScala.html" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a>, <span class="extype" name="org.influxdata.flux.impl.AbstractFluxClient">AbstractFluxClient</span>[<span class="extype" name="org.influxdata.flux.impl.FluxService">FluxService</span>], <span class="extype" name="org.influxdata.platform.rest.AbstractQueryClient">AbstractQueryClient</span>, <span class="extype" name="org.influxdata.platform.rest.AbstractRestClient">AbstractRestClient</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div class="toggle"></div>
+        <div id="memberfilter">
+          <i class="material-icons arrow"></i>
+          <span class="input">
+            <input id="mbrsel-input" placeholder="Filter all members" type="text" accesskey="/" />
+          </span>
+          <i class="clear material-icons"></i>
+        </div>
+        <div id="filterby">
+          <div id="order">
+            <span class="filtertype">Ordering</span>
+            <ol>
+              
+              <li class="alpha in"><span>Alphabetic</span></li>
+              <li class="inherit out"><span>By Inheritance</span></li>
+            </ol>
+          </div>
+          <div class="ancestors">
+                  <span class="filtertype">Inherited<br />
+                  </span>
+                  <ol id="linearization">
+                    <li class="in" name="org.influxdata.flux.impl.FluxClientScalaImpl"><span>FluxClientScalaImpl</span></li><li class="in" name="org.influxdata.flux.FluxClientScala"><span>FluxClientScala</span></li><li class="in" name="org.influxdata.flux.impl.AbstractFluxClient"><span>AbstractFluxClient</span></li><li class="in" name="org.influxdata.platform.rest.AbstractQueryClient"><span>AbstractQueryClient</span></li><li class="in" name="org.influxdata.platform.rest.AbstractRestClient"><span>AbstractRestClient</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  </ol>
+                </div><div class="ancestors">
+              <span class="filtertype"></span>
+              <ol>
+                <li class="hideall out"><span>Hide All</span></li>
+                <li class="showall in"><span>Show All</span></li>
+              </ol>
+            </div>
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+            </div>
+        </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="org.influxdata.flux.impl.FluxClientScalaImpl#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(options:org.influxdata.flux.option.FluxConnectionOptions):org.influxdata.flux.impl.FluxClientScalaImpl"></a><a id="&lt;init&gt;:FluxClientScalaImpl"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#&lt;init&gt;(options:org.influxdata.flux.option.FluxConnectionOptions):org.influxdata.flux.impl.FluxClientScalaImpl" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">FluxClientScalaImpl</span><span class="params">(<span name="options">options: <span class="extype" name="org.influxdata.flux.option.FluxConnectionOptions">FluxConnectionOptions</span></span>)</span>
+      </span>
+      
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+
+        <div class="values members">
+              <h3>Value Members</h3>
+              <ol>
+                <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#!=(x$1:Any):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html###():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#==(x$1:Any):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#asInstanceOf[T0]:T0" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="org.influxdata.platform.rest.AbstractRestClient#catchOrPropagateException" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="catchOrPropagateException(x$1:Exception,x$2:java.util.function.Consumer[_&gt;:Throwable]):Unit"></a><a id="catchOrPropagateException(Exception,Consumer[_&gt;:Throwable]):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#catchOrPropagateException(x$1:Exception,x$2:java.util.function.Consumer[_&gt;:Throwable]):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">catchOrPropagateException</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.Exception">Exception</span></span>, <span name="arg1">arg1: <span class="extype" name="java.util.function.Consumer">Consumer</span>[_ &gt;: <span class="extype" name="java.lang.Throwable">Throwable</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../platform/rest/index.html" class="extype" name="org.influxdata.platform.rest">org.influxdata.platform.rest</a>] </dd><dt>Definition Classes</dt><dd>AbstractRestClient</dd></dl></div>
+    </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a><a id="clone():AnyRef"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#clone():Object" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.flux.impl.AbstractFluxClient#close" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="close():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#close():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">close</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AbstractFluxClient</dd></dl></div>
+    </li><li name="org.influxdata.flux.impl.AbstractFluxClient#configure" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="configure(x$1:retrofit2.Retrofit.Builder):Unit"></a><a id="configure(Builder):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#configure(x$1:retrofit2.Retrofit.Builder):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">configure</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="retrofit2.Retrofit.Builder">Builder</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="index.html" class="extype" name="org.influxdata.flux.impl">org.influxdata.flux.impl</a>] </dd><dt>Definition Classes</dt><dd>AbstractFluxClient</dd></dl></div>
+    </li><li name="org.influxdata.platform.rest.AbstractQueryClient#createBody" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="createBody(x$1:String,x$2:String):okhttp3.RequestBody"></a><a id="createBody(String,String):RequestBody"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#createBody(x$1:String,x$2:String):okhttp3.RequestBody" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">createBody</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg1">arg1: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <span class="extype" name="okhttp3.RequestBody">RequestBody</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../platform/rest/index.html" class="extype" name="org.influxdata.platform.rest">org.influxdata.platform.rest</a>] </dd><dt>Definition Classes</dt><dd>AbstractQueryClient</dd><dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.platform.rest.AbstractRestClient#createBody" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="createBody(x$1:String):okhttp3.RequestBody"></a><a id="createBody(String):RequestBody"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#createBody(x$1:String):okhttp3.RequestBody" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">createBody</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <span class="extype" name="okhttp3.RequestBody">RequestBody</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../platform/rest/index.html" class="extype" name="org.influxdata.platform.rest">org.influxdata.platform.rest</a>] </dd><dt>Definition Classes</dt><dd>AbstractRestClient</dd><dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#eq(x$1:AnyRef):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#equals(x$1:Any):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.influxdata.platform.rest.AbstractRestClient#execute" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="execute[T](x$1:retrofit2.Call[T],x$2:String):T"></a><a id="execute[T](Call[T],String):T"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#execute[T](x$1:retrofit2.Call[T],x$2:String):T" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">execute</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="retrofit2.Call">Call</span>[<span class="extype" name="org.influxdata.platform.rest.AbstractRestClient.execute.T">T</span>]</span>, <span name="arg1">arg1: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <span class="extype" name="org.influxdata.platform.rest.AbstractRestClient.execute.T">T</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../platform/rest/index.html" class="extype" name="org.influxdata.platform.rest">org.influxdata.platform.rest</a>] </dd><dt>Definition Classes</dt><dd>AbstractRestClient</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[org.influxdata.platform.error.InfluxException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.platform.rest.AbstractRestClient#execute" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="execute[T](x$1:retrofit2.Call[T]):T"></a><a id="execute[T](Call[T]):T"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#execute[T](x$1:retrofit2.Call[T]):T" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">execute</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="retrofit2.Call">Call</span>[<span class="extype" name="org.influxdata.platform.rest.AbstractRestClient.execute.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="org.influxdata.platform.rest.AbstractRestClient.execute.T">T</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../platform/rest/index.html" class="extype" name="org.influxdata.platform.rest">org.influxdata.platform.rest</a>] </dd><dt>Definition Classes</dt><dd>AbstractRestClient</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[org.influxdata.platform.error.InfluxException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#finalize():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#getClass():Class[_]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.flux.impl.FluxClientScalaImpl#getLogLevel" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getLogLevel:org.influxdata.platform.rest.LogLevel"></a><a id="getLogLevel:LogLevel"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#getLogLevel:org.influxdata.platform.rest.LogLevel" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getLogLevel</span><span class="result">: <span class="extype" name="org.influxdata.platform.rest.LogLevel">LogLevel</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Gets the <span class="extype" name="LogLevel">LogLevel</span> that is used for logging requests and responses.</p><div class="fullcomment"><div class="comment cmt"><p>Gets the <span class="extype" name="LogLevel">LogLevel</span> that is used for logging requests and responses.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the <span class="extype" name="LogLevel">LogLevel</span> that is used for logging requests and responses</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.influxdata.flux.impl.FluxClientScalaImpl">FluxClientScalaImpl</a> → <a href="../FluxClientScala.html" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a></dd></dl></div>
+    </li><li name="org.influxdata.platform.rest.AbstractRestClient#getLogLevel" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getLogLevel(x$1:okhttp3.logging.HttpLoggingInterceptor):org.influxdata.platform.rest.LogLevel"></a><a id="getLogLevel(HttpLoggingInterceptor):LogLevel"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#getLogLevel(x$1:okhttp3.logging.HttpLoggingInterceptor):org.influxdata.platform.rest.LogLevel" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getLogLevel</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="okhttp3.logging.HttpLoggingInterceptor">HttpLoggingInterceptor</span></span>)</span><span class="result">: <span class="extype" name="org.influxdata.platform.rest.LogLevel">LogLevel</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../platform/rest/index.html" class="extype" name="org.influxdata.platform.rest">org.influxdata.platform.rest</a>] </dd><dt>Definition Classes</dt><dd>AbstractRestClient</dd><dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#hashCode():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.platform.rest.AbstractRestClient#isCloseException" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isCloseException(x$1:Exception):Boolean"></a><a id="isCloseException(Exception):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#isCloseException(x$1:Exception):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isCloseException</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.Exception">Exception</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../platform/rest/index.html" class="extype" name="org.influxdata.platform.rest">org.influxdata.platform.rest</a>] </dd><dt>Definition Classes</dt><dd>AbstractRestClient</dd></dl></div>
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#isInstanceOf[T0]:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#ne(x$1:AnyRef):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#notify():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#notifyAll():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.platform.rest.AbstractQueryClient#parseFluxResponseToLines" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="parseFluxResponseToLines(x$1:java.util.function.Consumer[String],x$2:org.influxdata.platform.rest.Cancellable,x$3:okio.BufferedSource):Unit"></a><a id="parseFluxResponseToLines(Consumer[String],Cancellable,BufferedSource):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#parseFluxResponseToLines(x$1:java.util.function.Consumer[String],x$2:org.influxdata.platform.rest.Cancellable,x$3:okio.BufferedSource):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">parseFluxResponseToLines</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.util.function.Consumer">Consumer</span>[<span class="extype" name="java.lang.String">String</span>]</span>, <span name="arg1">arg1: <span class="extype" name="org.influxdata.platform.rest.Cancellable">Cancellable</span></span>, <span name="arg2">arg2: <span class="extype" name="okio.BufferedSource">BufferedSource</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../platform/rest/index.html" class="extype" name="org.influxdata.platform.rest">org.influxdata.platform.rest</a>] </dd><dt>Definition Classes</dt><dd>AbstractQueryClient</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.io.IOException]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.flux.impl.FluxClientScalaImpl#ping" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ping:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#ping:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ping</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Check the status of InfluxDB Server.</p><div class="fullcomment"><div class="comment cmt"><p>Check the status of InfluxDB Server.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p><code>true</code> if server is healthy otherwise return <code>false</code></p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.influxdata.flux.impl.FluxClientScalaImpl">FluxClientScalaImpl</a> → <a href="../FluxClientScala.html" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a></dd></dl></div>
+    </li><li name="org.influxdata.flux.impl.FluxClientScalaImpl#query" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="query[M](query:String,measurementType:Class[M]):akka.stream.scaladsl.Source[M,akka.NotUsed]"></a><a id="query[M](String,Class[M]):Source[M,NotUsed]"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#query[M](query:String,measurementType:Class[M]):akka.stream.scaladsl.Source[M,akka.NotUsed]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">query</span><span class="tparams">[<span name="M">M</span>]</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="measurementType">measurementType: <span class="extype" name="scala.Predef.Class">Class</span>[<span class="extype" name="org.influxdata.flux.impl.FluxClientScalaImpl.query.M">M</span>]</span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="org.influxdata.flux.impl.FluxClientScalaImpl.query.M">M</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream measurements to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream measurements to <span class="extype" name="Stream">Stream</span>.
+</p></div><dl class="paramcmts block"><dt class="tparam">M</dt><dd class="cmt"><p>the type of the measurement (POJO)</p></dd><dt class="param">query</dt><dd class="cmt"><p>the flux query to execute</p></dd><dt class="param">measurementType</dt><dd class="cmt"><p>the measurement (POJO)</p></dd><dt>returns</dt><dd class="cmt"><p>the stream of measurements</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.influxdata.flux.impl.FluxClientScalaImpl">FluxClientScalaImpl</a> → <a href="../FluxClientScala.html" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a></dd></dl></div>
+    </li><li name="org.influxdata.flux.impl.FluxClientScalaImpl#query" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="query(query:String):akka.stream.scaladsl.Source[org.influxdata.flux.domain.FluxRecord,akka.NotUsed]"></a><a id="query(String):Source[FluxRecord,NotUsed]"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#query(query:String):akka.stream.scaladsl.Source[org.influxdata.flux.domain.FluxRecord,akka.NotUsed]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">query</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="org.influxdata.flux.domain.FluxRecord">FluxRecord</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream <span class="extype" name="FluxRecord">FluxRecord</span>s to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream <span class="extype" name="FluxRecord">FluxRecord</span>s to <span class="extype" name="Stream">Stream</span>.
+</p></div><dl class="paramcmts block"><dt class="param">query</dt><dd class="cmt"><p>the flux query to execute</p></dd><dt>returns</dt><dd class="cmt"><p>the stream of <span class="extype" name="FluxRecord">FluxRecord</span>s</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.influxdata.flux.impl.FluxClientScalaImpl">FluxClientScalaImpl</a> → <a href="../FluxClientScala.html" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a></dd></dl></div>
+    </li><li name="org.influxdata.platform.rest.AbstractQueryClient#query" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="query(x$1:retrofit2.Call[okhttp3.ResponseBody],x$2:java.util.function.BiConsumer[org.influxdata.platform.rest.Cancellable,okio.BufferedSource],x$3:java.util.function.Consumer[_&gt;:Throwable],x$4:Runnable,x$5:Boolean):Unit"></a><a id="query(Call[ResponseBody],BiConsumer[Cancellable,BufferedSource],Consumer[_&gt;:Throwable],Runnable,Boolean):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#query(x$1:retrofit2.Call[okhttp3.ResponseBody],x$2:java.util.function.BiConsumer[org.influxdata.platform.rest.Cancellable,okio.BufferedSource],x$3:java.util.function.Consumer[_&gt;:Throwable],x$4:Runnable,x$5:Boolean):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">query</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="retrofit2.Call">Call</span>[<span class="extype" name="okhttp3.ResponseBody">ResponseBody</span>]</span>, <span name="arg1">arg1: <span class="extype" name="java.util.function.BiConsumer">BiConsumer</span>[<span class="extype" name="org.influxdata.platform.rest.Cancellable">Cancellable</span>, <span class="extype" name="okio.BufferedSource">BufferedSource</span>]</span>, <span name="arg2">arg2: <span class="extype" name="java.util.function.Consumer">Consumer</span>[_ &gt;: <span class="extype" name="java.lang.Throwable">Throwable</span>]</span>, <span name="arg3">arg3: <span class="extype" name="java.lang.Runnable">Runnable</span></span>, <span name="arg4">arg4: <span class="extype" name="java.lang.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../platform/rest/index.html" class="extype" name="org.influxdata.platform.rest">org.influxdata.platform.rest</a>] </dd><dt>Definition Classes</dt><dd>AbstractQueryClient</dd></dl></div>
+    </li><li name="org.influxdata.platform.rest.AbstractQueryClient#query" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="query(x$1:retrofit2.Call[okhttp3.ResponseBody],x$2:org.influxdata.flux.impl.FluxCsvParser.FluxResponseConsumer,x$3:java.util.function.Consumer[_&gt;:Throwable],x$4:Runnable,x$5:Boolean):Unit"></a><a id="query(Call[ResponseBody],FluxResponseConsumer,Consumer[_&gt;:Throwable],Runnable,Boolean):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#query(x$1:retrofit2.Call[okhttp3.ResponseBody],x$2:org.influxdata.flux.impl.FluxCsvParser.FluxResponseConsumer,x$3:java.util.function.Consumer[_&gt;:Throwable],x$4:Runnable,x$5:Boolean):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">query</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="retrofit2.Call">Call</span>[<span class="extype" name="okhttp3.ResponseBody">ResponseBody</span>]</span>, <span name="arg1">arg1: <span class="extype" name="org.influxdata.flux.impl.FluxCsvParser.FluxResponseConsumer">FluxResponseConsumer</span></span>, <span name="arg2">arg2: <span class="extype" name="java.util.function.Consumer">Consumer</span>[_ &gt;: <span class="extype" name="java.lang.Throwable">Throwable</span>]</span>, <span name="arg3">arg3: <span class="extype" name="java.lang.Runnable">Runnable</span></span>, <span name="arg4">arg4: <span class="extype" name="java.lang.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../platform/rest/index.html" class="extype" name="org.influxdata.platform.rest">org.influxdata.platform.rest</a>] </dd><dt>Definition Classes</dt><dd>AbstractQueryClient</dd></dl></div>
+    </li><li name="org.influxdata.flux.impl.FluxClientScalaImpl#queryRaw" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="queryRaw(query:String,dialect:String):akka.stream.scaladsl.Source[String,akka.NotUsed]"></a><a id="queryRaw(String,String):Source[String,NotUsed]"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#queryRaw(query:String,dialect:String):akka.stream.scaladsl.Source[String,akka.NotUsed]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">queryRaw</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="dialect">dialect: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.
+</p></div><dl class="paramcmts block"><dt class="param">query</dt><dd class="cmt"><p>the flux query to execute</p></dd><dt class="param">dialect</dt><dd class="cmt"><p>Dialect is an object defining the options to use when encoding the response.
+               <a href="http://bit.ly/flux-dialect" target="_blank">See dialect SPEC</a>.</p></dd><dt>returns</dt><dd class="cmt"><p>the response stream</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.influxdata.flux.impl.FluxClientScalaImpl">FluxClientScalaImpl</a> → <a href="../FluxClientScala.html" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a></dd></dl></div>
+    </li><li name="org.influxdata.flux.impl.FluxClientScalaImpl#queryRaw" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="queryRaw(query:String):akka.stream.scaladsl.Source[String,akka.NotUsed]"></a><a id="queryRaw(String):Source[String,NotUsed]"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#queryRaw(query:String):akka.stream.scaladsl.Source[String,akka.NotUsed]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">queryRaw</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.
+</p></div><dl class="paramcmts block"><dt class="param">query</dt><dd class="cmt"><p>the flux query to execute</p></dd><dt>returns</dt><dd class="cmt"><p>the response stream</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.influxdata.flux.impl.FluxClientScalaImpl">FluxClientScalaImpl</a> → <a href="../FluxClientScala.html" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a></dd></dl></div>
+    </li><li name="org.influxdata.platform.rest.AbstractQueryClient#queryRaw" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="queryRaw(x$1:retrofit2.Call[okhttp3.ResponseBody],x$2:java.util.function.BiConsumer[org.influxdata.platform.rest.Cancellable,String],x$3:java.util.function.Consumer[_&gt;:Throwable],x$4:Runnable,x$5:Boolean):Unit"></a><a id="queryRaw(Call[ResponseBody],BiConsumer[Cancellable,String],Consumer[_&gt;:Throwable],Runnable,Boolean):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#queryRaw(x$1:retrofit2.Call[okhttp3.ResponseBody],x$2:java.util.function.BiConsumer[org.influxdata.platform.rest.Cancellable,String],x$3:java.util.function.Consumer[_&gt;:Throwable],x$4:Runnable,x$5:Boolean):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">queryRaw</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="retrofit2.Call">Call</span>[<span class="extype" name="okhttp3.ResponseBody">ResponseBody</span>]</span>, <span name="arg1">arg1: <span class="extype" name="java.util.function.BiConsumer">BiConsumer</span>[<span class="extype" name="org.influxdata.platform.rest.Cancellable">Cancellable</span>, <span class="extype" name="java.lang.String">String</span>]</span>, <span name="arg2">arg2: <span class="extype" name="java.util.function.Consumer">Consumer</span>[_ &gt;: <span class="extype" name="java.lang.Throwable">Throwable</span>]</span>, <span name="arg3">arg3: <span class="extype" name="java.lang.Runnable">Runnable</span></span>, <span name="arg4">arg4: <span class="extype" name="java.lang.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../platform/rest/index.html" class="extype" name="org.influxdata.platform.rest">org.influxdata.platform.rest</a>] </dd><dt>Definition Classes</dt><dd>AbstractQueryClient</dd></dl></div>
+    </li><li name="org.influxdata.platform.rest.AbstractRestClient#responseToError" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="responseToError(x$1:retrofit2.Response[okhttp3.ResponseBody]):org.influxdata.platform.error.InfluxException"></a><a id="responseToError(Response[ResponseBody]):InfluxException"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#responseToError(x$1:retrofit2.Response[okhttp3.ResponseBody]):org.influxdata.platform.error.InfluxException" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">responseToError</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="retrofit2.Response">Response</span>[<span class="extype" name="okhttp3.ResponseBody">ResponseBody</span>]</span>)</span><span class="result">: <span class="extype" name="org.influxdata.platform.error.InfluxException">InfluxException</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../platform/rest/index.html" class="extype" name="org.influxdata.platform.rest">org.influxdata.platform.rest</a>] </dd><dt>Definition Classes</dt><dd>AbstractRestClient</dd><dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.flux.impl.FluxClientScalaImpl#setLogLevel" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setLogLevel(logLevel:org.influxdata.platform.rest.LogLevel):org.influxdata.flux.FluxClientScala"></a><a id="setLogLevel(LogLevel):FluxClientScala"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#setLogLevel(logLevel:org.influxdata.platform.rest.LogLevel):org.influxdata.flux.FluxClientScala" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setLogLevel</span><span class="params">(<span name="logLevel">logLevel: <span class="extype" name="org.influxdata.platform.rest.LogLevel">LogLevel</span></span>)</span><span class="result">: <a href="../FluxClientScala.html" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Sets the log level for the request and response information.</p><div class="fullcomment"><div class="comment cmt"><p>Sets the log level for the request and response information.
+</p></div><dl class="paramcmts block"><dt class="param">logLevel</dt><dd class="cmt"><p>the log level to set.</p></dd><dt>returns</dt><dd class="cmt"><p>the FluxClient instance to be able to use it in a fluent manner.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.influxdata.flux.impl.FluxClientScalaImpl">FluxClientScalaImpl</a> → <a href="../FluxClientScala.html" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a></dd></dl></div>
+    </li><li name="org.influxdata.platform.rest.AbstractRestClient#setLogLevel" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setLogLevel(x$1:okhttp3.logging.HttpLoggingInterceptor,x$2:org.influxdata.platform.rest.LogLevel):Unit"></a><a id="setLogLevel(HttpLoggingInterceptor,LogLevel):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#setLogLevel(x$1:okhttp3.logging.HttpLoggingInterceptor,x$2:org.influxdata.platform.rest.LogLevel):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setLogLevel</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="okhttp3.logging.HttpLoggingInterceptor">HttpLoggingInterceptor</span></span>, <span name="arg1">arg1: <span class="extype" name="org.influxdata.platform.rest.LogLevel">LogLevel</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../platform/rest/index.html" class="extype" name="org.influxdata.platform.rest">org.influxdata.platform.rest</a>] </dd><dt>Definition Classes</dt><dd>AbstractRestClient</dd></dl></div>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#toString():String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.influxdata.flux.impl.FluxClientScalaImpl#version" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="version:String"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#version:String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">version</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Returns the version of the connected InfluxDB Server.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the version of the connected InfluxDB Server.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the version String, otherwise unknown.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.influxdata.flux.impl.FluxClientScalaImpl">FluxClientScalaImpl</a> → <a href="../FluxClientScala.html" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a></dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#wait():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#wait(x$1:Long):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li>
+              </ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="org.influxdata.flux.FluxClientScala">
+              <h3>Inherited from <a href="../FluxClientScala.html" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a></h3>
+            </div><div class="parent" name="org.influxdata.flux.impl.AbstractFluxClient">
+              <h3>Inherited from <span class="extype" name="org.influxdata.flux.impl.AbstractFluxClient">AbstractFluxClient</span>[<span class="extype" name="org.influxdata.flux.impl.FluxService">FluxService</span>]</h3>
+            </div><div class="parent" name="org.influxdata.platform.rest.AbstractQueryClient">
+              <h3>Inherited from <span class="extype" name="org.influxdata.platform.rest.AbstractQueryClient">AbstractQueryClient</span></h3>
+            </div><div class="parent" name="org.influxdata.platform.rest.AbstractRestClient">
+              <h3>Inherited from <span class="extype" name="org.influxdata.platform.rest.AbstractRestClient">AbstractRestClient</span></h3>
+            </div><div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+    </body>
+          </div>
+        </div>
+      </div>
+    </body>
+      </html>
