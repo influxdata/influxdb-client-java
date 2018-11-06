@@ -52,6 +52,7 @@ jobs:
   - stage: site
     jdk: oraclejdk8
     script:
+      - ./config/platform-restart.sh
       - ./config/publish-site.sh
 
   - stage: deploy
