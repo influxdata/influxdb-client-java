@@ -35,9 +35,10 @@ import org.influxdata.platform.Arguments;
  * <h3>Options</h3>
  * <ul>
  * <li><b>rowKey</b> - List of columns used to uniquely identify a row for the output. [array of strings]</li>
- * <li><b>colKey</b> -
+ * <li><b>columnKey</b> -
  * List of columns used to pivot values onto each row identified by the rowKey. [array of strings]</li>
- * <li><b>valueCol</b> - Identifies the single column that contains the value to be moved around the pivot [string]</li>
+ * <li><b>valueColumn</b> - Identifies the single column that contains the value to be moved around the pivot [string]
+ * </li>
  * </ul>
  *
  * <h3>Example</h3>
@@ -45,8 +46,8 @@ import org.influxdata.platform.Arguments;
  * Flux flux = Flux.from("telegraf")
  *     .pivot()
  *         .withRowKey(new String[]{"_time"})
- *         .withColKey(new String[]{"_field"})
- *         .withValueCol("_value");
+ *         .withColumnKey(new String[]{"_field"})
+ *         .withValueColumn("_value");
  * </pre>
  *
  * @author Jakub Bednar (10/10/2018 06:16)
@@ -92,43 +93,43 @@ public final class PivotFlux extends AbstractParametrizedFlux {
     }
 
     /**
-     * @param colKey the columns used to pivot values onto each row identified by the rowKey.
+     * @param columnKey the columns used to pivot values onto each row identified by the rowKey.
      * @return this
      */
     @Nonnull
-    public PivotFlux withColKey(@Nonnull final String[] colKey) {
+    public PivotFlux withColumnKey(@Nonnull final String[] columnKey) {
 
-        Arguments.checkNotNull(colKey, "colKey");
+        Arguments.checkNotNull(columnKey, "columnKey");
 
-        this.withPropertyValue("colKey", colKey);
+        this.withPropertyValue("columnKey", columnKey);
 
         return this;
     }
 
     /**
-     * @param colKey the columns used to pivot values onto each row identified by the rowKey.
+     * @param columnKey the columns used to pivot values onto each row identified by the rowKey.
      * @return this
      */
     @Nonnull
-    public PivotFlux withColKey(@Nonnull final Collection<String> colKey) {
+    public PivotFlux withColumnKey(@Nonnull final Collection<String> columnKey) {
 
-        Arguments.checkNotNull(colKey, "colKey");
+        Arguments.checkNotNull(columnKey, "columnKey");
 
-        this.withPropertyValue("colKey", colKey);
+        this.withPropertyValue("columnKey", columnKey);
 
         return this;
     }
 
     /**
-     * @param valueCol the single column that contains the value to be moved around the pivot
+     * @param valueColumn the single column that contains the value to be moved around the pivot
      * @return this
      */
     @Nonnull
-    public PivotFlux withValueCol(@Nonnull final String valueCol) {
+    public PivotFlux withValueColumn(@Nonnull final String valueColumn) {
 
-        Arguments.checkNonEmpty(valueCol, "valueCol");
+        Arguments.checkNonEmpty(valueColumn, "valueColumn");
 
-        this.withPropertyValueEscaped("valueCol", valueCol);
+        this.withPropertyValueEscaped("valueColumn", valueColumn);
 
         return this;
     }

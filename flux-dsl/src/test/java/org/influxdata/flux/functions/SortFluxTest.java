@@ -50,7 +50,7 @@ class SortFluxTest {
                 .sort(sortBy);
 
         Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sort(cols: [\"region\", \"host\"])");
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sort(columns: [\"region\", \"host\"])");
     }
 
     @Test
@@ -72,7 +72,7 @@ class SortFluxTest {
                 .sort(new String[]{"region", "value"});
 
         Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sort(cols: [\"region\", \"value\"])");
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sort(columns: [\"region\", \"value\"])");
     }
 
     @Test
@@ -103,7 +103,7 @@ class SortFluxTest {
                 .from("telegraf")
                 .sort(new String[]{"region", "value"}, true);
 
-        String expected = "from(bucket:\"telegraf\") |> sort(cols: [\"region\", \"value\"], desc: true)";
+        String expected = "from(bucket:\"telegraf\") |> sort(columns: [\"region\", \"value\"], desc: true)";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
     }
@@ -119,7 +119,7 @@ class SortFluxTest {
                 .from("telegraf")
                 .sort(sortBy, false);
 
-        String expected = "from(bucket:\"telegraf\") |> sort(cols: [\"region\", \"host\"], desc: false)";
+        String expected = "from(bucket:\"telegraf\") |> sort(columns: [\"region\", \"host\"], desc: false)";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
     }
@@ -130,14 +130,14 @@ class SortFluxTest {
         Flux flux = Flux
                 .from("telegraf")
                 .sort()
-                .withPropertyNamed("cols", "columnsParameter")
+                .withPropertyNamed("columns", "columnsParameter")
                 .withPropertyNamed("desc", "descParameter");
 
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("columnsParameter", new String[]{"region", "tag"});
         parameters.put("descParameter", false);
 
-        String expected = "from(bucket:\"telegraf\") |> sort(cols: [\"region\", \"tag\"], desc: false)";
+        String expected = "from(bucket:\"telegraf\") |> sort(columns: [\"region\", \"tag\"], desc: false)";
 
         Assertions
                 .assertThat(flux.toString(parameters))

@@ -109,8 +109,8 @@ class WindowFluxTest {
                         "time", "superStart", "totalEnd");
 
         String expected = "from(bucket:\"telegraf\") |> "
-                + "window(every: 15m, period: 20s, start: -50d, column: \"time\", "
-                + "startCol: \"superStart\", stopCol: \"totalEnd\")";
+                + "window(every: 15m, period: 20s, start: -50d, timeColumn: \"time\", "
+                + "startColumn: \"superStart\", stopColumn: \"totalEnd\")";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
     }
@@ -126,8 +126,8 @@ class WindowFluxTest {
                         "time", "superStart", "totalEnd");
 
         String expected = "from(bucket:\"telegraf\") |> "
-                + "window(every: 15m, period: 20s, offset: 1970-01-21T06:06:40.000000000Z, column: \"time\", "
-                + "startCol: \"superStart\", stopCol: \"totalEnd\")";
+                + "window(every: 15m, period: 20s, offset: 1970-01-21T06:06:40.000000000Z, timeColumn: \"time\", "
+                + "startColumn: \"superStart\", stopColumn: \"totalEnd\")";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
     }

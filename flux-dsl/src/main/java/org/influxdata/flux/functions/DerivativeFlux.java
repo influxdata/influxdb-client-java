@@ -37,7 +37,7 @@ import org.influxdata.platform.Arguments;
  * <li><b>unit</b> - The time duration to use for the result [duration]</li>
  * <li><b>nonNegative</b> - Indicates if the derivative is allowed to be negative [boolean].</li>
  * <li><b>columns</b> - List of columns on which to compute the derivative [array of strings].</li>
- * <li><b>timeSrc</b> - The source column for the time values. Defaults to `_time` [string].</li>
+ * <li><b>timeColumn</b> - The source column for the time values. Defaults to `_time` [string].</li>
  * </ul>
  *
  * <h3>Example</h3>
@@ -52,7 +52,7 @@ import org.influxdata.platform.Arguments;
  *         .withUnit(10L, ChronoUnit.DAYS)
  *         .withNonNegative(true)
  *         .withColumns(new String[]{"columnCompare_1", "columnCompare_2"})
- *         .withTimeSrc("_timeColumn");
+ *         .withTimeColumn("_timeColumn");
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (03/07/2018 14:28)
@@ -140,15 +140,15 @@ public final class DerivativeFlux extends AbstractParametrizedFlux {
     }
 
     /**
-     * @param timeSrc The source column for the time values
+     * @param timeColumn The source column for the time values
      * @return this
      */
     @Nonnull
-    public DerivativeFlux withTimeSrc(@Nonnull final String timeSrc) {
+    public DerivativeFlux withTimeColumn(@Nonnull final String timeColumn) {
 
-        Arguments.checkNonEmpty(timeSrc, "Time column");
+        Arguments.checkNonEmpty(timeColumn, "Time column");
 
-        this.withPropertyValueEscaped("timeSrc", timeSrc);
+        this.withPropertyValueEscaped("timeColumn", timeColumn);
 
         return this;
     }

@@ -57,9 +57,9 @@ class DerivativeFluxTest {
                 .withUnit(10L, ChronoUnit.DAYS)
                 .withNonNegative(true)
                 .withColumns(new String[]{"time1", "time2"})
-                .withTimeSrc("_timeMy");
+                .withTimeColumn("_timeMy");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> derivative(unit: 10d, nonNegative: true, columns: [\"time1\", \"time2\"], timeSrc: \"_timeMy\")");
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> derivative(unit: 10d, nonNegative: true, columns: [\"time1\", \"time2\"], timeColumn: \"_timeMy\")");
     }
 
     @Test

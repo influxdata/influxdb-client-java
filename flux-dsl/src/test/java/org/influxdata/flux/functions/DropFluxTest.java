@@ -66,9 +66,9 @@ class DropFluxTest {
 
         Flux flux = Flux
                 .from("telegraf")
-                .drop("col =~ /usage*/");
+                .drop("column =~ /usage*/");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> drop(fn: (col) => col =~ /usage*/)");
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> drop(fn: (column) => column =~ /usage*/)");
     }
 
     @Test
@@ -77,8 +77,8 @@ class DropFluxTest {
         Flux flux = Flux
                 .from("telegraf")
                 .drop()
-                    .withFunction("col =~ /free*/");
+                .withFunction("column =~ /free*/");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> drop(fn: (col) => col =~ /free*/)");
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> drop(fn: (column) => column =~ /free*/)");
     }
 }

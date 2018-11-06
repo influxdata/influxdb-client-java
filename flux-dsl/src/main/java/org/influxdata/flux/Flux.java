@@ -82,7 +82,7 @@ import org.influxdata.platform.Arguments;
  * <a href="http://bit.ly/flux-spec#basic-syntax">Flux</a> - Data Scripting Language.
  * <br>
  * <a href="http://bit.ly/flux-spec">Flux Specification</a>
- *
+ * <p>
  * TODO integration tests.
  *
  * <h3>The functions:</h3>
@@ -137,6 +137,7 @@ import org.influxdata.platform.Arguments;
  * <li>{@link WindowFlux}</li>
  * <li>{@link YieldFlux}</li>
  * <li>{@link ExpressionFlux}</li>
+ * <li>TODO - toKafka, toHttp</li>
  * </ul>
  *
  * @author Jakub Bednar (bednar@github) (22/06/2018 10:16)
@@ -488,7 +489,7 @@ public abstract class Flux {
      * <li>{@link DerivativeFlux#withUnit(Long, ChronoUnit)}</li>
      * <li>{@link DerivativeFlux#withNonNegative(boolean)}</li>
      * <li>{@link DerivativeFlux#withColumns(String[])}</li>
-     * <li>{@link DerivativeFlux#withTimeSrc(String)}</li>
+     * <li>{@link DerivativeFlux#withTimeColumn(String)}</li>
      * <li>{@link DerivativeFlux#withPropertyNamed(String)}</li>
      * <li>{@link DerivativeFlux#withPropertyNamed(String, String)}</li>
      * <li>{@link DerivativeFlux#withPropertyValueEscaped(String, String)}</li>
@@ -1124,7 +1125,7 @@ public abstract class Flux {
     /**
      * Percentile is both an aggregate operation and a selector operation depending on selected options.
      *
-     * @param percentile  value between 0 and 1 indicating the desired percentile
+     * @param percentile value between 0 and 1 indicating the desired percentile
      * @return {@link PivotFlux}
      */
     @Nonnull
@@ -1137,8 +1138,8 @@ public abstract class Flux {
     /**
      * Percentile is both an aggregate operation and a selector operation depending on selected options.
      *
-     * @param percentile  value between 0 and 1 indicating the desired percentile
-     * @param method      method to aggregate
+     * @param percentile value between 0 and 1 indicating the desired percentile
+     * @param method     method to aggregate
      * @return {@link PivotFlux}
      */
     @Nonnull
@@ -1221,9 +1222,9 @@ public abstract class Flux {
      * <ul>
      * <li>{@link PivotFlux#withRowKey(String[])}</li>
      * <li>{@link PivotFlux#withRowKey(Collection)}</li>
-     * <li>{@link PivotFlux#withColKey(String[])}</li>
-     * <li>{@link PivotFlux#withColKey(Collection)}</li>
-     * <li>{@link PivotFlux#withValueCol(String)}</li>
+     * <li>{@link PivotFlux#withColumnKey(String[])}</li>
+     * <li>{@link PivotFlux#withColumnKey(Collection)}</li>
+     * <li>{@link PivotFlux#withValueColumn(String)}</li>
      * <li>{@link PivotFlux#withPropertyNamed(String)}</li>
      * <li>{@link PivotFlux#withPropertyNamed(String, String)}</li>
      * <li>{@link PivotFlux#withPropertyValueEscaped(String, String)}</li>
@@ -1240,34 +1241,34 @@ public abstract class Flux {
      * Pivot collects values stored vertically (column-wise) in a table
      * and aligns them horizontally (row-wise) into logical sets.
      *
-     * @param rowKey   the columns used to uniquely identify a row for the output
-     * @param colKey   the columns used to pivot values onto each row identified by the rowKey.
-     * @param valueCol the single column that contains the value to be moved around the pivot
+     * @param rowKey      the columns used to uniquely identify a row for the output
+     * @param columnKey   the columns used to pivot values onto each row identified by the rowKey.
+     * @param valueColumn the single column that contains the value to be moved around the pivot
      * @return {@link PivotFlux}
      */
     @Nonnull
     public final PivotFlux pivot(@Nonnull final String[] rowKey,
-                                 @Nonnull final String[] colKey,
-                                 @Nonnull final String valueCol) {
+                                 @Nonnull final String[] columnKey,
+                                 @Nonnull final String valueColumn) {
 
-        return new PivotFlux(this).withRowKey(rowKey).withColKey(colKey).withValueCol(valueCol);
+        return new PivotFlux(this).withRowKey(rowKey).withColumnKey(columnKey).withValueColumn(valueColumn);
     }
 
     /**
      * Pivot collects values stored vertically (column-wise) in a table
      * and aligns them horizontally (row-wise) into logical sets.
      *
-     * @param rowKey   the columns used to uniquely identify a row for the output
-     * @param colKey   the columns used to pivot values onto each row identified by the rowKey.
-     * @param valueCol the single column that contains the value to be moved around the pivot
+     * @param rowKey      the columns used to uniquely identify a row for the output
+     * @param columnKey   the columns used to pivot values onto each row identified by the rowKey.
+     * @param valueColumn the single column that contains the value to be moved around the pivot
      * @return {@link PivotFlux}
      */
     @Nonnull
     public final PivotFlux pivot(@Nonnull final Collection<String> rowKey,
-                                 @Nonnull final Collection<String> colKey,
-                                 @Nonnull final String valueCol) {
+                                 @Nonnull final Collection<String> columnKey,
+                                 @Nonnull final String valueColumn) {
 
-        return new PivotFlux(this).withRowKey(rowKey).withColKey(colKey).withValueCol(valueCol);
+        return new PivotFlux(this).withRowKey(rowKey).withColumnKey(columnKey).withValueColumn(valueColumn);
     }
 
     /**
@@ -1594,7 +1595,7 @@ public abstract class Flux {
     public final SortFlux sort(@Nonnull final String[] columns) {
         Arguments.checkNotNull(columns, "Columns are required");
 
-        return new SortFlux(this).withCols(columns);
+        return new SortFlux(this).withColumns(columns);
     }
 
     /**
@@ -1607,7 +1608,7 @@ public abstract class Flux {
     public final SortFlux sort(@Nonnull final Collection<String> columns) {
         Arguments.checkNotNull(columns, "Columns are required");
 
-        return new SortFlux(this).withCols(columns);
+        return new SortFlux(this).withColumns(columns);
     }
 
     /**
@@ -1622,7 +1623,7 @@ public abstract class Flux {
         Arguments.checkNotNull(columns, "Columns are required");
 
         return new SortFlux(this)
-                .withCols(columns)
+                .withColumns(columns)
                 .withDesc(desc);
     }
 
@@ -1638,7 +1639,7 @@ public abstract class Flux {
         Arguments.checkNotNull(columns, "Columns are required");
 
         return new SortFlux(this)
-                .withCols(columns)
+                .withColumns(columns)
                 .withDesc(desc);
     }
 
@@ -1952,9 +1953,9 @@ public abstract class Flux {
      * <li>{@link WindowFlux#withPeriod(Long, ChronoUnit)}</li>
      * <li>{@link WindowFlux#withOffset(Long, ChronoUnit)}</li>
      * <li>{@link WindowFlux#withOffset(Instant)}</li>
-     * <li>{@link WindowFlux#withColumn(String)}</li>
-     * <li>{@link WindowFlux#withStartCol(String)}</li>
-     * <li>{@link WindowFlux#withStartCol(String)}</li>
+     * <li>{@link WindowFlux#withTimeColumn(String)}</li>
+     * <li>{@link WindowFlux#withStartColumn(String)}</li>
+     * <li>{@link WindowFlux#withStartColumn(String)}</li>
      * <li>{@link WindowFlux#withPropertyNamed(String)}</li>
      * <li>{@link WindowFlux#withPropertyNamed(String, String)}</li>
      * <li>{@link WindowFlux#withPropertyValueEscaped(String, String)}</li>
@@ -2061,15 +2062,15 @@ public abstract class Flux {
     /**
      * Partitions the results by a given time range.
      *
-     * @param every      duration of time between windows
-     * @param everyUnit  a {@code ChronoUnit} determining how to interpret the {@code every}
-     * @param period     duration of the windowed partition
-     * @param periodUnit a {@code ChronoUnit} determining how to interpret the {@code period}
-     * @param offset     The offset duration relative to the location offset
-     * @param offsetUnit a {@code ChronoUnit} determining how to interpret the {@code offset}
-     * @param timeColumn name of the time column to use
-     * @param startCol   name of the column containing the window start time
-     * @param stopCol    name of the column containing the window stop time
+     * @param every       duration of time between windows
+     * @param everyUnit   a {@code ChronoUnit} determining how to interpret the {@code every}
+     * @param period      duration of the windowed partition
+     * @param periodUnit  a {@code ChronoUnit} determining how to interpret the {@code period}
+     * @param offset      The offset duration relative to the location offset
+     * @param offsetUnit  a {@code ChronoUnit} determining how to interpret the {@code offset}
+     * @param timeColumn  name of the time column to use
+     * @param startColumn name of the column containing the window start time
+     * @param stopColumn  name of the column containing the window stop time
      * @return {@link WindowFlux}
      */
     @Nonnull
@@ -2080,30 +2081,30 @@ public abstract class Flux {
                                    @Nonnull final Long offset,
                                    @Nonnull final ChronoUnit offsetUnit,
                                    @Nonnull final String timeColumn,
-                                   @Nonnull final String startCol,
-                                   @Nonnull final String stopCol) {
+                                   @Nonnull final String startColumn,
+                                   @Nonnull final String stopColumn) {
 
         return new WindowFlux(this)
                 .withEvery(every, everyUnit)
                 .withPeriod(period, periodUnit)
                 .withOffset(offset, offsetUnit)
-                .withColumn(timeColumn)
-                .withStartCol(startCol)
-                .withStopCol(stopCol);
+                .withTimeColumn(timeColumn)
+                .withStartColumn(startColumn)
+                .withStopCol(stopColumn);
 
     }
 
     /**
      * Partitions the results by a given time range.
      *
-     * @param every      duration of time between windows
-     * @param everyUnit  a {@code ChronoUnit} determining how to interpret the {@code every}
-     * @param period     duration of the windowed partition
-     * @param periodUnit a {@code ChronoUnit} determining how to interpret the {@code period}
-     * @param offset     The offset duration relative to the location offset
-     * @param timeColumn name of the time column to use
-     * @param startCol   name of the column containing the window start time
-     * @param stopCol    name of the column containing the window stop time
+     * @param every       duration of time between windows
+     * @param everyUnit   a {@code ChronoUnit} determining how to interpret the {@code every}
+     * @param period      duration of the windowed partition
+     * @param periodUnit  a {@code ChronoUnit} determining how to interpret the {@code period}
+     * @param offset      The offset duration relative to the location offset
+     * @param timeColumn  name of the time column to use
+     * @param startColumn name of the column containing the window start time
+     * @param stopColumn  name of the column containing the window stop time
      * @return {@link WindowFlux}
      */
     @Nonnull
@@ -2113,16 +2114,16 @@ public abstract class Flux {
                                    @Nonnull final ChronoUnit periodUnit,
                                    @Nonnull final Instant offset,
                                    @Nonnull final String timeColumn,
-                                   @Nonnull final String startCol,
-                                   @Nonnull final String stopCol) {
+                                   @Nonnull final String startColumn,
+                                   @Nonnull final String stopColumn) {
 
         return new WindowFlux(this)
                 .withEvery(every, everyUnit)
                 .withPeriod(period, periodUnit)
                 .withOffset(offset)
-                .withColumn(timeColumn)
-                .withStartCol(startCol)
-                .withStopCol(stopCol);
+                .withTimeColumn(timeColumn)
+                .withStartColumn(startColumn)
+                .withStopCol(stopColumn);
     }
 
     /**
@@ -2287,7 +2288,7 @@ public abstract class Flux {
      * Flux flux = Flux
      *      .from("telegraf")
      *      .drop()
-     *           .withFunction("fn", "col =~ free*");
+     *           .withFunction("fn", "column =~ free*");
      * </pre>
      *
      * @param functionName name in Flux query
@@ -2340,7 +2341,7 @@ public abstract class Flux {
      * Flux flux = Flux
      *      .from("telegraf")
      *      .window(5, ChronoUnit.MINUTES)
-     *          .withPropertyValueEscaped("startCol", "differentCol")
+     *          .withPropertyValueEscaped("startColumn", "differentCol")
      *      .sum();
      * </pre>
      *
@@ -2368,7 +2369,7 @@ public abstract class Flux {
      * Flux flux = Flux
      *      .from("telegraf")
      *      .window(5, ChronoUnit.MINUTES)
-     *          .withPropertyValueEscaped("startCol", "differentCol")
+     *          .withPropertyValueEscaped("startColumn", "differentCol")
      *      .sum();
      * </pre>
      *

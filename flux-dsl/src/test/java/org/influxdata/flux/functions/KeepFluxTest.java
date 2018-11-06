@@ -66,9 +66,9 @@ class KeepFluxTest {
 
         Flux flux = Flux
                 .from("telegraf")
-                .keep("col =~ /usage*/");
+                .keep("column =~ /usage*/");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> keep(fn: (col) => col =~ /usage*/)");
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> keep(fn: (column) => column =~ /usage*/)");
     }
 
     @Test
@@ -77,8 +77,8 @@ class KeepFluxTest {
         Flux flux = Flux
                 .from("telegraf")
                 .keep()
-                .withFunction("col =~ /inodes*/");
+                .withFunction("column =~ /inodes*/");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> keep(fn: (col) => col =~ /inodes*/)");
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> keep(fn: (column) => column =~ /inodes*/)");
     }
 }

@@ -34,7 +34,7 @@ import org.influxdata.platform.Arguments;
  * <h3>Options</h3>
  * <ul>
  * <li>
- * <b>cols</b> - List of columns used to sort; precedence from left to right.
+ * <b>columns</b> - List of columns used to sort; precedence from left to right.
  * Default is ["value"] [array of strings]
  * </li>
  * <li><b>desc</b> - Sort results descending. Default false [bool]</li>
@@ -83,11 +83,11 @@ public final class SortFlux extends AbstractParametrizedFlux {
      * @return this
      */
     @Nonnull
-    public SortFlux withCols(@Nonnull final String[] columns) {
+    public SortFlux withColumns(@Nonnull final String[] columns) {
 
         Arguments.checkNotNull(columns, "Columns are required");
 
-        this.withPropertyValue("cols", columns);
+        this.withPropertyValue("columns", columns);
 
         return this;
     }
@@ -97,11 +97,11 @@ public final class SortFlux extends AbstractParametrizedFlux {
      * @return this
      */
     @Nonnull
-    public SortFlux withCols(@Nonnull final Collection<String> columns) {
+    public SortFlux withColumns(@Nonnull final Collection<String> columns) {
 
         Arguments.checkNotNull(columns, "Columns are required");
 
-        this.withPropertyValue("cols", columns);
+        this.withPropertyValue("columns", columns);
 
         return this;
     }

@@ -43,10 +43,10 @@ class PivotFluxTest {
         Flux flux = Flux.from("telegraf")
                 .pivot()
                     .withRowKey(new String[]{"_time"})
-                    .withColKey(new String[]{"_field"})
-                    .withValueCol("_value");
+                .withColumnKey(new String[]{"_field"})
+                .withValueColumn("_value");
 
-        String expected = "from(bucket:\"telegraf\") |> pivot(rowKey: [\"_time\"], colKey: [\"_field\"], valueCol: \"_value\")";
+        String expected = "from(bucket:\"telegraf\") |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
     }
@@ -57,7 +57,7 @@ class PivotFluxTest {
         Flux flux = Flux.from("telegraf")
                 .pivot(new String[]{"_time"}, new String[]{"_measurement", "_field"}, "_value");
 
-        String expected = "from(bucket:\"telegraf\") |> pivot(rowKey: [\"_time\"], colKey: [\"_measurement\", \"_field\"], valueCol: \"_value\")";
+        String expected = "from(bucket:\"telegraf\") |> pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\", \"_field\"], valueColumn: \"_value\")";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
     }
@@ -67,13 +67,13 @@ class PivotFluxTest {
 
         List<String> rowKey = new ArrayList<>();
         rowKey.add("_stop");
-        List<String> colKey = new ArrayList<>();
-        colKey.add("host");
+        List<String> columnKey = new ArrayList<>();
+        columnKey.add("host");
 
         Flux flux = Flux.from("telegraf")
-                .pivot(rowKey, colKey, "_value");
+                .pivot(rowKey, columnKey, "_value");
 
-        String expected = "from(bucket:\"telegraf\") |> pivot(rowKey: [\"_stop\"], colKey: [\"host\"], valueCol: \"_value\")";
+        String expected = "from(bucket:\"telegraf\") |> pivot(rowKey: [\"_stop\"], columnKey: [\"host\"], valueColumn: \"_value\")";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
     }

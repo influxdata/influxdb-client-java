@@ -97,7 +97,7 @@ public final class RenameFlux extends AbstractParametrizedFlux {
 
         Arguments.checkNonEmpty(function, "Function");
 
-        this.withFunction("fn: (col)", function);
+        this.withFunction("fn: (column)", function);
 
         return this;
     }

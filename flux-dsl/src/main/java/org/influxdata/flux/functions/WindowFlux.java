@@ -39,9 +39,9 @@ import org.influxdata.platform.Arguments;
  * <li><b>offset</b> - The offset duration relative to the location offset. It can be negative,
  * indicating that the offset goes backwards in time.
  * The default aligns the window boundaries to line up with the <i>now</i> option time. [time]</li>
- * <li><b>column</b> - Name of the time column to use. Defaults to <i>_time</i>. [string]
- * <li><b>startCol</b> - Name of the column containing the window start time. Defaults to <i>_start</i>. [string]
- * <li><b>stopCol</b> - Name of the column containing the window stop time. Defaults to <i>_stop</i>. [string]
+ * <li><b>timeColumn</b> - Name of the time column to use. Defaults to <i>_time</i>. [string]
+ * <li><b>startColumn</b> - Name of the column containing the window start time. Defaults to <i>_start</i>. [string]
+ * <li><b>stopColumn</b> - Name of the column containing the window stop time. Defaults to <i>_stop</i>. [string]
  * </ul>
  *
  * <h3>Example</h3>
@@ -183,39 +183,39 @@ public final class WindowFlux extends AbstractParametrizedFlux {
      * @return this
      */
     @Nonnull
-    public WindowFlux withColumn(@Nonnull final String timeColumn) {
+    public WindowFlux withTimeColumn(@Nonnull final String timeColumn) {
 
         Arguments.checkNonEmpty(timeColumn, "Time column");
 
-        this.withPropertyValueEscaped("column", timeColumn);
+        this.withPropertyValueEscaped("timeColumn", timeColumn);
 
         return this;
     }
 
     /**
-     * @param startCol name of the column containing the window start time
+     * @param startColumn name of the column containing the window start time
      * @return this
      */
     @Nonnull
-    public WindowFlux withStartCol(@Nonnull final String startCol) {
+    public WindowFlux withStartColumn(@Nonnull final String startColumn) {
 
-        Arguments.checkNonEmpty(startCol, "Start column");
+        Arguments.checkNonEmpty(startColumn, "Start column");
 
-        this.withPropertyValueEscaped("startCol", startCol);
+        this.withPropertyValueEscaped("startColumn", startColumn);
 
         return this;
     }
 
     /**
-     * @param stopCol name of the column containing the window stop time
+     * @param stopColumn name of the column containing the window stop time
      * @return this
      */
     @Nonnull
-    public WindowFlux withStopCol(@Nonnull final String stopCol) {
+    public WindowFlux withStopCol(@Nonnull final String stopColumn) {
 
-        Arguments.checkNonEmpty(stopCol, "Strop column");
+        Arguments.checkNonEmpty(stopColumn, "Strop column");
 
-        this.withPropertyValueEscaped("stopCol", stopCol);
+        this.withPropertyValueEscaped("stopColumn", stopColumn);
 
         return this;
     }

@@ -108,7 +108,7 @@ Computes the time based difference between subsequent non null records [[doc](ht
 - `unit` - The time duration to use for the result. [duration]
 - `nonNegative` - Indicates if the derivative is allowed to be negative. [boolean]
 - `columns` - List of columns on which to compute the derivative. [array of strings]
-- `timeSrc` - The source column for the time values. Defaults to `_time`. [string]
+- `timeColumn` - The source column for the time values. Defaults to `_time`. [string]
 
 ```java
 Flux flux = Flux
@@ -123,7 +123,7 @@ Flux flux = Flux
         .withUnit(10L, ChronoUnit.DAYS)
         .withNonNegative(true)
         .withColumns(new String[]{"columnCompare_1", "columnCompare_2"})
-        .withTimeSrc("_timeColumn");
+        .withTimeColumn("_timeColumn");
 ```
 
 ### difference
@@ -169,7 +169,7 @@ Flux flux = Flux
 Flux flux = Flux
     .from("telegraf")
     .drop()
-        .withFunction("col =~ /free*/");
+        .withFunction("column =~ /free*/");
 ```
 
 ### duplicate
@@ -324,7 +324,7 @@ Flux flux = Flux
 Flux flux = Flux
     .from("telegraf")
     .keep()
-        .withFunction("col =~ /inodes*/");
+        .withFunction("column =~ /inodes*/");
 ```
 
 ### last
@@ -445,8 +445,8 @@ Flux flux = Flux
 Pivot collects values stored vertically (column-wise) in a table 
 and aligns them horizontally (row-wise) into logical sets [[doc](https://github.com/influxdata/flux/blob/master/docs/SPEC.md#pivot)].
 - `rowKey` - List of columns used to uniquely identify a row for the output. [array of strings]
-- `colKey` - List of columns used to pivot values onto each row identified by the rowKey. [array of strings]
-- `valueCol` - Identifies the single column that contains the value to be moved around the pivot [string]
+- `columnKey` - List of columns used to pivot values onto each row identified by the rowKey. [array of strings]
+- `valueColumn` - Identifies the single column that contains the value to be moved around the pivot [string]
 
 ```java
 Flux flux = Flux.from("telegraf")
@@ -553,7 +553,7 @@ Flux flux = Flux
 
 ### sort
 Sorts the results by the specified columns. Default sort is ascending [[doc](http://bit.ly/flux-spec#skew)].
-- `cols` - List of columns used to sort. Precedence from left to right. Default is `"value"`. [array of strings]
+- `columns` - List of columns used to sort. Precedence from left to right. Default is `"value"`. [array of strings]
 - `desc` - Sort results descending. Default false. [boolean]
 
 ```java
@@ -679,9 +679,9 @@ Groups the results by a given time range [[doc](http://bit.ly/flux-spec#window)]
 - `every` - Duration of time between windows. Defaults to `period's` value. [duration] 
 - `period` - Duration of the windowed partition. Defaults to `period's` value. [duration] 
 - `offset` - The offset duration relative to the location offset. It can be negative, indicating that the offset goes backwards in time. The default aligns the window boundaries to line up with the `now` option time. [time]
-- `column` - Name of the time column to use. Defaults to `_time`. [string]
-- `startCol` - Name of the column containing the window start time. Defaults to `_start`. [string]
-- `stopCol` - Name of the column containing the window stop time. Defaults to `_stop`. [string]
+- `timeColumn` - Name of the time column to use. Defaults to `_time`. [string]
+- `startColumn` - Name of the column containing the window start time. Defaults to `_start`. [string]
+- `stopColumn` - Name of the column containing the window stop time. Defaults to `_stop`. [string]
 
 ```java
 Flux flux = Flux
