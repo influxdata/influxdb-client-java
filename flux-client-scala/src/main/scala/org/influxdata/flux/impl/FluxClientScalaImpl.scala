@@ -22,6 +22,7 @@
 package org.influxdata.flux.impl
 
 import java.io.IOException
+import java.util.function.BiConsumer
 import java.util.logging.{Level, Logger}
 
 import akka.NotUsed
@@ -35,6 +36,8 @@ import org.influxdata.platform.Arguments
 import org.influxdata.platform.error.InfluxException
 import org.influxdata.platform.rest.{AbstractQueryClient, Cancellable, LogLevel}
 
+import scala.compat.java8.FunctionConverters.asJavaConsumer
+
 /**
  * @author Jakub Bednar (bednar@github) (06/11/2018 08:19)
  */
@@ -43,6 +46,9 @@ class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)
     with FluxClientScala {
 
   private val LOG = Logger.getLogger(classOf[FluxClientScalaImpl].getName)
+
+  private val bufferSize = 100
+  private val overflowStrategy = OverflowStrategy.fail
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
@@ -58,8 +64,7 @@ class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)
       .single(query)
       .map(it => fluxService.query(createBody(AbstractQueryClient.DEFAULT_DIALECT.toString, it)))
       .flatMapConcat(queryCall => {
-        // TODO to arguments
-        Source.queue[FluxRecord](100, OverflowStrategy.fail)
+        Source.queue[FluxRecord](bufferSize, overflowStrategy)
           .mapMaterializedValue(queue => {
 
             val eventualDone = queue.watchCompletion()
@@ -79,7 +84,9 @@ class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)
               }
             }
 
-            this.query(queryCall, consumer, (t: Throwable) => queue.fail(t), () => queue.complete, true)
+            val onError = asJavaConsumer[Throwable](t =>  queue.fail(t))
+
+            this.query(queryCall, consumer, onError, () => queue.complete, true)
           })
     })
   }
@@ -125,7 +132,31 @@ class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)
 
     Arguments.checkNonEmpty(query, "query")
 
-    throw new NotImplementedError()
+    Source
+      .single(query)
+      .map(it => fluxService.query(createBody(dialect, it)))
+      .flatMapConcat(queryCall => {
+        Source.queue[String](bufferSize, overflowStrategy)
+          .mapMaterializedValue(queue => {
+
+            val eventualDone = queue.watchCompletion()
+
+
+            val onResponse = new BiConsumer[Cancellable, String] {
+              override def accept(cancellable: Cancellable, line: String): Unit = {
+                if (eventualDone.isCompleted) {
+                  cancellable.cancel()
+                } else {
+                  queue.offer(line)
+                }
+              }
+            }
+
+            val onError = asJavaConsumer[Throwable](t =>  queue.fail(t))
+
+            this.queryRaw(queryCall, onResponse, onError, () => queue.complete, true)
+          })
+      })
   }
 
   /**

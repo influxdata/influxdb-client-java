@@ -37,7 +37,7 @@ import org.scalatest.Matchers
  */
 class ITFluxClientScalaQuery extends AbstractITFluxClientScala with Matchers {
 
-  implicit val system: ActorSystem = ActorSystem("demo")
+  implicit val system: ActorSystem = ActorSystem("it-tests")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
 
   test("Simple query mapped to FluxRecords") {
