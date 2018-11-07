@@ -22,25 +22,33 @@
 package org.influxdata.flux.impl
 
 import java.io.IOException
+import java.util.function.BiConsumer
 import java.util.logging.{Level, Logger}
 
 import akka.NotUsed
+import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.Source
 import javax.annotation.Nonnull
 import org.influxdata.flux.FluxClientScala
-import org.influxdata.flux.domain.FluxRecord
+import org.influxdata.flux.domain.{FluxRecord, FluxTable}
 import org.influxdata.flux.option.FluxConnectionOptions
+import org.influxdata.platform.Arguments
 import org.influxdata.platform.error.InfluxException
-import org.influxdata.platform.rest.{AbstractQueryClient, LogLevel}
+import org.influxdata.platform.rest.{AbstractQueryClient, Cancellable, LogLevel}
+
+import scala.compat.java8.FunctionConverters.asJavaConsumer
 
 /**
  * @author Jakub Bednar (bednar@github) (06/11/2018 08:19)
  */
-<span class="nc" id="L39">class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)</span>
-<span class="nc" id="L40">  extends AbstractFluxClient(options.getOkHttpClient, options.getUrl, options.getParameters, classOf[FluxService])</span>
+<span class="nc" id="L44">class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)</span>
+<span class="nc" id="L45">  extends AbstractFluxClient(options.getOkHttpClient, options.getUrl, options.getParameters, classOf[FluxService])</span>
     with FluxClientScala {
 
-<span class="nc" id="L43">  private val LOG = Logger.getLogger(classOf[FluxClientScalaImpl].getName)</span>
+<span class="nc" id="L48">  private val LOG = Logger.getLogger(classOf[FluxClientScalaImpl].getName)</span>
+
+<span class="nc" id="L50">  private val bufferSize = 100</span>
+<span class="nc" id="L51">  private val overflowStrategy = OverflowStrategy.fail</span>
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
@@ -49,7 +57,38 @@ import org.influxdata.platform.rest.{AbstractQueryClient, LogLevel}
    * @return the stream of [[FluxRecord]]s
    */
   override def query(query: String): Source[FluxRecord, NotUsed] = {
-<span class="nc" id="L52">    throw new NotImplementedError()</span>
+
+<span class="nc" id="L61">    Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+
+<span class="nc" id="L63">    Source</span>
+<span class="nc" id="L64">      .single(query)</span>
+<span class="nc" id="L65">      .map(it =&gt; fluxService.query(createBody(AbstractQueryClient.DEFAULT_DIALECT.toString, it)))</span>
+<span class="nc" id="L66">      .flatMapConcat(queryCall =&gt; {</span>
+        Source.queue[FluxRecord](bufferSize, overflowStrategy)
+          .mapMaterializedValue(queue =&gt; {
+
+<span class="nc" id="L70">            val eventualDone = queue.watchCompletion()</span>
+<span class="nc" id="L71">            val consumer = new FluxCsvParser.FluxResponseConsumer() {</span>
+
+              override
+<span class="nc" id="L74">              def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull table: FluxTable): Unit = {</span>
+              }
+
+              override
+              def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull record: FluxRecord): Unit = {
+<span class="nc bnc" id="L79" title="All 2 branches missed.">                if (eventualDone.isCompleted) {</span>
+<span class="nc" id="L80">                  cancellable.cancel()</span>
+                } else {
+<span class="nc" id="L82">                  queue.offer(record)</span>
+                }
+              }
+            }
+
+            val onError = asJavaConsumer[Throwable](t =&gt;  queue.fail(t))
+
+            this.query(queryCall, consumer, onError, () =&gt; queue.complete, true)
+          })
+    })
   }
 
   /**
@@ -61,7 +100,11 @@ import org.influxdata.platform.rest.{AbstractQueryClient, LogLevel}
    * @return the stream of measurements
    */
   override def query[M](query: String, measurementType: Class[M]): Source[M, NotUsed] = {
-<span class="nc" id="L64">    throw new NotImplementedError()</span>
+
+<span class="nc" id="L104">    Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+<span class="nc" id="L105">    Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)</span>
+
+<span class="nc" id="L107">    this.query(query).map(t =&gt; resultMapper.toPOJO(t, measurementType))</span>
   }
 
   /**
@@ -71,8 +114,10 @@ import org.influxdata.platform.rest.{AbstractQueryClient, LogLevel}
    * @return the response stream
    */
   override def queryRaw(query: String): Source[String, NotUsed] = {
-<span class="nc" id="L74">    val dialect = AbstractQueryClient.DEFAULT_DIALECT.toString</span>
-<span class="nc" id="L75">    queryRaw(query, dialect)</span>
+
+<span class="nc" id="L118">    Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+
+<span class="nc" id="L120">    queryRaw(query, AbstractQueryClient.DEFAULT_DIALECT.toString)</span>
   }
 
   /**
@@ -84,7 +129,34 @@ import org.influxdata.platform.rest.{AbstractQueryClient, LogLevel}
    * @return the response stream
    */
   override def queryRaw(query: String, dialect: String): Source[String, NotUsed] = {
-<span class="nc" id="L87">    throw new NotImplementedError()</span>
+
+<span class="nc" id="L133">    Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+
+<span class="nc" id="L135">    Source</span>
+<span class="nc" id="L136">      .single(query)</span>
+<span class="nc" id="L137">      .map(it =&gt; fluxService.query(createBody(dialect, it)))</span>
+<span class="nc" id="L138">      .flatMapConcat(queryCall =&gt; {</span>
+        Source.queue[String](bufferSize, overflowStrategy)
+          .mapMaterializedValue(queue =&gt; {
+
+<span class="nc" id="L142">            val eventualDone = queue.watchCompletion()</span>
+
+
+<span class="nc" id="L145">            val onResponse = new BiConsumer[Cancellable, String] {</span>
+              override def accept(cancellable: Cancellable, line: String): Unit = {
+<span class="nc bnc" id="L147" title="All 2 branches missed.">                if (eventualDone.isCompleted) {</span>
+<span class="nc" id="L148">                  cancellable.cancel()</span>
+                } else {
+<span class="nc" id="L150">                  queue.offer(line)</span>
+                }
+              }
+            }
+
+            val onError = asJavaConsumer[Throwable](t =&gt;  queue.fail(t))
+
+            this.queryRaw(queryCall, onResponse, onError, () =&gt; queue.complete, true)
+          })
+      })
   }
 
   /**
@@ -94,11 +166,11 @@ import org.influxdata.platform.rest.{AbstractQueryClient, LogLevel}
    */
   override def ping: Boolean = {
     try {
-<span class="nc" id="L97">      fluxService.ping().execute().isSuccessful</span>
+<span class="nc" id="L169">      fluxService.ping().execute().isSuccessful</span>
     } catch {
       case e: IOException =&gt;
-<span class="nc" id="L100">        LOG.log(Level.WARNING, &quot;Ping request wasn't successful&quot;, e)</span>
-<span class="nc" id="L101">        false</span>
+<span class="nc" id="L172">        LOG.log(Level.WARNING, &quot;Ping request wasn't successful&quot;, e)</span>
+<span class="nc" id="L173">        false</span>
     }
   }
 
@@ -109,10 +181,10 @@ import org.influxdata.platform.rest.{AbstractQueryClient, LogLevel}
    */
   override def version: String = {
     try {
-<span class="nc" id="L112">      val response = fluxService.ping().execute()</span>
-<span class="nc" id="L113">      getVersion(response)</span>
+<span class="nc" id="L184">      val response = fluxService.ping().execute()</span>
+<span class="nc" id="L185">      getVersion(response)</span>
     } catch {
-<span class="nc" id="L115">      case e: IOException =&gt; throw new InfluxException(e)</span>
+<span class="nc" id="L187">      case e: IOException =&gt; throw new InfluxException(e)</span>
     }
   }
 
@@ -122,7 +194,7 @@ import org.influxdata.platform.rest.{AbstractQueryClient, LogLevel}
    * @return the [[LogLevel]] that is used for logging requests and responses
    */
   override def getLogLevel: LogLevel = {
-<span class="nc" id="L125">    super.getLogLevel(loggingInterceptor)</span>
+<span class="nc" id="L197">    super.getLogLevel(loggingInterceptor)</span>
   }
 
   /**
@@ -132,8 +204,11 @@ import org.influxdata.platform.rest.{AbstractQueryClient, LogLevel}
    * @return the FluxClient instance to be able to use it in a fluent manner.
    */
   override def setLogLevel(logLevel: LogLevel): FluxClientScala = {
-<span class="nc" id="L135">    super.setLogLevel(loggingInterceptor, logLevel)</span>
-<span class="nc" id="L136">    this</span>
+
+<span class="nc" id="L208">    Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;)</span>
+
+<span class="nc" id="L210">    super.setLogLevel(loggingInterceptor, logLevel)</span>
+<span class="nc" id="L211">    this</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

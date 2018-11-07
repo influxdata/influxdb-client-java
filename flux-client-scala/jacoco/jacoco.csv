@@ -1,4 +1,6 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-The Flux client - Scala,org.influxdata.flux.impl,FluxClientScalaImpl,84,0,0,0,17,0,10,0,10,0
+The Flux client - Scala,org.influxdata.flux.impl,FluxClientScalaImpl..anon.new BiConsumer() {...},26,0,2,0,6,0,4,0,3,0
+The Flux client - Scala,org.influxdata.flux.impl,FluxClientScalaImpl..anon.new FluxCsvParser.FluxResponseConsumer() {...},23,0,2,0,7,0,4,0,3,0
+The Flux client - Scala,org.influxdata.flux.impl,FluxClientScalaImpl,137,0,0,0,30,0,12,0,12,0
 The Flux client - Scala,org.influxdata.flux,FluxClientScalaFactory,8,0,0,0,0,0,2,0,2,0
 The Flux client - Scala,org.influxdata.flux,FluxClientScalaFactory.,24,0,0,0,6,0,4,0,4,0

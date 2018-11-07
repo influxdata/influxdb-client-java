@@ -46,54 +46,53 @@ import retrofit2.Response;
  */
 <span class="fc" id="L47">public abstract class AbstractQueryClient extends AbstractRestClient {</span>
 
+<span class="fc" id="L49">    protected final FluxCsvParser fluxCsvParser = new FluxCsvParser();</span>
+<span class="fc" id="L50">    protected final FluxResultMapper resultMapper = new FluxResultMapper();</span>
 
-<span class="fc" id="L50">    protected final FluxCsvParser fluxCsvParser = new FluxCsvParser();</span>
-<span class="fc" id="L51">    protected final FluxResultMapper resultMapper = new FluxResultMapper();</span>
+<span class="fc" id="L52">    protected static final Runnable EMPTY_ACTION = () -&gt; {</span>
 
-<span class="fc" id="L53">    protected static final Runnable EMPTY_ACTION = () -&gt; {</span>
+<span class="nc" id="L54">    };</span>
 
-<span class="nc" id="L55">    };</span>
+<span class="fc" id="L56">    protected static final JSONObject DEFAULT_DIALECT = new JSONObject()</span>
+<span class="fc" id="L57">            .put(&quot;header&quot;, true)</span>
+<span class="fc" id="L58">            .put(&quot;delimiter&quot;, &quot;,&quot;)</span>
+<span class="fc" id="L59">            .put(&quot;quoteChar&quot;, &quot;\&quot;&quot;)</span>
+<span class="fc" id="L60">            .put(&quot;commentPrefix&quot;, &quot;#&quot;)</span>
+<span class="fc" id="L61">            .put(&quot;annotations&quot;, new JSONArray().put(&quot;datatype&quot;).put(&quot;group&quot;).put(&quot;default&quot;));</span>
 
-<span class="fc" id="L57">    protected static final JSONObject DEFAULT_DIALECT = new JSONObject()</span>
-<span class="fc" id="L58">            .put(&quot;header&quot;, true)</span>
-<span class="fc" id="L59">            .put(&quot;delimiter&quot;, &quot;,&quot;)</span>
-<span class="fc" id="L60">            .put(&quot;quoteChar&quot;, &quot;\&quot;&quot;)</span>
-<span class="fc" id="L61">            .put(&quot;commentPrefix&quot;, &quot;#&quot;)</span>
-<span class="fc" id="L62">            .put(&quot;annotations&quot;, new JSONArray().put(&quot;datatype&quot;).put(&quot;group&quot;).put(&quot;default&quot;));</span>
-
-<span class="fc" id="L64">    protected static final Consumer&lt;Throwable&gt; ERROR_CONSUMER = throwable -&gt; {</span>
-<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (throwable instanceof InfluxException) {</span>
-<span class="fc" id="L66">            throw (InfluxException) throwable;</span>
+<span class="fc" id="L63">    protected static final Consumer&lt;Throwable&gt; ERROR_CONSUMER = throwable -&gt; {</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">        if (throwable instanceof InfluxException) {</span>
+<span class="fc" id="L65">            throw (InfluxException) throwable;</span>
         } else {
-<span class="nc" id="L68">            throw new InfluxException(throwable);</span>
+<span class="nc" id="L67">            throw new InfluxException(throwable);</span>
         }
     };
 
     @Nonnull
     protected RequestBody createBody(@Nullable final String dialect, @Nonnull final String query) {
 
-<span class="fc" id="L75">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
-<span class="fc" id="L76">        JSONObject json = new JSONObject()</span>
-<span class="fc" id="L77">                .put(&quot;query&quot;, query);</span>
+<span class="fc" id="L74">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
+<span class="fc" id="L75">        JSONObject json = new JSONObject()</span>
+<span class="fc" id="L76">                .put(&quot;query&quot;, query);</span>
 
-<span class="fc bfc" id="L79" title="All 4 branches covered.">        if (dialect != null &amp;&amp; !dialect.isEmpty()) {</span>
-<span class="fc" id="L80">            json.put(&quot;dialect&quot;, new JSONObject(dialect));</span>
+<span class="fc bfc" id="L78" title="All 4 branches covered.">        if (dialect != null &amp;&amp; !dialect.isEmpty()) {</span>
+<span class="fc" id="L79">            json.put(&quot;dialect&quot;, new JSONObject(dialect));</span>
         }
 
-<span class="fc" id="L83">        return createBody(json.toString());</span>
+<span class="fc" id="L82">        return createBody(json.toString());</span>
     }
 
     protected void parseFluxResponseToLines(@Nonnull final Consumer&lt;String&gt; onResponse,
                                             @Nonnull final Cancellable cancellable,
                                             @Nonnull final BufferedSource bufferedSource) throws IOException {
 
-<span class="fc" id="L90">        String line = bufferedSource.readUtf8Line();</span>
+<span class="fc" id="L89">        String line = bufferedSource.readUtf8Line();</span>
 
-<span class="fc bfc" id="L92" title="All 4 branches covered.">        while (line != null &amp;&amp; !cancellable.isCancelled()) {</span>
-<span class="fc" id="L93">            onResponse.accept(line);</span>
-<span class="fc" id="L94">            line = bufferedSource.readUtf8Line();</span>
+<span class="fc bfc" id="L91" title="All 4 branches covered.">        while (line != null &amp;&amp; !cancellable.isCancelled()) {</span>
+<span class="fc" id="L92">            onResponse.accept(line);</span>
+<span class="fc" id="L93">            line = bufferedSource.readUtf8Line();</span>
         }
-<span class="fc" id="L96">    }</span>
+<span class="fc" id="L95">    }</span>
 
     protected void query(@Nonnull final Call&lt;ResponseBody&gt; queryCall,
                          @Nonnull final FluxCsvParser.FluxResponseConsumer responseConsumer,
@@ -101,16 +100,16 @@ import retrofit2.Response;
                          @Nonnull final Runnable onComplete,
                          @Nonnull final Boolean asynchronously) {
 
-<span class="fc" id="L104">        BiConsumer&lt;Cancellable, BufferedSource&gt; consumer = (cancellable, bufferedSource) -&gt; {</span>
+<span class="fc" id="L103">        BiConsumer&lt;Cancellable, BufferedSource&gt; consumer = (cancellable, bufferedSource) -&gt; {</span>
             try {
-<span class="fc" id="L106">                fluxCsvParser.parseFluxResponse(bufferedSource, cancellable, responseConsumer);</span>
-<span class="nc" id="L107">            } catch (IOException e) {</span>
-<span class="nc" id="L108">                onError.accept(e);</span>
-<span class="fc" id="L109">            }</span>
-<span class="fc" id="L110">        };</span>
+<span class="fc" id="L105">                fluxCsvParser.parseFluxResponse(bufferedSource, cancellable, responseConsumer);</span>
+<span class="nc" id="L106">            } catch (IOException e) {</span>
+<span class="nc" id="L107">                onError.accept(e);</span>
+<span class="fc" id="L108">            }</span>
+<span class="fc" id="L109">        };</span>
 
-<span class="fc" id="L112">        query(queryCall, consumer, onError, onComplete, asynchronously);</span>
-<span class="fc" id="L113">    }</span>
+<span class="fc" id="L111">        query(queryCall, consumer, onError, onComplete, asynchronously);</span>
+<span class="fc" id="L112">    }</span>
 
     protected void queryRaw(@Nonnull final Call&lt;ResponseBody&gt; queryCall,
                             @Nonnull final BiConsumer&lt;Cancellable, String&gt; onResponse,
@@ -118,17 +117,17 @@ import retrofit2.Response;
                             @Nonnull final Runnable onComplete,
                             @Nonnull final Boolean asynchronously) {
 
-<span class="fc" id="L121">        BiConsumer&lt;Cancellable, BufferedSource&gt; consumer = (cancellable, bufferedSource) -&gt; {</span>
+<span class="fc" id="L120">        BiConsumer&lt;Cancellable, BufferedSource&gt; consumer = (cancellable, bufferedSource) -&gt; {</span>
 
             try {
-<span class="fc" id="L124">                parseFluxResponseToLines(line -&gt; onResponse.accept(cancellable, line), cancellable, bufferedSource);</span>
-<span class="nc" id="L125">            } catch (IOException e) {</span>
-<span class="nc" id="L126">                catchOrPropagateException(e, onError);</span>
-<span class="fc" id="L127">            }</span>
-<span class="fc" id="L128">        };</span>
+<span class="fc" id="L123">                parseFluxResponseToLines(line -&gt; onResponse.accept(cancellable, line), cancellable, bufferedSource);</span>
+<span class="nc" id="L124">            } catch (IOException e) {</span>
+<span class="nc" id="L125">                catchOrPropagateException(e, onError);</span>
+<span class="fc" id="L126">            }</span>
+<span class="fc" id="L127">        };</span>
 
-<span class="fc" id="L130">        query(queryCall, consumer, onError, onComplete, asynchronously);</span>
-<span class="fc" id="L131">    }</span>
+<span class="fc" id="L129">        query(queryCall, consumer, onError, onComplete, asynchronously);</span>
+<span class="fc" id="L130">    }</span>
 
     protected void query(@Nonnull final Call&lt;ResponseBody&gt; query,
                          @Nonnull final BiConsumer&lt;Cancellable, BufferedSource&gt; consumer,
@@ -136,85 +135,85 @@ import retrofit2.Response;
                          @Nonnull final Runnable onComplete,
                          @Nonnull final Boolean asynchronously) {
 
-<span class="fc" id="L139">        Arguments.checkNotNull(query, &quot;query&quot;);</span>
-<span class="fc" id="L140">        Arguments.checkNotNull(consumer, &quot;consumer&quot;);</span>
-<span class="fc" id="L141">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
-<span class="fc" id="L142">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
-<span class="fc" id="L143">        Arguments.checkNotNull(asynchronously, &quot;asynchronously&quot;);</span>
+<span class="fc" id="L138">        Arguments.checkNotNull(query, &quot;query&quot;);</span>
+<span class="fc" id="L139">        Arguments.checkNotNull(consumer, &quot;consumer&quot;);</span>
+<span class="fc" id="L140">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="fc" id="L141">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
+<span class="fc" id="L142">        Arguments.checkNotNull(asynchronously, &quot;asynchronously&quot;);</span>
 
-<span class="fc" id="L145">        DefaultCancellable cancellable = new DefaultCancellable();</span>
+<span class="fc" id="L144">        DefaultCancellable cancellable = new DefaultCancellable();</span>
 
-<span class="fc" id="L147">        Callback&lt;ResponseBody&gt; callback = new Callback&lt;ResponseBody&gt;() {</span>
+<span class="fc" id="L146">        Callback&lt;ResponseBody&gt; callback = new Callback&lt;ResponseBody&gt;() {</span>
             @Override
             public void onResponse(@Nonnull final Call&lt;ResponseBody&gt; call,
                                    @Nonnull final Response&lt;ResponseBody&gt; response) {
 
-<span class="fc bfc" id="L152" title="All 2 branches covered.">                if (!response.isSuccessful()) {</span>
-<span class="fc" id="L153">                    onError.accept(responseToError(response));</span>
-<span class="fc" id="L154">                    return;</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">                if (!response.isSuccessful()) {</span>
+<span class="fc" id="L152">                    onError.accept(responseToError(response));</span>
+<span class="fc" id="L153">                    return;</span>
                 }
 
-<span class="fc" id="L157">                ResponseBody body = response.body();</span>
-<span class="pc bpc" id="L158" title="1 of 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L159">                    return;</span>
+<span class="fc" id="L156">                ResponseBody body = response.body();</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L158">                    return;</span>
                 }
 
                 try {
-<span class="fc" id="L163">                    BufferedSource source = body.source();</span>
+<span class="fc" id="L162">                    BufferedSource source = body.source();</span>
 
                     //
                     // Source has data =&gt; parse
                     //
-<span class="fc bfc" id="L168" title="All 4 branches covered.">                    while (!source.exhausted() &amp;&amp; !cancellable.wasCancelled) {</span>
+<span class="fc bfc" id="L167" title="All 4 branches covered.">                    while (!source.exhausted() &amp;&amp; !cancellable.wasCancelled) {</span>
 
-<span class="fc" id="L170">                        consumer.accept(cancellable, source);</span>
+<span class="fc" id="L169">                        consumer.accept(cancellable, source);</span>
                     }
 
-<span class="fc bfc" id="L173" title="All 2 branches covered.">                    if (!cancellable.wasCancelled) {</span>
-<span class="fc" id="L174">                        onComplete.run();</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">                    if (!cancellable.wasCancelled) {</span>
+<span class="fc" id="L173">                        onComplete.run();</span>
                     }
 
-<span class="nc" id="L177">                } catch (Exception e) {</span>
-<span class="nc" id="L178">                    catchOrPropagateException(e, onError);</span>
+<span class="nc" id="L176">                } catch (Exception e) {</span>
+<span class="nc" id="L177">                    catchOrPropagateException(e, onError);</span>
 
                 } finally {
 
-<span class="fc" id="L182">                    body.close();</span>
+<span class="fc" id="L181">                    body.close();</span>
                 }
-<span class="fc" id="L184">            }</span>
+<span class="fc" id="L183">            }</span>
 
             @Override
             public void onFailure(@Nonnull final Call&lt;ResponseBody&gt; call, @Nonnull final Throwable throwable) {
-<span class="nc" id="L188">                onError.accept(throwable);</span>
-<span class="nc" id="L189">            }</span>
+<span class="nc" id="L187">                onError.accept(throwable);</span>
+<span class="nc" id="L188">            }</span>
         };
 
-<span class="fc bfc" id="L192" title="All 2 branches covered.">        if (asynchronously) {</span>
-<span class="fc" id="L193">            query.enqueue(callback);</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">        if (asynchronously) {</span>
+<span class="fc" id="L192">            query.enqueue(callback);</span>
         } else {
 
             Response&lt;ResponseBody&gt; response;
             try {
-<span class="fc" id="L198">                response = query.execute();</span>
-<span class="fc" id="L199">                callback.onResponse(query, response);</span>
-<span class="nc" id="L200">            } catch (IOException e) {</span>
-<span class="nc" id="L201">                catchOrPropagateException(e, onError);</span>
-<span class="fc" id="L202">            }</span>
+<span class="fc" id="L197">                response = query.execute();</span>
+<span class="fc" id="L198">                callback.onResponse(query, response);</span>
+<span class="nc" id="L199">            } catch (IOException e) {</span>
+<span class="nc" id="L200">                catchOrPropagateException(e, onError);</span>
+<span class="fc" id="L201">            }</span>
         }
-<span class="fc" id="L204">    }</span>
+<span class="fc" id="L203">    }</span>
 
-<span class="fc" id="L206">    private class DefaultCancellable implements Cancellable {</span>
+<span class="fc" id="L205">    private class DefaultCancellable implements Cancellable {</span>
 
-<span class="fc" id="L208">        private volatile boolean wasCancelled = false;</span>
+<span class="fc" id="L207">        private volatile boolean wasCancelled = false;</span>
 
         @Override
         public void cancel() {
-<span class="fc" id="L212">            wasCancelled = true;</span>
-<span class="fc" id="L213">        }</span>
+<span class="fc" id="L211">            wasCancelled = true;</span>
+<span class="fc" id="L212">        }</span>
 
         @Override
         public boolean isCancelled() {
-<span class="fc" id="L217">            return wasCancelled;</span>
+<span class="fc" id="L216">            return wasCancelled;</span>
         }
     }
 
