@@ -25,13 +25,15 @@ import java.io.IOException
 import java.util.logging.{Level, Logger}
 
 import akka.NotUsed
+import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.Source
 import javax.annotation.Nonnull
 import org.influxdata.flux.FluxClientScala
-import org.influxdata.flux.domain.FluxRecord
+import org.influxdata.flux.domain.{FluxRecord, FluxTable}
 import org.influxdata.flux.option.FluxConnectionOptions
+import org.influxdata.platform.Arguments
 import org.influxdata.platform.error.InfluxException
-import org.influxdata.platform.rest.{AbstractQueryClient, LogLevel}
+import org.influxdata.platform.rest.{AbstractQueryClient, Cancellable, LogLevel}
 
 /**
  * @author Jakub Bednar (bednar@github) (06/11/2018 08:19)
@@ -49,7 +51,37 @@ class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)
    * @return the stream of [[FluxRecord]]s
    */
   override def query(query: String): Source[FluxRecord, NotUsed] = {
-    throw new NotImplementedError()
+
+    Arguments.checkNonEmpty(query, "query")
+
+    Source
+      .single(query)
+      .map(it => fluxService.query(createBody(AbstractQueryClient.DEFAULT_DIALECT.toString, it)))
+      .flatMapConcat(queryCall => {
+        // TODO to arguments
+        Source.queue[FluxRecord](100, OverflowStrategy.fail)
+          .mapMaterializedValue(queue => {
+
+            val eventualDone = queue.watchCompletion()
+            val consumer = new FluxCsvParser.FluxResponseConsumer() {
+
+              override
+              def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull table: FluxTable): Unit = {
+              }
+
+              override
+              def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull record: FluxRecord): Unit = {
+                if (eventualDone.isCompleted) {
+                  cancellable.cancel()
+                } else {
+                  queue.offer(record)
+                }
+              }
+            }
+
+            this.query(queryCall, consumer, (t: Throwable) => queue.fail(t), () => queue.complete, true)
+          })
+    })
   }
 
   /**
@@ -61,7 +93,11 @@ class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)
    * @return the stream of measurements
    */
   override def query[M](query: String, measurementType: Class[M]): Source[M, NotUsed] = {
-    throw new NotImplementedError()
+
+    Arguments.checkNonEmpty(query, "query")
+    Arguments.checkNotNull(measurementType, "measurementType")
+
+    this.query(query).map(t => resultMapper.toPOJO(t, measurementType))
   }
 
   /**
@@ -71,8 +107,10 @@ class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)
    * @return the response stream
    */
   override def queryRaw(query: String): Source[String, NotUsed] = {
-    val dialect = AbstractQueryClient.DEFAULT_DIALECT.toString
-    queryRaw(query, dialect)
+
+    Arguments.checkNonEmpty(query, "query")
+
+    queryRaw(query, AbstractQueryClient.DEFAULT_DIALECT.toString)
   }
 
   /**
@@ -84,6 +122,9 @@ class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)
    * @return the response stream
    */
   override def queryRaw(query: String, dialect: String): Source[String, NotUsed] = {
+
+    Arguments.checkNonEmpty(query, "query")
+
     throw new NotImplementedError()
   }
 
@@ -132,6 +173,9 @@ class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)
    * @return the FluxClient instance to be able to use it in a fluent manner.
    */
   override def setLogLevel(logLevel: LogLevel): FluxClientScala = {
+
+    Arguments.checkNotNull(logLevel, "LogLevel")
+
     super.setLogLevel(loggingInterceptor, logLevel)
     this
   }

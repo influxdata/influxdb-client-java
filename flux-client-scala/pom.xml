@@ -178,6 +178,20 @@
         </dependency>
 
         <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-testkit_2.12</artifactId>
+            <version>2.5.17</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-stream-testkit_2.12</artifactId>
+            <version>2.5.17</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.influxdata</groupId>
             <artifactId>platform-common-test</artifactId>
             <scope>test</scope>

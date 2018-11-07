@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import javax.annotation.Nonnull;
 
 import org.influxdata.flux.domain.FluxColumn;
@@ -69,7 +67,7 @@ class ITFluxClient extends AbstractITFluxClient {
     @Test
     void chunkedOneTable() {
 
-        prepareChunkRecords();
+        prepareChunkRecords(DATABASE_NAME);
 
         String flux = FROM_FLUX_DATABASE + "\n"
                 + "\t|> filter(fn: (r) => r[\"_measurement\"] == \"chunked\")\n"
@@ -91,7 +89,7 @@ class ITFluxClient extends AbstractITFluxClient {
     @Test
     void chunkedMoreTables() {
 
-        prepareChunkRecords();
+        prepareChunkRecords(DATABASE_NAME);
 
         String flux = FROM_FLUX_DATABASE + "\n"
                 + "\t|> filter(fn: (r) => r[\"_measurement\"] == \"chunked\")\n"
@@ -114,7 +112,7 @@ class ITFluxClient extends AbstractITFluxClient {
     @Test
     void chunkedCancel() {
 
-        prepareChunkRecords();
+        prepareChunkRecords(DATABASE_NAME);
 
         String flux = FROM_FLUX_DATABASE + "\n"
                 + "\t|> filter(fn: (r) => r[\"_measurement\"] == \"chunked\")\n"
@@ -369,25 +367,6 @@ class ITFluxClient extends AbstractITFluxClient {
         Assertions.assertThat(record2.getValues())
                 .hasEntrySatisfying("host", value -> Assertions.assertThat(value).isEqualTo("B"))
                 .hasEntrySatisfying("region", value -> Assertions.assertThat(value).isEqualTo("west"));
-    }
-
-    private void prepareChunkRecords() {
-
-        int totalRecords = 500_000;
-        countDownLatch = new CountDownLatch(totalRecords);
-
-        List<String> points = new ArrayList<>();
-
-        IntStream.range(1, totalRecords + 1).forEach(i -> {
-
-            String format = String.format("chunked,host=A,region=west free=%1$si %1$s", i);
-            points.add(format);
-
-            if (i % 100_000 == 0) {
-                influxDBWrite(points.stream().collect(Collectors.joining("\n")), DATABASE_NAME);
-                points.clear();
-            }
-        });
     }
 
     public static class Mem {

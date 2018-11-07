@@ -46,7 +46,6 @@ import retrofit2.Response;
  */
 public abstract class AbstractQueryClient extends AbstractRestClient {
 
-
     protected final FluxCsvParser fluxCsvParser = new FluxCsvParser();
     protected final FluxResultMapper resultMapper = new FluxResultMapper();
 

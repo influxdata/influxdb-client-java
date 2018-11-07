@@ -67,22 +67,4 @@ internal abstract class AbstractITFluxClientKotlin : AbstractTest() {
 
         influxDBQuery("DROP DATABASE $DATABASE_NAME", DATABASE_NAME)
     }
-
-    protected fun prepareChunkRecords() {
-
-        LOG.info("Preparing data...")
-
-        val points = mutableListOf<String>()
-
-        for (i in 1..500000) {
-            points.add("chunked,host=A,region=west free=${i}i $i")
-
-            if (i % 100000 == 0) {
-                influxDBWrite(points.joinToString("\n"), DATABASE_NAME)
-                points.clear()
-            }
-        }
-
-        LOG.info("prepared")
-    }
 }

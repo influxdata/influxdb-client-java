@@ -66,6 +66,7 @@ abstract class AbstractITFluxClientScala extends FunSuite with BeforeAndAfter {
     def query(query: String, databaseName: String): Unit = super.influxDBQuery(query, databaseName)
 
     def write(lineProtocol: String, databaseName: String): Unit = super.influxDBWrite(lineProtocol, databaseName)
-  }
 
+    def prepareChunkRecords(): Unit = super.prepareChunkRecords(DATABASE_NAME)
+  }
 }

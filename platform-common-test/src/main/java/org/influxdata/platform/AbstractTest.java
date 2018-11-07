@@ -21,8 +21,12 @@
  */
 package org.influxdata.platform;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import javax.annotation.Nonnull;
 
 import okhttp3.MediaType;
@@ -36,6 +40,7 @@ import org.junit.jupiter.api.BeforeEach;
 /**
  * @author Jakub Bednar (bednar@github) (03/10/2018 14:54)
  */
+@SuppressWarnings("MagicNumber")
 public abstract class AbstractTest {
 
     private static final int DEFAULT_WAIT = 10;
@@ -113,5 +118,24 @@ public abstract class AbstractTest {
         } catch (Exception e) {
             Assertions.fail("Unexpected exception", e);
         }
+    }
+
+    protected void prepareChunkRecords(final String databaseName) {
+
+        int totalRecords = 500_000;
+        countDownLatch = new CountDownLatch(totalRecords);
+
+        List<String> points = new ArrayList<>();
+
+        IntStream.range(1, totalRecords + 1).forEach(i -> {
+
+            String format = String.format("chunked,host=A,region=west free=%1$si %1$s", i);
+            points.add(format);
+
+            if (i % 100_000 == 0) {
+                influxDBWrite(points.stream().collect(Collectors.joining("\n")), databaseName);
+                points.clear();
+            }
+        });
     }
 }

@@ -108,7 +108,7 @@ internal class ITFluxClientKotlinQuery : AbstractITFluxClientKotlin() {
     @Test
     fun `Stop processing`() = runBlocking {
 
-        prepareChunkRecords()
+        prepareChunkRecords(DATABASE_NAME)
 
         val flux = (FROM_FLUX_DATABASE + "\n"
                 + "\t|> filter(fn: (r) => r[\"_measurement\"] == \"chunked\")\n"
