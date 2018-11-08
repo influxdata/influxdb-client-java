@@ -72,7 +72,7 @@
 </span>48 <span style=''>  private val LOG = Logger.getLogger(classOf[FluxClientScalaImpl].getName)
 </span>49 <span style=''>
 </span>50 <span style=''>  private val bufferSize = 100
-</span>51 <span style=''>  private val overflowStrategy = OverflowStrategy.fail
+</span>51 <span style=''>  private val overflowStrategy = OverflowStrategy.backpressure
 </span>52 <span style=''>
 </span>53 <span style=''>  /**
 </span>54 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
@@ -165,76 +165,75 @@
 </span>141 <span style=''>
 </span>142 <span style=''>            val eventualDone = queue.watchCompletion()
 </span>143 <span style=''>
-</span>144 <span style=''>
-</span>145 <span style=''>            val onResponse = new BiConsumer[Cancellable, String] {
-</span>146 <span style=''>              override def accept(cancellable: Cancellable, line: String): Unit = {
-</span>147 <span style=''>                if (eventualDone.isCompleted) {
-</span>148 <span style=''>                  cancellable.cancel()
-</span>149 <span style=''>                } else {
-</span>150 <span style=''>                  queue.offer(line)
-</span>151 <span style=''>                }
-</span>152 <span style=''>              }
-</span>153 <span style=''>            }
-</span>154 <span style=''>
-</span>155 <span style=''>            val onError = asJavaConsumer[Throwable](t =&gt;  queue.fail(t))
-</span>156 <span style=''>
-</span>157 <span style=''>            this.queryRaw(queryCall, onResponse, onError, () =&gt; queue.complete, true)
-</span>158 <span style=''>          })
-</span>159 <span style=''>      })
-</span>160 <span style=''>  }
-</span>161 <span style=''>
-</span>162 <span style=''>  /**
-</span>163 <span style=''>   * Check the status of InfluxDB Server.
-</span>164 <span style=''>   *
-</span>165 <span style=''>   * @return `true` if server is healthy otherwise return `false`
-</span>166 <span style=''>   */
-</span>167 <span style=''>  override def ping: Boolean = {
-</span>168 <span style=''>    try {
-</span>169 <span style=''>      fluxService.ping().execute().isSuccessful
-</span>170 <span style=''>    } catch {
-</span>171 <span style=''>      case e: IOException =&gt;
-</span>172 <span style=''>        LOG.log(Level.WARNING, &quot;Ping request wasn't successful&quot;, e)
-</span>173 <span style=''>        false
-</span>174 <span style=''>    }
-</span>175 <span style=''>  }
-</span>176 <span style=''>
-</span>177 <span style=''>  /**
-</span>178 <span style=''>   * Returns the version of the connected InfluxDB Server.
-</span>179 <span style=''>   *
-</span>180 <span style=''>   * @return the version String, otherwise unknown.
-</span>181 <span style=''>   */
-</span>182 <span style=''>  override def version: String = {
-</span>183 <span style=''>    try {
-</span>184 <span style=''>      val response = fluxService.ping().execute()
-</span>185 <span style=''>      getVersion(response)
-</span>186 <span style=''>    } catch {
-</span>187 <span style=''>      case e: IOException =&gt; throw new InfluxException(e)
-</span>188 <span style=''>    }
-</span>189 <span style=''>  }
-</span>190 <span style=''>
-</span>191 <span style=''>  /**
-</span>192 <span style=''>   * Gets the [[LogLevel]] that is used for logging requests and responses.
-</span>193 <span style=''>   *
-</span>194 <span style=''>   * @return the [[LogLevel]] that is used for logging requests and responses
-</span>195 <span style=''>   */
-</span>196 <span style=''>  override def getLogLevel: LogLevel = {
-</span>197 <span style=''>    super.getLogLevel(loggingInterceptor)
-</span>198 <span style=''>  }
-</span>199 <span style=''>
-</span>200 <span style=''>  /**
-</span>201 <span style=''>   * Sets the log level for the request and response information.
-</span>202 <span style=''>   *
-</span>203 <span style=''>   * @param logLevel the log level to set.
-</span>204 <span style=''>   * @return the FluxClient instance to be able to use it in a fluent manner.
-</span>205 <span style=''>   */
-</span>206 <span style=''>  override def setLogLevel(logLevel: LogLevel): FluxClientScala = {
-</span>207 <span style=''>
-</span>208 <span style=''>    Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;)
-</span>209 <span style=''>
-</span>210 <span style=''>    super.setLogLevel(loggingInterceptor, logLevel)
-</span>211 <span style=''>    this
-</span>212 <span style=''>  }
-</span>213 <span style=''>}
+</span>144 <span style=''>            val onResponse = new BiConsumer[Cancellable, String] {
+</span>145 <span style=''>              override def accept(cancellable: Cancellable, line: String): Unit = {
+</span>146 <span style=''>                if (eventualDone.isCompleted) {
+</span>147 <span style=''>                  cancellable.cancel()
+</span>148 <span style=''>                } else {
+</span>149 <span style=''>                  queue.offer(line)
+</span>150 <span style=''>                }
+</span>151 <span style=''>              }
+</span>152 <span style=''>            }
+</span>153 <span style=''>
+</span>154 <span style=''>            val onError = asJavaConsumer[Throwable](t =&gt;  queue.fail(t))
+</span>155 <span style=''>
+</span>156 <span style=''>            this.queryRaw(queryCall, onResponse, onError, () =&gt; queue.complete, true)
+</span>157 <span style=''>          })
+</span>158 <span style=''>      })
+</span>159 <span style=''>  }
+</span>160 <span style=''>
+</span>161 <span style=''>  /**
+</span>162 <span style=''>   * Check the status of InfluxDB Server.
+</span>163 <span style=''>   *
+</span>164 <span style=''>   * @return `true` if server is healthy otherwise return `false`
+</span>165 <span style=''>   */
+</span>166 <span style=''>  override def ping: Boolean = {
+</span>167 <span style=''>    try {
+</span>168 <span style=''>      fluxService.ping().execute().isSuccessful
+</span>169 <span style=''>    } catch {
+</span>170 <span style=''>      case e: IOException =&gt;
+</span>171 <span style=''>        LOG.log(Level.WARNING, &quot;Ping request wasn't successful&quot;, e)
+</span>172 <span style=''>        false
+</span>173 <span style=''>    }
+</span>174 <span style=''>  }
+</span>175 <span style=''>
+</span>176 <span style=''>  /**
+</span>177 <span style=''>   * Returns the version of the connected InfluxDB Server.
+</span>178 <span style=''>   *
+</span>179 <span style=''>   * @return the version String, otherwise unknown.
+</span>180 <span style=''>   */
+</span>181 <span style=''>  override def version: String = {
+</span>182 <span style=''>    try {
+</span>183 <span style=''>      val response = fluxService.ping().execute()
+</span>184 <span style=''>      getVersion(response)
+</span>185 <span style=''>    } catch {
+</span>186 <span style=''>      case e: IOException =&gt; throw new InfluxException(e)
+</span>187 <span style=''>    }
+</span>188 <span style=''>  }
+</span>189 <span style=''>
+</span>190 <span style=''>  /**
+</span>191 <span style=''>   * Gets the [[LogLevel]] that is used for logging requests and responses.
+</span>192 <span style=''>   *
+</span>193 <span style=''>   * @return the [[LogLevel]] that is used for logging requests and responses
+</span>194 <span style=''>   */
+</span>195 <span style=''>  override def getLogLevel: LogLevel = {
+</span>196 <span style=''>    super.getLogLevel(loggingInterceptor)
+</span>197 <span style=''>  }
+</span>198 <span style=''>
+</span>199 <span style=''>  /**
+</span>200 <span style=''>   * Sets the log level for the request and response information.
+</span>201 <span style=''>   *
+</span>202 <span style=''>   * @param logLevel the log level to set.
+</span>203 <span style=''>   * @return the FluxClient instance to be able to use it in a fluent manner.
+</span>204 <span style=''>   */
+</span>205 <span style=''>  override def setLogLevel(logLevel: LogLevel): FluxClientScala = {
+</span>206 <span style=''>
+</span>207 <span style=''>    Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;)
+</span>208 <span style=''>
+</span>209 <span style=''>    super.setLogLevel(loggingInterceptor, logLevel)
+</span>210 <span style=''>    this
+</span>211 <span style=''>  }
+</span>212 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -325,10 +324,10 @@
           Select
         </td>
         <td>
-          akka.stream.OverflowStrategy.fail
+          akka.stream.OverflowStrategy.backpressure
         </td>
         <td style="background: #AEF1AE">
-          akka.stream.OverflowStrategy.fail
+          akka.stream.OverflowStrategy.backpressure
         </td>
       </tr><tr>
         <td>
@@ -338,9 +337,9 @@
           9
         </td>
         <td>
-          2507
+          2515
           -
-          2507
+          2515
         </td>
         <td>
           Apply
@@ -359,9 +358,9 @@
           11
         </td>
         <td>
-          2602
+          2610
           -
-          2602
+          2610
         </td>
         <td>
           Apply
@@ -380,9 +379,9 @@
           10
         </td>
         <td>
-          2639
+          2647
           -
-          2639
+          2647
         </td>
         <td>
           Apply
@@ -401,9 +400,9 @@
           12
         </td>
         <td>
-          2591
+          2599
           -
-          2591
+          2599
         </td>
         <td>
           Apply
@@ -422,9 +421,9 @@
           30
         </td>
         <td>
-          2675
+          2683
           -
-          2675
+          2683
         </td>
         <td>
           Apply
@@ -464,9 +463,9 @@
           14
         </td>
         <td>
-          2736
+          2744
           -
-          2736
+          2744
         </td>
         <td>
           Select
@@ -485,9 +484,9 @@
           13
         </td>
         <td>
-          2724
+          2732
           -
-          2724
+          2732
         </td>
         <td>
           Select
@@ -506,9 +505,9 @@
           29
         </td>
         <td>
-          2785
+          2793
           -
-          2785
+          2793
         </td>
         <td>
           Apply
@@ -548,9 +547,9 @@
           15
         </td>
         <td>
-          2850
+          2858
           -
-          2850
+          2858
         </td>
         <td>
           Apply
@@ -569,9 +568,9 @@
           23
         </td>
         <td>
-          2880
+          2888
           -
-          2880
+          2888
         </td>
         <td>
           Apply
@@ -590,9 +589,9 @@
           16
         </td>
         <td>
-          3054
+          3062
           -
-          3054
+          3062
         </td>
         <td>
           Literal
@@ -611,9 +610,9 @@
           17
         </td>
         <td>
-          3240
+          3248
           -
-          3240
+          3248
         </td>
         <td>
           Select
@@ -632,9 +631,9 @@
           19
         </td>
         <td>
-          3291
+          3299
           -
-          3291
+          3299
         </td>
         <td>
           Block
@@ -653,9 +652,9 @@
           18
         </td>
         <td>
-          3291
+          3299
           -
-          3291
+          3299
         </td>
         <td>
           Apply
@@ -674,9 +673,9 @@
           20
         </td>
         <td>
-          3348
+          3356
           -
-          3348
+          3356
         </td>
         <td>
           Apply
@@ -695,9 +694,9 @@
           22
         </td>
         <td>
-          3348
+          3356
           -
-          3348
+          3356
         </td>
         <td>
           Block
@@ -719,9 +718,9 @@
           21
         </td>
         <td>
-          3348
+          3356
           -
-          3348
+          3356
         </td>
         <td>
           Literal
@@ -740,9 +739,9 @@
           25
         </td>
         <td>
-          3457
+          3465
           -
-          3457
+          3465
         </td>
         <td>
           Apply
@@ -761,9 +760,9 @@
           24
         </td>
         <td>
-          3474
+          3482
           -
-          3474
+          3482
         </td>
         <td>
           Apply
@@ -782,9 +781,9 @@
           26
         </td>
         <td>
-          3545
+          3553
           -
-          3545
+          3553
         </td>
         <td>
           Apply
@@ -803,9 +802,9 @@
           28
         </td>
         <td>
-          3502
+          3510
           -
-          3502
+          3510
         </td>
         <td>
           Apply
@@ -824,9 +823,9 @@
           27
         </td>
         <td>
-          3555
+          3563
           -
-          3555
+          3563
         </td>
         <td>
           ApplyImplicitView
@@ -845,9 +844,9 @@
           31
         </td>
         <td>
-          4020
+          4028
           -
-          4020
+          4028
         </td>
         <td>
           Apply
@@ -866,9 +865,9 @@
           32
         </td>
         <td>
-          4063
+          4071
           -
-          4063
+          4071
         </td>
         <td>
           Apply
@@ -887,9 +886,9 @@
           34
         </td>
         <td>
-          4126
+          4134
           -
-          4126
+          4134
         </td>
         <td>
           Apply
@@ -908,9 +907,9 @@
           33
         </td>
         <td>
-          4151
+          4159
           -
-          4151
+          4159
         </td>
         <td>
           Apply
@@ -929,9 +928,9 @@
           35
         </td>
         <td>
-          4468
+          4476
           -
-          4468
+          4476
         </td>
         <td>
           Apply
@@ -939,7 +938,7 @@
         <td>
           org.influxdata.platform.Arguments.checkNonEmpty
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           org.influxdata.platform.Arguments.checkNonEmpty(query, &quot;query&quot;)
         </td>
       </tr><tr>
@@ -950,9 +949,9 @@
           37
         </td>
         <td>
-          4498
+          4506
           -
-          4498
+          4506
         </td>
         <td>
           Apply
@@ -960,7 +959,7 @@
         <td>
           org.influxdata.flux.impl.FluxClientScalaImpl.queryRaw
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           FluxClientScalaImpl.this.queryRaw(query, org.influxdata.platform.rest.AbstractQueryClient.DEFAULT_DIALECT.toString())
         </td>
       </tr><tr>
@@ -971,9 +970,9 @@
           36
         </td>
         <td>
-          4542
+          4550
           -
-          4542
+          4550
         </td>
         <td>
           Apply
@@ -981,7 +980,7 @@
         <td>
           org.json.JSONObject.toString
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           org.influxdata.platform.rest.AbstractQueryClient.DEFAULT_DIALECT.toString()
         </td>
       </tr><tr>
@@ -992,9 +991,9 @@
           38
         </td>
         <td>
-          5032
+          5040
           -
-          5032
+          5040
         </td>
         <td>
           Apply
@@ -1002,7 +1001,7 @@
         <td>
           org.influxdata.platform.Arguments.checkNonEmpty
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           org.influxdata.platform.Arguments.checkNonEmpty(query, &quot;query&quot;)
         </td>
       </tr><tr>
@@ -1013,9 +1012,9 @@
           40
         </td>
         <td>
-          5116
+          5124
           -
-          5116
+          5124
         </td>
         <td>
           Apply
@@ -1023,7 +1022,7 @@
         <td>
           org.influxdata.flux.impl.FluxService.query
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           FluxClientScalaImpl.this.fluxService.query(FluxClientScalaImpl.this.createBody(dialect, it))
         </td>
       </tr><tr>
@@ -1034,9 +1033,9 @@
           39
         </td>
         <td>
-          5127
+          5135
           -
-          5127
+          5135
         </td>
         <td>
           Apply
@@ -1044,7 +1043,7 @@
         <td>
           org.influxdata.platform.rest.AbstractQueryClient.createBody
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           FluxClientScalaImpl.this.createBody(dialect, it)
         </td>
       </tr><tr>
@@ -1055,9 +1054,9 @@
           57
         </td>
         <td>
-          5163
+          5171
           -
-          5163
+          5171
         </td>
         <td>
           Apply
@@ -1065,7 +1064,7 @@
         <td>
           akka.stream.scaladsl.FlowOps.flatMapConcat
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           akka.stream.scaladsl.Source.single[String](query).map[retrofit2.Call[okhttp3.ResponseBody]](((it: String) =&gt; FluxClientScalaImpl.this.fluxService.query(FluxClientScalaImpl.this.createBody(dialect, it)))).flatMapConcat[String, Unit](((queryCall: retrofit2.Call[okhttp3.ResponseBody]) =&gt; akka.stream.scaladsl.Source.queue[String](FluxClientScalaImpl.this.bufferSize, FluxClientScalaImpl.this.overflowStrategy).mapMaterializedValue[Unit](((queue: akka.stream.scaladsl.SourceQueueWithComplete[String]) =&gt; {
   val eventualDone: scala.concurrent.Future[akka.Done] = queue.watchCompletion();
   val onResponse: java.util.function.BiConsumer[org.influxdata.platform.rest.Cancellable,String] = {
@@ -1096,9 +1095,9 @@
           41
         </td>
         <td>
-          5208
+          5216
           -
-          5208
+          5216
         </td>
         <td>
           Select
@@ -1106,7 +1105,7 @@
         <td>
           org.influxdata.flux.impl.FluxClientScalaImpl.bufferSize
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           FluxClientScalaImpl.this.bufferSize
         </td>
       </tr><tr>
@@ -1117,9 +1116,9 @@
           42
         </td>
         <td>
-          5220
+          5228
           -
-          5220
+          5228
         </td>
         <td>
           Select
@@ -1127,7 +1126,7 @@
         <td>
           org.influxdata.flux.impl.FluxClientScalaImpl.overflowStrategy
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           FluxClientScalaImpl.this.overflowStrategy
         </td>
       </tr><tr>
@@ -1138,9 +1137,9 @@
           56
         </td>
         <td>
-          5269
+          5277
           -
-          5269
+          5277
         </td>
         <td>
           Apply
@@ -1148,7 +1147,7 @@
         <td>
           akka.stream.scaladsl.Source.mapMaterializedValue
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           akka.stream.scaladsl.Source.queue[String](FluxClientScalaImpl.this.bufferSize, FluxClientScalaImpl.this.overflowStrategy).mapMaterializedValue[Unit](((queue: akka.stream.scaladsl.SourceQueueWithComplete[String]) =&gt; {
   val eventualDone: scala.concurrent.Future[akka.Done] = queue.watchCompletion();
   val onResponse: java.util.function.BiConsumer[org.influxdata.platform.rest.Cancellable,String] = {
@@ -1179,9 +1178,9 @@
           43
         </td>
         <td>
-          5334
+          5342
           -
-          5334
+          5342
         </td>
         <td>
           Apply
@@ -1189,20 +1188,20 @@
         <td>
           akka.stream.scaladsl.SourceQueueWithComplete.watchCompletion
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           queue.watchCompletion()
         </td>
       </tr><tr>
         <td>
-          145
+          144
         </td>
         <td>
           50
         </td>
         <td>
-          5368
+          5375
           -
-          5368
+          5375
         </td>
         <td>
           Apply
@@ -1210,20 +1209,20 @@
         <td>
           org.influxdata.flux.impl.FluxClientScalaImpl.$anon.&lt;init&gt;
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           new $anon()
         </td>
       </tr><tr>
         <td>
-          147
+          146
         </td>
         <td>
           44
         </td>
         <td>
-          5523
+          5530
           -
-          5523
+          5530
         </td>
         <td>
           Select
@@ -1231,20 +1230,20 @@
         <td>
           scala.concurrent.Future.isCompleted
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           eventualDone.isCompleted
         </td>
       </tr><tr>
         <td>
-          148
+          147
         </td>
         <td>
           46
         </td>
         <td>
-          5574
+          5581
           -
-          5574
+          5581
         </td>
         <td>
           Block
@@ -1252,20 +1251,20 @@
         <td>
           org.influxdata.platform.rest.Cancellable.cancel
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           cancellable.cancel()
         </td>
       </tr><tr>
         <td>
-          148
+          147
         </td>
         <td>
           45
         </td>
         <td>
-          5574
+          5581
           -
-          5574
+          5581
         </td>
         <td>
           Apply
@@ -1273,20 +1272,20 @@
         <td>
           org.influxdata.platform.rest.Cancellable.cancel
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           cancellable.cancel()
         </td>
       </tr><tr>
         <td>
-          150
+          149
         </td>
         <td>
           47
         </td>
         <td>
-          5631
+          5638
           -
-          5631
+          5638
         </td>
         <td>
           Apply
@@ -1294,20 +1293,20 @@
         <td>
           akka.stream.scaladsl.SourceQueue.offer
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           queue.offer(line)
         </td>
       </tr><tr>
         <td>
-          150
+          149
         </td>
         <td>
           49
         </td>
         <td>
-          5631
+          5638
           -
-          5631
+          5638
         </td>
         <td>
           Block
@@ -1315,7 +1314,7 @@
         <td>
           &lt;nosymbol&gt;
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           {
   queue.offer(line);
   ()
@@ -1323,15 +1322,15 @@
         </td>
       </tr><tr>
         <td>
-          150
+          149
         </td>
         <td>
           48
         </td>
         <td>
-          5631
+          5638
           -
-          5631
+          5638
         </td>
         <td>
           Literal
@@ -1339,20 +1338,20 @@
         <td>
           &lt;nosymbol&gt;
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           ()
         </td>
       </tr><tr>
         <td>
-          155
+          154
         </td>
         <td>
           52
         </td>
         <td>
-          5738
+          5745
           -
-          5738
+          5745
         </td>
         <td>
           Apply
@@ -1360,20 +1359,20 @@
         <td>
           scala.compat.java8.FunctionConverters.asJavaConsumer
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           scala.compat.java8.FunctionConverters.`package`.asJavaConsumer[Throwable](((t: Throwable) =&gt; queue.fail(t)))
         </td>
       </tr><tr>
         <td>
-          155
+          154
         </td>
         <td>
           51
         </td>
         <td>
-          5755
+          5762
           -
-          5755
+          5762
         </td>
         <td>
           Apply
@@ -1386,15 +1385,15 @@
         </td>
       </tr><tr>
         <td>
-          157
+          156
         </td>
         <td>
           53
         </td>
         <td>
-          5831
+          5838
           -
-          5831
+          5838
         </td>
         <td>
           Apply
@@ -1402,20 +1401,20 @@
         <td>
           akka.stream.scaladsl.SourceQueueWithComplete.complete
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           queue.complete()
         </td>
       </tr><tr>
         <td>
-          157
+          156
         </td>
         <td>
           55
         </td>
         <td>
-          5786
+          5793
           -
-          5786
+          5793
         </td>
         <td>
           Apply
@@ -1423,20 +1422,20 @@
         <td>
           org.influxdata.platform.rest.AbstractQueryClient.queryRaw
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           this.queryRaw(queryCall, onResponse, onError, (() =&gt; queue.complete()), scala.Predef.boolean2Boolean(true))
         </td>
       </tr><tr>
         <td>
-          157
+          156
         </td>
         <td>
           54
         </td>
         <td>
-          5841
+          5848
           -
-          5841
+          5848
         </td>
         <td>
           ApplyImplicitView
@@ -1444,20 +1443,20 @@
         <td>
           scala.Predef.boolean2Boolean
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           scala.Predef.boolean2Boolean(true)
         </td>
       </tr><tr>
         <td>
-          169
+          168
         </td>
         <td>
           59
         </td>
         <td>
-          6077
+          6084
           -
-          6077
+          6084
         </td>
         <td>
           Block
@@ -1470,15 +1469,15 @@
         </td>
       </tr><tr>
         <td>
-          169
+          168
         </td>
         <td>
           58
         </td>
         <td>
-          6077
+          6084
           -
-          6077
+          6084
         </td>
         <td>
           Apply
@@ -1491,15 +1490,15 @@
         </td>
       </tr><tr>
         <td>
-          172
+          171
         </td>
         <td>
           62
         </td>
         <td>
-          6148
+          6155
           -
-          6148
+          6155
         </td>
         <td>
           Apply
@@ -1512,15 +1511,15 @@
         </td>
       </tr><tr>
         <td>
-          172
+          171
         </td>
         <td>
           61
         </td>
         <td>
-          6164
+          6171
           -
-          6164
+          6171
         </td>
         <td>
           Literal
@@ -1533,15 +1532,15 @@
         </td>
       </tr><tr>
         <td>
-          172
+          171
         </td>
         <td>
           60
         </td>
         <td>
-          6155
+          6162
           -
-          6155
+          6162
         </td>
         <td>
           Select
@@ -1554,15 +1553,15 @@
         </td>
       </tr><tr>
         <td>
-          173
+          172
         </td>
         <td>
           63
         </td>
         <td>
-          6209
+          6216
           -
-          6209
+          6216
         </td>
         <td>
           Literal
@@ -1575,15 +1574,15 @@
         </td>
       </tr><tr>
         <td>
-          183
+          182
         </td>
         <td>
           66
         </td>
         <td>
-          6393
+          6400
           -
-          6393
+          6400
         </td>
         <td>
           Block
@@ -1599,15 +1598,15 @@
         </td>
       </tr><tr>
         <td>
-          184
+          183
         </td>
         <td>
           64
         </td>
         <td>
-          6446
+          6453
           -
-          6446
+          6453
         </td>
         <td>
           Apply
@@ -1620,15 +1619,15 @@
         </td>
       </tr><tr>
         <td>
-          185
+          184
         </td>
         <td>
           65
         </td>
         <td>
-          6465
+          6472
           -
-          6465
+          6472
         </td>
         <td>
           Apply
@@ -1641,15 +1640,15 @@
         </td>
       </tr><tr>
         <td>
-          187
+          186
         </td>
         <td>
           67
         </td>
         <td>
-          6519
+          6526
           -
-          6519
+          6526
         </td>
         <td>
           Throw
@@ -1662,15 +1661,15 @@
         </td>
       </tr><tr>
         <td>
-          197
+          196
         </td>
         <td>
           68
         </td>
         <td>
-          6793
+          6800
           -
-          6793
+          6800
         </td>
         <td>
           Select
@@ -1683,15 +1682,15 @@
         </td>
       </tr><tr>
         <td>
-          197
+          196
         </td>
         <td>
           69
         </td>
         <td>
-          6792
+          6799
           -
-          6792
+          6799
         </td>
         <td>
           Apply
@@ -1704,15 +1703,15 @@
         </td>
       </tr><tr>
         <td>
-          208
+          207
         </td>
         <td>
           70
         </td>
         <td>
-          7117
+          7124
           -
-          7117
+          7124
         </td>
         <td>
           Apply
@@ -1725,15 +1724,15 @@
         </td>
       </tr><tr>
         <td>
-          210
+          209
         </td>
         <td>
           71
         </td>
         <td>
-          7163
+          7170
           -
-          7163
+          7170
         </td>
         <td>
           Select
@@ -1746,15 +1745,15 @@
         </td>
       </tr><tr>
         <td>
-          210
+          209
         </td>
         <td>
           72
         </td>
         <td>
-          7162
+          7169
           -
-          7162
+          7169
         </td>
         <td>
           Apply

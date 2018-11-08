@@ -48,7 +48,7 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
 <span class="nc" id="L48">  private val LOG = Logger.getLogger(classOf[FluxClientScalaImpl].getName)</span>
 
 <span class="nc" id="L50">  private val bufferSize = 100</span>
-<span class="nc" id="L51">  private val overflowStrategy = OverflowStrategy.fail</span>
+<span class="nc" id="L51">  private val overflowStrategy = OverflowStrategy.backpressure</span>
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
@@ -141,13 +141,12 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
 
 <span class="nc" id="L142">            val eventualDone = queue.watchCompletion()</span>
 
-
-<span class="nc" id="L145">            val onResponse = new BiConsumer[Cancellable, String] {</span>
+<span class="nc" id="L144">            val onResponse = new BiConsumer[Cancellable, String] {</span>
               override def accept(cancellable: Cancellable, line: String): Unit = {
-<span class="nc bnc" id="L147" title="All 2 branches missed.">                if (eventualDone.isCompleted) {</span>
-<span class="nc" id="L148">                  cancellable.cancel()</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">                if (eventualDone.isCompleted) {</span>
+<span class="nc" id="L147">                  cancellable.cancel()</span>
                 } else {
-<span class="nc" id="L150">                  queue.offer(line)</span>
+<span class="nc" id="L149">                  queue.offer(line)</span>
                 }
               }
             }
@@ -166,11 +165,11 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
    */
   override def ping: Boolean = {
     try {
-<span class="nc" id="L169">      fluxService.ping().execute().isSuccessful</span>
+<span class="nc" id="L168">      fluxService.ping().execute().isSuccessful</span>
     } catch {
       case e: IOException =&gt;
-<span class="nc" id="L172">        LOG.log(Level.WARNING, &quot;Ping request wasn't successful&quot;, e)</span>
-<span class="nc" id="L173">        false</span>
+<span class="nc" id="L171">        LOG.log(Level.WARNING, &quot;Ping request wasn't successful&quot;, e)</span>
+<span class="nc" id="L172">        false</span>
     }
   }
 
@@ -181,10 +180,10 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
    */
   override def version: String = {
     try {
-<span class="nc" id="L184">      val response = fluxService.ping().execute()</span>
-<span class="nc" id="L185">      getVersion(response)</span>
+<span class="nc" id="L183">      val response = fluxService.ping().execute()</span>
+<span class="nc" id="L184">      getVersion(response)</span>
     } catch {
-<span class="nc" id="L187">      case e: IOException =&gt; throw new InfluxException(e)</span>
+<span class="nc" id="L186">      case e: IOException =&gt; throw new InfluxException(e)</span>
     }
   }
 
@@ -194,7 +193,7 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
    * @return the [[LogLevel]] that is used for logging requests and responses
    */
   override def getLogLevel: LogLevel = {
-<span class="nc" id="L197">    super.getLogLevel(loggingInterceptor)</span>
+<span class="nc" id="L196">    super.getLogLevel(loggingInterceptor)</span>
   }
 
   /**
@@ -205,10 +204,10 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
    */
   override def setLogLevel(logLevel: LogLevel): FluxClientScala = {
 
-<span class="nc" id="L208">    Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;)</span>
+<span class="nc" id="L207">    Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;)</span>
 
-<span class="nc" id="L210">    super.setLogLevel(loggingInterceptor, logLevel)</span>
-<span class="nc" id="L211">    this</span>
+<span class="nc" id="L209">    super.setLogLevel(loggingInterceptor, logLevel)</span>
+<span class="nc" id="L210">    this</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
