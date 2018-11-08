@@ -48,7 +48,7 @@ class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)
   private val LOG = Logger.getLogger(classOf[FluxClientScalaImpl].getName)
 
   private val bufferSize = 100
-  private val overflowStrategy = OverflowStrategy.fail
+  private val overflowStrategy = OverflowStrategy.backpressure
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
@@ -140,7 +140,6 @@ class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)
           .mapMaterializedValue(queue => {
 
             val eventualDone = queue.watchCompletion()
-
 
             val onResponse = new BiConsumer[Cancellable, String] {
               override def accept(cancellable: Cancellable, line: String): Unit = {

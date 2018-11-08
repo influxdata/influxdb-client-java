@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.annotation.Nonnull;
@@ -42,6 +43,8 @@ import org.junit.jupiter.api.BeforeEach;
  */
 @SuppressWarnings("MagicNumber")
 public abstract class AbstractTest {
+
+    private static final Logger LOG = Logger.getLogger(AbstractTest.class.getName());
 
     private static final int DEFAULT_WAIT = 10;
     private static final int DEFAULT_INFLUXDB_SLEEP = 100;
@@ -122,6 +125,8 @@ public abstract class AbstractTest {
 
     protected void prepareChunkRecords(final String databaseName) {
 
+        LOG.info("Preparing data...");
+
         int totalRecords = 500_000;
         countDownLatch = new CountDownLatch(totalRecords);
 
@@ -137,5 +142,7 @@ public abstract class AbstractTest {
                 points.clear();
             }
         });
+
+        LOG.info("done");
     }
 }
