@@ -41,14 +41,17 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
 /**
  * @author Jakub Bednar (bednar@github) (06/11/2018 08:19)
  */
-<span class="nc" id="L44">class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)</span>
-<span class="nc" id="L45">  extends AbstractFluxClient(options.getOkHttpClient, options.getUrl, options.getParameters, classOf[FluxService])</span>
+<span class="nc" id="L44">class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions,</span>
+<span class="nc" id="L45">                          @Nonnull val bufferSize: Int,</span>
+<span class="nc" id="L46">                          @Nonnull val overflowStrategy: OverflowStrategy)</span>
+
+<span class="nc" id="L48">  extends AbstractFluxClient(options.getOkHttpClient, options.getUrl, options.getParameters, classOf[FluxService])</span>
     with FluxClientScala {
 
-<span class="nc" id="L48">  private val LOG = Logger.getLogger(classOf[FluxClientScalaImpl].getName)</span>
+<span class="nc" id="L51">  Arguments.checkNotNull(overflowStrategy, &quot;overflowStrategy&quot;)</span>
+<span class="nc" id="L52">  Arguments.checkNotNull(bufferSize, &quot;bufferSize&quot;)</span>
 
-<span class="nc" id="L50">  private val bufferSize = 100</span>
-<span class="nc" id="L51">  private val overflowStrategy = OverflowStrategy.backpressure</span>
+<span class="nc" id="L54">  private val LOG = Logger.getLogger(classOf[FluxClientScalaImpl].getName)</span>
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
@@ -58,28 +61,28 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
    */
   override def query(query: String): Source[FluxRecord, NotUsed] = {
 
-<span class="nc" id="L61">    Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+<span class="nc" id="L64">    Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
 
-<span class="nc" id="L63">    Source</span>
-<span class="nc" id="L64">      .single(query)</span>
-<span class="nc" id="L65">      .map(it =&gt; fluxService.query(createBody(AbstractQueryClient.DEFAULT_DIALECT.toString, it)))</span>
-<span class="nc" id="L66">      .flatMapConcat(queryCall =&gt; {</span>
+<span class="nc" id="L66">    Source</span>
+<span class="nc" id="L67">      .single(query)</span>
+<span class="nc" id="L68">      .map(it =&gt; fluxService.query(createBody(AbstractQueryClient.DEFAULT_DIALECT.toString, it)))</span>
+<span class="nc" id="L69">      .flatMapConcat(queryCall =&gt; {</span>
         Source.queue[FluxRecord](bufferSize, overflowStrategy)
           .mapMaterializedValue(queue =&gt; {
 
-<span class="nc" id="L70">            val eventualDone = queue.watchCompletion()</span>
-<span class="nc" id="L71">            val consumer = new FluxCsvParser.FluxResponseConsumer() {</span>
+<span class="nc" id="L73">            val eventualDone = queue.watchCompletion()</span>
+<span class="nc" id="L74">            val consumer = new FluxCsvParser.FluxResponseConsumer() {</span>
 
               override
-<span class="nc" id="L74">              def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull table: FluxTable): Unit = {</span>
+<span class="nc" id="L77">              def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull table: FluxTable): Unit = {</span>
               }
 
               override
               def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull record: FluxRecord): Unit = {
-<span class="nc bnc" id="L79" title="All 2 branches missed.">                if (eventualDone.isCompleted) {</span>
-<span class="nc" id="L80">                  cancellable.cancel()</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">                if (eventualDone.isCompleted) {</span>
+<span class="nc" id="L83">                  cancellable.cancel()</span>
                 } else {
-<span class="nc" id="L82">                  queue.offer(record)</span>
+<span class="nc" id="L85">                  queue.offer(record)</span>
                 }
               }
             }
@@ -101,10 +104,10 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
    */
   override def query[M](query: String, measurementType: Class[M]): Source[M, NotUsed] = {
 
-<span class="nc" id="L104">    Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
-<span class="nc" id="L105">    Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)</span>
+<span class="nc" id="L107">    Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+<span class="nc" id="L108">    Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)</span>
 
-<span class="nc" id="L107">    this.query(query).map(t =&gt; resultMapper.toPOJO(t, measurementType))</span>
+<span class="nc" id="L110">    this.query(query).map(t =&gt; resultMapper.toPOJO(t, measurementType))</span>
   }
 
   /**
@@ -115,9 +118,9 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
    */
   override def queryRaw(query: String): Source[String, NotUsed] = {
 
-<span class="nc" id="L118">    Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+<span class="nc" id="L121">    Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
 
-<span class="nc" id="L120">    queryRaw(query, AbstractQueryClient.DEFAULT_DIALECT.toString)</span>
+<span class="nc" id="L123">    queryRaw(query, AbstractQueryClient.DEFAULT_DIALECT.toString)</span>
   }
 
   /**
@@ -130,23 +133,23 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
    */
   override def queryRaw(query: String, dialect: String): Source[String, NotUsed] = {
 
-<span class="nc" id="L133">    Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+<span class="nc" id="L136">    Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
 
-<span class="nc" id="L135">    Source</span>
-<span class="nc" id="L136">      .single(query)</span>
-<span class="nc" id="L137">      .map(it =&gt; fluxService.query(createBody(dialect, it)))</span>
-<span class="nc" id="L138">      .flatMapConcat(queryCall =&gt; {</span>
+<span class="nc" id="L138">    Source</span>
+<span class="nc" id="L139">      .single(query)</span>
+<span class="nc" id="L140">      .map(it =&gt; fluxService.query(createBody(dialect, it)))</span>
+<span class="nc" id="L141">      .flatMapConcat(queryCall =&gt; {</span>
         Source.queue[String](bufferSize, overflowStrategy)
           .mapMaterializedValue(queue =&gt; {
 
-<span class="nc" id="L142">            val eventualDone = queue.watchCompletion()</span>
+<span class="nc" id="L145">            val eventualDone = queue.watchCompletion()</span>
 
-<span class="nc" id="L144">            val onResponse = new BiConsumer[Cancellable, String] {</span>
+<span class="nc" id="L147">            val onResponse = new BiConsumer[Cancellable, String] {</span>
               override def accept(cancellable: Cancellable, line: String): Unit = {
-<span class="nc bnc" id="L146" title="All 2 branches missed.">                if (eventualDone.isCompleted) {</span>
-<span class="nc" id="L147">                  cancellable.cancel()</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">                if (eventualDone.isCompleted) {</span>
+<span class="nc" id="L150">                  cancellable.cancel()</span>
                 } else {
-<span class="nc" id="L149">                  queue.offer(line)</span>
+<span class="nc" id="L152">                  queue.offer(line)</span>
                 }
               }
             }
@@ -165,11 +168,11 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
    */
   override def ping: Boolean = {
     try {
-<span class="nc" id="L168">      fluxService.ping().execute().isSuccessful</span>
+<span class="nc" id="L171">      fluxService.ping().execute().isSuccessful</span>
     } catch {
       case e: IOException =&gt;
-<span class="nc" id="L171">        LOG.log(Level.WARNING, &quot;Ping request wasn't successful&quot;, e)</span>
-<span class="nc" id="L172">        false</span>
+<span class="nc" id="L174">        LOG.log(Level.WARNING, &quot;Ping request wasn't successful&quot;, e)</span>
+<span class="nc" id="L175">        false</span>
     }
   }
 
@@ -180,10 +183,10 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
    */
   override def version: String = {
     try {
-<span class="nc" id="L183">      val response = fluxService.ping().execute()</span>
-<span class="nc" id="L184">      getVersion(response)</span>
+<span class="nc" id="L186">      val response = fluxService.ping().execute()</span>
+<span class="nc" id="L187">      getVersion(response)</span>
     } catch {
-<span class="nc" id="L186">      case e: IOException =&gt; throw new InfluxException(e)</span>
+<span class="nc" id="L189">      case e: IOException =&gt; throw new InfluxException(e)</span>
     }
   }
 
@@ -193,7 +196,7 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
    * @return the [[LogLevel]] that is used for logging requests and responses
    */
   override def getLogLevel: LogLevel = {
-<span class="nc" id="L196">    super.getLogLevel(loggingInterceptor)</span>
+<span class="nc" id="L199">    super.getLogLevel(loggingInterceptor)</span>
   }
 
   /**
@@ -204,10 +207,10 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
    */
   override def setLogLevel(logLevel: LogLevel): FluxClientScala = {
 
-<span class="nc" id="L207">    Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;)</span>
+<span class="nc" id="L210">    Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;)</span>
 
-<span class="nc" id="L209">    super.setLogLevel(loggingInterceptor, logLevel)</span>
-<span class="nc" id="L210">    this</span>
+<span class="nc" id="L212">    super.setLogLevel(loggingInterceptor, logLevel)</span>
+<span class="nc" id="L213">    this</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

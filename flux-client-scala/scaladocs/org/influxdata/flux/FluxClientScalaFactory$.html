@@ -316,9 +316,9 @@
               
         </dd></dl></div>
     </li><li name="org.influxdata.flux.FluxClientScalaFactory#create" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="create(options:org.influxdata.flux.option.FluxConnectionOptions):org.influxdata.flux.FluxClientScala"></a><a id="create(FluxConnectionOptions):FluxClientScala"></a>
+      <a id="create(options:org.influxdata.flux.option.FluxConnectionOptions,bufferSize:Int,overflowStrategy:akka.stream.OverflowStrategy):org.influxdata.flux.FluxClientScala"></a><a id="create(FluxConnectionOptions,Int,OverflowStrategy):FluxClientScala"></a>
       <span class="permalink">
-      <a href="../../../org/influxdata/flux/FluxClientScalaFactory$.html#create(options:org.influxdata.flux.option.FluxConnectionOptions):org.influxdata.flux.FluxClientScala" title="Permalink">
+      <a href="../../../org/influxdata/flux/FluxClientScalaFactory$.html#create(options:org.influxdata.flux.option.FluxConnectionOptions,bufferSize:Int,overflowStrategy:akka.stream.OverflowStrategy):org.influxdata.flux.FluxClientScala" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -327,14 +327,15 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">create</span><span class="params">(<span name="options">options: <span class="extype" name="org.influxdata.flux.option.FluxConnectionOptions">FluxConnectionOptions</span></span>)</span><span class="result">: <a href="FluxClientScala.html" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a></span>
+        <span class="name">create</span><span class="params">(<span name="options">options: <span class="extype" name="org.influxdata.flux.option.FluxConnectionOptions">FluxConnectionOptions</span></span>, <span name="bufferSize">bufferSize: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">10000</span></span>, <span name="overflowStrategy">overflowStrategy: <span class="extype" name="akka.stream.OverflowStrategy">OverflowStrategy</span> = <span class="symbol">OverflowStrategy.backpressure</span></span>)</span><span class="result">: <a href="FluxClientScala.html" class="extype" name="org.influxdata.flux.FluxClientScala">FluxClientScala</a></span>
       </span>
       
       <p class="shortcomment cmt">Create a instance of the Flux client.</p><div class="fullcomment"><div class="comment cmt"><p>Create a instance of the Flux client.
-</p></div><dl class="paramcmts block"><dt class="param">options</dt><dd class="cmt"><p>the connection configuration</p></dd><dt>returns</dt><dd class="cmt"><p>client</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+</p></div><dl class="paramcmts block"><dt class="param">options</dt><dd class="cmt"><p>the connection configuration</p></dd><dt class="param">bufferSize</dt><dd class="cmt"><p>size of a buffer for incoming responses. Default 10000.</p></dd><dt class="param">overflowStrategy</dt><dd class="cmt"><p>Strategy that is used when incoming response cannot fit inside the buffer.
+                        Default <span class="extype" name="akka.stream.OverflowStrategies.Backpressure">akka.stream.OverflowStrategies.Backpressure</span>.</p></dd><dt>returns</dt><dd class="cmt"><p>client</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@Nonnull</span><span class="args">()</span>
               
-        </dd></dl></div>
+        </dd><dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="akka.stream.scaladsl.Source#queue(int,">akka.stream.OverflowStrategy)</span></p></span></dd></dl></div>
     </li><li name="org.influxdata.flux.FluxClientScalaFactory#create" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="create(connectionString:String):org.influxdata.flux.FluxClientScala"></a><a id="create(String):FluxClientScala"></a>
       <span class="permalink">
@@ -354,7 +355,7 @@
 </p></div><dl class="paramcmts block"><dt class="param">connectionString</dt><dd class="cmt"><p>the connectionString to connect to InfluxDB.</p></dd><dt>returns</dt><dd class="cmt"><p>client</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@Nonnull</span><span class="args">()</span>
               
-        </dd><dt>See also</dt><dd><span class="cmt"><p>FluxConnectionOptions.Builder#builder(String)</p></span></dd></dl></div>
+        </dd><dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="org.influxdata.flux.option.FluxConnectionOptions#builder(java.lang.String)">org.influxdata.flux.option.FluxConnectionOptions#builder(java.lang.String)</span></p></span></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">

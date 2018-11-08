@@ -45,41 +45,52 @@
 </span>21 <span style=''> */
 </span>22 <span style=''>package org.influxdata.flux
 </span>23 <span style=''>
-</span>24 <span style=''>import javax.annotation.Nonnull
-</span>25 <span style=''>import org.influxdata.flux.impl.FluxClientScalaImpl
-</span>26 <span style=''>import org.influxdata.flux.option.FluxConnectionOptions
-</span>27 <span style=''>import org.influxdata.platform.Arguments
-</span>28 <span style=''>
-</span>29 <span style=''>/**
-</span>30 <span style=''> * The Factory that creates a instance of a Flux client.
-</span>31 <span style=''> * 
-</span>32 <span style=''> * @author Jakub Bednar (bednar@github) (05/11/2018 10:10)
-</span>33 <span style=''> */
-</span>34 <span style=''>object FluxClientScalaFactory {
-</span>35 <span style=''>
-</span>36 <span style=''>  /**
-</span>37 <span style=''>   * Create a instance of the Flux client.
-</span>38 <span style=''>   *
-</span>39 <span style=''>   * @param connectionString the connectionString to connect to InfluxDB.
-</span>40 <span style=''>   * @return client
-</span>41 <span style=''>   * @see FluxConnectionOptions.Builder#builder(String)
-</span>42 <span style=''>   */
-</span>43 <span style=''>  @Nonnull def create(@Nonnull connectionString: String): FluxClientScala = {
-</span>44 <span style=''>    val options = FluxConnectionOptions.builder(connectionString).build
-</span>45 <span style=''>    create(options)
-</span>46 <span style=''>  }
-</span>47 <span style=''>
-</span>48 <span style=''>  /**
-</span>49 <span style=''>   * Create a instance of the Flux client.
-</span>50 <span style=''>   *
-</span>51 <span style=''>   * @param options the connection configuration
-</span>52 <span style=''>   * @return client
-</span>53 <span style=''>   */
-</span>54 <span style=''>  @Nonnull def create(@Nonnull options: FluxConnectionOptions): FluxClientScala = {
-</span>55 <span style=''>    Arguments.checkNotNull(options, &quot;FluxConnectionOptions&quot;)
-</span>56 <span style=''>    new FluxClientScalaImpl(options)
-</span>57 <span style=''>  }
-</span>58 <span style=''>}
+</span>24 <span style=''>import akka.stream.OverflowStrategy
+</span>25 <span style=''>import javax.annotation.Nonnull
+</span>26 <span style=''>import org.influxdata.flux.impl.FluxClientScalaImpl
+</span>27 <span style=''>import org.influxdata.flux.option.FluxConnectionOptions
+</span>28 <span style=''>import org.influxdata.platform.Arguments
+</span>29 <span style=''>
+</span>30 <span style=''>/**
+</span>31 <span style=''> * The Factory that creates a instance of a Flux client.
+</span>32 <span style=''> * 
+</span>33 <span style=''> * @author Jakub Bednar (bednar@github) (05/11/2018 10:10)
+</span>34 <span style=''> */
+</span>35 <span style=''>object FluxClientScalaFactory {
+</span>36 <span style=''>
+</span>37 <span style=''>  /**
+</span>38 <span style=''>   * Create a instance of the Flux client.
+</span>39 <span style=''>   *
+</span>40 <span style=''>   * @param connectionString the connectionString to connect to InfluxDB.
+</span>41 <span style=''>   * @return client
+</span>42 <span style=''>   * @see [[org.influxdata.flux.option.FluxConnectionOptions#builder(java.lang.String)]]
+</span>43 <span style=''>   */
+</span>44 <span style=''>  @Nonnull def create(@Nonnull connectionString: String): FluxClientScala = {
+</span>45 <span style=''>    val options = FluxConnectionOptions.builder(connectionString).build
+</span>46 <span style=''>    create(options)
+</span>47 <span style=''>  }
+</span>48 <span style=''>
+</span>49 <span style=''>  /**
+</span>50 <span style=''>   * Create a instance of the Flux client.
+</span>51 <span style=''>   *
+</span>52 <span style=''>   * @param options          the connection configuration
+</span>53 <span style=''>   * @param bufferSize       size of a buffer for incoming responses. Default 10000.
+</span>54 <span style=''>   * @param overflowStrategy Strategy that is used when incoming response cannot fit inside the buffer.
+</span>55 <span style=''>   *                         Default [[akka.stream.OverflowStrategies.Backpressure]].
+</span>56 <span style=''>   * @see [[akka.stream.scaladsl.Source#queue(int, akka.stream.OverflowStrategy)]]
+</span>57 <span style=''>   * @return client
+</span>58 <span style=''>   */
+</span>59 <span style=''>  @Nonnull def create(@Nonnull options: FluxConnectionOptions,
+</span>60 <span style=''>                      @Nonnull bufferSize: Int = 10000,
+</span>61 <span style=''>                      @Nonnull overflowStrategy: OverflowStrategy = OverflowStrategy.backpressure): FluxClientScala = {
+</span>62 <span style=''>
+</span>63 <span style=''>    Arguments.checkNotNull(options, &quot;FluxConnectionOptions&quot;)
+</span>64 <span style=''>    Arguments.checkNotNull(overflowStrategy, &quot;overflowStrategy&quot;)
+</span>65 <span style=''>    Arguments.checkNotNull(bufferSize, &quot;bufferSize&quot;)
+</span>66 <span style=''>
+</span>67 <span style=''>    new FluxClientScalaImpl(options, bufferSize, overflowStrategy)
+</span>68 <span style=''>  }
+</span>69 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -93,15 +104,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          44
+          45
         </td>
         <td>
           1
         </td>
         <td>
-          1828
+          1897
           -
-          1828
+          1897
         </td>
         <td>
           Apply
@@ -114,15 +125,36 @@
         </td>
       </tr><tr>
         <td>
-          45
+          46
         </td>
         <td>
           2
         </td>
         <td>
-          1844
+          1907
           -
-          1844
+          1907
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.flux.FluxClientScalaFactory.create$default$2
+        </td>
+        <td style="background: #AEF1AE">
+          FluxClientScalaFactory.this.create$default$2
+        </td>
+      </tr><tr>
+        <td>
+          46
+        </td>
+        <td>
+          4
+        </td>
+        <td>
+          1913
+          -
+          1913
         </td>
         <td>
           Apply
@@ -131,19 +163,40 @@
           org.influxdata.flux.FluxClientScalaFactory.create
         </td>
         <td style="background: #AEF1AE">
-          FluxClientScalaFactory.this.create(options)
+          FluxClientScalaFactory.this.create(options, FluxClientScalaFactory.this.create$default$2, FluxClientScalaFactory.this.create$default$3)
         </td>
       </tr><tr>
         <td>
-          55
+          46
         </td>
         <td>
           3
         </td>
         <td>
-          2098
+          1907
           -
-          2098
+          1907
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.flux.FluxClientScalaFactory.create$default$3
+        </td>
+        <td style="background: #AEF1AE">
+          FluxClientScalaFactory.this.create$default$3
+        </td>
+      </tr><tr>
+        <td>
+          63
+        </td>
+        <td>
+          5
+        </td>
+        <td>
+          2690
+          -
+          2690
         </td>
         <td>
           Apply
@@ -156,15 +209,57 @@
         </td>
       </tr><tr>
         <td>
-          56
+          64
         </td>
         <td>
-          4
+          6
         </td>
         <td>
-          2137
+          2751
           -
-          2137
+          2751
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.platform.Arguments.checkNotNull
+        </td>
+        <td style="background: #AEF1AE">
+          org.influxdata.platform.Arguments.checkNotNull(overflowStrategy, &quot;overflowStrategy&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          7
+        </td>
+        <td>
+          2816
+          -
+          2816
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.platform.Arguments.checkNotNull
+        </td>
+        <td style="background: #AEF1AE">
+          org.influxdata.platform.Arguments.checkNotNull(bufferSize, &quot;bufferSize&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          67
+        </td>
+        <td>
+          8
+        </td>
+        <td>
+          2848
+          -
+          2848
         </td>
         <td>
           Apply
@@ -173,7 +268,7 @@
           org.influxdata.flux.impl.FluxClientScalaImpl.&lt;init&gt;
         </td>
         <td style="background: #AEF1AE">
-          new org.influxdata.flux.impl.FluxClientScalaImpl(options)
+          new org.influxdata.flux.impl.FluxClientScalaImpl(options, bufferSize, overflowStrategy)
         </td>
       </tr>
     </table>

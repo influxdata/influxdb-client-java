@@ -216,9 +216,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="org.influxdata.flux.impl.FluxClientScalaImpl#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(options:org.influxdata.flux.option.FluxConnectionOptions):org.influxdata.flux.impl.FluxClientScalaImpl"></a><a id="&lt;init&gt;:FluxClientScalaImpl"></a>
+      <a id="&lt;init&gt;(options:org.influxdata.flux.option.FluxConnectionOptions,bufferSize:Int,overflowStrategy:akka.stream.OverflowStrategy):org.influxdata.flux.impl.FluxClientScalaImpl"></a><a id="&lt;init&gt;:FluxClientScalaImpl"></a>
       <span class="permalink">
-      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#&lt;init&gt;(options:org.influxdata.flux.option.FluxConnectionOptions):org.influxdata.flux.impl.FluxClientScalaImpl" title="Permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#&lt;init&gt;(options:org.influxdata.flux.option.FluxConnectionOptions,bufferSize:Int,overflowStrategy:akka.stream.OverflowStrategy):org.influxdata.flux.impl.FluxClientScalaImpl" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -227,7 +227,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">FluxClientScalaImpl</span><span class="params">(<span name="options">options: <span class="extype" name="org.influxdata.flux.option.FluxConnectionOptions">FluxConnectionOptions</span></span>)</span>
+        <span class="name">FluxClientScalaImpl</span><span class="params">(<span name="options">options: <span class="extype" name="org.influxdata.flux.option.FluxConnectionOptions">FluxConnectionOptions</span></span>, <span name="bufferSize">bufferSize: <span class="extype" name="scala.Int">Int</span></span>, <span name="overflowStrategy">overflowStrategy: <span class="extype" name="akka.stream.OverflowStrategy">OverflowStrategy</span></span>)</span>
       </span>
       
       
@@ -305,6 +305,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="org.influxdata.flux.impl.FluxClientScalaImpl#bufferSize" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bufferSize:Int"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#bufferSize:Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bufferSize</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      
+      
     </li><li name="org.influxdata.platform.rest.AbstractRestClient#catchOrPropagateException" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="catchOrPropagateException(x$1:Exception,x$2:java.util.function.Consumer[_&gt;:Throwable]):Unit"></a><a id="catchOrPropagateException(Exception,Consumer[_&gt;:Throwable]):Unit"></a>
       <span class="permalink">
@@ -673,6 +689,22 @@
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="org.influxdata.flux.impl.FluxClientScalaImpl#overflowStrategy" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="overflowStrategy:akka.stream.OverflowStrategy"></a><a id="overflowStrategy:OverflowStrategy"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/flux/impl/FluxClientScalaImpl.html#overflowStrategy:akka.stream.OverflowStrategy" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">overflowStrategy</span><span class="result">: <span class="extype" name="akka.stream.OverflowStrategy">OverflowStrategy</span></span>
+      </span>
+      
+      
     </li><li name="org.influxdata.platform.rest.AbstractQueryClient#parseFluxResponseToLines" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="parseFluxResponseToLines(x$1:java.util.function.Consumer[String],x$2:org.influxdata.platform.rest.Cancellable,x$3:okio.BufferedSource):Unit"></a><a id="parseFluxResponseToLines(Consumer[String],Cancellable,BufferedSource):Unit"></a>
       <span class="permalink">
