@@ -45,6 +45,9 @@
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${kotlin.version}</version>
+                <configuration>
+                    <nowarn>true</nowarn>
+                </configuration>
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -53,15 +56,29 @@
                             <goal>compile</goal>
                         </goals>
                     </execution>
+                </executions>
+            </plugin>
 
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>${plugin.scala.version}</version>
+                <executions>
                     <execution>
-                        <id>test-compile</id>
                         <goals>
-                            <goal>test-compile</goal>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>doc-jar</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+
 
             <plugin>
                 <groupId>com.mycila</groupId>
@@ -106,6 +123,12 @@
         <dependency>
             <groupId>org.influxdata</groupId>
             <artifactId>flux-client-kotlin</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.influxdata</groupId>
+            <artifactId>flux-client-scala</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
