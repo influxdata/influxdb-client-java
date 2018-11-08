@@ -20,7 +20,7 @@ The `FluxClientFactory` creates an instance of a `FluxClient` client that can be
 
 `FluxConnectionOptions` parameters:
  
-- `url` -  the url to connect to Platform
+- `url` -  the url to connect to InfluxDB
 - `okHttpClient` - custom HTTP client to use for communications with Platform (optional)
 
 ```java

@@ -1,6 +1,6 @@
-# flux-client-kotlin
+# flux-client-scala
 
-The reference Kotlin client that allows you to perform [Flux queries](https://github.com/influxdata/flux/blob/master/docs/SPEC.md) against InfluxDB 1.7+. 
+The reference Scala client that allows you to perform [Flux queries](https://github.com/influxdata/flux/blob/master/docs/SPEC.md) against InfluxDB 1.7+. 
 
 > This library is under development and no stable version has been released yet.  
 > The API can change at any moment.
@@ -14,21 +14,22 @@ The reference Kotlin client that allows you to perform [Flux queries](https://gi
 
 ### Create client
 
-The `FluxClientKotlinFactory` creates an instance of a `FluxClientKotlin` client that can be customized with `FluxConnectionOptions`.
+The `FluxClientScalaFactory` creates an instance of a `FluxClientScala` client that can be customized with `FluxConnectionOptions`.
 
 `FluxConnectionOptions` parameters:
  
 - `url` -  the url to connect to InfluxDB
 - `okHttpClient` - custom HTTP client to use for communications with Platform (optional)
 
-```kotlin
+```scala
 // client creation
 val options = FluxConnectionOptions.builder()
-            .url("http://localhost:8086/")
-            .build()
+      .url("http://localhost:8086/")
+      .build()
 
-val fluxClient = FluxClientKotlinFactory.create(options)
+val fluxClient = FluxClientScalaFactory.create(options)
 
+// Result is returned as a stream
 val results = fluxClient.query(fluxQuery)
 ...
 ```
@@ -38,7 +39,7 @@ val results = fluxClient.query(fluxQuery)
 A client can be constructed using a connection string that can contain the FluxConnectionOptions parameters encoded into the URL.  
  
 ```java
-val fluxClient = FluxClientKotlinFactory
+val fluxClient = FluxClientScalaFactory
             .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC")
 ```
 The following options are supported:
@@ -50,26 +51,34 @@ The following options are supported:
 | connectTimeout    | 10000 ms| socket timeout |
 | logLevel          | NONE | rest client verbosity level |
 
+## Akka Streams
+
+The library is based on the [Akka Streams](https://doc.akka.io/docs/akka/2.5/stream/). The streaming can be configured by:
+- `bufferSize` - size of a buffer for incoming responses. Default 10000. 
+- `overflowStrategy` - strategy that is used when incoming response cannot fit inside the buffer. Default `akka.stream.OverflowStrategies.Backpressure`.
+
+```scala
+val fluxClient = FluxClientScalaFactory.create(options, 5000, OverflowStrategy.dropTail)
+```
 ## Query using the Flux language
 
-The library supports asynchronous queries by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html). 
-
-```kotlin
+```scala
 val fluxQuery = ("from(bucket: \"telegraf\")\n"
-            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
-            + " |> range(start: -1d)")
+      + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
+      + " |> range(start: -1d)")
 
-// Result is returned as a stream
+//Result is returned as a stream
 val results = fluxClient.query(fluxQuery)
 
-// Example of additional result stream processing on client side
-results
-    // filter on client side using `filter` built-in operator
-    .filter { "cpu0" == it.getValueByKey("cpu") }
-    // take first 20 records
-    .take(20)
-    // print results
-    .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
+//Example of additional result stream processing on client side
+val sink = results
+  //filter on client side using `filter` built-in operator
+  .filter(it => "cpu0" == it.getValueByKey("cpu"))
+  //take first 20 records
+  .take(20)
+  //print results
+  .runWith(Sink.foreach[FluxRecord](it => println(s"Measurement: ${it.getMeasurement}, value: ${it.getValue}")
+))
 ```
 ### Construct queries using the [flux-dsl](../flux-dsl) query builder
 
@@ -80,40 +89,39 @@ easily&mdash;see [Custom operator](../flux-dsl/README.md#custom-operator).
 
 An example of using the `Flux` query builder:
 
-```kotlin
-val flux = Flux
-    .from("telegraf")
-    .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
-    .range(-30L, ChronoUnit.MINUTES)
+```scala
+val mem = Flux.from("telegraf")
+      .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
+      .range(-30L, ChronoUnit.MINUTES)
 
-// Result is returned as a stream
-val results = fluxClient.query(flux.toString())
+//Result is returned as a stream
+val results = fluxClient.query(mem.toString())
 
-// Example of additional result stream processing on client side
-results
-    // filter on client side using `filter` built-in operator
-    .filter { (it.value as Double) > 55 }
-    // take first 20 records
-    .take(20)
-    // print results
-    .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
+//Example of additional result stream processing on client side
+val sink = results
+  //filter on client side using `filter` built-in operator
+  .filter(it => it.getValue.asInstanceOf[Double] > 55)
+  //take first 20 records
+  .take(20)
+  //print results
+  .runWith(Sink.foreach[FluxRecord](it => println(s"Measurement: ${it.getMeasurement}, value: ${it.getValue}")))
 ```
 
 #### Raw query response
 
 It is possible to parse a result line-by-line using the `queryRaw` method.  
 
-```kotlin
+```scala
 val fluxQuery = ("from(bucket: \"telegraf\")\n"
-            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
-            + " |> range(start: -5m)"
-            + " |> sample(n: 5, pos: 1)")
+      + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
+      + " |> range(start: -5m)"
+      + " |> sample(n: 5, pos: 1)")
 
-// Result is returned as a stream
-val results = fluxClient.queryRaw(fluxQuery, "{header: false}")
-
-// Print results
-results.consumeEach { println("Line: $it") }
+//Result is returned as a stream
+val sink = fluxClient
+  .queryRaw(fluxQuery, "{header: false}")
+  //print results
+  .runWith(Sink.foreach[String](it => println(s"Line: $it")))
 ```
 
 ### Advanced Usage
@@ -126,7 +134,7 @@ results.consumeEach { println("Line: $it") }
 The Requests and Responses can be logged by changing the LogLevel. LogLevel values are NONE, BASIC, HEADER, BODY. Note that 
 applying the `BODY` LogLevel will disable chunking while streaming and will load the whole response into memory.  
 
-```kotlin
+```scala
 fluxClient.setLogLevel(LogLevel.HEADERS)
 ```
 
@@ -140,7 +148,7 @@ The latest version for Maven dependency:
 ```xml
 <dependency>
   <groupId>org.influxdata</groupId>
-  <artifactId>flux-client-kotlin</artifactId>
+  <artifactId>flux-client-scala</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
@@ -148,7 +156,7 @@ The latest version for Maven dependency:
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "org.influxdata:flux-client-kotlin:1.0.0-SNAPSHOT"
+    compile "org.influxdata:flux-client-scala:1.0.0-SNAPSHOT"
 }
 ```
 

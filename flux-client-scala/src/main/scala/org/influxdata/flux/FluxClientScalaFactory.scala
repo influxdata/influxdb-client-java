@@ -21,6 +21,7 @@
  */
 package org.influxdata.flux
 
+import akka.stream.OverflowStrategy
 import javax.annotation.Nonnull
 import org.influxdata.flux.impl.FluxClientScalaImpl
 import org.influxdata.flux.option.FluxConnectionOptions
@@ -38,7 +39,7 @@ object FluxClientScalaFactory {
    *
    * @param connectionString the connectionString to connect to InfluxDB.
    * @return client
-   * @see FluxConnectionOptions.Builder#builder(String)
+   * @see [[org.influxdata.flux.option.FluxConnectionOptions#builder(java.lang.String)]]
    */
   @Nonnull def create(@Nonnull connectionString: String): FluxClientScala = {
     val options = FluxConnectionOptions.builder(connectionString).build
@@ -48,11 +49,21 @@ object FluxClientScalaFactory {
   /**
    * Create a instance of the Flux client.
    *
-   * @param options the connection configuration
+   * @param options          the connection configuration
+   * @param bufferSize       size of a buffer for incoming responses. Default 10000.
+   * @param overflowStrategy Strategy that is used when incoming response cannot fit inside the buffer.
+   *                         Default [[akka.stream.OverflowStrategies.Backpressure]].
+   * @see [[akka.stream.scaladsl.Source#queue(int, akka.stream.OverflowStrategy)]]
    * @return client
    */
-  @Nonnull def create(@Nonnull options: FluxConnectionOptions): FluxClientScala = {
+  @Nonnull def create(@Nonnull options: FluxConnectionOptions,
+                      @Nonnull bufferSize: Int = 10000,
+                      @Nonnull overflowStrategy: OverflowStrategy = OverflowStrategy.backpressure): FluxClientScala = {
+
     Arguments.checkNotNull(options, "FluxConnectionOptions")
-    new FluxClientScalaImpl(options)
+    Arguments.checkNotNull(overflowStrategy, "overflowStrategy")
+    Arguments.checkNotNull(bufferSize, "bufferSize")
+
+    new FluxClientScalaImpl(options, bufferSize, overflowStrategy)
   }
 }

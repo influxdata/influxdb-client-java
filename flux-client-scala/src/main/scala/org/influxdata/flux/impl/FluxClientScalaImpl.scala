@@ -41,14 +41,17 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
 /**
  * @author Jakub Bednar (bednar@github) (06/11/2018 08:19)
  */
-class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions)
+class FluxClientScalaImpl(@Nonnull options: FluxConnectionOptions,
+                          @Nonnull val bufferSize: Int,
+                          @Nonnull val overflowStrategy: OverflowStrategy)
+
   extends AbstractFluxClient(options.getOkHttpClient, options.getUrl, options.getParameters, classOf[FluxService])
     with FluxClientScala {
 
-  private val LOG = Logger.getLogger(classOf[FluxClientScalaImpl].getName)
+  Arguments.checkNotNull(overflowStrategy, "overflowStrategy")
+  Arguments.checkNotNull(bufferSize, "bufferSize")
 
-  private val bufferSize = 100
-  private val overflowStrategy = OverflowStrategy.backpressure
+  private val LOG = Logger.getLogger(classOf[FluxClientScalaImpl].getName)
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
