@@ -29,7 +29,6 @@ import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
-import org.influxdata.platform.rest.LogLevel;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -153,7 +152,6 @@ class ITOrganizationClientTest extends AbstractITClientTest {
     @Disabled
     void member() {
 
-        platformService.setLogLevel(LogLevel.BODY);
         Organization organization = organizationClient.createOrganization(generateName("Constant Pro"));
 
         List<UserResourceMapping> members = organizationClient.getMembers(organization);

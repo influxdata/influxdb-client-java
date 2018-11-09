@@ -54,8 +54,8 @@ The following options are supported:
 ## Akka Streams
 
 The library is based on the [Akka Streams](https://doc.akka.io/docs/akka/2.5/stream/). The streaming can be configured by:
-- `bufferSize` - size of a buffer for incoming responses. Default 10000. 
-- `overflowStrategy` - strategy that is used when incoming response cannot fit inside the buffer. Default `akka.stream.OverflowStrategies.Backpressure`.
+- `bufferSize` - Size of a buffer for incoming responses. Default 10000. 
+- `overflowStrategy` - Strategy that is used when incoming response cannot fit inside the buffer. Default `akka.stream.OverflowStrategies.Backpressure`.
 
 ```scala
 val fluxClient = FluxClientScalaFactory.create(options, 5000, OverflowStrategy.dropTail)
@@ -67,16 +67,16 @@ val fluxQuery = ("from(bucket: \"telegraf\")\n"
       + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
       + " |> range(start: -1d)")
 
-//Result is returned as a stream
+// Result is returned as a stream
 val results = fluxClient.query(fluxQuery)
 
-//Example of additional result stream processing on client side
+// Example of additional result stream processing on client side
 val sink = results
-  //filter on client side using `filter` built-in operator
+  // filter on client side using `filter` built-in operator
   .filter(it => "cpu0" == it.getValueByKey("cpu"))
-  //take first 20 records
+  // take first 20 records
   .take(20)
-  //print results
+  // print results
   .runWith(Sink.foreach[FluxRecord](it => println(s"Measurement: ${it.getMeasurement}, value: ${it.getValue}")
 ))
 ```
@@ -94,16 +94,16 @@ val mem = Flux.from("telegraf")
       .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
       .range(-30L, ChronoUnit.MINUTES)
 
-//Result is returned as a stream
+// Result is returned as a stream
 val results = fluxClient.query(mem.toString())
 
-//Example of additional result stream processing on client side
+// Example of additional result stream processing on client side
 val sink = results
-  //filter on client side using `filter` built-in operator
+  // filter on client side using `filter` built-in operator
   .filter(it => it.getValue.asInstanceOf[Double] > 55)
-  //take first 20 records
+  // take first 20 records
   .take(20)
-  //print results
+  // print results
   .runWith(Sink.foreach[FluxRecord](it => println(s"Measurement: ${it.getMeasurement}, value: ${it.getValue}")))
 ```
 
@@ -117,10 +117,10 @@ val fluxQuery = ("from(bucket: \"telegraf\")\n"
       + " |> range(start: -5m)"
       + " |> sample(n: 5, pos: 1)")
 
-//Result is returned as a stream
+// Result is returned as a stream
 val sink = fluxClient
   .queryRaw(fluxQuery, "{header: false}")
-  //print results
+  // print results
   .runWith(Sink.foreach[String](it => println(s"Line: $it")))
 ```
 
