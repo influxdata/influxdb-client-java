@@ -120,11 +120,6 @@ public final class Source {
      */
     private String defaultRP;
 
-    /**
-     * The url for a flux connected to a 1x source (V1SourceFields).
-     */
-    private String fluxURL;
-
     public String getId() {
         return id;
     }
@@ -235,13 +230,5 @@ public final class Source {
 
     public void setDefaultRP(final String defaultRP) {
         this.defaultRP = defaultRP;
-    }
-
-    public String getFluxURL() {
-        return fluxURL;
-    }
-
-    public void setFluxURL(final String fluxURL) {
-        this.fluxURL = fluxURL;
     }
 }

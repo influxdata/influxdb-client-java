@@ -87,23 +87,18 @@ class ITFluxClientScalaQueryRaw extends AbstractITFluxClientScala with Matchers 
     val source = fluxClient.queryRaw(flux, dialect).runWith(TestSink.probe[String])
 
     var line = source.requestNext()
-    println(line)
     line should be("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
 
     line = source.requestNext()
-    println(line)
     line should be("#group,false,false,true,true,true,true,true,true,false")
 
     line = source.requestNext()
-    println(line)
     line should be("#default,_result,,,,,,,,")
 
     line = source.requestNext()
-    println(line)
     line should endWith(",free,mem,A,west,21")
 
     line = source.requestNext()
-    println(line)
     line should endWith(",free,mem,B,west,42")
 
     line = source.requestNext()

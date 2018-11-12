@@ -73,7 +73,6 @@ class ITSourceClient extends AbstractITClientTest {
         source.setSharedSecret(UUID.randomUUID().toString());
         source.setMetaUrl("/usr/local/var/influxdb/meta");
         source.setDefaultRP("autogen");
-        source.setFluxURL("http://localhost:8086");
 
         Source createdSource = sourceClient.createSource(source);
 
@@ -93,7 +92,6 @@ class ITSourceClient extends AbstractITClientTest {
         Assertions.assertThat(createdSource.getSharedSecret()).isEqualTo(source.getSharedSecret());
         Assertions.assertThat(createdSource.getMetaUrl()).isEqualTo(source.getMetaUrl());
         Assertions.assertThat(createdSource.getDefaultRP()).isEqualTo(source.getDefaultRP());
-        Assertions.assertThat(createdSource.getFluxURL()).isEqualTo(source.getFluxURL());
     }
 
     @Test
