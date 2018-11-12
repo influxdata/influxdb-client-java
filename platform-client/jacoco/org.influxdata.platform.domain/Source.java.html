@@ -120,129 +120,116 @@ import com.squareup.moshi.Json;
      */
     private String defaultRP;
 
-    /**
-     * The url for a flux connected to a 1x source (V1SourceFields).
-     */
-    private String fluxURL;
-
     public String getId() {
-<span class="nc" id="L129">        return id;</span>
+<span class="nc" id="L124">        return id;</span>
     }
 
     public void setId(final String id) {
-<span class="nc" id="L133">        this.id = id;</span>
-<span class="nc" id="L134">    }</span>
+<span class="nc" id="L128">        this.id = id;</span>
+<span class="nc" id="L129">    }</span>
 
     public String getOrganizationID() {
-<span class="nc" id="L137">        return organizationID;</span>
+<span class="nc" id="L132">        return organizationID;</span>
     }
 
     public void setOrganizationID(final String organizationID) {
-<span class="nc" id="L141">        this.organizationID = organizationID;</span>
-<span class="nc" id="L142">    }</span>
+<span class="nc" id="L136">        this.organizationID = organizationID;</span>
+<span class="nc" id="L137">    }</span>
 
     public boolean isDefaultSource() {
-<span class="nc" id="L145">        return defaultSource;</span>
+<span class="nc" id="L140">        return defaultSource;</span>
     }
 
     public void setDefaultSource(final boolean defaultSource) {
-<span class="nc" id="L149">        this.defaultSource = defaultSource;</span>
-<span class="nc" id="L150">    }</span>
+<span class="nc" id="L144">        this.defaultSource = defaultSource;</span>
+<span class="nc" id="L145">    }</span>
 
     public String getName() {
-<span class="nc" id="L153">        return name;</span>
+<span class="nc" id="L148">        return name;</span>
     }
 
     public void setName(final String name) {
-<span class="nc" id="L157">        this.name = name;</span>
-<span class="nc" id="L158">    }</span>
+<span class="nc" id="L152">        this.name = name;</span>
+<span class="nc" id="L153">    }</span>
 
     public SourceType getType() {
-<span class="nc" id="L161">        return type;</span>
+<span class="nc" id="L156">        return type;</span>
     }
 
     public void setType(final SourceType type) {
-<span class="nc" id="L165">        this.type = type;</span>
-<span class="nc" id="L166">    }</span>
+<span class="nc" id="L160">        this.type = type;</span>
+<span class="nc" id="L161">    }</span>
 
     public String getUrl() {
-<span class="nc" id="L169">        return url;</span>
+<span class="nc" id="L164">        return url;</span>
     }
 
     public void setUrl(final String url) {
-<span class="nc" id="L173">        this.url = url;</span>
-<span class="nc" id="L174">    }</span>
+<span class="nc" id="L168">        this.url = url;</span>
+<span class="nc" id="L169">    }</span>
 
     public boolean isInsecureSkipVerify() {
-<span class="nc" id="L177">        return insecureSkipVerify;</span>
+<span class="nc" id="L172">        return insecureSkipVerify;</span>
     }
 
     public void setInsecureSkipVerify(final boolean insecureSkipVerify) {
-<span class="nc" id="L181">        this.insecureSkipVerify = insecureSkipVerify;</span>
-<span class="nc" id="L182">    }</span>
+<span class="nc" id="L176">        this.insecureSkipVerify = insecureSkipVerify;</span>
+<span class="nc" id="L177">    }</span>
 
     public String getTelegraf() {
-<span class="nc" id="L185">        return telegraf;</span>
+<span class="nc" id="L180">        return telegraf;</span>
     }
 
     public void setTelegraf(final String telegraf) {
-<span class="nc" id="L189">        this.telegraf = telegraf;</span>
-<span class="nc" id="L190">    }</span>
+<span class="nc" id="L184">        this.telegraf = telegraf;</span>
+<span class="nc" id="L185">    }</span>
 
     public String getToken() {
-<span class="nc" id="L193">        return token;</span>
+<span class="nc" id="L188">        return token;</span>
     }
 
     public void setToken(final String token) {
-<span class="nc" id="L197">        this.token = token;</span>
-<span class="nc" id="L198">    }</span>
+<span class="nc" id="L192">        this.token = token;</span>
+<span class="nc" id="L193">    }</span>
 
     public String getUsername() {
-<span class="nc" id="L201">        return username;</span>
+<span class="nc" id="L196">        return username;</span>
     }
 
     public void setUsername(final String username) {
-<span class="nc" id="L205">        this.username = username;</span>
-<span class="nc" id="L206">    }</span>
+<span class="nc" id="L200">        this.username = username;</span>
+<span class="nc" id="L201">    }</span>
 
     public String getPassword() {
-<span class="nc" id="L209">        return password;</span>
+<span class="nc" id="L204">        return password;</span>
     }
 
     public void setPassword(final String password) {
-<span class="nc" id="L213">        this.password = password;</span>
-<span class="nc" id="L214">    }</span>
+<span class="nc" id="L208">        this.password = password;</span>
+<span class="nc" id="L209">    }</span>
 
     public String getSharedSecret() {
-<span class="nc" id="L217">        return sharedSecret;</span>
+<span class="nc" id="L212">        return sharedSecret;</span>
     }
 
     public void setSharedSecret(final String sharedSecret) {
-<span class="nc" id="L221">        this.sharedSecret = sharedSecret;</span>
-<span class="nc" id="L222">    }</span>
+<span class="nc" id="L216">        this.sharedSecret = sharedSecret;</span>
+<span class="nc" id="L217">    }</span>
 
     public String getMetaUrl() {
-<span class="nc" id="L225">        return metaUrl;</span>
+<span class="nc" id="L220">        return metaUrl;</span>
     }
 
     public void setMetaUrl(final String metaUrl) {
-<span class="nc" id="L229">        this.metaUrl = metaUrl;</span>
-<span class="nc" id="L230">    }</span>
+<span class="nc" id="L224">        this.metaUrl = metaUrl;</span>
+<span class="nc" id="L225">    }</span>
 
     public String getDefaultRP() {
-<span class="nc" id="L233">        return defaultRP;</span>
+<span class="nc" id="L228">        return defaultRP;</span>
     }
 
     public void setDefaultRP(final String defaultRP) {
-<span class="nc" id="L237">        this.defaultRP = defaultRP;</span>
-<span class="nc" id="L238">    }</span>
-
-    public String getFluxURL() {
-<span class="nc" id="L241">        return fluxURL;</span>
-    }
-
-    public void setFluxURL(final String fluxURL) {
-<span class="nc" id="L245">        this.fluxURL = fluxURL;</span>
-<span class="nc" id="L246">    }</span>
+<span class="nc" id="L232">        this.defaultRP = defaultRP;</span>
+<span class="nc" id="L233">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

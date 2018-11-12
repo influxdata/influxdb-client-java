@@ -18,7 +18,7 @@ The Platform Client,org.influxdata.platform.domain,Sources,15,0,0,0,5,0,3,0,3,0
 The Platform Client,org.influxdata.platform.domain,UserResourceMapping.UserType,0,24,0,0,0,3,0,1,0,1
 The Platform Client,org.influxdata.platform.domain,Tasks,4,11,0,0,2,3,1,2,1,2
 The Platform Client,org.influxdata.platform.domain,ResourceType,0,54,0,0,0,6,0,1,0,1
-The Platform Client,org.influxdata.platform.domain,Source,108,0,0,0,46,0,31,0,31,0
+The Platform Client,org.influxdata.platform.domain,Source,101,0,0,0,43,0,29,0,29,0
 The Platform Client,org.influxdata.platform.domain,Run,59,0,0,0,25,0,17,0,17,0
 The Platform Client,org.influxdata.platform.domain,UserResourceMapping,16,15,0,0,8,5,4,5,4,5
 The Platform Client,org.influxdata.platform.domain,Permission,0,83,0,0,0,15,0,8,0,8
