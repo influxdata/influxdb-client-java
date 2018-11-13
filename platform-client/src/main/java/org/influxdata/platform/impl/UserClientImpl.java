@@ -21,6 +21,7 @@
  */
 package org.influxdata.platform.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,12 +30,16 @@ import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.UserClient;
+import org.influxdata.platform.domain.OperationLogEntry;
+import org.influxdata.platform.domain.OperationLogResponse;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.Users;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+import okhttp3.Credentials;
+import org.json.JSONObject;
 import retrofit2.Call;
 
 /**
@@ -117,6 +122,38 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
         return execute(userCall);
     }
 
+    @Nonnull
+    @Override
+    public User updateUserPassword(@Nonnull final User user,
+                                   @Nonnull final String oldPassword,
+                                   @Nonnull final String newPassword) {
+
+        Arguments.checkNotNull(oldPassword, "old password");
+        Arguments.checkNotNull(newPassword, "new password");
+
+        return updateUserPassword(user.getId(), user.getName(), oldPassword, newPassword);
+    }
+
+    @Nullable
+    @Override
+    public User updateUserPassword(@Nonnull final String userID,
+                                   @Nonnull final String oldPassword,
+                                   @Nonnull final String newPassword) {
+
+        Arguments.checkNotNull(userID, "User ID");
+        Arguments.checkNotNull(oldPassword, "old password");
+        Arguments.checkNotNull(newPassword, "new password");
+
+        User user = findUserByID(userID);
+        if (user == null) {
+
+            LOG.log(Level.WARNING, "User with id: {} not found.", userID);
+            return null;
+        }
+
+        return updateUserPassword(userID, user.getName(), oldPassword, newPassword);
+    }
+
     @Override
     public void deleteUser(@Nonnull final User user) {
 
@@ -141,5 +178,75 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
         Call<User> call = platformService.me();
 
         return execute(call, "token required");
+    }
+
+    @Nullable
+    @Override
+    public User meUpdatePassword(@Nonnull final String oldPassword, @Nonnull final String newPassword) {
+
+        Arguments.checkNotNull(oldPassword, "old password");
+        Arguments.checkNotNull(newPassword, "new password");
+
+        User user = me();
+        if (user == null) {
+            LOG.warning("User is not authenticated.");
+
+            return null;
+        }
+
+        String json = new JSONObject().put("password", newPassword).toString();
+
+        String credentials = Credentials
+                .basic(user.getName(), oldPassword);
+
+        Call<User> call = platformService.mePassword(credentials, createBody(json));
+
+        return execute(call, "token required");
+    }
+
+    @Nonnull
+    @Override
+    public List<OperationLogEntry> findUserLogs(@Nonnull final User user) {
+
+        Arguments.checkNotNull(user, "User");
+
+        return findUserLogs(user.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<OperationLogEntry> findUserLogs(@Nonnull final String userID) {
+
+        Call<OperationLogResponse> logsCall = platformService.findUserLogs(userID);
+
+        OperationLogResponse logResponse = execute(logsCall, "oplog not found");
+        if (logResponse == null) {
+            return new ArrayList<>();
+        }
+
+        LOG.log(Level.FINEST, "findUserLogs found: {0}", logResponse);
+
+        return logResponse.getLog();
+    }
+
+    @Nonnull
+    private User updateUserPassword(@Nonnull final String userID,
+                                    @Nonnull final String userName,
+                                    @Nonnull final String oldPassword,
+                                    @Nonnull final String newPassword) {
+
+        Arguments.checkNotNull(userID, "User ID");
+        Arguments.checkNotNull(userName, "Username");
+        Arguments.checkNotNull(oldPassword, "old password");
+        Arguments.checkNotNull(newPassword, "new password");
+
+        String credentials = Credentials
+                .basic(userName, oldPassword);
+
+        String json = new JSONObject().put("password", newPassword).toString();
+
+        Call<User> call = platformService.updateUserPassword(userID, credentials, createBody(json));
+
+        return execute(call);
     }
 }

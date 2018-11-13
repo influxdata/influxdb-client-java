@@ -21,18 +21,40 @@
  */
 package org.influxdata.platform.domain;
 
+import java.time.Instant;
+
 /**
- * @author Jakub Bednar (bednar@github) (25/10/2018 09:49)
+ * OperationLogEntry is a record in an operation log.
+ *
+ * @author Jakub Bednar (bednar@github) (13/11/2018 11:40)
  */
-public final class TaskResponse extends AbstractHasLinks {
+public final class OperationLogEntry extends AbstractHasLinks {
 
-    private Task task;
+    private String userID;
+    private String description;
+    private Instant time;
 
-    public Task getTask() {
-        return task;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setTask(final Task task) {
-        this.task = task;
+    public void setUserID(final String userID) {
+        this.userID = userID;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
+    public Instant getTime() {
+        return time;
+    }
+
+    public void setTime(final Instant time) {
+        this.time = time;
     }
 }

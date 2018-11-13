@@ -30,6 +30,7 @@ import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Authorizations;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Buckets;
+import org.influxdata.platform.domain.OperationLogResponse;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
 import org.influxdata.platform.domain.Run;
@@ -49,9 +50,11 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Streaming;
@@ -75,6 +78,16 @@ interface PlatformService {
     @PATCH("/api/v2/users/{id}")
     Call<User> updateUser(@Nonnull @Path("id") final String userID, @Nonnull @Body final RequestBody user);
 
+    @PUT("/api/v2/users/{id}/password")
+    Call<User> updateUserPassword(@Nonnull @Path("id") final String userID,
+                                  @Nonnull @Header("Authorization") final String credentials,
+                                  @Nonnull @Body final RequestBody password);
+
+    @GET("/api/v2/users/{id}/log")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<OperationLogResponse> findUserLogs(@Nonnull @Path("id") final String userID);
+
     @GET("/api/v2/users/{id}")
     @Nonnull
     @Headers("Content-Type: application/json")
@@ -89,6 +102,12 @@ interface PlatformService {
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<User> me();
+
+    @PUT("/api/v2/me/password")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<User> mePassword(@Nonnull @Header("Authorization") final String credentials,
+                          @Nonnull @Body final RequestBody password);
 
     //
     // Organizations

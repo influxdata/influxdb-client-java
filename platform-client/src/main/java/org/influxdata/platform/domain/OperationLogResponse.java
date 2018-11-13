@@ -21,18 +21,21 @@
  */
 package org.influxdata.platform.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * @author Jakub Bednar (bednar@github) (25/10/2018 09:49)
+ * @author Jakub Bednar (bednar@github) (13/11/2018 11:43)
  */
-public final class TaskResponse extends AbstractHasLinks {
+public final class OperationLogResponse extends AbstractHasLinks {
 
-    private Task task;
+    private List<OperationLogEntry> log = new ArrayList<>();
 
-    public Task getTask() {
-        return task;
+    public List<OperationLogEntry> getLog() {
+        return log;
     }
 
-    public void setTask(final Task task) {
-        this.task = task;
+    public void setLog(final List<OperationLogEntry> log) {
+        this.log = log;
     }
 }

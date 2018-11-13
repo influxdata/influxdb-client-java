@@ -67,7 +67,7 @@ abstract class AbstractITClientTest extends AbstractTest {
     }
 
     @Nonnull
-    protected RetentionRule retentionRule() {
+    RetentionRule retentionRule() {
         RetentionRule retentionRule = new RetentionRule();
         retentionRule.setType("expire");
         retentionRule.setEverySeconds(3600L);

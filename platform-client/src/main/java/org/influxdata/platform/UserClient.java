@@ -25,6 +25,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.influxdata.platform.domain.OperationLogEntry;
 import org.influxdata.platform.domain.User;
 
 /**
@@ -62,6 +63,32 @@ public interface UserClient {
     User updateUser(@Nonnull final User user);
 
     /**
+     * Update password to a user.
+     *
+     * @param user        user to update password
+     * @param oldPassword old password
+     * @param newPassword new password
+     * @return user updated
+     */
+    @Nonnull
+    User updateUserPassword(@Nonnull final User user,
+                            @Nonnull final String oldPassword,
+                            @Nonnull final String newPassword);
+
+    /**
+     * Update password to a user.
+     *
+     * @param userID      ID of user to update password
+     * @param oldPassword old password
+     * @param newPassword new password
+     * @return user updated
+     */
+    @Nullable
+    User updateUserPassword(@Nonnull final String userID,
+                            @Nonnull final String oldPassword,
+                            @Nonnull final String newPassword);
+
+    /**
      * Delete a user.
      *
      * @param user user to delete
@@ -83,7 +110,15 @@ public interface UserClient {
     @Nullable
     User me();
 
-    //TODO me/password, /users/:id/password
+    /**
+     * Update the password to a currently authenticated user.
+     *
+     * @param oldPassword old password
+     * @param newPassword new password
+     * @return currently authenticated user
+     */
+    @Nullable
+    User meUpdatePassword(@Nonnull final String oldPassword, @Nonnull final String newPassword);
 
     /**
      * Retrieve a user.
@@ -101,4 +136,22 @@ public interface UserClient {
      */
     @Nonnull
     List<User> findUsers();
+
+    /**
+     * Retrieve a user's logs.
+     *
+     * @param user for retrieve logs
+     * @return logs
+     */
+    @Nonnull
+    List<OperationLogEntry> findUserLogs(@Nonnull final User user);
+
+    /**
+     * Retrieve a user's logs.
+     *
+     * @param userID id of a user
+     * @return logs
+     */
+    @Nonnull
+    List<OperationLogEntry> findUserLogs(@Nonnull final String userID);
 }

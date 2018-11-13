@@ -23,6 +23,8 @@ package org.influxdata.platform.impl;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -215,7 +217,12 @@ public final class PlatformClientImpl extends AbstractRestClient implements Plat
             if (value == null) {
                 return null;
             }
-            return Instant.parse(value);
+
+            try {
+                return Instant.parse(value);
+            } catch (DateTimeParseException e) {
+                return DateTimeFormatter.ISO_DATE_TIME.parse(value, Instant::from);
+            }
         }
 
         @Override

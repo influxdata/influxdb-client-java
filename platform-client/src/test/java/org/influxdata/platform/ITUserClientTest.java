@@ -21,9 +21,11 @@
  */
 package org.influxdata.platform;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.influxdata.platform.domain.OperationLogEntry;
 import org.influxdata.platform.domain.User;
 
 import org.assertj.core.api.Assertions;
@@ -147,5 +149,81 @@ class ITUserClientTest extends AbstractITClientTest {
         User me = userClient.me();
 
         Assertions.assertThat(me).isNull();
+    }
+
+    @Test
+    void updateMePassword() {
+
+        User user = userClient.meUpdatePassword("my-password", "my-password");
+
+        Assertions.assertThat(user).isNotNull();
+        Assertions.assertThat(user.getName()).isEqualTo("my-user");
+    }
+
+    @Test
+    void updateMePasswordNotAuthenticate() throws Exception {
+
+        platformService.close();
+
+        User user = userClient.meUpdatePassword("my-password", "my-password");
+
+        Assertions.assertThat(user).isNull();
+    }
+
+    @Test
+    void updatePassword() {
+
+        User user = userClient.me();
+        Assertions.assertThat(user).isNotNull();
+
+        User updatedUser = userClient.updateUserPassword(user, "my-password", "my-password");
+
+        Assertions.assertThat(updatedUser).isNotNull();
+        Assertions.assertThat(updatedUser.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(updatedUser.getId()).isEqualTo(user.getId());
+    }
+
+    @Test
+    void updatePasswordNotFound() {
+
+        User updatedUser = userClient.updateUserPassword("020f755c3c082000", "", "new-password");
+
+        Assertions.assertThat(updatedUser).isNull();
+    }
+
+    @Test
+    void updatePasswordById() {
+
+        User user = userClient.me();
+        Assertions.assertThat(user).isNotNull();
+
+        User updatedUser = userClient.updateUserPassword(user.getId(), "my-password", "my-password");
+
+        Assertions.assertThat(updatedUser).isNotNull();
+        Assertions.assertThat(updatedUser.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(updatedUser.getId()).isEqualTo(user.getId());
+    }
+
+    @Test
+    void findUserLogs() {
+
+        Instant now = Instant.now();
+
+        User user = userClient.me();
+        Assertions.assertThat(user).isNotNull();
+
+        userClient.updateUser(user);
+
+        List<OperationLogEntry> userLogs = userClient.findUserLogs(user);
+        Assertions.assertThat(userLogs).isNotEmpty();
+        Assertions.assertThat(userLogs.get(0).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(userLogs.get(0).getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(userLogs.get(0).getTime()).isAfter(now);
+    }
+
+    @Test
+    void findUserLogsNotFound() {
+        List<OperationLogEntry> userLogs = userClient.findUserLogs("020f755c3c082000");
+        Assertions.assertThat(userLogs).isEmpty();
     }
 }
