@@ -50,7 +50,7 @@ public interface QueryClient {
      * @return {@code List<FluxTable>} which are matched the query
      */
     @Nonnull
-    List<FluxTable> query(@Nonnull final String query, final String organization);
+    List<FluxTable> query(@Nonnull final String query, @Nonnull final String organization);
 
     /**
      * Executes the Flux query against the InfluxData Platform and synchronously map whole response
@@ -66,7 +66,8 @@ public interface QueryClient {
      * @return {@code List<FluxTable>} which are matched the query
      */
     @Nonnull
-    <M> List<M> query(@Nonnull final String query, final String organization, @Nonnull final Class<M> measurementType);
+    <M> List<M> query(@Nonnull final String query,
+                      @Nonnull final String organization, @Nonnull final Class<M> measurementType);
 
     /**
      * Executes the Flux query against the InfluxData Platform and asynchronously stream {@link FluxRecord}s
@@ -78,7 +79,7 @@ public interface QueryClient {
      *                     to discontinue a streaming query
      */
     void query(@Nonnull final String query,
-               final String organization, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext);
+               @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext);
 
 
     /**
@@ -93,7 +94,7 @@ public interface QueryClient {
      *                        a streaming query
      */
     <M> void query(@Nonnull final String query,
-                   final String organization, @Nonnull final Class<M> measurementType,
+                   @Nonnull final String organization, @Nonnull final Class<M> measurementType,
                    @Nonnull final BiConsumer<Cancellable, M> onNext);
 
     /**
@@ -106,7 +107,7 @@ public interface QueryClient {
      * @param onError      the callback to consume any error notification
      */
     void query(@Nonnull final String query,
-               final String organization, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
+               @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
                @Nonnull final Consumer<? super Throwable> onError);
 
     /**
@@ -121,7 +122,7 @@ public interface QueryClient {
      * @param onError         the callback to consume any error notification
      */
     <M> void query(@Nonnull final String query,
-                   final String organization, @Nonnull final Class<M> measurementType,
+                   @Nonnull final String organization, @Nonnull final Class<M> measurementType,
                    @Nonnull final BiConsumer<Cancellable, M> onNext,
                    @Nonnull final Consumer<? super Throwable> onError);
 
@@ -136,7 +137,7 @@ public interface QueryClient {
      * @param onComplete   the callback to consume a notification about successfully end of stream
      */
     void query(@Nonnull final String query,
-               final String organization, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
+               @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
                @Nonnull final Consumer<? super Throwable> onError,
                @Nonnull final Runnable onComplete);
 
@@ -152,7 +153,7 @@ public interface QueryClient {
      * @param onComplete      the callback to consume a notification about successfully end of stream
      */
     <M> void query(@Nonnull final String query,
-                   final String organization, @Nonnull final Class<M> measurementType,
+                   @Nonnull final String organization, @Nonnull final Class<M> measurementType,
                    @Nonnull final BiConsumer<Cancellable, M> onNext,
                    @Nonnull final Consumer<? super Throwable> onError,
                    @Nonnull final Runnable onComplete);
@@ -170,7 +171,7 @@ public interface QueryClient {
      * @return the raw response that matched the query
      */
     @Nonnull
-    String queryRaw(@Nonnull final String query, final String organization);
+    String queryRaw(@Nonnull final String query, @Nonnull final String organization);
 
     /**
      * Executes the Flux query against the InfluxData Platform and synchronously map whole response
@@ -186,7 +187,7 @@ public interface QueryClient {
      * @return the raw response that matched the query
      */
     @Nonnull
-    String queryRaw(@Nonnull final String query, @Nullable final String dialect, final String organization);
+    String queryRaw(@Nonnull final String query, @Nullable final String dialect, @Nonnull final String organization);
 
     /**
      * Executes the Flux query against the InfluxData Platform and asynchronously stream response
@@ -198,7 +199,7 @@ public interface QueryClient {
      *                     to discontinue a streaming query
      */
     void queryRaw(@Nonnull final String query,
-                  final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse);
+                  @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse);
 
     /**
      * Executes the Flux query against the InfluxData Platform and asynchronously stream response
@@ -213,7 +214,7 @@ public interface QueryClient {
      */
     void queryRaw(@Nonnull final String query,
                   @Nullable final String dialect,
-                  final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse);
+                  @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse);
 
     /**
      * Executes the Flux query against the InfluxData Platform and asynchronously stream response
@@ -226,7 +227,7 @@ public interface QueryClient {
      * @param onError      callback to consume any error notification
      */
     void queryRaw(@Nonnull final String query,
-                  final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                  @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse,
                   @Nonnull final Consumer<? super Throwable> onError);
 
     /**
@@ -243,7 +244,7 @@ public interface QueryClient {
      */
     void queryRaw(@Nonnull final String query,
                   @Nullable final String dialect,
-                  final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                  @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse,
                   @Nonnull final Consumer<? super Throwable> onError);
 
     /**
@@ -258,7 +259,7 @@ public interface QueryClient {
      * @param onComplete   callback to consume a notification about successfully end of stream
      */
     void queryRaw(@Nonnull final String query,
-                  final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                  @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse,
                   @Nonnull final Consumer<? super Throwable> onError,
                   @Nonnull final Runnable onComplete);
 
@@ -279,7 +280,7 @@ public interface QueryClient {
      */
     void queryRaw(@Nonnull final String query,
                   @Nullable final String dialect,
-                  final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                  @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse,
                   @Nonnull final Consumer<? super Throwable> onError,
                   @Nonnull final Runnable onComplete);
 
