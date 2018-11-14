@@ -138,6 +138,7 @@ import org.influxdata.platform.Arguments;
  * <li>{@link YieldFlux}</li>
  * <li>{@link ExpressionFlux}</li>
  * <li>TODO - toKafka, toHttp</li>
+ * <li>TODO - SHOW DATABASES</li>
  * </ul>
  *
  * @author Jakub Bednar (bednar@github) (22/06/2018 10:16)

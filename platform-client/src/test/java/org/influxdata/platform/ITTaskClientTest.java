@@ -33,6 +33,7 @@ import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.domain.Task;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
+import org.influxdata.platform.rest.LogLevel;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,6 +49,7 @@ import org.junit.runner.RunWith;
 class ITTaskClientTest extends AbstractITClientTest {
 
     private static final Logger LOG = Logger.getLogger(ITTaskClientTest.class.getName());
+    private static final String TASK_FLUX = "from(bucket:\"my-bucket\") |> range(start: 0) |> last()";
 
     private User user;
     private Organization organization;
@@ -79,7 +81,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         String flux = "option task = {\n"
                 + "    name: \"" + taskName + "\",\n"
                 + "    every: 1h\n"
-                + "}\n\n from(bucket:\"telegraf\") |> sum()";
+                + "}\n\n" + TASK_FLUX;
 
         Task task = new Task();
         task.setName(taskName);
@@ -108,7 +110,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, "from(bucket:\"telegraf\") |> sum()", "1h", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1h", user, organization);
 
         Assertions.assertThat(task).isNotNull();
         Assertions.assertThat(task.getId()).isNotBlank();
@@ -120,7 +122,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
         Assertions.assertThat(task.getEvery()).isEqualTo("1h0m0s");
         Assertions.assertThat(task.getCron()).isNull();
-        Assertions.assertThat(task.getFlux()).endsWith("from(bucket:\"telegraf\") |> sum()");
+        Assertions.assertThat(task.getFlux()).endsWith(TASK_FLUX);
     }
 
     @Test
@@ -128,7 +130,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskCron(taskName, "from(bucket:\"telegraf\") |> sum()", "0 2 * * *", user, organization);
+        Task task = taskClient.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", user, organization);
 
         Assertions.assertThat(task).isNotNull();
         Assertions.assertThat(task.getId()).isNotBlank();
@@ -140,7 +142,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
         Assertions.assertThat(task.getCron()).isEqualTo("0 2 * * *");
         Assertions.assertThat(task.getEvery()).isEqualTo("0s");
-        Assertions.assertThat(task.getFlux()).endsWith("from(bucket:\"telegraf\") |> sum()");
+        Assertions.assertThat(task.getFlux()).endsWith(TASK_FLUX);
     }
 
     @Test
@@ -148,7 +150,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskCron(taskName, "from(bucket:\"telegraf\") |> sum()", "0 2 * * *", user.getId(), organization.getId());
+        Task task = taskClient.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", user.getId(), organization.getId());
 
         Task taskByID = taskClient.findTaskByID(task.getId());
         LOG.info("TaskByID: " + task);
@@ -170,7 +172,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         int size = taskClient.findTasks().size();
 
-        Task everyTask = taskClient.createTaskEvery(generateName("it task"), "from(bucket:\"telegraf\") |> sum()", "2h", user.getId(), organization.getId());
+        Task everyTask = taskClient.createTaskEvery(generateName("it task"), TASK_FLUX, "2h", user.getId(), organization.getId());
         Assertions.assertThat(everyTask).isNotNull();
 
         List<Task> tasks = taskClient.findTasks();
@@ -183,7 +185,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         User taskUser = platformService.createUserClient().createUser(generateName("TaskUser"));
 
-        taskClient.createTaskCron(generateName("it task"), "from(bucket:\"telegraf\") |> sum()", "0 2 * * *", taskUser, organization);
+        taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", taskUser, organization);
 
         List<Task> tasks = taskClient.findTasksByUser(taskUser);
         Assertions.assertThat(tasks).hasSize(1);
@@ -192,7 +194,7 @@ class ITTaskClientTest extends AbstractITClientTest {
     @Test
     void findTasksByOrganizationID() {
         Organization taskOrganization = platformService.createOrganizationClient().createOrganization(generateName("TaskOrg"));
-        taskClient.createTaskCron(generateName("it task"), "from(bucket:\"telegraf\") |> sum()", "0 2 * * *", user, taskOrganization);
+        taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", user, taskOrganization);
 
         List<Task> tasks = taskClient.findTasksByOrganization(taskOrganization);
         Assertions.assertThat(tasks).hasSize(1);
@@ -201,8 +203,8 @@ class ITTaskClientTest extends AbstractITClientTest {
     @Test
     void findTasksAfterSpecifiedID() {
 
-        Task task1 = taskClient.createTaskCron(generateName("it task"), "from(bucket:\"telegraf\") |> sum()", "0 2 * * *", user, organization);
-        Task task2 = taskClient.createTaskCron(generateName("it task"), "from(bucket:\"telegraf\") |> sum()", "0 2 * * *", user, organization);
+        Task task1 = taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", user, organization);
+        Task task2 = taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", user, organization);
 
         List<Task> tasks = taskClient.findTasks(task1.getId(), null, null);
 
@@ -213,7 +215,7 @@ class ITTaskClientTest extends AbstractITClientTest {
     @Test
     void deleteTask() {
 
-        Task createdTask = taskClient.createTaskCron(generateName("it task"), "from(bucket:\"telegraf\") |> sum()", "0 2 * * *", user, organization);
+        Task createdTask = taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", user, organization);
         Assertions.assertThat(createdTask).isNotNull();
 
         Task foundTask = taskClient.findTaskByID(createdTask.getId());
@@ -232,12 +234,12 @@ class ITTaskClientTest extends AbstractITClientTest {
     void updateTask() {
 
         String taskName = generateName("it task");
-        Task cronTask = taskClient.createTaskCron(taskName, "from(bucket:\"telegraf\") |> sum()", "0 2 * * *", user, organization);
+        Task cronTask = taskClient.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", user, organization);
 
         String flux = "option task = {\n"
                 + "    name: \"" + taskName + "\",\n"
                 + "    every: 2m\n"
-                + "}\n\n from(bucket:\"telegraf\") |> last()";
+                + "}\n\n" + TASK_FLUX;
 
         cronTask.setFlux(flux);
         cronTask.setStatus(Status.ACTIVE);
@@ -250,21 +252,21 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(updatedTask.getOwner().getName()).isEqualTo(cronTask.getOwner().getName());
         Assertions.assertThat(updatedTask.getEvery()).isEqualTo("2m0s");
         Assertions.assertThat(updatedTask.getCron()).isNull();
-        Assertions.assertThat(updatedTask.getFlux()).isEqualTo("from(bucket:\"telegraf\") |> last()");
+        Assertions.assertThat(updatedTask.getFlux()).isEqualTo(TASK_FLUX);
         Assertions.assertThat(updatedTask.getStatus()).isEqualTo(Status.INACTIVE);
         Assertions.assertThat(updatedTask.getOwner().getId()).isEqualTo(cronTask.getOwner().getId());
         Assertions.assertThat(updatedTask.getOrganizationId()).isEqualTo(cronTask.getOrganizationId());
         Assertions.assertThat(updatedTask.getName()).isEqualTo(cronTask.getName());
     }
 
-    //TODO
+    //TODO wait to fix task path ":tid" => ":id"
     @Test
     @Disabled
     void member() {
 
         UserClient userClient = platformService.createUserClient();
 
-        Task task = taskClient.createTaskCron(generateName("task"), "from(bucket:\"telegraf\") |> sum()", "0 2 * * *", user, organization);
+        Task task = taskClient.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", user, organization);
 
         List<UserResourceMapping> members = taskClient.getMembers(task);
         Assertions.assertThat(members).hasSize(0);
@@ -291,14 +293,14 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(members).hasSize(0);
     }
 
-    //TODO
+    //TODO wait to fix task path ":tid" => ":id"
     @Test
     @Disabled
     void owner() {
 
         UserClient userClient = platformService.createUserClient();
 
-        Task task = taskClient.createTaskCron(generateName("task"), "from(bucket:\"telegraf\") |> sum()", "0 2 * * *", user, organization);
+        Task task = taskClient.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", user, organization);
 
         List<UserResourceMapping> owners = taskClient.getOwners(task);
         Assertions.assertThat(owners).hasSize(0);
@@ -325,14 +327,15 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(owners).hasSize(0);
     }
 
-    //TODO
+    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
     @Test
     @Disabled
     void runs() throws Exception {
 
+        platformService.setLogLevel(LogLevel.BODY);
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, "from(bucket:\"telegraf\") |> sum()", "5s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
 
         Thread.sleep(7_000);
 
@@ -341,7 +344,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     }
 
-    //TODO
+    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
     @Test
     @Disabled
     void runsNotExist() {
@@ -350,7 +353,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(runs).hasSize(0);
     }
 
-    //TODO
+    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
     @Test
     @Disabled
     void runsByTime() throws InterruptedException {
@@ -359,7 +362,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, "from(bucket:\"telegraf\") |> sum()", "5s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
 
         Thread.sleep(7_000);
 
@@ -370,14 +373,14 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(runs).hasSize(0);
     }
 
-    //TODO
+    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
     @Test
     @Disabled
     void runsLimit() throws InterruptedException {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, "from(bucket:\"telegraf\") |> sum()", "1s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
 
         Thread.sleep(5_000);
 
@@ -385,14 +388,14 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(runs).hasSize(1);
     }
 
-    //TODO
+    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
     @Test
     @Disabled
     void run() throws InterruptedException {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, "from(bucket:\"telegraf\") |> sum()", "1s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
 
         Thread.sleep(5_000);
 
@@ -407,26 +410,27 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(run.getId()).isEqualTo(runs.get(0).getId());
     }
 
-    //TODO
+    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
     @Test
     @Disabled
     void runNotExist() {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, "from(bucket:\"telegraf\") |> sum()", "5s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
 
         Run run = taskClient.getRun(task.getId(), "020f755c3c082000");
         Assertions.assertThat(run).isNull();
     }
 
+    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
     @Test
     @Disabled
     void retry() throws InterruptedException {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, "from(bucket:\"telegraf\") |> sum()", "1s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
 
         Thread.sleep(5_000);
 
@@ -441,27 +445,27 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(run.getId()).isEqualTo(runs.get(0).getId());
     }
 
-    //TODO
+    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
     @Test
     @Disabled
     void retryNotExist() {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, "from(bucket:\"telegraf\") |> sum()", "5s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
 
         Run run = taskClient.retryRun(task.getId(), "020f755c3c082000");
         Assertions.assertThat(run).isNull();
     }
 
-    //TODO
+    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
     @Test
     @Disabled
     void logs() throws Exception {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, "from(bucket:\"telegraf\") |> sum()", "5s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
 
         Thread.sleep(7_000);
 
@@ -469,7 +473,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(runs).hasSize(1);
     }
 
-    //TODO
+    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
     @Test
     @Disabled
     void logsNotExist() {
@@ -478,14 +482,14 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(runs).hasSize(0);
     }
 
-    //TODO
+    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
     @Test
     @Disabled
     void runLogs() throws Exception {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, "from(bucket:\"telegraf\") |> sum()", "1s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
 
         Thread.sleep(5_000);
 
@@ -499,14 +503,14 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(logs).hasSize(1);
     }
 
-    //TODO
+    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
     @Test
     @Disabled
     void runLogsNotExist() {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, "from(bucket:\"telegraf\") |> sum()", "5s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
 
         List<String> logs = taskClient.getRunLogs(task.getId(), "020f755c3c082000");
         Assertions.assertThat(logs).isEmpty();
