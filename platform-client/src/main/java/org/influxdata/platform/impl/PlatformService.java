@@ -375,6 +375,12 @@ interface PlatformService {
     Call<Run> retryTaskRun(@Nonnull @Path("id") final String taskID,
                            @Nonnull @Path("runID") final String runID);
 
+    @DELETE("/api/v2/tasks/{id}/runs/{runID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> cancelRun(@Nonnull @Path("id") final String taskID,
+                         @Nonnull @Path("runID") final String runID);
+
     @GET("/api/v2/tasks/{id}/logs")
     @Nonnull
     @Headers("Content-Type: application/json")

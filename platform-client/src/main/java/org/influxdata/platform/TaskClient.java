@@ -439,7 +439,20 @@ public interface TaskClient {
     @Nullable
     Run retryRun(@Nonnull final String taskID, @Nonnull final String runID);
 
-    //TODO cancel run
+    /**
+     * Cancels a currently running run.
+     *
+     * @param run the run with a taskID and a runID to cancel
+     */
+    void cancelRun(@Nonnull final Run run);
+
+    /**
+     * Cancels a currently running run.
+     *
+     * @param taskID ID of task
+     * @param runID  ID of run
+     */
+    void cancelRun(@Nonnull final String taskID, @Nonnull final String runID);
 
     /**
      * Retrieve all logs for a task.

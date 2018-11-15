@@ -33,6 +33,7 @@ import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.domain.Task;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
+import org.influxdata.platform.error.InfluxException;
 import org.influxdata.platform.rest.LogLevel;
 
 import org.assertj.core.api.Assertions;
@@ -454,10 +455,10 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
 
-        Run run = taskClient.retryRun(task.getId(), "020f755c3c082000");
-        Assertions.assertThat(run).isNull();
+        Assertions.assertThatThrownBy(() ->  taskClient.retryRun(task.getId(), "020f755c3c082000"))
+                .isInstanceOf(InfluxException.class)
+                .hasMessage("run not found");
     }
-
     //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
     @Test
     @Disabled
@@ -478,8 +479,9 @@ class ITTaskClientTest extends AbstractITClientTest {
     @Disabled
     void logsNotExist() {
 
-        List<String> runs = taskClient.getLogs("020f755c3c082000");
-        Assertions.assertThat(runs).hasSize(0);
+        Assertions.assertThatThrownBy(() -> taskClient.getLogs("020f755c3c082000"))
+                .isInstanceOf(InfluxException.class)
+                .hasMessage("task not found");
     }
 
     //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
@@ -512,7 +514,35 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
 
-        List<String> logs = taskClient.getRunLogs(task.getId(), "020f755c3c082000");
-        Assertions.assertThat(logs).isEmpty();
+        Assertions.assertThatThrownBy(() -> taskClient.getRunLogs(task.getId(), "020f755c3c082000"))
+                .isInstanceOf(InfluxException.class)
+                .hasMessage("run not found");
+    }
+
+    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go) +
+    //pAdapter{s: s, r: r} => pAdapter{s: s, r: r, rc: rc} (platform_adapter.go)
+    @Test
+    @Disabled
+    void cancelRun() throws InterruptedException {
+
+        platformService.setLogLevel(LogLevel.BODY);
+        String taskName = generateName("it task");
+
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
+
+        Thread.sleep(2_000);
+
+        List<Run> runs = taskClient.getRuns(task);
+        taskClient.cancelRun(runs.get(0));
+    }
+
+    //TODO wait to change pAdapter{s: s, r: r} => pAdapter{s: s, r: r, rc: rc} (platform_adapter.go)
+    @Test
+    @Disabled
+    void cancelRunNotExist() {
+
+        Assertions.assertThatThrownBy(() -> taskClient.cancelRun("020f755c3c082000", "020f755c3c082000"))
+                .isInstanceOf(InfluxException.class)
+                .hasMessage("task not found");
     }
 }

@@ -479,7 +479,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Call<List<String>> logs = platformService.findRunLogs(taskID, runID);
 
-        return execute(logs, "run not found");
+        return execute(logs);
     }
 
     @Nullable
@@ -500,7 +500,25 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Call<Run> run = platformService.retryTaskRun(taskID, runID);
 
-        return execute(run, "run not found");
+        return execute(run);
+    }
+
+    @Override
+    public void cancelRun(@Nonnull final Run run) {
+
+        Arguments.checkNotNull(run, "run");
+
+        cancelRun(run.getTaskID(), run.getId());
+    }
+
+    @Override
+    public void cancelRun(@Nonnull final String taskID, @Nonnull final String runID) {
+
+        Arguments.checkNonEmpty(taskID, "Task.ID");
+        Arguments.checkNonEmpty(runID, "Run.ID");
+
+        Call<Void> run = platformService.cancelRun(taskID, runID);
+        execute(run);
     }
 
     @Nonnull
