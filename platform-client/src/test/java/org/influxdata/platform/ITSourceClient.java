@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Health;
 import org.influxdata.platform.domain.Source;
+import org.influxdata.platform.rest.LogLevel;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,6 +58,8 @@ class ITSourceClient extends AbstractITClientTest {
 
     @Test
     void createSource() {
+
+        platformService.setLogLevel(LogLevel.BODY);
 
         Source source = new Source();
 
@@ -88,8 +91,8 @@ class ITSourceClient extends AbstractITClientTest {
         Assertions.assertThat(createdSource.getTelegraf()).isEqualTo(source.getTelegraf());
         Assertions.assertThat(createdSource.getToken()).isEqualTo(source.getToken());
         Assertions.assertThat(createdSource.getUsername()).isEqualTo(source.getUsername());
-        Assertions.assertThat(createdSource.getPassword()).isEqualTo(source.getPassword());
-        Assertions.assertThat(createdSource.getSharedSecret()).isEqualTo(source.getSharedSecret());
+        Assertions.assertThat(createdSource.getPassword()).isNull();
+        Assertions.assertThat(createdSource.getSharedSecret()).isNull();
         Assertions.assertThat(createdSource.getMetaUrl()).isEqualTo(source.getMetaUrl());
         Assertions.assertThat(createdSource.getDefaultRP()).isEqualTo(source.getDefaultRP());
     }
