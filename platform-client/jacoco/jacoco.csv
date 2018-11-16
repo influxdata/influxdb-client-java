@@ -12,6 +12,7 @@ The Platform Client,org.influxdata.platform.domain,Users,4,11,0,0,2,3,1,2,1,2
 The Platform Client,org.influxdata.platform.domain,UserResourcesResponse,4,11,0,0,2,3,1,2,1,2
 The Platform Client,org.influxdata.platform.domain,AbstractHasLinks,4,11,0,0,2,3,1,2,1,2
 The Platform Client,org.influxdata.platform.domain,Health,22,0,0,0,8,0,6,0,6,0
+The Platform Client,org.influxdata.platform.domain,RunsResponse,15,0,0,0,5,0,3,0,3,0
 The Platform Client,org.influxdata.platform.domain,Task,4,163,0,0,2,33,1,17,1,17
 The Platform Client,org.influxdata.platform.domain,Source.SourceType,0,34,0,0,0,4,0,1,0,1
 The Platform Client,org.influxdata.platform.domain,Buckets,4,11,0,0,2,3,1,2,1,2
@@ -36,7 +37,7 @@ The Platform Client,org.influxdata.platform.impl,WriteClientImpl.ToWritePointsCo
 The Platform Client,org.influxdata.platform.impl,OrganizationClientImpl,216,139,0,0,52,34,12,9,12,9
 The Platform Client,org.influxdata.platform.impl,AuthenticateInterceptor,0,252,0,20,0,57,0,17,0,7
 The Platform Client,org.influxdata.platform.impl,GzipInterceptor,0,87,2,6,0,19,2,10,0,8
-The Platform Client,org.influxdata.platform.impl,TaskClientImpl,433,405,0,6,97,93,27,20,27,17
+The Platform Client,org.influxdata.platform.impl,TaskClientImpl,461,405,0,6,102,93,27,20,27,17
 The Platform Client,org.influxdata.platform.impl,WriteClientImpl.BatchWriteOptions,5,74,5,5,2,14,5,3,0,3
 The Platform Client,org.influxdata.platform.impl,WriteClientImpl.BatchWriteDataPoint,2,16,1,1,1,5,1,2,0,2
 The Platform Client,org.influxdata.platform.impl,QueryClientImpl.new FluxCsvParser.FluxResponseConsumer() {...},0,25,0,0,0,4,0,3,0,3
