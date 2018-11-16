@@ -51,7 +51,7 @@ class ITBucketClientTest extends AbstractITClientTest {
     @BeforeEach
     void setUp() {
 
-        super.setUp();
+        super.setUp(false);
 
         bucketClient = platformService.createBucketClient();
         organizationClient = platformService.createOrganizationClient();

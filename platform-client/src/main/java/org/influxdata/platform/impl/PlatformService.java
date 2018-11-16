@@ -34,6 +34,7 @@ import org.influxdata.platform.domain.OperationLogResponse;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
 import org.influxdata.platform.domain.Run;
+import org.influxdata.platform.domain.RunsResponse;
 import org.influxdata.platform.domain.Source;
 import org.influxdata.platform.domain.Sources;
 import org.influxdata.platform.domain.TaskResponse;
@@ -352,10 +353,11 @@ interface PlatformService {
     @GET("/api/v2/tasks/{id}/runs")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<List<Run>> findTaskRuns(@Nonnull @Path("id") final String taskID,
-                                 @Nullable @Query("afterTime") final Instant afterTime,
-                                 @Nullable @Query("beforeTime") final Instant beforeTime,
-                                 @Nullable @Query("limit") final Integer limit);
+    Call<RunsResponse> findTaskRuns(@Nonnull @Path("id") final String taskID,
+                                    @Nullable @Query("afterTime") final Instant afterTime,
+                                    @Nullable @Query("beforeTime") final Instant beforeTime,
+                                    @Nullable @Query("limit") final Integer limit,
+                                    @Nonnull @Query("orgID") final String orgID);
 
     @GET("/api/v2/tasks/{id}/runs/{runID}")
     @Nonnull
@@ -367,7 +369,8 @@ interface PlatformService {
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<List<String>> findRunLogs(@Nonnull @Path("id") final String taskID,
-                                   @Nonnull @Path("runID") final String runID);
+                                   @Nonnull @Path("runID") final String runID,
+                                   @Nonnull @Query("orgID") final String orgID);
 
     @POST("/api/v2/tasks/{id}/runs/{runID}/retry")
     @Nonnull
@@ -384,7 +387,8 @@ interface PlatformService {
     @GET("/api/v2/tasks/{id}/logs")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<List<String>> findTaskLogs(@Nonnull @Path("id") final String taskID);
+    Call<List<String>> findTaskLogs(@Nonnull @Path("id") final String taskID,
+                                    @Nonnull @Query("orgID") final String orgID);
 
     // Write
     //

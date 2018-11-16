@@ -362,15 +362,17 @@ public interface TaskClient {
      * Retrieve list of run records for a task.
      *
      * @param taskID ID of task to get runs for
+     * @param orgID  ID of organization
      * @return the list of run records for a task
      */
     @Nonnull
-    List<Run> getRuns(@Nonnull final String taskID);
+    List<Run> getRuns(@Nonnull final String taskID, final String orgID);
 
     /**
      * Retrieve list of run records for a task.
      *
      * @param taskID     ID of task to get runs for
+     * @param orgID      ID of organization
      * @param afterTime  filter runs to those scheduled after this time
      * @param beforeTime filter runs to those scheduled before this time
      * @param limit      the number of runs to return. Default value: 20.
@@ -378,6 +380,7 @@ public interface TaskClient {
      */
     @Nonnull
     List<Run> getRuns(@Nonnull final String taskID,
+                      @Nonnull final String orgID,
                       @Nullable final Instant afterTime,
                       @Nullable final Instant beforeTime,
                       @Nullable final Integer limit);
@@ -405,20 +408,22 @@ public interface TaskClient {
      * Retrieve all logs for a run.
      *
      * @param run the run with a taskID and a runID
+     * @param orgID
      * @return the list of all logs for a run
      */
     @Nonnull
-    List<String> getRunLogs(@Nonnull final Run run);
+    List<String> getRunLogs(@Nonnull final Run run, final String orgID);
 
     /**
      * Retrieve all logs for a run.
      *
      * @param taskID ID of task to get logs for it
      * @param runID  ID of run
+     * @param orgID  ID of organization
      * @return the list of all logs for a run
      */
     @Nonnull
-    List<String> getRunLogs(@Nonnull final String taskID, @Nonnull final String runID);
+    List<String> getRunLogs(@Nonnull final String taskID, @Nonnull final String runID, final String orgID);
 
     /**
      * Retry a task run.
@@ -467,8 +472,9 @@ public interface TaskClient {
      * Retrieve all logs for a task.
      *
      * @param taskID ID of task to get logs for
+     * @param orgID ID of organization
      * @return the list of all logs for a task
      */
     @Nonnull
-    List<String> getLogs(@Nonnull final String taskID);
+    List<String> getLogs(@Nonnull final String taskID, @Nonnull final String orgID);
 }

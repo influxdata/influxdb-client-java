@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Health;
 import org.influxdata.platform.domain.Source;
-import org.influxdata.platform.rest.LogLevel;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,15 +50,13 @@ class ITSourceClient extends AbstractITClientTest {
     @BeforeEach
     void setUp() {
 
-        super.setUp();
+        super.setUp(false);
 
         sourceClient = platformService.createSourceClient();
     }
 
     @Test
     void createSource() {
-
-        platformService.setLogLevel(LogLevel.BODY);
 
         Source source = new Source();
 

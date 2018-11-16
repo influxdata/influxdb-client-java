@@ -32,6 +32,7 @@ import org.influxdata.platform.Arguments;
 import org.influxdata.platform.TaskClient;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Run;
+import org.influxdata.platform.domain.RunsResponse;
 import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.domain.Task;
 import org.influxdata.platform.domain.TaskResponse;
@@ -414,30 +415,34 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(task, "task");
 
-        return getRuns(task.getId(), afterTime, beforeTime, limit);
+        return getRuns(task.getId(), task.getOrganizationId(), afterTime, beforeTime, limit);
     }
 
     @Nonnull
     @Override
-    public List<Run> getRuns(@Nonnull final String taskID) {
+    public List<Run> getRuns(@Nonnull final String taskID, @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
+        Arguments.checkNonEmpty(orgID, "Org.ID");
 
-        return getRuns(taskID, null, null, null);
+        return getRuns(taskID, orgID, null, null, null);
     }
 
     @Nonnull
     @Override
     public List<Run> getRuns(@Nonnull final String taskID,
+                             @Nonnull final String orgID,
                              @Nullable final Instant afterTime,
                              @Nullable final Instant beforeTime,
                              @Nullable final Integer limit) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
+        Arguments.checkNonEmpty(orgID, "Org.ID");
 
-        Call<List<Run>> runs = platformService.findTaskRuns(taskID, afterTime, beforeTime, limit);
+        Call<RunsResponse> runs = platformService.findTaskRuns(taskID, afterTime, beforeTime, limit, orgID);
+        RunsResponse execute = execute(runs);
 
-        return execute(runs);
+        return execute.getRuns();
     }
 
     @Nullable
@@ -446,7 +451,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(run, "run");
 
-        return getRun(run.getTaskID(), run.getId());
+        return getRun(run.getTaskId(), run.getId());
     }
 
     @Nullable
@@ -458,26 +463,29 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Call<Run> run = platformService.findTaskRun(taskID, runID);
 
-        return execute(run, "run not found");
+        return execute(run, "expected one run, got 0");
     }
 
     @Nonnull
     @Override
-    public List<String> getRunLogs(@Nonnull final Run run) {
+    public List<String> getRunLogs(@Nonnull final Run run, @Nonnull final String orgID) {
 
         Arguments.checkNotNull(run, "run");
 
-        return getRunLogs(run.getTaskID(), run.getId());
+        return getRunLogs(run.getTaskId(), run.getId(), orgID);
     }
 
     @Nonnull
     @Override
-    public List<String> getRunLogs(@Nonnull final String taskID, @Nonnull final String runID) {
+    public List<String> getRunLogs(@Nonnull final String taskID,
+                                   @Nonnull final String runID,
+                                   @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
         Arguments.checkNonEmpty(runID, "Run.ID");
+        Arguments.checkNonEmpty(orgID, "Org.ID");
 
-        Call<List<String>> logs = platformService.findRunLogs(taskID, runID);
+        Call<List<String>> logs = platformService.findRunLogs(taskID, runID, orgID);
 
         return execute(logs);
     }
@@ -488,7 +496,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(run, "run");
 
-        return retryRun(run.getTaskID(), run.getId());
+        return retryRun(run.getTaskId(), run.getId());
     }
 
     @Nullable
@@ -508,7 +516,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(run, "run");
 
-        cancelRun(run.getTaskID(), run.getId());
+        cancelRun(run.getTaskId(), run.getId());
     }
 
     @Override
@@ -527,16 +535,17 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(task, "task");
 
-        return getLogs(task.getId());
+        return getLogs(task.getId(), task.getOrganizationId());
     }
 
     @Nonnull
     @Override
-    public List<String> getLogs(@Nonnull final String taskID) {
+    public List<String> getLogs(@Nonnull final String taskID, @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
+        Arguments.checkNonEmpty(orgID, "Org.ID");
 
-        Call<List<String>> execute = platformService.findTaskLogs(taskID);
+        Call<List<String>> execute = platformService.findTaskLogs(taskID, orgID);
 
         return execute(execute, "task not found");
     }

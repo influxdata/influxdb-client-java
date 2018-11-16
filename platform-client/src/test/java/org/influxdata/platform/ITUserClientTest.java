@@ -47,7 +47,7 @@ class ITUserClientTest extends AbstractITClientTest {
     @BeforeEach
     void setUp() {
 
-        super.setUp();
+        super.setUp(false);
 
         userClient = platformService.createUserClient();
     }

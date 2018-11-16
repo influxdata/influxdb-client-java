@@ -32,7 +32,7 @@ public final class Run {
 
     private String id;
 
-    private String taskID;
+    private String taskId;
 
     private RunStatus status;
 
@@ -51,12 +51,12 @@ public final class Run {
         this.id = id;
     }
 
-    public String getTaskID() {
-        return taskID;
+    public String getTaskId() {
+        return taskId;
     }
 
-    public void setTaskID(final String taskID) {
-        this.taskID = taskID;
+    public void setTaskId(final String taskId) {
+        this.taskId = taskId;
     }
 
     public RunStatus getStatus() {

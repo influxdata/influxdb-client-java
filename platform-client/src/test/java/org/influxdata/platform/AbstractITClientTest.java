@@ -29,7 +29,6 @@ import org.influxdata.platform.domain.RetentionRule;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/09/2018 10:29)
@@ -41,8 +40,7 @@ abstract class AbstractITClientTest extends AbstractTest {
     PlatformClient platformService;
     String platformURL;
 
-    @BeforeEach
-    void setUp() {
+    void setUp(boolean useToken) {
 
         String platformIP = System.getenv().getOrDefault("PLATFORM_IP", "127.0.0.1");
         String platformPort = System.getenv().getOrDefault("PLATFORM_PORT", "9999");
@@ -51,6 +49,23 @@ abstract class AbstractITClientTest extends AbstractTest {
         LOG.log(Level.FINEST, "Platform URL: {0}", platformURL);
 
         platformService = PlatformClientFactory.create(platformURL, "my-user", "my-password".toCharArray());
+
+        if (useToken)
+        {
+            String token= platformService.createAuthorizationClient()
+                    .findAuthorizations()
+                    .stream()
+                    .filter(authorization -> authorization.getPermissions().size() == 4)
+                    .findFirst()
+                    .orElseThrow(IllegalStateException::new).getToken();
+
+            try {
+                platformService.close();
+                platformService = PlatformClientFactory.create(platformURL, token.toCharArray());
+            } catch (Exception e) {
+                Assertions.fail("Can't authorize via token", e);
+            }
+        }
     }
 
     @AfterEach

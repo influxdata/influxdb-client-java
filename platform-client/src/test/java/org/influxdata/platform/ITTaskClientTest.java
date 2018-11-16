@@ -22,19 +22,18 @@
 package org.influxdata.platform;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.domain.Run;
+import org.influxdata.platform.domain.RunStatus;
 import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.domain.Task;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
 import org.influxdata.platform.error.InfluxException;
-import org.influxdata.platform.rest.LogLevel;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,7 +59,7 @@ class ITTaskClientTest extends AbstractITClientTest {
     @BeforeEach
     void setUp() {
 
-        super.setUp();
+        super.setUp(true);
 
         taskClient = platformService.createTaskClient();
         organization = platformService.createOrganizationClient()
@@ -70,6 +69,8 @@ class ITTaskClientTest extends AbstractITClientTest {
                 .orElseThrow(IllegalStateException::new);
 
         user = platformService.createUserClient().me();
+
+        taskClient.findTasks().forEach(task -> taskClient.deleteTask(task));
     }
 
     @Test
@@ -328,12 +329,11 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(owners).hasSize(0);
     }
 
-    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
+    //TODO wait to fix task path ":tid" => ":id"
     @Test
     @Disabled
     void runs() throws Exception {
 
-        platformService.setLogLevel(LogLevel.BODY);
         String taskName = generateName("it task");
 
         Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
@@ -343,18 +343,28 @@ class ITTaskClientTest extends AbstractITClientTest {
         List<Run> runs = taskClient.getRuns(task);
         Assertions.assertThat(runs).hasSize(1);
 
+        Run run = runs.get(0);
+
+        Assertions.assertThat(run.getId()).isNotBlank();
+        Assertions.assertThat(run.getTaskId()).isEqualTo(task.getId());
+        Assertions.assertThat(run.getStatus()).isEqualTo(RunStatus.SUCCESS);
+        Assertions.assertThat(run.getScheduledFor()).isBefore(Instant.now());
+        Assertions.assertThat(run.getStartedAt()).isBefore(Instant.now());
+        Assertions.assertThat(run.getFinishedAt()).isBefore(Instant.now());
+        Assertions.assertThat(run.getRequestedAt()).isNull();
+        Assertions.assertThat(run.getLog()).isEmpty();
     }
 
-    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
+    //TODO wait to fix task path ":tid" => ":id"
     @Test
     @Disabled
     void runsNotExist() {
 
-        List<Run> runs = taskClient.getRuns("020f755c3c082000");
+        List<Run> runs = taskClient.getRuns("020f755c3c082000", organization.getId());
         Assertions.assertThat(runs).hasSize(0);
     }
 
-    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
+    //TODO wait to fix task path ":tid" => ":id"
     @Test
     @Disabled
     void runsByTime() throws InterruptedException {
@@ -365,16 +375,16 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
 
-        Thread.sleep(7_000);
-
         List<Run> runs = taskClient.getRuns(task, null, now, null);
         Assertions.assertThat(runs).hasSize(0);
 
-        runs = taskClient.getRuns(task, now.plus(1, ChronoUnit.MINUTES), null, null);
-        Assertions.assertThat(runs).hasSize(0);
+        Thread.sleep(7_000);
+
+        runs = taskClient.getRuns(task, now, null, null);
+        Assertions.assertThat(runs).hasSize(1);
     }
 
-    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
+    //TODO wait to fix task path ":tid" => ":id"
     @Test
     @Disabled
     void runsLimit() throws InterruptedException {
@@ -387,9 +397,12 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         List<Run> runs = taskClient.getRuns(task, null, null, 1);
         Assertions.assertThat(runs).hasSize(1);
+
+        runs = taskClient.getRuns(task, null, null, null);
+        Assertions.assertThat(runs.size()).isGreaterThan(1);
     }
 
-    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
+    //TODO wait to fix (task/backend/query_logreader.go:149) - FindRunByID (avoid "panic: column _measurement is not of type time goroutine")
     @Test
     @Disabled
     void run() throws InterruptedException {
@@ -403,15 +416,14 @@ class ITTaskClientTest extends AbstractITClientTest {
         List<Run> runs = taskClient.getRuns(task, null, null, 1);
         Assertions.assertThat(runs).hasSize(1);
 
-        Thread.sleep(5_000);
+        Run firstRun = runs.get(0);
+        Run runById = taskClient.getRun(firstRun);
 
-        Run run = taskClient.getRun(runs.get(0));
-
-        Assertions.assertThat(run).isNotNull();
-        Assertions.assertThat(run.getId()).isEqualTo(runs.get(0).getId());
+        Assertions.assertThat(runById).isNotNull();
+        Assertions.assertThat(runById.getId()).isEqualTo(firstRun.getId());
     }
 
-    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
+    //TODO wait to fix task path ":tid" => ":id"
     @Test
     @Disabled
     void runNotExist() {
@@ -424,29 +436,29 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(run).isNull();
     }
 
-    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
+    //TODO wait to fix (task/backend/query_logreader.go:149) - FindRunByID (avoid "panic: column _measurement is not of type time goroutine")
     @Test
     @Disabled
     void retry() throws InterruptedException {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "4s", user, organization);
 
         Thread.sleep(5_000);
 
-        List<Run> runs = taskClient.getRuns(task, null, null, 1);
-        Assertions.assertThat(runs).hasSize(1);
-
-        Thread.sleep(5_000);
+        List<Run> runs = taskClient.getRuns(task);
+        Assertions.assertThat(runs).isNotEmpty();
 
         Run run = taskClient.retryRun(runs.get(0));
 
         Assertions.assertThat(run).isNotNull();
         Assertions.assertThat(run.getId()).isEqualTo(runs.get(0).getId());
+
+        Assertions.assertThat(runs.size()).isLessThan(taskClient.getRuns(task).size());
     }
 
-    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
+    //TODO wait to fix task path ":tid" => ":id"
     @Test
     @Disabled
     void retryNotExist() {
@@ -457,9 +469,10 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() ->  taskClient.retryRun(task.getId(), "020f755c3c082000"))
                 .isInstanceOf(InfluxException.class)
-                .hasMessage("run not found");
+                .hasMessage("expected one run, got 0");
     }
-    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
+
+    //TODO wait to fix task path ":tid" => ":id"
     @Test
     @Disabled
     void logs() throws Exception {
@@ -470,21 +483,22 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Thread.sleep(7_000);
 
-        List<String> runs = taskClient.getLogs(task);
-        Assertions.assertThat(runs).hasSize(1);
+        List<String> logs = taskClient.getLogs(task);
+        Assertions.assertThat(logs).hasSize(1);
+        Assertions.assertThat(logs.get(0)).endsWith("Completed successfully");
     }
 
-    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
+    //TODO wait to fix task path ":tid" => ":id"
     @Test
     @Disabled
     void logsNotExist() {
 
-        Assertions.assertThatThrownBy(() -> taskClient.getLogs("020f755c3c082000"))
-                .isInstanceOf(InfluxException.class)
-                .hasMessage("task not found");
+        List<String> logs = taskClient.getLogs("020f755c3c082000", organization.getId());
+
+        Assertions.assertThat(logs).isEmpty();
     }
 
-    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
+    //TODO wait to fix task path ":tid" => ":id"
     @Test
     @Disabled
     void runLogs() throws Exception {
@@ -493,19 +507,17 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
 
-        Thread.sleep(5_000);
+        Thread.sleep(2_000);
 
         List<Run> runs = taskClient.getRuns(task, null, null, 1);
         Assertions.assertThat(runs).hasSize(1);
 
-        Thread.sleep(5_000);
-
-        List<String> logs = taskClient.getRunLogs(runs.get(0));
+        List<String> logs = taskClient.getRunLogs(runs.get(0), organization.getId());
 
         Assertions.assertThat(logs).hasSize(1);
     }
 
-    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go)
+    //TODO wait to fix task path ":tid" => ":id"
     @Test
     @Disabled
     void runLogsNotExist() {
@@ -514,18 +526,15 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
 
-        Assertions.assertThatThrownBy(() -> taskClient.getRunLogs(task.getId(), "020f755c3c082000"))
-                .isInstanceOf(InfluxException.class)
-                .hasMessage("run not found");
+        List<String> logs = taskClient.getRunLogs(task.getId(), "020f755c3c082000", organization.getId());
+        Assertions.assertThat(logs).isEmpty();
     }
 
-    //TODO wait to avoid "Replace NopLogReader with real log reader" (main.go) +
-    //pAdapter{s: s, r: r} => pAdapter{s: s, r: r, rc: rc} (platform_adapter.go)
+    //TODO wait to change pAdapter{s: s, r: r} => pAdapter{s: s, r: r, rc: rc} (platform_adapter.go)
     @Test
     @Disabled
     void cancelRun() throws InterruptedException {
 
-        platformService.setLogLevel(LogLevel.BODY);
         String taskName = generateName("it task");
 
         Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
@@ -534,6 +543,10 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         List<Run> runs = taskClient.getRuns(task);
         taskClient.cancelRun(runs.get(0));
+
+        Run canceledRun = taskClient.getRun(runs.get(0));
+        Assertions.assertThat(canceledRun).isNotNull();
+        Assertions.assertThat(canceledRun.getStatus()).isEqualTo(RunStatus.FAILED);
     }
 
     //TODO wait to change pAdapter{s: s, r: r} => pAdapter{s: s, r: r, rc: rc} (platform_adapter.go)
