@@ -64,7 +64,7 @@ class InfluxExceptionTest {
                 })
                 .isInstanceOf(InfluxException.class)
                 .hasNoCause()
-                .hasMessage("");
+                .hasMessage(null);
     }
 
     @Test
@@ -163,6 +163,55 @@ class InfluxExceptionTest {
                 .matches((Predicate<Throwable>) throwable -> {
                     try {
                         return ((InfluxException) throwable).errorBody().equals("{error: \"error-body\"}");
+                    } catch (IOException e) {
+                        Assertions.fail(e.getMessage(), e);
+                        return false;
+                    }
+                });
+    }
+
+    @Test
+    void errorBodyPlatform() {
+        Assertions
+                .assertThatThrownBy(() -> {
+                    Response<Object> response = errorResponse("not found", 404, 15, "{\"code\":\"not found\",\"msg\":\"user not found\"}", "X-Platform-Error-Code");
+                    throw new InfluxException(new HttpException(response));
+                })
+                .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals("user not found"));
+    }
+    
+    @Test
+    void errorBodyPlatformWithoutMsg() {
+        Assertions
+                .assertThatThrownBy(() -> {
+                    Response<Object> response = errorResponse("not found", 404, 15, "{\"code\":\"not found\"}", "X-Platform-Error-Code");
+                    throw new InfluxException(new HttpException(response));
+                })
+                .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals("not found"));
+    }
+
+    @Test
+    void errorBodyPlatformNotJson() {
+        Assertions
+                .assertThatThrownBy(() -> {
+                    Response<Object> response = errorResponse("not found", 404, 15, "not-json", "X-Platform-Error-Code");
+                    throw new InfluxException(new HttpException(response));
+                })
+                .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals("not found"));
+    }
+
+    @Test
+    void errorBodyReadAgain() {
+        Assertions
+                .assertThatThrownBy(() -> {
+                    Response<Object> response = errorResponse("Wrong query", 501, 15, "{error: \"error-body\"}");
+                    throw new InfluxException(new HttpException(response));
+                })
+                .matches((Predicate<Throwable>) throwable -> {
+                    try {
+                        String errorBody1 = ((InfluxException) throwable).errorBody();
+                        String errorBody2 = ((InfluxException) throwable).errorBody();
+                        return errorBody1.equals("{error: \"error-body\"}") && errorBody1.equals(errorBody2);
                     } catch (IOException e) {
                         Assertions.fail(e.getMessage(), e);
                         return false;
@@ -285,6 +334,15 @@ class InfluxExceptionTest {
     private Response<Object> errorResponse(@Nullable final String influxError, final int responseCode,
                                            @Nullable final Integer referenceCode,
                                            @Nonnull final String errorBody) {
+        return errorResponse(influxError, responseCode, referenceCode, errorBody,
+                "X-Influx-Error");
+    }
+
+    @Nonnull
+    private Response<Object> errorResponse(@Nullable final String influxError, final int responseCode,
+                                           @Nullable final Integer referenceCode,
+                                           @Nonnull final String errorBody,
+                                           @Nonnull final String platformHeaderErrorName) {
 
         okhttp3.Response.Builder builder = new okhttp3.Response.Builder() //
                 .code(responseCode)
@@ -293,7 +351,7 @@ class InfluxExceptionTest {
                 .request(new Request.Builder().url("http://localhost/").build());
 
         if (influxError != null) {
-            builder.addHeader("X-Influx-Error", influxError);
+            builder.addHeader(platformHeaderErrorName, influxError);
         }
 
         if (referenceCode != null) {

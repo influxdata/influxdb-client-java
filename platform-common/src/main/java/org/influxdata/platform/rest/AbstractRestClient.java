@@ -47,7 +47,6 @@ import org.influxdata.platform.error.rest.UnauthorizedException;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -82,11 +81,12 @@ public abstract class AbstractRestClient {
                 return response.body();
             } else {
 
-                String error = new InfluxException(response).getMessage();
+                InfluxException influxException = responseToError(response);
 
                 //
                 // The error message signal not found on the server => return null
                 //
+                String error = influxException.getMessage();
                 if (nullError != null && nullError.equals(error)) {
 
                     LOG.log(Level.WARNING, "Error is considered as null response: {0}", error);
@@ -94,7 +94,7 @@ public abstract class AbstractRestClient {
                     return null;
                 }
 
-                throw new InfluxException(error);
+                throw influxException;
             }
         } catch (IOException e) {
             throw new InfluxException(e);
@@ -103,7 +103,7 @@ public abstract class AbstractRestClient {
 
     @Nonnull
     @SuppressWarnings("MagicNumber")
-    protected InfluxException responseToError(@Nonnull final Response<ResponseBody> response) {
+    protected InfluxException responseToError(@Nonnull final Response<?> response) {
 
         Arguments.checkNotNull(response, "response");
 

@@ -22,10 +22,14 @@
 package org.influxdata.platform.error;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import okhttp3.ResponseBody;
+import org.json.JSONObject;
 import retrofit2.HttpException;
 import retrofit2.Response;
 
@@ -37,29 +41,42 @@ import retrofit2.Response;
  */
 public class InfluxException extends RuntimeException {
 
+    private static final Logger LOG = Logger.getLogger(InfluxException.class.getName());
+
     private final Response<?> response;
+    private final String message;
+
+    private String errorBody = null;
 
     public InfluxException(@Nullable final String message) {
 
-        super(message);
         this.response = null;
+        this.message = message;
     }
 
     public InfluxException(@Nullable final Throwable cause) {
 
-        super(errorMessage(cause), cause);
+        super(cause);
 
         if (cause instanceof HttpException) {
-            response = ((HttpException) cause).response();
+            this.response = ((HttpException) cause).response();
         } else {
-            response = null;
+            this.response = null;
         }
+
+        this.message = errorMessage();
     }
 
     public InfluxException(@Nullable final Response<?> cause) {
 
-        super((errorMessage(cause)));
-        response = cause;
+        super();
+        this.response = cause;
+        this.message = errorMessage();
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
     }
 
     /**
@@ -104,48 +121,55 @@ public class InfluxException extends RuntimeException {
     @Nonnull
     public String errorBody() throws IOException {
 
+        if (errorBody != null) {
+            return errorBody;
+        }
+
         if (response != null) {
             ResponseBody body = response.errorBody();
             if (body == null) {
-                return "";
+                errorBody = "";
+            } else {
+                errorBody = body.source().readUtf8();
             }
-            return body.source().readUtf8();
+        } else {
+            errorBody = "";
         }
 
-        return "";
+        return errorBody;
     }
 
     @Nullable
-    private static String errorMessage(@Nullable final Throwable cause) {
+    private String errorMessage() {
 
-        if (cause == null) {
-            return "";
-        }
+        if (response != null) {
 
-        if (cause instanceof HttpException) {
-            Response<?> response = ((HttpException) cause).response();
-            String message = errorMessage(response);
-            if (message != null) {
-                return message;
+            // try read error body as JSON
+            if (response.headers().get("X-Platform-Error-Code") != null) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(errorBody());
+                    if (jsonObject.has("msg")) {
+                        return jsonObject.getString("msg");
+                    }
+                } catch (Exception e) {
+                    LOG.log(Level.FINEST, "Can't parse msg from response {}", response);
+                }
+            }
+
+            String value = Stream.of("X-Platform-Error-Code", "X-Influx-Error", "X-InfluxDb-Error")
+                    .map(name -> response.headers().get(name))
+                    .filter(message -> message != null && !message.isEmpty()).findFirst()
+                    .orElse(null);
+
+            if (value != null) {
+                return value;
             }
         }
 
-        return cause.getMessage();
-    }
-
-    @Nullable
-    private static String errorMessage(@Nullable final Response<?> response) {
-
-        if (response == null) {
-            return null;
-        }
-
-        String message = response.headers().get("X-Influx-Error");
-        if (message == null) {
-            message = response.headers().get("X-InfluxDb-Error");
-        }
-        if (message != null && !message.isEmpty()) {
-            return message;
+        Throwable cause = getCause();
+        if (cause != null) {
+            return cause.getMessage();
         }
 
         return null;
