@@ -84,15 +84,14 @@ public final class PlatformClientFactory {
      * @see PlatformOptions.Builder#url(String)
      */
     @Nonnull
-    public static PlatformClient create(@Nonnull final String url,
-                                        @Nonnull final char[] token) {
+    public static PlatformClient create(@Nonnull final String url, @Nonnull final char[] token) {
 
-<span class="fc" id="L90">        PlatformOptions options = PlatformOptions.builder()</span>
-<span class="fc" id="L91">                .url(url)</span>
-<span class="fc" id="L92">                .authenticateToken(token)</span>
-<span class="fc" id="L93">                .build();</span>
+<span class="fc" id="L89">        PlatformOptions options = PlatformOptions.builder()</span>
+<span class="fc" id="L90">                .url(url)</span>
+<span class="fc" id="L91">                .authenticateToken(token)</span>
+<span class="fc" id="L92">                .build();</span>
 
-<span class="fc" id="L95">        return create(options);</span>
+<span class="fc" id="L94">        return create(options);</span>
     }
 
     /**
@@ -104,9 +103,9 @@ public final class PlatformClientFactory {
     @Nonnull
     public static PlatformClient create(@Nonnull final PlatformOptions options) {
 
-<span class="fc" id="L107">        Arguments.checkNotNull(options, &quot;PlatformOptions&quot;);</span>
+<span class="fc" id="L106">        Arguments.checkNotNull(options, &quot;PlatformOptions&quot;);</span>
 
-<span class="fc" id="L109">        return new PlatformClientImpl(options);</span>
+<span class="fc" id="L108">        return new PlatformClientImpl(options);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -166,13 +166,14 @@ final class SourceClientImpl extends AbstractRestClient implements SourceClient 
 <span class="nc" id="L166">            execute(call);</span>
 <span class="nc" id="L167">            health.setStatus(Health.HEALTHY_STATUS);</span>
 
-            //TODO check implementation of handleGetSourceHealth failure
-<span class="nc" id="L170">        } catch (InfluxException e) {</span>
-<span class="nc" id="L171">            health.setStatus(&quot;error&quot;);</span>
-<span class="nc" id="L172">            health.setMessage(e.getMessage());</span>
-<span class="nc" id="L173">        }</span>
+            //TODO wait for implementation of handleGetSourceHealth failure,
+            //after fix refactor to platformClient.health implementation
+<span class="nc" id="L171">        } catch (InfluxException e) {</span>
+<span class="nc" id="L172">            health.setStatus(&quot;error&quot;);</span>
+<span class="nc" id="L173">            health.setMessage(e.getMessage());</span>
+<span class="nc" id="L174">        }</span>
 
-<span class="nc" id="L175">        return health;</span>
+<span class="nc" id="L176">        return health;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
