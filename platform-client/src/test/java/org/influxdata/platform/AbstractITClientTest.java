@@ -37,7 +37,7 @@ abstract class AbstractITClientTest extends AbstractTest {
 
     private static final Logger LOG = Logger.getLogger(AbstractITClientTest.class.getName());
 
-    PlatformClient platformService;
+    PlatformClient platformClient;
     String platformURL;
 
     void setUp(boolean useToken) {
@@ -48,11 +48,11 @@ abstract class AbstractITClientTest extends AbstractTest {
         platformURL = "http://" + platformIP + ":" + platformPort;
         LOG.log(Level.FINEST, "Platform URL: {0}", platformURL);
 
-        platformService = PlatformClientFactory.create(platformURL, "my-user", "my-password".toCharArray());
+        platformClient = PlatformClientFactory.create(platformURL, "my-user", "my-password".toCharArray());
 
         if (useToken)
         {
-            String token= platformService.createAuthorizationClient()
+            String token= platformClient.createAuthorizationClient()
                     .findAuthorizations()
                     .stream()
                     .filter(authorization -> authorization.getPermissions().size() == 4)
@@ -60,8 +60,8 @@ abstract class AbstractITClientTest extends AbstractTest {
                     .orElseThrow(IllegalStateException::new).getToken();
 
             try {
-                platformService.close();
-                platformService = PlatformClientFactory.create(platformURL, token.toCharArray());
+                platformClient.close();
+                platformClient = PlatformClientFactory.create(platformURL, token.toCharArray());
             } catch (Exception e) {
                 Assertions.fail("Can't authorize via token", e);
             }
@@ -70,7 +70,7 @@ abstract class AbstractITClientTest extends AbstractTest {
 
     @AfterEach
     void logout() throws Exception {
-        platformService.close();
+        platformClient.close();
     }
 
     @Nonnull

@@ -45,12 +45,6 @@ interface FluxServiceReactive {
     @Headers("Content-Type: application/json")
     Observable<ResponseBody> query(@Nonnull @Body final RequestBody query);
 
-    @Nonnull
-    @Streaming
-    @POST("/api/v2/query")
-    @Headers("Content-Type: application/json")
-    Observable<Response<ResponseBody>> queryRaw(@Nonnull @Body final RequestBody query);
-
     @GET("/ping")
     Single<Response<ResponseBody>> ping();
 }

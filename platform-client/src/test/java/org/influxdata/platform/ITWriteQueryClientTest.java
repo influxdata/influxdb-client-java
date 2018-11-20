@@ -53,17 +53,16 @@ import org.junit.runner.RunWith;
 class ITWriteQueryClientTest extends AbstractITClientTest {
 
     private WriteClient writeClient;
-    private PlatformClient platformClient;
     private QueryClient queryClient;
 
     private Bucket bucket;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
 
         super.setUp(false);
 
-        bucket = platformService.createBucketClient()
+        bucket = platformClient.createBucketClient()
                 .createBucket(generateName("h2o"), retentionRule(), "my-org");
 
         //
@@ -79,14 +78,15 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         writeBucket.setResource(bucketResource);
         writeBucket.setAction(Permission.WRITE_ACTION);
 
-        User loggedUser = platformService.createUserClient().me();
+        User loggedUser = platformClient.createUserClient().me();
         Assertions.assertThat(loggedUser).isNotNull();
 
-        Authorization authorization = platformService.createAuthorizationClient()
+        Authorization authorization = platformClient.createAuthorizationClient()
                 .createAuthorization(loggedUser, Arrays.asList(readBucket, writeBucket));
 
         String token = authorization.getToken();
 
+        platformClient.close();
         platformClient = PlatformClientFactory.create(platformURL, token.toCharArray());
         queryClient = platformClient.createQueryClient();
     }
@@ -97,7 +97,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         if (writeClient != null) {
             writeClient.close();
         }
-        platformClient.close();
+//        platformClient.close();
     }
 
     @Test
@@ -275,9 +275,9 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         String orgName = generateName("new-org");
         Organization organization =
-                platformService.createOrganizationClient().createOrganization(orgName);
+                platformClient.createOrganizationClient().createOrganization(orgName);
 
-        Bucket bucket = platformService.createBucketClient()
+        Bucket bucket = platformClient.createBucketClient()
                 .createBucket(generateName("h2o"), retentionRule(), orgName);
 
         String bucketResource = Permission.bucketResource(bucket.getId());
@@ -290,10 +290,10 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         writeBucket.setResource(bucketResource);
         writeBucket.setAction(Permission.WRITE_ACTION);
 
-        User loggedUser = platformService.createUserClient().me();
+        User loggedUser = platformClient.createUserClient().me();
         Assertions.assertThat(loggedUser).isNotNull();
 
-        Authorization authorization = platformService.createAuthorizationClient()
+        Authorization authorization = platformClient.createAuthorizationClient()
                 .createAuthorization(loggedUser, Arrays.asList(readBucket, writeBucket));
 
         String token = authorization.getToken();

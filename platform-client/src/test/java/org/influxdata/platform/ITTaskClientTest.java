@@ -61,14 +61,14 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         super.setUp(true);
 
-        taskClient = platformService.createTaskClient();
-        organization = platformService.createOrganizationClient()
+        taskClient = platformClient.createTaskClient();
+        organization = platformClient.createOrganizationClient()
                 .findOrganizations().stream()
                 .filter(organization -> organization.getName().equals("my-org"))
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
 
-        user = platformService.createUserClient().me();
+        user = platformClient.createUserClient().me();
 
         taskClient.findTasks().forEach(task -> taskClient.deleteTask(task));
     }
@@ -185,7 +185,7 @@ class ITTaskClientTest extends AbstractITClientTest {
     @Test
     void findTasksByUserID() {
 
-        User taskUser = platformService.createUserClient().createUser(generateName("TaskUser"));
+        User taskUser = platformClient.createUserClient().createUser(generateName("TaskUser"));
 
         taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", taskUser, organization);
 
@@ -195,7 +195,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     @Test
     void findTasksByOrganizationID() {
-        Organization taskOrganization = platformService.createOrganizationClient().createOrganization(generateName("TaskOrg"));
+        Organization taskOrganization = platformClient.createOrganizationClient().createOrganization(generateName("TaskOrg"));
         taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", user, taskOrganization);
 
         List<Task> tasks = taskClient.findTasksByOrganization(taskOrganization);
@@ -266,7 +266,7 @@ class ITTaskClientTest extends AbstractITClientTest {
     @Disabled
     void member() {
 
-        UserClient userClient = platformService.createUserClient();
+        UserClient userClient = platformClient.createUserClient();
 
         Task task = taskClient.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", user, organization);
 
@@ -300,7 +300,7 @@ class ITTaskClientTest extends AbstractITClientTest {
     @Disabled
     void owner() {
 
-        UserClient userClient = platformService.createUserClient();
+        UserClient userClient = platformClient.createUserClient();
 
         Task task = taskClient.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", user, organization);
 

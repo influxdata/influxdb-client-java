@@ -57,9 +57,9 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
 
         super.setUp(false);
 
-        authorizationClient = platformService.createAuthorizationClient();
+        authorizationClient = platformClient.createAuthorizationClient();
 
-        user = platformService.createUserClient().createUser(generateName("Auth User"));
+        user = platformClient.createUserClient().createUser(generateName("Auth User"));
     }
 
     @Test
@@ -128,8 +128,8 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
     @Test
     void createAuthorizationBucket() {
 
-        Organization organization = platformService.createOrganizationClient().createOrganization(generateName("Auth Organization"));
-        Bucket bucket = platformService.createBucketClient().createBucket(generateName("Auth Bucket"), retentionRule(), organization);
+        Organization organization = platformClient.createOrganizationClient().createOrganization(generateName("Auth Organization"));
+        Bucket bucket = platformClient.createBucketClient().createBucket(generateName("Auth Bucket"), retentionRule(), organization);
 
         String bucketResource = Permission.bucketResource(bucket.getId());
 

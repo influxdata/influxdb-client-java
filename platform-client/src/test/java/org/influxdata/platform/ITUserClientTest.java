@@ -49,7 +49,7 @@ class ITUserClientTest extends AbstractITClientTest {
 
         super.setUp(false);
 
-        userClient = platformService.createUserClient();
+        userClient = platformClient.createUserClient();
     }
 
     @Test
@@ -144,7 +144,7 @@ class ITUserClientTest extends AbstractITClientTest {
     @Test
     void meNotAuthenticated() throws Exception {
 
-        platformService.close();
+        platformClient.close();
         
         User me = userClient.me();
 
@@ -163,7 +163,7 @@ class ITUserClientTest extends AbstractITClientTest {
     @Test
     void updateMePasswordNotAuthenticate() throws Exception {
 
-        platformService.close();
+        platformClient.close();
 
         User user = userClient.meUpdatePassword("my-password", "my-password");
 

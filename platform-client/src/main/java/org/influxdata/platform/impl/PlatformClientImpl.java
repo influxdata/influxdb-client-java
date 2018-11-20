@@ -21,14 +21,7 @@
  */
 package org.influxdata.platform.impl;
 
-import java.io.IOException;
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.AuthorizationClient;
@@ -40,62 +33,22 @@ import org.influxdata.platform.SourceClient;
 import org.influxdata.platform.TaskClient;
 import org.influxdata.platform.UserClient;
 import org.influxdata.platform.WriteClient;
+import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.error.InfluxException;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.option.WriteOptions;
-import org.influxdata.platform.rest.AbstractRestClient;
 import org.influxdata.platform.rest.LogLevel;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.JsonReader;
-import com.squareup.moshi.JsonWriter;
-import com.squareup.moshi.Moshi;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.moshi.MoshiConverterFactory;
+import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/10/2018 09:36)
  */
-public final class PlatformClientImpl extends AbstractRestClient implements PlatformClient {
-
-    private static final Logger LOG = Logger.getLogger(PlatformClientImpl.class.getName());
-
-    private final Moshi moshi;
-    private final PlatformService platformService;
-
-    private final HttpLoggingInterceptor loggingInterceptor;
-    private final AuthenticateInterceptor authenticateInterceptor;
-    private final GzipInterceptor gzipInterceptor;
+public final class PlatformClientImpl extends AbstractPlatformClient<PlatformService> implements PlatformClient {
 
     public PlatformClientImpl(@Nonnull final PlatformOptions options) {
 
-        Arguments.checkNotNull(options, "PlatformOptions");
-
-        this.loggingInterceptor = new HttpLoggingInterceptor();
-        this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
-        this.authenticateInterceptor = new AuthenticateInterceptor(options);
-        this.gzipInterceptor = new GzipInterceptor();
-
-        OkHttpClient okHttpClient = options.getOkHttpClient()
-                .addInterceptor(this.loggingInterceptor)
-                .addInterceptor(this.authenticateInterceptor)
-                .addInterceptor(this.gzipInterceptor)
-                .build();
-
-        this.authenticateInterceptor.initToken(okHttpClient);
-
-        this.moshi = new Moshi.Builder().add(Instant.class, new InstantAdapter()).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(options.getUrl())
-                .client(okHttpClient)
-                .addConverterFactory(MoshiConverterFactory.create(this.moshi).asLenient())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build();
-
-        this.platformService = retrofit.create(PlatformService.class);
+        super(options, PlatformService.class);
     }
 
     @Nonnull
@@ -157,6 +110,22 @@ public final class PlatformClientImpl extends AbstractRestClient implements Plat
 
     @Nonnull
     @Override
+    public Health health() {
+
+        try {
+            Call<Health> call = platformService.health();
+            return execute(call);
+        } catch (InfluxException e) {
+            Health health = new Health();
+            health.setStatus("error");
+            health.setMessage(e.getMessage());
+
+            return health;
+        }
+    }
+
+    @Nonnull
+    @Override
     public LogLevel getLogLevel() {
         return getLogLevel(this.loggingInterceptor);
     }
@@ -192,44 +161,5 @@ public final class PlatformClientImpl extends AbstractRestClient implements Plat
     public boolean isGzipEnabled() {
 
         return this.gzipInterceptor.isEnabledGzip();
-    }
-
-    @Override
-    public void close() {
-
-        //
-        // signout
-        //
-        try {
-            this.authenticateInterceptor.signout();
-        } catch (IOException e) {
-            LOG.log(Level.FINEST, "The signout exception", e);
-        }
-    }
-
-    private final class InstantAdapter extends JsonAdapter<Instant> {
-
-        @Nullable
-        @Override
-        public Instant fromJson(final JsonReader reader) throws IOException {
-            String value = reader.nextString();
-
-            if (value == null) {
-                return null;
-            }
-
-            try {
-                return Instant.parse(value);
-            } catch (DateTimeParseException e) {
-                return DateTimeFormatter.ISO_DATE_TIME.parse(value, Instant::from);
-            }
-        }
-
-        @Override
-        public void toJson(@Nonnull final JsonWriter writer, @Nullable final Instant value) throws IOException {
-            if (value != null) {
-                writer.value(value.toString());
-            }
-        }
     }
 }

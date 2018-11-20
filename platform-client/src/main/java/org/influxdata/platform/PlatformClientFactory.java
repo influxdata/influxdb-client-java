@@ -84,8 +84,7 @@ public final class PlatformClientFactory {
      * @see PlatformOptions.Builder#url(String)
      */
     @Nonnull
-    public static PlatformClient create(@Nonnull final String url,
-                                        @Nonnull final char[] token) {
+    public static PlatformClient create(@Nonnull final String url, @Nonnull final char[] token) {
 
         PlatformOptions options = PlatformOptions.builder()
                 .url(url)

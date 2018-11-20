@@ -23,6 +23,7 @@ package org.influxdata.platform;
 
 import javax.annotation.Nonnull;
 
+import org.influxdata.platform.domain.Health;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.LogLevel;
 
@@ -106,6 +107,14 @@ public interface PlatformClient extends AutoCloseable {
      */
     @Nonnull
     UserClient createUserClient();
+
+    /**
+     * Get the health of an instance.
+     *
+     * @return health of an instance
+     */
+    @Nonnull
+    Health health();
 
     /**
      * @return the {@link LogLevel} that is used for logging requests and responses

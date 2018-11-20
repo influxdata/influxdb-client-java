@@ -52,7 +52,7 @@ class ITSourceClient extends AbstractITClientTest {
 
         super.setUp(false);
 
-        sourceClient = platformService.createSourceClient();
+        sourceClient = platformClient.createSourceClient();
     }
 
     @Test

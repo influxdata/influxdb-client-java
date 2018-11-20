@@ -53,8 +53,8 @@ class ITOrganizationClientTest extends AbstractITClientTest {
 
         super.setUp(false);
 
-        organizationClient = platformService.createOrganizationClient();
-        userClient = platformService.createUserClient();
+        organizationClient = platformClient.createOrganizationClient();
+        userClient = platformClient.createUserClient();
     }
 
     @Test

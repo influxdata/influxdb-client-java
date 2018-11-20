@@ -30,6 +30,7 @@ import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Authorizations;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Buckets;
+import org.influxdata.platform.domain.Health;
 import org.influxdata.platform.domain.OperationLogResponse;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
@@ -64,6 +65,14 @@ import retrofit2.http.Streaming;
  * @author Jakub Bednar (bednar@github) (05/09/2018 13:30)
  */
 interface PlatformService {
+
+    //
+    // Health
+    //
+    @GET("/health")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Health> health();
 
     //
     // User
