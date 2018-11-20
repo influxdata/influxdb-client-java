@@ -53,4 +53,19 @@
         </plugins>
     </build>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>org.influxdata</groupId>
+            <artifactId>platform-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.influxdata</groupId>
+            <artifactId>platform-common-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
 </project>

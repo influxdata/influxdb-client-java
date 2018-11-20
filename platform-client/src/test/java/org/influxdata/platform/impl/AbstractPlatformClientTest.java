@@ -55,8 +55,8 @@ public class AbstractPlatformClientTest extends AbstractMockServerTest {
                                             @Nonnull final Scheduler jitterScheduler,
                                             @Nonnull final Scheduler retryScheduler) {
 
-        Optional<Object> platformService = ReflectionUtils.readFieldValue(PlatformClientImpl.class, "platformService",
-                (PlatformClientImpl) platformClient);
+        Optional<Object> platformService = ReflectionUtils.readFieldValue(AbstractPlatformClient.class, "platformService",
+                (AbstractPlatformClient) platformClient);
 
         if (!platformService.isPresent()) {
             Assertions.fail();
