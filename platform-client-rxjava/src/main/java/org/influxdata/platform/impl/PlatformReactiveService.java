@@ -26,8 +26,15 @@ import javax.annotation.Nonnull;
 import org.influxdata.platform.domain.Health;
 
 import io.reactivex.Single;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
+import retrofit2.http.Streaming;
 
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 07:19)
@@ -41,5 +48,14 @@ interface PlatformReactiveService {
     @Nonnull
     @Headers("Content-Type: application/json")
     Single<Health> health();
+
+    //
+    // Query
+    //
+    @Streaming
+    @POST("/api/v2/query")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<ResponseBody> query(@Query("organization") final String org, @Nonnull @Body final RequestBody query);
 
 }

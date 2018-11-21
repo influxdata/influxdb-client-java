@@ -21,10 +21,118 @@
  */
 package org.influxdata.platform;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.flux.domain.FluxRecord;
+
+import io.reactivex.Flowable;
+import org.reactivestreams.Publisher;
+
 /**
- * The client that allow perform Flux query against the Platform by a reactive way.
+ * The client that allow perform Flux query against the InfluxData Platform by a reactive way.
  *
  * @author Jakub Bednar (bednar@github) (21/11/2018 07:19)
  */
 public interface QueryClientReactive {
+
+    /**
+     * Returns {@link Flowable} emitting {@link FluxRecord}s which are matched the query.
+     * If none found than return {@link Flowable#empty()}.
+     *
+     * @param query        the Flux query to execute
+     * @param organization specifies the source organization
+     * @return {@link Flowable} of {@link FluxRecord}s
+     */
+    @Nonnull
+    Flowable<FluxRecord> query(@Nonnull final String query, @Nonnull final String organization);
+
+    /**
+     * Execute a Flux against the Flux service.
+     *
+     * @param query           the flux query to execute
+     * @param organization    specifies the source organization
+     * @param measurementType the class type used to which will be result mapped
+     * @param <M>             the type of the measurement (POJO)
+     * @return {@link Flowable} emitting a POJO mapped to {@code measurementType} which are matched
+     * the query or {@link Flowable#empty()} if none found.
+     */
+    <M> Flowable<M> query(@Nonnull final String query,
+                          @Nonnull final String organization,
+                          @Nonnull final Class<M> measurementType);
+
+    /**
+     * Returns {@link Flowable} emitting {@link FluxRecord}s which are matched the query.
+     * If none found than return {@link Flowable#empty()}.
+     *
+     * @param queryStream  the Flux query publisher
+     * @param organization specifies the source organization
+     * @return {@link Flowable} of {@link FluxRecord}s
+     */
+    @Nonnull
+    Flowable<FluxRecord> query(@Nonnull final Publisher<String> queryStream, @Nonnull final String organization);
+
+    /**
+     * Returns the {@link Flowable} emitting POJO stream.
+     * <p>
+     * If none found than return {@link Flowable#empty()}.
+     *
+     * @param measurementType the measurement class (POJO)
+     * @param organization    specifies the source organization
+     * @param <M>             the type of the measurement (POJO)
+     * @param queryStream     the Flux query publisher
+     * @return {@link Flowable} of {@link FluxRecord}s
+     */
+    @Nonnull
+    <M> Flowable<M> query(@Nonnull final Publisher<String> queryStream,
+                          @Nonnull final String organization,
+                          @Nonnull final Class<M> measurementType);
+
+    /**
+     * Returns {@link Flowable} emitting raw response from InfluxData Platform server line by line.
+     *
+     * @param query        the Flux query to execute
+     * @param organization specifies the source organization
+     * @return {@link Flowable} of response lines
+     */
+    @Nonnull
+    Flowable<String> queryRaw(@Nonnull final String query, @Nonnull final String organization);
+
+    /**
+     * Returns {@link Flowable} emitting queryRaw response from InfluxDB server line by line.
+     *
+     * @param queryStream  the Flux query publisher
+     * @param organization specifies the source organization
+     * @return {@link Flowable} of response lines
+     */
+    @Nonnull
+    Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream, @Nonnull final String organization);
+
+    /**
+     * Returns {@link Flowable} emitting queryRaw response from InfluxData Platform server line by line.
+     *
+     * @param dialect      Dialect is an object defining the options to use when encoding the response.
+     *                     <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
+     * @param query        the Flux query to execute
+     * @param organization specifies the source organization
+     * @return {@link Flowable} of response lines
+     */
+    @Nonnull
+    Flowable<String> queryRaw(@Nonnull final String query,
+                              @Nullable final String dialect,
+                              @Nonnull final String organization);
+
+    /**
+     * Returns {@link Flowable} emitting queryRaw response from InfluxData Platform server line by line.
+     *
+     * @param dialect      Dialect is an object defining the options to use when encoding the response.
+     *                     <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
+     * @param queryStream  the Flux query publisher
+     * @param organization specifies the source organization
+     * @return {@link Flowable} of response lines
+     */
+    @Nonnull
+    Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream,
+                              @Nullable final String dialect,
+                              @Nonnull final String organization);
 }
