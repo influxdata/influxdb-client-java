@@ -97,7 +97,8 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         if (writeClient != null) {
             writeClient.close();
         }
-//        platformClient.close();
+        
+        platformClient.close();
     }
 
     @Test

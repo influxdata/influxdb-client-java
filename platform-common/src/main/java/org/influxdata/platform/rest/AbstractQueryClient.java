@@ -82,18 +82,6 @@ public abstract class AbstractQueryClient extends AbstractRestClient {
         return createBody(json.toString());
     }
 
-    protected void parseFluxResponseToLines(@Nonnull final Consumer<String> onResponse,
-                                            @Nonnull final Cancellable cancellable,
-                                            @Nonnull final BufferedSource bufferedSource) throws IOException {
-
-        String line = bufferedSource.readUtf8Line();
-
-        while (line != null && !cancellable.isCancelled()) {
-            onResponse.accept(line);
-            line = bufferedSource.readUtf8Line();
-        }
-    }
-
     protected void query(@Nonnull final Call<ResponseBody> queryCall,
                          @Nonnull final FluxCsvParser.FluxResponseConsumer responseConsumer,
                          @Nonnull final Consumer<? super Throwable> onError,
@@ -199,6 +187,18 @@ public abstract class AbstractQueryClient extends AbstractRestClient {
             } catch (IOException e) {
                 catchOrPropagateException(e, onError);
             }
+        }
+    }
+
+    private void parseFluxResponseToLines(@Nonnull final Consumer<String> onResponse,
+                                          @Nonnull final Cancellable cancellable,
+                                          @Nonnull final BufferedSource bufferedSource) throws IOException {
+
+        String line = bufferedSource.readUtf8Line();
+
+        while (line != null && !cancellable.isCancelled()) {
+            onResponse.accept(line);
+            line = bufferedSource.readUtf8Line();
         }
     }
 
