@@ -256,67 +256,67 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
     @Override
     public List&lt;UserResourceMapping&gt; getOwners(@Nonnull final Bucket bucket) {
 
-<span class="nc" id="L259">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L259">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
 
-<span class="nc" id="L261">        return getOwners(bucket.getId());</span>
+<span class="fc" id="L261">        return getOwners(bucket.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;UserResourceMapping&gt; getOwners(@Nonnull final String bucketID) {
 
-<span class="nc" id="L268">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
+<span class="fc" id="L268">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
 
-<span class="nc" id="L270">        Call&lt;UserResourcesResponse&gt; call = platformService.findBucketOwners(bucketID);</span>
-<span class="nc" id="L271">        UserResourcesResponse userResourcesResponse = execute(call);</span>
-<span class="nc" id="L272">        LOG.log(Level.FINEST, &quot;findBucketOwners found: {0}&quot;, userResourcesResponse);</span>
+<span class="fc" id="L270">        Call&lt;UserResourcesResponse&gt; call = platformService.findBucketOwners(bucketID);</span>
+<span class="fc" id="L271">        UserResourcesResponse userResourcesResponse = execute(call);</span>
+<span class="fc" id="L272">        LOG.log(Level.FINEST, &quot;findBucketOwners found: {0}&quot;, userResourcesResponse);</span>
 
-<span class="nc" id="L274">        return userResourcesResponse.getUserResourceMappings();</span>
+<span class="fc" id="L274">        return userResourcesResponse.getUserResourceMappings();</span>
     }
 
     @Nonnull
     @Override
     public UserResourceMapping addOwner(@Nonnull final User owner, @Nonnull final Bucket bucket) {
 
-<span class="nc" id="L281">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
-<span class="nc" id="L282">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="fc" id="L281">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L282">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
 
-<span class="nc" id="L284">        return addOwner(owner.getId(), bucket.getId());</span>
+<span class="fc" id="L284">        return addOwner(owner.getId(), bucket.getId());</span>
     }
 
     @Nonnull
     @Override
     public UserResourceMapping addOwner(@Nonnull final String ownerID, @Nonnull final String bucketID) {
 
-<span class="nc" id="L291">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="nc" id="L292">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
+<span class="fc" id="L291">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="fc" id="L292">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
 
-<span class="nc" id="L294">        User user = new User();</span>
-<span class="nc" id="L295">        user.setId(ownerID);</span>
+<span class="fc" id="L294">        User user = new User();</span>
+<span class="fc" id="L295">        user.setId(ownerID);</span>
 
-<span class="nc" id="L297">        String json = userAdapter.toJson(user);</span>
-<span class="nc" id="L298">        Call&lt;UserResourceMapping&gt; call = platformService.addBucketOwner(bucketID, createBody(json));</span>
+<span class="fc" id="L297">        String json = userAdapter.toJson(user);</span>
+<span class="fc" id="L298">        Call&lt;UserResourceMapping&gt; call = platformService.addBucketOwner(bucketID, createBody(json));</span>
 
-<span class="nc" id="L300">        return execute(call);</span>
+<span class="fc" id="L300">        return execute(call);</span>
     }
 
     @Override
     public void deleteOwner(@Nonnull final User owner, @Nonnull final Bucket bucket) {
 
-<span class="nc" id="L306">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
-<span class="nc" id="L307">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="fc" id="L306">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L307">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
 
-<span class="nc" id="L309">        deleteOwner(owner.getId(), bucket.getId());</span>
-<span class="nc" id="L310">    }</span>
+<span class="fc" id="L309">        deleteOwner(owner.getId(), bucket.getId());</span>
+<span class="fc" id="L310">    }</span>
 
     @Override
     public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String bucketID) {
 
-<span class="nc" id="L315">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="nc" id="L316">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
+<span class="fc" id="L315">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="fc" id="L316">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
 
-<span class="nc" id="L318">        Call&lt;Void&gt; call = platformService.deleteBucketOwner(bucketID, ownerID);</span>
-<span class="nc" id="L319">        execute(call);</span>
-<span class="nc" id="L320">    }</span>
+<span class="fc" id="L318">        Call&lt;Void&gt; call = platformService.deleteBucketOwner(bucketID, ownerID);</span>
+<span class="fc" id="L319">        execute(call);</span>
+<span class="fc" id="L320">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
