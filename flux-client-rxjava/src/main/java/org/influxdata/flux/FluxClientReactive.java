@@ -52,12 +52,12 @@ public interface FluxClientReactive {
      * Execute a Flux against the Flux service.
      *
      * @param query           the flux query to execute
-     * @param recordType  the class type used to which will be result mapped
+     * @param measurementType  the class type used to which will be result mapped
      * @param <M>             the type of the measurement (POJO)
      * @return {@link Flowable} emitting a POJO mapped to {@code measurementType} which are matched
      * the query or {@link Flowable#empty()} if none found.
      */
-    <M> Flowable<M> query(@Nonnull final String query, @Nonnull final Class<M> recordType);
+    <M> Flowable<M> query(@Nonnull final String query, @Nonnull final Class<M> measurementType);
 
     /**
      * Returns {@link Flowable} emitting {@link FluxRecord}s which are matched the query.

@@ -23,10 +23,10 @@ package org.influxdata.flux.impl;
 
 import javax.annotation.Nonnull;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -43,7 +43,7 @@ interface FluxServiceReactive {
     @Streaming
     @POST("/api/v2/query")
     @Headers("Content-Type: application/json")
-    Observable<ResponseBody> query(@Nonnull @Body final RequestBody query);
+    Call<ResponseBody> query(@Nonnull @Body final RequestBody query);
 
     @GET("/ping")
     Single<Response<ResponseBody>> ping();

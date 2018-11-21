@@ -24,6 +24,7 @@ package org.influxdata.flux;
 import java.time.Instant;
 
 import org.influxdata.flux.domain.FluxRecord;
+import org.influxdata.platform.annotations.Column;
 
 import io.reactivex.Flowable;
 import org.assertj.core.api.Assertions;
@@ -242,6 +243,50 @@ class ITFluxClientReactive extends AbstractITFluxClientReactive {
     }
 
     @Test
+    void toMeasurement() {
+
+        String flux = FROM_FLUX_DATABASE + "\n"
+                + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
+                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"user_usage\"))\n";
+
+        Flowable<Free> frees = fluxClient.query(Flowable.just(flux), Free.class);
+
+        frees.test().assertValueCount(2)
+                .assertValueAt(0, free -> {
+
+                    Assertions.assertThat(free.host).isEqualTo("A");
+                    Assertions.assertThat(free.region).isEqualTo("west");
+                    Assertions.assertThat(free.user_usage).isEqualTo(45);
+
+                    return true;
+                })
+                .assertValueAt(1, free -> {
+
+                    Assertions.assertThat(free.host).isEqualTo("A");
+                    Assertions.assertThat(free.region).isEqualTo("west");
+                    Assertions.assertThat(free.user_usage).isEqualTo(49);
+
+                    return true;
+                });
+
+    }
+
+    @Test
+    void chunked() {
+
+        prepareChunkRecords(DATABASE_NAME);
+
+        String flux = FROM_FLUX_DATABASE + "\n"
+                + "\t|> filter(fn: (r) => r[\"_measurement\"] == \"chunked\")\n"
+                + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)";
+
+        fluxClient.query(flux)
+                .take(10)
+                .test()
+                .assertValueCount(10);
+    }
+
+    @Test
     void ping() {
 
         fluxClient
@@ -253,5 +298,17 @@ class ITFluxClientReactive extends AbstractITFluxClientReactive {
     @Test
     void version() {
         fluxClient.version().test().assertValue(version -> !version.isEmpty());
+    }
+
+    public static class Free {
+
+        @Column(name = "host")
+        private String host;
+
+        @Column(name = "region")
+        private String region;
+
+        @Column(name = "_value")
+        private Long user_usage;
     }
 }
