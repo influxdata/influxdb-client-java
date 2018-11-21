@@ -32,7 +32,6 @@ import org.influxdata.platform.domain.UserResourceMapping;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -147,9 +146,7 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("log", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId() + "/log"));
     }
 
-    //TODO wait to fix a  "/api/v2/orgs/:id/members/:organizationID"
     @Test
-    @Disabled
     void member() {
 
         Organization organization = organizationClient.createOrganization(generateName("Constant Pro"));
@@ -179,9 +176,7 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         Assertions.assertThat(members).hasSize(0);
     }
 
-    //TODO userType will be used
     @Test
-    @Disabled
     void owner() {
 
         Organization organization = organizationClient.createOrganization(generateName("Constant Pro"));

@@ -31,7 +31,6 @@ import org.influxdata.platform.domain.UserResourceMapping;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -198,9 +197,7 @@ class ITBucketClientTest extends AbstractITClientTest {
         Assertions.assertThat(members).hasSize(0);
     }
 
-    //TODO userType will be used
     @Test
-    @Disabled
     void owner() {
 
         Organization organization = organizationClient.createOrganization(generateName("Constant Pro"));
