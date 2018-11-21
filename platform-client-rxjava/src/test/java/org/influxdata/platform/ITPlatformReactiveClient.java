@@ -22,6 +22,7 @@
 package org.influxdata.platform;
 
 import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.rest.LogLevel;
 
 import io.reactivex.Single;
 import org.assertj.core.api.Assertions;
@@ -34,6 +35,12 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnitPlatform.class)
 class ITPlatformReactiveClient extends AbstractITPlatformClientTest {
+
+    @Test
+    void queryClient() {
+
+        Assertions.assertThat(platformClient.createQueryClient()).isNotNull();
+    }
 
     @Test
     void health() {
@@ -54,7 +61,7 @@ class ITPlatformReactiveClient extends AbstractITPlatformClientTest {
     }
 
     @Test
-    void notRunningInstance() throws Exception {
+    void healthNotRunningInstance() throws Exception {
 
         PlatformClientReactive clientNotRunning = PlatformClientReactiveFactory.create("http://localhost:8099");
         Single<Health> health = clientNotRunning.health();
@@ -69,4 +76,32 @@ class ITPlatformReactiveClient extends AbstractITPlatformClientTest {
         clientNotRunning.close();
     }
 
+    @Test
+    void logLevel() {
+
+        // default NONE
+        Assertions.assertThat(this.platformClient.getLogLevel()).isEqualTo(LogLevel.NONE);
+
+        // set HEADERS
+        PlatformClientReactive platformClient = this.platformClient.setLogLevel(LogLevel.HEADERS);
+        Assertions.assertThat(platformClient).isEqualTo(this.platformClient);
+
+        Assertions.assertThat(this.platformClient.getLogLevel()).isEqualTo(LogLevel.HEADERS);
+    }
+
+    @Test
+    void gzip() {
+
+        Assertions.assertThat(platformClient.isGzipEnabled()).isFalse();
+
+        // Enable GZIP
+        PlatformClientReactive platformClient = this.platformClient.enableGzip();
+        Assertions.assertThat(platformClient).isEqualTo(this.platformClient);
+        Assertions.assertThat(this.platformClient.isGzipEnabled()).isTrue();
+
+        // Disable GZIP
+        platformClient = this.platformClient.disableGzip();
+        Assertions.assertThat(platformClient).isEqualTo(this.platformClient);
+        Assertions.assertThat(this.platformClient.isGzipEnabled()).isFalse();
+    }
 }

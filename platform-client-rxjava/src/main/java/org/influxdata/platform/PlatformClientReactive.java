@@ -24,6 +24,7 @@ package org.influxdata.platform;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.rest.LogLevel;
 
 import io.reactivex.Single;
 
@@ -36,10 +37,58 @@ import io.reactivex.Single;
 public interface PlatformClientReactive extends AutoCloseable {
 
     /**
+     * Get the Query client.
+     *
+     * @return the new client instance for the Query API
+     */
+    @Nonnull
+    QueryClientReactive createQueryClient();
+
+    /**
      * Get the health of an instance.
      *
      * @return health of an instance
      */
     @Nonnull
     Single<Health> health();
+
+    /**
+     * @return the {@link LogLevel} that is used for logging requests and responses
+     */
+    @Nonnull
+    LogLevel getLogLevel();
+
+    /**
+     * Set the log level for the request and response information.
+     *
+     * @param logLevel the log level to set.
+     * @return the PlatformClient instance to be able to use it in a fluent manner.
+     */
+    @Nonnull
+    PlatformClientReactive setLogLevel(@Nonnull final LogLevel logLevel);
+
+    /**
+     * Enable Gzip compress for http request body.
+     *
+     * Currently only the "Write" endpoint supports the Gzip compression.
+     *
+     * @return the {@link PlatformClient} instance to be able to use it in a fluent manner.
+     */
+    @Nonnull
+    PlatformClientReactive enableGzip();
+
+    /**
+     * Disable Gzip compress for http request body.
+     *
+     * @return the {@link PlatformClient} instance to be able to use it in a fluent manner.
+     */
+    @Nonnull
+    PlatformClientReactive disableGzip();
+
+    /**
+     * Returns whether Gzip compress for http request body is enabled.
+     *
+     * @return true if gzip is enabled.
+     */
+    boolean isGzipEnabled();
 }

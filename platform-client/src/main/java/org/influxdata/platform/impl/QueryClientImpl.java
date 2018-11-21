@@ -44,7 +44,6 @@ import retrofit2.Call;
  */
 final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
 
-    private final FluxCsvParser fluxCsvParser;
     private final PlatformService platformService;
 
     QueryClientImpl(@Nonnull final PlatformService platformService) {
@@ -52,7 +51,6 @@ final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
         Arguments.checkNotNull(platformService, "PlatformService");
 
         this.platformService = platformService;
-        this.fluxCsvParser = new FluxCsvParser();
     }
 
     @Nonnull

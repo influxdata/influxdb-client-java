@@ -24,8 +24,10 @@ package org.influxdata.platform.impl;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.PlatformClientReactive;
+import org.influxdata.platform.QueryClientReactive;
 import org.influxdata.platform.domain.Health;
 import org.influxdata.platform.option.PlatformOptions;
+import org.influxdata.platform.rest.LogLevel;
 
 import io.reactivex.Single;
 
@@ -41,8 +43,53 @@ public class PlatformClientReactiveImpl extends AbstractPlatformClient<PlatformR
 
     @Nonnull
     @Override
+    public QueryClientReactive createQueryClient() {
+        return new QueryClientReactiveImpl(platformService);
+    }
+
+    @Nonnull
+    @Override
     public Single<Health> health() {
 
         return platformService.health();
+    }
+
+    @Nonnull
+    @Override
+    public LogLevel getLogLevel() {
+        return getLogLevel(this.loggingInterceptor);
+    }
+
+    @Nonnull
+    @Override
+    public PlatformClientReactive setLogLevel(@Nonnull final LogLevel logLevel) {
+
+        setLogLevel(this.loggingInterceptor, logLevel);
+
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public PlatformClientReactive enableGzip() {
+
+        this.gzipInterceptor.enableGzip();
+
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public PlatformClientReactive disableGzip() {
+
+        this.gzipInterceptor.disableGzip();
+
+        return this;
+    }
+
+    @Override
+    public boolean isGzipEnabled() {
+
+        return this.gzipInterceptor.isEnabledGzip();
     }
 }
