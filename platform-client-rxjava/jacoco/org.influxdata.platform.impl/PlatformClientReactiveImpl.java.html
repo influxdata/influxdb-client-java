@@ -24,8 +24,10 @@ package org.influxdata.platform.impl;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.PlatformClientReactive;
+import org.influxdata.platform.QueryClientReactive;
 import org.influxdata.platform.domain.Health;
 import org.influxdata.platform.option.PlatformOptions;
+import org.influxdata.platform.rest.LogLevel;
 
 import io.reactivex.Single;
 
@@ -36,14 +38,59 @@ public class PlatformClientReactiveImpl extends AbstractPlatformClient&lt;Platfo
         implements PlatformClientReactive {
 
     public PlatformClientReactiveImpl(@Nonnull final PlatformOptions options) {
-<span class="fc" id="L39">        super(options, PlatformReactiveService.class);</span>
-<span class="fc" id="L40">    }</span>
+<span class="fc" id="L41">        super(options, PlatformReactiveService.class);</span>
+<span class="fc" id="L42">    }</span>
+
+    @Nonnull
+    @Override
+    public QueryClientReactive createQueryClient() {
+<span class="nc" id="L47">        return new QueryClientReactiveImpl(platformService);</span>
+    }
 
     @Nonnull
     @Override
     public Single&lt;Health&gt; health() {
 
-<span class="nc" id="L46">        return platformService.health();</span>
+<span class="nc" id="L54">        return platformService.health();</span>
+    }
+
+    @Nonnull
+    @Override
+    public LogLevel getLogLevel() {
+<span class="nc" id="L60">        return getLogLevel(this.loggingInterceptor);</span>
+    }
+
+    @Nonnull
+    @Override
+    public PlatformClientReactive setLogLevel(@Nonnull final LogLevel logLevel) {
+
+<span class="nc" id="L67">        setLogLevel(this.loggingInterceptor, logLevel);</span>
+
+<span class="nc" id="L69">        return this;</span>
+    }
+
+    @Nonnull
+    @Override
+    public PlatformClientReactive enableGzip() {
+
+<span class="nc" id="L76">        this.gzipInterceptor.enableGzip();</span>
+
+<span class="nc" id="L78">        return this;</span>
+    }
+
+    @Nonnull
+    @Override
+    public PlatformClientReactive disableGzip() {
+
+<span class="nc" id="L85">        this.gzipInterceptor.disableGzip();</span>
+
+<span class="nc" id="L87">        return this;</span>
+    }
+
+    @Override
+    public boolean isGzipEnabled() {
+
+<span class="nc" id="L93">        return this.gzipInterceptor.isEnabledGzip();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

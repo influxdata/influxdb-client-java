@@ -50,7 +50,7 @@ The Platform Client,org.influxdata.platform.impl,MeasurementMapper,14,275,6,30,3
 The Platform Client,org.influxdata.platform.impl,WriteClientImpl.BatchWriteItem,0,18,0,0,0,6,0,1,0,1
 The Platform Client,org.influxdata.platform.impl,BucketClientImpl,108,303,0,2,26,72,6,21,6,20
 The Platform Client,org.influxdata.platform.impl,WriteClientImpl.BatchWriteDataMeasurement,2,25,1,1,1,6,1,2,0,2
-The Platform Client,org.influxdata.platform.impl,QueryClientImpl,219,226,0,0,57,48,9,11,9,11
+The Platform Client,org.influxdata.platform.impl,QueryClientImpl,219,221,0,0,57,47,9,11,9,11
 The Platform Client,org.influxdata.platform.impl,AuthorizationClientImpl,22,154,0,0,5,39,1,13,1,13
 The Platform Client,org.influxdata.platform.impl,SourceClientImpl,158,22,0,0,39,7,10,2,10,2
 The Platform Client,org.influxdata.platform.impl,WriteClientImpl,12,452,1,18,1,112,1,40,0,30
