@@ -82,34 +82,22 @@ import retrofit2.Response;
 <span class="fc" id="L82">        return createBody(json.toString());</span>
     }
 
-    protected void parseFluxResponseToLines(@Nonnull final Consumer&lt;String&gt; onResponse,
-                                            @Nonnull final Cancellable cancellable,
-                                            @Nonnull final BufferedSource bufferedSource) throws IOException {
-
-<span class="fc" id="L89">        String line = bufferedSource.readUtf8Line();</span>
-
-<span class="fc bfc" id="L91" title="All 4 branches covered.">        while (line != null &amp;&amp; !cancellable.isCancelled()) {</span>
-<span class="fc" id="L92">            onResponse.accept(line);</span>
-<span class="fc" id="L93">            line = bufferedSource.readUtf8Line();</span>
-        }
-<span class="fc" id="L95">    }</span>
-
     protected void query(@Nonnull final Call&lt;ResponseBody&gt; queryCall,
                          @Nonnull final FluxCsvParser.FluxResponseConsumer responseConsumer,
                          @Nonnull final Consumer&lt;? super Throwable&gt; onError,
                          @Nonnull final Runnable onComplete,
                          @Nonnull final Boolean asynchronously) {
 
-<span class="fc" id="L103">        BiConsumer&lt;Cancellable, BufferedSource&gt; consumer = (cancellable, bufferedSource) -&gt; {</span>
+<span class="fc" id="L91">        BiConsumer&lt;Cancellable, BufferedSource&gt; consumer = (cancellable, bufferedSource) -&gt; {</span>
             try {
-<span class="fc" id="L105">                fluxCsvParser.parseFluxResponse(bufferedSource, cancellable, responseConsumer);</span>
-<span class="nc" id="L106">            } catch (IOException e) {</span>
-<span class="nc" id="L107">                onError.accept(e);</span>
-<span class="fc" id="L108">            }</span>
-<span class="fc" id="L109">        };</span>
+<span class="fc" id="L93">                fluxCsvParser.parseFluxResponse(bufferedSource, cancellable, responseConsumer);</span>
+<span class="nc" id="L94">            } catch (IOException e) {</span>
+<span class="nc" id="L95">                onError.accept(e);</span>
+<span class="fc" id="L96">            }</span>
+<span class="fc" id="L97">        };</span>
 
-<span class="fc" id="L111">        query(queryCall, consumer, onError, onComplete, asynchronously);</span>
-<span class="fc" id="L112">    }</span>
+<span class="fc" id="L99">        query(queryCall, consumer, onError, onComplete, asynchronously);</span>
+<span class="fc" id="L100">    }</span>
 
     protected void queryRaw(@Nonnull final Call&lt;ResponseBody&gt; queryCall,
                             @Nonnull final BiConsumer&lt;Cancellable, String&gt; onResponse,
@@ -117,17 +105,17 @@ import retrofit2.Response;
                             @Nonnull final Runnable onComplete,
                             @Nonnull final Boolean asynchronously) {
 
-<span class="fc" id="L120">        BiConsumer&lt;Cancellable, BufferedSource&gt; consumer = (cancellable, bufferedSource) -&gt; {</span>
+<span class="fc" id="L108">        BiConsumer&lt;Cancellable, BufferedSource&gt; consumer = (cancellable, bufferedSource) -&gt; {</span>
 
             try {
-<span class="fc" id="L123">                parseFluxResponseToLines(line -&gt; onResponse.accept(cancellable, line), cancellable, bufferedSource);</span>
-<span class="nc" id="L124">            } catch (IOException e) {</span>
-<span class="nc" id="L125">                catchOrPropagateException(e, onError);</span>
-<span class="fc" id="L126">            }</span>
-<span class="fc" id="L127">        };</span>
+<span class="fc" id="L111">                parseFluxResponseToLines(line -&gt; onResponse.accept(cancellable, line), cancellable, bufferedSource);</span>
+<span class="nc" id="L112">            } catch (IOException e) {</span>
+<span class="nc" id="L113">                catchOrPropagateException(e, onError);</span>
+<span class="fc" id="L114">            }</span>
+<span class="fc" id="L115">        };</span>
 
-<span class="fc" id="L129">        query(queryCall, consumer, onError, onComplete, asynchronously);</span>
-<span class="fc" id="L130">    }</span>
+<span class="fc" id="L117">        query(queryCall, consumer, onError, onComplete, asynchronously);</span>
+<span class="fc" id="L118">    }</span>
 
     protected void query(@Nonnull final Call&lt;ResponseBody&gt; query,
                          @Nonnull final BiConsumer&lt;Cancellable, BufferedSource&gt; consumer,
@@ -135,70 +123,82 @@ import retrofit2.Response;
                          @Nonnull final Runnable onComplete,
                          @Nonnull final Boolean asynchronously) {
 
-<span class="fc" id="L138">        Arguments.checkNotNull(query, &quot;query&quot;);</span>
-<span class="fc" id="L139">        Arguments.checkNotNull(consumer, &quot;consumer&quot;);</span>
-<span class="fc" id="L140">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
-<span class="fc" id="L141">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
-<span class="fc" id="L142">        Arguments.checkNotNull(asynchronously, &quot;asynchronously&quot;);</span>
+<span class="fc" id="L126">        Arguments.checkNotNull(query, &quot;query&quot;);</span>
+<span class="fc" id="L127">        Arguments.checkNotNull(consumer, &quot;consumer&quot;);</span>
+<span class="fc" id="L128">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="fc" id="L129">        Arguments.checkNotNull(onComplete, &quot;onComplete&quot;);</span>
+<span class="fc" id="L130">        Arguments.checkNotNull(asynchronously, &quot;asynchronously&quot;);</span>
 
-<span class="fc" id="L144">        DefaultCancellable cancellable = new DefaultCancellable();</span>
+<span class="fc" id="L132">        DefaultCancellable cancellable = new DefaultCancellable();</span>
 
-<span class="fc" id="L146">        Callback&lt;ResponseBody&gt; callback = new Callback&lt;ResponseBody&gt;() {</span>
+<span class="fc" id="L134">        Callback&lt;ResponseBody&gt; callback = new Callback&lt;ResponseBody&gt;() {</span>
             @Override
             public void onResponse(@Nonnull final Call&lt;ResponseBody&gt; call,
                                    @Nonnull final Response&lt;ResponseBody&gt; response) {
 
-<span class="fc bfc" id="L151" title="All 2 branches covered.">                if (!response.isSuccessful()) {</span>
-<span class="fc" id="L152">                    onError.accept(responseToError(response));</span>
-<span class="fc" id="L153">                    return;</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">                if (!response.isSuccessful()) {</span>
+<span class="fc" id="L140">                    onError.accept(responseToError(response));</span>
+<span class="fc" id="L141">                    return;</span>
                 }
 
-<span class="fc" id="L156">                ResponseBody body = response.body();</span>
-<span class="pc bpc" id="L157" title="1 of 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L158">                    return;</span>
+<span class="fc" id="L144">                ResponseBody body = response.body();</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L146">                    return;</span>
                 }
 
                 try {
-<span class="fc" id="L162">                    BufferedSource source = body.source();</span>
+<span class="fc" id="L150">                    BufferedSource source = body.source();</span>
 
                     //
                     // Source has data =&gt; parse
                     //
-<span class="fc bfc" id="L167" title="All 4 branches covered.">                    while (!source.exhausted() &amp;&amp; !cancellable.wasCancelled) {</span>
+<span class="fc bfc" id="L155" title="All 4 branches covered.">                    while (!source.exhausted() &amp;&amp; !cancellable.wasCancelled) {</span>
 
-<span class="fc" id="L169">                        consumer.accept(cancellable, source);</span>
+<span class="fc" id="L157">                        consumer.accept(cancellable, source);</span>
                     }
 
-<span class="fc bfc" id="L172" title="All 2 branches covered.">                    if (!cancellable.wasCancelled) {</span>
-<span class="fc" id="L173">                        onComplete.run();</span>
+<span class="fc bfc" id="L160" title="All 2 branches covered.">                    if (!cancellable.wasCancelled) {</span>
+<span class="fc" id="L161">                        onComplete.run();</span>
                     }
 
-<span class="nc" id="L176">                } catch (Exception e) {</span>
-<span class="nc" id="L177">                    catchOrPropagateException(e, onError);</span>
+<span class="nc" id="L164">                } catch (Exception e) {</span>
+<span class="nc" id="L165">                    catchOrPropagateException(e, onError);</span>
 
                 } finally {
 
-<span class="fc" id="L181">                    body.close();</span>
+<span class="fc" id="L169">                    body.close();</span>
                 }
-<span class="fc" id="L183">            }</span>
+<span class="fc" id="L171">            }</span>
 
             @Override
             public void onFailure(@Nonnull final Call&lt;ResponseBody&gt; call, @Nonnull final Throwable throwable) {
-<span class="nc" id="L187">                onError.accept(throwable);</span>
-<span class="nc" id="L188">            }</span>
+<span class="nc" id="L175">                onError.accept(throwable);</span>
+<span class="nc" id="L176">            }</span>
         };
 
-<span class="fc bfc" id="L191" title="All 2 branches covered.">        if (asynchronously) {</span>
-<span class="fc" id="L192">            query.enqueue(callback);</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        if (asynchronously) {</span>
+<span class="fc" id="L180">            query.enqueue(callback);</span>
         } else {
 
             Response&lt;ResponseBody&gt; response;
             try {
-<span class="fc" id="L197">                response = query.execute();</span>
-<span class="fc" id="L198">                callback.onResponse(query, response);</span>
-<span class="nc" id="L199">            } catch (IOException e) {</span>
-<span class="nc" id="L200">                catchOrPropagateException(e, onError);</span>
-<span class="fc" id="L201">            }</span>
+<span class="fc" id="L185">                response = query.execute();</span>
+<span class="fc" id="L186">                callback.onResponse(query, response);</span>
+<span class="nc" id="L187">            } catch (IOException e) {</span>
+<span class="nc" id="L188">                catchOrPropagateException(e, onError);</span>
+<span class="fc" id="L189">            }</span>
+        }
+<span class="fc" id="L191">    }</span>
+
+    private void parseFluxResponseToLines(@Nonnull final Consumer&lt;String&gt; onResponse,
+                                          @Nonnull final Cancellable cancellable,
+                                          @Nonnull final BufferedSource bufferedSource) throws IOException {
+
+<span class="fc" id="L197">        String line = bufferedSource.readUtf8Line();</span>
+
+<span class="fc bfc" id="L199" title="All 4 branches covered.">        while (line != null &amp;&amp; !cancellable.isCancelled()) {</span>
+<span class="fc" id="L200">            onResponse.accept(line);</span>
+<span class="fc" id="L201">            line = bufferedSource.readUtf8Line();</span>
         }
 <span class="fc" id="L203">    }</span>
 
