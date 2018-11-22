@@ -24,6 +24,7 @@ package org.influxdata.platform.impl;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -112,7 +113,7 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
             return;
         }
 
-        write(bucket, organization, point.getPrecision(), Flowable.just(new BatchWriteDataPoint(point)));
+        writePoints(bucket, organization, Collections.singletonList(point));
     }
 
     @Override
@@ -124,7 +125,10 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
         Arguments.checkNonEmpty(organization, "organization");
         Arguments.checkNotNull(points, "points");
 
-        points.forEach(point -> writePoint(bucket, organization, point));
+        Flowable<BatchWriteDataPoint> stream = Flowable.fromIterable(points).filter(Objects::nonNull)
+                .map(BatchWriteDataPoint::new);
+
+        write(bucket, organization, stream);
     }
 
     @Override

@@ -158,6 +158,16 @@ abstract class AbstractWriteClient extends AbstractRestClient {
         eventPublisher.onComplete();
     }
 
+
+    void write(@Nonnull final String bucket,
+               @Nonnull final String organization,
+               @Nonnull final Flowable<BatchWriteDataPoint> stream) {
+
+        stream.subscribe(
+                dataPoint -> write(bucket, organization, dataPoint.point.getPrecision(), Flowable.just(dataPoint)),
+                throwable -> publish(new WriteErrorEvent(throwable)));
+    }
+
     void write(@Nonnull final String bucket,
                @Nonnull final String organization,
                @Nonnull final ChronoUnit precision,
@@ -263,17 +273,16 @@ abstract class AbstractWriteClient extends AbstractRestClient {
 
         private final Point point;
 
-        BatchWriteDataPoint(@Nullable final Point point) {
+        BatchWriteDataPoint(@Nonnull final Point point) {
+
+            Arguments.checkNotNull(point, "point");
+
             this.point = point;
         }
 
-        @Nullable
+        @Nonnull
         @Override
         public String toLineProtocol() {
-
-            if (point == null) {
-                return null;
-            }
 
             return point.toString();
         }
