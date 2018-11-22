@@ -71,7 +71,7 @@ final class QueryClientReactiveImpl extends AbstractQueryClient implements Query
         Arguments.checkNotNull(measurementType, "Measurement type");
         Arguments.checkNonEmpty(organization, "organization");
 
-        return query(query, organization).map(fluxRecord -> resultMapper.toPOJO(fluxRecord, measurementType));
+        return query(Flowable.just(query), organization, measurementType);
     }
 
     @Nonnull
@@ -175,7 +175,7 @@ final class QueryClientReactiveImpl extends AbstractQueryClient implements Query
 
         return Flowable
                 .fromPublisher(queryStream)
-                .map(it -> platformService.query(organization, createBody(DEFAULT_DIALECT.toString(), it)))
+                .map(it -> platformService.query(organization, createBody(dialect, it)))
                 .flatMap(queryCall -> {
 
                     Observable<String> observable = Observable.create(subscriber -> {

@@ -36,6 +36,7 @@ abstract class AbstractITPlatformClientTest extends AbstractTest {
     private static final Logger LOG = Logger.getLogger(AbstractITPlatformClientTest.class.getName());
 
     PlatformClientReactive platformClient;
+    String platformURL;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -43,7 +44,7 @@ abstract class AbstractITPlatformClientTest extends AbstractTest {
         String platformIP = System.getenv().getOrDefault("PLATFORM_IP", "127.0.0.1");
         String platformPort = System.getenv().getOrDefault("PLATFORM_PORT", "9999");
 
-        String platformURL = "http://" + platformIP + ":" + platformPort;
+        platformURL = "http://" + platformIP + ":" + platformPort;
         LOG.log(Level.FINEST, "Platform URL: {0}", platformURL);
 
         PlatformClient platformClient = PlatformClientFactory.create(platformURL, "my-user", "my-password".toCharArray());
