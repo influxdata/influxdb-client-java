@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WriteClientReactiveImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Platform Client - RxJava</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.platform.impl</a> &gt; <span class="el_source">WriteClientReactiveImpl.java</span></div><h1>WriteClientReactiveImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.platform.impl;
+
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
+import javax.annotation.Nonnull;
+
+import org.influxdata.platform.Arguments;
+import org.influxdata.platform.WriteClientReactive;
+import org.influxdata.platform.option.WriteOptions;
+import org.influxdata.platform.write.Point;
+import org.influxdata.platform.write.event.AbstractWriteEvent;
+
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.RequestBody;
+import org.reactivestreams.Publisher;
+
+/**
+ * @author Jakub Bednar (bednar@github) (22/11/2018 06:50)
+ */
+public class WriteClientReactiveImpl extends AbstractWriteClient implements WriteClientReactive {
+
+    private final PlatformReactiveService platformService;
+
+    WriteClientReactiveImpl(@Nonnull final WriteOptions writeOptions,
+                            @Nonnull final PlatformReactiveService platformService) {
+
+<span class="fc" id="L52">        super(writeOptions,</span>
+<span class="fc" id="L53">                Schedulers.newThread(),</span>
+<span class="fc" id="L54">                Schedulers.computation(),</span>
+<span class="fc" id="L55">                Schedulers.trampoline(),</span>
+<span class="fc" id="L56">                Schedulers.trampoline());</span>
+
+<span class="fc" id="L58">        this.platformService = platformService;</span>
+<span class="fc" id="L59">    }</span>
+
+    @Override
+    public void writeRecord(@Nonnull final String bucket,
+                            @Nonnull final String organization,
+                            @Nonnull final ChronoUnit precision,
+                            @Nonnull final Maybe&lt;String&gt; record) {
+
+<span class="fc" id="L67">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L68">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L69">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
+<span class="fc" id="L70">        Arguments.checkNotNull(record, &quot;record&quot;);</span>
+
+<span class="fc" id="L72">        writeRecords(bucket, organization, precision, record.toFlowable());</span>
+<span class="fc" id="L73">    }</span>
+
+    @Override
+    public void writeRecords(@Nonnull final String bucket,
+                             @Nonnull final String organization,
+                             @Nonnull final ChronoUnit precision,
+                             @Nonnull final Flowable&lt;String&gt; records) {
+
+<span class="fc" id="L81">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L82">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L83">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
+<span class="fc" id="L84">        Arguments.checkNotNull(records, &quot;records&quot;);</span>
+
+<span class="fc" id="L86">        Flowable&lt;BatchWriteData&gt; stream = records.map(BatchWriteDataRecord::new);</span>
+
+<span class="fc" id="L88">        write(bucket, organization, precision, stream);</span>
+<span class="fc" id="L89">    }</span>
+
+    @Override
+    public void writeRecords(@Nonnull final String bucket,
+                             @Nonnull final String organization,
+                             @Nonnull final ChronoUnit precision,
+                             @Nonnull final Publisher&lt;String&gt; records) {
+
+<span class="fc" id="L97">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L98">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L99">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
+<span class="fc" id="L100">        Arguments.checkNotNull(records, &quot;records&quot;);</span>
+
+<span class="fc" id="L102">        writeRecords(bucket, organization, precision, Flowable.fromPublisher(records));</span>
+<span class="fc" id="L103">    }</span>
+
+    @Override
+    public void writePoint(@Nonnull final String bucket,
+                           @Nonnull final String organization,
+                           @Nonnull final Maybe&lt;Point&gt; point) {
+
+<span class="fc" id="L110">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L111">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L112">        Arguments.checkNotNull(point, &quot;point&quot;);</span>
+
+<span class="fc" id="L114">        writePoints(bucket, organization, point.toFlowable());</span>
+<span class="fc" id="L115">    }</span>
+
+    @Override
+    public void writePoints(@Nonnull final String bucket,
+                            @Nonnull final String organization,
+                            @Nonnull final Flowable&lt;Point&gt; points) {
+
+<span class="fc" id="L122">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L123">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L124">        Arguments.checkNotNull(points, &quot;points&quot;);</span>
+
+<span class="fc" id="L126">        Flowable&lt;BatchWriteDataPoint&gt; stream = points.filter(Objects::nonNull).map(BatchWriteDataPoint::new);</span>
+
+<span class="fc" id="L128">        write(bucket, organization, stream);</span>
+<span class="fc" id="L129">    }</span>
+
+    @Override
+    public void writePoints(@Nonnull final String bucket,
+                            @Nonnull final String organization,
+                            @Nonnull final Publisher&lt;Point&gt; points) {
+
+<span class="fc" id="L136">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L137">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L138">        Arguments.checkNotNull(points, &quot;points&quot;);</span>
+
+<span class="fc" id="L140">        writePoints(bucket, organization, Flowable.fromPublisher(points));</span>
+<span class="fc" id="L141">    }</span>
+
+    @Override
+    public &lt;M&gt; void writeMeasurement(@Nonnull final String bucket,
+                                     @Nonnull final String organization,
+                                     @Nonnull final ChronoUnit precision,
+                                     @Nonnull final Maybe&lt;M&gt; measurement) {
+
+<span class="fc" id="L149">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L150">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L151">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
+<span class="fc" id="L152">        Arguments.checkNotNull(measurement, &quot;measurement&quot;);</span>
+
+<span class="fc" id="L154">        writeMeasurements(bucket, organization, precision, measurement.toFlowable());</span>
+<span class="fc" id="L155">    }</span>
+
+    @Override
+    public &lt;M&gt; void writeMeasurements(@Nonnull final String bucket,
+                                      @Nonnull final String organization,
+                                      @Nonnull final ChronoUnit precision,
+                                      @Nonnull final Flowable&lt;M&gt; measurements) {
+
+<span class="fc" id="L163">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L164">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L165">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
+<span class="fc" id="L166">        Arguments.checkNotNull(measurements, &quot;measurements&quot;);</span>
+
+<span class="fc" id="L168">        Flowable&lt;BatchWriteData&gt; stream = measurements.map(it -&gt; new BatchWriteDataMeasurement(it, precision));</span>
+
+<span class="fc" id="L170">        write(bucket, organization, precision, stream);</span>
+<span class="fc" id="L171">    }</span>
+
+    @Override
+    public &lt;M&gt; void writeMeasurements(@Nonnull final String bucket,
+                                      @Nonnull final String organization,
+                                      @Nonnull final ChronoUnit precision,
+                                      @Nonnull final Publisher&lt;M&gt; measurements) {
+
+<span class="fc" id="L179">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L180">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L181">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
+<span class="fc" id="L182">        Arguments.checkNotNull(measurements, &quot;measurements&quot;);</span>
+
+<span class="fc" id="L184">        writeMeasurements(bucket, organization, precision, Flowable.fromPublisher(measurements));</span>
+<span class="fc" id="L185">    }</span>
+
+    @Nonnull
+    @Override
+    public &lt;T extends AbstractWriteEvent&gt; Observable&lt;T&gt; listenEvents(@Nonnull final Class&lt;T&gt; eventType) {
+<span class="fc" id="L190">        return super.listenEvents(eventType);</span>
+    }
+
+    @Override
+    public void close() {
+<span class="fc" id="L195">        super.close();</span>
+<span class="fc" id="L196">    }</span>
+
+    @Override
+    Completable writeCall(final RequestBody requestBody,
+                          final String organization,
+                          final String bucket,
+                          final String precision) {
+<span class="fc" id="L203">        return platformService.writePoints(organization, bucket, precision, requestBody);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

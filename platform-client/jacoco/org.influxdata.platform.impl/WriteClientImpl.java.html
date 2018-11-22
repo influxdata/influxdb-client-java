@@ -24,6 +24,7 @@ package org.influxdata.platform.impl;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -50,12 +51,12 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
     WriteClientImpl(@Nonnull final WriteOptions writeOptions,
                     @Nonnull final PlatformService platformService) {
 
-<span class="fc" id="L53">        this(writeOptions, platformService,</span>
-<span class="fc" id="L54">                Schedulers.newThread(),</span>
-<span class="fc" id="L55">                Schedulers.computation(),</span>
-<span class="fc" id="L56">                Schedulers.trampoline(),</span>
-<span class="fc" id="L57">                Schedulers.trampoline());</span>
-<span class="fc" id="L58">    }</span>
+<span class="fc" id="L54">        this(writeOptions, platformService,</span>
+<span class="fc" id="L55">                Schedulers.newThread(),</span>
+<span class="fc" id="L56">                Schedulers.computation(),</span>
+<span class="fc" id="L57">                Schedulers.trampoline(),</span>
+<span class="fc" id="L58">                Schedulers.trampoline());</span>
+<span class="fc" id="L59">    }</span>
 
 
     WriteClientImpl(@Nonnull final WriteOptions writeOptions,
@@ -65,10 +66,10 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
                     @Nonnull final Scheduler jitterScheduler,
                     @Nonnull final Scheduler retryScheduler) {
 
-<span class="fc" id="L68">        super(writeOptions, processorScheduler, batchScheduler, jitterScheduler, retryScheduler);</span>
+<span class="fc" id="L69">        super(writeOptions, processorScheduler, batchScheduler, jitterScheduler, retryScheduler);</span>
 
-<span class="fc" id="L70">        this.platformService = platformService;</span>
-<span class="fc" id="L71">    }</span>
+<span class="fc" id="L71">        this.platformService = platformService;</span>
+<span class="fc" id="L72">    }</span>
 
     @Override
     public void writeRecord(@Nonnull final String bucket,
@@ -76,16 +77,16 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
                             @Nonnull final ChronoUnit precision,
                             @Nullable final String record) {
 
-<span class="fc" id="L79">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L80">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
-<span class="fc" id="L81">        Arguments.checkNotNull(precision, &quot;TimeUnit.precision is required&quot;);</span>
+<span class="fc" id="L80">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L81">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L82">        Arguments.checkNotNull(precision, &quot;TimeUnit.precision is required&quot;);</span>
 
-<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (record == null) {</span>
-<span class="fc" id="L84">            return;</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (record == null) {</span>
+<span class="fc" id="L85">            return;</span>
         }
 
-<span class="fc" id="L87">        write(bucket, organization, precision, Flowable.just(new BatchWriteDataRecord(record)));</span>
-<span class="fc" id="L88">    }</span>
+<span class="fc" id="L88">        write(bucket, organization, precision, Flowable.just(new BatchWriteDataRecord(record)));</span>
+<span class="fc" id="L89">    }</span>
 
     @Override
     public void writeRecords(@Nonnull final String bucket,
@@ -93,39 +94,42 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
                              @Nonnull final ChronoUnit precision,
                              @Nonnull final List&lt;String&gt; records) {
 
-<span class="fc" id="L96">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L97">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
-<span class="fc" id="L98">        Arguments.checkNotNull(precision, &quot;TimeUnit.precision is required&quot;);</span>
-<span class="fc" id="L99">        Arguments.checkNotNull(records, &quot;records&quot;);</span>
+<span class="fc" id="L97">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L98">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L99">        Arguments.checkNotNull(precision, &quot;TimeUnit.precision is required&quot;);</span>
+<span class="fc" id="L100">        Arguments.checkNotNull(records, &quot;records&quot;);</span>
 
-<span class="fc" id="L101">        Flowable&lt;BatchWriteData&gt; stream = Flowable.fromIterable(records).map(BatchWriteDataRecord::new);</span>
+<span class="fc" id="L102">        Flowable&lt;BatchWriteData&gt; stream = Flowable.fromIterable(records).map(BatchWriteDataRecord::new);</span>
 
-<span class="fc" id="L103">        write(bucket, organization, precision, stream);</span>
-<span class="fc" id="L104">    }</span>
+<span class="fc" id="L104">        write(bucket, organization, precision, stream);</span>
+<span class="fc" id="L105">    }</span>
 
     @Override
     public void writePoint(@Nonnull final String bucket,
                            @Nonnull final String organization,
                            @Nullable final Point point) {
 
-<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (point == null) {</span>
-<span class="fc" id="L112">            return;</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (point == null) {</span>
+<span class="fc" id="L113">            return;</span>
         }
 
-<span class="fc" id="L115">        write(bucket, organization, point.getPrecision(), Flowable.just(new BatchWriteDataPoint(point)));</span>
-<span class="fc" id="L116">    }</span>
+<span class="fc" id="L116">        writePoints(bucket, organization, Collections.singletonList(point));</span>
+<span class="fc" id="L117">    }</span>
 
     @Override
     public void writePoints(@Nonnull final String bucket,
                             @Nonnull final String organization,
                             @Nonnull final List&lt;Point&gt; points) {
 
-<span class="fc" id="L123">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L124">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
-<span class="fc" id="L125">        Arguments.checkNotNull(points, &quot;points&quot;);</span>
+<span class="fc" id="L124">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L125">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L126">        Arguments.checkNotNull(points, &quot;points&quot;);</span>
 
-<span class="fc" id="L127">        points.forEach(point -&gt; writePoint(bucket, organization, point));</span>
-<span class="fc" id="L128">    }</span>
+<span class="fc" id="L128">        Flowable&lt;BatchWriteDataPoint&gt; stream = Flowable.fromIterable(points).filter(Objects::nonNull)</span>
+<span class="fc" id="L129">                .map(BatchWriteDataPoint::new);</span>
+
+<span class="fc" id="L131">        write(bucket, organization, stream);</span>
+<span class="fc" id="L132">    }</span>
 
     @Override
     public void writeMeasurement(@Nonnull final String bucket,
@@ -133,12 +137,12 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
                                  @Nonnull final ChronoUnit precision,
                                  @Nullable final Object measurement) {
 
-<span class="fc bfc" id="L136" title="All 2 branches covered.">        if (measurement == null) {</span>
-<span class="fc" id="L137">            return;</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (measurement == null) {</span>
+<span class="fc" id="L141">            return;</span>
         }
 
-<span class="fc" id="L140">        writeMeasurements(bucket, organization, precision, Collections.singletonList(measurement));</span>
-<span class="fc" id="L141">    }</span>
+<span class="fc" id="L144">        writeMeasurements(bucket, organization, precision, Collections.singletonList(measurement));</span>
+<span class="fc" id="L145">    }</span>
 
     @Override
     public void writeMeasurements(@Nonnull final String bucket,
@@ -146,28 +150,28 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
                                   @Nonnull final ChronoUnit precision,
                                   @Nonnull final List&lt;Object&gt; measurements) {
 
-<span class="fc" id="L149">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L150">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
-<span class="fc" id="L151">        Arguments.checkNotNull(precision, &quot;TimeUnit.precision is required&quot;);</span>
-<span class="fc" id="L152">        Arguments.checkNotNull(measurements, &quot;records&quot;);</span>
+<span class="fc" id="L153">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L154">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L155">        Arguments.checkNotNull(precision, &quot;TimeUnit.precision is required&quot;);</span>
+<span class="fc" id="L156">        Arguments.checkNotNull(measurements, &quot;records&quot;);</span>
 
-<span class="fc" id="L154">        Flowable&lt;BatchWriteData&gt; stream = Flowable</span>
-<span class="fc" id="L155">                .fromIterable(measurements)</span>
-<span class="fc" id="L156">                .map(it -&gt; new BatchWriteDataMeasurement(it, precision));</span>
+<span class="fc" id="L158">        Flowable&lt;BatchWriteData&gt; stream = Flowable</span>
+<span class="fc" id="L159">                .fromIterable(measurements)</span>
+<span class="fc" id="L160">                .map(it -&gt; new BatchWriteDataMeasurement(it, precision));</span>
 
-<span class="fc" id="L158">        write(bucket, organization, precision, stream);</span>
-<span class="fc" id="L159">    }</span>
+<span class="fc" id="L162">        write(bucket, organization, precision, stream);</span>
+<span class="fc" id="L163">    }</span>
 
     @Nonnull
     @Override
     public &lt;T extends AbstractWriteEvent&gt; Observable&lt;T&gt; listenEvents(@Nonnull final Class&lt;T&gt; eventType) {
-<span class="fc" id="L164">        return super.listenEvents(eventType);</span>
+<span class="fc" id="L168">        return super.listenEvents(eventType);</span>
     }
 
     @Override
     public void close() {
-<span class="fc" id="L169">        super.close();</span>
-<span class="fc" id="L170">    }</span>
+<span class="fc" id="L173">        super.close();</span>
+<span class="fc" id="L174">    }</span>
 
     @Nonnull
     Completable writeCall(final RequestBody requestBody,
@@ -175,7 +179,7 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
                           final String bucket,
                           final String precision) {
 
-<span class="fc" id="L178">        return platformService.writePoints(organization, bucket, precision, requestBody);</span>
+<span class="fc" id="L182">        return platformService.writePoints(organization, bucket, precision, requestBody);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

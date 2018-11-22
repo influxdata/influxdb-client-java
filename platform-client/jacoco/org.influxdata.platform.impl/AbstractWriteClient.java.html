@@ -158,22 +158,32 @@ abstract class AbstractWriteClient extends AbstractRestClient {
 <span class="fc" id="L158">        eventPublisher.onComplete();</span>
 <span class="fc" id="L159">    }</span>
 
+
+    void write(@Nonnull final String bucket,
+               @Nonnull final String organization,
+               @Nonnull final Flowable&lt;BatchWriteDataPoint&gt; stream) {
+
+<span class="fc" id="L166">        stream.subscribe(</span>
+<span class="fc" id="L167">                dataPoint -&gt; write(bucket, organization, dataPoint.point.getPrecision(), Flowable.just(dataPoint)),</span>
+<span class="nc" id="L168">                throwable -&gt; publish(new WriteErrorEvent(throwable)));</span>
+<span class="fc" id="L169">    }</span>
+
     void write(@Nonnull final String bucket,
                @Nonnull final String organization,
                @Nonnull final ChronoUnit precision,
                @Nonnull final Publisher&lt;AbstractWriteClient.BatchWriteData&gt; stream) {
 
-<span class="fc" id="L166">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L167">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
-<span class="fc" id="L168">        Arguments.checkPrecision(precision);</span>
-<span class="fc" id="L169">        Arguments.checkNotNull(stream, &quot;data to write&quot;);</span>
+<span class="fc" id="L176">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L177">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L178">        Arguments.checkPrecision(precision);</span>
+<span class="fc" id="L179">        Arguments.checkNotNull(stream, &quot;data to write&quot;);</span>
 
-<span class="fc" id="L171">        BatchWriteOptions batchWriteOptions = new BatchWriteOptions(bucket, organization, precision);</span>
+<span class="fc" id="L181">        BatchWriteOptions batchWriteOptions = new BatchWriteOptions(bucket, organization, precision);</span>
 
-<span class="fc" id="L173">        Flowable.fromPublisher(stream)</span>
-<span class="fc" id="L174">                .map(it -&gt; new BatchWriteItem(batchWriteOptions, it))</span>
-<span class="pc" id="L175">                .subscribe(processor::onNext, throwable -&gt; publish(new WriteErrorEvent(throwable)));</span>
-<span class="fc" id="L176">    }</span>
+<span class="fc" id="L183">        Flowable.fromPublisher(stream)</span>
+<span class="fc" id="L184">                .map(it -&gt; new BatchWriteItem(batchWriteOptions, it))</span>
+<span class="pc" id="L185">                .subscribe(processor::onNext, throwable -&gt; publish(new WriteErrorEvent(throwable)));</span>
+<span class="fc" id="L186">    }</span>
 
     abstract Completable writeCall(final RequestBody requestBody,
                                    final String organization,
@@ -183,60 +193,60 @@ abstract class AbstractWriteClient extends AbstractRestClient {
     @Nonnull
     private String toPrecisionParameter(@Nonnull final ChronoUnit precision) {
 
-<span class="pc bpc" id="L186" title="1 of 5 branches missed.">        switch (precision) {</span>
+<span class="pc bpc" id="L196" title="1 of 5 branches missed.">        switch (precision) {</span>
             case NANOS:
-<span class="fc" id="L188">                return &quot;n&quot;;</span>
+<span class="fc" id="L198">                return &quot;n&quot;;</span>
             case MICROS:
-<span class="fc" id="L190">                return &quot;u&quot;;</span>
+<span class="fc" id="L200">                return &quot;u&quot;;</span>
             case MILLIS:
-<span class="fc" id="L192">                return &quot;ms&quot;;</span>
+<span class="fc" id="L202">                return &quot;ms&quot;;</span>
             case SECONDS:
-<span class="fc" id="L194">                return &quot;s&quot;;</span>
+<span class="fc" id="L204">                return &quot;s&quot;;</span>
             default:
-<span class="nc" id="L196">                throw new IllegalArgumentException(&quot;Not supported precision: &quot; + precision);</span>
+<span class="nc" id="L206">                throw new IllegalArgumentException(&quot;Not supported precision: &quot; + precision);</span>
         }
     }
 
     @Nonnull
     private FlowableTransformer&lt;BatchWriteItem, BatchWriteItem&gt; jitter(@Nonnull final Scheduler scheduler) {
 
-<span class="fc" id="L203">        Arguments.checkNotNull(scheduler, &quot;Jitter scheduler is required&quot;);</span>
+<span class="fc" id="L213">        Arguments.checkNotNull(scheduler, &quot;Jitter scheduler is required&quot;);</span>
 
-<span class="fc" id="L205">        return source -&gt; {</span>
+<span class="fc" id="L215">        return source -&gt; {</span>
 
             //
             // source without jitter
             //
-<span class="fc bfc" id="L210" title="All 2 branches covered.">            if (writeOptions.getJitterInterval() &lt;= 0) {</span>
-<span class="fc" id="L211">                return source;</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">            if (writeOptions.getJitterInterval() &lt;= 0) {</span>
+<span class="fc" id="L221">                return source;</span>
             }
 
             //
             // Add jitter =&gt; dynamic delay
             //
-<span class="fc" id="L217">            return source.delay((Function&lt;BatchWriteItem, Flowable&lt;Long&gt;&gt;) pointFlowable -&gt; {</span>
+<span class="fc" id="L227">            return source.delay((Function&lt;BatchWriteItem, Flowable&lt;Long&gt;&gt;) pointFlowable -&gt; {</span>
 
-<span class="fc" id="L219">                int delay = jitterDelay();</span>
+<span class="fc" id="L229">                int delay = jitterDelay();</span>
 
-<span class="fc" id="L221">                LOG.log(Level.FINEST, &quot;Generated Jitter dynamic delay: {0}&quot;, delay);</span>
+<span class="fc" id="L231">                LOG.log(Level.FINEST, &quot;Generated Jitter dynamic delay: {0}&quot;, delay);</span>
 
-<span class="fc" id="L223">                return Flowable.timer(delay, TimeUnit.MILLISECONDS, scheduler);</span>
+<span class="fc" id="L233">                return Flowable.timer(delay, TimeUnit.MILLISECONDS, scheduler);</span>
             });
         };
     }
 
     private int jitterDelay() {
 
-<span class="fc" id="L230">        return (int) (Math.random() * writeOptions.getJitterInterval());</span>
+<span class="fc" id="L240">        return (int) (Math.random() * writeOptions.getJitterInterval());</span>
     }
 
     private &lt;T extends AbstractWriteEvent&gt; void publish(@Nonnull final T event) {
 
-<span class="fc" id="L235">        Arguments.checkNotNull(event, &quot;event&quot;);</span>
+<span class="fc" id="L245">        Arguments.checkNotNull(event, &quot;event&quot;);</span>
 
-<span class="fc" id="L237">        event.logEvent();</span>
-<span class="fc" id="L238">        eventPublisher.onNext(event);</span>
-<span class="fc" id="L239">    }</span>
+<span class="fc" id="L247">        event.logEvent();</span>
+<span class="fc" id="L248">        eventPublisher.onNext(event);</span>
+<span class="fc" id="L249">    }</span>
 
     interface BatchWriteData {
 
@@ -248,14 +258,14 @@ abstract class AbstractWriteClient extends AbstractRestClient {
 
         private final String record;
 
-<span class="fc" id="L251">        BatchWriteDataRecord(@Nullable final String record) {</span>
-<span class="fc" id="L252">            this.record = record;</span>
-<span class="fc" id="L253">        }</span>
+<span class="fc" id="L261">        BatchWriteDataRecord(@Nullable final String record) {</span>
+<span class="fc" id="L262">            this.record = record;</span>
+<span class="fc" id="L263">        }</span>
 
         @Nullable
         @Override
         public String toLineProtocol() {
-<span class="fc" id="L258">            return record;</span>
+<span class="fc" id="L268">            return record;</span>
         }
     }
 
@@ -263,19 +273,18 @@ abstract class AbstractWriteClient extends AbstractRestClient {
 
         private final Point point;
 
-<span class="fc" id="L266">        BatchWriteDataPoint(@Nullable final Point point) {</span>
-<span class="fc" id="L267">            this.point = point;</span>
-<span class="fc" id="L268">        }</span>
+<span class="fc" id="L276">        BatchWriteDataPoint(@Nonnull final Point point) {</span>
 
-        @Nullable
+<span class="fc" id="L278">            Arguments.checkNotNull(point, &quot;point&quot;);</span>
+
+<span class="fc" id="L280">            this.point = point;</span>
+<span class="fc" id="L281">        }</span>
+
+        @Nonnull
         @Override
         public String toLineProtocol() {
 
-<span class="pc bpc" id="L274" title="1 of 2 branches missed.">            if (point == null) {</span>
-<span class="nc" id="L275">                return null;</span>
-            }
-
-<span class="fc" id="L278">            return point.toString();</span>
+<span class="fc" id="L287">            return point.toString();</span>
         }
     }
 
@@ -285,20 +294,20 @@ abstract class AbstractWriteClient extends AbstractRestClient {
         private final ChronoUnit precision;
 
         BatchWriteDataMeasurement(@Nullable final Object measurement,
-<span class="fc" id="L288">                                  @Nonnull final ChronoUnit precision) {</span>
-<span class="fc" id="L289">            this.measurement = measurement;</span>
-<span class="fc" id="L290">            this.precision = precision;</span>
-<span class="fc" id="L291">        }</span>
+<span class="fc" id="L297">                                  @Nonnull final ChronoUnit precision) {</span>
+<span class="fc" id="L298">            this.measurement = measurement;</span>
+<span class="fc" id="L299">            this.precision = precision;</span>
+<span class="fc" id="L300">        }</span>
 
         @Nullable
         @Override
         public String toLineProtocol() {
 
-<span class="pc bpc" id="L297" title="1 of 2 branches missed.">            if (measurement == null) {</span>
-<span class="nc" id="L298">                return null;</span>
+<span class="pc bpc" id="L306" title="1 of 2 branches missed.">            if (measurement == null) {</span>
+<span class="nc" id="L307">                return null;</span>
             }
 
-<span class="fc" id="L301">            return measurementMapper.toPoint(measurement, precision).toString();</span>
+<span class="fc" id="L310">            return measurementMapper.toPoint(measurement, precision).toString();</span>
         }
     }
 
@@ -311,14 +320,14 @@ abstract class AbstractWriteClient extends AbstractRestClient {
         private BatchWriteData data;
 
         private BatchWriteItem(@Nonnull final BatchWriteOptions batchWriteOptions,
-<span class="fc" id="L314">                               @Nonnull final BatchWriteData data) {</span>
+<span class="fc" id="L323">                               @Nonnull final BatchWriteData data) {</span>
 
-<span class="fc" id="L316">            Arguments.checkNotNull(batchWriteOptions, &quot;data&quot;);</span>
-<span class="fc" id="L317">            Arguments.checkNotNull(data, &quot;write options&quot;);</span>
+<span class="fc" id="L325">            Arguments.checkNotNull(batchWriteOptions, &quot;data&quot;);</span>
+<span class="fc" id="L326">            Arguments.checkNotNull(data, &quot;write options&quot;);</span>
 
-<span class="fc" id="L319">            this.batchWriteOptions = batchWriteOptions;</span>
-<span class="fc" id="L320">            this.data = data;</span>
-<span class="fc" id="L321">        }</span>
+<span class="fc" id="L328">            this.batchWriteOptions = batchWriteOptions;</span>
+<span class="fc" id="L329">            this.data = data;</span>
+<span class="fc" id="L330">        }</span>
     }
 
     /**
@@ -332,34 +341,34 @@ abstract class AbstractWriteClient extends AbstractRestClient {
 
         private BatchWriteOptions(@Nonnull final String bucket,
                                   @Nonnull final String organization,
-<span class="fc" id="L335">                                  @Nonnull final ChronoUnit precision) {</span>
+<span class="fc" id="L344">                                  @Nonnull final ChronoUnit precision) {</span>
 
-<span class="fc" id="L337">            Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L338">            Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
-<span class="fc" id="L339">            Arguments.checkNotNull(precision, &quot;TimeUnit.precision is required&quot;);</span>
+<span class="fc" id="L346">            Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L347">            Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L348">            Arguments.checkNotNull(precision, &quot;TimeUnit.precision is required&quot;);</span>
 
-<span class="fc" id="L341">            this.bucket = bucket;</span>
-<span class="fc" id="L342">            this.organization = organization;</span>
-<span class="fc" id="L343">            this.precision = precision;</span>
-<span class="fc" id="L344">        }</span>
+<span class="fc" id="L350">            this.bucket = bucket;</span>
+<span class="fc" id="L351">            this.organization = organization;</span>
+<span class="fc" id="L352">            this.precision = precision;</span>
+<span class="fc" id="L353">        }</span>
 
         @Override
         public boolean equals(final Object o) {
-<span class="pc bpc" id="L348" title="1 of 2 branches missed.">            if (this == o) {</span>
-<span class="nc" id="L349">                return true;</span>
+<span class="pc bpc" id="L357" title="1 of 2 branches missed.">            if (this == o) {</span>
+<span class="nc" id="L358">                return true;</span>
             }
-<span class="pc bpc" id="L351" title="1 of 2 branches missed.">            if (!(o instanceof BatchWriteOptions)) {</span>
-<span class="nc" id="L352">                return false;</span>
+<span class="pc bpc" id="L360" title="1 of 2 branches missed.">            if (!(o instanceof BatchWriteOptions)) {</span>
+<span class="nc" id="L361">                return false;</span>
             }
-<span class="fc" id="L354">            BatchWriteOptions that = (BatchWriteOptions) o;</span>
-<span class="pc bpc" id="L355" title="1 of 2 branches missed.">            return Objects.equals(bucket, that.bucket)</span>
-<span class="pc bpc" id="L356" title="2 of 4 branches missed.">                    &amp;&amp; Objects.equals(organization, that.organization)</span>
+<span class="fc" id="L363">            BatchWriteOptions that = (BatchWriteOptions) o;</span>
+<span class="pc bpc" id="L364" title="1 of 2 branches missed.">            return Objects.equals(bucket, that.bucket)</span>
+<span class="pc bpc" id="L365" title="2 of 4 branches missed.">                    &amp;&amp; Objects.equals(organization, that.organization)</span>
                     &amp;&amp; precision == that.precision;
         }
 
         @Override
         public int hashCode() {
-<span class="fc" id="L362">            return Objects.hash(bucket, organization, precision);</span>
+<span class="fc" id="L371">            return Objects.hash(bucket, organization, precision);</span>
         }
     }
 
@@ -368,41 +377,41 @@ abstract class AbstractWriteClient extends AbstractRestClient {
         // TODO implement retry, delete retry scheduler?
         private final Scheduler retryScheduler;
 
-<span class="fc" id="L371">        private ToWritePointsCompletable(@Nonnull final Scheduler retryScheduler) {</span>
-<span class="fc" id="L372">            this.retryScheduler = retryScheduler;</span>
-<span class="fc" id="L373">        }</span>
+<span class="fc" id="L380">        private ToWritePointsCompletable(@Nonnull final Scheduler retryScheduler) {</span>
+<span class="fc" id="L381">            this.retryScheduler = retryScheduler;</span>
+<span class="fc" id="L382">        }</span>
 
         @Override
         public CompletableSource apply(final BatchWriteItem batchWrite) {
 
-<span class="fc" id="L378">            String content = batchWrite.data.toLineProtocol();</span>
+<span class="fc" id="L387">            String content = batchWrite.data.toLineProtocol();</span>
 
-<span class="pc bpc" id="L380" title="1 of 4 branches missed.">            if (content == null || content.isEmpty()) {</span>
-<span class="fc" id="L381">                return Completable.complete();</span>
+<span class="pc bpc" id="L389" title="1 of 4 branches missed.">            if (content == null || content.isEmpty()) {</span>
+<span class="fc" id="L390">                return Completable.complete();</span>
             }
 
             //
             // InfluxDB Line Protocol =&gt; to Request Body
             //
-<span class="fc" id="L387">            RequestBody requestBody = createBody(content);</span>
+<span class="fc" id="L396">            RequestBody requestBody = createBody(content);</span>
 
             //
             // Parameters
-<span class="fc" id="L391">            String organization = batchWrite.batchWriteOptions.organization;</span>
-<span class="fc" id="L392">            String bucket = batchWrite.batchWriteOptions.bucket;</span>
-<span class="fc" id="L393">            String precision = AbstractWriteClient.this.toPrecisionParameter(batchWrite.batchWriteOptions.precision);</span>
+<span class="fc" id="L400">            String organization = batchWrite.batchWriteOptions.organization;</span>
+<span class="fc" id="L401">            String bucket = batchWrite.batchWriteOptions.bucket;</span>
+<span class="fc" id="L402">            String precision = AbstractWriteClient.this.toPrecisionParameter(batchWrite.batchWriteOptions.precision);</span>
 
-<span class="fc" id="L395">            return writeCall(requestBody, organization, bucket, precision)</span>
-<span class="fc" id="L396">                    .doOnComplete(() -&gt; publish(toSuccessEvent(batchWrite, content)));</span>
+<span class="fc" id="L404">            return writeCall(requestBody, organization, bucket, precision)</span>
+<span class="fc" id="L405">                    .doOnComplete(() -&gt; publish(toSuccessEvent(batchWrite, content)));</span>
         }
 
         @Nonnull
         private WriteSuccessEvent toSuccessEvent(@Nonnull final BatchWriteItem batchWrite, final String lineProtocol) {
 
-<span class="fc" id="L402">            return new WriteSuccessEvent(</span>
-<span class="fc" id="L403">                    batchWrite.batchWriteOptions.organization,</span>
-<span class="fc" id="L404">                    batchWrite.batchWriteOptions.bucket,</span>
-<span class="fc" id="L405">                    batchWrite.batchWriteOptions.precision,</span>
+<span class="fc" id="L411">            return new WriteSuccessEvent(</span>
+<span class="fc" id="L412">                    batchWrite.batchWriteOptions.organization,</span>
+<span class="fc" id="L413">                    batchWrite.batchWriteOptions.bucket,</span>
+<span class="fc" id="L414">                    batchWrite.batchWriteOptions.precision,</span>
                     lineProtocol);
         }
     }

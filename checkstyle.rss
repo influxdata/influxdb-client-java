@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 154,
+      <title>File: 156,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -803,6 +803,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.TaskClient.java">org/influxdata/platform/TaskClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.impl.WriteClientReactiveImpl.java">org/influxdata/platform/impl/WriteClientReactiveImpl.java</a>
                 </td>
                 <td>
                   0
@@ -2091,6 +2105,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.domain.Run.java">org/influxdata/platform/domain/Run.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.WriteClientReactive.java">org/influxdata/platform/WriteClientReactive.java</a>
                 </td>
                 <td>
                   0
