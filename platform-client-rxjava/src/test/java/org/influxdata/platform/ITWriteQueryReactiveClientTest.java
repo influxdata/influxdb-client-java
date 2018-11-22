@@ -207,8 +207,8 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         writeClient = platformClient.createWriteClient();
 
-        Instant now = Instant.now();
-        Point point = Point.name("h2o_feet").addTag("location", "south").addField("water_level", 1).time(now, ChronoUnit.MILLIS);
+        Instant time = Instant.ofEpochSecond(1000);
+        Point point = Point.name("h2o_feet").addTag("location", "south").addField("water_level", 1).time(time, ChronoUnit.MILLIS);
 
         writeClient
                 .listenEvents(WriteSuccessEvent.class)
@@ -226,7 +226,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
             Assertions.assertThat(fluxRecord.getValue()).isEqualTo(1L);
             Assertions.assertThat(fluxRecord.getField()).isEqualTo("water_level");
             Assertions.assertThat(fluxRecord.getValueByKey("location")).isEqualTo("south");
-            Assertions.assertThat(fluxRecord.getTime()).isEqualTo(now);
+            Assertions.assertThat(fluxRecord.getTime()).isEqualTo(time);
 
             return true;
         });
@@ -239,10 +239,10 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         countDownLatch = new CountDownLatch(2);
 
-        Instant time = Instant.now();
+        Instant time = Instant.ofEpochSecond(2000);
 
         Point point1 = Point.name("h2o_feet").addTag("location", "west").addField("water_level", 1).time(time, ChronoUnit.MILLIS);
-        Point point2 = Point.name("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusMillis(10), ChronoUnit.SECONDS);
+        Point point2 = Point.name("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusSeconds(10), ChronoUnit.SECONDS);
 
         writeClient
                 .listenEvents(WriteSuccessEvent.class)
@@ -265,7 +265,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
         H2O measurement = new H2O();
         measurement.location = "coyote_creek";
         measurement.level = 2.927;
-        measurement.time = Instant.now();
+        measurement.time = Instant.ofEpochSecond(10);
 
         writeClient = platformClient.createWriteClient();
         writeClient
@@ -292,17 +292,17 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
     @Test
     void writeMeasurements() {
 
-        Instant now = Instant.now();
+        Instant time = Instant.ofEpochSecond(50);
 
         H2O measurement1 = new H2O();
         measurement1.location = "coyote_creek";
         measurement1.level = 2.927;
-        measurement1.time = now;
+        measurement1.time = time;
 
         H2O measurement2 = new H2O();
         measurement2.location = "bohemia";
         measurement2.level = 3.927;
-        measurement2.time = now.plusSeconds(1);
+        measurement2.time = time.plusSeconds(1);
 
         writeClient = platformClient.createWriteClient();
         writeClient
