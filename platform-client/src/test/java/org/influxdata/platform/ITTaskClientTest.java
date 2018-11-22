@@ -155,7 +155,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Task task = taskClient.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", user.getId(), organization.getId());
 
         Task taskByID = taskClient.findTaskByID(task.getId());
-        LOG.info("TaskByID: " + task);
+        LOG.info("TaskByID: " + taskByID);
 
         Assertions.assertThat(taskByID).isNotNull();
         Assertions.assertThat(taskByID.getId()).isEqualTo(task.getId());

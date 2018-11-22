@@ -60,7 +60,7 @@ class ITBucketClientTest extends AbstractITClientTest {
     }
 
     @Test
-    void createBu3cket() {
+    void createBucket() {
 
         String bucketName = generateName("robot sensor");
 

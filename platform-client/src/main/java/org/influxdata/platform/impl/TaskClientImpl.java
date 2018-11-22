@@ -35,7 +35,6 @@ import org.influxdata.platform.domain.Run;
 import org.influxdata.platform.domain.RunsResponse;
 import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.domain.Task;
-import org.influxdata.platform.domain.TaskResponse;
 import org.influxdata.platform.domain.Tasks;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
@@ -73,14 +72,9 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNonEmpty(taskID, "taskID");
 
-        Call<TaskResponse> call = platformService.findTaskByID(taskID);
-        TaskResponse taskResponse = execute(call, "task not found");
+        Call<Task> call = platformService.findTaskByID(taskID);
 
-        if (taskResponse == null) {
-            return null;
-        }
-
-        return taskResponse.getTask();
+        return execute(call, "task not found");
     }
 
     @Nonnull
@@ -140,10 +134,9 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(task, "task");
 
-        Call<TaskResponse> call = platformService.createTask(createBody(adapter.toJson(task)));
-        TaskResponse taskResponse = execute(call);
+        Call<Task> call = platformService.createTask(createBody(adapter.toJson(task)));
 
-        return taskResponse.getTask();
+        return execute(call);
     }
 
     @Nonnull
@@ -238,10 +231,9 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
         Arguments.checkNotNull(task, "Task is required");
         Arguments.checkDurationNotRequired(task.getEvery(), "Task.every");
 
-        Call<TaskResponse> call = platformService.updateTask(task.getId(), createBody(adapter.toJson(task)));
-        TaskResponse taskResponse = execute(call);
+        Call<Task> call = platformService.updateTask(task.getId(), createBody(adapter.toJson(task)));
 
-        return taskResponse.getTask();
+        return execute(call);
     }
 
     @Override
