@@ -24,6 +24,7 @@ package org.influxdata.platform;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.LogLevel;
 
 import io.reactivex.Single;
@@ -43,6 +44,22 @@ public interface PlatformClientReactive extends AutoCloseable {
      */
     @Nonnull
     QueryClientReactive createQueryClient();
+
+    /**
+     * Get the Write client.
+     *
+     * @return the new client instance for the Write API
+     */
+    @Nonnull
+    WriteClientReactive createWriteClient();
+
+    /**
+     * Get the Write client.
+     *
+     * @return the new client instance for the Write API
+     */
+    @Nonnull
+    WriteClientReactive createWriteClient(@Nonnull final WriteOptions writeOptions);
 
     /**
      * Get the health of an instance.

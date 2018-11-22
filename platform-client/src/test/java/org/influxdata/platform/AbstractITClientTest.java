@@ -74,14 +74,6 @@ abstract class AbstractITClientTest extends AbstractTest {
     }
 
     @Nonnull
-    String generateName(@Nonnull final String prefix) {
-
-        Assertions.assertThat(prefix).isNotBlank();
-
-        return prefix + System.currentTimeMillis();
-    }
-
-    @Nonnull
     RetentionRule retentionRule() {
         RetentionRule retentionRule = new RetentionRule();
         retentionRule.setType("expire");

@@ -23,10 +23,13 @@ package org.influxdata.platform.impl;
 
 import javax.annotation.Nonnull;
 
+import org.influxdata.platform.Arguments;
 import org.influxdata.platform.PlatformClientReactive;
 import org.influxdata.platform.QueryClientReactive;
+import org.influxdata.platform.WriteClientReactive;
 import org.influxdata.platform.domain.Health;
 import org.influxdata.platform.option.PlatformOptions;
+import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.LogLevel;
 
 import io.reactivex.Single;
@@ -45,6 +48,22 @@ public class PlatformClientReactiveImpl extends AbstractPlatformClient<PlatformR
     @Override
     public QueryClientReactive createQueryClient() {
         return new QueryClientReactiveImpl(platformService);
+    }
+
+
+    @Nonnull
+    @Override
+    public WriteClientReactive createWriteClient() {
+        return createWriteClient(WriteOptions.DEFAULTS);
+    }
+
+    @Nonnull
+    @Override
+    public WriteClientReactive createWriteClient(@Nonnull final WriteOptions writeOptions) {
+
+        Arguments.checkNotNull(writeOptions, "WriteOptions");
+
+        return new WriteClientReactiveImpl(writeOptions, platformService);
     }
 
     @Nonnull

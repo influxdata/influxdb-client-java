@@ -145,4 +145,12 @@ public abstract class AbstractTest {
 
         LOG.info("done");
     }
+
+    @Nonnull
+    String generateName(@Nonnull final String prefix) {
+
+        Assertions.assertThat(prefix).isNotBlank();
+
+        return prefix + System.currentTimeMillis();
+    }
 }

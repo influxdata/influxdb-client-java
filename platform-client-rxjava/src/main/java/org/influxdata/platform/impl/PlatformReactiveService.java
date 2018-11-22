@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 
 import org.influxdata.platform.domain.Health;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -58,4 +59,13 @@ interface PlatformReactiveService {
     @Headers("Content-Type: application/json")
     Call<ResponseBody> query(@Query("organization") final String org, @Nonnull @Body final RequestBody query);
 
+
+    // Write
+    //
+    @POST("/api/v2/write")
+    @Nonnull
+    Completable writePoints(@Query("org") final String org,
+                            @Query("bucket") final String bucket,
+                            @Query("precision") final String precision,
+                            @Body final RequestBody points);
 }

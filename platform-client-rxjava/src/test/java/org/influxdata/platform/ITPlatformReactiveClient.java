@@ -43,6 +43,12 @@ class ITPlatformReactiveClient extends AbstractITPlatformClientTest {
     }
 
     @Test
+    void writeClient() {
+
+        Assertions.assertThat(platformClient.createWriteClient()).isNotNull();
+    }
+
+    @Test
     void health() {
 
         Single<Health> health = platformClient.health();
