@@ -174,7 +174,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
                 .listenEvents(WriteSuccessEvent.class)
                 .subscribe(event -> countDownLatch.countDown());
 
-        writeClient.writeRecords(bucket.getName(), "my-org", ChronoUnit.NANOS, records);
+        writeClient.writeRecords(bucket.getName(), "my-org", ChronoUnit.SECONDS, records);
 
         waitToCallback();
 
@@ -187,7 +187,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
                     Assertions.assertThat(fluxRecord.getMeasurement()).isEqualTo("h2o_feet");
                     Assertions.assertThat(fluxRecord.getValue()).isEqualTo(1.0D);
                     Assertions.assertThat(fluxRecord.getField()).isEqualTo("level water_level");
-                    Assertions.assertThat(fluxRecord.getTime()).isEqualTo(Instant.ofEpochSecond(0, 1));
+                    Assertions.assertThat(fluxRecord.getTime()).isEqualTo(Instant.ofEpochSecond(1));
 
                     return true;
                 })
@@ -196,7 +196,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
                     Assertions.assertThat(fluxRecord.getMeasurement()).isEqualTo("h2o_feet");
                     Assertions.assertThat(fluxRecord.getValue()).isEqualTo(2.0D);
                     Assertions.assertThat(fluxRecord.getField()).isEqualTo("level water_level");
-                    Assertions.assertThat(fluxRecord.getTime()).isEqualTo(Instant.ofEpochSecond(0, 2));
+                    Assertions.assertThat(fluxRecord.getTime()).isEqualTo(Instant.ofEpochSecond(2));
 
                     return true;
                 });
