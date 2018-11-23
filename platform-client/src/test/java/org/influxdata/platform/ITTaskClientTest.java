@@ -107,6 +107,32 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(task.getFlux()).isEqualToIgnoringWhitespace(flux);
     }
 
+    //TODO wait to fix Platform build
+    @Test
+    @Disabled
+    void createTaskWithDelay() {
+
+        String taskName = generateName("it task");
+        
+        String flux = "option task = {\n"
+                + "    name: \"" + taskName + "\",\n"
+                + "    every: 1h\n"
+                + "}\n\n" + TASK_FLUX;
+
+        Task task = new Task();
+        task.setName(taskName);
+        task.setOrganizationId(organization.getId());
+        task.setOwner(user);
+        task.setFlux(flux);
+        task.setStatus(Status.ACTIVE);
+        task.setDelay("30m");
+
+        task = taskClient.createTask(task);
+
+        Assertions.assertThat(task).isNotNull();
+        Assertions.assertThat(task.getDelay()).isEqualTo("30m");
+    }
+
     @Test
     void createTaskEvery() {
 
