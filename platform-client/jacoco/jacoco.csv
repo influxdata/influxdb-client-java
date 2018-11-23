@@ -12,7 +12,7 @@ The Platform Client,org.influxdata.platform.domain,UserResourcesResponse,4,11,0,
 The Platform Client,org.influxdata.platform.domain,AbstractHasLinks,4,11,0,0,2,3,1,2,1,2
 The Platform Client,org.influxdata.platform.domain,Health,22,0,0,0,8,0,6,0,6,0
 The Platform Client,org.influxdata.platform.domain,RunsResponse,15,0,0,0,5,0,3,0,3,0
-The Platform Client,org.influxdata.platform.domain,Task,4,163,0,0,2,33,1,17,1,17
+The Platform Client,org.influxdata.platform.domain,Task,11,175,0,0,5,34,3,17,3,17
 The Platform Client,org.influxdata.platform.domain,Source.SourceType,0,34,0,0,0,4,0,1,0,1
 The Platform Client,org.influxdata.platform.domain,Buckets,4,11,0,0,2,3,1,2,1,2
 The Platform Client,org.influxdata.platform.domain,Sources,15,0,0,0,5,0,3,0,3,0
