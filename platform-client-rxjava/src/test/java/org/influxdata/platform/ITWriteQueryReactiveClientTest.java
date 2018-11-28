@@ -166,6 +166,8 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         writeClient = platformClient.createWriteClient(WriteOptions.DISABLED_BATCHING);
 
+        countDownLatch = new CountDownLatch(2);
+
         Publisher<String> records = Flowable.just(
                 "h2o_feet,location=coyote_creek level\\ water_level=1.0 1",
                 "h2o_feet,location=coyote_creek level\\ water_level=2.0 2");
