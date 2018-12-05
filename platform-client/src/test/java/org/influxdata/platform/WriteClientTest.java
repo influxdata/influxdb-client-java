@@ -479,7 +479,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         mockServer.enqueue(createResponse("{}"));
 
-        writeClient = createWriteClient();
+        writeClient = createWriteClient(WriteOptions.builder().batchSize(1).build());
         TestObserver<WriteSuccessEvent> listener = writeClient.listenEvents(WriteSuccessEvent.class).test();
 
         writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS,
