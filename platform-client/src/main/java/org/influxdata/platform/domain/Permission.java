@@ -64,6 +64,24 @@ public final class Permission {
      */
     public static final String ORGANIZATION_RESOURCE = "org";
 
+    private String resource;
+    private String action;
+
+    public String getResource() {
+        return resource;
+    }
+
+    public void setResource(final String resource) {
+        this.resource = resource;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(final String action) {
+        this.action = action;
+    }
 
     /**
      * Represents the task resource scoped to an organization.
@@ -90,25 +108,6 @@ public final class Permission {
         Arguments.checkNonEmpty(bucketID, "bucketID");
 
         return String.format("bucket/%s", bucketID);
-    }
-
-    private String resource;
-    private String action;
-
-    public String getResource() {
-        return resource;
-    }
-
-    public void setResource(final String resource) {
-        this.resource = resource;
-    }
-
-    public String getAction() {
-        return action;
-    }
-
-    public void setAction(final String action) {
-        this.action = action;
     }
 
     @Override

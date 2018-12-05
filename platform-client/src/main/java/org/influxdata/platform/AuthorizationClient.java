@@ -49,7 +49,7 @@ public interface AuthorizationClient {
      * Create an authorization with defined {@code permissions}.
      *
      * @param user        owner of authorization
-     * @param permissions to new authorizations
+     * @param permissions the permissions for the authorization
      * @return created authorization
      */
     @Nonnull
@@ -59,7 +59,7 @@ public interface AuthorizationClient {
      * Create an authorization with defined {@code permissions}.
      *
      * @param userID      owner id of authorization
-     * @param permissions to new authorizations
+     * @param permissions the permissions for the authorization
      * @return created authorization
      */
     @Nonnull
@@ -68,11 +68,11 @@ public interface AuthorizationClient {
     /**
      * Updates the status of the authorization. Useful for setting an authorization to inactive or active.
      *
-     * @param authorization to update status
+     * @param authorization the authorization with updated status
      * @return updated authorization
      */
     @Nonnull
-    Authorization updateAuthorizationStatus(@Nonnull final Authorization authorization);
+    Authorization updateAuthorization(@Nonnull final Authorization authorization);
 
     /**
      * Delete a authorization.
@@ -107,7 +107,7 @@ public interface AuthorizationClient {
     Authorization findAuthorizationByID(@Nonnull final String authorizationID);
 
     /**
-     * List all buckets for specified {@code user}.
+     * List all authorizations for specified {@code user}.
      *
      * @param user filter authorizations belonging to a user
      * @return A list of authorizations
@@ -116,7 +116,7 @@ public interface AuthorizationClient {
     List<Authorization> findAuthorizationsByUser(@Nonnull final User user);
 
     /**
-     * List all buckets for specified {@code userID}.
+     * List all authorizations for specified {@code userID}.
      *
      * @param userID filter authorizations belonging to a user ID
      * @return A list of authorizations
@@ -125,7 +125,7 @@ public interface AuthorizationClient {
     List<Authorization> findAuthorizationsByUserID(@Nullable final String userID);
 
     /**
-     * List all buckets for specified {@code userName}.
+     * List all authorizations for specified {@code userName}.
      *
      * @param userName filter authorizations belonging to a user name
      * @return A list of authorizations

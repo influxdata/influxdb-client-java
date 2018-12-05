@@ -152,7 +152,7 @@ public abstract class AbstractQueryClient extends AbstractRestClient {
                     //
                     // Source has data => parse
                     //
-                    while (!source.exhausted() && !cancellable.wasCancelled) {
+                    while (source.isOpen() && !source.exhausted() && !cancellable.wasCancelled) {
 
                         consumer.accept(cancellable, source);
                     }

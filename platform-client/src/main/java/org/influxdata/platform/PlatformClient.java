@@ -31,6 +31,8 @@ import org.influxdata.platform.rest.LogLevel;
  * The client of the InfluxData Platform for Time Series that implements HTTP API defined by
  * <a href="https://github.com/influxdata/platform/blob/master/http/swagger.yml">Influx API Service swagger.yml</a>.
  *
+ * TODO same API in all client (user, bucket, ...).
+ *
  * @author Jakub Bednar (bednar@github) (11/10/2018 08:56)
  */
 public interface PlatformClient extends AutoCloseable {

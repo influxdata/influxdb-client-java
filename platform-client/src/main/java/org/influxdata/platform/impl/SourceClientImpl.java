@@ -167,7 +167,7 @@ final class SourceClientImpl extends AbstractRestClient implements SourceClient 
             health.setStatus(Health.HEALTHY_STATUS);
 
             //TODO wait for implementation of handleGetSourceHealth failure,
-            // after fix refactor to platformClient.health implementation
+            // after fix refactor to platformClient.health implementation + tests
         } catch (InfluxException e) {
             health.setStatus("error");
             health.setMessage(e.getMessage());

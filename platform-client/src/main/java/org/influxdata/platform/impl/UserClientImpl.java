@@ -128,6 +128,7 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
                                    @Nonnull final String oldPassword,
                                    @Nonnull final String newPassword) {
 
+        Arguments.checkNotNull(user, "User");
         Arguments.checkNotNull(oldPassword, "old password");
         Arguments.checkNotNull(newPassword, "new password");
 

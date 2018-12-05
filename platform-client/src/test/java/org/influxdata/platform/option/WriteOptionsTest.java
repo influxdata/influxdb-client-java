@@ -43,7 +43,7 @@ class WriteOptionsTest {
         Assertions.assertThat(writeOptions.getBufferLimit()).isEqualTo(10000);
         Assertions.assertThat(writeOptions.getFlushInterval()).isEqualTo(1000);
         Assertions.assertThat(writeOptions.getJitterInterval()).isEqualTo(0);
-        Assertions.assertThat(writeOptions.getWriteScheduler()).isEqualTo(Schedulers.trampoline());
+        Assertions.assertThat(writeOptions.getWriteScheduler()).isEqualTo(Schedulers.newThread());
         Assertions.assertThat(writeOptions.getBackpressureStrategy()).isEqualTo(BackpressureOverflowStrategy.DROP_OLDEST);
     }
 
@@ -67,11 +67,5 @@ class WriteOptionsTest {
         Assertions.assertThat(writeOptions.getRetryInterval()).isEqualTo(2_000);
         Assertions.assertThat(writeOptions.getWriteScheduler()).isEqualTo(Schedulers.computation());
         Assertions.assertThat(writeOptions.getBackpressureStrategy()).isEqualTo(BackpressureOverflowStrategy.ERROR);
-    }
-
-    @Test
-    void disabledBatching() {
-
-        Assertions.assertThat(WriteOptions.DISABLED_BATCHING.getBatchSize()).isEqualTo(1);
     }
 }

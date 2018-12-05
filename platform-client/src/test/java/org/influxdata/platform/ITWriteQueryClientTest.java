@@ -106,7 +106,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeClient = platformClient.createWriteClient(WriteOptions.DISABLED_BATCHING);
+        writeClient = platformClient.createWriteClient();
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
@@ -143,7 +143,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeClient = platformClient.createWriteClient(WriteOptions.DISABLED_BATCHING);
+        writeClient = platformClient.createWriteClient();
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
@@ -166,7 +166,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeClient = platformClient.createWriteClient(WriteOptions.DISABLED_BATCHING);
+        writeClient = platformClient.createWriteClient();
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
@@ -189,7 +189,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeClient = platformClient.createWriteClient(WriteOptions.DISABLED_BATCHING);
+        writeClient = platformClient.createWriteClient();
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
@@ -318,5 +318,114 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         String query = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", organization.getName());
         Assertions.assertThat(query).endsWith("1,water_level,h2o_feet,atlantic\n");
+    }
+
+    @Test
+    void flush() throws InterruptedException {
+
+        String bucketName = bucket.getName();
+
+        writeClient = platformClient.createWriteClient(WriteOptions.builder().batchSize(100_000)
+                .flushInterval(100_000).build());
+
+        String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
+
+        writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record);
+
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+        Assertions.assertThat(query).hasSize(0);
+
+        writeClient.flush();
+        Thread.sleep(10);
+
+        query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
+    }
+
+    @Test
+    void flushByTime() throws InterruptedException {
+
+        String bucketName = bucket.getName();
+
+        writeClient = platformClient.createWriteClient(WriteOptions.builder().batchSize(100_000)
+                .flushInterval(500).build());
+
+        String record1 = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
+        String record2 = "h2o_feet,location=coyote_creek level\\ water_level=2.0 2";
+        String record3 = "h2o_feet,location=coyote_creek level\\ water_level=3.0 3";
+        String record4 = "h2o_feet,location=coyote_creek level\\ water_level=4.0 4";
+        String record5 = "h2o_feet,location=coyote_creek level\\ water_level=5.0 5";
+
+        writeClient.writeRecords(bucketName, "my-org", ChronoUnit.NANOS, Arrays.asList(record1, record2, record3, record4, record5));
+
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", "my-org");
+        Assertions.assertThat(query).hasSize(0);
+
+        Thread.sleep(500);
+
+        query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", "my-org");
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords()).hasSize(5);
+    }
+
+    @Test
+    void flushByCount() throws InterruptedException {
+
+        String bucketName = bucket.getName();
+
+        writeClient = platformClient.createWriteClient(WriteOptions.builder().batchSize(6)
+                .flushInterval(100_000).build());
+
+        String record1 = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
+        String record2 = "h2o_feet,location=coyote_creek level\\ water_level=2.0 2";
+        String record3 = "h2o_feet,location=coyote_creek level\\ water_level=3.0 3";
+        String record4 = "h2o_feet,location=coyote_creek level\\ water_level=4.0 4";
+        String record5 = "h2o_feet,location=coyote_creek level\\ water_level=5.0 5";
+        String record6 = "h2o_feet,location=coyote_creek level\\ water_level=6.0 6";
+
+        writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record1);
+        writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record2);
+        writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record3);
+        writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record4);
+        writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record5);
+
+        Thread.sleep(100);
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", "my-org");
+        Assertions.assertThat(query).hasSize(0);
+
+        writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record6);
+        Thread.sleep(100);
+
+        query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", "my-org");
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords()).hasSize(6);
+    }
+
+    @Test
+    void jitter() throws InterruptedException {
+
+        String bucketName = bucket.getName();
+
+        writeClient = platformClient.createWriteClient(WriteOptions.builder().batchSize(1)
+                .jitterInterval(4_000)
+                .build());
+
+        String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
+
+        writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record);
+
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+        Assertions.assertThat(query).hasSize(0);
+
+        Thread.sleep(5000);
+
+        query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
     }
 }

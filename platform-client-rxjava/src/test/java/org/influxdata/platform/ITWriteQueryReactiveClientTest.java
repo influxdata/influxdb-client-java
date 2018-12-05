@@ -117,7 +117,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         String bucketName = bucket.getName();
 
-        writeClient = platformClient.createWriteClient(WriteOptions.DISABLED_BATCHING);
+        writeClient = platformClient.createWriteClient();
 
         String lineProtocol = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
         Maybe<String> record = Maybe.just(lineProtocol);
@@ -156,7 +156,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
     @Test
     void writeRecordEmpty() {
 
-        writeClient = platformClient.createWriteClient(WriteOptions.DISABLED_BATCHING);
+        writeClient = platformClient.createWriteClient();
 
         writeClient.writeRecord(bucket.getName(), "my-org", ChronoUnit.SECONDS, Maybe.empty());
     }
@@ -164,7 +164,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
     @Test
     void writeRecords() {
 
-        writeClient = platformClient.createWriteClient(WriteOptions.DISABLED_BATCHING);
+        writeClient = platformClient.createWriteClient(WriteOptions.builder().batchSize(1).build());
 
         countDownLatch = new CountDownLatch(2);
 

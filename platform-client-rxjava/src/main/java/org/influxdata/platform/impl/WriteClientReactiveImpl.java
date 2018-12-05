@@ -51,8 +51,6 @@ public class WriteClientReactiveImpl extends AbstractWriteClient implements Writ
 
         super(writeOptions,
                 Schedulers.newThread(),
-                Schedulers.computation(),
-                Schedulers.trampoline(),
                 Schedulers.trampoline());
 
         this.platformService = platformService;

@@ -32,7 +32,7 @@ import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * WriteOptions are used to configure writes the data point into InfluxDB.
+ * WriteOptions are used to configure writes the data point into InfluxData Platform.
  *
  * <p>
  * The default setting use the batching configured to (consistent with Telegraf):
@@ -46,7 +46,6 @@ import io.reactivex.schedulers.Schedulers;
  * <p>
  * The default backpressure strategy is {@link BackpressureOverflowStrategy#DROP_OLDEST}.
  * <p>
- * For disabling the batching use the configuration: {@link WriteOptions#DISABLED_BATCHING}
  *
  * @author Jakub Bednar (bednar@github) (21/09/2018 10:11)
  */
@@ -63,11 +62,6 @@ public final class WriteOptions {
      * Default configuration with values that are consistent with Telegraf.
      */
     public static final WriteOptions DEFAULTS = WriteOptions.builder().build();
-
-    /**
-     * Disabled batching.
-     */
-    public static final WriteOptions DISABLED_BATCHING = WriteOptions.disabled().build();
 
     private final int batchSize;
     private final int flushInterval;
@@ -94,7 +88,7 @@ public final class WriteOptions {
     }
 
     /**
-     * @return batch flush interval jitter value (milliseconds)
+     * @return batch flush jitter interval value (milliseconds)
      * @see WriteOptions.Builder#jitterInterval(int)
      */
     public int getJitterInterval() {
@@ -119,7 +113,7 @@ public final class WriteOptions {
     }
 
     /**
-     * @return Set the scheduler which is used for write data points.
+     * @return The scheduler which is used for write data points.
      * @see WriteOptions.Builder#writeScheduler(Scheduler)
      */
     @Nonnull
@@ -160,17 +154,6 @@ public final class WriteOptions {
     }
 
     /**
-     * Creates a builder instance with disabled batching. The {@link WriteOptions#getBatchSize()} is set to 1
-     * and {@link WriteOptions#getWriteScheduler()} is set to {@link Schedulers#io()}.
-     *
-     * @return a builder
-     */
-    @Nonnull
-    public static WriteOptions.Builder disabled() {
-        return WriteOptions.builder().batchSize(1).writeScheduler(Schedulers.single());
-    }
-
-    /**
      * A builder for {@code WriteOptions}.
      */
     @NotThreadSafe
@@ -181,7 +164,7 @@ public final class WriteOptions {
         private int jitterInterval = DEFAULT_JITTER_INTERVAL;
         private int retryInterval = DEFAULT_RETRY_INTERVAL;
         private int bufferLimit = DEFAULT_BUFFER_LIMIT;
-        private Scheduler writeScheduler = Schedulers.trampoline();
+        private Scheduler writeScheduler = Schedulers.newThread();
         private BackpressureOverflowStrategy backpressureStrategy = BackpressureOverflowStrategy.DROP_OLDEST;
 
         /**
@@ -255,7 +238,7 @@ public final class WriteOptions {
 
         /**
          * Set the scheduler which is used for write data points. It is useful for disabling batch writes or
-         * for tuning the performance. Default value is {@link Schedulers#trampoline()}.
+         * for tuning the performance. Default value is {@link Schedulers#newThread()}.
          *
          * @param writeScheduler the scheduler which is used for write data points.
          * @return {@code this}

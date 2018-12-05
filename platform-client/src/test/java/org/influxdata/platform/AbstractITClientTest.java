@@ -52,7 +52,7 @@ abstract class AbstractITClientTest extends AbstractTest {
 
         if (useToken)
         {
-            String token= platformClient.createAuthorizationClient()
+            String token = platformClient.createAuthorizationClient()
                     .findAuthorizations()
                     .stream()
                     .filter(authorization -> authorization.getPermissions().size() == 4)

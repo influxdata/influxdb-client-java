@@ -35,7 +35,6 @@ import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.AbstractRestClient;
 import org.influxdata.platform.write.Point;
 import org.influxdata.platform.write.event.AbstractWriteEvent;
-import org.influxdata.platform.write.event.BackpressureEvent;
 import org.influxdata.platform.write.event.WriteErrorEvent;
 import org.influxdata.platform.write.event.WriteSuccessEvent;
 
@@ -61,37 +60,44 @@ abstract class AbstractWriteClient extends AbstractRestClient {
     private final WriteOptions writeOptions;
 
     private final PublishProcessor<AbstractWriteClient.BatchWriteItem> processor;
+    private final PublishProcessor<Flowable<BatchWriteItem>> flushPublisher;
     private final PublishSubject<AbstractWriteEvent> eventPublisher;
 
     private final MeasurementMapper measurementMapper = new MeasurementMapper();
 
     AbstractWriteClient(@Nonnull final WriteOptions writeOptions,
                         @Nonnull final Scheduler processorScheduler,
-                        @Nonnull final Scheduler batchScheduler,
-                        @Nonnull final Scheduler jitterScheduler,
                         @Nonnull final Scheduler retryScheduler) {
 
         this.writeOptions = writeOptions;
 
+
+        this.flushPublisher = PublishProcessor.create();
         this.eventPublisher = PublishSubject.create();
         this.processor = PublishProcessor.create();
-        this.processor
-                //
-                // Backpressure
-                //
-                .onBackpressureBuffer(
-                        writeOptions.getBufferLimit(),
-                        () -> publish(new BackpressureEvent()),
-                        writeOptions.getBackpressureStrategy())
-                .observeOn(processorScheduler)
+
+
+        Flowable<Flowable<BatchWriteItem>> boundary = processor
+                .window(writeOptions.getFlushInterval(),
+                        TimeUnit.MILLISECONDS,
+                        processorScheduler,
+                        writeOptions.getBatchSize(),
+                        true)
+
+                .mergeWith(flushPublisher);
+
+        PublishProcessor<Flowable<BatchWriteItem>> tempBoundary = PublishProcessor.create();
+
+        processor
+//                .onBackpressureBuffer(
+//                        writeOptions.getBufferLimit(),
+//                        () -> publish(new BackpressureEvent()),
+//                        writeOptions.getBackpressureStrategy())
+//                .observeOn(processorScheduler)
                 //
                 // Batching
                 //
-                .window(writeOptions.getFlushInterval(),
-                        TimeUnit.MILLISECONDS,
-                        batchScheduler,
-                        writeOptions.getBatchSize(),
-                        true)
+                .window(tempBoundary)
                 //
                 // Group by key - same bucket, same org
                 //
@@ -129,7 +135,7 @@ abstract class AbstractWriteClient extends AbstractRestClient {
                 //
                 // Jitter interval
                 //
-                .compose(jitter(jitterScheduler))
+                .compose(jitter(processorScheduler))
                 //
                 // To WritePoints "request creator"
                 //
@@ -140,6 +146,8 @@ abstract class AbstractWriteClient extends AbstractRestClient {
                 .subscribe(
                         () -> LOG.log(Level.FINEST, "Finished batch write."),
                         throwable -> publish(new WriteErrorEvent(new InfluxException(throwable))));
+
+        boundary.subscribe(tempBoundary);
     }
 
     @Nonnull
@@ -150,14 +158,18 @@ abstract class AbstractWriteClient extends AbstractRestClient {
         return eventPublisher.ofType(eventType);
     }
 
+    public void flush() {
+        flushPublisher.offer(Flowable.empty());
+    }
+
     void close() {
 
         LOG.log(Level.INFO, "Flushing any cached BatchWrites before shutdown.");
 
         processor.onComplete();
         eventPublisher.onComplete();
+        flushPublisher.onComplete();
     }
-
 
     void write(@Nonnull final String bucket,
                @Nonnull final String organization,

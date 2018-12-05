@@ -147,6 +147,11 @@ public interface WriteClient extends AutoCloseable {
     <T extends AbstractWriteEvent> Observable<T> listenEvents(@Nonnull final Class<T> eventType);
 
     /**
+     * Forces the client to flush all pending writes from the buffer to InfluxData Platform via HTTP.
+     */
+    void flush();
+
+    /**
      * Close threads for asynchronous batch writing.
      */
     void close();

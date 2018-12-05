@@ -227,12 +227,12 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
         Assertions.assertThat(authorization.getStatus()).isEqualTo(Status.ACTIVE);
 
         authorization.setStatus(Status.INACTIVE);
-        authorization = authorizationClient.updateAuthorizationStatus(authorization);
+        authorization = authorizationClient.updateAuthorization(authorization);
 
         Assertions.assertThat(authorization.getStatus()).isEqualTo(Status.INACTIVE);
 
         authorization.setStatus(Status.ACTIVE);
-        authorization = authorizationClient.updateAuthorizationStatus(authorization);
+        authorization = authorizationClient.updateAuthorization(authorization);
 
         Assertions.assertThat(authorization.getStatus()).isEqualTo(Status.ACTIVE);
     }

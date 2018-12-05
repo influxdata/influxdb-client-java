@@ -30,8 +30,6 @@ import org.influxdata.platform.PlatformClientFactory;
 import org.influxdata.platform.WriteClient;
 import org.influxdata.platform.option.WriteOptions;
 
-import io.reactivex.Scheduler;
-import io.reactivex.schedulers.Schedulers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -50,10 +48,7 @@ public class AbstractPlatformClientTest extends AbstractMockServerTest {
     }
 
     @Nonnull
-    protected WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions,
-                                            @Nonnull final Scheduler batchScheduler,
-                                            @Nonnull final Scheduler jitterScheduler,
-                                            @Nonnull final Scheduler retryScheduler) {
+    protected WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions) {
 
         Optional<Object> platformService = ReflectionUtils.readFieldValue(AbstractPlatformClient.class, "platformService",
                 (AbstractPlatformClient) platformClient);
@@ -62,11 +57,6 @@ public class AbstractPlatformClientTest extends AbstractMockServerTest {
             Assertions.fail();
         }
 
-        return new WriteClientImpl(writeOptions,
-                (PlatformService) platformService.get(),
-                Schedulers.trampoline(),
-                batchScheduler,
-                jitterScheduler,
-                retryScheduler);
+        return new WriteClientImpl(writeOptions, (PlatformService) platformService.get());
     }
 }

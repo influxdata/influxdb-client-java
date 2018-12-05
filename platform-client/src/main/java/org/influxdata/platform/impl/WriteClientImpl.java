@@ -37,7 +37,6 @@ import org.influxdata.platform.write.event.AbstractWriteEvent;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.RequestBody;
 
@@ -51,22 +50,7 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
     WriteClientImpl(@Nonnull final WriteOptions writeOptions,
                     @Nonnull final PlatformService platformService) {
 
-        this(writeOptions, platformService,
-                Schedulers.newThread(),
-                Schedulers.computation(),
-                Schedulers.trampoline(),
-                Schedulers.trampoline());
-    }
-
-
-    WriteClientImpl(@Nonnull final WriteOptions writeOptions,
-                    @Nonnull final PlatformService platformService,
-                    @Nonnull final Scheduler processorScheduler,
-                    @Nonnull final Scheduler batchScheduler,
-                    @Nonnull final Scheduler jitterScheduler,
-                    @Nonnull final Scheduler retryScheduler) {
-
-        super(writeOptions, processorScheduler, batchScheduler, jitterScheduler, retryScheduler);
+        super(writeOptions, writeOptions.getWriteScheduler(), Schedulers.trampoline());
 
         this.platformService = platformService;
     }

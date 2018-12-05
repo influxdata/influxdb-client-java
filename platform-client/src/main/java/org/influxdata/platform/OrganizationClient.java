@@ -201,4 +201,8 @@ public interface OrganizationClient {
      * @param ownerID        the ID of a owner
      */
     void deleteOwner(@Nonnull final String ownerID, @Nonnull final String organizationID);
+
+    //TODO secrets
+    // https://github.com/influxdata/platform/commit/
+    // 56de056085c01eb5b3956c9c28c7ea52e4ce63d7#diff-ffefdbced7252e9b741e6138672603da
 }

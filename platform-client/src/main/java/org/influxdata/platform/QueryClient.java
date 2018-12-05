@@ -63,7 +63,7 @@ public interface QueryClient {
      * @param query           the flux query to execute
      * @param organization specifies the source organization
      * @param measurementType the type of measurement
-     * @return {@code List<FluxTable>} which are matched the query
+     * @return {@code List<T>} which are matched the query
      */
     @Nonnull
     <M> List<M> query(@Nonnull final String query,
@@ -90,7 +90,7 @@ public interface QueryClient {
      * @param query           the flux query to execute
      * @param organization specifies the source organization
      * @param measurementType the measurement type (POJO)
-     * @param onNext          the callback to consume the FluxRecord result with capability to discontinue
+     * @param onNext          the callback to consume the mapped Measurements with capability to discontinue
      *                        a streaming query
      */
     <M> void query(@Nonnull final String query,

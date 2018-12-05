@@ -136,7 +136,7 @@ public interface BucketClient {
     List<Bucket> findBuckets();
 
     /**
-     * List all buckets for specified {@code organizationID}.
+     * List all buckets for specified {@code organization}.
      *
      * @param organization filter buckets to a specific organization
      * @return A list of buckets
@@ -145,7 +145,7 @@ public interface BucketClient {
     List<Bucket> findBucketsByOrganization(@Nonnull final Organization organization);
 
     /**
-     * List all buckets for specified {@code organizationID}.
+     * List all buckets for specified {@code organizationName}.
      *
      * @param organizationName filter buckets to a specific organization name
      * @return A list of buckets
@@ -260,4 +260,6 @@ public interface BucketClient {
      * @param ownerID  the ID of a owner
      */
     void deleteOwner(@Nonnull final String ownerID, @Nonnull final String bucketID);
+
+    // TODO label?
 }

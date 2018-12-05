@@ -136,7 +136,7 @@ final class AuthorizationClientImpl extends AbstractRestClient implements Author
 
     @Nonnull
     @Override
-    public Authorization updateAuthorizationStatus(@Nonnull final Authorization authorization) {
+    public Authorization updateAuthorization(@Nonnull final Authorization authorization) {
 
         Arguments.checkNotNull(authorization, "Authorization is required");
 

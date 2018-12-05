@@ -39,6 +39,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
@@ -50,6 +51,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     private static final Logger LOG = Logger.getLogger(ITTaskClientTest.class.getName());
     private static final String TASK_FLUX = "from(bucket:\"my-bucket\") |> range(start: 0) |> last()";
+    private static final String DISABLE_IF_CONDITION = "true";
 
     private User user;
     private Organization organization;
@@ -109,7 +111,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     //TODO wait to fix Platform build
     @Test
-    @Disabled
+    @DisabledIf(DISABLE_IF_CONDITION)
     void createTaskWithDelay() {
 
         String taskName = generateName("it task");
@@ -277,6 +279,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(updatedTask).isNotNull();
         Assertions.assertThat(updatedTask.getId()).isEqualTo(cronTask.getId());
         Assertions.assertThat(updatedTask.getOwner()).isNotNull();
+        Assertions.assertThat(updatedTask.getOwner().getId()).isEqualTo(cronTask.getOwner().getId());
         Assertions.assertThat(updatedTask.getOwner().getName()).isEqualTo(cronTask.getOwner().getName());
         Assertions.assertThat(updatedTask.getEvery()).isEqualTo("2m0s");
         Assertions.assertThat(updatedTask.getCron()).isNull();
@@ -289,7 +292,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @Disabled
+    @DisabledIf(DISABLE_IF_CONDITION)
     void member() {
 
         UserClient userClient = platformClient.createUserClient();
@@ -323,7 +326,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @Disabled
+    @DisabledIf(DISABLE_IF_CONDITION)
     void owner() {
 
         UserClient userClient = platformClient.createUserClient();
@@ -357,7 +360,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @Disabled
+    @DisabledIf(DISABLE_IF_CONDITION)
     void runs() throws Exception {
 
         String taskName = generateName("it task");
@@ -383,7 +386,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @Disabled
+    @DisabledIf(DISABLE_IF_CONDITION)
     void runsNotExist() {
 
         List<Run> runs = taskClient.getRuns("020f755c3c082000", organization.getId());
@@ -392,7 +395,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @Disabled
+    @DisabledIf(DISABLE_IF_CONDITION)
     void runsByTime() throws InterruptedException {
 
         Instant now = Instant.now();
@@ -412,7 +415,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @Disabled
+    @DisabledIf(DISABLE_IF_CONDITION)
     void runsLimit() throws InterruptedException {
 
         String taskName = generateName("it task");
@@ -451,7 +454,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @Disabled
+    @DisabledIf(DISABLE_IF_CONDITION)
     void runNotExist() {
 
         String taskName = generateName("it task");
@@ -465,7 +468,7 @@ class ITTaskClientTest extends AbstractITClientTest {
     //TODO wait to fix (task/backend/query_logreader.go:149) - FindRunByID (avoid "panic: column _measurement is not of type time goroutine")
     @Test
     @Disabled
-    void retry() throws InterruptedException {
+    void retryRun() throws InterruptedException {
 
         String taskName = generateName("it task");
 
@@ -486,8 +489,8 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @Disabled
-    void retryNotExist() {
+    @DisabledIf(DISABLE_IF_CONDITION)
+    void retryRunNotExist() {
 
         String taskName = generateName("it task");
 
@@ -500,7 +503,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @Disabled
+    @DisabledIf(DISABLE_IF_CONDITION)
     void logs() throws Exception {
 
         String taskName = generateName("it task");
@@ -516,7 +519,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @Disabled
+    @DisabledIf(DISABLE_IF_CONDITION)
     void logsNotExist() {
 
         List<String> logs = taskClient.getLogs("020f755c3c082000", organization.getId());
@@ -526,7 +529,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @Disabled
+    @DisabledIf(DISABLE_IF_CONDITION)
     void runLogs() throws Exception {
 
         String taskName = generateName("it task");
@@ -545,7 +548,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @Disabled
+    @DisabledIf(DISABLE_IF_CONDITION)
     void runLogsNotExist() {
 
         String taskName = generateName("it task");
@@ -558,8 +561,8 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     //TODO wait to change pAdapter{s: s, r: r} => pAdapter{s: s, r: r, rc: rc} (platform_adapter.go)
     @Test
-    @Disabled
-    void cancelRun() throws InterruptedException {
+    @DisabledIf(DISABLE_IF_CONDITION)
+    void cancelRunNotExist() throws InterruptedException {
 
         String taskName = generateName("it task");
 
@@ -568,17 +571,16 @@ class ITTaskClientTest extends AbstractITClientTest {
         Thread.sleep(2_000);
 
         List<Run> runs = taskClient.getRuns(task);
-        taskClient.cancelRun(runs.get(0));
 
-        Run canceledRun = taskClient.getRun(runs.get(0));
-        Assertions.assertThat(canceledRun).isNotNull();
-        Assertions.assertThat(canceledRun.getStatus()).isEqualTo(RunStatus.FAILED);
+        Assertions.assertThatThrownBy(() -> taskClient.cancelRun(runs.get(0)))
+                .isInstanceOf(InfluxException.class)
+                .hasMessage("run not found");
     }
 
     //TODO wait to change pAdapter{s: s, r: r} => pAdapter{s: s, r: r, rc: rc} (platform_adapter.go)
     @Test
-    @Disabled
-    void cancelRunNotExist() {
+    @DisabledIf(DISABLE_IF_CONDITION)
+    void cancelRunTaskNotExist() {
 
         Assertions.assertThatThrownBy(() -> taskClient.cancelRun("020f755c3c082000", "020f755c3c082000"))
                 .isInstanceOf(InfluxException.class)
