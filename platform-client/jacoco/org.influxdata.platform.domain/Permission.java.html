@@ -64,6 +64,24 @@ import org.influxdata.platform.Arguments;
      */
     public static final String ORGANIZATION_RESOURCE = &quot;org&quot;;
 
+    private String resource;
+    private String action;
+
+    public String getResource() {
+<span class="fc" id="L71">        return resource;</span>
+    }
+
+    public void setResource(final String resource) {
+<span class="fc" id="L75">        this.resource = resource;</span>
+<span class="fc" id="L76">    }</span>
+
+    public String getAction() {
+<span class="fc" id="L79">        return action;</span>
+    }
+
+    public void setAction(final String action) {
+<span class="fc" id="L83">        this.action = action;</span>
+<span class="fc" id="L84">    }</span>
 
     /**
      * Represents the task resource scoped to an organization.
@@ -74,9 +92,9 @@ import org.influxdata.platform.Arguments;
     @Nonnull
     public static String taskResource(@Nonnull final String orgID) {
 
-<span class="fc" id="L77">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+<span class="fc" id="L95">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
 
-<span class="fc" id="L79">        return String.format(&quot;org/%s/task&quot;, orgID);</span>
+<span class="fc" id="L97">        return String.format(&quot;org/%s/task&quot;, orgID);</span>
     }
 
     /**
@@ -87,36 +105,17 @@ import org.influxdata.platform.Arguments;
      */
     public static String bucketResource(@Nonnull final String bucketID) {
 
-<span class="fc" id="L90">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
+<span class="fc" id="L108">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
 
-<span class="fc" id="L92">        return String.format(&quot;bucket/%s&quot;, bucketID);</span>
+<span class="fc" id="L110">        return String.format(&quot;bucket/%s&quot;, bucketID);</span>
     }
-
-    private String resource;
-    private String action;
-
-    public String getResource() {
-<span class="fc" id="L99">        return resource;</span>
-    }
-
-    public void setResource(final String resource) {
-<span class="fc" id="L103">        this.resource = resource;</span>
-<span class="fc" id="L104">    }</span>
-
-    public String getAction() {
-<span class="fc" id="L107">        return action;</span>
-    }
-
-    public void setAction(final String action) {
-<span class="fc" id="L111">        this.action = action;</span>
-<span class="fc" id="L112">    }</span>
 
     @Override
     public String toString() {
-<span class="fc" id="L116">        return new StringJoiner(&quot;, &quot;, Permission.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
-<span class="fc" id="L117">                .add(&quot;resource='&quot; + resource + &quot;'&quot;)</span>
-<span class="fc" id="L118">                .add(&quot;action='&quot; + action + &quot;'&quot;)</span>
-<span class="fc" id="L119">                .toString();</span>
+<span class="fc" id="L115">        return new StringJoiner(&quot;, &quot;, Permission.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
+<span class="fc" id="L116">                .add(&quot;resource='&quot; + resource + &quot;'&quot;)</span>
+<span class="fc" id="L117">                .add(&quot;action='&quot; + action + &quot;'&quot;)</span>
+<span class="fc" id="L118">                .toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

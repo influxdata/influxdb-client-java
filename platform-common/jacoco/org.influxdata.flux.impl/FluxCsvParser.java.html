@@ -120,91 +120,91 @@ import org.apache.commons.csv.CSVRecord;
 
 <span class="fc" id="L121">        ParsingState parsingState = ParsingState.NORMAL;</span>
 
-<span class="fc" id="L123">        final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);</span>
+<span class="fc" id="L123">        try (CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT)) {</span>
+<span class="fc" id="L124">            int tableIndex = 0;</span>
+<span class="fc" id="L125">            boolean startNewTable = false;</span>
+<span class="fc" id="L126">            FluxTable table = null;</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">            for (CSVRecord csvRecord : parser) {</span>
 
-<span class="fc" id="L125">        int tableIndex = 0;</span>
-<span class="fc" id="L126">        boolean startNewTable = false;</span>
-<span class="fc" id="L127">        FluxTable table = null;</span>
-
-<span class="fc bfc" id="L129" title="All 2 branches covered.">        for (CSVRecord csvRecord : parser) {</span>
-
-<span class="fc bfc" id="L131" title="All 2 branches covered.">            if (cancellable.isCancelled()) {</span>
-<span class="fc" id="L132">                return;</span>
-            }
-
-<span class="fc" id="L135">            long recordNumber = csvRecord.getRecordNumber();</span>
-
-            //
-            // Response has HTTP status ok, but response is error.
-            //
-<span class="fc bfc" id="L140" title="All 4 branches covered.">            if (ERROR_RECORD_INDEX == recordNumber &amp;&amp; csvRecord.get(1).equals(&quot;error&quot;)</span>
-<span class="pc bpc" id="L141" title="1 of 2 branches missed.">                    &amp;&amp; csvRecord.get(2).equals(&quot;reference&quot;)) {</span>
-
-<span class="fc" id="L143">                parsingState = ParsingState.IN_ERROR;</span>
-<span class="fc" id="L144">                continue;</span>
-            }
-
-            //
-            // Throw InfluxException with error response
-            //
-<span class="fc bfc" id="L150" title="All 2 branches covered.">            if (ParsingState.IN_ERROR.equals(parsingState)) {</span>
-<span class="fc" id="L151">                String error = csvRecord.get(1);</span>
-<span class="fc" id="L152">                String referenceValue = csvRecord.get(2);</span>
-
-<span class="fc" id="L154">                int reference = 0;</span>
-<span class="pc bpc" id="L155" title="1 of 4 branches missed.">                if (referenceValue != null &amp;&amp; !referenceValue.isEmpty()) {</span>
-<span class="fc" id="L156">                    reference = Integer.valueOf(referenceValue);</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">                if (cancellable.isCancelled()) {</span>
+<span class="fc" id="L130">                    return;</span>
                 }
 
-<span class="fc" id="L159">                throw new FluxQueryException(error, reference);</span>
-            }
+<span class="fc" id="L133">                long recordNumber = csvRecord.getRecordNumber();</span>
 
-<span class="fc" id="L162">            String token = csvRecord.get(0);</span>
-            //// start new table
-<span class="fc bfc" id="L164" title="All 2 branches covered.">            if (&quot;#datatype&quot;.equals(token)) {</span>
-<span class="fc" id="L165">                startNewTable = true;</span>
+                //
+                // Response has HTTP status ok, but response is error.
+                //
+<span class="fc bfc" id="L138" title="All 4 branches covered.">                if (ERROR_RECORD_INDEX == recordNumber &amp;&amp; csvRecord.get(1).equals(&quot;error&quot;)</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">                        &amp;&amp; csvRecord.get(2).equals(&quot;reference&quot;)) {</span>
 
-<span class="fc" id="L167">                table = new FluxTable();</span>
-<span class="fc" id="L168">                consumer.accept(tableIndex, cancellable, table);</span>
-<span class="fc" id="L169">                tableIndex++;</span>
-
-<span class="fc bfc" id="L171" title="All 2 branches covered.">            } else if (table == null) {</span>
-<span class="fc" id="L172">                throw new FluxCsvParserException(&quot;Unable to parse CSV response. FluxTable definition was not found.&quot;);</span>
-            }
-
-            //#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string
-<span class="fc bfc" id="L176" title="All 2 branches covered.">            if (&quot;#datatype&quot;.equals(token)) {</span>
-<span class="fc" id="L177">                addDataTypes(table, toList(csvRecord));</span>
-
-<span class="fc bfc" id="L179" title="All 2 branches covered.">            } else if (&quot;#group&quot;.equals(token)) {</span>
-<span class="fc" id="L180">                addGroups(table, toList(csvRecord));</span>
-
-<span class="fc bfc" id="L182" title="All 2 branches covered.">            } else if (&quot;#default&quot;.equals(token)) {</span>
-<span class="fc" id="L183">                addDefaultEmptyValues(table, toList(csvRecord));</span>
-
-            } else {
-                // parse column names
-<span class="fc bfc" id="L187" title="All 2 branches covered.">                if (startNewTable) {</span>
-<span class="fc" id="L188">                    addColumnNamesAndTags(table, toList(csvRecord));</span>
-<span class="fc" id="L189">                    startNewTable = false;</span>
-<span class="fc" id="L190">                    continue;</span>
+<span class="fc" id="L141">                    parsingState = ParsingState.IN_ERROR;</span>
+<span class="fc" id="L142">                    continue;</span>
                 }
 
-<span class="fc" id="L193">                int currentIndex = Integer.parseInt(csvRecord.get(1 + 1));</span>
+                //
+                // Throw InfluxException with error response
+                //
+<span class="fc bfc" id="L148" title="All 2 branches covered.">                if (ParsingState.IN_ERROR.equals(parsingState)) {</span>
+<span class="fc" id="L149">                    String error = csvRecord.get(1);</span>
+<span class="fc" id="L150">                    String referenceValue = csvRecord.get(2);</span>
 
-<span class="fc bfc" id="L195" title="All 2 branches covered.">                if (currentIndex &gt; (tableIndex - 1)) {</span>
-                    //create new table with previous column headers settings
-<span class="fc" id="L197">                    List&lt;FluxColumn&gt; fluxColumns = table.getColumns();</span>
-<span class="fc" id="L198">                    table = new FluxTable();</span>
-<span class="fc" id="L199">                    table.getColumns().addAll(fluxColumns);</span>
-<span class="fc" id="L200">                    consumer.accept(tableIndex, cancellable, table);</span>
-<span class="fc" id="L201">                    tableIndex++;</span>
+<span class="fc" id="L152">                    int reference = 0;</span>
+<span class="pc bpc" id="L153" title="1 of 4 branches missed.">                    if (referenceValue != null &amp;&amp; !referenceValue.isEmpty()) {</span>
+<span class="fc" id="L154">                        reference = Integer.valueOf(referenceValue);</span>
+                    }
+
+<span class="fc" id="L157">                    throw new FluxQueryException(error, reference);</span>
                 }
 
-<span class="fc" id="L204">                FluxRecord fluxRecord = parseRecord(tableIndex - 1, table, csvRecord);</span>
-<span class="fc" id="L205">                consumer.accept(tableIndex - 1, cancellable, fluxRecord);</span>
-            }
-<span class="fc" id="L207">        }</span>
+<span class="fc" id="L160">                String token = csvRecord.get(0);</span>
+                //// start new table
+<span class="fc bfc" id="L162" title="All 2 branches covered.">                if (&quot;#datatype&quot;.equals(token)) {</span>
+<span class="fc" id="L163">                    startNewTable = true;</span>
+
+<span class="fc" id="L165">                    table = new FluxTable();</span>
+<span class="fc" id="L166">                    consumer.accept(tableIndex, cancellable, table);</span>
+<span class="fc" id="L167">                    tableIndex++;</span>
+
+<span class="fc bfc" id="L169" title="All 2 branches covered.">                } else if (table == null) {</span>
+<span class="fc" id="L170">                    String message = &quot;Unable to parse CSV response. FluxTable definition was not found.&quot;;</span>
+<span class="fc" id="L171">                    throw new FluxCsvParserException(message);</span>
+                }
+
+                //#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string
+<span class="fc bfc" id="L175" title="All 2 branches covered.">                if (&quot;#datatype&quot;.equals(token)) {</span>
+<span class="fc" id="L176">                    addDataTypes(table, toList(csvRecord));</span>
+
+<span class="fc bfc" id="L178" title="All 2 branches covered.">                } else if (&quot;#group&quot;.equals(token)) {</span>
+<span class="fc" id="L179">                    addGroups(table, toList(csvRecord));</span>
+
+<span class="fc bfc" id="L181" title="All 2 branches covered.">                } else if (&quot;#default&quot;.equals(token)) {</span>
+<span class="fc" id="L182">                    addDefaultEmptyValues(table, toList(csvRecord));</span>
+
+                } else {
+                    // parse column names
+<span class="fc bfc" id="L186" title="All 2 branches covered.">                    if (startNewTable) {</span>
+<span class="fc" id="L187">                        addColumnNamesAndTags(table, toList(csvRecord));</span>
+<span class="fc" id="L188">                        startNewTable = false;</span>
+<span class="fc" id="L189">                        continue;</span>
+                    }
+
+<span class="fc" id="L192">                    int currentIndex = Integer.parseInt(csvRecord.get(1 + 1));</span>
+
+<span class="fc bfc" id="L194" title="All 2 branches covered.">                    if (currentIndex &gt; (tableIndex - 1)) {</span>
+                        //create new table with previous column headers settings
+<span class="fc" id="L196">                        List&lt;FluxColumn&gt; fluxColumns = table.getColumns();</span>
+<span class="fc" id="L197">                        table = new FluxTable();</span>
+<span class="fc" id="L198">                        table.getColumns().addAll(fluxColumns);</span>
+<span class="fc" id="L199">                        consumer.accept(tableIndex, cancellable, table);</span>
+<span class="fc" id="L200">                        tableIndex++;</span>
+                    }
+
+<span class="fc" id="L203">                    FluxRecord fluxRecord = parseRecord(tableIndex - 1, table, csvRecord);</span>
+<span class="fc" id="L204">                    consumer.accept(tableIndex - 1, cancellable, fluxRecord);</span>
+                }
+<span class="fc" id="L206">            }</span>
+        }
 <span class="fc" id="L208">    }</span>
 
     private FluxRecord parseRecord(final int tableIndex, final FluxTable table, final CSVRecord csvRecord) {

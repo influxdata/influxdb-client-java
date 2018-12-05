@@ -152,7 +152,7 @@ import retrofit2.Response;
                     //
                     // Source has data =&gt; parse
                     //
-<span class="fc bfc" id="L155" title="All 4 branches covered.">                    while (!source.exhausted() &amp;&amp; !cancellable.wasCancelled) {</span>
+<span class="fc bfc" id="L155" title="All 6 branches covered.">                    while (source.isOpen() &amp;&amp; !source.exhausted() &amp;&amp; !cancellable.wasCancelled) {</span>
 
 <span class="fc" id="L157">                        consumer.accept(cancellable, source);</span>
                     }
