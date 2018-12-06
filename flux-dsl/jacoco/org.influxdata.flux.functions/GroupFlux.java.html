@@ -33,24 +33,23 @@ import org.influxdata.platform.Arguments;
  *
  * &lt;h3&gt;Options&lt;/h3&gt;
  * &lt;ul&gt;
- * &lt;li&gt;&lt;b&gt;by&lt;/b&gt; - Group by these specific tag names. Cannot be used with &lt;i&gt;except&lt;/i&gt; option. [array of strings]
- * &lt;li&gt;&lt;b&gt;keep&lt;/b&gt; - Keep specific tag keys that were not in &lt;i&gt;by&lt;/i&gt; in the results. [array of strings]
- * &lt;li&gt;&lt;b&gt;except&lt;/b&gt; - Group by all but these tag keys. Cannot be used with &lt;i&gt;by&lt;/i&gt; option. [array of strings]
+ * &lt;li&gt;&lt;b&gt;columns&lt;/b&gt; - List of columns used to calculate the new group key. Default &lt;i&gt;[]&lt;/i&gt; [array of strings]&lt;/li&gt;
+ * &lt;li&gt;&lt;b&gt;mode&lt;/b&gt; -  The grouping mode, can be one of &lt;i&gt;by&lt;/i&gt; or &lt;i&gt;except&lt;/i&gt;. The default is &lt;i&gt;by&lt;/i&gt; [string].
  * &lt;/ul&gt;
  *
  * &lt;h3&gt;Example&lt;/h3&gt;
  * &lt;pre&gt;
- *     Flux.from(&quot;telegraf&quot;)
- *                 .range(-30L, ChronoUnit.MINUTES)
- *                 .groupBy(new String[]{&quot;tag_a&quot;, &quot;tag_b&quot;});
+ * Flux.from(&quot;telegraf&quot;)
+ *     .range(-30L, ChronoUnit.MINUTES)
+ *     .groupBy(new String[]{&quot;tag_a&quot;, &quot;tag_b&quot;});
  *
- *     Flux.from(&quot;telegraf&quot;)
- *                 .range(-30L, ChronoUnit.MINUTES)
- *                 .groupBy(new String[]{&quot;tag_a&quot;, &quot;tag_b&quot;}, new String[]{&quot;tag_c&quot;});
+ * Flux.from(&quot;telegraf&quot;)
+ *     .range(-30L, ChronoUnit.MINUTES)
+ *     .groupBy(&quot;tag_a&quot;});
  *
- *     Flux.from(&quot;telegraf&quot;)
- *                 .range(-30L, ChronoUnit.MINUTES)
- *                 .groupExcept(new String[]{&quot;tag_a&quot;}, new String[]{&quot;tag_b&quot;, &quot;tag_c&quot;});
+ * Flux.from(&quot;telegraf&quot;)
+ *     .range(-30L, ChronoUnit.MINUTES)
+ *     .groupExcept(new String[]{&quot;tag_c&quot;});
  * &lt;/pre&gt;
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 14:56)
@@ -59,13 +58,13 @@ public final class GroupFlux extends AbstractParametrizedFlux {
 
     public GroupFlux(@Nonnull final Flux source) {
 
-<span class="fc" id="L62">        super(source);</span>
-<span class="fc" id="L63">    }</span>
+<span class="fc" id="L61">        super(source);</span>
+<span class="fc" id="L62">    }</span>
 
     @Nonnull
     @Override
     protected String operatorName() {
-<span class="fc" id="L68">        return &quot;group&quot;;</span>
+<span class="fc" id="L67">        return &quot;group&quot;;</span>
     }
 
     /**
@@ -75,11 +74,11 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withBy(@Nonnull final String groupBy) {
 
-<span class="fc" id="L78">        Arguments.checkNotNull(groupBy, &quot;GroupBy Column are required&quot;);</span>
+<span class="fc" id="L77">        Arguments.checkNotNull(groupBy, &quot;GroupBy Column are required&quot;);</span>
 
-<span class="fc" id="L80">        this.withPropertyValue(&quot;by&quot;, new String[]{groupBy});</span>
+<span class="fc" id="L79">        this.withPropertyValue(&quot;columns&quot;, new String[]{groupBy});</span>
 
-<span class="fc" id="L82">        return this;</span>
+<span class="fc" id="L81">        return this;</span>
     }
 
     /**
@@ -89,11 +88,11 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withBy(@Nonnull final String[] groupBy) {
 
-<span class="fc" id="L92">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+<span class="fc" id="L91">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
 
-<span class="fc" id="L94">        this.withPropertyValue(&quot;by&quot;, groupBy);</span>
+<span class="fc" id="L93">        this.withPropertyValue(&quot;columns&quot;, groupBy);</span>
 
-<span class="fc" id="L96">        return this;</span>
+<span class="fc" id="L95">        return this;</span>
     }
 
     /**
@@ -103,39 +102,26 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withBy(@Nonnull final Collection&lt;String&gt; groupBy) {
 
-<span class="fc" id="L106">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
+<span class="fc" id="L105">        Arguments.checkNotNull(groupBy, &quot;GroupBy Columns are required&quot;);</span>
 
-<span class="fc" id="L108">        this.withPropertyValue(&quot;by&quot;, groupBy);</span>
+<span class="fc" id="L107">        this.withPropertyValue(&quot;columns&quot;, groupBy);</span>
 
-<span class="fc" id="L110">        return this;</span>
+<span class="fc" id="L109">        return this;</span>
     }
 
     /**
-     * @param keep Keep specific tag keys that were not in {@code groupBy} in the results.
+     * @param except Group by all but these tag key Cannot be used.
      * @return this
      */
     @Nonnull
-    public GroupFlux withKeep(@Nonnull final String[] keep) {
+    public GroupFlux withExcept(@Nonnull final String except) {
 
-<span class="fc" id="L120">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
+<span class="fc" id="L119">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
 
-<span class="fc" id="L122">        this.withPropertyValue(&quot;keep&quot;, keep);</span>
+<span class="fc" id="L121">        this.withPropertyValue(&quot;columns&quot;, new String[]{except});</span>
+<span class="fc" id="L122">        this.withPropertyValueEscaped(&quot;mode&quot;, &quot;except&quot;);</span>
 
 <span class="fc" id="L124">        return this;</span>
-    }
-
-    /**
-     * @param keep Keep specific tag keys that were not in {@code groupBy} in the results.
-     * @return this
-     */
-    @Nonnull
-    public GroupFlux withKeep(@Nonnull final Collection&lt;String&gt; keep) {
-
-<span class="fc" id="L134">        Arguments.checkNotNull(keep, &quot;Keep Columns are required&quot;);</span>
-
-<span class="fc" id="L136">        this.withPropertyValue(&quot;keep&quot;, keep);</span>
-
-<span class="fc" id="L138">        return this;</span>
     }
 
     /**
@@ -145,11 +131,12 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withExcept(@Nonnull final String[] except) {
 
-<span class="fc" id="L148">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
+<span class="fc" id="L134">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
 
-<span class="fc" id="L150">        this.withPropertyValue(&quot;except&quot;, except);</span>
+<span class="fc" id="L136">        this.withPropertyValue(&quot;columns&quot;, except);</span>
+<span class="fc" id="L137">        this.withPropertyValueEscaped(&quot;mode&quot;, &quot;except&quot;);</span>
 
-<span class="fc" id="L152">        return this;</span>
+<span class="fc" id="L139">        return this;</span>
     }
 
     /**
@@ -159,11 +146,12 @@ public final class GroupFlux extends AbstractParametrizedFlux {
     @Nonnull
     public GroupFlux withExcept(@Nonnull final Collection&lt;String&gt; except) {
 
-<span class="fc" id="L162">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
+<span class="fc" id="L149">        Arguments.checkNotNull(except, &quot;GroupBy Except Columns are required&quot;);</span>
 
-<span class="fc" id="L164">        this.withPropertyValue(&quot;except&quot;, except);</span>
+<span class="fc" id="L151">        this.withPropertyValue(&quot;columns&quot;, except);</span>
+<span class="fc" id="L152">        this.withPropertyValueEscaped(&quot;mode&quot;, &quot;except&quot;);</span>
 
-<span class="fc" id="L166">        return this;</span>
+<span class="fc" id="L154">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

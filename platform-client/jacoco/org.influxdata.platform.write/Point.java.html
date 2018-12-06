@@ -173,7 +173,7 @@ import org.influxdata.platform.Arguments;
 <span class="fc" id="L173">            return time((Long) null, precision);</span>
         }
 
-        Long longTime;
+        long longTime;
 
 <span class="fc" id="L178">        Duration plus = Duration.ofNanos(time.getNano()).plus(time.getEpochSecond(), ChronoUnit.SECONDS);</span>
 <span class="pc bpc" id="L179" title="1 of 5 branches missed.">        switch (precision) {</span>

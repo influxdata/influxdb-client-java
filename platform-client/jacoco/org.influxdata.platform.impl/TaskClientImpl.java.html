@@ -405,19 +405,19 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                              @Nullable final Instant beforeTime,
                              @Nullable final Integer limit) {
 
-<span class="nc" id="L408">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="fc" id="L408">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="nc" id="L410">        return getRuns(task.getId(), task.getOrganizationId(), afterTime, beforeTime, limit);</span>
+<span class="fc" id="L410">        return getRuns(task.getId(), task.getOrganizationId(), afterTime, beforeTime, limit);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Run&gt; getRuns(@Nonnull final String taskID, @Nonnull final String orgID) {
 
-<span class="nc" id="L417">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
-<span class="nc" id="L418">        Arguments.checkNonEmpty(orgID, &quot;Org.ID&quot;);</span>
+<span class="fc" id="L417">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="fc" id="L418">        Arguments.checkNonEmpty(orgID, &quot;Org.ID&quot;);</span>
 
-<span class="nc" id="L420">        return getRuns(taskID, orgID, null, null, null);</span>
+<span class="fc" id="L420">        return getRuns(taskID, orgID, null, null, null);</span>
     }
 
     @Nonnull
@@ -428,13 +428,13 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                              @Nullable final Instant beforeTime,
                              @Nullable final Integer limit) {
 
-<span class="nc" id="L431">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
-<span class="nc" id="L432">        Arguments.checkNonEmpty(orgID, &quot;Org.ID&quot;);</span>
+<span class="fc" id="L431">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="fc" id="L432">        Arguments.checkNonEmpty(orgID, &quot;Org.ID&quot;);</span>
 
-<span class="nc" id="L434">        Call&lt;RunsResponse&gt; runs = platformService.findTaskRuns(taskID, afterTime, beforeTime, limit, orgID);</span>
-<span class="nc" id="L435">        RunsResponse execute = execute(runs);</span>
+<span class="fc" id="L434">        Call&lt;RunsResponse&gt; runs = platformService.findTaskRuns(taskID, afterTime, beforeTime, limit, orgID);</span>
+<span class="fc" id="L435">        RunsResponse execute = execute(runs);</span>
 
-<span class="nc" id="L437">        return execute.getRuns();</span>
+<span class="fc" id="L437">        return execute.getRuns();</span>
     }
 
     @Nullable
@@ -443,19 +443,19 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
 <span class="nc" id="L444">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
 
-<span class="nc" id="L446">        return getRun(run.getTaskId(), run.getId());</span>
+<span class="nc" id="L446">        return getRun(run.getTaskID(), run.getId());</span>
     }
 
     @Nullable
     @Override
     public Run getRun(@Nonnull final String taskID, @Nonnull final String runID) {
 
-<span class="nc" id="L453">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
-<span class="nc" id="L454">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+<span class="fc" id="L453">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="fc" id="L454">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
 
-<span class="nc" id="L456">        Call&lt;Run&gt; run = platformService.findTaskRun(taskID, runID);</span>
+<span class="fc" id="L456">        Call&lt;Run&gt; run = platformService.findTaskRun(taskID, runID);</span>
 
-<span class="nc" id="L458">        return execute(run, &quot;expected one run, got 0&quot;);</span>
+<span class="fc" id="L458">        return execute(run, &quot;expected one run, got 0&quot;);</span>
     }
 
     @Nonnull
@@ -464,7 +464,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
 <span class="nc" id="L465">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
 
-<span class="nc" id="L467">        return getRunLogs(run.getTaskId(), run.getId(), orgID);</span>
+<span class="nc" id="L467">        return getRunLogs(run.getTaskID(), run.getId(), orgID);</span>
     }
 
     @Nonnull
@@ -473,13 +473,13 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                                    @Nonnull final String runID,
                                    @Nonnull final String orgID) {
 
-<span class="nc" id="L476">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
-<span class="nc" id="L477">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
-<span class="nc" id="L478">        Arguments.checkNonEmpty(orgID, &quot;Org.ID&quot;);</span>
+<span class="fc" id="L476">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="fc" id="L477">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+<span class="fc" id="L478">        Arguments.checkNonEmpty(orgID, &quot;Org.ID&quot;);</span>
 
-<span class="nc" id="L480">        Call&lt;List&lt;String&gt;&gt; logs = platformService.findRunLogs(taskID, runID, orgID);</span>
+<span class="fc" id="L480">        Call&lt;List&lt;String&gt;&gt; logs = platformService.findRunLogs(taskID, runID, orgID);</span>
 
-<span class="nc" id="L482">        return execute(logs);</span>
+<span class="fc" id="L482">        return execute(logs);</span>
     }
 
     @Nullable
@@ -488,17 +488,17 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
 <span class="nc" id="L489">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
 
-<span class="nc" id="L491">        return retryRun(run.getTaskId(), run.getId());</span>
+<span class="nc" id="L491">        return retryRun(run.getTaskID(), run.getId());</span>
     }
 
     @Nullable
     @Override
     public Run retryRun(@Nonnull final String taskID, @Nonnull final String runID) {
 
-<span class="nc" id="L498">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
-<span class="nc" id="L499">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+<span class="fc" id="L498">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="fc" id="L499">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
 
-<span class="nc" id="L501">        Call&lt;Run&gt; run = platformService.retryTaskRun(taskID, runID);</span>
+<span class="fc" id="L501">        Call&lt;Run&gt; run = platformService.retryTaskRun(taskID, runID);</span>
 
 <span class="nc" id="L503">        return execute(run);</span>
     }
@@ -508,7 +508,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
 <span class="nc" id="L509">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
 
-<span class="nc" id="L511">        cancelRun(run.getTaskId(), run.getId());</span>
+<span class="nc" id="L511">        cancelRun(run.getTaskID(), run.getId());</span>
 <span class="nc" id="L512">    }</span>
 
     @Override
@@ -525,21 +525,21 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
     @Override
     public List&lt;String&gt; getLogs(@Nonnull final Task task) {
 
-<span class="nc" id="L528">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="fc" id="L528">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="nc" id="L530">        return getLogs(task.getId(), task.getOrganizationId());</span>
+<span class="fc" id="L530">        return getLogs(task.getId(), task.getOrganizationId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;String&gt; getLogs(@Nonnull final String taskID, @Nonnull final String orgID) {
 
-<span class="nc" id="L537">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
-<span class="nc" id="L538">        Arguments.checkNonEmpty(orgID, &quot;Org.ID&quot;);</span>
+<span class="fc" id="L537">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="fc" id="L538">        Arguments.checkNonEmpty(orgID, &quot;Org.ID&quot;);</span>
 
-<span class="nc" id="L540">        Call&lt;List&lt;String&gt;&gt; execute = platformService.findTaskLogs(taskID, orgID);</span>
+<span class="fc" id="L540">        Call&lt;List&lt;String&gt;&gt; execute = platformService.findTaskLogs(taskID, orgID);</span>
 
-<span class="nc" id="L542">        return execute(execute, &quot;task not found&quot;);</span>
+<span class="fc" id="L542">        return execute(execute, &quot;task not found&quot;);</span>
     }
 
     @Nonnull

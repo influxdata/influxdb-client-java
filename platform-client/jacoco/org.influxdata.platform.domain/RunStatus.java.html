@@ -28,18 +28,21 @@ import com.squareup.moshi.Json;
  *
  * @author Jakub Bednar (bednar@github) (22/10/2018 09:08)
  */
-<span class="nc" id="L31">public enum RunStatus {</span>
+<span class="fc" id="L31">public enum RunStatus {</span>
 
-<span class="nc" id="L33">    @Json(name = &quot;scheduled&quot;)</span>
+<span class="fc" id="L33">    @Json(name = &quot;scheduled&quot;)</span>
     SCHEDULED,
 
-<span class="nc" id="L36">    @Json(name = &quot;executing&quot;)</span>
-    EXECUTING,
+<span class="fc" id="L36">    @Json(name = &quot;started&quot;)</span>
+    STARTED,
 
-<span class="nc" id="L39">    @Json(name = &quot;failed&quot;)</span>
+<span class="fc" id="L39">    @Json(name = &quot;failed&quot;)</span>
     FAILED,
 
-<span class="nc" id="L42">    @Json(name = &quot;success&quot;)</span>
-    SUCCESS
+<span class="fc" id="L42">    @Json(name = &quot;success&quot;)</span>
+    SUCCESS,
+
+<span class="fc" id="L45">    @Json(name = &quot;canceled&quot;)</span>
+    CANCELED
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

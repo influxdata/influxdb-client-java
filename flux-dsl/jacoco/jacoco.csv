@@ -21,7 +21,7 @@ The Flux DSL,org.influxdata.flux.functions,FilterFlux,0,16,0,0,0,6,0,3,0,3
 The Flux DSL,org.influxdata.flux.functions,CumulativeSumFlux,0,26,0,0,0,9,0,4,0,4
 The Flux DSL,org.influxdata.flux.functions,DuplicateFlux,0,28,0,0,0,9,0,4,0,4
 The Flux DSL,org.influxdata.flux.functions,AbstractParametrizedFlux,0,90,0,6,0,27,0,8,0,5
-The Flux DSL,org.influxdata.flux.functions,GroupFlux,0,81,0,0,0,24,0,9,0,9
+The Flux DSL,org.influxdata.flux.functions,GroupFlux,0,91,0,0,0,24,0,8,0,8
 The Flux DSL,org.influxdata.flux.functions,PivotFlux,0,57,0,0,0,18,0,7,0,7
 The Flux DSL,org.influxdata.flux.functions,ToIntFlux,0,6,0,0,0,3,0,2,0,2
 The Flux DSL,org.influxdata.flux.functions,ToUIntFlux,0,6,0,0,0,3,0,2,0,2
@@ -58,4 +58,4 @@ The Flux DSL,org.influxdata.flux.functions.restriction,ColumnRestriction.Operato
 The Flux DSL,org.influxdata.flux.functions.restriction,Restrictions.Logical,0,31,0,0,0,7,0,2,0,2
 The Flux DSL,org.influxdata.flux.functions.restriction,ColumnRestriction,0,50,0,0,0,11,0,8,0,8
 The Flux DSL,org.influxdata.flux.functions.restriction,Restrictions,0,53,0,0,0,12,0,11,0,11
-The Flux DSL,org.influxdata.flux,Flux,49,1223,0,2,11,272,4,139,4,138
+The Flux DSL,org.influxdata.flux,Flux,49,1173,0,2,11,262,4,136,4,135
