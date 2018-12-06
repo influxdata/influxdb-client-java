@@ -33,24 +33,23 @@ import org.influxdata.platform.Arguments;
  *
  * <h3>Options</h3>
  * <ul>
- * <li><b>by</b> - Group by these specific tag names. Cannot be used with <i>except</i> option. [array of strings]
- * <li><b>keep</b> - Keep specific tag keys that were not in <i>by</i> in the results. [array of strings]
- * <li><b>except</b> - Group by all but these tag keys. Cannot be used with <i>by</i> option. [array of strings]
+ * <li><b>columns</b> - List of columns used to calculate the new group key. Default <i>[]</i> [array of strings]</li>
+ * <li><b>mode</b> -  The grouping mode, can be one of <i>by</i> or <i>except</i>. The default is <i>by</i> [string].
  * </ul>
  *
  * <h3>Example</h3>
  * <pre>
- *     Flux.from("telegraf")
- *                 .range(-30L, ChronoUnit.MINUTES)
- *                 .groupBy(new String[]{"tag_a", "tag_b"});
+ * Flux.from("telegraf")
+ *     .range(-30L, ChronoUnit.MINUTES)
+ *     .groupBy(new String[]{"tag_a", "tag_b"});
  *
- *     Flux.from("telegraf")
- *                 .range(-30L, ChronoUnit.MINUTES)
- *                 .groupBy(new String[]{"tag_a", "tag_b"}, new String[]{"tag_c"});
+ * Flux.from("telegraf")
+ *     .range(-30L, ChronoUnit.MINUTES)
+ *     .groupBy("tag_a"});
  *
- *     Flux.from("telegraf")
- *                 .range(-30L, ChronoUnit.MINUTES)
- *                 .groupExcept(new String[]{"tag_a"}, new String[]{"tag_b", "tag_c"});
+ * Flux.from("telegraf")
+ *     .range(-30L, ChronoUnit.MINUTES)
+ *     .groupExcept(new String[]{"tag_c"});
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (25/06/2018 14:56)
@@ -77,7 +76,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
 
         Arguments.checkNotNull(groupBy, "GroupBy Column are required");
 
-        this.withPropertyValue("by", new String[]{groupBy});
+        this.withPropertyValue("columns", new String[]{groupBy});
 
         return this;
     }
@@ -91,7 +90,7 @@ public final class GroupFlux extends AbstractParametrizedFlux {
 
         Arguments.checkNotNull(groupBy, "GroupBy Columns are required");
 
-        this.withPropertyValue("by", groupBy);
+        this.withPropertyValue("columns", groupBy);
 
         return this;
     }
@@ -105,35 +104,22 @@ public final class GroupFlux extends AbstractParametrizedFlux {
 
         Arguments.checkNotNull(groupBy, "GroupBy Columns are required");
 
-        this.withPropertyValue("by", groupBy);
+        this.withPropertyValue("columns", groupBy);
 
         return this;
     }
 
     /**
-     * @param keep Keep specific tag keys that were not in {@code groupBy} in the results.
+     * @param except Group by all but these tag key Cannot be used.
      * @return this
      */
     @Nonnull
-    public GroupFlux withKeep(@Nonnull final String[] keep) {
+    public GroupFlux withExcept(@Nonnull final String except) {
 
-        Arguments.checkNotNull(keep, "Keep Columns are required");
+        Arguments.checkNotNull(except, "GroupBy Except Columns are required");
 
-        this.withPropertyValue("keep", keep);
-
-        return this;
-    }
-
-    /**
-     * @param keep Keep specific tag keys that were not in {@code groupBy} in the results.
-     * @return this
-     */
-    @Nonnull
-    public GroupFlux withKeep(@Nonnull final Collection<String> keep) {
-
-        Arguments.checkNotNull(keep, "Keep Columns are required");
-
-        this.withPropertyValue("keep", keep);
+        this.withPropertyValue("columns", new String[]{except});
+        this.withPropertyValueEscaped("mode", "except");
 
         return this;
     }
@@ -147,7 +133,8 @@ public final class GroupFlux extends AbstractParametrizedFlux {
 
         Arguments.checkNotNull(except, "GroupBy Except Columns are required");
 
-        this.withPropertyValue("except", except);
+        this.withPropertyValue("columns", except);
+        this.withPropertyValueEscaped("mode", "except");
 
         return this;
     }
@@ -161,7 +148,8 @@ public final class GroupFlux extends AbstractParametrizedFlux {
 
         Arguments.checkNotNull(except, "GroupBy Except Columns are required");
 
-        this.withPropertyValue("except", except);
+        this.withPropertyValue("columns", except);
+        this.withPropertyValueEscaped("mode", "except");
 
         return this;
     }

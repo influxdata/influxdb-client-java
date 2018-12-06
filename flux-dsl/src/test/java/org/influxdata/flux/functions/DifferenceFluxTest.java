@@ -46,7 +46,7 @@ class DifferenceFluxTest {
                 .groupBy("_measurement")
                 .difference(false);
 
-        String expected = "from(bucket:\"telegraf\") |> group(by: [\"_measurement\"]) |> difference(nonNegative: false)";
+        String expected = "from(bucket:\"telegraf\") |> group(columns: [\"_measurement\"]) |> difference(nonNegative: false)";
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
     }
 
@@ -62,7 +62,7 @@ class DifferenceFluxTest {
                 .groupBy("_measurement")
                 .difference(columns);
 
-        String expected = "from(bucket:\"telegraf\") |> group(by: [\"_measurement\"]) |> difference(columns: [\"_time\", \"_value\"])";
+        String expected = "from(bucket:\"telegraf\") |> group(columns: [\"_measurement\"]) |> difference(columns: [\"_time\", \"_value\"])";
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
     }
 
@@ -90,7 +90,7 @@ class DifferenceFluxTest {
                 .groupBy("_measurement")
                 .difference(columns, true);
 
-        String expected = "from(bucket:\"telegraf\") |> group(by: [\"_measurement\"]) |> difference(columns: [\"_time\", \"_value\"], nonNegative: true)";
+        String expected = "from(bucket:\"telegraf\") |> group(columns: [\"_measurement\"]) |> difference(columns: [\"_time\", \"_value\"], nonNegative: true)";
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
     }
 
@@ -102,7 +102,7 @@ class DifferenceFluxTest {
                 .groupBy("_measurement")
                 .difference(new String[]{"_val", "_time"}, false);
 
-        String expected = "from(bucket:\"telegraf\") |> group(by: [\"_measurement\"]) |> difference(columns: [\"_val\", \"_time\"], nonNegative: false)";
+        String expected = "from(bucket:\"telegraf\") |> group(columns: [\"_measurement\"]) |> difference(columns: [\"_val\", \"_time\"], nonNegative: false)";
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
     }
 
@@ -116,7 +116,7 @@ class DifferenceFluxTest {
                 .withColumns(new String[]{"_value", "_oldValue"});
 
 
-        String expected = "from(bucket:\"telegraf\") |> group(by: [\"_measurement\"]) |> difference(columns: [\"_value\", \"_oldValue\"])";
+        String expected = "from(bucket:\"telegraf\") |> group(columns: [\"_measurement\"]) |> difference(columns: [\"_value\", \"_oldValue\"])";
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
     }
 
@@ -128,7 +128,7 @@ class DifferenceFluxTest {
                 .groupBy("_measurement")
                 .difference();
 
-        String expected = "from(bucket:\"telegraf\") |> group(by: [\"_measurement\"]) |> difference()";
+        String expected = "from(bucket:\"telegraf\") |> group(columns: [\"_measurement\"]) |> difference()";
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
     }
 }

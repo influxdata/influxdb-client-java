@@ -246,26 +246,25 @@ Flux flux = Flux
 
 ### group
 Groups results by a user-specified set of tags [[doc](http://bit.ly/flux-spec#group)].
-- `by` - Group by these specific tag names. Cannot be used with `except` option. [array of strings]
-- `keep` - Keep specific tag keys that were not in `by` in the results. [array of strings]
-- `except` - Group by all but these tag keys. Cannot be used with `by` option. [array of strings]
+- `columns` - List of columns used to calculate the new group key. Default `[]`. [array of strings]
+- `mode` - The grouping mode, can be one of `by` or `except`. The default is `by`.
+    - `by` - the specified columns are the new group key [string]
+    - `except` - the new group key is the difference between the columns of the table under exam and `columns`. [string]
 
 ```java
 Flux.from("telegraf")
     .range(-30L, ChronoUnit.MINUTES)
     .groupBy(new String[]{"tag_a", "tag_b"});
-```
-```java
-// by + keep
+
 Flux.from("telegraf")
     .range(-30L, ChronoUnit.MINUTES)
-    .groupBy(new String[]{"tag_a", "tag_b"}, new String[]{"tag_c"});
+    .groupBy("tag_a"});
 ```
 ```java
-// except + keep
+// except mode
 Flux.from("telegraf")
     .range(-30L, ChronoUnit.MINUTES)
-    .groupExcept(new String[]{"tag_a"}, new String[]{"tag_b", "tag_c"});
+    .groupExcept(new String[]{"tag_c"});
 ```
 
 ### integral

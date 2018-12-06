@@ -124,6 +124,7 @@ import org.influxdata.platform.Arguments;
  * <li>{@link SortFlux}</li>
  * <li>{@link SpreadFlux}</li>
  * <li>!TODO stateTracking - Not defined in documentation or SPEC</li>
+ * <li>!TODO InfluxFieldsAsColsC</li>
  * <li>{@link StddevFlux}</li>
  * <li>{@link SumFlux}</li>
  * <li>{@link ToFlux}</li>
@@ -775,8 +776,6 @@ public abstract class Flux {
      * <ul>
      * <li>{@link GroupFlux#withBy(String[])}</li>
      * <li>{@link GroupFlux#withBy(Collection)}</li>
-     * <li>{@link GroupFlux#withKeep(String[])}</li>
-     * <li>{@link GroupFlux#withKeep(Collection)}</li>
      * <li>{@link GroupFlux#withExcept(String[])}</li>
      * <li>{@link GroupFlux#withExcept(Collection)}</li>
      * <li>{@link GroupFlux#withPropertyNamed(String)}</li>
@@ -822,21 +821,6 @@ public abstract class Flux {
      * Groups results by a user-specified set of tags.
      *
      * @param groupBy Group by these specific tag names.
-     * @param keep    Keep specific tag keys that were not in {@code groupBy} in the results.
-     * @return {@link GroupFlux}
-     */
-    @Nonnull
-    public final GroupFlux groupBy(@Nonnull final Collection<String> groupBy, @Nonnull final Collection<String> keep) {
-        Arguments.checkNotNull(groupBy, "GroupBy Columns are required");
-        Arguments.checkNotNull(keep, "Keep Columns are required");
-
-        return new GroupFlux(this).withBy(groupBy).withKeep(keep);
-    }
-
-    /**
-     * Groups results by a user-specified set of tags.
-     *
-     * @param groupBy Group by these specific tag names.
      * @return {@link GroupFlux}
      */
     @Nonnull
@@ -844,21 +828,6 @@ public abstract class Flux {
         Arguments.checkNotNull(groupBy, "GroupBy Columns are required");
 
         return new GroupFlux(this).withBy(groupBy);
-    }
-
-    /**
-     * Groups results by a user-specified set of tags.
-     *
-     * @param groupBy Group by these specific tag names.
-     * @param keep    Keep specific tag keys that were not in {@code groupBy} in the results.
-     * @return {@link GroupFlux}
-     */
-    @Nonnull
-    public final GroupFlux groupBy(@Nonnull final String[] groupBy, @Nonnull final String[] keep) {
-        Arguments.checkNotNull(groupBy, "GroupBy Columns are required");
-        Arguments.checkNotNull(keep, "Keep Columns are required");
-
-        return new GroupFlux(this).withBy(groupBy).withKeep(keep);
     }
 
     /**
@@ -878,17 +847,13 @@ public abstract class Flux {
      * Groups results by a user-specified set of tags.
      *
      * @param except Group by all but these tag keys Cannot be used.
-     * @param keep   Keep specific tag keys that were not in {@code groupBy} in the results.
      * @return {@link GroupFlux}
      */
     @Nonnull
-    public final GroupFlux groupExcept(@Nonnull final Collection<String> except,
-                                       @Nonnull final Collection<String> keep) {
+    public final GroupFlux groupExcept(@Nonnull final String except) {
+        Arguments.checkNotNull(except, "GroupBy Except Column are required");
 
-        Arguments.checkNotNull(except, "GroupBy Except Columns are required");
-        Arguments.checkNotNull(keep, "Keep Columns are required");
-
-        return new GroupFlux(this).withExcept(except).withKeep(keep);
+        return new GroupFlux(this).withExcept(except);
     }
 
     /**
@@ -902,21 +867,6 @@ public abstract class Flux {
         Arguments.checkNotNull(except, "GroupBy Except Columns are required");
 
         return new GroupFlux(this).withExcept(except);
-    }
-
-    /**
-     * Groups results by a user-specified set of tags.
-     *
-     * @param except Group by all but these tag keys Cannot be used.
-     * @param keep   Keep specific tag keys that were not in {@code groupBy} in the results.
-     * @return {@link GroupFlux}
-     */
-    @Nonnull
-    public final GroupFlux groupExcept(@Nonnull final String[] except, @Nonnull final String[] keep) {
-        Arguments.checkNotNull(except, "GroupBy Except Columns are required");
-        Arguments.checkNotNull(keep, "Keep Columns are required");
-
-        return new GroupFlux(this).withExcept(except).withKeep(keep);
     }
 
     /**
