@@ -52,7 +52,7 @@ public interface TaskClient {
      *
      * from(bucket:"metrics/autogen")
      *     |&gt; range(start:-task.every)
-     *     |&gt; group(by:["level"])
+     *     |&gt; group(columns:["level"])
      *     |&gt; mean()
      *     |&gt; yield(name:"mean")
      * </pre>

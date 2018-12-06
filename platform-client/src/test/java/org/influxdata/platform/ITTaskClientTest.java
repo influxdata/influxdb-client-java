@@ -109,9 +109,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(task.getFlux()).isEqualToIgnoringWhitespace(flux);
     }
 
-    //TODO wait to fix Platform build
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void createTaskWithDelay() {
 
         String taskName = generateName("it task");
@@ -375,7 +373,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Run run = runs.get(0);
 
         Assertions.assertThat(run.getId()).isNotBlank();
-        Assertions.assertThat(run.getTaskId()).isEqualTo(task.getId());
+        Assertions.assertThat(run.getTaskID()).isEqualTo(task.getId());
         Assertions.assertThat(run.getStatus()).isEqualTo(RunStatus.SUCCESS);
         Assertions.assertThat(run.getScheduledFor()).isBefore(Instant.now());
         Assertions.assertThat(run.getStartedAt()).isBefore(Instant.now());
@@ -384,18 +382,14 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(run.getLog()).isEmpty();
     }
 
-    //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void runsNotExist() {
 
         List<Run> runs = taskClient.getRuns("020f755c3c082000", organization.getId());
         Assertions.assertThat(runs).hasSize(0);
     }
 
-    //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void runsByTime() throws InterruptedException {
 
         Instant now = Instant.now();
@@ -413,9 +407,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(runs).hasSize(1);
     }
 
-    //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void runsLimit() throws InterruptedException {
 
         String taskName = generateName("it task");
@@ -452,9 +444,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(runById.getId()).isEqualTo(firstRun.getId());
     }
 
-    //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void runNotExist() {
 
         String taskName = generateName("it task");
@@ -487,9 +477,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(runs.size()).isLessThan(taskClient.getRuns(task).size());
     }
 
-    //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void retryRunNotExist() {
 
         String taskName = generateName("it task");
@@ -501,9 +489,7 @@ class ITTaskClientTest extends AbstractITClientTest {
                 .hasMessage("expected one run, got 0");
     }
 
-    //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void logs() throws Exception {
 
         String taskName = generateName("it task");
@@ -517,9 +503,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(logs.get(0)).endsWith("Completed successfully");
     }
 
-    //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void logsNotExist() {
 
         List<String> logs = taskClient.getLogs("020f755c3c082000", organization.getId());
@@ -546,9 +530,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(logs).hasSize(1);
     }
 
-    //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void runLogsNotExist() {
 
         String taskName = generateName("it task");

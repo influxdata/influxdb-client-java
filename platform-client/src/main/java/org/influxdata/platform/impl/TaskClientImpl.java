@@ -443,7 +443,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(run, "run");
 
-        return getRun(run.getTaskId(), run.getId());
+        return getRun(run.getTaskID(), run.getId());
     }
 
     @Nullable
@@ -464,7 +464,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(run, "run");
 
-        return getRunLogs(run.getTaskId(), run.getId(), orgID);
+        return getRunLogs(run.getTaskID(), run.getId(), orgID);
     }
 
     @Nonnull
@@ -488,7 +488,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(run, "run");
 
-        return retryRun(run.getTaskId(), run.getId());
+        return retryRun(run.getTaskID(), run.getId());
     }
 
     @Nullable
@@ -508,7 +508,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(run, "run");
 
-        cancelRun(run.getTaskId(), run.getId());
+        cancelRun(run.getTaskID(), run.getId());
     }
 
     @Override

@@ -173,7 +173,7 @@ public final class Point {
             return time((Long) null, precision);
         }
 
-        Long longTime;
+        long longTime;
 
         Duration plus = Duration.ofNanos(time.getNano()).plus(time.getEpochSecond(), ChronoUnit.SECONDS);
         switch (precision) {

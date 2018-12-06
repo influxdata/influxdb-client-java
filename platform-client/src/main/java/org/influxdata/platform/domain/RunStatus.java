@@ -33,12 +33,15 @@ public enum RunStatus {
     @Json(name = "scheduled")
     SCHEDULED,
 
-    @Json(name = "executing")
-    EXECUTING,
+    @Json(name = "started")
+    STARTED,
 
     @Json(name = "failed")
     FAILED,
 
     @Json(name = "success")
-    SUCCESS
+    SUCCESS,
+
+    @Json(name = "canceled")
+    CANCELED
 }
