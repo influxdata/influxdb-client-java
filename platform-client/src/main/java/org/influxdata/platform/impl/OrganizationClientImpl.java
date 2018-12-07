@@ -70,7 +70,8 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
         Call<Organization> organization = platformService.findOrganizationByID(organizationID);
 
-        return execute(organization, "organization not found");
+        // TODO message is not propagate - https://github.com/influxdata/platform/pull/1749
+        return execute(organization, "not found");
     }
 
     @Nonnull
