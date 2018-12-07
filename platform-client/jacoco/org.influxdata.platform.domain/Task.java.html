@@ -70,7 +70,7 @@ import java.util.StringJoiner;
     /**
      * Duration to delay after the schedule, before executing the task; parsed from flux.
      */
-    private String delay;
+    private String offset;
 
     public String getId() {
 <span class="fc" id="L76">        return id;</span>
@@ -136,12 +136,12 @@ import java.util.StringJoiner;
 <span class="fc" id="L136">        this.cron = cron;</span>
 <span class="fc" id="L137">    }</span>
 
-    public String getDelay() {
-<span class="fc" id="L140">        return delay;</span>
+    public String getOffset() {
+<span class="fc" id="L140">        return offset;</span>
     }
 
-    public void setDelay(final String delay) {
-<span class="fc" id="L144">        this.delay = delay;</span>
+    public void setOffset(final String offset) {
+<span class="fc" id="L144">        this.offset = offset;</span>
 <span class="fc" id="L145">    }</span>
 
     @Override
@@ -155,7 +155,7 @@ import java.util.StringJoiner;
 <span class="fc" id="L155">                .add(&quot;flux='&quot; + flux + &quot;'&quot;)</span>
 <span class="fc" id="L156">                .add(&quot;every='&quot; + every + &quot;'&quot;)</span>
 <span class="fc" id="L157">                .add(&quot;cron='&quot; + cron + &quot;'&quot;)</span>
-<span class="fc" id="L158">                .add(&quot;delay='&quot; + delay + &quot;'&quot;)</span>
+<span class="fc" id="L158">                .add(&quot;offset='&quot; + offset + &quot;'&quot;)</span>
 <span class="fc" id="L159">                .toString();</span>
     }
 }
