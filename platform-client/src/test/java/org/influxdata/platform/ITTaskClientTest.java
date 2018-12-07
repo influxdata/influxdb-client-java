@@ -404,7 +404,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Thread.sleep(7_000);
 
         runs = taskClient.getRuns(task, now, null, null);
-        Assertions.assertThat(runs).hasSize(1);
+        Assertions.assertThat(runs).isNotEmpty();
     }
 
     @Test
@@ -499,7 +499,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Thread.sleep(7_000);
 
         List<String> logs = taskClient.getLogs(task);
-        Assertions.assertThat(logs).hasAtLeastOneElementOfType(String.class);
+        Assertions.assertThat(logs).isNotEmpty();
         Assertions.assertThat(logs.get(0)).endsWith("Completed successfully");
     }
 
