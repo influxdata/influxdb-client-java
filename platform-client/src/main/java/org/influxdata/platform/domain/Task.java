@@ -70,7 +70,7 @@ public final class Task extends AbstractHasLinks {
     /**
      * Duration to delay after the schedule, before executing the task; parsed from flux.
      */
-    private String delay;
+    private String offset;
 
     public String getId() {
         return id;
@@ -136,12 +136,12 @@ public final class Task extends AbstractHasLinks {
         this.cron = cron;
     }
 
-    public String getDelay() {
-        return delay;
+    public String getOffset() {
+        return offset;
     }
 
-    public void setDelay(final String delay) {
-        this.delay = delay;
+    public void setOffset(final String offset) {
+        this.offset = offset;
     }
 
     @Override
@@ -155,7 +155,7 @@ public final class Task extends AbstractHasLinks {
                 .add("flux='" + flux + "'")
                 .add("every='" + every + "'")
                 .add("cron='" + cron + "'")
-                .add("delay='" + delay + "'")
+                .add("offset='" + offset + "'")
                 .toString();
     }
 }

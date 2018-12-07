@@ -110,7 +110,7 @@ class ITTaskClientTest extends AbstractITClientTest {
     }
 
     @Test
-    void createTaskWithDelay() {
+    void createTaskWithOffset() {
 
         String taskName = generateName("it task");
         
@@ -125,12 +125,12 @@ class ITTaskClientTest extends AbstractITClientTest {
         task.setOwner(user);
         task.setFlux(flux);
         task.setStatus(Status.ACTIVE);
-        task.setDelay("30m");
+        task.setOffset("30m");
 
         task = taskClient.createTask(task);
 
         Assertions.assertThat(task).isNotNull();
-        Assertions.assertThat(task.getDelay()).isEqualTo("30m");
+        Assertions.assertThat(task.getOffset()).isEqualTo("30m");
     }
 
     @Test
@@ -499,7 +499,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Thread.sleep(7_000);
 
         List<String> logs = taskClient.getLogs(task);
-        Assertions.assertThat(logs).hasSize(1);
+        Assertions.assertThat(logs).hasAtLeastOneElementOfType(String.class);
         Assertions.assertThat(logs.get(0)).endsWith("Completed successfully");
     }
 
