@@ -296,7 +296,7 @@ abstract class AbstractWriteClient extends AbstractRestClient {
         @Override
         public String toLineProtocol() {
 
-            return point.toString();
+            return point.toLineProtocol();
         }
     }
 
@@ -319,7 +319,7 @@ abstract class AbstractWriteClient extends AbstractRestClient {
                 return null;
             }
 
-            return measurementMapper.toPoint(measurement, precision).toString();
+            return measurementMapper.toPoint(measurement, precision).toLineProtocol();
         }
     }
 

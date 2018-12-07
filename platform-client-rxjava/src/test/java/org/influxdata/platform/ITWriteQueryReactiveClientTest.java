@@ -210,7 +210,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
         writeClient = platformClient.createWriteClient();
 
         Instant time = Instant.ofEpochSecond(1000);
-        Point point = Point.name("h2o_feet").addTag("location", "south").addField("water_level", 1).time(time, ChronoUnit.MILLIS);
+        Point point = Point.measurement("h2o_feet").addTag("location", "south").addField("water_level", 1).time(time, ChronoUnit.MILLIS);
 
         writeClient
                 .listenEvents(WriteSuccessEvent.class)
@@ -243,8 +243,8 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         Instant time = Instant.ofEpochSecond(2000);
 
-        Point point1 = Point.name("h2o_feet").addTag("location", "west").addField("water_level", 1).time(time, ChronoUnit.MILLIS);
-        Point point2 = Point.name("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusSeconds(10), ChronoUnit.SECONDS);
+        Point point1 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 1).time(time, ChronoUnit.MILLIS);
+        Point point2 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusSeconds(10), ChronoUnit.SECONDS);
 
         writeClient
                 .listenEvents(WriteSuccessEvent.class)

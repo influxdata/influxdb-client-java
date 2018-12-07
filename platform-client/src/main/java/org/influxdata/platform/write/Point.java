@@ -65,18 +65,18 @@ public final class Point {
     private ChronoUnit precision = DEFAULT_WRITE_PRECISION;
 
     /**
-     * uUpdates the measurement name for the point.
+     * Create a new Point withe specified a measurement name.
      *
-     * @param name the measurement name
+     * @param measurementName the measurement name
      * @return new instance of {@link Point}
      */
     @Nonnull
-    public static Point name(@Nonnull final String name) {
+    public static Point measurement(@Nonnull final String measurementName) {
 
-        Arguments.checkNotNull(name, "name");
+        Arguments.checkNotNull(measurementName, "measurement");
 
         Point point = new Point();
-        point.name = name;
+        point.name = measurementName;
 
         return point;
     }
@@ -223,15 +223,18 @@ public final class Point {
         return precision;
     }
 
-    @Override
-    public String toString() {
+    /**
+     * @return Line Protocol
+     */
+    @Nonnull
+    public String toLineProtocol() {
 
         StringBuilder sb = new StringBuilder();
 
         escapeKey(sb, name);
         appendTags(sb);
-        concatenatedFields(sb);
-        formattedTime(sb);
+        appendFields(sb);
+        appendTime(sb);
 
         return sb.toString();
 
@@ -265,7 +268,7 @@ public final class Point {
         sb.append(' ');
     }
 
-    private void concatenatedFields(@Nonnull final StringBuilder sb) {
+    private void appendFields(@Nonnull final StringBuilder sb) {
 
         for (Map.Entry<String, Object> field : this.fields.entrySet()) {
             Object value = field.getValue();
@@ -283,7 +286,7 @@ public final class Point {
             } else if (value instanceof String) {
                 String stringValue = (String) value;
                 sb.append('"');
-                escapeField(sb, stringValue);
+                escapeValue(sb, stringValue);
                 sb.append('"');
             } else {
                 sb.append(value);
@@ -299,7 +302,7 @@ public final class Point {
         }
     }
 
-    private void formattedTime(@Nonnull final StringBuilder sb) {
+    private void appendTime(@Nonnull final StringBuilder sb) {
 
         if (this.time == null) {
             return;
@@ -321,14 +324,14 @@ public final class Point {
         }
     }
 
-    private void escapeField(@Nonnull final StringBuilder sb, @Nonnull final String field) {
-        for (int i = 0; i < field.length(); i++) {
-            switch (field.charAt(i)) {
+    private void escapeValue(@Nonnull final StringBuilder sb, @Nonnull final String value) {
+        for (int i = 0; i < value.length(); i++) {
+            switch (value.charAt(i)) {
                 case '\\':
                 case '\"':
                     sb.append('\\');
                 default:
-                    sb.append(field.charAt(i));
+                    sb.append(value.charAt(i));
             }
         }
     }

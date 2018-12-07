@@ -108,12 +108,13 @@ public interface WriteClient extends AutoCloseable {
      *                     Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
      *                     {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
      *                     Default value : {@link TimeUnit#NANOSECONDS}.
+     * @param <M>          measurement type
      * @param measurement  specifies the Measurement to write into bucket
      */
-    void writeMeasurement(@Nonnull final String bucket,
-                          @Nonnull final String organization,
-                          @Nonnull final ChronoUnit precision,
-                          @Nullable final Object measurement);
+    <M> void writeMeasurement(@Nonnull final String bucket,
+                              @Nonnull final String organization,
+                              @Nonnull final ChronoUnit precision,
+                              @Nullable final M measurement);
 
 
     /**
@@ -125,12 +126,13 @@ public interface WriteClient extends AutoCloseable {
      *                     Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
      *                     {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
      *                     Default value : {@link TimeUnit#NANOSECONDS}.
+     * @param <M>          measurement type
      * @param measurements specifies the Measurements to write into bucket
      */
-    void writeMeasurements(@Nonnull final String bucket,
-                           @Nonnull final String organization,
-                           @Nonnull final ChronoUnit precision,
-                           @Nonnull final List<Object> measurements);
+    <M> void writeMeasurements(@Nonnull final String bucket,
+                               @Nonnull final String organization,
+                               @Nonnull final ChronoUnit precision,
+                               @Nonnull final List<M> measurements);
 
     /**
      * Listen the events produced by {@link WriteClient}.

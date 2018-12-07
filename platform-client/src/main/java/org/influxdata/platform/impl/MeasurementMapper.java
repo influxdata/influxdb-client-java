@@ -62,7 +62,7 @@ class MeasurementMapper {
             throw new InfluxException(message);
         }
 
-        Point point = Point.name(getMeasurementName(measurementType));
+        Point point = Point.measurement(getMeasurementName(measurementType));
 
         CLASS_FIELD_CACHE.get(measurementType.getName()).forEach((name, field) -> {
 

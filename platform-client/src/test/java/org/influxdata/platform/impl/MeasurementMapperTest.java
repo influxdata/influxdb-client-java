@@ -58,10 +58,10 @@ class MeasurementMapperTest {
         pojo.value = 15;
         pojo.timestamp = Instant.parse("1970-01-01T00:00:10.999999999Z");
 
-        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.SECONDS).toString()).isEqualTo("pojo,tag=value value=\"15\" 10");
-        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.MILLIS).toString()).isEqualTo("pojo,tag=value value=\"15\" 10999");
-        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.MICROS).toString()).isEqualTo("pojo,tag=value value=\"15\" 10999999");
-        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.NANOS).toString()).isEqualTo("pojo,tag=value value=\"15\" 10999999999");
+        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.SECONDS).toLineProtocol()).isEqualTo("pojo,tag=value value=\"15\" 10");
+        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.MILLIS).toLineProtocol()).isEqualTo("pojo,tag=value value=\"15\" 10999");
+        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.MICROS).toLineProtocol()).isEqualTo("pojo,tag=value value=\"15\" 10999999");
+        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.NANOS).toLineProtocol()).isEqualTo("pojo,tag=value value=\"15\" 10999999999");
     }
 
     @Test
@@ -73,7 +73,7 @@ class MeasurementMapperTest {
         pojo.valueWithoutDefaultName = 20;
         pojo.valueWithEmptyName = 25;
 
-        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.SECONDS).toString()).isEqualTo("pojo,tag=tag\\ val value=\"15\",valueWithEmptyName=25i,valueWithoutDefaultName=20i");
+        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.SECONDS).toLineProtocol()).isEqualTo("pojo,tag=tag\\ val value=\"15\",valueWithEmptyName=25i,valueWithoutDefaultName=20i");
     }
 
     @Test
@@ -89,7 +89,7 @@ class MeasurementMapperTest {
         };
 
         Point point = mapper.toPoint(pojo, ChronoUnit.NANOS);
-        Assertions.assertThat(point.toString()).isEqualTo("pojo,tag=value value=\"to-string\"");
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("pojo,tag=value value=\"to-string\"");
     }
 
     @Measurement(name = "pojo")

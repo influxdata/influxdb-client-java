@@ -39,54 +39,54 @@ class PointTest {
     @Test
     void measurementEscape() {
 
-        Point point = Point.name("h2 o")
+        Point point = Point.measurement("h2 o")
                 .addTag("location", "europe")
                 .addTag("", "warn")
                 .addField("level", 2);
 
-        Assertions.assertThat(point.toString()).isEqualTo("h2\\ o,location=europe level=2i");
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2\\ o,location=europe level=2i");
 
-        point = Point.name("h2=o")
+        point = Point.measurement("h2=o")
                 .addTag("location", "europe")
                 .addTag("", "warn")
                 .addField("level", 2);
 
-        Assertions.assertThat(point.toString()).isEqualTo("h2\\=o,location=europe level=2i");
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2\\=o,location=europe level=2i");
 
-        point = Point.name("h2,o")
+        point = Point.measurement("h2,o")
                 .addTag("location", "europe")
                 .addTag("", "warn")
                 .addField("level", 2);
 
-        Assertions.assertThat(point.toString()).isEqualTo("h2\\,o,location=europe level=2i");
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2\\,o,location=europe level=2i");
     }
 
     @Test
     void tagEmptyKey() {
 
-        Point point = Point.name("h2o")
+        Point point = Point.measurement("h2o")
                 .addTag("location", "europe")
                 .addTag("", "warn")
                 .addField("level", 2);
 
-        Assertions.assertThat(point.toString()).isEqualTo("h2o,location=europe level=2i");
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe level=2i");
     }
 
     @Test
     void tagEmptyValue() {
 
-        Point point = Point.name("h2o")
+        Point point = Point.measurement("h2o")
                 .addTag("location", "europe")
                 .addTag("log", "")
                 .addField("level", 2);
 
-        Assertions.assertThat(point.toString()).isEqualTo("h2o,location=europe level=2i");
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe level=2i");
     }
 
     @Test
     void fieldTypes() {
 
-        Point point = Point.name("h2o").addTag("location", "europe")
+        Point point = Point.measurement("h2o").addTag("location", "europe")
                 .addField("long", 1L)
                 .addField("double", 2D)
                 .addField("float", 3F)
@@ -102,49 +102,49 @@ class PointTest {
 
         String expected = "h2o,location=europe bigDecimal=33.45,boolean=false,booleanObject=true,double=2.0,doubleObject=5.0,"
                 + "float=3.0,floatObject=6.0,integer=7i,integerObject=8i,long=1i,longObject=4i,string=\"string value\"";
-        Assertions.assertThat(point.toString()).isEqualTo(expected);
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo(expected);
     }
 
     @Test
     void fieldNullValue() {
 
-        Point point = Point.name("h2o").addTag("location", "europe").addField("level", 2)
+        Point point = Point.measurement("h2o").addTag("location", "europe").addField("level", 2)
                 .addField("warning", (String) null);
 
-        Assertions.assertThat(point.toString()).isEqualTo("h2o,location=europe level=2i");
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe level=2i");
     }
 
     @Test
     void fieldEscape() {
 
-        Point point = Point.name("h2o")
+        Point point = Point.measurement("h2o")
                 .addTag("location", "europe")
                 .addField("level", "string esc\\ape value");
 
-        Assertions.assertThat(point.toString()).isEqualTo("h2o,location=europe level=\"string esc\\\\ape value\"");
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe level=\"string esc\\\\ape value\"");
 
-        point = Point.name("h2o")
+        point = Point.measurement("h2o")
                 .addTag("location", "europe")
                 .addField("level", "string esc\"ape value");
 
-        Assertions.assertThat(point.toString()).isEqualTo("h2o,location=europe level=\"string esc\\\"ape value\"");
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe level=\"string esc\\\"ape value\"");
     }
 
     @Test
     void time() {
 
-        Point point = Point.name("h2o")
+        Point point = Point.measurement("h2o")
                 .addTag("location", "europe")
                 .addField("level", 2)
                 .time(123L, ChronoUnit.SECONDS);
 
-        Assertions.assertThat(point.toString()).isEqualTo("h2o,location=europe level=2i 123");
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe level=2i 123");
     }
 
     @Test
     void timePrecisionDefault() {
 
-        Point point = Point.name("h2o")
+        Point point = Point.measurement("h2o")
                 .addTag("location", "europe")
                 .addField("level", 2);
 
@@ -154,7 +154,7 @@ class PointTest {
     @Test
     void timePrecisionNotSupported() {
 
-        Point point = Point.name("h2o")
+        Point point = Point.measurement("h2o")
                 .addTag("location", "europe")
                 .addField("level", 2);
 
@@ -167,11 +167,11 @@ class PointTest {
     @Test
     void timeInstantNull() {
 
-        Point point = Point.name("h2o")
+        Point point = Point.measurement("h2o")
                 .addTag("location", "europe")
                 .addField("level", 2)
                 .time((Instant) null, ChronoUnit.SECONDS);
 
-        Assertions.assertThat(point.toString()).isEqualTo("h2o,location=europe level=2i");
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe level=2i");
     }
 }

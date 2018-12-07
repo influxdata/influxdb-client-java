@@ -135,7 +135,7 @@ public class PlatformExample {
             //
             // Write by Point
             //
-            Point point = Point.name("temperature")
+            Point point = Point.measurement("temperature")
                     .addTag("location", "west")
                     .addField("value", 55D)
                     .time(Instant.now().toEpochMilli(), ChronoUnit.NANOS);

@@ -116,10 +116,10 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
     }
 
     @Override
-    public void writeMeasurement(@Nonnull final String bucket,
-                                 @Nonnull final String organization,
-                                 @Nonnull final ChronoUnit precision,
-                                 @Nullable final Object measurement) {
+    public <M> void writeMeasurement(@Nonnull final String bucket,
+                                     @Nonnull final String organization,
+                                     @Nonnull final ChronoUnit precision,
+                                     @Nullable final M measurement) {
 
         if (measurement == null) {
             return;
@@ -129,10 +129,10 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
     }
 
     @Override
-    public void writeMeasurements(@Nonnull final String bucket,
-                                  @Nonnull final String organization,
-                                  @Nonnull final ChronoUnit precision,
-                                  @Nonnull final List<Object> measurements) {
+    public <M> void writeMeasurements(@Nonnull final String bucket,
+                                      @Nonnull final String organization,
+                                      @Nonnull final ChronoUnit precision,
+                                      @Nonnull final List<M> measurements) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(organization, "organization");

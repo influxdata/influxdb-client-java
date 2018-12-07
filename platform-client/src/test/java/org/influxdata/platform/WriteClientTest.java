@@ -81,7 +81,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         writeClient = createWriteClient();
 
-        writeClient.writePoint("b1", "org1", Point.name("h2o").addTag("location", "europe").addField("level", 2));
+        writeClient.writePoint("b1", "org1", Point.measurement("h2o").addTag("location", "europe").addField("level", 2));
 
         RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
@@ -116,8 +116,8 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         writeClient = createWriteClient(WriteOptions.builder().batchSize(1).build());
 
-        Point point1 = Point.name("h2o").addTag("location", "europe").addField("level", 1).time(1L, ChronoUnit.MILLIS);
-        Point point2 = Point.name("h2o").addTag("location", "europe").addField("level", 2).time(2L, ChronoUnit.SECONDS);
+        Point point1 = Point.measurement("h2o").addTag("location", "europe").addField("level", 1).time(1L, ChronoUnit.MILLIS);
+        Point point2 = Point.measurement("h2o").addTag("location", "europe").addField("level", 2).time(2L, ChronoUnit.SECONDS);
 
         writeClient.writePoints("b1", "org1", Arrays.asList(point1, point2));
 

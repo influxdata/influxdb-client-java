@@ -219,8 +219,8 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         Instant time = Instant.now();
 
-        Point point1 = Point.name("h2o_feet").addTag("location", "west").addField("water_level", 1).time(time, ChronoUnit.MILLIS);
-        Point point2 = Point.name("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusMillis(10), ChronoUnit.MILLIS);
+        Point point1 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 1).time(time, ChronoUnit.MILLIS);
+        Point point2 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusMillis(10), ChronoUnit.MILLIS);
 
         writeClient.writePoints(bucketName, "my-org", Arrays.asList(point1, point2, point2));
 
@@ -302,7 +302,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         platformClient = PlatformClientFactory.create(platformURL, token.toCharArray());
         queryClient = platformClient.createQueryClient();
 
-        Point point = Point.name("h2o_feet")
+        Point point = Point.measurement("h2o_feet")
                 .addTag("location", "atlantic")
                 .addField("water_level", 1)
                 .time(Instant.now(), ChronoUnit.MICROS);
