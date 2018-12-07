@@ -396,12 +396,12 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
 
         List<Run> runs = taskClient.getRuns(task, null, now, null);
         Assertions.assertThat(runs).hasSize(0);
 
-        Thread.sleep(7_000);
+        Thread.sleep(5_000);
 
         runs = taskClient.getRuns(task, now, null, null);
         Assertions.assertThat(runs).isNotEmpty();
@@ -494,9 +494,9 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
 
-        Thread.sleep(7_000);
+        Thread.sleep(5_000);
 
         List<String> logs = taskClient.getLogs(task);
         Assertions.assertThat(logs).isNotEmpty();
