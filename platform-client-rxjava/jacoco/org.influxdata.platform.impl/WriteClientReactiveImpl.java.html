@@ -185,7 +185,7 @@ public class WriteClientReactiveImpl extends AbstractWriteClient implements Writ
     @Nonnull
     @Override
     public &lt;T extends AbstractWriteEvent&gt; Observable&lt;T&gt; listenEvents(@Nonnull final Class&lt;T&gt; eventType) {
-<span class="fc" id="L188">        return super.listenEvents(eventType);</span>
+<span class="fc" id="L188">        return super.addEventListener(eventType);</span>
     }
 
     @Override

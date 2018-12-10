@@ -151,7 +151,7 @@ abstract class AbstractWriteClient extends AbstractRestClient {
 <span class="fc" id="L151">    }</span>
 
     @Nonnull
-    &lt;T extends AbstractWriteEvent&gt; Observable&lt;T&gt; listenEvents(@Nonnull final Class&lt;T&gt; eventType) {
+    &lt;T extends AbstractWriteEvent&gt; Observable&lt;T&gt; addEventListener(@Nonnull final Class&lt;T&gt; eventType) {
 
 <span class="fc" id="L156">        Objects.requireNonNull(eventType, &quot;EventType is required&quot;);</span>
 

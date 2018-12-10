@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 156,
+      <title>File: 158,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -313,6 +313,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.ToFlux.java">org/influxdata/flux/functions/ToFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.write.event.EventListener.java">org/influxdata/platform/write/event/EventListener.java</a>
                 </td>
                 <td>
                   0
@@ -1895,6 +1909,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.AbstractFluxWithUpstream.java">org/influxdata/flux/functions/AbstractFluxWithUpstream.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.write.event.ListenerRegistration.java">org/influxdata/platform/write/event/ListenerRegistration.java</a>
                 </td>
                 <td>
                   0
