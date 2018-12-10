@@ -53,28 +53,28 @@ public final class WriteSuccessEvent extends AbstractWriteEvent {
 <span class="fc" id="L53">    }</span>
 
     /**
-     * @return the destination organization name for writes
+     * @return The organization that was used for write data.
      */
     public String getOrganization() {
 <span class="fc" id="L59">        return organization;</span>
     }
 
     /**
-     * @return the destination bucket name for writes
+     * @return The bucket that was used for write data.
      */
     public String getBucket() {
 <span class="fc" id="L66">        return bucket;</span>
     }
 
     /**
-     * @return the precision for the write
+     * @return The Precision that was used for write data.
      */
     public ChronoUnit getPrecision() {
 <span class="fc" id="L73">        return precision;</span>
     }
 
     /**
-     * @return the data for the write
+     * @return The successfully written data.
      */
     public String getLineProtocol() {
 <span class="fc" id="L80">        return lineProtocol;</span>
@@ -83,7 +83,7 @@ public final class WriteSuccessEvent extends AbstractWriteEvent {
     @Override
     public void logEvent() {
 
-<span class="fc" id="L86">        LOG.log(Level.FINEST, &quot;Success response from InfluxDB&quot;);</span>
+<span class="fc" id="L86">        LOG.log(Level.FINEST, &quot;The data was successfully written to InfluxData Platform.&quot;);</span>
 <span class="fc" id="L87">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
