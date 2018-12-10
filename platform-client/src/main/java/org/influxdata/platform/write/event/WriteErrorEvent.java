@@ -55,6 +55,6 @@ public final class WriteErrorEvent extends AbstractWriteEvent {
 
     @Override
     public void logEvent() {
-        LOG.log(Level.SEVERE, "Write error", throwable);
+        LOG.log(Level.SEVERE, "The error occurred during writing of data", throwable);
     }
 }

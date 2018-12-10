@@ -53,28 +53,28 @@ public final class WriteSuccessEvent extends AbstractWriteEvent {
     }
 
     /**
-     * @return the destination organization name for writes
+     * @return The organization that was used for write data.
      */
     public String getOrganization() {
         return organization;
     }
 
     /**
-     * @return the destination bucket name for writes
+     * @return The bucket that was used for write data.
      */
     public String getBucket() {
         return bucket;
     }
 
     /**
-     * @return the precision for the write
+     * @return The Precision that was used for write data.
      */
     public ChronoUnit getPrecision() {
         return precision;
     }
 
     /**
-     * @return the data for the write
+     * @return The successfully written data.
      */
     public String getLineProtocol() {
         return lineProtocol;
@@ -83,6 +83,6 @@ public final class WriteSuccessEvent extends AbstractWriteEvent {
     @Override
     public void logEvent() {
 
-        LOG.log(Level.FINEST, "Success response from InfluxDB");
+        LOG.log(Level.FINEST, "The data was successfully written to InfluxData Platform.");
     }
 }
