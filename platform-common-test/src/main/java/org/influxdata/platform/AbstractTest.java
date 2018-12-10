@@ -64,7 +64,7 @@ public abstract class AbstractTest {
         waitToCallback(countDownLatch, seconds);
     }
 
-    protected void waitToCallback(@Nonnull final CountDownLatch countDownLatch, final int seconds) {
+    protected static void waitToCallback(@Nonnull final CountDownLatch countDownLatch, final int seconds) {
         try {
             Assertions
                     .assertThat(countDownLatch.await(seconds, TimeUnit.SECONDS))

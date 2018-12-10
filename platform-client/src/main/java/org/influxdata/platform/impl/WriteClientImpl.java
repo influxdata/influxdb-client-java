@@ -33,10 +33,12 @@ import org.influxdata.platform.WriteClient;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.write.Point;
 import org.influxdata.platform.write.event.AbstractWriteEvent;
+import org.influxdata.platform.write.event.EventListener;
+import org.influxdata.platform.write.event.ListenerRegistration;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.RequestBody;
 
@@ -147,9 +149,15 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
     }
 
     @Nonnull
-    @Override
-    public <T extends AbstractWriteEvent> Observable<T> listenEvents(@Nonnull final Class<T> eventType) {
-        return super.listenEvents(eventType);
+    public <T extends AbstractWriteEvent> ListenerRegistration listenEvents(@Nonnull final Class<T> eventType,
+                                                                            @Nonnull final EventListener<T> listener) {
+
+        Arguments.checkNotNull(eventType, "Type of listener");
+        Arguments.checkNotNull(listener, "Listener");
+
+        Disposable subscribe = super.addEventListener(eventType).subscribe(listener::onEvent);
+
+        return subscribe::dispose;
     }
 
     @Override

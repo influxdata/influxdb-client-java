@@ -22,8 +22,10 @@
 package org.influxdata.platform;
 
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 
@@ -36,7 +38,6 @@ import org.influxdata.platform.write.event.WriteErrorEvent;
 import org.influxdata.platform.write.event.WriteSuccessEvent;
 
 import io.reactivex.Flowable;
-import io.reactivex.observers.TestObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.schedulers.TestScheduler;
 import okhttp3.mockwebserver.MockResponse;
@@ -44,6 +45,7 @@ import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -177,25 +179,18 @@ class WriteClientTest extends AbstractPlatformClientTest {
     void writeMeasurementWhichIsNotMappableToPoint() {
 
         writeClient = createWriteClient();
-        TestObserver<WriteErrorEvent> listener = writeClient.listenEvents(WriteErrorEvent.class).test();
+        EventListener<WriteErrorEvent> listener = new EventListener<>();
+        writeClient.listenEvents(WriteErrorEvent.class, listener);
 
         writeClient.writeMeasurement("b1", "org1", ChronoUnit.SECONDS, 15);
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(0);
 
-        listener
-                .assertValue(event -> {
-
-                    Assertions.assertThat(event).isNotNull();
-                    Assertions.assertThat(event.getThrowable()).isNotNull();
-                    Assertions.assertThat(event.getThrowable())
-                            .isInstanceOf(InfluxException.class)
-                            .hasMessage("Measurement type 'class java.lang.Integer' does not have a @Measurement annotation.");
-
-                    return true;
-                })
-                .assertSubscribed()
-                .assertNotComplete();
+        Assertions.assertThat(listener.values).hasSize(1);
+        Assertions.assertThat(listener.getValue()).isNotNull();
+        Assertions.assertThat(listener.getValue().getThrowable())
+                .isInstanceOf(InfluxException.class)
+                .hasMessage("Measurement type 'class java.lang.Integer' does not have a @Measurement annotation.");
     }
 
     @Test
@@ -253,7 +248,9 @@ class WriteClientTest extends AbstractPlatformClientTest {
     void emptyRequest() {
 
         writeClient = createWriteClient();
-        TestObserver<WriteErrorEvent> listener = writeClient.listenEvents(WriteErrorEvent.class).test();
+
+        EventListener<WriteErrorEvent> listener = new EventListener<>();
+        writeClient.listenEvents(WriteErrorEvent.class, listener);
 
         writeClient.writeRecords("b1", "org1", ChronoUnit.NANOS, Lists.emptyList());
         writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS, null);
@@ -261,7 +258,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(0);
 
-        listener.assertNoErrors();
+        Assertions.assertThat(listener.values).hasSize(0);
     }
 
     @Test
@@ -480,7 +477,9 @@ class WriteClientTest extends AbstractPlatformClientTest {
         mockServer.enqueue(createResponse("{}"));
 
         writeClient = createWriteClient(WriteOptions.builder().batchSize(1).build());
-        TestObserver<WriteSuccessEvent> listener = writeClient.listenEvents(WriteSuccessEvent.class).test();
+
+        EventListener<WriteSuccessEvent> listener = new EventListener<>();
+        writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS,
                 "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
@@ -488,19 +487,34 @@ class WriteClientTest extends AbstractPlatformClientTest {
         // wait for request
         getRequestBody(mockServer);
 
-        listener
-                .assertValue(event -> {
+        Assertions.assertThat(listener.getValue()).isNotNull();
+        Assertions.assertThat(listener.errors).isEmpty();
+        Assertions.assertThat(listener.values).hasSize(1);
 
-                    Assertions.assertThat(event).isNotNull();
-                    Assertions.assertThat(event.getBucket()).isEqualTo("b1");
-                    Assertions.assertThat(event.getOrganization()).isEqualTo("org1");
-                    Assertions.assertThat(event.getPrecision()).isEqualTo(ChronoUnit.NANOS);
-                    Assertions.assertThat(event.getLineProtocol()).isEqualTo("h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
+        Assertions.assertThat(listener.getValue().getBucket()).isEqualTo("b1");
+        Assertions.assertThat(listener.getValue().getOrganization()).isEqualTo("org1");
+        Assertions.assertThat(listener.getValue().getPrecision()).isEqualTo(ChronoUnit.NANOS);
+        Assertions.assertThat(listener.getValue().getLineProtocol()).isEqualTo("h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
+    }
 
-                    return true;
-                })
-                .assertSubscribed()
-                .assertNotComplete();
+    @Test
+    void eventWriteSuccessEventDispose() {
+
+        mockServer.enqueue(createResponse("{}"));
+
+        writeClient = createWriteClient(WriteOptions.builder().batchSize(1).build());
+
+        EventListener<WriteSuccessEvent> listener = new EventListener<>();
+        writeClient.listenEvents(WriteSuccessEvent.class, listener).dispose();
+
+        writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS,
+                "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
+
+        // wait for request
+        getRequestBody(mockServer);
+
+        Assertions.assertThat(listener.errors).isEmpty();
+        Assertions.assertThat(listener.values).isEmpty();
     }
 
     @Test
@@ -509,7 +523,8 @@ class WriteClientTest extends AbstractPlatformClientTest {
         mockServer.enqueue(createErrorResponse("Failed to find bucket"));
 
         writeClient = createWriteClient(WriteOptions.builder().batchSize(1).build());
-        TestObserver<WriteErrorEvent> listener = writeClient.listenEvents(WriteErrorEvent.class).test();
+        EventListener<WriteErrorEvent> listener = new EventListener<>();
+        writeClient.listenEvents(WriteErrorEvent.class, listener);
 
         writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS,
                 "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
@@ -517,19 +532,11 @@ class WriteClientTest extends AbstractPlatformClientTest {
         // wait for request
         getRequestBody(mockServer);
 
-        listener
-                .assertValue(event -> {
-
-                    Assertions.assertThat(event).isNotNull();
-                    Assertions.assertThat(event.getThrowable()).isNotNull();
-                    Assertions.assertThat(event.getThrowable())
-                            .isInstanceOf(InfluxException.class)
-                            .hasMessage("Failed to find bucket");
-
-                    return true;
-                })
-                .assertSubscribed()
-                .assertNotComplete();
+        Assertions.assertThat(listener.getValue()).isNotNull();
+        Assertions.assertThat(listener.getValue().getThrowable()).isNotNull();
+        Assertions.assertThat(listener.getValue().getThrowable())
+                .isInstanceOf(InfluxException.class)
+                .hasMessage("Failed to find bucket");
     }
 
     @Test
@@ -541,9 +548,8 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         writeClient = platformClient.createWriteClient(WriteOptions.builder().writeScheduler(new TestScheduler()).bufferLimit(100).build());
 
-        TestObserver<BackpressureEvent> listener = writeClient
-                .listenEvents(BackpressureEvent.class)
-                .test();
+        EventListener<BackpressureEvent> listener = new EventListener<>();
+        writeClient.listenEvents(BackpressureEvent.class, listener);
 
         Flowable
                 .range(0, 5000)
@@ -552,13 +558,10 @@ class WriteClientTest extends AbstractPlatformClientTest {
                     String record = String.format("h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 %s", index);
                     writeClient.writeRecord("b_" + index, "org1", ChronoUnit.NANOS, record);
                 });
-        
-        listener
-                .awaitCount(1)
-                .assertValueAt(0, event -> {
-                    Assertions.assertThat(event).isNotNull();
-                    return true;
-                });
+
+
+        BackpressureEvent backpressureEvent = listener.awaitCount(1).getValue();
+        Assertions.assertThat(backpressureEvent).isNotNull();
     }
 
     @Nonnull
@@ -580,6 +583,59 @@ class WriteClientTest extends AbstractPlatformClientTest {
         Assertions.assertThat(recordedRequest).isNotNull();
 
         return recordedRequest.getBody().readUtf8();
+    }
+
+    static class EventListener<T> implements org.influxdata.platform.write.event.EventListener<T> {
+
+        CountDownLatch countDownLatch;
+        List<T> values = new ArrayList<>();
+        List<InfluxException> errors = new ArrayList<>();
+
+        EventListener() {
+            this(1);
+        }
+
+        EventListener(final int count) {
+            countDownLatch = new CountDownLatch(count);
+        }
+
+        @Override
+        public void onEvent(@Nonnull final T value) {
+
+            countDownLatch.countDown();
+
+            values.add(value);
+        }
+
+        T getValue() {
+            return values.get(0);
+        }
+
+        EventListener<T> awaitCount(@SuppressWarnings("SameParameterValue") final int count) {
+
+            long start = System.currentTimeMillis();
+            for (; ; ) {
+                if (System.currentTimeMillis() - start >= 5_000) {
+                    Assert.fail("Time elapsed");
+                    break;
+                }
+                if (values.size() >= count) {
+                    break;
+                }
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            return this;
+        }
+
+        void waitToCallback() {
+            AbstractTest.waitToCallback(countDownLatch, 10);
+        }
     }
 
 }

@@ -80,7 +80,7 @@ public class InfluxException extends RuntimeException {
     }
 
     /**
-     * Gets the reference code unique to the error type. It the reference code is not present than return "0".
+     * Gets the reference code unique to the error type. If the reference code is not present than return "0".
      *
      * @return reference code unique to the error type
      */
@@ -100,7 +100,7 @@ public class InfluxException extends RuntimeException {
 
     /**
      * Gets the HTTP status code of the unsuccessful response.
-     * It the response is not present than return "0".
+     * If the response is not present than return "0".
      *
      * @return HTTP status code
      */

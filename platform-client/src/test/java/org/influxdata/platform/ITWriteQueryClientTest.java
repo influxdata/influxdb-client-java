@@ -110,23 +110,17 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> {
-
-                    Assertions.assertThat(event).isNotNull();
-                    Assertions.assertThat(event.getBucket()).isEqualTo(bucket.getName());
-                    Assertions.assertThat(event.getOrganization()).isEqualTo("my-org");
-                    Assertions.assertThat(event.getLineProtocol()).isEqualTo(record);
-
-                    countDownLatch.countDown();
-                });
+        WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
+        writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record);
 
-        waitToCallback();
-
-        Assertions.assertThat(countDownLatch.getCount()).isEqualTo(0);
+        listener.waitToCallback();
+        
+        Assertions.assertThat(listener.getValue()).isNotNull();
+        Assertions.assertThat(listener.getValue().getBucket()).isEqualTo(bucket.getName());
+        Assertions.assertThat(listener.getValue().getOrganization()).isEqualTo("my-org");
+        Assertions.assertThat(listener.getValue().getLineProtocol()).isEqualTo(record);
 
         List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
 
@@ -147,13 +141,12 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> countDownLatch.countDown());
+        WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
+        writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         writeClient.writeRecord(bucketName, "my-org", ChronoUnit.MICROS, record);
 
-        waitToCallback();
+        listener.waitToCallback();
 
         List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
 
@@ -170,13 +163,12 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> countDownLatch.countDown());
+        WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
+        writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         writeClient.writeRecord(bucketName, "my-org", ChronoUnit.MILLIS, record);
 
-        waitToCallback();
+        listener.waitToCallback();
 
         List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
 
@@ -193,13 +185,12 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> countDownLatch.countDown());
+        WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
+        writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         writeClient.writeRecord(bucketName, "my-org", ChronoUnit.SECONDS, record);
 
-        waitToCallback();
+        listener.waitToCallback();
 
         List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
 
@@ -213,9 +204,8 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         String bucketName = bucket.getName();
 
         writeClient = platformClient.createWriteClient();
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> countDownLatch.countDown());
+        WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
+        writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         Instant time = Instant.now();
 
@@ -224,7 +214,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         writeClient.writePoints(bucketName, "my-org", Arrays.asList(point1, point2, point2));
 
-        waitToCallback();
+        listener.waitToCallback();
 
         List<FluxRecord> fluxRecords = new ArrayList<>();
 
@@ -248,9 +238,8 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         String bucketName = bucket.getName();
 
         writeClient = platformClient.createWriteClient();
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> countDownLatch.countDown());
+        WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
+        writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         long millis = Instant.now().toEpochMilli();
         H2OFeetMeasurement measurement = new H2OFeetMeasurement(
@@ -258,7 +247,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         writeClient.writeMeasurement(bucketName, "my-org", ChronoUnit.NANOS, measurement);
 
-        waitToCallback();
+        listener.waitToCallback();
 
         List<H2OFeetMeasurement> measurements = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last() |> rename(columns:{_value: \"water_level\"})", "my-org", H2OFeetMeasurement.class);
 
@@ -308,13 +297,12 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
                 .time(Instant.now(), ChronoUnit.MICROS);
 
         writeClient = platformClient.createWriteClient();
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> countDownLatch.countDown());
+        WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
+        writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         writeClient.writePoint(bucket.getName(), organization.getName(), point);
 
-        waitToCallback();
+        listener.waitToCallback();
 
         String query = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", organization.getName());
         Assertions.assertThat(query).endsWith("1,water_level,h2o_feet,atlantic\n");

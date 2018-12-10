@@ -120,8 +120,7 @@ public class PlatformExample {
             .retryInterval(5000)
             .build())) {
 
-            writeClient.listenEvents(WriteSuccessEvent.class)
-                    .subscribe(writeSuccessEvent -> countDownLatch.countDown());
+            writeClient.listenEvents(WriteSuccessEvent.class, (value) -> countDownLatch.countDown());
 
             //
             // Write by POJO

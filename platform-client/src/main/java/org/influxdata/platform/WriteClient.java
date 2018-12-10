@@ -29,8 +29,8 @@ import javax.annotation.Nullable;
 
 import org.influxdata.platform.write.Point;
 import org.influxdata.platform.write.event.AbstractWriteEvent;
-
-import io.reactivex.Observable;
+import org.influxdata.platform.write.event.EventListener;
+import org.influxdata.platform.write.event.ListenerRegistration;
 
 /**
  * Write time-series data into InfluxData Platform 2.0.
@@ -146,7 +146,8 @@ public interface WriteClient extends AutoCloseable {
      * @return lister for {@code eventType} events
      */
     @Nonnull
-    <T extends AbstractWriteEvent> Observable<T> listenEvents(@Nonnull final Class<T> eventType);
+    <T extends AbstractWriteEvent> ListenerRegistration listenEvents(@Nonnull final Class<T> eventType,
+                                                                     @Nonnull final EventListener<T> listener);
 
     /**
      * Forces the client to flush all pending writes from the buffer to InfluxData Platform via HTTP.
