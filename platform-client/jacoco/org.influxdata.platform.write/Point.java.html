@@ -65,18 +65,18 @@ import org.influxdata.platform.Arguments;
 <span class="fc" id="L65">    private ChronoUnit precision = DEFAULT_WRITE_PRECISION;</span>
 
     /**
-     * uUpdates the measurement name for the point.
+     * Create a new Point withe specified a measurement name.
      *
-     * @param name the measurement name
+     * @param measurementName the measurement name
      * @return new instance of {@link Point}
      */
     @Nonnull
-    public static Point name(@Nonnull final String name) {
+    public static Point measurement(@Nonnull final String measurementName) {
 
-<span class="fc" id="L76">        Arguments.checkNotNull(name, &quot;name&quot;);</span>
+<span class="fc" id="L76">        Arguments.checkNotNull(measurementName, &quot;measurement&quot;);</span>
 
 <span class="fc" id="L78">        Point point = new Point();</span>
-<span class="fc" id="L79">        point.name = name;</span>
+<span class="fc" id="L79">        point.name = measurementName;</span>
 
 <span class="fc" id="L81">        return point;</span>
     }
@@ -223,114 +223,117 @@ import org.influxdata.platform.Arguments;
 <span class="fc" id="L223">        return precision;</span>
     }
 
-    @Override
-    public String toString() {
+    /**
+     * @return Line Protocol
+     */
+    @Nonnull
+    public String toLineProtocol() {
 
-<span class="fc" id="L229">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L232">        StringBuilder sb = new StringBuilder();</span>
 
-<span class="fc" id="L231">        escapeKey(sb, name);</span>
-<span class="fc" id="L232">        appendTags(sb);</span>
-<span class="fc" id="L233">        concatenatedFields(sb);</span>
-<span class="fc" id="L234">        formattedTime(sb);</span>
+<span class="fc" id="L234">        escapeKey(sb, name);</span>
+<span class="fc" id="L235">        appendTags(sb);</span>
+<span class="fc" id="L236">        appendFields(sb);</span>
+<span class="fc" id="L237">        appendTime(sb);</span>
 
-<span class="fc" id="L236">        return sb.toString();</span>
+<span class="fc" id="L239">        return sb.toString();</span>
 
     }
 
     @Nonnull
     private Point putField(@Nonnull final String field, @Nullable final Object value) {
 
-<span class="fc" id="L243">        Arguments.checkNonEmpty(field, &quot;fieldName&quot;);</span>
+<span class="fc" id="L246">        Arguments.checkNonEmpty(field, &quot;fieldName&quot;);</span>
 
-<span class="fc" id="L245">        fields.put(field, value);</span>
-<span class="fc" id="L246">        return this;</span>
+<span class="fc" id="L248">        fields.put(field, value);</span>
+<span class="fc" id="L249">        return this;</span>
     }
 
     private void appendTags(@Nonnull final StringBuilder sb) {
 
-<span class="fc bfc" id="L251" title="All 2 branches covered.">        for (Map.Entry&lt;String, String&gt; tag : this.tags.entrySet()) {</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">        for (Map.Entry&lt;String, String&gt; tag : this.tags.entrySet()) {</span>
 
-<span class="fc" id="L253">            String key = tag.getKey();</span>
-<span class="fc" id="L254">            String value = tag.getValue();</span>
+<span class="fc" id="L256">            String key = tag.getKey();</span>
+<span class="fc" id="L257">            String value = tag.getValue();</span>
 
-<span class="fc bfc" id="L256" title="All 4 branches covered.">            if (key.isEmpty() || value.isEmpty()) {</span>
-<span class="fc" id="L257">                continue;</span>
+<span class="fc bfc" id="L259" title="All 4 branches covered.">            if (key.isEmpty() || value.isEmpty()) {</span>
+<span class="fc" id="L260">                continue;</span>
             }
 
-<span class="fc" id="L260">            sb.append(',');</span>
-<span class="fc" id="L261">            escapeKey(sb, key);</span>
-<span class="fc" id="L262">            sb.append('=');</span>
-<span class="fc" id="L263">            escapeKey(sb, value);</span>
-<span class="fc" id="L264">        }</span>
-<span class="fc" id="L265">        sb.append(' ');</span>
-<span class="fc" id="L266">    }</span>
+<span class="fc" id="L263">            sb.append(',');</span>
+<span class="fc" id="L264">            escapeKey(sb, key);</span>
+<span class="fc" id="L265">            sb.append('=');</span>
+<span class="fc" id="L266">            escapeKey(sb, value);</span>
+<span class="fc" id="L267">        }</span>
+<span class="fc" id="L268">        sb.append(' ');</span>
+<span class="fc" id="L269">    }</span>
 
-    private void concatenatedFields(@Nonnull final StringBuilder sb) {
+    private void appendFields(@Nonnull final StringBuilder sb) {
 
-<span class="fc bfc" id="L270" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; field : this.fields.entrySet()) {</span>
-<span class="fc" id="L271">            Object value = field.getValue();</span>
-<span class="fc bfc" id="L272" title="All 2 branches covered.">            if (value == null) {</span>
-<span class="fc" id="L273">                continue;</span>
+<span class="fc bfc" id="L273" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; field : this.fields.entrySet()) {</span>
+<span class="fc" id="L274">            Object value = field.getValue();</span>
+<span class="fc bfc" id="L275" title="All 2 branches covered.">            if (value == null) {</span>
+<span class="fc" id="L276">                continue;</span>
             }
-<span class="fc" id="L275">            escapeKey(sb, field.getKey());</span>
-<span class="fc" id="L276">            sb.append('=');</span>
-<span class="fc bfc" id="L277" title="All 2 branches covered.">            if (value instanceof Number) {</span>
-<span class="fc bfc" id="L278" title="All 6 branches covered.">                if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {</span>
-<span class="fc" id="L279">                    sb.append(NUMBER_FORMATTER.get().format(value));</span>
+<span class="fc" id="L278">            escapeKey(sb, field.getKey());</span>
+<span class="fc" id="L279">            sb.append('=');</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">            if (value instanceof Number) {</span>
+<span class="fc bfc" id="L281" title="All 6 branches covered.">                if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {</span>
+<span class="fc" id="L282">                    sb.append(NUMBER_FORMATTER.get().format(value));</span>
                 } else {
-<span class="fc" id="L281">                    sb.append(value).append('i');</span>
+<span class="fc" id="L284">                    sb.append(value).append('i');</span>
                 }
-<span class="fc bfc" id="L283" title="All 2 branches covered.">            } else if (value instanceof String) {</span>
-<span class="fc" id="L284">                String stringValue = (String) value;</span>
-<span class="fc" id="L285">                sb.append('&quot;');</span>
-<span class="fc" id="L286">                escapeField(sb, stringValue);</span>
-<span class="fc" id="L287">                sb.append('&quot;');</span>
-<span class="fc" id="L288">            } else {</span>
-<span class="fc" id="L289">                sb.append(value);</span>
+<span class="fc bfc" id="L286" title="All 2 branches covered.">            } else if (value instanceof String) {</span>
+<span class="fc" id="L287">                String stringValue = (String) value;</span>
+<span class="fc" id="L288">                sb.append('&quot;');</span>
+<span class="fc" id="L289">                escapeValue(sb, stringValue);</span>
+<span class="fc" id="L290">                sb.append('&quot;');</span>
+<span class="fc" id="L291">            } else {</span>
+<span class="fc" id="L292">                sb.append(value);</span>
             }
 
-<span class="fc" id="L292">            sb.append(',');</span>
-<span class="fc" id="L293">        }</span>
+<span class="fc" id="L295">            sb.append(',');</span>
+<span class="fc" id="L296">        }</span>
 
         // efficiently chop off the trailing comma
-<span class="fc" id="L296">        int lengthMinusOne = sb.length() - 1;</span>
-<span class="pc bpc" id="L297" title="1 of 2 branches missed.">        if (sb.charAt(lengthMinusOne) == ',') {</span>
-<span class="fc" id="L298">            sb.setLength(lengthMinusOne);</span>
+<span class="fc" id="L299">        int lengthMinusOne = sb.length() - 1;</span>
+<span class="pc bpc" id="L300" title="1 of 2 branches missed.">        if (sb.charAt(lengthMinusOne) == ',') {</span>
+<span class="fc" id="L301">            sb.setLength(lengthMinusOne);</span>
         }
-<span class="fc" id="L300">    }</span>
+<span class="fc" id="L303">    }</span>
 
-    private void formattedTime(@Nonnull final StringBuilder sb) {
+    private void appendTime(@Nonnull final StringBuilder sb) {
 
-<span class="fc bfc" id="L304" title="All 2 branches covered.">        if (this.time == null) {</span>
-<span class="fc" id="L305">            return;</span>
+<span class="fc bfc" id="L307" title="All 2 branches covered.">        if (this.time == null) {</span>
+<span class="fc" id="L308">            return;</span>
         }
 
-<span class="fc" id="L308">        sb.append(&quot; &quot;).append(this.time);</span>
-<span class="fc" id="L309">    }</span>
+<span class="fc" id="L311">        sb.append(&quot; &quot;).append(this.time);</span>
+<span class="fc" id="L312">    }</span>
 
     private void escapeKey(@Nonnull final StringBuilder sb, @Nonnull final String key) {
-<span class="fc bfc" id="L312" title="All 2 branches covered.">        for (int i = 0; i &lt; key.length(); i++) {</span>
-<span class="fc bfc" id="L313" title="All 2 branches covered.">            switch (key.charAt(i)) {</span>
+<span class="fc bfc" id="L315" title="All 2 branches covered.">        for (int i = 0; i &lt; key.length(); i++) {</span>
+<span class="fc bfc" id="L316" title="All 2 branches covered.">            switch (key.charAt(i)) {</span>
                 case ' ':
                 case ',':
                 case '=':
-<span class="fc" id="L317">                    sb.append('\\');</span>
+<span class="fc" id="L320">                    sb.append('\\');</span>
                 default:
-<span class="fc" id="L319">                    sb.append(key.charAt(i));</span>
+<span class="fc" id="L322">                    sb.append(key.charAt(i));</span>
             }
         }
-<span class="fc" id="L322">    }</span>
+<span class="fc" id="L325">    }</span>
 
-    private void escapeField(@Nonnull final StringBuilder sb, @Nonnull final String field) {
-<span class="fc bfc" id="L325" title="All 2 branches covered.">        for (int i = 0; i &lt; field.length(); i++) {</span>
-<span class="fc bfc" id="L326" title="All 2 branches covered.">            switch (field.charAt(i)) {</span>
+    private void escapeValue(@Nonnull final StringBuilder sb, @Nonnull final String value) {
+<span class="fc bfc" id="L328" title="All 2 branches covered.">        for (int i = 0; i &lt; value.length(); i++) {</span>
+<span class="fc bfc" id="L329" title="All 2 branches covered.">            switch (value.charAt(i)) {</span>
                 case '\\':
                 case '\&quot;':
-<span class="fc" id="L329">                    sb.append('\\');</span>
+<span class="fc" id="L332">                    sb.append('\\');</span>
                 default:
-<span class="fc" id="L331">                    sb.append(field.charAt(i));</span>
+<span class="fc" id="L334">                    sb.append(value.charAt(i));</span>
             }
         }
-<span class="fc" id="L334">    }</span>
+<span class="fc" id="L337">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

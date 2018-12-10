@@ -62,7 +62,7 @@ import org.influxdata.platform.write.Point;
 <span class="fc" id="L62">            throw new InfluxException(message);</span>
         }
 
-<span class="fc" id="L65">        Point point = Point.name(getMeasurementName(measurementType));</span>
+<span class="fc" id="L65">        Point point = Point.measurement(getMeasurementName(measurementType));</span>
 
 <span class="fc" id="L67">        CLASS_FIELD_CACHE.get(measurementType.getName()).forEach((name, field) -&gt; {</span>
 

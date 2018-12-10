@@ -116,10 +116,10 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
 <span class="fc" id="L116">    }</span>
 
     @Override
-    public void writeMeasurement(@Nonnull final String bucket,
-                                 @Nonnull final String organization,
-                                 @Nonnull final ChronoUnit precision,
-                                 @Nullable final Object measurement) {
+    public &lt;M&gt; void writeMeasurement(@Nonnull final String bucket,
+                                     @Nonnull final String organization,
+                                     @Nonnull final ChronoUnit precision,
+                                     @Nullable final M measurement) {
 
 <span class="fc bfc" id="L124" title="All 2 branches covered.">        if (measurement == null) {</span>
 <span class="fc" id="L125">            return;</span>
@@ -129,10 +129,10 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
 <span class="fc" id="L129">    }</span>
 
     @Override
-    public void writeMeasurements(@Nonnull final String bucket,
-                                  @Nonnull final String organization,
-                                  @Nonnull final ChronoUnit precision,
-                                  @Nonnull final List&lt;Object&gt; measurements) {
+    public &lt;M&gt; void writeMeasurements(@Nonnull final String bucket,
+                                      @Nonnull final String organization,
+                                      @Nonnull final ChronoUnit precision,
+                                      @Nonnull final List&lt;M&gt; measurements) {
 
 <span class="fc" id="L137">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
 <span class="fc" id="L138">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
