@@ -40,7 +40,7 @@ import org.influxdata.platform.domain.UserResourceMapping;
 public interface TaskClient {
 
     /**
-     * Creates a new task. The {@link Task#flux} has to have defined a cron or a every repetition
+     * Creates a new task. The {@link Task#getFlux()} has to have defined a cron or a every repetition
      * by the <a href="http://bit.ly/option-statement">option statement</a>.
      * <p>
      * Flux example:
@@ -64,7 +64,8 @@ public interface TaskClient {
     Task createTask(@Nonnull final Task task);
 
     /**
-     * Creates a new task with task repetition by cron. The {@link Task#flux} is without a cron or a every repetition.
+     * Creates a new task with task repetition by cron.
+     * The {@link Task#getFlux()} is without a cron or a every repetition.
      * The repetition is automatically append to the <a href="http://bit.ly/option-statement">option statement</a>.
      *
      * @param name         description of the task
@@ -82,7 +83,8 @@ public interface TaskClient {
                         @Nonnull final Organization organization);
 
     /**
-     * Creates a new task with task repetition by cron. The {@link Task#flux} is without a cron or a every repetition.
+     * Creates a new task with task repetition by cron.
+     * The {@link Task#getFlux()} is without a cron or a every repetition.
      * The repetition is automatically append to the <a href="http://bit.ly/option-statement">option statement</a>.
      *
      * @param name           description of the task
@@ -101,7 +103,7 @@ public interface TaskClient {
 
     /**
      * Creates a new task with task repetition by duration expression ("1h", "30s").
-     * The {@link Task#flux} is without a cron or a every repetition. The repetition is automatically append
+     * The {@link Task#getFlux()} is without a cron or a every repetition. The repetition is automatically append
      * to the <a href="http://bit.ly/option-statement">option statement</a>.
      *
      * @param name         description of the task
@@ -120,7 +122,7 @@ public interface TaskClient {
 
     /**
      * Creates a new task with task repetition by duration expression ("1h", "30s").
-     * The {@link Task#flux} is without a cron or a every repetition. The repetition is automatically append
+     * The {@link Task#getFlux()} is without a cron or a every repetition. The repetition is automatically append
      * to the <a href="http://bit.ly/option-statement">option statement</a>.
      *
      * @param name           description of the task

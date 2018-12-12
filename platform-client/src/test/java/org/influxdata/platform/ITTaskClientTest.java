@@ -34,6 +34,7 @@ import org.influxdata.platform.domain.Task;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
 import org.influxdata.platform.error.InfluxException;
+import org.influxdata.platform.rest.LogLevel;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,6 +62,7 @@ class ITTaskClientTest extends AbstractITClientTest {
     @BeforeEach
     void setUp() {
 
+        // TODO token required
         super.setUp(true);
 
         taskClient = platformClient.createTaskClient();
@@ -196,6 +198,14 @@ class ITTaskClientTest extends AbstractITClientTest {
     }
 
     @Test
+    void findTaskByIDNull() {
+
+        Task task = taskClient.findTaskByID("020f755c3d082000");
+
+        Assertions.assertThat(task).isNull();
+    }
+
+    @Test
     void findTasks() {
 
         int size = taskClient.findTasks().size();
@@ -270,7 +280,7 @@ class ITTaskClientTest extends AbstractITClientTest {
                 + "}\n\n" + TASK_FLUX;
 
         cronTask.setFlux(flux);
-        cronTask.setStatus(Status.ACTIVE);
+        cronTask.setStatus(Status.INACTIVE);
 
         Task updatedTask = taskClient.updateTask(cronTask);
 
@@ -356,19 +366,17 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(owners).hasSize(0);
     }
 
-    //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void runs() throws Exception {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
 
-        Thread.sleep(7_000);
+        Thread.sleep(5_000);
 
         List<Run> runs = taskClient.getRuns(task);
-        Assertions.assertThat(runs).hasSize(1);
+        Assertions.assertThat(runs).isNotEmpty();
 
         Run run = runs.get(0);
 
@@ -392,16 +400,18 @@ class ITTaskClientTest extends AbstractITClientTest {
     @Test
     void runsByTime() throws InterruptedException {
 
+        platformClient.setLogLevel(LogLevel.BODY);
+
         Instant now = Instant.now();
 
         String taskName = generateName("it task");
 
         Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
 
+        Thread.sleep(5_000);
+        
         List<Run> runs = taskClient.getRuns(task, null, now, null);
         Assertions.assertThat(runs).hasSize(0);
-
-        Thread.sleep(5_000);
 
         runs = taskClient.getRuns(task, now, null, null);
         Assertions.assertThat(runs).isNotEmpty();
@@ -511,9 +521,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(logs).isEmpty();
     }
 
-    //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void runLogs() throws Exception {
 
         String taskName = generateName("it task");
@@ -528,6 +536,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         List<String> logs = taskClient.getRunLogs(runs.get(0), organization.getId());
 
         Assertions.assertThat(logs).hasSize(1);
+        Assertions.assertThat(logs.get(0)).endsWith("Completed successfully");
     }
 
     @Test
