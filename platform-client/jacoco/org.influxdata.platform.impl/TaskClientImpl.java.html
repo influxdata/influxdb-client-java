@@ -393,9 +393,9 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
     @Override
     public List&lt;Run&gt; getRuns(@Nonnull final Task task) {
 
-<span class="nc" id="L396">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="fc" id="L396">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="nc" id="L398">        return getRuns(task, null, null, null);</span>
+<span class="fc" id="L398">        return getRuns(task, null, null, null);</span>
     }
 
     @Nonnull
@@ -462,9 +462,9 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
     @Override
     public List&lt;String&gt; getRunLogs(@Nonnull final Run run, @Nonnull final String orgID) {
 
-<span class="nc" id="L465">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+<span class="fc" id="L465">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
 
-<span class="nc" id="L467">        return getRunLogs(run.getTaskID(), run.getId(), orgID);</span>
+<span class="fc" id="L467">        return getRunLogs(run.getTaskID(), run.getId(), orgID);</span>
     }
 
     @Nonnull
