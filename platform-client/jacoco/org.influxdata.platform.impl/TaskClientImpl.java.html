@@ -500,7 +500,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
 <span class="fc" id="L501">        Call&lt;Run&gt; run = platformService.retryTaskRun(taskID, runID);</span>
 
-<span class="nc" id="L503">        return execute(run);</span>
+<span class="fc" id="L503">        return execute(run, &quot;expected one run, got 0&quot;);</span>
     }
 
     @Override
