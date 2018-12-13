@@ -53,9 +53,9 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
     private User user;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
 
-        super.setUp(false);
+        super.setUp();
 
         authorizationClient = platformClient.createAuthorizationClient();
 

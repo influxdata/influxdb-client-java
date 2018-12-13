@@ -36,8 +36,8 @@ import org.junit.runner.RunWith;
 class ITPlatformClient extends AbstractITClientTest {
 
     @BeforeEach
-    void setUp() {
-        super.setUp(false);
+    void setUp() throws Exception  {
+        super.setUp();
     }
 
     @Test

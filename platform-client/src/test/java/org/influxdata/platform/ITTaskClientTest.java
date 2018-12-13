@@ -22,10 +22,14 @@
 package org.influxdata.platform;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 
+import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.Permission;
 import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.domain.Run;
 import org.influxdata.platform.domain.RunStatus;
@@ -34,7 +38,6 @@ import org.influxdata.platform.domain.Task;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.UserResourceMapping;
 import org.influxdata.platform.error.InfluxException;
-import org.influxdata.platform.rest.LogLevel;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,12 +63,10 @@ class ITTaskClientTest extends AbstractITClientTest {
     private TaskClient taskClient;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
 
-        // TODO token required
-        super.setUp(true);
+        super.setUp();
 
-        taskClient = platformClient.createTaskClient();
         organization = platformClient.createOrganizationClient()
                 .findOrganizations().stream()
                 .filter(organization -> organization.getName().equals("my-org"))
@@ -74,6 +75,15 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         user = platformClient.createUserClient().me();
 
+        //
+        // Add Task permission
+        //
+        Authorization authorization = addTasksAuthorization(organization);
+
+        platformClient.close();
+        platformClient = PlatformClientFactory.create(platformURL, authorization.getToken().toCharArray());
+
+        taskClient = platformClient.createTaskClient();
         taskClient.findTasks().forEach(task -> taskClient.deleteTask(task));
     }
 
@@ -230,8 +240,15 @@ class ITTaskClientTest extends AbstractITClientTest {
     }
 
     @Test
-    void findTasksByOrganizationID() {
+    void findTasksByOrganizationID() throws Exception {
+
         Organization taskOrganization = platformClient.createOrganizationClient().createOrganization(generateName("TaskOrg"));
+
+        Authorization authorization = addTasksAuthorization(taskOrganization);
+        platformClient.close();
+        platformClient = PlatformClientFactory.create(platformURL, authorization.getToken().toCharArray());
+        taskClient = platformClient.createTaskClient();
+
         taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", user, taskOrganization);
 
         List<Task> tasks = taskClient.findTasksByOrganization(taskOrganization);
@@ -400,8 +417,6 @@ class ITTaskClientTest extends AbstractITClientTest {
     @Test
     void runsByTime() throws InterruptedException {
 
-        platformClient.setLogLevel(LogLevel.BODY);
-
         Instant now = Instant.now();
 
         String taskName = generateName("it task");
@@ -413,7 +428,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         List<Run> runs = taskClient.getRuns(task, null, now, null);
         Assertions.assertThat(runs).hasSize(0);
 
-        runs = taskClient.getRuns(task, now, null, null);
+        runs = taskClient.getRuns(task, now,null, null);
         Assertions.assertThat(runs).isNotEmpty();
     }
 
@@ -494,9 +509,9 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
 
-        Assertions.assertThatThrownBy(() ->  taskClient.retryRun(task.getId(), "020f755c3c082000"))
-                .isInstanceOf(InfluxException.class)
-                .hasMessage("expected one run, got 0");
+        Run run = taskClient.retryRun(task.getId(), "020f755c3c082000");
+
+        Assertions.assertThat(run).isNull();
     }
 
     @Test
@@ -576,5 +591,25 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThatThrownBy(() -> taskClient.cancelRun("020f755c3c082000", "020f755c3c082000"))
                 .isInstanceOf(InfluxException.class)
                 .hasMessage("task not found");
+    }
+
+    @Nonnull
+    private Authorization addTasksAuthorization(final Organization organization) {
+
+        String taskResource = Permission.taskResource(organization.getId());
+
+        Permission createTask = new Permission();
+        createTask.setResource(taskResource);
+        createTask.setAction(Permission.CREATE_ACTION);
+
+        Permission deleteTask = new Permission();
+        deleteTask.setResource(taskResource);
+        deleteTask.setAction(Permission.DELETE_ACTION);
+
+        List<Permission> permissions = new ArrayList<>();
+        permissions.add(createTask);
+        permissions.add(deleteTask);
+
+        return platformClient.createAuthorizationClient().createAuthorization(user, permissions);
     }
 }

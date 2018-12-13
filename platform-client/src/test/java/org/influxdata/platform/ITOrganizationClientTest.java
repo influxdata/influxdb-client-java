@@ -48,9 +48,9 @@ class ITOrganizationClientTest extends AbstractITClientTest {
     private UserClient userClient;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
 
-        super.setUp(false);
+        super.setUp();
 
         organizationClient = platformClient.createOrganizationClient();
         userClient = platformClient.createUserClient();

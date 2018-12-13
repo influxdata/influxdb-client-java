@@ -60,7 +60,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
     @BeforeEach
     void setUp() throws Exception {
 
-        super.setUp(false);
+        super.setUp();
 
         bucket = platformClient.createBucketClient()
                 .createBucket(generateName("h2o"), retentionRule(), "my-org");
