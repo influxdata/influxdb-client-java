@@ -6,6 +6,7 @@ The Platform Client,org.influxdata.platform.write.event,AbstractWriteEvent,0,3,0
 The Platform Client,org.influxdata.platform.domain,OperationLogEntry,12,12,0,0,6,4,3,4,3,4
 The Platform Client,org.influxdata.platform.domain,Organizations,40,11,0,0,6,3,2,2,2,2
 The Platform Client,org.influxdata.platform.domain,Authorizations,30,11,0,0,5,3,2,2,2,2
+The Platform Client,org.influxdata.platform.domain,Ready,24,0,0,0,10,0,7,0,7,0
 The Platform Client,org.influxdata.platform.domain,RunStatus,0,54,0,0,0,6,0,1,0,1
 The Platform Client,org.influxdata.platform.domain,Users,4,11,0,0,2,3,1,2,1,2
 The Platform Client,org.influxdata.platform.domain,UserResourcesResponse,4,11,0,0,2,3,1,2,1,2
@@ -31,7 +32,7 @@ The Platform Client,org.influxdata.platform.domain,User,0,57,0,0,0,11,0,6,0,6
 The Platform Client,org.influxdata.platform.domain,Organization,0,67,0,0,0,12,0,6,0,6
 The Platform Client,org.influxdata.platform.domain,Authorization,16,103,0,0,8,19,4,10,4,10
 The Platform Client,org.influxdata.platform.impl,AbstractPlatformClient.InstantAdapter,17,14,3,1,6,4,3,2,1,2
-The Platform Client,org.influxdata.platform.impl,PlatformClientImpl,24,107,0,0,7,20,1,15,1,15
+The Platform Client,org.influxdata.platform.impl,PlatformClientImpl,42,112,0,0,12,21,2,16,2,16
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.BatchWriteDataPoint,0,16,0,0,0,5,0,2,0,2
 The Platform Client,org.influxdata.platform.impl,UserClientImpl,0,305,0,6,0,75,0,19,0,16
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient,26,317,1,12,2,74,3,29,2,22

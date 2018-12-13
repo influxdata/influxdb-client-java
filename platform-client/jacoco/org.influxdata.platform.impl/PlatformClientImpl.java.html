@@ -21,7 +21,10 @@
  */
 package org.influxdata.platform.impl;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.AuthorizationClient;
@@ -34,6 +37,7 @@ import org.influxdata.platform.TaskClient;
 import org.influxdata.platform.UserClient;
 import org.influxdata.platform.WriteClient;
 import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.domain.Ready;
 import org.influxdata.platform.error.InfluxException;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.option.WriteOptions;
@@ -46,66 +50,68 @@ import retrofit2.Call;
  */
 public final class PlatformClientImpl extends AbstractPlatformClient&lt;PlatformService&gt; implements PlatformClient {
 
+<span class="fc" id="L53">    private static final Logger LOG = Logger.getLogger(PlatformClientImpl.class.getName());</span>
+
     public PlatformClientImpl(@Nonnull final PlatformOptions options) {
 
-<span class="fc" id="L51">        super(options, PlatformService.class);</span>
-<span class="fc" id="L52">    }</span>
+<span class="fc" id="L57">        super(options, PlatformService.class);</span>
+<span class="fc" id="L58">    }</span>
 
     @Nonnull
     @Override
     public QueryClient createQueryClient() {
-<span class="fc" id="L57">        return new QueryClientImpl(platformService);</span>
+<span class="fc" id="L63">        return new QueryClientImpl(platformService);</span>
     }
 
     @Nonnull
     @Override
     public WriteClient createWriteClient() {
-<span class="fc" id="L63">        return createWriteClient(WriteOptions.DEFAULTS);</span>
+<span class="fc" id="L69">        return createWriteClient(WriteOptions.DEFAULTS);</span>
     }
 
     @Nonnull
     @Override
     public WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions) {
 
-<span class="fc" id="L70">        Arguments.checkNotNull(writeOptions, &quot;WriteOptions&quot;);</span>
+<span class="fc" id="L76">        Arguments.checkNotNull(writeOptions, &quot;WriteOptions&quot;);</span>
 
-<span class="fc" id="L72">        return new WriteClientImpl(writeOptions, platformService);</span>
+<span class="fc" id="L78">        return new WriteClientImpl(writeOptions, platformService);</span>
     }
 
     @Nonnull
     @Override
     public AuthorizationClient createAuthorizationClient() {
-<span class="fc" id="L78">        return new AuthorizationClientImpl(platformService, moshi);</span>
+<span class="fc" id="L84">        return new AuthorizationClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public BucketClient createBucketClient() {
-<span class="fc" id="L84">        return new BucketClientImpl(platformService, moshi);</span>
+<span class="fc" id="L90">        return new BucketClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public OrganizationClient createOrganizationClient() {
-<span class="fc" id="L90">        return new OrganizationClientImpl(platformService, moshi);</span>
+<span class="fc" id="L96">        return new OrganizationClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public SourceClient createSourceClient() {
-<span class="fc" id="L96">        return new SourceClientImpl(platformService, moshi);</span>
+<span class="fc" id="L102">        return new SourceClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public TaskClient createTaskClient() {
-<span class="fc" id="L102">        return new TaskClientImpl(platformService, moshi);</span>
+<span class="fc" id="L108">        return new TaskClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public UserClient createUserClient() {
-<span class="fc" id="L108">        return new UserClientImpl(platformService, moshi);</span>
+<span class="fc" id="L114">        return new UserClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
@@ -113,54 +119,66 @@ public final class PlatformClientImpl extends AbstractPlatformClient&lt;Platform
     public Health health() {
 
         try {
-<span class="nc" id="L116">            Call&lt;Health&gt; call = platformService.health();</span>
-<span class="nc" id="L117">            return execute(call);</span>
-<span class="nc" id="L118">        } catch (InfluxException e) {</span>
-<span class="nc" id="L119">            Health health = new Health();</span>
-<span class="nc" id="L120">            health.setStatus(&quot;error&quot;);</span>
-<span class="nc" id="L121">            health.setMessage(e.getMessage());</span>
+<span class="nc" id="L122">            Call&lt;Health&gt; call = platformService.health();</span>
+<span class="nc" id="L123">            return execute(call);</span>
+<span class="nc" id="L124">        } catch (InfluxException e) {</span>
+<span class="nc" id="L125">            Health health = new Health();</span>
+<span class="nc" id="L126">            health.setStatus(&quot;error&quot;);</span>
+<span class="nc" id="L127">            health.setMessage(e.getMessage());</span>
 
-<span class="nc" id="L123">            return health;</span>
+<span class="nc" id="L129">            return health;</span>
+        }
+    }
+
+    @Nullable
+    @Override
+    public Ready ready() {
+<span class="nc" id="L136">        Call&lt;Ready&gt; call = platformService.ready();</span>
+        try {
+<span class="nc" id="L138">            return execute(call);</span>
+<span class="nc" id="L139">        } catch (InfluxException e) {</span>
+<span class="nc" id="L140">            LOG.log(Level.WARNING, &quot;The exception occurs during check instance readiness&quot;, e);</span>
+<span class="nc" id="L141">            return null;</span>
         }
     }
 
     @Nonnull
     @Override
     public LogLevel getLogLevel() {
-<span class="fc" id="L130">        return getLogLevel(this.loggingInterceptor);</span>
+<span class="fc" id="L148">        return getLogLevel(this.loggingInterceptor);</span>
     }
 
     @Nonnull
     @Override
     public PlatformClient setLogLevel(@Nonnull final LogLevel logLevel) {
 
-<span class="fc" id="L137">        setLogLevel(this.loggingInterceptor, logLevel);</span>
+<span class="fc" id="L155">        setLogLevel(this.loggingInterceptor, logLevel);</span>
 
-<span class="fc" id="L139">        return this;</span>
+<span class="fc" id="L157">        return this;</span>
     }
 
     @Nonnull
     @Override
     public PlatformClient enableGzip() {
 
-<span class="fc" id="L146">        this.gzipInterceptor.enableGzip();</span>
+<span class="fc" id="L164">        this.gzipInterceptor.enableGzip();</span>
 
-<span class="fc" id="L148">        return this;</span>
+<span class="fc" id="L166">        return this;</span>
     }
 
     @Nonnull
     @Override
     public PlatformClient disableGzip() {
 
-<span class="fc" id="L155">        this.gzipInterceptor.disableGzip();</span>
+<span class="fc" id="L173">        this.gzipInterceptor.disableGzip();</span>
 
-<span class="fc" id="L157">        return this;</span>
+<span class="fc" id="L175">        return this;</span>
     }
 
     @Override
     public boolean isGzipEnabled() {
 
-<span class="fc" id="L163">        return this.gzipInterceptor.isEnabledGzip();</span>
+<span class="fc" id="L181">        return this.gzipInterceptor.isEnabledGzip();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
