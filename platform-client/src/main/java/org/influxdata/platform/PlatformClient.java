@@ -22,8 +22,10 @@
 package org.influxdata.platform;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.domain.Ready;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.LogLevel;
 
@@ -117,6 +119,14 @@ public interface PlatformClient extends AutoCloseable {
      */
     @Nonnull
     Health health();
+
+    /**
+     * The readiness of the InfluxData Platform.
+     *
+     * @return return null if the platform is not ready
+     */
+    @Nullable
+    Ready ready();
 
     /**
      * @return the {@link LogLevel} that is used for logging requests and responses

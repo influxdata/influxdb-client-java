@@ -21,7 +21,10 @@
  */
 package org.influxdata.platform;
 
+import java.time.Instant;
+
 import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.domain.Ready;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,7 +54,7 @@ class ITPlatformClient extends AbstractITClientTest {
     }
 
     @Test
-    void notRunningInstance() throws Exception {
+    void healthNotRunningInstance() throws Exception {
 
         PlatformClient clientNotRunning = PlatformClientFactory.create("http://localhost:8099");
         Health health = clientNotRunning.health();
@@ -59,6 +62,29 @@ class ITPlatformClient extends AbstractITClientTest {
         Assertions.assertThat(health).isNotNull();
         Assertions.assertThat(health.isHealthy()).isFalse();
         Assertions.assertThat(health.getMessage()).startsWith("Failed to connect to");
+
+        clientNotRunning.close();
+    }
+
+    @Test
+    void ready() {
+
+        Ready ready = platformClient.ready();
+
+        Assertions.assertThat(ready).isNotNull();
+        Assertions.assertThat(ready.getStatus()).isEqualTo("ready");
+        Assertions.assertThat(ready.getStarted()).isNotNull();
+        Assertions.assertThat(ready.getStarted()).isBefore(Instant.now());
+        Assertions.assertThat(ready.getUp()).isNotBlank();
+    }
+
+    @Test
+    void readyNotRunningInstance() throws Exception {
+
+        PlatformClient clientNotRunning = PlatformClientFactory.create("http://localhost:8099");
+
+        Ready ready = clientNotRunning.ready();
+        Assertions.assertThat(ready).isNull();
 
         clientNotRunning.close();
     }

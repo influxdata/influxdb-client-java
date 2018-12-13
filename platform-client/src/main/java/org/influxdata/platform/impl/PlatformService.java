@@ -34,6 +34,7 @@ import org.influxdata.platform.domain.Health;
 import org.influxdata.platform.domain.OperationLogResponse;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
+import org.influxdata.platform.domain.Ready;
 import org.influxdata.platform.domain.Run;
 import org.influxdata.platform.domain.RunsResponse;
 import org.influxdata.platform.domain.Source;
@@ -73,6 +74,14 @@ interface PlatformService {
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<Health> health();
+
+    //
+    // Ready
+    //
+    @GET("/ready")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Ready> ready();
 
     //
     // User

@@ -21,7 +21,10 @@
  */
 package org.influxdata.platform.impl;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.AuthorizationClient;
@@ -34,6 +37,7 @@ import org.influxdata.platform.TaskClient;
 import org.influxdata.platform.UserClient;
 import org.influxdata.platform.WriteClient;
 import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.domain.Ready;
 import org.influxdata.platform.error.InfluxException;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.option.WriteOptions;
@@ -45,6 +49,8 @@ import retrofit2.Call;
  * @author Jakub Bednar (bednar@github) (11/10/2018 09:36)
  */
 public final class PlatformClientImpl extends AbstractPlatformClient<PlatformService> implements PlatformClient {
+
+    private static final Logger LOG = Logger.getLogger(PlatformClientImpl.class.getName());
 
     public PlatformClientImpl(@Nonnull final PlatformOptions options) {
 
@@ -121,6 +127,18 @@ public final class PlatformClientImpl extends AbstractPlatformClient<PlatformSer
             health.setMessage(e.getMessage());
 
             return health;
+        }
+    }
+
+    @Nullable
+    @Override
+    public Ready ready() {
+        Call<Ready> call = platformService.ready();
+        try {
+            return execute(call);
+        } catch (InfluxException e) {
+            LOG.log(Level.WARNING, "The exception occurs during check instance readiness", e);
+            return null;
         }
     }
 
