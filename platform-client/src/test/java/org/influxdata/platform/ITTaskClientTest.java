@@ -543,7 +543,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
 
-        Thread.sleep(2_000);
+        Thread.sleep(5_000);
 
         List<Run> runs = taskClient.getRuns(task, null, null, 1);
         Assertions.assertThat(runs).hasSize(1);
