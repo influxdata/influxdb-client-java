@@ -50,7 +50,7 @@ class ITPlatformClient extends AbstractITClientTest {
 
         Assertions.assertThat(health).isNotNull();
         Assertions.assertThat(health.isHealthy()).isTrue();
-        Assertions.assertThat(health.getMessage()).isEqualTo("howdy y'all");
+        Assertions.assertThat(health.getMessage()).isEqualTo("ready for queries and writes");
     }
 
     @Test

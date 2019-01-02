@@ -32,6 +32,7 @@ import org.influxdata.platform.annotations.Measurement;
 import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Permission;
+import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.RetentionRule;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.option.WriteOptions;
@@ -64,7 +65,6 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         super.setUp();
 
-
         PlatformClient platformClient = PlatformClientFactory.create(platformURL, "my-user",
                 "my-password".toCharArray());
 
@@ -78,21 +78,21 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
         //
         // Add Permissions to read and write to the Bucket
         //
-        String bucketResource = Permission.bucketResource(bucket.getId());
-
         Permission readBucket = new Permission();
-        readBucket.setResource(bucketResource);
+        readBucket.setId(bucket.getId());
+        readBucket.setResource(PermissionResourceType.BUCKET);
         readBucket.setAction(Permission.READ_ACTION);
 
         Permission writeBucket = new Permission();
-        writeBucket.setResource(bucketResource);
+        readBucket.setId(bucket.getId());
+        writeBucket.setResource(PermissionResourceType.BUCKET);
         writeBucket.setAction(Permission.WRITE_ACTION);
 
         User loggedUser = platformClient.createUserClient().me();
         Assertions.assertThat(loggedUser).isNotNull();
 
         Authorization authorization = platformClient.createAuthorizationClient()
-                .createAuthorization(loggedUser, Arrays.asList(readBucket, writeBucket));
+                .createAuthorization(organization, Arrays.asList(readBucket, writeBucket));
 
         String token = authorization.getToken();
 

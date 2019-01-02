@@ -68,10 +68,22 @@ public abstract class AbstractRestClient {
     }
 
     protected <T> T execute(@Nonnull final Call<T> call) throws InfluxException {
-        return execute(call, null);
+        return execute(call, (String) null);
     }
 
     protected <T> T execute(@Nonnull final Call<T> call, @Nullable final String nullError) throws InfluxException {
+        return execute(call, nullError, null);
+    }
+
+    protected <T, E extends InfluxException> T execute(@Nonnull final Call<T> call,
+                                                       @Nullable final Class<E> nullType) throws InfluxException {
+
+        return execute(call, null, nullType);
+    }
+
+    private <T, E extends InfluxException> T execute(@Nonnull final Call<T> call,
+                                                     @Nullable final String nullError,
+                                                     @Nullable final Class<E> nullType) throws InfluxException {
 
         Arguments.checkNotNull(call, "call");
 
@@ -86,10 +98,12 @@ public abstract class AbstractRestClient {
                 //
                 // The error message signal not found on the server => return null
                 //
-                String error = influxException.getMessage();
-                if (nullError != null && nullError.equals(error)) {
+                boolean nullByMessage = nullError != null && nullError.equals(influxException.getMessage());
+                boolean nullByType = nullType != null && nullType.isAssignableFrom(influxException.getClass());
 
-                    LOG.log(Level.WARNING, "Error is considered as null response: {0}", error);
+                if (nullByMessage || nullByType) {
+
+                    LOG.log(Level.FINEST, "Error is considered as null response.", influxException);
 
                     return null;
                 }

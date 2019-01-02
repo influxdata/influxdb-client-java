@@ -21,31 +21,34 @@
  */
 package org.influxdata.platform.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
+import com.squareup.moshi.Json;
 
 /**
- * The wrapper for "/api/v2/authorizations" response.
- *
- * @author Jakub Bednar (bednar@github) (17/09/2018 11:43)
+ * @author Jakub Bednar (bednar@github) (02/01/2019 10,19)
  */
-public final class Authorizations extends AbstractHasLinks {
+public enum PermissionResourceType {
 
-    private List<Authorization> authorizations = new ArrayList<>();
+    @Json(name = "authorizations")
+    AUTHORIZATION,
 
-    public List<Authorization> getAuthorizations() {
-        return authorizations;
-    }
+    @Json(name = "buckets")
+    BUCKET,
 
-    public void setAuthorizations(final List<Authorization> authorizations) {
-        this.authorizations = authorizations;
-    }
+    @Json(name = "dashboards")
+    DASHBOARD,
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", Authorizations.class.getSimpleName() + "[", "]")
-                .add("authorizations=" + authorizations)
-                .toString();
-    }
+    @Json(name = "orgs")
+    ORG,
+
+    @Json(name = "tasks")
+    TASK,
+
+    @Json(name = "telegrafs")
+    TELEGRAF,
+
+    @Json(name = "sources")
+    SOURCE,
+
+    @Json(name = "users")
+    USER
 }

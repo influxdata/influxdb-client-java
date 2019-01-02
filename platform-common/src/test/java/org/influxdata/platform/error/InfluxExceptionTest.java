@@ -174,7 +174,7 @@ class InfluxExceptionTest {
     void errorBodyPlatform() {
         Assertions
                 .assertThatThrownBy(() -> {
-                    Response<Object> response = errorResponse("not found", 404, 15, "{\"code\":\"not found\",\"msg\":\"user not found\"}", "X-Platform-Error-Code");
+                    Response<Object> response = errorResponse("not found", 404, 15, "{\"code\":\"not found\",\"message\":\"user not found\"}", "X-Platform-Error-Code");
                     throw new InfluxException(new HttpException(response));
                 })
                 .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals("user not found"));

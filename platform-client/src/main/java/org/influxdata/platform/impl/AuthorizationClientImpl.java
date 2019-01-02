@@ -31,8 +31,10 @@ import org.influxdata.platform.Arguments;
 import org.influxdata.platform.AuthorizationClient;
 import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Authorizations;
+import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
 import org.influxdata.platform.domain.User;
+import org.influxdata.platform.error.rest.NotFoundException;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -60,24 +62,25 @@ final class AuthorizationClientImpl extends AbstractRestClient implements Author
 
     @Nonnull
     @Override
-    public Authorization createAuthorization(@Nonnull final User user, @Nonnull final List<Permission> permissions) {
+    public Authorization createAuthorization(@Nonnull final Organization organization,
+                                             @Nonnull final List<Permission> permissions) {
 
-        Arguments.checkNotNull(user, "User is required");
+        Arguments.checkNotNull(organization, "Organization is required");
         Arguments.checkNotNull(permissions, "Permissions are required");
 
-        return createAuthorization(user.getId(), permissions);
+        return createAuthorization(organization.getId(), permissions);
     }
 
     @Nonnull
     @Override
-    public Authorization createAuthorization(@Nonnull final String userID,
+    public Authorization createAuthorization(@Nonnull final String organizationID,
                                              @Nonnull final List<Permission> permissions) {
 
-        Arguments.checkNonEmpty(userID, "UserID");
+        Arguments.checkNonEmpty(organizationID, "UserID");
         Arguments.checkNotNull(permissions, "Permissions are required");
 
         Authorization authorization = new Authorization();
-        authorization.setUserID(userID);
+        authorization.setOrgID(organizationID);
         authorization.setPermissions(permissions);
 
         return createAuthorization(authorization);
@@ -110,7 +113,7 @@ final class AuthorizationClientImpl extends AbstractRestClient implements Author
 
         Call<Authorization> call = platformService.findAuthorization(authorizationID);
 
-        return execute(call, "authorization not found");
+        return execute(call, NotFoundException.class);
     }
 
     @Nonnull
@@ -173,6 +176,6 @@ final class AuthorizationClientImpl extends AbstractRestClient implements Author
         Authorizations authorizations = execute(authorizationsCall);
         LOG.log(Level.FINEST, "findAuthorizations found: {0}", authorizations);
 
-        return authorizations.getAuths();
+        return authorizations.getAuthorizations();
     }
 }

@@ -32,9 +32,10 @@ import org.influxdata.platform.Arguments;
 import org.influxdata.platform.OrganizationClient;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
+import org.influxdata.platform.domain.ResourceMember;
+import org.influxdata.platform.domain.ResourceMembers;
 import org.influxdata.platform.domain.User;
-import org.influxdata.platform.domain.UserResourceMapping;
-import org.influxdata.platform.domain.UserResourcesResponse;
+import org.influxdata.platform.error.rest.NotFoundException;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -70,7 +71,7 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
         Call<Organization> organization = platformService.findOrganizationByID(organizationID);
 
-        return execute(organization, "organization not found");
+        return execute(organization, NotFoundException.class);
     }
 
     @Nonnull
@@ -142,7 +143,7 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nonnull
     @Override
-    public List<UserResourceMapping> getMembers(@Nonnull final Organization organization) {
+    public List<ResourceMember> getMembers(@Nonnull final Organization organization) {
 
         Arguments.checkNotNull(organization, "Organization");
 
@@ -151,20 +152,20 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nonnull
     @Override
-    public List<UserResourceMapping> getMembers(@Nonnull final String organizationID) {
+    public List<ResourceMember> getMembers(@Nonnull final String organizationID) {
 
         Arguments.checkNonEmpty(organizationID, "Organization ID");
 
-        Call<UserResourcesResponse> call = platformService.findOrganizationMembers(organizationID);
-        UserResourcesResponse userResourcesResponse = execute(call);
-        LOG.log(Level.FINEST, "findOrganizationMembers found: {0}", userResourcesResponse);
+        Call<ResourceMembers> call = platformService.findOrganizationMembers(organizationID);
+        ResourceMembers resourceMembers = execute(call);
+        LOG.log(Level.FINEST, "findOrganizationMembers found: {0}", resourceMembers);
 
-        return userResourcesResponse.getUserResourceMappings();
+        return resourceMembers.getUsers();
     }
 
     @Nonnull
     @Override
-    public UserResourceMapping addMember(@Nonnull final User member, @Nonnull final Organization organization) {
+    public ResourceMember addMember(@Nonnull final User member, @Nonnull final Organization organization) {
 
         Arguments.checkNotNull(organization, "Organization");
         Arguments.checkNotNull(member, "member");
@@ -174,7 +175,7 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nonnull
     @Override
-    public UserResourceMapping addMember(@Nonnull final String memberID, @Nonnull final String organizationID) {
+    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String organizationID) {
 
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(organizationID, "Organization ID");
@@ -183,7 +184,7 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
         user.setId(memberID);
 
         String json = userAdapter.toJson(user);
-        Call<UserResourceMapping> call = platformService.addOrganizationMember(organizationID, createBody(json));
+        Call<ResourceMember> call = platformService.addOrganizationMember(organizationID, createBody(json));
 
         return execute(call);
     }
@@ -209,7 +210,7 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nonnull
     @Override
-    public List<UserResourceMapping> getOwners(@Nonnull final Organization organization) {
+    public List<ResourceMember> getOwners(@Nonnull final Organization organization) {
 
         Arguments.checkNotNull(organization, "Organization");
 
@@ -218,20 +219,20 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nonnull
     @Override
-    public List<UserResourceMapping> getOwners(@Nonnull final String organizationID) {
+    public List<ResourceMember> getOwners(@Nonnull final String organizationID) {
 
         Arguments.checkNonEmpty(organizationID, "Organization ID");
 
-        Call<UserResourcesResponse> call = platformService.findOrganizationOwners(organizationID);
-        UserResourcesResponse userResourcesResponse = execute(call);
-        LOG.log(Level.FINEST, "findOrganizationOwners found: {0}", userResourcesResponse);
+        Call<ResourceMembers> call = platformService.findOrganizationOwners(organizationID);
+        ResourceMembers resourceMembers = execute(call);
+        LOG.log(Level.FINEST, "findOrganizationOwners found: {0}", resourceMembers);
 
-        return userResourcesResponse.getUserResourceMappings();
+        return resourceMembers.getUsers();
     }
 
     @Nonnull
     @Override
-    public UserResourceMapping addOwner(@Nonnull final User owner, @Nonnull final Organization organization) {
+    public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Organization organization) {
 
         Arguments.checkNotNull(organization, "Organization");
         Arguments.checkNotNull(owner, "owner");
@@ -241,7 +242,7 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nonnull
     @Override
-    public UserResourceMapping addOwner(@Nonnull final String ownerID, @Nonnull final String organizationID) {
+    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String organizationID) {
 
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(organizationID, "Organization ID");
@@ -250,7 +251,7 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
         user.setId(ownerID);
 
         String json = userAdapter.toJson(user);
-        Call<UserResourceMapping> call = platformService.addOrganizationOwner(organizationID, createBody(json));
+        Call<ResourceMember> call = platformService.addOrganizationOwner(organizationID, createBody(json));
 
         return execute(call);
     }

@@ -25,9 +25,8 @@ import java.util.List;
 
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Organization;
-import org.influxdata.platform.domain.ResourceType;
+import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.User;
-import org.influxdata.platform.domain.UserResourceMapping;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -172,24 +171,22 @@ class ITBucketClientTest extends AbstractITClientTest {
 
         Bucket bucket = bucketClient.createBucket(generateName("robot sensor"), retentionRule(), organization);
 
-        List<UserResourceMapping> members = bucketClient.getMembers(bucket);
+        List<ResourceMember> members = bucketClient.getMembers(bucket);
         Assertions.assertThat(members).hasSize(0);
 
         User user = userClient.createUser(generateName("Luke Health"));
 
-        UserResourceMapping userResourceMapping = bucketClient.addMember(user, bucket);
-        Assertions.assertThat(userResourceMapping).isNotNull();
-        Assertions.assertThat(userResourceMapping.getResourceID()).isEqualTo(bucket.getId());
-        Assertions.assertThat(userResourceMapping.getResourceType()).isEqualTo(ResourceType.BUCKET_RESOURCE_TYPE);
-        Assertions.assertThat(userResourceMapping.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(userResourceMapping.getUserType()).isEqualTo(UserResourceMapping.UserType.MEMBER);
+        ResourceMember resourceMember = bucketClient.addMember(user, bucket);
+        Assertions.assertThat(resourceMember).isNotNull();
+        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
 
         members = bucketClient.getMembers(bucket);
         Assertions.assertThat(members).hasSize(1);
-        Assertions.assertThat(members.get(0).getResourceID()).isEqualTo(bucket.getId());
-        Assertions.assertThat(members.get(0).getResourceType()).isEqualTo(ResourceType.BUCKET_RESOURCE_TYPE);
+        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
         Assertions.assertThat(members.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(members.get(0).getUserType()).isEqualTo(UserResourceMapping.UserType.MEMBER);
+        Assertions.assertThat(members.get(0).getUserName()).isEqualTo(user.getName());
 
         bucketClient.deleteMember(user, bucket);
 
@@ -204,24 +201,22 @@ class ITBucketClientTest extends AbstractITClientTest {
 
         Bucket bucket = bucketClient.createBucket(generateName("robot sensor"), retentionRule(), organization);
 
-        List<UserResourceMapping> owners = bucketClient.getOwners(bucket);
+        List<ResourceMember> owners = bucketClient.getOwners(bucket);
         Assertions.assertThat(owners).hasSize(0);
 
         User user = userClient.createUser(generateName("Luke Health"));
 
-        UserResourceMapping userResourceMapping = bucketClient.addOwner(user, bucket);
-        Assertions.assertThat(userResourceMapping).isNotNull();
-        Assertions.assertThat(userResourceMapping.getResourceID()).isEqualTo(bucket.getId());
-        Assertions.assertThat(userResourceMapping.getResourceType()).isEqualTo(ResourceType.BUCKET_RESOURCE_TYPE);
-        Assertions.assertThat(userResourceMapping.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(userResourceMapping.getUserType()).isEqualTo(UserResourceMapping.UserType.OWNER);
+        ResourceMember resourceMember = bucketClient.addOwner(user, bucket);
+        Assertions.assertThat(resourceMember).isNotNull();
+        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.OWNER);
 
         owners = bucketClient.getOwners(bucket);
         Assertions.assertThat(owners).hasSize(1);
-        Assertions.assertThat(owners.get(0).getResourceID()).isEqualTo(bucket.getId());
-        Assertions.assertThat(owners.get(0).getResourceType()).isEqualTo(ResourceType.BUCKET_RESOURCE_TYPE);
+        Assertions.assertThat(owners.get(0).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
         Assertions.assertThat(owners.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(owners.get(0).getUserType()).isEqualTo(UserResourceMapping.UserType.OWNER);
+        Assertions.assertThat(owners.get(0).getUserName()).isEqualTo(user.getName());
 
         bucketClient.deleteOwner(user, bucket);
 

@@ -42,6 +42,11 @@ public final class Authorization extends AbstractHasLinks {
     @Json(name = "user")
     private String userName;
 
+    private String orgID;
+
+    @Json(name = "org")
+    private String orgName;
+
     private Status status;
 
     private List<Permission> permissions;
@@ -94,6 +99,22 @@ public final class Authorization extends AbstractHasLinks {
         this.permissions = permissions;
     }
 
+    public String getOrgID() {
+        return orgID;
+    }
+
+    public void setOrgID(final String orgID) {
+        this.orgID = orgID;
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(final String orgName) {
+        this.orgName = orgName;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", Authorization.class.getSimpleName() + "[", "]")
@@ -101,6 +122,8 @@ public final class Authorization extends AbstractHasLinks {
                 .add("token='-'")
                 .add("userID='" + userID + "'")
                 .add("userName='" + userName + "'")
+                .add("orgID='" + orgID + "'")
+                .add("orgName='" + orgName + "'")
                 .add("status=" + status)
                 .add("permissions=" + permissions)
                 .toString();

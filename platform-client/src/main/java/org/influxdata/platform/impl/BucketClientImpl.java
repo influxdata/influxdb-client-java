@@ -32,10 +32,11 @@ import org.influxdata.platform.BucketClient;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Buckets;
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.ResourceMember;
+import org.influxdata.platform.domain.ResourceMembers;
 import org.influxdata.platform.domain.RetentionRule;
 import org.influxdata.platform.domain.User;
-import org.influxdata.platform.domain.UserResourceMapping;
-import org.influxdata.platform.domain.UserResourcesResponse;
+import org.influxdata.platform.error.rest.NotFoundException;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -71,7 +72,7 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
 
         Call<Bucket> bucket = platformService.findBucketByID(bucketID);
 
-        return execute(bucket, "bucket not found");
+        return execute(bucket, NotFoundException.class);
     }
 
     @Nonnull
@@ -187,7 +188,7 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
 
     @Nonnull
     @Override
-    public List<UserResourceMapping> getMembers(@Nonnull final Bucket bucket) {
+    public List<ResourceMember> getMembers(@Nonnull final Bucket bucket) {
 
         Arguments.checkNotNull(bucket, "Bucket");
 
@@ -196,20 +197,20 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
 
     @Nonnull
     @Override
-    public List<UserResourceMapping> getMembers(@Nonnull final String bucketID) {
+    public List<ResourceMember> getMembers(@Nonnull final String bucketID) {
 
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        Call<UserResourcesResponse> call = platformService.findBucketMembers(bucketID);
-        UserResourcesResponse userResourcesResponse = execute(call);
-        LOG.log(Level.FINEST, "findBucketMembers found: {0}", userResourcesResponse);
+        Call<ResourceMembers> call = platformService.findBucketMembers(bucketID);
+        ResourceMembers resourceMembers = execute(call);
+        LOG.log(Level.FINEST, "findBucketMembers found: {0}", resourceMembers);
 
-        return userResourcesResponse.getUserResourceMappings();
+        return resourceMembers.getUsers();
     }
 
     @Nonnull
     @Override
-    public UserResourceMapping addMember(@Nonnull final User member, @Nonnull final Bucket bucket) {
+    public ResourceMember addMember(@Nonnull final User member, @Nonnull final Bucket bucket) {
 
         Arguments.checkNotNull(bucket, "bucket");
         Arguments.checkNotNull(member, "member");
@@ -219,7 +220,7 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
 
     @Nonnull
     @Override
-    public UserResourceMapping addMember(@Nonnull final String memberID, @Nonnull final String bucketID) {
+    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String bucketID) {
 
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
@@ -228,7 +229,7 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
         user.setId(memberID);
 
         String json = userAdapter.toJson(user);
-        Call<UserResourceMapping> call = platformService.addBucketMember(bucketID, createBody(json));
+        Call<ResourceMember> call = platformService.addBucketMember(bucketID, createBody(json));
 
         return execute(call);
     }
@@ -254,7 +255,7 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
 
     @Nonnull
     @Override
-    public List<UserResourceMapping> getOwners(@Nonnull final Bucket bucket) {
+    public List<ResourceMember> getOwners(@Nonnull final Bucket bucket) {
 
         Arguments.checkNotNull(bucket, "bucket");
 
@@ -263,20 +264,20 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
 
     @Nonnull
     @Override
-    public List<UserResourceMapping> getOwners(@Nonnull final String bucketID) {
+    public List<ResourceMember> getOwners(@Nonnull final String bucketID) {
 
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        Call<UserResourcesResponse> call = platformService.findBucketOwners(bucketID);
-        UserResourcesResponse userResourcesResponse = execute(call);
-        LOG.log(Level.FINEST, "findBucketOwners found: {0}", userResourcesResponse);
+        Call<ResourceMembers> call = platformService.findBucketOwners(bucketID);
+        ResourceMembers resourceMembers = execute(call);
+        LOG.log(Level.FINEST, "findBucketOwners found: {0}", resourceMembers);
 
-        return userResourcesResponse.getUserResourceMappings();
+        return resourceMembers.getUsers();
     }
 
     @Nonnull
     @Override
-    public UserResourceMapping addOwner(@Nonnull final User owner, @Nonnull final Bucket bucket) {
+    public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Bucket bucket) {
 
         Arguments.checkNotNull(bucket, "bucket");
         Arguments.checkNotNull(owner, "owner");
@@ -286,7 +287,7 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
 
     @Nonnull
     @Override
-    public UserResourceMapping addOwner(@Nonnull final String ownerID, @Nonnull final String bucketID) {
+    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String bucketID) {
 
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
@@ -295,7 +296,7 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
         user.setId(ownerID);
 
         String json = userAdapter.toJson(user);
-        Call<UserResourceMapping> call = platformService.addBucketOwner(bucketID, createBody(json));
+        Call<ResourceMember> call = platformService.addBucketOwner(bucketID, createBody(json));
 
         return execute(call);
     }

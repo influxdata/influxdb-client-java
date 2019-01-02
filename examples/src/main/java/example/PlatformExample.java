@@ -39,7 +39,7 @@ import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
-import org.influxdata.platform.domain.User;
+import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.write.Point;
 import org.influxdata.platform.write.event.WriteSuccessEvent;
@@ -91,19 +91,18 @@ public class PlatformExample {
         //
         // Add Permissions to read and write to the Bucket
         //
-        String bucketResource = Permission.bucketResource(temperatureBucket.getId());
-
         Permission readBucket = new Permission();
-        readBucket.setResource(bucketResource);
+        readBucket.setId(temperatureBucket.getId());
+        readBucket.setResource(PermissionResourceType.BUCKET);
         readBucket.setAction(Permission.READ_ACTION);
 
         Permission writeBucket = new Permission();
-        writeBucket.setResource(bucketResource);
+        writeBucket.setId(temperatureBucket.getId());
+        writeBucket.setResource(PermissionResourceType.BUCKET);
         writeBucket.setAction(Permission.WRITE_ACTION);
 
-        User loggedUser = platform.createUserClient().me();
         Authorization authorization = platform.createAuthorizationClient()
-            .createAuthorization(loggedUser, Arrays.asList(readBucket, writeBucket));
+            .createAuthorization(medicalGMBH, Arrays.asList(readBucket, writeBucket));
 
         String token = authorization.getToken();
         System.out.println("The token to write to temperature-sensors bucket " + token);

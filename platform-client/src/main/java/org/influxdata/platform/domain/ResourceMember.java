@@ -24,22 +24,60 @@ package org.influxdata.platform.domain;
 import com.squareup.moshi.Json;
 
 /**
- * The type of resource.
+ * The Resource Member.
+ *
+ * @author Jakub Bednar (bednar@github) (16/10/2018 07:52)
  */
-public enum ResourceType {
+public final class ResourceMember extends AbstractHasLinks {
 
-    @Json(name = "dashboard")
-    DASHBOARD_RESOURCE_TYPE,
+    /**
+     * User ID.
+     */
+    @Json(name = "id")
+    private String userID;
 
-    @Json(name = "bucket")
-    BUCKET_RESOURCE_TYPE,
+    /**
+     * User name.
+     */
+    @Json(name = "name")
+    private String userName;
 
-    @Json(name = "task")
-    TASK_RESOURCE_TYPE,
+    @Json(name = "role")
+    private UserType role;
 
-    @Json(name = "org")
-    ORG_RESOURCE_TYPE,
+    /**
+     * The user type.
+     */
+    public enum UserType {
 
-    @Json(name = "view")
-    VIEW_RESOURCE_TYPE
+        @Json(name = "owner")
+        OWNER,
+
+        @Json(name = "member")
+        MEMBER
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(final String userID) {
+        this.userID = userID;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(final String userName) {
+        this.userName = userName;
+    }
+
+    public UserType getRole() {
+        return role;
+    }
+
+    public void setRole(final UserType role) {
+        this.role = role;
+    }
 }

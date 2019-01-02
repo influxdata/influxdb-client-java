@@ -22,9 +22,6 @@
 package org.influxdata.platform.domain;
 
 import java.util.StringJoiner;
-import javax.annotation.Nonnull;
-
-import org.influxdata.platform.Arguments;
 
 
 /**
@@ -45,33 +42,25 @@ public final class Permission {
     public static final String WRITE_ACTION = "write";
 
     /**
-     * Action for creating new resources.
+     * Resource ID.
      */
-    public static final String CREATE_ACTION = "create";
-
-    /**
-     * Deleting an existing resource.
-     */
-    public static final String DELETE_ACTION = "delete";
-
-    /**
-     * Represents the user resource actions can apply to.
-     */
-    public static final String USER_RESOURCE = "user";
-
-    /**
-     * Represents the org resource actions can apply to.
-     */
-    public static final String ORGANIZATION_RESOURCE = "org";
-
-    private String resource;
+    private String id;
+    private PermissionResourceType resource;
     private String action;
 
-    public String getResource() {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(final String id) {
+        this.id = id;
+    }
+
+    public PermissionResourceType getResource() {
         return resource;
     }
 
-    public void setResource(final String resource) {
+    public void setResource(final PermissionResourceType resource) {
         this.resource = resource;
     }
 
@@ -81,33 +70,6 @@ public final class Permission {
 
     public void setAction(final String action) {
         this.action = action;
-    }
-
-    /**
-     * Represents the task resource scoped to an organization.
-     *
-     * @param orgID organization scope
-     * @return task resource
-     */
-    @Nonnull
-    public static String taskResource(@Nonnull final String orgID) {
-
-        Arguments.checkNonEmpty(orgID, "orgID");
-
-        return String.format("org/%s/task", orgID);
-    }
-
-    /**
-     * BucketResource constructs a bucket resource.
-     *
-     * @param bucketID bucket scope
-     * @return bucket resource
-     */
-    public static String bucketResource(@Nonnull final String bucketID) {
-
-        Arguments.checkNonEmpty(bucketID, "bucketID");
-
-        return String.format("bucket/%s", bucketID);
     }
 
     @Override

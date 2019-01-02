@@ -207,9 +207,9 @@ abstract class AbstractWriteClient extends AbstractRestClient {
 
         switch (precision) {
             case NANOS:
-                return "n";
+                return "ns";
             case MICROS:
-                return "u";
+                return "us";
             case MILLIS:
                 return "ms";
             case SECONDS:

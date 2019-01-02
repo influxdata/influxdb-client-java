@@ -23,6 +23,8 @@ package org.influxdata.platform.domain;
 
 import java.util.StringJoiner;
 
+import com.squareup.moshi.Json;
+
 /**
  * Task is a task.
  *
@@ -45,6 +47,7 @@ public final class Task extends AbstractHasLinks {
     /**
      * The ID of the organization that owns this Task.
      */
+    @Json(name = "organizationID")
     private String organizationId;
 
     /**

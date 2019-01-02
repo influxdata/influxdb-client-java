@@ -27,9 +27,9 @@ import javax.annotation.Nullable;
 
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.RetentionRule;
 import org.influxdata.platform.domain.User;
-import org.influxdata.platform.domain.UserResourceMapping;
 
 /**
  * The client of the InfluxData Platform that implement Bucket HTTP API endpoint.
@@ -39,7 +39,7 @@ import org.influxdata.platform.domain.UserResourceMapping;
 public interface BucketClient {
 
     /**
-     * Creates a new bucket and sets {@link Bucket#id} with the new identifier.
+     * Creates a new bucket and sets {@link Bucket#getId()} with the new identifier.
      *
      * @param bucket bucket to create
      * @return Bucket created
@@ -48,7 +48,7 @@ public interface BucketClient {
     Bucket createBucket(@Nonnull Bucket bucket);
 
     /**
-     * Creates a new bucket and sets {@link Bucket#id} with the new identifier.
+     * Creates a new bucket and sets {@link Bucket#getId()}  with the new identifier.
      *
      * @param name            name of the bucket
      * @param organization    owner of bucket
@@ -59,7 +59,7 @@ public interface BucketClient {
                         @Nonnull final Organization organization);
 
     /**
-     * Creates a new bucket and sets {@link Bucket#id} with the new identifier.
+     * Creates a new bucket and sets {@link Bucket#getId()} with the new identifier.
      *
      * @param name            name of the bucket
      * @param retentionRule bucket retention period
@@ -72,7 +72,7 @@ public interface BucketClient {
                         @Nonnull final Organization organization);
 
     /**
-     * Creates a new bucket and sets {@link Bucket#id} with the new identifier.
+     * Creates a new bucket and sets {@link Bucket#getId()} with the new identifier.
      *
      * @param name             name of the bucket
      * @param organizationName owner of bucket
@@ -83,7 +83,7 @@ public interface BucketClient {
                         @Nonnull final String organizationName);
 
     /**
-     * Creates a new bucket and sets {@link Bucket#id} with the new identifier.
+     * Creates a new bucket and sets {@link Bucket#getId()} with the new identifier.
      *
      * @param name             name of the bucket
      * @param retentionRule  bucket retention period
@@ -160,7 +160,7 @@ public interface BucketClient {
      * @return return the list all users with member privileges for a bucket
      */
     @Nonnull
-    List<UserResourceMapping> getMembers(@Nonnull final String bucketID);
+    List<ResourceMember> getMembers(@Nonnull final String bucketID);
 
     /**
      * List all users with member privileges for a bucket.
@@ -169,7 +169,7 @@ public interface BucketClient {
      * @return return the list all users with member privileges for a bucket
      */
     @Nonnull
-    List<UserResourceMapping> getMembers(@Nonnull final Bucket bucket);
+    List<ResourceMember> getMembers(@Nonnull final Bucket bucket);
 
     /**
      * Add the bucket member.
@@ -179,7 +179,7 @@ public interface BucketClient {
      * @return created mapping
      */
     @Nonnull
-    UserResourceMapping addMember(@Nonnull final User member, @Nonnull final Bucket bucket);
+    ResourceMember addMember(@Nonnull final User member, @Nonnull final Bucket bucket);
 
     /**
      * Add the bucket member.
@@ -189,7 +189,7 @@ public interface BucketClient {
      * @return created mapping
      */
     @Nonnull
-    UserResourceMapping addMember(@Nonnull final String memberID, @Nonnull final String bucketID);
+    ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String bucketID);
 
     /**
      * Removes a member from a bucket.
@@ -214,7 +214,7 @@ public interface BucketClient {
      * @return return List all owners of a bucket
      */
     @Nonnull
-    List<UserResourceMapping> getOwners(@Nonnull final String bucketID);
+    List<ResourceMember> getOwners(@Nonnull final String bucketID);
 
     /**
      * List all owners of a bucket.
@@ -223,7 +223,7 @@ public interface BucketClient {
      * @return return List all owners of a bucket.
      */
     @Nonnull
-    List<UserResourceMapping> getOwners(@Nonnull final Bucket bucket);
+    List<ResourceMember> getOwners(@Nonnull final Bucket bucket);
 
     /**
      * Add the bucket owner.
@@ -233,7 +233,7 @@ public interface BucketClient {
      * @return created mapping
      */
     @Nonnull
-    UserResourceMapping addOwner(@Nonnull final User owner, @Nonnull final Bucket bucket);
+    ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Bucket bucket);
 
     /**
      * Add the bucket owner.
@@ -243,7 +243,7 @@ public interface BucketClient {
      * @return created mapping
      */
     @Nonnull
-    UserResourceMapping addOwner(@Nonnull final String ownerID, @Nonnull final String bucketID);
+    ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String bucketID);
 
     /**
      * Removes a owner from a bucket.

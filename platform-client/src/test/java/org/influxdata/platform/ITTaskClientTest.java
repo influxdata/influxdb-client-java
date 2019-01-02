@@ -30,13 +30,13 @@ import javax.annotation.Nonnull;
 import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
-import org.influxdata.platform.domain.ResourceType;
+import org.influxdata.platform.domain.PermissionResourceType;
+import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.Run;
 import org.influxdata.platform.domain.RunStatus;
 import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.domain.Task;
 import org.influxdata.platform.domain.User;
-import org.influxdata.platform.domain.UserResourceMapping;
 import org.influxdata.platform.error.InfluxException;
 
 import org.assertj.core.api.Assertions;
@@ -67,11 +67,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         super.setUp();
 
-        organization = platformClient.createOrganizationClient()
-                .findOrganizations().stream()
-                .filter(organization -> organization.getName().equals("my-org"))
-                .findFirst()
-                .orElseThrow(IllegalStateException::new);
+        organization = findMyOrg();
 
         user = platformClient.createUserClient().me();
 
@@ -324,24 +320,22 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Task task = taskClient.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", user, organization);
 
-        List<UserResourceMapping> members = taskClient.getMembers(task);
+        List<ResourceMember> members = taskClient.getMembers(task);
         Assertions.assertThat(members).hasSize(0);
 
         User user = userClient.createUser(generateName("Luke Health"));
 
-        UserResourceMapping userResourceMapping = taskClient.addMember(user, task);
-        Assertions.assertThat(userResourceMapping).isNotNull();
-        Assertions.assertThat(userResourceMapping.getResourceID()).isEqualTo(task.getId());
-        Assertions.assertThat(userResourceMapping.getResourceType()).isEqualTo(ResourceType.TASK_RESOURCE_TYPE);
-        Assertions.assertThat(userResourceMapping.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(userResourceMapping.getUserType()).isEqualTo(UserResourceMapping.UserType.MEMBER);
+        ResourceMember resourceMember = taskClient.addMember(user, task);
+        Assertions.assertThat(resourceMember).isNotNull();
+        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
 
         members = taskClient.getMembers(task);
         Assertions.assertThat(members).hasSize(1);
-        Assertions.assertThat(members.get(0).getResourceID()).isEqualTo(task.getId());
-        Assertions.assertThat(members.get(0).getResourceType()).isEqualTo(ResourceType.TASK_RESOURCE_TYPE);
+        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
         Assertions.assertThat(members.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(members.get(0).getUserType()).isEqualTo(UserResourceMapping.UserType.MEMBER);
+        Assertions.assertThat(members.get(0).getUserName()).isEqualTo(user.getName());
 
         taskClient.deleteMember(user, task);
 
@@ -358,24 +352,22 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Task task = taskClient.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", user, organization);
 
-        List<UserResourceMapping> owners = taskClient.getOwners(task);
+        List<ResourceMember> owners = taskClient.getOwners(task);
         Assertions.assertThat(owners).hasSize(0);
 
         User user = userClient.createUser(generateName("Luke Health"));
 
-        UserResourceMapping userResourceMapping = taskClient.addOwner(user, task);
-        Assertions.assertThat(userResourceMapping).isNotNull();
-        Assertions.assertThat(userResourceMapping.getResourceID()).isEqualTo(task.getId());
-        Assertions.assertThat(userResourceMapping.getResourceType()).isEqualTo(ResourceType.TASK_RESOURCE_TYPE);
-        Assertions.assertThat(userResourceMapping.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(userResourceMapping.getUserType()).isEqualTo(UserResourceMapping.UserType.OWNER);
+        ResourceMember resourceMember = taskClient.addOwner(user, task);
+        Assertions.assertThat(resourceMember).isNotNull();
+        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.OWNER);
 
         owners = taskClient.getOwners(task);
         Assertions.assertThat(owners).hasSize(1);
-        Assertions.assertThat(owners.get(0).getResourceID()).isEqualTo(task.getId());
-        Assertions.assertThat(owners.get(0).getResourceType()).isEqualTo(ResourceType.TASK_RESOURCE_TYPE);
+        Assertions.assertThat(owners.get(0).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
         Assertions.assertThat(owners.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(owners.get(0).getUserType()).isEqualTo(UserResourceMapping.UserType.OWNER);
+        Assertions.assertThat(owners.get(0).getUserName()).isEqualTo(user.getName());
 
         taskClient.deleteOwner(user, task);
 
@@ -487,7 +479,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "4s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
 
         Thread.sleep(5_000);
 
@@ -596,20 +588,20 @@ class ITTaskClientTest extends AbstractITClientTest {
     @Nonnull
     private Authorization addTasksAuthorization(final Organization organization) {
 
-        String taskResource = Permission.taskResource(organization.getId());
-
         Permission createTask = new Permission();
-        createTask.setResource(taskResource);
-        createTask.setAction(Permission.CREATE_ACTION);
+        createTask.setResource(PermissionResourceType.TASK);
+        createTask.setAction(Permission.READ_ACTION);
+        createTask.setId(organization.getId());
 
         Permission deleteTask = new Permission();
-        deleteTask.setResource(taskResource);
-        deleteTask.setAction(Permission.DELETE_ACTION);
+        deleteTask.setResource(PermissionResourceType.TASK);
+        deleteTask.setAction(Permission.WRITE_ACTION);
+        deleteTask.setId(organization.getId());
 
         List<Permission> permissions = new ArrayList<>();
         permissions.add(createTask);
         permissions.add(deleteTask);
 
-        return platformClient.createAuthorizationClient().createAuthorization(user, permissions);
+        return platformClient.createAuthorizationClient().createAuthorization(organization, permissions);
     }
 }

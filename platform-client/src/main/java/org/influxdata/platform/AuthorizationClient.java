@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.platform.domain.Authorization;
+import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
 import org.influxdata.platform.domain.User;
 
@@ -48,22 +49,24 @@ public interface AuthorizationClient {
     /**
      * Create an authorization with defined {@code permissions}.
      *
-     * @param user        owner of authorization
+     * @param organization        owner of authorization
      * @param permissions the permissions for the authorization
      * @return created authorization
      */
     @Nonnull
-    Authorization createAuthorization(@Nonnull final User user, @Nonnull final List<Permission> permissions);
+    Authorization createAuthorization(@Nonnull final Organization organization,
+                                      @Nonnull final List<Permission> permissions);
 
     /**
      * Create an authorization with defined {@code permissions}.
      *
-     * @param userID      owner id of authorization
-     * @param permissions the permissions for the authorization
+     * @param organizationID owner id of authorization
+     * @param permissions    the permissions for the authorization
      * @return created authorization
      */
     @Nonnull
-    Authorization createAuthorization(@Nonnull final String userID, @Nonnull final List<Permission> permissions);
+    Authorization createAuthorization(@Nonnull final String organizationID,
+                                      @Nonnull final List<Permission> permissions);
 
     /**
      * Updates the status of the authorization. Useful for setting an authorization to inactive or active.

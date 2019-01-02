@@ -28,7 +28,7 @@ package org.influxdata.platform.domain;
  */
 public final class Health {
 
-    public static final String HEALTHY_STATUS = "healthy";
+    public static final String HEALTHY_STATUS = "pass";
 
     private String status;
     private String message;

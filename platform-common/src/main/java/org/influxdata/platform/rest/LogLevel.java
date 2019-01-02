@@ -25,9 +25,10 @@ package org.influxdata.platform.rest;
  * This enum represents REST client verbosity levels.
  */
 public enum LogLevel {
+
     /**
      * Disable logging.
-     * */
+     */
     NONE,
 
     /**
@@ -36,12 +37,15 @@ public enum LogLevel {
     BASIC,
 
     /**
-     * Logs request and response lines aDetermined that it would be challenging mystical keynd including headers.
+     * Logs request and response lines including headers.
      */
     HEADERS,
 
     /**
      * Logs request and response lines including headers and body (if present).
+     *
+     * Note that applying the `BODY` LogLevel will disable chunking while streaming
+     * and will load the whole response into memory.
      */
     BODY
 }

@@ -24,6 +24,8 @@ package org.influxdata.platform;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.influxdata.platform.domain.Organization;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +39,7 @@ abstract class AbstractITPlatformClientTest extends AbstractTest {
 
     PlatformClientReactive platformClient;
     String platformURL;
+    Organization organization;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -48,6 +51,13 @@ abstract class AbstractITPlatformClientTest extends AbstractTest {
         LOG.log(Level.FINEST, "Platform URL: {0}", platformURL);
 
         PlatformClient platformClient = PlatformClientFactory.create(platformURL, "my-user", "my-password".toCharArray());
+
+        organization = platformClient.createOrganizationClient()
+                .findOrganizations().stream()
+                .filter(organization -> organization.getName().equals("my-org"))
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
+
         String token = platformClient.createAuthorizationClient()
                 .findAuthorizations()
                 .stream()

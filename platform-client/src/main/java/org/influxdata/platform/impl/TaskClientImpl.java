@@ -31,14 +31,14 @@ import javax.annotation.Nullable;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.TaskClient;
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.ResourceMember;
+import org.influxdata.platform.domain.ResourceMembers;
 import org.influxdata.platform.domain.Run;
 import org.influxdata.platform.domain.RunsResponse;
 import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.domain.Task;
 import org.influxdata.platform.domain.Tasks;
 import org.influxdata.platform.domain.User;
-import org.influxdata.platform.domain.UserResourceMapping;
-import org.influxdata.platform.domain.UserResourcesResponse;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -134,6 +134,8 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(task, "task");
 
+        //TODO
+        task.setId(task.getOrganizationId());
         Call<Task> call = platformService.createTask(createBody(adapter.toJson(task)));
 
         return execute(call);
@@ -255,21 +257,21 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
     @Nonnull
     @Override
-    public List<UserResourceMapping> getMembers(@Nonnull final String taskID) {
+    public List<ResourceMember> getMembers(@Nonnull final String taskID) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        Call<UserResourcesResponse> call = platformService.findTaskMembers(taskID);
+        Call<ResourceMembers> call = platformService.findTaskMembers(taskID);
 
-        UserResourcesResponse userResourcesResponse = execute(call);
-        LOG.log(Level.FINEST, "findTaskMembers found: {0}", userResourcesResponse);
+        ResourceMembers resourceMembers = execute(call);
+        LOG.log(Level.FINEST, "findTaskMembers found: {0}", resourceMembers);
 
-        return userResourcesResponse.getUserResourceMappings();
+        return resourceMembers.getUsers();
     }
 
     @Nonnull
     @Override
-    public List<UserResourceMapping> getMembers(@Nonnull final Task task) {
+    public List<ResourceMember> getMembers(@Nonnull final Task task) {
 
         Arguments.checkNotNull(task, "Task");
 
@@ -278,7 +280,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
     @Nonnull
     @Override
-    public UserResourceMapping addMember(@Nonnull final User member, @Nonnull final Task task) {
+    public ResourceMember addMember(@Nonnull final User member, @Nonnull final Task task) {
 
         Arguments.checkNotNull(task, "task");
         Arguments.checkNotNull(member, "member");
@@ -288,7 +290,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
     @Nonnull
     @Override
-    public UserResourceMapping addMember(@Nonnull final String memberID, @Nonnull final String taskID) {
+    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String taskID) {
 
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(taskID, "Task.ID");
@@ -297,7 +299,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
         user.setId(memberID);
 
         String json = userAdapter.toJson(user);
-        Call<UserResourceMapping> call = platformService.addTaskMember(taskID, createBody(json));
+        Call<ResourceMember> call = platformService.addTaskMember(taskID, createBody(json));
 
         return execute(call);
     }
@@ -323,21 +325,21 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
     @Nonnull
     @Override
-    public List<UserResourceMapping> getOwners(@Nonnull final String taskID) {
+    public List<ResourceMember> getOwners(@Nonnull final String taskID) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        Call<UserResourcesResponse> call = platformService.findTaskOwners(taskID);
+        Call<ResourceMembers> call = platformService.findTaskOwners(taskID);
 
-        UserResourcesResponse userResourcesResponse = execute(call);
-        LOG.log(Level.FINEST, "findTaskMembers found: {0}", userResourcesResponse);
+        ResourceMembers resourceMembers = execute(call);
+        LOG.log(Level.FINEST, "findTaskMembers found: {0}", resourceMembers);
 
-        return userResourcesResponse.getUserResourceMappings();
+        return resourceMembers.getUsers();
     }
 
     @Nonnull
     @Override
-    public List<UserResourceMapping> getOwners(@Nonnull final Task task) {
+    public List<ResourceMember> getOwners(@Nonnull final Task task) {
 
         Arguments.checkNotNull(task, "task");
 
@@ -346,7 +348,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
     @Nonnull
     @Override
-    public UserResourceMapping addOwner(@Nonnull final User owner, @Nonnull final Task task) {
+    public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Task task) {
 
         Arguments.checkNotNull(task, "task");
         Arguments.checkNotNull(owner, "owner");
@@ -356,7 +358,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
     @Nonnull
     @Override
-    public UserResourceMapping addOwner(@Nonnull final String ownerID, @Nonnull final String taskID) {
+    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String taskID) {
 
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(taskID, "Task.ID");
@@ -365,7 +367,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
         user.setId(ownerID);
 
         String json = userAdapter.toJson(user);
-        Call<UserResourceMapping> call = platformService.addTaskOwner(taskID, createBody(json));
+        Call<ResourceMember> call = platformService.addTaskOwner(taskID, createBody(json));
 
         return execute(call);
     }

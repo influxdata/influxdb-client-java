@@ -27,15 +27,15 @@ import java.util.List;
 /**
  * @author Jakub Bednar (bednar@github) (29/10/2018 09:01)
  */
-public final class UserResourcesResponse {
+public final class ResourceMembers {
 
-    private List<UserResourceMapping> userResourceMappings = new ArrayList<>();
+    private List<ResourceMember> users = new ArrayList<>();
 
-    public List<UserResourceMapping> getUserResourceMappings() {
-        return userResourceMappings;
+    public List<ResourceMember> getUsers() {
+        return users;
     }
 
-    public void setUserResourceMappings(final List<UserResourceMapping> userResourceMappings) {
-        this.userResourceMappings = userResourceMappings;
+    public void setUsers(final List<ResourceMember> users) {
+        this.users = users;
     }
 }

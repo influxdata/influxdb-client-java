@@ -35,6 +35,8 @@ import org.influxdata.platform.domain.OperationLogResponse;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
 import org.influxdata.platform.domain.Ready;
+import org.influxdata.platform.domain.ResourceMember;
+import org.influxdata.platform.domain.ResourceMembers;
 import org.influxdata.platform.domain.Run;
 import org.influxdata.platform.domain.RunsResponse;
 import org.influxdata.platform.domain.Source;
@@ -42,8 +44,6 @@ import org.influxdata.platform.domain.Sources;
 import org.influxdata.platform.domain.Task;
 import org.influxdata.platform.domain.Tasks;
 import org.influxdata.platform.domain.User;
-import org.influxdata.platform.domain.UserResourceMapping;
-import org.influxdata.platform.domain.UserResourcesResponse;
 import org.influxdata.platform.domain.Users;
 
 import io.reactivex.Completable;
@@ -156,13 +156,13 @@ interface PlatformService {
     @GET("/api/v2/orgs/{id}/members")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<UserResourcesResponse> findOrganizationMembers(@Nonnull @Path("id") final String organizationID);
+    Call<ResourceMembers> findOrganizationMembers(@Nonnull @Path("id") final String organizationID);
 
     @POST("/api/v2/orgs/{id}/members")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<UserResourceMapping> addOrganizationMember(@Nonnull @Path("id") final String organizationID,
-                                                    @Nonnull @Body final RequestBody member);
+    Call<ResourceMember> addOrganizationMember(@Nonnull @Path("id") final String organizationID,
+                                               @Nonnull @Body final RequestBody member);
 
     @DELETE("/api/v2/orgs/{id}/members/{userID}")
     @Nonnull
@@ -173,13 +173,13 @@ interface PlatformService {
     @GET("/api/v2/orgs/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<UserResourcesResponse> findOrganizationOwners(@Nonnull @Path("id") final String organizationID);
+    Call<ResourceMembers> findOrganizationOwners(@Nonnull @Path("id") final String organizationID);
 
     @POST("/api/v2/orgs/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<UserResourceMapping> addOrganizationOwner(@Nonnull @Path("id") final String organizationID,
-                                                   @Nonnull @Body final RequestBody member);
+    Call<ResourceMember> addOrganizationOwner(@Nonnull @Path("id") final String organizationID,
+                                              @Nonnull @Body final RequestBody member);
 
     @DELETE("/api/v2/orgs/{id}/owners/{userID}")
     @Nonnull
@@ -214,13 +214,13 @@ interface PlatformService {
     @GET("/api/v2/buckets/{id}/members")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<UserResourcesResponse> findBucketMembers(@Nonnull @Path("id") final String bucketID);
+    Call<ResourceMembers> findBucketMembers(@Nonnull @Path("id") final String bucketID);
 
     @POST("/api/v2/buckets/{id}/members")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<UserResourceMapping> addBucketMember(@Nonnull @Path("id") final String bucketID,
-                                              @Nonnull @Body final RequestBody member);
+    Call<ResourceMember> addBucketMember(@Nonnull @Path("id") final String bucketID,
+                                         @Nonnull @Body final RequestBody member);
 
     @DELETE("/api/v2/buckets/{id}/members/{userID}")
     @Nonnull
@@ -231,13 +231,13 @@ interface PlatformService {
     @GET("/api/v2/buckets/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<UserResourcesResponse> findBucketOwners(@Nonnull @Path("id") final String bucketID);
+    Call<ResourceMembers> findBucketOwners(@Nonnull @Path("id") final String bucketID);
 
     @POST("/api/v2/buckets/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<UserResourceMapping> addBucketOwner(@Nonnull @Path("id") final String bucketID,
-                                             @Nonnull @Body final RequestBody member);
+    Call<ResourceMember> addBucketOwner(@Nonnull @Path("id") final String bucketID,
+                                        @Nonnull @Body final RequestBody member);
 
     @DELETE("/api/v2/buckets/{id}/owners/{userID}")
     @Nonnull
@@ -336,13 +336,13 @@ interface PlatformService {
     @GET("/api/v2/tasks/{id}/members")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<UserResourcesResponse> findTaskMembers(@Nonnull @Path("id") final String taskID);
+    Call<ResourceMembers> findTaskMembers(@Nonnull @Path("id") final String taskID);
 
     @POST("/api/v2/tasks/{id}/members")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<UserResourceMapping> addTaskMember(@Nonnull @Path("id") final String taskID,
-                                            @Nonnull @Body final RequestBody member);
+    Call<ResourceMember> addTaskMember(@Nonnull @Path("id") final String taskID,
+                                       @Nonnull @Body final RequestBody member);
 
     @DELETE("/api/v2/tasks/{id}/members/{userID}")
     @Nonnull
@@ -353,13 +353,13 @@ interface PlatformService {
     @GET("/api/v2/tasks/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<UserResourcesResponse> findTaskOwners(@Nonnull @Path("id") final String taskID);
+    Call<ResourceMembers> findTaskOwners(@Nonnull @Path("id") final String taskID);
 
     @POST("/api/v2/tasks/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<UserResourceMapping> addTaskOwner(@Nonnull @Path("id") final String taskID,
-                                           @Nonnull @Body final RequestBody member);
+    Call<ResourceMember> addTaskOwner(@Nonnull @Path("id") final String taskID,
+                                      @Nonnull @Body final RequestBody member);
 
     @DELETE("/api/v2/tasks/{id}/owners/{userID}")
     @Nonnull

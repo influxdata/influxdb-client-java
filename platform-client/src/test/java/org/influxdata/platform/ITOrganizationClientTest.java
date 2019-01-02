@@ -26,9 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.influxdata.platform.domain.Organization;
-import org.influxdata.platform.domain.ResourceType;
+import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.User;
-import org.influxdata.platform.domain.UserResourceMapping;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,8 +68,8 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         Assertions.assertThat(organization.getId()).isNotBlank();
         Assertions.assertThat(organization.getName()).isEqualTo(organizationName);
         Assertions.assertThat(organization.getLinks())
-                .hasSize(6)
-                .containsKeys("buckets", "dashboards", "log", "members", "self", "tasks");
+                .hasSize(8)
+                .containsKeys("buckets", "dashboards", "log", "members", "self", "tasks", "labels", "secrets");
     }
 
     @Test
@@ -86,8 +85,8 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         Assertions.assertThat(organizationByID.getId()).isEqualTo(organization.getId());
         Assertions.assertThat(organizationByID.getName()).isEqualTo(organization.getName());
         Assertions.assertThat(organizationByID.getLinks())
-                .hasSize(6)
-                .containsKeys("buckets", "dashboards", "log", "members", "self", "tasks");
+                .hasSize(8)
+                .containsKeys("buckets", "dashboards", "log", "members", "self", "tasks", "labels", "secrets");
     }
 
     @Test
@@ -118,7 +117,7 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         Organization foundOrganization = organizationClient.findOrganizationByID(createdOrganization.getId());
         Assertions.assertThat(foundOrganization).isNotNull();
 
-        // delete task
+        // delete organization
         organizationClient.deleteOrganization(createdOrganization);
 
         foundOrganization = organizationClient.findOrganizationByID(createdOrganization.getId());
@@ -137,13 +136,15 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         Assertions.assertThat(updatedOrganization.getId()).isEqualTo(createdOrganization.getId());
         Assertions.assertThat(updatedOrganization.getName()).isEqualTo("Master Pb");
 
-        Assertions.assertThat(updatedOrganization.getLinks()).hasSize(6);
+        Assertions.assertThat(updatedOrganization.getLinks()).hasSize(8);
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("buckets", value -> Assertions.assertThat(value).isEqualTo("/api/v2/buckets?org=Master Pb"));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("dashboards", value -> Assertions.assertThat(value).isEqualTo("/api/v2/dashboards?org=Master Pb"));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("self", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId()));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("tasks", value -> Assertions.assertThat(value).isEqualTo("/api/v2/tasks?org=Master Pb"));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("members", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId() + "/members"));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("log", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId() + "/log"));
+        Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("labels", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId() + "/labels"));
+        Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("secrets", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId() + "/secrets"));
     }
 
     @Test
@@ -151,24 +152,22 @@ class ITOrganizationClientTest extends AbstractITClientTest {
 
         Organization organization = organizationClient.createOrganization(generateName("Constant Pro"));
 
-        List<UserResourceMapping> members = organizationClient.getMembers(organization);
+        List<ResourceMember> members = organizationClient.getMembers(organization);
         Assertions.assertThat(members).hasSize(0);
 
         User user = userClient.createUser(generateName("Luke Health"));
 
-        UserResourceMapping userResourceMapping = organizationClient.addMember(user, organization);
-        Assertions.assertThat(userResourceMapping).isNotNull();
-        Assertions.assertThat(userResourceMapping.getResourceID()).isEqualTo(organization.getId());
-        Assertions.assertThat(userResourceMapping.getResourceType()).isEqualTo(ResourceType.ORG_RESOURCE_TYPE);
-        Assertions.assertThat(userResourceMapping.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(userResourceMapping.getUserType()).isEqualTo(UserResourceMapping.UserType.MEMBER);
+        ResourceMember resourceMember = organizationClient.addMember(user, organization);
+        Assertions.assertThat(resourceMember).isNotNull();
+        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
 
         members = organizationClient.getMembers(organization);
         Assertions.assertThat(members).hasSize(1);
-        Assertions.assertThat(members.get(0).getResourceID()).isEqualTo(organization.getId());
-        Assertions.assertThat(members.get(0).getResourceType()).isEqualTo(ResourceType.ORG_RESOURCE_TYPE);
+        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
         Assertions.assertThat(members.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(members.get(0).getUserType()).isEqualTo(UserResourceMapping.UserType.MEMBER);
+        Assertions.assertThat(members.get(0).getUserName()).isEqualTo(user.getName());
 
         organizationClient.deleteMember(user, organization);
 
@@ -181,24 +180,22 @@ class ITOrganizationClientTest extends AbstractITClientTest {
 
         Organization organization = organizationClient.createOrganization(generateName("Constant Pro"));
 
-        List<UserResourceMapping> owners = organizationClient.getOwners(organization);
+        List<ResourceMember> owners = organizationClient.getOwners(organization);
         Assertions.assertThat(owners).hasSize(0);
 
         User user = userClient.createUser(generateName("Luke Health"));
 
-        UserResourceMapping userResourceMapping = organizationClient.addOwner(user, organization);
-        Assertions.assertThat(userResourceMapping).isNotNull();
-        Assertions.assertThat(userResourceMapping.getResourceID()).isEqualTo(organization.getId());
-        Assertions.assertThat(userResourceMapping.getResourceType()).isEqualTo(ResourceType.ORG_RESOURCE_TYPE);
-        Assertions.assertThat(userResourceMapping.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(userResourceMapping.getUserType()).isEqualTo(UserResourceMapping.UserType.OWNER);
+        ResourceMember resourceMember = organizationClient.addOwner(user, organization);
+        Assertions.assertThat(resourceMember).isNotNull();
+        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.OWNER);
 
         owners = organizationClient.getOwners(organization);
         Assertions.assertThat(owners).hasSize(1);
-        Assertions.assertThat(owners.get(0).getResourceID()).isEqualTo(organization.getId());
-        Assertions.assertThat(owners.get(0).getResourceType()).isEqualTo(ResourceType.ORG_RESOURCE_TYPE);
+        Assertions.assertThat(owners.get(0).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
         Assertions.assertThat(owners.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(owners.get(0).getUserType()).isEqualTo(UserResourceMapping.UserType.OWNER);
+        Assertions.assertThat(owners.get(0).getUserName()).isEqualTo(user.getName());
 
         organizationClient.deleteOwner(user, organization);
 

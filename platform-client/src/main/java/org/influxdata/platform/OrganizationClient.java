@@ -26,8 +26,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.User;
-import org.influxdata.platform.domain.UserResourceMapping;
 
 /**
  * The client of the InfluxData Platform that implement Organization HTTP API endpoint.
@@ -37,7 +37,7 @@ import org.influxdata.platform.domain.UserResourceMapping;
 public interface OrganizationClient {
 
     /**
-     * Creates a new organization and sets {@link Organization#id} with the new identifier.
+     * Creates a new organization and sets {@link Organization#getId()} with the new identifier.
      *
      * @param organization the organization to create
      * @return Organization created
@@ -46,7 +46,7 @@ public interface OrganizationClient {
     Organization createOrganization(@Nonnull final Organization organization);
 
     /**
-     * Creates a new organization and sets {@link Organization#id} with the new identifier.
+     * Creates a new organization and sets {@link Organization#getId()} with the new identifier.
      *
      * @param name name of the organization
      * @return Organization created
@@ -101,7 +101,7 @@ public interface OrganizationClient {
      * @return return the List all members of an organization
      */
     @Nonnull
-    List<UserResourceMapping> getMembers(@Nonnull final String organizationID);
+    List<ResourceMember> getMembers(@Nonnull final String organizationID);
 
     /**
      * List all members of an organization.
@@ -110,7 +110,7 @@ public interface OrganizationClient {
      * @return return the List all members of an organization
      */
     @Nonnull
-    List<UserResourceMapping> getMembers(@Nonnull final Organization organization);
+    List<ResourceMember> getMembers(@Nonnull final Organization organization);
 
     /**
      * Add organization member.
@@ -120,7 +120,7 @@ public interface OrganizationClient {
      * @return created mapping
      */
     @Nonnull
-    UserResourceMapping addMember(@Nonnull final User member, @Nonnull final Organization organization);
+    ResourceMember addMember(@Nonnull final User member, @Nonnull final Organization organization);
 
     /**
      * Add organization member.
@@ -130,7 +130,7 @@ public interface OrganizationClient {
      * @return created mapping
      */
     @Nonnull
-    UserResourceMapping addMember(@Nonnull final String memberID, @Nonnull final String organizationID);
+    ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String organizationID);
 
     /**
      * Removes a member from an organization.
@@ -155,7 +155,7 @@ public interface OrganizationClient {
      * @return return the List all owners of an organization
      */
     @Nonnull
-    List<UserResourceMapping> getOwners(@Nonnull final String organizationID);
+    List<ResourceMember> getOwners(@Nonnull final String organizationID);
 
     /**
      * List all owners of an organization.
@@ -164,7 +164,7 @@ public interface OrganizationClient {
      * @return return the List all owners of an organization
      */
     @Nonnull
-    List<UserResourceMapping> getOwners(@Nonnull final Organization organization);
+    List<ResourceMember> getOwners(@Nonnull final Organization organization);
 
     /**
      * Add organization owner.
@@ -174,7 +174,7 @@ public interface OrganizationClient {
      * @return created mapping
      */
     @Nonnull
-    UserResourceMapping addOwner(@Nonnull final User owner, @Nonnull final Organization organization);
+    ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Organization organization);
 
     /**
      * Add organization owner.
@@ -184,7 +184,7 @@ public interface OrganizationClient {
      * @return created mapping
      */
     @Nonnull
-    UserResourceMapping addOwner(@Nonnull final String ownerID, @Nonnull final String organizationID);
+    ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String organizationID);
 
     /**
      * Removes a owner from an organization.

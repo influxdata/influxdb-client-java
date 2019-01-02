@@ -25,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
+import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.RetentionRule;
 
 import org.junit.jupiter.api.AfterEach;
@@ -61,5 +62,14 @@ abstract class AbstractITClientTest extends AbstractTest {
         retentionRule.setType("expire");
         retentionRule.setEverySeconds(3600L);
         return retentionRule;
+    }
+
+    @Nonnull
+    Organization findMyOrg() {
+        return platformClient.createOrganizationClient()
+                .findOrganizations().stream()
+                .filter(organization -> organization.getName().equals("my-org"))
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
     }
 }

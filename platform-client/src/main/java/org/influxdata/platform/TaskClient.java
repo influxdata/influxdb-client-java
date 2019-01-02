@@ -27,10 +27,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.Run;
 import org.influxdata.platform.domain.Task;
 import org.influxdata.platform.domain.User;
-import org.influxdata.platform.domain.UserResourceMapping;
 
 /**
  * The client of the InfluxData Platform that implement Task HTTP API endpoint.
@@ -235,7 +235,7 @@ public interface TaskClient {
      * @return return the list all task members
      */
     @Nonnull
-    List<UserResourceMapping> getMembers(@Nonnull final String taskID);
+    List<ResourceMember> getMembers(@Nonnull final String taskID);
 
     /**
      * List all task members.
@@ -244,7 +244,7 @@ public interface TaskClient {
      * @return return the list all task members
      */
     @Nonnull
-    List<UserResourceMapping> getMembers(@Nonnull final Task task);
+    List<ResourceMember> getMembers(@Nonnull final Task task);
 
     /**
      * Add task member.
@@ -254,7 +254,7 @@ public interface TaskClient {
      * @return created mapping
      */
     @Nonnull
-    UserResourceMapping addMember(@Nonnull final User member, @Nonnull final Task task);
+    ResourceMember addMember(@Nonnull final User member, @Nonnull final Task task);
 
     /**
      * Add task member.
@@ -264,7 +264,7 @@ public interface TaskClient {
      * @return created mapping
      */
     @Nonnull
-    UserResourceMapping addMember(@Nonnull final String memberID, @Nonnull final String taskID);
+    ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String taskID);
 
     /**
      * Removes a member from an task.
@@ -289,7 +289,7 @@ public interface TaskClient {
      * @return return List all task owners
      */
     @Nonnull
-    List<UserResourceMapping> getOwners(@Nonnull final String taskID);
+    List<ResourceMember> getOwners(@Nonnull final String taskID);
 
     /**
      * List all task owners.
@@ -298,7 +298,7 @@ public interface TaskClient {
      * @return return List all task owners
      */
     @Nonnull
-    List<UserResourceMapping> getOwners(@Nonnull final Task task);
+    List<ResourceMember> getOwners(@Nonnull final Task task);
 
     /**
      * Add task owner.
@@ -308,7 +308,7 @@ public interface TaskClient {
      * @return created mapping
      */
     @Nonnull
-    UserResourceMapping addOwner(@Nonnull final User owner, @Nonnull final Task task);
+    ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Task task);
 
     /**
      * Add task owner.
@@ -318,7 +318,7 @@ public interface TaskClient {
      * @return created mapping
      */
     @Nonnull
-    UserResourceMapping addOwner(@Nonnull final String ownerID, @Nonnull final String taskID);
+    ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String taskID);
 
     /**
      * Removes an owner from an task.
