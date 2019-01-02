@@ -43,7 +43,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
@@ -55,7 +54,6 @@ class ITTaskClientTest extends AbstractITClientTest {
 
     private static final Logger LOG = Logger.getLogger(ITTaskClientTest.class.getName());
     private static final String TASK_FLUX = "from(bucket:\"my-bucket\") |> range(start: 0) |> last()";
-    private static final String DISABLE_IF_CONDITION = "true";
 
     private User user;
     private Organization organization;
@@ -311,9 +309,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(updatedTask.getName()).isEqualTo(cronTask.getName());
     }
 
-    //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void member() {
 
         UserClient userClient = platformClient.createUserClient();
@@ -343,9 +339,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(members).hasSize(0);
     }
 
-    //TODO wait to fix task path ":tid" => ":id"
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void owner() {
 
         UserClient userClient = platformClient.createUserClient();
@@ -557,9 +551,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(logs).isEmpty();
     }
 
-    //TODO wait to change pAdapter{s: s, r: r} => pAdapter{s: s, r: r, rc: rc} (platform_adapter.go)
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void cancelRunNotExist() throws InterruptedException {
 
         String taskName = generateName("it task");
@@ -575,9 +567,7 @@ class ITTaskClientTest extends AbstractITClientTest {
                 .hasMessage("run not found");
     }
 
-    //TODO wait to change pAdapter{s: s, r: r} => pAdapter{s: s, r: r, rc: rc} (platform_adapter.go)
     @Test
-    @DisabledIf(DISABLE_IF_CONDITION)
     void cancelRunTaskNotExist() {
 
         Assertions.assertThatThrownBy(() -> taskClient.cancelRun("020f755c3c082000", "020f755c3c082000"))
