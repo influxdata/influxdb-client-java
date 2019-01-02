@@ -32,20 +32,20 @@ import java.util.StringJoiner;
  */
 <span class="fc" id="L33">public final class Authorizations extends AbstractHasLinks {</span>
 
-<span class="fc" id="L35">    private List&lt;Authorization&gt; auths = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L35">    private List&lt;Authorization&gt; authorizations = new ArrayList&lt;&gt;();</span>
 
-    public List&lt;Authorization&gt; getAuths() {
-<span class="fc" id="L38">        return auths;</span>
+    public List&lt;Authorization&gt; getAuthorizations() {
+<span class="fc" id="L38">        return authorizations;</span>
     }
 
-    public void setAuths(final List&lt;Authorization&gt; auths) {
-<span class="nc" id="L42">        this.auths = auths;</span>
+    public void setAuthorizations(final List&lt;Authorization&gt; authorizations) {
+<span class="nc" id="L42">        this.authorizations = authorizations;</span>
 <span class="nc" id="L43">    }</span>
 
     @Override
     public String toString() {
 <span class="nc" id="L47">        return new StringJoiner(&quot;, &quot;, Authorizations.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
-<span class="nc" id="L48">                .add(&quot;auths=&quot; + auths)</span>
+<span class="nc" id="L48">                .add(&quot;authorizations=&quot; + authorizations)</span>
 <span class="nc" id="L49">                .toString();</span>
     }
 }

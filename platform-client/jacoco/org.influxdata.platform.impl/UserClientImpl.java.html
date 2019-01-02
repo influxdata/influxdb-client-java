@@ -34,6 +34,8 @@ import org.influxdata.platform.domain.OperationLogEntry;
 import org.influxdata.platform.domain.OperationLogResponse;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.Users;
+import org.influxdata.platform.error.rest.ForbiddenException;
+import org.influxdata.platform.error.rest.NotFoundException;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -47,79 +49,79 @@ import retrofit2.Call;
  */
 final class UserClientImpl extends AbstractRestClient implements UserClient {
 
-<span class="fc" id="L50">    private static final Logger LOG = Logger.getLogger(UserClientImpl.class.getName());</span>
+<span class="fc" id="L52">    private static final Logger LOG = Logger.getLogger(UserClientImpl.class.getName());</span>
 
     private final PlatformService platformService;
     private final JsonAdapter&lt;User&gt; adapter;
 
-<span class="fc" id="L55">    UserClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
+<span class="fc" id="L57">    UserClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
 
-<span class="fc" id="L57">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
-<span class="fc" id="L58">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
+<span class="fc" id="L59">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
+<span class="fc" id="L60">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
 
-<span class="fc" id="L60">        this.platformService = platformService;</span>
-<span class="fc" id="L61">        this.adapter = moshi.adapter(User.class);</span>
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L62">        this.platformService = platformService;</span>
+<span class="fc" id="L63">        this.adapter = moshi.adapter(User.class);</span>
+<span class="fc" id="L64">    }</span>
 
     @Nullable
     @Override
     public User findUserByID(@Nonnull final String userID) {
 
-<span class="fc" id="L68">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
+<span class="fc" id="L70">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
 
-<span class="fc" id="L70">        Call&lt;User&gt; user = platformService.findUserByID(userID);</span>
+<span class="fc" id="L72">        Call&lt;User&gt; user = platformService.findUserByID(userID);</span>
 
-<span class="fc" id="L72">        return execute(user, &quot;user not found&quot;);</span>
+<span class="fc" id="L74">        return execute(user, NotFoundException.class);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;User&gt; findUsers() {
 
-<span class="fc" id="L79">        Call&lt;Users&gt; usersCall = platformService.findUsers();</span>
+<span class="fc" id="L81">        Call&lt;Users&gt; usersCall = platformService.findUsers();</span>
 
-<span class="fc" id="L81">        Users users = execute(usersCall);</span>
-<span class="fc" id="L82">        LOG.log(Level.FINEST, &quot;findUsers found: {0}&quot;, users);</span>
+<span class="fc" id="L83">        Users users = execute(usersCall);</span>
+<span class="fc" id="L84">        LOG.log(Level.FINEST, &quot;findUsers found: {0}&quot;, users);</span>
 
-<span class="fc" id="L84">        return users.getUsers();</span>
+<span class="fc" id="L86">        return users.getUsers();</span>
     }
 
     @Nonnull
     @Override
     public User createUser(@Nonnull final String name) {
 
-<span class="fc" id="L91">        Arguments.checkNonEmpty(name, &quot;User name&quot;);</span>
+<span class="fc" id="L93">        Arguments.checkNonEmpty(name, &quot;User name&quot;);</span>
 
-<span class="fc" id="L93">        User user = new User();</span>
-<span class="fc" id="L94">        user.setName(name);</span>
+<span class="fc" id="L95">        User user = new User();</span>
+<span class="fc" id="L96">        user.setName(name);</span>
 
-<span class="fc" id="L96">        return createUser(user);</span>
+<span class="fc" id="L98">        return createUser(user);</span>
     }
 
     @Nonnull
     @Override
     public User createUser(@Nonnull final User user) {
 
-<span class="fc" id="L103">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
+<span class="fc" id="L105">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
 
-<span class="fc" id="L105">        String json = adapter.toJson(user);</span>
+<span class="fc" id="L107">        String json = adapter.toJson(user);</span>
 
-<span class="fc" id="L107">        Call&lt;User&gt; call = platformService.createUser(createBody(json));</span>
+<span class="fc" id="L109">        Call&lt;User&gt; call = platformService.createUser(createBody(json));</span>
 
-<span class="fc" id="L109">        return execute(call);</span>
+<span class="fc" id="L111">        return execute(call);</span>
     }
 
     @Nonnull
     @Override
     public User updateUser(@Nonnull final User user) {
 
-<span class="fc" id="L116">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
+<span class="fc" id="L118">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
 
-<span class="fc" id="L118">        String json = adapter.toJson(user);</span>
+<span class="fc" id="L120">        String json = adapter.toJson(user);</span>
 
-<span class="fc" id="L120">        Call&lt;User&gt; userCall = platformService.updateUser(user.getId(), createBody(json));</span>
+<span class="fc" id="L122">        Call&lt;User&gt; userCall = platformService.updateUser(user.getId(), createBody(json));</span>
 
-<span class="fc" id="L122">        return execute(userCall);</span>
+<span class="fc" id="L124">        return execute(userCall);</span>
     }
 
     @Nonnull
@@ -128,11 +130,11 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
                                    @Nonnull final String oldPassword,
                                    @Nonnull final String newPassword) {
 
-<span class="fc" id="L131">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
-<span class="fc" id="L132">        Arguments.checkNotNull(oldPassword, &quot;old password&quot;);</span>
-<span class="fc" id="L133">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
+<span class="fc" id="L133">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
+<span class="fc" id="L134">        Arguments.checkNotNull(oldPassword, &quot;old password&quot;);</span>
+<span class="fc" id="L135">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
 
-<span class="fc" id="L135">        return updateUserPassword(user.getId(), user.getName(), oldPassword, newPassword);</span>
+<span class="fc" id="L137">        return updateUserPassword(user.getId(), user.getName(), oldPassword, newPassword);</span>
     }
 
     @Nullable
@@ -141,93 +143,93 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
                                    @Nonnull final String oldPassword,
                                    @Nonnull final String newPassword) {
 
-<span class="fc" id="L144">        Arguments.checkNotNull(userID, &quot;User ID&quot;);</span>
-<span class="fc" id="L145">        Arguments.checkNotNull(oldPassword, &quot;old password&quot;);</span>
-<span class="fc" id="L146">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
+<span class="fc" id="L146">        Arguments.checkNotNull(userID, &quot;User ID&quot;);</span>
+<span class="fc" id="L147">        Arguments.checkNotNull(oldPassword, &quot;old password&quot;);</span>
+<span class="fc" id="L148">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
 
-<span class="fc" id="L148">        User user = findUserByID(userID);</span>
-<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (user == null) {</span>
+<span class="fc" id="L150">        User user = findUserByID(userID);</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        if (user == null) {</span>
 
-<span class="fc" id="L151">            LOG.log(Level.WARNING, &quot;User with id: {} not found.&quot;, userID);</span>
-<span class="fc" id="L152">            return null;</span>
+<span class="fc" id="L153">            LOG.log(Level.WARNING, &quot;User with id: {} not found.&quot;, userID);</span>
+<span class="fc" id="L154">            return null;</span>
         }
 
-<span class="fc" id="L155">        return updateUserPassword(userID, user.getName(), oldPassword, newPassword);</span>
+<span class="fc" id="L157">        return updateUserPassword(userID, user.getName(), oldPassword, newPassword);</span>
     }
 
     @Override
     public void deleteUser(@Nonnull final User user) {
 
-<span class="fc" id="L161">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
+<span class="fc" id="L163">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
 
-<span class="fc" id="L163">        deleteUser(user.getId());</span>
-<span class="fc" id="L164">    }</span>
+<span class="fc" id="L165">        deleteUser(user.getId());</span>
+<span class="fc" id="L166">    }</span>
 
     @Override
     public void deleteUser(@Nonnull final String userID) {
 
-<span class="fc" id="L169">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
+<span class="fc" id="L171">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
 
-<span class="fc" id="L171">        Call&lt;Void&gt; call = platformService.deleteUser(userID);</span>
-<span class="fc" id="L172">        execute(call);</span>
-<span class="fc" id="L173">    }</span>
+<span class="fc" id="L173">        Call&lt;Void&gt; call = platformService.deleteUser(userID);</span>
+<span class="fc" id="L174">        execute(call);</span>
+<span class="fc" id="L175">    }</span>
 
     @Nullable
     @Override
     public User me() {
 
-<span class="fc" id="L179">        Call&lt;User&gt; call = platformService.me();</span>
+<span class="fc" id="L181">        Call&lt;User&gt; call = platformService.me();</span>
 
-<span class="fc" id="L181">        return execute(call, &quot;token required&quot;);</span>
+<span class="fc" id="L183">        return execute(call, ForbiddenException.class);</span>
     }
 
     @Nullable
     @Override
     public User meUpdatePassword(@Nonnull final String oldPassword, @Nonnull final String newPassword) {
 
-<span class="fc" id="L188">        Arguments.checkNotNull(oldPassword, &quot;old password&quot;);</span>
-<span class="fc" id="L189">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
+<span class="fc" id="L190">        Arguments.checkNotNull(oldPassword, &quot;old password&quot;);</span>
+<span class="fc" id="L191">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
 
-<span class="fc" id="L191">        User user = me();</span>
-<span class="fc bfc" id="L192" title="All 2 branches covered.">        if (user == null) {</span>
-<span class="fc" id="L193">            LOG.warning(&quot;User is not authenticated.&quot;);</span>
+<span class="fc" id="L193">        User user = me();</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        if (user == null) {</span>
+<span class="fc" id="L195">            LOG.warning(&quot;User is not authenticated.&quot;);</span>
 
-<span class="fc" id="L195">            return null;</span>
+<span class="fc" id="L197">            return null;</span>
         }
 
-<span class="fc" id="L198">        String json = new JSONObject().put(&quot;password&quot;, newPassword).toString();</span>
+<span class="fc" id="L200">        String json = new JSONObject().put(&quot;password&quot;, newPassword).toString();</span>
 
-<span class="fc" id="L200">        String credentials = Credentials</span>
-<span class="fc" id="L201">                .basic(user.getName(), oldPassword);</span>
+<span class="fc" id="L202">        String credentials = Credentials</span>
+<span class="fc" id="L203">                .basic(user.getName(), oldPassword);</span>
 
-<span class="fc" id="L203">        Call&lt;User&gt; call = platformService.mePassword(credentials, createBody(json));</span>
+<span class="fc" id="L205">        Call&lt;User&gt; call = platformService.mePassword(credentials, createBody(json));</span>
 
-<span class="fc" id="L205">        return execute(call, &quot;token required&quot;);</span>
+<span class="fc" id="L207">        return execute(call, ForbiddenException.class);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;OperationLogEntry&gt; findUserLogs(@Nonnull final User user) {
 
-<span class="fc" id="L212">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
+<span class="fc" id="L214">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
 
-<span class="fc" id="L214">        return findUserLogs(user.getId());</span>
+<span class="fc" id="L216">        return findUserLogs(user.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;OperationLogEntry&gt; findUserLogs(@Nonnull final String userID) {
 
-<span class="fc" id="L221">        Call&lt;OperationLogResponse&gt; logsCall = platformService.findUserLogs(userID);</span>
+<span class="fc" id="L223">        Call&lt;OperationLogResponse&gt; logsCall = platformService.findUserLogs(userID);</span>
 
-<span class="fc" id="L223">        OperationLogResponse logResponse = execute(logsCall, &quot;oplog not found&quot;);</span>
-<span class="fc bfc" id="L224" title="All 2 branches covered.">        if (logResponse == null) {</span>
-<span class="fc" id="L225">            return new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L225">        OperationLogResponse logResponse = execute(logsCall, &quot;oplog not found&quot;);</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">        if (logResponse == null) {</span>
+<span class="fc" id="L227">            return new ArrayList&lt;&gt;();</span>
         }
 
-<span class="fc" id="L228">        LOG.log(Level.FINEST, &quot;findUserLogs found: {0}&quot;, logResponse);</span>
+<span class="fc" id="L230">        LOG.log(Level.FINEST, &quot;findUserLogs found: {0}&quot;, logResponse);</span>
 
-<span class="fc" id="L230">        return logResponse.getLog();</span>
+<span class="fc" id="L232">        return logResponse.getLog();</span>
     }
 
     @Nonnull
@@ -236,19 +238,19 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
                                     @Nonnull final String oldPassword,
                                     @Nonnull final String newPassword) {
 
-<span class="fc" id="L239">        Arguments.checkNotNull(userID, &quot;User ID&quot;);</span>
-<span class="fc" id="L240">        Arguments.checkNotNull(userName, &quot;Username&quot;);</span>
-<span class="fc" id="L241">        Arguments.checkNotNull(oldPassword, &quot;old password&quot;);</span>
-<span class="fc" id="L242">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
+<span class="fc" id="L241">        Arguments.checkNotNull(userID, &quot;User ID&quot;);</span>
+<span class="fc" id="L242">        Arguments.checkNotNull(userName, &quot;Username&quot;);</span>
+<span class="fc" id="L243">        Arguments.checkNotNull(oldPassword, &quot;old password&quot;);</span>
+<span class="fc" id="L244">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
 
-<span class="fc" id="L244">        String credentials = Credentials</span>
-<span class="fc" id="L245">                .basic(userName, oldPassword);</span>
+<span class="fc" id="L246">        String credentials = Credentials</span>
+<span class="fc" id="L247">                .basic(userName, oldPassword);</span>
 
-<span class="fc" id="L247">        String json = new JSONObject().put(&quot;password&quot;, newPassword).toString();</span>
+<span class="fc" id="L249">        String json = new JSONObject().put(&quot;password&quot;, newPassword).toString();</span>
 
-<span class="fc" id="L249">        Call&lt;User&gt; call = platformService.updateUserPassword(userID, credentials, createBody(json));</span>
+<span class="fc" id="L251">        Call&lt;User&gt; call = platformService.updateUserPassword(userID, credentials, createBody(json));</span>
 
-<span class="fc" id="L251">        return execute(call);</span>
+<span class="fc" id="L253">        return execute(call);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

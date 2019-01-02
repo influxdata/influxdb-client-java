@@ -23,7 +23,7 @@ The Platform Commons,org.influxdata.flux.impl,FluxCsvParser.FluxResponseConsumer
 The Platform Commons,org.influxdata.flux.error,FluxCsvParserException,0,4,0,0,0,2,0,1,0,1
 The Platform Commons,org.influxdata.flux.error,FluxQueryException,0,10,0,0,0,4,0,2,0,2
 The Platform Commons,org.influxdata.platform,Arguments,0,178,0,30,0,25,0,25,0,10
-The Platform Commons,org.influxdata.platform.rest,AbstractRestClient,0,187,1,21,0,48,1,26,0,10
+The Platform Commons,org.influxdata.platform.rest,AbstractRestClient,13,204,5,25,1,50,5,28,1,11
 The Platform Commons,org.influxdata.platform.rest,LogLevel,0,44,0,0,0,5,0,1,0,1
 The Platform Commons,org.influxdata.platform.rest,AbstractQueryClient.new Callback() {...},13,65,1,11,5,13,2,7,1,2
 The Platform Commons,org.influxdata.platform.rest,AbstractQueryClient.DefaultCancellable,0,16,0,0,0,5,0,3,0,3

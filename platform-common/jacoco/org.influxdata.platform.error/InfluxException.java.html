@@ -149,8 +149,8 @@ public class InfluxException extends RuntimeException {
 
                 try {
 <span class="fc" id="L151">                    JSONObject jsonObject = new JSONObject(errorBody());</span>
-<span class="fc bfc" id="L152" title="All 2 branches covered.">                    if (jsonObject.has(&quot;msg&quot;)) {</span>
-<span class="fc" id="L153">                        return jsonObject.getString(&quot;msg&quot;);</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">                    if (jsonObject.has(&quot;message&quot;)) {</span>
+<span class="fc" id="L153">                        return jsonObject.getString(&quot;message&quot;);</span>
                     }
 <span class="fc" id="L155">                } catch (Exception e) {</span>
 <span class="fc" id="L156">                    LOG.log(Level.FINEST, &quot;Can't parse msg from response {}&quot;, response);</span>

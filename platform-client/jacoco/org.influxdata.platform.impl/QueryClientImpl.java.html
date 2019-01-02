@@ -229,10 +229,10 @@ final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
     @Override
     public String queryRaw(@Nonnull final String query, @Nonnull final String organization) {
 
-<span class="fc" id="L232">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
-<span class="fc" id="L233">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="nc" id="L232">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="nc" id="L233">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
 
-<span class="fc" id="L235">        return queryRaw(query, null, organization);</span>
+<span class="nc" id="L235">        return queryRaw(query, null, organization);</span>
     }
 
     @Nonnull
@@ -241,16 +241,16 @@ final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
                            @Nullable final String dialect,
                            @Nonnull final String organization) {
 
-<span class="fc" id="L244">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
-<span class="fc" id="L245">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="nc" id="L244">        Arguments.checkNonEmpty(query, &quot;query&quot;);</span>
+<span class="nc" id="L245">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
 
-<span class="fc" id="L247">        List&lt;String&gt; rows = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L247">        List&lt;String&gt; rows = new ArrayList&lt;&gt;();</span>
 
-<span class="fc" id="L249">        BiConsumer&lt;Cancellable, String&gt; consumer = (cancellable, row) -&gt; rows.add(row);</span>
+<span class="nc" id="L249">        BiConsumer&lt;Cancellable, String&gt; consumer = (cancellable, row) -&gt; rows.add(row);</span>
 
-<span class="fc" id="L251">        queryRaw(query, dialect, organization, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);</span>
+<span class="nc" id="L251">        queryRaw(query, dialect, organization, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);</span>
 
-<span class="fc" id="L253">        return String.join(&quot;\n&quot;, rows);</span>
+<span class="nc" id="L253">        return String.join(&quot;\n&quot;, rows);</span>
     }
 
     @Override
@@ -360,9 +360,9 @@ final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
                           @Nonnull final Runnable onComplete,
                           @Nonnull final Boolean asynchronously) {
 
-<span class="fc" id="L363">        Call&lt;ResponseBody&gt; queryCall = platformService.query(organization, createBody(dialect, query));</span>
+<span class="nc" id="L363">        Call&lt;ResponseBody&gt; queryCall = platformService.query(organization, createBody(dialect, query));</span>
 
-<span class="fc" id="L365">        queryRaw(queryCall, onResponse, onError, onComplete, asynchronously);</span>
-<span class="fc" id="L366">    }</span>
+<span class="nc" id="L365">        queryRaw(queryCall, onResponse, onError, onComplete, asynchronously);</span>
+<span class="nc" id="L366">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -42,68 +42,91 @@ import com.squareup.moshi.Json;
     @Json(name = &quot;user&quot;)
     private String userName;
 
+    private String orgID;
+
+    @Json(name = &quot;org&quot;)
+    private String orgName;
+
     private Status status;
 
     private List&lt;Permission&gt; permissions;
 
     public String getId() {
-<span class="fc" id="L50">        return id;</span>
+<span class="fc" id="L55">        return id;</span>
     }
 
     public void setId(final String id) {
-<span class="nc" id="L54">        this.id = id;</span>
-<span class="nc" id="L55">    }</span>
+<span class="nc" id="L59">        this.id = id;</span>
+<span class="nc" id="L60">    }</span>
 
     public String getToken() {
-<span class="fc" id="L58">        return token;</span>
+<span class="fc" id="L63">        return token;</span>
     }
 
     public void setToken(final String token) {
-<span class="nc" id="L62">        this.token = token;</span>
-<span class="nc" id="L63">    }</span>
+<span class="nc" id="L67">        this.token = token;</span>
+<span class="nc" id="L68">    }</span>
 
     public String getUserID() {
-<span class="fc" id="L66">        return userID;</span>
+<span class="fc" id="L71">        return userID;</span>
     }
 
     public void setUserID(final String userID) {
-<span class="fc" id="L70">        this.userID = userID;</span>
-<span class="fc" id="L71">    }</span>
+<span class="nc" id="L75">        this.userID = userID;</span>
+<span class="nc" id="L76">    }</span>
 
     public String getUserName() {
-<span class="fc" id="L74">        return userName;</span>
+<span class="fc" id="L79">        return userName;</span>
     }
 
     public void setUserName(final String userName) {
-<span class="nc" id="L78">        this.userName = userName;</span>
-<span class="nc" id="L79">    }</span>
+<span class="nc" id="L83">        this.userName = userName;</span>
+<span class="nc" id="L84">    }</span>
 
     public Status getStatus() {
-<span class="fc" id="L82">        return status;</span>
+<span class="fc" id="L87">        return status;</span>
     }
 
     public void setStatus(final Status status) {
-<span class="nc" id="L86">        this.status = status;</span>
-<span class="nc" id="L87">    }</span>
+<span class="nc" id="L91">        this.status = status;</span>
+<span class="nc" id="L92">    }</span>
 
     public List&lt;Permission&gt; getPermissions() {
-<span class="fc" id="L90">        return permissions;</span>
+<span class="fc" id="L95">        return permissions;</span>
     }
 
     public void setPermissions(final List&lt;Permission&gt; permissions) {
-<span class="fc" id="L94">        this.permissions = permissions;</span>
-<span class="fc" id="L95">    }</span>
+<span class="fc" id="L99">        this.permissions = permissions;</span>
+<span class="fc" id="L100">    }</span>
+
+    public String getOrgID() {
+<span class="fc" id="L103">        return orgID;</span>
+    }
+
+    public void setOrgID(final String orgID) {
+<span class="fc" id="L107">        this.orgID = orgID;</span>
+<span class="fc" id="L108">    }</span>
+
+    public String getOrgName() {
+<span class="fc" id="L111">        return orgName;</span>
+    }
+
+    public void setOrgName(final String orgName) {
+<span class="nc" id="L115">        this.orgName = orgName;</span>
+<span class="nc" id="L116">    }</span>
 
     @Override
     public String toString() {
-<span class="fc" id="L99">        return new StringJoiner(&quot;, &quot;, Authorization.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
-<span class="fc" id="L100">                .add(&quot;id='&quot; + id + &quot;'&quot;)</span>
-<span class="fc" id="L101">                .add(&quot;token='-'&quot;)</span>
-<span class="fc" id="L102">                .add(&quot;userID='&quot; + userID + &quot;'&quot;)</span>
-<span class="fc" id="L103">                .add(&quot;userName='&quot; + userName + &quot;'&quot;)</span>
-<span class="fc" id="L104">                .add(&quot;status=&quot; + status)</span>
-<span class="fc" id="L105">                .add(&quot;permissions=&quot; + permissions)</span>
-<span class="fc" id="L106">                .toString();</span>
+<span class="fc" id="L120">        return new StringJoiner(&quot;, &quot;, Authorization.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
+<span class="fc" id="L121">                .add(&quot;id='&quot; + id + &quot;'&quot;)</span>
+<span class="fc" id="L122">                .add(&quot;token='-'&quot;)</span>
+<span class="fc" id="L123">                .add(&quot;userID='&quot; + userID + &quot;'&quot;)</span>
+<span class="fc" id="L124">                .add(&quot;userName='&quot; + userName + &quot;'&quot;)</span>
+<span class="fc" id="L125">                .add(&quot;orgID='&quot; + orgID + &quot;'&quot;)</span>
+<span class="fc" id="L126">                .add(&quot;orgName='&quot; + orgName + &quot;'&quot;)</span>
+<span class="fc" id="L127">                .add(&quot;status=&quot; + status)</span>
+<span class="fc" id="L128">                .add(&quot;permissions=&quot; + permissions)</span>
+<span class="fc" id="L129">                .toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

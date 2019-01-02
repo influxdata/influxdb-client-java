@@ -22,9 +22,6 @@
 package org.influxdata.platform.domain;
 
 import java.util.StringJoiner;
-import javax.annotation.Nonnull;
-
-import org.influxdata.platform.Arguments;
 
 
 /**
@@ -32,7 +29,7 @@ import org.influxdata.platform.Arguments;
  *
  * @author Jakub Bednar (bednar@github) (17/09/2018 09:48)
  */
-<span class="fc" id="L35">public final class Permission {</span>
+<span class="fc" id="L32">public final class Permission {</span>
 
     /**
      * Action for reading.
@@ -45,77 +42,42 @@ import org.influxdata.platform.Arguments;
     public static final String WRITE_ACTION = &quot;write&quot;;
 
     /**
-     * Action for creating new resources.
+     * Resource ID.
      */
-    public static final String CREATE_ACTION = &quot;create&quot;;
-
-    /**
-     * Deleting an existing resource.
-     */
-    public static final String DELETE_ACTION = &quot;delete&quot;;
-
-    /**
-     * Represents the user resource actions can apply to.
-     */
-    public static final String USER_RESOURCE = &quot;user&quot;;
-
-    /**
-     * Represents the org resource actions can apply to.
-     */
-    public static final String ORGANIZATION_RESOURCE = &quot;org&quot;;
-
-    private String resource;
+    private String id;
+    private PermissionResourceType resource;
     private String action;
 
-    public String getResource() {
-<span class="fc" id="L71">        return resource;</span>
+    public String getId() {
+<span class="fc" id="L52">        return id;</span>
     }
 
-    public void setResource(final String resource) {
-<span class="fc" id="L75">        this.resource = resource;</span>
-<span class="fc" id="L76">    }</span>
+    public void setId(final String id) {
+<span class="fc" id="L56">        this.id = id;</span>
+<span class="fc" id="L57">    }</span>
+
+    public PermissionResourceType getResource() {
+<span class="fc" id="L60">        return resource;</span>
+    }
+
+    public void setResource(final PermissionResourceType resource) {
+<span class="fc" id="L64">        this.resource = resource;</span>
+<span class="fc" id="L65">    }</span>
 
     public String getAction() {
-<span class="fc" id="L79">        return action;</span>
+<span class="fc" id="L68">        return action;</span>
     }
 
     public void setAction(final String action) {
-<span class="fc" id="L83">        this.action = action;</span>
-<span class="fc" id="L84">    }</span>
-
-    /**
-     * Represents the task resource scoped to an organization.
-     *
-     * @param orgID organization scope
-     * @return task resource
-     */
-    @Nonnull
-    public static String taskResource(@Nonnull final String orgID) {
-
-<span class="fc" id="L95">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
-
-<span class="fc" id="L97">        return String.format(&quot;org/%s/task&quot;, orgID);</span>
-    }
-
-    /**
-     * BucketResource constructs a bucket resource.
-     *
-     * @param bucketID bucket scope
-     * @return bucket resource
-     */
-    public static String bucketResource(@Nonnull final String bucketID) {
-
-<span class="fc" id="L108">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
-
-<span class="fc" id="L110">        return String.format(&quot;bucket/%s&quot;, bucketID);</span>
-    }
+<span class="fc" id="L72">        this.action = action;</span>
+<span class="fc" id="L73">    }</span>
 
     @Override
     public String toString() {
-<span class="fc" id="L115">        return new StringJoiner(&quot;, &quot;, Permission.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
-<span class="fc" id="L116">                .add(&quot;resource='&quot; + resource + &quot;'&quot;)</span>
-<span class="fc" id="L117">                .add(&quot;action='&quot; + action + &quot;'&quot;)</span>
-<span class="fc" id="L118">                .toString();</span>
+<span class="fc" id="L77">        return new StringJoiner(&quot;, &quot;, Permission.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
+<span class="fc" id="L78">                .add(&quot;resource='&quot; + resource + &quot;'&quot;)</span>
+<span class="fc" id="L79">                .add(&quot;action='&quot; + action + &quot;'&quot;)</span>
+<span class="fc" id="L80">                .toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
