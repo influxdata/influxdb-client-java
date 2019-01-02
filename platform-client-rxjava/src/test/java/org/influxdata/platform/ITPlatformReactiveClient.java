@@ -60,7 +60,7 @@ class ITPlatformReactiveClient extends AbstractITPlatformClientTest {
 
                     Assertions.assertThat(it).isNotNull();
                     Assertions.assertThat(it.isHealthy()).isTrue();
-                    Assertions.assertThat(it.getMessage()).isEqualTo("howdy y'all");
+                    Assertions.assertThat(it.getMessage()).isEqualTo("ready for queries and writes");
 
                     return true;
                 });

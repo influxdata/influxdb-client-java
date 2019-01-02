@@ -58,17 +58,10 @@ abstract class AbstractITPlatformClientTest extends AbstractTest {
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
 
-        String token = platformClient.createAuthorizationClient()
-                .findAuthorizations()
-                .stream()
-                .filter(authorization -> authorization.getPermissions().size() == 4)
-                .findFirst()
-                .orElseThrow(IllegalStateException::new).getToken();
-
         platformClient.close();
         
         try {
-            this.platformClient = PlatformClientReactiveFactory.create(platformURL, token.toCharArray());
+            this.platformClient = PlatformClientReactiveFactory.create(platformURL, "my-user", "my-password".toCharArray());
         } catch (Exception e) {
             Assertions.fail("Can't authorize via token", e);
         }
