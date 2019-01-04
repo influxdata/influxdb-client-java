@@ -70,7 +70,7 @@ public class PlatformClientReactiveImpl extends AbstractPlatformClient&lt;Platfo
     @Override
     public Single&lt;Health&gt; health() {
 
-<span class="nc" id="L73">        return platformService.health();</span>
+<span class="nc" id="L73">        return Single.fromCallable(() -&gt; health(platformService.health()));</span>
     }
 
     @Nonnull

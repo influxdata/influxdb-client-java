@@ -99,7 +99,7 @@ public final class PlatformClientImpl extends AbstractPlatformClient&lt;Platform
     @Nonnull
     @Override
     public SourceClient createSourceClient() {
-<span class="fc" id="L102">        return new SourceClientImpl(platformService, moshi);</span>
+<span class="fc" id="L102">        return new SourceClientImpl(platformService, moshi, this);</span>
     }
 
     @Nonnull
@@ -118,67 +118,58 @@ public final class PlatformClientImpl extends AbstractPlatformClient&lt;Platform
     @Override
     public Health health() {
 
-        try {
-<span class="nc" id="L122">            Call&lt;Health&gt; call = platformService.health();</span>
-<span class="nc" id="L123">            return execute(call);</span>
-<span class="nc" id="L124">        } catch (InfluxException e) {</span>
-<span class="nc" id="L125">            Health health = new Health();</span>
-<span class="nc" id="L126">            health.setStatus(&quot;error&quot;);</span>
-<span class="nc" id="L127">            health.setMessage(e.getMessage());</span>
-
-<span class="nc" id="L129">            return health;</span>
-        }
+<span class="nc" id="L121">        return health(platformService.health());</span>
     }
 
     @Nullable
     @Override
     public Ready ready() {
-<span class="nc" id="L136">        Call&lt;Ready&gt; call = platformService.ready();</span>
+<span class="nc" id="L127">        Call&lt;Ready&gt; call = platformService.ready();</span>
         try {
-<span class="nc" id="L138">            return execute(call);</span>
-<span class="nc" id="L139">        } catch (InfluxException e) {</span>
-<span class="nc" id="L140">            LOG.log(Level.WARNING, &quot;The exception occurs during check instance readiness&quot;, e);</span>
-<span class="nc" id="L141">            return null;</span>
+<span class="nc" id="L129">            return execute(call);</span>
+<span class="nc" id="L130">        } catch (InfluxException e) {</span>
+<span class="nc" id="L131">            LOG.log(Level.WARNING, &quot;The exception occurs during check instance readiness&quot;, e);</span>
+<span class="nc" id="L132">            return null;</span>
         }
     }
 
     @Nonnull
     @Override
     public LogLevel getLogLevel() {
-<span class="fc" id="L148">        return getLogLevel(this.loggingInterceptor);</span>
+<span class="fc" id="L139">        return getLogLevel(this.loggingInterceptor);</span>
     }
 
     @Nonnull
     @Override
     public PlatformClient setLogLevel(@Nonnull final LogLevel logLevel) {
 
-<span class="fc" id="L155">        setLogLevel(this.loggingInterceptor, logLevel);</span>
+<span class="fc" id="L146">        setLogLevel(this.loggingInterceptor, logLevel);</span>
 
-<span class="fc" id="L157">        return this;</span>
+<span class="fc" id="L148">        return this;</span>
     }
 
     @Nonnull
     @Override
     public PlatformClient enableGzip() {
 
-<span class="fc" id="L164">        this.gzipInterceptor.enableGzip();</span>
+<span class="fc" id="L155">        this.gzipInterceptor.enableGzip();</span>
 
-<span class="fc" id="L166">        return this;</span>
+<span class="fc" id="L157">        return this;</span>
     }
 
     @Nonnull
     @Override
     public PlatformClient disableGzip() {
 
-<span class="fc" id="L173">        this.gzipInterceptor.disableGzip();</span>
+<span class="fc" id="L164">        this.gzipInterceptor.disableGzip();</span>
 
-<span class="fc" id="L175">        return this;</span>
+<span class="fc" id="L166">        return this;</span>
     }
 
     @Override
     public boolean isGzipEnabled() {
 
-<span class="fc" id="L181">        return this.gzipInterceptor.isEnabledGzip();</span>
+<span class="fc" id="L172">        return this.gzipInterceptor.isEnabledGzip();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
