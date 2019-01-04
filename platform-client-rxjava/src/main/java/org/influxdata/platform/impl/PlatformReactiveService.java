@@ -26,7 +26,6 @@ import javax.annotation.Nonnull;
 import org.influxdata.platform.domain.Health;
 
 import io.reactivex.Completable;
-import io.reactivex.Single;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -48,7 +47,7 @@ interface PlatformReactiveService {
     @GET("/health")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Single<Health> health();
+    Call<Health> health();
 
     //
     // Query

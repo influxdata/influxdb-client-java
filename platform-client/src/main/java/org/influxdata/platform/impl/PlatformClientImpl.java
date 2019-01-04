@@ -99,7 +99,7 @@ public final class PlatformClientImpl extends AbstractPlatformClient<PlatformSer
     @Nonnull
     @Override
     public SourceClient createSourceClient() {
-        return new SourceClientImpl(platformService, moshi);
+        return new SourceClientImpl(platformService, moshi, this);
     }
 
     @Nonnull
@@ -118,16 +118,7 @@ public final class PlatformClientImpl extends AbstractPlatformClient<PlatformSer
     @Override
     public Health health() {
 
-        try {
-            Call<Health> call = platformService.health();
-            return execute(call);
-        } catch (InfluxException e) {
-            Health health = new Health();
-            health.setStatus("error");
-            health.setMessage(e.getMessage());
-
-            return health;
-        }
+        return health(platformService.health());
     }
 
     @Nullable

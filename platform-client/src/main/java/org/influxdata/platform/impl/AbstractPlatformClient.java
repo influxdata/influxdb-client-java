@@ -31,6 +31,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
+import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.error.InfluxException;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.rest.AbstractRestClient;
 
@@ -40,6 +42,7 @@ import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.moshi.MoshiConverterFactory;
@@ -98,6 +101,22 @@ abstract class AbstractPlatformClient<T> extends AbstractRestClient {
             this.authenticateInterceptor.signout();
         } catch (IOException e) {
             LOG.log(Level.FINEST, "The signout exception", e);
+        }
+    }
+
+    @Nonnull
+    protected Health health(final Call<Health> healthCall) {
+
+        Arguments.checkNotNull(healthCall, "health call");
+
+        try {
+            return execute(healthCall);
+        } catch (InfluxException e) {
+            Health health = new Health();
+            health.setStatus("error");
+            health.setMessage(e.getMessage());
+
+            return health;
         }
     }
 

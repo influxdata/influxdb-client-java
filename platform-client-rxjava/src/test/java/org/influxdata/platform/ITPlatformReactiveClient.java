@@ -72,12 +72,17 @@ class ITPlatformReactiveClient extends AbstractITPlatformClientTest {
         PlatformClientReactive clientNotRunning = PlatformClientReactiveFactory.create("http://localhost:8099");
         Single<Health> health = clientNotRunning.health();
 
-        health.test().assertError(throwable -> {
+        health
+                .test()
+                .assertNoErrors()
+                .assertValue(it -> {
 
-            Assertions.assertThat(throwable).hasMessageStartingWith("Failed to connect to");
+                    Assertions.assertThat(it).isNotNull();
+                    Assertions.assertThat(it.isHealthy()).isFalse();
+                    Assertions.assertThat(it.getMessage()).startsWith("Failed to connect to");
 
-            return true;
-        });
+                    return true;
+                });
 
         clientNotRunning.close();
     }

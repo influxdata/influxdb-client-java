@@ -305,7 +305,7 @@ interface PlatformService {
     @GET("/api/v2/sources/{id}/health")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResponseBody> findSourceHealth(@Nonnull @Path("id") final String sourceID);
+    Call<Health> findSourceHealth(@Nonnull @Path("id") final String sourceID);
 
     //
     // Task

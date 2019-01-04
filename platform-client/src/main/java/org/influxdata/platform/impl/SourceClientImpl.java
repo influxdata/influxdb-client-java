@@ -33,12 +33,10 @@ import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Health;
 import org.influxdata.platform.domain.Source;
 import org.influxdata.platform.domain.Sources;
-import org.influxdata.platform.error.InfluxException;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 /**
@@ -50,14 +48,19 @@ final class SourceClientImpl extends AbstractRestClient implements SourceClient 
 
     private final PlatformService platformService;
     private final JsonAdapter<Source> adapter;
+    private final PlatformClientImpl platformClient;
 
-    SourceClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {
+    SourceClientImpl(@Nonnull final PlatformService platformService,
+                     @Nonnull final Moshi moshi,
+                     @Nonnull final PlatformClientImpl platformClient) {
 
         Arguments.checkNotNull(platformService, "PlatformService");
         Arguments.checkNotNull(moshi, "Moshi to create adapter");
+        Arguments.checkNotNull(platformClient, "PlatformClient");
 
         this.platformService = platformService;
         this.adapter = moshi.adapter(Source.class);
+        this.platformClient = platformClient;
     }
 
     @Nonnull
@@ -159,20 +162,6 @@ final class SourceClientImpl extends AbstractRestClient implements SourceClient 
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
-        Health health = new Health();
-
-        Call<ResponseBody> call = platformService.findSourceHealth(sourceID);
-        try {
-            execute(call);
-            health.setStatus(Health.HEALTHY_STATUS);
-
-            //TODO wait for implementation of handleGetSourceHealth failure,
-            // after fix refactor to platformClient.health implementation + tests
-        } catch (InfluxException e) {
-            health.setStatus("error");
-            health.setMessage(e.getMessage());
-        }
-
-        return health;
+        return platformClient.health(platformService.findSourceHealth(sourceID));
     }
 }
