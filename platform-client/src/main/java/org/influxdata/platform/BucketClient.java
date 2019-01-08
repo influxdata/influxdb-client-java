@@ -260,6 +260,4 @@ public interface BucketClient {
      * @param ownerID  the ID of a owner
      */
     void deleteOwner(@Nonnull final String ownerID, @Nonnull final String bucketID);
-
-    // TODO label?
 }

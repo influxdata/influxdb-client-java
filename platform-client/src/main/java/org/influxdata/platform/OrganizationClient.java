@@ -22,6 +22,7 @@
 package org.influxdata.platform;
 
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -93,6 +94,67 @@ public interface OrganizationClient {
      */
     @Nonnull
     List<Organization> findOrganizations();
+
+    /**
+     * List of secret keys the are stored for Organization.
+     * <p>
+     * For example
+     * <pre>
+     *     github_api_key,
+     *     some_other_key,
+     *     a_secret_key
+     * </pre>
+     *
+     * @param organization the organization for get secrets
+     * @return the secret key
+     */
+    List<String> getSecrets(@Nonnull final Organization organization);
+
+    /**
+     * List of secret keys the are stored for Organization.
+     * <p>
+     * For example
+     * <pre>
+     *     github_api_key,
+     *     some_other_key,
+     *     a_secret_key
+     * </pre>
+     *
+     * @param organizationID the organization for get secrets
+     * @return the secret key
+     */
+    List<String> getSecrets(@Nonnull final String organizationID);
+
+    /**
+     * Patches all provided secrets and updates any previous values.
+     *
+     * @param secrets      secrets to update/add
+     * @param organization the organization for put secrets
+     */
+    void putSecrets(@Nonnull final Map<String, String> secrets, @Nonnull final Organization organization);
+    /**
+     * Patches all provided secrets and updates any previous values.
+     *
+     * @param secrets      secrets to update/add
+     * @param organizationID the organization for put secrets
+     */
+    void putSecrets(@Nonnull final Map<String, String> secrets, @Nonnull final String organizationID);
+
+    /**
+     * Delete provided secrets.
+     *
+     * @param secrets      secrets to delete
+     * @param organization the organization for delete secrets
+     */
+    void deleteSecrets(@Nonnull final List<String> secrets, @Nonnull final Organization organization);
+
+    /**
+     * Delete provided secrets.
+     *
+     * @param secrets      secrets to delete
+     * @param organizationID the organization for delete secrets
+     */
+    void deleteSecrets(@Nonnull final List<String> secrets, @Nonnull final String organizationID);
 
     /**
      * List all members of an organization.
@@ -201,8 +263,4 @@ public interface OrganizationClient {
      * @param ownerID        the ID of a owner
      */
     void deleteOwner(@Nonnull final String ownerID, @Nonnull final String organizationID);
-
-    //TODO secrets
-    // https://github.com/influxdata/platform/commit/
-    // 56de056085c01eb5b3956c9c28c7ea52e4ce63d7#diff-ffefdbced7252e9b741e6138672603da
 }

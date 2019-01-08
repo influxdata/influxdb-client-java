@@ -21,13 +21,17 @@
  */
 package org.influxdata.platform;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.User;
+import org.influxdata.platform.rest.LogLevel;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -201,5 +205,30 @@ class ITOrganizationClientTest extends AbstractITClientTest {
 
         owners = organizationClient.getOwners(organization);
         Assertions.assertThat(owners).hasSize(0);
+    }
+
+    @Test
+    void secrets() {
+
+        Organization organization = organizationClient.createOrganization(generateName("Constant Pro"));
+
+        platformClient.setLogLevel(LogLevel.BODY);
+
+        List<String> secrets = organizationClient.getSecrets(organization);
+        Assertions.assertThat(secrets).isEmpty();
+
+        Map<String, String> secretsKV = new HashMap<>();
+        secretsKV.put("gh", "123456789");
+        secretsKV.put("az", "987654321");
+
+        organizationClient.putSecrets(secretsKV, organization);
+
+        secrets = organizationClient.getSecrets(organization);
+        Assertions.assertThat(secrets).hasSize(2).contains("gh", "az");
+
+        organizationClient.deleteSecrets(Collections.singletonList("gh"), organization);
+
+        secrets = organizationClient.getSecrets(organization);
+        Assertions.assertThat(secrets).hasSize(1).contains("az");
     }
 }

@@ -39,6 +39,7 @@ import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ResourceMembers;
 import org.influxdata.platform.domain.Run;
 import org.influxdata.platform.domain.RunsResponse;
+import org.influxdata.platform.domain.Secrets;
 import org.influxdata.platform.domain.Source;
 import org.influxdata.platform.domain.Sources;
 import org.influxdata.platform.domain.Task;
@@ -186,6 +187,16 @@ interface PlatformService {
     @Headers("Content-Type: application/json")
     Call<Void> deleteOrganizationOwner(@Nonnull @Path("id") final String organizationID,
                                        @Nonnull @Path("userID") final String userID);
+
+    @GET("/api/v2/orgs/{id}/secrets")
+    Call<Secrets> getSecrets(@Nonnull @Path("id") final String organizationID);
+
+    @PATCH("/api/v2/orgs/{id}/secrets")
+    Call<Void> putSecrets(@Nonnull @Path("id") final String organizationID, @Nonnull @Body final RequestBody secrets);
+
+    @POST("/api/v2/orgs/{id}/secrets/delete")
+    Call<Void> deleteSecrets(@Nonnull @Path("id") final String organizationID,
+                             @Nonnull @Body final RequestBody secrets);
 
     //
     // Bucket

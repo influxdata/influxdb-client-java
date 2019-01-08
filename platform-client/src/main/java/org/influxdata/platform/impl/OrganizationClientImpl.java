@@ -22,6 +22,7 @@
 package org.influxdata.platform.impl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +35,7 @@ import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ResourceMembers;
+import org.influxdata.platform.domain.Secrets;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.error.rest.NotFoundException;
 import org.influxdata.platform.rest.AbstractRestClient;
@@ -52,6 +54,8 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
     private final PlatformService platformService;
     private final JsonAdapter<Organization> adapter;
     private final JsonAdapter<User> userAdapter;
+    private final JsonAdapter<Map> mapAdapter;
+    private final JsonAdapter<List> listAdapter;
 
     OrganizationClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {
 
@@ -61,6 +65,8 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
         this.platformService = platformService;
         this.adapter = moshi.adapter(Organization.class);
         this.userAdapter = moshi.adapter(User.class);
+        this.mapAdapter = moshi.adapter(Map.class);
+        this.listAdapter = moshi.adapter(List.class);
     }
 
     @Nullable
@@ -138,6 +144,64 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
         Arguments.checkNonEmpty(organizationID, "Organization ID");
 
         Call<Void> call = platformService.deleteOrganization(organizationID);
+        execute(call);
+    }
+
+    @Override
+    public List<String> getSecrets(@Nonnull final Organization organization) {
+
+        Arguments.checkNotNull(organization, "Organization");
+
+        return getSecrets(organization.getId());
+    }
+
+    @Override
+    public List<String> getSecrets(@Nonnull final String organizationID) {
+
+        Arguments.checkNonEmpty(organizationID, "Organization ID");
+
+        Call<Secrets> call = platformService.getSecrets(organizationID);
+
+        Secrets secrets = execute(call);
+        LOG.log(Level.FINEST, "getSecrets found: {0}", secrets);
+
+        return secrets.getSecrets();
+    }
+
+    @Override
+    public void putSecrets(@Nonnull final Map<String, String> secrets, @Nonnull final Organization organization) {
+
+        Arguments.checkNotNull(organization, "Organization");
+
+        putSecrets(secrets, organization.getId());
+    }
+
+    @Override
+    public void putSecrets(@Nonnull final Map<String, String> secrets, @Nonnull final String organizationID) {
+
+        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNotNull(secrets, "secrets");
+
+        Call<Void> call = platformService.putSecrets(organizationID, createBody(mapAdapter.toJson(secrets)));
+        execute(call);
+    }
+
+    @Override
+    public void deleteSecrets(@Nonnull final List<String> secrets, @Nonnull final Organization organization) {
+
+        Arguments.checkNotNull(organization, "Organization");
+        Arguments.checkNotNull(secrets, "secrets");
+
+        deleteSecrets(secrets, organization.getId());
+    }
+
+    @Override
+    public void deleteSecrets(@Nonnull final List<String> secrets, @Nonnull final String organizationID) {
+
+        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNotNull(secrets, "secrets");
+
+        Call<Void> call = platformService.deleteSecrets(organizationID, createBody(listAdapter.toJson(secrets)));
         execute(call);
     }
 
