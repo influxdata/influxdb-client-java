@@ -73,10 +73,11 @@ class ITBucketClientTest extends AbstractITClientTest {
         Assertions.assertThat(bucket.getRetentionRules()).hasSize(1);
         Assertions.assertThat(bucket.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600L);
         Assertions.assertThat(bucket.getRetentionRules().get(0).getType()).isEqualTo("expire");
-        Assertions.assertThat(bucket.getLinks()).hasSize(3);
+        Assertions.assertThat(bucket.getLinks()).hasSize(4);
         Assertions.assertThat(bucket.getLinks()).hasEntrySatisfying("org", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + organization.getId()));
         Assertions.assertThat(bucket.getLinks()).hasEntrySatisfying("self", value -> Assertions.assertThat(value).isEqualTo("/api/v2/buckets/" + bucket.getId()));
         Assertions.assertThat(bucket.getLinks()).hasEntrySatisfying("log", value -> Assertions.assertThat(value).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/log"));
+        Assertions.assertThat(bucket.getLinks()).hasEntrySatisfying("labels", value -> Assertions.assertThat(value).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/labels"));
     }
 
     @Test
