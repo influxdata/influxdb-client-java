@@ -106,7 +106,7 @@ public interface OrganizationClient {
      * </pre>
      *
      * @param organization the organization for get secrets
-     * @return the secret key
+     * @return the secret keys
      */
     List<String> getSecrets(@Nonnull final Organization organization);
 
@@ -121,7 +121,7 @@ public interface OrganizationClient {
      * </pre>
      *
      * @param organizationID the organization for get secrets
-     * @return the secret key
+     * @return the secret keys
      */
     List<String> getSecrets(@Nonnull final String organizationID);
 
@@ -132,6 +132,7 @@ public interface OrganizationClient {
      * @param organization the organization for put secrets
      */
     void putSecrets(@Nonnull final Map<String, String> secrets, @Nonnull final Organization organization);
+    
     /**
      * Patches all provided secrets and updates any previous values.
      *

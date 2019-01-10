@@ -212,8 +212,6 @@ class ITOrganizationClientTest extends AbstractITClientTest {
 
         Organization organization = organizationClient.createOrganization(generateName("Constant Pro"));
 
-        platformClient.setLogLevel(LogLevel.BODY);
-
         List<String> secrets = organizationClient.getSecrets(organization);
         Assertions.assertThat(secrets).isEmpty();
 
