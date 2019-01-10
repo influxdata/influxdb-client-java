@@ -123,7 +123,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         
         Assertions.assertThat(listener.getValue()).isNotNull();
         Assertions.assertThat(listener.getValue().getBucket()).isEqualTo(bucket.getName());
-        Assertions.assertThat(listener.getValue().getOrganization()).isEqualTo("0339f4ec11066000");
+        Assertions.assertThat(listener.getValue().getOrganization()).isEqualTo(organization.getId());
         Assertions.assertThat(listener.getValue().getLineProtocol()).isEqualTo(record);
 
         List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
