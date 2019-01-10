@@ -56,14 +56,14 @@ interface PlatformReactiveService {
     @POST("/api/v2/query")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResponseBody> query(@Query("orgID") final String org, @Nonnull @Body final RequestBody query);
+    Call<ResponseBody> query(@Query("orgID") final String orgID, @Nonnull @Body final RequestBody query);
 
 
     // Write
     //
     @POST("/api/v2/write")
     @Nonnull
-    Completable writePoints(@Query("org") final String org,
+    Completable writePoints(@Query("org") final String orgID,
                             @Query("bucket") final String bucket,
                             @Query("precision") final String precision,
                             @Body final RequestBody points);

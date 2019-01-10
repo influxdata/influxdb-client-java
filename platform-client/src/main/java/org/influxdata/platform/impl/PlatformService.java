@@ -423,7 +423,7 @@ interface PlatformService {
     //
     @POST("/api/v2/write")
     @Nonnull
-    Completable writePoints(@Query("org") final String org,
+    Completable writePoints(@Query("org") final String orgID,
                             @Query("bucket") final String bucket,
                             @Query("precision") final String precision,
                             @Body final RequestBody points);

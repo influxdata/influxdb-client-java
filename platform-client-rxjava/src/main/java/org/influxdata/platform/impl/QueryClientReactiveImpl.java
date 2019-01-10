@@ -57,7 +57,7 @@ final class QueryClientReactiveImpl extends AbstractQueryClient implements Query
     public Flowable<FluxRecord> query(@Nonnull final String query, @Nonnull final String organizationId) {
 
         Arguments.checkNonEmpty(query, "Flux query");
-        Arguments.checkNonEmpty(organizationId, "organization");
+        Arguments.checkNonEmpty(organizationId, "organizationId");
 
         return query(Flowable.just(query), organizationId);
     }
@@ -69,7 +69,7 @@ final class QueryClientReactiveImpl extends AbstractQueryClient implements Query
 
         Arguments.checkNonEmpty(query, "Flux query");
         Arguments.checkNotNull(measurementType, "Measurement type");
-        Arguments.checkNonEmpty(organizationId, "organization");
+        Arguments.checkNonEmpty(organizationId, "organizationId");
 
         return query(Flowable.just(query), organizationId, measurementType);
     }
@@ -80,7 +80,7 @@ final class QueryClientReactiveImpl extends AbstractQueryClient implements Query
                                       @Nonnull final String organizationId) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
-        Arguments.checkNonEmpty(organizationId, "organization");
+        Arguments.checkNonEmpty(organizationId, "organizationId");
 
         return Flowable
                 .fromPublisher(queryStream)
@@ -126,7 +126,7 @@ final class QueryClientReactiveImpl extends AbstractQueryClient implements Query
 
         Arguments.checkNotNull(queryStream, "queryStream");
         Arguments.checkNotNull(measurementType, "Measurement type");
-        Arguments.checkNonEmpty(organizationId, "organization");
+        Arguments.checkNonEmpty(organizationId, "organizationId");
 
         return query(queryStream, organizationId).map(fluxRecord -> resultMapper.toPOJO(fluxRecord, measurementType));
     }
@@ -136,7 +136,7 @@ final class QueryClientReactiveImpl extends AbstractQueryClient implements Query
     public Flowable<String> queryRaw(@Nonnull final String query, @Nonnull final String organizationId) {
 
         Arguments.checkNonEmpty(query, "Flux query");
-        Arguments.checkNonEmpty(organizationId, "organization");
+        Arguments.checkNonEmpty(organizationId, "organizationId");
 
         return queryRaw(Flowable.just(query), organizationId);
     }
@@ -147,7 +147,7 @@ final class QueryClientReactiveImpl extends AbstractQueryClient implements Query
                                      @Nonnull final String organizationId) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
-        Arguments.checkNonEmpty(organizationId, "organization");
+        Arguments.checkNonEmpty(organizationId, "organizationId");
 
         return queryRaw(queryStream, DEFAULT_DIALECT.toString(), organizationId);
     }
@@ -159,7 +159,7 @@ final class QueryClientReactiveImpl extends AbstractQueryClient implements Query
                                      @Nonnull final String organizationId) {
 
         Arguments.checkNonEmpty(query, "Flux query");
-        Arguments.checkNonEmpty(organizationId, "organization");
+        Arguments.checkNonEmpty(organizationId, "organizationId");
 
         return queryRaw(Flowable.just(query), dialect, organizationId);
     }
@@ -171,7 +171,7 @@ final class QueryClientReactiveImpl extends AbstractQueryClient implements Query
                                      @Nonnull final String organizationId) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
-        Arguments.checkNonEmpty(organizationId, "organization");
+        Arguments.checkNonEmpty(organizationId, "organizationId");
 
         return Flowable
                 .fromPublisher(queryStream)

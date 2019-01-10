@@ -58,128 +58,128 @@ public class WriteClientReactiveImpl extends AbstractWriteClient implements Writ
 
     @Override
     public void writeRecord(@Nonnull final String bucket,
-                            @Nonnull final String organization,
+                            @Nonnull final String organizationId,
                             @Nonnull final ChronoUnit precision,
                             @Nonnull final Maybe<String> record) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organization, "organization");
+        Arguments.checkNonEmpty(organizationId, "organization");
         Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(record, "record");
 
-        writeRecords(bucket, organization, precision, record.toFlowable());
+        writeRecords(bucket, organizationId, precision, record.toFlowable());
     }
 
     @Override
     public void writeRecords(@Nonnull final String bucket,
-                             @Nonnull final String organization,
+                             @Nonnull final String organizationId,
                              @Nonnull final ChronoUnit precision,
                              @Nonnull final Flowable<String> records) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organization, "organization");
+        Arguments.checkNonEmpty(organizationId, "organization");
         Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(records, "records");
 
         Flowable<BatchWriteData> stream = records.map(BatchWriteDataRecord::new);
 
-        write(bucket, organization, precision, stream);
+        write(bucket, organizationId, precision, stream);
     }
 
     @Override
     public void writeRecords(@Nonnull final String bucket,
-                             @Nonnull final String organization,
+                             @Nonnull final String organizationId,
                              @Nonnull final ChronoUnit precision,
                              @Nonnull final Publisher<String> records) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organization, "organization");
+        Arguments.checkNonEmpty(organizationId, "organization");
         Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(records, "records");
 
-        writeRecords(bucket, organization, precision, Flowable.fromPublisher(records));
+        writeRecords(bucket, organizationId, precision, Flowable.fromPublisher(records));
     }
 
     @Override
     public void writePoint(@Nonnull final String bucket,
-                           @Nonnull final String organization,
+                           @Nonnull final String organizationId,
                            @Nonnull final Maybe<Point> point) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organization, "organization");
+        Arguments.checkNonEmpty(organizationId, "organization");
         Arguments.checkNotNull(point, "point");
 
-        writePoints(bucket, organization, point.toFlowable());
+        writePoints(bucket, organizationId, point.toFlowable());
     }
 
     @Override
     public void writePoints(@Nonnull final String bucket,
-                            @Nonnull final String organization,
+                            @Nonnull final String organizationId,
                             @Nonnull final Flowable<Point> points) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organization, "organization");
+        Arguments.checkNonEmpty(organizationId, "organization");
         Arguments.checkNotNull(points, "points");
 
         Flowable<BatchWriteDataPoint> stream = points.filter(Objects::nonNull).map(BatchWriteDataPoint::new);
 
-        write(bucket, organization, stream);
+        write(bucket, organizationId, stream);
     }
 
     @Override
     public void writePoints(@Nonnull final String bucket,
-                            @Nonnull final String organization,
+                            @Nonnull final String organizationId,
                             @Nonnull final Publisher<Point> points) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organization, "organization");
+        Arguments.checkNonEmpty(organizationId, "organization");
         Arguments.checkNotNull(points, "points");
 
-        writePoints(bucket, organization, Flowable.fromPublisher(points));
+        writePoints(bucket, organizationId, Flowable.fromPublisher(points));
     }
 
     @Override
     public <M> void writeMeasurement(@Nonnull final String bucket,
-                                     @Nonnull final String organization,
+                                     @Nonnull final String organizationId,
                                      @Nonnull final ChronoUnit precision,
                                      @Nonnull final Maybe<M> measurement) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organization, "organization");
+        Arguments.checkNonEmpty(organizationId, "organization");
         Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(measurement, "measurement");
 
-        writeMeasurements(bucket, organization, precision, measurement.toFlowable());
+        writeMeasurements(bucket, organizationId, precision, measurement.toFlowable());
     }
 
     @Override
     public <M> void writeMeasurements(@Nonnull final String bucket,
-                                      @Nonnull final String organization,
+                                      @Nonnull final String organizationId,
                                       @Nonnull final ChronoUnit precision,
                                       @Nonnull final Flowable<M> measurements) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organization, "organization");
+        Arguments.checkNonEmpty(organizationId, "organization");
         Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(measurements, "measurements");
 
         Flowable<BatchWriteData> stream = measurements.map(it -> new BatchWriteDataMeasurement(it, precision));
 
-        write(bucket, organization, precision, stream);
+        write(bucket, organizationId, precision, stream);
     }
 
     @Override
     public <M> void writeMeasurements(@Nonnull final String bucket,
-                                      @Nonnull final String organization,
+                                      @Nonnull final String organizationId,
                                       @Nonnull final ChronoUnit precision,
                                       @Nonnull final Publisher<M> measurements) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organization, "organization");
+        Arguments.checkNonEmpty(organizationId, "organization");
         Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(measurements, "measurements");
 
-        writeMeasurements(bucket, organization, precision, Flowable.fromPublisher(measurements));
+        writeMeasurements(bucket, organizationId, precision, Flowable.fromPublisher(measurements));
     }
 
     @Nonnull

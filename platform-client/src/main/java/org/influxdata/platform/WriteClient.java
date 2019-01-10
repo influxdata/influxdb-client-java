@@ -44,17 +44,17 @@ public interface WriteClient extends AutoCloseable {
     /**
      * Write Line Protocol record into specified bucket.
      *
-     * @param bucket       specifies the destination bucket for writes
-     * @param organization specifies the destination organization for writes
-     * @param precision    specifies the precision for the unix timestamps within the body line-protocol.
-     *                     Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
-     *                     {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
-     *                     Default value : {@link TimeUnit#NANOSECONDS}.
-     * @param record       specifies the record in InfluxDB Line Protocol.
-     *                     The {@code record} is considered as one batch unit.
+     * @param bucket         specifies the destination bucket for writes
+     * @param organizationId specifies the destination organization for writes
+     * @param precision      specifies the precision for the unix timestamps within the body line-protocol.
+     *                       Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
+     *                       {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
+     *                       Default value : {@link TimeUnit#NANOSECONDS}.
+     * @param record         specifies the record in InfluxDB Line Protocol.
+     *                       The {@code record} is considered as one batch unit.
      */
     void writeRecord(@Nonnull final String bucket,
-                     @Nonnull final String organization,
+                     @Nonnull final String organizationId,
                      @Nonnull final ChronoUnit precision,
                      @Nullable final String record);
 
@@ -62,57 +62,57 @@ public interface WriteClient extends AutoCloseable {
     /**
      * Write Line Protocol records into specified bucket.
      *
-     * @param bucket       specifies the destination bucket for writes
-     * @param organization specifies the destination organization for writes
-     * @param precision    specifies the precision for the unix timestamps within the body line-protocol.
-     *                     Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
-     *                     {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
-     *                     Default value : {@link TimeUnit#NANOSECONDS}.
-     * @param records      specifies the records in InfluxDB Line Protocol
+     * @param bucket         specifies the destination bucket for writes
+     * @param organizationId specifies the destination organization for writes
+     * @param precision      specifies the precision for the unix timestamps within the body line-protocol.
+     *                       Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
+     *                       {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
+     *                       Default value : {@link TimeUnit#NANOSECONDS}.
+     * @param records        specifies the records in InfluxDB Line Protocol
      */
     void writeRecords(@Nonnull final String bucket,
-                      @Nonnull final String organization,
+                      @Nonnull final String organizationId,
                       @Nonnull final ChronoUnit precision,
                       @Nonnull final List<String> records);
 
     /**
      * Write Data point into specified bucket.
      *
-     * @param bucket       specifies the destination bucket for writes
-     * @param organization specifies the destination organization for writes
-     * @param point        specifies the Data point to write into bucket
+     * @param bucket         specifies the destination bucket for writes
+     * @param organizationId specifies the destination organization for writes
+     * @param point          specifies the Data point to write into bucket
      */
     void writePoint(@Nonnull final String bucket,
-                    @Nonnull final String organization,
+                    @Nonnull final String organizationId,
                     @Nullable final Point point);
 
 
     /**
      * Write Data points into specified bucket.
      *
-     * @param bucket       specifies the destination bucket ID for writes
-     * @param organization specifies the destination organization ID for writes
-     * @param points       specifies the Data points to write into bucket
+     * @param bucket         specifies the destination bucket ID for writes
+     * @param organizationId specifies the destination organization ID for writes
+     * @param points         specifies the Data points to write into bucket
      */
     void writePoints(@Nonnull final String bucket,
-                     @Nonnull final String organization,
+                     @Nonnull final String organizationId,
                      @Nonnull final List<Point> points);
 
 
     /**
      * Write Measurement into specified bucket.
      *
-     * @param bucket       specifies the destination bucket for writes
-     * @param organization specifies the destination organization for writes
-     * @param precision    specifies the precision for the unix timestamps within the body line-protocol.
-     *                     Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
-     *                     {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
-     *                     Default value : {@link TimeUnit#NANOSECONDS}.
-     * @param <M>          measurement type
-     * @param measurement  specifies the Measurement to write into bucket
+     * @param bucket         specifies the destination bucket for writes
+     * @param organizationId specifies the destination organization for writes
+     * @param precision      specifies the precision for the unix timestamps within the body line-protocol.
+     *                       Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
+     *                       {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
+     *                       Default value : {@link TimeUnit#NANOSECONDS}.
+     * @param <M>            measurement type
+     * @param measurement    specifies the Measurement to write into bucket
      */
     <M> void writeMeasurement(@Nonnull final String bucket,
-                              @Nonnull final String organization,
+                              @Nonnull final String organizationId,
                               @Nonnull final ChronoUnit precision,
                               @Nullable final M measurement);
 
@@ -120,17 +120,17 @@ public interface WriteClient extends AutoCloseable {
     /**
      * Write Measurements into specified bucket.
      *
-     * @param bucket       specifies the destination bucket for writes
-     * @param organization specifies the destination organization for writes
-     * @param precision    specifies the precision for the unix timestamps within the body line-protocol.
-     *                     Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
-     *                     {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
-     *                     Default value : {@link TimeUnit#NANOSECONDS}.
-     * @param <M>          measurement type
-     * @param measurements specifies the Measurements to write into bucket
+     * @param bucket         specifies the destination bucket for writes
+     * @param organizationId specifies the destination organization for writes
+     * @param precision      specifies the precision for the unix timestamps within the body line-protocol.
+     *                       Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
+     *                       {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
+     *                       Default value : {@link TimeUnit#NANOSECONDS}.
+     * @param <M>            measurement type
+     * @param measurements   specifies the Measurements to write into bucket
      */
     <M> void writeMeasurements(@Nonnull final String bucket,
-                               @Nonnull final String organization,
+                               @Nonnull final String organizationId,
                                @Nonnull final ChronoUnit precision,
                                @Nonnull final List<M> measurements);
 

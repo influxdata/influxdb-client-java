@@ -91,8 +91,6 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
         User loggedUser = client.createUserClient().me();
         Assertions.assertThat(loggedUser).isNotNull();
 
-//        organization = findMyOrg();
-
         Authorization authorization = client.createAuthorizationClient()
                 .createAuthorization(organization, Arrays.asList(readBucket, writeBucket));
 
@@ -131,13 +129,13 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
                     Assertions.assertThat(event).isNotNull();
                     Assertions.assertThat(event.getBucket()).isEqualTo(bucket.getName());
-                    Assertions.assertThat(event.getOrganization()).isEqualTo("my-org");
+                    Assertions.assertThat(event.getOrganization()).isEqualTo(organization.getId());
                     Assertions.assertThat(event.getLineProtocol()).isEqualTo(lineProtocol);
 
                     countDownLatch.countDown();
                 });
 
-        writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record);
+        writeClient.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, record);
 
         waitToCallback();
 
@@ -161,7 +159,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         writeClient = platformClient.createWriteClient();
 
-        writeClient.writeRecord(bucket.getName(), "my-org", ChronoUnit.SECONDS, Maybe.empty());
+        writeClient.writeRecord(bucket.getName(), organization.getId(), ChronoUnit.SECONDS, Maybe.empty());
     }
 
     @Test
@@ -179,7 +177,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
                 .listenEvents(WriteSuccessEvent.class)
                 .subscribe(event -> countDownLatch.countDown());
 
-        writeClient.writeRecords(bucket.getName(), "my-org", ChronoUnit.SECONDS, records);
+        writeClient.writeRecords(bucket.getName(), organization.getId(), ChronoUnit.SECONDS, records);
 
         waitToCallback();
 
@@ -219,7 +217,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
                 .listenEvents(WriteSuccessEvent.class)
                 .subscribe(event -> countDownLatch.countDown());
 
-        writeClient.writePoint(bucket.getName(), "my-org", Maybe.just(point));
+        writeClient.writePoint(bucket.getName(), organization.getId(), Maybe.just(point));
 
         waitToCallback();
 
@@ -253,7 +251,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
                 .listenEvents(WriteSuccessEvent.class)
                 .subscribe(event -> countDownLatch.countDown());
 
-        writeClient.writePoints(bucket.getName(), "my-org", (Publisher<Point>) Flowable.just(point1, point2));
+        writeClient.writePoints(bucket.getName(), organization.getId(), (Publisher<Point>) Flowable.just(point1, point2));
 
         waitToCallback();
 
@@ -277,7 +275,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
                 .listenEvents(WriteSuccessEvent.class)
                 .subscribe(event -> countDownLatch.countDown());
 
-        writeClient.writeMeasurement(bucket.getName(), "my-org", ChronoUnit.NANOS, Maybe.just(measurement));
+        writeClient.writeMeasurement(bucket.getName(), organization.getId(), ChronoUnit.NANOS, Maybe.just(measurement));
 
         waitToCallback();
 
@@ -314,7 +312,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
                 .listenEvents(WriteSuccessEvent.class)
                 .subscribe(event -> countDownLatch.countDown());
 
-        writeClient.writeMeasurements(bucket.getName(), "my-org", ChronoUnit.NANOS, (Publisher<H2O>) Flowable.just(measurement1, measurement2));
+        writeClient.writeMeasurements(bucket.getName(), organization.getId(), ChronoUnit.NANOS, (Publisher<H2O>) Flowable.just(measurement1, measurement2));
 
         waitToCallback();
 
@@ -351,7 +349,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
                 .listenEvents(WriteSuccessEvent.class)
                 .subscribe(event -> countDownLatch.countDown());
 
-        writeClient.writeRecord(bucket.getName(), "my-org", ChronoUnit.NANOS, Maybe.just("h2o_feet,location=coyote_creek level\\ water_level=1.0 1"));
+        writeClient.writeRecord(bucket.getName(), organization.getId(), ChronoUnit.NANOS, Maybe.just("h2o_feet,location=coyote_creek level\\ water_level=1.0 1"));
 
         waitToCallback();
 
@@ -380,7 +378,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
                 .listenEvents(WriteSuccessEvent.class)
                 .subscribe(event -> countDownLatch.countDown());
 
-        writeClient.writeRecord(bucket.getName(), "my-org", ChronoUnit.NANOS, Maybe.just("h2o_feet,location=coyote_creek level\\ water_level=1.0 1"));
+        writeClient.writeRecord(bucket.getName(), organization.getId(), ChronoUnit.NANOS, Maybe.just("h2o_feet,location=coyote_creek level\\ water_level=1.0 1"));
 
         waitToCallback();
 

@@ -128,7 +128,7 @@ public class PlatformExample {
             temperature.location = "south";
             temperature.value = 62D;
             temperature.time = Instant.now();
-            writeClient.writeMeasurement("temperature-sensors", medicalGMBH.getName(), ChronoUnit.NANOS, temperature);
+            writeClient.writeMeasurement("temperature-sensors", medicalGMBH.getId(), ChronoUnit.NANOS, temperature);
 
             //
             // Write by Point
@@ -137,13 +137,13 @@ public class PlatformExample {
                     .addTag("location", "west")
                     .addField("value", 55D)
                     .time(Instant.now().toEpochMilli(), ChronoUnit.NANOS);
-            writeClient.writePoint("temperature-sensors", medicalGMBH.getName(), point);
+            writeClient.writePoint("temperature-sensors", medicalGMBH.getId(), point);
 
             //
             // Write by LineProtocol
             //
             String record = "temperature,location=north value=60.0";
-            writeClient.writeRecord("temperature-sensors", medicalGMBH.getName(), ChronoUnit.NANOS, record);
+            writeClient.writeRecord("temperature-sensors", medicalGMBH.getId(), ChronoUnit.NANOS, record);
 
             countDownLatch.await(2, TimeUnit.SECONDS);
         }
