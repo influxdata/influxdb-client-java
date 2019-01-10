@@ -37,13 +37,13 @@ import org.influxdata.platform.domain.Permission;
 import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.option.WriteOptions;
+import org.influxdata.platform.rest.LogLevel;
 import org.influxdata.platform.write.Point;
 import org.influxdata.platform.write.event.WriteSuccessEvent;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -58,6 +58,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
     private QueryClient queryClient;
 
     private Bucket bucket;
+    private Organization organization;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -83,8 +84,10 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         User loggedUser = platformClient.createUserClient().me();
         Assertions.assertThat(loggedUser).isNotNull();
 
+        organization = findMyOrg();
+
         Authorization authorization = platformClient.createAuthorizationClient()
-                .createAuthorization(findMyOrg(), Arrays.asList(readBucket, writeBucket));
+                .createAuthorization(organization, Arrays.asList(readBucket, writeBucket));
 
         String token = authorization.getToken();
 
@@ -115,6 +118,8 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
         writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
+        platformClient.setLogLevel(LogLevel.BODY);
+
         writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record);
 
         listener.waitToCallback();
@@ -124,7 +129,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         Assertions.assertThat(listener.getValue().getOrganization()).isEqualTo("my-org");
         Assertions.assertThat(listener.getValue().getLineProtocol()).isEqualTo(record);
 
-        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
@@ -150,7 +155,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         listener.waitToCallback();
 
-        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords().get(0).getTime()).isEqualTo(Instant.ofEpochSecond(0, 1000));
@@ -172,7 +177,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         listener.waitToCallback();
 
-        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords().get(0).getTime()).isEqualTo(Instant.ofEpochMilli(1));
@@ -194,7 +199,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         listener.waitToCallback();
 
-        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords().get(0).getTime()).isEqualTo(Instant.ofEpochSecond(1));
@@ -221,7 +226,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         List<FluxRecord> fluxRecords = new ArrayList<>();
 
         CountDownLatch queryCountDown = new CountDownLatch(2);
-        queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", "my-org", (cancellable, fluxRecord) -> {
+        queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", organization.getId(), (cancellable, fluxRecord) -> {
             fluxRecords.add(fluxRecord);
             queryCountDown.countDown();
 
@@ -251,7 +256,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         listener.waitToCallback();
 
-        List<H2OFeetMeasurement> measurements = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last() |> rename(columns:{_value: \"water_level\"})", "my-org", H2OFeetMeasurement.class);
+        List<H2OFeetMeasurement> measurements = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last() |> rename(columns:{_value: \"water_level\"})", organization.getId(), H2OFeetMeasurement.class);
 
         Assertions.assertThat(measurements).hasSize(1);
         Assertions.assertThat(measurements.get(0).location).isEqualTo("coyote_creek");
@@ -260,18 +265,12 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         Assertions.assertThat(measurements.get(0).time).isEqualTo(measurement.time);
     }
 
-    //TODO not working
     @Test
-    @Disabled
     void queryDataFromNewOrganization() throws Exception {
-
-        platformClient.close();
 
         String orgName = generateName("new-org");
         Organization organization =
                 platformClient.createOrganizationClient().createOrganization(orgName);
-
-        System.out.println("organization.getId() = " + organization.getId());
 
         Bucket bucket = platformClient.createBucketClient()
                 .createBucket(generateName("h2o"), retentionRule(), organization);
@@ -296,19 +295,17 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         writeOrganization.setAction(Permission.WRITE_ACTION);
         writeOrganization.setId(organization.getId());
 
-        User loggedUser = platformClient.createUserClient().me();
+        User loggedUser = platformClient.createUserClient().createUser(generateName("Tom Lik"));
         Assertions.assertThat(loggedUser).isNotNull();
 
         Authorization authorization = platformClient.createAuthorizationClient()
-                .createAuthorization(findMyOrg(), Arrays.asList(readOrganization, writeOrganization, readBucket, writeBucket));
+                .createAuthorization(organization, Arrays.asList(readOrganization, writeOrganization, readBucket, writeBucket));
 
         String token = authorization.getToken();
 
+        platformClient.close();
         platformClient = PlatformClientFactory.create(platformURL, token.toCharArray());
         queryClient = platformClient.createQueryClient();
-
-        Bucket bucketByID = platformClient.createBucketClient().findBucketByID(bucket.getId());
-        System.out.println("bucketByID = " + bucketByID);
 
         Point point = Point.measurement("h2o_feet")
                 .addTag("location", "atlantic")
@@ -323,7 +320,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         listener.waitToCallback();
 
-        String query = queryClient.queryRaw("from(bucketID:\"" + bucket.getId() + "\") |> range(start: 0) |> last()", organization.getId());
+        String query = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", organization.getId());
         Assertions.assertThat(query).endsWith("1,water_level,h2o_feet,atlantic\n");
     }
 
@@ -339,13 +336,13 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record);
 
-        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
         writeClient.flush();
         Thread.sleep(10);
 
-        query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+        query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
@@ -367,12 +364,12 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         writeClient.writeRecords(bucketName, "my-org", ChronoUnit.NANOS, Arrays.asList(record1, record2, record3, record4, record5));
 
-        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", "my-org");
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
         Thread.sleep(500);
 
-        query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", "my-org");
+        query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(5);
@@ -400,13 +397,13 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record5);
 
         Thread.sleep(100);
-        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", "my-org");
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
         writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record6);
         Thread.sleep(100);
 
-        query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", "my-org");
+        query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(6);
@@ -425,12 +422,12 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         writeClient.writeRecord(bucketName, "my-org", ChronoUnit.NANOS, record);
 
-        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+        List<FluxTable> query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
         Thread.sleep(5000);
 
-        query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+        query = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);

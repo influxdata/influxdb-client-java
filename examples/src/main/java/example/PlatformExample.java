@@ -148,7 +148,7 @@ public class PlatformExample {
             countDownLatch.await(2, TimeUnit.SECONDS);
         }
 
-        List<FluxTable> tables = client.createQueryClient().query("from(bucket:\"temperature-sensors\") |> range(start: 0)", medicalGMBH.getName());
+        List<FluxTable> tables = client.createQueryClient().query("from(bucket:\"temperature-sensors\") |> range(start: 0)", medicalGMBH.getId());
 
         for (FluxTable fluxTable : tables) {
             List<FluxRecord> records = fluxTable.getRecords();

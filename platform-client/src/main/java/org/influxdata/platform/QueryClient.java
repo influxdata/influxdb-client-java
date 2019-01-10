@@ -46,11 +46,11 @@ public interface QueryClient {
      * Use {@link QueryClient#query(String, String, BiConsumer, Consumer, Runnable)} for large data streaming.
      *
      * @param query        the flux query to execute
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @return {@code List<FluxTable>} which are matched the query
      */
     @Nonnull
-    List<FluxTable> query(@Nonnull final String query, @Nonnull final String organization);
+    List<FluxTable> query(@Nonnull final String query, @Nonnull final String organizationId);
 
     /**
      * Executes the Flux query against the InfluxData Platform and synchronously map whole response
@@ -61,25 +61,25 @@ public interface QueryClient {
      *
      * @param <M>             the type of the measurement (POJO)
      * @param query           the flux query to execute
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @param measurementType the type of measurement
      * @return {@code List<T>} which are matched the query
      */
     @Nonnull
     <M> List<M> query(@Nonnull final String query,
-                      @Nonnull final String organization, @Nonnull final Class<M> measurementType);
+                      @Nonnull final String organizationId, @Nonnull final Class<M> measurementType);
 
     /**
      * Executes the Flux query against the InfluxData Platform and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * @param query        the flux query to execute
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @param onNext       the callback to consume the FluxRecord result with capability
      *                     to discontinue a streaming query
      */
     void query(@Nonnull final String query,
-               @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext);
+               @Nonnull final String organizationId, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext);
 
 
     /**
@@ -88,13 +88,13 @@ public interface QueryClient {
      *
      * @param <M>             the type of the measurement (POJO)
      * @param query           the flux query to execute
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @param measurementType the measurement type (POJO)
      * @param onNext          the callback to consume the mapped Measurements with capability to discontinue
      *                        a streaming query
      */
     <M> void query(@Nonnull final String query,
-                   @Nonnull final String organization, @Nonnull final Class<M> measurementType,
+                   @Nonnull final String organizationId, @Nonnull final Class<M> measurementType,
                    @Nonnull final BiConsumer<Cancellable, M> onNext);
 
     /**
@@ -102,12 +102,12 @@ public interface QueryClient {
      * to {@code onNext} consumer.
      *
      * @param query        the flux query to execute
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @param onNext       the callback to consume FluxRecord result with capability to discontinue a streaming query
      * @param onError      the callback to consume any error notification
      */
     void query(@Nonnull final String query,
-               @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
+               @Nonnull final String organizationId, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
                @Nonnull final Consumer<? super Throwable> onError);
 
     /**
@@ -116,13 +116,13 @@ public interface QueryClient {
      *
      * @param <M>             the type of the measurement (POJO)
      * @param query           the flux query to execute
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @param measurementType the measurement type (POJO)
      * @param onNext          the callback to consume POJO record with capability to discontinue a streaming query
      * @param onError         the callback to consume any error notification
      */
     <M> void query(@Nonnull final String query,
-                   @Nonnull final String organization, @Nonnull final Class<M> measurementType,
+                   @Nonnull final String organizationId, @Nonnull final Class<M> measurementType,
                    @Nonnull final BiConsumer<Cancellable, M> onNext,
                    @Nonnull final Consumer<? super Throwable> onError);
 
@@ -131,13 +131,13 @@ public interface QueryClient {
      * to {@code onNext} consumer.
      *
      * @param query        the flux query to execute
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @param onNext       the callback to consume FluxRecord result with capability to discontinue a streaming query
      * @param onError      the callback to consume any error notification
      * @param onComplete   the callback to consume a notification about successfully end of stream
      */
     void query(@Nonnull final String query,
-               @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
+               @Nonnull final String organizationId, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
                @Nonnull final Consumer<? super Throwable> onError,
                @Nonnull final Runnable onComplete);
 
@@ -146,14 +146,14 @@ public interface QueryClient {
      *
      * @param <M>             the type of the measurement (POJO)
      * @param query           the flux query to execute
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @param measurementType the measurement type (POJO)
      * @param onNext          the callback to consume POJO record with capability to discontinue a streaming query
      * @param onError         the callback to consume any error notification
      * @param onComplete      the callback to consume a notification about successfully end of stream
      */
     <M> void query(@Nonnull final String query,
-                   @Nonnull final String organization, @Nonnull final Class<M> measurementType,
+                   @Nonnull final String organizationId, @Nonnull final Class<M> measurementType,
                    @Nonnull final BiConsumer<Cancellable, M> onNext,
                    @Nonnull final Consumer<? super Throwable> onError,
                    @Nonnull final Runnable onComplete);
@@ -167,11 +167,11 @@ public interface QueryClient {
      * Use {@link QueryClient#queryRaw(String, String, BiConsumer, Consumer, Runnable)} for large data streaming.
      *
      * @param query        the flux query to execute
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @return the raw response that matched the query
      */
     @Nonnull
-    String queryRaw(@Nonnull final String query, @Nonnull final String organization);
+    String queryRaw(@Nonnull final String query, @Nonnull final String organizationId);
 
     /**
      * Executes the Flux query against the InfluxData Platform and synchronously map whole response
@@ -183,23 +183,23 @@ public interface QueryClient {
      * @param query        the flux query to execute
      * @param dialect      Dialect is an object defining the options to use when encoding the response.
      *                     <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @return the raw response that matched the query
      */
     @Nonnull
-    String queryRaw(@Nonnull final String query, @Nullable final String dialect, @Nonnull final String organization);
+    String queryRaw(@Nonnull final String query, @Nullable final String dialect, @Nonnull final String organizationId);
 
     /**
      * Executes the Flux query against the InfluxData Platform and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query        the flux query to execute
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @param onResponse   callback to consume the response line by line with capability
      *                     to discontinue a streaming query
      */
     void queryRaw(@Nonnull final String query,
-                  @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse);
+                  @Nonnull final String organizationId, @Nonnull final BiConsumer<Cancellable, String> onResponse);
 
     /**
      * Executes the Flux query against the InfluxData Platform and asynchronously stream response
@@ -208,26 +208,26 @@ public interface QueryClient {
      * @param query        the flux query to execute
      * @param dialect      Dialect is an object defining the options to use when encoding the response.
      *                     <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @param onResponse   the callback to consume the response line by line
      *                     with capability to discontinue a streaming query
      */
     void queryRaw(@Nonnull final String query,
                   @Nullable final String dialect,
-                  @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse);
+                  @Nonnull final String organizationId, @Nonnull final BiConsumer<Cancellable, String> onResponse);
 
     /**
      * Executes the Flux query against the InfluxData Platform and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query        the flux query to execute
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @param onResponse   the callback to consume the response line by line
      *                     with capability to discontinue a streaming query
      * @param onError      callback to consume any error notification
      */
     void queryRaw(@Nonnull final String query,
-                  @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                  @Nonnull final String organizationId, @Nonnull final BiConsumer<Cancellable, String> onResponse,
                   @Nonnull final Consumer<? super Throwable> onError);
 
     /**
@@ -237,14 +237,14 @@ public interface QueryClient {
      * @param query        the flux query to execute
      * @param dialect      Dialect is an object defining the options to use when encoding the response.
      *                     <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @param onResponse   the callback to consume the response line by line
      *                     with capability to discontinue a streaming query
      * @param onError      callback to consume any error notification
      */
     void queryRaw(@Nonnull final String query,
                   @Nullable final String dialect,
-                  @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                  @Nonnull final String organizationId, @Nonnull final BiConsumer<Cancellable, String> onResponse,
                   @Nonnull final Consumer<? super Throwable> onError);
 
     /**
@@ -252,14 +252,14 @@ public interface QueryClient {
      * (line by line) to {@code onResponse}.
      *
      * @param query        the flux query to execute
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @param onResponse   the callback to consume the response line by line
      *                     with capability to discontinue a streaming query
      * @param onError      callback to consume any error notification
      * @param onComplete   callback to consume a notification about successfully end of stream
      */
     void queryRaw(@Nonnull final String query,
-                  @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                  @Nonnull final String organizationId, @Nonnull final BiConsumer<Cancellable, String> onResponse,
                   @Nonnull final Consumer<? super Throwable> onError,
                   @Nonnull final Runnable onComplete);
 
@@ -271,7 +271,7 @@ public interface QueryClient {
      * @param query        the flux query to execute
      * @param dialect      Dialect is an object defining the options to use when encoding the response.
      *                     <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
-     * @param organization specifies the source organization
+     * @param organizationId specifies the source organization
      * @param onResponse   the callback to consume the response line by line
      *                     with capability to discontinue a streaming query
      *                     The callback call contains the one line of the response.
@@ -280,7 +280,7 @@ public interface QueryClient {
      */
     void queryRaw(@Nonnull final String query,
                   @Nullable final String dialect,
-                  @Nonnull final String organization, @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                  @Nonnull final String organizationId, @Nonnull final BiConsumer<Cancellable, String> onResponse,
                   @Nonnull final Consumer<? super Throwable> onError,
                   @Nonnull final Runnable onComplete);
 

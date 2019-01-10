@@ -134,8 +134,6 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(task, "task");
 
-        //TODO
-        task.setId(task.getOrganizationId());
         Call<Task> call = platformService.createTask(createBody(adapter.toJson(task)));
 
         return execute(call);

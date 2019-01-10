@@ -59,7 +59,7 @@ abstract class AbstractITPlatformClientTest extends AbstractTest {
                 .orElseThrow(IllegalStateException::new);
 
         platformClient.close();
-        
+
         try {
             this.platformClient = PlatformClientReactiveFactory.create(platformURL, "my-user", "my-password".toCharArray());
         } catch (Exception e) {

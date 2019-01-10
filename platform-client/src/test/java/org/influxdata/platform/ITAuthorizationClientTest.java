@@ -185,6 +185,8 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
     }
 
     @Test
+    //TODO https://github.com/influxdata/influxdb/issues/10938
+    @Disabled
     void findAuthorizations() {
 
         int size = authorizationClient.findAuthorizations().size();
@@ -196,6 +198,8 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
     }
 
     @Test
+    //TODO https://github.com/influxdata/influxdb/issues/10938
+    @Disabled
     void findAuthorizationsByUser() {
 
         int size = authorizationClient.findAuthorizationsByUser(user).size();
@@ -207,6 +211,8 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
     }
 
     @Test
+    //TODO https://github.com/influxdata/influxdb/issues/10938
+    @Disabled
     void findAuthorizationsByUserName() {
 
         int size = authorizationClient.findAuthorizationsByUserName(user.getName()).size();
@@ -217,7 +223,7 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
         Assertions.assertThat(authorizations).hasSize(size + 1);
     }
 
-    //TODO updateAuthorization return PlatformError but c.db.update() required "plain" go error bolt/authorization.go:397
+    //TODO updateAuthorization return PlatformError but c.db.update() required "plain" go error bolt/authorization.go:397 - https://github.com/influxdata/platform/issues/1290
     @Test
     @Disabled
     void updateAuthorizationStatus() {

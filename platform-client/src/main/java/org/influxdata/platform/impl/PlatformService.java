@@ -435,6 +435,6 @@ interface PlatformService {
     @POST("/api/v2/query")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResponseBody> query(@Query("organization") final String org, @Nonnull @Body final RequestBody query);
+    Call<ResponseBody> query(@Query("orgID") final String orgID, @Nonnull @Body final RequestBody query);
 
 }

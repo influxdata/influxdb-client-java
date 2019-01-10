@@ -466,7 +466,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(run).isNull();
     }
 
-    //TODO wait to fix (task/backend/query_logreader.go:149) - FindRunByID (avoid "panic: column _measurement is not of type time goroutine")
+    //TODO wait to fix (task/backend/query_logreader.go:149) - FindRunByID (avoid "panic: column _measurement is not of type time goroutine") - https://github.com/influxdata/platform/pull/1225
     @Test
     @Disabled
     void retryRun() throws InterruptedException {

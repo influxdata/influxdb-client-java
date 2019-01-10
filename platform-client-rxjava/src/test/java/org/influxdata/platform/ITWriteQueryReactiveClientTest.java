@@ -65,41 +65,44 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         super.setUp();
 
-        PlatformClient platformClient = PlatformClientFactory.create(platformURL, "my-user",
+        PlatformClient client = PlatformClientFactory.create(platformURL, "my-user",
                 "my-password".toCharArray());
 
         RetentionRule retentionRule = new RetentionRule();
         retentionRule.setType("expire");
         retentionRule.setEverySeconds(3600L);
 
-        bucket = platformClient.createBucketClient()
+        bucket = client.createBucketClient()
                 .createBucket(generateName("h2o"), retentionRule, "my-org");
 
         //
         // Add Permissions to read and write to the Bucket
         //
         Permission readBucket = new Permission();
-        readBucket.setId(bucket.getId());
         readBucket.setResource(PermissionResourceType.BUCKET);
         readBucket.setAction(Permission.READ_ACTION);
+        readBucket.setId(bucket.getId());
 
         Permission writeBucket = new Permission();
-        readBucket.setId(bucket.getId());
         writeBucket.setResource(PermissionResourceType.BUCKET);
         writeBucket.setAction(Permission.WRITE_ACTION);
+        writeBucket.setId(bucket.getId());
 
-        User loggedUser = platformClient.createUserClient().me();
+        User loggedUser = client.createUserClient().me();
         Assertions.assertThat(loggedUser).isNotNull();
 
-        Authorization authorization = platformClient.createAuthorizationClient()
+//        organization = findMyOrg();
+
+        Authorization authorization = client.createAuthorizationClient()
                 .createAuthorization(organization, Arrays.asList(readBucket, writeBucket));
 
         String token = authorization.getToken();
 
+        client.close();
+
         platformClient.close();
-        this.platformClient.close();
-        this.platformClient = PlatformClientReactiveFactory.create(platformURL, token.toCharArray());
-        queryClient = this.platformClient.createQueryClient();
+        platformClient = PlatformClientReactiveFactory.create(platformURL, token.toCharArray());
+        queryClient = platformClient.createQueryClient();
     }
 
     @AfterEach
@@ -140,7 +143,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         Assertions.assertThat(countDownLatch.getCount()).isEqualTo(0);
 
-        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", "my-org");
+        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
 
         result.test().assertValueCount(1).assertValue(fluxRecord -> {
 
@@ -180,7 +183,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         waitToCallback();
 
-        Flowable<FluxRecord> results = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0)", "my-org");
+        Flowable<FluxRecord> results = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0)", organization.getId());
 
         results.test()
                 .assertValueCount(2)
@@ -220,7 +223,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         waitToCallback();
 
-        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", "my-org");
+        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", organization.getId());
 
         result.test().assertValueCount(1).assertValue(fluxRecord -> {
 
@@ -254,7 +257,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         waitToCallback();
 
-        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0)", "my-org");
+        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0)", organization.getId());
 
         result
                 .test()
@@ -278,7 +281,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         waitToCallback();
 
-        Flowable<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last() |> rename(columns:{_value: \"water_level\"})", "my-org", H2O.class);
+        Flowable<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last() |> rename(columns:{_value: \"water_level\"})", organization.getId(), H2O.class);
 
         measurements.test().assertValueCount(1).assertValueAt(0, h2O -> {
 
@@ -315,7 +318,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         waitToCallback();
 
-        Flowable<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> sort(desc: false, columns:[\"_time\"]) |>rename(columns:{_value: \"water_level\"})", "my-org", H2O.class);
+        Flowable<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> sort(desc: false, columns:[\"_time\"]) |>rename(columns:{_value: \"water_level\"})", organization.getId(), H2O.class);
 
         measurements
                 .test()
@@ -352,7 +355,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         waitToCallback();
 
-        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", "my-org");
+        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", organization.getId());
 
         result.test()
                 .assertValueCount(6)
@@ -381,7 +384,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         waitToCallback();
 
-        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", null, "my-org");
+        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", null, organization.getId());
 
         result.test()
                 .assertValueCount(3)
