@@ -132,7 +132,7 @@ public interface OrganizationClient {
      * @param organization the organization for put secrets
      */
     void putSecrets(@Nonnull final Map<String, String> secrets, @Nonnull final Organization organization);
-    
+
     /**
      * Patches all provided secrets and updates any previous values.
      *
