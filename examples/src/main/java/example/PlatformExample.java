@@ -110,6 +110,10 @@ public class PlatformExample {
         PlatformClient client = PlatformClientFactory.create("http://localhost:9999", token.toCharArray());
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        //
+        // Write data
+        //
         try (WriteClient writeClient = client.createWriteClient(WriteOptions.builder()
             .batchSize(5000)
             .flushInterval(1000)
@@ -148,6 +152,9 @@ public class PlatformExample {
             countDownLatch.await(2, TimeUnit.SECONDS);
         }
 
+        //
+        // Read data
+        //
         List<FluxTable> tables = client.createQueryClient().query("from(bucket:\"temperature-sensors\") |> range(start: 0)", medicalGMBH.getId());
 
         for (FluxTable fluxTable : tables) {
