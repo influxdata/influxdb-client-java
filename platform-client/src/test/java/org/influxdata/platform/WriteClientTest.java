@@ -602,6 +602,8 @@ class WriteClientTest extends AbstractPlatformClientTest {
         @Override
         public void onEvent(@Nonnull final T value) {
 
+            Assertions.assertThat(value).isNotNull();
+
             countDownLatch.countDown();
 
             values.add(value);

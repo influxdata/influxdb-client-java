@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.influxdata.flux.domain.FluxRecord;
 import org.influxdata.flux.domain.FluxTable;
@@ -53,6 +55,8 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnitPlatform.class)
 class ITWriteQueryClientTest extends AbstractITClientTest {
+
+    private static final Logger LOG = Logger.getLogger(ITWriteQueryClientTest.class.getName());
 
     private WriteClient writeClient;
     private QueryClient queryClient;
@@ -123,7 +127,9 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         writeClient.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, record);
 
         listener.waitToCallback();
-        
+
+        LOG.log(Level.FINEST, "Listener values: {0} errors: {1}", new Object[]{listener.values, listener.errors});
+
         Assertions.assertThat(listener.getValue()).isNotNull();
         Assertions.assertThat(listener.getValue().getBucket()).isEqualTo(bucket.getName());
         Assertions.assertThat(listener.getValue().getOrganization()).isEqualTo(organization.getId());
