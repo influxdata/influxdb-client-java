@@ -54,37 +54,37 @@ final class QueryClientReactiveImpl extends AbstractQueryClient implements Query
 
     @Nonnull
     @Override
-    public Flowable&lt;FluxRecord&gt; query(@Nonnull final String query, @Nonnull final String organization) {
+    public Flowable&lt;FluxRecord&gt; query(@Nonnull final String query, @Nonnull final String organizationId) {
 
 <span class="fc" id="L59">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
-<span class="fc" id="L60">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L60">        Arguments.checkNonEmpty(organizationId, &quot;organizationId&quot;);</span>
 
-<span class="fc" id="L62">        return query(Flowable.just(query), organization);</span>
+<span class="fc" id="L62">        return query(Flowable.just(query), organizationId);</span>
     }
 
     @Override
     public &lt;M&gt; Flowable&lt;M&gt; query(@Nonnull final String query,
-                                 @Nonnull final String organization,
+                                 @Nonnull final String organizationId,
                                  @Nonnull final Class&lt;M&gt; measurementType) {
 
 <span class="fc" id="L70">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
 <span class="fc" id="L71">        Arguments.checkNotNull(measurementType, &quot;Measurement type&quot;);</span>
-<span class="fc" id="L72">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L72">        Arguments.checkNonEmpty(organizationId, &quot;organizationId&quot;);</span>
 
-<span class="fc" id="L74">        return query(Flowable.just(query), organization, measurementType);</span>
+<span class="fc" id="L74">        return query(Flowable.just(query), organizationId, measurementType);</span>
     }
 
     @Nonnull
     @Override
     public Flowable&lt;FluxRecord&gt; query(@Nonnull final Publisher&lt;String&gt; queryStream,
-                                      @Nonnull final String organization) {
+                                      @Nonnull final String organizationId) {
 
 <span class="fc" id="L82">        Arguments.checkNotNull(queryStream, &quot;queryStream&quot;);</span>
-<span class="fc" id="L83">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L83">        Arguments.checkNonEmpty(organizationId, &quot;organizationId&quot;);</span>
 
 <span class="fc" id="L85">        return Flowable</span>
 <span class="fc" id="L86">                .fromPublisher(queryStream)</span>
-<span class="fc" id="L87">                .map(it -&gt; platformService.query(organization, createBody(DEFAULT_DIALECT.toString(), it)))</span>
+<span class="fc" id="L87">                .map(it -&gt; platformService.query(organizationId, createBody(DEFAULT_DIALECT.toString(), it)))</span>
 <span class="fc" id="L88">                .flatMap(queryCall -&gt; {</span>
 
 <span class="fc" id="L90">                    Observable&lt;FluxRecord&gt; observable = Observable.create(subscriber -&gt; {</span>
@@ -121,61 +121,61 @@ final class QueryClientReactiveImpl extends AbstractQueryClient implements Query
     @Nonnull
     @Override
     public &lt;M&gt; Flowable&lt;M&gt; query(@Nonnull final Publisher&lt;String&gt; queryStream,
-                                 @Nonnull final String organization,
+                                 @Nonnull final String organizationId,
                                  @Nonnull final Class&lt;M&gt; measurementType) {
 
 <span class="fc" id="L127">        Arguments.checkNotNull(queryStream, &quot;queryStream&quot;);</span>
 <span class="fc" id="L128">        Arguments.checkNotNull(measurementType, &quot;Measurement type&quot;);</span>
-<span class="fc" id="L129">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L129">        Arguments.checkNonEmpty(organizationId, &quot;organizationId&quot;);</span>
 
-<span class="fc" id="L131">        return query(queryStream, organization).map(fluxRecord -&gt; resultMapper.toPOJO(fluxRecord, measurementType));</span>
+<span class="fc" id="L131">        return query(queryStream, organizationId).map(fluxRecord -&gt; resultMapper.toPOJO(fluxRecord, measurementType));</span>
     }
 
     @Nonnull
     @Override
-    public Flowable&lt;String&gt; queryRaw(@Nonnull final String query, @Nonnull final String organization) {
+    public Flowable&lt;String&gt; queryRaw(@Nonnull final String query, @Nonnull final String organizationId) {
 
 <span class="fc" id="L138">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
-<span class="fc" id="L139">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L139">        Arguments.checkNonEmpty(organizationId, &quot;organizationId&quot;);</span>
 
-<span class="fc" id="L141">        return queryRaw(Flowable.just(query), organization);</span>
+<span class="fc" id="L141">        return queryRaw(Flowable.just(query), organizationId);</span>
     }
 
     @Nonnull
     @Override
     public Flowable&lt;String&gt; queryRaw(@Nonnull final Publisher&lt;String&gt; queryStream,
-                                     @Nonnull final String organization) {
+                                     @Nonnull final String organizationId) {
 
 <span class="fc" id="L149">        Arguments.checkNotNull(queryStream, &quot;queryStream&quot;);</span>
-<span class="fc" id="L150">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L150">        Arguments.checkNonEmpty(organizationId, &quot;organizationId&quot;);</span>
 
-<span class="fc" id="L152">        return queryRaw(queryStream, DEFAULT_DIALECT.toString(), organization);</span>
+<span class="fc" id="L152">        return queryRaw(queryStream, DEFAULT_DIALECT.toString(), organizationId);</span>
     }
 
     @Nonnull
     @Override
     public Flowable&lt;String&gt; queryRaw(@Nonnull final String query,
                                      @Nullable final String dialect,
-                                     @Nonnull final String organization) {
+                                     @Nonnull final String organizationId) {
 
 <span class="fc" id="L161">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
-<span class="fc" id="L162">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L162">        Arguments.checkNonEmpty(organizationId, &quot;organizationId&quot;);</span>
 
-<span class="fc" id="L164">        return queryRaw(Flowable.just(query), dialect, organization);</span>
+<span class="fc" id="L164">        return queryRaw(Flowable.just(query), dialect, organizationId);</span>
     }
 
     @Nonnull
     @Override
     public Flowable&lt;String&gt; queryRaw(@Nonnull final Publisher&lt;String&gt; queryStream,
                                      @Nullable final String dialect,
-                                     @Nonnull final String organization) {
+                                     @Nonnull final String organizationId) {
 
 <span class="fc" id="L173">        Arguments.checkNotNull(queryStream, &quot;queryStream&quot;);</span>
-<span class="fc" id="L174">        Arguments.checkNonEmpty(organization, &quot;organization&quot;);</span>
+<span class="fc" id="L174">        Arguments.checkNonEmpty(organizationId, &quot;organizationId&quot;);</span>
 
 <span class="fc" id="L176">        return Flowable</span>
 <span class="fc" id="L177">                .fromPublisher(queryStream)</span>
-<span class="fc" id="L178">                .map(it -&gt; platformService.query(organization, createBody(dialect, it)))</span>
+<span class="fc" id="L178">                .map(it -&gt; platformService.query(organizationId, createBody(dialect, it)))</span>
 <span class="fc" id="L179">                .flatMap(queryCall -&gt; {</span>
 
 <span class="fc" id="L181">                    Observable&lt;String&gt; observable = Observable.create(subscriber -&gt; {</span>

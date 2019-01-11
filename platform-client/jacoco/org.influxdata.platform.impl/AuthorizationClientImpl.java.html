@@ -102,7 +102,7 @@ final class AuthorizationClientImpl extends AbstractRestClient implements Author
     @Nonnull
     @Override
     public List&lt;Authorization&gt; findAuthorizations() {
-<span class="fc" id="L105">        return findAuthorizationsByUserID(null);</span>
+<span class="nc" id="L105">        return findAuthorizationsByUserID(null);</span>
     }
 
     @Nullable
@@ -120,21 +120,21 @@ final class AuthorizationClientImpl extends AbstractRestClient implements Author
     @Override
     public List&lt;Authorization&gt; findAuthorizationsByUser(@Nonnull final User user) {
 
-<span class="fc" id="L123">        Arguments.checkNotNull(user, &quot;User is required&quot;);</span>
+<span class="nc" id="L123">        Arguments.checkNotNull(user, &quot;User is required&quot;);</span>
 
-<span class="fc" id="L125">        return findAuthorizations(user.getId(), null);</span>
+<span class="nc" id="L125">        return findAuthorizations(user.getId(), null);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Authorization&gt; findAuthorizationsByUserID(@Nullable final String userID) {
-<span class="fc" id="L131">        return findAuthorizations(userID, null);</span>
+<span class="nc" id="L131">        return findAuthorizations(userID, null);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Authorization&gt; findAuthorizationsByUserName(@Nullable final String userName) {
-<span class="fc" id="L137">        return findAuthorizations(null, userName);</span>
+<span class="nc" id="L137">        return findAuthorizations(null, userName);</span>
     }
 
     @Nonnull
@@ -171,12 +171,12 @@ final class AuthorizationClientImpl extends AbstractRestClient implements Author
     @Nonnull
     private List&lt;Authorization&gt; findAuthorizations(@Nullable final String userID, @Nullable final String userName) {
 
-<span class="fc" id="L174">        Call&lt;Authorizations&gt; authorizationsCall = platformService.findAuthorizations(userID, userName);</span>
+<span class="nc" id="L174">        Call&lt;Authorizations&gt; authorizationsCall = platformService.findAuthorizations(userID, userName);</span>
 
-<span class="fc" id="L176">        Authorizations authorizations = execute(authorizationsCall);</span>
-<span class="fc" id="L177">        LOG.log(Level.FINEST, &quot;findAuthorizations found: {0}&quot;, authorizations);</span>
+<span class="nc" id="L176">        Authorizations authorizations = execute(authorizationsCall);</span>
+<span class="nc" id="L177">        LOG.log(Level.FINEST, &quot;findAuthorizations found: {0}&quot;, authorizations);</span>
 
-<span class="fc" id="L179">        return authorizations.getAuthorizations();</span>
+<span class="nc" id="L179">        return authorizations.getAuthorizations();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
