@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -43,6 +45,8 @@ import retrofit2.Call;
  * @author Jakub Bednar (bednar@github) (17/10/2018 10:50)
  */
 final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
+
+    private static final Logger LOG = Logger.getLogger(QueryClientImpl.class.getName());
 
     private final PlatformService platformService;
 
@@ -349,18 +353,24 @@ final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
 
         Call<ResponseBody> queryCall = platformService.query(organizationId, createBody(dialect, query));
 
+        LOG.log(Level.FINEST, "Prepare query \"{0}\" with dialect \"{1}\" on organization \"{2}\".",
+                new Object[]{query, dialect, organizationId});
+
         query(queryCall, responseConsumer, onError, onComplete, asynchronously);
     }
 
     private void queryRaw(@Nonnull final String query,
                           @Nullable final String dialect,
-                          @Nonnull final String organization,
+                          @Nonnull final String organizationId,
                           @Nonnull final BiConsumer<Cancellable, String> onResponse,
                           @Nonnull final Consumer<? super Throwable> onError,
                           @Nonnull final Runnable onComplete,
                           @Nonnull final Boolean asynchronously) {
 
-        Call<ResponseBody> queryCall = platformService.query(organization, createBody(dialect, query));
+        Call<ResponseBody> queryCall = platformService.query(organizationId, createBody(dialect, query));
+
+        LOG.log(Level.FINEST, "Prepare raw query \"{0}\" with dialect \"{1}\" on organization \"{2}\".",
+                new String[]{query, dialect, organizationId});
 
         queryRaw(queryCall, onResponse, onError, onComplete, asynchronously);
     }

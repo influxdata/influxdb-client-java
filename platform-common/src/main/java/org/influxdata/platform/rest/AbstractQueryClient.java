@@ -24,6 +24,8 @@ package org.influxdata.platform.rest;
 import java.io.IOException;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -45,6 +47,8 @@ import retrofit2.Response;
  * @author Jakub Bednar (bednar@github) (17/10/2018 11:20)
  */
 public abstract class AbstractQueryClient extends AbstractRestClient {
+
+    private static final Logger LOG = Logger.getLogger(AbstractQueryClient.class.getName());
 
     protected final FluxCsvParser fluxCsvParser = new FluxCsvParser();
     protected final FluxResultMapper resultMapper = new FluxResultMapper();
@@ -175,6 +179,8 @@ public abstract class AbstractQueryClient extends AbstractRestClient {
                 onError.accept(throwable);
             }
         };
+
+        LOG.log(Level.FINEST, "Prepared query {0}, asynchronously {1}", new Object[]{query, asynchronously});
 
         if (asynchronously) {
             query.enqueue(callback);
