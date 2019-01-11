@@ -22,10 +22,8 @@
 package org.influxdata.platform;
 
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 
@@ -45,7 +43,6 @@ import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -179,7 +176,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
     void writeMeasurementWhichIsNotMappableToPoint() {
 
         writeClient = createWriteClient();
-        EventListener<WriteErrorEvent> listener = new EventListener<>();
+        WriteEventListener<WriteErrorEvent> listener = new WriteEventListener<>();
         writeClient.listenEvents(WriteErrorEvent.class, listener);
 
         writeClient.writeMeasurement("b1", "org1", ChronoUnit.SECONDS, 15);
@@ -249,7 +246,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         writeClient = createWriteClient();
 
-        EventListener<WriteErrorEvent> listener = new EventListener<>();
+        WriteEventListener<WriteErrorEvent> listener = new WriteEventListener<>();
         writeClient.listenEvents(WriteErrorEvent.class, listener);
 
         writeClient.writeRecords("b1", "org1", ChronoUnit.NANOS, Lists.emptyList());
@@ -478,7 +475,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         writeClient = createWriteClient(WriteOptions.builder().batchSize(1).build());
 
-        EventListener<WriteSuccessEvent> listener = new EventListener<>();
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS,
@@ -504,7 +501,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         writeClient = createWriteClient(WriteOptions.builder().batchSize(1).build());
 
-        EventListener<WriteSuccessEvent> listener = new EventListener<>();
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeClient.listenEvents(WriteSuccessEvent.class, listener).dispose();
 
         writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS,
@@ -523,7 +520,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
         mockServer.enqueue(createErrorResponse("Failed to find bucket"));
 
         writeClient = createWriteClient(WriteOptions.builder().batchSize(1).build());
-        EventListener<WriteErrorEvent> listener = new EventListener<>();
+        WriteEventListener<WriteErrorEvent> listener = new WriteEventListener<>();
         writeClient.listenEvents(WriteErrorEvent.class, listener);
 
         writeClient.writeRecord("b1", "org1", ChronoUnit.NANOS,
@@ -548,7 +545,7 @@ class WriteClientTest extends AbstractPlatformClientTest {
 
         writeClient = platformClient.createWriteClient(WriteOptions.builder().writeScheduler(new TestScheduler()).bufferLimit(100).build());
 
-        EventListener<BackpressureEvent> listener = new EventListener<>();
+        WriteEventListener<BackpressureEvent> listener = new WriteEventListener<>();
         writeClient.listenEvents(BackpressureEvent.class, listener);
 
         Flowable
@@ -583,61 +580,6 @@ class WriteClientTest extends AbstractPlatformClientTest {
         Assertions.assertThat(recordedRequest).isNotNull();
 
         return recordedRequest.getBody().readUtf8();
-    }
-
-    static class EventListener<T> implements org.influxdata.platform.write.event.EventListener<T> {
-
-        CountDownLatch countDownLatch;
-        List<T> values = new ArrayList<>();
-        List<InfluxException> errors = new ArrayList<>();
-
-        EventListener() {
-            this(1);
-        }
-
-        EventListener(final int count) {
-            countDownLatch = new CountDownLatch(count);
-        }
-
-        @Override
-        public void onEvent(@Nonnull final T value) {
-
-            Assertions.assertThat(value).isNotNull();
-
-            countDownLatch.countDown();
-
-            values.add(value);
-        }
-
-        T getValue() {
-            return values.get(0);
-        }
-
-        EventListener<T> awaitCount(@SuppressWarnings("SameParameterValue") final int count) {
-
-            long start = System.currentTimeMillis();
-            for (; ; ) {
-                if (System.currentTimeMillis() - start >= 5_000) {
-                    Assert.fail("Time elapsed");
-                    break;
-                }
-                if (values.size() >= count) {
-                    break;
-                }
-
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            return this;
-        }
-
-        void waitToCallback() {
-            AbstractTest.waitToCallback(countDownLatch, 10);
-        }
     }
 
 }

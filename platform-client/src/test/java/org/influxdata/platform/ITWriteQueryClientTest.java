@@ -119,7 +119,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
-        WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         platformClient.setLogLevel(LogLevel.BODY);
@@ -154,7 +154,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
-        WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         writeClient.writeRecord(bucketName, organization.getId(), ChronoUnit.MICROS, record);
@@ -176,7 +176,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
-        WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         writeClient.writeRecord(bucketName, organization.getId(), ChronoUnit.MILLIS, record);
@@ -198,7 +198,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
-        WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         writeClient.writeRecord(bucketName, organization.getId(), ChronoUnit.SECONDS, record);
@@ -217,7 +217,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         String bucketName = bucket.getName();
 
         writeClient = platformClient.createWriteClient();
-        WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         Instant time = Instant.now();
@@ -251,7 +251,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         String bucketName = bucket.getName();
 
         writeClient = platformClient.createWriteClient();
-        WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         long millis = Instant.now().toEpochMilli();
@@ -319,7 +319,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
                 .time(Instant.now(), ChronoUnit.MICROS);
 
         writeClient = platformClient.createWriteClient();
-        WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
         writeClient.writePoint(bucket.getName(), organization.getId(), point);
