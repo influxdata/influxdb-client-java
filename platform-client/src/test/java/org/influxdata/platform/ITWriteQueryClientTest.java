@@ -37,6 +37,7 @@ import org.influxdata.platform.domain.Permission;
 import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.option.WriteOptions;
+import org.influxdata.platform.rest.LogLevel;
 import org.influxdata.platform.write.Point;
 import org.influxdata.platform.write.event.WriteSuccessEvent;
 
@@ -116,6 +117,8 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         WriteClientTest.EventListener<WriteSuccessEvent> listener = new WriteClientTest.EventListener<>();
         writeClient.listenEvents(WriteSuccessEvent.class, listener);
+
+        platformClient.setLogLevel(LogLevel.BODY);
 
         writeClient.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, record);
 
