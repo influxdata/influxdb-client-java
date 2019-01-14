@@ -50,9 +50,9 @@ public class WriteEventListener<T> implements org.influxdata.platform.write.even
 
         Assertions.assertThat(value).isNotNull();
 
-        countDownLatch.countDown();
-
         values.add(value);
+
+        countDownLatch.countDown();
     }
 
     T getValue() {
