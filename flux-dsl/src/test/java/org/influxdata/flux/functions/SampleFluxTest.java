@@ -49,7 +49,7 @@ class SampleFluxTest {
                 .sample(10);
 
         String expected = "from(bucket:\"telegraf\") |> "
-                + "filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\")) |> "
+                + "filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\")) |> "
                 + "range(start: -1d) |> sample(n: 10)";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
@@ -64,7 +64,7 @@ class SampleFluxTest {
                 .sample(5, 1);
 
         String expected = "from(bucket:\"telegraf\") |> "
-                + "filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\")) |> "
+                + "filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\")) |> "
                 + "range(start: -1d) |> sample(n: 5, pos: 1)";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);

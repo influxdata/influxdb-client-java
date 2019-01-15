@@ -177,7 +177,7 @@ class ITFluxClientReactive extends AbstractITFluxClientReactive {
                 + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
                 + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" AND r[\"_field\"] == \"free\"))\n"
                 + "\t|> window(every: 10s)\n"
-                + "\t|> group(by: [\"region\"])";
+                + "\t|> group(columns: [\"region\"])";
 
         Flowable<FluxRecord> results = fluxClient.query(flux);
 
@@ -247,7 +247,7 @@ class ITFluxClientReactive extends AbstractITFluxClientReactive {
 
         String flux = FROM_FLUX_DATABASE + "\n"
                 + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
-                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"user_usage\"))\n";
+                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"user_usage\"))\n";
 
         Flowable<Free> frees = fluxClient.query(Flowable.just(flux), Free.class);
 

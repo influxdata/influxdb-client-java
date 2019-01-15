@@ -186,16 +186,7 @@ class ITFluxClient extends AbstractITFluxClient {
         Assertions.assertThatThrownBy(() -> fluxClient.query("from(bucket:\"telegraf\")"))
                 .isInstanceOf(InfluxException.class)
                 .hasMessageStartingWith("failed to create physical plan:")
-                .hasMessageEndingWith("Add a 'range' call to bound the query");
-    }
-
-    @Test
-    void errorWithStatusOK() {
-
-        Assertions.assertThatThrownBy(() -> fluxClient.query(FROM_FLUX_DATABASE))
-                .isInstanceOf(InfluxException.class)
-                .hasMessageStartingWith("failed to create physical plan:")
-                .hasMessageEndingWith("Add a 'range' call to bound the query");
+                .hasMessageEndingWith("results from \"telegraf\" must be bounded");
     }
 
     @Test

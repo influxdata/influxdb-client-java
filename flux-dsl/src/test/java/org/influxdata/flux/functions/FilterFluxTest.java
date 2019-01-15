@@ -53,7 +53,7 @@ class FilterFluxTest {
                 .range(-4L, -2L, ChronoUnit.HOURS)
                 .count();
 
-        String expected = "from(bucket:\"telegraf\") |> filter(fn: (r) => (r[\"t1\"]==\"val1\" AND r[\"t2\"]==\"val2\")) |> "
+        String expected = "from(bucket:\"telegraf\") |> filter(fn: (r) => (r[\"t1\"]==\"val1\" and r[\"t2\"]==\"val2\")) |> "
                 + "range(start:-4h, stop:-2h) |> count()";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
@@ -74,7 +74,7 @@ class FilterFluxTest {
                 .range(-4L, ChronoUnit.HOURS)
                 .count();
 
-        String expected = "from(bucket:\"telegraf\") |> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" AND r[\"_field\"] == \"usage_system\" AND r[\"service\"] == \"app-server\")) |> "
+        String expected = "from(bucket:\"telegraf\") |> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"usage_system\" and r[\"service\"] == \"app-server\")) |> "
                 + "range(start:-4h) |> count()";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
@@ -96,7 +96,7 @@ class FilterFluxTest {
                 .range(4L, 2L, ChronoUnit.HOURS)
                 .count();
 
-        String expected = "from(bucket:\"telegraf\") |> filter(fn: (r) => ((r[\"t1\"]==\"val1\" AND r[\"t2\"]==\"val2\") OR r[\"t3\"]==\"val3\")) |> "
+        String expected = "from(bucket:\"telegraf\") |> filter(fn: (r) => ((r[\"t1\"]==\"val1\" and r[\"t2\"]==\"val2\") or r[\"t3\"]==\"val3\")) |> "
                 + "range(start:4h, stop:2h) |> count()";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
@@ -117,7 +117,7 @@ class FilterFluxTest {
                 .range(-4L, 2L, ChronoUnit.HOURS)
                 .count();
 
-        String expected = "from(bucket:\"telegraf\") |> filter(fn: (r) => (r[\"instance_type\"]==/prod/ AND r[\"_field\"] > 10.5 AND r[\"_time\"] <= -15h)) |> "
+        String expected = "from(bucket:\"telegraf\") |> filter(fn: (r) => (r[\"instance_type\"]==/prod/ and r[\"_field\"] > 10.5 and r[\"_time\"] <= -15h)) |> "
                 + "range(start:-4h, stop:2h) |> count()";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);

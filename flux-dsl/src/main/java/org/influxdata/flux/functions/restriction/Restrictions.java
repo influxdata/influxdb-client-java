@@ -35,12 +35,12 @@ public abstract class Restrictions {
 
     @Nonnull
     public static Restrictions and(@Nonnull final Restrictions... restrictions) {
-        return new Logical("AND", restrictions);
+        return new Logical("and", restrictions);
     }
 
     @Nonnull
     public static Restrictions or(@Nonnull final Restrictions... restrictions) {
-        return new Logical("OR", restrictions);
+        return new Logical("or", restrictions);
     }
 
     /**
