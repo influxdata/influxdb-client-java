@@ -24,7 +24,7 @@ language: java
 
 jdk:
   - oraclejdk8
-  - oraclejdk11
+  - openjdk11
 
 sudo: required
 
@@ -38,7 +38,7 @@ services:
 
 env:
   matrix:
-    - INFLUXDB_VERSION=1.7 INFLUX_PLATFORM_VERSION=nightly
+    - INFLUXDB_VERSION=1.7 INFLUX_PLATFORM_VERSION=latest
 
 install: true
 

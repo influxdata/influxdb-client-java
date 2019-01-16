@@ -84,7 +84,6 @@ final class AuthorizationClientImpl extends AbstractRestClient implements Author
         authorization.setOrgID(orgID);
         authorization.setPermissions(permissions);
         authorization.setStatus(Status.ACTIVE);
-        authorization.setDescription("x");
 
         return createAuthorization(authorization);
     }

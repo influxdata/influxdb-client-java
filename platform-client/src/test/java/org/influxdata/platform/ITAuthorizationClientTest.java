@@ -119,6 +119,32 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
     }
 
     @Test
+    void authorizationDescription() {
+
+        PermissionResource resource = new PermissionResource();
+        resource.setOrgID(organization.getId());
+        resource.setType(PermissionResourceType.SOURCE);
+
+        Permission createSource = new Permission();
+        createSource.setResource(resource);
+        createSource.setAction(Permission.WRITE_ACTION);
+
+        List<Permission> permissions = new ArrayList<>();
+        permissions.add(createSource);
+
+        Authorization authorization = new Authorization();
+        authorization.setOrgID(organization.getId());
+        authorization.setPermissions(permissions);
+        authorization.setStatus(Status.ACTIVE);
+        authorization.setDescription("My description!");
+
+        Authorization created = authorizationClient.createAuthorization(authorization);
+
+        Assertions.assertThat(created).isNotNull();
+        Assertions.assertThat(created.getDescription()).isEqualTo("My description!");
+    }
+
+    @Test
     void createAuthorizationTask() {
 
         PermissionResource resource = new PermissionResource();
