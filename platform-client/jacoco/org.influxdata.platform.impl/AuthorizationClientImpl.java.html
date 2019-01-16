@@ -143,14 +143,14 @@ final class AuthorizationClientImpl extends AbstractRestClient implements Author
     @Override
     public Authorization updateAuthorization(@Nonnull final Authorization authorization) {
 
-<span class="nc" id="L146">        Arguments.checkNotNull(authorization, &quot;Authorization is required&quot;);</span>
+<span class="fc" id="L146">        Arguments.checkNotNull(authorization, &quot;Authorization is required&quot;);</span>
 
-<span class="nc" id="L148">        String json = adapter.toJson(authorization);</span>
+<span class="fc" id="L148">        String json = adapter.toJson(authorization);</span>
 
-<span class="nc" id="L150">        Call&lt;Authorization&gt; authorizationCall = platformService</span>
-<span class="nc" id="L151">                .updateAuthorization(authorization.getId(), createBody(json));</span>
+<span class="fc" id="L150">        Call&lt;Authorization&gt; authorizationCall = platformService</span>
+<span class="fc" id="L151">                .updateAuthorization(authorization.getId(), createBody(json));</span>
 
-<span class="nc" id="L153">        return execute(authorizationCall);</span>
+<span class="fc" id="L153">        return execute(authorizationCall);</span>
     }
 
     @Override
