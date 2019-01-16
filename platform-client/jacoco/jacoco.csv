@@ -32,7 +32,7 @@ The Platform Client,org.influxdata.platform.domain,Bucket,19,31,0,0,9,11,5,8,5,8
 The Platform Client,org.influxdata.platform.domain,Status,0,24,0,0,0,3,0,1,0,1
 The Platform Client,org.influxdata.platform.domain,User,0,57,0,0,0,11,0,6,0,6
 The Platform Client,org.influxdata.platform.domain,Organization,0,67,0,0,0,12,0,6,0,6
-The Platform Client,org.influxdata.platform.domain,Authorization,23,151,0,0,11,28,6,14,6,14
+The Platform Client,org.influxdata.platform.domain,Authorization,20,154,0,0,10,29,5,15,5,15
 The Platform Client,org.influxdata.platform.impl,AbstractPlatformClient.InstantAdapter,17,14,3,1,6,4,3,2,1,2
 The Platform Client,org.influxdata.platform.impl,PlatformClientImpl,25,113,0,0,6,21,2,16,2,16
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.BatchWriteDataPoint,0,16,0,0,0,5,0,2,0,2
@@ -55,7 +55,7 @@ The Platform Client,org.influxdata.platform.impl,BucketClientImpl,0,406,0,2,0,97
 The Platform Client,org.influxdata.platform.impl,QueryClientImpl,219,262,0,0,57,50,9,12,9,12
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.BatchWriteItem,0,18,0,0,0,6,0,1,0,1
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.BatchWriteDataMeasurement,2,25,1,1,1,6,1,2,0,2
-The Platform Client,org.influxdata.platform.impl,AuthorizationClientImpl,22,160,0,0,5,41,1,13,1,13
+The Platform Client,org.influxdata.platform.impl,AuthorizationClientImpl,22,157,0,0,5,40,1,13,1,13
 The Platform Client,org.influxdata.platform.impl,SourceClientImpl,139,28,0,0,31,9,10,2,10,2
 The Platform Client,org.influxdata.platform.impl,WriteClientImpl,0,189,0,6,0,48,0,16,0,13
 The Platform Client,org.influxdata.platform.write,Point,12,396,2,37,1,101,2,39,0,20
