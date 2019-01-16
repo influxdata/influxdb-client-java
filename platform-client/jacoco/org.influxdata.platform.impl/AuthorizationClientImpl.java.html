@@ -33,6 +33,7 @@ import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Authorizations;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
+import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.error.rest.NotFoundException;
 import org.influxdata.platform.rest.AbstractRestClient;
@@ -46,137 +47,139 @@ import retrofit2.Call;
  */
 final class AuthorizationClientImpl extends AbstractRestClient implements AuthorizationClient {
 
-<span class="fc" id="L49">    private static final Logger LOG = Logger.getLogger(AuthorizationClientImpl.class.getName());</span>
+<span class="fc" id="L50">    private static final Logger LOG = Logger.getLogger(AuthorizationClientImpl.class.getName());</span>
 
     private final PlatformService platformService;
     private final JsonAdapter&lt;Authorization&gt; adapter;
 
-<span class="fc" id="L54">    AuthorizationClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
+<span class="fc" id="L55">    AuthorizationClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
 
-<span class="fc" id="L56">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
-<span class="fc" id="L57">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
+<span class="fc" id="L57">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
+<span class="fc" id="L58">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
 
-<span class="fc" id="L59">        this.platformService = platformService;</span>
-<span class="fc" id="L60">        this.adapter = moshi.adapter(Authorization.class);</span>
-<span class="fc" id="L61">    }</span>
+<span class="fc" id="L60">        this.platformService = platformService;</span>
+<span class="fc" id="L61">        this.adapter = moshi.adapter(Authorization.class);</span>
+<span class="fc" id="L62">    }</span>
 
     @Nonnull
     @Override
     public Authorization createAuthorization(@Nonnull final Organization organization,
                                              @Nonnull final List&lt;Permission&gt; permissions) {
 
-<span class="fc" id="L68">        Arguments.checkNotNull(organization, &quot;Organization is required&quot;);</span>
-<span class="fc" id="L69">        Arguments.checkNotNull(permissions, &quot;Permissions are required&quot;);</span>
+<span class="fc" id="L69">        Arguments.checkNotNull(organization, &quot;Organization is required&quot;);</span>
+<span class="fc" id="L70">        Arguments.checkNotNull(permissions, &quot;Permissions are required&quot;);</span>
 
-<span class="fc" id="L71">        return createAuthorization(organization.getId(), permissions);</span>
+<span class="fc" id="L72">        return createAuthorization(organization.getId(), permissions);</span>
     }
 
     @Nonnull
     @Override
-    public Authorization createAuthorization(@Nonnull final String organizationID,
+    public Authorization createAuthorization(@Nonnull final String orgID,
                                              @Nonnull final List&lt;Permission&gt; permissions) {
 
-<span class="fc" id="L79">        Arguments.checkNonEmpty(organizationID, &quot;UserID&quot;);</span>
-<span class="fc" id="L80">        Arguments.checkNotNull(permissions, &quot;Permissions are required&quot;);</span>
+<span class="fc" id="L80">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L81">        Arguments.checkNotNull(permissions, &quot;Permissions are required&quot;);</span>
 
-<span class="fc" id="L82">        Authorization authorization = new Authorization();</span>
-<span class="fc" id="L83">        authorization.setOrgID(organizationID);</span>
-<span class="fc" id="L84">        authorization.setPermissions(permissions);</span>
+<span class="fc" id="L83">        Authorization authorization = new Authorization();</span>
+<span class="fc" id="L84">        authorization.setOrgID(orgID);</span>
+<span class="fc" id="L85">        authorization.setPermissions(permissions);</span>
+<span class="fc" id="L86">        authorization.setStatus(Status.ACTIVE);</span>
+<span class="fc" id="L87">        authorization.setDescription(&quot;x&quot;);</span>
 
-<span class="fc" id="L86">        return createAuthorization(authorization);</span>
+<span class="fc" id="L89">        return createAuthorization(authorization);</span>
     }
 
     @Nonnull
     @Override
     public Authorization createAuthorization(@Nonnull final Authorization authorization) {
 
-<span class="fc" id="L93">        Arguments.checkNotNull(authorization, &quot;Authorization is required&quot;);</span>
+<span class="fc" id="L96">        Arguments.checkNotNull(authorization, &quot;Authorization is required&quot;);</span>
 
-<span class="fc" id="L95">        String json = adapter.toJson(authorization);</span>
+<span class="fc" id="L98">        String json = adapter.toJson(authorization);</span>
 
-<span class="fc" id="L97">        Call&lt;Authorization&gt; call = platformService.createAuthorization(createBody(json));</span>
+<span class="fc" id="L100">        Call&lt;Authorization&gt; call = platformService.createAuthorization(createBody(json));</span>
 
-<span class="fc" id="L99">        return execute(call);</span>
+<span class="fc" id="L102">        return execute(call);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Authorization&gt; findAuthorizations() {
-<span class="nc" id="L105">        return findAuthorizationsByUserID(null);</span>
+<span class="fc" id="L108">        return findAuthorizationsByUserID(null);</span>
     }
 
     @Nullable
     @Override
     public Authorization findAuthorizationByID(@Nonnull final String authorizationID) {
 
-<span class="fc" id="L112">        Arguments.checkNonEmpty(authorizationID, &quot;authorizationID&quot;);</span>
+<span class="fc" id="L115">        Arguments.checkNonEmpty(authorizationID, &quot;authorizationID&quot;);</span>
 
-<span class="fc" id="L114">        Call&lt;Authorization&gt; call = platformService.findAuthorization(authorizationID);</span>
+<span class="fc" id="L117">        Call&lt;Authorization&gt; call = platformService.findAuthorization(authorizationID);</span>
 
-<span class="fc" id="L116">        return execute(call, NotFoundException.class);</span>
+<span class="fc" id="L119">        return execute(call, NotFoundException.class);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Authorization&gt; findAuthorizationsByUser(@Nonnull final User user) {
 
-<span class="nc" id="L123">        Arguments.checkNotNull(user, &quot;User is required&quot;);</span>
+<span class="fc" id="L126">        Arguments.checkNotNull(user, &quot;User is required&quot;);</span>
 
-<span class="nc" id="L125">        return findAuthorizations(user.getId(), null);</span>
+<span class="fc" id="L128">        return findAuthorizations(user.getId(), null);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Authorization&gt; findAuthorizationsByUserID(@Nullable final String userID) {
-<span class="nc" id="L131">        return findAuthorizations(userID, null);</span>
+<span class="fc" id="L134">        return findAuthorizations(userID, null);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Authorization&gt; findAuthorizationsByUserName(@Nullable final String userName) {
-<span class="nc" id="L137">        return findAuthorizations(null, userName);</span>
+<span class="fc" id="L140">        return findAuthorizations(null, userName);</span>
     }
 
     @Nonnull
     @Override
     public Authorization updateAuthorization(@Nonnull final Authorization authorization) {
 
-<span class="nc" id="L144">        Arguments.checkNotNull(authorization, &quot;Authorization is required&quot;);</span>
+<span class="nc" id="L147">        Arguments.checkNotNull(authorization, &quot;Authorization is required&quot;);</span>
 
-<span class="nc" id="L146">        String json = adapter.toJson(authorization);</span>
+<span class="nc" id="L149">        String json = adapter.toJson(authorization);</span>
 
-<span class="nc" id="L148">        Call&lt;Authorization&gt; authorizationCall = platformService</span>
-<span class="nc" id="L149">                .updateAuthorization(authorization.getId(), createBody(json));</span>
+<span class="nc" id="L151">        Call&lt;Authorization&gt; authorizationCall = platformService</span>
+<span class="nc" id="L152">                .updateAuthorization(authorization.getId(), createBody(json));</span>
 
-<span class="nc" id="L151">        return execute(authorizationCall);</span>
+<span class="nc" id="L154">        return execute(authorizationCall);</span>
     }
 
     @Override
     public void deleteAuthorization(@Nonnull final Authorization authorization) {
 
-<span class="fc" id="L157">        Arguments.checkNotNull(authorization, &quot;Authorization is required&quot;);</span>
+<span class="fc" id="L160">        Arguments.checkNotNull(authorization, &quot;Authorization is required&quot;);</span>
 
-<span class="fc" id="L159">        deleteAuthorization(authorization.getId());</span>
-<span class="fc" id="L160">    }</span>
+<span class="fc" id="L162">        deleteAuthorization(authorization.getId());</span>
+<span class="fc" id="L163">    }</span>
 
     @Override
     public void deleteAuthorization(@Nonnull final String authorizationID) {
 
-<span class="fc" id="L165">        Arguments.checkNonEmpty(authorizationID, &quot;authorizationID&quot;);</span>
+<span class="fc" id="L168">        Arguments.checkNonEmpty(authorizationID, &quot;authorizationID&quot;);</span>
 
-<span class="fc" id="L167">        Call&lt;Void&gt; call = platformService.deleteAuthorization(authorizationID);</span>
-<span class="fc" id="L168">        execute(call);</span>
-<span class="fc" id="L169">    }</span>
+<span class="fc" id="L170">        Call&lt;Void&gt; call = platformService.deleteAuthorization(authorizationID);</span>
+<span class="fc" id="L171">        execute(call);</span>
+<span class="fc" id="L172">    }</span>
 
     @Nonnull
     private List&lt;Authorization&gt; findAuthorizations(@Nullable final String userID, @Nullable final String userName) {
 
-<span class="nc" id="L174">        Call&lt;Authorizations&gt; authorizationsCall = platformService.findAuthorizations(userID, userName);</span>
+<span class="fc" id="L177">        Call&lt;Authorizations&gt; authorizationsCall = platformService.findAuthorizations(userID, userName);</span>
 
-<span class="nc" id="L176">        Authorizations authorizations = execute(authorizationsCall);</span>
-<span class="nc" id="L177">        LOG.log(Level.FINEST, &quot;findAuthorizations found: {0}&quot;, authorizations);</span>
+<span class="fc" id="L179">        Authorizations authorizations = execute(authorizationsCall);</span>
+<span class="fc" id="L180">        LOG.log(Level.FINEST, &quot;findAuthorizations found: {0}&quot;, authorizations);</span>
 
-<span class="nc" id="L179">        return authorizations.getAuthorizations();</span>
+<span class="fc" id="L182">        return authorizations.getAuthorizations();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

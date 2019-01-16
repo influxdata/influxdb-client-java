@@ -23,14 +23,12 @@ package org.influxdata.platform.domain;
 
 import java.util.StringJoiner;
 
-import com.squareup.moshi.Json;
-
 /**
  * Task is a task.
  *
  * @author Jakub Bednar (bednar@github) (05/09/2018 08:09)
  */
-<span class="fc" id="L33">public final class Task extends AbstractHasLinks {</span>
+<span class="fc" id="L31">public final class Task extends AbstractHasLinks {</span>
 
     private String id;
 
@@ -47,8 +45,7 @@ import com.squareup.moshi.Json;
     /**
      * The ID of the organization that owns this Task.
      */
-    @Json(name = &quot;organizationID&quot;)
-    private String organizationId;
+    private String orgID;
 
     /**
      * The current status of the task. When updated to 'disabled', cancels all queued jobs of this task.
@@ -76,90 +73,90 @@ import com.squareup.moshi.Json;
     private String offset;
 
     public String getId() {
-<span class="fc" id="L79">        return id;</span>
+<span class="fc" id="L76">        return id;</span>
     }
 
     public void setId(final String id) {
-<span class="nc" id="L83">        this.id = id;</span>
-<span class="nc" id="L84">    }</span>
+<span class="nc" id="L80">        this.id = id;</span>
+<span class="nc" id="L81">    }</span>
 
     public String getName() {
-<span class="fc" id="L87">        return name;</span>
+<span class="fc" id="L84">        return name;</span>
     }
 
     public void setName(final String name) {
-<span class="fc" id="L91">        this.name = name;</span>
-<span class="fc" id="L92">    }</span>
+<span class="fc" id="L88">        this.name = name;</span>
+<span class="fc" id="L89">    }</span>
 
     public User getOwner() {
-<span class="fc" id="L95">        return owner;</span>
+<span class="fc" id="L92">        return owner;</span>
     }
 
     public void setOwner(final User owner) {
-<span class="fc" id="L99">        this.owner = owner;</span>
-<span class="fc" id="L100">    }</span>
+<span class="fc" id="L96">        this.owner = owner;</span>
+<span class="fc" id="L97">    }</span>
 
-    public String getOrganizationId() {
-<span class="fc" id="L103">        return organizationId;</span>
+    public String getOrgID() {
+<span class="fc" id="L100">        return orgID;</span>
     }
 
-    public void setOrganizationId(final String organizationId) {
-<span class="fc" id="L107">        this.organizationId = organizationId;</span>
-<span class="fc" id="L108">    }</span>
+    public void setOrgID(final String orgID) {
+<span class="fc" id="L104">        this.orgID = orgID;</span>
+<span class="fc" id="L105">    }</span>
 
     public Status getStatus() {
-<span class="fc" id="L111">        return status;</span>
+<span class="fc" id="L108">        return status;</span>
     }
 
     public void setStatus(final Status status) {
-<span class="fc" id="L115">        this.status = status;</span>
-<span class="fc" id="L116">    }</span>
+<span class="fc" id="L112">        this.status = status;</span>
+<span class="fc" id="L113">    }</span>
 
     public String getFlux() {
-<span class="fc" id="L119">        return flux;</span>
+<span class="fc" id="L116">        return flux;</span>
     }
 
     public void setFlux(final String flux) {
-<span class="fc" id="L123">        this.flux = flux;</span>
-<span class="fc" id="L124">    }</span>
+<span class="fc" id="L120">        this.flux = flux;</span>
+<span class="fc" id="L121">    }</span>
 
     public String getEvery() {
-<span class="fc" id="L127">        return every;</span>
+<span class="fc" id="L124">        return every;</span>
     }
 
     public void setEvery(final String every) {
-<span class="fc" id="L131">        this.every = every;</span>
-<span class="fc" id="L132">    }</span>
+<span class="fc" id="L128">        this.every = every;</span>
+<span class="fc" id="L129">    }</span>
 
     public String getCron() {
-<span class="fc" id="L135">        return cron;</span>
+<span class="fc" id="L132">        return cron;</span>
     }
 
     public void setCron(final String cron) {
-<span class="fc" id="L139">        this.cron = cron;</span>
-<span class="fc" id="L140">    }</span>
+<span class="fc" id="L136">        this.cron = cron;</span>
+<span class="fc" id="L137">    }</span>
 
     public String getOffset() {
-<span class="fc" id="L143">        return offset;</span>
+<span class="fc" id="L140">        return offset;</span>
     }
 
     public void setOffset(final String offset) {
-<span class="fc" id="L147">        this.offset = offset;</span>
-<span class="fc" id="L148">    }</span>
+<span class="fc" id="L144">        this.offset = offset;</span>
+<span class="fc" id="L145">    }</span>
 
     @Override
     public String toString() {
-<span class="fc" id="L152">        return new StringJoiner(&quot;, &quot;, Task.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
-<span class="fc" id="L153">                .add(&quot;id='&quot; + id + &quot;'&quot;)</span>
-<span class="fc" id="L154">                .add(&quot;name='&quot; + name + &quot;'&quot;)</span>
-<span class="fc" id="L155">                .add(&quot;owner=&quot; + owner)</span>
-<span class="fc" id="L156">                .add(&quot;organizationId='&quot; + organizationId + &quot;'&quot;)</span>
-<span class="fc" id="L157">                .add(&quot;status=&quot; + status)</span>
-<span class="fc" id="L158">                .add(&quot;flux='&quot; + flux + &quot;'&quot;)</span>
-<span class="fc" id="L159">                .add(&quot;every='&quot; + every + &quot;'&quot;)</span>
-<span class="fc" id="L160">                .add(&quot;cron='&quot; + cron + &quot;'&quot;)</span>
-<span class="fc" id="L161">                .add(&quot;offset='&quot; + offset + &quot;'&quot;)</span>
-<span class="fc" id="L162">                .toString();</span>
+<span class="fc" id="L149">        return new StringJoiner(&quot;, &quot;, Task.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
+<span class="fc" id="L150">                .add(&quot;id='&quot; + id + &quot;'&quot;)</span>
+<span class="fc" id="L151">                .add(&quot;name='&quot; + name + &quot;'&quot;)</span>
+<span class="fc" id="L152">                .add(&quot;owner=&quot; + owner)</span>
+<span class="fc" id="L153">                .add(&quot;orgID='&quot; + orgID + &quot;'&quot;)</span>
+<span class="fc" id="L154">                .add(&quot;status=&quot; + status)</span>
+<span class="fc" id="L155">                .add(&quot;flux='&quot; + flux + &quot;'&quot;)</span>
+<span class="fc" id="L156">                .add(&quot;every='&quot; + every + &quot;'&quot;)</span>
+<span class="fc" id="L157">                .add(&quot;cron='&quot; + cron + &quot;'&quot;)</span>
+<span class="fc" id="L158">                .add(&quot;offset='&quot; + offset + &quot;'&quot;)</span>
+<span class="fc" id="L159">                .toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

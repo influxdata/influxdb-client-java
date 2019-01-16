@@ -158,21 +158,23 @@ public class InfluxException extends RuntimeException {
             }
 
 <span class="fc" id="L160">            String value = Stream.of(&quot;X-Platform-Error-Code&quot;, &quot;X-Influx-Error&quot;, &quot;X-InfluxDb-Error&quot;)</span>
-<span class="fc" id="L161">                    .map(name -&gt; response.headers().get(name))</span>
-<span class="fc bfc" id="L162" title="All 4 branches covered.">                    .filter(message -&gt; message != null &amp;&amp; !message.isEmpty()).findFirst()</span>
-<span class="fc" id="L163">                    .orElse(null);</span>
+<span class="fc" id="L161">                    .map(name -&gt; {</span>
+<span class="fc" id="L162">                        return response.headers().get(name);</span>
+                    })
+<span class="fc bfc" id="L164" title="All 4 branches covered.">                    .filter(message -&gt; message != null &amp;&amp; !message.isEmpty()).findFirst()</span>
+<span class="fc" id="L165">                    .orElse(null);</span>
 
-<span class="fc bfc" id="L165" title="All 2 branches covered.">            if (value != null) {</span>
-<span class="fc" id="L166">                return value;</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">            if (value != null) {</span>
+<span class="fc" id="L168">                return value;</span>
             }
         }
 
-<span class="fc" id="L170">        Throwable cause = getCause();</span>
-<span class="fc bfc" id="L171" title="All 2 branches covered.">        if (cause != null) {</span>
-<span class="fc" id="L172">            return cause.getMessage();</span>
+<span class="fc" id="L172">        Throwable cause = getCause();</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">        if (cause != null) {</span>
+<span class="fc" id="L174">            return cause.getMessage();</span>
         }
 
-<span class="fc" id="L175">        return null;</span>
+<span class="fc" id="L177">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

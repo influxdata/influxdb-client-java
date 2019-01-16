@@ -71,11 +71,11 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nullable
     @Override
-    public Organization findOrganizationByID(@Nonnull final String organizationID) {
+    public Organization findOrganizationByID(@Nonnull final String orgID) {
 
-<span class="fc" id="L76">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L76">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
 
-<span class="fc" id="L78">        Call&lt;Organization&gt; organization = platformService.findOrganizationByID(organizationID);</span>
+<span class="fc" id="L78">        Call&lt;Organization&gt; organization = platformService.findOrganizationByID(orgID);</span>
 
 <span class="fc" id="L80">        return execute(organization, NotFoundException.class);</span>
     }
@@ -139,11 +139,11 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 <span class="fc" id="L139">    }</span>
 
     @Override
-    public void deleteOrganization(@Nonnull final String organizationID) {
+    public void deleteOrganization(@Nonnull final String orgID) {
 
-<span class="fc" id="L144">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L144">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
 
-<span class="fc" id="L146">        Call&lt;Void&gt; call = platformService.deleteOrganization(organizationID);</span>
+<span class="fc" id="L146">        Call&lt;Void&gt; call = platformService.deleteOrganization(orgID);</span>
 <span class="fc" id="L147">        execute(call);</span>
 <span class="fc" id="L148">    }</span>
 
@@ -156,11 +156,11 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
     }
 
     @Override
-    public List&lt;String&gt; getSecrets(@Nonnull final String organizationID) {
+    public List&lt;String&gt; getSecrets(@Nonnull final String orgID) {
 
-<span class="fc" id="L161">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L161">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
 
-<span class="fc" id="L163">        Call&lt;Secrets&gt; call = platformService.getSecrets(organizationID);</span>
+<span class="fc" id="L163">        Call&lt;Secrets&gt; call = platformService.getSecrets(orgID);</span>
 
 <span class="fc" id="L165">        Secrets secrets = execute(call);</span>
 <span class="fc" id="L166">        LOG.log(Level.FINEST, &quot;getSecrets found: {0}&quot;, secrets);</span>
@@ -177,12 +177,12 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 <span class="fc" id="L177">    }</span>
 
     @Override
-    public void putSecrets(@Nonnull final Map&lt;String, String&gt; secrets, @Nonnull final String organizationID) {
+    public void putSecrets(@Nonnull final Map&lt;String, String&gt; secrets, @Nonnull final String orgID) {
 
-<span class="fc" id="L182">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L182">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
 <span class="fc" id="L183">        Arguments.checkNotNull(secrets, &quot;secrets&quot;);</span>
 
-<span class="fc" id="L185">        Call&lt;Void&gt; call = platformService.putSecrets(organizationID, createBody(mapAdapter.toJson(secrets)));</span>
+<span class="fc" id="L185">        Call&lt;Void&gt; call = platformService.putSecrets(orgID, createBody(mapAdapter.toJson(secrets)));</span>
 <span class="fc" id="L186">        execute(call);</span>
 <span class="fc" id="L187">    }</span>
 
@@ -196,12 +196,12 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 <span class="fc" id="L196">    }</span>
 
     @Override
-    public void deleteSecrets(@Nonnull final List&lt;String&gt; secrets, @Nonnull final String organizationID) {
+    public void deleteSecrets(@Nonnull final List&lt;String&gt; secrets, @Nonnull final String orgID) {
 
-<span class="fc" id="L201">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L201">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
 <span class="fc" id="L202">        Arguments.checkNotNull(secrets, &quot;secrets&quot;);</span>
 
-<span class="fc" id="L204">        Call&lt;Void&gt; call = platformService.deleteSecrets(organizationID, createBody(listAdapter.toJson(secrets)));</span>
+<span class="fc" id="L204">        Call&lt;Void&gt; call = platformService.deleteSecrets(orgID, createBody(listAdapter.toJson(secrets)));</span>
 <span class="fc" id="L205">        execute(call);</span>
 <span class="fc" id="L206">    }</span>
 
@@ -216,11 +216,11 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nonnull
     @Override
-    public List&lt;ResourceMember&gt; getMembers(@Nonnull final String organizationID) {
+    public List&lt;ResourceMember&gt; getMembers(@Nonnull final String orgID) {
 
-<span class="fc" id="L221">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L221">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
 
-<span class="fc" id="L223">        Call&lt;ResourceMembers&gt; call = platformService.findOrganizationMembers(organizationID);</span>
+<span class="fc" id="L223">        Call&lt;ResourceMembers&gt; call = platformService.findOrganizationMembers(orgID);</span>
 <span class="fc" id="L224">        ResourceMembers resourceMembers = execute(call);</span>
 <span class="fc" id="L225">        LOG.log(Level.FINEST, &quot;findOrganizationMembers found: {0}&quot;, resourceMembers);</span>
 
@@ -239,16 +239,16 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nonnull
     @Override
-    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String organizationID) {
+    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String orgID) {
 
 <span class="fc" id="L244">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
-<span class="fc" id="L245">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L245">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
 
 <span class="fc" id="L247">        User user = new User();</span>
 <span class="fc" id="L248">        user.setId(memberID);</span>
 
 <span class="fc" id="L250">        String json = userAdapter.toJson(user);</span>
-<span class="fc" id="L251">        Call&lt;ResourceMember&gt; call = platformService.addOrganizationMember(organizationID, createBody(json));</span>
+<span class="fc" id="L251">        Call&lt;ResourceMember&gt; call = platformService.addOrganizationMember(orgID, createBody(json));</span>
 
 <span class="fc" id="L253">        return execute(call);</span>
     }
@@ -263,12 +263,12 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 <span class="fc" id="L263">    }</span>
 
     @Override
-    public void deleteMember(@Nonnull final String memberID, @Nonnull final String organizationID) {
+    public void deleteMember(@Nonnull final String memberID, @Nonnull final String orgID) {
 
 <span class="fc" id="L268">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
-<span class="fc" id="L269">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L269">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
 
-<span class="fc" id="L271">        Call&lt;Void&gt; call = platformService.deleteOrganizationMember(organizationID, memberID);</span>
+<span class="fc" id="L271">        Call&lt;Void&gt; call = platformService.deleteOrganizationMember(orgID, memberID);</span>
 <span class="fc" id="L272">        execute(call);</span>
 <span class="fc" id="L273">    }</span>
 
@@ -283,11 +283,11 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nonnull
     @Override
-    public List&lt;ResourceMember&gt; getOwners(@Nonnull final String organizationID) {
+    public List&lt;ResourceMember&gt; getOwners(@Nonnull final String orgID) {
 
-<span class="fc" id="L288">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L288">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
 
-<span class="fc" id="L290">        Call&lt;ResourceMembers&gt; call = platformService.findOrganizationOwners(organizationID);</span>
+<span class="fc" id="L290">        Call&lt;ResourceMembers&gt; call = platformService.findOrganizationOwners(orgID);</span>
 <span class="fc" id="L291">        ResourceMembers resourceMembers = execute(call);</span>
 <span class="fc" id="L292">        LOG.log(Level.FINEST, &quot;findOrganizationOwners found: {0}&quot;, resourceMembers);</span>
 
@@ -306,16 +306,16 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nonnull
     @Override
-    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String organizationID) {
+    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String orgID) {
 
 <span class="fc" id="L311">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="fc" id="L312">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L312">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
 
 <span class="fc" id="L314">        User user = new User();</span>
 <span class="fc" id="L315">        user.setId(ownerID);</span>
 
 <span class="fc" id="L317">        String json = userAdapter.toJson(user);</span>
-<span class="fc" id="L318">        Call&lt;ResourceMember&gt; call = platformService.addOrganizationOwner(organizationID, createBody(json));</span>
+<span class="fc" id="L318">        Call&lt;ResourceMember&gt; call = platformService.addOrganizationOwner(orgID, createBody(json));</span>
 
 <span class="fc" id="L320">        return execute(call);</span>
     }
@@ -329,12 +329,12 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 <span class="fc" id="L329">    }</span>
 
     @Override
-    public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String organizationID) {
+    public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String orgID) {
 
 <span class="fc" id="L334">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="fc" id="L335">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L335">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
 
-<span class="fc" id="L337">        Call&lt;Void&gt; call = platformService.deleteOrganizationOwner(organizationID, ownerID);</span>
+<span class="fc" id="L337">        Call&lt;Void&gt; call = platformService.deleteOrganizationOwner(orgID, ownerID);</span>
 <span class="fc" id="L338">        execute(call);</span>
 <span class="fc" id="L339">    }</span>
 }

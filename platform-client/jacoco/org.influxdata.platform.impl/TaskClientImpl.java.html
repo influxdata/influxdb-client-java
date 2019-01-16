@@ -110,17 +110,17 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
     @Nonnull
     @Override
-    public List&lt;Task&gt; findTasksByOrganizationID(@Nullable final String organizationID) {
-<span class="fc" id="L114">        return findTasks(null, null, organizationID);</span>
+    public List&lt;Task&gt; findTasksByOrganizationID(@Nullable final String orgID) {
+<span class="fc" id="L114">        return findTasks(null, null, orgID);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Task&gt; findTasks(@Nullable final String afterID,
                                 @Nullable final String userID,
-                                @Nullable final String organizationID) {
+                                @Nullable final String orgID) {
 
-<span class="fc" id="L123">        Call&lt;Tasks&gt; call = platformService.findTasks(afterID, userID, organizationID);</span>
+<span class="fc" id="L123">        Call&lt;Tasks&gt; call = platformService.findTasks(afterID, userID, orgID);</span>
 
 <span class="fc" id="L125">        Tasks tasks = execute(call);</span>
 <span class="fc" id="L126">        LOG.log(Level.FINEST, &quot;findTasks found: {0}&quot;, tasks);</span>
@@ -164,19 +164,19 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                                @Nonnull final String flux,
                                @Nonnull final String cron,
                                @Nonnull final String userID,
-                               @Nonnull final String organizationID) {
+                               @Nonnull final String orgID) {
 
 <span class="fc" id="L169">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
 <span class="fc" id="L170">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
 <span class="fc" id="L171">        Arguments.checkNonEmpty(cron, &quot;cron expression&quot;);</span>
 <span class="fc" id="L172">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
-<span class="fc" id="L173">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L173">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
 
 <span class="fc" id="L175">        User owner = new User();</span>
 <span class="fc" id="L176">        owner.setId(userID);</span>
 
 <span class="fc" id="L178">        Organization organization = new Organization();</span>
-<span class="fc" id="L179">        organization.setId(organizationID);</span>
+<span class="fc" id="L179">        organization.setId(orgID);</span>
 
 <span class="fc" id="L181">        return createTaskCron(name, flux, cron, owner, organization);</span>
     }
@@ -206,19 +206,19 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                                 @Nonnull final String flux,
                                 @Nonnull final String every,
                                 @Nonnull final String userID,
-                                @Nonnull final String organizationID) {
+                                @Nonnull final String orgID) {
 
 <span class="fc" id="L211">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
 <span class="fc" id="L212">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
 <span class="fc" id="L213">        Arguments.checkNonEmpty(every, &quot;every expression&quot;);</span>
 <span class="fc" id="L214">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
-<span class="fc" id="L215">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L215">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
 
 <span class="fc" id="L217">        User owner = new User();</span>
 <span class="fc" id="L218">        owner.setId(userID);</span>
 
 <span class="fc" id="L220">        Organization organization = new Organization();</span>
-<span class="fc" id="L221">        organization.setId(organizationID);</span>
+<span class="fc" id="L221">        organization.setId(orgID);</span>
 
 <span class="fc" id="L223">        return createTaskEvery(name, flux, every, owner, organization);</span>
     }
@@ -407,7 +407,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
 <span class="fc" id="L408">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="fc" id="L410">        return getRuns(task.getId(), task.getOrganizationId(), afterTime, beforeTime, limit);</span>
+<span class="fc" id="L410">        return getRuns(task.getId(), task.getOrgID(), afterTime, beforeTime, limit);</span>
     }
 
     @Nonnull
@@ -527,7 +527,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
 <span class="fc" id="L528">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="fc" id="L530">        return getLogs(task.getId(), task.getOrganizationId());</span>
+<span class="fc" id="L530">        return getLogs(task.getId(), task.getOrgID());</span>
     }
 
     @Nonnull
@@ -548,17 +548,17 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                             @Nullable final String every,
                             @Nullable final String cron,
                             @Nonnull final User owner,
-                            @Nonnull final String organizationID) {
+                            @Nonnull final String orgID) {
 
 <span class="fc" id="L553">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
 <span class="fc" id="L554">        Arguments.checkNotNull(flux, &quot;Flux script to run&quot;);</span>
 <span class="fc" id="L555">        Arguments.checkNotNull(owner, &quot;User&quot;);</span>
-<span class="fc" id="L556">        Arguments.checkNonEmpty(organizationID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L556">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
 <span class="fc" id="L557">        Arguments.checkDurationNotRequired(every, &quot;Task.every&quot;);</span>
 
 <span class="fc" id="L559">        Task task = new Task();</span>
 <span class="fc" id="L560">        task.setName(name);</span>
-<span class="fc" id="L561">        task.setOrganizationId(organizationID);</span>
+<span class="fc" id="L561">        task.setOrgID(orgID);</span>
 <span class="fc" id="L562">        task.setOwner(owner);</span>
 <span class="fc" id="L563">        task.setStatus(Status.ACTIVE);</span>
 <span class="fc" id="L564">        task.setEvery(every);</span>

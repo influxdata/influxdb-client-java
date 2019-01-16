@@ -58,128 +58,128 @@ public class WriteClientReactiveImpl extends AbstractWriteClient implements Writ
 
     @Override
     public void writeRecord(@Nonnull final String bucket,
-                            @Nonnull final String organizationId,
+                            @Nonnull final String orgID,
                             @Nonnull final ChronoUnit precision,
                             @Nonnull final Maybe&lt;String&gt; record) {
 
 <span class="fc" id="L65">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L66">        Arguments.checkNonEmpty(organizationId, &quot;organization&quot;);</span>
+<span class="fc" id="L66">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
 <span class="fc" id="L67">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
 <span class="fc" id="L68">        Arguments.checkNotNull(record, &quot;record&quot;);</span>
 
-<span class="fc" id="L70">        writeRecords(bucket, organizationId, precision, record.toFlowable());</span>
+<span class="fc" id="L70">        writeRecords(bucket, orgID, precision, record.toFlowable());</span>
 <span class="fc" id="L71">    }</span>
 
     @Override
     public void writeRecords(@Nonnull final String bucket,
-                             @Nonnull final String organizationId,
+                             @Nonnull final String orgID,
                              @Nonnull final ChronoUnit precision,
                              @Nonnull final Flowable&lt;String&gt; records) {
 
 <span class="fc" id="L79">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L80">        Arguments.checkNonEmpty(organizationId, &quot;organization&quot;);</span>
+<span class="fc" id="L80">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
 <span class="fc" id="L81">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
 <span class="fc" id="L82">        Arguments.checkNotNull(records, &quot;records&quot;);</span>
 
 <span class="fc" id="L84">        Flowable&lt;BatchWriteData&gt; stream = records.map(BatchWriteDataRecord::new);</span>
 
-<span class="fc" id="L86">        write(bucket, organizationId, precision, stream);</span>
+<span class="fc" id="L86">        write(bucket, orgID, precision, stream);</span>
 <span class="fc" id="L87">    }</span>
 
     @Override
     public void writeRecords(@Nonnull final String bucket,
-                             @Nonnull final String organizationId,
+                             @Nonnull final String orgID,
                              @Nonnull final ChronoUnit precision,
                              @Nonnull final Publisher&lt;String&gt; records) {
 
 <span class="fc" id="L95">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L96">        Arguments.checkNonEmpty(organizationId, &quot;organization&quot;);</span>
+<span class="fc" id="L96">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
 <span class="fc" id="L97">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
 <span class="fc" id="L98">        Arguments.checkNotNull(records, &quot;records&quot;);</span>
 
-<span class="fc" id="L100">        writeRecords(bucket, organizationId, precision, Flowable.fromPublisher(records));</span>
+<span class="fc" id="L100">        writeRecords(bucket, orgID, precision, Flowable.fromPublisher(records));</span>
 <span class="fc" id="L101">    }</span>
 
     @Override
     public void writePoint(@Nonnull final String bucket,
-                           @Nonnull final String organizationId,
+                           @Nonnull final String orgID,
                            @Nonnull final Maybe&lt;Point&gt; point) {
 
 <span class="fc" id="L108">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L109">        Arguments.checkNonEmpty(organizationId, &quot;organization&quot;);</span>
+<span class="fc" id="L109">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
 <span class="fc" id="L110">        Arguments.checkNotNull(point, &quot;point&quot;);</span>
 
-<span class="fc" id="L112">        writePoints(bucket, organizationId, point.toFlowable());</span>
+<span class="fc" id="L112">        writePoints(bucket, orgID, point.toFlowable());</span>
 <span class="fc" id="L113">    }</span>
 
     @Override
     public void writePoints(@Nonnull final String bucket,
-                            @Nonnull final String organizationId,
+                            @Nonnull final String orgID,
                             @Nonnull final Flowable&lt;Point&gt; points) {
 
 <span class="fc" id="L120">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L121">        Arguments.checkNonEmpty(organizationId, &quot;organization&quot;);</span>
+<span class="fc" id="L121">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
 <span class="fc" id="L122">        Arguments.checkNotNull(points, &quot;points&quot;);</span>
 
 <span class="fc" id="L124">        Flowable&lt;BatchWriteDataPoint&gt; stream = points.filter(Objects::nonNull).map(BatchWriteDataPoint::new);</span>
 
-<span class="fc" id="L126">        write(bucket, organizationId, stream);</span>
+<span class="fc" id="L126">        write(bucket, orgID, stream);</span>
 <span class="fc" id="L127">    }</span>
 
     @Override
     public void writePoints(@Nonnull final String bucket,
-                            @Nonnull final String organizationId,
+                            @Nonnull final String orgID,
                             @Nonnull final Publisher&lt;Point&gt; points) {
 
 <span class="fc" id="L134">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L135">        Arguments.checkNonEmpty(organizationId, &quot;organization&quot;);</span>
+<span class="fc" id="L135">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
 <span class="fc" id="L136">        Arguments.checkNotNull(points, &quot;points&quot;);</span>
 
-<span class="fc" id="L138">        writePoints(bucket, organizationId, Flowable.fromPublisher(points));</span>
+<span class="fc" id="L138">        writePoints(bucket, orgID, Flowable.fromPublisher(points));</span>
 <span class="fc" id="L139">    }</span>
 
     @Override
     public &lt;M&gt; void writeMeasurement(@Nonnull final String bucket,
-                                     @Nonnull final String organizationId,
+                                     @Nonnull final String orgID,
                                      @Nonnull final ChronoUnit precision,
                                      @Nonnull final Maybe&lt;M&gt; measurement) {
 
 <span class="fc" id="L147">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L148">        Arguments.checkNonEmpty(organizationId, &quot;organization&quot;);</span>
+<span class="fc" id="L148">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
 <span class="fc" id="L149">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
 <span class="fc" id="L150">        Arguments.checkNotNull(measurement, &quot;measurement&quot;);</span>
 
-<span class="fc" id="L152">        writeMeasurements(bucket, organizationId, precision, measurement.toFlowable());</span>
+<span class="fc" id="L152">        writeMeasurements(bucket, orgID, precision, measurement.toFlowable());</span>
 <span class="fc" id="L153">    }</span>
 
     @Override
     public &lt;M&gt; void writeMeasurements(@Nonnull final String bucket,
-                                      @Nonnull final String organizationId,
+                                      @Nonnull final String orgID,
                                       @Nonnull final ChronoUnit precision,
                                       @Nonnull final Flowable&lt;M&gt; measurements) {
 
 <span class="fc" id="L161">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L162">        Arguments.checkNonEmpty(organizationId, &quot;organization&quot;);</span>
+<span class="fc" id="L162">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
 <span class="fc" id="L163">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
 <span class="fc" id="L164">        Arguments.checkNotNull(measurements, &quot;measurements&quot;);</span>
 
 <span class="fc" id="L166">        Flowable&lt;BatchWriteData&gt; stream = measurements.map(it -&gt; new BatchWriteDataMeasurement(it, precision));</span>
 
-<span class="fc" id="L168">        write(bucket, organizationId, precision, stream);</span>
+<span class="fc" id="L168">        write(bucket, orgID, precision, stream);</span>
 <span class="fc" id="L169">    }</span>
 
     @Override
     public &lt;M&gt; void writeMeasurements(@Nonnull final String bucket,
-                                      @Nonnull final String organizationId,
+                                      @Nonnull final String orgID,
                                       @Nonnull final ChronoUnit precision,
                                       @Nonnull final Publisher&lt;M&gt; measurements) {
 
 <span class="fc" id="L177">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L178">        Arguments.checkNonEmpty(organizationId, &quot;organization&quot;);</span>
+<span class="fc" id="L178">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
 <span class="fc" id="L179">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
 <span class="fc" id="L180">        Arguments.checkNotNull(measurements, &quot;measurements&quot;);</span>
 
-<span class="fc" id="L182">        writeMeasurements(bucket, organizationId, precision, Flowable.fromPublisher(measurements));</span>
+<span class="fc" id="L182">        writeMeasurements(bucket, orgID, precision, Flowable.fromPublisher(measurements));</span>
 <span class="fc" id="L183">    }</span>
 
     @Nonnull

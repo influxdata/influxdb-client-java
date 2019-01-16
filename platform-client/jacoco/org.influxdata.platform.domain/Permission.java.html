@@ -21,15 +21,13 @@
  */
 package org.influxdata.platform.domain;
 
-import java.util.StringJoiner;
-
 
 /**
  * Permission defines an action and a resource.
  *
  * @author Jakub Bednar (bednar@github) (17/09/2018 09:48)
  */
-<span class="fc" id="L32">public final class Permission {</span>
+<span class="fc" id="L30">public final class Permission {</span>
 
     /**
      * Action for reading.
@@ -41,43 +39,24 @@ import java.util.StringJoiner;
      */
     public static final String WRITE_ACTION = &quot;write&quot;;
 
-    /**
-     * Resource ID.
-     */
-    private String id;
-    private PermissionResourceType resource;
     private String action;
 
-    public String getId() {
-<span class="fc" id="L52">        return id;</span>
-    }
-
-    public void setId(final String id) {
-<span class="fc" id="L56">        this.id = id;</span>
-<span class="fc" id="L57">    }</span>
-
-    public PermissionResourceType getResource() {
-<span class="fc" id="L60">        return resource;</span>
-    }
-
-    public void setResource(final PermissionResourceType resource) {
-<span class="fc" id="L64">        this.resource = resource;</span>
-<span class="fc" id="L65">    }</span>
+    private PermissionResource resource;
 
     public String getAction() {
-<span class="fc" id="L68">        return action;</span>
+<span class="fc" id="L47">        return action;</span>
     }
 
     public void setAction(final String action) {
-<span class="fc" id="L72">        this.action = action;</span>
-<span class="fc" id="L73">    }</span>
+<span class="fc" id="L51">        this.action = action;</span>
+<span class="fc" id="L52">    }</span>
 
-    @Override
-    public String toString() {
-<span class="fc" id="L77">        return new StringJoiner(&quot;, &quot;, Permission.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
-<span class="fc" id="L78">                .add(&quot;resource='&quot; + resource + &quot;'&quot;)</span>
-<span class="fc" id="L79">                .add(&quot;action='&quot; + action + &quot;'&quot;)</span>
-<span class="fc" id="L80">                .toString();</span>
+    public PermissionResource getResource() {
+<span class="fc" id="L55">        return resource;</span>
     }
+
+    public void setResource(final PermissionResource resource) {
+<span class="fc" id="L59">        this.resource = resource;</span>
+<span class="fc" id="L60">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

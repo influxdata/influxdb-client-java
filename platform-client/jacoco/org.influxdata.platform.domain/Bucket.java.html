@@ -36,7 +36,8 @@ import com.squareup.moshi.Json;
     private String id;
     private String name;
 
-    private String organizationID;
+    @Json(name = &quot;organizationID&quot;)
+    private String orgID;
 
     @Json(name = &quot;organization&quot;)
     private String organizationName;
@@ -50,54 +51,54 @@ import com.squareup.moshi.Json;
     /**
      * The retention rules.
      */
-<span class="fc" id="L53">    private List&lt;RetentionRule&gt; retentionRules = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L54">    private List&lt;RetentionRule&gt; retentionRules = new ArrayList&lt;&gt;();</span>
 
     public String getId() {
-<span class="fc" id="L56">        return id;</span>
+<span class="fc" id="L57">        return id;</span>
     }
 
     public void setId(final String id) {
-<span class="nc" id="L60">        this.id = id;</span>
-<span class="nc" id="L61">    }</span>
+<span class="nc" id="L61">        this.id = id;</span>
+<span class="nc" id="L62">    }</span>
 
     public String getName() {
-<span class="fc" id="L64">        return name;</span>
+<span class="fc" id="L65">        return name;</span>
     }
 
     public void setName(final String name) {
-<span class="fc" id="L68">        this.name = name;</span>
-<span class="fc" id="L69">    }</span>
+<span class="fc" id="L69">        this.name = name;</span>
+<span class="fc" id="L70">    }</span>
 
-    public String getOrganizationID() {
-<span class="fc" id="L72">        return organizationID;</span>
+    public String getOrgID() {
+<span class="fc" id="L73">        return orgID;</span>
     }
 
-    public void setOrganizationID(final String organizationID) {
-<span class="nc" id="L76">        this.organizationID = organizationID;</span>
-<span class="nc" id="L77">    }</span>
+    public void setOrgID(final String orgID) {
+<span class="fc" id="L77">        this.orgID = orgID;</span>
+<span class="fc" id="L78">    }</span>
 
     public String getOrganizationName() {
-<span class="fc" id="L80">        return organizationName;</span>
+<span class="fc" id="L81">        return organizationName;</span>
     }
 
     public void setOrganizationName(final String organizationName) {
-<span class="fc" id="L84">        this.organizationName = organizationName;</span>
-<span class="fc" id="L85">    }</span>
+<span class="nc" id="L85">        this.organizationName = organizationName;</span>
+<span class="nc" id="L86">    }</span>
 
     public String getRetentionPolicyName() {
-<span class="nc" id="L88">        return retentionPolicyName;</span>
+<span class="nc" id="L89">        return retentionPolicyName;</span>
     }
 
     public void setRetentionPolicyName(final String retentionPolicyName) {
-<span class="nc" id="L92">        this.retentionPolicyName = retentionPolicyName;</span>
-<span class="nc" id="L93">    }</span>
+<span class="nc" id="L93">        this.retentionPolicyName = retentionPolicyName;</span>
+<span class="nc" id="L94">    }</span>
 
     public List&lt;RetentionRule&gt; getRetentionRules() {
-<span class="fc" id="L96">        return retentionRules;</span>
+<span class="fc" id="L97">        return retentionRules;</span>
     }
 
     public void setRetentionRules(final List&lt;RetentionRule&gt; retentionRules) {
-<span class="nc" id="L100">        this.retentionRules = retentionRules;</span>
-<span class="nc" id="L101">    }</span>
+<span class="nc" id="L101">        this.retentionRules = retentionRules;</span>
+<span class="nc" id="L102">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
