@@ -71,11 +71,11 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nullable
     @Override
-    public Organization findOrganizationByID(@Nonnull final String organizationID) {
+    public Organization findOrganizationByID(@Nonnull final String orgID) {
 
-        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<Organization> organization = platformService.findOrganizationByID(organizationID);
+        Call<Organization> organization = platformService.findOrganizationByID(orgID);
 
         return execute(organization, NotFoundException.class);
     }
@@ -139,11 +139,11 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
     }
 
     @Override
-    public void deleteOrganization(@Nonnull final String organizationID) {
+    public void deleteOrganization(@Nonnull final String orgID) {
 
-        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<Void> call = platformService.deleteOrganization(organizationID);
+        Call<Void> call = platformService.deleteOrganization(orgID);
         execute(call);
     }
 
@@ -156,11 +156,11 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
     }
 
     @Override
-    public List<String> getSecrets(@Nonnull final String organizationID) {
+    public List<String> getSecrets(@Nonnull final String orgID) {
 
-        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<Secrets> call = platformService.getSecrets(organizationID);
+        Call<Secrets> call = platformService.getSecrets(orgID);
 
         Secrets secrets = execute(call);
         LOG.log(Level.FINEST, "getSecrets found: {0}", secrets);
@@ -177,12 +177,12 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
     }
 
     @Override
-    public void putSecrets(@Nonnull final Map<String, String> secrets, @Nonnull final String organizationID) {
+    public void putSecrets(@Nonnull final Map<String, String> secrets, @Nonnull final String orgID) {
 
-        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
         Arguments.checkNotNull(secrets, "secrets");
 
-        Call<Void> call = platformService.putSecrets(organizationID, createBody(mapAdapter.toJson(secrets)));
+        Call<Void> call = platformService.putSecrets(orgID, createBody(mapAdapter.toJson(secrets)));
         execute(call);
     }
 
@@ -196,12 +196,12 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
     }
 
     @Override
-    public void deleteSecrets(@Nonnull final List<String> secrets, @Nonnull final String organizationID) {
+    public void deleteSecrets(@Nonnull final List<String> secrets, @Nonnull final String orgID) {
 
-        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
         Arguments.checkNotNull(secrets, "secrets");
 
-        Call<Void> call = platformService.deleteSecrets(organizationID, createBody(listAdapter.toJson(secrets)));
+        Call<Void> call = platformService.deleteSecrets(orgID, createBody(listAdapter.toJson(secrets)));
         execute(call);
     }
 
@@ -216,11 +216,11 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nonnull
     @Override
-    public List<ResourceMember> getMembers(@Nonnull final String organizationID) {
+    public List<ResourceMember> getMembers(@Nonnull final String orgID) {
 
-        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<ResourceMembers> call = platformService.findOrganizationMembers(organizationID);
+        Call<ResourceMembers> call = platformService.findOrganizationMembers(orgID);
         ResourceMembers resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findOrganizationMembers found: {0}", resourceMembers);
 
@@ -239,16 +239,16 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nonnull
     @Override
-    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String organizationID) {
+    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(memberID, "Member ID");
-        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
 
         User user = new User();
         user.setId(memberID);
 
         String json = userAdapter.toJson(user);
-        Call<ResourceMember> call = platformService.addOrganizationMember(organizationID, createBody(json));
+        Call<ResourceMember> call = platformService.addOrganizationMember(orgID, createBody(json));
 
         return execute(call);
     }
@@ -263,12 +263,12 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
     }
 
     @Override
-    public void deleteMember(@Nonnull final String memberID, @Nonnull final String organizationID) {
+    public void deleteMember(@Nonnull final String memberID, @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(memberID, "Member ID");
-        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<Void> call = platformService.deleteOrganizationMember(organizationID, memberID);
+        Call<Void> call = platformService.deleteOrganizationMember(orgID, memberID);
         execute(call);
     }
 
@@ -283,11 +283,11 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nonnull
     @Override
-    public List<ResourceMember> getOwners(@Nonnull final String organizationID) {
+    public List<ResourceMember> getOwners(@Nonnull final String orgID) {
 
-        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<ResourceMembers> call = platformService.findOrganizationOwners(organizationID);
+        Call<ResourceMembers> call = platformService.findOrganizationOwners(orgID);
         ResourceMembers resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findOrganizationOwners found: {0}", resourceMembers);
 
@@ -306,16 +306,16 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     @Nonnull
     @Override
-    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String organizationID) {
+    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(ownerID, "Owner ID");
-        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
 
         User user = new User();
         user.setId(ownerID);
 
         String json = userAdapter.toJson(user);
-        Call<ResourceMember> call = platformService.addOrganizationOwner(organizationID, createBody(json));
+        Call<ResourceMember> call = platformService.addOrganizationOwner(orgID, createBody(json));
 
         return execute(call);
     }
@@ -329,12 +329,12 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
     }
 
     @Override
-    public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String organizationID) {
+    public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(ownerID, "Owner ID");
-        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<Void> call = platformService.deleteOrganizationOwner(organizationID, ownerID);
+        Call<Void> call = platformService.deleteOrganizationOwner(orgID, ownerID);
         execute(call);
     }
 }

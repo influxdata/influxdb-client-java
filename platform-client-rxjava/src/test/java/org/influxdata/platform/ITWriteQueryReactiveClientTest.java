@@ -32,6 +32,7 @@ import org.influxdata.platform.annotations.Measurement;
 import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Permission;
+import org.influxdata.platform.domain.PermissionResource;
 import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.RetentionRule;
 import org.influxdata.platform.domain.User;
@@ -73,20 +74,24 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
         retentionRule.setEverySeconds(3600L);
 
         bucket = client.createBucketClient()
-                .createBucket(generateName("h2o"), retentionRule, "my-org");
+                .createBucket(generateName("h2o"), retentionRule, organization);
 
         //
         // Add Permissions to read and write to the Bucket
         //
+
+        PermissionResource resource = new PermissionResource();
+        resource.setOrgID(organization.getId());
+        resource.setType(PermissionResourceType.BUCKET);
+        resource.setId(bucket.getId());
+
         Permission readBucket = new Permission();
-        readBucket.setResource(PermissionResourceType.BUCKET);
+        readBucket.setResource(resource);
         readBucket.setAction(Permission.READ_ACTION);
-        readBucket.setId(bucket.getId());
 
         Permission writeBucket = new Permission();
-        writeBucket.setResource(PermissionResourceType.BUCKET);
+        writeBucket.setResource(resource);
         writeBucket.setAction(Permission.WRITE_ACTION);
-        writeBucket.setId(bucket.getId());
 
         User loggedUser = client.createUserClient().me();
         Assertions.assertThat(loggedUser).isNotNull();

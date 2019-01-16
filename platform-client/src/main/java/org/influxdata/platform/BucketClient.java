@@ -50,8 +50,8 @@ public interface BucketClient {
     /**
      * Creates a new bucket and sets {@link Bucket#getId()}  with the new identifier.
      *
-     * @param name            name of the bucket
-     * @param organization    owner of bucket
+     * @param name         name of the bucket
+     * @param organization owner of bucket
      * @return Bucket created
      */
     @Nonnull
@@ -61,9 +61,9 @@ public interface BucketClient {
     /**
      * Creates a new bucket and sets {@link Bucket#getId()} with the new identifier.
      *
-     * @param name            name of the bucket
+     * @param name          name of the bucket
      * @param retentionRule bucket retention period
-     * @param organization    owner of bucket
+     * @param organization  owner of bucket
      * @return Bucket created
      */
     @Nonnull
@@ -74,26 +74,26 @@ public interface BucketClient {
     /**
      * Creates a new bucket and sets {@link Bucket#getId()} with the new identifier.
      *
-     * @param name             name of the bucket
-     * @param organizationName owner of bucket
+     * @param name  name of the bucket
+     * @param orgID owner of bucket
      * @return Bucket created
      */
     @Nonnull
     Bucket createBucket(@Nonnull final String name,
-                        @Nonnull final String organizationName);
+                        @Nonnull final String orgID);
 
     /**
      * Creates a new bucket and sets {@link Bucket#getId()} with the new identifier.
      *
-     * @param name             name of the bucket
-     * @param retentionRule  bucket retention period
-     * @param organizationName owner of bucket
+     * @param name          name of the bucket
+     * @param retentionRule bucket retention period
+     * @param orgID         owner of bucket
      * @return Bucket created
      */
     @Nonnull
     Bucket createBucket(@Nonnull final String name,
                         @Nullable final RetentionRule retentionRule,
-                        @Nonnull final String organizationName);
+                        @Nonnull final String orgID);
 
     /**
      * Update a bucket name and retention.
@@ -156,20 +156,20 @@ public interface BucketClient {
     /**
      * List all users with member privileges for a bucket.
      *
-     * @param bucketID ID of bucket to get members
-     * @return return the list all users with member privileges for a bucket
-     */
-    @Nonnull
-    List<ResourceMember> getMembers(@Nonnull final String bucketID);
-
-    /**
-     * List all users with member privileges for a bucket.
-     *
      * @param bucket the bucket with members
      * @return return the list all users with member privileges for a bucket
      */
     @Nonnull
     List<ResourceMember> getMembers(@Nonnull final Bucket bucket);
+
+    /**
+     * List all users with member privileges for a bucket.
+     *
+     * @param bucketID ID of bucket to get members
+     * @return return the list all users with member privileges for a bucket
+     */
+    @Nonnull
+    List<ResourceMember> getMembers(@Nonnull final String bucketID);
 
     /**
      * Add the bucket member.
@@ -210,20 +210,20 @@ public interface BucketClient {
     /**
      * List all owners of a bucket.
      *
-     * @param bucketID ID of bucket to get owners
-     * @return return List all owners of a bucket
-     */
-    @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final String bucketID);
-
-    /**
-     * List all owners of a bucket.
-     *
      * @param bucket the bucket with owners
      * @return return List all owners of a bucket.
      */
     @Nonnull
     List<ResourceMember> getOwners(@Nonnull final Bucket bucket);
+
+    /**
+     * List all owners of a bucket.
+     *
+     * @param bucketID ID of bucket to get owners
+     * @return return List all owners of a bucket
+     */
+    @Nonnull
+    List<ResourceMember> getOwners(@Nonnull final String bucketID);
 
     /**
      * Add the bucket owner.

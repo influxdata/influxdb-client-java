@@ -115,27 +115,27 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
 
         Arguments.checkNotNull(organization, "Organization is required");
 
-        return createBucket(name, retentionRule, organization.getName());
+        return createBucket(name, retentionRule, organization.getId());
     }
 
     @Nonnull
     @Override
-    public Bucket createBucket(@Nonnull final String name, @Nonnull final String organizationName) {
-        return createBucket(name, null, organizationName);
+    public Bucket createBucket(@Nonnull final String name, @Nonnull final String orgID) {
+        return createBucket(name, null, orgID);
     }
 
     @Nonnull
     @Override
     public Bucket createBucket(@Nonnull final String name,
                                @Nullable final RetentionRule retentionRule,
-                               @Nonnull final String organizationName) {
+                               @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(name, "Bucket name");
-        Arguments.checkNonEmpty(organizationName, "Organization name");
+        Arguments.checkNonEmpty(orgID, "Organization Id");
 
         Bucket bucket = new Bucket();
         bucket.setName(name);
-        bucket.setOrganizationName(organizationName);
+        bucket.setOrgID(orgID);
         if (retentionRule != null) {
             bucket.getRetentionRules().add(retentionRule);
         }
@@ -149,7 +149,6 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
 
         Arguments.checkNotNull(bucket, "Bucket is required");
         Arguments.checkNonEmpty(bucket.getName(), "Bucket name");
-        Arguments.checkNonEmpty(bucket.getOrganizationName(), "Organization name");
 
         Call<Bucket> call = platformService.createBucket(createBody(adapter.toJson(bucket)));
 

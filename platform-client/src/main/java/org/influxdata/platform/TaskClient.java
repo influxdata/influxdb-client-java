@@ -87,11 +87,11 @@ public interface TaskClient {
      * The {@link Task#getFlux()} is without a cron or a every repetition.
      * The repetition is automatically append to the <a href="http://bit.ly/option-statement">option statement</a>.
      *
-     * @param name           description of the task
-     * @param flux           the Flux script to run for this task
-     * @param cron           a task repetition schedule in the form '* * * * * *'
-     * @param userID         an id of the user that owns this Task
-     * @param organizationID an id of the organization that owns this Task
+     * @param name   description of the task
+     * @param flux   the Flux script to run for this task
+     * @param cron   a task repetition schedule in the form '* * * * * *'
+     * @param userID an id of the user that owns this Task
+     * @param orgID  an id of the organization that owns this Task
      * @return Task created
      */
     @Nonnull
@@ -99,7 +99,7 @@ public interface TaskClient {
                         @Nonnull final String flux,
                         @Nonnull final String cron,
                         @Nonnull final String userID,
-                        @Nonnull final String organizationID);
+                        @Nonnull final String orgID);
 
     /**
      * Creates a new task with task repetition by duration expression ("1h", "30s").
@@ -125,11 +125,11 @@ public interface TaskClient {
      * The {@link Task#getFlux()} is without a cron or a every repetition. The repetition is automatically append
      * to the <a href="http://bit.ly/option-statement">option statement</a>.
      *
-     * @param name           description of the task
-     * @param flux           the Flux script to run for this task
-     * @param every          a task repetition by duration expression
-     * @param userID         an id of the user that owns this Task
-     * @param organizationID an id of the organization that owns this Task
+     * @param name   description of the task
+     * @param flux   the Flux script to run for this task
+     * @param every  a task repetition by duration expression
+     * @param userID an id of the user that owns this Task
+     * @param orgID  an id of the organization that owns this Task
      * @return Task created
      */
     @Nonnull
@@ -137,7 +137,7 @@ public interface TaskClient {
                          @Nonnull final String flux,
                          @Nonnull final String every,
                          @Nonnull final String userID,
-                         @Nonnull final String organizationID);
+                         @Nonnull final String orgID);
 
     /**
      * Update a task. This will cancel all queued runs.
@@ -209,24 +209,24 @@ public interface TaskClient {
     /**
      * Lists tasks, limit 100.
      *
-     * @param organizationID filter tasks to a specific organization id
+     * @param orgID filter tasks to a specific organization id
      * @return A list of tasks
      */
     @Nonnull
-    List<Task> findTasksByOrganizationID(@Nullable final String organizationID);
+    List<Task> findTasksByOrganizationID(@Nullable final String orgID);
 
     /**
      * Lists tasks, limit 100.
      *
-     * @param afterID        returns tasks after specified ID
-     * @param userID         filter tasks to a specific user id
-     * @param organizationID filter tasks to a specific organization id
+     * @param afterID returns tasks after specified ID
+     * @param userID  filter tasks to a specific user id
+     * @param orgID   filter tasks to a specific organization id
      * @return A list of tasks
      */
     @Nonnull
     List<Task> findTasks(@Nullable final String afterID,
                          @Nullable final String userID,
-                         @Nullable final String organizationID);
+                         @Nullable final String orgID);
 
     /**
      * List all task members.
@@ -285,20 +285,20 @@ public interface TaskClient {
     /**
      * List all task owners.
      *
-     * @param taskID ID of task to get owners
-     * @return return List all task owners
-     */
-    @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final String taskID);
-
-    /**
-     * List all task owners.
-     *
      * @param task the task with owners
      * @return return List all task owners
      */
     @Nonnull
     List<ResourceMember> getOwners(@Nonnull final Task task);
+
+    /**
+     * List all task owners.
+     *
+     * @param taskID ID of task to get owners
+     * @return return List all task owners
+     */
+    @Nonnull
+    List<ResourceMember> getOwners(@Nonnull final String taskID);
 
     /**
      * Add task owner.
@@ -409,7 +409,7 @@ public interface TaskClient {
     /**
      * Retrieve all logs for a run.
      *
-     * @param run the run with a taskID and a runID
+     * @param run   the run with a taskID and a runID
      * @param orgID
      * @return the list of all logs for a run
      */
@@ -474,7 +474,7 @@ public interface TaskClient {
      * Retrieve all logs for a task.
      *
      * @param taskID ID of task to get logs for
-     * @param orgID ID of organization
+     * @param orgID  ID of organization
      * @return the list of all logs for a task
      */
     @Nonnull

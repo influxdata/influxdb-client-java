@@ -54,37 +54,37 @@ final class QueryClientReactiveImpl extends AbstractQueryClient implements Query
 
     @Nonnull
     @Override
-    public Flowable<FluxRecord> query(@Nonnull final String query, @Nonnull final String organizationId) {
+    public Flowable<FluxRecord> query(@Nonnull final String query, @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(query, "Flux query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
 
-        return query(Flowable.just(query), organizationId);
+        return query(Flowable.just(query), orgID);
     }
 
     @Override
     public <M> Flowable<M> query(@Nonnull final String query,
-                                 @Nonnull final String organizationId,
+                                 @Nonnull final String orgID,
                                  @Nonnull final Class<M> measurementType) {
 
         Arguments.checkNonEmpty(query, "Flux query");
         Arguments.checkNotNull(measurementType, "Measurement type");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
 
-        return query(Flowable.just(query), organizationId, measurementType);
+        return query(Flowable.just(query), orgID, measurementType);
     }
 
     @Nonnull
     @Override
     public Flowable<FluxRecord> query(@Nonnull final Publisher<String> queryStream,
-                                      @Nonnull final String organizationId) {
+                                      @Nonnull final String orgID) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
 
         return Flowable
                 .fromPublisher(queryStream)
-                .map(it -> platformService.query(organizationId, createBody(DEFAULT_DIALECT.toString(), it)))
+                .map(it -> platformService.query(orgID, createBody(DEFAULT_DIALECT.toString(), it)))
                 .flatMap(queryCall -> {
 
                     Observable<FluxRecord> observable = Observable.create(subscriber -> {
@@ -121,61 +121,61 @@ final class QueryClientReactiveImpl extends AbstractQueryClient implements Query
     @Nonnull
     @Override
     public <M> Flowable<M> query(@Nonnull final Publisher<String> queryStream,
-                                 @Nonnull final String organizationId,
+                                 @Nonnull final String orgID,
                                  @Nonnull final Class<M> measurementType) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
         Arguments.checkNotNull(measurementType, "Measurement type");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
 
-        return query(queryStream, organizationId).map(fluxRecord -> resultMapper.toPOJO(fluxRecord, measurementType));
+        return query(queryStream, orgID).map(fluxRecord -> resultMapper.toPOJO(fluxRecord, measurementType));
     }
 
     @Nonnull
     @Override
-    public Flowable<String> queryRaw(@Nonnull final String query, @Nonnull final String organizationId) {
+    public Flowable<String> queryRaw(@Nonnull final String query, @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(query, "Flux query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
 
-        return queryRaw(Flowable.just(query), organizationId);
+        return queryRaw(Flowable.just(query), orgID);
     }
 
     @Nonnull
     @Override
     public Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream,
-                                     @Nonnull final String organizationId) {
+                                     @Nonnull final String orgID) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
 
-        return queryRaw(queryStream, DEFAULT_DIALECT.toString(), organizationId);
+        return queryRaw(queryStream, DEFAULT_DIALECT.toString(), orgID);
     }
 
     @Nonnull
     @Override
     public Flowable<String> queryRaw(@Nonnull final String query,
                                      @Nullable final String dialect,
-                                     @Nonnull final String organizationId) {
+                                     @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(query, "Flux query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
 
-        return queryRaw(Flowable.just(query), dialect, organizationId);
+        return queryRaw(Flowable.just(query), dialect, orgID);
     }
 
     @Nonnull
     @Override
     public Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream,
                                      @Nullable final String dialect,
-                                     @Nonnull final String organizationId) {
+                                     @Nonnull final String orgID) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
 
         return Flowable
                 .fromPublisher(queryStream)
-                .map(it -> platformService.query(organizationId, createBody(dialect, it)))
+                .map(it -> platformService.query(orgID, createBody(dialect, it)))
                 .flatMap(queryCall -> {
 
                     Observable<String> observable = Observable.create(subscriber -> {

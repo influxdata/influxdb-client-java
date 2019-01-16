@@ -38,7 +38,7 @@ public final class Source {
     /**
      * The organization ID that resource belongs to.
      */
-    private String organizationID;
+    private String orgID;
 
     /**
      * Specifies the default source for the application.
@@ -128,12 +128,12 @@ public final class Source {
         this.id = id;
     }
 
-    public String getOrganizationID() {
-        return organizationID;
+    public String getOrgID() {
+        return orgID;
     }
 
-    public void setOrganizationID(final String organizationID) {
-        this.organizationID = organizationID;
+    public void setOrgID(final String orgID) {
+        this.orgID = orgID;
     }
 
     public boolean isDefaultSource() {

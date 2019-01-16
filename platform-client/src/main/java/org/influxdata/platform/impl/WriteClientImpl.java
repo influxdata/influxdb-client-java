@@ -59,67 +59,67 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
 
     @Override
     public void writeRecord(@Nonnull final String bucket,
-                            @Nonnull final String organizationId,
+                            @Nonnull final String orgID,
                             @Nonnull final ChronoUnit precision,
                             @Nullable final String record) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(precision, "TimeUnit.precision is required");
 
         if (record == null) {
             return;
         }
 
-        write(bucket, organizationId, precision, Flowable.just(new BatchWriteDataRecord(record)));
+        write(bucket, orgID, precision, Flowable.just(new BatchWriteDataRecord(record)));
     }
 
     @Override
     public void writeRecords(@Nonnull final String bucket,
-                             @Nonnull final String organizationId,
+                             @Nonnull final String orgID,
                              @Nonnull final ChronoUnit precision,
                              @Nonnull final List<String> records) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(precision, "TimeUnit.precision is required");
         Arguments.checkNotNull(records, "records");
 
         Flowable<BatchWriteData> stream = Flowable.fromIterable(records).map(BatchWriteDataRecord::new);
 
-        write(bucket, organizationId, precision, stream);
+        write(bucket, orgID, precision, stream);
     }
 
     @Override
     public void writePoint(@Nonnull final String bucket,
-                           @Nonnull final String organizationId,
+                           @Nonnull final String orgID,
                            @Nullable final Point point) {
 
         if (point == null) {
             return;
         }
 
-        writePoints(bucket, organizationId, Collections.singletonList(point));
+        writePoints(bucket, orgID, Collections.singletonList(point));
     }
 
     @Override
     public void writePoints(@Nonnull final String bucket,
-                            @Nonnull final String organizationId,
+                            @Nonnull final String orgID,
                             @Nonnull final List<Point> points) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(points, "points");
 
         Flowable<BatchWriteDataPoint> stream = Flowable.fromIterable(points).filter(Objects::nonNull)
                 .map(BatchWriteDataPoint::new);
 
-        write(bucket, organizationId, stream);
+        write(bucket, orgID, stream);
     }
 
     @Override
     public <M> void writeMeasurement(@Nonnull final String bucket,
-                                     @Nonnull final String organizationId,
+                                     @Nonnull final String orgID,
                                      @Nonnull final ChronoUnit precision,
                                      @Nullable final M measurement) {
 
@@ -127,17 +127,17 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
             return;
         }
 
-        writeMeasurements(bucket, organizationId, precision, Collections.singletonList(measurement));
+        writeMeasurements(bucket, orgID, precision, Collections.singletonList(measurement));
     }
 
     @Override
     public <M> void writeMeasurements(@Nonnull final String bucket,
-                                      @Nonnull final String organizationId,
+                                      @Nonnull final String orgID,
                                       @Nonnull final ChronoUnit precision,
                                       @Nonnull final List<M> measurements) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(precision, "TimeUnit.precision is required");
         Arguments.checkNotNull(measurements, "records");
 
@@ -145,7 +145,7 @@ final class WriteClientImpl extends AbstractWriteClient implements WriteClient {
                 .fromIterable(measurements)
                 .map(it -> new BatchWriteDataMeasurement(it, precision));
 
-        write(bucket, organizationId, precision, stream);
+        write(bucket, orgID, precision, stream);
     }
 
     @Nonnull

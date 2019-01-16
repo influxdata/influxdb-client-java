@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
+import org.influxdata.platform.domain.PermissionResource;
 import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.Run;
@@ -95,7 +96,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Task task = new Task();
         task.setName(taskName);
-        task.setOrganizationId(organization.getId());
+        task.setOrgID(organization.getId());
         task.setOwner(user);
         task.setFlux(flux);
         task.setStatus(Status.ACTIVE);
@@ -108,7 +109,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(task.getOwner()).isNotNull();
         Assertions.assertThat(task.getOwner().getId()).isEqualTo(user.getId());
         Assertions.assertThat(task.getOwner().getName()).isEqualTo(user.getName());
-        Assertions.assertThat(task.getOrganizationId()).isEqualTo(organization.getId());
+        Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
         Assertions.assertThat(task.getEvery()).isEqualTo("1h0m0s");
         Assertions.assertThat(task.getCron()).isNull();
@@ -127,7 +128,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Task task = new Task();
         task.setName(taskName);
-        task.setOrganizationId(organization.getId());
+        task.setOrgID(organization.getId());
         task.setOwner(user);
         task.setFlux(flux);
         task.setStatus(Status.ACTIVE);
@@ -152,7 +153,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(task.getOwner()).isNotNull();
         Assertions.assertThat(task.getOwner().getId()).isEqualTo(user.getId());
         Assertions.assertThat(task.getOwner().getName()).isEqualTo(user.getName());
-        Assertions.assertThat(task.getOrganizationId()).isEqualTo(organization.getId());
+        Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
         Assertions.assertThat(task.getEvery()).isEqualTo("1h0m0s");
         Assertions.assertThat(task.getCron()).isNull();
@@ -172,7 +173,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(task.getOwner()).isNotNull();
         Assertions.assertThat(task.getOwner().getId()).isEqualTo(user.getId());
         Assertions.assertThat(task.getOwner().getName()).isEqualTo(user.getName());
-        Assertions.assertThat(task.getOrganizationId()).isEqualTo(organization.getId());
+        Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
         Assertions.assertThat(task.getCron()).isEqualTo("0 2 * * *");
         Assertions.assertThat(task.getEvery()).isEqualTo("0s");
@@ -194,7 +195,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(taskByID.getName()).isEqualTo(task.getName());
         Assertions.assertThat(taskByID.getOwner()).isNotNull();
         Assertions.assertThat(taskByID.getOwner().getId()).isEqualTo(task.getOwner().getId());
-        Assertions.assertThat(taskByID.getOrganizationId()).isEqualTo(task.getOrganizationId());
+        Assertions.assertThat(taskByID.getOrgID()).isEqualTo(task.getOrgID());
         Assertions.assertThat(taskByID.getEvery()).isNull();
         Assertions.assertThat(taskByID.getCron()).isEqualTo(task.getCron());
         Assertions.assertThat(taskByID.getFlux()).isEqualTo(task.getFlux());
@@ -247,6 +248,8 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         List<Task> tasks = taskClient.findTasksByOrganization(taskOrganization);
         Assertions.assertThat(tasks).hasSize(1);
+
+        taskClient.findTasks().forEach(task -> taskClient.deleteTask(task));
     }
 
     @Test
@@ -291,6 +294,8 @@ class ITTaskClientTest extends AbstractITClientTest {
                 + "}\n\n" + TASK_FLUX;
 
         cronTask.setFlux(flux);
+        cronTask.setEvery("2m");
+        cronTask.setCron("");
         cronTask.setStatus(Status.INACTIVE);
 
         Task updatedTask = taskClient.updateTask(cronTask);
@@ -305,7 +310,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(updatedTask.getFlux()).isEqualTo(TASK_FLUX);
         Assertions.assertThat(updatedTask.getStatus()).isEqualTo(Status.INACTIVE);
         Assertions.assertThat(updatedTask.getOwner().getId()).isEqualTo(cronTask.getOwner().getId());
-        Assertions.assertThat(updatedTask.getOrganizationId()).isEqualTo(cronTask.getOrganizationId());
+        Assertions.assertThat(updatedTask.getOrgID()).isEqualTo(cronTask.getOrgID());
         Assertions.assertThat(updatedTask.getName()).isEqualTo(cronTask.getName());
     }
 
@@ -578,15 +583,17 @@ class ITTaskClientTest extends AbstractITClientTest {
     @Nonnull
     private Authorization addTasksAuthorization(final Organization organization) {
 
+        PermissionResource resource = new PermissionResource();
+        resource.setOrgID(organization.getId());
+        resource.setType(PermissionResourceType.TASK);
+
         Permission createTask = new Permission();
-        createTask.setResource(PermissionResourceType.TASK);
+        createTask.setResource(resource);
         createTask.setAction(Permission.READ_ACTION);
-        createTask.setId(organization.getId());
 
         Permission deleteTask = new Permission();
-        deleteTask.setResource(PermissionResourceType.TASK);
+        deleteTask.setResource(resource);
         deleteTask.setAction(Permission.WRITE_ACTION);
-        deleteTask.setId(organization.getId());
 
         List<Permission> permissions = new ArrayList<>();
         permissions.add(createTask);

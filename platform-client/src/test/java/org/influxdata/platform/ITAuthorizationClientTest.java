@@ -32,6 +32,7 @@ import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
+import org.influxdata.platform.domain.PermissionResource;
 import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.domain.User;
@@ -70,13 +71,21 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
     @Test
     void createAuthorization() {
 
+        PermissionResource userResource = new PermissionResource();
+        userResource.setOrgID(organization.getId());
+        userResource.setType(PermissionResourceType.USER);
+
         Permission readUsers = new Permission();
         readUsers.setAction(Permission.READ_ACTION);
-        readUsers.setResource(PermissionResourceType.USER);
+        readUsers.setResource(userResource);
+
+        PermissionResource orgResource = new PermissionResource();
+        orgResource.setOrgID(organization.getId());
+        orgResource.setType(PermissionResourceType.ORG);
 
         Permission writeOrganizations = new Permission();
         writeOrganizations.setAction(Permission.WRITE_ACTION);
-        writeOrganizations.setResource(PermissionResourceType.ORG);
+        writeOrganizations.setResource(orgResource);
 
         List<Permission> permissions = new ArrayList<>();
         permissions.add(readUsers);
@@ -96,9 +105,12 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
         Assertions.assertThat(authorization.getStatus()).isEqualTo(Status.ACTIVE);
 
         Assertions.assertThat(authorization.getPermissions()).hasSize(2);
-        Assertions.assertThat(authorization.getPermissions().get(0).getResource()).isEqualTo(PermissionResourceType.USER);
+        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(PermissionResourceType.USER);
+        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(authorization.getPermissions().get(0).getAction()).isEqualTo("read");
-        Assertions.assertThat(authorization.getPermissions().get(1).getResource()).isEqualTo(PermissionResourceType.ORG);
+
+        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(PermissionResourceType.ORG);
+        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(authorization.getPermissions().get(1).getAction()).isEqualTo("write");
 
         Assertions.assertThat(authorization.getLinks()).hasSize(2);
@@ -109,12 +121,16 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
     @Test
     void createAuthorizationTask() {
 
+        PermissionResource resource = new PermissionResource();
+        resource.setOrgID(organization.getId());
+        resource.setType(PermissionResourceType.TASK);
+
         Permission createTask = new Permission();
-        createTask.setResource(PermissionResourceType.TASK);
+        createTask.setResource(resource);
         createTask.setAction(Permission.READ_ACTION);
 
         Permission deleteTask = new Permission();
-        deleteTask.setResource(PermissionResourceType.TASK);
+        deleteTask.setResource(resource);
         deleteTask.setAction(Permission.WRITE_ACTION);
 
         List<Permission> permissions = new ArrayList<>();
@@ -124,9 +140,11 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
         Authorization authorization = authorizationClient.createAuthorization(organization, permissions);
 
         Assertions.assertThat(authorization.getPermissions()).hasSize(2);
-        Assertions.assertThat(authorization.getPermissions().get(0).getResource()).isEqualTo(PermissionResourceType.TASK);
+        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(PermissionResourceType.TASK);
+        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(authorization.getPermissions().get(0).getAction()).isEqualTo("read");
-        Assertions.assertThat(authorization.getPermissions().get(1).getResource()).isEqualTo(PermissionResourceType.TASK);
+        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(PermissionResourceType.TASK);
+        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(authorization.getPermissions().get(1).getAction()).isEqualTo("write");
     }
 
@@ -136,14 +154,17 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
         Organization organization = platformClient.createOrganizationClient().createOrganization(generateName("Auth Organization"));
         Bucket bucket = platformClient.createBucketClient().createBucket(generateName("Auth Bucket"), retentionRule(), organization);
 
+        PermissionResource resource = new PermissionResource();
+        resource.setOrgID(organization.getId());
+        resource.setType(PermissionResourceType.BUCKET);
+        resource.setId(bucket.getId());
+
         Permission readBucket = new Permission();
-        readBucket.setResource(PermissionResourceType.BUCKET);
-        readBucket.setId(bucket.getId());
+        readBucket.setResource(resource);
         readBucket.setAction(Permission.READ_ACTION);
 
         Permission writeBucket = new Permission();
-        writeBucket.setResource(PermissionResourceType.BUCKET);
-        writeBucket.setId(bucket.getId());
+        writeBucket.setResource(resource);
         writeBucket.setAction(Permission.WRITE_ACTION);
 
         List<Permission> permissions = new ArrayList<>();
@@ -153,11 +174,11 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
         Authorization authorization = authorizationClient.createAuthorization(organization, permissions);
 
         Assertions.assertThat(authorization.getPermissions()).hasSize(2);
-        Assertions.assertThat(authorization.getPermissions().get(0).getId()).isEqualTo(bucket.getId());
-        Assertions.assertThat(authorization.getPermissions().get(0).getResource()).isEqualTo(PermissionResourceType.BUCKET);
+        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getId()).isEqualTo(bucket.getId());
+        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(PermissionResourceType.BUCKET);
         Assertions.assertThat(authorization.getPermissions().get(0).getAction()).isEqualTo("read");
-        Assertions.assertThat(authorization.getPermissions().get(1).getId()).isEqualTo(bucket.getId());
-        Assertions.assertThat(authorization.getPermissions().get(1).getResource()).isEqualTo(PermissionResourceType.BUCKET);
+        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getId()).isEqualTo(bucket.getId());
+        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(PermissionResourceType.BUCKET);
         Assertions.assertThat(authorization.getPermissions().get(1).getAction()).isEqualTo("write");
     }
 
@@ -185,8 +206,6 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
     }
 
     @Test
-    //TODO https://github.com/influxdata/influxdb/issues/10938
-    @Disabled
     void findAuthorizations() {
 
         int size = authorizationClient.findAuthorizations().size();
@@ -198,8 +217,6 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
     }
 
     @Test
-    //TODO https://github.com/influxdata/influxdb/issues/10938
-    @Disabled
     void findAuthorizationsByUser() {
 
         int size = authorizationClient.findAuthorizationsByUser(user).size();
@@ -211,8 +228,6 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
     }
 
     @Test
-    //TODO https://github.com/influxdata/influxdb/issues/10938
-    @Disabled
     void findAuthorizationsByUserName() {
 
         int size = authorizationClient.findAuthorizationsByUserName(user.getName()).size();
@@ -228,9 +243,13 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
     @Disabled
     void updateAuthorizationStatus() {
 
+        PermissionResource resource = new PermissionResource();
+        resource.setOrgID(organization.getId());
+        resource.setType(PermissionResourceType.USER);
+
         Permission readUsers = new Permission();
         readUsers.setAction(Permission.READ_ACTION);
-        readUsers.setResource(PermissionResourceType.USER);
+        readUsers.setResource(resource);
 
         List<Permission> permissions = new ArrayList<>();
         permissions.add(readUsers);
@@ -269,9 +288,13 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
     @Nonnull
     private List<Permission> newPermissions() {
 
+        PermissionResource resource = new PermissionResource();
+        resource.setOrgID(organization.getId());
+        resource.setType(PermissionResourceType.USER);
+
         Permission permission = new Permission();
         permission.setAction(Permission.READ_ACTION);
-        permission.setResource(PermissionResourceType.USER);
+        permission.setResource(resource);
 
         return Collections.singletonList(permission);
     }

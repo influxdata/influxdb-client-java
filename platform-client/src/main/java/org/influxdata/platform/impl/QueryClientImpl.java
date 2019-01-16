@@ -59,14 +59,14 @@ final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
 
     @Nonnull
     @Override
-    public List<FluxTable> query(@Nonnull final String query, @Nonnull final String organizationId) {
+    public List<FluxTable> query(@Nonnull final String query, @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
 
         FluxCsvParser.FluxResponseConsumerTable consumer = fluxCsvParser.new FluxResponseConsumerTable();
 
-        query(query, DEFAULT_DIALECT.toString(), organizationId, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
+        query(query, DEFAULT_DIALECT.toString(), orgID, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
 
         return consumer.getTables();
     }
@@ -74,7 +74,7 @@ final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
     @Nonnull
     @Override
     public <M> List<M> query(@Nonnull final String query,
-                             @Nonnull final String organizationId,
+                             @Nonnull final String orgID,
                              @Nonnull final Class<M> measurementType) {
 
         Arguments.checkNonEmpty(query, "query");
@@ -99,75 +99,75 @@ final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
             }
         };
 
-        query(query, DEFAULT_DIALECT.toString(), organizationId, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
+        query(query, DEFAULT_DIALECT.toString(), orgID, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
 
         return measurements;
     }
 
     @Override
     public void query(@Nonnull final String query,
-                      @Nonnull final String organizationId,
+                      @Nonnull final String orgID,
                       @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext) {
 
         Arguments.checkNonEmpty(query, "query");
         Arguments.checkNotNull(onNext, "onNext");
 
-        query(query, organizationId, onNext, ERROR_CONSUMER);
+        query(query, orgID, onNext, ERROR_CONSUMER);
     }
 
     @Override
     public <M> void query(@Nonnull final String query,
-                          @Nonnull final String organizationId,
+                          @Nonnull final String orgID,
                           @Nonnull final Class<M> measurementType,
                           @Nonnull final BiConsumer<Cancellable, M> onNext) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(onNext, "onNext");
         Arguments.checkNotNull(measurementType, "measurementType");
 
-        query(query, organizationId, measurementType, onNext, ERROR_CONSUMER);
+        query(query, orgID, measurementType, onNext, ERROR_CONSUMER);
     }
 
     @Override
     public void query(@Nonnull final String query,
-                      @Nonnull final String organizationId,
+                      @Nonnull final String orgID,
                       @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
                       @Nonnull final Consumer<? super Throwable> onError) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(onNext, "onNext");
         Arguments.checkNotNull(onError, "onError");
 
-        query(query, organizationId, onNext, onError, EMPTY_ACTION);
+        query(query, orgID, onNext, onError, EMPTY_ACTION);
     }
 
     @Override
     public <M> void query(@Nonnull final String query,
-                          @Nonnull final String organizationId,
+                          @Nonnull final String orgID,
                           @Nonnull final Class<M> measurementType,
                           @Nonnull final BiConsumer<Cancellable, M> onNext,
                           @Nonnull final Consumer<? super Throwable> onError) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(onNext, "onNext");
         Arguments.checkNotNull(onError, "onError");
         Arguments.checkNotNull(measurementType, "measurementType");
 
-        query(query, organizationId, measurementType, onNext, onError, EMPTY_ACTION);
+        query(query, orgID, measurementType, onNext, onError, EMPTY_ACTION);
     }
 
     @Override
     public void query(@Nonnull final String query,
-                      @Nonnull final String organizationId,
+                      @Nonnull final String orgID,
                       @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
                       @Nonnull final Consumer<? super Throwable> onError,
                       @Nonnull final Runnable onComplete) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(onNext, "onNext");
         Arguments.checkNotNull(onError, "onError");
         Arguments.checkNotNull(onComplete, "onComplete");
@@ -188,19 +188,19 @@ final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
             }
         };
 
-        query(query, DEFAULT_DIALECT.toString(), organizationId, consumer, onError, onComplete, true);
+        query(query, DEFAULT_DIALECT.toString(), orgID, consumer, onError, onComplete, true);
     }
 
     @Override
     public <M> void query(@Nonnull final String query,
-                          @Nonnull final String organizationId,
+                          @Nonnull final String orgID,
                           @Nonnull final Class<M> measurementType,
                           @Nonnull final BiConsumer<Cancellable, M> onNext,
                           @Nonnull final Consumer<? super Throwable> onError,
                           @Nonnull final Runnable onComplete) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(onNext, "onNext");
         Arguments.checkNotNull(onError, "onError");
         Arguments.checkNotNull(onComplete, "onComplete");
@@ -226,65 +226,65 @@ final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
             }
         };
 
-        query(query, DEFAULT_DIALECT.toString(), organizationId, consumer, onError, onComplete, true);
+        query(query, DEFAULT_DIALECT.toString(), orgID, consumer, onError, onComplete, true);
     }
 
     @Nonnull
     @Override
-    public String queryRaw(@Nonnull final String query, @Nonnull final String organizationId) {
+    public String queryRaw(@Nonnull final String query, @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
 
-        return queryRaw(query, null, organizationId);
+        return queryRaw(query, null, orgID);
     }
 
     @Nonnull
     @Override
     public String queryRaw(@Nonnull final String query,
                            @Nullable final String dialect,
-                           @Nonnull final String organizationId) {
+                           @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
 
         List<String> rows = new ArrayList<>();
 
         BiConsumer<Cancellable, String> consumer = (cancellable, row) -> rows.add(row);
 
-        queryRaw(query, dialect, organizationId, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
+        queryRaw(query, dialect, orgID, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
 
         return String.join("\n", rows);
     }
 
     @Override
     public void queryRaw(@Nonnull final String query,
-                         @Nonnull final String organizationId,
+                         @Nonnull final String orgID,
                          @Nonnull final BiConsumer<Cancellable, String> onResponse) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(onResponse, "onResponse");
 
-        queryRaw(query, null, organizationId, onResponse);
+        queryRaw(query, null, orgID, onResponse);
     }
 
     @Override
     public void queryRaw(@Nonnull final String query,
                          @Nullable final String dialect,
-                         @Nonnull final String organizationId,
+                         @Nonnull final String orgID,
                          @Nonnull final BiConsumer<Cancellable, String> onResponse) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(onResponse, "onResponse");
 
-        queryRaw(query, dialect, organizationId, onResponse, ERROR_CONSUMER);
+        queryRaw(query, dialect, orgID, onResponse, ERROR_CONSUMER);
     }
 
     @Override
     public void queryRaw(@Nonnull final String query,
-                         @Nonnull final String organizationId,
+                         @Nonnull final String orgID,
                          @Nonnull final BiConsumer<Cancellable, String> onResponse,
                          @Nonnull final Consumer<? super Throwable> onError) {
 
@@ -292,85 +292,85 @@ final class QueryClientImpl extends AbstractQueryClient implements QueryClient {
         Arguments.checkNotNull(onResponse, "onNext");
         Arguments.checkNotNull(onError, "onError");
 
-        queryRaw(query, organizationId, onResponse, onError, EMPTY_ACTION);
+        queryRaw(query, orgID, onResponse, onError, EMPTY_ACTION);
     }
 
     @Override
     public void queryRaw(@Nonnull final String query,
                          @Nullable final String dialect,
-                         @Nonnull final String organizationId,
+                         @Nonnull final String orgID,
                          @Nonnull final BiConsumer<Cancellable, String> onResponse,
                          @Nonnull final Consumer<? super Throwable> onError) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(onResponse, "onNext");
         Arguments.checkNotNull(onError, "onError");
 
-        queryRaw(query, dialect, organizationId, onResponse, onError, EMPTY_ACTION);
+        queryRaw(query, dialect, orgID, onResponse, onError, EMPTY_ACTION);
     }
 
     @Override
     public void queryRaw(@Nonnull final String query,
-                         @Nonnull final String organizationId,
+                         @Nonnull final String orgID,
                          @Nonnull final BiConsumer<Cancellable, String> onResponse,
                          @Nonnull final Consumer<? super Throwable> onError,
                          @Nonnull final Runnable onComplete) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(onResponse, "onNext");
         Arguments.checkNotNull(onError, "onError");
         Arguments.checkNotNull(onComplete, "onComplete");
 
-        queryRaw(query, null, organizationId, onResponse, onError, onComplete);
+        queryRaw(query, null, orgID, onResponse, onError, onComplete);
     }
 
     @Override
     public void queryRaw(@Nonnull final String query,
                          @Nullable final String dialect,
-                         @Nonnull final String organizationId,
+                         @Nonnull final String orgID,
                          @Nonnull final BiConsumer<Cancellable, String> onResponse,
                          @Nonnull final Consumer<? super Throwable> onError,
                          @Nonnull final Runnable onComplete) {
 
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(organizationId, "organizationId");
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(onResponse, "onNext");
         Arguments.checkNotNull(onError, "onError");
         Arguments.checkNotNull(onComplete, "onComplete");
 
-        queryRaw(query, dialect, organizationId, onResponse, onError, onComplete, true);
+        queryRaw(query, dialect, orgID, onResponse, onError, onComplete, true);
     }
 
     private void query(@Nonnull final String query,
                        @Nonnull final String dialect,
-                       @Nonnull final String organizationId,
+                       @Nonnull final String orgID,
                        @Nonnull final FluxCsvParser.FluxResponseConsumer responseConsumer,
                        @Nonnull final Consumer<? super Throwable> onError,
                        @Nonnull final Runnable onComplete,
                        @Nonnull final Boolean asynchronously) {
 
-        Call<ResponseBody> queryCall = platformService.query(organizationId, createBody(dialect, query));
+        Call<ResponseBody> queryCall = platformService.query(orgID, createBody(dialect, query));
 
         LOG.log(Level.FINEST, "Prepare query \"{0}\" with dialect \"{1}\" on organization \"{2}\".",
-                new Object[]{query, dialect, organizationId});
+                new Object[]{query, dialect, orgID});
 
         query(queryCall, responseConsumer, onError, onComplete, asynchronously);
     }
 
     private void queryRaw(@Nonnull final String query,
                           @Nullable final String dialect,
-                          @Nonnull final String organizationId,
+                          @Nonnull final String orgID,
                           @Nonnull final BiConsumer<Cancellable, String> onResponse,
                           @Nonnull final Consumer<? super Throwable> onError,
                           @Nonnull final Runnable onComplete,
                           @Nonnull final Boolean asynchronously) {
 
-        Call<ResponseBody> queryCall = platformService.query(organizationId, createBody(dialect, query));
+        Call<ResponseBody> queryCall = platformService.query(orgID, createBody(dialect, query));
 
         LOG.log(Level.FINEST, "Prepare raw query \"{0}\" with dialect \"{1}\" on organization \"{2}\".",
-                new String[]{query, dialect, organizationId});
+                new String[]{query, dialect, orgID});
 
         queryRaw(queryCall, onResponse, onError, onComplete, asynchronously);
     }

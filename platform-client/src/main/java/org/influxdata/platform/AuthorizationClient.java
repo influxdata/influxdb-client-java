@@ -49,8 +49,8 @@ public interface AuthorizationClient {
     /**
      * Create an authorization with defined {@code permissions}.
      *
-     * @param organization        owner of authorization
-     * @param permissions the permissions for the authorization
+     * @param organization owner of authorization
+     * @param permissions  the permissions for the authorization
      * @return created authorization
      */
     @Nonnull
@@ -60,12 +60,12 @@ public interface AuthorizationClient {
     /**
      * Create an authorization with defined {@code permissions}.
      *
-     * @param organizationID owner id of authorization
-     * @param permissions    the permissions for the authorization
+     * @param orgID       owner id of authorization
+     * @param permissions the permissions for the authorization
      * @return created authorization
      */
     @Nonnull
-    Authorization createAuthorization(@Nonnull final String organizationID,
+    Authorization createAuthorization(@Nonnull final String orgID,
                                       @Nonnull final List<Permission> permissions);
 
     /**

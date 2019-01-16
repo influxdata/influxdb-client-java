@@ -110,17 +110,17 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
     @Nonnull
     @Override
-    public List<Task> findTasksByOrganizationID(@Nullable final String organizationID) {
-        return findTasks(null, null, organizationID);
+    public List<Task> findTasksByOrganizationID(@Nullable final String orgID) {
+        return findTasks(null, null, orgID);
     }
 
     @Nonnull
     @Override
     public List<Task> findTasks(@Nullable final String afterID,
                                 @Nullable final String userID,
-                                @Nullable final String organizationID) {
+                                @Nullable final String orgID) {
 
-        Call<Tasks> call = platformService.findTasks(afterID, userID, organizationID);
+        Call<Tasks> call = platformService.findTasks(afterID, userID, orgID);
 
         Tasks tasks = execute(call);
         LOG.log(Level.FINEST, "findTasks found: {0}", tasks);
@@ -164,19 +164,19 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                                @Nonnull final String flux,
                                @Nonnull final String cron,
                                @Nonnull final String userID,
-                               @Nonnull final String organizationID) {
+                               @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(name, "name of the task");
         Arguments.checkNonEmpty(flux, "Flux script to run");
         Arguments.checkNonEmpty(cron, "cron expression");
         Arguments.checkNonEmpty(userID, "User ID");
-        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
 
         User owner = new User();
         owner.setId(userID);
 
         Organization organization = new Organization();
-        organization.setId(organizationID);
+        organization.setId(orgID);
 
         return createTaskCron(name, flux, cron, owner, organization);
     }
@@ -206,19 +206,19 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                                 @Nonnull final String flux,
                                 @Nonnull final String every,
                                 @Nonnull final String userID,
-                                @Nonnull final String organizationID) {
+                                @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(name, "name of the task");
         Arguments.checkNonEmpty(flux, "Flux script to run");
         Arguments.checkNonEmpty(every, "every expression");
         Arguments.checkNonEmpty(userID, "User ID");
-        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
 
         User owner = new User();
         owner.setId(userID);
 
         Organization organization = new Organization();
-        organization.setId(organizationID);
+        organization.setId(orgID);
 
         return createTaskEvery(name, flux, every, owner, organization);
     }
@@ -407,7 +407,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(task, "task");
 
-        return getRuns(task.getId(), task.getOrganizationId(), afterTime, beforeTime, limit);
+        return getRuns(task.getId(), task.getOrgID(), afterTime, beforeTime, limit);
     }
 
     @Nonnull
@@ -527,7 +527,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
         Arguments.checkNotNull(task, "task");
 
-        return getLogs(task.getId(), task.getOrganizationId());
+        return getLogs(task.getId(), task.getOrgID());
     }
 
     @Nonnull
@@ -548,17 +548,17 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
                             @Nullable final String every,
                             @Nullable final String cron,
                             @Nonnull final User owner,
-                            @Nonnull final String organizationID) {
+                            @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(name, "name of the task");
         Arguments.checkNotNull(flux, "Flux script to run");
         Arguments.checkNotNull(owner, "User");
-        Arguments.checkNonEmpty(organizationID, "Organization ID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
         Arguments.checkDurationNotRequired(every, "Task.every");
 
         Task task = new Task();
         task.setName(name);
-        task.setOrganizationId(organizationID);
+        task.setOrgID(orgID);
         task.setOwner(owner);
         task.setStatus(Status.ACTIVE);
         task.setEvery(every);

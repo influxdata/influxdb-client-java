@@ -74,18 +74,18 @@ public interface OrganizationClient {
     /**
      * Delete a organization.
      *
-     * @param organizationID ID of organization to delete
+     * @param orgID ID of organization to delete
      */
-    void deleteOrganization(@Nonnull final String organizationID);
+    void deleteOrganization(@Nonnull final String orgID);
 
     /**
      * Retrieve a organization.
      *
-     * @param organizationID ID of organization to get
+     * @param orgID ID of organization to get
      * @return organization details
      */
     @Nullable
-    Organization findOrganizationByID(@Nonnull final String organizationID);
+    Organization findOrganizationByID(@Nonnull final String orgID);
 
     /**
      * List all organizations.
@@ -120,10 +120,10 @@ public interface OrganizationClient {
      *     a_secret_key
      * </pre>
      *
-     * @param organizationID the organization for get secrets
+     * @param orgID the organization for get secrets
      * @return the secret keys
      */
-    List<String> getSecrets(@Nonnull final String organizationID);
+    List<String> getSecrets(@Nonnull final String orgID);
 
     /**
      * Patches all provided secrets and updates any previous values.
@@ -136,10 +136,10 @@ public interface OrganizationClient {
     /**
      * Patches all provided secrets and updates any previous values.
      *
-     * @param secrets      secrets to update/add
-     * @param organizationID the organization for put secrets
+     * @param secrets secrets to update/add
+     * @param orgID   the organization for put secrets
      */
-    void putSecrets(@Nonnull final Map<String, String> secrets, @Nonnull final String organizationID);
+    void putSecrets(@Nonnull final Map<String, String> secrets, @Nonnull final String orgID);
 
     /**
      * Delete provided secrets.
@@ -152,19 +152,10 @@ public interface OrganizationClient {
     /**
      * Delete provided secrets.
      *
-     * @param secrets      secrets to delete
-     * @param organizationID the organization for delete secrets
+     * @param secrets secrets to delete
+     * @param orgID   the organization for delete secrets
      */
-    void deleteSecrets(@Nonnull final List<String> secrets, @Nonnull final String organizationID);
-
-    /**
-     * List all members of an organization.
-     *
-     * @param organizationID ID of organization to get members
-     * @return return the List all members of an organization
-     */
-    @Nonnull
-    List<ResourceMember> getMembers(@Nonnull final String organizationID);
+    void deleteSecrets(@Nonnull final List<String> secrets, @Nonnull final String orgID);
 
     /**
      * List all members of an organization.
@@ -174,6 +165,15 @@ public interface OrganizationClient {
      */
     @Nonnull
     List<ResourceMember> getMembers(@Nonnull final Organization organization);
+
+    /**
+     * List all members of an organization.
+     *
+     * @param orgID ID of organization to get members
+     * @return return the List all members of an organization
+     */
+    @Nonnull
+    List<ResourceMember> getMembers(@Nonnull final String orgID);
 
     /**
      * Add organization member.
@@ -188,12 +188,12 @@ public interface OrganizationClient {
     /**
      * Add organization member.
      *
-     * @param memberID       the ID of a member
-     * @param organizationID the ID of an organization
+     * @param memberID the ID of a member
+     * @param orgID    the ID of an organization
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String organizationID);
+    ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String orgID);
 
     /**
      * Removes a member from an organization.
@@ -206,19 +206,10 @@ public interface OrganizationClient {
     /**
      * Removes a member from an organization.
      *
-     * @param organizationID the ID of an organization
-     * @param memberID       the ID of a member
+     * @param orgID    the ID of an organization
+     * @param memberID the ID of a member
      */
-    void deleteMember(@Nonnull final String memberID, @Nonnull final String organizationID);
-
-    /**
-     * List all owners of an organization.
-     *
-     * @param organizationID ID of organization to get owners
-     * @return return the List all owners of an organization
-     */
-    @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final String organizationID);
+    void deleteMember(@Nonnull final String memberID, @Nonnull final String orgID);
 
     /**
      * List all owners of an organization.
@@ -228,6 +219,15 @@ public interface OrganizationClient {
      */
     @Nonnull
     List<ResourceMember> getOwners(@Nonnull final Organization organization);
+
+    /**
+     * List all owners of an organization.
+     *
+     * @param orgID ID of organization to get owners
+     * @return return the List all owners of an organization
+     */
+    @Nonnull
+    List<ResourceMember> getOwners(@Nonnull final String orgID);
 
     /**
      * Add organization owner.
@@ -242,12 +242,12 @@ public interface OrganizationClient {
     /**
      * Add organization owner.
      *
-     * @param organizationID the ID of an organization
-     * @param ownerID        the ID of a owner
+     * @param orgID   the ID of an organization
+     * @param ownerID the ID of a owner
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String organizationID);
+    ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String orgID);
 
     /**
      * Removes a owner from an organization.
@@ -260,8 +260,8 @@ public interface OrganizationClient {
     /**
      * Removes a owner from an organization.
      *
-     * @param organizationID the ID of an organization
-     * @param ownerID        the ID of a owner
+     * @param orgID   the ID of an organization
+     * @param ownerID the ID of a owner
      */
-    void deleteOwner(@Nonnull final String ownerID, @Nonnull final String organizationID);
+    void deleteOwner(@Nonnull final String ownerID, @Nonnull final String orgID);
 }

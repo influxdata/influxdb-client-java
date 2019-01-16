@@ -36,22 +36,22 @@ import org.influxdata.platform.domain.User;
 public interface UserClient {
 
     /**
-     * Creates a new user and sets {@link User#id} with the new identifier.
-     *
-     * @param name name of the user
-     * @return User created
-     */
-    @Nonnull
-    User createUser(@Nonnull final String name);
-
-    /**
-     * Creates a new user and sets {@link User#id} with the new identifier.
+     * Creates a new user and sets {@link User#getId()} with the new identifier.
      *
      * @param user the user to create
      * @return User created
      */
     @Nonnull
     User createUser(@Nonnull final User user);
+
+    /**
+     * Creates a new user and sets {@link User#getId()} with the new identifier.
+     *
+     * @param name name of the user
+     * @return User created
+     */
+    @Nonnull
+    User createUser(@Nonnull final String name);
 
     /**
      * Update a user.

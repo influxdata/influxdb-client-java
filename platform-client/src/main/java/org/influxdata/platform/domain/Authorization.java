@@ -49,6 +49,8 @@ public final class Authorization extends AbstractHasLinks {
 
     private Status status;
 
+    private String description;
+
     private List<Permission> permissions;
 
     public String getId() {
@@ -115,6 +117,14 @@ public final class Authorization extends AbstractHasLinks {
         this.orgName = orgName;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", Authorization.class.getSimpleName() + "[", "]")
@@ -125,6 +135,7 @@ public final class Authorization extends AbstractHasLinks {
                 .add("orgID='" + orgID + "'")
                 .add("orgName='" + orgName + "'")
                 .add("status=" + status)
+                .add("description=" + description)
                 .add("permissions=" + permissions)
                 .toString();
     }

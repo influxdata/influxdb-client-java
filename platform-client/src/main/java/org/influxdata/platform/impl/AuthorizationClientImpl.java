@@ -33,6 +33,7 @@ import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Authorizations;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
+import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.error.rest.NotFoundException;
 import org.influxdata.platform.rest.AbstractRestClient;
@@ -73,15 +74,17 @@ final class AuthorizationClientImpl extends AbstractRestClient implements Author
 
     @Nonnull
     @Override
-    public Authorization createAuthorization(@Nonnull final String organizationID,
+    public Authorization createAuthorization(@Nonnull final String orgID,
                                              @Nonnull final List<Permission> permissions) {
 
-        Arguments.checkNonEmpty(organizationID, "UserID");
+        Arguments.checkNonEmpty(orgID, "Organization ID");
         Arguments.checkNotNull(permissions, "Permissions are required");
 
         Authorization authorization = new Authorization();
-        authorization.setOrgID(organizationID);
+        authorization.setOrgID(orgID);
         authorization.setPermissions(permissions);
+        authorization.setStatus(Status.ACTIVE);
+        authorization.setDescription("x");
 
         return createAuthorization(authorization);
     }

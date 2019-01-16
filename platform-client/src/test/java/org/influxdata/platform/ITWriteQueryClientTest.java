@@ -36,6 +36,7 @@ import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
+import org.influxdata.platform.domain.PermissionResource;
 import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.option.WriteOptions;
@@ -69,26 +70,29 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
 
         super.setUp();
 
+        organization = findMyOrg();
+
         bucket = platformClient.createBucketClient()
-                .createBucket(generateName("h2o"), retentionRule(), "my-org");
+                .createBucket(generateName("h2o"), retentionRule(), organization);
+
+        PermissionResource resource = new PermissionResource();
+        resource.setId(bucket.getId());
+        resource.setOrgID(organization.getId());
+        resource.setType(PermissionResourceType.BUCKET);
 
         //
         // Add Permissions to read and write to the Bucket
         //
         Permission readBucket = new Permission();
-        readBucket.setResource(PermissionResourceType.BUCKET);
+        readBucket.setResource(resource);
         readBucket.setAction(Permission.READ_ACTION);
-        readBucket.setId(bucket.getId());
 
         Permission writeBucket = new Permission();
-        writeBucket.setResource(PermissionResourceType.BUCKET);
+        writeBucket.setResource(resource);
         writeBucket.setAction(Permission.WRITE_ACTION);
-        writeBucket.setId(bucket.getId());
 
         User loggedUser = platformClient.createUserClient().me();
         Assertions.assertThat(loggedUser).isNotNull();
-
-        organization = findMyOrg();
 
         Authorization authorization = platformClient.createAuthorizationClient()
                 .createAuthorization(organization, Arrays.asList(readBucket, writeBucket));
@@ -122,12 +126,15 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeClient.listenEvents(WriteSuccessEvent.class, listener);
 
+        LOG.log(Level.FINEST, "Write Event Listener count down: {0}. Before write.", countDownLatch);
+
         platformClient.setLogLevel(LogLevel.BODY);
 
         writeClient.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, record);
 
         listener.waitToCallback();
 
+        LOG.log(Level.FINEST, "Write Event Listener count down: {0}. After write.", countDownLatch);
         LOG.log(Level.FINEST, "Listener values: {0} errors: {1}", new Object[]{listener.values, listener.errors});
 
         Assertions.assertThat(listener.getValue()).isNotNull();
@@ -281,25 +288,31 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         Bucket bucket = platformClient.createBucketClient()
                 .createBucket(generateName("h2o"), retentionRule(), organization);
 
+        PermissionResource bucketResource = new PermissionResource();
+        bucketResource.setId(bucket.getId());
+        bucketResource.setOrgID(organization.getId());
+        bucketResource.setType(PermissionResourceType.BUCKET);
+
         Permission readBucket = new Permission();
-        readBucket.setResource(PermissionResourceType.BUCKET);
+        readBucket.setResource(bucketResource);
         readBucket.setAction(Permission.READ_ACTION);
-        readBucket.setId(bucket.getId());
 
         Permission writeBucket = new Permission();
-        writeBucket.setResource(PermissionResourceType.BUCKET);
+        writeBucket.setResource(bucketResource);
         writeBucket.setAction(Permission.WRITE_ACTION);
-        writeBucket.setId(bucket.getId());
+
+        PermissionResource orgResource = new PermissionResource();
+        orgResource.setId(organization.getId());
+        orgResource.setOrgID(organization.getId());
+        orgResource.setType(PermissionResourceType.ORG);
 
         Permission readOrganization = new Permission();
-        readOrganization.setResource(PermissionResourceType.ORG);
+        readOrganization.setResource(orgResource);
         readOrganization.setAction(Permission.READ_ACTION);
-        readOrganization.setId(organization.getId());
 
         Permission writeOrganization = new Permission();
-        writeOrganization.setResource(PermissionResourceType.ORG);
+        writeOrganization.setResource(orgResource);
         writeOrganization.setAction(Permission.WRITE_ACTION);
-        writeOrganization.setId(organization.getId());
 
         User loggedUser = platformClient.createUserClient().createUser(generateName("Tom Lik"));
         Assertions.assertThat(loggedUser).isNotNull();

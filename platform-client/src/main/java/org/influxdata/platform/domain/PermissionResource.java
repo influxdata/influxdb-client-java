@@ -21,37 +21,24 @@
  */
 package org.influxdata.platform.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.squareup.moshi.Json;
-
 /**
- * Bucket is a bucket.
+ * Resource is an authorizable resource.
  *
- * @author Jakub Bednar (bednar@github) (13/09/2018 09:21)
+ * @author Jakub Bednar (bednar@github) (16/01/2019 06:59)
  */
-public final class Bucket extends AbstractHasLinks {
+public class PermissionResource {
 
+    /**
+     * Resource ID.
+     */
     private String id;
-    private String name;
 
-    @Json(name = "organizationID")
+    /**
+     * Resource type.
+     */
+    private PermissionResourceType type;
+
     private String orgID;
-
-    @Json(name = "organization")
-    private String organizationName;
-
-    /**
-     * For support V1 sources.
-     */
-    @Json(name = "rp")
-    private String retentionPolicyName;
-
-    /**
-     * The retention rules.
-     */
-    private List<RetentionRule> retentionRules = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -61,12 +48,12 @@ public final class Bucket extends AbstractHasLinks {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public PermissionResourceType getType() {
+        return type;
     }
 
-    public void setName(final String name) {
-        this.name = name;
+    public void setType(final PermissionResourceType type) {
+        this.type = type;
     }
 
     public String getOrgID() {
@@ -75,29 +62,5 @@ public final class Bucket extends AbstractHasLinks {
 
     public void setOrgID(final String orgID) {
         this.orgID = orgID;
-    }
-
-    public String getOrganizationName() {
-        return organizationName;
-    }
-
-    public void setOrganizationName(final String organizationName) {
-        this.organizationName = organizationName;
-    }
-
-    public String getRetentionPolicyName() {
-        return retentionPolicyName;
-    }
-
-    public void setRetentionPolicyName(final String retentionPolicyName) {
-        this.retentionPolicyName = retentionPolicyName;
-    }
-
-    public List<RetentionRule> getRetentionRules() {
-        return retentionRules;
-    }
-
-    public void setRetentionRules(final List<RetentionRule> retentionRules) {
-        this.retentionRules = retentionRules;
     }
 }

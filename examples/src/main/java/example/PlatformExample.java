@@ -39,6 +39,7 @@ import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
+import org.influxdata.platform.domain.PermissionResource;
 import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.write.Point;
@@ -85,20 +86,22 @@ public class PlatformExample {
         //
         // Create New Bucket with retention 1h
         //
-        Bucket temperatureBucket = platform.createBucketClient()
-            .createBucket("temperature-sensors", medicalGMBH.getName());
+        Bucket temperatureBucket = platform.createBucketClient().createBucket("temperature-sensors", medicalGMBH);
 
         //
         // Add Permissions to read and write to the Bucket
         //
+        PermissionResource resource = new PermissionResource();
+        resource.setId(temperatureBucket.getId());
+        resource.setOrgID(medicalGMBH.getId());
+        resource.setType(PermissionResourceType.BUCKET);
+
         Permission readBucket = new Permission();
-        readBucket.setId(temperatureBucket.getId());
-        readBucket.setResource(PermissionResourceType.BUCKET);
+        readBucket.setResource(resource);
         readBucket.setAction(Permission.READ_ACTION);
 
         Permission writeBucket = new Permission();
-        writeBucket.setId(temperatureBucket.getId());
-        writeBucket.setResource(PermissionResourceType.BUCKET);
+        writeBucket.setResource(resource);
         writeBucket.setAction(Permission.WRITE_ACTION);
 
         Authorization authorization = platform.createAuthorizationClient()

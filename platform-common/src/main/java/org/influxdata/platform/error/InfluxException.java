@@ -158,7 +158,9 @@ public class InfluxException extends RuntimeException {
             }
 
             String value = Stream.of("X-Platform-Error-Code", "X-Influx-Error", "X-InfluxDb-Error")
-                    .map(name -> response.headers().get(name))
+                    .map(name -> {
+                        return response.headers().get(name);
+                    })
                     .filter(message -> message != null && !message.isEmpty()).findFirst()
                     .orElse(null);
 

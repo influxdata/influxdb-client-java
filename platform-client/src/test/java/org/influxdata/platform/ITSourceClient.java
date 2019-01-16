@@ -60,7 +60,7 @@ class ITSourceClient extends AbstractITClientTest {
 
         Source source = new Source();
 
-        source.setOrganizationID("02cebf26d7fc1000");
+        source.setOrgID("02cebf26d7fc1000");
         source.setDefaultSource(false);
         source.setName(generateName("Source"));
         source.setType(Source.SourceType.V1SourceType);
@@ -79,7 +79,7 @@ class ITSourceClient extends AbstractITClientTest {
         LOG.log(Level.INFO, "Created source: {0}", createdSource);
 
         Assertions.assertThat(createdSource.getId()).isNotBlank();
-        Assertions.assertThat(createdSource.getOrganizationID()).isEqualTo(source.getOrganizationID());
+        Assertions.assertThat(createdSource.getOrgID()).isEqualTo(source.getOrgID());
         Assertions.assertThat(createdSource.isDefaultSource()).isEqualTo(source.isDefaultSource());
         Assertions.assertThat(createdSource.getName()).isEqualTo(source.getName());
         Assertions.assertThat(createdSource.getType()).isEqualTo(source.getType());
@@ -133,7 +133,7 @@ class ITSourceClient extends AbstractITClientTest {
         Assertions.assertThat(sourceByID).isNotNull();
         Assertions.assertThat(sourceByID.getId()).isEqualTo(source.getId());
         Assertions.assertThat(sourceByID.getName()).isEqualTo(source.getName());
-        Assertions.assertThat(sourceByID.getOrganizationID()).isEqualTo(source.getOrganizationID());
+        Assertions.assertThat(sourceByID.getOrgID()).isEqualTo(source.getOrgID());
         Assertions.assertThat(sourceByID.getType()).isEqualTo(source.getType());
         Assertions.assertThat(sourceByID.getUrl()).isEqualTo(source.getUrl());
         Assertions.assertThat(sourceByID.isInsecureSkipVerify()).isEqualTo(source.isInsecureSkipVerify());
@@ -194,7 +194,7 @@ class ITSourceClient extends AbstractITClientTest {
         Source source = new Source();
 
         source.setName(generateName("Source"));
-        source.setOrganizationID("02cebf26d7fc1000");
+        source.setOrgID("02cebf26d7fc1000");
         source.setType(Source.SourceType.V1SourceType);
         source.setUrl("http://influxdb:8086");
         source.setInsecureSkipVerify(true);

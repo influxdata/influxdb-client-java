@@ -68,7 +68,7 @@ class ITBucketClientTest extends AbstractITClientTest {
         Assertions.assertThat(bucket).isNotNull();
         Assertions.assertThat(bucket.getId()).isNotBlank();
         Assertions.assertThat(bucket.getName()).isEqualTo(bucketName);
-        Assertions.assertThat(bucket.getOrganizationID()).isEqualTo(organization.getId());
+        Assertions.assertThat(bucket.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(bucket.getOrganizationName()).isEqualTo(organization.getName());
         Assertions.assertThat(bucket.getRetentionRules()).hasSize(1);
         Assertions.assertThat(bucket.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600L);
@@ -92,7 +92,7 @@ class ITBucketClientTest extends AbstractITClientTest {
         Assertions.assertThat(bucketByID).isNotNull();
         Assertions.assertThat(bucketByID.getId()).isEqualTo(bucket.getId());
         Assertions.assertThat(bucketByID.getName()).isEqualTo(bucket.getName());
-        Assertions.assertThat(bucketByID.getOrganizationID()).isEqualTo(bucket.getOrganizationID());
+        Assertions.assertThat(bucketByID.getOrgID()).isEqualTo(bucket.getOrgID());
         Assertions.assertThat(bucketByID.getOrganizationName()).isEqualTo(bucket.getOrganizationName());
         Assertions.assertThat(bucketByID.getRetentionRules().size()).isEqualTo(bucket.getRetentionRules().size());
         Assertions.assertThat(bucketByID.getRetentionRules()).hasSize(1);
@@ -115,7 +115,7 @@ class ITBucketClientTest extends AbstractITClientTest {
         bucketClient.createBucket(generateName("robot sensor"), retentionRule(), organization);
 
         Organization organization2 = organizationClient.createOrganization(generateName("Second"));
-        bucketClient.createBucket(generateName("robot sensor"), organization2.getName());
+        bucketClient.createBucket(generateName("robot sensor"), organization2.getId());
 
         List<Bucket> buckets = bucketClient.findBuckets();
         Assertions.assertThat(buckets).hasSize(size + 2);

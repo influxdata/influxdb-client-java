@@ -23,8 +23,6 @@ package org.influxdata.platform.domain;
 
 import java.util.StringJoiner;
 
-import com.squareup.moshi.Json;
-
 /**
  * Task is a task.
  *
@@ -47,8 +45,7 @@ public final class Task extends AbstractHasLinks {
     /**
      * The ID of the organization that owns this Task.
      */
-    @Json(name = "organizationID")
-    private String organizationId;
+    private String orgID;
 
     /**
      * The current status of the task. When updated to 'disabled', cancels all queued jobs of this task.
@@ -99,12 +96,12 @@ public final class Task extends AbstractHasLinks {
         this.owner = owner;
     }
 
-    public String getOrganizationId() {
-        return organizationId;
+    public String getOrgID() {
+        return orgID;
     }
 
-    public void setOrganizationId(final String organizationId) {
-        this.organizationId = organizationId;
+    public void setOrgID(final String orgID) {
+        this.orgID = orgID;
     }
 
     public Status getStatus() {
@@ -153,7 +150,7 @@ public final class Task extends AbstractHasLinks {
                 .add("id='" + id + "'")
                 .add("name='" + name + "'")
                 .add("owner=" + owner)
-                .add("organizationId='" + organizationId + "'")
+                .add("orgID='" + orgID + "'")
                 .add("status=" + status)
                 .add("flux='" + flux + "'")
                 .add("every='" + every + "'")

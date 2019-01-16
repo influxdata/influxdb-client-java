@@ -21,8 +21,6 @@
  */
 package org.influxdata.platform.domain;
 
-import java.util.StringJoiner;
-
 
 /**
  * Permission defines an action and a resource.
@@ -41,28 +39,9 @@ public final class Permission {
      */
     public static final String WRITE_ACTION = "write";
 
-    /**
-     * Resource ID.
-     */
-    private String id;
-    private PermissionResourceType resource;
     private String action;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(final String id) {
-        this.id = id;
-    }
-
-    public PermissionResourceType getResource() {
-        return resource;
-    }
-
-    public void setResource(final PermissionResourceType resource) {
-        this.resource = resource;
-    }
+    private PermissionResource resource;
 
     public String getAction() {
         return action;
@@ -72,11 +51,11 @@ public final class Permission {
         this.action = action;
     }
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", Permission.class.getSimpleName() + "[", "]")
-                .add("resource='" + resource + "'")
-                .add("action='" + action + "'")
-                .toString();
+    public PermissionResource getResource() {
+        return resource;
+    }
+
+    public void setResource(final PermissionResource resource) {
+        this.resource = resource;
     }
 }
