@@ -439,9 +439,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(runs.size()).isGreaterThan(1);
     }
 
-    //TODO wait to fix (task/backend/query_logreader.go:149) - FindRunByID (avoid "panic: column _measurement is not of type time goroutine")
     @Test
-    @Disabled
     void run() throws InterruptedException {
 
         String taskName = generateName("it task");
@@ -471,9 +469,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(run).isNull();
     }
 
-    //TODO wait to fix (task/backend/query_logreader.go:149) - FindRunByID (avoid "panic: column _measurement is not of type time goroutine") - https://github.com/influxdata/platform/pull/1225
     @Test
-    @Disabled
     void retryRun() throws InterruptedException {
 
         String taskName = generateName("it task");
@@ -488,9 +484,10 @@ class ITTaskClientTest extends AbstractITClientTest {
         Run run = taskClient.retryRun(runs.get(0));
 
         Assertions.assertThat(run).isNotNull();
-        Assertions.assertThat(run.getId()).isEqualTo(runs.get(0).getId());
+        Assertions.assertThat(run.getTaskID()).isEqualTo(runs.get(0).getTaskID());
 
-        Assertions.assertThat(runs.size()).isLessThan(taskClient.getRuns(task).size());
+        Assertions.assertThat(run.getStatus()).isEqualTo(RunStatus.SCHEDULED);
+        Assertions.assertThat(run.getTaskID()).isEqualTo(task.getId());
     }
 
     @Test
