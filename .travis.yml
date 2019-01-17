@@ -38,7 +38,7 @@ services:
 
 env:
   matrix:
-    - INFLUXDB_VERSION=1.7 INFLUX_PLATFORM_VERSION=latest
+    - INFLUXDB_VERSION=1.7 INFLUX_PLATFORM_VERSION=nightly
 
 install: true
 
