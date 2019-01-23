@@ -44,7 +44,7 @@ install: true
 
 script:
   - ./config/platform-restart.sh
-  - mvn -B clean install -Djava.util.logging.config.file=../config/logging.properties
+  - mvn -B clean install
   - bash <(curl -s https://codecov.io/bash)
 
 jobs:
