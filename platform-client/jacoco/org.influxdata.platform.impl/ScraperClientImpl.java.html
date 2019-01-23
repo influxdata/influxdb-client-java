@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ScraperClientImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Platform Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.platform.impl</a> &gt; <span class="el_source">ScraperClientImpl.java</span></div><h1>ScraperClientImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.platform.impl;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.platform.Arguments;
+import org.influxdata.platform.ScraperClient;
+import org.influxdata.platform.domain.ScraperTarget;
+import org.influxdata.platform.domain.ScraperTargetResponse;
+import org.influxdata.platform.domain.ScraperTargetResponses;
+import org.influxdata.platform.domain.ScraperType;
+import org.influxdata.platform.error.rest.NotFoundException;
+import org.influxdata.platform.rest.AbstractRestClient;
+
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (bednar@github) (22/01/2019 08:17)
+ */
+final class ScraperClientImpl extends AbstractRestClient implements ScraperClient {
+
+<span class="fc" id="L48">    private static final Logger LOG = Logger.getLogger(ScraperClientImpl.class.getName());</span>
+
+    private final PlatformService platformService;
+    private final JsonAdapter&lt;ScraperTarget&gt; adapter;
+
+<span class="fc" id="L53">    ScraperClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
+
+<span class="fc" id="L55">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
+<span class="fc" id="L56">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
+
+<span class="fc" id="L58">        this.platformService = platformService;</span>
+<span class="fc" id="L59">        this.adapter = moshi.adapter(ScraperTarget.class);</span>
+<span class="fc" id="L60">    }</span>
+
+    @Nonnull
+    @Override
+    public ScraperTargetResponse createScraperTarget(@Nonnull final ScraperTarget scraperTarget) {
+
+<span class="fc" id="L66">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
+
+<span class="fc" id="L68">        String json = adapter.toJson(scraperTarget);</span>
+<span class="fc" id="L69">        Call&lt;ScraperTargetResponse&gt; call = platformService.createScraperTarget(createBody(json));</span>
+
+<span class="fc" id="L71">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public ScraperTargetResponse createScraperTarget(@Nonnull final String name,
+                                                     @Nonnull final String url,
+                                                     @Nonnull final String bucketID,
+                                                     @Nonnull final String orgID) {
+
+<span class="fc" id="L81">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L82">        Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
+<span class="fc" id="L83">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
+<span class="fc" id="L84">        Arguments.checkNonEmpty(orgID, &quot; orgID&quot;);</span>
+
+<span class="fc" id="L86">        ScraperTarget scraperTarget = new ScraperTarget();</span>
+<span class="fc" id="L87">        scraperTarget.setName(name);</span>
+<span class="fc" id="L88">        scraperTarget.setUrl(url);</span>
+<span class="fc" id="L89">        scraperTarget.setBucketID(bucketID);</span>
+<span class="fc" id="L90">        scraperTarget.setOrgID(orgID);</span>
+<span class="fc" id="L91">        scraperTarget.setType(ScraperType.PROMETHEUS);</span>
+
+<span class="fc" id="L93">        return createScraperTarget(scraperTarget);</span>
+    }
+
+    @Nonnull
+    @Override
+    public ScraperTargetResponse updateScraperTarget(@Nonnull final ScraperTarget scraperTarget) {
+
+<span class="fc" id="L100">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
+
+<span class="fc" id="L102">        String json = adapter.toJson(scraperTarget);</span>
+
+<span class="fc" id="L104">        Call&lt;ScraperTargetResponse&gt; call = platformService.updateScraperTarget(scraperTarget.getId(), createBody(json));</span>
+
+<span class="fc" id="L106">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteScraperTarget(@Nonnull final ScraperTarget scraperTarget) {
+
+<span class="fc" id="L112">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
+
+<span class="fc" id="L114">        deleteScraperTarget(scraperTarget.getId());</span>
+<span class="fc" id="L115">    }</span>
+
+    @Override
+    public void deleteScraperTarget(@Nonnull final String scraperTargetID) {
+
+<span class="fc" id="L120">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+
+<span class="fc" id="L122">        Call&lt;Void&gt; call = platformService.deleteScraperTarget(scraperTargetID);</span>
+<span class="fc" id="L123">        execute(call);</span>
+<span class="fc" id="L124">    }</span>
+
+    @Nullable
+    @Override
+    public ScraperTargetResponse findScraperTargetByID(@Nonnull final String scraperTargetID) {
+
+<span class="fc" id="L130">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+
+<span class="fc" id="L132">        Call&lt;ScraperTargetResponse&gt; call = platformService.findScraperTargetByID(scraperTargetID);</span>
+
+<span class="fc" id="L134">        return execute(call, NotFoundException.class);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ScraperTargetResponse&gt; findScraperTargets() {
+
+<span class="fc" id="L141">        Call&lt;ScraperTargetResponses&gt; call = platformService.findScraperTargets();</span>
+
+<span class="fc" id="L143">        ScraperTargetResponses responses = execute(call);</span>
+<span class="fc" id="L144">        LOG.log(Level.FINEST, &quot;findScraperTargets found: {0}&quot;, responses);</span>
+
+<span class="fc" id="L146">        return responses.getTargetResponses();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

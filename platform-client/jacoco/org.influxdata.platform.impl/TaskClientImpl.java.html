@@ -103,15 +103,15 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
     @Override
     public List&lt;Task&gt; findTasksByOrganization(@Nonnull final Organization organization) {
 
-<span class="fc" id="L106">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+<span class="nc" id="L106">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
 
-<span class="fc" id="L108">        return findTasksByOrganizationID(organization.getId());</span>
+<span class="nc" id="L108">        return findTasksByOrganizationID(organization.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Task&gt; findTasksByOrganizationID(@Nullable final String orgID) {
-<span class="fc" id="L114">        return findTasks(null, null, orgID);</span>
+<span class="nc" id="L114">        return findTasks(null, null, orgID);</span>
     }
 
     @Nonnull
@@ -257,137 +257,137 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
     @Override
     public List&lt;ResourceMember&gt; getMembers(@Nonnull final String taskID) {
 
-<span class="fc" id="L260">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L260">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="fc" id="L262">        Call&lt;ResourceMembers&gt; call = platformService.findTaskMembers(taskID);</span>
+<span class="nc" id="L262">        Call&lt;ResourceMembers&gt; call = platformService.findTaskMembers(taskID);</span>
 
-<span class="fc" id="L264">        ResourceMembers resourceMembers = execute(call);</span>
-<span class="fc" id="L265">        LOG.log(Level.FINEST, &quot;findTaskMembers found: {0}&quot;, resourceMembers);</span>
+<span class="nc" id="L264">        ResourceMembers resourceMembers = execute(call);</span>
+<span class="nc" id="L265">        LOG.log(Level.FINEST, &quot;findTaskMembers found: {0}&quot;, resourceMembers);</span>
 
-<span class="fc" id="L267">        return resourceMembers.getUsers();</span>
+<span class="nc" id="L267">        return resourceMembers.getUsers();</span>
     }
 
     @Nonnull
     @Override
     public List&lt;ResourceMember&gt; getMembers(@Nonnull final Task task) {
 
-<span class="fc" id="L274">        Arguments.checkNotNull(task, &quot;Task&quot;);</span>
+<span class="nc" id="L274">        Arguments.checkNotNull(task, &quot;Task&quot;);</span>
 
-<span class="fc" id="L276">        return getMembers(task.getId());</span>
+<span class="nc" id="L276">        return getMembers(task.getId());</span>
     }
 
     @Nonnull
     @Override
     public ResourceMember addMember(@Nonnull final User member, @Nonnull final Task task) {
 
-<span class="fc" id="L283">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
-<span class="fc" id="L284">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+<span class="nc" id="L283">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L284">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
 
-<span class="fc" id="L286">        return addMember(member.getId(), task.getId());</span>
+<span class="nc" id="L286">        return addMember(member.getId(), task.getId());</span>
     }
 
     @Nonnull
     @Override
     public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String taskID) {
 
-<span class="fc" id="L293">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
-<span class="fc" id="L294">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L293">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="nc" id="L294">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="fc" id="L296">        User user = new User();</span>
-<span class="fc" id="L297">        user.setId(memberID);</span>
+<span class="nc" id="L296">        User user = new User();</span>
+<span class="nc" id="L297">        user.setId(memberID);</span>
 
-<span class="fc" id="L299">        String json = userAdapter.toJson(user);</span>
-<span class="fc" id="L300">        Call&lt;ResourceMember&gt; call = platformService.addTaskMember(taskID, createBody(json));</span>
+<span class="nc" id="L299">        String json = userAdapter.toJson(user);</span>
+<span class="nc" id="L300">        Call&lt;ResourceMember&gt; call = platformService.addTaskMember(taskID, createBody(json));</span>
 
-<span class="fc" id="L302">        return execute(call);</span>
+<span class="nc" id="L302">        return execute(call);</span>
     }
 
     @Override
     public void deleteMember(@Nonnull final User member, @Nonnull final Task task) {
 
-<span class="fc" id="L308">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
-<span class="fc" id="L309">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+<span class="nc" id="L308">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L309">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
 
-<span class="fc" id="L311">        deleteMember(member.getId(), task.getId());</span>
-<span class="fc" id="L312">    }</span>
+<span class="nc" id="L311">        deleteMember(member.getId(), task.getId());</span>
+<span class="nc" id="L312">    }</span>
 
     @Override
     public void deleteMember(@Nonnull final String memberID, @Nonnull final String taskID) {
 
-<span class="fc" id="L317">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
-<span class="fc" id="L318">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L317">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="nc" id="L318">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="fc" id="L320">        Call&lt;Void&gt; call = platformService.deleteTaskMember(taskID, memberID);</span>
-<span class="fc" id="L321">        execute(call);</span>
-<span class="fc" id="L322">    }</span>
+<span class="nc" id="L320">        Call&lt;Void&gt; call = platformService.deleteTaskMember(taskID, memberID);</span>
+<span class="nc" id="L321">        execute(call);</span>
+<span class="nc" id="L322">    }</span>
 
     @Nonnull
     @Override
     public List&lt;ResourceMember&gt; getOwners(@Nonnull final String taskID) {
 
-<span class="fc" id="L328">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L328">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="fc" id="L330">        Call&lt;ResourceMembers&gt; call = platformService.findTaskOwners(taskID);</span>
+<span class="nc" id="L330">        Call&lt;ResourceMembers&gt; call = platformService.findTaskOwners(taskID);</span>
 
-<span class="fc" id="L332">        ResourceMembers resourceMembers = execute(call);</span>
-<span class="fc" id="L333">        LOG.log(Level.FINEST, &quot;findTaskMembers found: {0}&quot;, resourceMembers);</span>
+<span class="nc" id="L332">        ResourceMembers resourceMembers = execute(call);</span>
+<span class="nc" id="L333">        LOG.log(Level.FINEST, &quot;findTaskMembers found: {0}&quot;, resourceMembers);</span>
 
-<span class="fc" id="L335">        return resourceMembers.getUsers();</span>
+<span class="nc" id="L335">        return resourceMembers.getUsers();</span>
     }
 
     @Nonnull
     @Override
     public List&lt;ResourceMember&gt; getOwners(@Nonnull final Task task) {
 
-<span class="fc" id="L342">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L342">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="fc" id="L344">        return getOwners(task.getId());</span>
+<span class="nc" id="L344">        return getOwners(task.getId());</span>
     }
 
     @Nonnull
     @Override
     public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Task task) {
 
-<span class="fc" id="L351">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
-<span class="fc" id="L352">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="nc" id="L351">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L352">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
 
-<span class="fc" id="L354">        return addOwner(owner.getId(), task.getId());</span>
+<span class="nc" id="L354">        return addOwner(owner.getId(), task.getId());</span>
     }
 
     @Nonnull
     @Override
     public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String taskID) {
 
-<span class="fc" id="L361">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="fc" id="L362">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L361">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L362">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="fc" id="L364">        User user = new User();</span>
-<span class="fc" id="L365">        user.setId(ownerID);</span>
+<span class="nc" id="L364">        User user = new User();</span>
+<span class="nc" id="L365">        user.setId(ownerID);</span>
 
-<span class="fc" id="L367">        String json = userAdapter.toJson(user);</span>
-<span class="fc" id="L368">        Call&lt;ResourceMember&gt; call = platformService.addTaskOwner(taskID, createBody(json));</span>
+<span class="nc" id="L367">        String json = userAdapter.toJson(user);</span>
+<span class="nc" id="L368">        Call&lt;ResourceMember&gt; call = platformService.addTaskOwner(taskID, createBody(json));</span>
 
-<span class="fc" id="L370">        return execute(call);</span>
+<span class="nc" id="L370">        return execute(call);</span>
     }
 
     @Override
     public void deleteOwner(@Nonnull final User owner, @Nonnull final Task task) {
 
-<span class="fc" id="L376">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
-<span class="fc" id="L377">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="nc" id="L376">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L377">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
 
-<span class="fc" id="L379">        deleteOwner(owner.getId(), task.getId());</span>
-<span class="fc" id="L380">    }</span>
+<span class="nc" id="L379">        deleteOwner(owner.getId(), task.getId());</span>
+<span class="nc" id="L380">    }</span>
 
     @Override
     public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String taskID) {
 
-<span class="fc" id="L385">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="fc" id="L386">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L385">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L386">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
 
-<span class="fc" id="L388">        Call&lt;Void&gt; call = platformService.deleteTaskOwner(taskID, ownerID);</span>
-<span class="fc" id="L389">        execute(call);</span>
-<span class="fc" id="L390">    }</span>
+<span class="nc" id="L388">        Call&lt;Void&gt; call = platformService.deleteTaskOwner(taskID, ownerID);</span>
+<span class="nc" id="L389">        execute(call);</span>
+<span class="nc" id="L390">    }</span>
 
     @Nonnull
     @Override
@@ -441,9 +441,9 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
     @Override
     public Run getRun(@Nonnull final Run run) {
 
-<span class="nc" id="L444">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+<span class="fc" id="L444">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
 
-<span class="nc" id="L446">        return getRun(run.getTaskID(), run.getId());</span>
+<span class="fc" id="L446">        return getRun(run.getTaskID(), run.getId());</span>
     }
 
     @Nullable
@@ -486,9 +486,9 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
     @Override
     public Run retryRun(@Nonnull final Run run) {
 
-<span class="nc" id="L489">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+<span class="fc" id="L489">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
 
-<span class="nc" id="L491">        return retryRun(run.getTaskID(), run.getId());</span>
+<span class="fc" id="L491">        return retryRun(run.getTaskID(), run.getId());</span>
     }
 
     @Nullable

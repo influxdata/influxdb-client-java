@@ -71,7 +71,7 @@ class AuthenticateInterceptor implements Interceptor {
 <span class="fc" id="L71">        final String requestPath = request.url().encodedPath();</span>
 
         // Is no authentication path?
-<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (NO_AUTH_ROUTE.stream().anyMatch(requestPath::endsWith)) {</span>
+<span class="fc bfc" id="L74" title="All 4 branches covered.">        if (NO_AUTH_ROUTE.stream().anyMatch(requestPath::endsWith) || signout.get()) {</span>
 <span class="fc" id="L75">            return chain.proceed(request);</span>
         }
 
@@ -105,7 +105,7 @@ class AuthenticateInterceptor implements Interceptor {
 
 <span class="fc" id="L106">        this.okHttpClient = okHttpClient;</span>
 
-<span class="fc bfc" id="L108" title="All 4 branches covered.">        if (!PlatformOptions.AuthScheme.SESSION.equals(platformOptions.getAuthScheme()) || signout.get()) {</span>
+<span class="pc bpc" id="L108" title="1 of 4 branches missed.">        if (!PlatformOptions.AuthScheme.SESSION.equals(platformOptions.getAuthScheme()) || signout.get()) {</span>
 <span class="fc" id="L109">            return;</span>
         }
 
@@ -149,23 +149,24 @@ class AuthenticateInterceptor implements Interceptor {
     void signout() throws IOException {
 
 <span class="fc bfc" id="L151" title="All 4 branches covered.">        if (!PlatformOptions.AuthScheme.SESSION.equals(platformOptions.getAuthScheme()) || signout.get()) {</span>
-<span class="fc" id="L152">            return;</span>
+<span class="fc" id="L152">            signout.set(true);</span>
+<span class="fc" id="L153">            return;</span>
         }
 
-<span class="fc" id="L155">        this.signout.set(true);</span>
-<span class="fc" id="L156">        this.sessionToken = null;</span>
+<span class="fc" id="L156">        this.signout.set(true);</span>
+<span class="fc" id="L157">        this.sessionToken = null;</span>
 
-<span class="fc" id="L158">        Request authRequest = new Request.Builder()</span>
-<span class="fc" id="L159">                .url(platformOptions.getUrl() + &quot;/api/v2/signout&quot;)</span>
-<span class="fc" id="L160">                .post(RequestBody.create(null, &quot;&quot;))</span>
-<span class="fc" id="L161">                .build();</span>
+<span class="fc" id="L159">        Request authRequest = new Request.Builder()</span>
+<span class="fc" id="L160">                .url(platformOptions.getUrl() + &quot;/api/v2/signout&quot;)</span>
+<span class="fc" id="L161">                .post(RequestBody.create(null, &quot;&quot;))</span>
+<span class="fc" id="L162">                .build();</span>
 
-<span class="fc" id="L163">        this.okHttpClient.newCall(authRequest).execute();</span>
-<span class="fc" id="L164">    }</span>
+<span class="fc" id="L164">        this.okHttpClient.newCall(authRequest).execute();</span>
+<span class="fc" id="L165">    }</span>
 
     @Nonnull
     private String string(final char[] password) {
-<span class="fc" id="L168">        return String.valueOf(password);</span>
+<span class="fc" id="L169">        return String.valueOf(password);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

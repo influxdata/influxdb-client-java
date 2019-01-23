@@ -34,8 +34,8 @@ import org.influxdata.platform.domain.OperationLogEntry;
 import org.influxdata.platform.domain.OperationLogResponse;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.Users;
-import org.influxdata.platform.error.rest.ForbiddenException;
 import org.influxdata.platform.error.rest.NotFoundException;
+import org.influxdata.platform.error.rest.UnauthorizedException;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -148,10 +148,10 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
 <span class="fc" id="L148">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
 
 <span class="fc" id="L150">        User user = findUserByID(userID);</span>
-<span class="fc bfc" id="L151" title="All 2 branches covered.">        if (user == null) {</span>
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">        if (user == null) {</span>
 
-<span class="fc" id="L153">            LOG.log(Level.WARNING, &quot;User with id: {} not found.&quot;, userID);</span>
-<span class="fc" id="L154">            return null;</span>
+<span class="nc" id="L153">            LOG.log(Level.WARNING, &quot;User with id: {} not found.&quot;, userID);</span>
+<span class="nc" id="L154">            return null;</span>
         }
 
 <span class="fc" id="L157">        return updateUserPassword(userID, user.getName(), oldPassword, newPassword);</span>
@@ -180,7 +180,7 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
 
 <span class="fc" id="L181">        Call&lt;User&gt; call = platformService.me();</span>
 
-<span class="fc" id="L183">        return execute(call, ForbiddenException.class);</span>
+<span class="fc" id="L183">        return execute(call, UnauthorizedException.class);</span>
     }
 
     @Nullable
@@ -204,7 +204,7 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
 
 <span class="fc" id="L205">        Call&lt;User&gt; call = platformService.mePassword(credentials, createBody(json));</span>
 
-<span class="fc" id="L207">        return execute(call, ForbiddenException.class);</span>
+<span class="fc" id="L207">        return execute(call, UnauthorizedException.class);</span>
     }
 
     @Nonnull
