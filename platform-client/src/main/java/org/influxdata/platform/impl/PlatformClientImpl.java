@@ -32,6 +32,7 @@ import org.influxdata.platform.BucketClient;
 import org.influxdata.platform.OrganizationClient;
 import org.influxdata.platform.PlatformClient;
 import org.influxdata.platform.QueryClient;
+import org.influxdata.platform.ScraperClient;
 import org.influxdata.platform.SourceClient;
 import org.influxdata.platform.TaskClient;
 import org.influxdata.platform.UserClient;
@@ -112,6 +113,12 @@ public final class PlatformClientImpl extends AbstractPlatformClient<PlatformSer
     @Override
     public UserClient createUserClient() {
         return new UserClientImpl(platformService, moshi);
+    }
+
+    @Nonnull
+    @Override
+    public ScraperClient createScraperClient() {
+        return new ScraperClientImpl(platformService, moshi);
     }
 
     @Nonnull

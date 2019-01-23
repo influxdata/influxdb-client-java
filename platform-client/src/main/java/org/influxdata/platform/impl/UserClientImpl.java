@@ -34,8 +34,8 @@ import org.influxdata.platform.domain.OperationLogEntry;
 import org.influxdata.platform.domain.OperationLogResponse;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.Users;
-import org.influxdata.platform.error.rest.ForbiddenException;
 import org.influxdata.platform.error.rest.NotFoundException;
+import org.influxdata.platform.error.rest.UnauthorizedException;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -180,7 +180,7 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
 
         Call<User> call = platformService.me();
 
-        return execute(call, ForbiddenException.class);
+        return execute(call, UnauthorizedException.class);
     }
 
     @Nullable
@@ -204,7 +204,7 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
 
         Call<User> call = platformService.mePassword(credentials, createBody(json));
 
-        return execute(call, ForbiddenException.class);
+        return execute(call, UnauthorizedException.class);
     }
 
     @Nonnull

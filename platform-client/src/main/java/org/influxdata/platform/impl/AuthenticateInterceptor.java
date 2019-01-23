@@ -71,7 +71,7 @@ class AuthenticateInterceptor implements Interceptor {
         final String requestPath = request.url().encodedPath();
 
         // Is no authentication path?
-        if (NO_AUTH_ROUTE.stream().anyMatch(requestPath::endsWith)) {
+        if (NO_AUTH_ROUTE.stream().anyMatch(requestPath::endsWith) || signout.get()) {
             return chain.proceed(request);
         }
 
@@ -149,6 +149,7 @@ class AuthenticateInterceptor implements Interceptor {
     void signout() throws IOException {
 
         if (!PlatformOptions.AuthScheme.SESSION.equals(platformOptions.getAuthScheme()) || signout.get()) {
+            signout.set(true);
             return;
         }
 

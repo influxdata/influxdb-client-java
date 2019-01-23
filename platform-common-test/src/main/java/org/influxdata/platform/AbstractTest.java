@@ -151,6 +151,6 @@ public abstract class AbstractTest {
 
         Assertions.assertThat(prefix).isNotBlank();
 
-        return prefix + System.currentTimeMillis();
+        return prefix + System.currentTimeMillis() + "-IT";
     }
 }

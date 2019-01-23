@@ -31,7 +31,6 @@ import java.util.logging.Logger;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.User;
-import org.influxdata.platform.rest.LogLevel;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,9 +50,7 @@ class ITOrganizationClientTest extends AbstractITClientTest {
     private UserClient userClient;
 
     @BeforeEach
-    void setUp() throws Exception {
-
-        super.setUp();
+    void setUp() {
 
         organizationClient = platformClient.createOrganizationClient();
         userClient = platformClient.createUserClient();

@@ -26,7 +26,7 @@ package org.influxdata.platform.domain;
  *
  * @author Jakub Bednar (bednar@github) (24/10/2018 10:38)
  */
-public class RetentionRule {
+public final class RetentionRule {
 
     private String type;
     private Long everySeconds;

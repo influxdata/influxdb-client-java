@@ -64,8 +64,6 @@ class ITTaskClientTest extends AbstractITClientTest {
     @BeforeEach
     void setUp() throws Exception {
 
-        super.setUp();
-
         organization = findMyOrg();
 
         user = platformClient.createUserClient().me();
@@ -176,7 +174,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
         Assertions.assertThat(task.getCron()).isEqualTo("0 2 * * *");
-        Assertions.assertThat(task.getEvery()).isEqualTo("0s");
+        Assertions.assertThat(task.getEvery()).isNull();
         Assertions.assertThat(task.getFlux()).endsWith(TASK_FLUX);
     }
 
@@ -235,6 +233,8 @@ class ITTaskClientTest extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/11491
     void findTasksByOrganizationID() throws Exception {
 
         Organization taskOrganization = platformClient.createOrganizationClient().createOrganization(generateName("TaskOrg"));
@@ -315,6 +315,8 @@ class ITTaskClientTest extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/11491
     void member() {
 
         UserClient userClient = platformClient.createUserClient();
@@ -345,6 +347,8 @@ class ITTaskClientTest extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/11491
     void owner() {
 
         UserClient userClient = platformClient.createUserClient();
@@ -592,9 +596,34 @@ class ITTaskClientTest extends AbstractITClientTest {
         deleteTask.setResource(resource);
         deleteTask.setAction(Permission.WRITE_ACTION);
 
+        PermissionResource orgResource = new PermissionResource();
+        orgResource.setType(PermissionResourceType.ORG);
+
+        Permission createOrg = new Permission();
+        createOrg.setAction(Permission.WRITE_ACTION);
+        createOrg.setResource(orgResource);
+
+        PermissionResource userResource = new PermissionResource();
+        userResource.setType(PermissionResourceType.USER);
+
+        Permission createUsers = new Permission();
+        createUsers.setAction(Permission.WRITE_ACTION);
+        createUsers.setResource(userResource);
+
+
+        PermissionResource authResource = new PermissionResource();
+        authResource.setType(PermissionResourceType.AUTHORIZATION);
+
+        Permission createAuth = new Permission();
+        createAuth.setAction(Permission.WRITE_ACTION);
+        createAuth.setResource(userResource);
+
         List<Permission> permissions = new ArrayList<>();
         permissions.add(createTask);
         permissions.add(deleteTask);
+        permissions.add(createOrg);
+        permissions.add(createUsers);
+        permissions.add(createAuth);
 
         return platformClient.createAuthorizationClient().createAuthorization(organization, permissions);
     }

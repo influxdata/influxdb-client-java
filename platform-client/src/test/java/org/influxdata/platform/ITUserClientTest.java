@@ -27,9 +27,11 @@ import java.util.logging.Logger;
 
 import org.influxdata.platform.domain.OperationLogEntry;
 import org.influxdata.platform.domain.User;
+import org.influxdata.platform.error.rest.UnauthorizedException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -45,9 +47,7 @@ class ITUserClientTest extends AbstractITClientTest {
     private UserClient userClient;
 
     @BeforeEach
-    void setUp() throws Exception {
-
-        super.setUp();
+    void setUp() {
 
         userClient = platformClient.createUserClient();
     }
@@ -152,6 +152,7 @@ class ITUserClientTest extends AbstractITClientTest {
     }
 
     @Test
+    @Tag("basic_auth")
     void updateMePassword() {
 
         User user = userClient.meUpdatePassword("my-password", "my-password");
@@ -171,6 +172,7 @@ class ITUserClientTest extends AbstractITClientTest {
     }
 
     @Test
+    @Tag("basic_auth")
     void updatePassword() {
 
         User user = userClient.me();
@@ -184,14 +186,16 @@ class ITUserClientTest extends AbstractITClientTest {
     }
 
     @Test
+    @Tag("basic_auth")
     void updatePasswordNotFound() {
 
-        User updatedUser = userClient.updateUserPassword("020f755c3c082000", "", "new-password");
-
-        Assertions.assertThat(updatedUser).isNull();
+        Assertions.assertThatThrownBy(() -> userClient.updateUserPassword("020f755c3c082000", "", "new-password"))
+                .isInstanceOf(UnauthorizedException.class)
+                .hasMessage("read:users/020f755c3c082000 is unauthorized");
     }
 
     @Test
+    @Tag("basic_auth")
     void updatePasswordById() {
 
         User user = userClient.me();

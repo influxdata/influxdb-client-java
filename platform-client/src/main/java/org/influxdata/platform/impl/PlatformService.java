@@ -39,6 +39,8 @@ import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ResourceMembers;
 import org.influxdata.platform.domain.Run;
 import org.influxdata.platform.domain.RunsResponse;
+import org.influxdata.platform.domain.ScraperTargetResponse;
+import org.influxdata.platform.domain.ScraperTargetResponses;
 import org.influxdata.platform.domain.Secrets;
 import org.influxdata.platform.domain.Source;
 import org.influxdata.platform.domain.Sources;
@@ -216,6 +218,11 @@ interface PlatformService {
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<Bucket> findBucketByID(@Nonnull @Path("id") final String bucketID);
+
+    @GET("/api/v2/buckets")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Buckets> findBucketByName(@Nonnull @Query("name") final String bucketName);
 
     @GET("/api/v2/buckets")
     @Nonnull
@@ -418,6 +425,33 @@ interface PlatformService {
     @Headers("Content-Type: application/json")
     Call<List<String>> findTaskLogs(@Nonnull @Path("id") final String taskID,
                                     @Nonnull @Query("orgID") final String orgID);
+
+
+    //
+    // Scrapers
+    //
+    @POST("/api/v2/scrapers")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<ScraperTargetResponse> createScraperTarget(@Nonnull @Body final RequestBody scraperTarget);
+
+    @PATCH("/api/v2/scrapers/{id}")
+    Call<ScraperTargetResponse> updateScraperTarget(@Nonnull @Path("id") final String userID,
+                                                    @Nonnull @Body final RequestBody scraperTarget);
+
+    @GET("/api/v2/scrapers/")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<ScraperTargetResponses> findScraperTargets();
+
+    @GET("/api/v2/scrapers/{id}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<ScraperTargetResponse> findScraperTargetByID(@Nonnull @Path("id") final String scraperTargetID);
+
+    @DELETE("/api/v2/scrapers/{id}")
+    Call<Void> deleteScraperTarget(@Nonnull @Path("id") final String scraperTargetID);
+
 
     // Write
     //

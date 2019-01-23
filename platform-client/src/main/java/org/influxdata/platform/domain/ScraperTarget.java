@@ -22,23 +22,20 @@
 package org.influxdata.platform.domain;
 
 /**
- * Resource is an authorizable resource.
+ * ScraperTarget is a target to scrape.
  *
- * @author Jakub Bednar (bednar@github) (16/01/2019 06:59)
+ * @author Jakub Bednar (bednar@github) (22/01/2019 07:57)
  */
-public final class PermissionResource {
+public class ScraperTarget extends AbstractHasLinks {
 
-    /**
-     * Resource ID.
-     */
     private String id;
+    private String name;
 
-    /**
-     * Resource type.
-     */
-    private PermissionResourceType type;
+    private ScraperType type;
 
+    private String url;
     private String orgID;
+    private String bucketID;
 
     public String getId() {
         return id;
@@ -48,12 +45,28 @@ public final class PermissionResource {
         this.id = id;
     }
 
-    public PermissionResourceType getType() {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public ScraperType getType() {
         return type;
     }
 
-    public void setType(final PermissionResourceType type) {
+    public void setType(final ScraperType type) {
         this.type = type;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(final String url) {
+        this.url = url;
     }
 
     public String getOrgID() {
@@ -62,5 +75,13 @@ public final class PermissionResource {
 
     public void setOrgID(final String orgID) {
         this.orgID = orgID;
+    }
+
+    public String getBucketID() {
+        return bucketID;
+    }
+
+    public void setBucketID(final String bucketID) {
+        this.bucketID = bucketID;
     }
 }

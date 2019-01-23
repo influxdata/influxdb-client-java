@@ -128,6 +128,15 @@ public interface BucketClient {
     Bucket findBucketByID(@Nonnull final String bucketID);
 
     /**
+     * Retrieve a bucket.
+     *
+     * @param bucketName Name of bucket to get
+     * @return bucket details
+     */
+    @Nullable
+    Bucket findBucketByName(@Nonnull final String bucketName);
+
+    /**
      * List all buckets.
      *
      * @return List all buckets

@@ -68,8 +68,6 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
     @BeforeEach
     void setUp() throws Exception {
 
-        super.setUp();
-
         organization = findMyOrg();
 
         bucket = platformClient.createBucketClient()
@@ -281,6 +279,15 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
     @Test
     void queryDataFromNewOrganization() throws Exception {
 
+        platformClient.close();
+
+        platformClient = PlatformClientFactory.create(platformURL, "my-user", "my-password".toCharArray());
+        String token = findMyToken();
+        platformClient.close();
+
+        // Login as operator
+        platformClient = PlatformClientFactory.create(platformURL, token.toCharArray());
+
         String orgName = generateName("new-org");
         Organization organization =
                 platformClient.createOrganizationClient().createOrganization(orgName);
@@ -320,9 +327,11 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         Authorization authorization = platformClient.createAuthorizationClient()
                 .createAuthorization(organization, Arrays.asList(readOrganization, writeOrganization, readBucket, writeBucket));
 
-        String token = authorization.getToken();
+        token = authorization.getToken();
 
         platformClient.close();
+
+        // Login as new user
         platformClient = PlatformClientFactory.create(platformURL, token.toCharArray());
         queryClient = platformClient.createQueryClient();
 

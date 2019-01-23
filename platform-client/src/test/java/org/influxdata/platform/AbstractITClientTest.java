@@ -26,9 +26,13 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.Permission;
+import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.RetentionRule;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/09/2018 10:29)
@@ -40,7 +44,8 @@ abstract class AbstractITClientTest extends AbstractTest {
     PlatformClient platformClient;
     String platformURL;
 
-    void setUp() throws Exception {
+    @BeforeEach
+    void initPlatformClient(TestInfo testInfo) throws Exception {
 
         String platformIP = System.getenv().getOrDefault("PLATFORM_IP", "127.0.0.1");
         String platformPort = System.getenv().getOrDefault("PLATFORM_PORT", "9999");
@@ -49,6 +54,16 @@ abstract class AbstractITClientTest extends AbstractTest {
         LOG.log(Level.FINEST, "Platform URL: {0}", platformURL);
 
         platformClient = PlatformClientFactory.create(platformURL, "my-user", "my-password".toCharArray());
+
+        boolean basic_auth = testInfo.getTags().contains("basic_auth");
+        
+        if (!basic_auth) {
+
+            String token = findMyToken();
+
+            platformClient.close();
+            platformClient = PlatformClientFactory.create(platformURL, token.toCharArray());
+        }
     }
 
     @AfterEach
@@ -62,6 +77,21 @@ abstract class AbstractITClientTest extends AbstractTest {
         retentionRule.setType("expire");
         retentionRule.setEverySeconds(3600L);
         return retentionRule;
+    }
+
+    @Nonnull
+    String findMyToken() {
+        return platformClient.createAuthorizationClient()
+                .findAuthorizations()
+                .stream()
+                .filter(authorization -> authorization.getPermissions().stream()
+                        .map(Permission::getResource)
+                        .anyMatch(resource ->
+                                resource.getType().equals(PermissionResourceType.ORG) &&
+                                        resource.getId() == null &&
+                                        resource.getOrgID() == null))
+                .findFirst()
+                .orElseThrow(IllegalStateException::new).getToken();
     }
 
     @Nonnull

@@ -111,6 +111,14 @@ public interface PlatformClient extends AutoCloseable {
     UserClient createUserClient();
 
     /**
+     * Get the {@link org.influxdata.platform.domain.ScraperTarget} client.
+     *
+     * @return he new client instance for Scraper API
+     */
+    @Nonnull
+    ScraperClient createScraperClient();
+
+    /**
      * Get the health of an instance.
      *
      * @return health of an instance

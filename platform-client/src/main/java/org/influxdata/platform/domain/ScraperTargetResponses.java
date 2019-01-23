@@ -21,46 +21,24 @@
  */
 package org.influxdata.platform.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.squareup.moshi.Json;
+
 /**
- * Resource is an authorizable resource.
- *
- * @author Jakub Bednar (bednar@github) (16/01/2019 06:59)
+ * @author Jakub Bednar (bednar@github) (22/01/2019 10:18)
  */
-public final class PermissionResource {
+public final class ScraperTargetResponses extends AbstractHasLinks {
 
-    /**
-     * Resource ID.
-     */
-    private String id;
+    @Json(name = "configurations")
+    private List<ScraperTargetResponse> targetResponses = new ArrayList<>();
 
-    /**
-     * Resource type.
-     */
-    private PermissionResourceType type;
-
-    private String orgID;
-
-    public String getId() {
-        return id;
+    public List<ScraperTargetResponse> getTargetResponses() {
+        return targetResponses;
     }
 
-    public void setId(final String id) {
-        this.id = id;
-    }
-
-    public PermissionResourceType getType() {
-        return type;
-    }
-
-    public void setType(final PermissionResourceType type) {
-        this.type = type;
-    }
-
-    public String getOrgID() {
-        return orgID;
-    }
-
-    public void setOrgID(final String orgID) {
-        this.orgID = orgID;
+    public void setTargetResponses(final List<ScraperTargetResponse> targetResponses) {
+        this.targetResponses = targetResponses;
     }
 }

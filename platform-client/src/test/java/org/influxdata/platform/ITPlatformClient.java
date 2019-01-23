@@ -27,7 +27,6 @@ import org.influxdata.platform.domain.Health;
 import org.influxdata.platform.domain.Ready;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -37,11 +36,6 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnitPlatform.class)
 class ITPlatformClient extends AbstractITClientTest {
-
-    @BeforeEach
-    void setUp() throws Exception  {
-        super.setUp();
-    }
 
     @Test
     void health() {

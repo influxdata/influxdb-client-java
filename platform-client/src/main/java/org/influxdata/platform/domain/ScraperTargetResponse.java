@@ -21,46 +21,32 @@
  */
 package org.influxdata.platform.domain;
 
+import com.squareup.moshi.Json;
+
 /**
- * Resource is an authorizable resource.
- *
- * @author Jakub Bednar (bednar@github) (16/01/2019 06:59)
+ * @author Jakub Bednar (bednar@github) (22/01/2019 08:06)
  */
-public final class PermissionResource {
+public final class ScraperTargetResponse extends ScraperTarget {
 
-    /**
-     * Resource ID.
-     */
-    private String id;
+    @Json(name = "organization")
+    private String organizationName;
 
-    /**
-     * Resource type.
-     */
-    private PermissionResourceType type;
+    @Json(name = "bucket")
+    private String bucketName;
 
-    private String orgID;
-
-    public String getId() {
-        return id;
+    public String getOrganizationName() {
+        return organizationName;
     }
 
-    public void setId(final String id) {
-        this.id = id;
+    public void setOrganizationName(final String organizationName) {
+        this.organizationName = organizationName;
     }
 
-    public PermissionResourceType getType() {
-        return type;
+    public String getBucketName() {
+        return bucketName;
     }
 
-    public void setType(final PermissionResourceType type) {
-        this.type = type;
-    }
-
-    public String getOrgID() {
-        return orgID;
-    }
-
-    public void setOrgID(final String orgID) {
-        this.orgID = orgID;
+    public void setBucketName(final String bucketName) {
+        this.bucketName = bucketName;
     }
 }

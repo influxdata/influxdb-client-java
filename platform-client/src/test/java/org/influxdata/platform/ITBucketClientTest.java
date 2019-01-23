@@ -47,15 +47,20 @@ class ITBucketClientTest extends AbstractITClientTest {
     private UserClient userClient;
 
     @BeforeEach
-    void setUp() throws Exception {
-
-        super.setUp();
+    void setUp() {
 
         bucketClient = platformClient.createBucketClient();
         organizationClient = platformClient.createOrganizationClient();
         userClient = platformClient.createUserClient();
 
         organization = organizationClient.createOrganization(generateName("Org"));
+
+        bucketClient.findBuckets()
+                .stream()
+                .filter(bucket -> bucket.getName().endsWith("-IT"))
+                .forEach(bucket -> {
+                    bucketClient.deleteBucket(bucket);
+                });
     }
 
     @Test

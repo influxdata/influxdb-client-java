@@ -40,15 +40,24 @@ public enum PermissionResourceType {
     @Json(name = "orgs")
     ORG,
 
+    @Json(name = "sources")
+    SOURCE,
+
     @Json(name = "tasks")
     TASK,
 
     @Json(name = "telegrafs")
     TELEGRAF,
 
-    @Json(name = "sources")
-    SOURCE,
-
     @Json(name = "users")
-    USER
+    USER,
+
+    @Json(name = "macros")
+    MACRO,
+
+    @Json(name = "scrapers")
+    SCRAPER,
+
+    @Json(name = "secrets")
+    SECRET,
 }

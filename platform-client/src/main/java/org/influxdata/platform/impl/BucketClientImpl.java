@@ -75,6 +75,17 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
         return execute(bucket, NotFoundException.class);
     }
 
+    @Nullable
+    @Override
+    public Bucket findBucketByName(@Nonnull final String bucketName) {
+
+        Arguments.checkNonEmpty(bucketName, "Bucket Name");
+
+        Call<Buckets> bucket = platformService.findBucketByName(bucketName);
+
+        return execute(bucket).getBuckets().stream().findFirst().orElse(null);
+    }
+
     @Nonnull
     @Override
     public List<Bucket> findBuckets() {

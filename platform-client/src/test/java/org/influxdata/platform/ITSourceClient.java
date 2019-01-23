@@ -48,9 +48,7 @@ class ITSourceClient extends AbstractITClientTest {
     private SourceClient sourceClient;
 
     @BeforeEach
-    void setUp() throws Exception {
-
-        super.setUp();
+    void setUp() {
 
         sourceClient = platformClient.createSourceClient();
     }
