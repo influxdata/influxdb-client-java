@@ -44,7 +44,7 @@ install: true
 
 script:
   - ./config/platform-restart.sh
-  - mvn -B clean install
+  - mvn -B clean install -Dmaven.javadoc.skip=true
   - bash <(curl -s https://codecov.io/bash)
 
 jobs:
