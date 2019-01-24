@@ -113,6 +113,25 @@ class ITBucketClientTest extends AbstractITClientTest {
     }
 
     @Test
+    void findBucketByName() {
+
+        Bucket bucket = bucketClient.findBucketByName("my-bucket");
+
+        Assertions.assertThat(bucket).isNotNull();
+        Assertions.assertThat(bucket.getId()).isNotEmpty();
+        Assertions.assertThat(bucket.getName()).isEqualTo("my-bucket");
+        Assertions.assertThat(bucket.getOrgID()).isEqualTo(findMyOrg().getId());
+    }
+
+    @Test
+    void findBucketByNameNotFound() {
+
+        Bucket bucket = bucketClient.findBucketByName("my-bucket-not-found");
+
+        Assertions.assertThat(bucket).isNull();
+    }
+
+    @Test
     void findBuckets() {
 
         int size = bucketClient.findBuckets().size();
