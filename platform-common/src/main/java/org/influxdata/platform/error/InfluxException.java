@@ -21,7 +21,6 @@
  */
 package org.influxdata.platform.error;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -46,7 +45,7 @@ public class InfluxException extends RuntimeException {
     private final Response<?> response;
     private final String message;
 
-    private String errorBody = null;
+    private JSONObject errorBody = new JSONObject();
 
     public InfluxException(@Nullable final String message) {
 
@@ -64,14 +63,14 @@ public class InfluxException extends RuntimeException {
             this.response = null;
         }
 
-        this.message = errorMessage();
+        this.message = messageFromResponse();
     }
 
     public InfluxException(@Nullable final Response<?> cause) {
 
         super();
         this.response = cause;
-        this.message = errorMessage();
+        this.message = messageFromResponse();
     }
 
     @Override
@@ -119,42 +118,26 @@ public class InfluxException extends RuntimeException {
      * @return a response body
      */
     @Nonnull
-    public String errorBody() throws IOException {
-
-        if (errorBody != null) {
-            return errorBody;
-        }
-
-        if (response != null) {
-            ResponseBody body = response.errorBody();
-            if (body == null) {
-                errorBody = "";
-            } else {
-                errorBody = body.source().readUtf8();
-            }
-        } else {
-            errorBody = "";
-        }
+    public JSONObject errorBody() {
 
         return errorBody;
     }
 
     @Nullable
-    private String errorMessage() {
+    private String messageFromResponse() {
 
         if (response != null) {
 
-            // try read error body as JSON
-            if (response.headers().get("X-Platform-Error-Code") != null) {
-
-                try {
-                    JSONObject jsonObject = new JSONObject(errorBody());
-                    if (jsonObject.has("message")) {
-                        return jsonObject.getString("message");
+            try {
+                ResponseBody body = response.errorBody();
+                if (body != null) {
+                    errorBody = new JSONObject(body.source().readUtf8());
+                    if (errorBody.has("message")) {
+                        return errorBody.getString("message");
                     }
-                } catch (Exception e) {
-                    LOG.log(Level.FINEST, "Can't parse msg from response {}", response);
                 }
+            } catch (Exception e) {
+                LOG.log(Level.FINEST, "Can't parse msg from response {}", response);
             }
 
             String value = Stream.of("X-Platform-Error-Code", "X-Influx-Error", "X-InfluxDb-Error")

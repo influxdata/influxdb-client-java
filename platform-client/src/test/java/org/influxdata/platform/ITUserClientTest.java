@@ -31,6 +31,7 @@ import org.influxdata.platform.error.rest.UnauthorizedException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -183,6 +184,24 @@ class ITUserClientTest extends AbstractITClientTest {
         Assertions.assertThat(updatedUser).isNotNull();
         Assertions.assertThat(updatedUser.getName()).isEqualTo(user.getName());
         Assertions.assertThat(updatedUser.getId()).isEqualTo(user.getId());
+    }
+
+    //TODO set user password -> https://github.com/influxdata/influxdb/issues/11590
+    @Test
+    @Disabled
+    void createNewUserAndSetPassword() throws Exception {
+
+        User myNewUser = userClient.createUser(generateName("My new user"));
+
+        platformClient.close();
+
+        //TODO set user password -> https://github.com/influxdata/influxdb/issues/11590
+        platformClient = PlatformClientFactory.create(platformURL, "my-user", "my-password".toCharArray());
+        userClient = platformClient.createUserClient();
+
+        User user = userClient.updateUserPassword(myNewUser, "", "strong-password");
+
+        Assertions.assertThat(myNewUser.getId()).isEqualTo(user.getId());
     }
 
     @Test

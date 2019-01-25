@@ -71,7 +71,6 @@ public interface TaskClient {
      * @param name         description of the task
      * @param flux         the Flux script to run for this task
      * @param cron         a task repetition schedule in the form '* * * * * *'
-     * @param owner        the user that owns this Task
      * @param organization the organization that owns this Task
      * @return Task created
      */
@@ -79,7 +78,6 @@ public interface TaskClient {
     Task createTaskCron(@Nonnull final String name,
                         @Nonnull final String flux,
                         @Nonnull final String cron,
-                        @Nonnull final User owner,
                         @Nonnull final Organization organization);
 
     /**
@@ -87,18 +85,16 @@ public interface TaskClient {
      * The {@link Task#getFlux()} is without a cron or a every repetition.
      * The repetition is automatically append to the <a href="http://bit.ly/option-statement">option statement</a>.
      *
-     * @param name   description of the task
-     * @param flux   the Flux script to run for this task
-     * @param cron   a task repetition schedule in the form '* * * * * *'
-     * @param userID an id of the user that owns this Task
-     * @param orgID  an id of the organization that owns this Task
+     * @param name  description of the task
+     * @param flux  the Flux script to run for this task
+     * @param cron  a task repetition schedule in the form '* * * * * *'
+     * @param orgID an id of the organization that owns this Task
      * @return Task created
      */
     @Nonnull
     Task createTaskCron(@Nonnull final String name,
                         @Nonnull final String flux,
                         @Nonnull final String cron,
-                        @Nonnull final String userID,
                         @Nonnull final String orgID);
 
     /**
@@ -109,7 +105,6 @@ public interface TaskClient {
      * @param name         description of the task
      * @param flux         the Flux script to run for this task
      * @param every        a task repetition by duration expression
-     * @param owner        the user that owns this Task
      * @param organization the organization that owns this Task
      * @return Task created
      */
@@ -117,7 +112,6 @@ public interface TaskClient {
     Task createTaskEvery(@Nonnull final String name,
                          @Nonnull final String flux,
                          @Nonnull final String every,
-                         @Nonnull final User owner,
                          @Nonnull final Organization organization);
 
     /**
@@ -125,18 +119,16 @@ public interface TaskClient {
      * The {@link Task#getFlux()} is without a cron or a every repetition. The repetition is automatically append
      * to the <a href="http://bit.ly/option-statement">option statement</a>.
      *
-     * @param name   description of the task
-     * @param flux   the Flux script to run for this task
-     * @param every  a task repetition by duration expression
-     * @param userID an id of the user that owns this Task
-     * @param orgID  an id of the organization that owns this Task
+     * @param name  description of the task
+     * @param flux  the Flux script to run for this task
+     * @param every a task repetition by duration expression
+     * @param orgID an id of the organization that owns this Task
      * @return Task created
      */
     @Nonnull
     Task createTaskEvery(@Nonnull final String name,
                          @Nonnull final String flux,
                          @Nonnull final String every,
-                         @Nonnull final String userID,
                          @Nonnull final String orgID);
 
     /**
@@ -410,7 +402,7 @@ public interface TaskClient {
      * Retrieve all logs for a run.
      *
      * @param run   the run with a taskID and a runID
-     * @param orgID
+     * @param orgID ID of organization
      * @return the list of all logs for a run
      */
     @Nonnull

@@ -93,22 +93,26 @@ public abstract class AbstractRestClient {
                 return response.body();
             } else {
 
-                InfluxException influxException = responseToError(response);
+                InfluxException ie = responseToError(response);
 
                 //
                 // The error message signal not found on the server => return null
                 //
-                boolean nullByMessage = nullError != null && nullError.equals(influxException.getMessage());
-                boolean nullByType = nullType != null && nullType.isAssignableFrom(influxException.getClass());
+                boolean nullByMessage = nullError != null && (nullError.equals(ie.getMessage())
+                        ||
+                        //TODO https://github.com/influxdata/influxdb/issues/11589
+                        (ie.errorBody().has("error") && ie.errorBody().getString("error").equals(nullError)))
+                        ;
+                boolean nullByType = nullType != null && nullType.isAssignableFrom(ie.getClass());
 
                 if (nullByMessage || nullByType) {
 
-                    LOG.log(Level.FINEST, "Error is considered as null response.", influxException);
+                    LOG.log(Level.FINEST, "Error is considered as null response.", ie);
 
                     return null;
                 }
 
-                throw influxException;
+                throw ie;
             }
         } catch (IOException e) {
             throw new InfluxException(e);
@@ -117,7 +121,7 @@ public abstract class AbstractRestClient {
 
     @Nonnull
     @SuppressWarnings("MagicNumber")
-    protected InfluxException responseToError(@Nonnull final Response<?> response) {
+    InfluxException responseToError(@Nonnull final Response<?> response) {
 
         Arguments.checkNotNull(response, "response");
 

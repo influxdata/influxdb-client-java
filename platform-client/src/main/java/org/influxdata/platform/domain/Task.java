@@ -38,11 +38,6 @@ public final class Task extends AbstractHasLinks {
     private String name;
 
     /**
-     * The {@link User} that owns this Task.
-     */
-    private User owner;
-
-    /**
      * The ID of the organization that owns this Task.
      */
     private String orgID;
@@ -86,14 +81,6 @@ public final class Task extends AbstractHasLinks {
 
     public void setName(final String name) {
         this.name = name;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(final User owner) {
-        this.owner = owner;
     }
 
     public String getOrgID() {
@@ -149,7 +136,6 @@ public final class Task extends AbstractHasLinks {
         return new StringJoiner(", ", Task.class.getSimpleName() + "[", "]")
                 .add("id='" + id + "'")
                 .add("name='" + name + "'")
-                .add("owner=" + owner)
                 .add("orgID='" + orgID + "'")
                 .add("status=" + status)
                 .add("flux='" + flux + "'")

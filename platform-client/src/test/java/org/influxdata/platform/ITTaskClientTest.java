@@ -24,6 +24,7 @@ package org.influxdata.platform;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
@@ -56,7 +57,6 @@ class ITTaskClientTest extends AbstractITClientTest {
     private static final Logger LOG = Logger.getLogger(ITTaskClientTest.class.getName());
     private static final String TASK_FLUX = "from(bucket:\"my-bucket\") |> range(start: 0) |> last()";
 
-    private User user;
     private Organization organization;
 
     private TaskClient taskClient;
@@ -65,8 +65,6 @@ class ITTaskClientTest extends AbstractITClientTest {
     void setUp() throws Exception {
 
         organization = findMyOrg();
-
-        user = platformClient.createUserClient().me();
 
         //
         // Add Task permission
@@ -95,7 +93,6 @@ class ITTaskClientTest extends AbstractITClientTest {
         Task task = new Task();
         task.setName(taskName);
         task.setOrgID(organization.getId());
-        task.setOwner(user);
         task.setFlux(flux);
         task.setStatus(Status.ACTIVE);
 
@@ -104,9 +101,6 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(task).isNotNull();
         Assertions.assertThat(task.getId()).isNotBlank();
         Assertions.assertThat(task.getName()).isEqualTo(taskName);
-        Assertions.assertThat(task.getOwner()).isNotNull();
-        Assertions.assertThat(task.getOwner().getId()).isEqualTo(user.getId());
-        Assertions.assertThat(task.getOwner().getName()).isEqualTo(user.getName());
         Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
         Assertions.assertThat(task.getEvery()).isEqualTo("1h0m0s");
@@ -127,7 +121,6 @@ class ITTaskClientTest extends AbstractITClientTest {
         Task task = new Task();
         task.setName(taskName);
         task.setOrgID(organization.getId());
-        task.setOwner(user);
         task.setFlux(flux);
         task.setStatus(Status.ACTIVE);
         task.setOffset("30m");
@@ -143,14 +136,11 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1h", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1h", organization);
 
         Assertions.assertThat(task).isNotNull();
         Assertions.assertThat(task.getId()).isNotBlank();
         Assertions.assertThat(task.getName()).isEqualTo(taskName);
-        Assertions.assertThat(task.getOwner()).isNotNull();
-        Assertions.assertThat(task.getOwner().getId()).isEqualTo(user.getId());
-        Assertions.assertThat(task.getOwner().getName()).isEqualTo(user.getName());
         Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
         Assertions.assertThat(task.getEvery()).isEqualTo("1h0m0s");
@@ -163,14 +153,11 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", user, organization);
+        Task task = taskClient.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", organization);
 
         Assertions.assertThat(task).isNotNull();
         Assertions.assertThat(task.getId()).isNotBlank();
         Assertions.assertThat(task.getName()).isEqualTo(taskName);
-        Assertions.assertThat(task.getOwner()).isNotNull();
-        Assertions.assertThat(task.getOwner().getId()).isEqualTo(user.getId());
-        Assertions.assertThat(task.getOwner().getName()).isEqualTo(user.getName());
         Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
         Assertions.assertThat(task.getCron()).isEqualTo("0 2 * * *");
@@ -183,7 +170,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", user.getId(), organization.getId());
+        Task task = taskClient.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", organization.getId());
 
         Task taskByID = taskClient.findTaskByID(task.getId());
         LOG.info("TaskByID: " + taskByID);
@@ -191,8 +178,6 @@ class ITTaskClientTest extends AbstractITClientTest {
         Assertions.assertThat(taskByID).isNotNull();
         Assertions.assertThat(taskByID.getId()).isEqualTo(task.getId());
         Assertions.assertThat(taskByID.getName()).isEqualTo(task.getName());
-        Assertions.assertThat(taskByID.getOwner()).isNotNull();
-        Assertions.assertThat(taskByID.getOwner().getId()).isEqualTo(task.getOwner().getId());
         Assertions.assertThat(taskByID.getOrgID()).isEqualTo(task.getOrgID());
         Assertions.assertThat(taskByID.getEvery()).isNull();
         Assertions.assertThat(taskByID.getCron()).isEqualTo(task.getCron());
@@ -213,7 +198,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         int size = taskClient.findTasks().size();
 
-        Task everyTask = taskClient.createTaskEvery(generateName("it task"), TASK_FLUX, "2h", user.getId(), organization.getId());
+        Task everyTask = taskClient.createTaskEvery(generateName("it task"), TASK_FLUX, "2h", organization.getId());
         Assertions.assertThat(everyTask).isNotNull();
 
         List<Task> tasks = taskClient.findTasks();
@@ -222,11 +207,13 @@ class ITTaskClientTest extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO set user password -> https://github.com/influxdata/influxdb/issues/11590
     void findTasksByUserID() {
 
         User taskUser = platformClient.createUserClient().createUser(generateName("TaskUser"));
 
-        taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", taskUser, organization);
+        taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization);
 
         List<Task> tasks = taskClient.findTasksByUser(taskUser);
         Assertions.assertThat(tasks).hasSize(1);
@@ -244,7 +231,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         platformClient = PlatformClientFactory.create(platformURL, authorization.getToken().toCharArray());
         taskClient = platformClient.createTaskClient();
 
-        taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", user, taskOrganization);
+        taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", taskOrganization);
 
         List<Task> tasks = taskClient.findTasksByOrganization(taskOrganization);
         Assertions.assertThat(tasks).hasSize(1);
@@ -255,8 +242,8 @@ class ITTaskClientTest extends AbstractITClientTest {
     @Test
     void findTasksAfterSpecifiedID() {
 
-        Task task1 = taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", user, organization);
-        Task task2 = taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", user, organization);
+        Task task1 = taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization);
+        Task task2 = taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization);
 
         List<Task> tasks = taskClient.findTasks(task1.getId(), null, null);
 
@@ -267,7 +254,7 @@ class ITTaskClientTest extends AbstractITClientTest {
     @Test
     void deleteTask() {
 
-        Task createdTask = taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", user, organization);
+        Task createdTask = taskClient.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization);
         Assertions.assertThat(createdTask).isNotNull();
 
         Task foundTask = taskClient.findTaskByID(createdTask.getId());
@@ -286,7 +273,7 @@ class ITTaskClientTest extends AbstractITClientTest {
     void updateTask() {
 
         String taskName = generateName("it task");
-        Task cronTask = taskClient.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", user, organization);
+        Task cronTask = taskClient.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", organization);
 
         String flux = "option task = {\n"
                 + "    name: \"" + taskName + "\",\n"
@@ -302,14 +289,10 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Assertions.assertThat(updatedTask).isNotNull();
         Assertions.assertThat(updatedTask.getId()).isEqualTo(cronTask.getId());
-        Assertions.assertThat(updatedTask.getOwner()).isNotNull();
-        Assertions.assertThat(updatedTask.getOwner().getId()).isEqualTo(cronTask.getOwner().getId());
-        Assertions.assertThat(updatedTask.getOwner().getName()).isEqualTo(cronTask.getOwner().getName());
         Assertions.assertThat(updatedTask.getEvery()).isEqualTo("2m0s");
         Assertions.assertThat(updatedTask.getCron()).isNull();
         Assertions.assertThat(updatedTask.getFlux()).isEqualTo(TASK_FLUX);
         Assertions.assertThat(updatedTask.getStatus()).isEqualTo(Status.INACTIVE);
-        Assertions.assertThat(updatedTask.getOwner().getId()).isEqualTo(cronTask.getOwner().getId());
         Assertions.assertThat(updatedTask.getOrgID()).isEqualTo(cronTask.getOrgID());
         Assertions.assertThat(updatedTask.getName()).isEqualTo(cronTask.getName());
     }
@@ -321,7 +304,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         UserClient userClient = platformClient.createUserClient();
 
-        Task task = taskClient.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", user, organization);
+        Task task = taskClient.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", organization);
 
         List<ResourceMember> members = taskClient.getMembers(task);
         Assertions.assertThat(members).hasSize(0);
@@ -353,7 +336,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         UserClient userClient = platformClient.createUserClient();
 
-        Task task = taskClient.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", user, organization);
+        Task task = taskClient.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", organization);
 
         List<ResourceMember> owners = taskClient.getOwners(task);
         Assertions.assertThat(owners).hasSize(0);
@@ -383,7 +366,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
 
@@ -416,7 +399,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
         
@@ -432,7 +415,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
 
@@ -448,7 +431,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
 
@@ -467,7 +450,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", organization);
 
         Run run = taskClient.getRun(task.getId(), "020f755c3c082000");
         Assertions.assertThat(run).isNull();
@@ -478,7 +461,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
 
@@ -499,7 +482,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", organization);
 
         Run run = taskClient.retryRun(task.getId(), "020f755c3c082000");
 
@@ -511,7 +494,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
 
@@ -533,7 +516,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
 
@@ -551,7 +534,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "5s", organization);
 
         List<String> logs = taskClient.getRunLogs(task.getId(), "020f755c3c082000", organization.getId());
         Assertions.assertThat(logs).isEmpty();
@@ -562,7 +545,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", user, organization);
+        Task task = taskClient.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
 
@@ -570,7 +553,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> taskClient.cancelRun(runs.get(0)))
                 .isInstanceOf(InfluxException.class)
-                .hasMessage("run not found");
+                .matches(errorPredicate("run not found"));
     }
 
     @Test
@@ -578,7 +561,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> taskClient.cancelRun("020f755c3c082000", "020f755c3c082000"))
                 .isInstanceOf(InfluxException.class)
-                .hasMessage("task not found");
+                .matches(errorPredicate("task not found"));
     }
 
     @Nonnull
@@ -626,5 +609,18 @@ class ITTaskClientTest extends AbstractITClientTest {
         permissions.add(createAuth);
 
         return platformClient.createAuthorizationClient().createAuthorization(organization, permissions);
+    }
+
+    //TODO https://github.com/influxdata/influxdb/issues/11589
+    @Nonnull
+    private Predicate<Throwable> errorPredicate(@Nonnull final String message) {
+
+        Assertions.assertThat(message).isNotEmpty();
+        return throwable -> {
+
+            Assertions.assertThat(((InfluxException) throwable).errorBody().getString("error")).isEqualTo(message);
+
+            return true;
+        };
     }
 }

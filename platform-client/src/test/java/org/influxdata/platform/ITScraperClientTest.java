@@ -51,31 +51,31 @@ class ITScraperClientTest extends AbstractITClientTest {
     }
 
     @Test
-    void createScrapperTarget() {
+    void createScraperTarget() {
 
         Organization organization = findMyOrg();
-        ScraperTargetResponse scrapper = scraperClient.createScraperTarget("InfluxDB scrapper",
+        ScraperTargetResponse scraper = scraperClient.createScraperTarget(generateName("InfluxDB scraper"),
                 "http://localhost:9999", bucket.getId(), organization.getId());
 
-        Assertions.assertThat(scrapper).isNotNull();
-        Assertions.assertThat(scrapper.getBucketName()).isEqualTo("my-bucket");
-        Assertions.assertThat(scrapper.getOrganizationName()).isEqualTo("my-org");
-        Assertions.assertThat(scrapper.getLinks())
+        Assertions.assertThat(scraper).isNotNull();
+        Assertions.assertThat(scraper.getBucketName()).isEqualTo("my-bucket");
+        Assertions.assertThat(scraper.getOrganizationName()).isEqualTo("my-org");
+        Assertions.assertThat(scraper.getLinks())
                 .hasSize(3)
                 .hasEntrySatisfying("bucket", value -> Assertions.assertThat(value).isEqualTo("/api/v2/buckets/" + bucket.getId()))
                 .hasEntrySatisfying("organization", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + organization.getId()))
-                .hasEntrySatisfying("self", value -> Assertions.assertThat(value).isEqualTo("/api/v2/scrapers/" + scrapper.getId()));
+                .hasEntrySatisfying("self", value -> Assertions.assertThat(value).isEqualTo("/api/v2/scrapers/" + scraper.getId()));
     }
 
     @Test
     void updateScraper() {
 
-        ScraperTarget scrapper = scraperClient.createScraperTarget("InfluxDB scrapper",
+        ScraperTarget scraper = scraperClient.createScraperTarget(generateName("InfluxDB scraper"),
                 "http://localhost:9999", bucket.getId(), findMyOrg().getId());
 
-        scrapper.setName("Name updated");
+        scraper.setName("Name updated");
 
-        ScraperTargetResponse updated = scraperClient.updateScraperTarget(scrapper);
+        ScraperTargetResponse updated = scraperClient.updateScraperTarget(scraper);
 
         Assertions.assertThat(updated.getName()).isEqualTo("Name updated");
     }
@@ -85,7 +85,7 @@ class ITScraperClientTest extends AbstractITClientTest {
 
         int size = scraperClient.findScraperTargets().size();
 
-        scraperClient.createScraperTarget("InfluxDB scrapper",
+        scraperClient.createScraperTarget(generateName("InfluxDB scraper"),
                 "http://localhost:9999", bucket.getId(), findMyOrg().getId());
 
         List<ScraperTargetResponse> scraperTargets = scraperClient.findScraperTargets();
@@ -95,7 +95,7 @@ class ITScraperClientTest extends AbstractITClientTest {
     @Test
     void findScraperByID() {
 
-        ScraperTargetResponse scraper = scraperClient.createScraperTarget("InfluxDB scrapper",
+        ScraperTargetResponse scraper = scraperClient.createScraperTarget(generateName("InfluxDB scraper"),
                 "http://localhost:9999", bucket.getId(), findMyOrg().getId());
 
         ScraperTargetResponse scraperByID =  scraperClient.findScraperTargetByID(scraper.getId());
@@ -116,7 +116,7 @@ class ITScraperClientTest extends AbstractITClientTest {
     @Test
     void deleteScraper() {
 
-        ScraperTargetResponse createdScraper = scraperClient.createScraperTarget("InfluxDB scrapper",
+        ScraperTargetResponse createdScraper = scraperClient.createScraperTarget(generateName("InfluxDB scraper"),
                 "http://localhost:9999", bucket.getId(), findMyOrg().getId());
         Assertions.assertThat(createdScraper).isNotNull();
 

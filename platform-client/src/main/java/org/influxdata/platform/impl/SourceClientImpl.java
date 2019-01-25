@@ -33,6 +33,7 @@ import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Health;
 import org.influxdata.platform.domain.Source;
 import org.influxdata.platform.domain.Sources;
+import org.influxdata.platform.error.rest.NotFoundException;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -113,7 +114,7 @@ final class SourceClientImpl extends AbstractRestClient implements SourceClient 
 
         Call<Source> call = platformService.findSource(sourceID);
 
-        return execute(call, "source not found");
+        return execute(call, NotFoundException.class);
     }
 
     @Nonnull
@@ -144,7 +145,7 @@ final class SourceClientImpl extends AbstractRestClient implements SourceClient 
 
         Call<List<Bucket>> call = platformService.findSourceBuckets(sourceID);
 
-        return execute(call, "source not found");
+        return execute(call, NotFoundException.class);
     }
 
     @Nonnull

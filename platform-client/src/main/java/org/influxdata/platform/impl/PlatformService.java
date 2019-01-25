@@ -102,6 +102,7 @@ interface PlatformService {
 
     @PUT("/api/v2/users/{id}/password")
     Call<User> updateUserPassword(@Nonnull @Path("id") final String userID,
+                                  //TODO set user password -> https://github.com/influxdata/influxdb/issues/11590
                                   @Nonnull @Header("Authorization") final String credentials,
                                   @Nonnull @Body final RequestBody password);
 
