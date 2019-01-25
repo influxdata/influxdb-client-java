@@ -113,7 +113,7 @@ public class InfluxException extends RuntimeException {
     }
 
     /**
-     * The raw unsuccessful response body.
+     * The JSON unsuccessful response body.
      *
      * @return a response body
      */
