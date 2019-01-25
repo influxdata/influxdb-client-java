@@ -21,7 +21,6 @@
  */
 package org.influxdata.platform.error;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -41,42 +40,42 @@ import retrofit2.Response;
  */
 public class InfluxException extends RuntimeException {
 
-<span class="fc" id="L44">    private static final Logger LOG = Logger.getLogger(InfluxException.class.getName());</span>
+<span class="fc" id="L43">    private static final Logger LOG = Logger.getLogger(InfluxException.class.getName());</span>
 
     private final Response&lt;?&gt; response;
     private final String message;
 
-<span class="fc" id="L49">    private String errorBody = null;</span>
+<span class="fc" id="L48">    private JSONObject errorBody = new JSONObject();</span>
 
-<span class="fc" id="L51">    public InfluxException(@Nullable final String message) {</span>
+<span class="fc" id="L50">    public InfluxException(@Nullable final String message) {</span>
 
-<span class="fc" id="L53">        this.response = null;</span>
-<span class="fc" id="L54">        this.message = message;</span>
-<span class="fc" id="L55">    }</span>
+<span class="fc" id="L52">        this.response = null;</span>
+<span class="fc" id="L53">        this.message = message;</span>
+<span class="fc" id="L54">    }</span>
 
     public InfluxException(@Nullable final Throwable cause) {
 
-<span class="fc" id="L59">        super(cause);</span>
+<span class="fc" id="L58">        super(cause);</span>
 
-<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (cause instanceof HttpException) {</span>
-<span class="fc" id="L62">            this.response = ((HttpException) cause).response();</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (cause instanceof HttpException) {</span>
+<span class="fc" id="L61">            this.response = ((HttpException) cause).response();</span>
         } else {
-<span class="fc" id="L64">            this.response = null;</span>
+<span class="fc" id="L63">            this.response = null;</span>
         }
 
-<span class="fc" id="L67">        this.message = errorMessage();</span>
-<span class="fc" id="L68">    }</span>
+<span class="fc" id="L66">        this.message = messageFromResponse();</span>
+<span class="fc" id="L67">    }</span>
 
     public InfluxException(@Nullable final Response&lt;?&gt; cause) {
 
-<span class="fc" id="L72">        super();</span>
-<span class="fc" id="L73">        this.response = cause;</span>
-<span class="fc" id="L74">        this.message = errorMessage();</span>
-<span class="fc" id="L75">    }</span>
+<span class="fc" id="L71">        super();</span>
+<span class="fc" id="L72">        this.response = cause;</span>
+<span class="fc" id="L73">        this.message = messageFromResponse();</span>
+<span class="fc" id="L74">    }</span>
 
     @Override
     public String getMessage() {
-<span class="fc" id="L79">        return message;</span>
+<span class="fc" id="L78">        return message;</span>
     }
 
     /**
@@ -86,16 +85,16 @@ public class InfluxException extends RuntimeException {
      */
     public int reference() {
 
-<span class="fc" id="L89">        String reference = null;</span>
-<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (response != null) {</span>
-<span class="fc" id="L91">            reference = this.response.headers().get(&quot;X-Influx-Reference&quot;);</span>
+<span class="fc" id="L88">        String reference = null;</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (response != null) {</span>
+<span class="fc" id="L90">            reference = this.response.headers().get(&quot;X-Influx-Reference&quot;);</span>
         }
 
-<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (reference != null) {</span>
-<span class="fc" id="L95">            return Integer.valueOf(reference);</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (reference != null) {</span>
+<span class="fc" id="L94">            return Integer.valueOf(reference);</span>
         }
 
-<span class="fc" id="L98">        return 0;</span>
+<span class="fc" id="L97">        return 0;</span>
     }
 
     /**
@@ -106,11 +105,11 @@ public class InfluxException extends RuntimeException {
      */
     public int status() {
 
-<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (response != null) {</span>
-<span class="fc" id="L110">            return response.code();</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (response != null) {</span>
+<span class="fc" id="L109">            return response.code();</span>
         }
 
-<span class="fc" id="L113">        return 0;</span>
+<span class="fc" id="L112">        return 0;</span>
     }
 
     /**
@@ -119,60 +118,44 @@ public class InfluxException extends RuntimeException {
      * @return a response body
      */
     @Nonnull
-    public String errorBody() throws IOException {
+    public JSONObject errorBody() {
 
-<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (errorBody != null) {</span>
-<span class="fc" id="L125">            return errorBody;</span>
-        }
-
-<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (response != null) {</span>
-<span class="fc" id="L129">            ResponseBody body = response.errorBody();</span>
-<span class="pc bpc" id="L130" title="1 of 2 branches missed.">            if (body == null) {</span>
-<span class="nc" id="L131">                errorBody = &quot;&quot;;</span>
-            } else {
-<span class="fc" id="L133">                errorBody = body.source().readUtf8();</span>
-            }
-<span class="fc" id="L135">        } else {</span>
-<span class="fc" id="L136">            errorBody = &quot;&quot;;</span>
-        }
-
-<span class="fc" id="L139">        return errorBody;</span>
+<span class="fc" id="L123">        return errorBody;</span>
     }
 
     @Nullable
-    private String errorMessage() {
+    private String messageFromResponse() {
 
-<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (response != null) {</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (response != null) {</span>
 
-            // try read error body as JSON
-<span class="fc bfc" id="L148" title="All 2 branches covered.">            if (response.headers().get(&quot;X-Platform-Error-Code&quot;) != null) {</span>
-
-                try {
-<span class="fc" id="L151">                    JSONObject jsonObject = new JSONObject(errorBody());</span>
-<span class="fc bfc" id="L152" title="All 2 branches covered.">                    if (jsonObject.has(&quot;message&quot;)) {</span>
-<span class="fc" id="L153">                        return jsonObject.getString(&quot;message&quot;);</span>
+            try {
+<span class="fc" id="L132">                ResponseBody body = response.errorBody();</span>
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">                if (body != null) {</span>
+<span class="fc" id="L134">                    errorBody = new JSONObject(body.source().readUtf8());</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">                    if (errorBody.has(&quot;message&quot;)) {</span>
+<span class="fc" id="L136">                        return errorBody.getString(&quot;message&quot;);</span>
                     }
-<span class="fc" id="L155">                } catch (Exception e) {</span>
-<span class="fc" id="L156">                    LOG.log(Level.FINEST, &quot;Can't parse msg from response {}&quot;, response);</span>
-<span class="fc" id="L157">                }</span>
-            }
+                }
+<span class="fc" id="L139">            } catch (Exception e) {</span>
+<span class="fc" id="L140">                LOG.log(Level.FINEST, &quot;Can't parse msg from response {}&quot;, response);</span>
+<span class="fc" id="L141">            }</span>
 
-<span class="fc" id="L160">            String value = Stream.of(&quot;X-Platform-Error-Code&quot;, &quot;X-Influx-Error&quot;, &quot;X-InfluxDb-Error&quot;)</span>
-<span class="fc" id="L161">                    .map(name -&gt; response.headers().get(name))</span>
-<span class="fc bfc" id="L162" title="All 4 branches covered.">                    .filter(message -&gt; message != null &amp;&amp; !message.isEmpty()).findFirst()</span>
-<span class="fc" id="L163">                    .orElse(null);</span>
+<span class="fc" id="L143">            String value = Stream.of(&quot;X-Platform-Error-Code&quot;, &quot;X-Influx-Error&quot;, &quot;X-InfluxDb-Error&quot;)</span>
+<span class="fc" id="L144">                    .map(name -&gt; response.headers().get(name))</span>
+<span class="fc bfc" id="L145" title="All 4 branches covered.">                    .filter(message -&gt; message != null &amp;&amp; !message.isEmpty()).findFirst()</span>
+<span class="fc" id="L146">                    .orElse(null);</span>
 
-<span class="fc bfc" id="L165" title="All 2 branches covered.">            if (value != null) {</span>
-<span class="fc" id="L166">                return value;</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">            if (value != null) {</span>
+<span class="fc" id="L149">                return value;</span>
             }
         }
 
-<span class="fc" id="L170">        Throwable cause = getCause();</span>
-<span class="fc bfc" id="L171" title="All 2 branches covered.">        if (cause != null) {</span>
-<span class="fc" id="L172">            return cause.getMessage();</span>
+<span class="fc" id="L153">        Throwable cause = getCause();</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        if (cause != null) {</span>
+<span class="fc" id="L155">            return cause.getMessage();</span>
         }
 
-<span class="fc" id="L175">        return null;</span>
+<span class="fc" id="L158">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

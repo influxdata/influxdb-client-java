@@ -33,6 +33,7 @@ import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Health;
 import org.influxdata.platform.domain.Source;
 import org.influxdata.platform.domain.Sources;
+import org.influxdata.platform.error.rest.NotFoundException;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -44,7 +45,7 @@ import retrofit2.Call;
  */
 final class SourceClientImpl extends AbstractRestClient implements SourceClient {
 
-<span class="fc" id="L47">    private static final Logger LOG = Logger.getLogger(SourceClientImpl.class.getName());</span>
+<span class="fc" id="L48">    private static final Logger LOG = Logger.getLogger(SourceClientImpl.class.getName());</span>
 
     private final PlatformService platformService;
     private final JsonAdapter&lt;Source&gt; adapter;
@@ -52,117 +53,117 @@ final class SourceClientImpl extends AbstractRestClient implements SourceClient 
 
     SourceClientImpl(@Nonnull final PlatformService platformService,
                      @Nonnull final Moshi moshi,
-<span class="fc" id="L55">                     @Nonnull final PlatformClientImpl platformClient) {</span>
+<span class="fc" id="L56">                     @Nonnull final PlatformClientImpl platformClient) {</span>
 
-<span class="fc" id="L57">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
-<span class="fc" id="L58">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
-<span class="fc" id="L59">        Arguments.checkNotNull(platformClient, &quot;PlatformClient&quot;);</span>
+<span class="fc" id="L58">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
+<span class="fc" id="L59">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
+<span class="fc" id="L60">        Arguments.checkNotNull(platformClient, &quot;PlatformClient&quot;);</span>
 
-<span class="fc" id="L61">        this.platformService = platformService;</span>
-<span class="fc" id="L62">        this.adapter = moshi.adapter(Source.class);</span>
-<span class="fc" id="L63">        this.platformClient = platformClient;</span>
-<span class="fc" id="L64">    }</span>
+<span class="fc" id="L62">        this.platformService = platformService;</span>
+<span class="fc" id="L63">        this.adapter = moshi.adapter(Source.class);</span>
+<span class="fc" id="L64">        this.platformClient = platformClient;</span>
+<span class="fc" id="L65">    }</span>
 
     @Nonnull
     @Override
     public Source createSource(@Nonnull final Source source) {
 
-<span class="nc" id="L70">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+<span class="nc" id="L71">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
 
-<span class="nc" id="L72">        String json = adapter.toJson(source);</span>
+<span class="nc" id="L73">        String json = adapter.toJson(source);</span>
 
-<span class="nc" id="L74">        Call&lt;Source&gt; call = platformService.createSource(createBody(json));</span>
-<span class="nc" id="L75">        return execute(call);</span>
+<span class="nc" id="L75">        Call&lt;Source&gt; call = platformService.createSource(createBody(json));</span>
+<span class="nc" id="L76">        return execute(call);</span>
     }
 
     @Nonnull
     @Override
     public Source updateSource(@Nonnull final Source source) {
 
-<span class="nc" id="L82">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+<span class="nc" id="L83">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
 
-<span class="nc" id="L84">        String json = adapter.toJson(source);</span>
+<span class="nc" id="L85">        String json = adapter.toJson(source);</span>
 
-<span class="nc" id="L86">        Call&lt;Source&gt; call = platformService.updateSource(source.getId(), createBody(json));</span>
-<span class="nc" id="L87">        return execute(call);</span>
+<span class="nc" id="L87">        Call&lt;Source&gt; call = platformService.updateSource(source.getId(), createBody(json));</span>
+<span class="nc" id="L88">        return execute(call);</span>
     }
 
     @Override
     public void deleteSource(@Nonnull final Source source) {
 
-<span class="nc" id="L93">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+<span class="nc" id="L94">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
 
-<span class="nc" id="L95">        deleteSource(source.getId());</span>
-<span class="nc" id="L96">    }</span>
+<span class="nc" id="L96">        deleteSource(source.getId());</span>
+<span class="nc" id="L97">    }</span>
 
     @Override
     public void deleteSource(@Nonnull final String sourceID) {
 
-<span class="nc" id="L101">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
+<span class="nc" id="L102">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
 
-<span class="nc" id="L103">        Call&lt;Void&gt; call = platformService.deleteSource(sourceID);</span>
-<span class="nc" id="L104">        execute(call);</span>
+<span class="nc" id="L104">        Call&lt;Void&gt; call = platformService.deleteSource(sourceID);</span>
+<span class="nc" id="L105">        execute(call);</span>
 
-<span class="nc" id="L106">    }</span>
+<span class="nc" id="L107">    }</span>
 
     @Nullable
     @Override
     public Source findSourceByID(@Nonnull final String sourceID) {
 
-<span class="nc" id="L112">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
+<span class="nc" id="L113">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
 
-<span class="nc" id="L114">        Call&lt;Source&gt; call = platformService.findSource(sourceID);</span>
+<span class="nc" id="L115">        Call&lt;Source&gt; call = platformService.findSource(sourceID);</span>
 
-<span class="nc" id="L116">        return execute(call, &quot;source not found&quot;);</span>
+<span class="nc" id="L117">        return execute(call, NotFoundException.class);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Source&gt; findSources() {
-<span class="nc" id="L122">        Call&lt;Sources&gt; sourcesCall = platformService.findSources();</span>
+<span class="nc" id="L123">        Call&lt;Sources&gt; sourcesCall = platformService.findSources();</span>
 
-<span class="nc" id="L124">        Sources sources = execute(sourcesCall);</span>
-<span class="nc" id="L125">        LOG.log(Level.FINEST, &quot;findSources found: {0}&quot;, sources);</span>
+<span class="nc" id="L125">        Sources sources = execute(sourcesCall);</span>
+<span class="nc" id="L126">        LOG.log(Level.FINEST, &quot;findSources found: {0}&quot;, sources);</span>
 
-<span class="nc" id="L127">        return sources.getSources();</span>
+<span class="nc" id="L128">        return sources.getSources();</span>
     }
 
     @Nullable
     @Override
     public List&lt;Bucket&gt; findBucketsBySource(@Nonnull final Source source) {
 
-<span class="nc" id="L134">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+<span class="nc" id="L135">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
 
-<span class="nc" id="L136">        return findBucketsBySourceID(source.getId());</span>
+<span class="nc" id="L137">        return findBucketsBySourceID(source.getId());</span>
     }
 
     @Nullable
     @Override
     public List&lt;Bucket&gt; findBucketsBySourceID(@Nonnull final String sourceID) {
 
-<span class="nc" id="L143">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
+<span class="nc" id="L144">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
 
-<span class="nc" id="L145">        Call&lt;List&lt;Bucket&gt;&gt; call = platformService.findSourceBuckets(sourceID);</span>
+<span class="nc" id="L146">        Call&lt;List&lt;Bucket&gt;&gt; call = platformService.findSourceBuckets(sourceID);</span>
 
-<span class="nc" id="L147">        return execute(call, &quot;source not found&quot;);</span>
+<span class="nc" id="L148">        return execute(call, NotFoundException.class);</span>
     }
 
     @Nonnull
     @Override
     public Health health(@Nonnull final Source source) {
 
-<span class="nc" id="L154">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+<span class="nc" id="L155">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
 
-<span class="nc" id="L156">        return health(source.getId());</span>
+<span class="nc" id="L157">        return health(source.getId());</span>
     }
 
     @Nonnull
     @Override
     public Health health(@Nonnull final String sourceID) {
 
-<span class="nc" id="L163">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
+<span class="nc" id="L164">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
 
-<span class="nc" id="L165">        return platformClient.health(platformService.findSourceHealth(sourceID));</span>
+<span class="nc" id="L166">        return platformClient.health(platformService.findSourceHealth(sourceID));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

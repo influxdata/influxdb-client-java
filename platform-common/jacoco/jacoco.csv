@@ -2,7 +2,7 @@ GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_
 The Platform Commons,org.influxdata.flux.domain,FluxColumn,0,110,0,0,0,23,0,12,0,12
 The Platform Commons,org.influxdata.flux.domain,FluxRecord,0,102,0,0,0,20,0,12,0,12
 The Platform Commons,org.influxdata.flux.domain,FluxTable,0,66,0,0,0,10,0,5,0,5
-The Platform Commons,org.influxdata.platform.error,InfluxException,4,196,1,27,1,53,1,24,0,11
+The Platform Commons,org.influxdata.platform.error,InfluxException,0,182,1,21,0,46,1,21,0,11
 The Platform Commons,org.influxdata.platform.error.rest,NotImplementedException,0,4,0,0,0,2,0,1,0,1
 The Platform Commons,org.influxdata.platform.error.rest,InternalServerErrorException,0,4,0,0,0,2,0,1,0,1
 The Platform Commons,org.influxdata.platform.error.rest,BadGatewayException,0,4,0,0,0,2,0,1,0,1
@@ -23,7 +23,7 @@ The Platform Commons,org.influxdata.flux.impl,FluxCsvParser.FluxResponseConsumer
 The Platform Commons,org.influxdata.flux.error,FluxCsvParserException,0,4,0,0,0,2,0,1,0,1
 The Platform Commons,org.influxdata.flux.error,FluxQueryException,0,10,0,0,0,4,0,2,0,2
 The Platform Commons,org.influxdata.platform,Arguments,0,178,0,30,0,25,0,25,0,10
-The Platform Commons,org.influxdata.platform.rest,AbstractRestClient,13,204,5,25,1,50,5,28,1,11
+The Platform Commons,org.influxdata.platform.rest,AbstractRestClient,25,204,9,25,1,51,7,28,1,11
 The Platform Commons,org.influxdata.platform.rest,LogLevel,0,44,0,0,0,5,0,1,0,1
 The Platform Commons,org.influxdata.platform.rest,AbstractQueryClient.new Callback() {...},13,65,1,11,5,13,2,7,1,2
 The Platform Commons,org.influxdata.platform.rest,AbstractQueryClient.DefaultCancellable,0,16,0,0,0,5,0,3,0,3
