@@ -25,8 +25,10 @@ import java.util.List;
 
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ScraperTarget;
 import org.influxdata.platform.domain.ScraperTargetResponse;
+import org.influxdata.platform.domain.User;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,12 +43,14 @@ import org.junit.runner.RunWith;
 class ITScraperClientTest extends AbstractITClientTest {
 
     private ScraperClient scraperClient;
+    private UserClient userClient;
     private Bucket bucket;
 
     @BeforeEach
     void setUp() {
 
         scraperClient = platformClient.createScraperClient();
+        userClient = platformClient.createUserClient();
         bucket = platformClient.createBucketClient().findBucketByName("my-bucket");
     }
 
@@ -128,5 +132,63 @@ class ITScraperClientTest extends AbstractITClientTest {
 
         foundScraper = scraperClient.findScraperTargetByID(createdScraper.getId());
         Assertions.assertThat(foundScraper).isNull();
+    }
+
+    @Test
+    void member() {
+
+        ScraperTarget scraper =  scraperClient.createScraperTarget(generateName("InfluxDB scraper"),
+                "http://localhost:9999", bucket.getId(), findMyOrg().getId());
+
+        List<ResourceMember> members = scraperClient.getMembers(scraper);
+        Assertions.assertThat(members).hasSize(0);
+
+        User user = userClient.createUser(generateName("Luke Health"));
+
+        ResourceMember resourceMember = scraperClient.addMember(user, scraper);
+        Assertions.assertThat(resourceMember).isNotNull();
+        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
+
+        members = scraperClient.getMembers(scraper);
+        Assertions.assertThat(members).hasSize(1);
+        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
+        Assertions.assertThat(members.get(0).getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(members.get(0).getUserName()).isEqualTo(user.getName());
+
+        scraperClient.deleteMember(user, scraper);
+
+        members = scraperClient.getMembers(scraper);
+        Assertions.assertThat(members).hasSize(0);
+    }
+
+    @Test
+    void owner() {
+
+        ScraperTarget scraper =  scraperClient.createScraperTarget(generateName("InfluxDB scraper"),
+                "http://localhost:9999", bucket.getId(), findMyOrg().getId());
+
+        List<ResourceMember> owners = scraperClient.getOwners(scraper);
+        Assertions.assertThat(owners).hasSize(1);
+
+        User user = userClient.createUser(generateName("Luke Health"));
+
+        ResourceMember resourceMember = scraperClient.addOwner(user, scraper);
+        Assertions.assertThat(resourceMember).isNotNull();
+        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.OWNER);
+
+        owners = scraperClient.getOwners(scraper);
+        Assertions.assertThat(owners).hasSize(2);
+        Assertions.assertThat(owners.get(1).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
+        Assertions.assertThat(owners.get(1).getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(owners.get(1).getUserName()).isEqualTo(user.getName());
+
+        scraperClient.deleteOwner(user, scraper);
+
+        owners = scraperClient.getOwners(scraper);
+        Assertions.assertThat(owners).hasSize(1);
     }
 }

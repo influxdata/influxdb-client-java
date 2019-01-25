@@ -29,10 +29,13 @@ import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.ScraperClient;
+import org.influxdata.platform.domain.ResourceMember;
+import org.influxdata.platform.domain.ResourceMembers;
 import org.influxdata.platform.domain.ScraperTarget;
 import org.influxdata.platform.domain.ScraperTargetResponse;
 import org.influxdata.platform.domain.ScraperTargetResponses;
 import org.influxdata.platform.domain.ScraperType;
+import org.influxdata.platform.domain.User;
 import org.influxdata.platform.error.rest.NotFoundException;
 import org.influxdata.platform.rest.AbstractRestClient;
 
@@ -49,6 +52,7 @@ final class ScraperClientImpl extends AbstractRestClient implements ScraperClien
 
     private final PlatformService platformService;
     private final JsonAdapter<ScraperTarget> adapter;
+    private final JsonAdapter<User> userAdapter;
 
     ScraperClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {
 
@@ -57,6 +61,7 @@ final class ScraperClientImpl extends AbstractRestClient implements ScraperClien
 
         this.platformService = platformService;
         this.adapter = moshi.adapter(ScraperTarget.class);
+        this.userAdapter = moshi.adapter(User.class);
     }
 
     @Nonnull
@@ -144,5 +149,139 @@ final class ScraperClientImpl extends AbstractRestClient implements ScraperClien
         LOG.log(Level.FINEST, "findScraperTargets found: {0}", responses);
 
         return responses.getTargetResponses();
+    }
+
+    @Nonnull
+    @Override
+    public List<ResourceMember> getMembers(@Nonnull final ScraperTarget scraperTarget) {
+
+        Arguments.checkNotNull(scraperTarget, "scraperTarget");
+
+        return getMembers(scraperTarget.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<ResourceMember> getMembers(@Nonnull final String scraperTargetID) {
+
+        Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
+
+        Call<ResourceMembers> call = platformService.findScraperTargetMembers(scraperTargetID);
+        ResourceMembers resourceMembers = execute(call);
+        LOG.log(Level.FINEST, "findScraperTargetMembers found: {0}", resourceMembers);
+
+        return resourceMembers.getUsers();
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final User member, @Nonnull final ScraperTarget scraperTarget) {
+
+        Arguments.checkNotNull(scraperTarget, "scraperTarget");
+        Arguments.checkNotNull(member, "member");
+
+        return addMember(member.getId(), scraperTarget.getId());
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String scraperTargetID) {
+
+        Arguments.checkNonEmpty(memberID, "Member ID");
+        Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
+
+        User user = new User();
+        user.setId(memberID);
+
+        String json = userAdapter.toJson(user);
+        Call<ResourceMember> call = platformService.addScraperTargetMember(scraperTargetID, createBody(json));
+
+        return execute(call);
+    }
+
+    @Override
+    public void deleteMember(@Nonnull final User member, @Nonnull final ScraperTarget scraperTarget) {
+
+        Arguments.checkNotNull(scraperTarget, "scraperTarget");
+        Arguments.checkNotNull(member, "member");
+
+        deleteMember(member.getId(), scraperTarget.getId());
+    }
+
+    @Override
+    public void deleteMember(@Nonnull final String memberID, @Nonnull final String scraperTargetID) {
+
+        Arguments.checkNonEmpty(memberID, "Member ID");
+        Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
+
+        Call<Void> call = platformService.deleteScraperTargetMember(scraperTargetID, memberID);
+        execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public List<ResourceMember> getOwners(@Nonnull final ScraperTarget scraperTarget) {
+
+        Arguments.checkNotNull(scraperTarget, "scraperTarget");
+
+        return getOwners(scraperTarget.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<ResourceMember> getOwners(@Nonnull final String scraperTargetID) {
+
+        Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
+
+        Call<ResourceMembers> call = platformService.findScraperTargetOwners(scraperTargetID);
+        ResourceMembers resourceMembers = execute(call);
+        LOG.log(Level.FINEST, "findScraperTargetOwners found: {0}", resourceMembers);
+
+        return resourceMembers.getUsers();
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final ScraperTarget scraperTarget) {
+
+        Arguments.checkNotNull(scraperTarget, "scraperTarget");
+        Arguments.checkNotNull(owner, "owner");
+
+        return addOwner(owner.getId(), scraperTarget.getId());
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String scraperTargetID) {
+
+        Arguments.checkNonEmpty(ownerID, "Owner ID");
+        Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
+
+        User user = new User();
+        user.setId(ownerID);
+
+        String json = userAdapter.toJson(user);
+        Call<ResourceMember> call = platformService.addScraperTargetOwner(scraperTargetID, createBody(json));
+
+        return execute(call);
+    }
+
+    @Override
+    public void deleteOwner(@Nonnull final User owner, @Nonnull final ScraperTarget scraperTarget) {
+
+        Arguments.checkNotNull(scraperTarget, "scraperTarget");
+        Arguments.checkNotNull(owner, "owner");
+
+        deleteOwner(owner.getId(), scraperTarget.getId());
+    }
+
+    @Override
+    public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String scraperTargetID) {
+
+        Arguments.checkNonEmpty(ownerID, "Owner ID");
+        Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
+
+        Call<Void> call = platformService.deleteScraperTargetOwner(scraperTargetID, ownerID);
+        execute(call);
     }
 }

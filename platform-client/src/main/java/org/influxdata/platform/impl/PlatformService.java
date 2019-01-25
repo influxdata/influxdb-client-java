@@ -453,6 +453,40 @@ interface PlatformService {
     @DELETE("/api/v2/scrapers/{id}")
     Call<Void> deleteScraperTarget(@Nonnull @Path("id") final String scraperTargetID);
 
+    @GET("/api/v2/scrapers/{id}/members")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<ResourceMembers> findScraperTargetMembers(@Nonnull @Path("id") final String scraperTargetID);
+
+    @POST("/api/v2/scrapers/{id}/members")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<ResourceMember> addScraperTargetMember(@Nonnull @Path("id") final String scraperTargetID,
+                                                @Nonnull @Body final RequestBody member);
+
+    @DELETE("/api/v2/scrapers/{id}/members/{userID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteScraperTargetMember(@Nonnull @Path("id") final String scraperTargetID,
+                                         @Nonnull @Path("userID") final String userID);
+
+    @GET("/api/v2/scrapers/{id}/owners")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<ResourceMembers> findScraperTargetOwners(@Nonnull @Path("id") final String scraperTargetID);
+
+    @POST("/api/v2/scrapers/{id}/owners")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<ResourceMember> addScraperTargetOwner(@Nonnull @Path("id") final String scraperTargetID,
+                                               @Nonnull @Body final RequestBody member);
+
+    @DELETE("/api/v2/scrapers/{id}/owners/{userID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteScraperTargetOwner(@Nonnull @Path("id") final String scraperTargetID,
+                                        @Nonnull @Path("userID") final String userID);
+
 
     // Write
     //
