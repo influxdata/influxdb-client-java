@@ -31,13 +31,14 @@ import org.influxdata.platform.Arguments;
 import org.influxdata.platform.BucketClient;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Buckets;
+import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ResourceMembers;
 import org.influxdata.platform.domain.RetentionRule;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.error.rest.NotFoundException;
-import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -46,76 +47,73 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (13/09/2018 10:47)
  */
-final class BucketClientImpl extends AbstractRestClient implements BucketClient {
+final class BucketClientImpl extends AbstractLabelRestClient implements BucketClient {
 
-<span class="fc" id="L51">    private static final Logger LOG = Logger.getLogger(BucketClientImpl.class.getName());</span>
+<span class="fc" id="L52">    private static final Logger LOG = Logger.getLogger(BucketClientImpl.class.getName());</span>
 
-    private final PlatformService platformService;
     private final JsonAdapter&lt;Bucket&gt; adapter;
     private final JsonAdapter&lt;User&gt; userAdapter;
 
-<span class="fc" id="L57">    BucketClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
+    BucketClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {
 
-<span class="fc" id="L59">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
-<span class="fc" id="L60">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
+<span class="fc" id="L59">        super(platformService, moshi);</span>
 
-<span class="fc" id="L62">        this.platformService = platformService;</span>
-<span class="fc" id="L63">        this.adapter = moshi.adapter(Bucket.class);</span>
-<span class="fc" id="L64">        this.userAdapter = moshi.adapter(User.class);</span>
-<span class="fc" id="L65">    }</span>
+<span class="fc" id="L61">        this.adapter = moshi.adapter(Bucket.class);</span>
+<span class="fc" id="L62">        this.userAdapter = moshi.adapter(User.class);</span>
+<span class="fc" id="L63">    }</span>
 
     @Nullable
     @Override
     public Bucket findBucketByID(@Nonnull final String bucketID) {
 
-<span class="fc" id="L71">        Arguments.checkNonEmpty(bucketID, &quot;Bucket ID&quot;);</span>
+<span class="fc" id="L69">        Arguments.checkNonEmpty(bucketID, &quot;Bucket ID&quot;);</span>
 
-<span class="fc" id="L73">        Call&lt;Bucket&gt; bucket = platformService.findBucketByID(bucketID);</span>
+<span class="fc" id="L71">        Call&lt;Bucket&gt; bucket = platformService.findBucketByID(bucketID);</span>
 
-<span class="fc" id="L75">        return execute(bucket, NotFoundException.class);</span>
+<span class="fc" id="L73">        return execute(bucket, NotFoundException.class);</span>
     }
 
     @Nullable
     @Override
     public Bucket findBucketByName(@Nonnull final String bucketName) {
 
-<span class="fc" id="L82">        Arguments.checkNonEmpty(bucketName, &quot;Bucket Name&quot;);</span>
+<span class="fc" id="L80">        Arguments.checkNonEmpty(bucketName, &quot;Bucket Name&quot;);</span>
 
-<span class="fc" id="L84">        Call&lt;Buckets&gt; bucket = platformService.findBucketByName(bucketName);</span>
+<span class="fc" id="L82">        Call&lt;Buckets&gt; bucket = platformService.findBucketByName(bucketName);</span>
 
-<span class="fc" id="L86">        return execute(bucket).getBuckets().stream().findFirst().orElse(null);</span>
+<span class="fc" id="L84">        return execute(bucket).getBuckets().stream().findFirst().orElse(null);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Bucket&gt; findBuckets() {
-<span class="fc" id="L92">        return findBucketsByOrganizationName(null);</span>
+<span class="fc" id="L90">        return findBucketsByOrganizationName(null);</span>
     }
 
     @Nonnull
     public List&lt;Bucket&gt; findBucketsByOrganization(@Nonnull final Organization organization) {
 
-<span class="fc" id="L98">        Arguments.checkNotNull(organization, &quot;Organization is required&quot;);</span>
+<span class="fc" id="L96">        Arguments.checkNotNull(organization, &quot;Organization is required&quot;);</span>
 
-<span class="fc" id="L100">        return findBucketsByOrganizationName(organization.getName());</span>
+<span class="fc" id="L98">        return findBucketsByOrganizationName(organization.getName());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Bucket&gt; findBucketsByOrganizationName(@Nullable final String organizationName) {
 
-<span class="fc" id="L107">        Call&lt;Buckets&gt; bucketsCall = platformService.findBuckets(organizationName);</span>
+<span class="fc" id="L105">        Call&lt;Buckets&gt; bucketsCall = platformService.findBuckets(organizationName);</span>
 
-<span class="fc" id="L109">        Buckets buckets = execute(bucketsCall);</span>
-<span class="fc" id="L110">        LOG.log(Level.FINEST, &quot;findBucketsByOrganizationName found: {0}&quot;, buckets);</span>
+<span class="fc" id="L107">        Buckets buckets = execute(bucketsCall);</span>
+<span class="fc" id="L108">        LOG.log(Level.FINEST, &quot;findBucketsByOrganizationName found: {0}&quot;, buckets);</span>
 
-<span class="fc" id="L112">        return buckets.getBuckets();</span>
+<span class="fc" id="L110">        return buckets.getBuckets();</span>
     }
 
     @Nonnull
     @Override
     public Bucket createBucket(@Nonnull final String name, @Nonnull final Organization organization) {
-<span class="fc" id="L118">        return createBucket(name, null, organization);</span>
+<span class="fc" id="L116">        return createBucket(name, null, organization);</span>
     }
 
     @Nonnull
@@ -124,15 +122,15 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
                                @Nullable  final RetentionRule retentionRule,
                                @Nonnull final Organization organization) {
 
-<span class="fc" id="L127">        Arguments.checkNotNull(organization, &quot;Organization is required&quot;);</span>
+<span class="fc" id="L125">        Arguments.checkNotNull(organization, &quot;Organization is required&quot;);</span>
 
-<span class="fc" id="L129">        return createBucket(name, retentionRule, organization.getId());</span>
+<span class="fc" id="L127">        return createBucket(name, retentionRule, organization.getId());</span>
     }
 
     @Nonnull
     @Override
     public Bucket createBucket(@Nonnull final String name, @Nonnull final String orgID) {
-<span class="fc" id="L135">        return createBucket(name, null, orgID);</span>
+<span class="fc" id="L133">        return createBucket(name, null, orgID);</span>
     }
 
     @Nonnull
@@ -141,193 +139,249 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
                                @Nullable final RetentionRule retentionRule,
                                @Nonnull final String orgID) {
 
-<span class="fc" id="L144">        Arguments.checkNonEmpty(name, &quot;Bucket name&quot;);</span>
-<span class="fc" id="L145">        Arguments.checkNonEmpty(orgID, &quot;Organization Id&quot;);</span>
+<span class="fc" id="L142">        Arguments.checkNonEmpty(name, &quot;Bucket name&quot;);</span>
+<span class="fc" id="L143">        Arguments.checkNonEmpty(orgID, &quot;Organization Id&quot;);</span>
 
-<span class="fc" id="L147">        Bucket bucket = new Bucket();</span>
-<span class="fc" id="L148">        bucket.setName(name);</span>
-<span class="fc" id="L149">        bucket.setOrgID(orgID);</span>
-<span class="fc bfc" id="L150" title="All 2 branches covered.">        if (retentionRule != null) {</span>
-<span class="fc" id="L151">            bucket.getRetentionRules().add(retentionRule);</span>
+<span class="fc" id="L145">        Bucket bucket = new Bucket();</span>
+<span class="fc" id="L146">        bucket.setName(name);</span>
+<span class="fc" id="L147">        bucket.setOrgID(orgID);</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        if (retentionRule != null) {</span>
+<span class="fc" id="L149">            bucket.getRetentionRules().add(retentionRule);</span>
         }
 
-<span class="fc" id="L154">        return createBucket(bucket);</span>
+<span class="fc" id="L152">        return createBucket(bucket);</span>
     }
 
     @Nonnull
     @Override
     public Bucket createBucket(@Nonnull final Bucket bucket) {
 
-<span class="fc" id="L161">        Arguments.checkNotNull(bucket, &quot;Bucket is required&quot;);</span>
-<span class="fc" id="L162">        Arguments.checkNonEmpty(bucket.getName(), &quot;Bucket name&quot;);</span>
+<span class="fc" id="L159">        Arguments.checkNotNull(bucket, &quot;Bucket is required&quot;);</span>
+<span class="fc" id="L160">        Arguments.checkNonEmpty(bucket.getName(), &quot;Bucket name&quot;);</span>
 
-<span class="fc" id="L164">        Call&lt;Bucket&gt; call = platformService.createBucket(createBody(adapter.toJson(bucket)));</span>
+<span class="fc" id="L162">        Call&lt;Bucket&gt; call = platformService.createBucket(createBody(adapter.toJson(bucket)));</span>
 
-<span class="fc" id="L166">        return execute(call);</span>
+<span class="fc" id="L164">        return execute(call);</span>
     }
 
     @Nonnull
     @Override
     public Bucket updateBucket(@Nonnull final Bucket bucket) {
 
-<span class="fc" id="L173">        Arguments.checkNotNull(bucket, &quot;Bucket is required&quot;);</span>
+<span class="fc" id="L171">        Arguments.checkNotNull(bucket, &quot;Bucket is required&quot;);</span>
 
-<span class="fc" id="L175">        String json = adapter.toJson(bucket);</span>
+<span class="fc" id="L173">        String json = adapter.toJson(bucket);</span>
 
-<span class="fc" id="L177">        Call&lt;Bucket&gt; bucketCall = platformService.updateBucket(bucket.getId(), createBody(json));</span>
+<span class="fc" id="L175">        Call&lt;Bucket&gt; bucketCall = platformService.updateBucket(bucket.getId(), createBody(json));</span>
 
-<span class="fc" id="L179">        return execute(bucketCall);</span>
+<span class="fc" id="L177">        return execute(bucketCall);</span>
     }
 
     @Override
     public void deleteBucket(@Nonnull final Bucket bucket) {
 
-<span class="fc" id="L185">        Arguments.checkNotNull(bucket, &quot;Bucket&quot;);</span>
+<span class="fc" id="L183">        Arguments.checkNotNull(bucket, &quot;Bucket&quot;);</span>
 
-<span class="fc" id="L187">        deleteBucket(bucket.getId());</span>
-<span class="fc" id="L188">    }</span>
+<span class="fc" id="L185">        deleteBucket(bucket.getId());</span>
+<span class="fc" id="L186">    }</span>
 
     @Override
     public void deleteBucket(@Nonnull final String bucketID) {
 
-<span class="fc" id="L193">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
+<span class="fc" id="L191">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
 
-<span class="fc" id="L195">        Call&lt;Void&gt; call = platformService.deleteBucket(bucketID);</span>
-<span class="fc" id="L196">        execute(call);</span>
-<span class="fc" id="L197">    }</span>
+<span class="fc" id="L193">        Call&lt;Void&gt; call = platformService.deleteBucket(bucketID);</span>
+<span class="fc" id="L194">        execute(call);</span>
+<span class="fc" id="L195">    }</span>
 
     @Nonnull
     @Override
     public List&lt;ResourceMember&gt; getMembers(@Nonnull final Bucket bucket) {
 
-<span class="fc" id="L203">        Arguments.checkNotNull(bucket, &quot;Bucket&quot;);</span>
+<span class="fc" id="L201">        Arguments.checkNotNull(bucket, &quot;Bucket&quot;);</span>
 
-<span class="fc" id="L205">        return getMembers(bucket.getId());</span>
+<span class="fc" id="L203">        return getMembers(bucket.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;ResourceMember&gt; getMembers(@Nonnull final String bucketID) {
 
-<span class="fc" id="L212">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
+<span class="fc" id="L210">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
 
-<span class="fc" id="L214">        Call&lt;ResourceMembers&gt; call = platformService.findBucketMembers(bucketID);</span>
-<span class="fc" id="L215">        ResourceMembers resourceMembers = execute(call);</span>
-<span class="fc" id="L216">        LOG.log(Level.FINEST, &quot;findBucketMembers found: {0}&quot;, resourceMembers);</span>
+<span class="fc" id="L212">        Call&lt;ResourceMembers&gt; call = platformService.findBucketMembers(bucketID);</span>
+<span class="fc" id="L213">        ResourceMembers resourceMembers = execute(call);</span>
+<span class="fc" id="L214">        LOG.log(Level.FINEST, &quot;findBucketMembers found: {0}&quot;, resourceMembers);</span>
 
-<span class="fc" id="L218">        return resourceMembers.getUsers();</span>
+<span class="fc" id="L216">        return resourceMembers.getUsers();</span>
     }
 
     @Nonnull
     @Override
     public ResourceMember addMember(@Nonnull final User member, @Nonnull final Bucket bucket) {
 
-<span class="fc" id="L225">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L226">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+<span class="fc" id="L223">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L224">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
 
-<span class="fc" id="L228">        return addMember(member.getId(), bucket.getId());</span>
+<span class="fc" id="L226">        return addMember(member.getId(), bucket.getId());</span>
     }
 
     @Nonnull
     @Override
     public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String bucketID) {
 
-<span class="fc" id="L235">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
-<span class="fc" id="L236">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
+<span class="fc" id="L233">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="fc" id="L234">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
 
-<span class="fc" id="L238">        User user = new User();</span>
-<span class="fc" id="L239">        user.setId(memberID);</span>
+<span class="fc" id="L236">        User user = new User();</span>
+<span class="fc" id="L237">        user.setId(memberID);</span>
 
-<span class="fc" id="L241">        String json = userAdapter.toJson(user);</span>
-<span class="fc" id="L242">        Call&lt;ResourceMember&gt; call = platformService.addBucketMember(bucketID, createBody(json));</span>
+<span class="fc" id="L239">        String json = userAdapter.toJson(user);</span>
+<span class="fc" id="L240">        Call&lt;ResourceMember&gt; call = platformService.addBucketMember(bucketID, createBody(json));</span>
 
-<span class="fc" id="L244">        return execute(call);</span>
+<span class="fc" id="L242">        return execute(call);</span>
     }
 
     @Override
     public void deleteMember(@Nonnull final User member, @Nonnull final Bucket bucket) {
 
-<span class="fc" id="L250">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L251">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+<span class="fc" id="L248">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L249">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
 
-<span class="fc" id="L253">        deleteMember(member.getId(), bucket.getId());</span>
-<span class="fc" id="L254">    }</span>
+<span class="fc" id="L251">        deleteMember(member.getId(), bucket.getId());</span>
+<span class="fc" id="L252">    }</span>
 
     @Override
     public void deleteMember(@Nonnull final String memberID, @Nonnull final String bucketID) {
 
-<span class="fc" id="L259">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
-<span class="fc" id="L260">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
+<span class="fc" id="L257">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="fc" id="L258">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
 
-<span class="fc" id="L262">        Call&lt;Void&gt; call = platformService.deleteBucketMember(bucketID, memberID);</span>
-<span class="fc" id="L263">        execute(call);</span>
-<span class="fc" id="L264">    }</span>
+<span class="fc" id="L260">        Call&lt;Void&gt; call = platformService.deleteBucketMember(bucketID, memberID);</span>
+<span class="fc" id="L261">        execute(call);</span>
+<span class="fc" id="L262">    }</span>
 
     @Nonnull
     @Override
     public List&lt;ResourceMember&gt; getOwners(@Nonnull final Bucket bucket) {
 
-<span class="fc" id="L270">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L268">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
 
-<span class="fc" id="L272">        return getOwners(bucket.getId());</span>
+<span class="fc" id="L270">        return getOwners(bucket.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;ResourceMember&gt; getOwners(@Nonnull final String bucketID) {
 
-<span class="fc" id="L279">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
+<span class="fc" id="L277">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
 
-<span class="fc" id="L281">        Call&lt;ResourceMembers&gt; call = platformService.findBucketOwners(bucketID);</span>
-<span class="fc" id="L282">        ResourceMembers resourceMembers = execute(call);</span>
-<span class="fc" id="L283">        LOG.log(Level.FINEST, &quot;findBucketOwners found: {0}&quot;, resourceMembers);</span>
+<span class="fc" id="L279">        Call&lt;ResourceMembers&gt; call = platformService.findBucketOwners(bucketID);</span>
+<span class="fc" id="L280">        ResourceMembers resourceMembers = execute(call);</span>
+<span class="fc" id="L281">        LOG.log(Level.FINEST, &quot;findBucketOwners found: {0}&quot;, resourceMembers);</span>
 
-<span class="fc" id="L285">        return resourceMembers.getUsers();</span>
+<span class="fc" id="L283">        return resourceMembers.getUsers();</span>
     }
 
     @Nonnull
     @Override
     public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Bucket bucket) {
 
-<span class="fc" id="L292">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L293">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="fc" id="L290">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L291">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
 
-<span class="fc" id="L295">        return addOwner(owner.getId(), bucket.getId());</span>
+<span class="fc" id="L293">        return addOwner(owner.getId(), bucket.getId());</span>
     }
 
     @Nonnull
     @Override
     public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String bucketID) {
 
-<span class="fc" id="L302">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="fc" id="L303">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
+<span class="fc" id="L300">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="fc" id="L301">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
 
-<span class="fc" id="L305">        User user = new User();</span>
-<span class="fc" id="L306">        user.setId(ownerID);</span>
+<span class="fc" id="L303">        User user = new User();</span>
+<span class="fc" id="L304">        user.setId(ownerID);</span>
 
-<span class="fc" id="L308">        String json = userAdapter.toJson(user);</span>
-<span class="fc" id="L309">        Call&lt;ResourceMember&gt; call = platformService.addBucketOwner(bucketID, createBody(json));</span>
+<span class="fc" id="L306">        String json = userAdapter.toJson(user);</span>
+<span class="fc" id="L307">        Call&lt;ResourceMember&gt; call = platformService.addBucketOwner(bucketID, createBody(json));</span>
 
-<span class="fc" id="L311">        return execute(call);</span>
+<span class="fc" id="L309">        return execute(call);</span>
     }
 
     @Override
     public void deleteOwner(@Nonnull final User owner, @Nonnull final Bucket bucket) {
 
-<span class="fc" id="L317">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
-<span class="fc" id="L318">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="fc" id="L315">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L316">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
 
-<span class="fc" id="L320">        deleteOwner(owner.getId(), bucket.getId());</span>
-<span class="fc" id="L321">    }</span>
+<span class="fc" id="L318">        deleteOwner(owner.getId(), bucket.getId());</span>
+<span class="fc" id="L319">    }</span>
 
     @Override
     public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String bucketID) {
 
-<span class="fc" id="L326">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="fc" id="L327">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
+<span class="fc" id="L324">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="fc" id="L325">        Arguments.checkNonEmpty(bucketID, &quot;Bucket.ID&quot;);</span>
 
-<span class="fc" id="L329">        Call&lt;Void&gt; call = platformService.deleteBucketOwner(bucketID, ownerID);</span>
-<span class="fc" id="L330">        execute(call);</span>
-<span class="fc" id="L331">    }</span>
+<span class="fc" id="L327">        Call&lt;Void&gt; call = platformService.deleteBucketOwner(bucketID, ownerID);</span>
+<span class="fc" id="L328">        execute(call);</span>
+<span class="fc" id="L329">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final Bucket bucket) {
+
+<span class="fc" id="L335">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
+
+<span class="fc" id="L337">        return getLabels(bucket.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final String bucketID) {
+
+<span class="fc" id="L344">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
+
+<span class="fc" id="L346">        return getLabels(bucketID, &quot;buckets&quot;);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final Label label, @Nonnull final Bucket bucket) {
+
+<span class="fc" id="L353">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="fc" id="L354">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
+
+<span class="fc" id="L356">        return addLabel(label.getId(), bucket.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final String labelID, @Nonnull final String bucketID) {
+
+<span class="fc" id="L363">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="fc" id="L364">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
+
+<span class="fc" id="L366">        return addLabel(labelID, bucketID, &quot;buckets&quot;, PermissionResourceType.BUCKET);</span>
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final Bucket bucket) {
+
+<span class="fc" id="L372">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="fc" id="L373">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
+
+<span class="fc" id="L375">        deleteLabel(label.getId(), bucket.getId());</span>
+<span class="fc" id="L376">    }</span>
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String bucketID) {
+
+<span class="fc" id="L381">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="fc" id="L382">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
+
+<span class="fc" id="L384">        deleteLabel(labelID, bucketID, &quot;buckets&quot;);</span>
+<span class="fc" id="L385">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

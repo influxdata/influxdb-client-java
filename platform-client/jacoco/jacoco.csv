@@ -24,6 +24,7 @@ The Platform Client,org.influxdata.platform.domain,Buckets,4,11,0,0,2,3,1,2,1,2
 The Platform Client,org.influxdata.platform.domain,Secrets,4,11,0,0,2,3,1,2,1,2
 The Platform Client,org.influxdata.platform.domain,Sources,15,0,0,0,5,0,3,0,3,0
 The Platform Client,org.influxdata.platform.domain,Tasks,4,11,0,0,2,3,1,2,1,2
+The Platform Client,org.influxdata.platform.domain,LabelMapping,6,11,0,0,2,5,2,3,2,3
 The Platform Client,org.influxdata.platform.domain,ResourceMember.UserType,0,24,0,0,0,3,0,1,0,1
 The Platform Client,org.influxdata.platform.domain,PermissionResourceType,0,124,0,0,0,13,0,1,0,1
 The Platform Client,org.influxdata.platform.domain,Source,101,0,0,0,43,0,29,0,29,0
@@ -44,26 +45,27 @@ The Platform Client,org.influxdata.platform.impl,AbstractPlatformClient.InstantA
 The Platform Client,org.influxdata.platform.impl,PlatformClientImpl,25,131,0,0,6,23,2,18,2,18
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.BatchWriteDataPoint,0,16,0,0,0,5,0,2,0,2
 The Platform Client,org.influxdata.platform.impl,UserClientImpl,7,298,1,5,2,73,1,18,0,16
-The Platform Client,org.influxdata.platform.impl,ScraperClientImpl,0,378,0,0,0,93,0,21,0,21
+The Platform Client,org.influxdata.platform.impl,ScraperClientImpl,0,443,0,0,0,108,0,27,0,27
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient,26,317,1,12,2,74,3,29,2,22
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.ToWritePointsCompletable,0,75,1,3,0,16,1,5,0,4
-The Platform Client,org.influxdata.platform.impl,OrganizationClientImpl,0,462,0,0,0,112,0,27,0,27
+The Platform Client,org.influxdata.platform.impl,OrganizationClientImpl,0,527,0,0,0,127,0,33,0,33
 The Platform Client,org.influxdata.platform.impl,AuthenticateInterceptor,0,260,1,21,0,58,1,17,0,7
 The Platform Client,org.influxdata.platform.impl,GzipInterceptor,0,87,2,6,0,19,2,10,0,8
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.BatchWriteOptions,5,74,5,5,2,14,5,3,0,3
 The Platform Client,org.influxdata.platform.impl,LabelServiceImpl,0,169,0,2,0,43,0,10,0,9
 The Platform Client,org.influxdata.platform.impl,AbstractPlatformClient,28,92,0,0,9,26,1,3,1,3
-The Platform Client,org.influxdata.platform.impl,TaskClientImpl,281,534,0,4,66,114,17,29,17,27
+The Platform Client,org.influxdata.platform.impl,TaskClientImpl,281,599,0,4,66,129,17,35,17,33
 The Platform Client,org.influxdata.platform.impl,QueryClientImpl.new FluxCsvParser.FluxResponseConsumer() {...},0,25,0,0,0,4,0,3,0,3
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.BatchWriteDataRecord,0,12,0,0,0,4,0,2,0,2
 The Platform Client,org.influxdata.platform.impl,QueryClientImpl.new FluxCsvParser.FluxResponseConsumer() {...},25,0,0,0,4,0,3,0,3,0
 The Platform Client,org.influxdata.platform.impl,QueryClientImpl.new FluxCsvParser.FluxResponseConsumer() {...},0,16,0,0,0,4,0,3,0,3
 The Platform Client,org.influxdata.platform.impl,GzipInterceptor.new RequestBody() {...},0,28,0,0,0,7,0,4,0,4
 The Platform Client,org.influxdata.platform.impl,MeasurementMapper,14,275,6,30,3,57,6,19,0,7
-The Platform Client,org.influxdata.platform.impl,BucketClientImpl,0,426,0,2,0,100,0,28,0,27
+The Platform Client,org.influxdata.platform.impl,BucketClientImpl,0,491,0,2,0,115,0,34,0,33
 The Platform Client,org.influxdata.platform.impl,QueryClientImpl,219,262,0,0,57,50,9,12,9,12
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.BatchWriteItem,0,18,0,0,0,6,0,1,0,1
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.BatchWriteDataMeasurement,2,25,1,1,1,6,1,2,0,2
+The Platform Client,org.influxdata.platform.impl,AbstractLabelRestClient,0,122,0,0,0,30,0,5,0,5
 The Platform Client,org.influxdata.platform.impl,AuthorizationClientImpl,0,179,0,0,0,45,0,14,0,14
 The Platform Client,org.influxdata.platform.impl,SourceClientImpl,139,28,0,0,31,9,10,2,10,2
 The Platform Client,org.influxdata.platform.impl,WriteClientImpl,0,189,0,6,0,48,0,16,0,13
