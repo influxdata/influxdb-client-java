@@ -31,7 +31,7 @@ import org.influxdata.platform.domain.Label;
 /**
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:37)
  */
-public interface LabelService {
+public interface LabelClient {
 
     /**
      * Creates a new label and sets {@link Label#getId()} with the new identifier.

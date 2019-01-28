@@ -222,6 +222,7 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
 
         Call<OperationLogResponse> logsCall = platformService.findUserLogs(userID);
 
+        //TODO https://github.com/influxdata/influxdb/issues/11632
         OperationLogResponse logResponse = execute(logsCall, "oplog not found");
         if (logResponse == null) {
             return new ArrayList<>();

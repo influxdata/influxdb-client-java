@@ -573,7 +573,7 @@ class ITTaskClientTest extends AbstractITClientTest {
     @Test
     void labels() {
 
-        LabelService labelService = platformClient.createLabelService();
+        LabelClient labelClient = platformClient.createLabelClient();
 
         Task task = taskClient.createTaskEvery(generateName("it task"), TASK_FLUX, "1s", organization);
 
@@ -581,7 +581,7 @@ class ITTaskClientTest extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = labelService.createLabel(generateName("Cool Resource"), properties);
+        Label label = labelClient.createLabel(generateName("Cool Resource"), properties);
 
         List<Label> labels = taskClient.getLabels(task);
         Assertions.assertThat(labels).hasSize(0);

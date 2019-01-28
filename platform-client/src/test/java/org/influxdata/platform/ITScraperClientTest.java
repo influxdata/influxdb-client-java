@@ -198,7 +198,7 @@ class ITScraperClientTest extends AbstractITClientTest {
     @Test
     void labels() {
 
-        LabelService labelService = platformClient.createLabelService();
+        LabelClient labelClient = platformClient.createLabelClient();
 
         ScraperTarget scraper =  scraperClient.createScraperTarget(generateName("InfluxDB scraper"),
                 "http://localhost:9999", bucket.getId(), findMyOrg().getId());
@@ -207,7 +207,7 @@ class ITScraperClientTest extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = labelService.createLabel(generateName("Cool Resource"), properties);
+        Label label = labelClient.createLabel(generateName("Cool Resource"), properties);
 
         List<Label> labels = scraperClient.getLabels(scraper);
         Assertions.assertThat(labels).hasSize(0);

@@ -231,7 +231,7 @@ class ITOrganizationClientTest extends AbstractITClientTest {
     @Test
     void labels() {
 
-        LabelService labelService = platformClient.createLabelService();
+        LabelClient labelClient = platformClient.createLabelClient();
 
         Organization organization = organizationClient.createOrganization(generateName("Constant Pro"));
 
@@ -239,7 +239,7 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = labelService.createLabel(generateName("Cool Resource"), properties);
+        Label label = labelClient.createLabel(generateName("Cool Resource"), properties);
 
         List<Label> labels = organizationClient.getLabels(organization);
         Assertions.assertThat(labels).hasSize(0);

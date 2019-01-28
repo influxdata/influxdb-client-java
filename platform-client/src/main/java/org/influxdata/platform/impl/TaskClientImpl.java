@@ -440,7 +440,8 @@ final class TaskClientImpl extends AbstractLabelRestClient implements TaskClient
 
         Call<Run> run = platformService.findTaskRun(taskID, runID);
 
-        return execute(run, "failed to find run");
+        //TODO https://github.com/influxdata/influxdb/issues/11589#issuecomment-458138193
+        return execute(run, "expected one run, got 0");
     }
 
     @Nonnull
@@ -485,6 +486,7 @@ final class TaskClientImpl extends AbstractLabelRestClient implements TaskClient
 
         Call<Run> run = platformService.retryTaskRun(taskID, runID);
 
+        //TODO https://github.com/influxdata/influxdb/issues/11589#issuecomment-458138193
         return execute(run, "expected one run, got 0");
     }
 

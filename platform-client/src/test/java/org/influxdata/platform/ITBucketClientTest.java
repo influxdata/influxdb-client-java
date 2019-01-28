@@ -256,7 +256,7 @@ class ITBucketClientTest extends AbstractITClientTest {
     @Test
     void labels() {
 
-        LabelService labelService = platformClient.createLabelService();
+        LabelClient labelClient = platformClient.createLabelClient();
 
         Bucket bucket = bucketClient.createBucket(generateName("robot sensor"), retentionRule(), organization);
 
@@ -264,7 +264,7 @@ class ITBucketClientTest extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = labelService.createLabel(generateName("Cool Resource"), properties);
+        Label label = labelClient.createLabel(generateName("Cool Resource"), properties);
 
         List<Label> labels = bucketClient.getLabels(bucket);
         Assertions.assertThat(labels).hasSize(0);

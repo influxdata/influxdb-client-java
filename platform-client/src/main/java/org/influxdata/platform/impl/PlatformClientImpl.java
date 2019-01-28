@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.AuthorizationClient;
 import org.influxdata.platform.BucketClient;
-import org.influxdata.platform.LabelService;
+import org.influxdata.platform.LabelClient;
 import org.influxdata.platform.OrganizationClient;
 import org.influxdata.platform.PlatformClient;
 import org.influxdata.platform.QueryClient;
@@ -124,8 +124,8 @@ public final class PlatformClientImpl extends AbstractPlatformClient<PlatformSer
 
     @Nonnull
     @Override
-    public LabelService createLabelService() {
-        return new LabelServiceImpl(platformService, moshi);
+    public LabelClient createLabelClient() {
+        return new LabelClientImpl(platformService, moshi);
     }
 
     @Nonnull

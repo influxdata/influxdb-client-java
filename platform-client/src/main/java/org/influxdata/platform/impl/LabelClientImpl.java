@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
-import org.influxdata.platform.LabelService;
+import org.influxdata.platform.LabelClient;
 import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.LabelResponse;
 import org.influxdata.platform.domain.Labels;
@@ -43,15 +43,15 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:48)
  */
-class LabelServiceImpl extends AbstractRestClient implements LabelService {
+class LabelClientImpl extends AbstractRestClient implements LabelClient {
 
-    private static final Logger LOG = Logger.getLogger(LabelServiceImpl.class.getName());
+    private static final Logger LOG = Logger.getLogger(LabelClientImpl.class.getName());
 
     private final PlatformService platformService;
     private final JsonAdapter<Label> adapter;
     private final JsonAdapter<Map> mapAdapter;
 
-    LabelServiceImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {
+    LabelClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {
 
         Arguments.checkNotNull(platformService, "PlatformService");
         Arguments.checkNotNull(moshi, "Moshi to create adapter");

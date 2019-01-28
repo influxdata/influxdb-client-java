@@ -37,16 +37,16 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:52)
  */
 @RunWith(JUnitPlatform.class)
-class ITLabelServiceTest extends AbstractITClientTest {
+class ITLabelClientTest extends AbstractITClientTest {
 
-    private LabelService labelService;
+    private LabelClient labelClient;
 
     @BeforeEach
     void setUp() {
 
-        labelService = platformClient.createLabelService();
+        labelClient = platformClient.createLabelClient();
 
-        labelService.findLabels().forEach(label -> labelService.deleteLabel(label));
+        labelClient.findLabels().forEach(label -> labelClient.deleteLabel(label));
     }
 
     @Test
@@ -58,7 +58,7 @@ class ITLabelServiceTest extends AbstractITClientTest {
         properties.put("color", "red");
         properties.put("source", "remote api");
 
-        Label label = labelService.createLabel(name, properties);
+        Label label = labelClient.createLabel(name, properties);
 
         Assertions.assertThat(label).isNotNull();
         Assertions.assertThat(label.getId()).isNotBlank();
@@ -77,7 +77,7 @@ class ITLabelServiceTest extends AbstractITClientTest {
         Label label = new Label();
         label.setName(name);
 
-        label = labelService.createLabel(label);
+        label = labelClient.createLabel(label);
 
         Assertions.assertThat(label).isNotNull();
         Assertions.assertThat(label.getId()).isNotBlank();
@@ -87,9 +87,9 @@ class ITLabelServiceTest extends AbstractITClientTest {
     @Test
     void findLabelByID() {
 
-        Label label = labelService.createLabel(generateName("Cool Resource"), new HashMap<>());
+        Label label = labelClient.createLabel(generateName("Cool Resource"), new HashMap<>());
 
-        Label labelByID = labelService.findLabelByID(label.getId());
+        Label labelByID = labelClient.findLabelByID(label.getId());
 
         Assertions.assertThat(labelByID).isNotNull();
         Assertions.assertThat(labelByID.getId()).isEqualTo(label.getId());
@@ -99,7 +99,7 @@ class ITLabelServiceTest extends AbstractITClientTest {
     @Test
     void findLabelByIDNull() {
 
-        Label labelByID = labelService.findLabelByID("020f755c3c082000");
+        Label labelByID = labelClient.findLabelByID("020f755c3c082000");
 
         Assertions.assertThat(labelByID).isNull();
     }
@@ -107,39 +107,39 @@ class ITLabelServiceTest extends AbstractITClientTest {
     @Test
     void findLabels() {
 
-        int size = labelService.findLabels().size();
+        int size = labelClient.findLabels().size();
 
-        labelService.createLabel(generateName("Cool Resource"), new HashMap<>());
+        labelClient.createLabel(generateName("Cool Resource"), new HashMap<>());
 
-        List<Label> labels = labelService.findLabels();
+        List<Label> labels = labelClient.findLabels();
         Assertions.assertThat(labels).hasSize(size + 1);
     }
 
     @Test
     void deleteLabel() {
 
-        Label createdLabel = labelService.createLabel(generateName("Cool Resource"), new HashMap<>());
+        Label createdLabel = labelClient.createLabel(generateName("Cool Resource"), new HashMap<>());
         Assertions.assertThat(createdLabel).isNotNull();
 
-        Label foundLabel = labelService.findLabelByID(createdLabel.getId());
+        Label foundLabel = labelClient.findLabelByID(createdLabel.getId());
         Assertions.assertThat(foundLabel).isNotNull();
 
         // delete user
-        labelService.deleteLabel(createdLabel);
+        labelClient.deleteLabel(createdLabel);
 
-        foundLabel = labelService.findLabelByID(createdLabel.getId());
+        foundLabel = labelClient.findLabelByID(createdLabel.getId());
         Assertions.assertThat(foundLabel).isNull();
     }
 
     @Test
     void updateLabel() {
 
-        Label label = labelService.createLabel(generateName("Cool Resource"), new HashMap<>());
+        Label label = labelClient.createLabel(generateName("Cool Resource"), new HashMap<>());
         Assertions.assertThat(label.getProperties()).hasSize(0);
 
         label.getProperties().put("color", "blue");
 
-        label = labelService.updateLabel(label);
+        label = labelClient.updateLabel(label);
         Assertions.assertThat(label.getProperties())
                 .hasSize(1)
                 .hasEntrySatisfying("color", link -> Assertions.assertThat(link).isEqualTo("blue"));
@@ -147,7 +147,7 @@ class ITLabelServiceTest extends AbstractITClientTest {
 
         label.getProperties().put("type", "free");
 
-        label = labelService.updateLabel(label);
+        label = labelClient.updateLabel(label);
         Assertions.assertThat(label.getProperties())
                 .hasSize(2)
                 .hasEntrySatisfying("color", link -> Assertions.assertThat(link).isEqualTo("blue"))
@@ -156,7 +156,7 @@ class ITLabelServiceTest extends AbstractITClientTest {
         label.getProperties().put("type", "paid");
         label.getProperties().put("color", "");
 
-        label = labelService.updateLabel(label);
+        label = labelClient.updateLabel(label);
         Assertions.assertThat(label.getProperties())
                 .hasSize(1)
                 .hasEntrySatisfying("type", link -> Assertions.assertThat(link).isEqualTo("paid"));

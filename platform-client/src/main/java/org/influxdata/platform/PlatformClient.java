@@ -124,7 +124,7 @@ public interface PlatformClient extends AutoCloseable {
      * @return the new client instance for Label API
      */
     @Nonnull
-    LabelService createLabelService();
+    LabelClient createLabelClient();
 
     /**
      * Get the health of an instance.
