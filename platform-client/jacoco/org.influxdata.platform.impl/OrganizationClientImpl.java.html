@@ -34,9 +34,9 @@ import org.influxdata.platform.OrganizationClient;
 import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
-import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ResourceMembers;
+import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.domain.Secrets;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.error.rest.NotFoundException;
@@ -371,7 +371,7 @@ final class OrganizationClientImpl extends AbstractLabelRestClient implements Or
 <span class="fc" id="L371">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
 <span class="fc" id="L372">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
 
-<span class="fc" id="L374">        return addLabel(labelID, orgID, &quot;orgs&quot;, PermissionResourceType.ORG);</span>
+<span class="fc" id="L374">        return addLabel(labelID, orgID, &quot;orgs&quot;, ResourceType.ORGS);</span>
     }
 
     @Override

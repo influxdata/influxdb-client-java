@@ -480,20 +480,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.domain.PermissionResourceType.java">org/influxdata/platform/domain/PermissionResourceType.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.impl.TaskClientImpl.java">org/influxdata/platform/impl/TaskClientImpl.java</a>
                 </td>
                 <td>
@@ -733,6 +719,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.ToUIntFlux.java">org/influxdata/flux/functions/ToUIntFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.domain.ResourceType.java">org/influxdata/platform/domain/ResourceType.java</a>
                 </td>
                 <td>
                   0

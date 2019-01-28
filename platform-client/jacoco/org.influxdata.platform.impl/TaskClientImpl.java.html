@@ -32,9 +32,9 @@ import org.influxdata.platform.Arguments;
 import org.influxdata.platform.TaskClient;
 import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
-import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ResourceMembers;
+import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.domain.Run;
 import org.influxdata.platform.domain.RunsResponse;
 import org.influxdata.platform.domain.Status;
@@ -562,7 +562,7 @@ final class TaskClientImpl extends AbstractLabelRestClient implements TaskClient
 <span class="fc" id="L562">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
 <span class="fc" id="L563">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
 
-<span class="fc" id="L565">        return addLabel(labelID, taskID, &quot;tasks&quot;, PermissionResourceType.TASK);</span>
+<span class="fc" id="L565">        return addLabel(labelID, taskID, &quot;tasks&quot;, ResourceType.TASKS);</span>
     }
 
     @Override

@@ -33,9 +33,9 @@ import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Buckets;
 import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
-import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ResourceMembers;
+import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.domain.RetentionRule;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.error.rest.NotFoundException;
@@ -363,7 +363,7 @@ final class BucketClientImpl extends AbstractLabelRestClient implements BucketCl
 <span class="fc" id="L363">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
 <span class="fc" id="L364">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
 
-<span class="fc" id="L366">        return addLabel(labelID, bucketID, &quot;buckets&quot;, PermissionResourceType.BUCKET);</span>
+<span class="fc" id="L366">        return addLabel(labelID, bucketID, &quot;buckets&quot;, ResourceType.BUCKETS);</span>
     }
 
     @Override

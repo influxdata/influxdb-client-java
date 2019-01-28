@@ -31,7 +31,7 @@ import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.LabelMapping;
 import org.influxdata.platform.domain.LabelResponse;
 import org.influxdata.platform.domain.Labels;
-import org.influxdata.platform.domain.PermissionResourceType;
+import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
@@ -76,7 +76,7 @@ abstract class AbstractLabelRestClient extends AbstractRestClient {
     Label addLabel(@Nonnull final String labelID,
                    @Nonnull final String resourceID,
                    @Nonnull final String resourcePath,
-                   @Nonnull final PermissionResourceType resourceType) {
+                   @Nonnull final ResourceType resourceType) {
 
 <span class="fc" id="L81">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
 <span class="fc" id="L82">        Arguments.checkNonEmpty(resourceID, &quot;resourceID&quot;);</span>
