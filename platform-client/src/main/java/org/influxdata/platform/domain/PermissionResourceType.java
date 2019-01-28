@@ -60,4 +60,7 @@ public enum PermissionResourceType {
 
     @Json(name = "secrets")
     SECRET,
+
+    @Json(name = "labels")
+    LABEL,
 }
