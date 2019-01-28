@@ -30,9 +30,9 @@ import javax.annotation.Nullable;
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.ScraperClient;
 import org.influxdata.platform.domain.Label;
-import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ResourceMembers;
+import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.domain.ScraperTarget;
 import org.influxdata.platform.domain.ScraperTargetResponse;
 import org.influxdata.platform.domain.ScraperTargetResponses;
@@ -318,7 +318,7 @@ final class ScraperClientImpl extends AbstractLabelRestClient implements Scraper
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
-        return addLabel(labelID, scraperTargetID, "scrapers", PermissionResourceType.SCRAPER);
+        return addLabel(labelID, scraperTargetID, "scrapers", ResourceType.SCRAPERS);
     }
 
     @Override

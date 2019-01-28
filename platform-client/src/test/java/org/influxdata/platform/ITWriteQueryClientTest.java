@@ -37,7 +37,7 @@ import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
 import org.influxdata.platform.domain.PermissionResource;
-import org.influxdata.platform.domain.PermissionResourceType;
+import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.LogLevel;
@@ -76,7 +76,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         PermissionResource resource = new PermissionResource();
         resource.setId(bucket.getId());
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResourceType.BUCKET);
+        resource.setType(ResourceType.BUCKETS);
 
         //
         // Add Permissions to read and write to the Bucket
@@ -298,7 +298,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         PermissionResource bucketResource = new PermissionResource();
         bucketResource.setId(bucket.getId());
         bucketResource.setOrgID(organization.getId());
-        bucketResource.setType(PermissionResourceType.BUCKET);
+        bucketResource.setType(ResourceType.BUCKETS);
 
         Permission readBucket = new Permission();
         readBucket.setResource(bucketResource);
@@ -311,7 +311,7 @@ class ITWriteQueryClientTest extends AbstractITClientTest {
         PermissionResource orgResource = new PermissionResource();
         orgResource.setId(organization.getId());
         orgResource.setOrgID(organization.getId());
-        orgResource.setType(PermissionResourceType.ORG);
+        orgResource.setType(ResourceType.ORGS);
 
         Permission readOrganization = new Permission();
         readOrganization.setResource(orgResource);

@@ -35,8 +35,8 @@ import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
 import org.influxdata.platform.domain.PermissionResource;
-import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.ResourceMember;
+import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.domain.Run;
 import org.influxdata.platform.domain.RunStatus;
 import org.influxdata.platform.domain.Status;
@@ -608,7 +608,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResourceType.TASK);
+        resource.setType(ResourceType.TASKS);
 
         Permission createTask = new Permission();
         createTask.setResource(resource);
@@ -619,14 +619,14 @@ class ITTaskClientTest extends AbstractITClientTest {
         deleteTask.setAction(Permission.WRITE_ACTION);
 
         PermissionResource orgResource = new PermissionResource();
-        orgResource.setType(PermissionResourceType.ORG);
+        orgResource.setType(ResourceType.ORGS);
 
         Permission createOrg = new Permission();
         createOrg.setAction(Permission.WRITE_ACTION);
         createOrg.setResource(orgResource);
 
         PermissionResource userResource = new PermissionResource();
-        userResource.setType(PermissionResourceType.USER);
+        userResource.setType(ResourceType.USERS);
 
         Permission createUsers = new Permission();
         createUsers.setAction(Permission.WRITE_ACTION);
@@ -634,7 +634,7 @@ class ITTaskClientTest extends AbstractITClientTest {
 
 
         PermissionResource authResource = new PermissionResource();
-        authResource.setType(PermissionResourceType.AUTHORIZATION);
+        authResource.setType(ResourceType.AUTHORIZATIONS);
 
         Permission createAuth = new Permission();
         createAuth.setAction(Permission.WRITE_ACTION);

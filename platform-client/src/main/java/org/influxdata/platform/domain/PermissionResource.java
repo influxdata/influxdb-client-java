@@ -36,7 +36,7 @@ public final class PermissionResource {
     /**
      * Resource type.
      */
-    private PermissionResourceType type;
+    private ResourceType type;
 
     private String orgID;
 
@@ -48,11 +48,11 @@ public final class PermissionResource {
         this.id = id;
     }
 
-    public PermissionResourceType getType() {
+    public ResourceType getType() {
         return type;
     }
 
-    public void setType(final PermissionResourceType type) {
+    public void setType(final ResourceType type) {
         this.type = type;
     }
 

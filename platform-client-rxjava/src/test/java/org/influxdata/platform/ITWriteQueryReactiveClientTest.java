@@ -33,7 +33,7 @@ import org.influxdata.platform.domain.Authorization;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Permission;
 import org.influxdata.platform.domain.PermissionResource;
-import org.influxdata.platform.domain.PermissionResourceType;
+import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.domain.RetentionRule;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.option.WriteOptions;
@@ -82,7 +82,7 @@ class ITWriteQueryReactiveClientTest extends AbstractITPlatformClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResourceType.BUCKET);
+        resource.setType(ResourceType.BUCKETS);
         resource.setId(bucket.getId());
 
         Permission readBucket = new Permission();

@@ -33,7 +33,7 @@ import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
 import org.influxdata.platform.domain.PermissionResource;
-import org.influxdata.platform.domain.PermissionResourceType;
+import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.domain.User;
 
@@ -70,7 +70,7 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
 
         PermissionResource userResource = new PermissionResource();
         userResource.setOrgID(organization.getId());
-        userResource.setType(PermissionResourceType.USER);
+        userResource.setType(ResourceType.USERS);
 
         Permission readUsers = new Permission();
         readUsers.setAction(Permission.READ_ACTION);
@@ -78,7 +78,7 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
 
         PermissionResource orgResource = new PermissionResource();
         orgResource.setOrgID(organization.getId());
-        orgResource.setType(PermissionResourceType.ORG);
+        orgResource.setType(ResourceType.ORGS);
 
         Permission writeOrganizations = new Permission();
         writeOrganizations.setAction(Permission.WRITE_ACTION);
@@ -102,11 +102,11 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
         Assertions.assertThat(authorization.getStatus()).isEqualTo(Status.ACTIVE);
 
         Assertions.assertThat(authorization.getPermissions()).hasSize(2);
-        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(PermissionResourceType.USER);
+        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(ResourceType.USERS);
         Assertions.assertThat(authorization.getPermissions().get(0).getResource().getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(authorization.getPermissions().get(0).getAction()).isEqualTo("read");
 
-        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(PermissionResourceType.ORG);
+        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(ResourceType.ORGS);
         Assertions.assertThat(authorization.getPermissions().get(1).getResource().getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(authorization.getPermissions().get(1).getAction()).isEqualTo("write");
 
@@ -120,7 +120,7 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResourceType.SOURCE);
+        resource.setType(ResourceType.SOURCES);
 
         Permission createSource = new Permission();
         createSource.setResource(resource);
@@ -146,7 +146,7 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResourceType.TASK);
+        resource.setType(ResourceType.TASKS);
 
         Permission createTask = new Permission();
         createTask.setResource(resource);
@@ -163,10 +163,10 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
         Authorization authorization = authorizationClient.createAuthorization(organization, permissions);
 
         Assertions.assertThat(authorization.getPermissions()).hasSize(2);
-        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(PermissionResourceType.TASK);
+        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(ResourceType.TASKS);
         Assertions.assertThat(authorization.getPermissions().get(0).getResource().getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(authorization.getPermissions().get(0).getAction()).isEqualTo("read");
-        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(PermissionResourceType.TASK);
+        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(ResourceType.TASKS);
         Assertions.assertThat(authorization.getPermissions().get(1).getResource().getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(authorization.getPermissions().get(1).getAction()).isEqualTo("write");
     }
@@ -179,7 +179,7 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResourceType.BUCKET);
+        resource.setType(ResourceType.BUCKETS);
         resource.setId(bucket.getId());
 
         Permission readBucket = new Permission();
@@ -198,10 +198,10 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
 
         Assertions.assertThat(authorization.getPermissions()).hasSize(2);
         Assertions.assertThat(authorization.getPermissions().get(0).getResource().getId()).isEqualTo(bucket.getId());
-        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(PermissionResourceType.BUCKET);
+        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(ResourceType.BUCKETS);
         Assertions.assertThat(authorization.getPermissions().get(0).getAction()).isEqualTo("read");
         Assertions.assertThat(authorization.getPermissions().get(1).getResource().getId()).isEqualTo(bucket.getId());
-        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(PermissionResourceType.BUCKET);
+        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(ResourceType.BUCKETS);
         Assertions.assertThat(authorization.getPermissions().get(1).getAction()).isEqualTo("write");
     }
 
@@ -266,7 +266,7 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResourceType.USER);
+        resource.setType(ResourceType.USERS);
 
         Permission readUsers = new Permission();
         readUsers.setAction(Permission.READ_ACTION);
@@ -311,7 +311,7 @@ class ITAuthorizationClientTest extends AbstractITClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResourceType.USER);
+        resource.setType(ResourceType.USERS);
 
         Permission permission = new Permission();
         permission.setAction(Permission.READ_ACTION);

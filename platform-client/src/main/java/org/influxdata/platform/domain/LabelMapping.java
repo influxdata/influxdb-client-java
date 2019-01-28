@@ -28,7 +28,7 @@ public class LabelMapping {
 
     private String labelID;
 
-    private PermissionResourceType resourceType;
+    private ResourceType resourceType;
 
     public String getLabelID() {
         return labelID;
@@ -38,11 +38,11 @@ public class LabelMapping {
         this.labelID = labelID;
     }
 
-    public PermissionResourceType getResourceType() {
+    public ResourceType getResourceType() {
         return resourceType;
     }
 
-    public void setResourceType(final PermissionResourceType resourceType) {
+    public void setResourceType(final ResourceType resourceType) {
         this.resourceType = resourceType;
     }
 }

@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
-import org.influxdata.platform.domain.PermissionResourceType;
+import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.domain.RetentionRule;
 
 import org.junit.jupiter.api.AfterEach;
@@ -87,7 +87,7 @@ abstract class AbstractITClientTest extends AbstractTest {
                 .filter(authorization -> authorization.getPermissions().stream()
                         .map(Permission::getResource)
                         .anyMatch(resource ->
-                                resource.getType().equals(PermissionResourceType.ORG) &&
+                                resource.getType().equals(ResourceType.ORGS) &&
                                         resource.getId() == null &&
                                         resource.getOrgID() == null))
                 .findFirst()

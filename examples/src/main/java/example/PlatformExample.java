@@ -40,7 +40,7 @@ import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
 import org.influxdata.platform.domain.PermissionResource;
-import org.influxdata.platform.domain.PermissionResourceType;
+import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.write.Point;
 import org.influxdata.platform.write.event.WriteSuccessEvent;
@@ -94,7 +94,7 @@ public class PlatformExample {
         PermissionResource resource = new PermissionResource();
         resource.setId(temperatureBucket.getId());
         resource.setOrgID(medicalGMBH.getId());
-        resource.setType(PermissionResourceType.BUCKET);
+        resource.setType(ResourceType.BUCKETS);
 
         Permission readBucket = new Permission();
         readBucket.setResource(resource);

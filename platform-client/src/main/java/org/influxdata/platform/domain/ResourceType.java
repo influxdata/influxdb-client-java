@@ -26,41 +26,41 @@ import com.squareup.moshi.Json;
 /**
  * @author Jakub Bednar (bednar@github) (02/01/2019 10,19)
  */
-public enum PermissionResourceType {
+public enum ResourceType {
 
     @Json(name = "authorizations")
-    AUTHORIZATION,
+    AUTHORIZATIONS,
 
     @Json(name = "buckets")
-    BUCKET,
+    BUCKETS,
 
     @Json(name = "dashboards")
-    DASHBOARD,
+    DASHBOARDS,
 
     @Json(name = "orgs")
-    ORG,
+    ORGS,
 
     @Json(name = "sources")
-    SOURCE,
+    SOURCES,
 
     @Json(name = "tasks")
-    TASK,
+    TASKS,
 
     @Json(name = "telegrafs")
-    TELEGRAF,
+    TELEGRAFS,
 
     @Json(name = "users")
-    USER,
+    USERS,
 
     @Json(name = "macros")
-    MACRO,
+    MACROS,
 
     @Json(name = "scrapers")
-    SCRAPER,
+    SCRAPERS,
 
     @Json(name = "secrets")
-    SECRET,
+    SECRETS,
 
     @Json(name = "labels")
-    LABEL,
+    LABELS,
 }
