@@ -100,7 +100,7 @@ import retrofit2.Response;
                 //
 <span class="pc bpc" id="L101" title="1 of 4 branches missed.">                boolean nullByMessage = nullError != null &amp;&amp; (nullError.equals(ie.getMessage())</span>
                         ||
-                        //TODO https://github.com/influxdata/influxdb/issues/11589
+                        //TODO set user password -&gt; https://github.com/influxdata/influxdb/issues/11590
 <span class="pc bnc" id="L104" title="All 4 branches missed.">                        (ie.errorBody().has(&quot;error&quot;) &amp;&amp; ie.errorBody().getString(&quot;error&quot;).equals(nullError)));</span>
 <span class="pc bpc" id="L105" title="3 of 4 branches missed.">                boolean nullByType = nullType != null &amp;&amp; nullType.isAssignableFrom(ie.getClass());</span>
 

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LabelServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Platform Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.platform.impl</a> &gt; <span class="el_source">LabelServiceImpl.java</span></div><h1>LabelServiceImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.platform.impl;
+
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.platform.Arguments;
+import org.influxdata.platform.LabelService;
+import org.influxdata.platform.domain.Label;
+import org.influxdata.platform.domain.LabelResponse;
+import org.influxdata.platform.domain.Labels;
+import org.influxdata.platform.error.rest.NotFoundException;
+import org.influxdata.platform.rest.AbstractRestClient;
+
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (bednar@github) (28/01/2019 10:48)
+ */
+class LabelServiceImpl extends AbstractRestClient implements LabelService {
+
+<span class="fc" id="L48">    private static final Logger LOG = Logger.getLogger(LabelServiceImpl.class.getName());</span>
+
+    private final PlatformService platformService;
+    private final JsonAdapter&lt;Label&gt; adapter;
+    private final JsonAdapter&lt;Map&gt; mapAdapter;
+
+<span class="fc" id="L54">    LabelServiceImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
+
+<span class="fc" id="L56">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
+<span class="fc" id="L57">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
+
+<span class="fc" id="L59">        this.platformService = platformService;</span>
+<span class="fc" id="L60">        this.adapter = moshi.adapter(Label.class);</span>
+<span class="fc" id="L61">        this.mapAdapter = moshi.adapter(Map.class);</span>
+<span class="fc" id="L62">    }</span>
+
+    @Nonnull
+    @Override
+    public Label createLabel(@Nonnull final Label label) {
+
+<span class="fc" id="L68">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+
+<span class="fc" id="L70">        Call&lt;LabelResponse&gt; call = platformService.createLabel(createBody(adapter.toJson(label)));</span>
+<span class="fc" id="L71">        LabelResponse labelResponse = execute(call);</span>
+
+<span class="fc" id="L73">        LOG.log(Level.FINEST, &quot;createLabel response: {0}&quot;, labelResponse);</span>
+
+<span class="fc" id="L75">        return labelResponse.getLabel();</span>
+    }
+
+    @Nonnull
+    @Override
+    public Label createLabel(@Nonnull final String name, @Nonnull final Map&lt;String, String&gt; properties) {
+
+<span class="fc" id="L82">        Arguments.checkNotNull(name, &quot;name&quot;);</span>
+<span class="fc" id="L83">        Arguments.checkNotNull(properties, &quot;properties&quot;);</span>
+
+<span class="fc" id="L85">        Label label = new Label();</span>
+<span class="fc" id="L86">        label.setName(name);</span>
+<span class="fc" id="L87">        label.setProperties(properties);</span>
+
+<span class="fc" id="L89">        return createLabel(label);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Label updateLabel(@Nonnull final Label label) {
+
+<span class="fc" id="L96">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+
+<span class="fc" id="L98">        String json = adapter.toJson(label);</span>
+
+<span class="fc" id="L100">        Call&lt;LabelResponse&gt; call = platformService.updateLabel(label.getId(), createBody(json));</span>
+<span class="fc" id="L101">        LabelResponse labelResponse = execute(call);</span>
+
+<span class="fc" id="L103">        LOG.log(Level.FINEST, &quot;updateLabel response: {0}&quot;, labelResponse);</span>
+
+<span class="fc" id="L105">        return labelResponse.getLabel();</span>
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label) {
+
+<span class="fc" id="L111">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+
+<span class="fc" id="L113">        deleteLabel(label.getId());</span>
+<span class="fc" id="L114">    }</span>
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID) {
+
+<span class="fc" id="L119">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+
+<span class="fc" id="L121">        Call&lt;Void&gt; call = platformService.deleteLabel(labelID);</span>
+<span class="fc" id="L122">        execute(call);</span>
+<span class="fc" id="L123">    }</span>
+
+    @Nullable
+    @Override
+    public Label findLabelByID(@Nonnull final String labelID) {
+
+<span class="fc" id="L129">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+
+<span class="fc" id="L131">        Call&lt;LabelResponse&gt; call = platformService.findLabelByID(labelID);</span>
+<span class="fc" id="L132">        LabelResponse labelResponse = execute(call, NotFoundException.class);</span>
+
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        if (labelResponse == null) {</span>
+<span class="fc" id="L135">            return null;</span>
+        }
+
+<span class="fc" id="L138">        LOG.log(Level.FINEST, &quot;findLabelByID response: {0}&quot;, labelResponse);</span>
+
+<span class="fc" id="L140">        return labelResponse.getLabel();</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; findLabels() {
+
+<span class="fc" id="L147">        Call&lt;Labels&gt; sourcesCall = platformService.findLabels();</span>
+
+<span class="fc" id="L149">        Labels labels = execute(sourcesCall);</span>
+<span class="fc" id="L150">        LOG.log(Level.FINEST, &quot;findLabels found: {0}&quot;, labels);</span>
+
+<span class="fc" id="L152">        return labels.getLabels();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
