@@ -100,7 +100,7 @@ public abstract class AbstractRestClient {
                 //
                 boolean nullByMessage = nullError != null && (nullError.equals(ie.getMessage())
                         ||
-                        //TODO https://github.com/influxdata/influxdb/issues/11589
+                        //TODO set user password -> https://github.com/influxdata/influxdb/issues/11590
                         (ie.errorBody().has("error") && ie.errorBody().getString("error").equals(nullError)));
                 boolean nullByType = nullType != null && nullType.isAssignableFrom(ie.getClass());
 

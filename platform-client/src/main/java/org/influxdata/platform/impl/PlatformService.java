@@ -31,6 +31,8 @@ import org.influxdata.platform.domain.Authorizations;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Buckets;
 import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.domain.LabelResponse;
+import org.influxdata.platform.domain.Labels;
 import org.influxdata.platform.domain.OperationLogResponse;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
@@ -486,6 +488,30 @@ interface PlatformService {
     @Headers("Content-Type: application/json")
     Call<Void> deleteScraperTargetOwner(@Nonnull @Path("id") final String scraperTargetID,
                                         @Nonnull @Path("userID") final String userID);
+
+    //
+    // Labels
+    //
+    @POST("/api/v2/labels")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<LabelResponse> createLabel(@Nonnull @Body final RequestBody label);
+
+    @DELETE("/api/v2/labels/{id}")
+    Call<Void> deleteLabel(@Nonnull @Path("id") final String labelID);
+
+    @PATCH("/api/v2/labels/{id}")
+    Call<LabelResponse> updateLabel(@Nonnull @Path("id") final String labelID, @Nonnull @Body final RequestBody labelUpdate);
+
+    @GET("/api/v2/labels/{id}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<LabelResponse> findLabelByID(@Nonnull @Path("id") final String labelID);
+
+    @GET("/api/v2/labels")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Labels> findLabels();
 
 
     // Write

@@ -113,10 +113,18 @@ public interface PlatformClient extends AutoCloseable {
     /**
      * Get the {@link org.influxdata.platform.domain.ScraperTarget} client.
      *
-     * @return he new client instance for Scraper API
+     * @return the new client instance for Scraper API
      */
     @Nonnull
     ScraperClient createScraperClient();
+
+    /**
+     * Get the {@link org.influxdata.platform.domain.Label} client.
+     *
+     * @return the new client instance for Label API
+     */
+    @Nonnull
+    LabelService createLabelService();
 
     /**
      * Get the health of an instance.
@@ -151,7 +159,7 @@ public interface PlatformClient extends AutoCloseable {
 
     /**
      * Enable Gzip compress for http request body.
-     *
+     * <p>
      * Currently only the "Write" endpoint supports the Gzip compression.
      *
      * @return the {@link PlatformClient} instance to be able to use it in a fluent manner.
