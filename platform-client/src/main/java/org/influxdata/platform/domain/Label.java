@@ -26,7 +26,7 @@ import java.util.Map;
 
 /**
  * Label is a tag set on a resource, typically used for filtering on a UI.
- * 
+ *
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:23)
  */
 public final class Label {

@@ -501,7 +501,8 @@ interface PlatformService {
     Call<Void> deleteLabel(@Nonnull @Path("id") final String labelID);
 
     @PATCH("/api/v2/labels/{id}")
-    Call<LabelResponse> updateLabel(@Nonnull @Path("id") final String labelID, @Nonnull @Body final RequestBody labelUpdate);
+    Call<LabelResponse> updateLabel(@Nonnull @Path("id") final String labelID,
+                                    @Nonnull @Body final RequestBody labelUpdate);
 
     @GET("/api/v2/labels/{id}")
     @Nonnull
