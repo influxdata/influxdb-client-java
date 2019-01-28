@@ -442,7 +442,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
 <span class="fc" id="L443">        Call&lt;Run&gt; run = platformService.findTaskRun(taskID, runID);</span>
 
-<span class="fc" id="L445">        return execute(run, NotFoundException.class);</span>
+<span class="fc" id="L445">        return execute(run, &quot;failed to find run&quot;);</span>
     }
 
     @Nonnull
@@ -526,7 +526,7 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
 
 <span class="fc" id="L527">        Call&lt;List&lt;String&gt;&gt; execute = platformService.findTaskLogs(taskID, orgID);</span>
 
-<span class="fc" id="L529">        return execute(execute, &quot;task not found&quot;);</span>
+<span class="fc" id="L529">        return execute(execute);</span>
     }
 
     @Nonnull
