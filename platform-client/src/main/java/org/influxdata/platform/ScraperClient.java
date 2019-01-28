@@ -25,6 +25,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ScraperTarget;
 import org.influxdata.platform.domain.ScraperTargetResponse;
@@ -209,4 +210,59 @@ public interface ScraperClient {
      * @param ownerID  the ID of a owner
      */
     void deleteOwner(@Nonnull final String ownerID, @Nonnull final String scraperTargetID);
+
+
+    /**
+     * List all labels of a ScraperTarget.
+     *
+     * @param scraperTarget the ScraperTarget with labels
+     * @return return List all labels of a ScraperTarget.
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final ScraperTarget scraperTarget);
+
+    /**
+     * List all labels of a ScraperTarget.
+     *
+     * @param scraperTargetID ID of ScraperTarget to get labels
+     * @return return List all labels of a ScraperTarget
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final String scraperTargetID);
+
+    /**
+     * Add the ScraperTarget label.
+     *
+     * @param label         the label of a ScraperTarget
+     * @param scraperTarget the ScraperTarget
+     * @return added label
+     */
+    @Nonnull
+    Label addLabel(@Nonnull final Label label, @Nonnull final ScraperTarget scraperTarget);
+
+    /**
+     * Add the ScraperTarget label.
+     *
+     * @param scraperTargetID the ID of a ScraperTarget
+     * @param labelID         the ID of a label
+     * @return added label
+     */
+    @Nonnull
+    Label addLabel(@Nonnull final String labelID, @Nonnull final String scraperTargetID);
+
+    /**
+     * Removes a label from a ScraperTarget.
+     *
+     * @param label         the label of a ScraperTarget
+     * @param scraperTarget the ScraperTarget
+     */
+    void deleteLabel(@Nonnull final Label label, @Nonnull final ScraperTarget scraperTarget);
+
+    /**
+     * Removes a label from a ScraperTarget.
+     *
+     * @param scraperTargetID the ID of a ScraperTarget
+     * @param labelID         the ID of a Label
+     */
+    void deleteLabel(@Nonnull final String labelID, @Nonnull final String scraperTargetID);
 }

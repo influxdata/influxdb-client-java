@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.User;
@@ -225,5 +226,38 @@ class ITOrganizationClientTest extends AbstractITClientTest {
 
         secrets = organizationClient.getSecrets(organization);
         Assertions.assertThat(secrets).hasSize(1).contains("az");
+    }
+
+    @Test
+    void labels() {
+
+        LabelService labelService = platformClient.createLabelService();
+
+        Organization organization = organizationClient.createOrganization(generateName("Constant Pro"));
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = labelService.createLabel(generateName("Cool Resource"), properties);
+
+        List<Label> labels = organizationClient.getLabels(organization);
+        Assertions.assertThat(labels).hasSize(0);
+
+        Label addedLabel = organizationClient.addLabel(label, organization);
+        Assertions.assertThat(addedLabel).isNotNull();
+        Assertions.assertThat(addedLabel.getId()).isEqualTo(label.getId());
+        Assertions.assertThat(addedLabel.getName()).isEqualTo(label.getName());
+        Assertions.assertThat(addedLabel.getProperties()).isEqualTo(label.getProperties());
+
+        labels = organizationClient.getLabels(organization);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
+        Assertions.assertThat(labels.get(0).getName()).isEqualTo(label.getName());
+
+        organizationClient.deleteLabel(label, organization);
+
+        labels = organizationClient.getLabels(organization);
+        Assertions.assertThat(labels).hasSize(0);
     }
 }

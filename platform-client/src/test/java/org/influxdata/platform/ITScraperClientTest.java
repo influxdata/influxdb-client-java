@@ -21,9 +21,12 @@
  */
 package org.influxdata.platform;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.influxdata.platform.domain.Bucket;
+import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ScraperTarget;
@@ -190,5 +193,39 @@ class ITScraperClientTest extends AbstractITClientTest {
 
         owners = scraperClient.getOwners(scraper);
         Assertions.assertThat(owners).hasSize(1);
+    }
+
+    @Test
+    void labels() {
+
+        LabelService labelService = platformClient.createLabelService();
+
+        ScraperTarget scraper =  scraperClient.createScraperTarget(generateName("InfluxDB scraper"),
+                "http://localhost:9999", bucket.getId(), findMyOrg().getId());
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = labelService.createLabel(generateName("Cool Resource"), properties);
+
+        List<Label> labels = scraperClient.getLabels(scraper);
+        Assertions.assertThat(labels).hasSize(0);
+
+        Label addedLabel = scraperClient.addLabel(label, scraper);
+        Assertions.assertThat(addedLabel).isNotNull();
+        Assertions.assertThat(addedLabel.getId()).isEqualTo(label.getId());
+        Assertions.assertThat(addedLabel.getName()).isEqualTo(label.getName());
+        Assertions.assertThat(addedLabel.getProperties()).isEqualTo(label.getProperties());
+
+        labels = scraperClient.getLabels(scraper);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
+        Assertions.assertThat(labels.get(0).getName()).isEqualTo(label.getName());
+
+        scraperClient.deleteLabel(label, scraper);
+
+        labels = scraperClient.getLabels(scraper);
+        Assertions.assertThat(labels).hasSize(0);
     }
 }

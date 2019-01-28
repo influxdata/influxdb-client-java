@@ -23,12 +23,15 @@ package org.influxdata.platform;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.domain.Authorization;
+import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Permission;
 import org.influxdata.platform.domain.PermissionResource;
@@ -565,6 +568,39 @@ class ITTaskClientTest extends AbstractITClientTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("failed to cancel run")
                 .matches(errorPredicate("task not found"));
+    }
+
+    @Test
+    void labels() {
+
+        LabelService labelService = platformClient.createLabelService();
+
+        Task task = taskClient.createTaskEvery(generateName("it task"), TASK_FLUX, "1s", organization);
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = labelService.createLabel(generateName("Cool Resource"), properties);
+
+        List<Label> labels = taskClient.getLabels(task);
+        Assertions.assertThat(labels).hasSize(0);
+
+        Label addedLabel = taskClient.addLabel(label, task);
+        Assertions.assertThat(addedLabel).isNotNull();
+        Assertions.assertThat(addedLabel.getId()).isEqualTo(label.getId());
+        Assertions.assertThat(addedLabel.getName()).isEqualTo(label.getName());
+        Assertions.assertThat(addedLabel.getProperties()).isEqualTo(label.getProperties());
+
+        labels = taskClient.getLabels(task);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
+        Assertions.assertThat(labels.get(0).getName()).isEqualTo(label.getName());
+
+        taskClient.deleteLabel(label, task);
+
+        labels = taskClient.getLabels(task);
+        Assertions.assertThat(labels).hasSize(0);
     }
 
     @Nonnull

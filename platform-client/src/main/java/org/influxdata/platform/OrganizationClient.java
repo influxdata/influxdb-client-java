@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.User;
@@ -264,4 +265,58 @@ public interface OrganizationClient {
      * @param ownerID the ID of a owner
      */
     void deleteOwner(@Nonnull final String ownerID, @Nonnull final String orgID);
+
+    /**
+     * List all labels of a organization.
+     *
+     * @param organization the organization with labels
+     * @return return List all labels of a organization.
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final Organization organization);
+
+    /**
+     * List all labels of a organization.
+     *
+     * @param orgID ID of organization to get labels
+     * @return return List all labels of a organization
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final String orgID);
+
+    /**
+     * Add the organization label.
+     *
+     * @param label        the label of a organization
+     * @param organization the organization
+     * @return added label
+     */
+    @Nonnull
+    Label addLabel(@Nonnull final Label label, @Nonnull final Organization organization);
+
+    /**
+     * Add the organization label.
+     *
+     * @param orgID   the ID of a organization
+     * @param labelID the ID of a label
+     * @return added label
+     */
+    @Nonnull
+    Label addLabel(@Nonnull final String labelID, @Nonnull final String orgID);
+
+    /**
+     * Removes a label from a organization.
+     *
+     * @param label        the label
+     * @param organization the organization
+     */
+    void deleteLabel(@Nonnull final Label label, @Nonnull final Organization organization);
+
+    /**
+     * Removes a label from a organization.
+     *
+     * @param orgID   the ID of a organization
+     * @param labelID the ID of a label
+     */
+    void deleteLabel(@Nonnull final String labelID, @Nonnull final String orgID);
 }

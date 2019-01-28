@@ -21,12 +21,16 @@
  */
 package org.influxdata.platform;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.influxdata.platform.domain.Bucket;
+import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.User;
+import org.influxdata.platform.error.rest.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -247,5 +251,55 @@ class ITBucketClientTest extends AbstractITClientTest {
 
         owners = bucketClient.getOwners(bucket);
         Assertions.assertThat(owners).hasSize(0);
+    }
+
+    @Test
+    void labels() {
+
+        LabelService labelService = platformClient.createLabelService();
+
+        Bucket bucket = bucketClient.createBucket(generateName("robot sensor"), retentionRule(), organization);
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = labelService.createLabel(generateName("Cool Resource"), properties);
+
+        List<Label> labels = bucketClient.getLabels(bucket);
+        Assertions.assertThat(labels).hasSize(0);
+
+        Label addedLabel = bucketClient.addLabel(label, bucket);
+        Assertions.assertThat(addedLabel).isNotNull();
+        Assertions.assertThat(addedLabel.getId()).isEqualTo(label.getId());
+        Assertions.assertThat(addedLabel.getName()).isEqualTo(label.getName());
+        Assertions.assertThat(addedLabel.getProperties()).isEqualTo(label.getProperties());
+
+        labels = bucketClient.getLabels(bucket);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
+        Assertions.assertThat(labels.get(0).getName()).isEqualTo(label.getName());
+
+        bucketClient.deleteLabel(label, bucket);
+
+        labels = bucketClient.getLabels(bucket);
+        Assertions.assertThat(labels).hasSize(0);
+    }
+
+    @Test
+    void labelAddNotExists() {
+
+        Bucket bucket = bucketClient.createBucket(generateName("robot sensor"), retentionRule(), organization);
+
+        Assertions.assertThatThrownBy(() -> bucketClient.addLabel("020f755c3c082000", bucket.getId()))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void labelDeleteNotExists() {
+
+        Bucket bucket = bucketClient.createBucket(generateName("robot sensor"), retentionRule(), organization);
+
+        bucketClient.deleteLabel("020f755c3c082000", bucket.getId());
     }
 }

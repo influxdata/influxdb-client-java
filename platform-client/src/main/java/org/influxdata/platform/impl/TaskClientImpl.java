@@ -30,7 +30,9 @@ import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.TaskClient;
+import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ResourceMembers;
 import org.influxdata.platform.domain.Run;
@@ -40,7 +42,6 @@ import org.influxdata.platform.domain.Task;
 import org.influxdata.platform.domain.Tasks;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.error.rest.NotFoundException;
-import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -49,20 +50,17 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (11/09/2018 07:59)
  */
-final class TaskClientImpl extends AbstractRestClient implements TaskClient {
+final class TaskClientImpl extends AbstractLabelRestClient implements TaskClient {
 
     private static final Logger LOG = Logger.getLogger(TaskClientImpl.class.getName());
 
-    private final PlatformService platformService;
     private final JsonAdapter<Task> adapter;
     private final JsonAdapter<User> userAdapter;
 
     TaskClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {
 
-        Arguments.checkNotNull(platformService, "PlatformService");
-        Arguments.checkNotNull(moshi, "Moshi to create adapter");
+        super(platformService, moshi);
 
-        this.platformService = platformService;
         this.adapter = moshi.adapter(Task.class);
         this.userAdapter = moshi.adapter(User.class);
     }
@@ -527,6 +525,62 @@ final class TaskClientImpl extends AbstractRestClient implements TaskClient {
         Call<List<String>> execute = platformService.findTaskLogs(taskID, orgID);
 
         return execute(execute);
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final Task task) {
+
+        Arguments.checkNotNull(task, "task");
+
+        return getLabels(task.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final String taskID) {
+
+        Arguments.checkNonEmpty(taskID, "taskID");
+
+        return getLabels(taskID, "tasks");
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final Label label, @Nonnull final Task task) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(task, "task");
+
+        return addLabel(label.getId(), task.getId());
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final String labelID, @Nonnull final String taskID) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNonEmpty(taskID, "taskID");
+
+        return addLabel(labelID, taskID, "tasks", PermissionResourceType.TASK);
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final Task task) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(task, "task");
+
+        deleteLabel(label.getId(), task.getId());
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String taskID) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNonEmpty(taskID, "taskID");
+
+        deleteLabel(labelID, taskID, "tasks");
     }
 
     @Nonnull

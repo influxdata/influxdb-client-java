@@ -514,6 +514,26 @@ interface PlatformService {
     @Headers("Content-Type: application/json")
     Call<Labels> findLabels();
 
+    @GET("/api/v2/{path}/{id}/labels")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Labels> findResourceLabels(@Nonnull @Path("id") final String resourceID,
+                                   @Nonnull @Path("path") final String path);
+
+    @POST("/api/v2/{path}/{id}/labels")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<LabelResponse> addResourceLabelOwner(@Nonnull @Path("id") final String resourceID,
+                                      @Nonnull @Path("path") final String path,
+                                      @Nonnull @Body final RequestBody labelMapping);
+
+    @DELETE("/api/v2/{path}/{id}/labels/{labelID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteResourceLabelOwner(@Nonnull @Path("id") final String resourceID,
+                                        @Nonnull @Path("path") final String path,
+                                        @Nonnull @Path("labelID") final String labelID);
+
 
     // Write
     //

@@ -26,6 +26,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.Run;
@@ -471,4 +472,58 @@ public interface TaskClient {
      */
     @Nonnull
     List<String> getLogs(@Nonnull final String taskID, @Nonnull final String orgID);
+
+    /**
+     * List all labels of a Task.
+     *
+     * @param task the Task with labels
+     * @return return List all labels of a Task.
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final Task task);
+
+    /**
+     * List all labels of a Task.
+     *
+     * @param taskID ID of Task to get labels
+     * @return return List all labels of a Task
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final String taskID);
+
+    /**
+     * Add the Task label.
+     *
+     * @param label the label of a Task
+     * @param task  the bucket
+     * @return added label
+     */
+    @Nonnull
+    Label addLabel(@Nonnull final Label label, @Nonnull final Task task);
+
+    /**
+     * Add the Task label.
+     *
+     * @param taskID  the ID of a Task
+     * @param labelID the ID of a label
+     * @return added label
+     */
+    @Nonnull
+    Label addLabel(@Nonnull final String labelID, @Nonnull final String taskID);
+
+    /**
+     * Removes a label from a Task.
+     *
+     * @param label the Label of a Task
+     * @param task  the Task
+     */
+    void deleteLabel(@Nonnull final Label label, @Nonnull final Task task);
+
+    /**
+     * Removes a label from a bucket.
+     *
+     * @param taskID  the ID of a task
+     * @param labelID the ID of a label
+     */
+    void deleteLabel(@Nonnull final String labelID, @Nonnull final String taskID);
 }

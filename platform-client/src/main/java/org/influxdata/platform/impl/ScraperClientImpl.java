@@ -29,6 +29,8 @@ import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.ScraperClient;
+import org.influxdata.platform.domain.Label;
+import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ResourceMembers;
 import org.influxdata.platform.domain.ScraperTarget;
@@ -37,7 +39,6 @@ import org.influxdata.platform.domain.ScraperTargetResponses;
 import org.influxdata.platform.domain.ScraperType;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.error.rest.NotFoundException;
-import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -46,20 +47,17 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (22/01/2019 08:17)
  */
-final class ScraperClientImpl extends AbstractRestClient implements ScraperClient {
+final class ScraperClientImpl extends AbstractLabelRestClient implements ScraperClient {
 
     private static final Logger LOG = Logger.getLogger(ScraperClientImpl.class.getName());
 
-    private final PlatformService platformService;
     private final JsonAdapter<ScraperTarget> adapter;
     private final JsonAdapter<User> userAdapter;
 
     ScraperClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {
 
-        Arguments.checkNotNull(platformService, "PlatformService");
-        Arguments.checkNotNull(moshi, "Moshi to create adapter");
+        super(platformService, moshi);
 
-        this.platformService = platformService;
         this.adapter = moshi.adapter(ScraperTarget.class);
         this.userAdapter = moshi.adapter(User.class);
     }
@@ -283,5 +281,61 @@ final class ScraperClientImpl extends AbstractRestClient implements ScraperClien
 
         Call<Void> call = platformService.deleteScraperTargetOwner(scraperTargetID, ownerID);
         execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final ScraperTarget scraperTarget) {
+
+        Arguments.checkNotNull(scraperTarget, "scraperTarget");
+
+        return getLabels(scraperTarget.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final String scraperTargetID) {
+
+        Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
+
+        return getLabels(scraperTargetID, "scrapers");
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final Label label, @Nonnull final ScraperTarget scraperTarget) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(scraperTarget, "scraperTarget");
+
+        return addLabel(label.getId(), scraperTarget.getId());
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final String labelID, @Nonnull final String scraperTargetID) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
+
+        return addLabel(labelID, scraperTargetID, "scrapers", PermissionResourceType.SCRAPER);
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final ScraperTarget scraperTarget) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(scraperTarget, "scraperTarget");
+
+        deleteLabel(label.getId(), scraperTarget.getId());
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String scraperTargetID) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
+
+        deleteLabel(labelID, scraperTargetID, "scrapers");
     }
 }

@@ -31,14 +31,15 @@ import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.OrganizationClient;
+import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
+import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ResourceMembers;
 import org.influxdata.platform.domain.Secrets;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.error.rest.NotFoundException;
-import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -47,11 +48,10 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (12/09/2018 08:57)
  */
-final class OrganizationClientImpl extends AbstractRestClient implements OrganizationClient {
+final class OrganizationClientImpl extends AbstractLabelRestClient implements OrganizationClient {
 
     private static final Logger LOG = Logger.getLogger(OrganizationClientImpl.class.getName());
 
-    private final PlatformService platformService;
     private final JsonAdapter<Organization> adapter;
     private final JsonAdapter<User> userAdapter;
     private final JsonAdapter<Map> mapAdapter;
@@ -59,10 +59,8 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
     OrganizationClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {
 
-        Arguments.checkNotNull(platformService, "PlatformService");
-        Arguments.checkNotNull(moshi, "Moshi to create adapter");
+        super(platformService, moshi);
 
-        this.platformService = platformService;
         this.adapter = moshi.adapter(Organization.class);
         this.userAdapter = moshi.adapter(User.class);
         this.mapAdapter = moshi.adapter(Map.class);
@@ -336,5 +334,61 @@ final class OrganizationClientImpl extends AbstractRestClient implements Organiz
 
         Call<Void> call = platformService.deleteOrganizationOwner(orgID, ownerID);
         execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final Organization organization) {
+
+        Arguments.checkNotNull(organization, "organization");
+
+        return getLabels(organization.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final String orgID) {
+
+        Arguments.checkNonEmpty(orgID, "orgID");
+
+        return getLabels(orgID, "orgs");
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final Label label, @Nonnull final Organization organization) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(organization, "organization");
+
+        return addLabel(label.getId(), organization.getId());
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final String labelID, @Nonnull final String orgID) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNonEmpty(orgID, "orgID");
+
+        return addLabel(labelID, orgID, "orgs", PermissionResourceType.ORG);
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final Organization organization) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(organization, "organization");
+
+        deleteLabel(label.getId(), organization.getId());
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String orgID) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNonEmpty(orgID, "orgID");
+
+        deleteLabel(labelID, orgID, "orgs");
     }
 }

@@ -31,13 +31,14 @@ import org.influxdata.platform.Arguments;
 import org.influxdata.platform.BucketClient;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Buckets;
+import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
+import org.influxdata.platform.domain.PermissionResourceType;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ResourceMembers;
 import org.influxdata.platform.domain.RetentionRule;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.error.rest.NotFoundException;
-import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -46,20 +47,17 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (13/09/2018 10:47)
  */
-final class BucketClientImpl extends AbstractRestClient implements BucketClient {
+final class BucketClientImpl extends AbstractLabelRestClient implements BucketClient {
 
     private static final Logger LOG = Logger.getLogger(BucketClientImpl.class.getName());
 
-    private final PlatformService platformService;
     private final JsonAdapter<Bucket> adapter;
     private final JsonAdapter<User> userAdapter;
 
     BucketClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {
 
-        Arguments.checkNotNull(platformService, "PlatformService");
-        Arguments.checkNotNull(moshi, "Moshi to create adapter");
+        super(platformService, moshi);
 
-        this.platformService = platformService;
         this.adapter = moshi.adapter(Bucket.class);
         this.userAdapter = moshi.adapter(User.class);
     }
@@ -328,5 +326,61 @@ final class BucketClientImpl extends AbstractRestClient implements BucketClient 
 
         Call<Void> call = platformService.deleteBucketOwner(bucketID, ownerID);
         execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final Bucket bucket) {
+
+        Arguments.checkNotNull(bucket, "bucket");
+
+        return getLabels(bucket.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final String bucketID) {
+
+        Arguments.checkNonEmpty(bucketID, "bucketID");
+
+        return getLabels(bucketID, "buckets");
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final Label label, @Nonnull final Bucket bucket) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(bucket, "bucket");
+
+        return addLabel(label.getId(), bucket.getId());
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final String labelID, @Nonnull final String bucketID) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNonEmpty(bucketID, "bucketID");
+
+        return addLabel(labelID, bucketID, "buckets", PermissionResourceType.BUCKET);
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final Bucket bucket) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(bucket, "bucket");
+
+        deleteLabel(label.getId(), bucket.getId());
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String bucketID) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNonEmpty(bucketID, "bucketID");
+
+        deleteLabel(labelID, bucketID, "buckets");
     }
 }

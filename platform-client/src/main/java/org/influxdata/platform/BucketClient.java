@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.platform.domain.Bucket;
+import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.RetentionRule;
@@ -269,4 +270,58 @@ public interface BucketClient {
      * @param ownerID  the ID of a owner
      */
     void deleteOwner(@Nonnull final String ownerID, @Nonnull final String bucketID);
+
+    /**
+     * List all labels of a bucket.
+     *
+     * @param bucket the bucket with labels
+     * @return return List all labels of a bucket.
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final Bucket bucket);
+
+    /**
+     * List all labels of a bucket.
+     *
+     * @param bucketID ID of bucket to get labels
+     * @return return List all labels of a bucket
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final String bucketID);
+
+    /**
+     * Add the bucket label.
+     *
+     * @param label  the label of a bucket
+     * @param bucket the bucket
+     * @return added label
+     */
+    @Nonnull
+    Label addLabel(@Nonnull final Label label, @Nonnull final Bucket bucket);
+
+    /**
+     * Add the bucket label.
+     *
+     * @param bucketID the ID of a bucket
+     * @param labelID  the ID of a label
+     * @return added label
+     */
+    @Nonnull
+    Label addLabel(@Nonnull final String labelID, @Nonnull final String bucketID);
+
+    /**
+     * Removes a label from a bucket.
+     *
+     * @param label  the label of a bucket
+     * @param bucket the bucket
+     */
+    void deleteLabel(@Nonnull final Label label, @Nonnull final Bucket bucket);
+
+    /**
+     * Removes a label from a bucket.
+     *
+     * @param bucketID the ID of a bucket
+     * @param labelID  the ID of a label
+     */
+    void deleteLabel(@Nonnull final String labelID, @Nonnull final String bucketID);
 }
