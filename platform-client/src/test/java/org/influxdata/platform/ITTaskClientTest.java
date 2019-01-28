@@ -40,6 +40,7 @@ import org.influxdata.platform.domain.Status;
 import org.influxdata.platform.domain.Task;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.error.InfluxException;
+import org.influxdata.platform.error.rest.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -552,7 +553,8 @@ class ITTaskClientTest extends AbstractITClientTest {
         List<Run> runs = taskClient.getRuns(task);
 
         Assertions.assertThatThrownBy(() -> taskClient.cancelRun(runs.get(0)))
-                .isInstanceOf(InfluxException.class)
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("failed to cancel run")
                 .matches(errorPredicate("run not found"));
     }
 
@@ -560,7 +562,8 @@ class ITTaskClientTest extends AbstractITClientTest {
     void cancelRunTaskNotExist() {
 
         Assertions.assertThatThrownBy(() -> taskClient.cancelRun("020f755c3c082000", "020f755c3c082000"))
-                .isInstanceOf(InfluxException.class)
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("failed to cancel run")
                 .matches(errorPredicate("task not found"));
     }
 
@@ -611,7 +614,6 @@ class ITTaskClientTest extends AbstractITClientTest {
         return platformClient.createAuthorizationClient().createAuthorization(organization, permissions);
     }
 
-    //TODO https://github.com/influxdata/influxdb/issues/11589
     @Nonnull
     private Predicate<Throwable> errorPredicate(@Nonnull final String message) {
 
