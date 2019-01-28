@@ -368,20 +368,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.LabelService.java">org/influxdata/platform/LabelService.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.impl.WriteClientImpl.java">org/influxdata/platform/impl/WriteClientImpl.java</a>
                 </td>
                 <td>
@@ -1250,6 +1236,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.LabelClient.java">org/influxdata/platform/LabelClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.GroupFlux.java">org/influxdata/flux/functions/GroupFlux.java</a>
                 </td>
                 <td>
@@ -1377,20 +1377,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.domain.ResourceMember.java">org/influxdata/platform/domain/ResourceMember.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.impl.LabelServiceImpl.java">org/influxdata/platform/impl/LabelServiceImpl.java</a>
                 </td>
                 <td>
                   0
@@ -1797,6 +1783,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.OrganizationClient.java">org/influxdata/platform/OrganizationClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.impl.LabelClientImpl.java">org/influxdata/platform/impl/LabelClientImpl.java</a>
                 </td>
                 <td>
                   0

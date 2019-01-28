@@ -222,14 +222,15 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
 
 <span class="fc" id="L223">        Call&lt;OperationLogResponse&gt; logsCall = platformService.findUserLogs(userID);</span>
 
-<span class="fc" id="L225">        OperationLogResponse logResponse = execute(logsCall, &quot;oplog not found&quot;);</span>
-<span class="fc bfc" id="L226" title="All 2 branches covered.">        if (logResponse == null) {</span>
-<span class="fc" id="L227">            return new ArrayList&lt;&gt;();</span>
+        //TODO https://github.com/influxdata/influxdb/issues/11632
+<span class="fc" id="L226">        OperationLogResponse logResponse = execute(logsCall, &quot;oplog not found&quot;);</span>
+<span class="fc bfc" id="L227" title="All 2 branches covered.">        if (logResponse == null) {</span>
+<span class="fc" id="L228">            return new ArrayList&lt;&gt;();</span>
         }
 
-<span class="fc" id="L230">        LOG.log(Level.FINEST, &quot;findUserLogs found: {0}&quot;, logResponse);</span>
+<span class="fc" id="L231">        LOG.log(Level.FINEST, &quot;findUserLogs found: {0}&quot;, logResponse);</span>
 
-<span class="fc" id="L232">        return logResponse.getLog();</span>
+<span class="fc" id="L233">        return logResponse.getLog();</span>
     }
 
     @Nonnull
@@ -238,19 +239,19 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
                                     @Nonnull final String oldPassword,
                                     @Nonnull final String newPassword) {
 
-<span class="fc" id="L241">        Arguments.checkNotNull(userID, &quot;User ID&quot;);</span>
-<span class="fc" id="L242">        Arguments.checkNotNull(userName, &quot;Username&quot;);</span>
-<span class="fc" id="L243">        Arguments.checkNotNull(oldPassword, &quot;old password&quot;);</span>
-<span class="fc" id="L244">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
+<span class="fc" id="L242">        Arguments.checkNotNull(userID, &quot;User ID&quot;);</span>
+<span class="fc" id="L243">        Arguments.checkNotNull(userName, &quot;Username&quot;);</span>
+<span class="fc" id="L244">        Arguments.checkNotNull(oldPassword, &quot;old password&quot;);</span>
+<span class="fc" id="L245">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
 
-<span class="fc" id="L246">        String credentials = Credentials</span>
-<span class="fc" id="L247">                .basic(userName, oldPassword);</span>
+<span class="fc" id="L247">        String credentials = Credentials</span>
+<span class="fc" id="L248">                .basic(userName, oldPassword);</span>
 
-<span class="fc" id="L249">        String json = new JSONObject().put(&quot;password&quot;, newPassword).toString();</span>
+<span class="fc" id="L250">        String json = new JSONObject().put(&quot;password&quot;, newPassword).toString();</span>
 
-<span class="fc" id="L251">        Call&lt;User&gt; call = platformService.updateUserPassword(userID, credentials, createBody(json));</span>
+<span class="fc" id="L252">        Call&lt;User&gt; call = platformService.updateUserPassword(userID, credentials, createBody(json));</span>
 
-<span class="fc" id="L253">        return execute(call);</span>
+<span class="fc" id="L254">        return execute(call);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

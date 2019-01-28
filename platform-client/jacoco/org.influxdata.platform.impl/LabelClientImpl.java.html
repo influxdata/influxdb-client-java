@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LabelServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Platform Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.platform.impl</a> &gt; <span class="el_source">LabelServiceImpl.java</span></div><h1>LabelServiceImpl.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LabelClientImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Platform Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.platform.impl</a> &gt; <span class="el_source">LabelClientImpl.java</span></div><h1>LabelClientImpl.java</h1><pre class="source lang-java linenums">/*
  * The MIT License
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
-import org.influxdata.platform.LabelService;
+import org.influxdata.platform.LabelClient;
 import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.LabelResponse;
 import org.influxdata.platform.domain.Labels;
@@ -43,15 +43,15 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:48)
  */
-class LabelServiceImpl extends AbstractRestClient implements LabelService {
+class LabelClientImpl extends AbstractRestClient implements LabelClient {
 
-<span class="fc" id="L48">    private static final Logger LOG = Logger.getLogger(LabelServiceImpl.class.getName());</span>
+<span class="fc" id="L48">    private static final Logger LOG = Logger.getLogger(LabelClientImpl.class.getName());</span>
 
     private final PlatformService platformService;
     private final JsonAdapter&lt;Label&gt; adapter;
     private final JsonAdapter&lt;Map&gt; mapAdapter;
 
-<span class="fc" id="L54">    LabelServiceImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
+<span class="fc" id="L54">    LabelClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
 
 <span class="fc" id="L56">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
 <span class="fc" id="L57">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
