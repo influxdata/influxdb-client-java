@@ -49,107 +49,105 @@ class LabelClientImpl extends AbstractRestClient implements LabelClient {
 
     private final PlatformService platformService;
     private final JsonAdapter&lt;Label&gt; adapter;
-    private final JsonAdapter&lt;Map&gt; mapAdapter;
 
-<span class="fc" id="L54">    LabelClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
+<span class="fc" id="L53">    LabelClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {</span>
 
-<span class="fc" id="L56">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
-<span class="fc" id="L57">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
+<span class="fc" id="L55">        Arguments.checkNotNull(platformService, &quot;PlatformService&quot;);</span>
+<span class="fc" id="L56">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
 
-<span class="fc" id="L59">        this.platformService = platformService;</span>
-<span class="fc" id="L60">        this.adapter = moshi.adapter(Label.class);</span>
-<span class="fc" id="L61">        this.mapAdapter = moshi.adapter(Map.class);</span>
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L58">        this.platformService = platformService;</span>
+<span class="fc" id="L59">        this.adapter = moshi.adapter(Label.class);</span>
+<span class="fc" id="L60">    }</span>
 
     @Nonnull
     @Override
     public Label createLabel(@Nonnull final Label label) {
 
-<span class="fc" id="L68">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="fc" id="L66">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
 
-<span class="fc" id="L70">        Call&lt;LabelResponse&gt; call = platformService.createLabel(createBody(adapter.toJson(label)));</span>
-<span class="fc" id="L71">        LabelResponse labelResponse = execute(call);</span>
+<span class="fc" id="L68">        Call&lt;LabelResponse&gt; call = platformService.createLabel(createBody(adapter.toJson(label)));</span>
+<span class="fc" id="L69">        LabelResponse labelResponse = execute(call);</span>
 
-<span class="fc" id="L73">        LOG.log(Level.FINEST, &quot;createLabel response: {0}&quot;, labelResponse);</span>
+<span class="fc" id="L71">        LOG.log(Level.FINEST, &quot;createLabel response: {0}&quot;, labelResponse);</span>
 
-<span class="fc" id="L75">        return labelResponse.getLabel();</span>
+<span class="fc" id="L73">        return labelResponse.getLabel();</span>
     }
 
     @Nonnull
     @Override
     public Label createLabel(@Nonnull final String name, @Nonnull final Map&lt;String, String&gt; properties) {
 
-<span class="fc" id="L82">        Arguments.checkNotNull(name, &quot;name&quot;);</span>
-<span class="fc" id="L83">        Arguments.checkNotNull(properties, &quot;properties&quot;);</span>
+<span class="fc" id="L80">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L81">        Arguments.checkNotNull(properties, &quot;properties&quot;);</span>
 
-<span class="fc" id="L85">        Label label = new Label();</span>
-<span class="fc" id="L86">        label.setName(name);</span>
-<span class="fc" id="L87">        label.setProperties(properties);</span>
+<span class="fc" id="L83">        Label label = new Label();</span>
+<span class="fc" id="L84">        label.setName(name);</span>
+<span class="fc" id="L85">        label.setProperties(properties);</span>
 
-<span class="fc" id="L89">        return createLabel(label);</span>
+<span class="fc" id="L87">        return createLabel(label);</span>
     }
 
     @Nonnull
     @Override
     public Label updateLabel(@Nonnull final Label label) {
 
-<span class="fc" id="L96">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="fc" id="L94">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
 
-<span class="fc" id="L98">        String json = adapter.toJson(label);</span>
+<span class="fc" id="L96">        String json = adapter.toJson(label);</span>
 
-<span class="fc" id="L100">        Call&lt;LabelResponse&gt; call = platformService.updateLabel(label.getId(), createBody(json));</span>
-<span class="fc" id="L101">        LabelResponse labelResponse = execute(call);</span>
+<span class="fc" id="L98">        Call&lt;LabelResponse&gt; call = platformService.updateLabel(label.getId(), createBody(json));</span>
+<span class="fc" id="L99">        LabelResponse labelResponse = execute(call);</span>
 
-<span class="fc" id="L103">        LOG.log(Level.FINEST, &quot;updateLabel response: {0}&quot;, labelResponse);</span>
+<span class="fc" id="L101">        LOG.log(Level.FINEST, &quot;updateLabel response: {0}&quot;, labelResponse);</span>
 
-<span class="fc" id="L105">        return labelResponse.getLabel();</span>
+<span class="fc" id="L103">        return labelResponse.getLabel();</span>
     }
 
     @Override
     public void deleteLabel(@Nonnull final Label label) {
 
-<span class="fc" id="L111">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="fc" id="L109">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
 
-<span class="fc" id="L113">        deleteLabel(label.getId());</span>
-<span class="fc" id="L114">    }</span>
+<span class="fc" id="L111">        deleteLabel(label.getId());</span>
+<span class="fc" id="L112">    }</span>
 
     @Override
     public void deleteLabel(@Nonnull final String labelID) {
 
-<span class="fc" id="L119">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="fc" id="L117">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
 
-<span class="fc" id="L121">        Call&lt;Void&gt; call = platformService.deleteLabel(labelID);</span>
-<span class="fc" id="L122">        execute(call);</span>
-<span class="fc" id="L123">    }</span>
+<span class="fc" id="L119">        Call&lt;Void&gt; call = platformService.deleteLabel(labelID);</span>
+<span class="fc" id="L120">        execute(call);</span>
+<span class="fc" id="L121">    }</span>
 
     @Nullable
     @Override
     public Label findLabelByID(@Nonnull final String labelID) {
 
-<span class="fc" id="L129">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="fc" id="L127">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
 
-<span class="fc" id="L131">        Call&lt;LabelResponse&gt; call = platformService.findLabelByID(labelID);</span>
-<span class="fc" id="L132">        LabelResponse labelResponse = execute(call, NotFoundException.class);</span>
+<span class="fc" id="L129">        Call&lt;LabelResponse&gt; call = platformService.findLabelByID(labelID);</span>
+<span class="fc" id="L130">        LabelResponse labelResponse = execute(call, NotFoundException.class);</span>
 
-<span class="fc bfc" id="L134" title="All 2 branches covered.">        if (labelResponse == null) {</span>
-<span class="fc" id="L135">            return null;</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        if (labelResponse == null) {</span>
+<span class="fc" id="L133">            return null;</span>
         }
 
-<span class="fc" id="L138">        LOG.log(Level.FINEST, &quot;findLabelByID response: {0}&quot;, labelResponse);</span>
+<span class="fc" id="L136">        LOG.log(Level.FINEST, &quot;findLabelByID response: {0}&quot;, labelResponse);</span>
 
-<span class="fc" id="L140">        return labelResponse.getLabel();</span>
+<span class="fc" id="L138">        return labelResponse.getLabel();</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Label&gt; findLabels() {
 
-<span class="fc" id="L147">        Call&lt;Labels&gt; sourcesCall = platformService.findLabels();</span>
+<span class="fc" id="L145">        Call&lt;Labels&gt; sourcesCall = platformService.findLabels();</span>
 
-<span class="fc" id="L149">        Labels labels = execute(sourcesCall);</span>
-<span class="fc" id="L150">        LOG.log(Level.FINEST, &quot;findLabels found: {0}&quot;, labels);</span>
+<span class="fc" id="L147">        Labels labels = execute(sourcesCall);</span>
+<span class="fc" id="L148">        LOG.log(Level.FINEST, &quot;findLabels found: {0}&quot;, labels);</span>
 
-<span class="fc" id="L152">        return labels.getLabels();</span>
+<span class="fc" id="L150">        return labels.getLabels();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
