@@ -49,7 +49,6 @@ class LabelClientImpl extends AbstractRestClient implements LabelClient {
 
     private final PlatformService platformService;
     private final JsonAdapter<Label> adapter;
-    private final JsonAdapter<Map> mapAdapter;
 
     LabelClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {
 
@@ -58,7 +57,6 @@ class LabelClientImpl extends AbstractRestClient implements LabelClient {
 
         this.platformService = platformService;
         this.adapter = moshi.adapter(Label.class);
-        this.mapAdapter = moshi.adapter(Map.class);
     }
 
     @Nonnull
@@ -79,7 +77,7 @@ class LabelClientImpl extends AbstractRestClient implements LabelClient {
     @Override
     public Label createLabel(@Nonnull final String name, @Nonnull final Map<String, String> properties) {
 
-        Arguments.checkNotNull(name, "name");
+        Arguments.checkNonEmpty(name, "name");
         Arguments.checkNotNull(properties, "properties");
 
         Label label = new Label();

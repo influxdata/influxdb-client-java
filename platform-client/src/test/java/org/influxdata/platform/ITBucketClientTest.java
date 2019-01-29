@@ -62,9 +62,7 @@ class ITBucketClientTest extends AbstractITClientTest {
         bucketClient.findBuckets()
                 .stream()
                 .filter(bucket -> bucket.getName().endsWith("-IT"))
-                .forEach(bucket -> {
-                    bucketClient.deleteBucket(bucket);
-                });
+                .forEach(bucket -> bucketClient.deleteBucket(bucket));
     }
 
     @Test

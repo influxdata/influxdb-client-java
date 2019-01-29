@@ -77,8 +77,7 @@ public class PlatformExample {
 
     public static void main(final String[] args) throws Exception {
 
-        PlatformClient platform = PlatformClientFactory.create("http://localhost:9999",
-            "my-user", "my-password".toCharArray());
+        PlatformClient platform = PlatformClientFactory.create("http://localhost:9999", findToken().toCharArray());
 
         Organization medicalGMBH = platform.createOrganizationClient()
                 .createOrganization("Medical Corp" + System.currentTimeMillis());
@@ -105,7 +104,7 @@ public class PlatformExample {
         writeBucket.setAction(Permission.WRITE_ACTION);
 
         Authorization authorization = platform.createAuthorizationClient()
-            .createAuthorization(medicalGMBH, Arrays.asList(readBucket, writeBucket));
+                .createAuthorization(medicalGMBH, Arrays.asList(readBucket, writeBucket));
 
         String token = authorization.getToken();
         System.out.println("The token to write to temperature-sensors bucket " + token);
@@ -118,13 +117,13 @@ public class PlatformExample {
         // Write data
         //
         try (WriteClient writeClient = client.createWriteClient(WriteOptions.builder()
-            .batchSize(5000)
-            .flushInterval(1000)
-            .backpressureStrategy(BackpressureOverflowStrategy.DROP_OLDEST)
-            .bufferLimit(10000)
-            .jitterInterval(1000)
-            .retryInterval(5000)
-            .build())) {
+                .batchSize(5000)
+                .flushInterval(1000)
+                .backpressureStrategy(BackpressureOverflowStrategy.DROP_OLDEST)
+                .bufferLimit(10000)
+                .jitterInterval(1000)
+                .retryInterval(5000)
+                .build())) {
 
             writeClient.listenEvents(WriteSuccessEvent.class, (value) -> countDownLatch.countDown());
 
@@ -169,5 +168,27 @@ public class PlatformExample {
 
         client.close();
         platform.close();
+    }
+
+    private static String findToken() throws Exception {
+
+        PlatformClient platform = PlatformClientFactory.create("http://localhost:9999",
+                "my-user", "my-password".toCharArray());
+
+        String token = platform.createAuthorizationClient()
+                .findAuthorizations()
+                .stream()
+                .filter(authorization -> authorization.getPermissions().stream()
+                        .map(Permission::getResource)
+                        .anyMatch(resource ->
+                                resource.getType().equals(ResourceType.ORGS) &&
+                                        resource.getId() == null &&
+                                        resource.getOrgID() == null))
+                .findFirst()
+                .orElseThrow(IllegalStateException::new).getToken();
+
+        platform.close();
+
+        return token;
     }
 }
