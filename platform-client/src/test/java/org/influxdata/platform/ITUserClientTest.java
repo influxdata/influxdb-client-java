@@ -24,7 +24,10 @@ package org.influxdata.platform;
 import java.time.Instant;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
+import org.influxdata.platform.domain.FindOptions;
+import org.influxdata.platform.domain.OperationLogEntries;
 import org.influxdata.platform.domain.OperationLogEntry;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.error.rest.UnauthorizedException;
@@ -248,5 +251,89 @@ class ITUserClientTest extends AbstractITClientTest {
     void findUserLogsNotFound() {
         List<OperationLogEntry> userLogs = userClient.findUserLogs("020f755c3c082000");
         Assertions.assertThat(userLogs).isEmpty();
+    }
+
+    @Test
+    void findBucketLogsPaging() {
+
+        User user = userClient.createUser(generateName("Thomas Boot"));
+
+        IntStream
+                .range(0, 19)
+                .forEach(value -> {
+
+                    user.setName(value + "_" + user.getName());
+                    userClient.updateUser(user);
+                });
+
+        List<OperationLogEntry> logs = userClient.findUserLogs(user);
+
+        Assertions.assertThat(logs).hasSize(20);
+        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(logs.get(19).getDescription()).isEqualTo("User Created");
+
+        FindOptions findOptions = new FindOptions();
+        findOptions.setLimit(5);
+        findOptions.setOffset(0);
+
+        OperationLogEntries entries = userClient.findUserLogs(user, findOptions);
+
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("User Updated");
+
+        //TODO isNotNull FindOptions also in Log API?
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        entries = userClient.findUserLogs(user, findOptions);
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("User Updated");
+
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        entries = userClient.findUserLogs(user, findOptions);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("User Updated");
+
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        entries = userClient.findUserLogs(user, findOptions);
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("User Created");
+
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        entries = userClient.findUserLogs(user, findOptions);
+        Assertions.assertThat(entries.getLogs()).hasSize(0);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        // order
+        findOptions = new FindOptions();
+        findOptions.setDescending(false);
+
+        entries = userClient.findUserLogs(user, findOptions);
+
+        Assertions.assertThat(entries.getLogs()).hasSize(20);
+        // TODO log API vs paging api https://github.com/influxdata/influxdb/issues/11642
+        // Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("User Updated");
+        // Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Created");
     }
 }

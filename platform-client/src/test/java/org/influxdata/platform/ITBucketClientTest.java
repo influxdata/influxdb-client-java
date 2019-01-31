@@ -24,9 +24,14 @@ package org.influxdata.platform;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import org.influxdata.platform.domain.Bucket;
+import org.influxdata.platform.domain.Buckets;
+import org.influxdata.platform.domain.FindOptions;
 import org.influxdata.platform.domain.Label;
+import org.influxdata.platform.domain.OperationLogEntries;
+import org.influxdata.platform.domain.OperationLogEntry;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.User;
@@ -145,6 +150,39 @@ class ITBucketClientTest extends AbstractITClientTest {
 
         List<Bucket> buckets = bucketClient.findBuckets();
         Assertions.assertThat(buckets).hasSize(size + 2);
+    }
+
+    @Test
+    void findBucketsPaging() {
+
+        IntStream
+                .range(0, 20 - bucketClient.findBuckets().size())
+                .forEach(value -> {
+                    bucketClient.createBucket(generateName(String.valueOf(value)), retentionRule(), organization);
+                });
+
+        FindOptions findOptions = new FindOptions();
+        findOptions.setLimit(5);
+
+        Buckets buckets = bucketClient.findBuckets(findOptions);
+        Assertions.assertThat(buckets.getBuckets()).hasSize(5);
+        Assertions.assertThat(buckets.getNextPage()).isNotNull();
+
+        buckets = bucketClient.findBuckets(buckets.getNextPage());
+        Assertions.assertThat(buckets.getBuckets()).hasSize(5);
+        Assertions.assertThat(buckets.getNextPage()).isNotNull();
+
+        buckets = bucketClient.findBuckets(buckets.getNextPage());
+        Assertions.assertThat(buckets.getBuckets()).hasSize(5);
+        Assertions.assertThat(buckets.getNextPage()).isNotNull();
+
+        buckets = bucketClient.findBuckets(buckets.getNextPage());
+        Assertions.assertThat(buckets.getBuckets()).hasSize(5);
+        Assertions.assertThat(buckets.getNextPage()).isNotNull();
+
+        buckets = bucketClient.findBuckets(buckets.getNextPage());
+        Assertions.assertThat(buckets.getBuckets()).hasSize(0);
+        Assertions.assertThat(buckets.getNextPage()).isNull();
     }
 
     @Test
@@ -299,5 +337,117 @@ class ITBucketClientTest extends AbstractITClientTest {
         Bucket bucket = bucketClient.createBucket(generateName("robot sensor"), retentionRule(), organization);
 
         bucketClient.deleteLabel("020f755c3c082000", bucket.getId());
+    }
+
+    @Test
+    void findBucketLogs() {
+
+        Bucket bucket = bucketClient.createBucket(generateName("robot sensor"), retentionRule(), organization);
+
+        List<OperationLogEntry> logs = bucketClient.findBucketLogs(bucket);
+
+        Assertions.assertThat(logs).hasSize(1);
+        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Bucket Created");
+    }
+
+    @Test
+    void findBucketLogsPaging() {
+
+        Bucket bucket = bucketClient.createBucket(generateName("robot sensor"), retentionRule(), organization);
+
+        IntStream
+                .range(0, 19)
+                .forEach(value -> {
+
+                    bucket.setName(value + "_" + bucket.getName());
+                    bucketClient.updateBucket(bucket);
+                });
+
+        List<OperationLogEntry> logs = bucketClient.findBucketLogs(bucket);
+
+        Assertions.assertThat(logs).hasSize(20);
+        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(logs.get(19).getDescription()).isEqualTo("Bucket Created");
+
+        FindOptions findOptions = new FindOptions();
+        findOptions.setLimit(5);
+        findOptions.setOffset(0);
+
+        OperationLogEntries entries = bucketClient.findBucketLogs(bucket, findOptions);
+        
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
+
+        //TODO isNotNull FindOptions also in Log API?
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        entries = bucketClient.findBucketLogs(bucket, findOptions);
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
+
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        entries = bucketClient.findBucketLogs(bucket, findOptions);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
+
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        entries = bucketClient.findBucketLogs(bucket, findOptions);
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Created");
+
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        entries = bucketClient.findBucketLogs(bucket, findOptions);
+        Assertions.assertThat(entries.getLogs()).hasSize(0);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        // order
+        findOptions = new FindOptions();
+        findOptions.setDescending(false);
+
+        entries = bucketClient.findBucketLogs(bucket, findOptions);
+
+        Assertions.assertThat(entries.getLogs()).hasSize(20);
+        // TODO log API vs paging api https://github.com/influxdata/influxdb/issues/11642
+        // Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("Bucket Updated");
+        // Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Created");
+    }
+
+    @Test
+    void findBucketLogsNotFound() {
+
+        List<OperationLogEntry> bucketLogs = bucketClient.findBucketLogs("020f755c3c082000");
+
+        Assertions.assertThat(bucketLogs).isEmpty();
+    }
+
+    @Test
+    void findBucketLogsFindOptionsNotFound() {
+
+        OperationLogEntries entries = bucketClient.findBucketLogs("020f755c3c082000", new FindOptions());
+
+        Assertions.assertThat(entries).isNotNull();
+        Assertions.assertThat(entries.getLogs()).isEmpty();
     }
 }

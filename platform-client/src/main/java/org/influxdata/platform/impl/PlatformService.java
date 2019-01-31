@@ -23,6 +23,7 @@ package org.influxdata.platform.impl;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -33,7 +34,7 @@ import org.influxdata.platform.domain.Buckets;
 import org.influxdata.platform.domain.Health;
 import org.influxdata.platform.domain.LabelResponse;
 import org.influxdata.platform.domain.Labels;
-import org.influxdata.platform.domain.OperationLogResponse;
+import org.influxdata.platform.domain.OperationLogEntries;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
 import org.influxdata.platform.domain.Ready;
@@ -65,6 +66,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 import retrofit2.http.Streaming;
 
 /**
@@ -111,7 +113,8 @@ interface PlatformService {
     @GET("/api/v2/users/{id}/log")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<OperationLogResponse> findUserLogs(@Nonnull @Path("id") final String userID);
+    Call<OperationLogEntries> findUserLogs(@Nonnull @Path("id") final String userID,
+                                           @Nonnull @QueryMap final Map<String, Object> findOptions);
 
     @GET("/api/v2/users/{id}")
     @Nonnull
@@ -143,16 +146,22 @@ interface PlatformService {
     Call<Organization> createOrganization(@Nonnull @Body final RequestBody organization);
 
     @DELETE("/api/v2/orgs/{id}")
-    Call<Void> deleteOrganization(@Nonnull @Path("id") final String organizationID);
+    Call<Void> deleteOrganization(@Nonnull @Path("id") final String orgID);
 
     @PATCH("/api/v2/orgs/{id}")
-    Call<Organization> updateOrganization(@Nonnull @Path("id") final String organizationID,
+    Call<Organization> updateOrganization(@Nonnull @Path("id") final String orgID,
                                           @Nonnull @Body final RequestBody organization);
 
     @GET("/api/v2/orgs/{id}")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<Organization> findOrganizationByID(@Nonnull @Path("id") final String organizationID);
+    Call<Organization> findOrganizationByID(@Nonnull @Path("id") final String orgID);
+
+    @GET("/api/v2/orgs/{id}/log")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<OperationLogEntries> findOrganizationLogs(@Nonnull @Path("id") final String orgID,
+                                             @Nonnull @QueryMap final Map<String, Object> findOptions);
 
     @GET("/api/v2/orgs")
     @Nonnull
@@ -162,45 +171,45 @@ interface PlatformService {
     @GET("/api/v2/orgs/{id}/members")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResourceMembers> findOrganizationMembers(@Nonnull @Path("id") final String organizationID);
+    Call<ResourceMembers> findOrganizationMembers(@Nonnull @Path("id") final String orgID);
 
     @POST("/api/v2/orgs/{id}/members")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResourceMember> addOrganizationMember(@Nonnull @Path("id") final String organizationID,
+    Call<ResourceMember> addOrganizationMember(@Nonnull @Path("id") final String orgID,
                                                @Nonnull @Body final RequestBody member);
 
     @DELETE("/api/v2/orgs/{id}/members/{userID}")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<Void> deleteOrganizationMember(@Nonnull @Path("id") final String organizationID,
+    Call<Void> deleteOrganizationMember(@Nonnull @Path("id") final String orgID,
                                         @Nonnull @Path("userID") final String userID);
 
     @GET("/api/v2/orgs/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResourceMembers> findOrganizationOwners(@Nonnull @Path("id") final String organizationID);
+    Call<ResourceMembers> findOrganizationOwners(@Nonnull @Path("id") final String orgID);
 
     @POST("/api/v2/orgs/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResourceMember> addOrganizationOwner(@Nonnull @Path("id") final String organizationID,
+    Call<ResourceMember> addOrganizationOwner(@Nonnull @Path("id") final String orgID,
                                               @Nonnull @Body final RequestBody member);
 
     @DELETE("/api/v2/orgs/{id}/owners/{userID}")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<Void> deleteOrganizationOwner(@Nonnull @Path("id") final String organizationID,
+    Call<Void> deleteOrganizationOwner(@Nonnull @Path("id") final String orgID,
                                        @Nonnull @Path("userID") final String userID);
 
     @GET("/api/v2/orgs/{id}/secrets")
-    Call<Secrets> getSecrets(@Nonnull @Path("id") final String organizationID);
+    Call<Secrets> getSecrets(@Nonnull @Path("id") final String orgID);
 
     @PATCH("/api/v2/orgs/{id}/secrets")
-    Call<Void> putSecrets(@Nonnull @Path("id") final String organizationID, @Nonnull @Body final RequestBody secrets);
+    Call<Void> putSecrets(@Nonnull @Path("id") final String orgID, @Nonnull @Body final RequestBody secrets);
 
     @POST("/api/v2/orgs/{id}/secrets/delete")
-    Call<Void> deleteSecrets(@Nonnull @Path("id") final String organizationID,
+    Call<Void> deleteSecrets(@Nonnull @Path("id") final String orgID,
                              @Nonnull @Body final RequestBody secrets);
 
     //
@@ -222,6 +231,12 @@ interface PlatformService {
     @Headers("Content-Type: application/json")
     Call<Bucket> findBucketByID(@Nonnull @Path("id") final String bucketID);
 
+    @GET("/api/v2/buckets/{id}/log")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<OperationLogEntries> findBucketLogs(@Nonnull @Path("id") final String bucketID,
+                                             @Nonnull @QueryMap final Map<String, Object> findOptions);
+
     @GET("/api/v2/buckets")
     @Nonnull
     @Headers("Content-Type: application/json")
@@ -230,7 +245,8 @@ interface PlatformService {
     @GET("/api/v2/buckets")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<Buckets> findBuckets(@Nullable @Query("org") final String organizationName);
+    Call<Buckets> findBuckets(@Nullable @Query("org") final String organizationName,
+                              @Nonnull @QueryMap final Map<String, Object> findOptions);
 
     @GET("/api/v2/buckets/{id}/members")
     @Nonnull

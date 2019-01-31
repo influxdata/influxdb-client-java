@@ -26,7 +26,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.platform.domain.Bucket;
+import org.influxdata.platform.domain.Buckets;
+import org.influxdata.platform.domain.FindOptions;
 import org.influxdata.platform.domain.Label;
+import org.influxdata.platform.domain.OperationLogEntries;
+import org.influxdata.platform.domain.OperationLogEntry;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.RetentionRule;
@@ -144,6 +148,15 @@ public interface BucketClient {
      */
     @Nonnull
     List<Bucket> findBuckets();
+
+    /**
+     * List all buckets filtered by {@code findOptions}.
+     *
+     * @param findOptions the find options
+     * @return List all buckets
+     */
+    @Nonnull
+    Buckets findBuckets(@Nonnull final FindOptions findOptions);
 
     /**
      * List all buckets for specified {@code organization}.
@@ -270,6 +283,44 @@ public interface BucketClient {
      * @param ownerID  the ID of a owner
      */
     void deleteOwner(@Nonnull final String ownerID, @Nonnull final String bucketID);
+
+    /**
+     * Retrieve a bucket's logs.
+     *
+     * @param bucket for retrieve logs
+     * @return logs
+     */
+    @Nonnull
+    List<OperationLogEntry> findBucketLogs(@Nonnull final Bucket bucket);
+
+    /**
+     * Retrieve a bucket's logs.
+     *
+     * @param bucket      for retrieve logs
+     * @param findOptions the find options
+     * @return logs
+     */
+    @Nonnull
+    OperationLogEntries findBucketLogs(@Nonnull final Bucket bucket, @Nonnull final FindOptions findOptions);
+
+    /**
+     * Retrieve a bucket's logs.
+     *
+     * @param bucketID id of a bucket
+     * @return logs
+     */
+    @Nonnull
+    List<OperationLogEntry> findBucketLogs(@Nonnull final String bucketID);
+
+    /**
+     * Retrieve a bucket's logs.
+     *
+     * @param bucketID    id of a bucket
+     * @param findOptions the find options
+     * @return logs
+     */
+    @Nonnull
+    OperationLogEntries findBucketLogs(@Nonnull final String bucketID, @Nonnull final FindOptions findOptions);
 
     /**
      * List all labels of a bucket.

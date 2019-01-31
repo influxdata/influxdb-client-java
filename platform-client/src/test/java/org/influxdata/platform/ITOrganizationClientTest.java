@@ -27,8 +27,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
+import org.influxdata.platform.domain.FindOptions;
 import org.influxdata.platform.domain.Label;
+import org.influxdata.platform.domain.OperationLogEntries;
+import org.influxdata.platform.domain.OperationLogEntry;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.User;
@@ -259,5 +263,105 @@ class ITOrganizationClientTest extends AbstractITClientTest {
 
         labels = organizationClient.getLabels(organization);
         Assertions.assertThat(labels).hasSize(0);
+    }
+
+    @Test
+    void findOrganizationLogs() {
+
+        Organization organization = organizationClient.createOrganization(generateName("Constant Pro"));
+
+        List<OperationLogEntry> userLogs = organizationClient.findOrganizationLogs(organization);
+        Assertions.assertThat(userLogs).isNotEmpty();
+        Assertions.assertThat(userLogs.get(0).getDescription()).isEqualTo("Organization Created");
+    }
+
+    @Test
+    void findOrganizationLogsNotFound() {
+        List<OperationLogEntry> userLogs = organizationClient.findOrganizationLogs("020f755c3c082000");
+        Assertions.assertThat(userLogs).isEmpty();
+    }
+
+    @Test
+    void findOrganizationLogsPaging() {
+
+        Organization organization = organizationClient.createOrganization(generateName("Constant Pro"));
+
+        IntStream
+                .range(0, 19)
+                .forEach(value -> {
+
+                    organization.setName(value + "_" + organization.getName());
+                    organizationClient.updateOrganization(organization);
+                });
+
+        List<OperationLogEntry> logs = organizationClient.findOrganizationLogs(organization);
+
+        Assertions.assertThat(logs).hasSize(20);
+        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(logs.get(19).getDescription()).isEqualTo("Organization Created");
+
+        FindOptions findOptions = new FindOptions();
+        findOptions.setLimit(5);
+        findOptions.setOffset(0);
+
+        OperationLogEntries entries = organizationClient.findOrganizationLogs(organization, findOptions);
+
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Organization Updated");
+
+        //TODO isNotNull FindOptions also in Log API?
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        entries = organizationClient.findOrganizationLogs(organization, findOptions);
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Organization Updated");
+
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        entries = organizationClient.findOrganizationLogs(organization, findOptions);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Organization Updated");
+
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        entries = organizationClient.findOrganizationLogs(organization, findOptions);
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Organization Created");
+
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        entries = organizationClient.findOrganizationLogs(organization, findOptions);
+        Assertions.assertThat(entries.getLogs()).hasSize(0);
+        Assertions.assertThat(entries.getNextPage()).isNull();
+
+        // order
+        findOptions = new FindOptions();
+        findOptions.setDescending(false);
+
+        entries = organizationClient.findOrganizationLogs(organization, findOptions);
+
+        Assertions.assertThat(entries.getLogs()).hasSize(20);
+        // TODO log API vs paging api https://github.com/influxdata/influxdb/issues/11642
+        // Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("Organization Updated");
+        // Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Created");
     }
 }

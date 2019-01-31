@@ -31,7 +31,10 @@ import org.influxdata.platform.Arguments;
 import org.influxdata.platform.BucketClient;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Buckets;
+import org.influxdata.platform.domain.FindOptions;
 import org.influxdata.platform.domain.Label;
+import org.influxdata.platform.domain.OperationLogEntries;
+import org.influxdata.platform.domain.OperationLogEntry;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.ResourceMembers;
@@ -47,7 +50,7 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (13/09/2018 10:47)
  */
-final class BucketClientImpl extends AbstractLabelRestClient implements BucketClient {
+final class BucketClientImpl extends AbstractPlatformRestClient implements BucketClient {
 
     private static final Logger LOG = Logger.getLogger(BucketClientImpl.class.getName());
 
@@ -90,6 +93,15 @@ final class BucketClientImpl extends AbstractLabelRestClient implements BucketCl
         return findBucketsByOrganizationName(null);
     }
 
+    @Override
+    @Nonnull
+    public Buckets findBuckets(@Nonnull final FindOptions findOptions) {
+
+        Arguments.checkNotNull(findOptions, "findOptions");
+
+        return findBuckets(null, findOptions);
+    }
+
     @Nonnull
     public List<Bucket> findBucketsByOrganization(@Nonnull final Organization organization) {
 
@@ -102,12 +114,11 @@ final class BucketClientImpl extends AbstractLabelRestClient implements BucketCl
     @Override
     public List<Bucket> findBucketsByOrganizationName(@Nullable final String organizationName) {
 
-        Call<Buckets> bucketsCall = platformService.findBuckets(organizationName);
-
-        Buckets buckets = execute(bucketsCall);
+        Buckets buckets = findBuckets(organizationName, new FindOptions());
         LOG.log(Level.FINEST, "findBucketsByOrganizationName found: {0}", buckets);
 
         return buckets.getBuckets();
+
     }
 
     @Nonnull
@@ -330,6 +341,48 @@ final class BucketClientImpl extends AbstractLabelRestClient implements BucketCl
 
     @Nonnull
     @Override
+    public List<OperationLogEntry> findBucketLogs(@Nonnull final Bucket bucket) {
+
+        Arguments.checkNotNull(bucket, "bucket");
+
+        return findBucketLogs(bucket.getId());
+    }
+
+    @Nonnull
+    @Override
+    public OperationLogEntries findBucketLogs(@Nonnull final Bucket bucket,
+                                              @Nonnull final FindOptions findOptions) {
+
+        Arguments.checkNotNull(bucket, "bucket");
+        Arguments.checkNotNull(findOptions, "findOptions");
+
+        return findBucketLogs(bucket.getId(), findOptions);
+    }
+
+    @Nonnull
+    @Override
+    public List<OperationLogEntry> findBucketLogs(@Nonnull final String bucketID) {
+
+        Arguments.checkNonEmpty(bucketID, "Bucket.ID");
+
+        return findBucketLogs(bucketID, new FindOptions()).getLogs();
+    }
+
+    @Nonnull
+    @Override
+    public OperationLogEntries findBucketLogs(@Nonnull final String bucketID,
+                                              @Nonnull final FindOptions findOptions) {
+
+        Arguments.checkNonEmpty(bucketID, "Bucket.ID");
+        Arguments.checkNotNull(findOptions, "findOptions");
+
+        Call<OperationLogEntries> call = platformService.findBucketLogs(bucketID, createQueryMap(findOptions));
+
+        return getOperationLogEntries(call);
+    }
+
+    @Nonnull
+    @Override
     public List<Label> getLabels(@Nonnull final Bucket bucket) {
 
         Arguments.checkNotNull(bucket, "bucket");
@@ -382,5 +435,14 @@ final class BucketClientImpl extends AbstractLabelRestClient implements BucketCl
         Arguments.checkNonEmpty(bucketID, "bucketID");
 
         deleteLabel(labelID, bucketID, "buckets");
+    }
+
+    @Nonnull
+    private Buckets findBuckets(@Nullable final String organizationName,
+                                @Nonnull final FindOptions findOptions) {
+
+        Call<Buckets> bucketsCall = platformService.findBuckets(organizationName, createQueryMap(findOptions));
+
+        return execute(bucketsCall);
     }
 }

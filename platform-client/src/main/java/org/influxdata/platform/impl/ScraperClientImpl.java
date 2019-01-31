@@ -47,7 +47,7 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (22/01/2019 08:17)
  */
-final class ScraperClientImpl extends AbstractLabelRestClient implements ScraperClient {
+final class ScraperClientImpl extends AbstractPlatformRestClient implements ScraperClient {
 
     private static final Logger LOG = Logger.getLogger(ScraperClientImpl.class.getName());
 

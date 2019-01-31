@@ -26,7 +26,10 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.influxdata.platform.domain.FindOptions;
 import org.influxdata.platform.domain.Label;
+import org.influxdata.platform.domain.OperationLogEntries;
+import org.influxdata.platform.domain.OperationLogEntry;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.ResourceMember;
 import org.influxdata.platform.domain.User;
@@ -57,7 +60,7 @@ public interface OrganizationClient {
     Organization createOrganization(@Nonnull final String name);
 
     /**
-     * Update a organization.
+     * Update an organization.
      *
      * @param organization organization update to apply
      * @return organization updated
@@ -66,21 +69,21 @@ public interface OrganizationClient {
     Organization updateOrganization(@Nonnull final Organization organization);
 
     /**
-     * Delete a organization.
+     * Delete an organization.
      *
      * @param organization organization to delete
      */
     void deleteOrganization(@Nonnull final Organization organization);
 
     /**
-     * Delete a organization.
+     * Delete an organization.
      *
      * @param orgID ID of organization to delete
      */
     void deleteOrganization(@Nonnull final String orgID);
 
     /**
-     * Retrieve a organization.
+     * Retrieve an organization.
      *
      * @param orgID ID of organization to get
      * @return organization details
@@ -267,19 +270,19 @@ public interface OrganizationClient {
     void deleteOwner(@Nonnull final String ownerID, @Nonnull final String orgID);
 
     /**
-     * List all labels of a organization.
+     * List all labels of an organization.
      *
      * @param organization the organization with labels
-     * @return return List all labels of a organization.
+     * @return return List all labels of an organization.
      */
     @Nonnull
     List<Label> getLabels(@Nonnull final Organization organization);
 
     /**
-     * List all labels of a organization.
+     * List all labels of an organization.
      *
      * @param orgID ID of organization to get labels
-     * @return return List all labels of a organization
+     * @return return List all labels of an organization
      */
     @Nonnull
     List<Label> getLabels(@Nonnull final String orgID);
@@ -287,7 +290,7 @@ public interface OrganizationClient {
     /**
      * Add the organization label.
      *
-     * @param label        the label of a organization
+     * @param label        the label of an organization
      * @param organization the organization
      * @return added label
      */
@@ -297,7 +300,7 @@ public interface OrganizationClient {
     /**
      * Add the organization label.
      *
-     * @param orgID   the ID of a organization
+     * @param orgID   the ID of an organization
      * @param labelID the ID of a label
      * @return added label
      */
@@ -305,7 +308,7 @@ public interface OrganizationClient {
     Label addLabel(@Nonnull final String labelID, @Nonnull final String orgID);
 
     /**
-     * Removes a label from a organization.
+     * Removes a label from an organization.
      *
      * @param label        the label
      * @param organization the organization
@@ -313,10 +316,47 @@ public interface OrganizationClient {
     void deleteLabel(@Nonnull final Label label, @Nonnull final Organization organization);
 
     /**
-     * Removes a label from a organization.
+     * Removes a label from an organization.
      *
-     * @param orgID   the ID of a organization
+     * @param orgID   the ID of an organization
      * @param labelID the ID of a label
      */
     void deleteLabel(@Nonnull final String labelID, @Nonnull final String orgID);
+
+    /**
+     * Retrieve an organization's logs.
+     *
+     * @param organization for retrieve logs
+     * @return logs
+     */
+    @Nonnull
+    List<OperationLogEntry> findOrganizationLogs(@Nonnull final Organization organization);
+
+    /**
+     * Retrieve an organization's logs.
+     *
+     * @param organization for retrieve logs
+     * @return logs
+     */
+    @Nonnull
+    OperationLogEntries findOrganizationLogs(@Nonnull final Organization organization,
+                                             @Nonnull final FindOptions findOptions);
+
+    /**
+     * Retrieve an organization's logs.
+     *
+     * @param orgID id of an organization
+     * @return logs
+     */
+    @Nonnull
+    List<OperationLogEntry> findOrganizationLogs(@Nonnull final String orgID);
+
+    /**
+     * Retrieve an organization's logs.
+     *
+     * @param orgID id of an organization
+     * @return logs
+     */
+    @Nonnull
+    OperationLogEntries findOrganizationLogs(@Nonnull final String orgID, @Nonnull final FindOptions findOptions);
 }

@@ -25,6 +25,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.influxdata.platform.domain.FindOptions;
+import org.influxdata.platform.domain.OperationLogEntries;
 import org.influxdata.platform.domain.OperationLogEntry;
 import org.influxdata.platform.domain.User;
 
@@ -138,7 +140,7 @@ public interface UserClient {
     List<User> findUsers();
 
     /**
-     * Retrieve a user's logs.
+     * Retrieve an user's logs.
      *
      * @param user for retrieve logs
      * @return logs
@@ -147,11 +149,29 @@ public interface UserClient {
     List<OperationLogEntry> findUserLogs(@Nonnull final User user);
 
     /**
-     * Retrieve a user's logs.
+     * Retrieve an user's logs.
      *
-     * @param userID id of a user
+     * @param user for retrieve logs
+     * @return logs
+     */
+    @Nonnull
+    OperationLogEntries findUserLogs(@Nonnull final User user, @Nonnull final FindOptions findOptions);
+
+    /**
+     * Retrieve an user's logs.
+     *
+     * @param userID id of an user
      * @return logs
      */
     @Nonnull
     List<OperationLogEntry> findUserLogs(@Nonnull final String userID);
+
+    /**
+     * Retrieve an user's logs.
+     *
+     * @param userID id of an user
+     * @return logs
+     */
+    @Nonnull
+    OperationLogEntries findUserLogs(@Nonnull final String userID, @Nonnull final FindOptions findOptions);
 }

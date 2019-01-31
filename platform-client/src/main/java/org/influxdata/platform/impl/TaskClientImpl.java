@@ -50,7 +50,7 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (11/09/2018 07:59)
  */
-final class TaskClientImpl extends AbstractLabelRestClient implements TaskClient {
+final class TaskClientImpl extends AbstractPlatformRestClient implements TaskClient {
 
     private static final Logger LOG = Logger.getLogger(TaskClientImpl.class.getName());
 

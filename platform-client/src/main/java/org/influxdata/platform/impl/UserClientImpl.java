@@ -21,7 +21,6 @@
  */
 package org.influxdata.platform.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,13 +29,13 @@ import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.UserClient;
+import org.influxdata.platform.domain.FindOptions;
+import org.influxdata.platform.domain.OperationLogEntries;
 import org.influxdata.platform.domain.OperationLogEntry;
-import org.influxdata.platform.domain.OperationLogResponse;
 import org.influxdata.platform.domain.User;
 import org.influxdata.platform.domain.Users;
 import org.influxdata.platform.error.rest.NotFoundException;
 import org.influxdata.platform.error.rest.UnauthorizedException;
-import org.influxdata.platform.rest.AbstractRestClient;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -47,19 +46,16 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (11/09/2018 10:16)
  */
-final class UserClientImpl extends AbstractRestClient implements UserClient {
+final class UserClientImpl extends AbstractPlatformRestClient implements UserClient {
 
     private static final Logger LOG = Logger.getLogger(UserClientImpl.class.getName());
 
-    private final PlatformService platformService;
     private final JsonAdapter<User> adapter;
 
     UserClientImpl(@Nonnull final PlatformService platformService, @Nonnull final Moshi moshi) {
 
-        Arguments.checkNotNull(platformService, "PlatformService");
-        Arguments.checkNotNull(moshi, "Moshi to create adapter");
+        super(platformService, moshi);
 
-        this.platformService = platformService;
         this.adapter = moshi.adapter(User.class);
     }
 
@@ -220,17 +216,31 @@ final class UserClientImpl extends AbstractRestClient implements UserClient {
     @Override
     public List<OperationLogEntry> findUserLogs(@Nonnull final String userID) {
 
-        Call<OperationLogResponse> logsCall = platformService.findUserLogs(userID);
+        Arguments.checkNonEmpty(userID, "User ID");
 
-        //TODO https://github.com/influxdata/influxdb/issues/11632
-        OperationLogResponse logResponse = execute(logsCall, "oplog not found");
-        if (logResponse == null) {
-            return new ArrayList<>();
-        }
+        return findUserLogs(userID, new FindOptions()).getLogs();
+    }
 
-        LOG.log(Level.FINEST, "findUserLogs found: {0}", logResponse);
+    @Nonnull
+    @Override
+    public OperationLogEntries findUserLogs(@Nonnull final User user, @Nonnull final FindOptions findOptions) {
 
-        return logResponse.getLog();
+        Arguments.checkNotNull(user, "User");
+        Arguments.checkNotNull(findOptions, "findOptions");
+
+        return findUserLogs(user.getId(), findOptions);
+    }
+
+    @Nonnull
+    @Override
+    public OperationLogEntries findUserLogs(@Nonnull final String userID, @Nonnull final FindOptions findOptions) {
+
+        Arguments.checkNonEmpty(userID, "User ID");
+        Arguments.checkNotNull(findOptions, "findOptions");
+
+        Call<OperationLogEntries> call = platformService.findUserLogs(userID, createQueryMap(findOptions));
+
+        return getOperationLogEntries(call);
     }
 
     @Nonnull

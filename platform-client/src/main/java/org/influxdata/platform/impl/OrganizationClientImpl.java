@@ -31,7 +31,10 @@ import javax.annotation.Nullable;
 
 import org.influxdata.platform.Arguments;
 import org.influxdata.platform.OrganizationClient;
+import org.influxdata.platform.domain.FindOptions;
 import org.influxdata.platform.domain.Label;
+import org.influxdata.platform.domain.OperationLogEntries;
+import org.influxdata.platform.domain.OperationLogEntry;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
 import org.influxdata.platform.domain.ResourceMember;
@@ -48,7 +51,7 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (12/09/2018 08:57)
  */
-final class OrganizationClientImpl extends AbstractLabelRestClient implements OrganizationClient {
+final class OrganizationClientImpl extends AbstractPlatformRestClient implements OrganizationClient {
 
     private static final Logger LOG = Logger.getLogger(OrganizationClientImpl.class.getName());
 
@@ -390,5 +393,47 @@ final class OrganizationClientImpl extends AbstractLabelRestClient implements Or
         Arguments.checkNonEmpty(orgID, "orgID");
 
         deleteLabel(labelID, orgID, "orgs");
+    }
+
+    @Nonnull
+    @Override
+    public List<OperationLogEntry> findOrganizationLogs(@Nonnull final Organization organization) {
+
+        Arguments.checkNotNull(organization, "organization");
+
+        return findOrganizationLogs(organization.getId());
+    }
+
+    @Nonnull
+    @Override
+    public OperationLogEntries findOrganizationLogs(@Nonnull final Organization organization,
+                                                    @Nonnull final FindOptions findOptions) {
+
+        Arguments.checkNotNull(organization, "organization");
+        Arguments.checkNotNull(findOptions, "findOptions");
+
+        return findOrganizationLogs(organization.getId(), findOptions);
+    }
+
+    @Nonnull
+    @Override
+    public List<OperationLogEntry> findOrganizationLogs(@Nonnull final String orgID) {
+
+        Arguments.checkNonEmpty(orgID, "orgID");
+
+        return findOrganizationLogs(orgID, new FindOptions()).getLogs();
+    }
+
+    @Nonnull
+    @Override
+    public OperationLogEntries findOrganizationLogs(@Nonnull final String orgID,
+                                                    @Nonnull final FindOptions findOptions) {
+
+        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNotNull(findOptions, "findOptions");
+
+        Call<OperationLogEntries> call = platformService.findOrganizationLogs(orgID, createQueryMap(findOptions));
+
+        return getOperationLogEntries(call);
     }
 }

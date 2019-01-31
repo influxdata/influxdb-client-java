@@ -21,28 +21,24 @@
  */
 package org.influxdata.platform.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.squareup.moshi.Json;
+
 /**
- * @author Jakub Bednar (bednar@github) (28/01/2019 12:19)
+ * @author Jakub Bednar (bednar@github) (13/11/2018 11:43)
  */
-public final class LabelMapping {
+public final class OperationLogEntries extends AbstractPageLinks {
 
-    private String labelID;
+    @Json(name = "log")
+    private List<OperationLogEntry> logs = new ArrayList<>();
 
-    private ResourceType resourceType;
-
-    public String getLabelID() {
-        return labelID;
+    public List<OperationLogEntry> getLogs() {
+        return logs;
     }
 
-    public void setLabelID(final String labelID) {
-        this.labelID = labelID;
-    }
-
-    public ResourceType getResourceType() {
-        return resourceType;
-    }
-
-    public void setResourceType(final ResourceType resourceType) {
-        this.resourceType = resourceType;
+    public void setLogs(final List<OperationLogEntry> logs) {
+        this.logs = logs;
     }
 }

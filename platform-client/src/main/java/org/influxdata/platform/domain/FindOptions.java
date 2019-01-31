@@ -21,21 +21,52 @@
  */
 package org.influxdata.platform.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * @author Jakub Bednar (bednar@github) (13/11/2018 11:43)
+ * FindOptions represents options passed to all find methods with multiple results.
+ *
+ * @author Jakub Bednar (bednar@github) (30/01/2019 07:41)
  */
-public final class OperationLogResponse extends AbstractHasLinks {
+public final class FindOptions {
 
-    private List<OperationLogEntry> log = new ArrayList<>();
+    public static final String LIMIT_KEY = "limit";
+    public static final String OFFSET_KEY = "offset";
+    public static final String SORT_BY_KEY = "sortBy";
+    public static final String DESCENDING_KEY = "descending";
 
-    public List<OperationLogEntry> getLog() {
-        return log;
+    private Integer limit;
+    private Integer offset;
+    private String sortBy;
+    private Boolean descending;
+
+    public Integer getLimit() {
+        return limit;
     }
 
-    public void setLog(final List<OperationLogEntry> log) {
-        this.log = log;
+    public void setLimit(final Integer limit) {
+        this.limit = limit;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(final Integer offset) {
+        this.offset = offset;
+    }
+
+    public String getSortBy() {
+        return sortBy;
+    }
+
+    public void setSortBy(final String sortBy) {
+        this.sortBy = sortBy;
+    }
+
+    public Boolean getDescending() {
+        return descending;
+    }
+
+    public void setDescending(final Boolean descending) {
+        this.descending = descending;
     }
 }

@@ -21,16 +21,20 @@
  */
 package org.influxdata.platform.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import org.influxdata.platform.Arguments;
+import org.influxdata.platform.domain.FindOptions;
 import org.influxdata.platform.domain.Label;
 import org.influxdata.platform.domain.LabelMapping;
 import org.influxdata.platform.domain.LabelResponse;
 import org.influxdata.platform.domain.Labels;
+import org.influxdata.platform.domain.OperationLogEntries;
 import org.influxdata.platform.domain.ResourceType;
 import org.influxdata.platform.rest.AbstractRestClient;
 
@@ -41,15 +45,15 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:06)
  */
-abstract class AbstractLabelRestClient extends AbstractRestClient {
+abstract class AbstractPlatformRestClient extends AbstractRestClient {
 
-    private static final Logger LOG = Logger.getLogger(AbstractLabelRestClient.class.getName());
+    private static final Logger LOG = Logger.getLogger(AbstractPlatformRestClient.class.getName());
 
     protected final PlatformService platformService;
     private final JsonAdapter<LabelMapping> labelMappingAdapter;
 
-    AbstractLabelRestClient(@Nonnull final PlatformService platformService,
-                            @Nonnull final Moshi moshi) {
+    AbstractPlatformRestClient(@Nonnull final PlatformService platformService,
+                               @Nonnull final Moshi moshi) {
 
         Arguments.checkNotNull(platformService, "PlatformService");
         Arguments.checkNotNull(moshi, "Moshi to create adapter");
@@ -106,5 +110,43 @@ abstract class AbstractLabelRestClient extends AbstractRestClient {
         Call<Void> call = platformService.deleteResourceLabelOwner(resourceID, resourcePath, labelID);
 
         execute(call);
+    }
+
+    @Nonnull
+    OperationLogEntries getOperationLogEntries(@Nonnull final Call<OperationLogEntries> call) {
+
+        Arguments.checkNotNull(call, "call");
+
+        //TODO https://github.com/influxdata/influxdb/issues/11632
+        OperationLogEntries entries = execute(call, "oplog not found");
+        if (entries == null) {
+            return new OperationLogEntries();
+        }
+
+        return entries;
+    }
+
+    @Nonnull
+    Map<String, Object> createQueryMap(@Nonnull final FindOptions findOptions) {
+
+        Map<String, Object> query = new HashMap<>();
+
+        if (findOptions.getLimit() != null) {
+            query.put(FindOptions.LIMIT_KEY, findOptions.getLimit());
+        }
+
+        if (findOptions.getOffset() != null) {
+            query.put(FindOptions.OFFSET_KEY, findOptions.getOffset());
+        }
+
+        if (findOptions.getSortBy() != null) {
+            query.put(FindOptions.SORT_BY_KEY, findOptions.getSortBy());
+        }
+
+        if (findOptions.getDescending() != null) {
+            query.put(FindOptions.DESCENDING_KEY, findOptions.getDescending());
+        }
+
+        return query;
     }
 }
