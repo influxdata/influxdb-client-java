@@ -32,23 +32,25 @@ The Platform Client,org.influxdata.platform.domain,PermissionResource,0,24,0,0,0
 The Platform Client,org.influxdata.platform.domain,Run,32,27,0,0,16,9,8,9,8,9
 The Platform Client,org.influxdata.platform.domain,Permission,0,17,0,0,0,7,0,5,0,5
 The Platform Client,org.influxdata.platform.domain,RetentionRule,0,17,0,0,0,7,0,5,0,5
-The Platform Client,org.influxdata.platform.domain,OperationLogResponse,4,11,0,0,2,3,1,2,1,2
 The Platform Client,org.influxdata.platform.domain,Bucket,19,31,0,0,9,11,5,8,5,8
+The Platform Client,org.influxdata.platform.domain,OperationLogEntries,4,11,0,0,2,3,1,2,1,2
+The Platform Client,org.influxdata.platform.domain,FindOptions,0,31,0,0,0,13,0,9,0,9
 The Platform Client,org.influxdata.platform.domain,Status,0,24,0,0,0,3,0,1,0,1
 The Platform Client,org.influxdata.platform.domain,ScraperTarget,16,29,0,0,6,13,5,8,5,8
 The Platform Client,org.influxdata.platform.domain,User,0,57,0,0,0,11,0,6,0,6
 The Platform Client,org.influxdata.platform.domain,Organization,0,67,0,0,0,12,0,6,0,6
+The Platform Client,org.influxdata.platform.domain,AbstractPageLinks,2,107,7,13,1,28,7,8,0,5
 The Platform Client,org.influxdata.platform.domain,Labels,4,11,0,0,2,3,1,2,1,2
 The Platform Client,org.influxdata.platform.domain,LabelResponse,4,6,0,0,2,2,1,2,1,2
 The Platform Client,org.influxdata.platform.domain,Authorization,20,154,0,0,10,29,5,15,5,15
 The Platform Client,org.influxdata.platform.impl,AbstractPlatformClient.InstantAdapter,17,14,3,1,6,4,3,2,1,2
 The Platform Client,org.influxdata.platform.impl,PlatformClientImpl,25,131,0,0,6,23,2,18,2,18
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.BatchWriteDataPoint,0,16,0,0,0,5,0,2,0,2
-The Platform Client,org.influxdata.platform.impl,UserClientImpl,7,298,1,5,2,73,1,18,0,16
+The Platform Client,org.influxdata.platform.impl,UserClientImpl,7,309,1,3,2,73,1,19,0,18
 The Platform Client,org.influxdata.platform.impl,ScraperClientImpl,0,443,0,0,0,108,0,27,0,27
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient,26,317,1,12,2,74,3,29,2,22
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.ToWritePointsCompletable,0,75,1,3,0,16,1,5,0,4
-The Platform Client,org.influxdata.platform.impl,OrganizationClientImpl,0,527,0,0,0,127,0,33,0,33
+The Platform Client,org.influxdata.platform.impl,OrganizationClientImpl,0,578,0,0,0,138,0,37,0,37
 The Platform Client,org.influxdata.platform.impl,AuthenticateInterceptor,0,260,1,21,0,58,1,17,0,7
 The Platform Client,org.influxdata.platform.impl,GzipInterceptor,0,87,2,6,0,19,2,10,0,8
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.BatchWriteOptions,5,74,5,5,2,14,5,3,0,3
@@ -58,13 +60,13 @@ The Platform Client,org.influxdata.platform.impl,QueryClientImpl.new FluxCsvPars
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.BatchWriteDataRecord,0,12,0,0,0,4,0,2,0,2
 The Platform Client,org.influxdata.platform.impl,QueryClientImpl.new FluxCsvParser.FluxResponseConsumer() {...},25,0,0,0,4,0,3,0,3,0
 The Platform Client,org.influxdata.platform.impl,QueryClientImpl.new FluxCsvParser.FluxResponseConsumer() {...},0,16,0,0,0,4,0,3,0,3
+The Platform Client,org.influxdata.platform.impl,AbstractPlatformRestClient,6,175,1,9,1,44,1,11,0,7
 The Platform Client,org.influxdata.platform.impl,GzipInterceptor.new RequestBody() {...},0,28,0,0,0,7,0,4,0,4
 The Platform Client,org.influxdata.platform.impl,MeasurementMapper,14,275,6,30,3,57,6,19,0,7
-The Platform Client,org.influxdata.platform.impl,BucketClientImpl,0,491,0,2,0,115,0,34,0,33
+The Platform Client,org.influxdata.platform.impl,BucketClientImpl,0,560,0,2,0,129,0,40,0,39
 The Platform Client,org.influxdata.platform.impl,QueryClientImpl,219,262,0,0,57,50,9,12,9,12
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.BatchWriteItem,0,18,0,0,0,6,0,1,0,1
 The Platform Client,org.influxdata.platform.impl,AbstractWriteClient.BatchWriteDataMeasurement,2,25,1,1,1,6,1,2,0,2
-The Platform Client,org.influxdata.platform.impl,AbstractLabelRestClient,0,122,0,0,0,30,0,5,0,5
 The Platform Client,org.influxdata.platform.impl,AuthorizationClientImpl,0,179,0,0,0,45,0,14,0,14
 The Platform Client,org.influxdata.platform.impl,LabelClientImpl,0,165,0,2,0,42,0,10,0,9
 The Platform Client,org.influxdata.platform.impl,SourceClientImpl,139,28,0,0,31,9,10,2,10,2

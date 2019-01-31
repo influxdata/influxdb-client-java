@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractPageLinks.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Platform Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.platform.domain</a> &gt; <span class="el_source">AbstractPageLinks.java</span></div><h1>AbstractPageLinks.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.platform.domain;
+
+import java.util.Set;
+import javax.annotation.Nullable;
+
+import org.influxdata.platform.Arguments;
+
+import okhttp3.HttpUrl;
+
+import static org.influxdata.platform.domain.FindOptions.DESCENDING_KEY;
+import static org.influxdata.platform.domain.FindOptions.LIMIT_KEY;
+import static org.influxdata.platform.domain.FindOptions.OFFSET_KEY;
+import static org.influxdata.platform.domain.FindOptions.SORT_BY_KEY;
+
+/**
+ * PagingLinks represents paging links.
+ *
+ * @author Jakub Bednar (bednar@github) (30/01/2019 08:26)
+ */
+<span class="fc" id="L41">public abstract class AbstractPageLinks extends AbstractHasLinks {</span>
+
+    @Nullable
+    public FindOptions getPrevPage() {
+<span class="fc" id="L45">        return getFindOptions(&quot;prev&quot;);</span>
+    }
+
+    @Nullable
+    public FindOptions getSelfPage() {
+<span class="fc" id="L50">        return getFindOptions(&quot;self&quot;);</span>
+    }
+
+    @Nullable
+    public FindOptions getNextPage() {
+<span class="fc" id="L55">        return getFindOptions(&quot;next&quot;);</span>
+    }
+
+    @Nullable
+    private FindOptions getFindOptions(final String key) {
+
+<span class="fc" id="L61">        Arguments.checkNonEmpty(key, &quot;key&quot;);</span>
+
+<span class="fc" id="L63">        String link = getLinks().get(key);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (link == null) {</span>
+<span class="fc" id="L65">            return null;</span>
+        }
+
+
+<span class="fc" id="L69">        HttpUrl httpUrl = HttpUrl.parse(&quot;https://influxdb&quot; + link);</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        if (httpUrl == null) {</span>
+<span class="nc" id="L71">            return null;</span>
+        }
+
+<span class="fc" id="L74">        Set&lt;String&gt; qp = httpUrl.queryParameterNames();</span>
+<span class="pc bpc" id="L75" title="2 of 6 branches missed.">        if (!qp.contains(LIMIT_KEY) &amp;&amp; !qp.contains(OFFSET_KEY) &amp;&amp; !qp.contains(SORT_BY_KEY)</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                &amp;&amp; !qp.contains(DESCENDING_KEY)) {</span>
+
+<span class="fc" id="L78">            return null;</span>
+        }
+
+<span class="fc" id="L81">        FindOptions options = new FindOptions();</span>
+
+<span class="fc" id="L83">        String limit = httpUrl.queryParameter(LIMIT_KEY);</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">        if (limit != null) {</span>
+<span class="fc" id="L85">            options.setLimit(Integer.valueOf(limit));</span>
+        }
+
+<span class="fc" id="L88">        String offset = httpUrl.queryParameter(OFFSET_KEY);</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">        if (offset != null) {</span>
+<span class="fc" id="L90">            options.setOffset(Integer.valueOf(offset));</span>
+        }
+
+<span class="fc" id="L93">        String sortBy = httpUrl.queryParameter(SORT_BY_KEY);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (sortBy != null) {</span>
+<span class="fc" id="L95">            options.setSortBy(sortBy);</span>
+        }
+
+<span class="fc" id="L98">        String descending = httpUrl.queryParameter(DESCENDING_KEY);</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">        if (descending != null) {</span>
+<span class="fc" id="L100">            options.setDescending(Boolean.valueOf(descending));</span>
+        }
+
+<span class="fc" id="L103">        return options;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
