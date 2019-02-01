@@ -41,6 +41,7 @@ import org.influxdata.platform.error.rest.ProxyAuthenticationRequiredException;
 import org.influxdata.platform.error.rest.RequestTimeoutException;
 import org.influxdata.platform.error.rest.ServiceUnavailableException;
 import org.influxdata.platform.error.rest.UnauthorizedException;
+import org.influxdata.platform.error.rest.UnprocessableEntityException;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -105,6 +106,7 @@ class RestClientTest extends AbstractMockServerTest {
         Assertions.assertThatThrownBy(() -> errorResponse(406)).isInstanceOf(NotAcceptableException.class);
         Assertions.assertThatThrownBy(() -> errorResponse(407)).isInstanceOf(ProxyAuthenticationRequiredException.class);
         Assertions.assertThatThrownBy(() -> errorResponse(408)).isInstanceOf(RequestTimeoutException.class);
+        Assertions.assertThatThrownBy(() -> errorResponse(422)).isInstanceOf(UnprocessableEntityException.class);
         Assertions.assertThatThrownBy(() -> errorResponse(500)).isInstanceOf(InternalServerErrorException.class);
         Assertions.assertThatThrownBy(() -> errorResponse(501)).isInstanceOf(NotImplementedException.class);
         Assertions.assertThatThrownBy(() -> errorResponse(502)).isInstanceOf(BadGatewayException.class);

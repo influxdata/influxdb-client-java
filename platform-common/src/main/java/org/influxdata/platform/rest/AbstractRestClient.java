@@ -44,6 +44,7 @@ import org.influxdata.platform.error.rest.ProxyAuthenticationRequiredException;
 import org.influxdata.platform.error.rest.RequestTimeoutException;
 import org.influxdata.platform.error.rest.ServiceUnavailableException;
 import org.influxdata.platform.error.rest.UnauthorizedException;
+import org.influxdata.platform.error.rest.UnprocessableEntityException;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -143,6 +144,8 @@ public abstract class AbstractRestClient {
                 return new ProxyAuthenticationRequiredException(response);
             case 408:
                 return new RequestTimeoutException(response);
+            case 422:
+                return new UnprocessableEntityException(response);
             case 500:
                 return new InternalServerErrorException(response);
             case 501:

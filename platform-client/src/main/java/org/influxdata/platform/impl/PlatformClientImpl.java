@@ -39,12 +39,16 @@ import org.influxdata.platform.TaskClient;
 import org.influxdata.platform.UserClient;
 import org.influxdata.platform.WriteClient;
 import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.domain.IsOnboarding;
+import org.influxdata.platform.domain.Onboarding;
+import org.influxdata.platform.domain.OnboardingResponse;
 import org.influxdata.platform.domain.Ready;
 import org.influxdata.platform.error.InfluxException;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.LogLevel;
 
+import com.squareup.moshi.JsonAdapter;
 import retrofit2.Call;
 
 /**
@@ -54,9 +58,13 @@ public final class PlatformClientImpl extends AbstractPlatformClient<PlatformSer
 
     private static final Logger LOG = Logger.getLogger(PlatformClientImpl.class.getName());
 
+    private final JsonAdapter<Onboarding> onboardingAdapter;
+
     public PlatformClientImpl(@Nonnull final PlatformOptions options) {
 
         super(options, PlatformService.class);
+
+        this.onboardingAdapter = moshi.adapter(Onboarding.class);
     }
 
     @Nonnull
@@ -145,6 +153,28 @@ public final class PlatformClientImpl extends AbstractPlatformClient<PlatformSer
             LOG.log(Level.WARNING, "The exception occurs during check instance readiness", e);
             return null;
         }
+    }
+
+    @Nonnull
+    @Override
+    public OnboardingResponse onBoarding(@Nonnull final Onboarding onboarding) throws InfluxException {
+
+        Arguments.checkNotNull(onboarding, "onboarding");
+
+        String json = onboardingAdapter.toJson(onboarding);
+
+        Call<OnboardingResponse> call = platformService.setup(createBody(json));
+
+        return execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public Boolean isOnboardingAllowed() {
+
+        IsOnboarding isOnboarding = execute(platformService.setup());
+
+        return isOnboarding.getAllowed();
     }
 
     @Nonnull

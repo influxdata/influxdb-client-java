@@ -42,12 +42,13 @@ abstract class AbstractITClientTest extends AbstractTest {
     private static final Logger LOG = Logger.getLogger(AbstractITClientTest.class.getName());
 
     PlatformClient platformClient;
+    String platformIP;
     String platformURL;
 
     @BeforeEach
     void initPlatformClient(TestInfo testInfo) throws Exception {
 
-        String platformIP = System.getenv().getOrDefault("PLATFORM_IP", "127.0.0.1");
+        platformIP = System.getenv().getOrDefault("PLATFORM_IP", "127.0.0.1");
         String platformPort = System.getenv().getOrDefault("PLATFORM_PORT", "9999");
 
         platformURL = "http://" + platformIP + ":" + platformPort;

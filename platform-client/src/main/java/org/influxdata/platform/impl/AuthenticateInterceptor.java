@@ -48,7 +48,8 @@ class AuthenticateInterceptor implements Interceptor {
 
     private static final Logger LOG = Logger.getLogger(PlatformClientImpl.class.getName());
 
-    private static final List<String> NO_AUTH_ROUTE = Arrays.asList("/api/v2/signin", "/api/v2/signout");
+    private static final List<String> NO_AUTH_ROUTE = Arrays.asList("/api/v2/signin", "/api/v2/signout",
+            "/api/v2/setup");
 
     private final PlatformOptions platformOptions;
 

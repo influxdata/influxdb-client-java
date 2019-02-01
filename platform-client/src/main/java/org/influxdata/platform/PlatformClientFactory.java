@@ -23,6 +23,8 @@ package org.influxdata.platform;
 
 import javax.annotation.Nonnull;
 
+import org.influxdata.platform.domain.Onboarding;
+import org.influxdata.platform.domain.OnboardingResponse;
 import org.influxdata.platform.impl.PlatformClientImpl;
 import org.influxdata.platform.option.PlatformOptions;
 
@@ -106,5 +108,57 @@ public final class PlatformClientFactory {
         Arguments.checkNotNull(options, "PlatformOptions");
 
         return new PlatformClientImpl(options);
+    }
+
+    /**
+     * Post onboarding request, to setup initial user, org and bucket.
+     *
+     * @param url      the url to connect to the InfluxDB
+     * @param username the name of an user
+     * @param password the password to connect as an user
+     * @param org      the name of an organization
+     * @param bucket   the name of a bucket
+     * @return Created default user, bucket, org.
+     */
+    @Nonnull
+    public static OnboardingResponse onBoarding(@Nonnull final String url,
+                                                @Nonnull final String username,
+                                                @Nonnull final String password,
+                                                @Nonnull final String org,
+                                                @Nonnull final String bucket) {
+
+        Arguments.checkNonEmpty(url, "url");
+        Arguments.checkNonEmpty(username, "username");
+        Arguments.checkNonEmpty(password, "password");
+        Arguments.checkNonEmpty(org, "org");
+        Arguments.checkNonEmpty(bucket, "bucket");
+
+        Onboarding onboarding = new Onboarding();
+        onboarding.setUsername(username);
+        onboarding.setPassword(password);
+        onboarding.setOrg(org);
+        onboarding.setBucket(bucket);
+
+        return onBoarding(url, onboarding);
+    }
+
+
+    /**
+     * Post onboarding request, to setup initial user, org and bucket.
+     *
+     * @param url        the url to connect to the InfluxDB
+     * @param onboarding the defaults
+     * @return Created default user, bucket, org.
+     */
+    @Nonnull
+    public static OnboardingResponse onBoarding(@Nonnull final String url,
+                                                @Nonnull final Onboarding onboarding) {
+        Arguments.checkNonEmpty(url, "url");
+        Arguments.checkNotNull(onboarding, "onboarding");
+
+        try (PlatformClientImpl client = new PlatformClientImpl(PlatformOptions.builder().url(url).build())) {
+
+            return client.onBoarding(onboarding);
+        }
     }
 }

@@ -89,6 +89,21 @@ curl -i -X POST http://localhost:9999/api/v2/setup -H 'accept: application/json'
             "bucket": "my-bucket"
         }'
 
+#
+# InfluxData Platform
+#
+echo
+echo "Restarting InfluxData Platform for onboarding test... "
+echo
+
+docker kill influxdb-onboarding || true
+docker rm influxdb-onboarding || true
+docker run \
+       --detach \
+       --name influxdb-onboarding\
+       --publish 9990:9999 \
+       ${INFLUX_PLATFORM_IMAGE}
+
 
 
 

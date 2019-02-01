@@ -25,7 +25,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.domain.Onboarding;
+import org.influxdata.platform.domain.OnboardingResponse;
 import org.influxdata.platform.domain.Ready;
+import org.influxdata.platform.error.rest.UnprocessableEntityException;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.LogLevel;
 
@@ -141,6 +144,24 @@ public interface PlatformClient extends AutoCloseable {
      */
     @Nullable
     Ready ready();
+
+    /**
+     * Post onboarding request, to setup initial user, org and bucket.
+     *
+     * @param onboarding to setup defaults
+     * @return defaults for first run
+     * @throws UnprocessableEntityException when an onboarding has already been completed
+     */
+    @Nonnull
+    OnboardingResponse onBoarding(@Nonnull final Onboarding onboarding) throws UnprocessableEntityException;
+
+    /**
+     * Check if database has default user, org, bucket created, returns true if not.
+     *
+     * @return {@link Boolean#FALSE} if onboarding has already been completed otherwise {@link Boolean#FALSE}.
+     */
+    @Nonnull
+    Boolean isOnboardingAllowed();
 
     /**
      * @return the {@link LogLevel} that is used for logging requests and responses

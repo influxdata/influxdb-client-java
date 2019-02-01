@@ -24,7 +24,11 @@ package org.influxdata.platform;
 import java.time.Instant;
 
 import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.domain.Onboarding;
+import org.influxdata.platform.domain.OnboardingResponse;
 import org.influxdata.platform.domain.Ready;
+import org.influxdata.platform.domain.User;
+import org.influxdata.platform.error.rest.UnprocessableEntityException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -81,5 +85,69 @@ class ITPlatformClient extends AbstractITClientTest {
         Assertions.assertThat(ready).isNull();
 
         clientNotRunning.close();
+    }
+
+    @Test
+    void isOnboardingNotAllowed() {
+
+        Boolean onboardingAllowed = platformClient.isOnboardingAllowed();
+
+        Assertions.assertThat(onboardingAllowed).isFalse();
+    }
+
+    @Test
+    void onboarding() throws Exception {
+
+        String url = "http://" + platformIP + ":9990";
+
+        PlatformClient platformClient = PlatformClientFactory.create(url);
+
+        Boolean onboardingAllowed = platformClient.isOnboardingAllowed();
+        Assertions.assertThat(onboardingAllowed).isTrue();
+
+        platformClient.close();
+
+        OnboardingResponse onboarding = PlatformClientFactory.onBoarding(url, "admin", "111111", "Testing", "test");
+
+        Assertions.assertThat(onboarding).isNotNull();
+        Assertions.assertThat(onboarding.getUser()).isNotNull();
+        Assertions.assertThat(onboarding.getUser().getId()).isNotEmpty();
+        Assertions.assertThat(onboarding.getUser().getName()).isEqualTo("admin");
+
+        Assertions.assertThat(onboarding.getBucket()).isNotNull();
+        Assertions.assertThat(onboarding.getBucket().getId()).isNotEmpty();
+        Assertions.assertThat(onboarding.getBucket().getName()).isEqualTo("test");
+
+        Assertions.assertThat(onboarding.getOrganization()).isNotNull();
+        Assertions.assertThat(onboarding.getOrganization().getId()).isNotEmpty();
+        Assertions.assertThat(onboarding.getOrganization().getName()).isEqualTo("Testing");
+
+        Assertions.assertThat(onboarding.getAuthorization()).isNotNull();
+        Assertions.assertThat(onboarding.getAuthorization().getId()).isNotEmpty();
+        Assertions.assertThat(onboarding.getAuthorization().getToken()).isNotEmpty();
+
+        platformClient.close();
+
+        platformClient = PlatformClientFactory.create(url, onboarding.getAuthorization().getToken().toCharArray());
+
+        User me = platformClient.createUserClient().me();
+        Assertions.assertThat(me).isNotNull();
+        Assertions.assertThat(me.getName()).isEqualTo("admin");
+
+        platformClient.close();
+    }
+
+    @Test
+    void onboardingAlreadyDone() {
+
+        Onboarding onboarding = new Onboarding();
+        onboarding.setUsername("admin");
+        onboarding.setPassword("111111");
+        onboarding.setOrg("Testing");
+        onboarding.setBucket("test");
+
+        Assertions.assertThatThrownBy(() -> platformClient.onBoarding(onboarding))
+                .isInstanceOf(UnprocessableEntityException.class)
+                .hasMessage("onboarding has already been completed");
     }
 }

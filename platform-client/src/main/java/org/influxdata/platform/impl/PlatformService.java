@@ -32,8 +32,10 @@ import org.influxdata.platform.domain.Authorizations;
 import org.influxdata.platform.domain.Bucket;
 import org.influxdata.platform.domain.Buckets;
 import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.domain.IsOnboarding;
 import org.influxdata.platform.domain.LabelResponse;
 import org.influxdata.platform.domain.Labels;
+import org.influxdata.platform.domain.OnboardingResponse;
 import org.influxdata.platform.domain.OperationLogEntries;
 import org.influxdata.platform.domain.Organization;
 import org.influxdata.platform.domain.Organizations;
@@ -89,6 +91,19 @@ interface PlatformService {
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<Ready> ready();
+
+    //
+    // Setup
+    //
+    @GET("/api/v2/setup")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<IsOnboarding> setup();
+
+    @POST("/api/v2/setup")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<OnboardingResponse> setup(@Nonnull @Body final RequestBody onboarding);
 
     //
     // User
