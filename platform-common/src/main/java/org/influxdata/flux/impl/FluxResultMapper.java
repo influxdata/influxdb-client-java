@@ -22,6 +22,7 @@
 package org.influxdata.flux.impl;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nonnull;
@@ -122,6 +123,11 @@ public class FluxResultMapper {
                 field.setBoolean(object, Boolean.valueOf(String.valueOf(value)));
                 return;
             }
+            if (BigDecimal.class.isAssignableFrom(fieldType)) {
+                field.set(object, toBigDecimalValue(value));
+
+                return;
+            }
 
             field.set(object, value);
 
@@ -159,5 +165,26 @@ public class FluxResultMapper {
         return ((Double) value).intValue();
     }
 
+    private BigDecimal toBigDecimalValue(final Object value) {
+        if (String.class.isAssignableFrom(value.getClass())) {
+            return new BigDecimal((String) value);
+        }
 
+        if (double.class.isAssignableFrom(value.getClass()) || Double.class.isAssignableFrom(value.getClass())) {
+            return BigDecimal.valueOf((double) value);
+        }
+
+        if (int.class.isAssignableFrom(value.getClass()) || Integer.class.isAssignableFrom(value.getClass())) {
+            return BigDecimal.valueOf((int) value);
+        }
+
+        if (long.class.isAssignableFrom(value.getClass()) || Long.class.isAssignableFrom(value.getClass())) {
+            return BigDecimal.valueOf((long) value);
+        }
+
+        String message = String.format("Cannot cast %s [%s] to %s.",
+                value.getClass().getName(), value, BigDecimal.class);
+
+        throw new ClassCastException(message);
+    }
 }
