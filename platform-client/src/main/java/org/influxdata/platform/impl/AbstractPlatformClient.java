@@ -61,6 +61,7 @@ abstract class AbstractPlatformClient<T> extends AbstractRestClient {
     final HttpLoggingInterceptor loggingInterceptor;
     final GzipInterceptor gzipInterceptor;
     private final AuthenticateInterceptor authenticateInterceptor;
+    private final OkHttpClient okHttpClient;
 
     AbstractPlatformClient(@Nonnull final PlatformOptions options, @Nonnull final Class<T> serviceType) {
 
@@ -72,7 +73,7 @@ abstract class AbstractPlatformClient<T> extends AbstractRestClient {
         this.authenticateInterceptor = new AuthenticateInterceptor(options);
         this.gzipInterceptor = new GzipInterceptor();
 
-        OkHttpClient okHttpClient = options.getOkHttpClient()
+        this.okHttpClient = options.getOkHttpClient()
                 .addInterceptor(this.loggingInterceptor)
                 .addInterceptor(this.authenticateInterceptor)
                 .addInterceptor(this.gzipInterceptor)
@@ -102,6 +103,12 @@ abstract class AbstractPlatformClient<T> extends AbstractRestClient {
         } catch (IOException e) {
             LOG.log(Level.FINEST, "The signout exception", e);
         }
+
+        //
+        // Shutdown OkHttp
+        //
+        okHttpClient.connectionPool().evictAll();
+        okHttpClient.dispatcher().executorService().shutdown();
     }
 
     @Nonnull
