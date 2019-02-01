@@ -44,6 +44,7 @@ import org.influxdata.platform.domain.Onboarding;
 import org.influxdata.platform.domain.OnboardingResponse;
 import org.influxdata.platform.domain.Ready;
 import org.influxdata.platform.error.InfluxException;
+import org.influxdata.platform.error.rest.UnprocessableEntityException;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.LogLevel;
@@ -157,7 +158,7 @@ public final class PlatformClientImpl extends AbstractPlatformClient<PlatformSer
 
     @Nonnull
     @Override
-    public OnboardingResponse onBoarding(@Nonnull final Onboarding onboarding) throws InfluxException {
+    public OnboardingResponse onBoarding(@Nonnull final Onboarding onboarding) throws UnprocessableEntityException {
 
         Arguments.checkNotNull(onboarding, "onboarding");
 
