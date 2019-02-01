@@ -17,7 +17,7 @@ The Platform Commons,org.influxdata.platform.error.rest,PaymentRequiredException
 The Platform Commons,org.influxdata.platform.error.rest,NotFoundException,0,4,0,0,0,2,0,1,0,1
 The Platform Commons,org.influxdata.platform.error.rest,ForbiddenException,0,4,0,0,0,2,0,1,0,1
 The Platform Commons,org.influxdata.flux.impl,FluxCsvParser,0,471,4,54,0,115,4,38,0,10
-The Platform Commons,org.influxdata.flux.impl,FluxResultMapper,259,3,40,0,57,1,25,1,5,1
+The Platform Commons,org.influxdata.flux.impl,FluxResultMapper,110,244,27,29,25,47,24,11,3,4
 The Platform Commons,org.influxdata.flux.impl,FluxCsvParser.ParsingState,0,24,0,0,0,3,0,1,0,1
 The Platform Commons,org.influxdata.flux.impl,FluxCsvParser.FluxResponseConsumerTable,0,30,0,0,0,7,0,4,0,4
 The Platform Commons,org.influxdata.flux.error,FluxCsvParserException,0,4,0,0,0,2,0,1,0,1
