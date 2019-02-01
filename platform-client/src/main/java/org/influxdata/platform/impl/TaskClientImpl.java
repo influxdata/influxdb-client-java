@@ -440,8 +440,7 @@ final class TaskClientImpl extends AbstractPlatformRestClient implements TaskCli
 
         Call<Run> run = platformService.findTaskRun(taskID, runID);
 
-        //TODO https://github.com/influxdata/influxdb/issues/11589#issuecomment-458138193
-        return execute(run, "expected one run, got 0");
+        return execute(run, NotFoundException.class);
     }
 
     @Nonnull
@@ -486,8 +485,7 @@ final class TaskClientImpl extends AbstractPlatformRestClient implements TaskCli
 
         Call<Run> run = platformService.retryTaskRun(taskID, runID);
 
-        //TODO https://github.com/influxdata/influxdb/issues/11589#issuecomment-458138193
-        return execute(run, "expected one run, got 0");
+        return execute(run, NotFoundException.class);
     }
 
     @Override
