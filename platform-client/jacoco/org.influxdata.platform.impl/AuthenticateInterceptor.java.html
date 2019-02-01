@@ -48,51 +48,52 @@ class AuthenticateInterceptor implements Interceptor {
 
 <span class="fc" id="L49">    private static final Logger LOG = Logger.getLogger(PlatformClientImpl.class.getName());</span>
 
-<span class="fc" id="L51">    private static final List&lt;String&gt; NO_AUTH_ROUTE = Arrays.asList(&quot;/api/v2/signin&quot;, &quot;/api/v2/signout&quot;);</span>
+<span class="fc" id="L51">    private static final List&lt;String&gt; NO_AUTH_ROUTE = Arrays.asList(&quot;/api/v2/signin&quot;, &quot;/api/v2/signout&quot;,</span>
+            &quot;/api/v2/setup&quot;);
 
     private final PlatformOptions platformOptions;
 
     private OkHttpClient okHttpClient;
 
     private char[] sessionToken;
-<span class="fc" id="L58">    private AtomicBoolean signout = new AtomicBoolean(false);</span>
+<span class="fc" id="L59">    private AtomicBoolean signout = new AtomicBoolean(false);</span>
 
-<span class="fc" id="L60">    AuthenticateInterceptor(@Nonnull final PlatformOptions platformOptions) {</span>
+<span class="fc" id="L61">    AuthenticateInterceptor(@Nonnull final PlatformOptions platformOptions) {</span>
 
-<span class="fc" id="L62">        Arguments.checkNotNull(platformOptions, &quot;PlatformOptions&quot;);</span>
+<span class="fc" id="L63">        Arguments.checkNotNull(platformOptions, &quot;PlatformOptions&quot;);</span>
 
-<span class="fc" id="L64">        this.platformOptions = platformOptions;</span>
-<span class="fc" id="L65">    }</span>
+<span class="fc" id="L65">        this.platformOptions = platformOptions;</span>
+<span class="fc" id="L66">    }</span>
 
     @Override
     public Response intercept(@Nonnull final Chain chain) throws IOException {
 
-<span class="fc" id="L70">        Request request = chain.request();</span>
-<span class="fc" id="L71">        final String requestPath = request.url().encodedPath();</span>
+<span class="fc" id="L71">        Request request = chain.request();</span>
+<span class="fc" id="L72">        final String requestPath = request.url().encodedPath();</span>
 
         // Is no authentication path?
-<span class="fc bfc" id="L74" title="All 4 branches covered.">        if (NO_AUTH_ROUTE.stream().anyMatch(requestPath::endsWith) || signout.get()) {</span>
-<span class="fc" id="L75">            return chain.proceed(request);</span>
+<span class="fc bfc" id="L75" title="All 4 branches covered.">        if (NO_AUTH_ROUTE.stream().anyMatch(requestPath::endsWith) || signout.get()) {</span>
+<span class="fc" id="L76">            return chain.proceed(request);</span>
         }
 
-<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (PlatformOptions.AuthScheme.TOKEN.equals(platformOptions.getAuthScheme())) {</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        if (PlatformOptions.AuthScheme.TOKEN.equals(platformOptions.getAuthScheme())) {</span>
 
-<span class="fc" id="L80">            request = request.newBuilder()</span>
-<span class="fc" id="L81">                    .header(&quot;Authorization&quot;, &quot;Token &quot; + string(platformOptions.getToken()))</span>
-<span class="fc" id="L82">                    .build();</span>
+<span class="fc" id="L81">            request = request.newBuilder()</span>
+<span class="fc" id="L82">                    .header(&quot;Authorization&quot;, &quot;Token &quot; + string(platformOptions.getToken()))</span>
+<span class="fc" id="L83">                    .build();</span>
 
-<span class="fc bfc" id="L84" title="All 2 branches covered.">        } else if (PlatformOptions.AuthScheme.SESSION.equals(platformOptions.getAuthScheme())) {</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        } else if (PlatformOptions.AuthScheme.SESSION.equals(platformOptions.getAuthScheme())) {</span>
 
-<span class="fc" id="L86">            initToken(this.okHttpClient);</span>
+<span class="fc" id="L87">            initToken(this.okHttpClient);</span>
 
-<span class="fc bfc" id="L88" title="All 2 branches covered.">            if (sessionToken != null) {</span>
-<span class="fc" id="L89">                request = request.newBuilder()</span>
-<span class="fc" id="L90">                        .header(&quot;Cookie&quot;, &quot;session=&quot; + string(sessionToken))</span>
-<span class="fc" id="L91">                        .build();</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">            if (sessionToken != null) {</span>
+<span class="fc" id="L90">                request = request.newBuilder()</span>
+<span class="fc" id="L91">                        .header(&quot;Cookie&quot;, &quot;session=&quot; + string(sessionToken))</span>
+<span class="fc" id="L92">                        .build();</span>
             }
         }
 
-<span class="fc" id="L95">        return chain.proceed(request);</span>
+<span class="fc" id="L96">        return chain.proceed(request);</span>
     }
 
     /**
@@ -101,44 +102,44 @@ class AuthenticateInterceptor implements Interceptor {
      */
     void initToken(@Nonnull final OkHttpClient okHttpClient) {
 
-<span class="fc" id="L104">        Arguments.checkNotNull(okHttpClient, &quot;okHttpClient&quot;);</span>
+<span class="fc" id="L105">        Arguments.checkNotNull(okHttpClient, &quot;okHttpClient&quot;);</span>
 
-<span class="fc" id="L106">        this.okHttpClient = okHttpClient;</span>
+<span class="fc" id="L107">        this.okHttpClient = okHttpClient;</span>
 
-<span class="pc bpc" id="L108" title="1 of 4 branches missed.">        if (!PlatformOptions.AuthScheme.SESSION.equals(platformOptions.getAuthScheme()) || signout.get()) {</span>
-<span class="fc" id="L109">            return;</span>
+<span class="pc bpc" id="L109" title="1 of 4 branches missed.">        if (!PlatformOptions.AuthScheme.SESSION.equals(platformOptions.getAuthScheme()) || signout.get()) {</span>
+<span class="fc" id="L110">            return;</span>
         }
 
         //TODO or expired
-<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (sessionToken == null) {</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (sessionToken == null) {</span>
 
-<span class="fc" id="L115">            String credentials = Credentials</span>
-<span class="fc" id="L116">                    .basic(platformOptions.getUsername(), string(platformOptions.getPassword()));</span>
+<span class="fc" id="L116">            String credentials = Credentials</span>
+<span class="fc" id="L117">                    .basic(platformOptions.getUsername(), string(platformOptions.getPassword()));</span>
 
-<span class="fc" id="L118">            Request authRequest = new Request.Builder()</span>
-<span class="fc" id="L119">                    .url(platformOptions.getUrl() + &quot;/api/v2/signin&quot;)</span>
-<span class="fc" id="L120">                    .addHeader(&quot;Authorization&quot;, credentials)</span>
-<span class="fc" id="L121">                    .post(RequestBody.create(null, &quot;&quot;))</span>
-<span class="fc" id="L122">                    .build();</span>
+<span class="fc" id="L119">            Request authRequest = new Request.Builder()</span>
+<span class="fc" id="L120">                    .url(platformOptions.getUrl() + &quot;/api/v2/signin&quot;)</span>
+<span class="fc" id="L121">                    .addHeader(&quot;Authorization&quot;, credentials)</span>
+<span class="fc" id="L122">                    .post(RequestBody.create(null, &quot;&quot;))</span>
+<span class="fc" id="L123">                    .build();</span>
 
             Response authResponse;
             try {
-<span class="fc" id="L126">                authResponse = this.okHttpClient.newCall(authRequest).execute();</span>
-<span class="fc" id="L127">            } catch (IOException e) {</span>
-<span class="fc" id="L128">                LOG.log(Level.WARNING, &quot;Cannot retrieve the Session token!&quot;, e);</span>
-<span class="fc" id="L129">                return;</span>
-<span class="fc" id="L130">            }</span>
+<span class="fc" id="L127">                authResponse = this.okHttpClient.newCall(authRequest).execute();</span>
+<span class="fc" id="L128">            } catch (IOException e) {</span>
+<span class="fc" id="L129">                LOG.log(Level.WARNING, &quot;Cannot retrieve the Session token!&quot;, e);</span>
+<span class="fc" id="L130">                return;</span>
+<span class="fc" id="L131">            }</span>
 
-<span class="fc" id="L132">            Cookie sessionCookie = Cookie.parseAll(authRequest.url(), authResponse.headers()).stream()</span>
-<span class="fc" id="L133">                    .filter(cookie -&gt; &quot;session&quot;.equals(cookie.name()))</span>
-<span class="fc" id="L134">                    .findFirst()</span>
-<span class="fc" id="L135">                    .orElse(null);</span>
+<span class="fc" id="L133">            Cookie sessionCookie = Cookie.parseAll(authRequest.url(), authResponse.headers()).stream()</span>
+<span class="fc" id="L134">                    .filter(cookie -&gt; &quot;session&quot;.equals(cookie.name()))</span>
+<span class="fc" id="L135">                    .findFirst()</span>
+<span class="fc" id="L136">                    .orElse(null);</span>
 
-<span class="fc bfc" id="L137" title="All 2 branches covered.">            if (sessionCookie != null) {</span>
-<span class="fc" id="L138">                sessionToken = sessionCookie.value().toCharArray();</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">            if (sessionCookie != null) {</span>
+<span class="fc" id="L139">                sessionToken = sessionCookie.value().toCharArray();</span>
             }
         }
-<span class="fc" id="L141">    }</span>
+<span class="fc" id="L142">    }</span>
 
     /**
      * Expire the current session.
@@ -148,25 +149,25 @@ class AuthenticateInterceptor implements Interceptor {
      */
     void signout() throws IOException {
 
-<span class="fc bfc" id="L151" title="All 4 branches covered.">        if (!PlatformOptions.AuthScheme.SESSION.equals(platformOptions.getAuthScheme()) || signout.get()) {</span>
-<span class="fc" id="L152">            signout.set(true);</span>
-<span class="fc" id="L153">            return;</span>
+<span class="fc bfc" id="L152" title="All 4 branches covered.">        if (!PlatformOptions.AuthScheme.SESSION.equals(platformOptions.getAuthScheme()) || signout.get()) {</span>
+<span class="fc" id="L153">            signout.set(true);</span>
+<span class="fc" id="L154">            return;</span>
         }
 
-<span class="fc" id="L156">        this.signout.set(true);</span>
-<span class="fc" id="L157">        this.sessionToken = null;</span>
+<span class="fc" id="L157">        this.signout.set(true);</span>
+<span class="fc" id="L158">        this.sessionToken = null;</span>
 
-<span class="fc" id="L159">        Request authRequest = new Request.Builder()</span>
-<span class="fc" id="L160">                .url(platformOptions.getUrl() + &quot;/api/v2/signout&quot;)</span>
-<span class="fc" id="L161">                .post(RequestBody.create(null, &quot;&quot;))</span>
-<span class="fc" id="L162">                .build();</span>
+<span class="fc" id="L160">        Request authRequest = new Request.Builder()</span>
+<span class="fc" id="L161">                .url(platformOptions.getUrl() + &quot;/api/v2/signout&quot;)</span>
+<span class="fc" id="L162">                .post(RequestBody.create(null, &quot;&quot;))</span>
+<span class="fc" id="L163">                .build();</span>
 
-<span class="fc" id="L164">        this.okHttpClient.newCall(authRequest).execute();</span>
-<span class="fc" id="L165">    }</span>
+<span class="fc" id="L165">        this.okHttpClient.newCall(authRequest).execute();</span>
+<span class="fc" id="L166">    }</span>
 
     @Nonnull
     private String string(final char[] password) {
-<span class="fc" id="L169">        return String.valueOf(password);</span>
+<span class="fc" id="L170">        return String.valueOf(password);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

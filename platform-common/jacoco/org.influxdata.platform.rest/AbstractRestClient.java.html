@@ -44,6 +44,7 @@ import org.influxdata.platform.error.rest.ProxyAuthenticationRequiredException;
 import org.influxdata.platform.error.rest.RequestTimeoutException;
 import org.influxdata.platform.error.rest.ServiceUnavailableException;
 import org.influxdata.platform.error.rest.UnauthorizedException;
+import org.influxdata.platform.error.rest.UnprocessableEntityException;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -54,67 +55,67 @@ import retrofit2.Response;
 /**
  * @author Jakub Bednar (bednar@github) (04/10/2018 07:50)
  */
-<span class="fc" id="L57">public abstract class AbstractRestClient {</span>
+<span class="fc" id="L58">public abstract class AbstractRestClient {</span>
 
-<span class="fc" id="L59">    private static final Logger LOG = Logger.getLogger(AbstractRestClient.class.getName());</span>
-<span class="fc" id="L60">    private static final MediaType CONTENT_TYPE_JSON = MediaType.parse(&quot;application/json&quot;);</span>
+<span class="fc" id="L60">    private static final Logger LOG = Logger.getLogger(AbstractRestClient.class.getName());</span>
+<span class="fc" id="L61">    private static final MediaType CONTENT_TYPE_JSON = MediaType.parse(&quot;application/json&quot;);</span>
 
     @Nonnull
     protected RequestBody createBody(@Nonnull final String content) {
 
-<span class="fc" id="L65">        Arguments.checkNonEmpty(content, &quot;content&quot;);</span>
+<span class="fc" id="L66">        Arguments.checkNonEmpty(content, &quot;content&quot;);</span>
 
-<span class="fc" id="L67">        return RequestBody.create(CONTENT_TYPE_JSON, content);</span>
+<span class="fc" id="L68">        return RequestBody.create(CONTENT_TYPE_JSON, content);</span>
     }
 
     protected &lt;T&gt; T execute(@Nonnull final Call&lt;T&gt; call) throws InfluxException {
-<span class="fc" id="L71">        return execute(call, (String) null);</span>
+<span class="fc" id="L72">        return execute(call, (String) null);</span>
     }
 
     protected &lt;T&gt; T execute(@Nonnull final Call&lt;T&gt; call, @Nullable final String nullError) throws InfluxException {
-<span class="fc" id="L75">        return execute(call, nullError, null);</span>
+<span class="fc" id="L76">        return execute(call, nullError, null);</span>
     }
 
     protected &lt;T, E extends InfluxException&gt; T execute(@Nonnull final Call&lt;T&gt; call,
                                                        @Nullable final Class&lt;E&gt; nullType) throws InfluxException {
 
-<span class="nc" id="L81">        return execute(call, null, nullType);</span>
+<span class="nc" id="L82">        return execute(call, null, nullType);</span>
     }
 
     private &lt;T, E extends InfluxException&gt; T execute(@Nonnull final Call&lt;T&gt; call,
                                                      @Nullable final String nullError,
                                                      @Nullable final Class&lt;E&gt; nullType) throws InfluxException {
 
-<span class="fc" id="L88">        Arguments.checkNotNull(call, &quot;call&quot;);</span>
+<span class="fc" id="L89">        Arguments.checkNotNull(call, &quot;call&quot;);</span>
 
         try {
-<span class="fc" id="L91">            Response&lt;T&gt; response = call.execute();</span>
-<span class="fc bfc" id="L92" title="All 2 branches covered.">            if (response.isSuccessful()) {</span>
-<span class="fc" id="L93">                return response.body();</span>
+<span class="fc" id="L92">            Response&lt;T&gt; response = call.execute();</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">            if (response.isSuccessful()) {</span>
+<span class="fc" id="L94">                return response.body();</span>
             } else {
 
-<span class="fc" id="L96">                InfluxException ie = responseToError(response);</span>
+<span class="fc" id="L97">                InfluxException ie = responseToError(response);</span>
 
                 //
                 // The error message signal not found on the server =&gt; return null
                 //
-<span class="pc bpc" id="L101" title="1 of 4 branches missed.">                boolean nullByMessage = nullError != null &amp;&amp; (nullError.equals(ie.getMessage())</span>
+<span class="pc bpc" id="L102" title="1 of 4 branches missed.">                boolean nullByMessage = nullError != null &amp;&amp; (nullError.equals(ie.getMessage())</span>
                         ||
                         //TODO set user password -&gt; https://github.com/influxdata/influxdb/issues/11590
-<span class="pc bnc" id="L104" title="All 4 branches missed.">                        (ie.errorBody().has(&quot;error&quot;) &amp;&amp; ie.errorBody().getString(&quot;error&quot;).equals(nullError)));</span>
-<span class="pc bpc" id="L105" title="3 of 4 branches missed.">                boolean nullByType = nullType != null &amp;&amp; nullType.isAssignableFrom(ie.getClass());</span>
+<span class="pc bnc" id="L105" title="All 4 branches missed.">                        (ie.errorBody().has(&quot;error&quot;) &amp;&amp; ie.errorBody().getString(&quot;error&quot;).equals(nullError)));</span>
+<span class="pc bpc" id="L106" title="3 of 4 branches missed.">                boolean nullByType = nullType != null &amp;&amp; nullType.isAssignableFrom(ie.getClass());</span>
 
-<span class="pc bpc" id="L107" title="1 of 4 branches missed.">                if (nullByMessage || nullByType) {</span>
+<span class="pc bpc" id="L108" title="1 of 4 branches missed.">                if (nullByMessage || nullByType) {</span>
 
-<span class="fc" id="L109">                    LOG.log(Level.FINEST, &quot;Error is considered as null response.&quot;, ie);</span>
+<span class="fc" id="L110">                    LOG.log(Level.FINEST, &quot;Error is considered as null response.&quot;, ie);</span>
 
-<span class="fc" id="L111">                    return null;</span>
+<span class="fc" id="L112">                    return null;</span>
                 }
 
-<span class="fc" id="L114">                throw ie;</span>
+<span class="fc" id="L115">                throw ie;</span>
             }
-<span class="fc" id="L116">        } catch (IOException e) {</span>
-<span class="fc" id="L117">            throw new InfluxException(e);</span>
+<span class="fc" id="L117">        } catch (IOException e) {</span>
+<span class="fc" id="L118">            throw new InfluxException(e);</span>
         }
     }
 
@@ -122,77 +123,79 @@ import retrofit2.Response;
     @SuppressWarnings(&quot;MagicNumber&quot;)
     InfluxException responseToError(@Nonnull final Response&lt;?&gt; response) {
 
-<span class="fc" id="L125">        Arguments.checkNotNull(response, &quot;response&quot;);</span>
+<span class="fc" id="L126">        Arguments.checkNotNull(response, &quot;response&quot;);</span>
 
-<span class="fc bfc" id="L127" title="All 14 branches covered.">        switch (response.code()) {</span>
+<span class="fc bfc" id="L128" title="All 15 branches covered.">        switch (response.code()) {</span>
             case 400:
-<span class="fc" id="L129">                return new BadRequestException(response);</span>
+<span class="fc" id="L130">                return new BadRequestException(response);</span>
             case 401:
-<span class="fc" id="L131">                return new UnauthorizedException(response);</span>
+<span class="fc" id="L132">                return new UnauthorizedException(response);</span>
             case 402:
-<span class="fc" id="L133">                return new PaymentRequiredException(response);</span>
+<span class="fc" id="L134">                return new PaymentRequiredException(response);</span>
             case 403:
-<span class="fc" id="L135">                return new ForbiddenException(response);</span>
+<span class="fc" id="L136">                return new ForbiddenException(response);</span>
             case 404:
-<span class="fc" id="L137">                return new NotFoundException(response);</span>
+<span class="fc" id="L138">                return new NotFoundException(response);</span>
             case 405:
-<span class="fc" id="L139">                return new MethodNotAllowedException(response);</span>
+<span class="fc" id="L140">                return new MethodNotAllowedException(response);</span>
             case 406:
-<span class="fc" id="L141">                return new NotAcceptableException(response);</span>
+<span class="fc" id="L142">                return new NotAcceptableException(response);</span>
             case 407:
-<span class="fc" id="L143">                return new ProxyAuthenticationRequiredException(response);</span>
+<span class="fc" id="L144">                return new ProxyAuthenticationRequiredException(response);</span>
             case 408:
-<span class="fc" id="L145">                return new RequestTimeoutException(response);</span>
+<span class="fc" id="L146">                return new RequestTimeoutException(response);</span>
+            case 422:
+<span class="fc" id="L148">                return new UnprocessableEntityException(response);</span>
             case 500:
-<span class="fc" id="L147">                return new InternalServerErrorException(response);</span>
+<span class="fc" id="L150">                return new InternalServerErrorException(response);</span>
             case 501:
-<span class="fc" id="L149">                return new NotImplementedException(response);</span>
+<span class="fc" id="L152">                return new NotImplementedException(response);</span>
             case 502:
-<span class="fc" id="L151">                return new BadGatewayException(response);</span>
+<span class="fc" id="L154">                return new BadGatewayException(response);</span>
             case 503:
-<span class="fc" id="L153">                return new ServiceUnavailableException(response);</span>
+<span class="fc" id="L156">                return new ServiceUnavailableException(response);</span>
             default:
-<span class="fc" id="L155">                return new InfluxException(response);</span>
+<span class="fc" id="L158">                return new InfluxException(response);</span>
         }
     }
 
     protected void catchOrPropagateException(@Nonnull final Exception exception,
                                              @Nonnull final Consumer&lt;? super Throwable&gt; onError) {
 
-<span class="fc" id="L162">        Arguments.checkNotNull(exception, &quot;exception&quot;);</span>
-<span class="fc" id="L163">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+<span class="fc" id="L165">        Arguments.checkNotNull(exception, &quot;exception&quot;);</span>
+<span class="fc" id="L166">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
 
         //
         // Socket closed by remote server or end of data
         //
-<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (isCloseException(exception)) {</span>
-<span class="fc" id="L169">            LOG.log(Level.FINEST, &quot;Socket closed by remote server or end of data&quot;, exception);</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        if (isCloseException(exception)) {</span>
+<span class="fc" id="L172">            LOG.log(Level.FINEST, &quot;Socket closed by remote server or end of data&quot;, exception);</span>
         } else {
-<span class="fc" id="L171">            onError.accept(exception);</span>
+<span class="fc" id="L174">            onError.accept(exception);</span>
         }
-<span class="fc" id="L173">    }</span>
+<span class="fc" id="L176">    }</span>
 
     protected boolean isCloseException(@Nonnull final Exception exception) {
 
-<span class="fc" id="L177">        Arguments.checkNotNull(exception, &quot;exception&quot;);</span>
+<span class="fc" id="L180">        Arguments.checkNotNull(exception, &quot;exception&quot;);</span>
 
-<span class="fc" id="L179">        return exception instanceof EOFException;</span>
+<span class="fc" id="L182">        return exception instanceof EOFException;</span>
     }
 
     protected void setLogLevel(@Nonnull final HttpLoggingInterceptor interceptor, @Nonnull final LogLevel logLevel) {
 
-<span class="fc" id="L184">        Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;);</span>
-<span class="fc" id="L185">        Arguments.checkNotNull(interceptor, &quot;HttpLogging interceptor&quot;);</span>
+<span class="fc" id="L187">        Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;);</span>
+<span class="fc" id="L188">        Arguments.checkNotNull(interceptor, &quot;HttpLogging interceptor&quot;);</span>
 
-<span class="fc" id="L187">        interceptor.setLevel(HttpLoggingInterceptor.Level.valueOf(logLevel.name()));</span>
-<span class="fc" id="L188">    }</span>
+<span class="fc" id="L190">        interceptor.setLevel(HttpLoggingInterceptor.Level.valueOf(logLevel.name()));</span>
+<span class="fc" id="L191">    }</span>
 
     @Nonnull
     protected LogLevel getLogLevel(@Nonnull final HttpLoggingInterceptor interceptor) {
 
-<span class="fc" id="L193">        Arguments.checkNotNull(interceptor, &quot;HttpLogging interceptor&quot;);</span>
+<span class="fc" id="L196">        Arguments.checkNotNull(interceptor, &quot;HttpLogging interceptor&quot;);</span>
 
-<span class="fc" id="L195">        return LogLevel.valueOf(interceptor.getLevel().name());</span>
+<span class="fc" id="L198">        return LogLevel.valueOf(interceptor.getLevel().name());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

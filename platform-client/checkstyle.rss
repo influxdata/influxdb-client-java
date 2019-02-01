@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 - 2019 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 77,
+      <title>File: 80,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -536,6 +536,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.IsOnboarding.java">org/influxdata/platform/domain/IsOnboarding.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Bucket.java">org/influxdata/platform/domain/Bucket.java</a>
                 </td>
                 <td>
@@ -746,6 +760,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.OnboardingResponse.java">org/influxdata/platform/domain/OnboardingResponse.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.option.PlatformOptions.java">org/influxdata/platform/option/PlatformOptions.java</a>
                 </td>
                 <td>
@@ -817,6 +845,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.impl.SourceClientImpl.java">org/influxdata/platform/impl/SourceClientImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/platform-client/checkstyle.html#org.influxdata.platform.domain.Onboarding.java">org/influxdata/platform/domain/Onboarding.java</a>
                 </td>
                 <td>
                   0

@@ -23,6 +23,8 @@ package org.influxdata.platform;
 
 import javax.annotation.Nonnull;
 
+import org.influxdata.platform.domain.Onboarding;
+import org.influxdata.platform.domain.OnboardingResponse;
 import org.influxdata.platform.impl.PlatformClientImpl;
 import org.influxdata.platform.option.PlatformOptions;
 
@@ -46,11 +48,11 @@ public final class PlatformClientFactory {
     @Nonnull
     public static PlatformClient create(@Nonnull final String url) {
 
-<span class="fc" id="L49">        PlatformOptions options = PlatformOptions.builder()</span>
-<span class="fc" id="L50">                .url(url)</span>
-<span class="fc" id="L51">                .build();</span>
+<span class="fc" id="L51">        PlatformOptions options = PlatformOptions.builder()</span>
+<span class="fc" id="L52">                .url(url)</span>
+<span class="fc" id="L53">                .build();</span>
 
-<span class="fc" id="L53">        return create(options);</span>
+<span class="fc" id="L55">        return create(options);</span>
     }
 
     /**
@@ -67,12 +69,12 @@ public final class PlatformClientFactory {
                                         @Nonnull final String username,
                                         @Nonnull final char[] password) {
 
-<span class="fc" id="L70">        PlatformOptions options = PlatformOptions.builder()</span>
-<span class="fc" id="L71">                .url(url)</span>
-<span class="fc" id="L72">                .authenticate(username, password)</span>
-<span class="fc" id="L73">                .build();</span>
+<span class="fc" id="L72">        PlatformOptions options = PlatformOptions.builder()</span>
+<span class="fc" id="L73">                .url(url)</span>
+<span class="fc" id="L74">                .authenticate(username, password)</span>
+<span class="fc" id="L75">                .build();</span>
 
-<span class="fc" id="L75">        return create(options);</span>
+<span class="fc" id="L77">        return create(options);</span>
     }
 
     /**
@@ -86,12 +88,12 @@ public final class PlatformClientFactory {
     @Nonnull
     public static PlatformClient create(@Nonnull final String url, @Nonnull final char[] token) {
 
-<span class="fc" id="L89">        PlatformOptions options = PlatformOptions.builder()</span>
-<span class="fc" id="L90">                .url(url)</span>
-<span class="fc" id="L91">                .authenticateToken(token)</span>
-<span class="fc" id="L92">                .build();</span>
+<span class="fc" id="L91">        PlatformOptions options = PlatformOptions.builder()</span>
+<span class="fc" id="L92">                .url(url)</span>
+<span class="fc" id="L93">                .authenticateToken(token)</span>
+<span class="fc" id="L94">                .build();</span>
 
-<span class="fc" id="L94">        return create(options);</span>
+<span class="fc" id="L96">        return create(options);</span>
     }
 
     /**
@@ -103,9 +105,61 @@ public final class PlatformClientFactory {
     @Nonnull
     public static PlatformClient create(@Nonnull final PlatformOptions options) {
 
-<span class="fc" id="L106">        Arguments.checkNotNull(options, &quot;PlatformOptions&quot;);</span>
+<span class="fc" id="L108">        Arguments.checkNotNull(options, &quot;PlatformOptions&quot;);</span>
 
-<span class="fc" id="L108">        return new PlatformClientImpl(options);</span>
+<span class="fc" id="L110">        return new PlatformClientImpl(options);</span>
+    }
+
+    /**
+     * Post onboarding request, to setup initial user, org and bucket.
+     *
+     * @param url      the url to connect to the InfluxDB
+     * @param username the name of an user
+     * @param password the password to connect as an user
+     * @param org      the name of an organization
+     * @param bucket   the name of a bucket
+     * @return Created default user, bucket, org.
+     */
+    @Nonnull
+    public static OnboardingResponse onBoarding(@Nonnull final String url,
+                                                @Nonnull final String username,
+                                                @Nonnull final String password,
+                                                @Nonnull final String org,
+                                                @Nonnull final String bucket) {
+
+<span class="nc" id="L130">        Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
+<span class="nc" id="L131">        Arguments.checkNonEmpty(username, &quot;username&quot;);</span>
+<span class="nc" id="L132">        Arguments.checkNonEmpty(password, &quot;password&quot;);</span>
+<span class="nc" id="L133">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+<span class="nc" id="L134">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+
+<span class="nc" id="L136">        Onboarding onboarding = new Onboarding();</span>
+<span class="nc" id="L137">        onboarding.setUsername(username);</span>
+<span class="nc" id="L138">        onboarding.setPassword(password);</span>
+<span class="nc" id="L139">        onboarding.setOrg(org);</span>
+<span class="nc" id="L140">        onboarding.setBucket(bucket);</span>
+
+<span class="nc" id="L142">        return onBoarding(url, onboarding);</span>
+    }
+
+
+    /**
+     * Post onboarding request, to setup initial user, org and bucket.
+     *
+     * @param url        the url to connect to the InfluxDB
+     * @param onboarding the defaults
+     * @return Created default user, bucket, org.
+     */
+    @Nonnull
+    public static OnboardingResponse onBoarding(@Nonnull final String url,
+                                                @Nonnull final Onboarding onboarding) {
+<span class="nc" id="L156">        Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
+<span class="nc" id="L157">        Arguments.checkNotNull(onboarding, &quot;onboarding&quot;);</span>
+
+<span class="nc" id="L159">        try (PlatformClientImpl client = new PlatformClientImpl(PlatformOptions.builder().url(url).build())) {</span>
+
+<span class="nc" id="L161">            return client.onBoarding(onboarding);</span>
+        }
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

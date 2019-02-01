@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 - 2019 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 176,
+      <title>File: 180,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -243,6 +243,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.PlatformClientFactory.java">org/influxdata/platform/PlatformClientFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.error.rest.UnprocessableEntityException.java">org/influxdata/platform/error/rest/UnprocessableEntityException.java</a>
                 </td>
                 <td>
                   0
@@ -481,6 +495,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.impl.TaskClientImpl.java">org/influxdata/platform/impl/TaskClientImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.domain.IsOnboarding.java">org/influxdata/platform/domain/IsOnboarding.java</a>
                 </td>
                 <td>
                   0
@@ -760,6 +788,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.domain.OnboardingResponse.java">org/influxdata/platform/domain/OnboardingResponse.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.option.PlatformOptions.java">org/influxdata/platform/option/PlatformOptions.java</a>
                 </td>
                 <td>
@@ -985,6 +1027,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.flux.functions.MinFlux.java">org/influxdata/flux/functions/MinFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/platform-java/checkstyle.html#org.influxdata.platform.domain.Onboarding.java">org/influxdata/platform/domain/Onboarding.java</a>
                 </td>
                 <td>
                   0

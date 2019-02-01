@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OnboardingResponse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Platform Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.platform.domain</a> &gt; <span class="el_source">OnboardingResponse.java</span></div><h1>OnboardingResponse.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.platform.domain;
+
+import com.squareup.moshi.Json;
+
+/**
+ * Created default user, bucket, org.
+ *
+ * @author Jakub Bednar (bednar@github) (01/02/2019 11:43)
+ */
+<span class="nc" id="L31">public final class OnboardingResponse extends AbstractHasLinks {</span>
+
+    private User user;
+
+    private Bucket bucket;
+
+    @Json(name = &quot;org&quot;)
+    private Organization organization;
+
+    @Json(name = &quot;auth&quot;)
+    private Authorization authorization;
+
+    public User getUser() {
+<span class="nc" id="L44">        return user;</span>
+    }
+
+    public void setUser(final User user) {
+<span class="nc" id="L48">        this.user = user;</span>
+<span class="nc" id="L49">    }</span>
+
+    public Bucket getBucket() {
+<span class="nc" id="L52">        return bucket;</span>
+    }
+
+    public void setBucket(final Bucket bucket) {
+<span class="nc" id="L56">        this.bucket = bucket;</span>
+<span class="nc" id="L57">    }</span>
+
+    public Organization getOrganization() {
+<span class="nc" id="L60">        return organization;</span>
+    }
+
+    public void setOrganization(final Organization organization) {
+<span class="nc" id="L64">        this.organization = organization;</span>
+<span class="nc" id="L65">    }</span>
+
+    public Authorization getAuthorization() {
+<span class="nc" id="L68">        return authorization;</span>
+    }
+
+    public void setAuthorization(final Authorization authorization) {
+<span class="nc" id="L72">        this.authorization = authorization;</span>
+<span class="nc" id="L73">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

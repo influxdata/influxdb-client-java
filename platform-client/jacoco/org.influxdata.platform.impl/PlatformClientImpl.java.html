@@ -39,12 +39,16 @@ import org.influxdata.platform.TaskClient;
 import org.influxdata.platform.UserClient;
 import org.influxdata.platform.WriteClient;
 import org.influxdata.platform.domain.Health;
+import org.influxdata.platform.domain.IsOnboarding;
+import org.influxdata.platform.domain.Onboarding;
+import org.influxdata.platform.domain.OnboardingResponse;
 import org.influxdata.platform.domain.Ready;
 import org.influxdata.platform.error.InfluxException;
 import org.influxdata.platform.option.PlatformOptions;
 import org.influxdata.platform.option.WriteOptions;
 import org.influxdata.platform.rest.LogLevel;
 
+import com.squareup.moshi.JsonAdapter;
 import retrofit2.Call;
 
 /**
@@ -52,138 +56,164 @@ import retrofit2.Call;
  */
 public final class PlatformClientImpl extends AbstractPlatformClient&lt;PlatformService&gt; implements PlatformClient {
 
-<span class="fc" id="L55">    private static final Logger LOG = Logger.getLogger(PlatformClientImpl.class.getName());</span>
+<span class="fc" id="L59">    private static final Logger LOG = Logger.getLogger(PlatformClientImpl.class.getName());</span>
+
+    private final JsonAdapter&lt;Onboarding&gt; onboardingAdapter;
 
     public PlatformClientImpl(@Nonnull final PlatformOptions options) {
 
-<span class="fc" id="L59">        super(options, PlatformService.class);</span>
-<span class="fc" id="L60">    }</span>
+<span class="fc" id="L65">        super(options, PlatformService.class);</span>
+
+<span class="fc" id="L67">        this.onboardingAdapter = moshi.adapter(Onboarding.class);</span>
+<span class="fc" id="L68">    }</span>
 
     @Nonnull
     @Override
     public QueryClient createQueryClient() {
-<span class="fc" id="L65">        return new QueryClientImpl(platformService);</span>
+<span class="fc" id="L73">        return new QueryClientImpl(platformService);</span>
     }
 
     @Nonnull
     @Override
     public WriteClient createWriteClient() {
-<span class="fc" id="L71">        return createWriteClient(WriteOptions.DEFAULTS);</span>
+<span class="fc" id="L79">        return createWriteClient(WriteOptions.DEFAULTS);</span>
     }
 
     @Nonnull
     @Override
     public WriteClient createWriteClient(@Nonnull final WriteOptions writeOptions) {
 
-<span class="fc" id="L78">        Arguments.checkNotNull(writeOptions, &quot;WriteOptions&quot;);</span>
+<span class="fc" id="L86">        Arguments.checkNotNull(writeOptions, &quot;WriteOptions&quot;);</span>
 
-<span class="fc" id="L80">        return new WriteClientImpl(writeOptions, platformService);</span>
+<span class="fc" id="L88">        return new WriteClientImpl(writeOptions, platformService);</span>
     }
 
     @Nonnull
     @Override
     public AuthorizationClient createAuthorizationClient() {
-<span class="fc" id="L86">        return new AuthorizationClientImpl(platformService, moshi);</span>
+<span class="fc" id="L94">        return new AuthorizationClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public BucketClient createBucketClient() {
-<span class="fc" id="L92">        return new BucketClientImpl(platformService, moshi);</span>
+<span class="fc" id="L100">        return new BucketClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public OrganizationClient createOrganizationClient() {
-<span class="fc" id="L98">        return new OrganizationClientImpl(platformService, moshi);</span>
+<span class="fc" id="L106">        return new OrganizationClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public SourceClient createSourceClient() {
-<span class="fc" id="L104">        return new SourceClientImpl(platformService, moshi, this);</span>
+<span class="fc" id="L112">        return new SourceClientImpl(platformService, moshi, this);</span>
     }
 
     @Nonnull
     @Override
     public TaskClient createTaskClient() {
-<span class="fc" id="L110">        return new TaskClientImpl(platformService, moshi);</span>
+<span class="fc" id="L118">        return new TaskClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public UserClient createUserClient() {
-<span class="fc" id="L116">        return new UserClientImpl(platformService, moshi);</span>
+<span class="fc" id="L124">        return new UserClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public ScraperClient createScraperClient() {
-<span class="fc" id="L122">        return new ScraperClientImpl(platformService, moshi);</span>
+<span class="fc" id="L130">        return new ScraperClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public LabelClient createLabelClient() {
-<span class="fc" id="L128">        return new LabelClientImpl(platformService, moshi);</span>
+<span class="fc" id="L136">        return new LabelClientImpl(platformService, moshi);</span>
     }
 
     @Nonnull
     @Override
     public Health health() {
 
-<span class="nc" id="L135">        return health(platformService.health());</span>
+<span class="nc" id="L143">        return health(platformService.health());</span>
     }
 
     @Nullable
     @Override
     public Ready ready() {
-<span class="nc" id="L141">        Call&lt;Ready&gt; call = platformService.ready();</span>
+<span class="nc" id="L149">        Call&lt;Ready&gt; call = platformService.ready();</span>
         try {
-<span class="nc" id="L143">            return execute(call);</span>
-<span class="nc" id="L144">        } catch (InfluxException e) {</span>
-<span class="nc" id="L145">            LOG.log(Level.WARNING, &quot;The exception occurs during check instance readiness&quot;, e);</span>
-<span class="nc" id="L146">            return null;</span>
+<span class="nc" id="L151">            return execute(call);</span>
+<span class="nc" id="L152">        } catch (InfluxException e) {</span>
+<span class="nc" id="L153">            LOG.log(Level.WARNING, &quot;The exception occurs during check instance readiness&quot;, e);</span>
+<span class="nc" id="L154">            return null;</span>
         }
     }
 
     @Nonnull
     @Override
+    public OnboardingResponse onBoarding(@Nonnull final Onboarding onboarding) throws InfluxException {
+
+<span class="nc" id="L162">        Arguments.checkNotNull(onboarding, &quot;onboarding&quot;);</span>
+
+<span class="nc" id="L164">        String json = onboardingAdapter.toJson(onboarding);</span>
+
+<span class="nc" id="L166">        Call&lt;OnboardingResponse&gt; call = platformService.setup(createBody(json));</span>
+
+<span class="nc" id="L168">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Boolean isOnboardingAllowed() {
+
+<span class="nc" id="L175">        IsOnboarding isOnboarding = execute(platformService.setup());</span>
+
+<span class="nc" id="L177">        return isOnboarding.getAllowed();</span>
+    }
+
+    @Nonnull
+    @Override
     public LogLevel getLogLevel() {
-<span class="fc" id="L153">        return getLogLevel(this.loggingInterceptor);</span>
+<span class="fc" id="L183">        return getLogLevel(this.loggingInterceptor);</span>
     }
 
     @Nonnull
     @Override
     public PlatformClient setLogLevel(@Nonnull final LogLevel logLevel) {
 
-<span class="fc" id="L160">        setLogLevel(this.loggingInterceptor, logLevel);</span>
+<span class="fc" id="L190">        setLogLevel(this.loggingInterceptor, logLevel);</span>
 
-<span class="fc" id="L162">        return this;</span>
+<span class="fc" id="L192">        return this;</span>
     }
 
     @Nonnull
     @Override
     public PlatformClient enableGzip() {
 
-<span class="fc" id="L169">        this.gzipInterceptor.enableGzip();</span>
+<span class="fc" id="L199">        this.gzipInterceptor.enableGzip();</span>
 
-<span class="fc" id="L171">        return this;</span>
+<span class="fc" id="L201">        return this;</span>
     }
 
     @Nonnull
     @Override
     public PlatformClient disableGzip() {
 
-<span class="fc" id="L178">        this.gzipInterceptor.disableGzip();</span>
+<span class="fc" id="L208">        this.gzipInterceptor.disableGzip();</span>
 
-<span class="fc" id="L180">        return this;</span>
+<span class="fc" id="L210">        return this;</span>
     }
 
     @Override
     public boolean isGzipEnabled() {
 
-<span class="fc" id="L186">        return this.gzipInterceptor.isEnabledGzip();</span>
+<span class="fc" id="L216">        return this.gzipInterceptor.isEnabledGzip();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
