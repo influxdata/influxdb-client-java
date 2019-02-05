@@ -28,30 +28,25 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.influxdata</groupId>
-    <artifactId>influxdata-platform-java</artifactId>
+    <artifactId>influxdb-client</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>platform-common-test</module>
-        <module>platform-common</module>
-        <module>flux-client</module>
-        <module>flux-client-rxjava</module>
-        <module>flux-client-kotlin</module>
-        <module>flux-client-scala</module>
+        <module>client-test</module>
+        <module>client-core</module>
+        <module>client-legacy</module>
+        <module>client</module>
+        <module>client-reactive</module>
+        <module>client-kotlin</module>
+        <module>client-scala</module>
         <module>flux-dsl</module>
-        <module>platform-client</module>
-        <module>platform-client-rxjava</module>
         <module>examples</module>
     </modules>
 
-    <name>Java client for InfluxData Platform</name>
-    <description>
-        The Flux - new data scripting language centered on querying and manipulating time series data.
-        The Platform (a.k.a. Influx 2.0 OSS) client - managing users, organizations, tokens, ...
-    </description>
+    <name>The InfluxDB 2.0 JVM Based Clients</name>
 
-    <url>https://github.com/influxdata/platform-java</url>
+    <url>https://github.com/influxdata/influxdb-client-java</url>
     <inceptionYear>2018</inceptionYear>
 
     <organization>
@@ -62,7 +57,7 @@
     <licenses>
         <license>
             <name>The MIT License (MIT)</name>
-            <url>https://raw.githubusercontent.com/bonitoo-io/influxdata-platform-java/master/LICENSE</url>
+            <url>https://raw.githubusercontent.com/bonitoo-io/influxdb-client-java/master/LICENSE</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -83,9 +78,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/influxdata/platform-java.git</connection>
-        <developerConnection>scm:git:ssh://github.com:influxdata/platform-java.git</developerConnection>
-        <url>http://github.com/influxdata/platform-java/tree/master</url>
+        <connection>scm:git:git://github.com/influxdata/influxdb-client-java.git</connection>
+        <developerConnection>scm:git:ssh://github.com:influxdata/influxdb-client-java.git</developerConnection>
+        <url>http://github.com/influxdata/influxdb-client-java/tree/master</url>
     </scm>
 
     <distributionManagement>
@@ -99,7 +94,7 @@
         </repository>
         <site>
             <id>gp</id>
-            <url>https://influxdata.github.io/platform-java</url>
+            <url>https://influxdata.github.io/influxdb-client-java</url>
         </site>
     </distributionManagement>
 
@@ -175,7 +170,7 @@
                 <version>${plugin.checkstyle.version}</version>
                 <configuration>
                     <failsOnError>true</failsOnError>
-                    <configLocation>config/checkstyle.xml</configLocation>
+                    <configLocation>scripts/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <linkXRef>false</linkXRef>
                     <excludes>**/examples/**</excludes>
@@ -194,7 +189,7 @@
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
-                    <header>config/license_header.txt</header>
+                    <header>scripts/license_header.txt</header>
                     <strictCheck>true</strictCheck>
                     <failIfUnknown>true</failIfUnknown>
                     <mapping>
@@ -282,7 +277,7 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>${plugin.plugin.version}</version>
                 <configuration>
-                    <siteDirectory>config/site/</siteDirectory>
+                    <siteDirectory>scripts/site/</siteDirectory>
                 </configuration>
             </plugin>
 
@@ -335,7 +330,7 @@
                 <version>${plugin.checkstyle.version}</version>
                 <configuration>
                     <failsOnError>true</failsOnError>
-                    <configLocation>config/checkstyle.xml</configLocation>
+                    <configLocation>scripts/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <linkXRef>false</linkXRef>
                     <excludes>**/example/**</excludes>
@@ -373,26 +368,26 @@
 
             <dependency>
                 <groupId>org.influxdata</groupId>
-                <artifactId>platform-common-test</artifactId>
+                <artifactId>influxdb-client-test</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.influxdata</groupId>
-                <artifactId>platform-common</artifactId>
+                <artifactId>influxdb-client-core</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>org.influxdata</groupId>
-                <artifactId>platform-client</artifactId>
+                <artifactId>influxdb-client-java</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>org.influxdata</groupId>
-                <artifactId>flux-client</artifactId>
+                <artifactId>influxdb-client-flux</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
 

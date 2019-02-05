@@ -26,9 +26,10 @@ import java.time.temporal.ChronoUnit
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
-import org.influxdata.flux.domain.FluxRecord
-import org.influxdata.flux.functions.restriction.Restrictions
-import org.influxdata.flux.{Flux, FluxClientScalaFactory}
+import org.influxdata.client.flux.domain.FluxRecord
+import org.influxdata.flux.dsl.Flux
+import org.influxdata.flux.dsl.functions.restriction.Restrictions
+import org.influxdata.scala.client.FluxClientScalaFactory
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration

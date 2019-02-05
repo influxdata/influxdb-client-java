@@ -25,9 +25,9 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.filter
 import kotlinx.coroutines.channels.take
 import kotlinx.coroutines.runBlocking
-import org.influxdata.flux.Flux
-import org.influxdata.flux.FluxClientKotlinFactory
-import org.influxdata.flux.functions.restriction.Restrictions
+import org.influxdata.flux.dsl.Flux
+import org.influxdata.flux.dsl.functions.restriction.Restrictions
+import org.influxdata.kotlin.client.FluxClientKotlinFactory
 import java.time.temporal.ChronoUnit
 
 fun main(args: Array<String>) = runBlocking {

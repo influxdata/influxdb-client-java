@@ -1,1 +1,0 @@
-![influxdata-platform-java](./images/influxdata-platform-java.png "influxdata-platform-java")

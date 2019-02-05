@@ -23,9 +23,9 @@ package com.example.flux;
 
 import javax.annotation.Nonnull;
 
-import org.influxdata.flux.Flux;
-import org.influxdata.flux.functions.AbstractParametrizedFlux;
-import org.influxdata.platform.Arguments;
+import org.influxdata.client.Arguments;
+import org.influxdata.flux.dsl.Flux;
+import org.influxdata.flux.dsl.functions.AbstractParametrizedFlux;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

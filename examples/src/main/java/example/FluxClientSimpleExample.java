@@ -23,11 +23,11 @@ package example;
 
 import java.util.List;
 
-import org.influxdata.flux.FluxClient;
-import org.influxdata.flux.FluxClientFactory;
-import org.influxdata.flux.domain.FluxRecord;
-import org.influxdata.flux.domain.FluxTable;
-import org.influxdata.flux.option.FluxConnectionOptions;
+import org.influxdata.client.flux.domain.FluxRecord;
+import org.influxdata.client.flux.domain.FluxTable;
+import org.influxdata.flux.client.FluxClient;
+import org.influxdata.flux.client.FluxClientFactory;
+import org.influxdata.flux.client.FluxConnectionOptions;
 
 @SuppressWarnings("CheckStyle")
 public class FluxClientSimpleExample {

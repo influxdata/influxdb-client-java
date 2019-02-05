@@ -21,8 +21,8 @@
  */
 package example;
 
-import org.influxdata.flux.FluxClient;
-import org.influxdata.flux.FluxClientFactory;
+import org.influxdata.flux.client.FluxClient;
+import org.influxdata.flux.client.FluxClientFactory;
 
 @SuppressWarnings("CheckStyle")
 public class FluxRawExample {

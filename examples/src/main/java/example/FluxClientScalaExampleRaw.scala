@@ -24,7 +24,7 @@ package example
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
-import org.influxdata.flux.FluxClientScalaFactory
+import org.influxdata.scala.client.FluxClientScalaFactory
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration

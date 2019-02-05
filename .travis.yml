@@ -38,12 +38,12 @@ services:
 
 env:
   matrix:
-    - INFLUXDB_VERSION=1.7 INFLUX_PLATFORM_VERSION=nightly
+    - INFLUXDB_VERSION=1.7 INFLUXDB_2_VERSION=nightly
 
 install: true
 
 script:
-  - ./config/platform-restart.sh
+  - ./scripts/influxdb-restart.sh
   - mvn -B clean install -Dmaven.javadoc.skip=true
   - bash <(curl -s https://codecov.io/bash)
 
@@ -52,18 +52,18 @@ jobs:
   - stage: site
     jdk: oraclejdk8
     script:
-      - ./config/platform-restart.sh
-      - ./config/publish-site.sh
+      - ./scripts/influxdb-restart.sh
+      - ./scripts/publish-site.sh
 
   - stage: deploy
     jdk: oraclejdk8
     script: skip
     deploy:
       provider: script
-      script: mvn clean deploy -DskipTests -s config/deploy-settings.xml
+      script: mvn clean deploy -DskipTests -s scripts/deploy-settings.xml
       skip_cleanup: true
       on:
-        repo: bonitoo-io/influxdata-platform-java
+        repo: bonitoo-io/influxdb-client-java
         branch: master
 
 after_failure:

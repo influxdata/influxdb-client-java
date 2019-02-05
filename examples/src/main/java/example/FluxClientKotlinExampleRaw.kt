@@ -23,7 +23,7 @@ package example
 
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.runBlocking
-import org.influxdata.flux.FluxClientKotlinFactory
+import org.influxdata.kotlin.client.FluxClientKotlinFactory
 
 fun main(args: Array<String>) = runBlocking {
 

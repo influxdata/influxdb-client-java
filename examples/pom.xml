@@ -27,7 +27,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <artifactId>influxdata-platform-java</artifactId>
+        <artifactId>influxdb-client</artifactId>
         <groupId>org.influxdata</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -84,7 +84,7 @@
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
-                    <header>../config/license_header.txt</header>
+                    <header>../scripts/license_header.txt</header>
                 </configuration>
             </plugin>
         </plugins>
@@ -105,30 +105,24 @@
         </dependency>
         <dependency>
             <groupId>org.influxdata</groupId>
-            <artifactId>platform-client</artifactId>
+            <artifactId>influxdb-client-java</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.influxdata</groupId>
-            <artifactId>flux-client</artifactId>
+            <artifactId>influxdb-client-flux</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.influxdata</groupId>
-            <artifactId>flux-client-rxjava</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.influxdata</groupId>
-            <artifactId>flux-client-kotlin</artifactId>
+            <artifactId>influxdb-client-kotlin</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.influxdata</groupId>
-            <artifactId>flux-client-scala</artifactId>
+            <artifactId>influxdb-client-scala</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

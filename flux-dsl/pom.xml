@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>influxdata-platform-java</artifactId>
+        <artifactId>influxdb-client</artifactId>
         <groupId>org.influxdata</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -45,7 +45,7 @@
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
-                    <header>../config/license_header.txt</header>
+                    <header>../scripts/license_header.txt</header>
                 </configuration>
             </plugin>
         </plugins>
@@ -55,7 +55,7 @@
         
         <dependency>
             <groupId>org.influxdata</groupId>
-            <artifactId>platform-common</artifactId>
+            <artifactId>influxdb-client-core</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>com.squareup.retrofit2</groupId>
@@ -78,7 +78,7 @@
 
         <dependency>
             <groupId>org.influxdata</groupId>
-            <artifactId>platform-common-test</artifactId>
+            <artifactId>influxdb-client-test</artifactId>
             <scope>test</scope>
         </dependency>
 

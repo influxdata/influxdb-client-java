@@ -28,27 +28,27 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.influxdata.flux.domain.FluxRecord;
-import org.influxdata.flux.domain.FluxTable;
-import org.influxdata.platform.PlatformClient;
-import org.influxdata.platform.PlatformClientFactory;
-import org.influxdata.platform.WriteClient;
-import org.influxdata.platform.annotations.Column;
-import org.influxdata.platform.annotations.Measurement;
-import org.influxdata.platform.domain.Authorization;
-import org.influxdata.platform.domain.Bucket;
-import org.influxdata.platform.domain.Organization;
-import org.influxdata.platform.domain.Permission;
-import org.influxdata.platform.domain.PermissionResource;
-import org.influxdata.platform.domain.ResourceType;
-import org.influxdata.platform.option.WriteOptions;
-import org.influxdata.platform.write.Point;
-import org.influxdata.platform.write.event.WriteSuccessEvent;
+import org.influxdata.client.annotations.Column;
+import org.influxdata.client.annotations.Measurement;
+import org.influxdata.client.flux.domain.FluxRecord;
+import org.influxdata.client.flux.domain.FluxTable;
+import org.influxdata.java.client.InfluxDBClient;
+import org.influxdata.java.client.InfluxDBClientFactory;
+import org.influxdata.java.client.WriteApi;
+import org.influxdata.java.client.WriteOptions;
+import org.influxdata.java.client.domain.Authorization;
+import org.influxdata.java.client.domain.Bucket;
+import org.influxdata.java.client.domain.Organization;
+import org.influxdata.java.client.domain.Permission;
+import org.influxdata.java.client.domain.PermissionResource;
+import org.influxdata.java.client.domain.ResourceType;
+import org.influxdata.java.client.writes.Point;
+import org.influxdata.java.client.writes.events.WriteSuccessEvent;
 
 import io.reactivex.BackpressureOverflowStrategy;
 
 /*
-  InfluxPlatform OSS2.0 onboarding tasks (create default user, organization and bucket) :
+  InfluxDB 2.0 onboarding tasks (create default user, organization and bucket) :
 
   curl -i -X POST http://localhost:9999/api/v2/setup -H 'accept: application/json' \
       -d '{
@@ -77,15 +77,15 @@ public class PlatformExample {
 
     public static void main(final String[] args) throws Exception {
 
-        PlatformClient platform = PlatformClientFactory.create("http://localhost:9999", findToken().toCharArray());
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", findToken().toCharArray());
 
-        Organization medicalGMBH = platform.createOrganizationClient()
+        Organization medicalGMBH = influxDBClient.getOrganizationsApi()
                 .createOrganization("Medical Corp" + System.currentTimeMillis());
 
         //
         // Create New Bucket with retention 1h
         //
-        Bucket temperatureBucket = platform.createBucketClient().createBucket("temperature-sensors", medicalGMBH);
+        Bucket temperatureBucket = influxDBClient.getBucketsApi().createBucket("temperature-sensors", medicalGMBH);
 
         //
         // Add Permissions to read and write to the Bucket
@@ -103,20 +103,20 @@ public class PlatformExample {
         writeBucket.setResource(resource);
         writeBucket.setAction(Permission.WRITE_ACTION);
 
-        Authorization authorization = platform.createAuthorizationClient()
+        Authorization authorization = influxDBClient.getAuthorizationsApi()
                 .createAuthorization(medicalGMBH, Arrays.asList(readBucket, writeBucket));
 
         String token = authorization.getToken();
         System.out.println("The token to write to temperature-sensors bucket " + token);
 
-        PlatformClient client = PlatformClientFactory.create("http://localhost:9999", token.toCharArray());
+        InfluxDBClient client = InfluxDBClientFactory.create("http://localhost:9999", token.toCharArray());
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
 
         //
         // Write data
         //
-        try (WriteClient writeClient = client.createWriteClient(WriteOptions.builder()
+        try (WriteApi writeApi = client.getWriteApi(WriteOptions.builder()
                 .batchSize(5000)
                 .flushInterval(1000)
                 .backpressureStrategy(BackpressureOverflowStrategy.DROP_OLDEST)
@@ -125,7 +125,7 @@ public class PlatformExample {
                 .retryInterval(5000)
                 .build())) {
 
-            writeClient.listenEvents(WriteSuccessEvent.class, (value) -> countDownLatch.countDown());
+            writeApi.listenEvents(WriteSuccessEvent.class, (value) -> countDownLatch.countDown());
 
             //
             // Write by POJO
@@ -134,7 +134,7 @@ public class PlatformExample {
             temperature.location = "south";
             temperature.value = 62D;
             temperature.time = Instant.now();
-            writeClient.writeMeasurement("temperature-sensors", medicalGMBH.getId(), ChronoUnit.NANOS, temperature);
+            writeApi.writeMeasurement("temperature-sensors", medicalGMBH.getId(), ChronoUnit.NANOS, temperature);
 
             //
             // Write by Point
@@ -143,13 +143,13 @@ public class PlatformExample {
                     .addTag("location", "west")
                     .addField("value", 55D)
                     .time(Instant.now().toEpochMilli(), ChronoUnit.NANOS);
-            writeClient.writePoint("temperature-sensors", medicalGMBH.getId(), point);
+            writeApi.writePoint("temperature-sensors", medicalGMBH.getId(), point);
 
             //
             // Write by LineProtocol
             //
             String record = "temperature,location=north value=60.0";
-            writeClient.writeRecord("temperature-sensors", medicalGMBH.getId(), ChronoUnit.NANOS, record);
+            writeApi.writeRecord("temperature-sensors", medicalGMBH.getId(), ChronoUnit.NANOS, record);
 
             countDownLatch.await(2, TimeUnit.SECONDS);
         }
@@ -157,7 +157,7 @@ public class PlatformExample {
         //
         // Read data
         //
-        List<FluxTable> tables = client.createQueryClient().query("from(bucket:\"temperature-sensors\") |> range(start: 0)", medicalGMBH.getId());
+        List<FluxTable> tables = client.getQueryApi().query("from(bucket:\"temperature-sensors\") |> range(start: 0)", medicalGMBH.getId());
 
         for (FluxTable fluxTable : tables) {
             List<FluxRecord> records = fluxTable.getRecords();
@@ -167,15 +167,15 @@ public class PlatformExample {
         }
 
         client.close();
-        platform.close();
+        influxDBClient.close();
     }
 
     private static String findToken() throws Exception {
 
-        PlatformClient platform = PlatformClientFactory.create("http://localhost:9999",
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999",
                 "my-user", "my-password".toCharArray());
 
-        String token = platform.createAuthorizationClient()
+        String token = influxDBClient.getAuthorizationsApi()
                 .findAuthorizations()
                 .stream()
                 .filter(authorization -> authorization.getPermissions().stream()
@@ -187,7 +187,7 @@ public class PlatformExample {
                 .findFirst()
                 .orElseThrow(IllegalStateException::new).getToken();
 
-        platform.close();
+        influxDBClient.close();
 
         return token;
     }
