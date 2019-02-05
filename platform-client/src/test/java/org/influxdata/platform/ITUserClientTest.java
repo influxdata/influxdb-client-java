@@ -242,9 +242,9 @@ class ITUserClientTest extends AbstractITClientTest {
 
         List<OperationLogEntry> userLogs = userClient.findUserLogs(user);
         Assertions.assertThat(userLogs).isNotEmpty();
-        Assertions.assertThat(userLogs.get(0).getDescription()).isEqualTo("User Created");
-        Assertions.assertThat(userLogs.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(userLogs.get(0).getTime()).isAfter(now);
+        Assertions.assertThat(userLogs.get(userLogs.size() - 1).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(userLogs.get(userLogs.size() - 1).getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(userLogs.get(userLogs.size() - 1).getTime()).isAfter(now);
     }
 
     @Test
