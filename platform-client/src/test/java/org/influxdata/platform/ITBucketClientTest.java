@@ -366,8 +366,8 @@ class ITBucketClientTest extends AbstractITClientTest {
         List<OperationLogEntry> logs = bucketClient.findBucketLogs(bucket);
 
         Assertions.assertThat(logs).hasSize(20);
-        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(logs.get(19).getDescription()).isEqualTo("Bucket Created");
+        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Bucket Created");
+        Assertions.assertThat(logs.get(19).getDescription()).isEqualTo("Bucket Updated");
 
         FindOptions findOptions = new FindOptions();
         findOptions.setLimit(5);
@@ -376,7 +376,7 @@ class ITBucketClientTest extends AbstractITClientTest {
         OperationLogEntries entries = bucketClient.findBucketLogs(bucket, findOptions);
         
         Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Created");
         Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
         Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
         Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
@@ -413,7 +413,7 @@ class ITBucketClientTest extends AbstractITClientTest {
         Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
         Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
         Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Created");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
 
         findOptions.setOffset(findOptions.getOffset() + 5);
         Assertions.assertThat(entries.getNextPage()).isNull();
@@ -429,9 +429,8 @@ class ITBucketClientTest extends AbstractITClientTest {
         entries = bucketClient.findBucketLogs(bucket, findOptions);
 
         Assertions.assertThat(entries.getLogs()).hasSize(20);
-        // TODO log API vs paging api https://github.com/influxdata/influxdb/issues/11642
-        // Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("Bucket Updated");
-        // Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Created");
+        Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Created");
     }
 
     @Test

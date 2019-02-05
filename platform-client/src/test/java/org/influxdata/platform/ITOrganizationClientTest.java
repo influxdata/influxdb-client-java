@@ -297,8 +297,8 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         List<OperationLogEntry> logs = organizationClient.findOrganizationLogs(organization);
 
         Assertions.assertThat(logs).hasSize(20);
-        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(logs.get(19).getDescription()).isEqualTo("Organization Created");
+        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Organization Created");
+        Assertions.assertThat(logs.get(19).getDescription()).isEqualTo("Organization Updated");
 
         FindOptions findOptions = new FindOptions();
         findOptions.setLimit(5);
@@ -307,7 +307,7 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         OperationLogEntries entries = organizationClient.findOrganizationLogs(organization, findOptions);
 
         Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Created");
         Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Organization Updated");
         Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Organization Updated");
         Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Organization Updated");
@@ -344,7 +344,7 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Organization Updated");
         Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Organization Updated");
         Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Organization Created");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Organization Updated");
 
         findOptions.setOffset(findOptions.getOffset() + 5);
         Assertions.assertThat(entries.getNextPage()).isNull();
@@ -360,8 +360,7 @@ class ITOrganizationClientTest extends AbstractITClientTest {
         entries = organizationClient.findOrganizationLogs(organization, findOptions);
 
         Assertions.assertThat(entries.getLogs()).hasSize(20);
-        // TODO log API vs paging api https://github.com/influxdata/influxdb/issues/11642
-        // Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("Organization Updated");
-        // Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Created");
+        Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("Organization Updated");
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Created");
     }
 }

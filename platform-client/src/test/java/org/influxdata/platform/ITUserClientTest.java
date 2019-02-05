@@ -242,7 +242,7 @@ class ITUserClientTest extends AbstractITClientTest {
 
         List<OperationLogEntry> userLogs = userClient.findUserLogs(user);
         Assertions.assertThat(userLogs).isNotEmpty();
-        Assertions.assertThat(userLogs.get(0).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(userLogs.get(0).getDescription()).isEqualTo("User Created");
         Assertions.assertThat(userLogs.get(0).getUserID()).isEqualTo(user.getId());
         Assertions.assertThat(userLogs.get(0).getTime()).isAfter(now);
     }
@@ -269,8 +269,8 @@ class ITUserClientTest extends AbstractITClientTest {
         List<OperationLogEntry> logs = userClient.findUserLogs(user);
 
         Assertions.assertThat(logs).hasSize(20);
-        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(logs.get(19).getDescription()).isEqualTo("User Created");
+        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("User Created");
+        Assertions.assertThat(logs.get(19).getDescription()).isEqualTo("User Updated");
 
         FindOptions findOptions = new FindOptions();
         findOptions.setLimit(5);
@@ -279,7 +279,7 @@ class ITUserClientTest extends AbstractITClientTest {
         OperationLogEntries entries = userClient.findUserLogs(user, findOptions);
 
         Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Created");
         Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("User Updated");
         Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("User Updated");
         Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("User Updated");
@@ -316,7 +316,7 @@ class ITUserClientTest extends AbstractITClientTest {
         Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("User Updated");
         Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("User Updated");
         Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("User Created");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("User Updated");
 
         findOptions.setOffset(findOptions.getOffset() + 5);
         Assertions.assertThat(entries.getNextPage()).isNull();
@@ -332,8 +332,7 @@ class ITUserClientTest extends AbstractITClientTest {
         entries = userClient.findUserLogs(user, findOptions);
 
         Assertions.assertThat(entries.getLogs()).hasSize(20);
-        // TODO log API vs paging api https://github.com/influxdata/influxdb/issues/11642
-        // Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("User Updated");
-        // Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Created");
+        Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("User Updated");
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Created");
     }
 }
