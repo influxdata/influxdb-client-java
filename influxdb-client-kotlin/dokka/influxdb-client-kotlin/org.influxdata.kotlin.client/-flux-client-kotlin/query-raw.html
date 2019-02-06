@@ -1,0 +1,31 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>FluxClientKotlin.queryRaw - influxdb-client-kotlin</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">influxdb-client-kotlin</a>&nbsp;/&nbsp;<a href="../index.html">org.influxdata.kotlin.client</a>&nbsp;/&nbsp;<a href="index.html">FluxClientKotlin</a>&nbsp;/&nbsp;<a href="./query-raw.html">queryRaw</a><br/>
+<br/>
+<h1>queryRaw</h1>
+<a name="org.influxdata.kotlin.client.FluxClientKotlin$queryRaw(kotlin.String)"></a>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">queryRaw</span><span class="symbol">(</span><span class="identifier" id="org.influxdata.kotlin.client.FluxClientKotlin$queryRaw(kotlin.String)/query">query</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Channel</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code> <a href="https://github.com/bonitoo-io/influxdb-client-java/tree/master/client-kotlin/src/main/kotlin/org/influxdata/kotlin/client/FluxClientKotlin.kt#L59">(source)</a>
+<p>Executes the Flux query against the InfluxDB and asynchronously stream response to <a href="#">Channel</a>.</p>
+<h3>Parameters</h3>
+<p><a name="query"></a>
+<code>query</code> - the flux query to execute</p>
+<p><strong>Return</strong><br/>
+the response stream</p>
+<a name="org.influxdata.kotlin.client.FluxClientKotlin$queryRaw(kotlin.String, kotlin.String)"></a>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">queryRaw</span><span class="symbol">(</span><span class="identifier" id="org.influxdata.kotlin.client.FluxClientKotlin$queryRaw(kotlin.String, kotlin.String)/query">query</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="org.influxdata.kotlin.client.FluxClientKotlin$queryRaw(kotlin.String, kotlin.String)/dialect">dialect</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Channel</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code> <a href="https://github.com/bonitoo-io/influxdb-client-java/tree/master/client-kotlin/src/main/kotlin/org/influxdata/kotlin/client/FluxClientKotlin.kt#L69">(source)</a>
+<p>Executes the Flux query against the InfluxDB and asynchronously stream response to <a href="#">Channel</a>.</p>
+<h3>Parameters</h3>
+<p><a name="query"></a>
+<code>query</code> - the flux query to execute</p>
+<p><a name="dialect"></a>
+<code>dialect</code> - Dialect is an object defining the options to use when encoding the response.
+    <a href="http://bit.ly/flux-dialect">See dialect SPEC</a>.</p>
+<p><strong>Return</strong><br/>
+the response stream</p>
+</BODY>
+</HTML>

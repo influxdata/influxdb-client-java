@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InfluxDBClientFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.0 Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.java.client</a> &gt; <span class="el_source">InfluxDBClientFactory.java</span></div><h1>InfluxDBClientFactory.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.java.client;
+
+import javax.annotation.Nonnull;
+
+import org.influxdata.client.Arguments;
+import org.influxdata.java.client.domain.Onboarding;
+import org.influxdata.java.client.domain.OnboardingResponse;
+import org.influxdata.java.client.internal.InfluxDBClientImpl;
+
+/**
+ * The Factory that create a instance of a InfluxDB 2.0 client.
+ *
+ * @author Jakub Bednar (bednar@github) (05/09/2018 10:04)
+ */
+public final class InfluxDBClientFactory {
+
+    private InfluxDBClientFactory() {
+    }
+
+    /**
+     * Create a instance of the InfluxDB 2.0 client.
+     *
+     * @param url      the url to connect to the InfluxDB
+     * @return client
+     * @see InfluxDBClientOptions.Builder#url(String)
+     */
+    @Nonnull
+    public static InfluxDBClient create(@Nonnull final String url) {
+
+<span class="fc" id="L51">        InfluxDBClientOptions options = InfluxDBClientOptions.builder()</span>
+<span class="fc" id="L52">                .url(url)</span>
+<span class="fc" id="L53">                .build();</span>
+
+<span class="fc" id="L55">        return create(options);</span>
+    }
+
+    /**
+     * Create a instance of the InfluxDB 2.0 client.
+     *
+     * @param url      the url to connect to the InfluxDB
+     * @param username the username to use in the basic auth
+     * @param password the password to use in the basic auth
+     * @return client
+     * @see InfluxDBClientOptions.Builder#url(String)
+     */
+    @Nonnull
+    public static InfluxDBClient create(@Nonnull final String url,
+                                        @Nonnull final String username,
+                                        @Nonnull final char[] password) {
+
+<span class="fc" id="L72">        InfluxDBClientOptions options = InfluxDBClientOptions.builder()</span>
+<span class="fc" id="L73">                .url(url)</span>
+<span class="fc" id="L74">                .authenticate(username, password)</span>
+<span class="fc" id="L75">                .build();</span>
+
+<span class="fc" id="L77">        return create(options);</span>
+    }
+
+    /**
+     * Create a instance of the InfluxDB 2.0 client.
+     *
+     * @param url      the url to connect to the InfluxDB
+     * @param token    the token to use for the authorization
+     * @return client
+     * @see InfluxDBClientOptions.Builder#url(String)
+     */
+    @Nonnull
+    public static InfluxDBClient create(@Nonnull final String url, @Nonnull final char[] token) {
+
+<span class="fc" id="L91">        InfluxDBClientOptions options = InfluxDBClientOptions.builder()</span>
+<span class="fc" id="L92">                .url(url)</span>
+<span class="fc" id="L93">                .authenticateToken(token)</span>
+<span class="fc" id="L94">                .build();</span>
+
+<span class="fc" id="L96">        return create(options);</span>
+    }
+
+    /**
+     * Create a instance of the InfluxDB 2.0 client.
+     *
+     * @param options the connection configuration
+     * @return client
+     */
+    @Nonnull
+    public static InfluxDBClient create(@Nonnull final InfluxDBClientOptions options) {
+
+<span class="fc" id="L108">        Arguments.checkNotNull(options, &quot;InfluxDBClientOptions&quot;);</span>
+
+<span class="fc" id="L110">        return new InfluxDBClientImpl(options);</span>
+    }
+
+    /**
+     * Post onboarding request, to setup initial user, org and bucket.
+     *
+     * @param url      the url to connect to the InfluxDB
+     * @param username the name of an user
+     * @param password the password to connect as an user
+     * @param org      the name of an organization
+     * @param bucket   the name of a bucket
+     * @return Created default user, bucket, org.
+     */
+    @Nonnull
+    public static OnboardingResponse onBoarding(@Nonnull final String url,
+                                                @Nonnull final String username,
+                                                @Nonnull final String password,
+                                                @Nonnull final String org,
+                                                @Nonnull final String bucket) {
+
+<span class="nc" id="L130">        Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
+<span class="nc" id="L131">        Arguments.checkNonEmpty(username, &quot;username&quot;);</span>
+<span class="nc" id="L132">        Arguments.checkNonEmpty(password, &quot;password&quot;);</span>
+<span class="nc" id="L133">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+<span class="nc" id="L134">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+
+<span class="nc" id="L136">        Onboarding onboarding = new Onboarding();</span>
+<span class="nc" id="L137">        onboarding.setUsername(username);</span>
+<span class="nc" id="L138">        onboarding.setPassword(password);</span>
+<span class="nc" id="L139">        onboarding.setOrg(org);</span>
+<span class="nc" id="L140">        onboarding.setBucket(bucket);</span>
+
+<span class="nc" id="L142">        return onBoarding(url, onboarding);</span>
+    }
+
+
+    /**
+     * Post onboarding request, to setup initial user, org and bucket.
+     *
+     * @param url        the url to connect to the InfluxDB
+     * @param onboarding the defaults
+     * @return Created default user, bucket, org.
+     */
+    @Nonnull
+    public static OnboardingResponse onBoarding(@Nonnull final String url,
+                                                @Nonnull final Onboarding onboarding) {
+<span class="nc" id="L156">        Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
+<span class="nc" id="L157">        Arguments.checkNotNull(onboarding, &quot;onboarding&quot;);</span>
+
+<span class="nc" id="L159">        try (InfluxDBClientImpl client = new InfluxDBClientImpl(InfluxDBClientOptions.builder().url(url).build())) {</span>
+
+<span class="nc" id="L161">            return client.onBoarding(onboarding);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

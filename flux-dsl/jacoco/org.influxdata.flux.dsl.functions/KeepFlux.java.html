@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KeepFlux.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Flux DSL</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.flux.dsl.functions</a> &gt; <span class="el_source">KeepFlux.java</span></div><h1>KeepFlux.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.flux.dsl.functions;
+
+import java.util.Collection;
+import javax.annotation.Nonnull;
+
+import org.influxdata.client.Arguments;
+import org.influxdata.flux.dsl.Flux;
+
+/**
+ * Keep is the inverse of drop. It will return a table containing only columns that are specified, ignoring all others.
+ * Only columns in the group key that are also specified in keep will be kept in the resulting group key.
+ * &lt;a href=&quot;http://bit.ly/flux-spec#keep&quot;&gt;See SPEC&lt;/a&gt;.
+ *
+ * &lt;h3&gt;Options&lt;/h3&gt;
+ * &lt;ul&gt;
+ * &lt;li&gt;
+ * &lt;b&gt;columns&lt;/b&gt; - The list of columns that should be included in the resulting table.
+ * Cannot be used with &lt;i&gt;fn&lt;/i&gt;. [array of strings]
+ * &lt;/li&gt;
+ * &lt;li&gt;
+ * &lt;b&gt;fn&lt;/b&gt; - The function which takes a column name as a parameter and returns a boolean indicating whether
+ * or not the column should be included in the resulting table. Cannot be used with &lt;i&gt;columns&lt;/i&gt;. [function(column)]
+ * &lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * &lt;h3&gt;Example&lt;/h3&gt;
+ * &lt;pre&gt;
+ * Flux flux = Flux
+ *     .from(&quot;telegraf&quot;)
+ *     .keep(new String[]{&quot;_time&quot;, &quot;_value&quot;});
+ *
+ * Flux flux = Flux
+ *     .from(&quot;telegraf&quot;)
+ *     .keep()
+ *         .withFunction(&quot;column =~ /*inodes/&quot;);
+ * &lt;/pre&gt;
+ *
+ * @author Jakub Bednar (bednar@github) (02/08/2018 11:22)
+ */
+public final class KeepFlux extends AbstractParametrizedFlux {
+
+    public KeepFlux(@Nonnull final Flux source) {
+<span class="fc" id="L64">        super(source);</span>
+<span class="fc" id="L65">    }</span>
+
+    @Nonnull
+    @Override
+    protected String operatorName() {
+<span class="fc" id="L70">        return &quot;keep&quot;;</span>
+    }
+
+    /**
+     * @param columns The list of columns that should be included in the resulting table.
+     * @return this
+     */
+    @Nonnull
+    public KeepFlux withColumns(@Nonnull final String[] columns) {
+
+<span class="fc" id="L80">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+
+<span class="fc" id="L82">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
+
+<span class="fc" id="L84">        return this;</span>
+    }
+
+    /**
+     * @param columns The list of columns that should be included in the resulting table.
+     * @return this
+     */
+    @Nonnull
+    public KeepFlux withColumns(@Nonnull final Collection&lt;String&gt; columns) {
+
+<span class="fc" id="L94">        Arguments.checkNotNull(columns, &quot;Columns are required&quot;);</span>
+
+<span class="fc" id="L96">        this.withPropertyValue(&quot;columns&quot;, columns);</span>
+
+<span class="fc" id="L98">        return this;</span>
+    }
+
+
+    /**
+     * @param function The function which takes a column name as a parameter and returns a boolean indicating whether
+     *                 or not the column should be included in the resulting table.
+     * @return this
+     */
+    @Nonnull
+    public KeepFlux withFunction(@Nonnull final String function) {
+
+<span class="fc" id="L110">        Arguments.checkNonEmpty(function, &quot;Function&quot;);</span>
+
+<span class="fc" id="L112">        this.withFunction(&quot;fn: (column)&quot;, function);</span>
+
+<span class="fc" id="L114">        return this;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractRestClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The InfluxDB Client Core</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.client.internal</a> &gt; <span class="el_source">AbstractRestClient.java</span></div><h1>AbstractRestClient.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.client.internal;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.client.Arguments;
+import org.influxdata.client.LogLevel;
+import org.influxdata.client.exceptions.BadGatewayException;
+import org.influxdata.client.exceptions.BadRequestException;
+import org.influxdata.client.exceptions.ForbiddenException;
+import org.influxdata.client.exceptions.InfluxException;
+import org.influxdata.client.exceptions.InternalServerErrorException;
+import org.influxdata.client.exceptions.MethodNotAllowedException;
+import org.influxdata.client.exceptions.NotAcceptableException;
+import org.influxdata.client.exceptions.NotFoundException;
+import org.influxdata.client.exceptions.NotImplementedException;
+import org.influxdata.client.exceptions.PaymentRequiredException;
+import org.influxdata.client.exceptions.ProxyAuthenticationRequiredException;
+import org.influxdata.client.exceptions.RequestTimeoutException;
+import org.influxdata.client.exceptions.ServiceUnavailableException;
+import org.influxdata.client.exceptions.UnauthorizedException;
+import org.influxdata.client.exceptions.UnprocessableEntityException;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Response;
+
+/**
+ * @author Jakub Bednar (bednar@github) (04/10/2018 07:50)
+ */
+<span class="fc" id="L59">public abstract class AbstractRestClient {</span>
+
+<span class="fc" id="L61">    private static final Logger LOG = Logger.getLogger(AbstractRestClient.class.getName());</span>
+<span class="fc" id="L62">    private static final MediaType CONTENT_TYPE_JSON = MediaType.parse(&quot;application/json&quot;);</span>
+
+    @Nonnull
+    protected RequestBody createBody(@Nonnull final String content) {
+
+<span class="fc" id="L67">        Arguments.checkNonEmpty(content, &quot;content&quot;);</span>
+
+<span class="fc" id="L69">        return RequestBody.create(CONTENT_TYPE_JSON, content);</span>
+    }
+
+    protected &lt;T&gt; T execute(@Nonnull final Call&lt;T&gt; call) throws InfluxException {
+<span class="fc" id="L73">        return execute(call, (String) null);</span>
+    }
+
+    protected &lt;T&gt; T execute(@Nonnull final Call&lt;T&gt; call, @Nullable final String nullError) throws InfluxException {
+<span class="fc" id="L77">        return execute(call, nullError, null);</span>
+    }
+
+    protected &lt;T, E extends InfluxException&gt; T execute(@Nonnull final Call&lt;T&gt; call,
+                                                       @Nullable final Class&lt;E&gt; nullType) throws InfluxException {
+
+<span class="nc" id="L83">        return execute(call, null, nullType);</span>
+    }
+
+    private &lt;T, E extends InfluxException&gt; T execute(@Nonnull final Call&lt;T&gt; call,
+                                                     @Nullable final String nullError,
+                                                     @Nullable final Class&lt;E&gt; nullType) throws InfluxException {
+
+<span class="fc" id="L90">        Arguments.checkNotNull(call, &quot;call&quot;);</span>
+
+        try {
+<span class="fc" id="L93">            Response&lt;T&gt; response = call.execute();</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">            if (response.isSuccessful()) {</span>
+<span class="fc" id="L95">                return response.body();</span>
+            } else {
+
+<span class="fc" id="L98">                InfluxException ie = responseToError(response);</span>
+
+                //
+                // The error message signal not found on the server =&gt; return null
+                //
+<span class="pc bpc" id="L103" title="1 of 4 branches missed.">                boolean nullByMessage = nullError != null &amp;&amp; (nullError.equals(ie.getMessage())</span>
+                        ||
+                        //TODO set user password -&gt; https://github.com/influxdata/influxdb/issues/11590
+<span class="pc bnc" id="L106" title="All 4 branches missed.">                        (ie.errorBody().has(&quot;error&quot;) &amp;&amp; ie.errorBody().getString(&quot;error&quot;).equals(nullError)));</span>
+<span class="pc bpc" id="L107" title="3 of 4 branches missed.">                boolean nullByType = nullType != null &amp;&amp; nullType.isAssignableFrom(ie.getClass());</span>
+
+<span class="pc bpc" id="L109" title="1 of 4 branches missed.">                if (nullByMessage || nullByType) {</span>
+
+<span class="fc" id="L111">                    LOG.log(Level.FINEST, &quot;Error is considered as null response.&quot;, ie);</span>
+
+<span class="fc" id="L113">                    return null;</span>
+                }
+
+<span class="fc" id="L116">                throw ie;</span>
+            }
+<span class="fc" id="L118">        } catch (IOException e) {</span>
+<span class="fc" id="L119">            throw new InfluxException(e);</span>
+        }
+    }
+
+    @Nonnull
+    @SuppressWarnings(&quot;MagicNumber&quot;)
+    InfluxException responseToError(@Nonnull final Response&lt;?&gt; response) {
+
+<span class="fc" id="L127">        Arguments.checkNotNull(response, &quot;response&quot;);</span>
+
+<span class="fc bfc" id="L129" title="All 15 branches covered.">        switch (response.code()) {</span>
+            case 400:
+<span class="fc" id="L131">                return new BadRequestException(response);</span>
+            case 401:
+<span class="fc" id="L133">                return new UnauthorizedException(response);</span>
+            case 402:
+<span class="fc" id="L135">                return new PaymentRequiredException(response);</span>
+            case 403:
+<span class="fc" id="L137">                return new ForbiddenException(response);</span>
+            case 404:
+<span class="fc" id="L139">                return new NotFoundException(response);</span>
+            case 405:
+<span class="fc" id="L141">                return new MethodNotAllowedException(response);</span>
+            case 406:
+<span class="fc" id="L143">                return new NotAcceptableException(response);</span>
+            case 407:
+<span class="fc" id="L145">                return new ProxyAuthenticationRequiredException(response);</span>
+            case 408:
+<span class="fc" id="L147">                return new RequestTimeoutException(response);</span>
+            case 422:
+<span class="fc" id="L149">                return new UnprocessableEntityException(response);</span>
+            case 500:
+<span class="fc" id="L151">                return new InternalServerErrorException(response);</span>
+            case 501:
+<span class="fc" id="L153">                return new NotImplementedException(response);</span>
+            case 502:
+<span class="fc" id="L155">                return new BadGatewayException(response);</span>
+            case 503:
+<span class="fc" id="L157">                return new ServiceUnavailableException(response);</span>
+            default:
+<span class="fc" id="L159">                return new InfluxException(response);</span>
+        }
+    }
+
+    protected void catchOrPropagateException(@Nonnull final Exception exception,
+                                             @Nonnull final Consumer&lt;? super Throwable&gt; onError) {
+
+<span class="fc" id="L166">        Arguments.checkNotNull(exception, &quot;exception&quot;);</span>
+<span class="fc" id="L167">        Arguments.checkNotNull(onError, &quot;onError&quot;);</span>
+
+        //
+        // Socket closed by remote server or end of data
+        //
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        if (isCloseException(exception)) {</span>
+<span class="fc" id="L173">            LOG.log(Level.FINEST, &quot;Socket closed by remote server or end of data&quot;, exception);</span>
+        } else {
+<span class="fc" id="L175">            onError.accept(exception);</span>
+        }
+<span class="fc" id="L177">    }</span>
+
+    protected boolean isCloseException(@Nonnull final Exception exception) {
+
+<span class="fc" id="L181">        Arguments.checkNotNull(exception, &quot;exception&quot;);</span>
+
+<span class="fc" id="L183">        return exception instanceof EOFException;</span>
+    }
+
+    protected void setLogLevel(@Nonnull final HttpLoggingInterceptor interceptor, @Nonnull final LogLevel logLevel) {
+
+<span class="fc" id="L188">        Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;);</span>
+<span class="fc" id="L189">        Arguments.checkNotNull(interceptor, &quot;HttpLogging interceptor&quot;);</span>
+
+<span class="fc" id="L191">        interceptor.setLevel(HttpLoggingInterceptor.Level.valueOf(logLevel.name()));</span>
+<span class="fc" id="L192">    }</span>
+
+    @Nonnull
+    protected LogLevel getLogLevel(@Nonnull final HttpLoggingInterceptor interceptor) {
+
+<span class="fc" id="L197">        Arguments.checkNotNull(interceptor, &quot;HttpLogging interceptor&quot;);</span>
+
+<span class="fc" id="L199">        return LogLevel.valueOf(interceptor.getLevel().name());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

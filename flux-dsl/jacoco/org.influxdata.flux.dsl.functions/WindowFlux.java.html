@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WindowFlux.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Flux DSL</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.flux.dsl.functions</a> &gt; <span class="el_source">WindowFlux.java</span></div><h1>WindowFlux.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.flux.dsl.functions;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import javax.annotation.Nonnull;
+
+import org.influxdata.client.Arguments;
+import org.influxdata.flux.dsl.Flux;
+
+/**
+ * Groups the results by a given time range.
+ * &lt;a href=&quot;http://bit.ly/flux-spec#window&quot;&gt;See SPEC&lt;/a&gt;.
+ *
+ * &lt;h3&gt;Options&lt;/h3&gt;
+ * &lt;ul&gt;
+ * &lt;li&gt;&lt;b&gt;every&lt;/b&gt; - Duration of time between windows. Defaults to &lt;i&gt;period's&lt;/i&gt; value. [duration]
+ * &lt;li&gt;&lt;b&gt;period&lt;/b&gt; - Duration of the windowed partition. Defaults to &lt;i&gt;every's&lt;/i&gt; value. [duration]
+ * &lt;li&gt;&lt;b&gt;offset&lt;/b&gt; - The offset duration relative to the location offset. It can be negative,
+ * indicating that the offset goes backwards in time.
+ * The default aligns the window boundaries to line up with the &lt;i&gt;now&lt;/i&gt; option time. [time]&lt;/li&gt;
+ * &lt;li&gt;&lt;b&gt;timeColumn&lt;/b&gt; - Name of the time column to use. Defaults to &lt;i&gt;_time&lt;/i&gt;. [string]
+ * &lt;li&gt;&lt;b&gt;startColumn&lt;/b&gt; - Name of the column containing the window start time. Defaults to &lt;i&gt;_start&lt;/i&gt;. [string]
+ * &lt;li&gt;&lt;b&gt;stopColumn&lt;/b&gt; - Name of the column containing the window stop time. Defaults to &lt;i&gt;_stop&lt;/i&gt;. [string]
+ * &lt;/ul&gt;
+ *
+ * &lt;h3&gt;Example&lt;/h3&gt;
+ * &lt;pre&gt;
+ * Flux flux = Flux
+ *     .from(&quot;telegraf&quot;)
+ *     .window(15L, ChronoUnit.MINUTES)
+ *     .max();
+ *
+ * Flux flux = Flux
+ *     .from(&quot;telegraf&quot;)
+ *     .window(15L, ChronoUnit.MINUTES,
+ *             20L, ChronoUnit.SECONDS,
+ *             1L, ChronoUnit.SECONDS)
+ *     .max();
+ * &lt;/pre&gt;
+ *
+ * @author Jakub Bednar (bednar@github) (27/06/2018 12:01)
+ */
+public final class WindowFlux extends AbstractParametrizedFlux {
+
+    public WindowFlux(@Nonnull final Flux flux) {
+<span class="fc" id="L67">        super(flux);</span>
+<span class="fc" id="L68">    }</span>
+
+
+    @Nonnull
+    @Override
+    protected String operatorName() {
+<span class="fc" id="L74">        return &quot;window&quot;;</span>
+    }
+
+    /**
+     * @param every     duration of time between windows
+     * @param everyUnit a {@code ChronoUnit} determining how to interpret the {@code every}
+     * @return this
+     */
+    @Nonnull
+    public WindowFlux withEvery(@Nonnull final Long every, @Nonnull final ChronoUnit everyUnit) {
+
+<span class="fc" id="L85">        Arguments.checkNotNull(every, &quot;Every is required&quot;);</span>
+<span class="fc" id="L86">        Arguments.checkNotNull(everyUnit, &quot;Every ChronoUnit is required&quot;);</span>
+
+<span class="fc" id="L88">        this.withPropertyValue(&quot;every&quot;, every, everyUnit);</span>
+
+<span class="fc" id="L90">        return this;</span>
+    }
+
+    /**
+     * @param every duration of time between windows
+     * @return this
+     */
+    @Nonnull
+    public WindowFlux withEvery(@Nonnull final String every) {
+
+<span class="fc" id="L100">        Arguments.checkDuration(every, &quot;Every&quot;);</span>
+
+<span class="fc" id="L102">        this.withPropertyValue(&quot;every&quot;, every);</span>
+
+<span class="fc" id="L104">        return this;</span>
+    }
+
+    /**
+     * @param period     duration of the windowed partition
+     * @param periodUnit a {@code ChronoUnit} determining how to interpret the {@code period}
+     * @return this
+     */
+    @Nonnull
+    public WindowFlux withPeriod(@Nonnull final Long period, @Nonnull final ChronoUnit periodUnit) {
+
+<span class="fc" id="L115">        Arguments.checkNotNull(period, &quot;Period is required&quot;);</span>
+<span class="fc" id="L116">        Arguments.checkNotNull(periodUnit, &quot;Period ChronoUnit is required&quot;);</span>
+
+<span class="fc" id="L118">        this.withPropertyValue(&quot;period&quot;, period, periodUnit);</span>
+
+<span class="fc" id="L120">        return this;</span>
+    }
+
+    /**
+     * @param period duration of the windowed partition
+     * @return this
+     */
+    @Nonnull
+    public WindowFlux withPeriod(@Nonnull final String period) {
+
+<span class="fc" id="L130">        Arguments.checkDuration(period, &quot;Period&quot;);</span>
+
+<span class="fc" id="L132">        this.withPropertyValue(&quot;period&quot;, period);</span>
+
+<span class="fc" id="L134">        return this;</span>
+    }
+
+    /**
+     * @param offset     The offset duration relative to the location offset.
+     * @param offsetUnit a {@code ChronoUnit} determining how to interpret the {@code offset}
+     * @return this
+     */
+    @Nonnull
+    public WindowFlux withOffset(@Nonnull final Long offset, @Nonnull final ChronoUnit offsetUnit) {
+
+<span class="fc" id="L145">        Arguments.checkNotNull(offset, &quot;Offset is required&quot;);</span>
+<span class="fc" id="L146">        Arguments.checkNotNull(offsetUnit, &quot;Offset ChronoUnit is required&quot;);</span>
+
+<span class="fc" id="L148">        this.withPropertyValue(&quot;start&quot;, offset, offsetUnit);</span>
+
+<span class="fc" id="L150">        return this;</span>
+    }
+
+    /**
+     * @param start The offset duration relative to the location offset.
+     * @return this
+     */
+    @Nonnull
+    public WindowFlux withOffset(@Nonnull final Instant start) {
+
+<span class="fc" id="L160">        Arguments.checkNotNull(start, &quot;Offset is required&quot;);</span>
+
+<span class="fc" id="L162">        this.withPropertyValue(&quot;offset&quot;, start);</span>
+
+<span class="fc" id="L164">        return this;</span>
+    }
+
+    /**
+     * @param offset The offset duration relative to the location offset.
+     * @return this
+     */
+    @Nonnull
+    public WindowFlux withOffset(@Nonnull final String offset) {
+
+<span class="fc" id="L174">        Arguments.checkDuration(offset, &quot;offset&quot;);</span>
+
+<span class="fc" id="L176">        this.withPropertyValue(&quot;offset&quot;, offset);</span>
+
+<span class="fc" id="L178">        return this;</span>
+    }
+
+    /**
+     * @param timeColumn name of the time column to use
+     * @return this
+     */
+    @Nonnull
+    public WindowFlux withTimeColumn(@Nonnull final String timeColumn) {
+
+<span class="fc" id="L188">        Arguments.checkNonEmpty(timeColumn, &quot;Time column&quot;);</span>
+
+<span class="fc" id="L190">        this.withPropertyValueEscaped(&quot;timeColumn&quot;, timeColumn);</span>
+
+<span class="fc" id="L192">        return this;</span>
+    }
+
+    /**
+     * @param startColumn name of the column containing the window start time
+     * @return this
+     */
+    @Nonnull
+    public WindowFlux withStartColumn(@Nonnull final String startColumn) {
+
+<span class="fc" id="L202">        Arguments.checkNonEmpty(startColumn, &quot;Start column&quot;);</span>
+
+<span class="fc" id="L204">        this.withPropertyValueEscaped(&quot;startColumn&quot;, startColumn);</span>
+
+<span class="fc" id="L206">        return this;</span>
+    }
+
+    /**
+     * @param stopColumn name of the column containing the window stop time
+     * @return this
+     */
+    @Nonnull
+    public WindowFlux withStopCol(@Nonnull final String stopColumn) {
+
+<span class="fc" id="L216">        Arguments.checkNonEmpty(stopColumn, &quot;Strop column&quot;);</span>
+
+<span class="fc" id="L218">        this.withPropertyValueEscaped(&quot;stopColumn&quot;, stopColumn);</span>
+
+<span class="fc" id="L220">        return this;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,1861 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          org/influxdata/scala/client/internal/FluxApiScalaImpl.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>/**
+</span>2 <span style=''> * The MIT License
+</span>3 <span style=''> *
+</span>4 <span style=''> * Permission is hereby granted, free of charge, to any person obtaining a copy
+</span>5 <span style=''> * of this software and associated documentation files (the &quot;Software&quot;), to deal
+</span>6 <span style=''> * in the Software without restriction, including without limitation the rights
+</span>7 <span style=''> * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+</span>8 <span style=''> * copies of the Software, and to permit persons to whom the Software is
+</span>9 <span style=''> * furnished to do so, subject to the following conditions:
+</span>10 <span style=''> *
+</span>11 <span style=''> * The above copyright notice and this permission notice shall be included in
+</span>12 <span style=''> * all copies or substantial portions of the Software.
+</span>13 <span style=''> *
+</span>14 <span style=''> * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+</span>15 <span style=''> * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+</span>16 <span style=''> * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+</span>17 <span style=''> * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+</span>18 <span style=''> * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+</span>19 <span style=''> * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+</span>20 <span style=''> * THE SOFTWARE.
+</span>21 <span style=''> */
+</span>22 <span style=''>package org.influxdata.scala.client.internal
+</span>23 <span style=''>
+</span>24 <span style=''>import java.io.IOException
+</span>25 <span style=''>import java.util.function.BiConsumer
+</span>26 <span style=''>import java.util.logging.{Level, Logger}
+</span>27 <span style=''>
+</span>28 <span style=''>import akka.NotUsed
+</span>29 <span style=''>import akka.stream.OverflowStrategy
+</span>30 <span style=''>import akka.stream.scaladsl.Source
+</span>31 <span style=''>import javax.annotation.Nonnull
+</span>32 <span style=''>import org.influxdata.client.exceptions.InfluxException
+</span>33 <span style=''>import org.influxdata.client.flux.domain.{FluxRecord, FluxTable}
+</span>34 <span style=''>import org.influxdata.client.flux.internal.FluxCsvParser
+</span>35 <span style=''>import org.influxdata.client.internal.AbstractQueryApi
+</span>36 <span style=''>import org.influxdata.client.{Arguments, Cancellable, LogLevel}
+</span>37 <span style=''>import org.influxdata.flux.client.FluxConnectionOptions
+</span>38 <span style=''>import org.influxdata.flux.client.internal.{AbstractFluxApi, FluxService}
+</span>39 <span style=''>import org.influxdata.scala.client.FluxClientScala
+</span>40 <span style=''>
+</span>41 <span style=''>import scala.compat.java8.FunctionConverters.asJavaConsumer
+</span>42 <span style=''>
+</span>43 <span style=''>/**
+</span>44 <span style=''> * @author Jakub Bednar (bednar@github) (06/11/2018 08:19)
+</span>45 <span style=''> */
+</span>46 <span style=''>class FluxApiScalaImpl(@Nonnull options: FluxConnectionOptions,
+</span>47 <span style=''>                       @Nonnull val bufferSize: Int,
+</span>48 <span style=''>                       @Nonnull val overflowStrategy: OverflowStrategy)
+</span>49 <span style=''>
+</span>50 <span style=''>  extends AbstractFluxApi(options.getOkHttpClient, options.getUrl, options.getParameters, classOf[FluxService])
+</span>51 <span style=''>    with FluxClientScala {
+</span>52 <span style=''>
+</span>53 <span style=''>  Arguments.checkNotNull(overflowStrategy, &quot;overflowStrategy&quot;)
+</span>54 <span style=''>  Arguments.checkNotNull(bufferSize, &quot;bufferSize&quot;)
+</span>55 <span style=''>
+</span>56 <span style=''>  private val LOG = Logger.getLogger(classOf[FluxApiScalaImpl].getName)
+</span>57 <span style=''>
+</span>58 <span style=''>  /**
+</span>59 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
+</span>60 <span style=''>   *
+</span>61 <span style=''>   * @param query the flux query to execute
+</span>62 <span style=''>   * @return the stream of [[FluxRecord]]s
+</span>63 <span style=''>   */
+</span>64 <span style=''>  override def query(query: String): Source[FluxRecord, NotUsed] = {
+</span>65 <span style=''>
+</span>66 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
+</span>67 <span style=''>
+</span>68 <span style=''>    Source
+</span>69 <span style=''>      .single(query)
+</span>70 <span style=''>      .map(it =&gt; fluxService.query(createBody(AbstractQueryApi.DEFAULT_DIALECT.toString, it)))
+</span>71 <span style=''>      .flatMapConcat(queryCall =&gt; {
+</span>72 <span style=''>        Source.queue[FluxRecord](bufferSize, overflowStrategy)
+</span>73 <span style=''>          .mapMaterializedValue(queue =&gt; {
+</span>74 <span style=''>
+</span>75 <span style=''>            val eventualDone = queue.watchCompletion()
+</span>76 <span style=''>            val consumer = new FluxCsvParser.FluxResponseConsumer() {
+</span>77 <span style=''>
+</span>78 <span style=''>              override
+</span>79 <span style=''>              def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull table: FluxTable): Unit = {
+</span>80 <span style=''>              }
+</span>81 <span style=''>
+</span>82 <span style=''>              override
+</span>83 <span style=''>              def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull record: FluxRecord): Unit = {
+</span>84 <span style=''>                if (eventualDone.isCompleted) {
+</span>85 <span style=''>                  cancellable.cancel()
+</span>86 <span style=''>                } else {
+</span>87 <span style=''>                  queue.offer(record)
+</span>88 <span style=''>                }
+</span>89 <span style=''>              }
+</span>90 <span style=''>            }
+</span>91 <span style=''>
+</span>92 <span style=''>            val onError = asJavaConsumer[Throwable](t =&gt;  queue.fail(t))
+</span>93 <span style=''>
+</span>94 <span style=''>            this.query(queryCall, consumer, onError, () =&gt; queue.complete, true)
+</span>95 <span style=''>          })
+</span>96 <span style=''>    })
+</span>97 <span style=''>  }
+</span>98 <span style=''>
+</span>99 <span style=''>  /**
+</span>100 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+</span>101 <span style=''>   *
+</span>102 <span style=''>   * @param query           the flux query to execute
+</span>103 <span style=''>   * @param measurementType the measurement (POJO)
+</span>104 <span style=''>   * @tparam M the type of the measurement (POJO)
+</span>105 <span style=''>   * @return the stream of measurements
+</span>106 <span style=''>   */
+</span>107 <span style=''>  override def query[M](query: String, measurementType: Class[M]): Source[M, NotUsed] = {
+</span>108 <span style=''>
+</span>109 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
+</span>110 <span style=''>    Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)
+</span>111 <span style=''>
+</span>112 <span style=''>    this.query(query).map(t =&gt; resultMapper.toPOJO(t, measurementType))
+</span>113 <span style=''>  }
+</span>114 <span style=''>
+</span>115 <span style=''>  /**
+</span>116 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>117 <span style=''>   *
+</span>118 <span style=''>   * @param query the flux query to execute
+</span>119 <span style=''>   * @return the response stream
+</span>120 <span style=''>   */
+</span>121 <span style=''>  override def queryRaw(query: String): Source[String, NotUsed] = {
+</span>122 <span style=''>
+</span>123 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
+</span>124 <span style=''>
+</span>125 <span style=''>    queryRaw(query, AbstractQueryApi.DEFAULT_DIALECT.toString)
+</span>126 <span style=''>  }
+</span>127 <span style=''>
+</span>128 <span style=''>  /**
+</span>129 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>130 <span style=''>   *
+</span>131 <span style=''>   * @param query   the flux query to execute
+</span>132 <span style=''>   * @param dialect Dialect is an object defining the options to use when encoding the response.
+</span>133 <span style=''>   *                [[http://bit.ly/flux-dialect See dialect SPEC]].
+</span>134 <span style=''>   * @return the response stream
+</span>135 <span style=''>   */
+</span>136 <span style=''>  override def queryRaw(query: String, dialect: String): Source[String, NotUsed] = {
+</span>137 <span style=''>
+</span>138 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
+</span>139 <span style=''>
+</span>140 <span style=''>    Source
+</span>141 <span style=''>      .single(query)
+</span>142 <span style=''>      .map(it =&gt; fluxService.query(createBody(dialect, it)))
+</span>143 <span style=''>      .flatMapConcat(queryCall =&gt; {
+</span>144 <span style=''>        Source.queue[String](bufferSize, overflowStrategy)
+</span>145 <span style=''>          .mapMaterializedValue(queue =&gt; {
+</span>146 <span style=''>
+</span>147 <span style=''>            val eventualDone = queue.watchCompletion()
+</span>148 <span style=''>
+</span>149 <span style=''>            val onResponse = new BiConsumer[Cancellable, String] {
+</span>150 <span style=''>              override def accept(cancellable: Cancellable, line: String): Unit = {
+</span>151 <span style=''>                if (eventualDone.isCompleted) {
+</span>152 <span style=''>                  cancellable.cancel()
+</span>153 <span style=''>                } else {
+</span>154 <span style=''>                  queue.offer(line)
+</span>155 <span style=''>                }
+</span>156 <span style=''>              }
+</span>157 <span style=''>            }
+</span>158 <span style=''>
+</span>159 <span style=''>            val onError = asJavaConsumer[Throwable](t =&gt;  queue.fail(t))
+</span>160 <span style=''>
+</span>161 <span style=''>            this.queryRaw(queryCall, onResponse, onError, () =&gt; queue.complete, true)
+</span>162 <span style=''>          })
+</span>163 <span style=''>      })
+</span>164 <span style=''>  }
+</span>165 <span style=''>
+</span>166 <span style=''>  /**
+</span>167 <span style=''>   * Check the status of InfluxDB Server.
+</span>168 <span style=''>   *
+</span>169 <span style=''>   * @return `true` if server is healthy otherwise return `false`
+</span>170 <span style=''>   */
+</span>171 <span style=''>  override def ping: Boolean = {
+</span>172 <span style=''>    try {
+</span>173 <span style=''>      fluxService.ping().execute().isSuccessful
+</span>174 <span style=''>    } catch {
+</span>175 <span style=''>      case e: IOException =&gt;
+</span>176 <span style=''>        LOG.log(Level.WARNING, &quot;Ping request wasn't successful&quot;, e)
+</span>177 <span style=''>        false
+</span>178 <span style=''>    }
+</span>179 <span style=''>  }
+</span>180 <span style=''>
+</span>181 <span style=''>  /**
+</span>182 <span style=''>   * Returns the version of the connected InfluxDB Server.
+</span>183 <span style=''>   *
+</span>184 <span style=''>   * @return the version String, otherwise unknown.
+</span>185 <span style=''>   */
+</span>186 <span style=''>  override def version: String = {
+</span>187 <span style=''>    try {
+</span>188 <span style=''>      val response = fluxService.ping().execute()
+</span>189 <span style=''>      getVersion(response)
+</span>190 <span style=''>    } catch {
+</span>191 <span style=''>      case e: IOException =&gt; throw new InfluxException(e)
+</span>192 <span style=''>    }
+</span>193 <span style=''>  }
+</span>194 <span style=''>
+</span>195 <span style=''>  /**
+</span>196 <span style=''>   * Gets the [[LogLevel]] that is used for logging requests and responses.
+</span>197 <span style=''>   *
+</span>198 <span style=''>   * @return the [[LogLevel]] that is used for logging requests and responses
+</span>199 <span style=''>   */
+</span>200 <span style=''>  override def getLogLevel: LogLevel = {
+</span>201 <span style=''>    super.getLogLevel(loggingInterceptor)
+</span>202 <span style=''>  }
+</span>203 <span style=''>
+</span>204 <span style=''>  /**
+</span>205 <span style=''>   * Sets the log level for the request and response information.
+</span>206 <span style=''>   *
+</span>207 <span style=''>   * @param logLevel the log level to set.
+</span>208 <span style=''>   * @return the FluxClient instance to be able to use it in a fluent manner.
+</span>209 <span style=''>   */
+</span>210 <span style=''>  override def setLogLevel(logLevel: LogLevel): FluxClientScala = {
+</span>211 <span style=''>
+</span>212 <span style=''>    Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;)
+</span>213 <span style=''>
+</span>214 <span style=''>    super.setLogLevel(loggingInterceptor, logLevel)
+</span>215 <span style=''>    this
+</span>216 <span style=''>  }
+</span>217 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          53
+        </td>
+        <td>
+          11
+        </td>
+        <td>
+          2338
+          -
+          2338
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.Arguments.checkNotNull
+        </td>
+        <td style="background: #AEF1AE">
+          org.influxdata.client.Arguments.checkNotNull(FluxApiScalaImpl.this.overflowStrategy, &quot;overflowStrategy&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          53
+        </td>
+        <td>
+          10
+        </td>
+        <td>
+          2357
+          -
+          2357
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;overflowStrategy&quot;
+        </td>
+      </tr><tr>
+        <td>
+          53
+        </td>
+        <td>
+          9
+        </td>
+        <td>
+          2339
+          -
+          2339
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.scala.client.internal.FluxApiScalaImpl.overflowStrategy
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.overflowStrategy
+        </td>
+      </tr><tr>
+        <td>
+          54
+        </td>
+        <td>
+          14
+        </td>
+        <td>
+          2401
+          -
+          2401
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.Arguments.checkNotNull
+        </td>
+        <td style="background: #AEF1AE">
+          org.influxdata.client.Arguments.checkNotNull(FluxApiScalaImpl.this.bufferSize, &quot;bufferSize&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          54
+        </td>
+        <td>
+          13
+        </td>
+        <td>
+          2414
+          -
+          2414
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;bufferSize&quot;
+        </td>
+      </tr><tr>
+        <td>
+          54
+        </td>
+        <td>
+          12
+        </td>
+        <td>
+          2402
+          -
+          2402
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.scala.client.internal.FluxApiScalaImpl.bufferSize
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.bufferSize
+        </td>
+      </tr><tr>
+        <td>
+          56
+        </td>
+        <td>
+          16
+        </td>
+        <td>
+          2465
+          -
+          2465
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.util.logging.Logger.getLogger
+        </td>
+        <td style="background: #AEF1AE">
+          java.util.logging.Logger.getLogger(classOf[org.influxdata.scala.client.internal.FluxApiScalaImpl].getName())
+        </td>
+      </tr><tr>
+        <td>
+          56
+        </td>
+        <td>
+          15
+        </td>
+        <td>
+          2492
+          -
+          2492
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.Class.getName
+        </td>
+        <td style="background: #AEF1AE">
+          classOf[org.influxdata.scala.client.internal.FluxApiScalaImpl].getName()
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          17
+        </td>
+        <td>
+          2810
+          -
+          2810
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.Arguments.checkNonEmpty
+        </td>
+        <td style="background: #AEF1AE">
+          org.influxdata.client.Arguments.checkNonEmpty(query, &quot;query&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          70
+        </td>
+        <td>
+          20
+        </td>
+        <td>
+          2894
+          -
+          2894
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.flux.client.internal.FluxService.query
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.fluxService.query(FluxApiScalaImpl.this.createBody(org.influxdata.client.internal.AbstractQueryApi.DEFAULT_DIALECT.toString(), it))
+        </td>
+      </tr><tr>
+        <td>
+          70
+        </td>
+        <td>
+          19
+        </td>
+        <td>
+          2905
+          -
+          2905
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.internal.AbstractQueryApi.createBody
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.createBody(org.influxdata.client.internal.AbstractQueryApi.DEFAULT_DIALECT.toString(), it)
+        </td>
+      </tr><tr>
+        <td>
+          70
+        </td>
+        <td>
+          18
+        </td>
+        <td>
+          2939
+          -
+          2939
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.json.JSONObject.toString
+        </td>
+        <td style="background: #AEF1AE">
+          org.influxdata.client.internal.AbstractQueryApi.DEFAULT_DIALECT.toString()
+        </td>
+      </tr><tr>
+        <td>
+          71
+        </td>
+        <td>
+          38
+        </td>
+        <td>
+          2975
+          -
+          2975
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.FlowOps.flatMapConcat
+        </td>
+        <td style="background: #AEF1AE">
+          akka.stream.scaladsl.Source.single[String](query).map[retrofit2.Call[okhttp3.ResponseBody]](((it: String) =&gt; FluxApiScalaImpl.this.fluxService.query(FluxApiScalaImpl.this.createBody(org.influxdata.client.internal.AbstractQueryApi.DEFAULT_DIALECT.toString(), it)))).flatMapConcat[org.influxdata.client.flux.domain.FluxRecord, Unit](((queryCall: retrofit2.Call[okhttp3.ResponseBody]) =&gt; akka.stream.scaladsl.Source.queue[org.influxdata.client.flux.domain.FluxRecord](FluxApiScalaImpl.this.bufferSize, FluxApiScalaImpl.this.overflowStrategy).mapMaterializedValue[Unit](((queue: akka.stream.scaladsl.SourceQueueWithComplete[org.influxdata.client.flux.domain.FluxRecord]) =&gt; {
+  val eventualDone: scala.concurrent.Future[akka.Done] = queue.watchCompletion();
+  val consumer: org.influxdata.client.flux.internal.FluxCsvParser.FluxResponseConsumer = {
+    final class $anon extends Object with org.influxdata.client.flux.internal.FluxCsvParser.FluxResponseConsumer {
+      def &lt;init&gt;(): &lt;$anon: org.influxdata.client.flux.internal.FluxCsvParser.FluxResponseConsumer&gt; = {
+        $anon.super.&lt;init&gt;();
+        ()
+      };
+      override def accept(index: Int, @javax.annotation.Nonnull cancellable: org.influxdata.client.Cancellable, @javax.annotation.Nonnull table: org.influxdata.client.flux.domain.FluxTable): Unit = ();
+      override def accept(index: Int, @javax.annotation.Nonnull cancellable: org.influxdata.client.Cancellable, @javax.annotation.Nonnull record: org.influxdata.client.flux.domain.FluxRecord): Unit = if (eventualDone.isCompleted)
+        cancellable.cancel()
+      else
+        {
+          queue.offer(record);
+          ()
+        }
+    };
+    new $anon()
+  };
+  val onError: java.util.function.Consumer[Throwable] = scala.compat.java8.FunctionConverters.`package`.asJavaConsumer[Throwable](((t: Throwable) =&gt; queue.fail(t)));
+  this.query(queryCall, consumer, onError, (() =&gt; queue.complete()), scala.Predef.boolean2Boolean(true))
+}))))
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          22
+        </td>
+        <td>
+          3036
+          -
+          3036
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.scala.client.internal.FluxApiScalaImpl.overflowStrategy
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.overflowStrategy
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          21
+        </td>
+        <td>
+          3024
+          -
+          3024
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.scala.client.internal.FluxApiScalaImpl.bufferSize
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.bufferSize
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          37
+        </td>
+        <td>
+          3085
+          -
+          3085
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.Source.mapMaterializedValue
+        </td>
+        <td style="background: #AEF1AE">
+          akka.stream.scaladsl.Source.queue[org.influxdata.client.flux.domain.FluxRecord](FluxApiScalaImpl.this.bufferSize, FluxApiScalaImpl.this.overflowStrategy).mapMaterializedValue[Unit](((queue: akka.stream.scaladsl.SourceQueueWithComplete[org.influxdata.client.flux.domain.FluxRecord]) =&gt; {
+  val eventualDone: scala.concurrent.Future[akka.Done] = queue.watchCompletion();
+  val consumer: org.influxdata.client.flux.internal.FluxCsvParser.FluxResponseConsumer = {
+    final class $anon extends Object with org.influxdata.client.flux.internal.FluxCsvParser.FluxResponseConsumer {
+      def &lt;init&gt;(): &lt;$anon: org.influxdata.client.flux.internal.FluxCsvParser.FluxResponseConsumer&gt; = {
+        $anon.super.&lt;init&gt;();
+        ()
+      };
+      override def accept(index: Int, @javax.annotation.Nonnull cancellable: org.influxdata.client.Cancellable, @javax.annotation.Nonnull table: org.influxdata.client.flux.domain.FluxTable): Unit = ();
+      override def accept(index: Int, @javax.annotation.Nonnull cancellable: org.influxdata.client.Cancellable, @javax.annotation.Nonnull record: org.influxdata.client.flux.domain.FluxRecord): Unit = if (eventualDone.isCompleted)
+        cancellable.cancel()
+      else
+        {
+          queue.offer(record);
+          ()
+        }
+    };
+    new $anon()
+  };
+  val onError: java.util.function.Consumer[Throwable] = scala.compat.java8.FunctionConverters.`package`.asJavaConsumer[Throwable](((t: Throwable) =&gt; queue.fail(t)));
+  this.query(queryCall, consumer, onError, (() =&gt; queue.complete()), scala.Predef.boolean2Boolean(true))
+}))
+        </td>
+      </tr><tr>
+        <td>
+          75
+        </td>
+        <td>
+          23
+        </td>
+        <td>
+          3150
+          -
+          3150
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.SourceQueueWithComplete.watchCompletion
+        </td>
+        <td style="background: #AEF1AE">
+          queue.watchCompletion()
+        </td>
+      </tr><tr>
+        <td>
+          76
+        </td>
+        <td>
+          31
+        </td>
+        <td>
+          3180
+          -
+          3180
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.scala.client.internal.FluxApiScalaImpl.$anon.&lt;init&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          new $anon()
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          24
+        </td>
+        <td>
+          3354
+          -
+          3354
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          84
+        </td>
+        <td>
+          25
+        </td>
+        <td>
+          3540
+          -
+          3540
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.concurrent.Future.isCompleted
+        </td>
+        <td style="background: #AEF1AE">
+          eventualDone.isCompleted
+        </td>
+      </tr><tr>
+        <td>
+          85
+        </td>
+        <td>
+          26
+        </td>
+        <td>
+          3591
+          -
+          3591
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.Cancellable.cancel
+        </td>
+        <td style="background: #AEF1AE">
+          cancellable.cancel()
+        </td>
+      </tr><tr>
+        <td>
+          85
+        </td>
+        <td>
+          27
+        </td>
+        <td>
+          3591
+          -
+          3591
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          org.influxdata.client.Cancellable.cancel
+        </td>
+        <td style="background: #AEF1AE">
+          cancellable.cancel()
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          29
+        </td>
+        <td>
+          3648
+          -
+          3648
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          28
+        </td>
+        <td>
+          3648
+          -
+          3648
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.SourceQueue.offer
+        </td>
+        <td style="background: #AEF1AE">
+          queue.offer(record)
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          30
+        </td>
+        <td>
+          3648
+          -
+          3648
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          {
+  queue.offer(record);
+  ()
+}
+        </td>
+      </tr><tr>
+        <td>
+          92
+        </td>
+        <td>
+          32
+        </td>
+        <td>
+          3774
+          -
+          3774
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.SourceQueueWithComplete.fail
+        </td>
+        <td style="background: #AEF1AE">
+          queue.fail(t)
+        </td>
+      </tr><tr>
+        <td>
+          92
+        </td>
+        <td>
+          33
+        </td>
+        <td>
+          3757
+          -
+          3757
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.compat.java8.FunctionConverters.asJavaConsumer
+        </td>
+        <td style="background: #AEF1AE">
+          scala.compat.java8.FunctionConverters.`package`.asJavaConsumer[Throwable](((t: Throwable) =&gt; queue.fail(t)))
+        </td>
+      </tr><tr>
+        <td>
+          94
+        </td>
+        <td>
+          35
+        </td>
+        <td>
+          3855
+          -
+          3855
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          scala.Predef.boolean2Boolean
+        </td>
+        <td style="background: #AEF1AE">
+          scala.Predef.boolean2Boolean(true)
+        </td>
+      </tr><tr>
+        <td>
+          94
+        </td>
+        <td>
+          34
+        </td>
+        <td>
+          3845
+          -
+          3845
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.SourceQueueWithComplete.complete
+        </td>
+        <td style="background: #AEF1AE">
+          queue.complete()
+        </td>
+      </tr><tr>
+        <td>
+          94
+        </td>
+        <td>
+          36
+        </td>
+        <td>
+          3802
+          -
+          3802
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.internal.AbstractQueryApi.query
+        </td>
+        <td style="background: #AEF1AE">
+          this.query(queryCall, consumer, onError, (() =&gt; queue.complete()), scala.Predef.boolean2Boolean(true))
+        </td>
+      </tr><tr>
+        <td>
+          109
+        </td>
+        <td>
+          39
+        </td>
+        <td>
+          4320
+          -
+          4320
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.Arguments.checkNonEmpty
+        </td>
+        <td style="background: #AEF1AE">
+          org.influxdata.client.Arguments.checkNonEmpty(query, &quot;query&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          110
+        </td>
+        <td>
+          40
+        </td>
+        <td>
+          4363
+          -
+          4363
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.Arguments.checkNotNull
+        </td>
+        <td style="background: #AEF1AE">
+          org.influxdata.client.Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          112
+        </td>
+        <td>
+          41
+        </td>
+        <td>
+          4451
+          -
+          4451
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.flux.internal.FluxResultMapper.toPOJO
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.resultMapper.toPOJO[M](t, measurementType)
+        </td>
+      </tr><tr>
+        <td>
+          112
+        </td>
+        <td>
+          42
+        </td>
+        <td>
+          4426
+          -
+          4426
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.FlowOps.map
+        </td>
+        <td style="background: #AEF1AE">
+          this.query(query).map[M](((t: org.influxdata.client.flux.domain.FluxRecord) =&gt; FluxApiScalaImpl.this.resultMapper.toPOJO[M](t, measurementType)))
+        </td>
+      </tr><tr>
+        <td>
+          123
+        </td>
+        <td>
+          43
+        </td>
+        <td>
+          4768
+          -
+          4768
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.Arguments.checkNonEmpty
+        </td>
+        <td style="background: #AEF1AE">
+          org.influxdata.client.Arguments.checkNonEmpty(query, &quot;query&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          125
+        </td>
+        <td>
+          44
+        </td>
+        <td>
+          4839
+          -
+          4839
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.json.JSONObject.toString
+        </td>
+        <td style="background: #AEF1AE">
+          org.influxdata.client.internal.AbstractQueryApi.DEFAULT_DIALECT.toString()
+        </td>
+      </tr><tr>
+        <td>
+          125
+        </td>
+        <td>
+          45
+        </td>
+        <td>
+          4798
+          -
+          4798
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.scala.client.internal.FluxApiScalaImpl.queryRaw
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.queryRaw(query, org.influxdata.client.internal.AbstractQueryApi.DEFAULT_DIALECT.toString())
+        </td>
+      </tr><tr>
+        <td>
+          138
+        </td>
+        <td>
+          46
+        </td>
+        <td>
+          5329
+          -
+          5329
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.Arguments.checkNonEmpty
+        </td>
+        <td style="background: #AEF1AE">
+          org.influxdata.client.Arguments.checkNonEmpty(query, &quot;query&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          142
+        </td>
+        <td>
+          47
+        </td>
+        <td>
+          5424
+          -
+          5424
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.internal.AbstractQueryApi.createBody
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.createBody(dialect, it)
+        </td>
+      </tr><tr>
+        <td>
+          142
+        </td>
+        <td>
+          48
+        </td>
+        <td>
+          5413
+          -
+          5413
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.flux.client.internal.FluxService.query
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.fluxService.query(FluxApiScalaImpl.this.createBody(dialect, it))
+        </td>
+      </tr><tr>
+        <td>
+          143
+        </td>
+        <td>
+          65
+        </td>
+        <td>
+          5460
+          -
+          5460
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.FlowOps.flatMapConcat
+        </td>
+        <td style="background: #AEF1AE">
+          akka.stream.scaladsl.Source.single[String](query).map[retrofit2.Call[okhttp3.ResponseBody]](((it: String) =&gt; FluxApiScalaImpl.this.fluxService.query(FluxApiScalaImpl.this.createBody(dialect, it)))).flatMapConcat[String, Unit](((queryCall: retrofit2.Call[okhttp3.ResponseBody]) =&gt; akka.stream.scaladsl.Source.queue[String](FluxApiScalaImpl.this.bufferSize, FluxApiScalaImpl.this.overflowStrategy).mapMaterializedValue[Unit](((queue: akka.stream.scaladsl.SourceQueueWithComplete[String]) =&gt; {
+  val eventualDone: scala.concurrent.Future[akka.Done] = queue.watchCompletion();
+  val onResponse: java.util.function.BiConsumer[org.influxdata.client.Cancellable,String] = {
+    final class $anon extends Object with java.util.function.BiConsumer[org.influxdata.client.Cancellable,String] {
+      def &lt;init&gt;(): &lt;$anon: java.util.function.BiConsumer[org.influxdata.client.Cancellable,String]&gt; = {
+        $anon.super.&lt;init&gt;();
+        ()
+      };
+      override def accept(cancellable: org.influxdata.client.Cancellable, line: String): Unit = if (eventualDone.isCompleted)
+        cancellable.cancel()
+      else
+        {
+          queue.offer(line);
+          ()
+        }
+    };
+    new $anon()
+  };
+  val onError: java.util.function.Consumer[Throwable] = scala.compat.java8.FunctionConverters.`package`.asJavaConsumer[Throwable](((t: Throwable) =&gt; queue.fail(t)));
+  this.queryRaw(queryCall, onResponse, onError, (() =&gt; queue.complete()), scala.Predef.boolean2Boolean(true))
+}))))
+        </td>
+      </tr><tr>
+        <td>
+          144
+        </td>
+        <td>
+          50
+        </td>
+        <td>
+          5517
+          -
+          5517
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.scala.client.internal.FluxApiScalaImpl.overflowStrategy
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.overflowStrategy
+        </td>
+      </tr><tr>
+        <td>
+          144
+        </td>
+        <td>
+          49
+        </td>
+        <td>
+          5505
+          -
+          5505
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.scala.client.internal.FluxApiScalaImpl.bufferSize
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.bufferSize
+        </td>
+      </tr><tr>
+        <td>
+          145
+        </td>
+        <td>
+          64
+        </td>
+        <td>
+          5566
+          -
+          5566
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.Source.mapMaterializedValue
+        </td>
+        <td style="background: #AEF1AE">
+          akka.stream.scaladsl.Source.queue[String](FluxApiScalaImpl.this.bufferSize, FluxApiScalaImpl.this.overflowStrategy).mapMaterializedValue[Unit](((queue: akka.stream.scaladsl.SourceQueueWithComplete[String]) =&gt; {
+  val eventualDone: scala.concurrent.Future[akka.Done] = queue.watchCompletion();
+  val onResponse: java.util.function.BiConsumer[org.influxdata.client.Cancellable,String] = {
+    final class $anon extends Object with java.util.function.BiConsumer[org.influxdata.client.Cancellable,String] {
+      def &lt;init&gt;(): &lt;$anon: java.util.function.BiConsumer[org.influxdata.client.Cancellable,String]&gt; = {
+        $anon.super.&lt;init&gt;();
+        ()
+      };
+      override def accept(cancellable: org.influxdata.client.Cancellable, line: String): Unit = if (eventualDone.isCompleted)
+        cancellable.cancel()
+      else
+        {
+          queue.offer(line);
+          ()
+        }
+    };
+    new $anon()
+  };
+  val onError: java.util.function.Consumer[Throwable] = scala.compat.java8.FunctionConverters.`package`.asJavaConsumer[Throwable](((t: Throwable) =&gt; queue.fail(t)));
+  this.queryRaw(queryCall, onResponse, onError, (() =&gt; queue.complete()), scala.Predef.boolean2Boolean(true))
+}))
+        </td>
+      </tr><tr>
+        <td>
+          147
+        </td>
+        <td>
+          51
+        </td>
+        <td>
+          5631
+          -
+          5631
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.SourceQueueWithComplete.watchCompletion
+        </td>
+        <td style="background: #AEF1AE">
+          queue.watchCompletion()
+        </td>
+      </tr><tr>
+        <td>
+          149
+        </td>
+        <td>
+          58
+        </td>
+        <td>
+          5664
+          -
+          5664
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.scala.client.internal.FluxApiScalaImpl.$anon.&lt;init&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          new $anon()
+        </td>
+      </tr><tr>
+        <td>
+          151
+        </td>
+        <td>
+          52
+        </td>
+        <td>
+          5819
+          -
+          5819
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.concurrent.Future.isCompleted
+        </td>
+        <td style="background: #AEF1AE">
+          eventualDone.isCompleted
+        </td>
+      </tr><tr>
+        <td>
+          152
+        </td>
+        <td>
+          53
+        </td>
+        <td>
+          5870
+          -
+          5870
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.Cancellable.cancel
+        </td>
+        <td style="background: #AEF1AE">
+          cancellable.cancel()
+        </td>
+      </tr><tr>
+        <td>
+          152
+        </td>
+        <td>
+          54
+        </td>
+        <td>
+          5870
+          -
+          5870
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          org.influxdata.client.Cancellable.cancel
+        </td>
+        <td style="background: #AEF1AE">
+          cancellable.cancel()
+        </td>
+      </tr><tr>
+        <td>
+          154
+        </td>
+        <td>
+          56
+        </td>
+        <td>
+          5927
+          -
+          5927
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          154
+        </td>
+        <td>
+          55
+        </td>
+        <td>
+          5927
+          -
+          5927
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.SourceQueue.offer
+        </td>
+        <td style="background: #AEF1AE">
+          queue.offer(line)
+        </td>
+      </tr><tr>
+        <td>
+          154
+        </td>
+        <td>
+          57
+        </td>
+        <td>
+          5927
+          -
+          5927
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          {
+  queue.offer(line);
+  ()
+}
+        </td>
+      </tr><tr>
+        <td>
+          159
+        </td>
+        <td>
+          59
+        </td>
+        <td>
+          6051
+          -
+          6051
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.SourceQueueWithComplete.fail
+        </td>
+        <td style="background: #F0ADAD">
+          queue.fail(t)
+        </td>
+      </tr><tr>
+        <td>
+          159
+        </td>
+        <td>
+          60
+        </td>
+        <td>
+          6034
+          -
+          6034
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.compat.java8.FunctionConverters.asJavaConsumer
+        </td>
+        <td style="background: #AEF1AE">
+          scala.compat.java8.FunctionConverters.`package`.asJavaConsumer[Throwable](((t: Throwable) =&gt; queue.fail(t)))
+        </td>
+      </tr><tr>
+        <td>
+          161
+        </td>
+        <td>
+          62
+        </td>
+        <td>
+          6137
+          -
+          6137
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          scala.Predef.boolean2Boolean
+        </td>
+        <td style="background: #AEF1AE">
+          scala.Predef.boolean2Boolean(true)
+        </td>
+      </tr><tr>
+        <td>
+          161
+        </td>
+        <td>
+          61
+        </td>
+        <td>
+          6127
+          -
+          6127
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.SourceQueueWithComplete.complete
+        </td>
+        <td style="background: #AEF1AE">
+          queue.complete()
+        </td>
+      </tr><tr>
+        <td>
+          161
+        </td>
+        <td>
+          63
+        </td>
+        <td>
+          6082
+          -
+          6082
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.internal.AbstractQueryApi.queryRaw
+        </td>
+        <td style="background: #AEF1AE">
+          this.queryRaw(queryCall, onResponse, onError, (() =&gt; queue.complete()), scala.Predef.boolean2Boolean(true))
+        </td>
+      </tr><tr>
+        <td>
+          173
+        </td>
+        <td>
+          67
+        </td>
+        <td>
+          6373
+          -
+          6373
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          retrofit2.Response.isSuccessful
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.fluxService.ping().execute().isSuccessful()
+        </td>
+      </tr><tr>
+        <td>
+          173
+        </td>
+        <td>
+          66
+        </td>
+        <td>
+          6373
+          -
+          6373
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          retrofit2.Response.isSuccessful
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.fluxService.ping().execute().isSuccessful()
+        </td>
+      </tr><tr>
+        <td>
+          176
+        </td>
+        <td>
+          68
+        </td>
+        <td>
+          6451
+          -
+          6451
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          java.util.logging.Level.WARNING
+        </td>
+        <td style="background: #AEF1AE">
+          java.util.logging.Level.WARNING
+        </td>
+      </tr><tr>
+        <td>
+          176
+        </td>
+        <td>
+          70
+        </td>
+        <td>
+          6444
+          -
+          6444
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.util.logging.Logger.log
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.LOG.log(java.util.logging.Level.WARNING, &quot;Ping request wasn\'t successful&quot;, e)
+        </td>
+      </tr><tr>
+        <td>
+          176
+        </td>
+        <td>
+          69
+        </td>
+        <td>
+          6460
+          -
+          6460
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;Ping request wasn\'t successful&quot;
+        </td>
+      </tr><tr>
+        <td>
+          177
+        </td>
+        <td>
+          71
+        </td>
+        <td>
+          6505
+          -
+          6505
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          false
+        </td>
+      </tr><tr>
+        <td>
+          187
+        </td>
+        <td>
+          74
+        </td>
+        <td>
+          6689
+          -
+          6689
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          {
+  val response: retrofit2.Response[okhttp3.ResponseBody] = FluxApiScalaImpl.this.fluxService.ping().execute();
+  FluxApiScalaImpl.this.getVersion(response)
+}
+        </td>
+      </tr><tr>
+        <td>
+          188
+        </td>
+        <td>
+          72
+        </td>
+        <td>
+          6742
+          -
+          6742
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          retrofit2.Call.execute
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.fluxService.ping().execute()
+        </td>
+      </tr><tr>
+        <td>
+          189
+        </td>
+        <td>
+          73
+        </td>
+        <td>
+          6761
+          -
+          6761
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.flux.client.internal.AbstractFluxApi.getVersion
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.getVersion(response)
+        </td>
+      </tr><tr>
+        <td>
+          191
+        </td>
+        <td>
+          75
+        </td>
+        <td>
+          6815
+          -
+          6815
+        </td>
+        <td>
+          Throw
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          throw new org.influxdata.client.exceptions.InfluxException(e)
+        </td>
+      </tr><tr>
+        <td>
+          201
+        </td>
+        <td>
+          77
+        </td>
+        <td>
+          7088
+          -
+          7088
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.internal.AbstractRestClient.getLogLevel
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.super.getLogLevel(FluxApiScalaImpl.this.loggingInterceptor)
+        </td>
+      </tr><tr>
+        <td>
+          201
+        </td>
+        <td>
+          76
+        </td>
+        <td>
+          7089
+          -
+          7089
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.flux.client.internal.AbstractFluxApi.loggingInterceptor
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.loggingInterceptor
+        </td>
+      </tr><tr>
+        <td>
+          212
+        </td>
+        <td>
+          78
+        </td>
+        <td>
+          7413
+          -
+          7413
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.Arguments.checkNotNull
+        </td>
+        <td style="background: #AEF1AE">
+          org.influxdata.client.Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          214
+        </td>
+        <td>
+          80
+        </td>
+        <td>
+          7458
+          -
+          7458
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.internal.AbstractRestClient.setLogLevel
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.super.setLogLevel(FluxApiScalaImpl.this.loggingInterceptor, logLevel)
+        </td>
+      </tr><tr>
+        <td>
+          214
+        </td>
+        <td>
+          79
+        </td>
+        <td>
+          7459
+          -
+          7459
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.flux.client.internal.AbstractFluxApi.loggingInterceptor
+        </td>
+        <td style="background: #AEF1AE">
+          FluxApiScalaImpl.this.loggingInterceptor
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

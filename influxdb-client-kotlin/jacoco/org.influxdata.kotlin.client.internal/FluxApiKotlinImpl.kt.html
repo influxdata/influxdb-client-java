@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FluxApiKotlinImpl.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Kotlin InfluxDB 2.0 Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.kotlin.client.internal</a> &gt; <span class="el_source">FluxApiKotlinImpl.kt</span></div><h1>FluxApiKotlinImpl.kt</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.kotlin.client.internal
+
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.runBlocking
+import org.influxdata.client.Arguments
+import org.influxdata.client.Cancellable
+import org.influxdata.client.LogLevel
+import org.influxdata.client.exceptions.InfluxException
+import org.influxdata.client.flux.domain.FluxRecord
+import org.influxdata.client.flux.domain.FluxTable
+import org.influxdata.client.flux.internal.FluxCsvParser.FluxResponseConsumer
+import org.influxdata.client.internal.AbstractQueryApi
+import org.influxdata.flux.client.FluxConnectionOptions
+import org.influxdata.flux.client.internal.AbstractFluxApi
+import org.influxdata.flux.client.internal.FluxApiImpl
+import org.influxdata.flux.client.internal.FluxService
+import org.influxdata.kotlin.client.FluxClientKotlin
+import java.io.IOException
+import java.util.function.BiConsumer
+import java.util.function.Consumer
+import java.util.logging.Level
+import java.util.logging.Logger
+
+/**
+ * @author Jakub Bednar (bednar@github) (30/10/2018 08:51)
+ */
+<span class="fc" id="L48">internal class FluxApiKotlinImpl(options: FluxConnectionOptions) : AbstractFluxApi&lt;FluxService&gt;(options.okHttpClient, options.url, options.parameters, FluxService::class.java), FluxClientKotlin {</span>
+
+    @Suppress(&quot;PrivatePropertyName&quot;)
+<span class="fc" id="L51">    private val LOG = Logger.getLogger(FluxApiImpl::class.java.name)</span>
+
+    override fun query(query: String): Channel&lt;FluxRecord&gt; {
+
+<span class="nc" id="L55">        Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+
+<span class="nc" id="L57">        val consumer = BiConsumer { channel: Channel&lt;FluxRecord&gt;, record: FluxRecord -&gt;</span>
+<span class="nc bnc" id="L58" title="All 7 branches missed.">            runBlocking {</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">                channel.send(record)</span>
+<span class="nc" id="L60">            }</span>
+<span class="nc" id="L61">        }</span>
+
+<span class="nc" id="L63">        return query(query, AbstractQueryApi.DEFAULT_DIALECT.toString(), consumer)</span>
+    }
+
+    override fun &lt;M&gt; query(query: String, measurementType: Class&lt;M&gt;): Channel&lt;M&gt; {
+
+<span class="nc" id="L68">        Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+<span class="nc" id="L69">        Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)</span>
+
+<span class="nc" id="L71">        val consumer = BiConsumer { channel: Channel&lt;M&gt;, record: FluxRecord -&gt;</span>
+<span class="nc bnc" id="L72" title="All 7 branches missed.">            runBlocking {</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">                channel.send(resultMapper.toPOJO(record, measurementType))</span>
+<span class="nc" id="L74">            }</span>
+<span class="nc" id="L75">        }</span>
+
+<span class="nc" id="L77">        return query(query, AbstractQueryApi.DEFAULT_DIALECT.toString(), consumer)</span>
+    }
+
+    override fun queryRaw(query: String): Channel&lt;String&gt; {
+
+<span class="nc" id="L82">        Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+
+<span class="nc" id="L84">        return queryRaw(query, AbstractQueryApi.DEFAULT_DIALECT.toString())</span>
+    }
+
+    override fun queryRaw(query: String, dialect: String): Channel&lt;String&gt; {
+
+<span class="nc" id="L89">        Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+<span class="nc" id="L90">        Arguments.checkNonEmpty(dialect, &quot;dialect&quot;)</span>
+
+<span class="nc" id="L92">        val channel = Channel&lt;String&gt;()</span>
+
+<span class="nc" id="L94">        val queryCall = fluxService.query(createBody(dialect, query))</span>
+
+<span class="nc" id="L96">        val consumer = BiConsumer { cancellable: Cancellable, line: String -&gt;</span>
+
+<span class="nc bnc" id="L98" title="All 2 branches missed.">            if (channel.isClosedForSend) {</span>
+<span class="nc" id="L99">                cancellable.cancel()</span>
+            } else {
+<span class="nc bnc" id="L101" title="All 7 branches missed.">                runBlocking {</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">                    channel.send(line)</span>
+<span class="nc" id="L103">                }</span>
+            }
+<span class="nc" id="L105">        }</span>
+
+<span class="nc" id="L107">        queryRaw(queryCall, consumer, Consumer { channel.close(it) }, Runnable { channel.close() }, true)</span>
+
+<span class="nc" id="L109">        return channel</span>
+    }
+
+    override fun ping(): Boolean {
+
+<span class="nc" id="L114">        return try {</span>
+<span class="nc" id="L115">            fluxService.ping().execute().isSuccessful</span>
+<span class="nc" id="L116">        } catch (e: IOException) {</span>
+
+<span class="nc" id="L118">            LOG.log(Level.WARNING, &quot;Ping request wasn't successful&quot;, e)</span>
+<span class="nc" id="L119">            false</span>
+        }
+    }
+
+    override fun version(): String {
+
+<span class="nc" id="L125">        try {</span>
+<span class="nc" id="L126">            val execute = fluxService.ping().execute()</span>
+<span class="nc" id="L127">            return getVersion(execute)</span>
+<span class="nc" id="L128">        } catch (e: IOException) {</span>
+<span class="nc" id="L129">            throw InfluxException(e)</span>
+        }
+    }
+
+    override fun getLogLevel(): LogLevel {
+<span class="nc" id="L134">        return getLogLevel(this.loggingInterceptor)</span>
+    }
+
+    override fun setLogLevel(logLevel: LogLevel): FluxClientKotlin {
+
+<span class="nc" id="L139">        Arguments.checkNotNull(logLevel, &quot;LogLevel&quot;)</span>
+
+<span class="nc" id="L141">        setLogLevel(this.loggingInterceptor, logLevel)</span>
+
+<span class="nc" id="L143">        return this</span>
+    }
+
+    private fun &lt;T&gt; query(query: String, dialect: String, consumer: BiConsumer&lt;Channel&lt;T&gt;, FluxRecord&gt;): Channel&lt;T&gt; {
+
+<span class="nc" id="L148">        Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+<span class="nc" id="L149">        Arguments.checkNonEmpty(dialect, &quot;dialect&quot;)</span>
+
+<span class="nc" id="L151">        val channel = Channel&lt;T&gt;()</span>
+
+<span class="nc" id="L153">        val queryCall = fluxService.query(createBody(dialect, query))</span>
+
+<span class="nc" id="L155">        val responseConsumer = object : FluxResponseConsumer {</span>
+
+            override fun accept(index: Int, cancellable: Cancellable, table: FluxTable) {
+
+<span class="nc" id="L159">            }</span>
+
+            override fun accept(index: Int, cancellable: Cancellable, record: FluxRecord) {
+
+<span class="nc bnc" id="L163" title="All 2 branches missed.">                if (channel.isClosedForSend) {</span>
+<span class="nc" id="L164">                    cancellable.cancel()</span>
+                } else {
+<span class="nc" id="L166">                    consumer.accept(channel, record)</span>
+                }
+<span class="nc" id="L168">            }</span>
+        }
+
+<span class="nc" id="L171">        query(queryCall, responseConsumer, { channel.close(it) }, { channel.close() }, true)</span>
+<span class="nc" id="L172">        return channel</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
