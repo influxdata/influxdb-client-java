@@ -35,15 +35,14 @@
         <menu name="Overview" inheritAsRef="true">
             <item name="Structure" href="structure.html" />
             <item name="Flux DSL" href="./flux-dsl/index.html" />
-            <item name="Client Core" href="./client-core/index.html" />
+            <item name="Client Core" href="./influxdb-client-core/index.html" />
         </menu>
         <menu name="Clients" inheritAsRef="true">
-            <item name="Flux client" href="./flux-client/index.html" />
-            <item name="Flux client - RxJava" href="./flux-client-rxjava/index.html" />
-            <item name="Flux client - Kotlin" href="./flux-client-kotlin/index.html" />
-            <item name="Flux client - Scala" href="./flux-client-scala/index.html" />
-            <item name="InfluxDB 2.0 client" href="./client/index.html" />
-            <item name="InfluxDB 2.0 client - RxJava" href="./client-reactive/index.html" />
+            <item name="InfluxDB 2.0 client" href="./influxdb-client-java/index.html" />
+            <item name="InfluxDB 2.0 client - Reactive" href="./influxdb-client-reactive/index.html" />
+            <item name="InfluxDB 2.0 client - Kotlin" href="./influxdb-client-kotlin/index.html" />
+            <item name="InfluxDB 2.0 client - Scala" href="./influxdb-client-scala/index.html" />
+            <item name="InfluxDB 1.7+ Flux Client" href="./influxdb-client-flux/index.html" />
         </menu>
         <menu ref="parent" inherit="top" />
         <menu ref="reports" inherit="top" />
