@@ -30,6 +30,7 @@ import java.util.function.Predicate;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
+import org.influxdata.client.LogLevel;
 import org.influxdata.client.exceptions.InfluxException;
 import org.influxdata.client.exceptions.NotFoundException;
 import org.influxdata.java.client.domain.Authorization;
@@ -55,6 +56,8 @@ import org.junit.runner.RunWith;
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 15:54)
  */
+@Disabled
+// TODO https://github.com/influxdata/influxdb/issues/11491
 @RunWith(JUnitPlatform.class)
 class ITTasksApiTest extends AbstractITClientTest {
 
@@ -99,6 +102,8 @@ class ITTasksApiTest extends AbstractITClientTest {
         task.setOrgID(organization.getId());
         task.setFlux(flux);
         task.setStatus(Status.ACTIVE);
+
+        influxDBClient.setLogLevel(LogLevel.BODY);
 
         task = tasksApi.createTask(task);
 
