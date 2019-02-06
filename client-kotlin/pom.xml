@@ -85,7 +85,7 @@
                     <sourceLinks>
                         <link>
                             <dir>${project.basedir}</dir>
-                            <url>https://github.com/bonitoo-io/influxdb-client-java/tree/master/influxdb-client-kotlin
+                            <url>https://github.com/bonitoo-io/influxdb-client-java/tree/master/client-kotlin
                             </url>
                             <urlSuffix>#L</urlSuffix>
                         </link>
