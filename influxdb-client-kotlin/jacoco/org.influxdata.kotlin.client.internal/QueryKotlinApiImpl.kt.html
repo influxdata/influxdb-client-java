@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>QueryKotlinApiImpl.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Kotlin InfluxDB 2.0 Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.kotlin.client.internal</a> &gt; <span class="el_source">QueryKotlinApiImpl.kt</span></div><h1>QueryKotlinApiImpl.kt</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.kotlin.client.internal
+
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.runBlocking
+import org.influxdata.client.Arguments
+import org.influxdata.client.Cancellable
+import org.influxdata.client.flux.domain.FluxRecord
+import org.influxdata.client.flux.domain.FluxTable
+import org.influxdata.client.flux.internal.FluxCsvParser.FluxResponseConsumer
+import org.influxdata.client.internal.AbstractQueryApi
+import org.influxdata.java.client.internal.InfluxDBService
+import org.influxdata.kotlin.client.QueryKotlinApi
+import java.util.function.BiConsumer
+import java.util.function.Consumer
+
+/**
+ * @author Jakub Bednar (bednar@github) (30/10/2018 08:51)
+ */
+<span class="nc" id="L40">internal class QueryKotlinApiImpl(private val influxDBService: InfluxDBService) : AbstractQueryApi(), QueryKotlinApi {</span>
+
+    override fun query(query: String, orgID: String): Channel&lt;FluxRecord&gt; {
+
+<span class="nc" id="L44">        Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+<span class="nc" id="L45">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)</span>
+
+<span class="nc" id="L47">        val consumer = BiConsumer { channel: Channel&lt;FluxRecord&gt;, record: FluxRecord -&gt;</span>
+<span class="nc bnc" id="L48" title="All 7 branches missed.">            runBlocking {</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">                channel.send(record)</span>
+<span class="nc" id="L50">            }</span>
+<span class="nc" id="L51">        }</span>
+
+<span class="nc" id="L53">        return query(query, AbstractQueryApi.DEFAULT_DIALECT.toString(), orgID, consumer)</span>
+    }
+
+    override fun &lt;M&gt; query(query: String, orgID: String, measurementType: Class&lt;M&gt;): Channel&lt;M&gt; {
+
+<span class="nc" id="L58">        Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+<span class="nc" id="L59">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)</span>
+<span class="nc" id="L60">        Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)</span>
+
+<span class="nc" id="L62">        val consumer = BiConsumer { channel: Channel&lt;M&gt;, record: FluxRecord -&gt;</span>
+<span class="nc bnc" id="L63" title="All 7 branches missed.">            runBlocking {</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">                channel.send(resultMapper.toPOJO(record, measurementType))</span>
+<span class="nc" id="L65">            }</span>
+<span class="nc" id="L66">        }</span>
+
+<span class="nc" id="L68">        return query(query, AbstractQueryApi.DEFAULT_DIALECT.toString(), orgID, consumer)</span>
+    }
+
+    override fun queryRaw(query: String, orgID: String): Channel&lt;String&gt; {
+
+<span class="nc" id="L73">        Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+<span class="nc" id="L74">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)</span>
+
+<span class="nc" id="L76">        return queryRaw(query, AbstractQueryApi.DEFAULT_DIALECT.toString(), orgID)</span>
+    }
+
+    override fun queryRaw(query: String, dialect: String, orgID: String): Channel&lt;String&gt; {
+
+<span class="nc" id="L81">        Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+<span class="nc" id="L82">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)</span>
+
+<span class="nc" id="L84">                val channel = Channel&lt;String&gt;()</span>
+
+<span class="nc" id="L86">        val queryCall = influxDBService.query(orgID, createBody(dialect, query))</span>
+
+<span class="nc" id="L88">        val consumer = BiConsumer { cancellable: Cancellable, line: String -&gt;</span>
+
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            if (channel.isClosedForSend) {</span>
+<span class="nc" id="L91">                cancellable.cancel()</span>
+            } else {
+<span class="nc bnc" id="L93" title="All 7 branches missed.">                runBlocking {</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">                    channel.send(line)</span>
+<span class="nc" id="L95">                }</span>
+            }
+<span class="nc" id="L97">        }</span>
+
+<span class="nc" id="L99">        queryRaw(queryCall, consumer, Consumer { channel.close(it) }, Runnable { channel.close() }, true)</span>
+
+<span class="nc" id="L101">        return channel</span>
+    }
+
+    private fun &lt;T&gt; query(query: String, dialect: String, orgID: String, consumer: BiConsumer&lt;Channel&lt;T&gt;, FluxRecord&gt;): Channel&lt;T&gt; {
+
+<span class="nc" id="L106">        Arguments.checkNonEmpty(query, &quot;query&quot;)</span>
+<span class="nc" id="L107">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)</span>
+<span class="nc" id="L108">        Arguments.checkNonEmpty(dialect, &quot;dialect&quot;)</span>
+
+<span class="nc" id="L110">        val channel = Channel&lt;T&gt;()</span>
+
+<span class="nc" id="L112">        val queryCall = influxDBService.query(orgID, createBody(dialect, query))</span>
+
+<span class="nc" id="L114">        val responseConsumer = object : FluxResponseConsumer {</span>
+
+            override fun accept(index: Int, cancellable: Cancellable, table: FluxTable) {
+
+<span class="nc" id="L118">            }</span>
+
+            override fun accept(index: Int, cancellable: Cancellable, record: FluxRecord) {
+
+<span class="nc bnc" id="L122" title="All 2 branches missed.">                if (channel.isClosedForSend) {</span>
+<span class="nc" id="L123">                    cancellable.cancel()</span>
+                } else {
+<span class="nc" id="L125">                    consumer.accept(channel, record)</span>
+                }
+<span class="nc" id="L127">            }</span>
+        }
+
+<span class="nc" id="L130">        query(queryCall, responseConsumer, { channel.close(it) }, { channel.close() }, true)</span>
+<span class="nc" id="L131">        return channel</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
