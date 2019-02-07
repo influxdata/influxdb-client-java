@@ -44,18 +44,16 @@ abstract class AbstractITClientTest extends AbstractTest {
 
     InfluxDBClient influxDBClient;
     String influxDB_IP;
-    String InfluxDB_URL;
+    String influxDB_URL;
 
     @BeforeEach
     void initInfluxDBClientClient(TestInfo testInfo) throws Exception {
 
-        influxDB_IP = System.getenv().getOrDefault("INFLUXDB_2_IP", "127.0.0.1");
-        String influxDBPort = System.getenv().getOrDefault("INFLUXDB_2_PORT", "9999");
+        influxDB_IP = getInfluxDb2Ip();
+        influxDB_URL = getInfluxDb2Url();
+        LOG.log(Level.FINEST, "InfluxDB URL: {0}", influxDB_URL);
 
-        InfluxDB_URL = "http://" + influxDB_IP + ":" + influxDBPort;
-        LOG.log(Level.FINEST, "InfluxDB URL: {0}", InfluxDB_URL);
-
-        influxDBClient = InfluxDBClientFactory.create(InfluxDB_URL, "my-user", "my-password".toCharArray());
+        influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-user", "my-password".toCharArray());
 
         boolean basic_auth = testInfo.getTags().contains("basic_auth");
         
@@ -64,7 +62,7 @@ abstract class AbstractITClientTest extends AbstractTest {
             String token = findMyToken();
 
             influxDBClient.close();
-            influxDBClient = InfluxDBClientFactory.create(InfluxDB_URL, token.toCharArray());
+            influxDBClient = InfluxDBClientFactory.create(influxDB_URL, token.toCharArray());
         }
     }
 

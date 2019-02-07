@@ -77,7 +77,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Authorization authorization = addTasksAuthorization(organization);
 
         influxDBClient.close();
-        influxDBClient = InfluxDBClientFactory.create(InfluxDB_URL, authorization.getToken().toCharArray());
+        influxDBClient = InfluxDBClientFactory.create(influxDB_URL, authorization.getToken().toCharArray());
 
         tasksApi = influxDBClient.getTasksApi();
         tasksApi.findTasks().forEach(task -> tasksApi.deleteTask(task));
@@ -235,7 +235,7 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         Authorization authorization = addTasksAuthorization(taskOrganization);
         influxDBClient.close();
-        influxDBClient = InfluxDBClientFactory.create(InfluxDB_URL, authorization.getToken().toCharArray());
+        influxDBClient = InfluxDBClientFactory.create(influxDB_URL, authorization.getToken().toCharArray());
         tasksApi = influxDBClient.getTasksApi();
 
         tasksApi.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", taskOrganization);

@@ -77,7 +77,7 @@ public abstract class AbstractTest {
     }
 
     @Nonnull
-    protected String getInfluxDbURL() {
+    protected String getInfluxDbUrl() {
 
         String influxdbIP = System.getenv().getOrDefault("INFLUXDB_IP", "127.0.0.1");
         String influxdbPort = System.getenv().getOrDefault("INFLUXDB_PORT_API", "8086");
@@ -85,10 +85,25 @@ public abstract class AbstractTest {
         return "http://" + influxdbIP + ":" + influxdbPort;
     }
 
+    @Nonnull
+    protected String getInfluxDb2Port() {
+        return System.getenv().getOrDefault("INFLUXDB_2_PORT", "9999");
+    }
+
+    @Nonnull
+    protected String getInfluxDb2Ip() {
+        return System.getenv().getOrDefault("INFLUXDB_2_IP", "127.0.0.1");
+    }
+
+    @Nonnull
+    protected String getInfluxDb2Url() {
+        return "http://" + getInfluxDb2Ip() + ":" + getInfluxDb2Port();
+    }
+
     protected void influxDBWrite(@Nonnull final String lineProtocol, @Nonnull final String databaseName) {
 
         Request request = new Request.Builder()
-                .url(getInfluxDbURL() + "/write?db=" + databaseName)
+                .url(getInfluxDbUrl() + "/write?db=" + databaseName)
                 .addHeader("accept", "application/json")
                 .post(RequestBody.create(MediaType.parse("text/plain"), lineProtocol))
                 .build();
@@ -99,7 +114,7 @@ public abstract class AbstractTest {
     protected void influxDBQuery(@Nonnull final String query, @Nonnull final String databaseName) {
 
         Request request = new Request.Builder()
-                .url(getInfluxDbURL() + "/query?db=" + databaseName + ";q=" + query)
+                .url(getInfluxDbUrl() + "/query?db=" + databaseName + ";q=" + query)
                 .addHeader("accept", "application/json")
                 .get()
                 .build();

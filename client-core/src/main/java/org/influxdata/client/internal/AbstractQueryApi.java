@@ -45,7 +45,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * @author Jakub Bednar (bednar@github) (17/10/2018 11:20)
+ * @author Jakub Bednar (bednar@github) (17/10/201AbstractQueryApi8 11:20)
  */
 public abstract class AbstractQueryApi extends AbstractRestClient {
 

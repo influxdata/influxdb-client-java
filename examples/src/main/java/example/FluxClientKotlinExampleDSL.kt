@@ -27,12 +27,12 @@ import kotlinx.coroutines.channels.take
 import kotlinx.coroutines.runBlocking
 import org.influxdata.flux.dsl.Flux
 import org.influxdata.flux.dsl.functions.restriction.Restrictions
-import org.influxdata.kotlin.client.FluxClientKotlinFactory
+import org.influxdata.kotlin.client.InfluxDBClientKotlinFactory
 import java.time.temporal.ChronoUnit
 
 fun main(args: Array<String>) = runBlocking {
 
-    val fluxClient = FluxClientKotlinFactory
+    val fluxClient = InfluxDBClientKotlinFactory
             .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC")
 
     val mem = Flux.from("telegraf")
@@ -40,7 +40,7 @@ fun main(args: Array<String>) = runBlocking {
             .range(-30L, ChronoUnit.MINUTES)
 
     //Result is returned as a stream
-    val results = fluxClient.query(mem.toString())
+    val results = fluxClient.getQueryKotlinApi().query(mem.toString(), "my-org")
 
     //Example of additional result stream processing on client side
     results

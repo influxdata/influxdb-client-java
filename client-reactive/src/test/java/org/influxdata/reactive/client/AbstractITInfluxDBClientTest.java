@@ -47,10 +47,7 @@ abstract class AbstractITInfluxDBClientTest extends AbstractTest {
     @BeforeEach
     void setUp() throws Exception {
 
-        String influxDB_IP = System.getenv().getOrDefault("INFLUXDB_2_IP", "127.0.0.1");
-        String influxDB_Port = System.getenv().getOrDefault("INFLUXDB_2_PORT", "9999");
-
-        influxDB_URL = "http://" + influxDB_IP + ":" + influxDB_Port;
+        influxDB_URL = getInfluxDb2Url();
         LOG.log(Level.FINEST, "InfluxDB URL: {0}", influxDB_URL);
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-user", "my-password".toCharArray());
@@ -66,7 +63,7 @@ abstract class AbstractITInfluxDBClientTest extends AbstractTest {
         try {
             this.influxDBClient = InfluxDBClientReactiveFactory.create(influxDB_URL, "my-user", "my-password".toCharArray());
         } catch (Exception e) {
-            Assertions.fail("Can't authorize via token", e);
+            Assertions.fail("Can't authorize via password", e);
         }
 
     }

@@ -30,13 +30,13 @@ import org.junit.runner.RunWith
  * @author Jakub Bednar (bednar@github) (30/10/2018 08:32)
  */
 @RunWith(JUnitPlatform::class)
-class FluxClientKotlinFactoryTest {
+class InfluxDBClientKotlinFactoryTest {
 
     @Test
     fun connect()
     {
-        val fluxClient = FluxClientKotlinFactory.create("http://localhost:8093")
+        val fluxClient = InfluxDBClientKotlinFactory.create("http://localhost:8093")
 
-        AssertionsForClassTypes.assertThat<FluxClientKotlin>(fluxClient).isNotNull
+        AssertionsForClassTypes.assertThat<InfluxDBClientKotlin>(fluxClient).isNotNull
     }
 }

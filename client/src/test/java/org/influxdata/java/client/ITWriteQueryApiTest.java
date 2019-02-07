@@ -97,7 +97,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         String token = authorization.getToken();
 
         influxDBClient.close();
-        influxDBClient = InfluxDBClientFactory.create(InfluxDB_URL, token.toCharArray());
+        influxDBClient = InfluxDBClientFactory.create(influxDB_URL, token.toCharArray());
         queryApi = influxDBClient.getQueryApi();
     }
 
@@ -280,12 +280,12 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
 
         influxDBClient.close();
 
-        influxDBClient = InfluxDBClientFactory.create(InfluxDB_URL, "my-user", "my-password".toCharArray());
+        influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-user", "my-password".toCharArray());
         String token = findMyToken();
         influxDBClient.close();
 
         // Login as operator
-        influxDBClient = InfluxDBClientFactory.create(InfluxDB_URL, token.toCharArray());
+        influxDBClient = InfluxDBClientFactory.create(influxDB_URL, token.toCharArray());
 
         String orgName = generateName("new-org");
         Organization organization =
@@ -331,7 +331,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         influxDBClient.close();
 
         // Login as new user
-        influxDBClient = InfluxDBClientFactory.create(InfluxDB_URL, token.toCharArray());
+        influxDBClient = InfluxDBClientFactory.create(influxDB_URL, token.toCharArray());
         queryApi = influxDBClient.getQueryApi();
 
         Point point = Point.measurement("h2o_feet")

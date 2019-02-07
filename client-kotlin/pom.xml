@@ -108,12 +108,7 @@
 
         <dependency>
             <groupId>org.influxdata</groupId>
-            <artifactId>influxdb-client-flux</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.influxdata</groupId>
-            <artifactId>influxdb-client-core</artifactId>
+            <artifactId>influxdb-client-java</artifactId>
         </dependency>
 
         <dependency>

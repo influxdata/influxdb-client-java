@@ -74,7 +74,7 @@ import retrofit2.http.Streaming;
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 13:30)
  */
-interface InfluxDBService {
+public interface InfluxDBService {
 
     //
     // Health

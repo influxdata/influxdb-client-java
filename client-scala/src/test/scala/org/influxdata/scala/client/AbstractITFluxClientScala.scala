@@ -61,7 +61,7 @@ abstract class AbstractITFluxClientScala extends FunSuite with BeforeAndAfter {
   }
 
   class InfluxDBUtils extends AbstractTest {
-    def getUrl: String = super.getInfluxDbURL
+    def getUrl: String = super.getInfluxDbUrl
 
     def query(query: String, databaseName: String): Unit = super.influxDBQuery(query, databaseName)
 

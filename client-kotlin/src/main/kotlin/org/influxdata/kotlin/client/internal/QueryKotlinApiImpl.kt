@@ -25,34 +25,24 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import org.influxdata.client.Arguments
 import org.influxdata.client.Cancellable
-import org.influxdata.client.LogLevel
-import org.influxdata.client.exceptions.InfluxException
 import org.influxdata.client.flux.domain.FluxRecord
 import org.influxdata.client.flux.domain.FluxTable
 import org.influxdata.client.flux.internal.FluxCsvParser.FluxResponseConsumer
 import org.influxdata.client.internal.AbstractQueryApi
-import org.influxdata.flux.client.FluxConnectionOptions
-import org.influxdata.flux.client.internal.AbstractFluxApi
-import org.influxdata.flux.client.internal.FluxApiImpl
-import org.influxdata.flux.client.internal.FluxService
-import org.influxdata.kotlin.client.FluxClientKotlin
-import java.io.IOException
+import org.influxdata.java.client.internal.InfluxDBService
+import org.influxdata.kotlin.client.QueryKotlinApi
 import java.util.function.BiConsumer
 import java.util.function.Consumer
-import java.util.logging.Level
-import java.util.logging.Logger
 
 /**
  * @author Jakub Bednar (bednar@github) (30/10/2018 08:51)
  */
-internal class FluxApiKotlinImpl(options: FluxConnectionOptions) : AbstractFluxApi<FluxService>(options.okHttpClient, options.url, options.parameters, FluxService::class.java), FluxClientKotlin {
+internal class QueryKotlinApiImpl(private val influxDBService: InfluxDBService) : AbstractQueryApi(), QueryKotlinApi {
 
-    @Suppress("PrivatePropertyName")
-    private val LOG = Logger.getLogger(FluxApiImpl::class.java.name)
-
-    override fun query(query: String): Channel<FluxRecord> {
+    override fun query(query: String, orgID: String): Channel<FluxRecord> {
 
         Arguments.checkNonEmpty(query, "query")
+        Arguments.checkNonEmpty(orgID, "orgID")
 
         val consumer = BiConsumer { channel: Channel<FluxRecord>, record: FluxRecord ->
             runBlocking {
@@ -60,12 +50,13 @@ internal class FluxApiKotlinImpl(options: FluxConnectionOptions) : AbstractFluxA
             }
         }
 
-        return query(query, AbstractQueryApi.DEFAULT_DIALECT.toString(), consumer)
+        return query(query, AbstractQueryApi.DEFAULT_DIALECT.toString(), orgID, consumer)
     }
 
-    override fun <M> query(query: String, measurementType: Class<M>): Channel<M> {
+    override fun <M> query(query: String, orgID: String, measurementType: Class<M>): Channel<M> {
 
         Arguments.checkNonEmpty(query, "query")
+        Arguments.checkNonEmpty(orgID, "orgID")
         Arguments.checkNotNull(measurementType, "measurementType")
 
         val consumer = BiConsumer { channel: Channel<M>, record: FluxRecord ->
@@ -74,24 +65,25 @@ internal class FluxApiKotlinImpl(options: FluxConnectionOptions) : AbstractFluxA
             }
         }
 
-        return query(query, AbstractQueryApi.DEFAULT_DIALECT.toString(), consumer)
+        return query(query, AbstractQueryApi.DEFAULT_DIALECT.toString(), orgID, consumer)
     }
 
-    override fun queryRaw(query: String): Channel<String> {
+    override fun queryRaw(query: String, orgID: String): Channel<String> {
 
         Arguments.checkNonEmpty(query, "query")
+        Arguments.checkNonEmpty(orgID, "orgID")
 
-        return queryRaw(query, AbstractQueryApi.DEFAULT_DIALECT.toString())
+        return queryRaw(query, AbstractQueryApi.DEFAULT_DIALECT.toString(), orgID)
     }
 
-    override fun queryRaw(query: String, dialect: String): Channel<String> {
+    override fun queryRaw(query: String, dialect: String, orgID: String): Channel<String> {
 
         Arguments.checkNonEmpty(query, "query")
-        Arguments.checkNonEmpty(dialect, "dialect")
+        Arguments.checkNonEmpty(orgID, "orgID")
 
-        val channel = Channel<String>()
+                val channel = Channel<String>()
 
-        val queryCall = fluxService.query(createBody(dialect, query))
+        val queryCall = influxDBService.query(orgID, createBody(dialect, query))
 
         val consumer = BiConsumer { cancellable: Cancellable, line: String ->
 
@@ -109,48 +101,15 @@ internal class FluxApiKotlinImpl(options: FluxConnectionOptions) : AbstractFluxA
         return channel
     }
 
-    override fun ping(): Boolean {
-
-        return try {
-            fluxService.ping().execute().isSuccessful
-        } catch (e: IOException) {
-
-            LOG.log(Level.WARNING, "Ping request wasn't successful", e)
-            false
-        }
-    }
-
-    override fun version(): String {
-
-        try {
-            val execute = fluxService.ping().execute()
-            return getVersion(execute)
-        } catch (e: IOException) {
-            throw InfluxException(e)
-        }
-    }
-
-    override fun getLogLevel(): LogLevel {
-        return getLogLevel(this.loggingInterceptor)
-    }
-
-    override fun setLogLevel(logLevel: LogLevel): FluxClientKotlin {
-
-        Arguments.checkNotNull(logLevel, "LogLevel")
-
-        setLogLevel(this.loggingInterceptor, logLevel)
-
-        return this
-    }
-
-    private fun <T> query(query: String, dialect: String, consumer: BiConsumer<Channel<T>, FluxRecord>): Channel<T> {
+    private fun <T> query(query: String, dialect: String, orgID: String, consumer: BiConsumer<Channel<T>, FluxRecord>): Channel<T> {
 
         Arguments.checkNonEmpty(query, "query")
+        Arguments.checkNonEmpty(orgID, "orgID")
         Arguments.checkNonEmpty(dialect, "dialect")
 
         val channel = Channel<T>()
 
-        val queryCall = fluxService.query(createBody(dialect, query))
+        val queryCall = influxDBService.query(orgID, createBody(dialect, query))
 
         val responseConsumer = object : FluxResponseConsumer {
 

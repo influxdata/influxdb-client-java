@@ -23,7 +23,6 @@
 package org.influxdata.kotlin.client
 
 import kotlinx.coroutines.channels.Channel
-import org.influxdata.client.LogLevel
 import org.influxdata.client.flux.domain.FluxRecord
 
 /**
@@ -31,74 +30,45 @@ import org.influxdata.client.flux.domain.FluxRecord
  *
  * @author Jakub Bednar (bednar@github) (29/10/2018 10:45)
  */
-interface FluxClientKotlin {
+interface QueryKotlinApi {
 
     /**
      * Executes the Flux query against the InfluxDB and asynchronously stream [FluxRecord]s to [Channel].
      *
      * @param query the flux query to execute
+     * @param orgID           specifies the source organization
      * @return the stream of [FluxRecord]s
      */
-    fun query(query: String): Channel<FluxRecord>
+    fun query(query: String, orgID: String): Channel<FluxRecord>
 
     /**
      * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [Channel].
      *
      * @param query the flux query to execute
+     * @param orgID           specifies the source organization
      * @param <M> the type of the measurement (POJO)
      * @return the stream of measurements
      */
-    fun <M> query(query: String, measurementType: Class<M>): Channel<M>
+    fun <M> query(query: String, orgID: String, measurementType: Class<M>): Channel<M>
 
     /**
      * Executes the Flux query against the InfluxDB and asynchronously stream response to [Channel].
      *
      * @param query the flux query to execute
+     * @param orgID           specifies the source organization
      * @return the response stream
      */
-    fun queryRaw(query: String): Channel<String>
+    fun queryRaw(query: String, orgID: String): Channel<String>
 
     /**
      * Executes the Flux query against the InfluxDB and asynchronously stream response to [Channel].
      *
      * @param query the flux query to execute
+     * @param orgID           specifies the source organization
      * @param dialect    Dialect is an object defining the options to use when encoding the response.
      *                  [See dialect SPEC](http://bit.ly/flux-dialect).
      * @return the response stream
      */
-    fun queryRaw(query: String, dialect: String): Channel<String>
+    fun queryRaw(query: String, dialect: String, orgID: String): Channel<String>
 
-    /**
-     * Check the status of InfluxDB Server.
-     *
-     * @return [Boolean#TRUE] if server is healthy otherwise return [Boolean#FALSE]
-     */
-    fun ping(): Boolean
-
-    /**
-     * Returns the version of the connected InfluxDB Server.
-     *
-     * @return the version String, otherwise unknown.
-     */
-    fun version(): String
-
-    /**
-     * Gets the [LogLevel] that is used for logging requests and responses.
-     *
-     * @return the [LogLevel] that is used for logging requests and responses
-     */
-    fun getLogLevel(): LogLevel
-
-    /**
-     * Sets the log level for the request and response information.
-     *
-     * @param logLevel the log level to set.
-     * @return the FluxClientKotlin instance to be able to use it in a fluent manner.
-     */
-    fun setLogLevel(logLevel: LogLevel): FluxClientKotlin
-
-    /**
-     * Shutdown and close the client.
-     */
-    fun close()
 }

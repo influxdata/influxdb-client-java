@@ -21,50 +21,26 @@
  */
 package org.influxdata.kotlin.client
 
-import org.influxdata.flux.client.internal.FluxApiImpl
 import org.influxdata.test.client.AbstractTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
-import java.util.logging.Logger
 
 /**
  * @author Jakub Bednar (bednar@github) (30/10/2018 09:13)
  */
-internal abstract class AbstractITFluxClientKotlin : AbstractTest() {
+internal abstract class AbstractITInfluxDBClientKotlin : AbstractTest() {
 
-    @Suppress("PrivatePropertyName")
-    private val LOG = Logger.getLogger(FluxApiImpl::class.java.name)
-
-    val DATABASE_NAME = "flux_database_kotlin"
-
-    internal lateinit var fluxClient: FluxClientKotlin
-    protected val FROM_FLUX_DATABASE = String
-            .format("from(bucket:\"%s\")", DATABASE_NAME)
+    internal lateinit var influxDBClient: InfluxDBClientKotlin
 
     @BeforeEach
     protected fun setUp() {
 
-        fluxClient = FluxClientKotlinFactory.create(influxDbURL)
-
-        influxDBQuery("CREATE DATABASE $DATABASE_NAME", DATABASE_NAME)
-
-        val lineProtocol = arrayOf("mem,host=A,region=west free=10i 10000000000",
-                "mem,host=A,region=west free=11i 20000000000",
-                "mem,host=B,region=west free=20i 10000000000",
-                "mem,host=B,region=west free=22i 20000000000",
-                "cpu,host=A,region=west usage_system=35i,user_usage=45i 10000000000",
-                "cpu,host=A,region=west usage_system=38i,user_usage=49i 20000000000",
-                "cpu,host=A,hyper-threading=true,region=west usage_system=55i,user_usage=65i 20000000000")
-                .joinToString("\n")
-
-        influxDBWrite(lineProtocol, DATABASE_NAME)
+        influxDBClient = InfluxDBClientKotlinFactory.create(influxDb2Url)
     }
 
     @AfterEach
     protected fun after() {
 
-        fluxClient.close()
-
-        influxDBQuery("DROP DATABASE $DATABASE_NAME", DATABASE_NAME)
+        influxDBClient.close()
     }
 }

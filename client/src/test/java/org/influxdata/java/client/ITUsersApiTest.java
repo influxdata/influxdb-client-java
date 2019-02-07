@@ -199,7 +199,7 @@ class ITUsersApiTest extends AbstractITClientTest {
         influxDBClient.close();
 
         //TODO set user password -> https://github.com/influxdata/influxdb/issues/11590
-        influxDBClient = InfluxDBClientFactory.create(InfluxDB_URL, "my-user", "my-password".toCharArray());
+        influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-user", "my-password".toCharArray());
         usersApi = influxDBClient.getUsersApi();
 
         User user = usersApi.updateUserPassword(myNewUser, "", "strong-password");

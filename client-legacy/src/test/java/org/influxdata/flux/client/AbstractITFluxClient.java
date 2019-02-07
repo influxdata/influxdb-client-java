@@ -43,7 +43,7 @@ public abstract class AbstractITFluxClient extends AbstractTest {
     @BeforeEach
     protected void setUp() {
 
-        String influxURL = getInfluxDbURL();
+        String influxURL = getInfluxDbUrl();
         
         LOG.log(Level.FINEST, "Influx URL: {0}", influxURL);
 

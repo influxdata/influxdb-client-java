@@ -25,11 +25,11 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.filter
 import kotlinx.coroutines.channels.take
 import kotlinx.coroutines.runBlocking
-import org.influxdata.kotlin.client.FluxClientKotlinFactory
+import org.influxdata.kotlin.client.InfluxDBClientKotlinFactory
 
 fun main(args: Array<String>) = runBlocking {
 
-    val fluxClient = FluxClientKotlinFactory
+    val fluxClient = InfluxDBClientKotlinFactory
             .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC")
 
     val fluxQuery = ("from(bucket: \"telegraf\")\n"
@@ -37,7 +37,7 @@ fun main(args: Array<String>) = runBlocking {
             + " |> range(start: -1d)")
 
     //Result is returned as a stream
-    val results = fluxClient.query(fluxQuery)
+    val results = fluxClient.getQueryKotlinApi().query(fluxQuery, "my-org")
 
     //Example of additional result stream processing on client side
     results
