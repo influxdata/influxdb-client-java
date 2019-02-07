@@ -39,6 +39,7 @@ import org.influxdata.java.client.domain.User;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -290,6 +291,8 @@ class ITBucketsApiTest extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO labels
     void labels() {
 
         LabelsApi labelsApi = influxDBClient.getLabelsApi();
