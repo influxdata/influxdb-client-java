@@ -153,190 +153,190 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
     @Override
     public List&lt;ResourceMember&gt; getMembers(@Nonnull final ScraperTarget scraperTarget) {
 
-<span class="fc" id="L156">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
+<span class="nc" id="L156">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
 
-<span class="fc" id="L158">        return getMembers(scraperTarget.getId());</span>
+<span class="nc" id="L158">        return getMembers(scraperTarget.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;ResourceMember&gt; getMembers(@Nonnull final String scraperTargetID) {
 
-<span class="fc" id="L165">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+<span class="nc" id="L165">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
 
-<span class="fc" id="L167">        Call&lt;ResourceMembers&gt; call = influxDBService.findScraperTargetMembers(scraperTargetID);</span>
-<span class="fc" id="L168">        ResourceMembers resourceMembers = execute(call);</span>
-<span class="fc" id="L169">        LOG.log(Level.FINEST, &quot;findScraperTargetMembers found: {0}&quot;, resourceMembers);</span>
+<span class="nc" id="L167">        Call&lt;ResourceMembers&gt; call = influxDBService.findScraperTargetMembers(scraperTargetID);</span>
+<span class="nc" id="L168">        ResourceMembers resourceMembers = execute(call);</span>
+<span class="nc" id="L169">        LOG.log(Level.FINEST, &quot;findScraperTargetMembers found: {0}&quot;, resourceMembers);</span>
 
-<span class="fc" id="L171">        return resourceMembers.getUsers();</span>
+<span class="nc" id="L171">        return resourceMembers.getUsers();</span>
     }
 
     @Nonnull
     @Override
     public ResourceMember addMember(@Nonnull final User member, @Nonnull final ScraperTarget scraperTarget) {
 
-<span class="fc" id="L178">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
-<span class="fc" id="L179">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+<span class="nc" id="L178">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
+<span class="nc" id="L179">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
 
-<span class="fc" id="L181">        return addMember(member.getId(), scraperTarget.getId());</span>
+<span class="nc" id="L181">        return addMember(member.getId(), scraperTarget.getId());</span>
     }
 
     @Nonnull
     @Override
     public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String scraperTargetID) {
 
-<span class="fc" id="L188">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
-<span class="fc" id="L189">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+<span class="nc" id="L188">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="nc" id="L189">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
 
-<span class="fc" id="L191">        User user = new User();</span>
-<span class="fc" id="L192">        user.setId(memberID);</span>
+<span class="nc" id="L191">        User user = new User();</span>
+<span class="nc" id="L192">        user.setId(memberID);</span>
 
-<span class="fc" id="L194">        String json = userAdapter.toJson(user);</span>
-<span class="fc" id="L195">        Call&lt;ResourceMember&gt; call = influxDBService.addScraperTargetMember(scraperTargetID, createBody(json));</span>
+<span class="nc" id="L194">        String json = userAdapter.toJson(user);</span>
+<span class="nc" id="L195">        Call&lt;ResourceMember&gt; call = influxDBService.addScraperTargetMember(scraperTargetID, createBody(json));</span>
 
-<span class="fc" id="L197">        return execute(call);</span>
+<span class="nc" id="L197">        return execute(call);</span>
     }
 
     @Override
     public void deleteMember(@Nonnull final User member, @Nonnull final ScraperTarget scraperTarget) {
 
-<span class="fc" id="L203">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
-<span class="fc" id="L204">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+<span class="nc" id="L203">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
+<span class="nc" id="L204">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
 
-<span class="fc" id="L206">        deleteMember(member.getId(), scraperTarget.getId());</span>
-<span class="fc" id="L207">    }</span>
+<span class="nc" id="L206">        deleteMember(member.getId(), scraperTarget.getId());</span>
+<span class="nc" id="L207">    }</span>
 
     @Override
     public void deleteMember(@Nonnull final String memberID, @Nonnull final String scraperTargetID) {
 
-<span class="fc" id="L212">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
-<span class="fc" id="L213">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+<span class="nc" id="L212">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="nc" id="L213">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
 
-<span class="fc" id="L215">        Call&lt;Void&gt; call = influxDBService.deleteScraperTargetMember(scraperTargetID, memberID);</span>
-<span class="fc" id="L216">        execute(call);</span>
-<span class="fc" id="L217">    }</span>
+<span class="nc" id="L215">        Call&lt;Void&gt; call = influxDBService.deleteScraperTargetMember(scraperTargetID, memberID);</span>
+<span class="nc" id="L216">        execute(call);</span>
+<span class="nc" id="L217">    }</span>
 
     @Nonnull
     @Override
     public List&lt;ResourceMember&gt; getOwners(@Nonnull final ScraperTarget scraperTarget) {
 
-<span class="fc" id="L223">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
+<span class="nc" id="L223">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
 
-<span class="fc" id="L225">        return getOwners(scraperTarget.getId());</span>
+<span class="nc" id="L225">        return getOwners(scraperTarget.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;ResourceMember&gt; getOwners(@Nonnull final String scraperTargetID) {
 
-<span class="fc" id="L232">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+<span class="nc" id="L232">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
 
-<span class="fc" id="L234">        Call&lt;ResourceMembers&gt; call = influxDBService.findScraperTargetOwners(scraperTargetID);</span>
-<span class="fc" id="L235">        ResourceMembers resourceMembers = execute(call);</span>
-<span class="fc" id="L236">        LOG.log(Level.FINEST, &quot;findScraperTargetOwners found: {0}&quot;, resourceMembers);</span>
+<span class="nc" id="L234">        Call&lt;ResourceMembers&gt; call = influxDBService.findScraperTargetOwners(scraperTargetID);</span>
+<span class="nc" id="L235">        ResourceMembers resourceMembers = execute(call);</span>
+<span class="nc" id="L236">        LOG.log(Level.FINEST, &quot;findScraperTargetOwners found: {0}&quot;, resourceMembers);</span>
 
-<span class="fc" id="L238">        return resourceMembers.getUsers();</span>
+<span class="nc" id="L238">        return resourceMembers.getUsers();</span>
     }
 
     @Nonnull
     @Override
     public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final ScraperTarget scraperTarget) {
 
-<span class="fc" id="L245">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
-<span class="fc" id="L246">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="nc" id="L245">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
+<span class="nc" id="L246">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
 
-<span class="fc" id="L248">        return addOwner(owner.getId(), scraperTarget.getId());</span>
+<span class="nc" id="L248">        return addOwner(owner.getId(), scraperTarget.getId());</span>
     }
 
     @Nonnull
     @Override
     public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String scraperTargetID) {
 
-<span class="fc" id="L255">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="fc" id="L256">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+<span class="nc" id="L255">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L256">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
 
-<span class="fc" id="L258">        User user = new User();</span>
-<span class="fc" id="L259">        user.setId(ownerID);</span>
+<span class="nc" id="L258">        User user = new User();</span>
+<span class="nc" id="L259">        user.setId(ownerID);</span>
 
-<span class="fc" id="L261">        String json = userAdapter.toJson(user);</span>
-<span class="fc" id="L262">        Call&lt;ResourceMember&gt; call = influxDBService.addScraperTargetOwner(scraperTargetID, createBody(json));</span>
+<span class="nc" id="L261">        String json = userAdapter.toJson(user);</span>
+<span class="nc" id="L262">        Call&lt;ResourceMember&gt; call = influxDBService.addScraperTargetOwner(scraperTargetID, createBody(json));</span>
 
-<span class="fc" id="L264">        return execute(call);</span>
+<span class="nc" id="L264">        return execute(call);</span>
     }
 
     @Override
     public void deleteOwner(@Nonnull final User owner, @Nonnull final ScraperTarget scraperTarget) {
 
-<span class="fc" id="L270">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
-<span class="fc" id="L271">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="nc" id="L270">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
+<span class="nc" id="L271">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
 
-<span class="fc" id="L273">        deleteOwner(owner.getId(), scraperTarget.getId());</span>
-<span class="fc" id="L274">    }</span>
+<span class="nc" id="L273">        deleteOwner(owner.getId(), scraperTarget.getId());</span>
+<span class="nc" id="L274">    }</span>
 
     @Override
     public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String scraperTargetID) {
 
-<span class="fc" id="L279">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
-<span class="fc" id="L280">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+<span class="nc" id="L279">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L280">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
 
-<span class="fc" id="L282">        Call&lt;Void&gt; call = influxDBService.deleteScraperTargetOwner(scraperTargetID, ownerID);</span>
-<span class="fc" id="L283">        execute(call);</span>
-<span class="fc" id="L284">    }</span>
+<span class="nc" id="L282">        Call&lt;Void&gt; call = influxDBService.deleteScraperTargetOwner(scraperTargetID, ownerID);</span>
+<span class="nc" id="L283">        execute(call);</span>
+<span class="nc" id="L284">    }</span>
 
     @Nonnull
     @Override
     public List&lt;Label&gt; getLabels(@Nonnull final ScraperTarget scraperTarget) {
 
-<span class="fc" id="L290">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
+<span class="nc" id="L290">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
 
-<span class="fc" id="L292">        return getLabels(scraperTarget.getId());</span>
+<span class="nc" id="L292">        return getLabels(scraperTarget.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Label&gt; getLabels(@Nonnull final String scraperTargetID) {
 
-<span class="fc" id="L299">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+<span class="nc" id="L299">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
 
-<span class="fc" id="L301">        return getLabels(scraperTargetID, &quot;scrapers&quot;);</span>
+<span class="nc" id="L301">        return getLabels(scraperTargetID, &quot;scrapers&quot;);</span>
     }
 
     @Nonnull
     @Override
     public Label addLabel(@Nonnull final Label label, @Nonnull final ScraperTarget scraperTarget) {
 
-<span class="fc" id="L308">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
-<span class="fc" id="L309">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
+<span class="nc" id="L308">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="nc" id="L309">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
 
-<span class="fc" id="L311">        return addLabel(label.getId(), scraperTarget.getId());</span>
+<span class="nc" id="L311">        return addLabel(label.getId(), scraperTarget.getId());</span>
     }
 
     @Nonnull
     @Override
     public Label addLabel(@Nonnull final String labelID, @Nonnull final String scraperTargetID) {
 
-<span class="fc" id="L318">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
-<span class="fc" id="L319">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+<span class="nc" id="L318">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="nc" id="L319">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
 
-<span class="fc" id="L321">        return addLabel(labelID, scraperTargetID, &quot;scrapers&quot;, ResourceType.SCRAPERS);</span>
+<span class="nc" id="L321">        return addLabel(labelID, scraperTargetID, &quot;scrapers&quot;, ResourceType.SCRAPERS);</span>
     }
 
     @Override
     public void deleteLabel(@Nonnull final Label label, @Nonnull final ScraperTarget scraperTarget) {
 
-<span class="fc" id="L327">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
-<span class="fc" id="L328">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
+<span class="nc" id="L327">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="nc" id="L328">        Arguments.checkNotNull(scraperTarget, &quot;scraperTarget&quot;);</span>
 
-<span class="fc" id="L330">        deleteLabel(label.getId(), scraperTarget.getId());</span>
-<span class="fc" id="L331">    }</span>
+<span class="nc" id="L330">        deleteLabel(label.getId(), scraperTarget.getId());</span>
+<span class="nc" id="L331">    }</span>
 
     @Override
     public void deleteLabel(@Nonnull final String labelID, @Nonnull final String scraperTargetID) {
 
-<span class="fc" id="L336">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
-<span class="fc" id="L337">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+<span class="nc" id="L336">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="nc" id="L337">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
 
-<span class="fc" id="L339">        deleteLabel(labelID, scraperTargetID, &quot;scrapers&quot;);</span>
-<span class="fc" id="L340">    }</span>
+<span class="nc" id="L339">        deleteLabel(labelID, scraperTargetID, &quot;scrapers&quot;);</span>
+<span class="nc" id="L340">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

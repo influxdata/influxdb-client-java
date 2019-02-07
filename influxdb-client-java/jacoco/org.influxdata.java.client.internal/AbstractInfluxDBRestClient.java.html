@@ -65,15 +65,15 @@ abstract class AbstractInfluxDBRestClient extends AbstractRestClient {
     @Nonnull
     List&lt;Label&gt; getLabels(@Nonnull final String resourceID, @Nonnull final String resourcePath) {
 
-<span class="fc" id="L68">        Arguments.checkNonEmpty(resourceID, &quot;resourceID&quot;);</span>
-<span class="fc" id="L69">        Arguments.checkNonEmpty(resourcePath, &quot;resourcePath&quot;);</span>
+<span class="nc" id="L68">        Arguments.checkNonEmpty(resourceID, &quot;resourceID&quot;);</span>
+<span class="nc" id="L69">        Arguments.checkNonEmpty(resourcePath, &quot;resourcePath&quot;);</span>
 
-<span class="fc" id="L71">        Call&lt;Labels&gt; call = influxDBService.findResourceLabels(resourceID, resourcePath);</span>
-<span class="fc" id="L72">        Labels labels = execute(call);</span>
+<span class="nc" id="L71">        Call&lt;Labels&gt; call = influxDBService.findResourceLabels(resourceID, resourcePath);</span>
+<span class="nc" id="L72">        Labels labels = execute(call);</span>
 
-<span class="fc" id="L74">        LOG.log(Level.FINEST, &quot;findResourceLabels response: {0}&quot;, labels);</span>
+<span class="nc" id="L74">        LOG.log(Level.FINEST, &quot;findResourceLabels response: {0}&quot;, labels);</span>
 
-<span class="fc" id="L76">        return labels.getLabels();</span>
+<span class="nc" id="L76">        return labels.getLabels();</span>
     }
 
     @Nonnull
@@ -93,11 +93,11 @@ abstract class AbstractInfluxDBRestClient extends AbstractRestClient {
 <span class="fc" id="L93">        String json = labelMappingAdapter.toJson(labelMapping);</span>
 <span class="fc" id="L94">        Call&lt;LabelResponse&gt; call = influxDBService.addResourceLabelOwner(resourceID, resourcePath, createBody(json));</span>
 
-<span class="fc" id="L96">        LabelResponse labelResponse = execute(call);</span>
+<span class="nc" id="L96">        LabelResponse labelResponse = execute(call);</span>
 
-<span class="fc" id="L98">        LOG.log(Level.FINEST, &quot;addResourceLabelOwner response: {0}&quot;, labelResponse);</span>
+<span class="nc" id="L98">        LOG.log(Level.FINEST, &quot;addResourceLabelOwner response: {0}&quot;, labelResponse);</span>
 
-<span class="fc" id="L100">        return labelResponse.getLabel();</span>
+<span class="nc" id="L100">        return labelResponse.getLabel();</span>
     }
 
     void deleteLabel(@Nonnull final String labelID, @Nonnull final String resourceID,

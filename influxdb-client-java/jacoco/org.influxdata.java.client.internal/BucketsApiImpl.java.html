@@ -385,28 +385,28 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
     @Override
     public List&lt;Label&gt; getLabels(@Nonnull final Bucket bucket) {
 
-<span class="fc" id="L388">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
+<span class="nc" id="L388">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
 
-<span class="fc" id="L390">        return getLabels(bucket.getId());</span>
+<span class="nc" id="L390">        return getLabels(bucket.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Label&gt; getLabels(@Nonnull final String bucketID) {
 
-<span class="fc" id="L397">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
+<span class="nc" id="L397">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
 
-<span class="fc" id="L399">        return getLabels(bucketID, &quot;buckets&quot;);</span>
+<span class="nc" id="L399">        return getLabels(bucketID, &quot;buckets&quot;);</span>
     }
 
     @Nonnull
     @Override
     public Label addLabel(@Nonnull final Label label, @Nonnull final Bucket bucket) {
 
-<span class="fc" id="L406">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
-<span class="fc" id="L407">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
+<span class="nc" id="L406">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="nc" id="L407">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
 
-<span class="fc" id="L409">        return addLabel(label.getId(), bucket.getId());</span>
+<span class="nc" id="L409">        return addLabel(label.getId(), bucket.getId());</span>
     }
 
     @Nonnull
@@ -416,17 +416,17 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 <span class="fc" id="L416">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
 <span class="fc" id="L417">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
 
-<span class="fc" id="L419">        return addLabel(labelID, bucketID, &quot;buckets&quot;, ResourceType.BUCKETS);</span>
+<span class="nc" id="L419">        return addLabel(labelID, bucketID, &quot;buckets&quot;, ResourceType.BUCKETS);</span>
     }
 
     @Override
     public void deleteLabel(@Nonnull final Label label, @Nonnull final Bucket bucket) {
 
-<span class="fc" id="L425">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
-<span class="fc" id="L426">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
+<span class="nc" id="L425">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="nc" id="L426">        Arguments.checkNotNull(bucket, &quot;bucket&quot;);</span>
 
-<span class="fc" id="L428">        deleteLabel(label.getId(), bucket.getId());</span>
-<span class="fc" id="L429">    }</span>
+<span class="nc" id="L428">        deleteLabel(label.getId(), bucket.getId());</span>
+<span class="nc" id="L429">    }</span>
 
     @Override
     public void deleteLabel(@Nonnull final String labelID, @Nonnull final String bucketID) {

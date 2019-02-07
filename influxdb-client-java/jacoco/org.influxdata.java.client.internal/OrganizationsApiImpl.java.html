@@ -343,57 +343,57 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
     @Override
     public List&lt;Label&gt; getLabels(@Nonnull final Organization organization) {
 
-<span class="fc" id="L346">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+<span class="nc" id="L346">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
 
-<span class="fc" id="L348">        return getLabels(organization.getId());</span>
+<span class="nc" id="L348">        return getLabels(organization.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Label&gt; getLabels(@Nonnull final String orgID) {
 
-<span class="fc" id="L355">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+<span class="nc" id="L355">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
 
-<span class="fc" id="L357">        return getLabels(orgID, &quot;orgs&quot;);</span>
+<span class="nc" id="L357">        return getLabels(orgID, &quot;orgs&quot;);</span>
     }
 
     @Nonnull
     @Override
     public Label addLabel(@Nonnull final Label label, @Nonnull final Organization organization) {
 
-<span class="fc" id="L364">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
-<span class="fc" id="L365">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+<span class="nc" id="L364">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="nc" id="L365">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
 
-<span class="fc" id="L367">        return addLabel(label.getId(), organization.getId());</span>
+<span class="nc" id="L367">        return addLabel(label.getId(), organization.getId());</span>
     }
 
     @Nonnull
     @Override
     public Label addLabel(@Nonnull final String labelID, @Nonnull final String orgID) {
 
-<span class="fc" id="L374">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
-<span class="fc" id="L375">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+<span class="nc" id="L374">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="nc" id="L375">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
 
-<span class="fc" id="L377">        return addLabel(labelID, orgID, &quot;orgs&quot;, ResourceType.ORGS);</span>
+<span class="nc" id="L377">        return addLabel(labelID, orgID, &quot;orgs&quot;, ResourceType.ORGS);</span>
     }
 
     @Override
     public void deleteLabel(@Nonnull final Label label, @Nonnull final Organization organization) {
 
-<span class="fc" id="L383">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
-<span class="fc" id="L384">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+<span class="nc" id="L383">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="nc" id="L384">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
 
-<span class="fc" id="L386">        deleteLabel(label.getId(), organization.getId());</span>
-<span class="fc" id="L387">    }</span>
+<span class="nc" id="L386">        deleteLabel(label.getId(), organization.getId());</span>
+<span class="nc" id="L387">    }</span>
 
     @Override
     public void deleteLabel(@Nonnull final String labelID, @Nonnull final String orgID) {
 
-<span class="fc" id="L392">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
-<span class="fc" id="L393">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+<span class="nc" id="L392">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="nc" id="L393">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
 
-<span class="fc" id="L395">        deleteLabel(labelID, orgID, &quot;orgs&quot;);</span>
-<span class="fc" id="L396">    }</span>
+<span class="nc" id="L395">        deleteLabel(labelID, orgID, &quot;orgs&quot;);</span>
+<span class="nc" id="L396">    }</span>
 
     @Nonnull
     @Override
