@@ -56,8 +56,6 @@ import org.junit.runner.RunWith;
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 15:54)
  */
-@Disabled
-// TODO https://github.com/influxdata/influxdb/issues/11491
 @RunWith(JUnitPlatform.class)
 class ITTasksApiTest extends AbstractITClientTest {
 
@@ -576,6 +574,8 @@ class ITTasksApiTest extends AbstractITClientTest {
     }
 
     @Test
+    //TODO https://github.com/influxdata/influxdb/issues/11748
+    @Disabled
     void labels() {
 
         LabelsApi labelsApi = influxDBClient.getLabelsApi();

@@ -235,7 +235,7 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
 
     @Test
     @Disabled
-        //TODO labels
+    //TODO https://github.com/influxdata/influxdb/issues/11748
     void labels() {
 
         LabelsApi labelsApi = influxDBClient.getLabelsApi();

@@ -38,7 +38,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:52)
  */
 @Disabled
-//TODO labels
+//TODO https://github.com/influxdata/influxdb/issues/11748
 @RunWith(JUnitPlatform.class)
 class ITLabelsApiTest extends AbstractITClientTest {
 
