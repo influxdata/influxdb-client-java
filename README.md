@@ -25,6 +25,7 @@ This repository contains the reference Java client for the InfluxDB 2.0.
         - tasks
         - authorizations
         - health check
+        - ...
          
 ### Documentation
 

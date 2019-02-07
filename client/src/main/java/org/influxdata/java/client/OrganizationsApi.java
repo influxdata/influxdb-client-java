@@ -35,7 +35,7 @@ import org.influxdata.java.client.domain.ResourceMember;
 import org.influxdata.java.client.domain.User;
 
 /**
- * The client of theInfluxDB 2.0that implement Organization HTTP API endpoint.
+ * The client of the InfluxDB 2.0 that implement Organization HTTP API endpoint.
  *
  * @author Jakub Bednar (bednar@github) (11/09/2018 14:58)
  */

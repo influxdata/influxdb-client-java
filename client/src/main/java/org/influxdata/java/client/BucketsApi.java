@@ -37,7 +37,7 @@ import org.influxdata.java.client.domain.RetentionRule;
 import org.influxdata.java.client.domain.User;
 
 /**
- * The client of theInfluxDB 2.0that implement Bucket HTTP API endpoint.
+ * The client of the InfluxDB 2.0 that implement Bucket HTTP API endpoint.
  *
  * @author Jakub Bednar (bednar@github) (13/09/2018 10:31)
  */

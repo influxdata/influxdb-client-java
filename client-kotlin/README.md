@@ -1,6 +1,6 @@
 # flux-client-kotlin
 
-The reference Kotlin client that allows you to perform [Flux queries](https://github.com/influxdata/flux/blob/master/docs/SPEC.md) against InfluxDB 1.7+. 
+The reference Kotlin client that allows you to perform [Flux queries](http://bit.ly/flux-spec) against InfluxDB 1.7+. 
 
 > This library is under development and no stable version has been released yet.  
 > The API can change at any moment.

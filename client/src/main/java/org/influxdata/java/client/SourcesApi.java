@@ -30,7 +30,7 @@ import org.influxdata.java.client.domain.Health;
 import org.influxdata.java.client.domain.Source;
 
 /**
- * The client of theInfluxDB 2.0that implement Source HTTP API endpoint.
+ * The client of the InfluxDB 2.0 that implement Source HTTP API endpoint.
  *
  * @author Jakub Bednar (bednar@github) (18/09/2018 09:01)
  */

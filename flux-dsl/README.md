@@ -442,7 +442,7 @@ Flux flux = Flux
 
 ### pivot
 Pivot collects values stored vertically (column-wise) in a table 
-and aligns them horizontally (row-wise) into logical sets [[doc](https://github.com/influxdata/flux/blob/master/docs/SPEC.md#pivot)].
+and aligns them horizontally (row-wise) into logical sets [[doc](http://bit.ly/flux-spec#pivot)].
 - `rowKey` - List of columns used to uniquely identify a row for the output. [array of strings]
 - `columnKey` - List of columns used to pivot values onto each row identified by the rowKey. [array of strings]
 - `valueColumn` - Identifies the single column that contains the value to be moved around the pivot [string]

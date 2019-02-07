@@ -31,7 +31,7 @@ import org.influxdata.java.client.domain.Permission;
 import org.influxdata.java.client.domain.User;
 
 /**
- * The client of theInfluxDB 2.0that implement Authorization HTTP API endpoint.
+ * The client of the InfluxDB 2.0 that implement Authorization HTTP API endpoint.
  *
  * @author Jakub Bednar (bednar@github) (17/09/2018 11:09)
  */

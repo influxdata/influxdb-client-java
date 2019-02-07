@@ -31,7 +31,7 @@ import org.influxdata.java.client.domain.OperationLogEntry;
 import org.influxdata.java.client.domain.User;
 
 /**
- * The client of theInfluxDB 2.0that implement User HTTP API endpoint.
+ * The client of the InfluxDB 2.0 that implement User HTTP API endpoint.
  *
  * @author Jakub Bednar (bednar@github) (11/09/2018 10:05)
  */

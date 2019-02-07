@@ -32,7 +32,7 @@ import org.influxdata.client.flux.domain.FluxRecord;
 import org.influxdata.client.flux.domain.FluxTable;
 
 /**
- * The client of theInfluxDB 2.0that implement Query HTTP API endpoint.
+ * The client of the InfluxDB 2.0 that implement Query HTTP API endpoint.
  *
  * @author Jakub Bednar (bednar@github) (01/10/2018 12:17)
  */
