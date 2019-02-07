@@ -22,9 +22,13 @@
 package org.influxdata.java.client.internal;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -36,10 +40,12 @@ import org.influxdata.client.internal.AbstractRestClient;
 import org.influxdata.java.client.InfluxDBClientOptions;
 import org.influxdata.java.client.domain.Health;
 
+import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -58,8 +64,8 @@ public abstract class AbstractInfluxDBClient<T> extends AbstractRestClient {
 
     final Moshi moshi;
 
-    public final HttpLoggingInterceptor loggingInterceptor;
-    public final GzipInterceptor gzipInterceptor;
+    protected final HttpLoggingInterceptor loggingInterceptor;
+    protected final GzipInterceptor gzipInterceptor;
     private final AuthenticateInterceptor authenticateInterceptor;
     private final OkHttpClient okHttpClient;
 
@@ -81,7 +87,28 @@ public abstract class AbstractInfluxDBClient<T> extends AbstractRestClient {
 
         this.authenticateInterceptor.initToken(okHttpClient);
 
-        this.moshi = new Moshi.Builder().add(Instant.class, new InstantAdapter()).build();
+        this.moshi = new Moshi.Builder()
+                .add(Instant.class, new InstantAdapter())
+                //
+                // Unknown enum value to null
+                //
+                .add(new JsonAdapter.Factory() {
+                    @Nullable
+                    @Override
+                    public JsonAdapter create(@Nonnull final Type type,
+                                              @Nonnull final Set<? extends Annotation> annotations,
+                                              @Nonnull final Moshi moshi) {
+
+                        Class rawType = Types.getRawType(type);
+                        if (rawType.isEnum()) {
+                            //noinspection unchecked
+                            return new EnumJsonAdapter(rawType);
+                        }
+
+                        return null;
+                    }
+                })
+                .build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(options.getUrl())
@@ -150,6 +177,62 @@ public abstract class AbstractInfluxDBClient<T> extends AbstractRestClient {
             if (value != null) {
                 writer.value(value.toString());
             }
+        }
+    }
+
+    /**
+     * EnumJsonAdapter is able to skip unknown enum values.
+     * Inspirited from com.squareup.moshi.StandardJsonAdapters.EnumJsonAdapter.
+     * <p>
+     * TODO use 1.8 Moshi Adapter after upgrade Retrofit
+     */
+    private final class EnumJsonAdapter extends JsonAdapter<Enum> {
+
+        private final Class enumType;
+        private final String[] nameStrings;
+        private final Enum[] constants;
+        private final JsonReader.Options options;
+
+        EnumJsonAdapter(final Class<Enum> enumType) {
+            this.enumType = enumType;
+            try {
+                constants = enumType.getEnumConstants();
+                nameStrings = new String[constants.length];
+                for (int i = 0; i < constants.length; i++) {
+                    Enum constant = constants[i];
+                    Json annotation = enumType.getField(constant.name()).getAnnotation(Json.class);
+                    String name = annotation != null ? annotation.name() : constant.name();
+                    nameStrings[i] = name;
+                }
+                options = JsonReader.Options.of(nameStrings);
+            } catch (NoSuchFieldException e) {
+                throw new AssertionError("Missing field in " + enumType.getName(), e);
+            }
+        }
+
+        @Override
+        public Enum fromJson(final JsonReader reader) throws IOException {
+            int index = reader.selectString(options);
+            if (index != -1) {
+                return constants[index];
+            }
+
+            String name = reader.nextString();
+
+            LOG.log(Level.WARNING, "Expected one of {0} but was {1} at path {2}",
+                    new Object[]{Arrays.asList(nameStrings), name, reader.getPath()});
+
+            return null;
+        }
+
+        @Override
+        public void toJson(final JsonWriter writer, final Enum value) throws IOException {
+            writer.value(nameStrings[value.ordinal()]);
+        }
+
+        @Override
+        public String toString() {
+            return "EnumJsonAdapter(" + enumType.getName() + ")";
         }
     }
 }

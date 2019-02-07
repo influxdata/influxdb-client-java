@@ -22,6 +22,8 @@
 package org.influxdata.java.client;
 
 import org.influxdata.client.LogLevel;
+import org.influxdata.java.client.domain.Authorization;
+import org.influxdata.java.client.domain.Status;
 import org.influxdata.java.client.internal.AbstractInfluxDBClientTest;
 
 import okhttp3.mockwebserver.MockResponse;
@@ -133,5 +135,20 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
         // request to signout
         RecordedRequest signOut = mockServer.takeRequest();
         Assertions.assertThat(signOut.getPath()).endsWith("/api/v2/signout");
+    }
+
+    @Test
+    void parseUnknownEnumAsNull() {
+
+        mockServer.enqueue(new MockResponse().setBody("{\"status\":\"active\"}"));
+        mockServer.enqueue(new MockResponse().setBody("{\"status\":\"unknown\"}"));
+
+        Authorization authorization = influxDBClient.getAuthorizationsApi().findAuthorizationByID("id");
+        Assertions.assertThat(authorization).isNotNull();
+        Assertions.assertThat(authorization.getStatus()).isEqualTo(Status.ACTIVE);
+
+        authorization = influxDBClient.getAuthorizationsApi().findAuthorizationByID("id");
+        Assertions.assertThat(authorization).isNotNull();
+        Assertions.assertThat(authorization.getStatus()).isNull();
     }
 }
