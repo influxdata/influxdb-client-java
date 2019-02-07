@@ -63,4 +63,7 @@ public enum ResourceType {
 
     @Json(name = "labels")
     LABELS,
+
+    @Json(name = "views")
+    VIEWS
 }
