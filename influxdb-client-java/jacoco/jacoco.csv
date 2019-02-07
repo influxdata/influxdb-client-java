@@ -8,7 +8,7 @@ The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,AbstractWriteCl
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,QueryApiImpl.new FluxCsvParser.FluxResponseConsumer() {...},0,25,0,0,0,4,0,3,0,3
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,QueryApiImpl.new FluxCsvParser.FluxResponseConsumer() {...},0,16,0,0,0,4,0,3,0,3
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,AbstractInfluxDBRestClient,46,135,1,9,10,35,2,10,1,6
-The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,AbstractInfluxDBClient,28,104,0,0,9,28,1,3,1,3
+The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,AbstractInfluxDBClient,28,109,0,0,9,31,1,3,1,3
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,AbstractWriteClient,26,317,1,12,2,74,3,29,2,22
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,AbstractWriteClient.BatchWriteOptions,5,74,5,5,2,14,5,3,0,3
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,InfluxDBClientImpl,66,128,0,0,13,23,5,17,5,17
@@ -18,20 +18,22 @@ The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,AuthorizationsA
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,LabelsApiImpl,165,0,2,0,42,0,10,0,9,0
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,WriteApiImpl,0,189,0,6,0,48,0,16,0,13
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,AbstractWriteClient.BatchWriteDataMeasurement,2,25,1,1,1,6,1,2,0,2
+The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,AbstractInfluxDBClient.new JsonAdapter.Factory() {...},0,21,0,2,0,5,0,3,0,2
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,AbstractInfluxDBClient.InstantAdapter,17,14,3,1,6,4,3,2,1,2
+The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,AbstractInfluxDBClient.EnumJsonAdapter,30,107,1,5,3,21,2,5,1,3
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,ScraperTargetsApiImpl,288,155,0,0,70,38,18,9,18,9
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,AbstractWriteClient.ToWritePointsCompletable,0,75,1,3,0,16,1,5,0,4
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,BucketsApiImpl,50,510,0,2,12,117,4,36,4,35
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,UsersApiImpl,7,309,1,3,2,73,1,19,0,18
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,MeasurementMapper,14,275,6,30,3,57,6,19,0,7
-The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,TasksApiImpl,860,20,4,0,190,5,50,2,48,2
+The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,TasksApiImpl,353,527,0,4,84,111,23,29,23,27
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,AuthenticateInterceptor,0,264,1,21,0,58,1,17,0,7
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,QueryApiImpl,219,262,0,0,57,50,9,12,9,12
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.internal,OrganizationsApiImpl,72,506,0,0,18,120,6,31,6,31
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,ScraperTarget,16,29,0,0,6,13,5,8,5,8
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,ResourceType,0,134,0,0,0,14,0,1,0,1
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,User,0,57,0,0,0,11,0,6,0,6
-The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,RunStatus,54,0,0,0,6,0,1,0,1,0
+The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,RunStatus,0,54,0,0,0,6,0,1,0,1
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Status,0,24,0,0,0,3,0,1,0,1
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Buckets,4,11,0,0,2,3,1,2,1,2
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Authorization,20,154,0,0,10,29,5,15,5,15
@@ -40,10 +42,10 @@ The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,FindOptions,0,31,
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Source,101,0,0,0,43,0,29,0,29,0
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Permission,0,17,0,0,0,7,0,5,0,5
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,AbstractHasLinks,4,11,0,0,2,3,1,2,1,2
-The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Organization,4,63,0,0,2,10,1,5,1,5
+The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Organization,0,67,0,0,0,12,0,6,0,6
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,ScraperTargetResponses,4,11,0,0,2,3,1,2,1,2
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Source.SourceType,0,34,0,0,0,4,0,1,0,1
-The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Tasks,15,0,0,0,5,0,3,0,3,0
+The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Tasks,4,11,0,0,2,3,1,2,1,2
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,ScraperType,0,14,0,0,0,2,0,1,0,1
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,RetentionRule,0,17,0,0,0,7,0,5,0,5
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,PermissionResource,0,24,0,0,0,10,0,7,0,7
@@ -58,13 +60,13 @@ The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,AbstractPageLinks
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Label,29,0,0,0,11,0,7,0,7,0
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,OperationLogEntries,4,11,0,0,2,3,1,2,1,2
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,ResourceMember,12,12,0,0,6,4,3,4,3,4
-The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Task,169,0,0,0,35,0,18,0,18,0
+The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Task,4,165,0,0,2,33,1,17,1,17
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,OperationLogEntry,12,12,0,0,6,4,3,4,3,4
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,ResourceMembers,4,11,0,0,2,3,1,2,1,2
-The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,RunsResponse,15,0,0,0,5,0,3,0,3,0
+The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,RunsResponse,4,11,0,0,2,3,1,2,1,2
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,IsOnboarding,10,0,0,0,4,0,3,0,3,0
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Sources,15,0,0,0,5,0,3,0,3,0
-The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Run,59,0,0,0,25,0,17,0,17,0
+The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Run,32,27,0,0,16,9,8,9,8,9
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,ResourceMember.UserType,0,24,0,0,0,3,0,1,0,1
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,Bucket,19,31,0,0,9,11,5,8,5,8
 The Java InfluxDB 2.0 Client,org.influxdata.java.client.domain,LabelMapping,6,11,0,0,2,5,2,3,2,3
