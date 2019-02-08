@@ -1390,6 +1390,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#org.influxdata.test.AbstractMockServerTest.java">org/influxdata/test/AbstractMockServerTest.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Task.java">org/influxdata/client/domain/Task.java</a>
                 </td>
                 <td>
@@ -1601,6 +1615,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#org.influxdata.flux.dsl.functions.DifferenceFlux.java">org/influxdata/flux/dsl/functions/DifferenceFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#org.influxdata.test.AbstractTest.java">org/influxdata/test/AbstractTest.java</a>
                 </td>
                 <td>
                   0
@@ -1838,20 +1866,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#org.influxdata.test.client.AbstractTest.java">org/influxdata/test/client/AbstractTest.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#org.influxdata.flux.dsl.functions.restriction.ColumnRestriction.java">org/influxdata/flux/dsl/functions/restriction/ColumnRestriction.java</a>
                 </td>
                 <td>
@@ -1937,20 +1951,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.WriteApiImpl.java">org/influxdata/client/internal/WriteApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#org.influxdata.test.client.AbstractMockServerTest.java">org/influxdata/test/client/AbstractMockServerTest.java</a>
                 </td>
                 <td>
                   0

@@ -19,4 +19,4 @@ org.influxdata.internal
 org.influxdata.query
 org.influxdata.query.exceptions
 org.influxdata.query.internal
-org.influxdata.test.client
+org.influxdata.test
