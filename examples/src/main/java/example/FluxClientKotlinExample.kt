@@ -25,7 +25,7 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.filter
 import kotlinx.coroutines.channels.take
 import kotlinx.coroutines.runBlocking
-import org.influxdata.kotlin.client.InfluxDBClientKotlinFactory
+import org.influxdata.client.kotlin.InfluxDBClientKotlinFactory
 
 fun main(args: Array<String>) = runBlocking {
 

@@ -28,7 +28,7 @@ import java.util.StringJoiner;
 import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 
-import org.influxdata.client.Arguments;
+import org.influxdata.Arguments;
 import org.influxdata.flux.dsl.Flux;
 
 /**

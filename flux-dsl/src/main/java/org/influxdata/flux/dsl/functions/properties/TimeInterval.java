@@ -25,7 +25,7 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import javax.annotation.Nonnull;
 
-import org.influxdata.client.Arguments;
+import org.influxdata.Arguments;
 
 /**
  * Flux duration literal -

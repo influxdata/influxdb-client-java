@@ -21,9 +21,9 @@
  */
 package example;
 
-import org.influxdata.client.LogLevel;
-import org.influxdata.flux.client.FluxClient;
-import org.influxdata.flux.client.FluxClientFactory;
+import org.influxdata.LogLevel;
+import org.influxdata.client.flux.FluxClient;
+import org.influxdata.client.flux.FluxClientFactory;
 
 @SuppressWarnings("CheckStyle")
 public class FluxExample {

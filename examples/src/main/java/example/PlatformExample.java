@@ -28,22 +28,22 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.influxdata.client.annotations.Column;
-import org.influxdata.client.annotations.Measurement;
-import org.influxdata.client.flux.domain.FluxRecord;
-import org.influxdata.client.flux.domain.FluxTable;
-import org.influxdata.java.client.InfluxDBClient;
-import org.influxdata.java.client.InfluxDBClientFactory;
-import org.influxdata.java.client.WriteApi;
-import org.influxdata.java.client.WriteOptions;
-import org.influxdata.java.client.domain.Authorization;
-import org.influxdata.java.client.domain.Bucket;
-import org.influxdata.java.client.domain.Organization;
-import org.influxdata.java.client.domain.Permission;
-import org.influxdata.java.client.domain.PermissionResource;
-import org.influxdata.java.client.domain.ResourceType;
-import org.influxdata.java.client.writes.Point;
-import org.influxdata.java.client.writes.events.WriteSuccessEvent;
+import org.influxdata.annotations.Column;
+import org.influxdata.annotations.Measurement;
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.WriteApi;
+import org.influxdata.client.WriteOptions;
+import org.influxdata.client.domain.Authorization;
+import org.influxdata.client.domain.Bucket;
+import org.influxdata.client.domain.Organization;
+import org.influxdata.client.domain.Permission;
+import org.influxdata.client.domain.PermissionResource;
+import org.influxdata.client.domain.ResourceType;
+import org.influxdata.client.writes.Point;
+import org.influxdata.client.writes.events.WriteSuccessEvent;
+import org.influxdata.query.FluxRecord;
+import org.influxdata.query.FluxTable;
 
 import io.reactivex.BackpressureOverflowStrategy;
 

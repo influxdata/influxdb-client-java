@@ -24,15 +24,12 @@ package org.influxdata.flux.dsl.functions;
 import java.time.temporal.ChronoUnit;
 
 import org.influxdata.flux.dsl.Flux;
+import org.influxdata.flux.dsl.functions.restriction.Restrictions;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-
-import static org.influxdata.flux.dsl.functions.restriction.Restrictions.and;
-import static org.influxdata.flux.dsl.functions.restriction.Restrictions.field;
-import static org.influxdata.flux.dsl.functions.restriction.Restrictions.measurement;
 
 /**
  * @author Jakub Bednar (bednar@github) (29/06/2018 07:37)
@@ -44,7 +41,7 @@ class SampleFluxTest {
     void sampleN() {
 
         Flux flux = Flux.from("telegraf")
-                .filter(and(measurement().equal("cpu"), field().equal("usage_system")))
+                .filter(Restrictions.and(Restrictions.measurement().equal("cpu"), Restrictions.field().equal("usage_system")))
                 .range(-1L, ChronoUnit.DAYS)
                 .sample(10);
 
@@ -59,7 +56,7 @@ class SampleFluxTest {
     void sampleNPosition() {
 
         Flux flux = Flux.from("telegraf")
-                .filter(and(measurement().equal("cpu"), field().equal("usage_system")))
+                .filter(Restrictions.and(Restrictions.measurement().equal("cpu"), Restrictions.field().equal("usage_system")))
                 .range(-1L, ChronoUnit.DAYS)
                 .sample(5, 1);
 
@@ -85,7 +82,7 @@ class SampleFluxTest {
     void samplePositionGreaterThanN() {
 
         Flux flux = Flux.from("telegraf")
-                .filter(and(measurement().equal("cpu"), field().equal("usage_system")))
+                .filter(Restrictions.and(Restrictions.measurement().equal("cpu"), Restrictions.field().equal("usage_system")))
                 .range(-1L, ChronoUnit.DAYS);
 
 
@@ -98,7 +95,7 @@ class SampleFluxTest {
     void samplePositionSameThanN() {
 
         Flux flux = Flux.from("telegraf")
-                .filter(and(measurement().equal("cpu"), field().equal("usage_system")))
+                .filter(Restrictions.and(Restrictions.measurement().equal("cpu"), Restrictions.field().equal("usage_system")))
                 .range(-1L, ChronoUnit.DAYS);
 
         Assertions.assertThatThrownBy(() -> flux.sample(10, 10))

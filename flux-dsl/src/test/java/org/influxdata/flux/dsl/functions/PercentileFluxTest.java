@@ -24,7 +24,6 @@ package org.influxdata.flux.dsl.functions;
 import java.util.Arrays;
 
 import org.influxdata.flux.dsl.Flux;
-import org.influxdata.flux.dsl.functions.PercentileFlux.MethodType;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -68,7 +67,7 @@ class PercentileFluxTest {
 
         Flux flux = Flux
                 .from("telegraf")
-                .percentile(0.80F, MethodType.EXACT_SELECTOR);
+                .percentile(0.80F, PercentileFlux.MethodType.EXACT_SELECTOR);
 
         Assertions.assertThat(flux.toString())
                 .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> percentile(percentile:0.8, method:\"exact_selector\")");
@@ -79,7 +78,7 @@ class PercentileFluxTest {
 
         Flux flux = Flux
                 .from("telegraf")
-                .percentile(0.80F, MethodType.EXACT_SELECTOR, 3_000F);
+                .percentile(0.80F, PercentileFlux.MethodType.EXACT_SELECTOR, 3_000F);
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> percentile(percentile:0.8, method:\"exact_selector\", compression:3000.0)");
     }
@@ -89,7 +88,7 @@ class PercentileFluxTest {
 
         Flux flux = Flux
                 .from("telegraf")
-                .percentile(new String[]{"_value", "_value2"}, 0.80F, MethodType.EXACT_SELECTOR, 3_000F);
+                .percentile(new String[]{"_value", "_value2"}, 0.80F, PercentileFlux.MethodType.EXACT_SELECTOR, 3_000F);
 
         String expected = "from(bucket:\"telegraf\") |> "
                 + "percentile(columns:[\"_value\", \"_value2\"], percentile:0.8, method:\"exact_selector\", compression:3000.0)";
@@ -103,7 +102,7 @@ class PercentileFluxTest {
 
         Flux flux = Flux
                 .from("telegraf")
-                .percentile(Arrays.asList(columns), 0.80F, MethodType.ESTIMATE_TDIGEST, 3_000F);
+                .percentile(Arrays.asList(columns), 0.80F, PercentileFlux.MethodType.ESTIMATE_TDIGEST, 3_000F);
 
         String expected = "from(bucket:\"telegraf\") |> "
                 + "percentile(columns:[\"_value\", \"_value2\"], percentile:0.8, method:\"estimate_tdigest\", compression:3000.0)";

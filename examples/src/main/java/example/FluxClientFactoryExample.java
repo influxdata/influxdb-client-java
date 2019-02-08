@@ -21,9 +21,9 @@
  */
 package example;
 
-import org.influxdata.flux.client.FluxClient;
-import org.influxdata.flux.client.FluxClientFactory;
-import org.influxdata.flux.client.FluxConnectionOptions;
+import org.influxdata.client.flux.FluxClient;
+import org.influxdata.client.flux.FluxClientFactory;
+import org.influxdata.client.flux.FluxConnectionOptions;
 
 @SuppressWarnings("CheckStyle")
 public class FluxClientFactoryExample {
