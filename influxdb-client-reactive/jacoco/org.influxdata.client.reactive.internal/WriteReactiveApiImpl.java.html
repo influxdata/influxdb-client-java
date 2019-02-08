@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WriteReactiveApiImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The RxJava InfluxDB 2.0 Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.client.reactive.internal</a> &gt; <span class="el_source">WriteReactiveApiImpl.java</span></div><h1>WriteReactiveApiImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.client.reactive.internal;
+
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
+import javax.annotation.Nonnull;
+
+import org.influxdata.Arguments;
+import org.influxdata.client.WriteOptions;
+import org.influxdata.client.internal.AbstractWriteClient;
+import org.influxdata.client.reactive.WriteReactiveApi;
+import org.influxdata.client.write.Point;
+import org.influxdata.client.write.events.AbstractWriteEvent;
+
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.RequestBody;
+import org.reactivestreams.Publisher;
+
+/**
+ * @author Jakub Bednar (bednar@github) (22/11/2018 06:50)
+ */
+public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteReactiveApi {
+
+    private final InfluxDBReactiveService influxDBService;
+
+    WriteReactiveApiImpl(@Nonnull final WriteOptions writeOptions,
+                         @Nonnull final InfluxDBReactiveService influxDBService) {
+
+<span class="fc" id="L53">        super(writeOptions,</span>
+<span class="fc" id="L54">                Schedulers.newThread(),</span>
+<span class="fc" id="L55">                Schedulers.trampoline());</span>
+
+<span class="fc" id="L57">        this.influxDBService = influxDBService;</span>
+<span class="fc" id="L58">    }</span>
+
+    @Override
+    public void writeRecord(@Nonnull final String bucket,
+                            @Nonnull final String orgID,
+                            @Nonnull final ChronoUnit precision,
+                            @Nonnull final Maybe&lt;String&gt; record) {
+
+<span class="fc" id="L66">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L67">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
+<span class="fc" id="L68">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
+<span class="fc" id="L69">        Arguments.checkNotNull(record, &quot;record&quot;);</span>
+
+<span class="fc" id="L71">        writeRecords(bucket, orgID, precision, record.toFlowable());</span>
+<span class="fc" id="L72">    }</span>
+
+    @Override
+    public void writeRecords(@Nonnull final String bucket,
+                             @Nonnull final String orgID,
+                             @Nonnull final ChronoUnit precision,
+                             @Nonnull final Flowable&lt;String&gt; records) {
+
+<span class="fc" id="L80">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L81">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
+<span class="fc" id="L82">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
+<span class="fc" id="L83">        Arguments.checkNotNull(records, &quot;records&quot;);</span>
+
+<span class="fc" id="L85">        Flowable&lt;BatchWriteData&gt; stream = records.map(BatchWriteDataRecord::new);</span>
+
+<span class="fc" id="L87">        write(bucket, orgID, precision, stream);</span>
+<span class="fc" id="L88">    }</span>
+
+    @Override
+    public void writeRecords(@Nonnull final String bucket,
+                             @Nonnull final String orgID,
+                             @Nonnull final ChronoUnit precision,
+                             @Nonnull final Publisher&lt;String&gt; records) {
+
+<span class="fc" id="L96">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L97">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
+<span class="fc" id="L98">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
+<span class="fc" id="L99">        Arguments.checkNotNull(records, &quot;records&quot;);</span>
+
+<span class="fc" id="L101">        writeRecords(bucket, orgID, precision, Flowable.fromPublisher(records));</span>
+<span class="fc" id="L102">    }</span>
+
+    @Override
+    public void writePoint(@Nonnull final String bucket,
+                           @Nonnull final String orgID,
+                           @Nonnull final Maybe&lt;Point&gt; point) {
+
+<span class="fc" id="L109">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L110">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
+<span class="fc" id="L111">        Arguments.checkNotNull(point, &quot;point&quot;);</span>
+
+<span class="fc" id="L113">        writePoints(bucket, orgID, point.toFlowable());</span>
+<span class="fc" id="L114">    }</span>
+
+    @Override
+    public void writePoints(@Nonnull final String bucket,
+                            @Nonnull final String orgID,
+                            @Nonnull final Flowable&lt;Point&gt; points) {
+
+<span class="fc" id="L121">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L122">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
+<span class="fc" id="L123">        Arguments.checkNotNull(points, &quot;points&quot;);</span>
+
+<span class="fc" id="L125">        Flowable&lt;BatchWriteDataPoint&gt; stream = points.filter(Objects::nonNull).map(BatchWriteDataPoint::new);</span>
+
+<span class="fc" id="L127">        write(bucket, orgID, stream);</span>
+<span class="fc" id="L128">    }</span>
+
+    @Override
+    public void writePoints(@Nonnull final String bucket,
+                            @Nonnull final String orgID,
+                            @Nonnull final Publisher&lt;Point&gt; points) {
+
+<span class="fc" id="L135">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L136">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
+<span class="fc" id="L137">        Arguments.checkNotNull(points, &quot;points&quot;);</span>
+
+<span class="fc" id="L139">        writePoints(bucket, orgID, Flowable.fromPublisher(points));</span>
+<span class="fc" id="L140">    }</span>
+
+    @Override
+    public &lt;M&gt; void writeMeasurement(@Nonnull final String bucket,
+                                     @Nonnull final String orgID,
+                                     @Nonnull final ChronoUnit precision,
+                                     @Nonnull final Maybe&lt;M&gt; measurement) {
+
+<span class="fc" id="L148">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L149">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
+<span class="fc" id="L150">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
+<span class="fc" id="L151">        Arguments.checkNotNull(measurement, &quot;measurement&quot;);</span>
+
+<span class="fc" id="L153">        writeMeasurements(bucket, orgID, precision, measurement.toFlowable());</span>
+<span class="fc" id="L154">    }</span>
+
+    @Override
+    public &lt;M&gt; void writeMeasurements(@Nonnull final String bucket,
+                                      @Nonnull final String orgID,
+                                      @Nonnull final ChronoUnit precision,
+                                      @Nonnull final Flowable&lt;M&gt; measurements) {
+
+<span class="fc" id="L162">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L163">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
+<span class="fc" id="L164">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
+<span class="fc" id="L165">        Arguments.checkNotNull(measurements, &quot;measurements&quot;);</span>
+
+<span class="fc" id="L167">        Flowable&lt;BatchWriteData&gt; stream = measurements.map(it -&gt; new BatchWriteDataMeasurement(it, precision));</span>
+
+<span class="fc" id="L169">        write(bucket, orgID, precision, stream);</span>
+<span class="fc" id="L170">    }</span>
+
+    @Override
+    public &lt;M&gt; void writeMeasurements(@Nonnull final String bucket,
+                                      @Nonnull final String orgID,
+                                      @Nonnull final ChronoUnit precision,
+                                      @Nonnull final Publisher&lt;M&gt; measurements) {
+
+<span class="fc" id="L178">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L179">        Arguments.checkNonEmpty(orgID, &quot;organization&quot;);</span>
+<span class="fc" id="L180">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
+<span class="fc" id="L181">        Arguments.checkNotNull(measurements, &quot;measurements&quot;);</span>
+
+<span class="fc" id="L183">        writeMeasurements(bucket, orgID, precision, Flowable.fromPublisher(measurements));</span>
+<span class="fc" id="L184">    }</span>
+
+    @Nonnull
+    @Override
+    public &lt;T extends AbstractWriteEvent&gt; Observable&lt;T&gt; listenEvents(@Nonnull final Class&lt;T&gt; eventType) {
+<span class="fc" id="L189">        return super.addEventListener(eventType);</span>
+    }
+
+    @Override
+    public void close() {
+<span class="fc" id="L194">        super.close();</span>
+<span class="fc" id="L195">    }</span>
+
+    @Override
+    public Completable writeCall(final RequestBody requestBody,
+                                 final String organization,
+                                 final String bucket,
+                                 final String precision) {
+<span class="fc" id="L202">        return influxDBService.writePoints(organization, bucket, precision, requestBody);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,2 +1,2 @@
-org.influxdata.reactive.client
-org.influxdata.reactive.client.internal
+org.influxdata.client.reactive
+org.influxdata.client.reactive.internal

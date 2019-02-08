@@ -25,7 +25,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.influxdata.client.Arguments;
+import org.influxdata.Arguments;
 import org.influxdata.flux.dsl.Flux;
 
 /**

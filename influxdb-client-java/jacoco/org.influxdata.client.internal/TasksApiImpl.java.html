@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TasksApiImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.0 Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.client.internal</a> &gt; <span class="el_source">TasksApiImpl.java</span></div><h1>TasksApiImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.client.internal;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.Arguments;
+import org.influxdata.client.TasksApi;
+import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.Organization;
+import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceMembers;
+import org.influxdata.client.domain.ResourceType;
+import org.influxdata.client.domain.Run;
+import org.influxdata.client.domain.RunsResponse;
+import org.influxdata.client.domain.Status;
+import org.influxdata.client.domain.Task;
+import org.influxdata.client.domain.Tasks;
+import org.influxdata.client.domain.User;
+import org.influxdata.exceptions.NotFoundException;
+
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (bednar@github) (11/09/2018 07:59)
+ */
+final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi {
+
+<span class="fc" id="L55">    private static final Logger LOG = Logger.getLogger(TasksApiImpl.class.getName());</span>
+
+    private final JsonAdapter&lt;Task&gt; adapter;
+    private final JsonAdapter&lt;User&gt; userAdapter;
+
+    TasksApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi) {
+
+<span class="fc" id="L62">        super(influxDBService, moshi);</span>
+
+<span class="fc" id="L64">        this.adapter = moshi.adapter(Task.class);</span>
+<span class="fc" id="L65">        this.userAdapter = moshi.adapter(User.class);</span>
+<span class="fc" id="L66">    }</span>
+
+    @Nullable
+    @Override
+    public Task findTaskByID(@Nonnull final String taskID) {
+
+<span class="fc" id="L72">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+
+<span class="fc" id="L74">        Call&lt;Task&gt; call = influxDBService.findTaskByID(taskID);</span>
+
+<span class="fc" id="L76">        return execute(call, NotFoundException.class);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Task&gt; findTasks() {
+<span class="fc" id="L82">        return findTasks(null, null, null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Task&gt; findTasksByUser(@Nonnull final User user) {
+
+<span class="nc" id="L89">        Arguments.checkNotNull(user, &quot;user&quot;);</span>
+
+<span class="nc" id="L91">        return findTasksByUserID(user.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Task&gt; findTasksByUserID(@Nullable final String userID) {
+
+<span class="nc" id="L98">        return findTasks(null, userID, null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Task&gt; findTasksByOrganization(@Nonnull final Organization organization) {
+
+<span class="nc" id="L105">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+
+<span class="nc" id="L107">        return findTasksByOrganizationID(organization.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Task&gt; findTasksByOrganizationID(@Nullable final String orgID) {
+<span class="nc" id="L113">        return findTasks(null, null, orgID);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Task&gt; findTasks(@Nullable final String afterID,
+                                @Nullable final String userID,
+                                @Nullable final String orgID) {
+
+<span class="fc" id="L122">        Call&lt;Tasks&gt; call = influxDBService.findTasks(afterID, userID, orgID);</span>
+
+<span class="fc" id="L124">        Tasks tasks = execute(call);</span>
+<span class="fc" id="L125">        LOG.log(Level.FINEST, &quot;findTasks found: {0}&quot;, tasks);</span>
+
+<span class="fc" id="L127">        return tasks.getTasks();</span>
+    }
+
+    @Nonnull
+    @Override
+    public Task createTask(@Nonnull final Task task) {
+
+<span class="fc" id="L134">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="fc" id="L136">        Call&lt;Task&gt; call = influxDBService.createTask(createBody(adapter.toJson(task)));</span>
+
+<span class="fc" id="L138">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Task createTaskCron(@Nonnull final String name,
+                               @Nonnull final String flux,
+                               @Nonnull final String cron,
+                               @Nonnull final Organization organization) {
+
+<span class="fc" id="L148">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="fc" id="L149">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
+<span class="fc" id="L150">        Arguments.checkNonEmpty(cron, &quot;cron expression&quot;);</span>
+<span class="fc" id="L151">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+
+<span class="fc" id="L153">        Task task = createTask(name, flux, null, cron, organization.getId());</span>
+
+<span class="fc" id="L155">        return createTask(task);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Task createTaskCron(@Nonnull final String name,
+                               @Nonnull final String flux,
+                               @Nonnull final String cron,
+                               @Nonnull final String orgID) {
+
+<span class="fc" id="L165">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="fc" id="L166">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
+<span class="fc" id="L167">        Arguments.checkNonEmpty(cron, &quot;cron expression&quot;);</span>
+<span class="fc" id="L168">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
+
+<span class="fc" id="L170">        Organization organization = new Organization();</span>
+<span class="fc" id="L171">        organization.setId(orgID);</span>
+
+<span class="fc" id="L173">        return createTaskCron(name, flux, cron, organization);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Task createTaskEvery(@Nonnull final String name,
+                                @Nonnull final String flux,
+                                @Nonnull final String every,
+                                @Nonnull final Organization organization) {
+
+<span class="fc" id="L183">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="fc" id="L184">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
+<span class="fc" id="L185">        Arguments.checkNonEmpty(every, &quot;every&quot;);</span>
+<span class="fc" id="L186">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+
+<span class="fc" id="L188">        Task task = createTask(name, flux, every, null, organization.getId());</span>
+
+<span class="fc" id="L190">        return createTask(task);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Task createTaskEvery(@Nonnull final String name,
+                                @Nonnull final String flux,
+                                @Nonnull final String every,
+                                @Nonnull final String orgID) {
+
+<span class="fc" id="L200">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="fc" id="L201">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
+<span class="fc" id="L202">        Arguments.checkNonEmpty(every, &quot;every expression&quot;);</span>
+<span class="fc" id="L203">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
+
+<span class="fc" id="L205">        Organization organization = new Organization();</span>
+<span class="fc" id="L206">        organization.setId(orgID);</span>
+
+<span class="fc" id="L208">        return createTaskEvery(name, flux, every, organization);</span>
+    }
+
+
+    @Nonnull
+    @Override
+    public Task updateTask(@Nonnull final Task task) {
+
+<span class="nc" id="L216">        Arguments.checkNotNull(task, &quot;Task is required&quot;);</span>
+<span class="nc" id="L217">        Arguments.checkDurationNotRequired(task.getEvery(), &quot;Task.every&quot;);</span>
+
+<span class="nc" id="L219">        Call&lt;Task&gt; call = influxDBService.updateTask(task.getId(), createBody(adapter.toJson(task)));</span>
+
+<span class="nc" id="L221">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteTask(@Nonnull final Task task) {
+
+<span class="fc" id="L227">        Arguments.checkNotNull(task, &quot;Task is required&quot;);</span>
+
+<span class="fc" id="L229">        deleteTask(task.getId());</span>
+<span class="fc" id="L230">    }</span>
+
+    @Override
+    public void deleteTask(@Nonnull final String taskID) {
+
+<span class="fc" id="L235">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+
+<span class="fc" id="L237">        Call&lt;Void&gt; call = influxDBService.deleteTask(taskID);</span>
+<span class="fc" id="L238">        execute(call);</span>
+<span class="fc" id="L239">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceMember&gt; getMembers(@Nonnull final String taskID) {
+
+<span class="nc" id="L245">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L247">        Call&lt;ResourceMembers&gt; call = influxDBService.findTaskMembers(taskID);</span>
+
+<span class="nc" id="L249">        ResourceMembers resourceMembers = execute(call);</span>
+<span class="nc" id="L250">        LOG.log(Level.FINEST, &quot;findTaskMembers found: {0}&quot;, resourceMembers);</span>
+
+<span class="nc" id="L252">        return resourceMembers.getUsers();</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceMember&gt; getMembers(@Nonnull final Task task) {
+
+<span class="nc" id="L259">        Arguments.checkNotNull(task, &quot;Task&quot;);</span>
+
+<span class="nc" id="L261">        return getMembers(task.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final User member, @Nonnull final Task task) {
+
+<span class="nc" id="L268">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L269">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+
+<span class="nc" id="L271">        return addMember(member.getId(), task.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String taskID) {
+
+<span class="nc" id="L278">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="nc" id="L279">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L281">        User user = new User();</span>
+<span class="nc" id="L282">        user.setId(memberID);</span>
+
+<span class="nc" id="L284">        String json = userAdapter.toJson(user);</span>
+<span class="nc" id="L285">        Call&lt;ResourceMember&gt; call = influxDBService.addTaskMember(taskID, createBody(json));</span>
+
+<span class="nc" id="L287">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteMember(@Nonnull final User member, @Nonnull final Task task) {
+
+<span class="nc" id="L293">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L294">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+
+<span class="nc" id="L296">        deleteMember(member.getId(), task.getId());</span>
+<span class="nc" id="L297">    }</span>
+
+    @Override
+    public void deleteMember(@Nonnull final String memberID, @Nonnull final String taskID) {
+
+<span class="nc" id="L302">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="nc" id="L303">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L305">        Call&lt;Void&gt; call = influxDBService.deleteTaskMember(taskID, memberID);</span>
+<span class="nc" id="L306">        execute(call);</span>
+<span class="nc" id="L307">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceMember&gt; getOwners(@Nonnull final String taskID) {
+
+<span class="nc" id="L313">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L315">        Call&lt;ResourceMembers&gt; call = influxDBService.findTaskOwners(taskID);</span>
+
+<span class="nc" id="L317">        ResourceMembers resourceMembers = execute(call);</span>
+<span class="nc" id="L318">        LOG.log(Level.FINEST, &quot;findTaskMembers found: {0}&quot;, resourceMembers);</span>
+
+<span class="nc" id="L320">        return resourceMembers.getUsers();</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceMember&gt; getOwners(@Nonnull final Task task) {
+
+<span class="nc" id="L327">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="nc" id="L329">        return getOwners(task.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Task task) {
+
+<span class="nc" id="L336">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L337">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+
+<span class="nc" id="L339">        return addOwner(owner.getId(), task.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String taskID) {
+
+<span class="nc" id="L346">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L347">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L349">        User user = new User();</span>
+<span class="nc" id="L350">        user.setId(ownerID);</span>
+
+<span class="nc" id="L352">        String json = userAdapter.toJson(user);</span>
+<span class="nc" id="L353">        Call&lt;ResourceMember&gt; call = influxDBService.addTaskOwner(taskID, createBody(json));</span>
+
+<span class="nc" id="L355">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteOwner(@Nonnull final User owner, @Nonnull final Task task) {
+
+<span class="nc" id="L361">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L362">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+
+<span class="nc" id="L364">        deleteOwner(owner.getId(), task.getId());</span>
+<span class="nc" id="L365">    }</span>
+
+    @Override
+    public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String taskID) {
+
+<span class="nc" id="L370">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L371">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L373">        Call&lt;Void&gt; call = influxDBService.deleteTaskOwner(taskID, ownerID);</span>
+<span class="nc" id="L374">        execute(call);</span>
+<span class="nc" id="L375">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;Run&gt; getRuns(@Nonnull final Task task) {
+
+<span class="fc" id="L381">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="fc" id="L383">        return getRuns(task, null, null, null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Run&gt; getRuns(@Nonnull final Task task,
+                             @Nullable final Instant afterTime,
+                             @Nullable final Instant beforeTime,
+                             @Nullable final Integer limit) {
+
+<span class="fc" id="L393">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="fc" id="L395">        return getRuns(task.getId(), task.getOrgID(), afterTime, beforeTime, limit);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Run&gt; getRuns(@Nonnull final String taskID, @Nonnull final String orgID) {
+
+<span class="fc" id="L402">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="fc" id="L403">        Arguments.checkNonEmpty(orgID, &quot;Org.ID&quot;);</span>
+
+<span class="fc" id="L405">        return getRuns(taskID, orgID, null, null, null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Run&gt; getRuns(@Nonnull final String taskID,
+                             @Nonnull final String orgID,
+                             @Nullable final Instant afterTime,
+                             @Nullable final Instant beforeTime,
+                             @Nullable final Integer limit) {
+
+<span class="fc" id="L416">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="fc" id="L417">        Arguments.checkNonEmpty(orgID, &quot;Org.ID&quot;);</span>
+
+<span class="fc" id="L419">        Call&lt;RunsResponse&gt; runs = influxDBService.findTaskRuns(taskID, afterTime, beforeTime, limit, orgID);</span>
+<span class="fc" id="L420">        RunsResponse execute = execute(runs);</span>
+
+<span class="fc" id="L422">        return execute.getRuns();</span>
+    }
+
+    @Nullable
+    @Override
+    public Run getRun(@Nonnull final Run run) {
+
+<span class="fc" id="L429">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+
+<span class="fc" id="L431">        return getRun(run.getTaskID(), run.getId());</span>
+    }
+
+    @Nullable
+    @Override
+    public Run getRun(@Nonnull final String taskID, @Nonnull final String runID) {
+
+<span class="fc" id="L438">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="fc" id="L439">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+
+<span class="fc" id="L441">        Call&lt;Run&gt; run = influxDBService.findTaskRun(taskID, runID);</span>
+
+<span class="fc" id="L443">        return execute(run, NotFoundException.class);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;String&gt; getRunLogs(@Nonnull final Run run, @Nonnull final String orgID) {
+
+<span class="fc" id="L450">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+
+<span class="fc" id="L452">        return getRunLogs(run.getTaskID(), run.getId(), orgID);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;String&gt; getRunLogs(@Nonnull final String taskID,
+                                   @Nonnull final String runID,
+                                   @Nonnull final String orgID) {
+
+<span class="fc" id="L461">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="fc" id="L462">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+<span class="fc" id="L463">        Arguments.checkNonEmpty(orgID, &quot;Org.ID&quot;);</span>
+
+<span class="fc" id="L465">        Call&lt;List&lt;String&gt;&gt; logs = influxDBService.findRunLogs(taskID, runID, orgID);</span>
+
+<span class="fc" id="L467">        return execute(logs);</span>
+    }
+
+    @Nullable
+    @Override
+    public Run retryRun(@Nonnull final Run run) {
+
+<span class="fc" id="L474">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+
+<span class="fc" id="L476">        return retryRun(run.getTaskID(), run.getId());</span>
+    }
+
+    @Nullable
+    @Override
+    public Run retryRun(@Nonnull final String taskID, @Nonnull final String runID) {
+
+<span class="fc" id="L483">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="fc" id="L484">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+
+<span class="fc" id="L486">        Call&lt;Run&gt; run = influxDBService.retryTaskRun(taskID, runID);</span>
+
+<span class="fc" id="L488">        return execute(run, NotFoundException.class);</span>
+    }
+
+    @Override
+    public void cancelRun(@Nonnull final Run run) {
+
+<span class="fc" id="L494">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+
+<span class="nc" id="L496">        cancelRun(run.getTaskID(), run.getId());</span>
+<span class="nc" id="L497">    }</span>
+
+    @Override
+    public void cancelRun(@Nonnull final String taskID, @Nonnull final String runID) {
+
+<span class="fc" id="L502">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="fc" id="L503">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+
+<span class="fc" id="L505">        Call&lt;Void&gt; run = influxDBService.cancelRun(taskID, runID);</span>
+<span class="nc" id="L506">        execute(run);</span>
+<span class="nc" id="L507">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;String&gt; getLogs(@Nonnull final Task task) {
+
+<span class="fc" id="L513">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="fc" id="L515">        return getLogs(task.getId(), task.getOrgID());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;String&gt; getLogs(@Nonnull final String taskID, @Nonnull final String orgID) {
+
+<span class="fc" id="L522">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="fc" id="L523">        Arguments.checkNonEmpty(orgID, &quot;Org.ID&quot;);</span>
+
+<span class="fc" id="L525">        Call&lt;List&lt;String&gt;&gt; execute = influxDBService.findTaskLogs(taskID, orgID);</span>
+
+<span class="fc" id="L527">        return execute(execute);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final Task task) {
+
+<span class="fc" id="L534">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="fc" id="L536">        return getLabels(task.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final String taskID) {
+
+<span class="fc" id="L543">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+
+<span class="fc" id="L545">        return getLabels(taskID, &quot;tasks&quot;);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final Label label, @Nonnull final Task task) {
+
+<span class="fc" id="L552">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="fc" id="L553">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="fc" id="L555">        return addLabel(label.getId(), task.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final String labelID, @Nonnull final String taskID) {
+
+<span class="fc" id="L562">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="fc" id="L563">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+
+<span class="fc" id="L565">        return addLabel(labelID, taskID, &quot;tasks&quot;, ResourceType.TASKS);</span>
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final Task task) {
+
+<span class="fc" id="L571">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="fc" id="L572">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="fc" id="L574">        deleteLabel(label.getId(), task.getId());</span>
+<span class="fc" id="L575">    }</span>
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String taskID) {
+
+<span class="fc" id="L580">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="fc" id="L581">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+
+<span class="fc" id="L583">        deleteLabel(labelID, taskID, &quot;tasks&quot;);</span>
+<span class="fc" id="L584">    }</span>
+
+    @Nonnull
+    private Task createTask(@Nonnull final String name,
+                            @Nonnull final String flux,
+                            @Nullable final String every,
+                            @Nullable final String cron,
+                            @Nonnull final String orgID) {
+
+<span class="fc" id="L593">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="fc" id="L594">        Arguments.checkNotNull(flux, &quot;Flux script to run&quot;);</span>
+<span class="fc" id="L595">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
+<span class="fc" id="L596">        Arguments.checkDurationNotRequired(every, &quot;Task.every&quot;);</span>
+
+<span class="fc" id="L598">        Task task = new Task();</span>
+<span class="fc" id="L599">        task.setName(name);</span>
+<span class="fc" id="L600">        task.setOrgID(orgID);</span>
+<span class="fc" id="L601">        task.setStatus(Status.ACTIVE);</span>
+<span class="fc" id="L602">        task.setEvery(every);</span>
+<span class="fc" id="L603">        task.setCron(cron);</span>
+<span class="fc" id="L604">        task.setFlux(flux);</span>
+
+<span class="fc" id="L606">        String repetition = &quot;&quot;;</span>
+<span class="fc bfc" id="L607" title="All 2 branches covered.">        if (every != null) {</span>
+<span class="fc" id="L608">            repetition += &quot;every: &quot;;</span>
+<span class="fc" id="L609">            repetition += every;</span>
+        }
+<span class="fc bfc" id="L611" title="All 2 branches covered.">        if (cron != null) {</span>
+<span class="fc" id="L612">            repetition += &quot;cron: &quot;;</span>
+<span class="fc" id="L613">            repetition += &quot;\&quot;&quot; + cron + &quot;\&quot;&quot;;</span>
+        }
+<span class="fc" id="L615">        String fluxWithOptions = String.format(&quot;option task = {name: \&quot;%s\&quot;, %s} \n %s&quot;, name, repetition, flux);</span>
+
+<span class="fc" id="L617">        task.setFlux(fluxWithOptions);</span>
+
+<span class="fc" id="L619">        return task;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

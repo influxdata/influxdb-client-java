@@ -1,2 +1,2 @@
-org.influxdata.flux.client
-org.influxdata.flux.client.internal
+org.influxdata.client.flux
+org.influxdata.client.flux.internal

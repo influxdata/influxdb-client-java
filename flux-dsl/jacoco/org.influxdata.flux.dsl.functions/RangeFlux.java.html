@@ -25,7 +25,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import javax.annotation.Nonnull;
 
-import org.influxdata.client.Arguments;
+import org.influxdata.Arguments;
 import org.influxdata.flux.dsl.Flux;
 
 /**

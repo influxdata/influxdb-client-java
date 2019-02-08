@@ -102,7 +102,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>1.843</td></tr></table><br />
+<td>1.985</td></tr></table><br />
 <p>Note: failures are anticipated and checked for with assertions while errors are unanticipated.</p><br /></div>
 <div class="section">
 <h2><a name="Package_List"></a>Package List</h2><a name="Package_List"></a>
@@ -117,40 +117,40 @@ function toggleDisplay(elementId) {
 <th>Success Rate</th>
 <th>Time</th></tr>
 <tr class="b">
-<td><a href="#org.influxdata.client">org.influxdata.client</a></td>
-<td>23</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.066</td></tr>
-<tr class="a">
-<td><a href="#org.influxdata.client.exceptions">org.influxdata.client.exceptions</a></td>
+<td><a href="#org.influxdata.exceptions">org.influxdata.exceptions</a></td>
 <td>20</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.067</td></tr>
-<tr class="b">
-<td><a href="#org.influxdata.client.internal">org.influxdata.client.internal</a></td>
-<td>25</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>1.213</td></tr>
+<td>0.086</td></tr>
 <tr class="a">
-<td><a href="#org.influxdata.client.flux.internal">org.influxdata.client.flux.internal</a></td>
+<td><a href="#org.influxdata.query.internal">org.influxdata.query.internal</a></td>
 <td>18</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.497</td></tr></table><br />
+<td>0.359</td></tr>
+<tr class="b">
+<td><a href="#org.influxdata">org.influxdata</a></td>
+<td>23</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.263</td></tr>
+<tr class="a">
+<td><a href="#org.influxdata.internal">org.influxdata.internal</a></td>
+<td>25</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.277</td></tr></table><br />
 <p>Note: package statistics are not computed recursively, they only sum up all of its testsuites numbers.</p>
 <div class="section">
-<h3><a name="org.influxdata.client"></a>org.influxdata.client</h3><a name="org.influxdata.client"></a>
+<h3><a name="org.influxdata.exceptions"></a>org.influxdata.exceptions</h3><a name="org.influxdata.exceptions"></a>
 <table border="1" class="table table-striped">
 <tr class="a">
 <th></th>
@@ -162,46 +162,16 @@ function toggleDisplay(elementId) {
 <th>Success Rate</th>
 <th>Time</th></tr>
 <tr class="b">
-<td><a href="#org.influxdata.client.ArgumentsDurationTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.influxdata.client.ArgumentsDurationTest">ArgumentsDurationTest</a></td>
-<td>6</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.018</td></tr>
-<tr class="a">
-<td><a href="#org.influxdata.client.ArgumentsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.influxdata.client.ArgumentsTest">ArgumentsTest</a></td>
-<td>17</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.048</td></tr></table></div>
-<div class="section">
-<h3><a name="org.influxdata.client.exceptions"></a>org.influxdata.client.exceptions</h3><a name="org.influxdata.client.exceptions"></a>
-<table border="1" class="table table-striped">
-<tr class="a">
-<th></th>
-<th>Class</th>
-<th>Tests</th>
-<th>Errors</th>
-<th>Failures</th>
-<th>Skipped</th>
-<th>Success Rate</th>
-<th>Time</th></tr>
-<tr class="b">
-<td><a href="#org.influxdata.client.exceptions.InfluxExceptionTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.influxdata.client.exceptions.InfluxExceptionTest">InfluxExceptionTest</a></td>
+<td><a href="#org.influxdata.exceptions.InfluxExceptionTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.influxdata.exceptions.InfluxExceptionTest">InfluxExceptionTest</a></td>
 <td>20</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.067</td></tr></table></div>
+<td>0.086</td></tr></table></div>
 <div class="section">
-<h3><a name="org.influxdata.client.internal"></a>org.influxdata.client.internal</h3><a name="org.influxdata.client.internal"></a>
+<h3><a name="org.influxdata.query.internal"></a>org.influxdata.query.internal</h3><a name="org.influxdata.query.internal"></a>
 <table border="1" class="table table-striped">
 <tr class="a">
 <th></th>
@@ -213,421 +183,451 @@ function toggleDisplay(elementId) {
 <th>Success Rate</th>
 <th>Time</th></tr>
 <tr class="b">
-<td><a href="#org.influxdata.client.internal.RestClientTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.influxdata.client.internal.RestClientTest">RestClientTest</a></td>
-<td>10</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.195</td></tr>
-<tr class="a">
-<td><a href="#org.influxdata.client.internal.QueryAbstractApiTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.influxdata.client.internal.QueryAbstractApiTest">QueryAbstractApiTest</a></td>
-<td>15</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>1.018</td></tr></table></div>
-<div class="section">
-<h3><a name="org.influxdata.client.flux.internal"></a>org.influxdata.client.flux.internal</h3><a name="org.influxdata.client.flux.internal"></a>
-<table border="1" class="table table-striped">
-<tr class="a">
-<th></th>
-<th>Class</th>
-<th>Tests</th>
-<th>Errors</th>
-<th>Failures</th>
-<th>Skipped</th>
-<th>Success Rate</th>
-<th>Time</th></tr>
-<tr class="b">
-<td><a href="#org.influxdata.client.flux.internal.FluxCsvParserTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.influxdata.client.flux.internal.FluxCsvParserTest">FluxCsvParserTest</a></td>
+<td><a href="#org.influxdata.query.internal.FluxCsvParserTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.influxdata.query.internal.FluxCsvParserTest">FluxCsvParserTest</a></td>
 <td>16</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.497</td></tr>
+<td>0.345</td></tr>
 <tr class="a">
-<td><a href="#org.influxdata.client.flux.internal.FluxResultMapperTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.influxdata.client.flux.internal.FluxResultMapperTest">FluxResultMapperTest</a></td>
+<td><a href="#org.influxdata.query.internal.FluxResultMapperTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.influxdata.query.internal.FluxResultMapperTest">FluxResultMapperTest</a></td>
 <td>2</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0</td></tr></table></div><br /></div>
+<td>0.014</td></tr></table></div>
+<div class="section">
+<h3><a name="org.influxdata"></a>org.influxdata</h3><a name="org.influxdata"></a>
+<table border="1" class="table table-striped">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors</th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#org.influxdata.ArgumentsDurationTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.influxdata.ArgumentsDurationTest">ArgumentsDurationTest</a></td>
+<td>6</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.193</td></tr>
+<tr class="a">
+<td><a href="#org.influxdata.ArgumentsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.influxdata.ArgumentsTest">ArgumentsTest</a></td>
+<td>17</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.07</td></tr></table></div>
+<div class="section">
+<h3><a name="org.influxdata.internal"></a>org.influxdata.internal</h3><a name="org.influxdata.internal"></a>
+<table border="1" class="table table-striped">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors</th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#org.influxdata.internal.RestClientTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.influxdata.internal.RestClientTest">RestClientTest</a></td>
+<td>10</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.181</td></tr>
+<tr class="a">
+<td><a href="#org.influxdata.internal.QueryAbstractApiTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.influxdata.internal.QueryAbstractApiTest">QueryAbstractApiTest</a></td>
+<td>15</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.096</td></tr></table></div><br /></div>
 <div class="section">
 <h2><a name="Test_Cases"></a>Test Cases</h2><a name="Test_Cases"></a>
 <p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p>
 <div class="section">
-<h3><a name="ArgumentsDurationTest"></a>ArgumentsDurationTest</h3><a name="org.influxdata.client.ArgumentsDurationTest"></a>
+<h3><a name="InfluxExceptionTest"></a>InfluxExceptionTest</h3><a name="org.influxdata.exceptions.InfluxExceptionTest"></a>
 <table border="1" class="table table-striped">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsDurationTest.literalEmpty"></a>literalEmpty</td>
-<td>0</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsDurationTest.notRequiredValid"></a>notRequiredValid</td>
-<td>0</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsDurationTest.notRequiredNotValid"></a>notRequiredNotValid</td>
-<td>0</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsDurationTest.literalNotDuration"></a>literalNotDuration</td>
-<td>0.003</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsDurationTest.literals"></a>literals</td>
-<td>0</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsDurationTest.literalNull"></a>literalNull</td>
-<td>0.001</td></tr></table></div>
-<div class="section">
-<h3><a name="InfluxExceptionTest"></a>InfluxExceptionTest</h3><a name="org.influxdata.client.exceptions.InfluxExceptionTest"></a>
-<table border="1" class="table table-striped">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.referenceResponseWithoutHeader"></a>referenceResponseWithoutHeader</td>
-<td>0.003</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.errorBodyInfluxDB"></a>errorBodyInfluxDB</td>
-<td>0.002</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.errorBodyInfluxDBWithoutMsg"></a>errorBodyInfluxDBWithoutMsg</td>
-<td>0.004</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.nullException"></a>nullException</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.reference"></a>reference</td>
-<td>0.004</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.statusResponseNull"></a>statusResponseNull</td>
-<td>0.002</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.messageNull"></a>messageNull</td>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.referenceResponseWithoutHeader"></a>referenceResponseWithoutHeader</td>
 <td>0.002</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.referenceResponseNull"></a>referenceResponseNull</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.nullResponse"></a>nullResponse</td>
-<td>0.002</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.errorBodyInfluxDBNotJson"></a>errorBodyInfluxDBNotJson</td>
-<td>0.002</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.retrofitHttpExceptionNullError"></a>retrofitHttpExceptionNullError</td>
-<td>0.005</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.errorBody"></a>errorBody</td>
-<td>0</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.statusResponse"></a>statusResponse</td>
-<td>0.001</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.errorBodyReadAgain"></a>errorBodyReadAgain</td>
-<td>0.002</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.retrofitHttpExceptionEmptyError"></a>retrofitHttpExceptionEmptyError</td>
-<td>0.002</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.message"></a>message</td>
-<td>0.002</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.errorBodyResponseWithoutBody"></a>errorBodyResponseWithoutBody</td>
-<td>0.001</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.errorBodyResponseNull"></a>errorBodyResponseNull</td>
-<td>0.002</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.unExpectedError"></a>unExpectedError</td>
-<td>0</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.exceptions.InfluxExceptionTest.retrofitHttpException"></a>retrofitHttpException</td>
-<td>0.004</td></tr></table></div>
-<div class="section">
-<h3><a name="RestClientTest"></a>RestClientTest</h3><a name="org.influxdata.client.internal.RestClientTest"></a>
-<table border="1" class="table table-striped">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.RestClientTest.catchOrPropagateCatchEOFException"></a>catchOrPropagateCatchEOFException</td>
-<td>0.011</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.RestClientTest.restCallNullError"></a>restCallNullError</td>
-<td>0.029</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.RestClientTest.mappingLogLevel"></a>mappingLogLevel</td>
-<td>0.016</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.RestClientTest.catchOrPropagateCatchSocketClosed"></a>catchOrPropagateCatchSocketClosed</td>
-<td>0.016</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.RestClientTest.restCall"></a>restCall</td>
-<td>0.022</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.RestClientTest.catchOrPropagate"></a>catchOrPropagate</td>
-<td>0.012</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.RestClientTest.restCallError"></a>restCallError</td>
-<td>0.028</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.RestClientTest.exceptionType"></a>exceptionType</td>
-<td>0.023</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.RestClientTest.restCallIOError"></a>restCallIOError</td>
-<td>0.011</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.RestClientTest.createBodyString"></a>createBodyString</td>
-<td>0.014</td></tr></table></div>
-<div class="section">
-<h3><a name="ArgumentsTest"></a>ArgumentsTest</h3><a name="org.influxdata.client.ArgumentsTest"></a>
-<table border="1" class="table table-striped">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkNonEmptyStringEmpty"></a>checkNonEmptyStringEmpty</td>
-<td>0.004</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkNotNegativeNumberNegative"></a>checkNotNegativeNumberNegative</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkNotNegativeNumber"></a>checkNotNegativeNumber</td>
-<td>0</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkPositiveNumberZeroNegative"></a>checkPositiveNumberZeroNegative</td>
-<td>0</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkNotNegativeNumberNull"></a>checkNotNegativeNumberNull</td>
-<td>0.001</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkPrecisionNotSupported"></a>checkPrecisionNotSupported</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkOneCharStringNull"></a>checkOneCharStringNull</td>
-<td>0</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkPrecision"></a>checkPrecision</td>
-<td>0</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkNonEmptyString"></a>checkNonEmptyString</td>
-<td>0</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkOneCharString"></a>checkOneCharString</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkOneCharStringEmpty"></a>checkOneCharStringEmpty</td>
-<td>0.001</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkOneCharStringLarge"></a>checkOneCharStringLarge</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkPositiveNumberNull"></a>checkPositiveNumberNull</td>
-<td>0</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkPositiveNumberZero"></a>checkPositiveNumberZero</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkPositiveNumber"></a>checkPositiveNumber</td>
-<td>0.001</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkNonEmptyStringNull"></a>checkNonEmptyStringNull</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.ArgumentsTest.checkNotNull"></a>checkNotNull</td>
-<td>0.002</td></tr></table></div>
-<div class="section">
-<h3><a name="FluxCsvParserTest"></a>FluxCsvParserTest</h3><a name="org.influxdata.client.flux.internal.FluxCsvParserTest"></a>
-<table border="1" class="table table-striped">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.unknownTypeAsString"></a>unknownTypeAsString</td>
-<td>0.237</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.parsingToConsumer"></a>parsingToConsumer</td>
-<td>0.039</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.mappingBase64Binary"></a>mappingBase64Binary</td>
-<td>0.024</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.mappingDouble"></a>mappingDouble</td>
-<td>0.008</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.mappingDuration"></a>mappingDuration</td>
-<td>0.002</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.shortcut"></a>shortcut</td>
-<td>0.004</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.errorWithoutReference"></a>errorWithoutReference</td>
-<td>0.023</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.error"></a>error</td>
-<td>0.004</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.groupKey"></a>groupKey</td>
-<td>0.003</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.cancelParsing"></a>cancelParsing</td>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.errorBodyInfluxDB"></a>errorBodyInfluxDB</td>
 <td>0.005</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.mappingBoolean"></a>mappingBoolean</td>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.errorBodyInfluxDBWithoutMsg"></a>errorBodyInfluxDBWithoutMsg</td>
 <td>0.004</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.mappingRFC3339"></a>mappingRFC3339</td>
-<td>0.004</td></tr>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.nullException"></a>nullException</td>
+<td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.responseWithMultipleValues"></a>responseWithMultipleValues</td>
-<td>0.079</td></tr>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.reference"></a>reference</td>
+<td>0.003</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.mappingUnsignedLong"></a>mappingUnsignedLong</td>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.statusResponseNull"></a>statusResponseNull</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.messageNull"></a>messageNull</td>
+<td>0.002</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.referenceResponseNull"></a>referenceResponseNull</td>
 <td>0.002</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.parsingWithoutTableDefinition"></a>parsingWithoutTableDefinition</td>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.nullResponse"></a>nullResponse</td>
 <td>0.005</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxCsvParserTest.mappingRFC3339Nano"></a>mappingRFC3339Nano</td>
-<td>0.008</td></tr></table></div>
-<div class="section">
-<h3><a name="FluxResultMapperTest"></a>FluxResultMapperTest</h3><a name="org.influxdata.client.flux.internal.FluxResultMapperTest"></a>
-<table border="1" class="table table-striped">
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.errorBodyInfluxDBNotJson"></a>errorBodyInfluxDBNotJson</td>
+<td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxResultMapperTest.mapToBigDecimal"></a>mapToBigDecimal</td>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.retrofitHttpExceptionNullError"></a>retrofitHttpExceptionNullError</td>
+<td>0.003</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.errorBody"></a>errorBody</td>
+<td>0.002</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.statusResponse"></a>statusResponse</td>
+<td>0.004</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.errorBodyReadAgain"></a>errorBodyReadAgain</td>
 <td>0</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.flux.internal.FluxResultMapperTest.mapToBigDecimalNotSupportedType"></a>mapToBigDecimalNotSupportedType</td>
-<td>0</td></tr></table></div>
-<div class="section">
-<h3><a name="QueryAbstractApiTest"></a>QueryAbstractApiTest</h3><a name="org.influxdata.client.internal.QueryAbstractApiTest"></a>
-<table border="1" class="table table-striped">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.queryRawError"></a>queryRawError</td>
-<td>0.623</td></tr>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.retrofitHttpExceptionEmptyError"></a>retrofitHttpExceptionEmptyError</td>
+<td>0.001</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.queryRawSynchronous"></a>queryRawSynchronous</td>
-<td>0.04</td></tr>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.message"></a>message</td>
+<td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.queryCancel"></a>queryCancel</td>
-<td>0.049</td></tr>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.errorBodyResponseWithoutBody"></a>errorBodyResponseWithoutBody</td>
+<td>0.001</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.queryErrorCustom"></a>queryErrorCustom</td>
-<td>0.019</td></tr>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.errorBodyResponseNull"></a>errorBodyResponseNull</td>
+<td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.queryRawErrorCustom"></a>queryRawErrorCustom</td>
-<td>0.045</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.queryOnComplete"></a>queryOnComplete</td>
-<td>0.035</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.queryRawOnComplete"></a>queryRawOnComplete</td>
-<td>0.039</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.queryAsynchronous"></a>queryAsynchronous</td>
-<td>0.039</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.queryError"></a>queryError</td>
-<td>0.03</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.queryRawAsynchronous"></a>queryRawAsynchronous</td>
-<td>0.014</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.createBodyWithDialect"></a>createBodyWithDialect</td>
-<td>0.016</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.createBodyDefaultDialect"></a>createBodyDefaultDialect</td>
-<td>0.008</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.createBody"></a>createBody</td>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.unExpectedError"></a>unExpectedError</td>
 <td>0.009</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.createBodyEmptyDialect"></a>createBodyEmptyDialect</td>
-<td>0.013</td></tr>
+<td><a name="TC_org.influxdata.exceptions.InfluxExceptionTest.retrofitHttpException"></a>retrofitHttpException</td>
+<td>0.001</td></tr></table></div>
+<div class="section">
+<h3><a name="RestClientTest"></a>RestClientTest</h3><a name="org.influxdata.internal.RestClientTest"></a>
+<table border="1" class="table table-striped">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td><a name="TC_org.influxdata.client.internal.QueryAbstractApiTest.querySynchronous"></a>querySynchronous</td>
-<td>0.022</td></tr></table></div><br /></div>
+<td><a name="TC_org.influxdata.internal.RestClientTest.catchOrPropagateCatchEOFException"></a>catchOrPropagateCatchEOFException</td>
+<td>0.008</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.RestClientTest.restCallNullError"></a>restCallNullError</td>
+<td>0.023</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.RestClientTest.mappingLogLevel"></a>mappingLogLevel</td>
+<td>0.012</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.RestClientTest.catchOrPropagateCatchSocketClosed"></a>catchOrPropagateCatchSocketClosed</td>
+<td>0.008</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.RestClientTest.restCall"></a>restCall</td>
+<td>0.018</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.RestClientTest.catchOrPropagate"></a>catchOrPropagate</td>
+<td>0.014</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.RestClientTest.restCallError"></a>restCallError</td>
+<td>0.02</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.RestClientTest.exceptionType"></a>exceptionType</td>
+<td>0.041</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.RestClientTest.restCallIOError"></a>restCallIOError</td>
+<td>0.011</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.RestClientTest.createBodyString"></a>createBodyString</td>
+<td>0.005</td></tr></table></div>
+<div class="section">
+<h3><a name="QueryAbstractApiTest"></a>QueryAbstractApiTest</h3><a name="org.influxdata.internal.QueryAbstractApiTest"></a>
+<table border="1" class="table table-striped">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.queryRawError"></a>queryRawError</td>
+<td>0.678</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.queryRawSynchronous"></a>queryRawSynchronous</td>
+<td>0.039</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.queryCancel"></a>queryCancel</td>
+<td>0.033</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.queryErrorCustom"></a>queryErrorCustom</td>
+<td>0.037</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.queryRawErrorCustom"></a>queryRawErrorCustom</td>
+<td>0.026</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.queryOnComplete"></a>queryOnComplete</td>
+<td>0.027</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.queryRawOnComplete"></a>queryRawOnComplete</td>
+<td>0.022</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.queryAsynchronous"></a>queryAsynchronous</td>
+<td>0.05</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.queryError"></a>queryError</td>
+<td>0.037</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.queryRawAsynchronous"></a>queryRawAsynchronous</td>
+<td>0.017</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.createBodyWithDialect"></a>createBodyWithDialect</td>
+<td>0.02</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.createBodyDefaultDialect"></a>createBodyDefaultDialect</td>
+<td>0.023</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.createBody"></a>createBody</td>
+<td>0.024</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.createBodyEmptyDialect"></a>createBodyEmptyDialect</td>
+<td>0.017</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.internal.QueryAbstractApiTest.querySynchronous"></a>querySynchronous</td>
+<td>0.03</td></tr></table></div>
+<div class="section">
+<h3><a name="ArgumentsDurationTest"></a>ArgumentsDurationTest</h3><a name="org.influxdata.ArgumentsDurationTest"></a>
+<table border="1" class="table table-striped">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsDurationTest.literalEmpty"></a>literalEmpty</td>
+<td>0.162</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsDurationTest.notRequiredValid"></a>notRequiredValid</td>
+<td>0.003</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsDurationTest.notRequiredNotValid"></a>notRequiredNotValid</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsDurationTest.literalNotDuration"></a>literalNotDuration</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsDurationTest.literals"></a>literals</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsDurationTest.literalNull"></a>literalNull</td>
+<td>0.006</td></tr></table></div>
+<div class="section">
+<h3><a name="FluxCsvParserTest"></a>FluxCsvParserTest</h3><a name="org.influxdata.query.internal.FluxCsvParserTest"></a>
+<table border="1" class="table table-striped">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.unknownTypeAsString"></a>unknownTypeAsString</td>
+<td>0.111</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.parsingToConsumer"></a>parsingToConsumer</td>
+<td>0.038</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.mappingBase64Binary"></a>mappingBase64Binary</td>
+<td>0.026</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.mappingDouble"></a>mappingDouble</td>
+<td>0.007</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.mappingDuration"></a>mappingDuration</td>
+<td>0.003</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.shortcut"></a>shortcut</td>
+<td>0.005</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.errorWithoutReference"></a>errorWithoutReference</td>
+<td>0.021</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.error"></a>error</td>
+<td>0.005</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.groupKey"></a>groupKey</td>
+<td>0.004</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.cancelParsing"></a>cancelParsing</td>
+<td>0.006</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.mappingBoolean"></a>mappingBoolean</td>
+<td>0.003</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.mappingRFC3339"></a>mappingRFC3339</td>
+<td>0.002</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.responseWithMultipleValues"></a>responseWithMultipleValues</td>
+<td>0.077</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.mappingUnsignedLong"></a>mappingUnsignedLong</td>
+<td>0.003</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.parsingWithoutTableDefinition"></a>parsingWithoutTableDefinition</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxCsvParserTest.mappingRFC3339Nano"></a>mappingRFC3339Nano</td>
+<td>0.008</td></tr></table></div>
+<div class="section">
+<h3><a name="ArgumentsTest"></a>ArgumentsTest</h3><a name="org.influxdata.ArgumentsTest"></a>
+<table border="1" class="table table-striped">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkNonEmptyStringEmpty"></a>checkNonEmptyStringEmpty</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkNotNegativeNumberNegative"></a>checkNotNegativeNumberNegative</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkNotNegativeNumber"></a>checkNotNegativeNumber</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkPositiveNumberZeroNegative"></a>checkPositiveNumberZeroNegative</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkNotNegativeNumberNull"></a>checkNotNegativeNumberNull</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkPrecisionNotSupported"></a>checkPrecisionNotSupported</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkOneCharStringNull"></a>checkOneCharStringNull</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkPrecision"></a>checkPrecision</td>
+<td>0.003</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkNonEmptyString"></a>checkNonEmptyString</td>
+<td>0.005</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkOneCharString"></a>checkOneCharString</td>
+<td>0.006</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkOneCharStringEmpty"></a>checkOneCharStringEmpty</td>
+<td>0.004</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkOneCharStringLarge"></a>checkOneCharStringLarge</td>
+<td>0.002</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkPositiveNumberNull"></a>checkPositiveNumberNull</td>
+<td>0.003</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkPositiveNumberZero"></a>checkPositiveNumberZero</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkPositiveNumber"></a>checkPositiveNumber</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkNonEmptyStringNull"></a>checkNonEmptyStringNull</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.ArgumentsTest.checkNotNull"></a>checkNotNull</td>
+<td>0.002</td></tr></table></div>
+<div class="section">
+<h3><a name="FluxResultMapperTest"></a>FluxResultMapperTest</h3><a name="org.influxdata.query.internal.FluxResultMapperTest"></a>
+<table border="1" class="table table-striped">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxResultMapperTest.mapToBigDecimal"></a>mapToBigDecimal</td>
+<td>0.008</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td><a name="TC_org.influxdata.query.internal.FluxResultMapperTest.mapToBigDecimalNotSupportedType"></a>mapToBigDecimalNotSupportedType</td>
+<td>0.002</td></tr></table></div><br /></div>
         </div>
       </div>
     </div>

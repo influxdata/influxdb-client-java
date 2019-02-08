@@ -1,5 +1,5 @@
-org.influxdata.java.client
-org.influxdata.java.client.domain
-org.influxdata.java.client.internal
-org.influxdata.java.client.writes
-org.influxdata.java.client.writes.events
+org.influxdata.client
+org.influxdata.client.domain
+org.influxdata.client.internal
+org.influxdata.client.write
+org.influxdata.client.write.events

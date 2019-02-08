@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SourcesApiImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.0 Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.client.internal</a> &gt; <span class="el_source">SourcesApiImpl.java</span></div><h1>SourcesApiImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.client.internal;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.influxdata.Arguments;
+import org.influxdata.client.SourcesApi;
+import org.influxdata.client.domain.Bucket;
+import org.influxdata.client.domain.Health;
+import org.influxdata.client.domain.Source;
+import org.influxdata.client.domain.Sources;
+import org.influxdata.exceptions.NotFoundException;
+import org.influxdata.internal.AbstractRestClient;
+
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (bednar@github) (18/09/2018 09:40)
+ */
+final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
+
+<span class="fc" id="L48">    private static final Logger LOG = Logger.getLogger(SourcesApiImpl.class.getName());</span>
+
+    private final InfluxDBService influxDBService;
+    private final JsonAdapter&lt;Source&gt; adapter;
+    private final InfluxDBClientImpl influxDBClient;
+
+    SourcesApiImpl(@Nonnull final InfluxDBService influxDBService,
+                   @Nonnull final Moshi moshi,
+<span class="fc" id="L56">                   @Nonnull final InfluxDBClientImpl influxDBClient) {</span>
+
+<span class="fc" id="L58">        Arguments.checkNotNull(influxDBService, &quot;InfluxDBService&quot;);</span>
+<span class="fc" id="L59">        Arguments.checkNotNull(moshi, &quot;Moshi to create adapter&quot;);</span>
+<span class="fc" id="L60">        Arguments.checkNotNull(influxDBClient, &quot;InfluxDBClient&quot;);</span>
+
+<span class="fc" id="L62">        this.influxDBService = influxDBService;</span>
+<span class="fc" id="L63">        this.adapter = moshi.adapter(Source.class);</span>
+<span class="fc" id="L64">        this.influxDBClient = influxDBClient;</span>
+<span class="fc" id="L65">    }</span>
+
+    @Nonnull
+    @Override
+    public Source createSource(@Nonnull final Source source) {
+
+<span class="nc" id="L71">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+
+<span class="nc" id="L73">        String json = adapter.toJson(source);</span>
+
+<span class="nc" id="L75">        Call&lt;Source&gt; call = influxDBService.createSource(createBody(json));</span>
+<span class="nc" id="L76">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Source updateSource(@Nonnull final Source source) {
+
+<span class="nc" id="L83">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+
+<span class="nc" id="L85">        String json = adapter.toJson(source);</span>
+
+<span class="nc" id="L87">        Call&lt;Source&gt; call = influxDBService.updateSource(source.getId(), createBody(json));</span>
+<span class="nc" id="L88">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteSource(@Nonnull final Source source) {
+
+<span class="nc" id="L94">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+
+<span class="nc" id="L96">        deleteSource(source.getId());</span>
+<span class="nc" id="L97">    }</span>
+
+    @Override
+    public void deleteSource(@Nonnull final String sourceID) {
+
+<span class="nc" id="L102">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
+
+<span class="nc" id="L104">        Call&lt;Void&gt; call = influxDBService.deleteSource(sourceID);</span>
+<span class="nc" id="L105">        execute(call);</span>
+
+<span class="nc" id="L107">    }</span>
+
+    @Nullable
+    @Override
+    public Source findSourceByID(@Nonnull final String sourceID) {
+
+<span class="nc" id="L113">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
+
+<span class="nc" id="L115">        Call&lt;Source&gt; call = influxDBService.findSource(sourceID);</span>
+
+<span class="nc" id="L117">        return execute(call, NotFoundException.class);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Source&gt; findSources() {
+<span class="nc" id="L123">        Call&lt;Sources&gt; sourcesCall = influxDBService.findSources();</span>
+
+<span class="nc" id="L125">        Sources sources = execute(sourcesCall);</span>
+<span class="nc" id="L126">        LOG.log(Level.FINEST, &quot;findSources found: {0}&quot;, sources);</span>
+
+<span class="nc" id="L128">        return sources.getSources();</span>
+    }
+
+    @Nullable
+    @Override
+    public List&lt;Bucket&gt; findBucketsBySource(@Nonnull final Source source) {
+
+<span class="nc" id="L135">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+
+<span class="nc" id="L137">        return findBucketsBySourceID(source.getId());</span>
+    }
+
+    @Nullable
+    @Override
+    public List&lt;Bucket&gt; findBucketsBySourceID(@Nonnull final String sourceID) {
+
+<span class="nc" id="L144">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
+
+<span class="nc" id="L146">        Call&lt;List&lt;Bucket&gt;&gt; call = influxDBService.findSourceBuckets(sourceID);</span>
+
+<span class="nc" id="L148">        return execute(call, NotFoundException.class);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Health health(@Nonnull final Source source) {
+
+<span class="nc" id="L155">        Arguments.checkNotNull(source, &quot;Source is required&quot;);</span>
+
+<span class="nc" id="L157">        return health(source.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Health health(@Nonnull final String sourceID) {
+
+<span class="nc" id="L164">        Arguments.checkNonEmpty(sourceID, &quot;sourceID&quot;);</span>
+
+<span class="nc" id="L166">        return influxDBClient.health(influxDBService.findSourceHealth(sourceID));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

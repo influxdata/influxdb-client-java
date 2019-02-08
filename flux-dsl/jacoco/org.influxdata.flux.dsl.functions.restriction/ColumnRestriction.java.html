@@ -23,7 +23,7 @@ package org.influxdata.flux.dsl.functions.restriction;
 
 import javax.annotation.Nonnull;
 
-import org.influxdata.client.Arguments;
+import org.influxdata.Arguments;
 import org.influxdata.flux.dsl.functions.properties.FunctionsParameters;
 
 /**

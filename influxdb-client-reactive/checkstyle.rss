@@ -46,7 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.reactive.client.QueryReactiveApi.java">org/influxdata/reactive/client/QueryReactiveApi.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.WriteReactiveApi.java">org/influxdata/client/reactive/WriteReactiveApi.java</a>
                 </td>
                 <td>
                   0
@@ -60,7 +60,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.reactive.client.WriteReactiveApi.java">org/influxdata/reactive/client/WriteReactiveApi.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.QueryReactiveApi.java">org/influxdata/client/reactive/QueryReactiveApi.java</a>
                 </td>
                 <td>
                   0
@@ -74,7 +74,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.reactive.client.InfluxDBClientReactiveFactory.java">org/influxdata/reactive/client/InfluxDBClientReactiveFactory.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.internal.QueryReactiveApiImpl.java">org/influxdata/client/reactive/internal/QueryReactiveApiImpl.java</a>
                 </td>
                 <td>
                   0
@@ -88,7 +88,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.reactive.client.internal.WriteReactiveApiImpl.java">org/influxdata/reactive/client/internal/WriteReactiveApiImpl.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.internal.InfluxDBClientReactiveImpl.java">org/influxdata/client/reactive/internal/InfluxDBClientReactiveImpl.java</a>
                 </td>
                 <td>
                   0
@@ -102,7 +102,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.reactive.client.InfluxDBClientReactive.java">org/influxdata/reactive/client/InfluxDBClientReactive.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.InfluxDBClientReactiveFactory.java">org/influxdata/client/reactive/InfluxDBClientReactiveFactory.java</a>
                 </td>
                 <td>
                   0
@@ -116,7 +116,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.reactive.client.internal.QueryReactiveApiImpl.java">org/influxdata/reactive/client/internal/QueryReactiveApiImpl.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.InfluxDBClientReactive.java">org/influxdata/client/reactive/InfluxDBClientReactive.java</a>
                 </td>
                 <td>
                   0
@@ -130,7 +130,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.reactive.client.internal.InfluxDBClientReactiveImpl.java">org/influxdata/reactive/client/internal/InfluxDBClientReactiveImpl.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.internal.WriteReactiveApiImpl.java">org/influxdata/client/reactive/internal/WriteReactiveApiImpl.java</a>
                 </td>
                 <td>
                   0
@@ -144,7 +144,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.reactive.client.internal.InfluxDBReactiveService.java">org/influxdata/reactive/client/internal/InfluxDBReactiveService.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.internal.InfluxDBReactiveService.java">org/influxdata/client/reactive/internal/InfluxDBReactiveService.java</a>
                 </td>
                 <td>
                   0
