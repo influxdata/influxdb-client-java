@@ -28,7 +28,7 @@ import org.influxdata.client.InfluxDBClient;
 import org.influxdata.client.InfluxDBClientFactory;
 import org.influxdata.client.WriteApi;
 import org.influxdata.client.WriteOptions;
-import org.influxdata.test.client.AbstractMockServerTest;
+import org.influxdata.test.AbstractMockServerTest;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

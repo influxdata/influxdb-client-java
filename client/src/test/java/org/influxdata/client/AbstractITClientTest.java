@@ -29,7 +29,7 @@ import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.ResourceType;
 import org.influxdata.client.domain.RetentionRule;
-import org.influxdata.test.client.AbstractTest;
+import org.influxdata.test.AbstractTest;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -21,7 +21,7 @@
  */
 package org.influxdata.client.kotlin
 
-import org.influxdata.test.client.AbstractTest
+import org.influxdata.test.AbstractTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 

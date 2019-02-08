@@ -24,7 +24,7 @@ package org.influxdata.client.flux;
 import javax.annotation.Nonnull;
 
 import org.influxdata.client.flux.internal.FluxApiImpl;
-import org.influxdata.test.client.AbstractMockServerTest;
+import org.influxdata.test.AbstractMockServerTest;
 
 import okhttp3.mockwebserver.MockResponse;
 import org.junit.jupiter.api.AfterEach;

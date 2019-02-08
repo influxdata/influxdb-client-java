@@ -24,7 +24,7 @@ package org.influxdata.client.flux;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.influxdata.test.client.AbstractTest;
+import org.influxdata.test.AbstractTest;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

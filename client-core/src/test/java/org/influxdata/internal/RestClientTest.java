@@ -42,7 +42,7 @@ import org.influxdata.exceptions.RequestTimeoutException;
 import org.influxdata.exceptions.ServiceUnavailableException;
 import org.influxdata.exceptions.UnauthorizedException;
 import org.influxdata.exceptions.UnprocessableEntityException;
-import org.influxdata.test.client.AbstractMockServerTest;
+import org.influxdata.test.AbstractMockServerTest;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;

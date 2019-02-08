@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import org.influxdata.client.InfluxDBClient;
 import org.influxdata.client.InfluxDBClientFactory;
 import org.influxdata.client.domain.Organization;
-import org.influxdata.test.client.AbstractTest;
+import org.influxdata.test.AbstractTest;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;

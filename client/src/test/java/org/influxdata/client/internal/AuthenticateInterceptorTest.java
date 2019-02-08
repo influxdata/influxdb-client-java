@@ -25,7 +25,7 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 
 import org.influxdata.client.InfluxDBClientOptions;
-import org.influxdata.test.client.AbstractMockServerTest;
+import org.influxdata.test.AbstractMockServerTest;
 
 import okhttp3.Cookie;
 import okhttp3.Credentials;

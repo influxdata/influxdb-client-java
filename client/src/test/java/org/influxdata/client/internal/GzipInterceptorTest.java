@@ -24,7 +24,7 @@ package org.influxdata.client.internal;
 import java.io.IOException;
 import javax.annotation.Nonnull;
 
-import org.influxdata.test.client.AbstractMockServerTest;
+import org.influxdata.test.AbstractMockServerTest;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;

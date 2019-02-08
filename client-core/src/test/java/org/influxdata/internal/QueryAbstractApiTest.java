@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.Cancellable;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.query.internal.FluxCsvParser;
-import org.influxdata.test.client.AbstractMockServerTest;
+import org.influxdata.test.AbstractMockServerTest;
 
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;

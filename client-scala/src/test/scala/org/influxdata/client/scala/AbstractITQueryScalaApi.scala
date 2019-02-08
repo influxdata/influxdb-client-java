@@ -21,7 +21,7 @@
  */
 package org.influxdata.client.scala
 
-import org.influxdata.test.client.AbstractTest
+import org.influxdata.test.AbstractTest
 import org.scalatest.{BeforeAndAfter, FunSuite}
 
 /**
