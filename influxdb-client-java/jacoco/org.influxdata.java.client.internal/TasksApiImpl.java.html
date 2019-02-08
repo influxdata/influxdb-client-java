@@ -531,57 +531,57 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
     @Override
     public List&lt;Label&gt; getLabels(@Nonnull final Task task) {
 
-<span class="nc" id="L534">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="fc" id="L534">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="nc" id="L536">        return getLabels(task.getId());</span>
+<span class="fc" id="L536">        return getLabels(task.getId());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;Label&gt; getLabels(@Nonnull final String taskID) {
 
-<span class="nc" id="L543">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+<span class="fc" id="L543">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
 
-<span class="nc" id="L545">        return getLabels(taskID, &quot;tasks&quot;);</span>
+<span class="fc" id="L545">        return getLabels(taskID, &quot;tasks&quot;);</span>
     }
 
     @Nonnull
     @Override
     public Label addLabel(@Nonnull final Label label, @Nonnull final Task task) {
 
-<span class="nc" id="L552">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
-<span class="nc" id="L553">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="fc" id="L552">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="fc" id="L553">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="nc" id="L555">        return addLabel(label.getId(), task.getId());</span>
+<span class="fc" id="L555">        return addLabel(label.getId(), task.getId());</span>
     }
 
     @Nonnull
     @Override
     public Label addLabel(@Nonnull final String labelID, @Nonnull final String taskID) {
 
-<span class="nc" id="L562">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
-<span class="nc" id="L563">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+<span class="fc" id="L562">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="fc" id="L563">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
 
-<span class="nc" id="L565">        return addLabel(labelID, taskID, &quot;tasks&quot;, ResourceType.TASKS);</span>
+<span class="fc" id="L565">        return addLabel(labelID, taskID, &quot;tasks&quot;, ResourceType.TASKS);</span>
     }
 
     @Override
     public void deleteLabel(@Nonnull final Label label, @Nonnull final Task task) {
 
-<span class="nc" id="L571">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
-<span class="nc" id="L572">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="fc" id="L571">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="fc" id="L572">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
 
-<span class="nc" id="L574">        deleteLabel(label.getId(), task.getId());</span>
-<span class="nc" id="L575">    }</span>
+<span class="fc" id="L574">        deleteLabel(label.getId(), task.getId());</span>
+<span class="fc" id="L575">    }</span>
 
     @Override
     public void deleteLabel(@Nonnull final String labelID, @Nonnull final String taskID) {
 
-<span class="nc" id="L580">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
-<span class="nc" id="L581">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+<span class="fc" id="L580">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="fc" id="L581">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
 
-<span class="nc" id="L583">        deleteLabel(labelID, taskID, &quot;tasks&quot;);</span>
-<span class="nc" id="L584">    }</span>
+<span class="fc" id="L583">        deleteLabel(labelID, taskID, &quot;tasks&quot;);</span>
+<span class="fc" id="L584">    }</span>
 
     @Nonnull
     private Task createTask(@Nonnull final String name,
