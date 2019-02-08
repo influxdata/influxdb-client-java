@@ -21,39 +21,33 @@
  */
 package org.influxdata.scala.client.internal
 
-import java.io.IOException
 import java.util.function.BiConsumer
-import java.util.logging.{Level, Logger}
 
 import akka.NotUsed
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.Source
 import javax.annotation.Nonnull
-import org.influxdata.client.exceptions.InfluxException
 import org.influxdata.client.flux.domain.{FluxRecord, FluxTable}
 import org.influxdata.client.flux.internal.FluxCsvParser
 import org.influxdata.client.internal.AbstractQueryApi
-import org.influxdata.client.{Arguments, Cancellable, LogLevel}
-import org.influxdata.flux.client.FluxConnectionOptions
-import org.influxdata.flux.client.internal.{AbstractFluxApi, FluxService}
-import org.influxdata.scala.client.FluxClientScala
+import org.influxdata.client.{Arguments, Cancellable}
+import org.influxdata.java.client.internal.InfluxDBService
+import org.influxdata.scala.client.QueryScalaApi
 
 import scala.compat.java8.FunctionConverters.asJavaConsumer
 
 /**
  * @author Jakub Bednar (bednar@github) (06/11/2018 08:19)
  */
-class FluxApiScalaImpl(@Nonnull options: FluxConnectionOptions,
-                       @Nonnull val bufferSize: Int,
-                       @Nonnull val overflowStrategy: OverflowStrategy)
+class QueryScalaApiImpl(@Nonnull influxDBService: InfluxDBService,
+                        @Nonnull val bufferSize: Int,
+                        @Nonnull val overflowStrategy: OverflowStrategy)
 
-  extends AbstractFluxApi(options.getOkHttpClient, options.getUrl, options.getParameters, classOf[FluxService])
-    with FluxClientScala {
+  extends AbstractQueryApi()
+    with QueryScalaApi {
 
   Arguments.checkNotNull(overflowStrategy, "overflowStrategy")
   Arguments.checkNotNull(bufferSize, "bufferSize")
-
-  private val LOG = Logger.getLogger(classOf[FluxApiScalaImpl].getName)
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
@@ -61,13 +55,14 @@ class FluxApiScalaImpl(@Nonnull options: FluxConnectionOptions,
    * @param query the flux query to execute
    * @return the stream of [[FluxRecord]]s
    */
-  override def query(query: String): Source[FluxRecord, NotUsed] = {
+  override def query(@Nonnull query: String, @Nonnull orgID: String): Source[FluxRecord, NotUsed] = {
 
     Arguments.checkNonEmpty(query, "query")
+    Arguments.checkNonEmpty(orgID, "orgID")
 
     Source
       .single(query)
-      .map(it => fluxService.query(createBody(AbstractQueryApi.DEFAULT_DIALECT.toString, it)))
+      .map(it => influxDBService.query(orgID, createBody(AbstractQueryApi.DEFAULT_DIALECT.toString, it)))
       .flatMapConcat(queryCall => {
         Source.queue[FluxRecord](bufferSize, overflowStrategy)
           .mapMaterializedValue(queue => {
@@ -104,12 +99,13 @@ class FluxApiScalaImpl(@Nonnull options: FluxConnectionOptions,
    * @tparam M the type of the measurement (POJO)
    * @return the stream of measurements
    */
-  override def query[M](query: String, measurementType: Class[M]): Source[M, NotUsed] = {
+  override def query[M](@Nonnull query: String, @Nonnull orgID: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed] = {
 
     Arguments.checkNonEmpty(query, "query")
+    Arguments.checkNonEmpty(orgID, "orgID")
     Arguments.checkNotNull(measurementType, "measurementType")
 
-    this.query(query).map(t => resultMapper.toPOJO(t, measurementType))
+    this.query(query, orgID).map(t => resultMapper.toPOJO(t, measurementType))
   }
 
   /**
@@ -118,11 +114,12 @@ class FluxApiScalaImpl(@Nonnull options: FluxConnectionOptions,
    * @param query the flux query to execute
    * @return the response stream
    */
-  override def queryRaw(query: String): Source[String, NotUsed] = {
+  override def queryRaw(@Nonnull query: String, @Nonnull orgID: String): Source[String, NotUsed] = {
 
     Arguments.checkNonEmpty(query, "query")
+    Arguments.checkNonEmpty(orgID, "orgID")
 
-    queryRaw(query, AbstractQueryApi.DEFAULT_DIALECT.toString)
+    queryRaw(query, AbstractQueryApi.DEFAULT_DIALECT.toString, orgID)
   }
 
   /**
@@ -133,13 +130,14 @@ class FluxApiScalaImpl(@Nonnull options: FluxConnectionOptions,
    *                [[http://bit.ly/flux-dialect See dialect SPEC]].
    * @return the response stream
    */
-  override def queryRaw(query: String, dialect: String): Source[String, NotUsed] = {
+  override def queryRaw(query: String, dialect: String, orgID: String): Source[String, NotUsed] = {
 
     Arguments.checkNonEmpty(query, "query")
+    Arguments.checkNonEmpty(orgID, "orgID")
 
     Source
       .single(query)
-      .map(it => fluxService.query(createBody(dialect, it)))
+      .map(it => influxDBService.query(orgID, createBody(dialect, it)))
       .flatMapConcat(queryCall => {
         Source.queue[String](bufferSize, overflowStrategy)
           .mapMaterializedValue(queue => {
@@ -161,57 +159,5 @@ class FluxApiScalaImpl(@Nonnull options: FluxConnectionOptions,
             this.queryRaw(queryCall, onResponse, onError, () => queue.complete, true)
           })
       })
-  }
-
-  /**
-   * Check the status of InfluxDB Server.
-   *
-   * @return `true` if server is healthy otherwise return `false`
-   */
-  override def ping: Boolean = {
-    try {
-      fluxService.ping().execute().isSuccessful
-    } catch {
-      case e: IOException =>
-        LOG.log(Level.WARNING, "Ping request wasn't successful", e)
-        false
-    }
-  }
-
-  /**
-   * Returns the version of the connected InfluxDB Server.
-   *
-   * @return the version String, otherwise unknown.
-   */
-  override def version: String = {
-    try {
-      val response = fluxService.ping().execute()
-      getVersion(response)
-    } catch {
-      case e: IOException => throw new InfluxException(e)
-    }
-  }
-
-  /**
-   * Gets the [[LogLevel]] that is used for logging requests and responses.
-   *
-   * @return the [[LogLevel]] that is used for logging requests and responses
-   */
-  override def getLogLevel: LogLevel = {
-    super.getLogLevel(loggingInterceptor)
-  }
-
-  /**
-   * Sets the log level for the request and response information.
-   *
-   * @param logLevel the log level to set.
-   * @return the FluxClient instance to be able to use it in a fluent manner.
-   */
-  override def setLogLevel(logLevel: LogLevel): FluxClientScala = {
-
-    Arguments.checkNotNull(logLevel, "LogLevel")
-
-    super.setLogLevel(loggingInterceptor, logLevel)
-    this
   }
 }

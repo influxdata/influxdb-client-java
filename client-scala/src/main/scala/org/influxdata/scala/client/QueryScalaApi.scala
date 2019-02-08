@@ -24,7 +24,6 @@ package org.influxdata.scala.client
 import akka.NotUsed
 import akka.stream.scaladsl.Source
 import javax.annotation.Nonnull
-import org.influxdata.client.LogLevel
 import org.influxdata.client.flux.domain.FluxRecord
 
 /**
@@ -32,33 +31,36 @@ import org.influxdata.client.flux.domain.FluxRecord
  *
  * @author Jakub Bednar (bednar@github) (02/11/2018 09:48)
  */
-trait FluxClientScala {
+trait QueryScalaApi {
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
    *
    * @param query the flux query to execute
+   * @param orgID specifies the source organization
    * @return the stream of [[FluxRecord]]s
    */
-  @Nonnull def query(@Nonnull query: String): Source[FluxRecord, NotUsed]
+  @Nonnull def query(@Nonnull query: String, @Nonnull orgID: String): Source[FluxRecord, NotUsed]
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
    *
    * @param query           the flux query to execute
+   * @param orgID           specifies the source organization
    * @param measurementType the measurement (POJO)
    * @tparam M the type of the measurement (POJO)
    * @return the stream of measurements
    */
-  @Nonnull def query[M](@Nonnull query: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed]
+  @Nonnull def query[M](@Nonnull query: String, @Nonnull orgID: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed]
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
    *
    * @param query the flux query to execute
+   * @param orgID specifies the source organization
    * @return the response stream
    */
-  @Nonnull def queryRaw(@Nonnull query: String): Source[String, NotUsed]
+  @Nonnull def queryRaw(@Nonnull query: String, @Nonnull orgID: String): Source[String, NotUsed]
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
@@ -66,41 +68,8 @@ trait FluxClientScala {
    * @param query   the flux query to execute
    * @param dialect Dialect is an object defining the options to use when encoding the response.
    *                [[http://bit.ly/flux-dialect See dialect SPEC]].
+   * @param orgID   specifies the source organization
    * @return the response stream
    */
-  @Nonnull def queryRaw(@Nonnull query: String, @Nonnull dialect: String): Source[String, NotUsed]
-
-  /**
-   * Check the status of InfluxDB Server.
-   *
-   * @return `true` if server is healthy otherwise return `false`
-   */
-  @Nonnull def ping: Boolean
-
-  /**
-   * Returns the version of the connected InfluxDB Server.
-   *
-   * @return the version String, otherwise unknown.
-   */
-  @Nonnull def version: String
-
-  /**
-   * Gets the [[LogLevel]] that is used for logging requests and responses.
-   *
-   * @return the [[LogLevel]] that is used for logging requests and responses
-   */
-  @Nonnull def getLogLevel: LogLevel
-
-  /**
-   * Sets the log level for the request and response information.
-   *
-   * @param logLevel the log level to set.
-   * @return the FluxClient instance to be able to use it in a fluent manner.
-   */
-  @Nonnull def setLogLevel(@Nonnull logLevel: LogLevel): FluxClientScala
-
-  /**
-   * Shutdown and close the client.
-   */
-  def close(): Unit
+  @Nonnull def queryRaw(@Nonnull query: String, @Nonnull dialect: String, @Nonnull orgID: String): Source[String, NotUsed]
 }

@@ -27,46 +27,25 @@ import org.scalatest.{BeforeAndAfter, FunSuite}
 /**
  * @author Jakub Bednar (bednar@github) (06/11/2018 09:34)
  */
-abstract class AbstractITFluxClientScala extends FunSuite with BeforeAndAfter {
-
-  val DATABASE_NAME = "flux_database_scala"
+abstract class AbstractITQueryScalaApi extends FunSuite with BeforeAndAfter {
 
   var influxDBUtils: InfluxDBUtils = _
 
-  var fluxClient: FluxClientScala = _
+  var influxDBClient: InfluxDBClientScala = _
 
-  before {
+  def setUp() {
     influxDBUtils = new InfluxDBUtils {}
 
-    fluxClient = FluxClientScalaFactory.create(influxDBUtils.getUrl)
-
-    influxDBUtils.query(s"CREATE DATABASE $DATABASE_NAME", DATABASE_NAME)
-
-    val lineProtocol = Seq("mem,host=A,region=west free=10i 10000000000",
-      "mem,host=A,region=west free=11i 20000000000",
-      "mem,host=B,region=west free=20i 10000000000",
-      "mem,host=B,region=west free=22i 20000000000",
-      "cpu,host=A,region=west usage_system=35i,user_usage=45i 10000000000",
-      "cpu,host=A,region=west usage_system=38i,user_usage=49i 20000000000",
-      "cpu,host=A,hyper-threading=true,region=west usage_system=55i,user_usage=65i 20000000000")
-      .mkString("\n")
-
-    influxDBUtils.write(lineProtocol, DATABASE_NAME)
+    influxDBClient = InfluxDBClientScalaFactory.create(influxDBUtils.getUrl)
   }
 
   after {
-    fluxClient.close()
-
-    influxDBUtils.query(s"DROP DATABASE $DATABASE_NAME", DATABASE_NAME)
+    influxDBClient.close()
   }
 
   class InfluxDBUtils extends AbstractTest {
-    def getUrl: String = super.getInfluxDbUrl
+    def getUrl: String = super.getInfluxDb2Url
 
-    def query(query: String, databaseName: String): Unit = super.influxDBQuery(query, databaseName)
-
-    def write(lineProtocol: String, databaseName: String): Unit = super.influxDBWrite(lineProtocol, databaseName)
-
-    def prepareChunkRecords(): Unit = super.prepareChunkRecords(DATABASE_NAME)
+    override def generateName(prefix: String): String = super.generateName(prefix)
   }
 }

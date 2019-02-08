@@ -56,7 +56,7 @@ interface InfluxDBClientKotlin {
      * Sets the log level for the request and response information.
      *
      * @param logLevel the log level to set.
-     * @return the QueryKotlinApi instance to be able to use it in a fluent manner.
+     * @return the [InfluxDBClientKotlin] instance to be able to use it in a fluent manner.
      */
     fun setLogLevel(logLevel: LogLevel): InfluxDBClientKotlin
 

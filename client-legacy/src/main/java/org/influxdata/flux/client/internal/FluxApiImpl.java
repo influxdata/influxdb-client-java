@@ -39,23 +39,53 @@ import org.influxdata.client.flux.domain.FluxRecord;
 import org.influxdata.client.flux.domain.FluxTable;
 import org.influxdata.client.flux.internal.FluxCsvParser.FluxResponseConsumer;
 import org.influxdata.client.flux.internal.FluxCsvParser.FluxResponseConsumerTable;
+import org.influxdata.client.internal.AbstractQueryApi;
 import org.influxdata.flux.client.FluxClient;
 import org.influxdata.flux.client.FluxConnectionOptions;
 
+import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
-import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * @author Jakub Bednar (bednar@github) (03/10/2018 14:20)
  */
-public class FluxApiImpl extends AbstractFluxApi<FluxService> implements FluxClient {
+public class FluxApiImpl extends AbstractQueryApi implements FluxClient {
 
     private static final Logger LOG = Logger.getLogger(FluxApiImpl.class.getName());
 
+    private final FluxService fluxService;
+
+    private final HttpLoggingInterceptor loggingInterceptor;
+    private final OkHttpClient okHttpClient;
+
     public FluxApiImpl(@Nonnull final FluxConnectionOptions options) {
 
-        super(options.getOkHttpClient(), options.getUrl(), options.getParameters(), FluxService.class);
+        Arguments.checkNotNull(options, "options");
+
+        this.loggingInterceptor = new HttpLoggingInterceptor();
+
+        String logLevelParam = options.getParameters().get("logLevel");
+
+        if (logLevelParam == null) {
+            this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+        } else {
+            this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.valueOf(logLevelParam));
+        }
+
+        this.okHttpClient = options.getOkHttpClient()
+                .addInterceptor(this.loggingInterceptor)
+                .build();
+
+        Retrofit.Builder serviceBuilder = new Retrofit.Builder()
+                .baseUrl(options.getUrl())
+                .client(this.okHttpClient);
+
+        this.fluxService = serviceBuilder
+                .build()
+                .create(FluxService.class);
     }
 
     @Nonnull
@@ -339,8 +369,12 @@ public class FluxApiImpl extends AbstractFluxApi<FluxService> implements FluxCli
         Call<ResponseBody> ping = fluxService.ping();
 
         try {
-            Response<ResponseBody> execute = ping.execute();
-            return getVersion(execute);
+            String version = ping.execute().headers().get("X-Influxdb-Version");
+            if (version != null) {
+                return version;
+            }
+
+            return "unknown";
         } catch (IOException e) {
             throw new InfluxException(e);
         }
@@ -361,6 +395,14 @@ public class FluxApiImpl extends AbstractFluxApi<FluxService> implements FluxCli
         setLogLevel(this.loggingInterceptor, logLevel);
 
         return this;
+    }
+
+    /**
+     * Closes the client, initiates shutdown, no new running calls are accepted during shutdown.
+     */
+    public void close() {
+        okHttpClient.connectionPool().evictAll();
+        okHttpClient.dispatcher().executorService().shutdown();
     }
 
     private void query(@Nonnull final String query,

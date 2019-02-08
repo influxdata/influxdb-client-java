@@ -24,30 +24,71 @@ package org.influxdata.scala.client
 import akka.stream.OverflowStrategy
 import javax.annotation.Nonnull
 import org.influxdata.client.Arguments
-import org.influxdata.flux.client.FluxConnectionOptions
-import org.influxdata.scala.client.internal.FluxApiScalaImpl
+import org.influxdata.java.client.InfluxDBClientOptions
+import org.influxdata.scala.client.internal.InfluxDBClientScalaImpl
 
 /**
  * The Factory that creates a instance of a Flux client.
  * 
  * @author Jakub Bednar (bednar@github) (05/11/2018 10:10)
  */
-object FluxClientScalaFactory {
+object InfluxDBClientScalaFactory {
 
   /**
-   * Create a instance of the Flux client.
+   * Create a instance of the InfluxDB 2.0 reactive client.
    *
-   * @param connectionString the connectionString to connect to InfluxDB.
+   * @param url the url to connect to the InfluxDB
    * @return client
-   * @see [[FluxConnectionOptions#builder(java.lang.String)]]
+   * @see [[InfluxDBClientOptions.Builder]]
    */
-  @Nonnull def create(@Nonnull connectionString: String): FluxClientScala = {
-    val options = FluxConnectionOptions.builder(connectionString).build
+  @Nonnull def create(url: String): InfluxDBClientScala = {
+
+    val options = InfluxDBClientOptions.builder()
+      .url(url)
+      .build()
+
     create(options)
   }
 
   /**
-   * Create a instance of the Flux client.
+   * Create a instance of the InfluxDB 2.0 reactive client.
+   *
+   * @param url      the url to connect to the InfluxDB
+   * @param username the username to use in the basic auth
+   * @param password the password to use in the basic auth
+   * @return client
+   * @see [[InfluxDBClientOptions.Builder]]
+   */
+  @Nonnull def create(url: String, username: String, password: Array[Char]): InfluxDBClientScala = {
+
+    val options = InfluxDBClientOptions.builder()
+      .url(url)
+      .authenticate(username, password)
+      .build()
+
+    create(options)
+  }
+
+  /**
+   * Create a instance of the InfluxDB 2.0 reactive client.
+   *
+   * @param url   the url to connect to the InfluxDB
+   * @param token the token to use for the authorization
+   * @return client
+   * @see [[InfluxDBClientOptions.Builder]]
+   */
+  @Nonnull def create(url: String, token: Array[Char]): InfluxDBClientScala = {
+
+    val options = InfluxDBClientOptions.builder()
+      .url(url)
+      .authenticateToken(token)
+      .build()
+
+    create(options)
+  }
+
+  /**
+   * Create a instance of the InfluxDB 2.0 reactive client.
    *
    * @param options          the connection configuration
    * @param bufferSize       size of a buffer for incoming responses. Default 10000.
@@ -56,14 +97,12 @@ object FluxClientScalaFactory {
    * @see [[akka.stream.scaladsl.Source#queue(int, akka.stream.OverflowStrategy)]]
    * @return client
    */
-  @Nonnull def create(@Nonnull options: FluxConnectionOptions,
+  @Nonnull def create(@Nonnull options: InfluxDBClientOptions,
                       @Nonnull bufferSize: Int = 10000,
-                      @Nonnull overflowStrategy: OverflowStrategy = OverflowStrategy.backpressure): FluxClientScala = {
+                      @Nonnull overflowStrategy: OverflowStrategy = OverflowStrategy.backpressure): InfluxDBClientScala = {
 
-    Arguments.checkNotNull(options, "FluxConnectionOptions")
-    Arguments.checkNotNull(overflowStrategy, "overflowStrategy")
-    Arguments.checkNotNull(bufferSize, "bufferSize")
+    Arguments.checkNotNull(options, "InfluxDBClientOptions")
 
-    new FluxApiScalaImpl(options, bufferSize, overflowStrategy)
+    new InfluxDBClientScalaImpl(options, bufferSize, overflowStrategy)
   }
 }

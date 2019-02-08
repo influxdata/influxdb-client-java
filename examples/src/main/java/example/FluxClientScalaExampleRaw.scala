@@ -24,7 +24,7 @@ package example
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
-import org.influxdata.scala.client.FluxClientScalaFactory
+import org.influxdata.scala.client.InfluxDBClientScalaFactory
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -38,7 +38,7 @@ object FluxClientScalaExampleRaw {
   implicit val materializer: ActorMaterializer = ActorMaterializer()
 
   def main(args: Array[String]): Unit = {
-    val fluxClient = FluxClientScalaFactory
+    val fluxClient = InfluxDBClientScalaFactory
       .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000")
 
     val fluxQuery = ("from(bucket: \"telegraf\")\n"
@@ -47,8 +47,7 @@ object FluxClientScalaExampleRaw {
       + " |> sample(n: 5, pos: 1)")
 
     //Result is returned as a stream
-    val sink = fluxClient
-      .queryRaw(fluxQuery, "{header: false}")
+    val sink = fluxClient.getQueryScalaApi().queryRaw(fluxQuery, "{header: false}", "my-org")
       //print results
       .runWith(Sink.foreach[String](it => println(s"Line: $it")))
 

@@ -32,7 +32,6 @@ import assertk.assertions.isTrue
 import kotlinx.coroutines.channels.map
 import kotlinx.coroutines.channels.toList
 import kotlinx.coroutines.runBlocking
-import org.assertj.core.api.Assertions
 import org.influxdata.client.annotations.Column
 import org.influxdata.java.client.InfluxDBClientFactory
 import org.influxdata.java.client.domain.Bucket
@@ -96,9 +95,6 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
         val writeBucket = Permission()
         writeBucket.resource = resource
         writeBucket.action = Permission.WRITE_ACTION
-
-        val loggedUser = client.usersApi.me()
-        Assertions.assertThat(loggedUser).isNotNull
 
         val authorization = client.authorizationsApi
                 .createAuthorization(organization, Arrays.asList(readBucket, writeBucket))

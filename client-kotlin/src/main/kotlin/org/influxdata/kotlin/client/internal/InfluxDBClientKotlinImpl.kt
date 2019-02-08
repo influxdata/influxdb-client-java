@@ -43,11 +43,11 @@ internal class InfluxDBClientKotlinImpl(options: InfluxDBClientOptions) : Abstra
     }
 
     override fun getLogLevel(): LogLevel {
-        return getLogLevel(this.loggingInterceptor)
+        return getLogLevel(loggingInterceptor)
     }
 
     override fun setLogLevel(logLevel: LogLevel): InfluxDBClientKotlin {
-        setLogLevel(this.loggingInterceptor, logLevel)
+        setLogLevel(loggingInterceptor, logLevel)
 
         return this
     }
@@ -65,6 +65,6 @@ internal class InfluxDBClientKotlinImpl(options: InfluxDBClientOptions) : Abstra
     }
 
     override fun isGzipEnabled(): Boolean {
-        return this.gzipInterceptor.isEnabledGzip
+        return gzipInterceptor.isEnabledGzip
     }
 }

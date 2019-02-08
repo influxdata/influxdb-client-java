@@ -29,7 +29,7 @@ import akka.stream.scaladsl.Sink
 import org.influxdata.client.flux.domain.FluxRecord
 import org.influxdata.flux.dsl.Flux
 import org.influxdata.flux.dsl.functions.restriction.Restrictions
-import org.influxdata.scala.client.FluxClientScalaFactory
+import org.influxdata.scala.client.InfluxDBClientScalaFactory
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -44,7 +44,7 @@ object FluxClientScalaExampleDSL {
 
   def main(args: Array[String]) {
 
-    val fluxClient = FluxClientScalaFactory
+    val fluxClient = InfluxDBClientScalaFactory
       .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000")
 
     val mem = Flux.from("telegraf")
@@ -52,7 +52,7 @@ object FluxClientScalaExampleDSL {
       .range(-30L, ChronoUnit.MINUTES)
 
     //Result is returned as a stream
-    val results = fluxClient.query(mem.toString())
+    val results = fluxClient.getQueryScalaApi().query(mem.toString(), "my-org")
 
     //Example of additional result stream processing on client side
     val sink = results

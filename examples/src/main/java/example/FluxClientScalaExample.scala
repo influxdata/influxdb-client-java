@@ -25,7 +25,7 @@ import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
 import org.influxdata.client.flux.domain.FluxRecord
-import org.influxdata.scala.client.FluxClientScalaFactory
+import org.influxdata.scala.client.InfluxDBClientScalaFactory
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -40,7 +40,7 @@ object FluxClientScalaExample {
 
   def main(args: Array[String]): Unit = {
 
-    val fluxClient = FluxClientScalaFactory
+    val fluxClient = InfluxDBClientScalaFactory
       .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000")
 
     val fluxQuery = ("from(bucket: \"telegraf\")\n"
@@ -48,7 +48,7 @@ object FluxClientScalaExample {
       + " |> range(start: -1d)")
 
     //Result is returned as a stream
-    val results = fluxClient.query(fluxQuery)
+    val results = fluxClient.getQueryScalaApi().query(fluxQuery, "my-org")
 
     //Example of additional result stream processing on client side
     val sink = results

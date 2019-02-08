@@ -35,8 +35,8 @@ class InfluxDBClientKotlinFactoryTest {
     @Test
     fun connect()
     {
-        val fluxClient = InfluxDBClientKotlinFactory.create("http://localhost:8093")
+        val client = InfluxDBClientKotlinFactory.create("http://localhost:8093")
 
-        AssertionsForClassTypes.assertThat<InfluxDBClientKotlin>(fluxClient).isNotNull
+        AssertionsForClassTypes.assertThat<InfluxDBClientKotlin>(client).isNotNull
     }
 }

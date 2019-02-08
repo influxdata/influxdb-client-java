@@ -40,6 +40,8 @@ import org.influxdata.java.client.writes.events.WriteSuccessEvent;
  * <p>
  * The data are formatted in <a href="https://bit.ly/2QL99fu">Line Protocol</a>.
  *
+ * //TODO support orgID and orgName (+ query)
+ *
  * @author Jakub Bednar (bednar@github) (20/09/2018 10:58)
  */
 public interface WriteApi extends AutoCloseable {

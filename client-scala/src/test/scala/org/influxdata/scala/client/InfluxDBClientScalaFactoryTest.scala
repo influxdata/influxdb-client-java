@@ -21,50 +21,17 @@
  */
 package org.influxdata.scala.client
 
-import org.influxdata.client.LogLevel
-import org.influxdata.client.exceptions.InfluxException
-import org.scalatest.Matchers
+import org.scalatest.{FunSuite, Matchers}
 
 /**
- * @author Jakub Bednar (bednar@github) (06/11/2018 09:52)
+ * @author Jakub Bednar (bednar@github) (05/11/2018 09:22)
  */
-class ITFluxClientScala extends AbstractITFluxClientScala with Matchers {
+class InfluxDBClientScalaFactoryTest extends FunSuite with Matchers {
 
-  test("log level") {
+  test("connect") {
 
-    fluxClient.getLogLevel should be(LogLevel.NONE)
+    val client = InfluxDBClientScalaFactory.create("http://localhost:8093")
 
-    fluxClient.setLogLevel(LogLevel.HEADERS)
-
-    fluxClient.getLogLevel should be(LogLevel.HEADERS)
-  }
-
-  test("ping healthy") {
-
-    fluxClient.ping should be(true)
-
-  }
-
-  test("ping not running server") {
-
-    val clientNotRunning = FluxClientScalaFactory.create("http://localhost:8099")
-
-    clientNotRunning.ping should be(false)
-
-    clientNotRunning.close()
-  }
-
-  test("version") {
-
-    fluxClient.version should not be empty
-  }
-
-  test("version not running server") {
-
-    val clientNotRunning = FluxClientScalaFactory.create("http://localhost:8099")
-
-    an [InfluxException] should be thrownBy clientNotRunning.version
-
-    clientNotRunning.close()
+    client should not be null
   }
 }
