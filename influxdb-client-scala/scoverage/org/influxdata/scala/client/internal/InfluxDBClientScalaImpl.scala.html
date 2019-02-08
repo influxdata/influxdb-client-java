@@ -1,0 +1,412 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          org/influxdata/scala/client/internal/InfluxDBClientScalaImpl.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>/**
+</span>2 <span style=''> * The MIT License
+</span>3 <span style=''> *
+</span>4 <span style=''> * Permission is hereby granted, free of charge, to any person obtaining a copy
+</span>5 <span style=''> * of this software and associated documentation files (the &quot;Software&quot;), to deal
+</span>6 <span style=''> * in the Software without restriction, including without limitation the rights
+</span>7 <span style=''> * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+</span>8 <span style=''> * copies of the Software, and to permit persons to whom the Software is
+</span>9 <span style=''> * furnished to do so, subject to the following conditions:
+</span>10 <span style=''> *
+</span>11 <span style=''> * The above copyright notice and this permission notice shall be included in
+</span>12 <span style=''> * all copies or substantial portions of the Software.
+</span>13 <span style=''> *
+</span>14 <span style=''> * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+</span>15 <span style=''> * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+</span>16 <span style=''> * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+</span>17 <span style=''> * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+</span>18 <span style=''> * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+</span>19 <span style=''> * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+</span>20 <span style=''> * THE SOFTWARE.
+</span>21 <span style=''> */
+</span>22 <span style=''>package org.influxdata.scala.client.internal
+</span>23 <span style=''>
+</span>24 <span style=''>import akka.stream.OverflowStrategy
+</span>25 <span style=''>import javax.annotation.Nonnull
+</span>26 <span style=''>import org.influxdata.client.LogLevel
+</span>27 <span style=''>import org.influxdata.java.client.InfluxDBClientOptions
+</span>28 <span style=''>import org.influxdata.java.client.domain.Health
+</span>29 <span style=''>import org.influxdata.java.client.internal.{AbstractInfluxDBClient, InfluxDBService}
+</span>30 <span style=''>import org.influxdata.scala.client.{InfluxDBClientScala, QueryScalaApi}
+</span>31 <span style=''>
+</span>32 <span style=''>/**
+</span>33 <span style=''> * @author Jakub Bednar (bednar@github) (08/02/2019 09:26)
+</span>34 <span style=''> */
+</span>35 <span style=''>class InfluxDBClientScalaImpl(@Nonnull options: InfluxDBClientOptions,
+</span>36 <span style=''>                              @Nonnull val bufferSize: Int,
+</span>37 <span style=''>                              @Nonnull val overflowStrategy: OverflowStrategy) extends AbstractInfluxDBClient(options, classOf[InfluxDBService]) with InfluxDBClientScala {
+</span>38 <span style=''>  /**
+</span>39 <span style=''>   * Get the Query client.
+</span>40 <span style=''>   *
+</span>41 <span style=''>   * @return the new client instance for the Query API
+</span>42 <span style=''>   */
+</span>43 <span style=''>  override def getQueryScalaApi(): QueryScalaApi = new QueryScalaApiImpl(influxDBService, bufferSize, overflowStrategy)
+</span>44 <span style=''>
+</span>45 <span style=''>  /**
+</span>46 <span style=''>   * Get the health of an instance.
+</span>47 <span style=''>   *
+</span>48 <span style=''>   * @return health of an instance
+</span>49 <span style=''>   */
+</span>50 <span style=''>  override def health: Health = health(influxDBService.health())
+</span>51 <span style=''>
+</span>52 <span style=''>  /**
+</span>53 <span style=''>   * Gets the [[LogLevel]] that is used for logging requests and responses.
+</span>54 <span style=''>   *
+</span>55 <span style=''>   * @return the [[LogLevel]] that is used for logging requests and responses
+</span>56 <span style=''>   */
+</span>57 <span style=''>  override def getLogLevel: LogLevel = getLogLevel(loggingInterceptor)
+</span>58 <span style=''>
+</span>59 <span style=''>  /**
+</span>60 <span style=''>   * Sets the log level for the request and response information.
+</span>61 <span style=''>   *
+</span>62 <span style=''>   * @param logLevel the log level to set.
+</span>63 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
+</span>64 <span style=''>   */
+</span>65 <span style=''>  override def setLogLevel(logLevel: LogLevel): InfluxDBClientScala = {
+</span>66 <span style=''>    setLogLevel(loggingInterceptor, logLevel)
+</span>67 <span style=''>    this
+</span>68 <span style=''>  }
+</span>69 <span style=''>
+</span>70 <span style=''>  /**
+</span>71 <span style=''>   * Enable Gzip compress for http request body.
+</span>72 <span style=''>   *
+</span>73 <span style=''>   * Currently only the &quot;Write&quot; endpoint supports the Gzip compression.
+</span>74 <span style=''>   *
+</span>75 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
+</span>76 <span style=''>   */
+</span>77 <span style=''>  override def enableGzip(): InfluxDBClientScala = {
+</span>78 <span style=''>    gzipInterceptor.enableGzip()
+</span>79 <span style=''>    this
+</span>80 <span style=''>  }
+</span>81 <span style=''>
+</span>82 <span style=''>  /**
+</span>83 <span style=''>   * Disable Gzip compress for http request body.
+</span>84 <span style=''>   *
+</span>85 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
+</span>86 <span style=''>   */
+</span>87 <span style=''>  override def disableGzip(): InfluxDBClientScala = {
+</span>88 <span style=''>    gzipInterceptor.disableGzip()
+</span>89 <span style=''>    this
+</span>90 <span style=''>  }
+</span>91 <span style=''>
+</span>92 <span style=''>  /**
+</span>93 <span style=''>   * Returns whether Gzip compress for http request body is enabled.
+</span>94 <span style=''>   *
+</span>95 <span style=''>   * @return true if gzip is enabled.
+</span>96 <span style=''>   */
+</span>97 <span style=''>  override def isGzipEnabled: Boolean = gzipInterceptor.isEnabledGzip
+</span>98 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          17
+        </td>
+        <td>
+          2087
+          -
+          2087
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.scala.client.internal.InfluxDBClientScalaImpl.overflowStrategy
+        </td>
+        <td style="background: #AEF1AE">
+          InfluxDBClientScalaImpl.this.overflowStrategy
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          16
+        </td>
+        <td>
+          2075
+          -
+          2075
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.scala.client.internal.InfluxDBClientScalaImpl.bufferSize
+        </td>
+        <td style="background: #AEF1AE">
+          InfluxDBClientScalaImpl.this.bufferSize
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          18
+        </td>
+        <td>
+          2036
+          -
+          2036
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.scala.client.internal.QueryScalaApiImpl.&lt;init&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          new QueryScalaApiImpl(InfluxDBClientScalaImpl.this.influxDBService, InfluxDBClientScalaImpl.this.bufferSize, InfluxDBClientScalaImpl.this.overflowStrategy)
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          15
+        </td>
+        <td>
+          2058
+          -
+          2058
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.java.client.internal.AbstractInfluxDBClient.influxDBService
+        </td>
+        <td style="background: #AEF1AE">
+          InfluxDBClientScalaImpl.this.influxDBService
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          20
+        </td>
+        <td>
+          2232
+          -
+          2232
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.java.client.internal.AbstractInfluxDBClient.health
+        </td>
+        <td style="background: #AEF1AE">
+          InfluxDBClientScalaImpl.this.health(InfluxDBClientScalaImpl.this.influxDBService.health())
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          19
+        </td>
+        <td>
+          2255
+          -
+          2255
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.java.client.internal.InfluxDBService.health
+        </td>
+        <td style="background: #AEF1AE">
+          InfluxDBClientScalaImpl.this.influxDBService.health()
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          22
+        </td>
+        <td>
+          2481
+          -
+          2481
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.internal.AbstractRestClient.getLogLevel
+        </td>
+        <td style="background: #AEF1AE">
+          InfluxDBClientScalaImpl.this.getLogLevel(InfluxDBClientScalaImpl.this.loggingInterceptor)
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          21
+        </td>
+        <td>
+          2482
+          -
+          2482
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.java.client.internal.AbstractInfluxDBClient.loggingInterceptor
+        </td>
+        <td style="background: #AEF1AE">
+          InfluxDBClientScalaImpl.this.loggingInterceptor
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          23
+        </td>
+        <td>
+          2808
+          -
+          2808
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.influxdata.java.client.internal.AbstractInfluxDBClient.loggingInterceptor
+        </td>
+        <td style="background: #AEF1AE">
+          InfluxDBClientScalaImpl.this.loggingInterceptor
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          24
+        </td>
+        <td>
+          2807
+          -
+          2807
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.client.internal.AbstractRestClient.setLogLevel
+        </td>
+        <td style="background: #AEF1AE">
+          InfluxDBClientScalaImpl.this.setLogLevel(InfluxDBClientScalaImpl.this.loggingInterceptor, logLevel)
+        </td>
+      </tr><tr>
+        <td>
+          78
+        </td>
+        <td>
+          25
+        </td>
+        <td>
+          3169
+          -
+          3169
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.java.client.internal.GzipInterceptor.enableGzip
+        </td>
+        <td style="background: #AEF1AE">
+          InfluxDBClientScalaImpl.this.gzipInterceptor.enableGzip()
+        </td>
+      </tr><tr>
+        <td>
+          88
+        </td>
+        <td>
+          26
+        </td>
+        <td>
+          3429
+          -
+          3429
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.java.client.internal.GzipInterceptor.disableGzip
+        </td>
+        <td style="background: #AEF1AE">
+          InfluxDBClientScalaImpl.this.gzipInterceptor.disableGzip()
+        </td>
+      </tr><tr>
+        <td>
+          97
+        </td>
+        <td>
+          27
+        </td>
+        <td>
+          3626
+          -
+          3626
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.influxdata.java.client.internal.GzipInterceptor.isEnabledGzip
+        </td>
+        <td style="background: #AEF1AE">
+          InfluxDBClientScalaImpl.this.gzipInterceptor.isEnabledGzip()
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

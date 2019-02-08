@@ -43,11 +43,11 @@ import org.influxdata.kotlin.client.QueryKotlinApi
     }
 
     override fun getLogLevel(): LogLevel {
-<span class="nc" id="L46">        return getLogLevel(this.loggingInterceptor)</span>
+<span class="nc" id="L46">        return getLogLevel(loggingInterceptor)</span>
     }
 
     override fun setLogLevel(logLevel: LogLevel): InfluxDBClientKotlin {
-<span class="nc" id="L50">        setLogLevel(this.loggingInterceptor, logLevel)</span>
+<span class="nc" id="L50">        setLogLevel(loggingInterceptor, logLevel)</span>
 
 <span class="nc" id="L52">        return this</span>
     }
@@ -65,7 +65,7 @@ import org.influxdata.kotlin.client.QueryKotlinApi
     }
 
     override fun isGzipEnabled(): Boolean {
-<span class="nc" id="L68">        return this.gzipInterceptor.isEnabledGzip</span>
+<span class="nc" id="L68">        return gzipInterceptor.isEnabledGzip</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

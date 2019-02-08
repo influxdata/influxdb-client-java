@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InfluxDBClientScalaFactory.scala</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Scala InfluxDB 2.0 Client</a> &gt; <a href="index.source.html" class="el_package">org.influxdata.scala.client</a> &gt; <span class="el_source">InfluxDBClientScalaFactory.scala</span></div><h1>InfluxDBClientScalaFactory.scala</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.influxdata.scala.client
+
+import akka.stream.OverflowStrategy
+import javax.annotation.Nonnull
+import org.influxdata.client.Arguments
+import org.influxdata.java.client.InfluxDBClientOptions
+import org.influxdata.scala.client.internal.InfluxDBClientScalaImpl
+
+/**
+ * The Factory that creates a instance of a Flux client.
+ * 
+ * @author Jakub Bednar (bednar@github) (05/11/2018 10:10)
+ */
+<span class="nc" id="L35">object InfluxDBClientScalaFactory {</span>
+
+  /**
+   * Create a instance of the InfluxDB 2.0 reactive client.
+   *
+   * @param url the url to connect to the InfluxDB
+   * @return client
+   * @see [[InfluxDBClientOptions.Builder]]
+   */
+  @Nonnull def create(url: String): InfluxDBClientScala = {
+
+<span class="nc" id="L46">    val options = InfluxDBClientOptions.builder()</span>
+<span class="nc" id="L47">      .url(url)</span>
+      .build()
+
+<span class="nc" id="L50">    create(options)</span>
+  }
+
+  /**
+   * Create a instance of the InfluxDB 2.0 reactive client.
+   *
+   * @param url      the url to connect to the InfluxDB
+   * @param username the username to use in the basic auth
+   * @param password the password to use in the basic auth
+   * @return client
+   * @see [[InfluxDBClientOptions.Builder]]
+   */
+  @Nonnull def create(url: String, username: String, password: Array[Char]): InfluxDBClientScala = {
+
+<span class="nc" id="L64">    val options = InfluxDBClientOptions.builder()</span>
+<span class="nc" id="L65">      .url(url)</span>
+<span class="nc" id="L66">      .authenticate(username, password)</span>
+      .build()
+
+<span class="nc" id="L69">    create(options)</span>
+  }
+
+  /**
+   * Create a instance of the InfluxDB 2.0 reactive client.
+   *
+   * @param url   the url to connect to the InfluxDB
+   * @param token the token to use for the authorization
+   * @return client
+   * @see [[InfluxDBClientOptions.Builder]]
+   */
+  @Nonnull def create(url: String, token: Array[Char]): InfluxDBClientScala = {
+
+<span class="nc" id="L82">    val options = InfluxDBClientOptions.builder()</span>
+<span class="nc" id="L83">      .url(url)</span>
+<span class="nc" id="L84">      .authenticateToken(token)</span>
+      .build()
+
+<span class="nc" id="L87">    create(options)</span>
+  }
+
+  /**
+   * Create a instance of the InfluxDB 2.0 reactive client.
+   *
+   * @param options          the connection configuration
+   * @param bufferSize       size of a buffer for incoming responses. Default 10000.
+   * @param overflowStrategy Strategy that is used when incoming response cannot fit inside the buffer.
+   *                         Default [[akka.stream.OverflowStrategies.Backpressure]].
+   * @see [[akka.stream.scaladsl.Source#queue(int, akka.stream.OverflowStrategy)]]
+   * @return client
+   */
+  @Nonnull def create(@Nonnull options: InfluxDBClientOptions,
+<span class="nc" id="L101">                      @Nonnull bufferSize: Int = 10000,</span>
+<span class="nc" id="L102">                      @Nonnull overflowStrategy: OverflowStrategy = OverflowStrategy.backpressure): InfluxDBClientScala = {</span>
+
+<span class="nc" id="L104">    Arguments.checkNotNull(options, &quot;InfluxDBClientOptions&quot;)</span>
+
+<span class="nc" id="L106">    new InfluxDBClientScalaImpl(options, bufferSize, overflowStrategy)</span>
+  }
+<span class="nc" id="L108">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
