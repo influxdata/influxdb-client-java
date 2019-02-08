@@ -27,13 +27,13 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.influxdata.client.writes.Point;
-import org.influxdata.client.writes.events.AbstractWriteEvent;
-import org.influxdata.client.writes.events.BackpressureEvent;
-import org.influxdata.client.writes.events.EventListener;
-import org.influxdata.client.writes.events.ListenerRegistration;
-import org.influxdata.client.writes.events.WriteErrorEvent;
-import org.influxdata.client.writes.events.WriteSuccessEvent;
+import org.influxdata.client.write.Point;
+import org.influxdata.client.write.events.AbstractWriteEvent;
+import org.influxdata.client.write.events.BackpressureEvent;
+import org.influxdata.client.write.events.EventListener;
+import org.influxdata.client.write.events.ListenerRegistration;
+import org.influxdata.client.write.events.WriteErrorEvent;
+import org.influxdata.client.write.events.WriteSuccessEvent;
 
 /**
  * Write time-series data intoInfluxDB 2.02.0.

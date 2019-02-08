@@ -28,10 +28,10 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 
 import org.influxdata.client.internal.AbstractInfluxDBClientTest;
-import org.influxdata.client.writes.Point;
-import org.influxdata.client.writes.events.BackpressureEvent;
-import org.influxdata.client.writes.events.WriteErrorEvent;
-import org.influxdata.client.writes.events.WriteSuccessEvent;
+import org.influxdata.client.write.Point;
+import org.influxdata.client.write.events.BackpressureEvent;
+import org.influxdata.client.write.events.WriteErrorEvent;
+import org.influxdata.client.write.events.WriteSuccessEvent;
 import org.influxdata.exceptions.InfluxException;
 
 import io.reactivex.Flowable;

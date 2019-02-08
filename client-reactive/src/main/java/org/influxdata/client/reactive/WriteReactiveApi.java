@@ -26,11 +26,11 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 
 import org.influxdata.client.WriteApi;
-import org.influxdata.client.writes.Point;
-import org.influxdata.client.writes.events.AbstractWriteEvent;
-import org.influxdata.client.writes.events.BackpressureEvent;
-import org.influxdata.client.writes.events.WriteErrorEvent;
-import org.influxdata.client.writes.events.WriteSuccessEvent;
+import org.influxdata.client.write.Point;
+import org.influxdata.client.write.events.AbstractWriteEvent;
+import org.influxdata.client.write.events.BackpressureEvent;
+import org.influxdata.client.write.events.WriteErrorEvent;
+import org.influxdata.client.write.events.WriteSuccessEvent;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;

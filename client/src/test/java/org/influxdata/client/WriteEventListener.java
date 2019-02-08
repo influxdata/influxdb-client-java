@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import javax.annotation.Nonnull;
 
-import org.influxdata.client.writes.events.EventListener;
+import org.influxdata.client.write.events.EventListener;
 import org.influxdata.exceptions.InfluxException;
 
 import org.assertj.core.api.Assertions;

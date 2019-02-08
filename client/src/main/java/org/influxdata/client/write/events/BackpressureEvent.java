@@ -19,17 +19,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.client.writes.events;
+package org.influxdata.client.write.events;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Represent a listener registration.
+ * The event is published when is backpressure applied.
  *
- * @author Jakub Bednar (bednar@github) (10/12/2018 09:31)
+ * @author Jakub Bednar (bednar@github) (25/09/2018 12:27)
  */
-public interface ListenerRegistration {
+public final class BackpressureEvent extends AbstractWriteEvent {
 
-    /**
-     * Dispose the listener registration. The repeatable calls has no effect.
-     */
-    void dispose();
+    private static final Logger LOG = Logger.getLogger(BackpressureEvent.class.getName());
+
+    @Override
+    public void logEvent() {
+
+        LOG.log(Level.WARNING, "Backpressure applied, try increase WriteOptions.bufferLimit");
+    }
 }

@@ -40,8 +40,8 @@ import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
 import org.influxdata.client.domain.ResourceType;
-import org.influxdata.client.writes.Point;
-import org.influxdata.client.writes.events.WriteSuccessEvent;
+import org.influxdata.client.write.Point;
+import org.influxdata.client.write.events.WriteSuccessEvent;
 import org.influxdata.query.FluxRecord;
 import org.influxdata.query.FluxTable;
 

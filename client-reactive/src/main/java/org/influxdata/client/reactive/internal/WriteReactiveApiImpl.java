@@ -29,8 +29,8 @@ import org.influxdata.Arguments;
 import org.influxdata.client.WriteOptions;
 import org.influxdata.client.internal.AbstractWriteClient;
 import org.influxdata.client.reactive.WriteReactiveApi;
-import org.influxdata.client.writes.Point;
-import org.influxdata.client.writes.events.AbstractWriteEvent;
+import org.influxdata.client.write.Point;
+import org.influxdata.client.write.events.AbstractWriteEvent;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;

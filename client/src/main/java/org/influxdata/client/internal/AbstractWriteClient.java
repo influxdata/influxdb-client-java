@@ -31,10 +31,10 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.WriteOptions;
-import org.influxdata.client.writes.Point;
-import org.influxdata.client.writes.events.AbstractWriteEvent;
-import org.influxdata.client.writes.events.WriteErrorEvent;
-import org.influxdata.client.writes.events.WriteSuccessEvent;
+import org.influxdata.client.write.Point;
+import org.influxdata.client.write.events.AbstractWriteEvent;
+import org.influxdata.client.write.events.WriteErrorEvent;
+import org.influxdata.client.write.events.WriteSuccessEvent;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.internal.AbstractRestClient;
 

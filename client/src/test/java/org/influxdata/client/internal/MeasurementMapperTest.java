@@ -26,7 +26,7 @@ import java.time.temporal.ChronoUnit;
 
 import org.influxdata.annotations.Column;
 import org.influxdata.annotations.Measurement;
-import org.influxdata.client.writes.Point;
+import org.influxdata.client.write.Point;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

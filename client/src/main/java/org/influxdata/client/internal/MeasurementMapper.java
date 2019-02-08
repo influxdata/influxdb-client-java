@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.Arguments;
 import org.influxdata.annotations.Column;
 import org.influxdata.annotations.Measurement;
-import org.influxdata.client.writes.Point;
+import org.influxdata.client.write.Point;
 import org.influxdata.exceptions.InfluxException;
 
 /**
