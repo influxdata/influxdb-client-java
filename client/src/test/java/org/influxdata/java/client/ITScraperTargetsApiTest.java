@@ -140,7 +140,7 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
 
     @Test
     @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/11748
+    //TODO https://github.com/influxdata/influxdb/issues/11767
     void member() {
 
         ScraperTarget scraper =  scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
@@ -171,7 +171,7 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
 
     @Test
     @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/11748
+    //TODO https://github.com/influxdata/influxdb/issues/11767
     void owner() {
 
         ScraperTarget scraper =  scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
@@ -202,7 +202,7 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
 
     @Test
     @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/11748
+    //TODO https://github.com/influxdata/influxdb/issues/11767
     void labels() {
 
         LabelsApi labelsApi = influxDBClient.getLabelsApi();
