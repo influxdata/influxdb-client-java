@@ -20,7 +20,7 @@ under the License.
 <rss version="0.91">
   <channel>
     <title>The Flux DSL - Checkstyle report</title>
-    <link>https://github.com/influxdata/influxdb-client-java/flux-dsl</link>
+    <link>https://github.com/bonitoo-io/influxdb-client-java/flux-dsl</link>
     <description>The Flux DSL - Checkstyle report</description>
     <language>en-us</language>
     <copyright>&#169;2018 - 2019 InfluxData, Inc.</copyright>
@@ -30,9 +30,9 @@ under the License.
              Warnings: 0,
              Infos: 0
       </title>
-            <link>https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html</link>
+            <link>https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html</link>
       <description>
-        <p>Click <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html">here</a> for the full Checkstyle report.</p>
+        <p>Click <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html">here</a> for the full Checkstyle report.</p>
 
         <table summary="Files" boder="1">
           <thead>
@@ -46,7 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.LimitFlux.java">org/influxdata/flux/dsl/functions/LimitFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.LimitFlux.java">org/influxdata/flux/dsl/functions/LimitFlux.java</a>
                 </td>
                 <td>
                   0
@@ -60,7 +60,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToFlux.java">org/influxdata/flux/dsl/functions/ToFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToFlux.java">org/influxdata/flux/dsl/functions/ToFlux.java</a>
                 </td>
                 <td>
                   0
@@ -74,7 +74,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ShiftFlux.java">org/influxdata/flux/dsl/functions/ShiftFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ShiftFlux.java">org/influxdata/flux/dsl/functions/ShiftFlux.java</a>
                 </td>
                 <td>
                   0
@@ -88,7 +88,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.SumFlux.java">org/influxdata/flux/dsl/functions/SumFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.SumFlux.java">org/influxdata/flux/dsl/functions/SumFlux.java</a>
                 </td>
                 <td>
                   0
@@ -102,7 +102,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.FilterFlux.java">org/influxdata/flux/dsl/functions/FilterFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.FilterFlux.java">org/influxdata/flux/dsl/functions/FilterFlux.java</a>
                 </td>
                 <td>
                   0
@@ -116,7 +116,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.FirstFlux.java">org/influxdata/flux/dsl/functions/FirstFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.FirstFlux.java">org/influxdata/flux/dsl/functions/FirstFlux.java</a>
                 </td>
                 <td>
                   0
@@ -130,7 +130,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.GroupFlux.java">org/influxdata/flux/dsl/functions/GroupFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.GroupFlux.java">org/influxdata/flux/dsl/functions/GroupFlux.java</a>
                 </td>
                 <td>
                   0
@@ -144,7 +144,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.CovarianceFlux.java">org/influxdata/flux/dsl/functions/CovarianceFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.CovarianceFlux.java">org/influxdata/flux/dsl/functions/CovarianceFlux.java</a>
                 </td>
                 <td>
                   0
@@ -158,7 +158,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.AbstractParametrizedFlux.java">org/influxdata/flux/dsl/functions/AbstractParametrizedFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.AbstractParametrizedFlux.java">org/influxdata/flux/dsl/functions/AbstractParametrizedFlux.java</a>
                 </td>
                 <td>
                   0
@@ -172,7 +172,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.KeepFlux.java">org/influxdata/flux/dsl/functions/KeepFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.KeepFlux.java">org/influxdata/flux/dsl/functions/KeepFlux.java</a>
                 </td>
                 <td>
                   0
@@ -186,7 +186,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.StddevFlux.java">org/influxdata/flux/dsl/functions/StddevFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.StddevFlux.java">org/influxdata/flux/dsl/functions/StddevFlux.java</a>
                 </td>
                 <td>
                   0
@@ -200,7 +200,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.RenameFlux.java">org/influxdata/flux/dsl/functions/RenameFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.RenameFlux.java">org/influxdata/flux/dsl/functions/RenameFlux.java</a>
                 </td>
                 <td>
                   0
@@ -214,7 +214,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.DuplicateFlux.java">org/influxdata/flux/dsl/functions/DuplicateFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.DuplicateFlux.java">org/influxdata/flux/dsl/functions/DuplicateFlux.java</a>
                 </td>
                 <td>
                   0
@@ -228,7 +228,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.MaxFlux.java">org/influxdata/flux/dsl/functions/MaxFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.MaxFlux.java">org/influxdata/flux/dsl/functions/MaxFlux.java</a>
                 </td>
                 <td>
                   0
@@ -242,7 +242,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.SampleFlux.java">org/influxdata/flux/dsl/functions/SampleFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.SampleFlux.java">org/influxdata/flux/dsl/functions/SampleFlux.java</a>
                 </td>
                 <td>
                   0
@@ -256,7 +256,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.DifferenceFlux.java">org/influxdata/flux/dsl/functions/DifferenceFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.DifferenceFlux.java">org/influxdata/flux/dsl/functions/DifferenceFlux.java</a>
                 </td>
                 <td>
                   0
@@ -270,7 +270,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.Flux.java">org/influxdata/flux/dsl/Flux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.Flux.java">org/influxdata/flux/dsl/Flux.java</a>
                 </td>
                 <td>
                   0
@@ -284,7 +284,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.AbstractFluxWithUpstream.java">org/influxdata/flux/dsl/functions/AbstractFluxWithUpstream.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.AbstractFluxWithUpstream.java">org/influxdata/flux/dsl/functions/AbstractFluxWithUpstream.java</a>
                 </td>
                 <td>
                   0
@@ -298,7 +298,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToUIntFlux.java">org/influxdata/flux/dsl/functions/ToUIntFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToUIntFlux.java">org/influxdata/flux/dsl/functions/ToUIntFlux.java</a>
                 </td>
                 <td>
                   0
@@ -312,7 +312,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.DropFlux.java">org/influxdata/flux/dsl/functions/DropFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.DropFlux.java">org/influxdata/flux/dsl/functions/DropFlux.java</a>
                 </td>
                 <td>
                   0
@@ -326,7 +326,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ExpressionFlux.java">org/influxdata/flux/dsl/functions/ExpressionFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ExpressionFlux.java">org/influxdata/flux/dsl/functions/ExpressionFlux.java</a>
                 </td>
                 <td>
                   0
@@ -340,7 +340,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.YieldFlux.java">org/influxdata/flux/dsl/functions/YieldFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.YieldFlux.java">org/influxdata/flux/dsl/functions/YieldFlux.java</a>
                 </td>
                 <td>
                   0
@@ -354,7 +354,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.WindowFlux.java">org/influxdata/flux/dsl/functions/WindowFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.WindowFlux.java">org/influxdata/flux/dsl/functions/WindowFlux.java</a>
                 </td>
                 <td>
                   0
@@ -368,7 +368,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.MinFlux.java">org/influxdata/flux/dsl/functions/MinFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.MinFlux.java">org/influxdata/flux/dsl/functions/MinFlux.java</a>
                 </td>
                 <td>
                   0
@@ -382,7 +382,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.MeanFlux.java">org/influxdata/flux/dsl/functions/MeanFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.MeanFlux.java">org/influxdata/flux/dsl/functions/MeanFlux.java</a>
                 </td>
                 <td>
                   0
@@ -396,7 +396,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.restriction.ColumnRestriction.java">org/influxdata/flux/dsl/functions/restriction/ColumnRestriction.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.restriction.ColumnRestriction.java">org/influxdata/flux/dsl/functions/restriction/ColumnRestriction.java</a>
                 </td>
                 <td>
                   0
@@ -410,7 +410,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToFloatFlux.java">org/influxdata/flux/dsl/functions/ToFloatFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToFloatFlux.java">org/influxdata/flux/dsl/functions/ToFloatFlux.java</a>
                 </td>
                 <td>
                   0
@@ -424,7 +424,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.restriction.Restrictions.java">org/influxdata/flux/dsl/functions/restriction/Restrictions.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.restriction.Restrictions.java">org/influxdata/flux/dsl/functions/restriction/Restrictions.java</a>
                 </td>
                 <td>
                   0
@@ -438,7 +438,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.SkewFlux.java">org/influxdata/flux/dsl/functions/SkewFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.SkewFlux.java">org/influxdata/flux/dsl/functions/SkewFlux.java</a>
                 </td>
                 <td>
                   0
@@ -452,7 +452,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.DistinctFlux.java">org/influxdata/flux/dsl/functions/DistinctFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.DistinctFlux.java">org/influxdata/flux/dsl/functions/DistinctFlux.java</a>
                 </td>
                 <td>
                   0
@@ -466,7 +466,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.MapFlux.java">org/influxdata/flux/dsl/functions/MapFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.MapFlux.java">org/influxdata/flux/dsl/functions/MapFlux.java</a>
                 </td>
                 <td>
                   0
@@ -480,7 +480,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.properties.TimeInterval.java">org/influxdata/flux/dsl/functions/properties/TimeInterval.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.properties.TimeInterval.java">org/influxdata/flux/dsl/functions/properties/TimeInterval.java</a>
                 </td>
                 <td>
                   0
@@ -494,7 +494,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.SortFlux.java">org/influxdata/flux/dsl/functions/SortFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.SortFlux.java">org/influxdata/flux/dsl/functions/SortFlux.java</a>
                 </td>
                 <td>
                   0
@@ -508,7 +508,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToDurationFlux.java">org/influxdata/flux/dsl/functions/ToDurationFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToDurationFlux.java">org/influxdata/flux/dsl/functions/ToDurationFlux.java</a>
                 </td>
                 <td>
                   0
@@ -522,7 +522,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.PercentileFlux.java">org/influxdata/flux/dsl/functions/PercentileFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.PercentileFlux.java">org/influxdata/flux/dsl/functions/PercentileFlux.java</a>
                 </td>
                 <td>
                   0
@@ -536,7 +536,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.IntegralFlux.java">org/influxdata/flux/dsl/functions/IntegralFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.IntegralFlux.java">org/influxdata/flux/dsl/functions/IntegralFlux.java</a>
                 </td>
                 <td>
                   0
@@ -550,7 +550,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToBoolFlux.java">org/influxdata/flux/dsl/functions/ToBoolFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToBoolFlux.java">org/influxdata/flux/dsl/functions/ToBoolFlux.java</a>
                 </td>
                 <td>
                   0
@@ -564,7 +564,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.CumulativeSumFlux.java">org/influxdata/flux/dsl/functions/CumulativeSumFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.CumulativeSumFlux.java">org/influxdata/flux/dsl/functions/CumulativeSumFlux.java</a>
                 </td>
                 <td>
                   0
@@ -578,7 +578,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.FromFlux.java">org/influxdata/flux/dsl/functions/FromFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.FromFlux.java">org/influxdata/flux/dsl/functions/FromFlux.java</a>
                 </td>
                 <td>
                   0
@@ -592,7 +592,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToTimeFlux.java">org/influxdata/flux/dsl/functions/ToTimeFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToTimeFlux.java">org/influxdata/flux/dsl/functions/ToTimeFlux.java</a>
                 </td>
                 <td>
                   0
@@ -606,7 +606,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.LastFlux.java">org/influxdata/flux/dsl/functions/LastFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.LastFlux.java">org/influxdata/flux/dsl/functions/LastFlux.java</a>
                 </td>
                 <td>
                   0
@@ -620,7 +620,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.CountFlux.java">org/influxdata/flux/dsl/functions/CountFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.CountFlux.java">org/influxdata/flux/dsl/functions/CountFlux.java</a>
                 </td>
                 <td>
                   0
@@ -634,7 +634,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.SetFlux.java">org/influxdata/flux/dsl/functions/SetFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.SetFlux.java">org/influxdata/flux/dsl/functions/SetFlux.java</a>
                 </td>
                 <td>
                   0
@@ -648,7 +648,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.properties.FunctionsParameters.java">org/influxdata/flux/dsl/functions/properties/FunctionsParameters.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.properties.FunctionsParameters.java">org/influxdata/flux/dsl/functions/properties/FunctionsParameters.java</a>
                 </td>
                 <td>
                   0
@@ -662,7 +662,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToIntFlux.java">org/influxdata/flux/dsl/functions/ToIntFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToIntFlux.java">org/influxdata/flux/dsl/functions/ToIntFlux.java</a>
                 </td>
                 <td>
                   0
@@ -676,7 +676,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.RangeFlux.java">org/influxdata/flux/dsl/functions/RangeFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.RangeFlux.java">org/influxdata/flux/dsl/functions/RangeFlux.java</a>
                 </td>
                 <td>
                   0
@@ -690,7 +690,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.SpreadFlux.java">org/influxdata/flux/dsl/functions/SpreadFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.SpreadFlux.java">org/influxdata/flux/dsl/functions/SpreadFlux.java</a>
                 </td>
                 <td>
                   0
@@ -704,7 +704,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.JoinFlux.java">org/influxdata/flux/dsl/functions/JoinFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.JoinFlux.java">org/influxdata/flux/dsl/functions/JoinFlux.java</a>
                 </td>
                 <td>
                   0
@@ -718,7 +718,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToStringFlux.java">org/influxdata/flux/dsl/functions/ToStringFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.ToStringFlux.java">org/influxdata/flux/dsl/functions/ToStringFlux.java</a>
                 </td>
                 <td>
                   0
@@ -732,7 +732,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.PivotFlux.java">org/influxdata/flux/dsl/functions/PivotFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.PivotFlux.java">org/influxdata/flux/dsl/functions/PivotFlux.java</a>
                 </td>
                 <td>
                   0
@@ -746,7 +746,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.DerivativeFlux.java">org/influxdata/flux/dsl/functions/DerivativeFlux.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/flux-dsl/checkstyle.html#org.influxdata.flux.dsl.functions.DerivativeFlux.java">org/influxdata/flux/dsl/functions/DerivativeFlux.java</a>
                 </td>
                 <td>
                   0
