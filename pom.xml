@@ -46,7 +46,7 @@
 
     <name>The InfluxDB 2.0 JVM Based Clients</name>
 
-    <url>https://github.com/influxdata/influxdb-client-java</url>
+    <url>https://github.com/bonitoo-io/influxdb-client-java</url>
     <inceptionYear>2018</inceptionYear>
 
     <organization>
@@ -78,9 +78,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/influxdata/influxdb-client-java.git</connection>
+        <connection>scm:git:git://github.com/bonitoo-io/influxdb-client-java.git</connection>
         <developerConnection>scm:git:ssh://github.com:influxdata/influxdb-client-java.git</developerConnection>
-        <url>http://github.com/influxdata/influxdb-client-java/tree/master</url>
+        <url>http://github.com/bonitoo-io/influxdb-client-java/tree/master</url>
     </scm>
 
     <distributionManagement>
@@ -94,7 +94,7 @@
         </repository>
         <site>
             <id>gp</id>
-            <url>https://influxdata.github.io/influxdb-client-java</url>
+            <url>https://bonitoo-io.github.io/influxdb-client-java/</url>
         </site>
     </distributionManagement>
 
@@ -102,7 +102,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <dependency.retrofit.version>2.5.0</dependency.retrofit.version>
-        <dependency.okhttp3.version>3.12.1</dependency.okhttp3.version>
+        <dependency.okhttp3.version>3.13.1</dependency.okhttp3.version>
 
         <plugin.surefire.version>2.22.0</plugin.surefire.version>
         <plugin.javadoc.version>3.0.1</plugin.javadoc.version>
@@ -111,7 +111,7 @@
         <plugin.plugin.version>3.7.1</plugin.plugin.version>
         <plugin.scala.version>3.4.4</plugin.scala.version>
 
-        <kotlin.version>1.3.20</kotlin.version>
+        <kotlin.version>1.3.21</kotlin.version>
         <scala.version>2.12.7</scala.version>
     </properties>
 
@@ -412,7 +412,7 @@
             <dependency>
                 <groupId>com.squareup.okio</groupId>
                 <artifactId>okio</artifactId>
-                <version>1.16.0</version>
+                <version>1.17.3</version>
             </dependency>
 
             <dependency>
@@ -425,6 +425,12 @@
                         <artifactId>rxjava</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${dependency.okhttp3.version}</version>
             </dependency>
 
             <dependency>
