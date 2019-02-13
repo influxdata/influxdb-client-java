@@ -88,6 +88,8 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         //TODO API cron, every in Flux
 
+        influxDBClient.setLogLevel(LogLevel.BODY);
+
         String taskName = generateName("it task");
 
         String flux = "option task = {\n"
@@ -190,6 +192,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(taskByID.getCron()).isEqualTo(task.getCron());
         Assertions.assertThat(taskByID.getFlux()).isEqualTo(task.getFlux());
         Assertions.assertThat(taskByID.getStatus()).isEqualTo(Status.ACTIVE);
+        Assertions.assertThat(taskByID.getCreatedAt()).isNotNull();
     }
 
     @Test
@@ -274,9 +277,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(foundTask).isNull();
     }
 
-    // TODO Enable after implement mapping background Task to Task /platform/task/platform_adapter.go:89
     @Test
-    @Disabled
     void updateTask() {
 
         String taskName = generateName("it task");
@@ -298,10 +299,13 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(updatedTask.getId()).isEqualTo(cronTask.getId());
         Assertions.assertThat(updatedTask.getEvery()).isEqualTo("2m0s");
         Assertions.assertThat(updatedTask.getCron()).isNull();
-        Assertions.assertThat(updatedTask.getFlux()).isEqualTo(TASK_FLUX);
+        Assertions.assertThat(updatedTask.getFlux()).endsWith("from(bucket: \"my-bucket\")\n"
+                + "\t|> range(start: 0)\n"
+                + "\t|> last()");
         Assertions.assertThat(updatedTask.getStatus()).isEqualTo(Status.INACTIVE);
         Assertions.assertThat(updatedTask.getOrgID()).isEqualTo(cronTask.getOrgID());
         Assertions.assertThat(updatedTask.getName()).isEqualTo(cronTask.getName());
+        Assertions.assertThat(updatedTask.getUpdatedAt()).isNotNull();
     }
 
     @Test
@@ -450,6 +454,11 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         Assertions.assertThat(runById).isNotNull();
         Assertions.assertThat(runById.getId()).isEqualTo(firstRun.getId());
+
+        task = tasksApi.findTaskByID(task.getId());
+
+        Assertions.assertThat(task).isNotNull();
+        Assertions.assertThat(task.getLatestCompleted()).isNotNull();
     }
 
     @Test

@@ -21,7 +21,10 @@
  */
 package org.influxdata.client.domain;
 
+import java.time.Instant;
 import java.util.StringJoiner;
+
+import com.squareup.moshi.Json;
 
 /**
  * Task is a task.
@@ -66,6 +69,16 @@ public final class Task extends AbstractHasLinks {
      * Duration to delay after the schedule, before executing the task; parsed from flux.
      */
     private String offset;
+
+    private Instant createdAt;
+
+    private Instant updatedAt;
+
+    /**
+     * Timestamp of latest scheduled, completed run, RFC3339.
+     */
+    @Json(name = "latest_completed")
+    private Instant latestCompleted;
 
     public String getId() {
         return id;
@@ -131,6 +144,30 @@ public final class Task extends AbstractHasLinks {
         this.offset = offset;
     }
 
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(final Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(final Instant updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Instant getLatestCompleted() {
+        return latestCompleted;
+    }
+
+    public void setLatestCompleted(final Instant latestCompleted) {
+        this.latestCompleted = latestCompleted;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", Task.class.getSimpleName() + "[", "]")
@@ -142,6 +179,9 @@ public final class Task extends AbstractHasLinks {
                 .add("every='" + every + "'")
                 .add("cron='" + cron + "'")
                 .add("offset='" + offset + "'")
+                .add("createdAt='" + createdAt + "'")
+                .add("updatedAt='" + updatedAt + "'")
+                .add("latestCompleted='" + latestCompleted + "'")
                 .toString();
     }
 }

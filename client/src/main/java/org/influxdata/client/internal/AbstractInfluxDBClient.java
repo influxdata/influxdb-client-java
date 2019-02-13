@@ -176,6 +176,8 @@ public abstract class AbstractInfluxDBClient<T> extends AbstractRestClient {
         public void toJson(@Nonnull final JsonWriter writer, @Nullable final Instant value) throws IOException {
             if (value != null) {
                 writer.value(value.toString());
+            } else {
+                writer.nullValue();
             }
         }
     }
