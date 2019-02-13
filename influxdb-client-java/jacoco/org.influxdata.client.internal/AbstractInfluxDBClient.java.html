@@ -174,10 +174,12 @@ public abstract class AbstractInfluxDBClient&lt;T&gt; extends AbstractRestClient
 
         @Override
         public void toJson(@Nonnull final JsonWriter writer, @Nullable final Instant value) throws IOException {
-<span class="nc bnc" id="L177" title="All 2 branches missed.">            if (value != null) {</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">            if (value != null) {</span>
 <span class="nc" id="L178">                writer.value(value.toString());</span>
+            } else {
+<span class="fc" id="L180">                writer.nullValue();</span>
             }
-<span class="nc" id="L180">        }</span>
+<span class="fc" id="L182">        }</span>
     }
 
     /**
@@ -193,46 +195,46 @@ public abstract class AbstractInfluxDBClient&lt;T&gt; extends AbstractRestClient
         private final Enum[] constants;
         private final JsonReader.Options options;
 
-<span class="fc" id="L196">        EnumJsonAdapter(final Class&lt;Enum&gt; enumType) {</span>
-<span class="fc" id="L197">            this.enumType = enumType;</span>
+<span class="fc" id="L198">        EnumJsonAdapter(final Class&lt;Enum&gt; enumType) {</span>
+<span class="fc" id="L199">            this.enumType = enumType;</span>
             try {
-<span class="fc" id="L199">                constants = enumType.getEnumConstants();</span>
-<span class="fc" id="L200">                nameStrings = new String[constants.length];</span>
-<span class="fc bfc" id="L201" title="All 2 branches covered.">                for (int i = 0; i &lt; constants.length; i++) {</span>
-<span class="fc" id="L202">                    Enum constant = constants[i];</span>
-<span class="fc" id="L203">                    Json annotation = enumType.getField(constant.name()).getAnnotation(Json.class);</span>
-<span class="pc bpc" id="L204" title="1 of 2 branches missed.">                    String name = annotation != null ? annotation.name() : constant.name();</span>
-<span class="fc" id="L205">                    nameStrings[i] = name;</span>
+<span class="fc" id="L201">                constants = enumType.getEnumConstants();</span>
+<span class="fc" id="L202">                nameStrings = new String[constants.length];</span>
+<span class="fc bfc" id="L203" title="All 2 branches covered.">                for (int i = 0; i &lt; constants.length; i++) {</span>
+<span class="fc" id="L204">                    Enum constant = constants[i];</span>
+<span class="fc" id="L205">                    Json annotation = enumType.getField(constant.name()).getAnnotation(Json.class);</span>
+<span class="pc bpc" id="L206" title="1 of 2 branches missed.">                    String name = annotation != null ? annotation.name() : constant.name();</span>
+<span class="fc" id="L207">                    nameStrings[i] = name;</span>
                 }
-<span class="fc" id="L207">                options = JsonReader.Options.of(nameStrings);</span>
-<span class="nc" id="L208">            } catch (NoSuchFieldException e) {</span>
-<span class="nc" id="L209">                throw new AssertionError(&quot;Missing field in &quot; + enumType.getName(), e);</span>
-<span class="fc" id="L210">            }</span>
-<span class="fc" id="L211">        }</span>
+<span class="fc" id="L209">                options = JsonReader.Options.of(nameStrings);</span>
+<span class="nc" id="L210">            } catch (NoSuchFieldException e) {</span>
+<span class="nc" id="L211">                throw new AssertionError(&quot;Missing field in &quot; + enumType.getName(), e);</span>
+<span class="fc" id="L212">            }</span>
+<span class="fc" id="L213">        }</span>
 
         @Override
         public Enum fromJson(final JsonReader reader) throws IOException {
-<span class="fc" id="L215">            int index = reader.selectString(options);</span>
-<span class="fc bfc" id="L216" title="All 2 branches covered.">            if (index != -1) {</span>
-<span class="fc" id="L217">                return constants[index];</span>
+<span class="fc" id="L217">            int index = reader.selectString(options);</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">            if (index != -1) {</span>
+<span class="fc" id="L219">                return constants[index];</span>
             }
 
-<span class="fc" id="L220">            String name = reader.nextString();</span>
+<span class="fc" id="L222">            String name = reader.nextString();</span>
 
-<span class="fc" id="L222">            LOG.log(Level.WARNING, &quot;Expected one of {0} but was {1} at path {2}&quot;,</span>
-<span class="fc" id="L223">                    new Object[]{Arrays.asList(nameStrings), name, reader.getPath()});</span>
+<span class="fc" id="L224">            LOG.log(Level.WARNING, &quot;Expected one of {0} but was {1} at path {2}&quot;,</span>
+<span class="fc" id="L225">                    new Object[]{Arrays.asList(nameStrings), name, reader.getPath()});</span>
 
-<span class="fc" id="L225">            return null;</span>
+<span class="fc" id="L227">            return null;</span>
         }
 
         @Override
         public void toJson(final JsonWriter writer, final Enum value) throws IOException {
-<span class="fc" id="L230">            writer.value(nameStrings[value.ordinal()]);</span>
-<span class="fc" id="L231">        }</span>
+<span class="fc" id="L232">            writer.value(nameStrings[value.ordinal()]);</span>
+<span class="fc" id="L233">        }</span>
 
         @Override
         public String toString() {
-<span class="nc" id="L235">            return &quot;EnumJsonAdapter(&quot; + enumType.getName() + &quot;)&quot;;</span>
+<span class="nc" id="L237">            return &quot;EnumJsonAdapter(&quot; + enumType.getName() + &quot;)&quot;;</span>
         }
     }
 }

@@ -213,12 +213,12 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
     @Override
     public Task updateTask(@Nonnull final Task task) {
 
-<span class="nc" id="L216">        Arguments.checkNotNull(task, &quot;Task is required&quot;);</span>
-<span class="nc" id="L217">        Arguments.checkDurationNotRequired(task.getEvery(), &quot;Task.every&quot;);</span>
+<span class="fc" id="L216">        Arguments.checkNotNull(task, &quot;Task is required&quot;);</span>
+<span class="fc" id="L217">        Arguments.checkDurationNotRequired(task.getEvery(), &quot;Task.every&quot;);</span>
 
-<span class="nc" id="L219">        Call&lt;Task&gt; call = influxDBService.updateTask(task.getId(), createBody(adapter.toJson(task)));</span>
+<span class="fc" id="L219">        Call&lt;Task&gt; call = influxDBService.updateTask(task.getId(), createBody(adapter.toJson(task)));</span>
 
-<span class="nc" id="L221">        return execute(call);</span>
+<span class="fc" id="L221">        return execute(call);</span>
     }
 
     @Override
