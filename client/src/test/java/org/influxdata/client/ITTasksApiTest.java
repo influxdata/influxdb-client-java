@@ -30,7 +30,6 @@ import java.util.function.Predicate;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
-import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Organization;
@@ -88,8 +87,6 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         //TODO API cron, every in Flux
 
-        influxDBClient.setLogLevel(LogLevel.BODY);
-
         String taskName = generateName("it task");
 
         String flux = "option task = {\n"
@@ -102,8 +99,6 @@ class ITTasksApiTest extends AbstractITClientTest {
         task.setOrgID(organization.getId());
         task.setFlux(flux);
         task.setStatus(Status.ACTIVE);
-
-        influxDBClient.setLogLevel(LogLevel.BODY);
 
         task = tasksApi.createTask(task);
 
@@ -118,6 +113,8 @@ class ITTasksApiTest extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO report that offset is not returned
     void createTaskWithOffset() {
 
         String taskName = generateName("it task");
