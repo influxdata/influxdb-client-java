@@ -59,7 +59,7 @@ The Java InfluxDB 2.0 Client,org.influxdata.client.internal,QueryApiImpl,219,262
 The Java InfluxDB 2.0 Client,org.influxdata.client.internal,AbstractWriteClient,26,317,1,12,2,74,3,29,2,22
 The Java InfluxDB 2.0 Client,org.influxdata.client.internal,AbstractWriteClient.BatchWriteDataRecord,0,12,0,0,0,4,0,2,0,2
 The Java InfluxDB 2.0 Client,org.influxdata.client.internal,WriteApiImpl,0,189,0,6,0,48,0,16,0,13
-The Java InfluxDB 2.0 Client,org.influxdata.client.internal,TasksApiImpl,256,624,0,4,62,133,16,36,16,34
+The Java InfluxDB 2.0 Client,org.influxdata.client.internal,TasksApiImpl,256,636,0,4,62,133,16,36,16,34
 The Java InfluxDB 2.0 Client,org.influxdata.client.internal,MeasurementMapper,14,275,6,30,3,57,6,19,0,7
 The Java InfluxDB 2.0 Client,org.influxdata.client.internal,AuthorizationsApiImpl,0,179,0,0,0,45,0,14,0,14
 The Java InfluxDB 2.0 Client,org.influxdata.client.internal,AbstractInfluxDBClient.EnumJsonAdapter,30,107,1,5,3,21,2,5,1,3
