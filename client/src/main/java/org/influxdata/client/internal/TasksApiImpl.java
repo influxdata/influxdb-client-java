@@ -22,6 +22,7 @@
 package org.influxdata.client.internal;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,6 +42,7 @@ import org.influxdata.client.domain.Status;
 import org.influxdata.client.domain.Task;
 import org.influxdata.client.domain.Tasks;
 import org.influxdata.client.domain.User;
+import org.influxdata.exceptions.InternalServerErrorException;
 import org.influxdata.exceptions.NotFoundException;
 
 import com.squareup.moshi.JsonAdapter;
@@ -417,7 +419,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(orgID, "Org.ID");
 
         Call<RunsResponse> runs = influxDBService.findTaskRuns(taskID, afterTime, beforeTime, limit, orgID);
-        RunsResponse execute = execute(runs);
+        RunsResponse execute = execute(runs, NotFoundException.class, new RunsResponse());
 
         return execute.getRuns();
     }
@@ -464,7 +466,8 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
         Call<List<String>> logs = influxDBService.findRunLogs(taskID, runID, orgID);
 
-        return execute(logs);
+        //TODO change to NotFoundException - https://github.com/influxdata/influxdb/issues/11960
+        return execute(logs, InternalServerErrorException.class, new ArrayList<>());
     }
 
     @Nullable
@@ -524,7 +527,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
         Call<List<String>> execute = influxDBService.findTaskLogs(taskID, orgID);
 
-        return execute(execute);
+        return execute(execute, NotFoundException.class, new ArrayList<>());
     }
 
     @Nonnull

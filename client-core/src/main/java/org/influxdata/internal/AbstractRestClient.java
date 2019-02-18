@@ -74,18 +74,25 @@ public abstract class AbstractRestClient {
     }
 
     protected <T> T execute(@Nonnull final Call<T> call, @Nullable final String nullError) throws InfluxException {
-        return execute(call, nullError, null);
+        return execute(call, nullError, null, null);
     }
 
     protected <T, E extends InfluxException> T execute(@Nonnull final Call<T> call,
                                                        @Nullable final Class<E> nullType) throws InfluxException {
+        return execute(call, nullType, null);
+    }
 
-        return execute(call, null, nullType);
+    protected <T, E extends InfluxException> T execute(@Nonnull final Call<T> call,
+                                                       @Nullable final Class<E> nullType,
+                                                       @Nullable final T defaultValue) throws InfluxException {
+
+        return execute(call, null, nullType, defaultValue);
     }
 
     private <T, E extends InfluxException> T execute(@Nonnull final Call<T> call,
                                                      @Nullable final String nullError,
-                                                     @Nullable final Class<E> nullType) throws InfluxException {
+                                                     @Nullable final Class<E> nullType,
+                                                     @Nullable final T defaultValue) throws InfluxException {
 
         Arguments.checkNotNull(call, "call");
 
@@ -110,7 +117,7 @@ public abstract class AbstractRestClient {
 
                     LOG.log(Level.FINEST, "Error is considered as null response.", ie);
 
-                    return null;
+                    return defaultValue;
                 }
 
                 throw ie;
