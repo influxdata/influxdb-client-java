@@ -50,7 +50,7 @@ script:
 jobs:
   include:
   - stage: site
-    if: branch = master
+    if: branch = master AND repo = bonitoo-io/influxdb-client-java AND type = push
     jdk: oraclejdk8
     script:
       - ./scripts/influxdb-restart.sh
