@@ -52,8 +52,8 @@ public enum ResourceType {
     @Json(name = "users")
     USERS,
 
-    @Json(name = "macros")
-    MACROS,
+    @Json(name = "variables")
+    VARIABLES,
 
     @Json(name = "scrapers")
     SCRAPERS,
