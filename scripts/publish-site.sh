@@ -34,7 +34,7 @@ if [ "$TRAVIS_REPO_SLUG" == "bonitoo-io/influxdb-client-java" ] && [ "$TRAVIS_PU
 
     # Generate Site
     cd ${SCRIPT_PATH}/..
-    mvn clean site site:stage
+    mvn clean site site:stage -DskipTests
     # Copy Kotlin doc
     cp -R ${SCRIPT_PATH}/../client-kotlin/target/dokka/ ${SCRIPT_PATH}/../target/staging/influxdb-client-kotlin/dokka/
     cp -R ${SCRIPT_PATH}/../target/staging ${HOME}/site

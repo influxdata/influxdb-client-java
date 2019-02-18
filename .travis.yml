@@ -54,6 +54,9 @@ jobs:
     script:
       - ./scripts/influxdb-restart.sh
       - ./scripts/publish-site.sh
+    on:
+      repo: bonitoo-io/influxdb-client-java
+      branch: master
 
   - stage: deploy
     jdk: oraclejdk8

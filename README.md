@@ -29,29 +29,25 @@ This repository contains the reference Java client for the InfluxDB 2.0.
          
 ### Documentation
 
-- **[flux-client](./flux-client)** 
-    - The reference Java client that allows you to perform Flux queries against InfluxDB 1.7+.
-    - [javadoc](https://bonitoo-io.github.io/influxdb-client-java/flux-client/apidocs/index.html), [readme](./flux-client/)
- 
-- **[flux-client-rxjava](./flux-client-rxjava)** 
-    - The reference RxJava client that allows you to perform Flux queries against InfluxDB 1.7+ in a [_reactive_](http://www.reactive-streams.org/) way.
-    -  [javadoc](https://bonitoo-io.github.io/influxdb-client-java/flux-client-rxjava/apidocs/index.html), [readme](./flux-client-rxjava/)
-
-- **[flux-client-kotlin](./flux-client-kotlin)** 
-    - The reference Kotlin client that allows you to perform Flux queries against InfluxDB 1.7+.
-    -  [KDoc](https://bonitoo-io.github.io/influxdb-client-java/flux-client-kotlin/dokka/flux-client-kotlin/org.influxdata.flux/index.html), [readme](./flux-client-kotlin/)
-
-- **[flux-client-scala](./flux-client-scala)** 
-    - The reference Scala client that allows you to perform Flux queries against InfluxDB 1.7+.
-    -  [Scaladoc](https://bonitoo-io.github.io/influxdb-client-java/flux-client-scala/scaladocs/org/influxdata/flux/index.html), [readme](./flux-client-scala/)
-
 - **[client](./client)** 
-    - The reference Java client that allows query, write and [InfluxDB 2.0](https://github.com/influxdata/influxdb) management.
-    - [javadoc](https://bonitoo-io.github.io/influxdb-client-java/client/apidocs/index.html), [readme](./client/)
-
+    - The reference Java client that allows query, write and InfluxDB 2.0 management.
+    - [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html), [readme](./client/)
+    
 - **[client-reactive](./client-reactive)** 
-    - The reference RxJava client for the [InfluxDB 2.0](https://github.com/influxdata/influxdb]) that allows query and write in a reactive way.
-    - [javadoc](https://bonitoo-io.github.io/influxdb-client-java/client-reactive/apidocs/index.html), [readme](./client-reactive/)
+    - The reference RxJava client for the InfluxDB 2.0 that allows query and write in a reactive way.
+    - [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/index.html), [readme](./client-reactive/)    
+
+- **[client-kotlin](./client-kotlin)** 
+    - The reference Kotlin client that allows query and write for the InfluxDB 2.0 by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html).
+    - [KDoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/org.influxdata.client.kotlin/index.html), [readme](./client-kotlin/)
+
+- **[client-scala](./client-scala)** 
+    - The reference Scala client that allows query and write for the InfluxDB 2.0 by [Akka Streams](https://doc.akka.io/docs/akka/2.5/stream/).
+    -  [Scaladoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-scala/scaladocs/org/influxdata/client/scala/index.html), [readme](./client-scala/)
+
+- **[client-legacy](./client-legacy)** 
+    - The reference Java client that allows you to perform Flux queries against InfluxDB 1.7+.
+    - [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-flux/apidocs/index.html), [readme](./client-legacy/)
 
 - **[flux-dsl](./flux-dsl)** 
     - A Java query builder for the Flux language   
