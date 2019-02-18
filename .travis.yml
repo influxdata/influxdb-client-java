@@ -57,6 +57,7 @@ jobs:
       - ./scripts/publish-site.sh
 
   - stage: deploy
+    if: branch = master AND repo = bonitoo-io/influxdb-client-java AND type = push
     jdk: oraclejdk8
     script: skip
     deploy:
