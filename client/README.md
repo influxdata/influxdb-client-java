@@ -550,6 +550,8 @@ WriteApi writeApi = influxDBClient.getWriteApi(writeOptions);
 
 ## Management API
 
+The client has following management API:
+
 | API endpoint | Description | Javadoc |
 | --- | --- | --- |
 | **/api/v2/authorizations** | Managing authorization data | [AuthorizationsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/AuthorizationsApi.html) |
