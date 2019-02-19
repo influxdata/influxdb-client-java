@@ -19,13 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.example.flux;
+package org.influxdata.query.dsl.functions;
 
-import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.influxdata.Arguments;
 import org.influxdata.query.dsl.Flux;
-import org.influxdata.query.dsl.functions.AbstractParametrizedFlux;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,48 +32,46 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 /**
- * @author Jakub Bednar (bednar@github) (02/07/2018 13:55)
+ * @author Jakub Bednar (10/10/2018 07:45)
  */
 @RunWith(JUnitPlatform.class)
-class CustomFunction {
+class CumulativeSumFluxTest {
 
     @Test
-    void customFunction() {
+    void cumulativeSum() {
 
         Flux flux = Flux
                 .from("telegraf")
-                .function(FilterMeasurement.class)
-                .withName("cpu")
-                .sum();
+                .cumulativeSum()
+                    .withColumns(new String[]{"_value"});
 
         Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> measurement(m:\"cpu\") |> sum()");
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> cumulativeSum(columns: [\"_value\"])");
     }
 
-    public static class FilterMeasurement extends AbstractParametrizedFlux {
+    @Test
+    void cumulativeSumArray() {
 
-        public FilterMeasurement(@Nonnull final Flux source) {
-            super(source);
-        }
+        Flux flux = Flux
+                .from("telegraf")
+                .cumulativeSum(new String[]{"_value", "_value2"});
 
-        @Nonnull
-        @Override
-        protected String operatorName() {
-            return "measurement";
-        }
+        Assertions.assertThat(flux.toString())
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> cumulativeSum(columns: [\"_value\", \"_value2\"])");
+    }
 
-        /**
-         * @param measurement the measurement name. Has to be defined.
-         * @return this
-         */
-        @Nonnull
-        public FilterMeasurement withName(@Nonnull final String measurement) {
+    @Test
+    void cumulativeSumCollection() {
 
-            Arguments.checkNonEmpty(measurement, "Measurement name");
+        List<String> columns = new ArrayList<>();
+        columns.add("_value");
+        columns.add("_host");
 
-            withPropertyValueEscaped("m", measurement);
+        Flux flux = Flux
+                .from("telegraf")
+                .cumulativeSum(columns);
 
-            return this;
-        }
+        Assertions.assertThat(flux.toString())
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> cumulativeSum(columns: [\"_value\", \"_host\"])");
     }
 }

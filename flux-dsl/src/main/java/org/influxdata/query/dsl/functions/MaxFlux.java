@@ -19,27 +19,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package example;
+package org.influxdata.query.dsl.functions;
 
-import java.time.temporal.ChronoUnit;
+import javax.annotation.Nonnull;
 
 import org.influxdata.query.dsl.Flux;
-import org.influxdata.query.dsl.functions.restriction.Restrictions;
 
-@SuppressWarnings("CheckStyle")
-public class FluxDslExample {
-    public static void main(String[] args) {
+/**
+ * Returns the max value within the results.
+ * <a href="http://bit.ly/flux-spec#max">See SPEC</a>.
+ *
+ * <h3>Options</h3>
+ * <ul>
+ * <li><b>useStartTime</b> - Use the start time as the timestamp of the resulting aggregate [boolean]
+ * </ul>
+ *
+ * <h3>Example</h3>
+ * <pre>
+ * Flux flux = Flux
+ *     .from("telegraf")
+ *     .range(-12L, ChronoUnit.HOURS)
+ *     .window(10L, ChronoUnit.MINUTES)
+ *     .max();
+ * </pre>
+ *
+ * @author Jakub Bednar (bednar@github) (25/06/2018 09:49)
+ */
+public final class MaxFlux extends AbstractParametrizedFlux {
 
-        Flux sampleFlux = Flux.from("telegraf")
-            .filter(
-                Restrictions.and(
-                    Restrictions.measurement().equal("cpu"),
-                    Restrictions.field().equal("usage_system"))
-            )
-            .range(-1L, ChronoUnit.DAYS)
-            .sample(5, 1);
+    public MaxFlux(@Nonnull final Flux source) {
+        super(source);
+    }
 
-        System.out.println(sampleFlux.toString());
+    @Nonnull
+    @Override
+    protected String operatorName() {
+        return "max";
+    }
 
+    /**
+     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @return this
+     */
+    @Nonnull
+    public MaxFlux withUseStartTime(final boolean useStartTime) {
+
+        this.withPropertyValue("useStartTime", useStartTime);
+
+        return this;
     }
 }

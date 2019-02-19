@@ -19,27 +19,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package example;
+package org.influxdata.query.dsl.functions;
 
-import java.time.temporal.ChronoUnit;
+import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import org.influxdata.Arguments;
 import org.influxdata.query.dsl.Flux;
-import org.influxdata.query.dsl.functions.restriction.Restrictions;
 
-@SuppressWarnings("CheckStyle")
-public class FluxDslExample {
-    public static void main(String[] args) {
+/**
+ * Abstract base class for operators that take an upstream source of {@link Flux}.
+ *
+ * @author Jakub Bednar (bednar@github) (25/06/2018 07:29)
+ */
+abstract class AbstractFluxWithUpstream extends Flux {
 
-        Flux sampleFlux = Flux.from("telegraf")
-            .filter(
-                Restrictions.and(
-                    Restrictions.measurement().equal("cpu"),
-                    Restrictions.field().equal("usage_system"))
-            )
-            .range(-1L, ChronoUnit.DAYS)
-            .sample(5, 1);
+    @Nullable
+    Flux source;
 
-        System.out.println(sampleFlux.toString());
+    AbstractFluxWithUpstream() {
+    }
 
+    AbstractFluxWithUpstream(@Nonnull final Flux source) {
+
+        Arguments.checkNotNull(source, "Source is required");
+
+        this.source = source;
+    }
+
+    @Override
+    public void appendActual(@Nonnull final Map<String, Object> parameters, @Nonnull final StringBuilder builder) {
+
+        if (source != null) {
+            source.appendActual(parameters, builder);
+        }
+    }
+
+    /**
+     * Append delimiter to Flux query.
+     *
+     * @param builder Flux query chain.
+     */
+    void appendDelimiter(@Nonnull final StringBuilder builder) {
+        if (builder.length() != 0) {
+            builder.append("\n");
+            builder.append("\t|> ");
+        }
     }
 }

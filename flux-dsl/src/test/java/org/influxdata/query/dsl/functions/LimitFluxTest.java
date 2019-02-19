@@ -19,13 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.example.flux;
+package org.influxdata.query.dsl.functions;
 
-import javax.annotation.Nonnull;
+import java.util.HashMap;
 
-import org.influxdata.Arguments;
 import org.influxdata.query.dsl.Flux;
-import org.influxdata.query.dsl.functions.AbstractParametrizedFlux;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,48 +31,48 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 /**
- * @author Jakub Bednar (bednar@github) (02/07/2018 13:55)
+ * @author Jakub Bednar (bednar@github) (25/06/2018 11:55)
  */
 @RunWith(JUnitPlatform.class)
-class CustomFunction {
+class LimitFluxTest {
 
     @Test
-    void customFunction() {
+    void limit() {
 
         Flux flux = Flux
                 .from("telegraf")
-                .function(FilterMeasurement.class)
-                .withName("cpu")
-                .sum();
+                .limit(5);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> measurement(m:\"cpu\") |> sum()");
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> limit(n: 5)");
     }
 
-    public static class FilterMeasurement extends AbstractParametrizedFlux {
+    @Test
+    void limitPositive() {
+        Assertions.assertThatThrownBy(() -> Flux.from("telegraf").limit(-5))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Expecting a positive number for Number of results");
+    }
 
-        public FilterMeasurement(@Nonnull final Flux source) {
-            super(source);
-        }
+    @Test
+    void limitByParameter() {
 
-        @Nonnull
-        @Override
-        protected String operatorName() {
-            return "measurement";
-        }
+        Flux flux = Flux
+                .from("telegraf")
+                .limit()
+                .withPropertyNamed("n", "limit");
 
-        /**
-         * @param measurement the measurement name. Has to be defined.
-         * @return this
-         */
-        @Nonnull
-        public FilterMeasurement withName(@Nonnull final String measurement) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("limit", 15);
 
-            Arguments.checkNonEmpty(measurement, "Measurement name");
+        Assertions.assertThat(flux.toString(parameters))
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> limit(n: 15)");
+    }
 
-            withPropertyValueEscaped("m", measurement);
+    @Test
+    void limitByParameterMissing() {
 
-            return this;
-        }
+        Assertions.assertThatThrownBy(() -> Flux.from("telegraf").limit().withPropertyNamed("limit").toString())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("The parameter 'limit' is not defined.");
     }
 }

@@ -19,13 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.example.flux;
+package org.influxdata.query.dsl.functions;
 
-import javax.annotation.Nonnull;
-
-import org.influxdata.Arguments;
 import org.influxdata.query.dsl.Flux;
-import org.influxdata.query.dsl.functions.AbstractParametrizedFlux;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,48 +29,29 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 /**
- * @author Jakub Bednar (bednar@github) (02/07/2018 13:55)
+ * @author Jakub Bednar (bednar@github) (29/06/2018 09:32)
  */
 @RunWith(JUnitPlatform.class)
-class CustomFunction {
+class SetFluxTest {
 
     @Test
-    void customFunction() {
+    void set() {
 
         Flux flux = Flux
                 .from("telegraf")
-                .function(FilterMeasurement.class)
-                .withName("cpu")
-                .sum();
+                .set("location", "Carolina");
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> measurement(m:\"cpu\") |> sum()");
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> set(key: \"location\", value: \"Carolina\")");
     }
 
-    public static class FilterMeasurement extends AbstractParametrizedFlux {
+    @Test
+    void setByWith() {
 
-        public FilterMeasurement(@Nonnull final Flux source) {
-            super(source);
-        }
+        Flux flux = Flux
+                .from("telegraf")
+                .set()
+                .withKeyValue("type", "telegraphs");
 
-        @Nonnull
-        @Override
-        protected String operatorName() {
-            return "measurement";
-        }
-
-        /**
-         * @param measurement the measurement name. Has to be defined.
-         * @return this
-         */
-        @Nonnull
-        public FilterMeasurement withName(@Nonnull final String measurement) {
-
-            Arguments.checkNonEmpty(measurement, "Measurement name");
-
-            withPropertyValueEscaped("m", measurement);
-
-            return this;
-        }
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> set(key: \"type\", value: \"telegraphs\")");
     }
 }

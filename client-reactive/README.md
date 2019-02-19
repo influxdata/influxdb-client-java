@@ -292,8 +292,8 @@ package example;
 import org.influxdata.client.reactive.InfluxDBClientReactive;
 import org.influxdata.client.reactive.InfluxDBClientReactiveFactory;
 import org.influxdata.client.reactive.QueryReactiveApi;
-import org.influxdata.flux.dsl.Flux;
-import org.influxdata.flux.dsl.functions.restriction.Restrictions;
+import org.influxdata.query.dsl.Flux;
+import org.influxdata.query.dsl.functions.restriction.Restrictions;
 
 public class ReactiveQuery {
 

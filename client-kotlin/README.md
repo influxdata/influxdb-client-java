@@ -132,8 +132,8 @@ import kotlinx.coroutines.channels.filter
 import kotlinx.coroutines.channels.take
 import kotlinx.coroutines.runBlocking
 import org.influxdata.client.kotlin.InfluxDBClientKotlinFactory
-import org.influxdata.flux.dsl.Flux
-import org.influxdata.flux.dsl.functions.restriction.Restrictions
+import org.influxdata.query.dsl.Flux
+import org.influxdata.query.dsl.functions.restriction.Restrictions
 import java.time.temporal.ChronoUnit
 
 private val token = "my_token".toCharArray()

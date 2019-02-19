@@ -19,27 +19,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package example;
+package org.influxdata.query.dsl.functions;
 
-import java.time.temporal.ChronoUnit;
+import java.util.Map;
+import javax.annotation.Nonnull;
 
+import org.influxdata.Arguments;
 import org.influxdata.query.dsl.Flux;
-import org.influxdata.query.dsl.functions.restriction.Restrictions;
 
-@SuppressWarnings("CheckStyle")
-public class FluxDslExample {
-    public static void main(String[] args) {
+/**
+ * The custom Flux expression.
+ *
+ * <h3>Example</h3>
+ * <pre>
+ *     Flux.from("telegraf")
+ *          .expression("map(fn: (r) =&gt; r._value * r._value)")
+ *          .expression("sum()")
+ * </pre>
+ *
+ * @author Jakub Bednar (bednar@github) (27/06/2018 11:21)
+ */
+public final class ExpressionFlux extends AbstractFluxWithUpstream {
 
-        Flux sampleFlux = Flux.from("telegraf")
-            .filter(
-                Restrictions.and(
-                    Restrictions.measurement().equal("cpu"),
-                    Restrictions.field().equal("usage_system"))
-            )
-            .range(-1L, ChronoUnit.DAYS)
-            .sample(5, 1);
+    private final String expression;
 
-        System.out.println(sampleFlux.toString());
+    public ExpressionFlux(@Nonnull final Flux source, @Nonnull final String expression) {
+        super(source);
 
+        Arguments.checkNonEmpty(expression, "Expression");
+
+        this.expression = expression;
+    }
+
+    @Override
+    public void appendActual(@Nonnull final Map<String, Object> parameters, @Nonnull final StringBuilder builder) {
+
+        super.appendActual(parameters, builder);
+
+        appendDelimiter(builder);
+        builder.append(expression);
     }
 }

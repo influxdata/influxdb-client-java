@@ -19,13 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.example.flux;
+package org.influxdata.query.dsl.functions;
 
-import javax.annotation.Nonnull;
+import java.util.HashMap;
 
-import org.influxdata.Arguments;
 import org.influxdata.query.dsl.Flux;
-import org.influxdata.query.dsl.functions.AbstractParametrizedFlux;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,48 +31,55 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 /**
- * @author Jakub Bednar (bednar@github) (02/07/2018 13:55)
+ * @author Jakub Bednar (bednar@github) (25/06/2018 10:08)
  */
 @RunWith(JUnitPlatform.class)
-class CustomFunction {
+class SkewFluxTest {
 
     @Test
-    void customFunction() {
+    void skew() {
 
         Flux flux = Flux
                 .from("telegraf")
-                .function(FilterMeasurement.class)
-                .withName("cpu")
-                .sum();
+                .skew();
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> measurement(m:\"cpu\") |> sum()");
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> skew()");
     }
 
-    public static class FilterMeasurement extends AbstractParametrizedFlux {
+    @Test
+    void skewByParameter() {
 
-        public FilterMeasurement(@Nonnull final Flux source) {
-            super(source);
-        }
+        Flux flux = Flux
+                .from("telegraf")
+                .skew()
+                .withPropertyNamed("useStartTime", "parameter");
 
-        @Nonnull
-        @Override
-        protected String operatorName() {
-            return "measurement";
-        }
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("parameter", true);
 
-        /**
-         * @param measurement the measurement name. Has to be defined.
-         * @return this
-         */
-        @Nonnull
-        public FilterMeasurement withName(@Nonnull final String measurement) {
+        Assertions.assertThat(flux.toString(parameters))
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> skew(useStartTime: true)");
+    }
 
-            Arguments.checkNonEmpty(measurement, "Measurement name");
+    @Test
+    void useStartTimeFalse() {
 
-            withPropertyValueEscaped("m", measurement);
+        Flux flux = Flux
+                .from("telegraf")
+                .skew(false);
 
-            return this;
-        }
+        Assertions.assertThat(flux.toString())
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> skew(useStartTime: false)");
+    }
+
+    @Test
+    void useStartTimeTrue() {
+
+        Flux flux = Flux
+                .from("telegraf")
+                .skew(true);
+
+        Assertions.assertThat(flux.toString())
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> skew(useStartTime: true)");
     }
 }

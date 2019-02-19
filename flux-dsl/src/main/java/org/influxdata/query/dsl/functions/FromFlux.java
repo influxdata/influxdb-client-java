@@ -19,27 +19,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package example;
+package org.influxdata.query.dsl.functions;
 
-import java.time.temporal.ChronoUnit;
+import javax.annotation.Nonnull;
 
-import org.influxdata.query.dsl.Flux;
-import org.influxdata.query.dsl.functions.restriction.Restrictions;
+/**
+ * From produces a stream of tables from the specified bucket.
+ * <a href="http://bit.ly/flux-spec#from">See SPEC</a>.
+ *
+ * <h3>Options</h3>
+ * <ul>
+ * <li><b>bucket</b> - The name of the bucket to query [string]</li>
+ * <li><b>hosts</b> - array of strings from(bucket:"telegraf", hosts:["host1", "host2"])</li>
+ * </ul>
+ *
+ * <h3>Example</h3>
+ * <pre>
+ * Flux flux = Flux.from("telegraf");
+ *
+ * Flux flux = Flux
+ *      .from("telegraf", new String[]{"192.168.1.200", "192.168.1.100"})
+ *      .last();
+ * </pre>
+ *
+ * @author Jakub Bednar (bednar@github) (22/06/2018 10:20)
+ */
+public final class FromFlux extends AbstractParametrizedFlux {
 
-@SuppressWarnings("CheckStyle")
-public class FluxDslExample {
-    public static void main(String[] args) {
+    public FromFlux() {
+    }
 
-        Flux sampleFlux = Flux.from("telegraf")
-            .filter(
-                Restrictions.and(
-                    Restrictions.measurement().equal("cpu"),
-                    Restrictions.field().equal("usage_system"))
-            )
-            .range(-1L, ChronoUnit.DAYS)
-            .sample(5, 1);
-
-        System.out.println(sampleFlux.toString());
-
+    @Nonnull
+    @Override
+    protected String operatorName() {
+        return "from";
     }
 }

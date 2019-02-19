@@ -19,27 +19,57 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package example;
+package org.influxdata.query.dsl.functions;
 
-import java.time.temporal.ChronoUnit;
+import javax.annotation.Nonnull;
 
+import org.influxdata.Arguments;
 import org.influxdata.query.dsl.Flux;
-import org.influxdata.query.dsl.functions.restriction.Restrictions;
 
-@SuppressWarnings("CheckStyle")
-public class FluxDslExample {
-    public static void main(String[] args) {
+/**
+ * Distinct produces the unique values for a given column.
+ * <a href="http://bit.ly/flux-spec#distinct">See SPEC</a>.
+ *
+ * <h3>Options</h3>
+ * <ul>
+ * <li>
+ * <b>column</b> - The column on which to track unique values [string]
+ * </li>
+ * </ul>
+ *
+ * <h3>Example</h3>
+ * <pre>
+ * Flux flux = Flux
+ *     .from("telegraf")
+ *     .groupBy("_measurement")
+ *     .distinct("_measurement");
+ * </pre>
+ *
+ * @author Jakub Bednar (bednar@github) (17/07/2018 12:08)
+ */
+public final class DistinctFlux extends AbstractParametrizedFlux {
 
-        Flux sampleFlux = Flux.from("telegraf")
-            .filter(
-                Restrictions.and(
-                    Restrictions.measurement().equal("cpu"),
-                    Restrictions.field().equal("usage_system"))
-            )
-            .range(-1L, ChronoUnit.DAYS)
-            .sample(5, 1);
+    public DistinctFlux(@Nonnull final Flux source) {
+        super(source);
+    }
 
-        System.out.println(sampleFlux.toString());
+    @Nonnull
+    @Override
+    protected String operatorName() {
+        return "distinct";
+    }
 
+    /**
+     * @param column The column on which to track unique values.
+     * @return this
+     */
+    @Nonnull
+    public DistinctFlux withColumn(@Nonnull final String column) {
+
+        Arguments.checkNonEmpty(column, "Column");
+
+        this.withPropertyValueEscaped("column", column);
+
+        return this;
     }
 }

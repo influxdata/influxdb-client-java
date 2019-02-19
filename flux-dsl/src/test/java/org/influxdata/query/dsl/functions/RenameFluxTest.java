@@ -19,13 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.example.flux;
+package org.influxdata.query.dsl.functions;
 
-import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.influxdata.Arguments;
 import org.influxdata.query.dsl.Flux;
-import org.influxdata.query.dsl.functions.AbstractParametrizedFlux;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,48 +32,44 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 /**
- * @author Jakub Bednar (bednar@github) (02/07/2018 13:55)
+ * @author Jakub Bednar (bednar@github) (02/08/2018 12:01)
  */
 @RunWith(JUnitPlatform.class)
-class CustomFunction {
+class RenameFluxTest {
 
     @Test
-    void customFunction() {
+    void renameByMap() {
+
+        Map<String, String> map = new HashMap<>();
+        map.put("host", "server");
+        map.put("_value", "val");
 
         Flux flux = Flux
                 .from("telegraf")
-                .function(FilterMeasurement.class)
-                .withName("cpu")
-                .sum();
+                .rename(map);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> measurement(m:\"cpu\") |> sum()");
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> rename(columns: {host: \"server\", _value: \"val\"})");
     }
 
-    public static class FilterMeasurement extends AbstractParametrizedFlux {
 
-        public FilterMeasurement(@Nonnull final Flux source) {
-            super(source);
-        }
+    @Test
+    void renameByFunction() {
 
-        @Nonnull
-        @Override
-        protected String operatorName() {
-            return "measurement";
-        }
+        Flux flux = Flux
+                .from("telegraf")
+                .rename("\"{column}_new\"");
 
-        /**
-         * @param measurement the measurement name. Has to be defined.
-         * @return this
-         */
-        @Nonnull
-        public FilterMeasurement withName(@Nonnull final String measurement) {
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> rename(fn: (column) => \"{column}_new\")");
+    }
 
-            Arguments.checkNonEmpty(measurement, "Measurement name");
+    @Test
+    void renameByParameters() {
 
-            withPropertyValueEscaped("m", measurement);
+        Flux flux = Flux
+                .from("telegraf")
+                .rename()
+                .withFunction("\"{column}_new\"");
 
-            return this;
-        }
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> rename(fn: (column) => \"{column}_new\")");
     }
 }

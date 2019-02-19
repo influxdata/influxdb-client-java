@@ -668,8 +668,8 @@ import java.util.List;
 import org.influxdata.client.InfluxDBClient;
 import org.influxdata.client.InfluxDBClientFactory;
 import org.influxdata.client.QueryApi;
-import org.influxdata.flux.dsl.Flux;
-import org.influxdata.flux.dsl.functions.restriction.Restrictions;
+import org.influxdata.query.dsl.Flux;
+import org.influxdata.query.dsl.functions.restriction.Restrictions;
 import org.influxdata.query.FluxRecord;
 import org.influxdata.query.FluxTable;
 

@@ -19,13 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.example.flux;
-
-import javax.annotation.Nonnull;
-
-import org.influxdata.Arguments;
-import org.influxdata.query.dsl.Flux;
-import org.influxdata.query.dsl.functions.AbstractParametrizedFlux;
+package org.influxdata.query.dsl.functions.restriction;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,48 +27,32 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 /**
- * @author Jakub Bednar (bednar@github) (02/07/2018 13:55)
+ * @author Jakub Bednar (bednar@github) (09/10/2018 10:33)
  */
 @RunWith(JUnitPlatform.class)
-class CustomFunction {
+class RestrictionsTest {
 
     @Test
-    void customFunction() {
+    void notEqual() {
 
-        Flux flux = Flux
-                .from("telegraf")
-                .function(FilterMeasurement.class)
-                .withName("cpu")
-                .sum();
+        Restrictions restrictions = Restrictions.start().notEqual(10);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> measurement(m:\"cpu\") |> sum()");
+        Assertions.assertThat(restrictions.toString()).isEqualTo("r[\"_start\"] != 10");
     }
 
-    public static class FilterMeasurement extends AbstractParametrizedFlux {
+    @Test
+    void less() {
 
-        public FilterMeasurement(@Nonnull final Flux source) {
-            super(source);
-        }
+        Restrictions restrictions = Restrictions.stop().less(10);
 
-        @Nonnull
-        @Override
-        protected String operatorName() {
-            return "measurement";
-        }
+        Assertions.assertThat(restrictions.toString()).isEqualTo("r[\"_stop\"] < 10");
+    }
 
-        /**
-         * @param measurement the measurement name. Has to be defined.
-         * @return this
-         */
-        @Nonnull
-        public FilterMeasurement withName(@Nonnull final String measurement) {
+    @Test
+    void greaterOrEqual() {
 
-            Arguments.checkNonEmpty(measurement, "Measurement name");
+        Restrictions restrictions = Restrictions.value().greaterOrEqual(10);
 
-            withPropertyValueEscaped("m", measurement);
-
-            return this;
-        }
+        Assertions.assertThat(restrictions.toString()).isEqualTo("r[\"_value\"] >= 10");
     }
 }
