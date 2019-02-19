@@ -7,32 +7,24 @@
 
 The reference Java client that allows query, write and management (bucket, organization, users) for the InfluxDB 2.0.
 
-- [Features](#features)
-- [Documentation](#documentation)
-    - [Queries](#queries)
-    - [Writes](#writes)
-    - [Management API](#management-api)
-
 ## Features
  
-- Querying data using Flux language
-- Writing data points using
-    - [Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/) 
-    - [Point object](https://github.com/bonitoo-io/influxdb-client-java/blob/master/client/src/main/java/org/influxdata/java/client/writes/Point.java#L76) 
-    - POJO
-- InfluxDB 2.0 Management API client for managing
+- [Querying data using Flux language](#queries)
+- [Writing data points using](#writes)
+    - [Line Protocol](#by-lineprotocol) 
+    - [Point object](#by-data-point) 
+    - [POJO](#by-measurement)
+- [InfluxDB 2.0 Management API client for managing](#management-api)
     - sources, buckets
     - tasks
     - authorizations
     - health check
          
-## Documentation
-
-### Queries
+## Queries
 
 For querying data we use [QueryApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/QueryApi.html) that allow perform synchronous, asynchronous and also use raw query response.
 
-#### Synchronous query
+### Synchronous query
 
 The synchronous query is not intended for large query results because the Flux response can be potentially unbound.
 
@@ -130,7 +122,7 @@ public class SynchronousQuery {
 }
 ```
 
-#### Asynchronous query
+### Asynchronous query
 
 The Asynchronous query offers possibility to process unbound query and allow user to handle exceptions, 
 stop receiving more results and notify that all data arrived.  
@@ -160,22 +152,23 @@ public class AsynchronousQuery {
         queryApi.query(flux, "org_id", (cancellable, fluxRecord) -> {
 
             //
-            // cancelable - possibility to cancel query
-            // fluxRecord - mapped FluxRecord
+            // The callback to consume a FluxRecord.
+            //
+            // cancelable - object has the cancel method to stop asynchronous query
             //
             System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
             
         }, throwable -> {
             
             //
-            // error handling while processing result
+            // The callback to consume any error notification.
             //
             System.out.println("Error occurred: " + throwable.getMessage());
             
         }, () -> {
             
             //
-            // on complete
+            // The callback to consume a notification about successfully end of stream.
             //
             System.out.println("Query completed");
             
@@ -186,7 +179,7 @@ public class AsynchronousQuery {
 }
 ```
 
-The asynchronous query offers a possibility map [FluxRecords](http://bit.ly/flux-spec#record) to POJO:
+And there is also a possibility map [FluxRecords](http://bit.ly/flux-spec#record) to POJO:
 
 ```java
 package example;
@@ -220,8 +213,9 @@ public class AsynchronousQuery {
         queryApi.query(flux, "org_id", Temperature.class, (cancellable, temperature) -> {
             
             //
-            // cancelable - possibility to cancel query
-            // temperature - mapped POJO measurement
+            // The callback to consume a FluxRecord mapped to POJO.
+            //
+            // cancelable - object has the cancel method to stop asynchronous query
             //
             System.out.println(temperature.location + ": " + temperature.value + " at " + temperature.time);
         });
@@ -244,7 +238,7 @@ public class AsynchronousQuery {
 }
 ```
 
-#### Raw query
+### Raw query
 
 The Raw query allows direct processing original [CSV response](http://bit.ly/flux-spec#csv): 
 
@@ -279,7 +273,7 @@ public class RawQuery {
 }
 ```
 
-Asynchronous version allows processing line by line:
+The Asynchronous version allows processing line by line:
 
 ```java
 package example;
@@ -306,8 +300,9 @@ public class RawQueryAsynchronous {
         queryApi.queryRaw(flux, "org_id", (cancellable, line) -> {
 
             //
-            // cancelable - possibility to cancel query
-            // line - line of the CSV response
+            // The callback to consume a line of CSV response
+            //
+            // cancelable - object has the cancel method to stop asynchronous query
             //
             System.out.println("Response: " + line);
         });
@@ -317,16 +312,235 @@ public class RawQueryAsynchronous {
 }
 ```
 
-### Writes
+## Writes
 
-#### Configuration
+The `WriteApi` supports:
+1. writing data points in [InfluxDB Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/) 
+2. use batching for writes
+3. use client backpressure strategy
+4. produces events that allow user to be notified and react to this events
+    - `WriteSuccessEvent` - published when arrived the success response from Platform server
+    - `BackpressureEvent` - published when is **client** backpressure applied
+    - `WriteErrorEvent` - published when occurs a unhandled exception
+5. use GZIP compression for data
+
+The writes are processed in batches which are configurable by `WriteOptions`:
+
+| Property | Description | Default Value |
+| --- | --- | --- |
+| **batchSize** | the number of data point to collect in batch | 1000 |
+| **flushInterval** | the number of milliseconds before the batch is written | 1000 |
+| **jitterInterval** | the number of milliseconds to increase the batch flush interval by a random amount (see documentation above) | 0 |
+| **retryInterval** | the number of milliseconds to retry unsuccessful write | 1000 |
+| **bufferLimit** | the maximum number of unwritten stored points | 10000 |
+| **backpressureStrategy** | the strategy to deal with buffer overflow | DROP_OLDEST |
+
+### Backpressure
+The backpressure presents the problem of what to do with a growing backlog of unconsumed data points. 
+The key feature of backpressure is to provide the capability to avoid consuming the unexpected amount of system resources.  
+This situation is not common and can be caused by several problems: generating too much measurements in short interval,
+long term unavailability of the InfluxDB server, network issues. 
+
+The size of backlog is configured by 
+`WriteOptions.bufferLimit` and backpressure strategy by `WriteOptions.backpressureStrategy`.
+
+#### Strategy how react to backlog overflows
+- `DROP_OLDEST` - Drop the oldest data points from the backlog 
+- `DROP_LATEST` - Drop the latest data points from the backlog  
+- `ERROR` - Signal a exception
+- `BLOCK` - (not implemented yet) Wait specified time for space in buffer to become available
+  - `timeout` - how long to wait before giving up
+  - `unit` - TimeUnit of the timeout
+
+If is used the strategy `DROP_OLDEST` or `DROP_LATEST` there is a possibility to react on backpressure event and slowdown the producing new measurements:
+
+```java
+WriteApi writeApi = influxDBClient.getWriteApi(writeOptions);
+writeApi.listenEvents(BackpressureEvent.class, value -> {
+    //
+    // slowdown producers
+    //...
+});
+```
+
+### Writing data
 
 #### By Measurement
 
+```java
+package example;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
+import org.influxdata.annotations.Column;
+import org.influxdata.annotations.Measurement;
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.WriteApi;
+
+public class WritePOJO {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        //
+        // Write data
+        //
+        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+
+            //
+            // Write by POJO
+            //
+            Temperature temperature = new Temperature();
+            temperature.location = "south";
+            temperature.value = 62D;
+            temperature.time = Instant.now();
+
+            writeApi.writeMeasurement("bucket_name", "org_id", ChronoUnit.NANOS, temperature);
+        }
+
+        influxDBClient.close();
+    }
+
+    @Measurement(name = "temperature")
+    private static class Temperature {
+
+        @Column(tag = true)
+        String location;
+
+        @Column
+        Double value;
+
+        @Column(timestamp = true)
+        Instant time;
+    }
+}
+```
+
 #### By Data Point
+
+```java
+package example;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.WriteApi;
+import org.influxdata.client.write.Point;
+
+public class WriteDataPoint {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        //
+        // Write data
+        //
+        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+
+            //
+            // Write by Data Point
+            //
+            Point point = Point.measurement("temperature")
+                    .addTag("location", "west")
+                    .addField("value", 55D)
+                    .time(Instant.now().toEpochMilli(), ChronoUnit.NANOS);
+
+            writeApi.writePoint("bucket_name", "org_id", point);
+        }
+
+        influxDBClient.close();
+    }
+}
+```
 
 #### By LineProtocol
 
-### Management API
+```java
+package example;
+
+import java.time.temporal.ChronoUnit;
+
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.WriteApi;
+
+public class WriteLineProtocol {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        //
+        // Write data
+        //
+        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+
+            //
+            // Write by LineProtocol
+            //
+            String record = "temperature,location=north value=60.0";
+            
+            writeApi.writeRecord("bucket_name", "org_id", ChronoUnit.NANOS, record);
+        }
+
+        influxDBClient.close();
+    }
+}
+```
+
+### Handle the Events
+
+#### Handle the Success write
+
+```java
+WriteApi writeApi = influxDBClient.getWriteApi();
+writeApi.listenEvents(WriteSuccessEvent.class, event -> {
+
+    String data = event.getLineProtocol();
+
+    //
+    // handle success
+    //
+});
+```
+
+#### Handle the Error Write
+
+```java
+WriteApi writeApi = influxDBClient.getWriteApi();
+writeApi.listenEvents(WriteErrorEvent.class, event -> {
+
+    Throwable exception = event.getThrowable();
+
+    //
+    // handle error
+    //
+});
+```
+
+### Gzip's support
+`WriteApi` does not enable gzip compress for http request body by default. If you want to enable gzip to reduce transfer data's size, you can call:
+
+```java
+influxDBClient.enableGzip();
+
+WriteApi writeApi = influxDBClient.getWriteApi(writeOptions);
+
+...
+```
+
+## Management API
 
 
