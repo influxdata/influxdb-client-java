@@ -38,7 +38,7 @@ fun main(args: Array<String>) = runBlocking {
             + " |> range(start: -1d)")
 
     //Result is returned as a stream
-    val results = influxDBClient.getQueryKotlinApi().query(fluxQuery, "my-org")
+    val results = influxDBClient.getQueryKotlinApi().query(fluxQuery, "org_id")
 
     //Example of additional result stream processing on client side
     results
@@ -74,7 +74,7 @@ fun main(args: Array<String>) = runBlocking {
             + " |> sample(n: 5, pos: 1)")
 
     // Result is returned as a stream
-    val results = influxDBClient.getQueryKotlinApi().queryRaw(fluxQuery, "{header: false}")
+    val results = influxDBClient.getQueryKotlinApi().queryRaw(fluxQuery, "{header: false}", "org_id")
 
     // Print results
     results.consumeEach { println("Line: $it") }

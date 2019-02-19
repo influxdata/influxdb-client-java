@@ -266,7 +266,7 @@ The following options are supported:
 
 
 ### Gzip support
-`InfluxDBClient` does not enable gzip compress for http request body by default. If you want to enable gzip to reduce transfer data's size, you can call:
+`InfluxDBClientReactive` does not enable gzip compress for http request body by default. If you want to enable gzip to reduce transfer data's size, you can call:
 
 ```java
 influxDBClient.enableGzip();
