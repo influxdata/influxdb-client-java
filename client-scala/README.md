@@ -1,4 +1,4 @@
-# flux-client-scala
+# influxdb-client-scala
 
 The reference Scala client that allows you to perform [Flux queries](http://bit.ly/flux-spec) against InfluxDB 1.7+. 
 

@@ -1,4 +1,8 @@
 # influxdb-client-java
+
+> This library is under development and no stable version has been released yet.  
+> The API can change at any moment.
+
 [![Build Status](https://travis-ci.org/bonitoo-io/influxdb-client-java.svg?branch=master)](https://travis-ci.org/bonitoo-io/influxdb-client-java)
 [![codecov](https://codecov.io/gh/bonitoo-io/influxdb-client-java/branch/master/graph/badge.svg)](https://codecov.io/gh/bonitoo-io/influxdb-client-java)
 [![License](https://img.shields.io/github/license/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/blob/master/LICENSE)
@@ -7,9 +11,6 @@
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/pulls)
 
 This repository contains the reference Java client for the InfluxDB 2.0.
-
-> This library is under development and no stable version has been released yet.  
-> The API can change at any moment.
 
 ### Features
 
@@ -62,9 +63,8 @@ The following example demonstrates querying using the Flux language:
 ```java
 package example;
 
-import okhttp3.logging.HttpLoggingInterceptor;
-import FluxClient;
-import FluxClientFactory;
+import org.influxdata.client.flux.FluxClient;
+import org.influxdata.client.flux.FluxClientFactory;
 
 public class FluxExample {
 
@@ -72,26 +72,47 @@ public class FluxExample {
 
     FluxClient fluxClient = FluxClientFactory.create(
         "http://localhost:8086/");
-
-    String fluxQuery = "from(bucket: \"telegraf\")\n" +
+    
+    //
+    // Flux
+    //
+    String flux = "from(bucket: \"telegraf\")\n" +
         " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))" +
         " |> range(start: -1d)" +
         " |> sample(n: 5, pos: 1)";
-
-     fluxClient.query(
-         fluxQuery, (cancellable, record) -> {
-          // process the flux query result record
-           System.out.println(
-               record.getTime() + ": " + record.getValue());
-
-        }, error -> {
-           // error handling while processing result
-           System.out.println("Error occured: "+ error.getMessage());
-
-        }, () -> {
-          // on complete
-           System.out.println("Query completed");
-        });
+    
+    //
+    // Synchronous query
+    //
+    List<FluxTable> tables = fluxClient.query(flux);
+    
+    for (FluxTable fluxTable : tables) {
+        List<FluxRecord> records = fluxTable.getRecords();
+        for (FluxRecord fluxRecord : records) {
+            System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
+        }
+    }
+    
+    //
+    // Asynchronous query
+    //
+    fluxClient.query(flux, (cancellable, record) -> {
+        
+        // process the flux query result record
+        System.out.println(record.getTime() + ": " + record.getValue());
+    
+    }, error -> {
+       
+        // error handling while processing result
+        System.out.println("Error occured: "+ error.getMessage());
+    
+    }, () -> {
+        
+        // on complete
+        System.out.println("Query completed");
+    });
+    
+    fluxClient.close();
   }
 }
 
@@ -104,7 +125,7 @@ The latest version for Maven dependency:
 ```XML
 <dependency>
     <groupId>org.influxdata</groupId>
-    <artifactId>flux-client</artifactId>
+    <artifactId>influxdb-client-flux</artifactId>
     <version>1.0-SNAPSHOT</version>
 </dependency>
 ```
@@ -113,7 +134,148 @@ Or when using Gradle:
 
 ```groovy
 dependencies {
-    compile "org.influxdata:flux-client:1.0.0-SNAPSHOT"
+    compile "org.influxdata:influxdb-client-flux:1.0.0-SNAPSHOT"
+}
+```
+
+### Writes and Queries in InfluxDB 2.0
+
+The following example demonstrates how to write data to InfluxDB 2.0 and read them back using the Flux language:
+
+```java
+package example;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+import org.influxdata.annotations.Column;
+import org.influxdata.annotations.Measurement;
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.QueryApi;
+import org.influxdata.client.WriteApi;
+import org.influxdata.client.write.Point;
+import org.influxdata.query.FluxRecord;
+import org.influxdata.query.FluxTable;
+
+public class InfluxDB2Example {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        //
+        // Write data
+        //
+        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+
+            //
+            // Write by Data Point
+            //
+            Point point = Point.measurement("temperature")
+                    .addTag("location", "west")
+                    .addField("value", 55D)
+                    .time(Instant.now().toEpochMilli(), ChronoUnit.NANOS);
+
+            writeApi.writePoint("bucket_name", "org_id", point);
+
+            //
+            // Write by LineProtocol
+            //
+            writeApi.writeRecord("bucket_name", "org_id", ChronoUnit.NANOS, "temperature,location=north value=60.0");
+
+            //
+            // Write by POJO
+            //
+            Temperature temperature = new Temperature();
+            temperature.location = "south";
+            temperature.value = 62D;
+            temperature.time = Instant.now();
+
+            writeApi.writeMeasurement("bucket_name", "org_id", ChronoUnit.NANOS, temperature);
+        }
+
+        //
+        // Query data
+        //
+        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+        
+        QueryApi queryApi = influxDBClient.getQueryApi();
+        
+        List<FluxTable> tables = queryApi.query(flux, "org_id");
+        for (FluxTable fluxTable : tables) {
+            List<FluxRecord> records = fluxTable.getRecords();
+            for (FluxRecord fluxRecord : records) {
+                System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
+            }
+        }
+
+        influxDBClient.close();
+    }
+
+    @Measurement(name = "temperature")
+    private static class Temperature {
+
+        @Column(tag = true)
+        String location;
+
+        @Column
+        Double value;
+
+        @Column(timestamp = true)
+        Instant time;
+    }
+}
+```
+
+**Dependecies**
+
+The latest version for Maven dependency:
+
+```XML
+<dependency>
+    <groupId>org.influxdata</groupId>
+    <artifactId>influxdb-client-java</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
+```
+       
+Or when using Gradle:
+
+```groovy
+dependencies {
+    compile "org.influxdata:influxdb-client-java:1.0.0-SNAPSHOT"
+}
+```
+
+### Snapshot Repository
+
+**Maven**:
+
+```xml
+<repositories>
+    <repository>
+        <id>bonitoo-snapshot</id>
+        <name>Bonitoo.io snapshot repository</name>
+        <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
+        <releases>
+            <enabled>false</enabled>
+        </releases>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+```
+
+**Gradle:**
+
+```groovy
+repositories{
+    maven {url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot/"}
 }
 ```
 
@@ -142,16 +304,10 @@ If you have Docker running, but it is not available over localhost (e.g. you are
 
 - `INFLUXDB_IP`
 - `INFLUXDB_PORT_API`
-- `FLUX_IP`
-- `FLUX_PORT_API`
+- `INFLUXDB_2_IP`
+- `INFLUXDB_2_PORT_API`
 
 ```bash
 $ export INFLUXDB_IP=192.168.99.100
 $ mvn test
-```
-
-For convenience we provide a small shell script which starts an InfluxDB and Flux server inside Docker containers and executes `mvn clean install` with all tests executed locally.
-
-```bash
-$ ./scripts/compile-and-test.sh
 ```
