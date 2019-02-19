@@ -14,7 +14,7 @@ The reference Java client that allows query, write and management (bucket, organ
     - [Line Protocol](#by-lineprotocol) 
     - [Point object](#by-data-point) 
     - [POJO](#by-measurement)
-- [InfluxDB 2.0 Management API client for managing](#management-api)
+- [InfluxDB 2.0 Management API](#management-api)
     - sources, buckets
     - tasks
     - authorizations
@@ -314,7 +314,8 @@ public class RawQueryAsynchronous {
 
 ## Writes
 
-The `WriteApi` supports:
+For writing data we use [WriteApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/WriteApi.html) that supports:
+
 1. writing data points in [InfluxDB Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/) 
 2. use batching for writes
 3. use client backpressure strategy
@@ -365,7 +366,9 @@ writeApi.listenEvents(BackpressureEvent.class, value -> {
 
 ### Writing data
 
-#### By Measurement
+#### By POJO
+
+Write Measurement into specified bucket:
 
 ```java
 package example;
@@ -423,6 +426,8 @@ public class WritePOJO {
 
 #### By Data Point
 
+Write Data point into specified bucket:
+
 ```java
 package example;
 
@@ -464,6 +469,8 @@ public class WriteDataPoint {
 ```
 
 #### By LineProtocol
+
+Write Line Protocol record into specified bucket:
 
 ```java
 package example;
@@ -543,4 +550,81 @@ WriteApi writeApi = influxDBClient.getWriteApi(writeOptions);
 
 ## Management API
 
+| API endpoint | Description | Javadoc |
+| --- | --- | --- |
+| **/api/v2/authorizations** | Managing authorization data | [AuthorizationsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/AuthorizationsApi.html) |
+| **/api/v2/buckets** | Managing bucket data | [BucketsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/BucketsApi.html) |
+| **/api/v2/orgs** | Managing organization data | [OrganizationsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/OrganizationsApi.html) |
+| **/api/v2/users** | Managing user data | [UsersApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/UsersApi.html) |
+| **/api/v2/sources** | Managing sources | [SourcesApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/SourcesApi.html) |
+| **/api/v2/tasks** | Managing one-off and recurring tasks | [TasksApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/TasksApi.html) |
+| **/api/v2/scrapers** | Managing ScraperTarget data | [ScraperTargetsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/ScraperTargetsApi.html) |
+| **/api/v2/labels** | Managing resource labels | [LabelsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/LabelsApi.html) |
+| **/api/v2/setup** | Managing onboarding setup | [InfluxDBClient#onBoarding()](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#onBoarding-org.influxdata.client.domain.Onboarding-) |
+| **/ready** | Get the readiness of a instance at startup| [InfluxDBClient#ready()](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#ready--) |
+| **/health** | Get the health of an instance anytime during execution | [InfluxDBClient#health()](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#health--) |
+
+
+The following example demonstrates how to use a InfluxDB 2.0 Management API. For further information see endpoints Javadoc.
+
+```java
+package example;
+
+import java.util.Arrays;
+
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.domain.Authorization;
+import org.influxdata.client.domain.Bucket;
+import org.influxdata.client.domain.Permission;
+import org.influxdata.client.domain.PermissionResource;
+import org.influxdata.client.domain.ResourceType;
+import org.influxdata.client.domain.RetentionRule;
+
+public class InfluxDB2ManagementExample {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        //
+        // Create bucket "iot_bucket" with data retention set to 3,600 seconds
+        //
+        RetentionRule retention = new RetentionRule();
+        retention.setEverySeconds(3600L);
+
+        Bucket bucket = influxDBClient.getBucketsApi().createBucket("iot_bucket", retention, "org_id");
+
+        //
+        // Create access token to "iot_bucket"
+        //
+        PermissionResource resource = new PermissionResource();
+        resource.setId(bucket.getId());
+        resource.setOrgID("org_id");
+        resource.setType(ResourceType.BUCKETS);
+
+        // Read permission
+        Permission read = new Permission();
+        read.setResource(resource);
+        read.setAction(Permission.READ_ACTION);
+
+        // Write permission
+        Permission write = new Permission();
+        write.setResource(resource);
+        write.setAction(Permission.WRITE_ACTION);
+
+        Authorization authorization = influxDBClient.getAuthorizationsApi()
+                .createAuthorization("org_id", Arrays.asList(read, write));
+
+        //
+        // Created token that can be use for writes to "iot_bucket"
+        //
+        String token = authorization.getToken();
+
+        influxDBClient.close();
+    }
+}
+```
 
