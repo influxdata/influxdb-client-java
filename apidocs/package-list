@@ -11,12 +11,12 @@ org.influxdata.client.reactive.internal
 org.influxdata.client.write
 org.influxdata.client.write.events
 org.influxdata.exceptions
-org.influxdata.flux.dsl
-org.influxdata.flux.dsl.functions
-org.influxdata.flux.dsl.functions.properties
-org.influxdata.flux.dsl.functions.restriction
 org.influxdata.internal
 org.influxdata.query
+org.influxdata.query.dsl
+org.influxdata.query.dsl.functions
+org.influxdata.query.dsl.functions.properties
+org.influxdata.query.dsl.functions.restriction
 org.influxdata.query.exceptions
 org.influxdata.query.internal
 org.influxdata.test

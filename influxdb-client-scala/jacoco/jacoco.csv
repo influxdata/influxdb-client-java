@@ -1,7 +1,0 @@
-GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-The Scala InfluxDB 2.0 Client,org.influxdata.client.scala,InfluxDBClientScalaFactory.,67,0,0,0,17,0,8,0,8,0
-The Scala InfluxDB 2.0 Client,org.influxdata.client.scala,InfluxDBClientScalaFactory,27,0,0,0,0,0,6,0,6,0
-The Scala InfluxDB 2.0 Client,org.influxdata.client.scala.internal,QueryScalaApiImpl,102,0,0,0,25,0,7,0,7,0
-The Scala InfluxDB 2.0 Client,org.influxdata.client.scala.internal,InfluxDBClientScalaImpl,61,0,0,0,13,0,10,0,10,0
-The Scala InfluxDB 2.0 Client,org.influxdata.client.scala.internal,QueryScalaApiImpl..anon.new FluxCsvParser.FluxResponseConsumer() {...},23,0,2,0,7,0,4,0,3,0
-The Scala InfluxDB 2.0 Client,org.influxdata.client.scala.internal,QueryScalaApiImpl..anon.new BiConsumer() {...},26,0,2,0,6,0,4,0,3,0

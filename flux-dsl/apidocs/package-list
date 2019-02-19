@@ -1,4 +1,4 @@
-org.influxdata.flux.dsl
-org.influxdata.flux.dsl.functions
-org.influxdata.flux.dsl.functions.properties
-org.influxdata.flux.dsl.functions.restriction
+org.influxdata.query.dsl
+org.influxdata.query.dsl.functions
+org.influxdata.query.dsl.functions.properties
+org.influxdata.query.dsl.functions.restriction
