@@ -117,7 +117,7 @@ public class FluxExample {
     }, error -> {
        
         // error handling while processing result
-        System.out.println("Error occured: "+ error.getMessage());
+        System.out.println("Error occurred: "+ error.getMessage());
     
     }, () -> {
         

@@ -3,6 +3,8 @@
 > This library is under development and no stable version has been released yet.  
 > The API can change at any moment.
 
+[![javadoc](https://img.shields.io/badge/javadoc-link-brightgreen.svg)](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html)
+
 The reference Java client that allows query, write and management (bucket, organization, users) for the InfluxDB 2.0.
 
 - [Features](#features)
@@ -73,7 +75,7 @@ public class SynchronousQuery {
 }
 ```
 
-The synchronous query offers a possibility map [FluxRecords](http://bit.ly/flux-spec#record) to POJO.
+The synchronous query offers a possibility map [FluxRecords](http://bit.ly/flux-spec#record) to POJO:
 
 ```java
 package example;
@@ -130,6 +132,191 @@ public class SynchronousQuery {
 
 #### Asynchronous query
 
+The Asynchronous query offers possibility to process unbound query and allow user to handle exceptions, 
+stop receiving more results and notify that all data arrived.  
+
+```java
+package example;
+
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.QueryApi;
+
+public class AsynchronousQuery {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        //
+        // Query data
+        //
+        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+
+        QueryApi queryApi = influxDBClient.getQueryApi();
+
+        queryApi.query(flux, "org_id", (cancellable, fluxRecord) -> {
+
+            //
+            // cancelable - possibility to cancel query
+            // fluxRecord - mapped FluxRecord
+            //
+            System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
+            
+        }, throwable -> {
+            
+            //
+            // error handling while processing result
+            //
+            System.out.println("Error occurred: " + throwable.getMessage());
+            
+        }, () -> {
+            
+            //
+            // on complete
+            //
+            System.out.println("Query completed");
+            
+        });
+
+        influxDBClient.close();
+    }
+}
+```
+
+The asynchronous query offers a possibility map [FluxRecords](http://bit.ly/flux-spec#record) to POJO:
+
+```java
+package example;
+
+import java.time.Instant;
+
+import org.influxdata.annotations.Column;
+import org.influxdata.annotations.Measurement;
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.QueryApi;
+
+public class AsynchronousQuery {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        //
+        // Query data
+        //
+        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+
+        QueryApi queryApi = influxDBClient.getQueryApi();
+
+        //
+        // Map to POJO
+        //
+        queryApi.query(flux, "org_id", Temperature.class, (cancellable, temperature) -> {
+            
+            //
+            // cancelable - possibility to cancel query
+            // temperature - mapped POJO measurement
+            //
+            System.out.println(temperature.location + ": " + temperature.value + " at " + temperature.time);
+        });
+
+        influxDBClient.close();
+    }
+
+    @Measurement(name = "temperature")
+    private static class Temperature {
+
+        @Column(tag = true)
+        String location;
+
+        @Column
+        Double value;
+
+        @Column(timestamp = true)
+        Instant time;
+    }
+}
+```
+
+#### Raw query
+
+The Raw query allows direct processing original [CSV response](http://bit.ly/flux-spec#csv): 
+
+```java
+package example;
+
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.QueryApi;
+
+public class RawQuery {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        //
+        // Query data
+        //
+        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+
+        QueryApi queryApi = influxDBClient.getQueryApi();
+
+        String csv = queryApi.queryRaw(flux, "org_id");
+
+        System.out.println("CSV response: " + csv);
+
+        influxDBClient.close();
+    }
+}
+```
+
+Asynchronous version allows processing line by line:
+
+```java
+package example;
+
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.QueryApi;
+
+public class RawQueryAsynchronous {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        //
+        // Query data
+        //
+        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+
+        QueryApi queryApi = influxDBClient.getQueryApi();
+
+        queryApi.queryRaw(flux, "org_id", (cancellable, line) -> {
+
+            //
+            // cancelable - possibility to cancel query
+            // line - line of the CSV response
+            //
+            System.out.println("Response: " + line);
+        });
+
+        influxDBClient.close();
+    }
+}
+```
+
 ### Writes
 
 #### Configuration
@@ -141,3 +328,5 @@ public class SynchronousQuery {
 #### By LineProtocol
 
 ### Management API
+
+

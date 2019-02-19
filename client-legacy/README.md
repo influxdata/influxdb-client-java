@@ -120,7 +120,7 @@ An asynchronous query example:
            
         }, error -> {
            // error handling while processing result
-           System.out.println("Error occured: "+ error.getMessage());
+           System.out.println("Error occurred: "+ error.getMessage());
 
         }, () -> {
           // on complete notification
