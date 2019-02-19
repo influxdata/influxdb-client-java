@@ -19,6 +19,7 @@ The reference Java client that allows query, write and management (bucket, organ
     - tasks
     - authorizations
     - health check
+- [Advanced Usage](#advanced-usage)
          
 ## Queries
 
@@ -537,17 +538,6 @@ writeApi.listenEvents(WriteErrorEvent.class, event -> {
 });
 ```
 
-### Gzip's support
-`WriteApi` does not enable gzip compress for http request body by default. If you want to enable gzip to reduce transfer data's size, you can call:
-
-```java
-influxDBClient.enableGzip();
-
-WriteApi writeApi = influxDBClient.getWriteApi(writeOptions);
-
-...
-```
-
 ## Management API
 
 The client has following management API:
@@ -629,6 +619,46 @@ public class InfluxDB2ManagementExample {
     }
 }
 ```
+
+## Advanced Usage
+
+### Client connection string
+
+A client can be constructed using a connection string that can contain the InfluxDBClientOptions parameters encoded into the URL.  
+ 
+```java
+InfluxDBClient influxDBClient = InfluxDBClientFactory
+            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
+```
+The following options are supported:
+
+| Property name | default | description |
+| --------------|-------------|-------------| 
+| readTimeout       | 10000 ms| read timeout |
+| writeTimeout      | 10000 ms| write timeout |
+| connectTimeout    | 10000 ms| socket timeout |
+| logLevel          | NONE | rest client verbosity level |
+
+
+### Gzip support
+`InfluxDBClient` does not enable gzip compress for http request body by default. If you want to enable gzip to reduce transfer data's size, you can call:
+
+```java
+influxDBClient.enableGzip();
+```
+
+### Log HTTP Request and Response
+The Requests and Responses can be logged by changing the LogLevel. LogLevel values are NONE, BASIC, HEADER, BODY. Note that 
+applying the `BODY` LogLevel will disable chunking while streaming and will load the whole response into memory.  
+
+```kotlin
+influxDBClient.setLogLevel(LogLevel.HEADERS)
+```
+
+### Check the server status 
+
+Server availability can be checked using the `influxDBClient.health()` endpoint.
+
 ## Version
 
 The latest version for Maven dependency:
