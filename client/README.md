@@ -1,17 +1,17 @@
 # influxdb-client-java
-[![Build Status](https://travis-ci.org/bonitoo-io/influxdb-client-java.svg?branch=master)](https://travis-ci.org/bonitoo-io/influxdb-client-java)
-[![codecov](https://codecov.io/gh/bonitoo-io/influxdb-client-java/branch/master/graph/badge.svg)](https://codecov.io/gh/bonitoo-io/influxdb-client-java)
-[![License](https://img.shields.io/github/license/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/blob/master/LICENSE)
-[![Snapshot Version](https://img.shields.io/nexus/s/https/apitea.com/nexus/org.influxdata/influxdb-client-java.svg)](https://apitea.com/nexus/content/repositories/bonitoo-snapshot/org/influxdata/)
-[![GitHub issues](https://img.shields.io/github/issues-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/pulls)
-
-This module contains the Java client for the InfluxDB 2.0.
 
 > This library is under development and no stable version has been released yet.  
 > The API can change at any moment.
 
-### Features
+The reference Java client that allows query, write and management (bucket, organization, users) for the InfluxDB 2.0.
+
+- [Features](#features)
+- [Documentation](#documentation)
+    - [Queries](#queries)
+    - [Writes](#writes)
+    - [Management API](#management-api)
+
+## Features
  
 - Querying data using Flux language
 - Writing data points using
@@ -24,10 +24,120 @@ This module contains the Java client for the InfluxDB 2.0.
     - authorizations
     - health check
          
-### Documentation
+## Documentation
 
-#### Data query using Flux language
+### Queries
 
-#### Write data
+For querying data we use [QueryApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/QueryApi.html) that allow perform synchronous, asynchronous and also use raw query response.
 
-#### Management API
+#### Synchronous query
+
+The synchronous query is not intended for large query results because the Flux response can be potentially unbound.
+
+```java
+package example;
+
+import java.util.List;
+
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.QueryApi;
+import org.influxdata.query.FluxRecord;
+import org.influxdata.query.FluxTable;
+
+public class SynchronousQuery {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+
+        QueryApi queryApi = influxDBClient.getQueryApi();
+
+        //
+        // Query data
+        //
+        List<FluxTable> tables = queryApi.query(flux, "org_id");
+        for (FluxTable fluxTable : tables) {
+            List<FluxRecord> records = fluxTable.getRecords();
+            for (FluxRecord fluxRecord : records) {
+                System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
+            }
+        }
+
+        influxDBClient.close();
+    }
+}
+```
+
+The synchronous query offers a possibility map [FluxRecords](http://bit.ly/flux-spec#record) to POJO.
+
+```java
+package example;
+
+import java.time.Instant;
+import java.util.List;
+
+import org.influxdata.annotations.Column;
+import org.influxdata.annotations.Measurement;
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.QueryApi;
+
+public class SynchronousQuery {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        //
+        // Query data
+        //
+        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+
+        QueryApi queryApi = influxDBClient.getQueryApi();
+
+        //
+        // Map to POJO
+        //
+        List<Temperature> temperatures = queryApi.query(flux, "org_id", Temperature.class);
+        for (Temperature temperature : temperatures) {
+            System.out.println(temperature.location + ": " + temperature.value + " at " + temperature.time);
+        }
+
+        influxDBClient.close();
+    }
+
+    @Measurement(name = "temperature")
+    private static class Temperature {
+
+        @Column(tag = true)
+        String location;
+
+        @Column
+        Double value;
+
+        @Column(timestamp = true)
+        Instant time;
+    }
+}
+```
+
+#### Asynchronous query
+
+### Writes
+
+#### Configuration
+
+#### By Measurement
+
+#### By Data Point
+
+#### By LineProtocol
+
+### Management API

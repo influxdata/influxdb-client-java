@@ -10,7 +10,7 @@
 [![GitHub issues](https://img.shields.io/github/issues-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/pulls)
 
-This repository contains the reference Java client for the InfluxDB 2.0.
+This repository contains the reference JVM clients for the InfluxDB 2.0.
 
 - [Features](#features)
 - [Documentation](#documentation)
@@ -265,6 +265,8 @@ dependencies {
 ```
 
 ### Use Management API to create a new Bucket in InfluxDB 2.0  
+
+The following example demonstrates how to use a InfluxDB 2.0 Management API. For further information see [client documentation](./client#management-api).
 
 ```java
 package example;
