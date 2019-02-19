@@ -17,6 +17,7 @@ This repository contains the reference Java client for the InfluxDB 2.0.
 - [How To Use](#how-to-use)
     - [Flux queries in InfluxDB 1.7+](#flux-queries-in-influxdb-17)
     - [Writes and Queries in InfluxDB 2.0](#writes-and-queries-in-influxdb-20)
+    - [Use Management API to create a new Bucket in InfluxDB 2.0](#use-management-api-to-create-a-new-bucket-in-influxdb-20)
 - [Build Requirements](#build-requirements)
 - [Contributing](#contributing)
 - [License](#license)
@@ -263,6 +264,69 @@ dependencies {
 }
 ```
 
+### Use Management API to create a new Bucket in InfluxDB 2.0  
+
+```java
+package example;
+
+import java.util.Arrays;
+
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.domain.Authorization;
+import org.influxdata.client.domain.Bucket;
+import org.influxdata.client.domain.Permission;
+import org.influxdata.client.domain.PermissionResource;
+import org.influxdata.client.domain.ResourceType;
+import org.influxdata.client.domain.RetentionRule;
+
+public class InfluxDB2ManagementExample {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        //
+        // Create bucket "iot_bucket" with data retention set to 3,600 seconds
+        //
+        RetentionRule retention = new RetentionRule();
+        retention.setEverySeconds(3600L);
+
+        Bucket bucket = influxDBClient.getBucketsApi().createBucket("iot_bucket", retention, "org_id");
+
+        //
+        // Create access token to "iot_bucket"
+        //
+        PermissionResource resource = new PermissionResource();
+        resource.setId(bucket.getId());
+        resource.setOrgID("org_id");
+        resource.setType(ResourceType.BUCKETS);
+
+        // Read permission
+        Permission read = new Permission();
+        read.setResource(resource);
+        read.setAction(Permission.READ_ACTION);
+
+        // Write permission
+        Permission write = new Permission();
+        write.setResource(resource);
+        write.setAction(Permission.WRITE_ACTION);
+
+        Authorization authorization = influxDBClient.getAuthorizationsApi()
+                .createAuthorization("org_id", Arrays.asList(read, write));
+
+        //
+        // Created token that can be use for writes to "iot_bucket"
+        //
+        String token = authorization.getToken();
+
+        influxDBClient.close();
+    }
+}
+```
+
 ## Build Requirements
 
 * Java 1.8+ (tested with jdk8)
@@ -296,7 +360,7 @@ $ export INFLUXDB_IP=192.168.99.100
 $ mvn test
 ```
 
-#### Snapshot Repository
+### Snapshot Repository
 
 **Maven**:
 
