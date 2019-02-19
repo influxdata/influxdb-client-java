@@ -184,7 +184,7 @@ For writing data we use [WriteReactiveApi](https://bonitoo-io.github.io/influxdb
 
 ### Writing data
 
-Write measurements every 10 seconds:
+The following example demonstrates how to write measurements every 10 seconds:
 
 ```java
 package example;
@@ -242,5 +242,46 @@ public class WriteEvery10Seconds {
         @Column(timestamp = true)
         Instant time;
     }
+}
+```
+## Version
+
+The latest version for Maven dependency:
+```xml
+<dependency>
+  <groupId>org.influxdata</groupId>
+  <artifactId>influxdb-client-reactive</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
+  
+Or when using with Gradle:
+```groovy
+dependencies {
+    compile "org.influxdata:influxdb-client-reactive:1.0.0-SNAPSHOT"
+}
+```
+
+### Snapshot repository
+The snapshot repository is temporally located [here](https://apitea.com/nexus/content/repositories/bonitoo-snapshot/).
+
+#### Maven
+```xml
+<repository>
+    <id>bonitoo-snapshot</id>
+    <name>Bonitoo.io snapshot repository</name>
+    <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
+    <releases>
+        <enabled>false</enabled>
+    </releases>
+    <snapshots>
+        <enabled>true</enabled>
+    </snapshots>
+</repository>
+```
+#### Gradle
+```
+repositories {
+    maven { url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot" }
 }
 ```

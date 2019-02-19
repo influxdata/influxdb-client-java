@@ -629,4 +629,45 @@ public class InfluxDB2ManagementExample {
     }
 }
 ```
+## Version
+
+The latest version for Maven dependency:
+```xml
+<dependency>
+  <groupId>org.influxdata</groupId>
+  <artifactId>influxdb-client-java</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
+  
+Or when using with Gradle:
+```groovy
+dependencies {
+    compile "org.influxdata:influxdb-client-java:1.0.0-SNAPSHOT"
+}
+```
+
+### Snapshot repository
+The snapshot repository is temporally located [here](https://apitea.com/nexus/content/repositories/bonitoo-snapshot/).
+
+#### Maven
+```xml
+<repository>
+    <id>bonitoo-snapshot</id>
+    <name>Bonitoo.io snapshot repository</name>
+    <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
+    <releases>
+        <enabled>false</enabled>
+    </releases>
+    <snapshots>
+        <enabled>true</enabled>
+    </snapshots>
+</repository>
+```
+#### Gradle
+```
+repositories {
+    maven { url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot" }
+}
+```
 
