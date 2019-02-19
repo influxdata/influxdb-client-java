@@ -12,7 +12,17 @@
 
 This repository contains the reference Java client for the InfluxDB 2.0.
 
-### Features
+- [Features](#features)
+- [Documentation](#documentation)
+- [How To Use](#how-to-use)
+    - [Flux queries in InfluxDB 1.7+](#flux-queries-in-influxdb-17)
+    - [Writes and Queries in InfluxDB 2.0](#writes-and-queries-in-influxdb-20)
+- [Build Requirements](#build-requirements)
+- [Contributing](#contributing)
+- [License](#license)
+
+
+## Features
 
 - Supports querying using the Flux language over the InfluxDB 1.7+ REST API (`/api/v2/query endpoint`) 
 - InfluxDB 2.0 client
@@ -28,7 +38,7 @@ This repository contains the reference Java client for the InfluxDB 2.0.
         - health check
         - ...
          
-### Documentation
+## Documentation
 
 - **[client](./client)** 
     - The reference Java client that allows query, write and InfluxDB 2.0 management.
@@ -53,7 +63,9 @@ This repository contains the reference Java client for the InfluxDB 2.0.
 - **[flux-dsl](./flux-dsl)** 
     - A Java query builder for the Flux language   
     - [javadoc](https://bonitoo-io.github.io/influxdb-client-java/flux-dsl/apidocs/index.html), [readme](./flux-dsl#flux-dsl/)
-       
+    
+## How To Use   
+
 ### Flux queries in InfluxDB 1.7+
 
 The REST endpoint `/api/v2/query` for querying using the **Flux** language has been introduced with InfluxDB 1.7.
@@ -251,35 +263,7 @@ dependencies {
 }
 ```
 
-### Snapshot Repository
-
-**Maven**:
-
-```xml
-<repositories>
-    <repository>
-        <id>bonitoo-snapshot</id>
-        <name>Bonitoo.io snapshot repository</name>
-        <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
-        <releases>
-            <enabled>false</enabled>
-        </releases>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-    </repository>
-</repositories>
-```
-
-**Gradle:**
-
-```groovy
-repositories{
-    maven {url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot/"}
-}
-```
-
-### Build Requirements
+## Build Requirements
 
 * Java 1.8+ (tested with jdk8)
 * Maven 3.0+ (tested with maven 3.5.0)
@@ -311,3 +295,39 @@ If you have Docker running, but it is not available over localhost (e.g. you are
 $ export INFLUXDB_IP=192.168.99.100
 $ mvn test
 ```
+
+#### Snapshot Repository
+
+**Maven**:
+
+```xml
+<repositories>
+    <repository>
+        <id>bonitoo-snapshot</id>
+        <name>Bonitoo.io snapshot repository</name>
+        <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
+        <releases>
+            <enabled>false</enabled>
+        </releases>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+```
+
+**Gradle:**
+
+```groovy
+repositories{
+    maven {url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot/"}
+}
+```
+
+## Contributing
+
+If you would like to contribute code you can do through GitHub by forking the repository and sending a pull request into the `master` branch.
+
+## License
+
+The InfluxDB 2.0 JVM Based Clients are released under the [MIT License](https://opensource.org/licenses/MIT).
