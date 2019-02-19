@@ -1,18 +1,11 @@
-# flux-java
-
-The reference Java library for the InfluxDB 1.7 `/v2/query` REST API using the [Flux language](http://bit.ly/flux-spec). 
-
-
+# influxdb-client-flux
 
 > This library is under development and no stable version has been released yet.  
 > The API can change at any moment.
 
-[![Build Status](https://travis-ci.org/bonitoo-io/influxdb-client-java.svg?branch=master)](https://travis-ci.org/bonitoo-io/influxdb-client-java)
-[![codecov](https://codecov.io/gh/bonitoo-io/influxdb-client-java/branch/master/graph/badge.svg)](https://codecov.io/gh/bonitoo-io/influxdb-client-java)
-[![License](https://img.shields.io/github/license/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/blob/master/LICENSE)
-[![Snapshot Version](https://img.shields.io/nexus/s/https/apitea.com/nexus/io.bonitoo.flux/flux-java.svg)](https://apitea.com/nexus/content/repositories/bonitoo-snapshot/)
-[![GitHub issues](https://img.shields.io/github/issues-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/pulls)
+[![javadoc](https://img.shields.io/badge/javadoc-link-brightgreen.svg)](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-flux/apidocs/index.html)
+
+The client that allow perform Flux Query against the InfluxDB 1.7+.
 
 ### Create client
 
@@ -24,16 +17,16 @@ The `FluxClientFactory` creates an instance of a `FluxClient` client that can be
 - `okHttpClient` - custom HTTP client to use for communications with InfluxDB (optional)
 
 ```java
-    // client creation
-    FluxConnectionOptions options = FluxConnectionOptions.builder()
-        .url("http://localhost:8086/")
-        .okHttpClient
-        .build();
+// client creation
+FluxConnectionOptions options = FluxConnectionOptions.builder()
+    .url("http://localhost:8086/")
+    .okHttpClient
+    .build();
 
-    FluxClient fluxClient = FluxClientFactory.create(options);
+FluxClient fluxClient = FluxClientFactory.create(options);
 
-    fluxClient.query(...)
-     ...
+fluxClient.query(...)
+ ...
 ```
 
 #### Client connection string
@@ -41,7 +34,7 @@ The `FluxClientFactory` creates an instance of a `FluxClient` client that can be
 A client can be constructed using a connection string that can contain the FluxConnectionOptions parameters encoded into the URL.  
  
 ```java
-    FluxClient fluxClient = FluxClientFactory.create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC")
+FluxClient fluxClient = FluxClientFactory.create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC")
 ```
 The following options are supported:
 
@@ -63,8 +56,8 @@ String query = "from(bucket:\"telegraf\") |> filter(fn: (r) => r[\"_measurement\
 
 //simple synchronous query
 List<FluxTable> tables = fluxClient.flux(query);
-
 ```
+
 For larger data sets it is more effective to stream data and to use [asynchronous](#asynchronous-query) requests or the [reactive](../flux-client-rxjava) 
 client based on RxJava2.   
 
@@ -120,7 +113,7 @@ An asynchronous query example:
            
         }, error -> {
            // error handling while processing result
-           System.out.println("Error occured: "+ error.getMessage());
+           System.out.println("Error occurred: "+ error.getMessage());
 
         }, () -> {
           // on complete notification
@@ -133,11 +126,10 @@ An asynchronous query example:
 It is possible to parse a result line-by-line using the `queryRaw` method.  
 
 ```java
-    void queryRaw(@Nonnull final String query,
-                  @Nonnull final BiConsumer<Cancellable, String> onResponse,
-                  @Nonnull final Consumer<? super Throwable> onError,
-                  @Nonnull final Runnable onComplete);
-
+void queryRaw(@Nonnull final String query,
+              @Nonnull final BiConsumer<Cancellable, String> onResponse,
+              @Nonnull final Consumer<? super Throwable> onError,
+              @Nonnull final Runnable onComplete);
 ```
 
 ### Advanced Usage
@@ -164,7 +156,7 @@ The latest version for Maven dependency:
 ```xml
 <dependency>
   <groupId>org.influxdata</groupId>
-  <artifactId>flux-client</artifactId>
+  <artifactId>influxdb-client-flux</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
@@ -172,7 +164,7 @@ The latest version for Maven dependency:
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "org.influxdata:flux-client:1.0.0-SNAPSHOT"
+    compile "org.influxdata:influxdb-client-flux:1.0.0-SNAPSHOT"
 }
 ```
 

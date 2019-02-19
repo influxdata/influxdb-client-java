@@ -23,8 +23,8 @@ package example;
 
 import java.time.temporal.ChronoUnit;
 
-import org.influxdata.flux.dsl.Flux;
-import org.influxdata.flux.dsl.functions.restriction.Restrictions;
+import org.influxdata.query.dsl.Flux;
+import org.influxdata.query.dsl.functions.restriction.Restrictions;
 
 @SuppressWarnings("CheckStyle")
 public class FluxDslExample {

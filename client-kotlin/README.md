@@ -1,45 +1,97 @@
-# flux-client-kotlin
-
-The reference Kotlin client that allows you to perform [Flux queries](http://bit.ly/flux-spec) against InfluxDB 1.7+. 
+# influxdb-client-kotlin
 
 > This library is under development and no stable version has been released yet.  
 > The API can change at any moment.
 
-[![Build Status](https://travis-ci.org/bonitoo-io/influxdb-client-java.svg?branch=master)](https://travis-ci.org/bonitoo-io/influxdb-client-java)
-[![codecov](https://codecov.io/gh/bonitoo-io/influxdb-client-java/branch/master/graph/badge.svg)](https://codecov.io/gh/bonitoo-io/influxdb-client-java)
-[![License](https://img.shields.io/github/license/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/blob/master/LICENSE)
-[![Snapshot Version](https://img.shields.io/nexus/s/https/apitea.com/nexus/io.bonitoo.flux/flux-java.svg)](https://apitea.com/nexus/content/repositories/bonitoo-snapshot/)
-[![GitHub issues](https://img.shields.io/github/issues-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/pulls)
+[![KDoc](https://img.shields.io/badge/KDoc-link-brightgreen.svg)](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/org.influxdata.client.kotlin/index.html)
 
-### Create client
+The reference Kotlin client that allows query and write for the InfluxDB 2.0 by Kotlin Channel coroutines. 
 
-The `FluxClientKotlinFactory` creates an instance of a `FluxClientKotlin` client that can be customized with `FluxConnectionOptions`.
+## Features
 
-`FluxConnectionOptions` parameters:
- 
-- `url` -  the url to connect to InfluxDB
-- `okHttpClient` - custom HTTP client to use for communications with InfluxDB (optional)
+- [Querying data using Flux language](#queries)
+- [Advanced Usage](#advanced-usage)
+   
+## Queries
+
+The [QueryKotlinApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/org.influxdata.client.kotlin/-query-kotlin-api/index.html) supports asynchronous queries by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html).
+   
+The following example demonstrates querying using the Flux language:
 
 ```kotlin
-// client creation
-val options = FluxConnectionOptions.builder()
-            .url("http://localhost:8086/")
-            .build()
+package example
 
-val fluxClient = FluxClientKotlinFactory.create(options)
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.channels.filter
+import kotlinx.coroutines.channels.take
+import kotlinx.coroutines.runBlocking
+import org.influxdata.client.kotlin.InfluxDBClientKotlinFactory
 
-val results = fluxClient.query(fluxQuery)
-...
+private val token = "my_token".toCharArray()
+
+fun main(args: Array<String>) = runBlocking {
+
+    val influxDBClient = InfluxDBClientKotlinFactory.create("http://localhost:9999", token)
+
+    val fluxQuery = ("from(bucket: \"telegraf\")\n"
+            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
+            + " |> range(start: -1d)")
+
+    //Result is returned as a stream
+    val results = influxDBClient.getQueryKotlinApi().query(fluxQuery, "org_id")
+
+    //Example of additional result stream processing on client side
+    results
+            //filter on client side using `filter` built-in operator
+            .filter { "cpu0" == it.getValueByKey("cpu") }
+            //take first 20 records
+            .take(20)
+            //print results
+            .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
+
+    influxDBClient.close()
+}
 ```
 
-#### Client connection string
+It is possible to parse a result line-by-line using the `queryRaw` method:
 
-A client can be constructed using a connection string that can contain the FluxConnectionOptions parameters encoded into the URL.  
+```kotlin
+package example
+
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.runBlocking
+import org.influxdata.client.kotlin.InfluxDBClientKotlinFactory
+
+private val token = "my_token".toCharArray()
+
+fun main(args: Array<String>) = runBlocking {
+
+    val influxDBClient = InfluxDBClientKotlinFactory.create("http://localhost:9999", token)
+
+    val fluxQuery = ("from(bucket: \"telegraf\")\n"
+            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
+            + " |> range(start: -5m)"
+            + " |> sample(n: 5, pos: 1)")
+
+    // Result is returned as a stream
+    val results = influxDBClient.getQueryKotlinApi().queryRaw(fluxQuery, "{header: false}", "org_id")
+
+    // Print results
+    results.consumeEach { println("Line: $it") }
+
+    influxDBClient.close()
+}
+```
+
+## Advanced Usage
+
+### Client connection string
+
+A client can be constructed using a connection string that can contain the InfluxDBClientOptions parameters encoded into the URL.  
  
 ```java
-val fluxClient = FluxClientKotlinFactory
-            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC")
+val influxDBClient = InfluxDBClientKotlinFactory
+            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
 ```
 The following options are supported:
 
@@ -50,89 +102,65 @@ The following options are supported:
 | connectTimeout    | 10000 ms| socket timeout |
 | logLevel          | NONE | rest client verbosity level |
 
-## Query using the Flux language
 
-The library supports asynchronous queries by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html). 
+### Gzip support
+`InfluxDBClientKotlin` does not enable gzip compress for http request body by default. If you want to enable gzip to reduce transfer data's size, you can call:
 
-```kotlin
-val fluxQuery = ("from(bucket: \"telegraf\")\n"
-            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
-            + " |> range(start: -1d)")
-
-// Result is returned as a stream
-val results = fluxClient.query(fluxQuery)
-
-// Example of additional result stream processing on client side
-results
-    // filter on client side using `filter` built-in operator
-    .filter { "cpu0" == it.getValueByKey("cpu") }
-    // take first 20 records
-    .take(20)
-    // print results
-    .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
-```
-### Construct queries using the [flux-dsl](../flux-dsl) query builder
-
-[Flux-dsl](../flux-dsl) contains java classes representing elements of the Flux language to help build Flux queries and expressions. 
-
-All supported operators are documented in [Operators](../flux-dsl) and in javadoc. Custom functions can be added
-easily&mdash;see [Custom operator](../flux-dsl/README.md#custom-operator).
-
-An example of using the `Flux` query builder:
-
-```kotlin
-val flux = Flux
-    .from("telegraf")
-    .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
-    .range(-30L, ChronoUnit.MINUTES)
-
-// Result is returned as a stream
-val results = fluxClient.query(flux.toString())
-
-// Example of additional result stream processing on client side
-results
-    // filter on client side using `filter` built-in operator
-    .filter { (it.value as Double) > 55 }
-    // take first 20 records
-    .take(20)
-    // print results
-    .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
+```java
+influxDBClient.enableGzip();
 ```
 
-#### Raw query response
-
-It is possible to parse a result line-by-line using the `queryRaw` method.  
-
-```kotlin
-val fluxQuery = ("from(bucket: \"telegraf\")\n"
-            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
-            + " |> range(start: -5m)"
-            + " |> sample(n: 5, pos: 1)")
-
-// Result is returned as a stream
-val results = fluxClient.queryRaw(fluxQuery, "{header: false}")
-
-// Print results
-results.consumeEach { println("Line: $it") }
-```
-
-### Advanced Usage
-
-#### Gzip support
-
-> Currently unsupported by the server.
-
-#### Log HTTP Request and Response
+### Log HTTP Request and Response
 The Requests and Responses can be logged by changing the LogLevel. LogLevel values are NONE, BASIC, HEADER, BODY. Note that 
 applying the `BODY` LogLevel will disable chunking while streaming and will load the whole response into memory.  
 
 ```kotlin
-fluxClient.setLogLevel(LogLevel.HEADERS)
+influxDBClient.setLogLevel(LogLevel.HEADERS)
 ```
 
-#### Check the server status and version
+### Check the server status 
 
-Server availability can be checked using the `fluxClient.ping()` endpoint.  Server version can be obtained using `fluxClient.version()`.
+Server availability can be checked using the `influxDBClient.health()` endpoint.
+
+### Construct queries using the [flux-dsl](../flux-dsl) query builder
+
+```kotlin
+package example
+
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.channels.filter
+import kotlinx.coroutines.channels.take
+import kotlinx.coroutines.runBlocking
+import org.influxdata.client.kotlin.InfluxDBClientKotlinFactory
+import org.influxdata.query.dsl.Flux
+import org.influxdata.query.dsl.functions.restriction.Restrictions
+import java.time.temporal.ChronoUnit
+
+private val token = "my_token".toCharArray()
+
+fun main(args: Array<String>) = runBlocking {
+
+    val influxDBClient = InfluxDBClientKotlinFactory.create("http://localhost:9999", token)
+
+    val mem = Flux.from("telegraf")
+            .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
+            .range(-30L, ChronoUnit.MINUTES)
+
+    //Result is returned as a stream
+    val results = influxDBClient.getQueryKotlinApi().query(mem.toString(), "my-org")
+
+    //Example of additional result stream processing on client side
+    results
+            //filter on client side using `filter` built-in operator
+            .filter { (it.value as Double) > 55 }
+            // take first 20 records
+            .take(20)
+            //print results
+            .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
+
+    influxDBClient.close()
+}
+```
  
 ## Version
 
@@ -140,7 +168,7 @@ The latest version for Maven dependency:
 ```xml
 <dependency>
   <groupId>org.influxdata</groupId>
-  <artifactId>flux-client-kotlin</artifactId>
+  <artifactId>influxdb-client-kotlin</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
@@ -148,7 +176,7 @@ The latest version for Maven dependency:
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "org.influxdata:flux-client-kotlin:1.0.0-SNAPSHOT"
+    compile "org.influxdata:influxdb-client-kotlin:1.0.0-SNAPSHOT"
 }
 ```
 

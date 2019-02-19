@@ -87,7 +87,7 @@ public abstract class AbstractTest {
 
     @Nonnull
     protected String getInfluxDb2Port() {
-        return System.getenv().getOrDefault("INFLUXDB_2_PORT", "9999");
+        return System.getenv().getOrDefault("INFLUXDB_2_PORT_API", "9999");
     }
 
     @Nonnull

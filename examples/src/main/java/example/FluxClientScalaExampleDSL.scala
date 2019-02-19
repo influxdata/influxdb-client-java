@@ -27,9 +27,9 @@ import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
 import org.influxdata.client.scala.InfluxDBClientScalaFactory
-import org.influxdata.flux.dsl.Flux
-import org.influxdata.flux.dsl.functions.restriction.Restrictions
 import org.influxdata.query.FluxRecord
+import org.influxdata.query.dsl.Flux
+import org.influxdata.query.dsl.functions.restriction.Restrictions
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration

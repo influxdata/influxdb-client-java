@@ -50,21 +50,20 @@ script:
 jobs:
   include:
   - stage: site
+    if: branch = master AND repo = bonitoo-io/influxdb-client-java AND type = push
     jdk: oraclejdk8
     script:
       - ./scripts/influxdb-restart.sh
       - ./scripts/publish-site.sh
 
   - stage: deploy
+    if: branch = master AND repo = bonitoo-io/influxdb-client-java AND type = push
     jdk: oraclejdk8
     script: skip
     deploy:
       provider: script
       script: mvn clean deploy -DskipTests -s scripts/deploy-settings.xml
       skip_cleanup: true
-      on:
-        repo: bonitoo-io/influxdb-client-java
-        branch: master
 
 after_failure:
   - cat target/surefire-reports/*.txt
