@@ -1,4 +1,4 @@
-# flux-java
+# influxdb-client-flux
 
 The reference Java library for the InfluxDB 1.7 `/v2/query` REST API using the [Flux language](http://bit.ly/flux-spec). 
 

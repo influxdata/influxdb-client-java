@@ -1,4 +1,4 @@
-# flux-client-kotlin
+# influxdb-client-kotlin
 
 The reference Kotlin client that allows you to perform [Flux queries](http://bit.ly/flux-spec) against InfluxDB 1.7+. 
 

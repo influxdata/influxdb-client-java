@@ -1,4 +1,4 @@
-# Built-in Flux functions
+# flux-dsl
 
 ## Operator properties
 There are four possibilities how to add properties to the functions.
