@@ -121,6 +121,46 @@ influxDBClient.setLogLevel(LogLevel.HEADERS)
 ### Check the server status 
 
 Server availability can be checked using the `influxDBClient.health()` endpoint.
+
+### Construct queries using the [flux-dsl](../flux-dsl) query builder
+
+```kotlin
+package example
+
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.channels.filter
+import kotlinx.coroutines.channels.take
+import kotlinx.coroutines.runBlocking
+import org.influxdata.client.kotlin.InfluxDBClientKotlinFactory
+import org.influxdata.flux.dsl.Flux
+import org.influxdata.flux.dsl.functions.restriction.Restrictions
+import java.time.temporal.ChronoUnit
+
+private val token = "my_token".toCharArray()
+
+fun main(args: Array<String>) = runBlocking {
+
+    val influxDBClient = InfluxDBClientKotlinFactory.create("http://localhost:9999", token)
+
+    val mem = Flux.from("telegraf")
+            .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
+            .range(-30L, ChronoUnit.MINUTES)
+
+    //Result is returned as a stream
+    val results = influxDBClient.getQueryKotlinApi().query(mem.toString(), "my-org")
+
+    //Example of additional result stream processing on client side
+    results
+            //filter on client side using `filter` built-in operator
+            .filter { (it.value as Double) > 55 }
+            // take first 20 records
+            .take(20)
+            //print results
+            .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
+
+    influxDBClient.close()
+}
+```
  
 ## Version
 

@@ -157,6 +157,63 @@ influxDBClient.setLogLevel(LogLevel.HEADERS)
 
 Server availability can be checked using the `influxDBClient.health()` endpoint.
 
+### Construct queries using the [flux-dsl](../flux-dsl) query builder
+
+```scala
+package example
+
+import java.time.temporal.ChronoUnit
+
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import akka.stream.scaladsl.Sink
+import org.influxdata.client.scala.InfluxDBClientScalaFactory
+import org.influxdata.flux.dsl.Flux
+import org.influxdata.flux.dsl.functions.restriction.Restrictions
+import org.influxdata.query.FluxRecord
+
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+
+/**
+ * @author Jakub Bednar (bednar@github) (08/11/2018 10:29)
+ */
+object FluxClientScalaExampleDSL {
+
+  implicit val system: ActorSystem = ActorSystem("it-tests")
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  
+  private val token = "my_token".toCharArray
+
+  def main(args: Array[String]) {
+
+    val influxDBClient = InfluxDBClientScalaFactory.create("http://localhost:9999", token)
+
+    val mem = Flux.from("telegraf")
+      .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
+      .range(-30L, ChronoUnit.MINUTES)
+
+    //Result is returned as a stream
+    val results = influxDBClient.getQueryScalaApi().query(mem.toString(), "my-org")
+
+    //Example of additional result stream processing on client side
+    val sink = results
+      //filter on client side using `filter` built-in operator
+      .filter(it => it.getValue.asInstanceOf[Double] > 55)
+      //take first 20 records
+      .take(20)
+      //print results
+      .runWith(Sink.foreach[FluxRecord](it => println(s"Measurement: ${it.getMeasurement}, value: ${it.getValue}")))
+
+    // wait to finish
+    Await.result(sink, Duration.Inf)
+
+    influxDBClient.close()
+    system.terminate()
+  }
+}
+```
+
 ## Version
 
 The latest version for Maven dependency:

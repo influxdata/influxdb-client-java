@@ -284,6 +284,48 @@ influxDBClient.setLogLevel(LogLevel.HEADERS)
 
 Server availability can be checked using the `influxDBClient.health()` endpoint.
 
+### Construct queries using the [flux-dsl](../flux-dsl) query builder
+
+```java
+package example;
+
+import org.influxdata.client.reactive.InfluxDBClientReactive;
+import org.influxdata.client.reactive.InfluxDBClientReactiveFactory;
+import org.influxdata.client.reactive.QueryReactiveApi;
+import org.influxdata.flux.dsl.Flux;
+import org.influxdata.flux.dsl.functions.restriction.Restrictions;
+
+public class ReactiveQuery {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token);
+
+        //
+        // Query data
+        //
+        Flux flux = Flux.from("temperature-sensors")
+                .filter(Restrictions.and(Restrictions.field().equal("pressure")))
+                .limit(10);
+
+        QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
+
+        queryApi
+                .query(flux.toString(), "org_id")
+                .subscribe(fluxRecord -> {
+                    //
+                    // The callback to consume a FluxRecord.
+                    //
+                    System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
+                });
+
+        influxDBClient.close();
+    }
+}
+```
+
 ## Version
 
 The latest version for Maven dependency:

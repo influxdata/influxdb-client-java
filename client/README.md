@@ -659,6 +659,50 @@ influxDBClient.setLogLevel(LogLevel.HEADERS)
 
 Server availability can be checked using the `influxDBClient.health()` endpoint.
 
+### Construct queries using the [flux-dsl](../flux-dsl) query builder
+```java
+package example;
+
+import java.util.List;
+
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.QueryApi;
+import org.influxdata.flux.dsl.Flux;
+import org.influxdata.flux.dsl.functions.restriction.Restrictions;
+import org.influxdata.query.FluxRecord;
+import org.influxdata.query.FluxTable;
+
+public class SynchronousQuery {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        Flux flux = Flux.from("temperature-sensors")
+                .filter(Restrictions.and(Restrictions.field().equal("pressure")))
+                .limit(10);
+
+        QueryApi queryApi = influxDBClient.getQueryApi();
+
+        //
+        // Query data
+        //
+        List<FluxTable> tables = queryApi.query(flux.toString(), "org_id");
+        for (FluxTable fluxTable : tables) {
+            List<FluxRecord> records = fluxTable.getRecords();
+            for (FluxRecord fluxRecord : records) {
+                System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
+            }
+        }
+
+        influxDBClient.close();
+    }
+}
+```
+
 ## Version
 
 The latest version for Maven dependency:
