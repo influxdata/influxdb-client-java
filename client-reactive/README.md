@@ -10,9 +10,9 @@ The reference Java client that allows query and write for the InfluxDB 2.0 by a 
 ## Features
  
 - [Querying data using Flux language](#queries)
-- [Writing data points using](#writes)
+- [Writing data using](#writes)
    - Line Protocol
-   - Point object 
+   - Data Point
    - POJO
 - [Advanced Usage](#advanced-usage)
          
@@ -174,7 +174,7 @@ public class ReactiveQueryPojo {
 
 For writing data we use [WriteReactiveApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/org/influxdata/client/reactive/WriteReactiveApi.html) that supports same configuration as [non reactive client](../client#writes):
 
-1. writing data points in Line Protocol
+1. writing data using Line Protocol, Data Point, POJO
 2. use batching for writes
 3. use client backpressure strategy
 4. produces events that allow user to be notified and react to this events

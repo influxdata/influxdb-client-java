@@ -10,9 +10,9 @@ The reference Java client that allows query, write and management (bucket, organ
 ## Features
  
 - [Querying data using Flux language](#queries)
-- [Writing data points using](#writes)
+- [Writing data using](#writes)
     - [Line Protocol](#by-lineprotocol) 
-    - [Point object](#by-data-point) 
+    - [Data Point](#by-data-point) 
     - [POJO](#by-measurement)
 - [InfluxDB 2.0 Management API](#management-api)
     - sources, buckets
@@ -317,7 +317,7 @@ public class RawQueryAsynchronous {
 
 For writing data we use [WriteApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/WriteApi.html) that supports:
 
-1. writing data points in [InfluxDB Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/) 
+1. writing data using [InfluxDB Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/), Data Point, POJO 
 2. use batching for writes
 3. use client backpressure strategy
 4. produces events that allow user to be notified and react to this events
@@ -651,7 +651,7 @@ influxDBClient.enableGzip();
 The Requests and Responses can be logged by changing the LogLevel. LogLevel values are NONE, BASIC, HEADER, BODY. Note that 
 applying the `BODY` LogLevel will disable chunking while streaming and will load the whole response into memory.  
 
-```kotlin
+```java
 influxDBClient.setLogLevel(LogLevel.HEADERS)
 ```
 

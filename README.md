@@ -28,9 +28,9 @@ This repository contains the reference JVM clients for the InfluxDB 2.0.
 - Supports querying using the Flux language over the InfluxDB 1.7+ REST API (`/api/v2/query endpoint`) 
 - InfluxDB 2.0 client
     - Querying data using the Flux language
-    - Writing data points using
+    - Writing data using
         - [Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/) 
-        - [Point object](https://github.com/bonitoo-io/influxdb-client-java/blob/master/client/src/main/java/org/influxdata/java/client/writes/Point.java#L76) 
+        - [Data Point](https://github.com/bonitoo-io/influxdb-client-java/blob/master/client/src/main/java/org/influxdata/client/write/Point.java#L46) 
         - POJO
     - InfluxDB 2.0 Management API client for managing
         - sources, buckets
