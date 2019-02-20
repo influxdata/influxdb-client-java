@@ -77,7 +77,7 @@ public final class Task extends AbstractHasLinks {
     /**
      * Timestamp of latest scheduled, completed run, RFC3339.
      */
-    @Json(name = "latest_completed")
+    @Json(name = "latestCompleted")
     private Instant latestCompleted;
 
     public String getId() {

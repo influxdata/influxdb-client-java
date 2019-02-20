@@ -231,6 +231,8 @@ class ITUsersApiTest extends AbstractITClientTest {
     }
 
     @Test
+    //TODO - https://github.com/influxdata/influxdb/issues/11999
+    @Disabled
     void findUserLogs() {
 
         Instant now = Instant.now();
@@ -254,7 +256,9 @@ class ITUsersApiTest extends AbstractITClientTest {
     }
 
     @Test
-    void findBucketLogsPaging() {
+    //TODO - https://github.com/influxdata/influxdb/issues/11999
+    @Disabled
+    void findUserLogsPaging() {
 
         User user = usersApi.createUser(generateName("Thomas Boot"));
 

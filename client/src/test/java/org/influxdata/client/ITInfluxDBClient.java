@@ -107,7 +107,7 @@ class ITInfluxDBClient extends AbstractITClientTest {
 
         influxDBClient.close();
 
-        OnboardingResponse onboarding = InfluxDBClientFactory.onBoarding(url, "admin", "111111", "Testing", "test");
+        OnboardingResponse onboarding = InfluxDBClientFactory.onBoarding(url, "admin", "11111111", "Testing", "test");
 
         Assertions.assertThat(onboarding).isNotNull();
         Assertions.assertThat(onboarding.getUser()).isNotNull();
@@ -142,7 +142,7 @@ class ITInfluxDBClient extends AbstractITClientTest {
 
         Onboarding onboarding = new Onboarding();
         onboarding.setUsername("admin");
-        onboarding.setPassword("111111");
+        onboarding.setPassword("11111111");
         onboarding.setOrg("Testing");
         onboarding.setBucket("test");
 

@@ -42,7 +42,6 @@ import org.influxdata.client.domain.Status;
 import org.influxdata.client.domain.Task;
 import org.influxdata.client.domain.Tasks;
 import org.influxdata.client.domain.User;
-import org.influxdata.exceptions.InternalServerErrorException;
 import org.influxdata.exceptions.NotFoundException;
 
 import com.squareup.moshi.JsonAdapter;
@@ -466,8 +465,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
         Call<List<String>> logs = influxDBService.findRunLogs(taskID, runID, orgID);
 
-        //TODO change to NotFoundException - https://github.com/influxdata/influxdb/issues/11960
-        return execute(logs, InternalServerErrorException.class, new ArrayList<>());
+        return execute(logs, NotFoundException.class, new ArrayList<>());
     }
 
     @Nullable

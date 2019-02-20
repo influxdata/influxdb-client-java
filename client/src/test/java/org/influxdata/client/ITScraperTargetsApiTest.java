@@ -35,7 +35,6 @@ import org.influxdata.client.domain.User;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -139,8 +138,6 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/11767
     void member() {
 
         ScraperTarget scraper =  scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
@@ -170,8 +167,6 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/11767
     void owner() {
 
         ScraperTarget scraper =  scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
@@ -201,8 +196,6 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/11767
     void labels() {
 
         LabelsApi labelsApi = influxDBClient.getLabelsApi();

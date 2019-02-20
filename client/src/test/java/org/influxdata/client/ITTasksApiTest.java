@@ -400,8 +400,6 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(runs).hasSize(0);
     }
 
-    @Disabled
-    //TODO wait to change InternalServerErrorException to NotFoundException - https://github.com/influxdata/influxdb/issues/11960
     @Test
     void runsByTime() throws InterruptedException {
 
