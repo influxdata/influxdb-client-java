@@ -79,7 +79,7 @@
 
     <scm>
         <connection>scm:git:git://github.com/bonitoo-io/influxdb-client-java.git</connection>
-        <developerConnection>scm:git:ssh://github.com:influxdata/influxdb-client-java.git</developerConnection>
+        <developerConnection>scm:git:ssh://github.com/bonitoo-io/influxdb-client-java.git</developerConnection>
         <url>http://github.com/bonitoo-io/influxdb-client-java/tree/master</url>
     </scm>
 

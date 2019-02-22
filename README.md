@@ -10,14 +10,14 @@
 [![GitHub issues](https://img.shields.io/github/issues-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/pulls)
 
-This repository contains the reference JVM clients for the InfluxDB 2.0.
+This repository contains the reference JVM clients for the InfluxDB 2.0. Currently, Java, Reactive, Kotlin and Scala clients are implemented.
 
 - [Features](#features)
 - [Documentation](#documentation)
 - [How To Use](#how-to-use)
-    - [Flux queries in InfluxDB 1.7+](#flux-queries-in-influxdb-17)
     - [Writes and Queries in InfluxDB 2.0](#writes-and-queries-in-influxdb-20)
     - [Use Management API to create a new Bucket in InfluxDB 2.0](#use-management-api-to-create-a-new-bucket-in-influxdb-20)
+    - [Flux queries in InfluxDB 1.7+](#flux-queries-in-influxdb-17)
 - [Build Requirements](#build-requirements)
 - [Contributing](#contributing)
 - [License](#license)
@@ -25,7 +25,6 @@ This repository contains the reference JVM clients for the InfluxDB 2.0.
 
 ## Features
 
-- Supports querying using the Flux language over the InfluxDB 1.7+ REST API (`/api/v2/query endpoint`) 
 - InfluxDB 2.0 client
     - Querying data using the Flux language
     - Writing data using
@@ -38,122 +37,94 @@ This repository contains the reference JVM clients for the InfluxDB 2.0.
         - authorizations
         - health check
         - ...
+- Supports querying using the Flux language over the InfluxDB 1.7+ REST API (`/api/v2/query endpoint`) 
          
 ## Documentation
 
-- **[client](./client)** 
-    - The reference Java client that allows query, write and InfluxDB 2.0 management.
-    - [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html), [readme](./client#influxdb-client-java/)
-    
-- **[client-reactive](./client-reactive)** 
-    - The reference RxJava client for the InfluxDB 2.0 that allows query and write in a reactive way.
-    - [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/index.html), [readme](./client-reactive#influxdb-client-reactive/)    
+The Java, Reactive, Kotlin and Scala clients are implemented for the InfluxDB 2.0:
 
-- **[client-kotlin](./client-kotlin)** 
-    - The reference Kotlin client that allows query and write for the InfluxDB 2.0 by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html).
-    - [KDoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/org.influxdata.client.kotlin/index.html), [readme](./client-kotlin#influxdb-client-kotlin/)
+| Client | Description | Documentation | Compatibility |
+| --- | --- | --- |                                      --- |
+| **[java](./client)** | The reference Java client that allows query, write and InfluxDB 2.0 management. |  [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html), [readme](./client#influxdb-client-java/)| 2.0 |
+| **[reactive](./client-reactive)**  | The reference RxJava client for the InfluxDB 2.0 that allows query and write in a reactive way.| [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html), [readme](./client#influxdb-client-java/) |2.0 |
+| **[kotlin](./client-kotlin)** | The reference Kotlin client that allows query and write for the InfluxDB 2.0 by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html). | [KDoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/org.influxdata.client.kotlin/index.html), [readme](./client-kotlin#influxdb-client-kotlin/) | 2.0|
+| **[scala](./client-scala)** | The reference Scala client that allows query and write for the InfluxDB 2.0 by [Akka Streams](https://doc.akka.io/docs/akka/2.5/stream/). | [Scaladoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-scala/scaladocs/org/influxdata/client/scala/index.html), [readme](./client-scala#influxdb-client-scala/) | 2.0 |
 
-- **[client-scala](./client-scala)** 
-    - The reference Scala client that allows query and write for the InfluxDB 2.0 by [Akka Streams](https://doc.akka.io/docs/akka/2.5/stream/).
-    -  [Scaladoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-scala/scaladocs/org/influxdata/client/scala/index.html), [readme](./client-scala#influxdb-client-scala/)
+There is also possibility to use the Flux language over the InfluxDB 1.7+ provided by: 
 
-- **[client-legacy](./client-legacy)** 
-    - The reference Java client that allows you to perform Flux queries against InfluxDB 1.7+.
-    - [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-flux/apidocs/index.html), [readme](./client-legacy#influxdb-client-flux/)
+| Client | Description | Documentation | Compatibility |
+| --- | --- | --- |                                      --- |
+| **[flux](./client-legacy)** | The reference Java client that allows you to perform Flux queries against InfluxDB 1.7+. | [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-flux/apidocs/index.html), [readme](./client-legacy#influxdb-client-flux/) | 1.7+ |
 
-- **[flux-dsl](./flux-dsl)** 
-    - A Java query builder for the Flux language   
-    - [javadoc](https://bonitoo-io.github.io/influxdb-client-java/flux-dsl/apidocs/index.html), [readme](./flux-dsl#flux-dsl/)
-    
-## How To Use   
-
-### Flux queries in InfluxDB 1.7+
-
-The REST endpoint `/api/v2/query` for querying using the **Flux** language has been introduced with InfluxDB 1.7.
-
-The following example demonstrates querying using the Flux language: 
+The last useful part is  **[flux-dsl](./flux-dsl)** that helps construct Flux query by Query builder pattern:
 
 ```java
-package example;
-
-import org.influxdata.client.flux.FluxClient;
-import org.influxdata.client.flux.FluxClientFactory;
-
-public class FluxExample {
-
-  public static void main(String[] args) {
-
-    FluxClient fluxClient = FluxClientFactory.create(
-        "http://localhost:8086/");
-    
-    //
-    // Flux
-    //
-    String flux = "from(bucket: \"telegraf\")\n" +
-        " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))" +
-        " |> range(start: -1d)" +
-        " |> sample(n: 5, pos: 1)";
-    
-    //
-    // Synchronous query
-    //
-    List<FluxTable> tables = fluxClient.query(flux);
-    
-    for (FluxTable fluxTable : tables) {
-        List<FluxRecord> records = fluxTable.getRecords();
-        for (FluxRecord fluxRecord : records) {
-            System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
-        }
-    }
-    
-    //
-    // Asynchronous query
-    //
-    fluxClient.query(flux, (cancellable, record) -> {
-        
-        // process the flux query result record
-        System.out.println(record.getTime() + ": " + record.getValue());
-    
-    }, error -> {
-       
-        // error handling while processing result
-        System.out.println("Error occurred: "+ error.getMessage());
-    
-    }, () -> {
-        
-        // on complete
-        System.out.println("Query completed");
-    });
-    
-    fluxClient.close();
-  }
-}
-
+Flux flux = Flux
+    .from("telegraf")
+    .window(15L, ChronoUnit.MINUTES, 20L, ChronoUnit.SECONDS)
+    .sum();
 ```
 
-**Dependecies**
+| Module | Description | Documentation | Compatibility |
+| --- | --- | --- |                                      --- |
+| **[flux-dsl](./flux-dsl)** | A Java query builder for the Flux language | [javadoc](https://bonitoo-io.github.io/influxdb-client-java/flux-dsl/apidocs/index.html), [readme](./flux-dsl#flux-dsl/)| 1.7+, 2.0 |
 
-The latest version for Maven dependency:
 
-```XML
-<dependency>
-    <groupId>org.influxdata</groupId>
-    <artifactId>influxdb-client-flux</artifactId>
-    <version>1.0-SNAPSHOT</version>
-</dependency>
+## How To Use  
+
+This clients are a work in progress and hosted in Bonitoo.io Snapshot Repository. 
+
+If you want to use it with the Maven, you have to add the Bonitoo.io Snapshot Repository to your pom.xml:
+
+```xml
+<repositories>
+    <repository>
+        <id>bonitoo-snapshot</id>
+        <name>Bonitoo.io snapshot repository</name>
+        <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
+        <releases>
+            <enabled>false</enabled>
+        </releases>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
 ```
-       
-Or when using Gradle:
+
+or when using Gradle add:
 
 ```groovy
-dependencies {
-    compile "org.influxdata:influxdb-client-flux:1.0.0-SNAPSHOT"
+repositories{
+    maven {url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot/"}
 }
 ```
 
 ### Writes and Queries in InfluxDB 2.0
 
-The following example demonstrates how to write data to InfluxDB 2.0 and read them back using the Flux language:
+The following example demonstrates how to write data to InfluxDB 2.0 and read them back using the Flux language.
+
+#### Installation
+
+Download the latest version:
+
+##### Maven dependency:
+
+```XML
+<dependency>
+    <groupId>org.influxdata</groupId>
+    <artifactId>influxdb-client-java</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
+```
+       
+##### Or when using Gradle:
+
+```groovy
+dependencies {
+    compile "org.influxdata:influxdb-client-java:1.0.0-SNAPSHOT"
+}
+```
 
 ```java
 package example;
@@ -244,9 +215,15 @@ public class InfluxDB2Example {
 }
 ```
 
-**Dependecies**
+### Use Management API to create a new Bucket in InfluxDB 2.0  
 
-The latest version for Maven dependency:
+The following example demonstrates how to use a InfluxDB 2.0 Management API. For further information see [client documentation](./client#management-api).
+
+#### Installation
+
+Download the latest version:
+
+##### Maven dependency:
 
 ```XML
 <dependency>
@@ -256,17 +233,13 @@ The latest version for Maven dependency:
 </dependency>
 ```
        
-Or when using Gradle:
+##### Or when using Gradle:
 
 ```groovy
 dependencies {
     compile "org.influxdata:influxdb-client-java:1.0.0-SNAPSHOT"
 }
 ```
-
-### Use Management API to create a new Bucket in InfluxDB 2.0  
-
-The following example demonstrates how to use a InfluxDB 2.0 Management API. For further information see [client documentation](./client#management-api).
 
 ```java
 package example;
@@ -327,6 +300,90 @@ public class InfluxDB2ManagementExample {
         influxDBClient.close();
     }
 }
+``` 
+
+### Flux queries in InfluxDB 1.7+
+
+The following example demonstrates querying using the Flux language.
+
+#### Installation
+
+Download the latest version:
+
+##### Maven dependency:
+
+```XML
+<dependency>
+    <groupId>org.influxdata</groupId>
+    <artifactId>influxdb-client-flux</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
+```
+       
+##### Or when using Gradle:
+
+```groovy
+dependencies {
+    compile "org.influxdata:influxdb-client-flux:1.0.0-SNAPSHOT"
+}
+``` 
+
+```java
+package example;
+
+import org.influxdata.client.flux.FluxClient;
+import org.influxdata.client.flux.FluxClientFactory;
+
+public class FluxExample {
+
+  public static void main(String[] args) {
+
+    FluxClient fluxClient = FluxClientFactory.create(
+        "http://localhost:8086/");
+    
+    //
+    // Flux
+    //
+    String flux = "from(bucket: \"telegraf\")\n" +
+        " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))" +
+        " |> range(start: -1d)" +
+        " |> sample(n: 5, pos: 1)";
+    
+    //
+    // Synchronous query
+    //
+    List<FluxTable> tables = fluxClient.query(flux);
+    
+    for (FluxTable fluxTable : tables) {
+        List<FluxRecord> records = fluxTable.getRecords();
+        for (FluxRecord fluxRecord : records) {
+            System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
+        }
+    }
+    
+    //
+    // Asynchronous query
+    //
+    fluxClient.query(flux, (cancellable, record) -> {
+        
+        // process the flux query result record
+        System.out.println(record.getTime() + ": " + record.getValue());
+    
+    }, error -> {
+       
+        // error handling while processing result
+        System.out.println("Error occurred: "+ error.getMessage());
+    
+    }, () -> {
+        
+        // on complete
+        System.out.println("Query completed");
+    });
+    
+    fluxClient.close();
+  }
+}
+
 ```
 
 ## Build Requirements
@@ -360,34 +417,6 @@ If you have Docker running, but it is not available over localhost (e.g. you are
 ```bash
 $ export INFLUXDB_IP=192.168.99.100
 $ mvn test
-```
-
-### Snapshot Repository
-
-**Maven**:
-
-```xml
-<repositories>
-    <repository>
-        <id>bonitoo-snapshot</id>
-        <name>Bonitoo.io snapshot repository</name>
-        <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
-        <releases>
-            <enabled>false</enabled>
-        </releases>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-    </repository>
-</repositories>
-```
-
-**Gradle:**
-
-```groovy
-repositories{
-    maven {url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot/"}
-}
 ```
 
 ## Contributing
