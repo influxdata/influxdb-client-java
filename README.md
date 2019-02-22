@@ -74,7 +74,7 @@ Flux flux = Flux
 
 This clients are a work in progress and hosted in Bonitoo.io Snapshot Repository. 
 
-If you want to use it with the Maven, you have to add a Bonitoo.io Snapshot Repository to your pom.xml:
+If you want to use it with the Maven, you have to add the Bonitoo.io Snapshot Repository to your pom.xml:
 
 ```xml
 <repositories>
