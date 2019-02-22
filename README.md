@@ -72,6 +72,34 @@ Flux flux = Flux
 
 ## How To Use  
 
+This clients are a work in progress and hosted in Bonitoo.io Snapshot Repository. 
+
+If you want to use it with the Maven, you have to add a Bonitoo.io Snapshot Repository to your pom.xml:
+
+```xml
+<repositories>
+    <repository>
+        <id>bonitoo-snapshot</id>
+        <name>Bonitoo.io snapshot repository</name>
+        <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
+        <releases>
+            <enabled>false</enabled>
+        </releases>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+```
+
+or when using Gradle add:
+
+```groovy
+repositories{
+    maven {url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot/"}
+}
+```
+
 ### Writes and Queries in InfluxDB 2.0
 
 The following example demonstrates how to write data to InfluxDB 2.0 and read them back using the Flux language.
@@ -184,26 +212,6 @@ public class InfluxDB2Example {
         @Column(timestamp = true)
         Instant time;
     }
-}
-```
-
-**Dependecies**
-
-The latest version for Maven dependency:
-
-```XML
-<dependency>
-    <groupId>org.influxdata</groupId>
-    <artifactId>influxdb-client-java</artifactId>
-    <version>1.0-SNAPSHOT</version>
-</dependency>
-```
-       
-Or when using Gradle:
-
-```groovy
-dependencies {
-    compile "org.influxdata:influxdb-client-java:1.0.0-SNAPSHOT"
 }
 ```
 
@@ -409,34 +417,6 @@ If you have Docker running, but it is not available over localhost (e.g. you are
 ```bash
 $ export INFLUXDB_IP=192.168.99.100
 $ mvn test
-```
-
-### Snapshot Repository
-
-**Maven**:
-
-```xml
-<repositories>
-    <repository>
-        <id>bonitoo-snapshot</id>
-        <name>Bonitoo.io snapshot repository</name>
-        <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
-        <releases>
-            <enabled>false</enabled>
-        </releases>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-    </repository>
-</repositories>
-```
-
-**Gradle:**
-
-```groovy
-repositories{
-    maven {url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot/"}
-}
 ```
 
 ## Contributing
