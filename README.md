@@ -43,18 +43,18 @@ This repository contains the reference JVM clients for the InfluxDB 2.0. Current
 
 The Java, Reactive, Kotlin and Scala clients are implemented for the InfluxDB 2.0:
 
-| Module | Description | Documentation | Compatibility |
+| Client | Description | Documentation | Compatibility |
 | --- | --- | --- |                                      --- |
-| **[client-java](./client)** | The reference Java client that allows query, write and InfluxDB 2.0 management. |  [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html), [readme](./client#influxdb-client-java/)| 2.0 |
-| **[client-reactive](./client-reactive)**  | The reference RxJava client for the InfluxDB 2.0 that allows query and write in a reactive way.| [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html), [readme](./client#influxdb-client-java/) |2.0 |
-| **[client-kotlin](./client-kotlin)** | The reference Kotlin client that allows query and write for the InfluxDB 2.0 by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html). | [KDoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/org.influxdata.client.kotlin/index.html), [readme](./client-kotlin#influxdb-client-kotlin/) | 2.0|
-| **[client-scala](./client-scala)** | The reference Scala client that allows query and write for the InfluxDB 2.0 by [Akka Streams](https://doc.akka.io/docs/akka/2.5/stream/). | [Scaladoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-scala/scaladocs/org/influxdata/client/scala/index.html), [readme](./client-scala#influxdb-client-scala/) | 2.0 |
+| **[java](./client)** | The reference Java client that allows query, write and InfluxDB 2.0 management. |  [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html), [readme](./client#influxdb-client-java/)| 2.0 |
+| **[reactive](./client-reactive)**  | The reference RxJava client for the InfluxDB 2.0 that allows query and write in a reactive way.| [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html), [readme](./client#influxdb-client-java/) |2.0 |
+| **[kotlin](./client-kotlin)** | The reference Kotlin client that allows query and write for the InfluxDB 2.0 by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html). | [KDoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/org.influxdata.client.kotlin/index.html), [readme](./client-kotlin#influxdb-client-kotlin/) | 2.0|
+| **[scala](./client-scala)** | The reference Scala client that allows query and write for the InfluxDB 2.0 by [Akka Streams](https://doc.akka.io/docs/akka/2.5/stream/). | [Scaladoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-scala/scaladocs/org/influxdata/client/scala/index.html), [readme](./client-scala#influxdb-client-scala/) | 2.0 |
 
 There is also possibility to use the Flux language over the InfluxDB 1.7+ provided by: 
 
-| Module | Description | Documentation | Compatibility |
+| Client | Description | Documentation | Compatibility |
 | --- | --- | --- |                                      --- |
-| **[client-flux](./client-legacy)** | The reference Java client that allows you to perform Flux queries against InfluxDB 1.7+. | [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-flux/apidocs/index.html), [readme](./client-legacy#influxdb-client-flux/) | 1.7+ |
+| **[flux](./client-legacy)** | The reference Java client that allows you to perform Flux queries against InfluxDB 1.7+. | [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-flux/apidocs/index.html), [readme](./client-legacy#influxdb-client-flux/) | 1.7+ |
 
 The last useful part is  **[flux-dsl](./flux-dsl)** that helps construct Flux query by Query builder pattern:
 
