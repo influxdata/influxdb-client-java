@@ -187,7 +187,8 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
         Organization organization = organizationsApi.createOrganization(generateName("Constant Pro"));
 
         List<ResourceMember> owners = organizationsApi.getOwners(organization);
-        Assertions.assertThat(owners).hasSize(0);
+        Assertions.assertThat(owners).hasSize(1);
+        Assertions.assertThat(owners.get(0).getUserName()).isEqualTo("my-user");
 
         User user = usersApi.createUser(generateName("Luke Health"));
 
@@ -198,15 +199,15 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
         Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.OWNER);
 
         owners = organizationsApi.getOwners(organization);
-        Assertions.assertThat(owners).hasSize(1);
-        Assertions.assertThat(owners.get(0).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
-        Assertions.assertThat(owners.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(owners.get(0).getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(owners).hasSize(2);
+        Assertions.assertThat(owners.get(1).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
+        Assertions.assertThat(owners.get(1).getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(owners.get(1).getUserName()).isEqualTo(user.getName());
 
         organizationsApi.deleteOwner(user, organization);
 
         owners = organizationsApi.getOwners(organization);
-        Assertions.assertThat(owners).hasSize(0);
+        Assertions.assertThat(owners).hasSize(1);
     }
 
     @Test

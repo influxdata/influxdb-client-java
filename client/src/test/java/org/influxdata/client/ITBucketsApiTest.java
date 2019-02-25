@@ -267,7 +267,8 @@ class ITBucketsApiTest extends AbstractITClientTest {
         Bucket bucket = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);
 
         List<ResourceMember> owners = bucketsApi.getOwners(bucket);
-        Assertions.assertThat(owners).hasSize(0);
+        Assertions.assertThat(owners).hasSize(1);
+        Assertions.assertThat(owners.get(0).getUserName()).isEqualTo("my-user");
 
         User user = usersApi.createUser(generateName("Luke Health"));
 
@@ -278,15 +279,15 @@ class ITBucketsApiTest extends AbstractITClientTest {
         Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.OWNER);
 
         owners = bucketsApi.getOwners(bucket);
-        Assertions.assertThat(owners).hasSize(1);
-        Assertions.assertThat(owners.get(0).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
-        Assertions.assertThat(owners.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(owners.get(0).getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(owners).hasSize(2);
+        Assertions.assertThat(owners.get(1).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
+        Assertions.assertThat(owners.get(1).getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(owners.get(1).getUserName()).isEqualTo(user.getName());
 
         bucketsApi.deleteOwner(user, bucket);
 
         owners = bucketsApi.getOwners(bucket);
-        Assertions.assertThat(owners).hasSize(0);
+        Assertions.assertThat(owners).hasSize(1);
     }
 
     @Test
