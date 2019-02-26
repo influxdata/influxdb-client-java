@@ -1,5 +1,6 @@
 org.influxdata.client
 org.influxdata.client.domain
 org.influxdata.client.internal
+org.influxdata.client.internal.annotations
 org.influxdata.client.write
 org.influxdata.client.write.events
