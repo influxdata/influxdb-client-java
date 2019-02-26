@@ -114,15 +114,14 @@ class ITTasksApiTest extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO report that offset is not returned
     void createTaskWithOffset() {
 
         String taskName = generateName("it task");
         
         String flux = "option task = {\n"
                 + "    name: \"" + taskName + "\",\n"
-                + "    every: 1h\n"
+                + "    every: 1h,\n"
+                + "    offset: 30m\n"
                 + "}\n\n" + TASK_FLUX;
 
         Task task = new Task();
@@ -130,12 +129,11 @@ class ITTasksApiTest extends AbstractITClientTest {
         task.setOrgID(organization.getId());
         task.setFlux(flux);
         task.setStatus(Status.ACTIVE);
-        task.setOffset("30m");
 
         task = tasksApi.createTask(task);
 
         Assertions.assertThat(task).isNotNull();
-        Assertions.assertThat(task.getOffset()).isEqualTo("30m");
+        Assertions.assertThat(task.getOffset()).isEqualTo("30m0s");
     }
 
     @Test
@@ -287,8 +285,6 @@ class ITTasksApiTest extends AbstractITClientTest {
                 + "}\n\n" + TASK_FLUX;
 
         cronTask.setFlux(flux);
-        cronTask.setEvery("2m");
-        cronTask.setCron("");
         cronTask.setStatus(Status.INACTIVE);
 
         Task updatedTask = tasksApi.updateTask(cronTask);
@@ -297,9 +293,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(updatedTask.getId()).isEqualTo(cronTask.getId());
         Assertions.assertThat(updatedTask.getEvery()).isEqualTo("2m0s");
         Assertions.assertThat(updatedTask.getCron()).isNull();
-        Assertions.assertThat(updatedTask.getFlux()).endsWith("from(bucket: \"my-bucket\")\n"
-                + "\t|> range(start: 0)\n"
-                + "\t|> last()");
+        Assertions.assertThat(updatedTask.getFlux()).isEqualTo(flux);
         Assertions.assertThat(updatedTask.getStatus()).isEqualTo(Status.INACTIVE);
         Assertions.assertThat(updatedTask.getOrgID()).isEqualTo(cronTask.getOrgID());
         Assertions.assertThat(updatedTask.getName()).isEqualTo(cronTask.getName());

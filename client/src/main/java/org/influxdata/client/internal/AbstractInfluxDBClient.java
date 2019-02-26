@@ -37,14 +37,17 @@ import javax.annotation.Nullable;
 import org.influxdata.Arguments;
 import org.influxdata.client.InfluxDBClientOptions;
 import org.influxdata.client.domain.Health;
+import org.influxdata.client.internal.annotations.ToNullJson;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.internal.AbstractRestClient;
 
+import com.squareup.moshi.FromJson;
 import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
+import com.squareup.moshi.ToJson;
 import com.squareup.moshi.Types;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -92,6 +95,7 @@ public abstract class AbstractInfluxDBClient<T> extends AbstractRestClient {
                 //
                 // Unknown enum value to null
                 //
+                .add(new NullToEmptyStringAdapter())
                 .add(new JsonAdapter.Factory() {
                     @Nullable
                     @Override
@@ -235,6 +239,20 @@ public abstract class AbstractInfluxDBClient<T> extends AbstractRestClient {
         @Override
         public String toString() {
             return "EnumJsonAdapter(" + enumType.getName() + ")";
+        }
+    }
+
+    private final class NullToEmptyStringAdapter {
+
+        @ToJson
+        public String toJson(@SuppressWarnings("unused") @Nullable @ToNullJson final String value) {
+            return null;
+        }
+
+        @FromJson
+        @ToNullJson
+        public String fromJson(@Nullable final String data) {
+            return data;
         }
     }
 }

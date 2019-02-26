@@ -24,6 +24,8 @@ package org.influxdata.client.domain;
 import java.time.Instant;
 import java.util.StringJoiner;
 
+import org.influxdata.client.internal.annotations.ToNullJson;
+
 import com.squareup.moshi.Json;
 
 /**
@@ -58,16 +60,19 @@ public final class Task extends AbstractHasLinks {
     /**
      * A simple task repetition schedule (duration type); parsed from Flux.
      */
+    @ToNullJson
     private String every;
 
     /**
      * A task repetition schedule in the form '* * * * * *'; parsed from Flux.
      */
+    @ToNullJson
     private String cron;
 
     /**
      * Duration to delay after the schedule, before executing the task; parsed from flux.
      */
+    @ToNullJson
     private String offset;
 
     private Instant createdAt;
@@ -124,24 +129,12 @@ public final class Task extends AbstractHasLinks {
         return every;
     }
 
-    public void setEvery(final String every) {
-        this.every = every;
-    }
-
     public String getCron() {
         return cron;
     }
 
-    public void setCron(final String cron) {
-        this.cron = cron;
-    }
-
     public String getOffset() {
         return offset;
-    }
-
-    public void setOffset(final String offset) {
-        this.offset = offset;
     }
 
     public Instant getCreatedAt() {

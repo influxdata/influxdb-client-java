@@ -600,8 +600,6 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         task.setName(name);
         task.setOrgID(orgID);
         task.setStatus(Status.ACTIVE);
-        task.setEvery(every);
-        task.setCron(cron);
         task.setFlux(flux);
 
         String repetition = "";
