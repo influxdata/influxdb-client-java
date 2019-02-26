@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import org.influxdata.client.domain.Authorization;
+import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
@@ -649,12 +650,30 @@ class ITTasksApiTest extends AbstractITClientTest {
         createAuth.setAction(Permission.WRITE_ACTION);
         createAuth.setResource(userResource);
 
+        Bucket bucket = influxDBClient.getBucketsApi().findBucketByName("my-bucket");
+        Assertions.assertThat(bucket).isNotNull();
+
+        PermissionResource bucketResource = new PermissionResource();
+        bucketResource.setOrgID(organization.getId());
+        bucketResource.setType(ResourceType.BUCKETS);
+        bucketResource.setId(bucket.getId());
+
+        Permission readBucket = new Permission();
+        readBucket.setResource(bucketResource);
+        readBucket.setAction(Permission.READ_ACTION);
+
+        Permission writeBucket = new Permission();
+        writeBucket.setResource(bucketResource);
+        writeBucket.setAction(Permission.WRITE_ACTION);
+
         List<Permission> permissions = new ArrayList<>();
         permissions.add(createTask);
         permissions.add(deleteTask);
         permissions.add(createOrg);
         permissions.add(createUsers);
         permissions.add(createAuth);
+        permissions.add(readBucket);
+        permissions.add(writeBucket);
 
         return influxDBClient.getAuthorizationsApi().createAuthorization(organization, permissions);
     }
