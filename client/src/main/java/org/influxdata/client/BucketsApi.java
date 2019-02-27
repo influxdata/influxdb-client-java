@@ -128,7 +128,7 @@ public interface BucketsApi {
      *
      * @param clonedName name of cloned bucket
      * @param bucketID   ID of bucket to clone
-     * @return new bucket
+     * @return cloned bucket
      */
     @Nonnull
     Bucket cloneBucket(@Nonnull final String clonedName, @Nonnull final String bucketID);
@@ -138,7 +138,7 @@ public interface BucketsApi {
      *
      * @param clonedName name of cloned bucket
      * @param bucket     bucket to clone
-     * @return new bucket
+     * @return cloned bucket
      */
     @Nonnull
     Bucket cloneBucket(@Nonnull final String clonedName, @Nonnull final Bucket bucket);

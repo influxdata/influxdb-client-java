@@ -170,6 +170,34 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
         execute(call);
     }
 
+    @Nonnull
+    @Override
+    public User cloneUser(@Nonnull final String clonedName, @Nonnull final String userID) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNonEmpty(userID, "userID");
+
+        User user = findUserByID(userID);
+        if (user == null) {
+            throw new IllegalStateException("NotFound User with ID: " + userID);
+        }
+
+        return cloneUser(clonedName, user);
+    }
+
+    @Nonnull
+    @Override
+    public User cloneUser(@Nonnull final String clonedName, @Nonnull final User user) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNotNull(user, "User");
+
+        User cloned = new User();
+        cloned.setName(clonedName);
+
+        return createUser(cloned);
+    }
+
     @Nullable
     @Override
     public User me() {

@@ -335,4 +335,23 @@ class ITUsersApiTest extends AbstractITClientTest {
         Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("User Updated");
         Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Created");
     }
+
+    @Test
+    void cloneUser() {
+
+        User source = usersApi.createUser(generateName("John Ryzen"));
+
+        String name = generateName("cloned");
+
+        User cloned = usersApi.cloneUser(name, source.getId());
+
+        Assertions.assertThat(cloned.getName()).isEqualTo(name);
+    }
+
+    @Test
+    void cloneUserNotFound() {
+        Assertions.assertThatThrownBy(() -> usersApi.cloneUser(generateName("cloned"), "020f755c3c082000"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("NotFound User with ID: 020f755c3c082000");
+    }
 }

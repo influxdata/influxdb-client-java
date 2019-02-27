@@ -87,7 +87,7 @@ public interface OrganizationsApi {
      *
      * @param clonedName name of cloned organization
      * @param orgID      ID of organization to clone
-     * @return new organization
+     * @return cloned organization
      */
     @Nonnull
     Organization cloneOrganization(@Nonnull final String clonedName, @Nonnull final String orgID);
@@ -97,7 +97,7 @@ public interface OrganizationsApi {
      *
      * @param clonedName   name of cloned organization
      * @param organization organization to clone
-     * @return new organization
+     * @return cloned organization
      */
     @Nonnull
     Organization cloneOrganization(@Nonnull final String clonedName, @Nonnull final Organization organization);
