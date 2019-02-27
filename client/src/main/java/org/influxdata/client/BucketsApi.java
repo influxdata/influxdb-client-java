@@ -124,6 +124,26 @@ public interface BucketsApi {
     void deleteBucket(@Nonnull final String bucketID);
 
     /**
+     * Clone a bucket.
+     *
+     * @param clonedName name of cloned bucket
+     * @param bucketID   ID of bucket to clone
+     * @return new bucket
+     */
+    @Nonnull
+    Bucket cloneBucket(@Nonnull final String clonedName, @Nonnull final String bucketID);
+
+    /**
+     * Clone a bucket.
+     *
+     * @param clonedName name of cloned bucket
+     * @param bucket     bucket to clone
+     * @return new bucket
+     */
+    @Nonnull
+    Bucket cloneBucket(@Nonnull final String clonedName, @Nonnull final Bucket bucket);
+
+    /**
      * Retrieve a bucket.
      *
      * @param bucketID ID of bucket to get
