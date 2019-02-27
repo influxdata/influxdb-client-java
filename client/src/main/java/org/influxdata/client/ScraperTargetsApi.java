@@ -87,6 +87,26 @@ public interface ScraperTargetsApi {
     void deleteScraperTarget(@Nonnull final String scraperTargetID);
 
     /**
+     * Clone a ScraperTarget.
+     *
+     * @param clonedName      name of cloned ScraperTarget
+     * @param scraperTargetID ID of ScraperTarget to clone
+     * @return cloned ScraperTarget
+     */
+    @Nonnull
+    ScraperTarget cloneScraperTarget(@Nonnull final String clonedName, @Nonnull final String scraperTargetID);
+
+    /**
+     * Clone a ScraperTarget.
+     *
+     * @param clonedName    name of cloned ScraperTarget
+     * @param scraperTarget ScraperTarget to clone
+     * @return cloned ScraperTarget
+     */
+    @Nonnull
+    ScraperTarget cloneScraperTarget(@Nonnull final String clonedName, @Nonnull final ScraperTarget scraperTarget);
+
+    /**
      * Retrieve a ScraperTarget.
      *
      * @param scraperTargetID ID of ScraperTarget to get

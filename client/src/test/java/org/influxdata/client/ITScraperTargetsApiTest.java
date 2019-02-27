@@ -228,4 +228,40 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
         labels = scraperTargetsApi.getLabels(scraper);
         Assertions.assertThat(labels).hasSize(0);
     }
+
+    @Test
+    void cloneScraperTarget() {
+
+        ScraperTarget source = scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
+                "http://localhost:9999", bucket.getId(), findMyOrg().getId());
+
+        String name = generateName("cloned");
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties);
+
+        scraperTargetsApi.addLabel(label, source);
+
+        ScraperTarget cloned = scraperTargetsApi.cloneScraperTarget(name, source.getId());
+
+        Assertions.assertThat(cloned.getName()).isEqualTo(name);
+        Assertions.assertThat(cloned.getType()).isEqualTo(source.getType());
+        Assertions.assertThat(cloned.getUrl()).isEqualTo(source.getUrl());
+        Assertions.assertThat(cloned.getOrgID()).isEqualTo(source.getOrgID());
+        Assertions.assertThat(cloned.getBucketID()).isEqualTo(source.getBucketID());
+
+        List<Label> labels = scraperTargetsApi.getLabels(cloned);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
+    }
+
+    @Test
+    void cloneScraperTargetNotFound() {
+        Assertions.assertThatThrownBy(() -> scraperTargetsApi.cloneScraperTarget(generateName("cloned"), "020f755c3c082000"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("NotFound ScraperTarget with ID: 020f755c3c082000");
+    }
 }
