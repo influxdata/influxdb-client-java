@@ -162,4 +162,31 @@ class ITLabelsApiTest extends AbstractITClientTest {
                 .hasEntrySatisfying("type", link -> Assertions.assertThat(link).isEqualTo("paid"));
 
     }
+
+    @Test
+    void cloneLabel() {
+
+        String name = generateName("cloned");
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties);
+
+        Label cloned = labelsApi.cloneLabel(name, label);
+
+        Assertions.assertThat(cloned.getName()).isEqualTo(name);
+        Assertions.assertThat(cloned.getProperties())
+                .hasSize(2)
+                .hasEntrySatisfying("color", link -> Assertions.assertThat(link).isEqualTo("green"))
+                .hasEntrySatisfying("location", link -> Assertions.assertThat(link).isEqualTo("west"));
+    }
+
+    @Test
+    void cloneLabelNotFound() {
+        Assertions.assertThatThrownBy(() -> labelsApi.cloneLabel(generateName("cloned"), "020f755c3c082000"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("NotFound Label with ID: 020f755c3c082000");
+    }
 }

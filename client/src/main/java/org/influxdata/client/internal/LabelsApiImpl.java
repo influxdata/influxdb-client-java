@@ -120,6 +120,35 @@ class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
         execute(call);
     }
 
+    @Nonnull
+    @Override
+    public Label cloneLabel(@Nonnull final String clonedName, @Nonnull final String labelID) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNonEmpty(labelID, "labelID");
+
+        Label label = findLabelByID(labelID);
+        if (label == null) {
+            throw new IllegalStateException("NotFound Label with ID: " + labelID);
+        }
+
+        return cloneLabel(clonedName, label);
+    }
+
+    @Nonnull
+    @Override
+    public Label cloneLabel(@Nonnull final String clonedName, @Nonnull final Label label) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNotNull(label, "label");
+
+        Label cloned = new Label();
+        cloned.setName(clonedName);
+        cloned.getProperties().putAll(label.getProperties());
+
+        return createLabel(cloned);
+    }
+
     @Nullable
     @Override
     public Label findLabelByID(@Nonnull final String labelID) {
