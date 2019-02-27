@@ -117,9 +117,9 @@ public interface UsersApi {
     /**
      * Clone an user.
      *
-     * @param clonedName name of cloned bucket
+     * @param clonedName name of cloned user
      * @param user       user to clone
-     * @return cloned bucket
+     * @return cloned user
      */
     @Nonnull
     User cloneUser(@Nonnull final String clonedName, @Nonnull final User user);

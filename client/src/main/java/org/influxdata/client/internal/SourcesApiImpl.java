@@ -103,7 +103,46 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Call<Void> call = influxDBService.deleteSource(sourceID);
         execute(call);
+    }
 
+    @Nonnull
+    @Override
+    public Source cloneSource(@Nonnull final String clonedName, @Nonnull final String sourceID) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNonEmpty(sourceID, "sourceID");
+
+        Source source = findSourceByID(sourceID);
+        if (source == null) {
+            throw new IllegalStateException("NotFound Source with ID: " + sourceID);
+        }
+
+        return cloneSource(clonedName, source);
+    }
+
+    @Nonnull
+    @Override
+    public Source cloneSource(@Nonnull final String clonedName, @Nonnull final Source source) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNotNull(source, "source");
+
+        Source cloned = new Source();
+        cloned.setName(clonedName);
+        cloned.setOrgID(source.getOrgID());
+        cloned.setDefaultSource(source.isDefaultSource());
+        cloned.setType(source.getType());
+        cloned.setUrl(source.getUrl());
+        cloned.setInsecureSkipVerify(source.isInsecureSkipVerify());
+        cloned.setTelegraf(source.getTelegraf());
+        cloned.setToken(source.getToken());
+        cloned.setUsername(source.getUsername());
+        cloned.setPassword(source.getPassword());
+        cloned.setSharedSecret(source.getSharedSecret());
+        cloned.setMetaUrl(source.getMetaUrl());
+        cloned.setDefaultRP(source.getDefaultRP());
+
+        return createSource(cloned);
     }
 
     @Nullable

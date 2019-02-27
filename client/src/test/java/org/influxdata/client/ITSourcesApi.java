@@ -186,6 +186,37 @@ class ITSourcesApi extends AbstractITClientTest {
         Assertions.assertThat(health.isHealthy()).isTrue();
     }
 
+    @Test
+    void cloneSource() {
+
+        Source source = sourcesApi.createSource(newSource());
+
+        String name = generateName("cloned");
+
+        Source cloned = sourcesApi.cloneSource(name, source.getId());
+
+        Assertions.assertThat(cloned.getName()).isEqualTo(name);
+        Assertions.assertThat(cloned.getOrgID()).isEqualTo(source.getOrgID());
+        Assertions.assertThat(cloned.isDefaultSource()).isEqualTo(source.isDefaultSource());
+        Assertions.assertThat(cloned.getType()).isEqualTo(source.getType());
+        Assertions.assertThat(cloned.getUrl()).isEqualTo(source.getUrl());
+        Assertions.assertThat(cloned.isInsecureSkipVerify()).isEqualTo(source.isInsecureSkipVerify());
+        Assertions.assertThat(cloned.getTelegraf()).isEqualTo(source.getTelegraf());
+        Assertions.assertThat(cloned.getToken()).isEqualTo(source.getToken());
+        Assertions.assertThat(cloned.getUsername()).isEqualTo(source.getUsername());
+        Assertions.assertThat(cloned.getPassword()).isEqualTo(source.getPassword());
+        Assertions.assertThat(cloned.getSharedSecret()).isEqualTo(source.getSharedSecret());
+        Assertions.assertThat(cloned.getMetaUrl()).isEqualTo(source.getMetaUrl());
+        Assertions.assertThat(cloned.getDefaultRP()).isEqualTo(source.getDefaultRP());
+    }
+
+    @Test
+    void cloneSourceNotFound() {
+        Assertions.assertThatThrownBy(() -> sourcesApi.cloneSource(generateName("cloned"), "da7aba5e5d81e550"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("NotFound Source with ID: da7aba5e5d81e550");
+    }
+
     @Nonnull
     private Source newSource() {
 
