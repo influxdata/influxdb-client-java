@@ -207,6 +207,42 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
     @Nonnull
     @Override
+    public Bucket cloneBucket(@Nonnull final String clonedName, @Nonnull final String bucketID) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNonEmpty(bucketID, "bucketID");
+
+        Bucket bucket = findBucketByID(bucketID);
+        if (bucket == null) {
+            throw new IllegalStateException("NotFound Bucket with ID: " + bucketID);
+        }
+
+        return cloneBucket(clonedName, bucket);
+    }
+
+    @Nonnull
+    @Override
+    public Bucket cloneBucket(@Nonnull final String clonedName, @Nonnull final Bucket bucket) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNotNull(bucket, "Bucket");
+
+        Bucket cloned = new Bucket();
+        cloned.setName(clonedName);
+        cloned.setOrgID(bucket.getOrgID());
+        cloned.setOrganizationName(bucket.getOrganizationName());
+        cloned.setRetentionPolicyName(bucket.getRetentionPolicyName());
+        cloned.getRetentionRules().addAll(bucket.getRetentionRules());
+
+        Bucket created = createBucket(cloned);
+
+        getLabels(bucket).forEach(label -> addLabel(label, created));
+
+        return created;
+    }
+
+    @Nonnull
+    @Override
     public List<ResourceMember> getMembers(@Nonnull final Bucket bucket) {
 
         Arguments.checkNotNull(bucket, "Bucket");

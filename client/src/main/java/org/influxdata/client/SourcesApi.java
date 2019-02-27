@@ -69,6 +69,26 @@ public interface SourcesApi {
     void deleteSource(@Nonnull final String sourceID);
 
     /**
+     * Clone a source.
+     *
+     * @param clonedName name of cloned source
+     * @param sourceID   ID of source to clone
+     * @return cloned source
+     */
+    @Nonnull
+    Source cloneSource(@Nonnull final String clonedName, @Nonnull final String sourceID);
+
+    /**
+     * Clone a source.
+     *
+     * @param clonedName name of cloned source
+     * @param source     source to clone
+     * @return cloned source
+     */
+    @Nonnull
+    Source cloneSource(@Nonnull final String clonedName, @Nonnull final Source source);
+
+    /**
      * Retrieve a source.
      *
      * @param sourceID ID of source to get

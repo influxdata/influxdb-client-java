@@ -306,6 +306,34 @@ class ITAuthorizationsApiTest extends AbstractITClientTest {
         Assertions.assertThat(foundAuthorization).isNull();
     }
 
+    @Test
+    void cloneAuthorization() {
+
+        Authorization source = authorizationsApi.createAuthorization(organization, newPermissions());
+
+        Authorization cloned = authorizationsApi.cloneAuthorization(source.getId());
+
+        Assertions.assertThat(cloned.getToken()).isNotBlank();
+        Assertions.assertThat(cloned.getToken()).isNotEqualTo(source.getToken());
+        Assertions.assertThat(cloned.getUserID()).isEqualTo(source.getUserID());
+        Assertions.assertThat(cloned.getUserName()).isEqualTo(source.getUserName());
+        Assertions.assertThat(cloned.getOrgID()).isEqualTo(organization.getId());
+        Assertions.assertThat(cloned.getOrgName()).isEqualTo(organization.getName());
+        Assertions.assertThat(cloned.getStatus()).isEqualTo(Status.ACTIVE);
+        Assertions.assertThat(cloned.getDescription()).isEqualTo(source.getDescription());
+        Assertions.assertThat(cloned.getPermissions()).hasSize(1);
+        Assertions.assertThat(cloned.getPermissions().get(0).getAction()).isEqualTo(Permission.READ_ACTION);
+        Assertions.assertThat(cloned.getPermissions().get(0).getResource().getType()).isEqualTo(ResourceType.USERS);
+        Assertions.assertThat(cloned.getPermissions().get(0).getResource().getOrgID()).isEqualTo(organization.getId());
+    }
+
+    @Test
+    void cloneAuthorizationNotFound() {
+        Assertions.assertThatThrownBy(() -> authorizationsApi.cloneAuthorization("020f755c3c082000"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("NotFound Authorization with ID: 020f755c3c082000");
+    }
+
     @Nonnull
     private List<Permission> newPermissions() {
 

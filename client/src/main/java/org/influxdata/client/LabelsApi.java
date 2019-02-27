@@ -76,6 +76,26 @@ public interface LabelsApi {
     void deleteLabel(@Nonnull final String labelID);
 
     /**
+     * Clone a label.
+     *
+     * @param clonedName name of cloned label
+     * @param labelID    ID of label to clone
+     * @return cloned label
+     */
+    @Nonnull
+    Label cloneLabel(@Nonnull final String clonedName, @Nonnull final String labelID);
+
+    /**
+     * Clone a label.
+     *
+     * @param clonedName name of cloned label
+     * @param label      label to clone
+     * @return cloned label
+     */
+    @Nonnull
+    Label cloneLabel(@Nonnull final String clonedName, @Nonnull final Label label);
+
+    /**
      * Retrieve a label.
      *
      * @param labelID ID of a label to get

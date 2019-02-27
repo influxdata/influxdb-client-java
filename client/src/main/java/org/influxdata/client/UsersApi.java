@@ -56,7 +56,7 @@ public interface UsersApi {
     User createUser(@Nonnull final String name);
 
     /**
-     * Update a user.
+     * Update an user.
      *
      * @param user user update to apply
      * @return user updated
@@ -65,7 +65,7 @@ public interface UsersApi {
     User updateUser(@Nonnull final User user);
 
     /**
-     * Update password to a user.
+     * Update password to an user.
      *
      * @param user        user to update password
      * @param oldPassword old password
@@ -78,7 +78,7 @@ public interface UsersApi {
                             @Nonnull final String newPassword);
 
     /**
-     * Update password to a user.
+     * Update password to an user.
      *
      * @param userID      ID of user to update password
      * @param oldPassword old password
@@ -91,18 +91,38 @@ public interface UsersApi {
                             @Nonnull final String newPassword);
 
     /**
-     * Delete a user.
+     * Delete an user.
      *
      * @param user user to delete
      */
     void deleteUser(@Nonnull final User user);
 
     /**
-     * Delete a user.
+     * Delete an user.
      *
      * @param userID ID of user to delete
      */
     void deleteUser(@Nonnull final String userID);
+
+    /**
+     * Clone an user.
+     *
+     * @param clonedName name of cloned user
+     * @param userID     ID of user to clone
+     * @return cloned user
+     */
+    @Nonnull
+    User cloneUser(@Nonnull final String clonedName, @Nonnull final String userID);
+
+    /**
+     * Clone an user.
+     *
+     * @param clonedName name of cloned user
+     * @param user       user to clone
+     * @return cloned user
+     */
+    @Nonnull
+    User cloneUser(@Nonnull final String clonedName, @Nonnull final User user);
 
     /**
      * Returns currently authenticated user.
@@ -123,7 +143,7 @@ public interface UsersApi {
     User meUpdatePassword(@Nonnull final String oldPassword, @Nonnull final String newPassword);
 
     /**
-     * Retrieve a user.
+     * Retrieve an user.
      *
      * @param userID ID of user to get
      * @return user details

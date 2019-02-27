@@ -148,6 +148,38 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
         execute(call);
     }
 
+    @Nonnull
+    @Override
+    public Organization cloneOrganization(@Nonnull final String clonedName, @Nonnull final String orgID) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNonEmpty(orgID, "orgID");
+
+        Organization organization = findOrganizationByID(orgID);
+        if (organization == null) {
+            throw new IllegalStateException("NotFound Organization with ID: " + orgID);
+        }
+
+        return cloneOrganization(clonedName, organization);
+    }
+
+    @Nonnull
+    @Override
+    public Organization cloneOrganization(@Nonnull final String clonedName, @Nonnull final Organization organization) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNotNull(organization, "Organization");
+
+        Organization cloned = new Organization();
+        cloned.setName(clonedName);
+
+        Organization created = createOrganization(cloned);
+
+        getLabels(organization).forEach(label -> addLabel(label, created));
+
+        return created;
+    }
+
     @Override
     public List<String> getSecrets(@Nonnull final Organization organization) {
 

@@ -83,6 +83,26 @@ public interface OrganizationsApi {
     void deleteOrganization(@Nonnull final String orgID);
 
     /**
+     * Clone an organization.
+     *
+     * @param clonedName name of cloned organization
+     * @param orgID      ID of organization to clone
+     * @return cloned organization
+     */
+    @Nonnull
+    Organization cloneOrganization(@Nonnull final String clonedName, @Nonnull final String orgID);
+
+    /**
+     * Clone an organization.
+     *
+     * @param clonedName   name of cloned organization
+     * @param organization organization to clone
+     * @return cloned organization
+     */
+    @Nonnull
+    Organization cloneOrganization(@Nonnull final String clonedName, @Nonnull final Organization organization);
+
+    /**
      * Retrieve an organization.
      *
      * @param orgID ID of organization to get

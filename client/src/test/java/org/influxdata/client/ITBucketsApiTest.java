@@ -157,9 +157,7 @@ class ITBucketsApiTest extends AbstractITClientTest {
 
         IntStream
                 .range(0, 20 - bucketsApi.findBuckets().size())
-                .forEach(value -> {
-                    bucketsApi.createBucket(generateName(String.valueOf(value)), retentionRule(), organization);
-                });
+                .forEach(value -> bucketsApi.createBucket(generateName(String.valueOf(value)), retentionRule(), organization));
 
         FindOptions findOptions = new FindOptions();
         findOptions.setLimit(5);
@@ -449,5 +447,42 @@ class ITBucketsApiTest extends AbstractITClientTest {
 
         Assertions.assertThat(entries).isNotNull();
         Assertions.assertThat(entries.getLogs()).isEmpty();
+    }
+
+    @Test
+    void cloneBucket() {
+
+        Bucket source = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);
+
+        String name = generateName("cloned");
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties);
+
+        bucketsApi.addLabel(label, source);
+
+        Bucket cloned = bucketsApi.cloneBucket(name, source.getId());
+
+        Assertions.assertThat(cloned.getName()).isEqualTo(name);
+        Assertions.assertThat(cloned.getOrgID()).isEqualTo(organization.getId());
+        Assertions.assertThat(cloned.getOrganizationName()).isEqualTo(organization.getName());
+        Assertions.assertThat(cloned.getRetentionPolicyName()).isNull();
+        Assertions.assertThat(cloned.getRetentionRules()).hasSize(1);
+        Assertions.assertThat(cloned.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600);
+        Assertions.assertThat(cloned.getRetentionRules().get(0).getType()).isEqualTo("expire");
+
+        List<Label> labels = bucketsApi.getLabels(cloned);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
+    }
+
+    @Test
+    void cloneBucketNotFound() {
+         Assertions.assertThatThrownBy(() -> bucketsApi.cloneBucket(generateName("cloned"), "020f755c3c082000"))
+                 .isInstanceOf(IllegalStateException.class)
+                 .hasMessage("NotFound Bucket with ID: 020f755c3c082000");
     }
 }

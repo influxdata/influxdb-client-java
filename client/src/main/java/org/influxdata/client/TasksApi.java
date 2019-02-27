@@ -156,6 +156,24 @@ public interface TasksApi {
     void deleteTask(@Nonnull final String taskID);
 
     /**
+     * Clone a task.
+     *
+     * @param taskID ID of task to clone
+     * @return cloned task
+     */
+    @Nonnull
+    Task cloneTask(@Nonnull final String taskID);
+
+    /**
+     * Clone a task.
+     *
+     * @param task       task to clone
+     * @return cloned task
+     */
+    @Nonnull
+    Task cloneTask(@Nonnull final Task task);
+
+    /**
      * Retrieve an task.
      *
      * @param taskID ID of task to get

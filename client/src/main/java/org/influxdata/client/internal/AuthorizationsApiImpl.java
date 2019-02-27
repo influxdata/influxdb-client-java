@@ -171,6 +171,39 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
     }
 
     @Nonnull
+    @Override
+    public Authorization cloneAuthorization(@Nonnull final String authorizationID) {
+
+        Arguments.checkNonEmpty(authorizationID, "authorizationID");
+
+        Authorization authorization = findAuthorizationByID(authorizationID);
+        if (authorization == null) {
+            throw new IllegalStateException("NotFound Authorization with ID: " + authorizationID);
+        }
+
+        return cloneAuthorization(authorization);
+    }
+
+    @Nonnull
+    @Override
+    public Authorization cloneAuthorization(@Nonnull final Authorization authorization) {
+
+        Arguments.checkNotNull(authorization, "authorization");
+
+        Authorization cloned = new Authorization();
+        cloned.setToken(authorization.getToken());
+        cloned.setUserID(authorization.getUserID());
+        cloned.setUserName(authorization.getUserName());
+        cloned.setOrgID(authorization.getOrgID());
+        cloned.setOrgName(authorization.getOrgName());
+        cloned.setStatus(Status.ACTIVE);
+        cloned.setDescription(authorization.getDescription());
+        cloned.getPermissions().addAll(authorization.getPermissions());
+
+        return createAuthorization(cloned);
+    }
+
+    @Nonnull
     private List<Authorization> findAuthorizations(@Nullable final String userID, @Nullable final String userName) {
 
         Call<Authorizations> authorizationsCall = influxDBService.findAuthorizations(userID, userName);

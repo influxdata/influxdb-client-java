@@ -126,6 +126,43 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
         execute(call);
     }
 
+    @Nonnull
+    @Override
+    public ScraperTarget cloneScraperTarget(@Nonnull final String clonedName, @Nonnull final String scraperTargetID) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
+
+        ScraperTarget scraperTarget = findScraperTargetByID(scraperTargetID);
+        if (scraperTarget == null) {
+            throw new IllegalStateException("NotFound ScraperTarget with ID: " + scraperTargetID);
+        }
+
+        return cloneScraperTarget(clonedName, scraperTarget);
+    }
+
+    @Nonnull
+    @Override
+    public ScraperTarget cloneScraperTarget(@Nonnull final String clonedName,
+                                            @Nonnull final ScraperTarget scraperTarget) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNotNull(scraperTarget, "scraperTarget");
+
+        ScraperTarget cloned = new ScraperTarget();
+        cloned.setName(clonedName);
+        cloned.setType(scraperTarget.getType());
+        cloned.setUrl(scraperTarget.getUrl());
+        cloned.setOrgID(scraperTarget.getOrgID());
+        cloned.setBucketID(scraperTarget.getBucketID());
+
+        ScraperTarget created = createScraperTarget(cloned);
+
+        getLabels(scraperTarget).forEach(label -> addLabel(label, created));
+
+        return created;
+    }
+
     @Nullable
     @Override
     public ScraperTargetResponse findScraperTargetByID(@Nonnull final String scraperTargetID) {
