@@ -456,6 +456,14 @@ class ITBucketsApiTest extends AbstractITClientTest {
 
         String name = generateName("cloned");
 
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties);
+
+        bucketsApi.addLabel(label, source);
+
         Bucket cloned = bucketsApi.cloneBucket(name, source.getId());
 
         Assertions.assertThat(cloned.getName()).isEqualTo(name);
@@ -465,6 +473,10 @@ class ITBucketsApiTest extends AbstractITClientTest {
         Assertions.assertThat(cloned.getRetentionRules()).hasSize(1);
         Assertions.assertThat(cloned.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600);
         Assertions.assertThat(cloned.getRetentionRules().get(0).getType()).isEqualTo("expire");
+
+        List<Label> labels = bucketsApi.getLabels(cloned);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
     }
 
     @Test

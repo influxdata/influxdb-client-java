@@ -234,7 +234,11 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
         cloned.setRetentionPolicyName(bucket.getRetentionPolicyName());
         cloned.getRetentionRules().addAll(bucket.getRetentionRules());
 
-        return createBucket(cloned);
+        Bucket created = createBucket(cloned);
+
+        getLabels(bucket).forEach(label -> addLabel(label, created));
+        
+        return created;
     }
 
     @Nonnull
