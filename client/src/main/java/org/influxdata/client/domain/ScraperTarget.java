@@ -31,7 +31,7 @@ public class ScraperTarget extends AbstractHasLinks {
     private String id;
     private String name;
 
-    private ScraperType type;
+    private ScraperType type = ScraperType.PROMETHEUS;
 
     private String url;
     private String orgID;

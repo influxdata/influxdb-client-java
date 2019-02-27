@@ -293,7 +293,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(updatedTask.getId()).isEqualTo(cronTask.getId());
         Assertions.assertThat(updatedTask.getEvery()).isEqualTo("2m0s");
         Assertions.assertThat(updatedTask.getCron()).isNull();
-        Assertions.assertThat(updatedTask.getFlux()).isEqualTo(flux);
+        Assertions.assertThat(updatedTask.getFlux()).isEqualToIgnoringWhitespace(flux);
         Assertions.assertThat(updatedTask.getStatus()).isEqualTo(Status.INACTIVE);
         Assertions.assertThat(updatedTask.getOrgID()).isEqualTo(cronTask.getOrgID());
         Assertions.assertThat(updatedTask.getName()).isEqualTo(cronTask.getName());
