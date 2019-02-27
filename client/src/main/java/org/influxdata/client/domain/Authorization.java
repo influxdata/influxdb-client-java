@@ -21,6 +21,7 @@
  */
 package org.influxdata.client.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -51,7 +52,7 @@ public final class Authorization extends AbstractHasLinks {
 
     private String description;
 
-    private List<Permission> permissions;
+    private List<Permission> permissions = new ArrayList<>();
 
     public String getId() {
         return id;

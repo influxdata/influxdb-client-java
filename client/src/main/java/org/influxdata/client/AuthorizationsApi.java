@@ -78,19 +78,36 @@ public interface AuthorizationsApi {
     Authorization updateAuthorization(@Nonnull final Authorization authorization);
 
     /**
-     * Delete a authorization.
+     * Delete an authorization.
      *
      * @param authorization authorization to delete
      */
     void deleteAuthorization(@Nonnull final Authorization authorization);
 
     /**
-     * Delete a authorization.
+     * Delete an authorization.
      *
      * @param authorizationID ID of authorization to delete
      */
     void deleteAuthorization(@Nonnull final String authorizationID);
 
+    /**
+     * Clone an authorization.
+     *
+     * @param authorizationID ID of authorization to clone
+     * @return cloned authorization
+     */
+    @Nonnull
+    Authorization cloneAuthorization(@Nonnull final String authorizationID);
+
+    /**
+     * Clone an authorization.
+     *
+     * @param authorization authorization to clone
+     * @return cloned authorization
+     */
+    @Nonnull
+    Authorization cloneAuthorization(@Nonnull final Authorization authorization);
 
     /**
      * List all authorizations.
@@ -101,7 +118,7 @@ public interface AuthorizationsApi {
     List<Authorization> findAuthorizations();
 
     /**
-     * Retrieve a authorization.
+     * Retrieve an authorization.
      *
      * @param authorizationID ID of authorization to get
      * @return authorization details
