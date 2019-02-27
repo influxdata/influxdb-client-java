@@ -237,7 +237,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
         Bucket created = createBucket(cloned);
 
         getLabels(bucket).forEach(label -> addLabel(label, created));
-        
+
         return created;
     }
 

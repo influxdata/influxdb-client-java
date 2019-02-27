@@ -364,4 +364,35 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
         Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("Organization Updated");
         Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Created");
     }
+
+    @Test
+    void cloneOrganization() {
+
+        Organization source = organizationsApi.createOrganization(generateName("Constant Pro"));
+
+        String name = generateName("cloned");
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties);
+
+        organizationsApi.addLabel(label, source);
+
+        Organization cloned = organizationsApi.cloneOrganization(name, source.getId());
+
+        Assertions.assertThat(cloned.getName()).isEqualTo(name);
+
+        List<Label> labels = organizationsApi.getLabels(cloned);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
+    }
+
+    @Test
+    void cloneOrganizationNotFound() {
+        Assertions.assertThatThrownBy(() -> organizationsApi.cloneOrganization(generateName("cloned"), "020f755c3c082000"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("NotFound Organization with ID: 020f755c3c082000");
+    }
 }
