@@ -607,6 +607,40 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(labels).hasSize(0);
     }
 
+    @Test
+    void cloneTask() {
+
+        Task source = tasksApi.createTaskEvery(generateName("it task"), TASK_FLUX, "1s", organization);
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties);
+
+        tasksApi.addLabel(label, source);
+
+        Task cloned = tasksApi.cloneTask(source.getId());
+
+        Assertions.assertThat(cloned.getName()).isEqualTo(source.getName());
+        Assertions.assertThat(cloned.getOrgID()).isEqualTo(organization.getId());
+        Assertions.assertThat(cloned.getFlux()).isEqualTo(source.getFlux());
+        Assertions.assertThat(cloned.getEvery()).isEqualTo("1s");
+        Assertions.assertThat(cloned.getCron()).isNull();
+        Assertions.assertThat(cloned.getOffset()).isNull();
+
+        List<Label> labels = tasksApi.getLabels(cloned);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
+    }
+
+    @Test
+    void cloneTaskNotFound() {
+        Assertions.assertThatThrownBy(() -> tasksApi.cloneTask("020f755c3c082000"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("NotFound Task with ID: 020f755c3c082000");
+    }
+
     @Nonnull
     private Authorization addTasksAuthorization(final Organization organization) {
 

@@ -241,6 +241,39 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
     @Nonnull
     @Override
+    public Task cloneTask(@Nonnull final String taskID) {
+
+        Arguments.checkNonEmpty(taskID, "taskID");
+
+        Task task = findTaskByID(taskID);
+        if (task == null) {
+            throw new IllegalStateException("NotFound Task with ID: " + taskID);
+        }
+
+        return cloneTask(task);
+    }
+
+    @Nonnull
+    @Override
+    public Task cloneTask(@Nonnull final Task task) {
+
+        Arguments.checkNotNull(task, "task");
+
+        Task cloned = new Task();
+        cloned.setName(task.getName());
+        cloned.setOrgID(task.getOrgID());
+        cloned.setFlux(task.getFlux());
+        cloned.setStatus(Status.ACTIVE);
+
+        Task created = createTask(cloned);
+
+        getLabels(task).forEach(label -> addLabel(label, created));
+
+        return created;
+    }
+
+    @Nonnull
+    @Override
     public List<ResourceMember> getMembers(@Nonnull final String taskID) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
