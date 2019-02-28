@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.TelegrafConfig;
@@ -58,8 +57,6 @@ class ITTelegrafsApi extends AbstractITClientTest {
         organization = findMyOrg();
 
         telegrafsApi.findTelegrafConfigs().forEach(telegrafConfig -> telegrafsApi.deleteTelegrafConfig(telegrafConfig));
-
-        influxDBClient.setLogLevel(LogLevel.BODY);
     }
 
     @Test
