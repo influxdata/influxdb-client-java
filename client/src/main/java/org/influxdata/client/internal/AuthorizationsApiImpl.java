@@ -191,7 +191,6 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
         Arguments.checkNotNull(authorization, "authorization");
 
         Authorization cloned = new Authorization();
-        cloned.setToken(authorization.getToken());
         cloned.setUserID(authorization.getUserID());
         cloned.setUserName(authorization.getUserName());
         cloned.setOrgID(authorization.getOrgID());

@@ -185,16 +185,16 @@ public interface BucketsApi {
      * @return A list of buckets
      */
     @Nonnull
-    List<Bucket> findBucketsByOrganization(@Nonnull final Organization organization);
+    List<Bucket> findBucketsByOrg(@Nonnull final Organization organization);
 
     /**
-     * List all buckets for specified {@code organizationName}.
+     * List all buckets for specified {@code orgName}.
      *
-     * @param organizationName filter buckets to a specific organization name
+     * @param orgName filter buckets to a specific organization name
      * @return A list of buckets
      */
     @Nonnull
-    List<Bucket> findBucketsByOrganizationName(@Nullable final String organizationName);
+    List<Bucket> findBucketsByOrgName(@Nullable final String orgName);
 
     /**
      * List all users with member privileges for a bucket.

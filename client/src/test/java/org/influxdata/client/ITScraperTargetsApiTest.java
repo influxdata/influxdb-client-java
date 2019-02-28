@@ -66,7 +66,7 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
 
         Assertions.assertThat(scraper).isNotNull();
         Assertions.assertThat(scraper.getBucketName()).isEqualTo("my-bucket");
-        Assertions.assertThat(scraper.getOrganizationName()).isEqualTo("my-org");
+        Assertions.assertThat(scraper.getOrgName()).isEqualTo("my-org");
         Assertions.assertThat(scraper.getLinks())
                 .hasSize(3)
                 .hasEntrySatisfying("bucket", value -> Assertions.assertThat(value).isEqualTo("/api/v2/buckets/" + bucket.getId()))

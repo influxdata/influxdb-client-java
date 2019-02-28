@@ -40,7 +40,7 @@ public final class Bucket extends AbstractHasLinks {
     private String orgID;
 
     @Json(name = "organization")
-    private String organizationName;
+    private String orgName;
 
     /**
      * For support V1 sources.
@@ -77,12 +77,12 @@ public final class Bucket extends AbstractHasLinks {
         this.orgID = orgID;
     }
 
-    public String getOrganizationName() {
-        return organizationName;
+    public String getOrgName() {
+        return orgName;
     }
 
-    public void setOrganizationName(final String organizationName) {
-        this.organizationName = organizationName;
+    public void setOrgName(final String orgName) {
+        this.orgName = orgName;
     }
 
     public String getRetentionPolicyName() {

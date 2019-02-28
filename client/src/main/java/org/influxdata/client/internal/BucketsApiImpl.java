@@ -90,7 +90,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
     @Nonnull
     @Override
     public List<Bucket> findBuckets() {
-        return findBucketsByOrganizationName(null);
+        return findBucketsByOrgName(null);
     }
 
     @Override
@@ -103,19 +103,19 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
     }
 
     @Nonnull
-    public List<Bucket> findBucketsByOrganization(@Nonnull final Organization organization) {
+    public List<Bucket> findBucketsByOrg(@Nonnull final Organization organization) {
 
         Arguments.checkNotNull(organization, "Organization is required");
 
-        return findBucketsByOrganizationName(organization.getName());
+        return findBucketsByOrgName(organization.getName());
     }
 
     @Nonnull
     @Override
-    public List<Bucket> findBucketsByOrganizationName(@Nullable final String organizationName) {
+    public List<Bucket> findBucketsByOrgName(@Nullable final String orgName) {
 
-        Buckets buckets = findBuckets(organizationName, new FindOptions());
-        LOG.log(Level.FINEST, "findBucketsByOrganizationName found: {0}", buckets);
+        Buckets buckets = findBuckets(orgName, new FindOptions());
+        LOG.log(Level.FINEST, "findBucketsByOrgName found: {0}", buckets);
 
         return buckets.getBuckets();
 
@@ -230,7 +230,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
         Bucket cloned = new Bucket();
         cloned.setName(clonedName);
         cloned.setOrgID(bucket.getOrgID());
-        cloned.setOrganizationName(bucket.getOrganizationName());
+        cloned.setOrgName(bucket.getOrgName());
         cloned.setRetentionPolicyName(bucket.getRetentionPolicyName());
         cloned.getRetentionRules().addAll(bucket.getRetentionRules());
 
@@ -474,10 +474,10 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
     }
 
     @Nonnull
-    private Buckets findBuckets(@Nullable final String organizationName,
+    private Buckets findBuckets(@Nullable final String orgNae,
                                 @Nonnull final FindOptions findOptions) {
 
-        Call<Buckets> bucketsCall = influxDBService.findBuckets(organizationName, createQueryMap(findOptions));
+        Call<Buckets> bucketsCall = influxDBService.findBuckets(orgNae, createQueryMap(findOptions));
 
         return execute(bucketsCall);
     }

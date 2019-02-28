@@ -64,15 +64,15 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
     @Test
     void createOrganization() {
 
-        String organizationName = generateName("Constant Pro");
+        String orgName = generateName("Constant Pro");
 
-        Organization organization = organizationsApi.createOrganization(organizationName);
+        Organization organization = organizationsApi.createOrganization(orgName);
 
         LOG.log(Level.INFO, "Created organization: {0}", organization);
 
         Assertions.assertThat(organization).isNotNull();
         Assertions.assertThat(organization.getId()).isNotBlank();
-        Assertions.assertThat(organization.getName()).isEqualTo(organizationName);
+        Assertions.assertThat(organization.getName()).isEqualTo(orgName);
         Assertions.assertThat(organization.getLinks())
                 .hasSize(8)
                 .containsKeys("buckets", "dashboards", "log", "members", "self", "tasks", "labels", "secrets");
@@ -81,9 +81,9 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
     @Test
     void findOrganizationByID() {
 
-        String organizationName = generateName("Constant Pro");
+        String orgName = generateName("Constant Pro");
 
-        Organization organization = organizationsApi.createOrganization(organizationName);
+        Organization organization = organizationsApi.createOrganization(orgName);
 
         Organization organizationByID = organizationsApi.findOrganizationByID(organization.getId());
 

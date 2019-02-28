@@ -29,17 +29,17 @@ import com.squareup.moshi.Json;
 public final class ScraperTargetResponse extends ScraperTarget {
 
     @Json(name = "organization")
-    private String organizationName;
+    private String orgName;
 
     @Json(name = "bucket")
     private String bucketName;
 
-    public String getOrganizationName() {
-        return organizationName;
+    public String getOrgName() {
+        return orgName;
     }
 
-    public void setOrganizationName(final String organizationName) {
-        this.organizationName = organizationName;
+    public void setOrgName(final String orgName) {
+        this.orgName = orgName;
     }
 
     public String getBucketName() {

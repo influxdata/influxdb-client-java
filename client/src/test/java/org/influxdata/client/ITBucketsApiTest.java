@@ -81,7 +81,7 @@ class ITBucketsApiTest extends AbstractITClientTest {
         Assertions.assertThat(bucket.getId()).isNotBlank();
         Assertions.assertThat(bucket.getName()).isEqualTo(bucketName);
         Assertions.assertThat(bucket.getOrgID()).isEqualTo(organization.getId());
-        Assertions.assertThat(bucket.getOrganizationName()).isEqualTo(organization.getName());
+        Assertions.assertThat(bucket.getOrgName()).isEqualTo(organization.getName());
         Assertions.assertThat(bucket.getRetentionRules()).hasSize(1);
         Assertions.assertThat(bucket.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600L);
         Assertions.assertThat(bucket.getRetentionRules().get(0).getType()).isEqualTo("expire");
@@ -105,7 +105,7 @@ class ITBucketsApiTest extends AbstractITClientTest {
         Assertions.assertThat(bucketByID.getId()).isEqualTo(bucket.getId());
         Assertions.assertThat(bucketByID.getName()).isEqualTo(bucket.getName());
         Assertions.assertThat(bucketByID.getOrgID()).isEqualTo(bucket.getOrgID());
-        Assertions.assertThat(bucketByID.getOrganizationName()).isEqualTo(bucket.getOrganizationName());
+        Assertions.assertThat(bucketByID.getOrgName()).isEqualTo(bucket.getOrgName());
         Assertions.assertThat(bucketByID.getRetentionRules().size()).isEqualTo(bucket.getRetentionRules().size());
         Assertions.assertThat(bucketByID.getRetentionRules()).hasSize(1);
         Assertions.assertThat(bucketByID.getLinks()).hasSize(bucket.getLinks().size());
@@ -186,14 +186,14 @@ class ITBucketsApiTest extends AbstractITClientTest {
     @Test
     void findBucketsByOrganization() {
 
-        Assertions.assertThat(bucketsApi.findBucketsByOrganization(organization)).hasSize(0);
+        Assertions.assertThat(bucketsApi.findBucketsByOrg(organization)).hasSize(0);
 
         bucketsApi.createBucket(generateName("robot sensor"), organization);
 
         Organization organization2 = organizationsApi.createOrganization(generateName("Second"));
         bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization2);
 
-        Assertions.assertThat(bucketsApi.findBucketsByOrganization(organization)).hasSize(1);
+        Assertions.assertThat(bucketsApi.findBucketsByOrg(organization)).hasSize(1);
     }
 
     @Test
@@ -468,7 +468,7 @@ class ITBucketsApiTest extends AbstractITClientTest {
 
         Assertions.assertThat(cloned.getName()).isEqualTo(name);
         Assertions.assertThat(cloned.getOrgID()).isEqualTo(organization.getId());
-        Assertions.assertThat(cloned.getOrganizationName()).isEqualTo(organization.getName());
+        Assertions.assertThat(cloned.getOrgName()).isEqualTo(organization.getName());
         Assertions.assertThat(cloned.getRetentionPolicyName()).isNull();
         Assertions.assertThat(cloned.getRetentionRules()).hasSize(1);
         Assertions.assertThat(cloned.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600);

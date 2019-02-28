@@ -260,7 +260,7 @@ public interface InfluxDBService {
     @GET("/api/v2/buckets")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<Buckets> findBuckets(@Nullable @Query("org") final String organizationName,
+    Call<Buckets> findBuckets(@Nullable @Query("org") final String orgName,
                               @Nonnull @QueryMap final Map<String, Object> findOptions);
 
     @GET("/api/v2/buckets/{id}/members")
