@@ -36,6 +36,7 @@ import org.influxdata.client.domain.Ready;
 import org.influxdata.client.domain.ScraperTarget;
 import org.influxdata.client.domain.Source;
 import org.influxdata.client.domain.Task;
+import org.influxdata.client.domain.TelegrafConfig;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.UnprocessableEntityException;
 
@@ -127,6 +128,14 @@ public interface InfluxDBClient extends AutoCloseable {
      */
     @Nonnull
     ScraperTargetsApi getScraperTargetsApi();
+
+    /**
+     * Get the {@link TelegrafConfig} client
+     *
+     * @return the new client instance for Telegrafs API
+     */
+    @Nonnull
+    TelegrafsApi getTelegrafsApi();
 
     /**
      * Get the {@link Label} client.

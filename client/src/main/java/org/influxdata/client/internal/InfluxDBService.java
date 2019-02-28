@@ -51,6 +51,7 @@ import org.influxdata.client.domain.Source;
 import org.influxdata.client.domain.Sources;
 import org.influxdata.client.domain.Task;
 import org.influxdata.client.domain.Tasks;
+import org.influxdata.client.domain.TelegrafConfig;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.domain.Users;
 
@@ -565,6 +566,13 @@ public interface InfluxDBService {
                                         @Nonnull @Path("path") final String path,
                                         @Nonnull @Path("labelID") final String labelID);
 
+    //
+    // Telegrafs
+    //
+    @POST("/api/v2/telegrafs")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<TelegrafConfig> createTelegrafConfig(@Nonnull @Body final RequestBody source);
 
     // Write
     //
