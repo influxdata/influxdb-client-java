@@ -593,6 +593,10 @@ public interface InfluxDBService {
     @Headers("Content-Type: application/json")
     Call<TelegrafConfigs> findTelegrafConfigs(@Nullable @Query("orgID") final String orgID);
 
+    @PUT("/api/v2/telegrafs/{id}")
+    Call<TelegrafConfig> updateTelegrafConfig(@Nonnull @Path("id") final String telegrafConfigID,
+                                              @Nonnull @Body final RequestBody telegrafConfig);
+
     // Write
     //
     @POST("/api/v2/write")

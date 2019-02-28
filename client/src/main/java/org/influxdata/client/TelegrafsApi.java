@@ -136,6 +136,15 @@ public interface TelegrafsApi {
                                         @Nonnull final Collection<TelegrafPlugin> plugins);
 
     /**
+     * Update a telegraf config
+     *
+     * @param telegrafConfig telegraf config update to apply
+     * @return An updated telegraf
+     */
+    @Nonnull
+    TelegrafConfig updateTelegrafConfig(@Nonnull final TelegrafConfig telegrafConfig);
+
+    /**
      * Delete a telegraf config.
      *
      * @param telegrafConfig telegraf config to delete

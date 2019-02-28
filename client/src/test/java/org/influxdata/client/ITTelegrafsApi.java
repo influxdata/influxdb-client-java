@@ -30,6 +30,7 @@ import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.TelegrafConfig;
 import org.influxdata.client.domain.TelegrafPlugin;
 import org.influxdata.client.domain.TelegrafPluginType;
+import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -83,6 +84,23 @@ class ITTelegrafsApi extends AbstractITClientTest {
     }
 
     @Test
+    void updateTelegrafConfig() {
+
+        TelegrafConfig telegrafConfig = telegrafsApi
+                .createTelegrafConfig(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+
+        telegrafConfig.setDescription("updated");
+        telegrafConfig.getAgent().setCollectionInterval(500);
+        telegrafConfig.getPlugins().remove(0);
+
+        telegrafConfig = telegrafsApi.updateTelegrafConfig(telegrafConfig);
+
+        Assertions.assertThat(telegrafConfig.getDescription()).isEqualTo("updated");
+        Assertions.assertThat(telegrafConfig.getAgent().getCollectionInterval()).isEqualTo(500);
+        Assertions.assertThat(telegrafConfig.getPlugins()).hasSize(1);
+    }
+
+    @Test
     void deleteTelegrafConfig() {
 
         List<TelegrafPlugin> plugins = Arrays.asList(newOutputPlugin(), newCpuPlugin());
@@ -99,6 +117,14 @@ class ITTelegrafsApi extends AbstractITClientTest {
 
         foundTelegrafConfig = telegrafsApi.findTelegrafConfigByID(createdConfig.getId());
         Assertions.assertThat(foundTelegrafConfig).isNull();
+    }
+
+    @Test
+    void deleteTelegrafConfigNotFound() {
+
+        Assertions.assertThatThrownBy(() -> telegrafsApi.deleteTelegrafConfig("020f755c3d082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("telegraf configuration not found");
     }
 
     @Test
@@ -170,6 +196,14 @@ class ITTelegrafsApi extends AbstractITClientTest {
         Assertions.assertThat(toml).contains("[[outputs.influxdb_v2]]");
         Assertions.assertThat(toml).contains("organization = \"my-org\"");
         Assertions.assertThat(toml).contains("bucket = \"my-bucket\"");
+    }
+
+    @Test
+    void getTOMLNotFound() {
+
+        Assertions.assertThatThrownBy(() -> telegrafsApi.getTOML("020f755c3d082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("telegraf configuration not found");
     }
 
     @Nonnull

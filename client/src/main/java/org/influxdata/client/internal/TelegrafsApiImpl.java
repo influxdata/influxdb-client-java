@@ -144,6 +144,19 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
         return createTelegrafConfig(telegrafConfig);
     }
 
+    @Nonnull
+    @Override
+    public TelegrafConfig updateTelegrafConfig(@Nonnull final TelegrafConfig telegrafConfig) {
+        
+        Arguments.checkNotNull(telegrafConfig, "TelegrafConfig");
+
+        String json = adapter.toJson(telegrafConfig);
+
+        Call<TelegrafConfig> telegrafConfigCall = influxDBService.updateTelegrafConfig(telegrafConfig.getId(), createBody(json));
+
+        return execute(telegrafConfigCall);
+    }
+
     @Override
     public void deleteTelegrafConfig(@Nonnull final TelegrafConfig telegrafConfig) {
 
