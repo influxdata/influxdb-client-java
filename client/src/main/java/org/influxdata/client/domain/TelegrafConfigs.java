@@ -21,24 +21,24 @@
  */
 package org.influxdata.client.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.squareup.moshi.Json;
 
 /**
- * Type is a telegraf plugin type.
- * 
- * @author Jakub Bednar (bednar@github) (28/02/2019 09:10)
+ * @author Jakub Bednar (bednar@github) (28/02/2019 12:27)
  */
-public enum TelegrafPluginType {
+public final class TelegrafConfigs {
 
-    @Json(name = "input")
-    INPUT,
+    @Json(name = "configurations")
+    private List<TelegrafConfig> configs = new ArrayList<>();
 
-    @Json(name = "output")
-    OUTPUT,
+    public List<TelegrafConfig> getConfigs() {
+        return configs;
+    }
 
-    @Json(name = "processor")
-    PROCESSOR,
-
-    @Json(name = "aggregator")
-    AGGREGATOR
+    public void setConfigs(final List<TelegrafConfig> configs) {
+        this.configs = configs;
+    }
 }

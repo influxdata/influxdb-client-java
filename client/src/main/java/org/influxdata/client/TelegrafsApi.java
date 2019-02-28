@@ -22,6 +22,7 @@
 package org.influxdata.client;
 
 import java.util.Collection;
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -133,4 +134,53 @@ public interface TelegrafsApi {
                                         @Nonnull final Organization org,
                                         @Nonnull final Integer collectionInterval,
                                         @Nonnull final Collection<TelegrafPlugin> plugins);
+
+    /**
+     * Delete a telegraf config.
+     *
+     * @param telegrafConfig telegraf config to delete
+     */
+    void deleteTelegrafConfig(@Nonnull final TelegrafConfig telegrafConfig);
+
+    /**
+     * Delete a telegraf config.
+     *
+     * @param telegrafConfigID ID of telegraf config to delete
+     */
+    void deleteTelegrafConfig(@Nonnull final String telegrafConfigID);
+
+    /**
+     * Retrieve a telegraf config
+     *
+     * @param telegrafConfigID ID of telegraf config to get
+     * @return telegraf config details
+     */
+    @Nullable
+    TelegrafConfig findTelegrafConfigByID(@Nonnull final String telegrafConfigID);
+
+    /**
+     * Returns a list of telegraf configs
+     *
+     * @return A list of telegraf configs
+     */
+    @Nonnull
+    List<TelegrafConfig> findTelegrafConfigs();
+
+    /**
+     * Returns a list of telegraf configs for specified {@code organization}.
+     *
+     * @param organization specifies the organization of the telegraf configs
+     * @return A list of telegraf configs
+     */
+    @Nonnull
+    List<TelegrafConfig> findTelegrafConfigsByOrg(@Nonnull final Organization organization);
+
+    /**
+     * Returns a list of telegraf configs for specified {@code orgId}.
+     *
+     * @param orgId specifies the organization of the telegraf configs
+     * @return A list of telegraf configs
+     */
+    @Nonnull
+    List<TelegrafConfig> findTelegrafConfigsByOrgId(@Nullable final String orgId);
 }

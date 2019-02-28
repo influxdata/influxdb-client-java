@@ -52,6 +52,7 @@ import org.influxdata.client.domain.Sources;
 import org.influxdata.client.domain.Task;
 import org.influxdata.client.domain.Tasks;
 import org.influxdata.client.domain.TelegrafConfig;
+import org.influxdata.client.domain.TelegrafConfigs;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.domain.Users;
 
@@ -573,6 +574,20 @@ public interface InfluxDBService {
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<TelegrafConfig> createTelegrafConfig(@Nonnull @Body final RequestBody source);
+
+    @DELETE("/api/v2/telegrafs/{id}")
+    Call<Void> deleteTelegrafConfig(@Nonnull @Path("id") final String telegrafConfigID);
+
+    @GET("/api/v2/telegrafs/{id}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<TelegrafConfig> findTelegrafConfigByID(@Nonnull @Path("id") final String telegrafConfigID,
+                                                @Nonnull @Header("accept") final String accept);
+
+    @GET("/api/v2/telegrafs")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<TelegrafConfigs> findTelegrafConfigs(@Nullable @Query("orgID") final String orgID);
 
     // Write
     //
