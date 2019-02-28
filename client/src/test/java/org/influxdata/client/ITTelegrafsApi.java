@@ -158,6 +158,20 @@ class ITTelegrafsApi extends AbstractITClientTest {
         Assertions.assertThat(telegrafConfigs).hasSize(size + 1);
     }
 
+    @Test
+    void getTOML() {
+
+        TelegrafConfig telegrafConfig = telegrafsApi
+                .createTelegrafConfig(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+
+        String toml = telegrafsApi.getTOML(telegrafConfig);
+
+        Assertions.assertThat(toml).contains("[[inputs.cpu]]");
+        Assertions.assertThat(toml).contains("[[outputs.influxdb_v2]]");
+        Assertions.assertThat(toml).contains("organization = \"my-org\"");
+        Assertions.assertThat(toml).contains("bucket = \"my-bucket\"");
+    }
+
     @Nonnull
     private TelegrafPlugin newCpuPlugin() {
 

@@ -580,9 +580,13 @@ public interface InfluxDBService {
 
     @GET("/api/v2/telegrafs/{id}")
     @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<TelegrafConfig> findTelegrafConfigByID(@Nonnull @Path("id") final String telegrafConfigID,
-                                                @Nonnull @Header("accept") final String accept);
+    @Headers({"Content-Type: application/json", "accept: application/json"})
+    Call<TelegrafConfig> findTelegrafConfigByID(@Nonnull @Path("id") final String telegrafConfigID);
+    
+    @GET("/api/v2/telegrafs/{id}")
+    @Nonnull
+    @Headers({"Content-Type: application/json", "accept: application/toml"})
+    Call<ResponseBody> findTelegrafConfigByIDInTOML(@Nonnull @Path("id") final String telegrafConfigID);
 
     @GET("/api/v2/telegrafs")
     @Nonnull

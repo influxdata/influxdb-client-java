@@ -59,7 +59,7 @@ import org.influxdata.client.domain.TelegrafPlugin;
 public interface TelegrafsApi {
 
     /**
-     * Create a telegraf config
+     * Create a telegraf config.
      *
      * @param telegrafConfig Telegraf Configuration to create
      * @return Telegraf config created
@@ -68,7 +68,7 @@ public interface TelegrafsApi {
     TelegrafConfig createTelegrafConfig(@Nonnull final TelegrafConfig telegrafConfig);
 
     /**
-     * Create a telegraf config
+     * Create a telegraf config.
      *
      * @param name               Telegraf Configuration Name
      * @param description        Telegraf Configuration Description
@@ -85,7 +85,7 @@ public interface TelegrafsApi {
                                         @Nonnull final TelegrafPlugin... plugins);
 
     /**
-     * Create a telegraf config
+     * Create a telegraf config.
      *
      * @param name               Telegraf Configuration Name
      * @param description        Telegraf Configuration Description
@@ -102,7 +102,7 @@ public interface TelegrafsApi {
                                         @Nonnull final TelegrafPlugin... plugins);
 
     /**
-     * Create a telegraf config
+     * Create a telegraf config.
      *
      * @param name               Telegraf Configuration Name
      * @param description        Telegraf Configuration Description
@@ -119,7 +119,7 @@ public interface TelegrafsApi {
                                         @Nonnull final Collection<TelegrafPlugin> plugins);
 
     /**
-     * Create a telegraf config
+     * Create a telegraf config.
      *
      * @param name               Telegraf Configuration Name
      * @param description        Telegraf Configuration Description
@@ -150,7 +150,7 @@ public interface TelegrafsApi {
     void deleteTelegrafConfig(@Nonnull final String telegrafConfigID);
 
     /**
-     * Retrieve a telegraf config
+     * Retrieve a telegraf config.
      *
      * @param telegrafConfigID ID of telegraf config to get
      * @return telegraf config details
@@ -159,7 +159,7 @@ public interface TelegrafsApi {
     TelegrafConfig findTelegrafConfigByID(@Nonnull final String telegrafConfigID);
 
     /**
-     * Returns a list of telegraf configs
+     * Returns a list of telegraf configs.
      *
      * @return A list of telegraf configs
      */
@@ -183,4 +183,22 @@ public interface TelegrafsApi {
      */
     @Nonnull
     List<TelegrafConfig> findTelegrafConfigsByOrgId(@Nullable final String orgId);
+
+    /**
+     * Retrieve a telegraf config in TOML.
+     *
+     * @param telegrafConfig telegraf config to get
+     * @return telegraf config details in TOML format
+     */
+    @Nonnull
+    String getTOML(@Nonnull final TelegrafConfig telegrafConfig);
+
+    /**
+     * Retrieve a telegraf config in TOML.
+     *
+     * @param telegrafConfigID ID of telegraf config to get
+     * @return telegraf config details in TOML format
+     */
+    @Nonnull
+    String getTOML(@Nonnull final String telegrafConfigID);
 }

@@ -21,6 +21,7 @@
  */
 package org.influxdata.client.internal;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -36,10 +37,12 @@ import org.influxdata.client.domain.TelegrafAgent;
 import org.influxdata.client.domain.TelegrafConfig;
 import org.influxdata.client.domain.TelegrafConfigs;
 import org.influxdata.client.domain.TelegrafPlugin;
+import org.influxdata.exceptions.InfluxException;
 import org.influxdata.exceptions.NotFoundException;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 /**
@@ -164,7 +167,7 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
         Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig ID");
 
-        Call<TelegrafConfig> telegrafConfig = influxDBService.findTelegrafConfigByID(telegrafConfigID, "application/json");
+        Call<TelegrafConfig> telegrafConfig = influxDBService.findTelegrafConfigByID(telegrafConfigID);
 
         return execute(telegrafConfig, NotFoundException.class);
     }
@@ -194,5 +197,29 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
         LOG.log(Level.FINEST, "findTelegrafConfigs found: {0}", telegrafConfigs);
         
         return telegrafConfigs.getConfigs();
+    }
+
+    @Nonnull
+    @Override
+    public String getTOML(@Nonnull final TelegrafConfig telegrafConfig) {
+
+        Arguments.checkNotNull(telegrafConfig, "TelegrafConfig");
+
+        return getTOML(telegrafConfig.getId());
+    }
+
+    @Nonnull
+    @Override
+    public String getTOML(@Nonnull final String telegrafConfigID) {
+
+        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig ID");
+
+        Call<ResponseBody> telegrafConfig = influxDBService.findTelegrafConfigByIDInTOML(telegrafConfigID);
+
+        try {
+            return execute(telegrafConfig).string();
+        } catch (IOException e) {
+            throw new InfluxException(e);
+        }
     }
 }
