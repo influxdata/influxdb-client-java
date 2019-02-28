@@ -28,7 +28,7 @@ import com.squareup.moshi.Json;
 
 /**
  * TelegrafConfig stores telegraf config for one telegraf instance.
- * 
+ *
  * @author Jakub Bednar (bednar@github) (28/02/2019 08:45)
  */
 public final class TelegrafConfig extends AbstractHasLabels {

@@ -130,7 +130,7 @@ public interface InfluxDBClient extends AutoCloseable {
     ScraperTargetsApi getScraperTargetsApi();
 
     /**
-     * Get the {@link TelegrafConfig} client
+     * Get the {@link TelegrafConfig} client.
      *
      * @return the new client instance for Telegrafs API
      */

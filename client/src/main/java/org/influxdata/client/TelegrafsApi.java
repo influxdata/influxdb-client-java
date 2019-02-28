@@ -34,8 +34,8 @@ import org.influxdata.client.domain.User;
 
 /**
  * The client of the InfluxDB 2.0 that implement Telegrafs HTTP API endpoint.
- * <br/>
- * <br/>
+ * <br>
+ * <br>
  * <p>
  * The following example shows how to create a Telegraf configuration with an output plugin and an input cpu plugin.
  * <pre>
@@ -138,7 +138,7 @@ public interface TelegrafsApi {
                                         @Nonnull final Collection<TelegrafPlugin> plugins);
 
     /**
-     * Update a telegraf config
+     * Update a telegraf config.
      *
      * @param telegrafConfig telegraf config update to apply
      * @return An updated telegraf
