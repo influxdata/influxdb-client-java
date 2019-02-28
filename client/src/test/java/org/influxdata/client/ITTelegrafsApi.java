@@ -27,9 +27,11 @@ import javax.annotation.Nonnull;
 
 import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Organization;
+import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.TelegrafConfig;
 import org.influxdata.client.domain.TelegrafPlugin;
 import org.influxdata.client.domain.TelegrafPluginType;
+import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
@@ -45,12 +47,14 @@ import org.junit.runner.RunWith;
 class ITTelegrafsApi extends AbstractITClientTest {
 
     private TelegrafsApi telegrafsApi;
+    private UsersApi usersApi;
     private Organization organization;
 
     @BeforeEach
     void setUp() {
 
         telegrafsApi = influxDBClient.getTelegrafsApi();
+        usersApi = influxDBClient.getUsersApi();
         organization = findMyOrg();
 
         telegrafsApi.findTelegrafConfigs().forEach(telegrafConfig -> telegrafsApi.deleteTelegrafConfig(telegrafConfig));
@@ -204,6 +208,65 @@ class ITTelegrafsApi extends AbstractITClientTest {
         Assertions.assertThatThrownBy(() -> telegrafsApi.getTOML("020f755c3d082000"))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("telegraf configuration not found");
+    }
+
+    @Test
+    void member() {
+
+        TelegrafConfig telegrafConfig = telegrafsApi
+                .createTelegrafConfig(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+
+        List<ResourceMember> members = telegrafsApi.getMembers(telegrafConfig);
+        Assertions.assertThat(members).hasSize(0);
+
+        User user = usersApi.createUser(generateName("Luke Health"));
+
+        ResourceMember resourceMember = telegrafsApi.addMember(user, telegrafConfig);
+        Assertions.assertThat(resourceMember).isNotNull();
+        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
+
+        members = telegrafsApi.getMembers(telegrafConfig);
+        Assertions.assertThat(members).hasSize(1);
+        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
+        Assertions.assertThat(members.get(0).getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(members.get(0).getUserName()).isEqualTo(user.getName());
+
+        telegrafsApi.deleteMember(user, telegrafConfig);
+
+        members = telegrafsApi.getMembers(telegrafConfig);
+        Assertions.assertThat(members).hasSize(0);
+    }
+
+    @Test
+    void owner() {
+
+        TelegrafConfig telegrafConfig = telegrafsApi
+                .createTelegrafConfig(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+
+        List<ResourceMember> owners = telegrafsApi.getOwners(telegrafConfig);
+        Assertions.assertThat(owners).hasSize(1);
+        Assertions.assertThat(owners.get(0).getUserName()).isEqualTo("my-user");
+
+        User user = usersApi.createUser(generateName("Luke Health"));
+
+        ResourceMember resourceMember = telegrafsApi.addOwner(user, telegrafConfig);
+        Assertions.assertThat(resourceMember).isNotNull();
+        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.OWNER);
+
+        owners = telegrafsApi.getOwners(telegrafConfig);
+        Assertions.assertThat(owners).hasSize(2);
+        Assertions.assertThat(owners.get(1).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
+        Assertions.assertThat(owners.get(1).getUserID()).isEqualTo(user.getId());
+        Assertions.assertThat(owners.get(1).getUserName()).isEqualTo(user.getName());
+
+        telegrafsApi.deleteOwner(user, telegrafConfig);
+
+        owners = telegrafsApi.getOwners(telegrafConfig);
+        Assertions.assertThat(owners).hasSize(1);
     }
 
     @Nonnull

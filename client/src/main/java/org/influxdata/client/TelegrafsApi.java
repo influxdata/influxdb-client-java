@@ -27,8 +27,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.Organization;
+import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.TelegrafConfig;
 import org.influxdata.client.domain.TelegrafPlugin;
+import org.influxdata.client.domain.User;
 
 /**
  * The client of the InfluxDB 2.0 that implement Telegrafs HTTP API endpoint.
@@ -210,4 +212,112 @@ public interface TelegrafsApi {
      */
     @Nonnull
     String getTOML(@Nonnull final String telegrafConfigID);
+
+    /**
+     * List all users with member privileges for a telegraf config.
+     *
+     * @param telegrafConfig the telegraf config
+     * @return a list of telegraf config members
+     */
+    @Nonnull
+    List<ResourceMember> getMembers(@Nonnull final TelegrafConfig telegrafConfig);
+
+    /**
+     * List all users with member privileges for a telegraf config.
+     *
+     * @param telegrafConfigID ID of the telegraf config
+     * @return a list of telegraf config members
+     */
+    @Nonnull
+    List<ResourceMember> getMembers(@Nonnull final String telegrafConfigID);
+
+    /**
+     * Add telegraf config member.
+     *
+     * @param member         user to add as member
+     * @param telegrafConfig the telegraf config
+     * @return member added to telegraf
+     */
+    @Nonnull
+    ResourceMember addMember(@Nonnull final User member, @Nonnull final TelegrafConfig telegrafConfig);
+
+    /**
+     * Add telegraf config member.
+     *
+     * @param memberID         user ID to add as member
+     * @param telegrafConfigID ID of the telegraf config
+     * @return member added to telegraf
+     */
+    @Nonnull
+    ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String telegrafConfigID);
+
+    /**
+     * Removes a member from a telegraf config.
+     *
+     * @param member         member to remove
+     * @param telegrafConfig the telegraf
+     */
+    void deleteMember(@Nonnull final User member, @Nonnull final TelegrafConfig telegrafConfig);
+
+    /**
+     * Removes a member from a telegraf config.
+     *
+     * @param telegrafConfigID ID of the telegraf
+     * @param memberID         ID of member to remove
+     */
+    void deleteMember(@Nonnull final String memberID, @Nonnull final String telegrafConfigID);
+
+    /**
+     * List all owners of a telegraf config.
+     *
+     * @param telegrafConfig the telegraf config
+     * @return a list of telegraf config owners
+     */
+    @Nonnull
+    List<ResourceMember> getOwners(@Nonnull final TelegrafConfig telegrafConfig);
+
+    /**
+     * List all owners of a telegraf config.
+     *
+     * @param telegrafConfigID ID of the telegraf config
+     * @return a list of telegraf config owners
+     */
+    @Nonnull
+    List<ResourceMember> getOwners(@Nonnull final String telegrafConfigID);
+
+    /**
+     * Add telegraf config owner.
+     *
+     * @param owner          user to add as owner
+     * @param telegrafConfig the telegraf config
+     * @return telegraf config owner added
+     */
+    @Nonnull
+    ResourceMember addOwner(@Nonnull final User owner, @Nonnull final TelegrafConfig telegrafConfig);
+
+    /**
+     * Add telegraf config owner.
+     *
+     * @param telegrafConfigID ID of the telegraf config
+     * @param ownerID          ID of user to add as owner
+     * @return telegraf config owner added
+     */
+    @Nonnull
+    ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String telegrafConfigID);
+
+    /**
+     * Removes an owner from a telegraf config.
+     *
+     * @param owner          owner to remove
+     * @param telegrafConfig the telegraf config
+     */
+    void deleteOwner(@Nonnull final User owner, @Nonnull final TelegrafConfig telegrafConfig);
+
+    /**
+     * Removes an owner from a telegraf config.
+     *
+     * @param telegrafConfigID ID of the telegraf config
+     * @param ownerID          ID of owner to remove
+     */
+    void deleteOwner(@Nonnull final String ownerID, @Nonnull final String telegrafConfigID);
 }

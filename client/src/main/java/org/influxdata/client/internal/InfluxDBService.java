@@ -597,6 +597,40 @@ public interface InfluxDBService {
     Call<TelegrafConfig> updateTelegrafConfig(@Nonnull @Path("id") final String telegrafConfigID,
                                               @Nonnull @Body final RequestBody telegrafConfig);
 
+    @GET("/api/v2/telegrafs/{id}/members")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<ResourceMembers> findTelegrafConfigMembers(@Nonnull @Path("id") final String telegrafConfigID);
+
+    @POST("/api/v2/telegrafs/{id}/members")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<ResourceMember> addTelegrafConfigMember(@Nonnull @Path("id") final String telegrafConfigID,
+                                                 @Nonnull @Body final RequestBody member);
+
+    @DELETE("/api/v2/telegrafs/{id}/members/{userID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteTelegrafConfigMember(@Nonnull @Path("id") final String telegrafConfigID,
+                                          @Nonnull @Path("userID") final String userID);
+
+    @GET("/api/v2/telegrafs/{id}/owners")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<ResourceMembers> findTelegrafConfigOwners(@Nonnull @Path("id") final String telegrafConfigID);
+
+    @POST("/api/v2/telegrafs/{id}/owners")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<ResourceMember> addTelegrafConfigOwner(@Nonnull @Path("id") final String telegrafConfigID,
+                                                @Nonnull @Body final RequestBody member);
+
+    @DELETE("/api/v2/telegrafs/{id}/owners/{userID}")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteTelegrafConfigOwner(@Nonnull @Path("id") final String telegrafConfigID,
+                                         @Nonnull @Path("userID") final String userID);
+
     // Write
     //
     @POST("/api/v2/write")

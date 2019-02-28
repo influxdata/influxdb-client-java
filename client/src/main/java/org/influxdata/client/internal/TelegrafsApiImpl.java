@@ -33,10 +33,13 @@ import javax.annotation.Nullable;
 import org.influxdata.Arguments;
 import org.influxdata.client.TelegrafsApi;
 import org.influxdata.client.domain.Organization;
+import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceMembers;
 import org.influxdata.client.domain.TelegrafAgent;
 import org.influxdata.client.domain.TelegrafConfig;
 import org.influxdata.client.domain.TelegrafConfigs;
 import org.influxdata.client.domain.TelegrafPlugin;
+import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.exceptions.NotFoundException;
 
@@ -53,12 +56,14 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
     private static final Logger LOG = Logger.getLogger(TelegrafsApiImpl.class.getName());
 
     private final JsonAdapter<TelegrafConfig> adapter;
+    private final JsonAdapter<User> userAdapter;
 
     TelegrafsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi) {
 
         super(influxDBService, moshi);
 
         this.adapter = moshi.adapter(TelegrafConfig.class);
+        this.userAdapter = moshi.adapter(User.class);
     }
 
     @Nonnull
@@ -234,5 +239,139 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
         } catch (IOException e) {
             throw new InfluxException(e);
         }
+    }
+
+    @Nonnull
+    @Override
+    public List<ResourceMember> getMembers(@Nonnull final TelegrafConfig telegrafConfig) {
+
+        Arguments.checkNotNull(telegrafConfig, "TelegrafConfig");
+
+        return getMembers(telegrafConfig.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<ResourceMember> getMembers(@Nonnull final String telegrafConfigID) {
+
+        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
+
+        Call<ResourceMembers> call = influxDBService.findTelegrafConfigMembers(telegrafConfigID);
+        ResourceMembers resourceMembers = execute(call);
+        LOG.log(Level.FINEST, "findTelegrafConfigMembers found: {0}", resourceMembers);
+
+        return resourceMembers.getUsers();
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final User member, @Nonnull final TelegrafConfig telegrafConfig) {
+
+        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+        Arguments.checkNotNull(member, "member");
+
+        return addMember(member.getId(), telegrafConfig.getId());
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String telegrafConfigID) {
+
+        Arguments.checkNonEmpty(memberID, "Member ID");
+        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
+
+        User user = new User();
+        user.setId(memberID);
+
+        String json = userAdapter.toJson(user);
+        Call<ResourceMember> call = influxDBService.addTelegrafConfigMember(telegrafConfigID, createBody(json));
+
+        return execute(call);
+    }
+
+    @Override
+    public void deleteMember(@Nonnull final User member, @Nonnull final TelegrafConfig telegrafConfig) {
+
+        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+        Arguments.checkNotNull(member, "member");
+
+        deleteMember(member.getId(), telegrafConfig.getId());
+    }
+
+    @Override
+    public void deleteMember(@Nonnull final String memberID, @Nonnull final String telegrafConfigID) {
+
+        Arguments.checkNonEmpty(memberID, "Member ID");
+        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
+
+        Call<Void> call = influxDBService.deleteTelegrafConfigMember(telegrafConfigID, memberID);
+        execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public List<ResourceMember> getOwners(@Nonnull final TelegrafConfig telegrafConfig) {
+
+        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+
+        return getOwners(telegrafConfig.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<ResourceMember> getOwners(@Nonnull final String telegrafConfigID) {
+
+        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
+
+        Call<ResourceMembers> call = influxDBService.findTelegrafConfigOwners(telegrafConfigID);
+        ResourceMembers resourceMembers = execute(call);
+        LOG.log(Level.FINEST, "findTelegrafConfigOwners found: {0}", resourceMembers);
+
+        return resourceMembers.getUsers();
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final TelegrafConfig telegrafConfig) {
+
+        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+        Arguments.checkNotNull(owner, "owner");
+
+        return addOwner(owner.getId(), telegrafConfig.getId());
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String telegrafConfigID) {
+
+        Arguments.checkNonEmpty(ownerID, "Owner ID");
+        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
+
+        User user = new User();
+        user.setId(ownerID);
+
+        String json = userAdapter.toJson(user);
+        Call<ResourceMember> call = influxDBService.addTelegrafConfigOwner(telegrafConfigID, createBody(json));
+
+        return execute(call);
+    }
+
+    @Override
+    public void deleteOwner(@Nonnull final User owner, @Nonnull final TelegrafConfig telegrafConfig) {
+
+        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+        Arguments.checkNotNull(owner, "owner");
+
+        deleteOwner(owner.getId(), telegrafConfig.getId());
+    }
+
+    @Override
+    public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String telegrafConfigID) {
+
+        Arguments.checkNonEmpty(ownerID, "Owner ID");
+        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
+
+        Call<Void> call = influxDBService.deleteTelegrafConfigOwner(telegrafConfigID, ownerID);
+        execute(call);
     }
 }
