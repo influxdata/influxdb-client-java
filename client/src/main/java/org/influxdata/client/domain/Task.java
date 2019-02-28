@@ -33,7 +33,7 @@ import com.squareup.moshi.Json;
  *
  * @author Jakub Bednar (bednar@github) (05/09/2018 08:09)
  */
-public final class Task extends AbstractHasLinks {
+public final class Task extends AbstractHasLabels {
 
     private String id;
 

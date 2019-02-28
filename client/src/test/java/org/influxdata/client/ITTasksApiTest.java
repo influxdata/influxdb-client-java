@@ -601,6 +601,12 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
         Assertions.assertThat(labels.get(0).getName()).isEqualTo(label.getName());
 
+        task = tasksApi.findTaskByID(task.getId());
+        Assertions.assertThat(task).isNotNull();
+        Assertions.assertThat(task.getLabels()).hasSize(1);
+        Assertions.assertThat(task.getLabels().get(0).getId()).isEqualTo(label.getId());
+        Assertions.assertThat(task.getLabels().get(0).getName()).isEqualTo(label.getName());
+
         tasksApi.deleteLabel(label, task);
 
         labels = tasksApi.getLabels(task);
