@@ -22,9 +22,12 @@
 package org.influxdata.client;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 
+import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.TelegrafConfig;
@@ -264,6 +267,59 @@ class ITTelegrafsApi extends AbstractITClientTest {
 
         owners = telegrafsApi.getOwners(telegrafConfig);
         Assertions.assertThat(owners).hasSize(1);
+    }
+
+    @Test
+    void labels() {
+
+        LabelsApi labelsApi = influxDBClient.getLabelsApi();
+
+        TelegrafConfig telegrafConfig = telegrafsApi
+                .createTelegrafConfig(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties);
+
+        List<Label> labels = telegrafsApi.getLabels(telegrafConfig);
+        Assertions.assertThat(labels).hasSize(0);
+
+        Label addedLabel = telegrafsApi.addLabel(label, telegrafConfig);
+        Assertions.assertThat(addedLabel).isNotNull();
+        Assertions.assertThat(addedLabel.getId()).isEqualTo(label.getId());
+        Assertions.assertThat(addedLabel.getName()).isEqualTo(label.getName());
+        Assertions.assertThat(addedLabel.getProperties()).isEqualTo(label.getProperties());
+
+        labels = telegrafsApi.getLabels(telegrafConfig);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
+        Assertions.assertThat(labels.get(0).getName()).isEqualTo(label.getName());
+
+        telegrafsApi.deleteLabel(label, telegrafConfig);
+
+        labels = telegrafsApi.getLabels(telegrafConfig);
+        Assertions.assertThat(labels).hasSize(0);
+    }
+
+    @Test
+    void labelAddNotExists() {
+
+        TelegrafConfig telegrafConfig = telegrafsApi
+                .createTelegrafConfig(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+
+        Assertions.assertThatThrownBy(() -> telegrafsApi.addLabel("020f755c3c082000", telegrafConfig.getId()))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void labelDeleteNotExists() {
+
+        TelegrafConfig telegrafConfig = telegrafsApi
+                .createTelegrafConfig(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+
+        telegrafsApi.deleteLabel("020f755c3c082000", telegrafConfig.getId());
     }
 
     @Nonnull

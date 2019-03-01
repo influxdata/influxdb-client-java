@@ -32,9 +32,11 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.TelegrafsApi;
+import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
+import org.influxdata.client.domain.ResourceType;
 import org.influxdata.client.domain.TelegrafAgent;
 import org.influxdata.client.domain.TelegrafConfig;
 import org.influxdata.client.domain.TelegrafConfigs;
@@ -374,5 +376,61 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
         Call<Void> call = influxDBService.deleteTelegrafConfigOwner(telegrafConfigID, ownerID);
         execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final TelegrafConfig telegrafConfig) {
+
+        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+
+        return getLabels(telegrafConfig.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final String telegrafConfigID) {
+
+        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
+
+        return getLabels(telegrafConfigID, "telegrafs");
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final Label label, @Nonnull final TelegrafConfig telegrafConfig) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+
+        return addLabel(label.getId(), telegrafConfig.getId());
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final String labelID, @Nonnull final String telegrafConfigID) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNonEmpty(telegrafConfigID, "telegrafConfigID");
+
+        return addLabel(labelID, telegrafConfigID, "telegrafs", ResourceType.TELEGRAFS);
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final TelegrafConfig telegrafConfig) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+
+        deleteLabel(label.getId(), telegrafConfig.getId());
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String telegrafConfigID) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNonEmpty(telegrafConfigID, "telegrafConfigID");
+
+        deleteLabel(labelID, telegrafConfigID, "telegrafs");
     }
 }

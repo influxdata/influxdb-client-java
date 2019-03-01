@@ -26,6 +26,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.TelegrafConfig;
@@ -320,4 +321,58 @@ public interface TelegrafsApi {
      * @param ownerID          ID of owner to remove
      */
     void deleteOwner(@Nonnull final String ownerID, @Nonnull final String telegrafConfigID);
+
+    /**
+     * List all labels for a telegraf config.
+     *
+     * @param telegrafConfig the telegraf config
+     * @return a list of all labels for a telegraf config
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final TelegrafConfig telegrafConfig);
+
+    /**
+     * List all labels for a telegraf config.
+     *
+     * @param telegrafConfigID ID of the telegraf config
+     * @return a list of all labels for a telegraf config
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final String telegrafConfigID);
+
+    /**
+     * Add a label to a telegraf config.
+     *
+     * @param label          label to add
+     * @param telegrafConfig the telegraf config
+     * @return added label
+     */
+    @Nonnull
+    Label addLabel(@Nonnull final Label label, @Nonnull final TelegrafConfig telegrafConfig);
+
+    /**
+     * Add a label to a telegraf config.
+     *
+     * @param telegrafConfigID ID of the telegraf config
+     * @param labelID          ID of label to add
+     * @return added label
+     */
+    @Nonnull
+    Label addLabel(@Nonnull final String labelID, @Nonnull final String telegrafConfigID);
+
+    /**
+     * Delete a label from a telegraf config.
+     *
+     * @param label          label to delete
+     * @param telegrafConfig the telegraf config
+     */
+    void deleteLabel(@Nonnull final Label label, @Nonnull final TelegrafConfig telegrafConfig);
+
+    /**
+     * Delete a label from a telegraf config.
+     *
+     * @param telegrafConfigID ID of the telegraf config
+     * @param labelID  ID of label to delete
+     */
+    void deleteLabel(@Nonnull final String labelID, @Nonnull final String telegrafConfigID);
 }
