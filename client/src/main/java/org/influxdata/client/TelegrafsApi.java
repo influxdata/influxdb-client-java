@@ -162,6 +162,26 @@ public interface TelegrafsApi {
     void deleteTelegrafConfig(@Nonnull final String telegrafConfigID);
 
     /**
+     * Clone a telegraf config.
+     *
+     * @param clonedName       name of cloned telegraf config
+     * @param telegrafConfigID ID of telegraf config to clone
+     * @return cloned telegraf config
+     */
+    @Nonnull
+    TelegrafConfig cloneTelegrafConfig(@Nonnull final String clonedName, @Nonnull final String telegrafConfigID);
+
+    /**
+     * Clone a telegraf config.
+     *
+     * @param clonedName     name of cloned telegraf config
+     * @param telegrafConfig telegraf config to clone
+     * @return cloned telegraf config
+     */
+    @Nonnull
+    TelegrafConfig cloneTelegrafConfig(@Nonnull final String clonedName, @Nonnull final TelegrafConfig telegrafConfig);
+
+    /**
      * Retrieve a telegraf config.
      *
      * @param telegrafConfigID ID of telegraf config to get

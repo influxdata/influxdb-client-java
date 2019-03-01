@@ -182,6 +182,45 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
         execute(call);
     }
 
+    @Nonnull
+    @Override
+    public TelegrafConfig cloneTelegrafConfig(@Nonnull final String clonedName,
+                                              @Nonnull final String telegrafConfigID) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNonEmpty(telegrafConfigID, "telegrafConfigID");
+
+        TelegrafConfig telegrafConfig = findTelegrafConfigByID(telegrafConfigID);
+        if (telegrafConfig == null) {
+            throw new IllegalStateException("NotFound TelegrafConfig with ID: " + telegrafConfigID);
+        }
+
+        return cloneTelegrafConfig(clonedName, telegrafConfig);
+    }
+
+    @Nonnull
+    @Override
+    public TelegrafConfig cloneTelegrafConfig(@Nonnull final String clonedName,
+                                              @Nonnull final TelegrafConfig telegrafConfig) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNotNull(telegrafConfig, "TelegrafConfig");
+
+        TelegrafConfig cloned = new TelegrafConfig();
+        cloned.setName(clonedName);
+        cloned.setOrgID(telegrafConfig.getOrgID());
+        cloned.setDescription(telegrafConfig.getDescription());
+        cloned.setAgent(new TelegrafAgent());
+        cloned.getAgent().setCollectionInterval(telegrafConfig.getAgent().getCollectionInterval());
+        cloned.getPlugins().addAll(telegrafConfig.getPlugins());
+
+        TelegrafConfig created = createTelegrafConfig(cloned);
+
+        getLabels(telegrafConfig).forEach(label -> addLabel(label, created));
+
+        return created;
+    }
+
     @Nullable
     @Override
     public TelegrafConfig findTelegrafConfigByID(@Nonnull final String telegrafConfigID) {

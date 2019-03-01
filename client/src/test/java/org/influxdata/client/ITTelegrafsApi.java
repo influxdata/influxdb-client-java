@@ -322,6 +322,44 @@ class ITTelegrafsApi extends AbstractITClientTest {
         telegrafsApi.deleteLabel("020f755c3c082000", telegrafConfig.getId());
     }
 
+    @Test
+    void cloneTelegrafConfig() {
+
+        TelegrafConfig source = telegrafsApi
+                .createTelegrafConfig(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+
+        String name = generateName("cloned");
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties);
+
+        telegrafsApi.addLabel(label, source);
+
+        TelegrafConfig cloned = telegrafsApi.cloneTelegrafConfig(name, source.getId());
+
+        Assertions.assertThat(cloned.getName()).isEqualTo(name);
+        Assertions.assertThat(cloned.getOrgID()).isEqualTo(organization.getId());
+        Assertions.assertThat(cloned.getDescription()).isEqualTo(source.getDescription());
+        Assertions.assertThat(cloned.getAgent().getCollectionInterval()).isEqualTo(source.getAgent().getCollectionInterval());
+        Assertions.assertThat(cloned.getPlugins()).hasSize(2);
+        Assertions.assertThat(cloned.getPlugins().get(0).getName()).isEqualTo("cpu");
+        Assertions.assertThat(cloned.getPlugins().get(1).getName()).isEqualTo("influxdb_v2");
+
+        List<Label> labels = telegrafsApi.getLabels(cloned);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
+    }
+
+    @Test
+    void cloneTelegrafConfigNotFound() {
+        Assertions.assertThatThrownBy(() -> telegrafsApi.cloneTelegrafConfig(generateName("cloned"), "020f755c3c082000"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("NotFound TelegrafConfig with ID: 020f755c3c082000");
+    }
+
     @Nonnull
     private TelegrafPlugin newCpuPlugin() {
 

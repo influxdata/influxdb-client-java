@@ -30,9 +30,9 @@ DEFAULT_INFLUXDB_VERSION="1.7"
 INFLUXDB_VERSION="${INFLUXDB_VERSION:-$DEFAULT_INFLUXDB_VERSION}"
 INFLUXDB_IMAGE=influxdb:${INFLUXDB_VERSION}-alpine
 
-DEFAULT_INFLUXDB_2_VERSION="nightly"
-INFLUXDB_2_VERSION="${INFLUXDB_2_VERSION:-$DEFAULT_INFLUXDB_2_VERSION}"
-INFLUXDB_2_IMAGE=${DOCKER_REGISTRY}influx:${INFLUXDB_2_VERSION}
+DEFAULT_INFLUXDB_V2_VERSION="nightly"
+INFLUXDB_V2_VERSION="${INFLUXDB_V2_VERSION:-$DEFAULT_INFLUXDB_V2_VERSION}"
+INFLUXDB_V2_IMAGE=${DOCKER_REGISTRY}influx:${INFLUXDB_V2_VERSION}
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
@@ -62,18 +62,18 @@ sleep 5
 # InfluxDB 2.0
 #
 echo
-echo "Restarting InfluxDB 2.0 [${INFLUXDB_2_IMAGE}] ... "
+echo "Restarting InfluxDB 2.0 [${INFLUXDB_V2_IMAGE}] ... "
 echo
 
-docker kill influxdb_2 || true
-docker rm influxdb_2 || true
-docker pull ${INFLUXDB_2_IMAGE} || true
+docker kill influxdb_v2 || true
+docker rm influxdb_v2 || true
+docker pull ${INFLUXDB_V2_IMAGE} || true
 docker run \
        --detach \
-       --name influxdb_2 \
+       --name influxdb_v2 \
        --link=influxdb \
        --publish 9999:9999 \
-       ${INFLUXDB_2_IMAGE}
+       ${INFLUXDB_V2_IMAGE}
 
 echo "Wait 5s to start InfluxDB 2.0"
 sleep 5
@@ -96,13 +96,13 @@ echo
 echo "Restarting InfluxDB 2.0 for onboarding test... "
 echo
 
-docker kill influxdb_2_onboarding || true
-docker rm influxdb_2_onboarding || true
+docker kill influxdb_v2_onboarding || true
+docker rm influxdb_v2_onboarding || true
 docker run \
        --detach \
-       --name influxdb_2_onboarding\
+       --name influxdb_v2_onboarding\
        --publish 9990:9999 \
-       ${INFLUXDB_2_IMAGE}
+       ${INFLUXDB_V2_IMAGE}
 
 
 
