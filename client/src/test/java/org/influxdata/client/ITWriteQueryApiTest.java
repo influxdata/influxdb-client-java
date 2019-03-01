@@ -279,6 +279,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
 
         influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-user", "my-password".toCharArray());
         String token = findMyToken();
+        //X2Q2jEU004Gzxf4dd8MSSQ23W-FV7-qQAjtH5js4LGHi578U4j1oFBoiCLO6Wx39QliSU07oubQ14P7LpT68VQ==
         influxDBClient.close();
 
         // Login as operator

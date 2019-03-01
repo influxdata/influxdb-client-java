@@ -38,6 +38,7 @@ import org.influxdata.client.QueryApi;
 import org.influxdata.client.ScraperTargetsApi;
 import org.influxdata.client.SourcesApi;
 import org.influxdata.client.TasksApi;
+import org.influxdata.client.TelegrafsApi;
 import org.influxdata.client.UsersApi;
 import org.influxdata.client.WriteApi;
 import org.influxdata.client.WriteOptions;
@@ -129,6 +130,12 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Override
     public ScraperTargetsApi getScraperTargetsApi() {
         return new ScraperTargetsApiImpl(influxDBService, moshi);
+    }
+
+    @Nonnull
+    @Override
+    public TelegrafsApi getTelegrafsApi() {
+        return new TelegrafsApiImpl(influxDBService, moshi);
     }
 
     @Nonnull
