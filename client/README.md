@@ -552,6 +552,7 @@ The client has following management API:
 | **/api/v2/tasks** | Managing one-off and recurring tasks | [TasksApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/TasksApi.html) |
 | **/api/v2/scrapers** | Managing ScraperTarget data | [ScraperTargetsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/ScraperTargetsApi.html) |
 | **/api/v2/labels** | Managing resource labels | [LabelsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/LabelsApi.html) |
+| **/api/v2/telegrafs** | Managing telegraf config data | [TelegrafsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/TelegrafsApi.html) |
 | **/api/v2/setup** | Managing onboarding setup | [InfluxDBClient#onBoarding()](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#onBoarding-org.influxdata.client.domain.Onboarding-) |
 | **/ready** | Get the readiness of a instance at startup| [InfluxDBClient#ready()](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#ready--) |
 | **/health** | Get the health of an instance anytime during execution | [InfluxDBClient#health()](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#health--) |

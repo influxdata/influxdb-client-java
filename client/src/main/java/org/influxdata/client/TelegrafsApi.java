@@ -392,7 +392,7 @@ public interface TelegrafsApi {
      * Delete a label from a telegraf config.
      *
      * @param telegrafConfigID ID of the telegraf config
-     * @param labelID  ID of label to delete
+     * @param labelID          ID of label to delete
      */
     void deleteLabel(@Nonnull final String labelID, @Nonnull final String telegrafConfigID);
 }
