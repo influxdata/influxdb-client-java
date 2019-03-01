@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 - 2019 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 81,
+      <title>File: 89,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -173,6 +173,34 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.InfluxDBClientFactory.java">org/influxdata/client/InfluxDBClientFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.TelegrafAgent.java">org/influxdata/client/domain/TelegrafAgent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.TelegrafPlugin.java">org/influxdata/client/domain/TelegrafPlugin.java</a>
                 </td>
                 <td>
                   0
@@ -368,7 +396,35 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.TelegrafPluginType.java">org/influxdata/client/domain/TelegrafPluginType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.AuthorizationsApi.java">org/influxdata/client/AuthorizationsApi.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.AbstractHasLabels.java">org/influxdata/client/domain/AbstractHasLabels.java</a>
                 </td>
                 <td>
                   0
@@ -481,6 +537,34 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.AbstractWriteClient.java">org/influxdata/client/internal/AbstractWriteClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.TelegrafConfigs.java">org/influxdata/client/domain/TelegrafConfigs.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.TelegrafConfig.java">org/influxdata/client/domain/TelegrafConfig.java</a>
                 </td>
                 <td>
                   0
@@ -844,6 +928,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.TelegrafsApiImpl.java">org/influxdata/client/internal/TelegrafsApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.AuthorizationsApiImpl.java">org/influxdata/client/internal/AuthorizationsApiImpl.java</a>
                 </td>
                 <td>
@@ -1013,6 +1111,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.write.events.BackpressureEvent.java">org/influxdata/client/write/events/BackpressureEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.TelegrafsApi.java">org/influxdata/client/TelegrafsApi.java</a>
                 </td>
                 <td>
                   0
