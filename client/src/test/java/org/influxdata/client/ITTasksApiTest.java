@@ -274,6 +274,8 @@ class ITTasksApiTest extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/12322
     void updateTask() {
 
         String taskName = generateName("it task");
@@ -281,7 +283,7 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         String flux = "option task = {\n"
                 + "    name: \"" + taskName + "\",\n"
-                + "    every: 2m\n"
+                + "    every: 3m\n"
                 + "}\n\n" + TASK_FLUX;
 
         cronTask.setFlux(flux);
@@ -291,7 +293,7 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         Assertions.assertThat(updatedTask).isNotNull();
         Assertions.assertThat(updatedTask.getId()).isEqualTo(cronTask.getId());
-        Assertions.assertThat(updatedTask.getEvery()).isEqualTo("2m0s");
+        Assertions.assertThat(updatedTask.getEvery()).isEqualTo("3m0s");
         Assertions.assertThat(updatedTask.getCron()).isNull();
         Assertions.assertThat(updatedTask.getFlux()).isEqualToIgnoringWhitespace(flux);
         Assertions.assertThat(updatedTask.getStatus()).isEqualTo(Status.INACTIVE);

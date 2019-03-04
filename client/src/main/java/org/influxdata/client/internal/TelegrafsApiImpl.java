@@ -249,9 +249,9 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public List<TelegrafConfig> findTelegrafConfigsByOrgId(@Nullable final String orgId) {
+    public List<TelegrafConfig> findTelegrafConfigsByOrgId(@Nullable final String orgID) {
 
-        Call<TelegrafConfigs> configsCall = influxDBService.findTelegrafConfigs(orgId);
+        Call<TelegrafConfigs> configsCall = influxDBService.findTelegrafConfigs(orgID);
 
         TelegrafConfigs telegrafConfigs = execute(configsCall);
         LOG.log(Level.FINEST, "findTelegrafConfigs found: {0}", telegrafConfigs);

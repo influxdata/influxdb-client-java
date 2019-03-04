@@ -208,13 +208,13 @@ public interface TelegrafsApi {
     List<TelegrafConfig> findTelegrafConfigsByOrg(@Nonnull final Organization organization);
 
     /**
-     * Returns a list of telegraf configs for specified {@code orgId}.
+     * Returns a list of telegraf configs for specified {@code orgID}.
      *
-     * @param orgId specifies the organization of the telegraf configs
+     * @param orgID specifies the organization of the telegraf configs
      * @return A list of telegraf configs
      */
     @Nonnull
-    List<TelegrafConfig> findTelegrafConfigsByOrgId(@Nullable final String orgId);
+    List<TelegrafConfig> findTelegrafConfigsByOrgId(@Nullable final String orgID);
 
     /**
      * Retrieve a telegraf config in TOML.
