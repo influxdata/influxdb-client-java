@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 - 2019 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 184,
+      <title>File: 186,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -1138,6 +1138,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/checkstyle.html#org.influxdata.exceptions.RequestEntityTooLargeException.java">org/influxdata/exceptions/RequestEntityTooLargeException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.OperationLogEntries.java">org/influxdata/client/domain/OperationLogEntries.java</a>
                 </td>
                 <td>
@@ -1195,6 +1209,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Labels.java">org/influxdata/client/domain/Labels.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/checkstyle.html#org.influxdata.client.write.events.WriteRetriableErrorEvent.java">org/influxdata/client/write/events/WriteRetriableErrorEvent.java</a>
                 </td>
                 <td>
                   0
