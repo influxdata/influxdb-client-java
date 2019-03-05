@@ -32,13 +32,13 @@ import org.influxdata.client.reactive.WriteReactiveApi;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.AbstractWriteEvent;
 
-import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.RequestBody;
 import org.reactivestreams.Publisher;
+import retrofit2.Response;
 
 /**
  * @author Jakub Bednar (bednar@github) (22/11/2018 06:50)
@@ -195,10 +195,11 @@ public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteRe
     }
 
     @Override
-    public Completable writeCall(final RequestBody requestBody,
-                                 final String organization,
-                                 final String bucket,
-                                 final String precision) {
+    public Maybe<Response<Void>> writeCall(final RequestBody requestBody,
+                                           final String organization,
+                                           final String bucket,
+                                           final String precision) {
+
         return influxDBService.writePoints(organization, bucket, precision, requestBody);
     }
 }

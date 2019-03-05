@@ -32,7 +32,11 @@ import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.BackpressureEvent;
 import org.influxdata.client.write.events.WriteErrorEvent;
 import org.influxdata.client.write.events.WriteSuccessEvent;
+import org.influxdata.exceptions.BadRequestException;
+import org.influxdata.exceptions.ForbiddenException;
 import org.influxdata.exceptions.InfluxException;
+import org.influxdata.exceptions.RequestEntityTooLargeException;
+import org.influxdata.exceptions.UnauthorizedException;
 
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
@@ -310,8 +314,8 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
     @Test
     void batching() {
 
-        mockServer.enqueue(createResponse("{}"));
-        mockServer.enqueue(createResponse("{}"));
+        mockServer.enqueue(createResponse(""));
+        mockServer.enqueue(createResponse(""));
 
         writeApi = createWriteClient(WriteOptions.builder().flushInterval(10_000).batchSize(2).build());
 
@@ -516,7 +520,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
     @Test
     void eventUnhandledErrorEvent() {
 
-        mockServer.enqueue(createErrorResponse("Failed to find bucket"));
+        mockServer.enqueue(createErrorResponse("no token was sent and they are required", true, 403));
 
         writeApi = createWriteClient(WriteOptions.builder().batchSize(1).build());
         WriteEventListener<WriteErrorEvent> listener = new WriteEventListener<>();
@@ -531,8 +535,8 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         Assertions.assertThat(listener.getValue()).isNotNull();
         Assertions.assertThat(listener.getValue().getThrowable()).isNotNull();
         Assertions.assertThat(listener.getValue().getThrowable())
-                .isInstanceOf(InfluxException.class)
-                .hasMessage("Failed to find bucket");
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("no token was sent and they are required");
     }
 
     @Test
@@ -558,6 +562,87 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         BackpressureEvent backpressureEvent = listener.awaitCount(1).getValue();
         Assertions.assertThat(backpressureEvent).isNotNull();
+    }
+
+    @Test
+    void retry() {
+
+        mockServer.enqueue(createErrorResponse("token is temporarily over quota", true, 429));
+        mockServer.enqueue(createResponse("{}"));
+
+        writeApi = createWriteClient();
+
+        writeApi.writePoint("b1", "org1", Point.measurement("h2o").addTag("location", "europe").addField("level", 2));
+
+        String body1 = getRequestBody(mockServer);
+        Assertions.assertThat(body1).isEqualTo("h2o,location=europe level=2i");
+
+        String body2 = getRequestBody(mockServer);
+        Assertions.assertThat(body2).isEqualTo("h2o,location=europe level=2i");
+
+        Assertions.assertThat(mockServer.getRequestCount())
+                .isEqualTo(2);
+    }
+
+    @Test
+    void retryNotApplied() {
+
+        mockServer.enqueue(createErrorResponse("line protocol poorly formed and no points were written", true, 400));
+        mockServer.enqueue(createErrorResponse("token does not have sufficient permissions to write to this organization and bucket or the organization and bucket do not exist", true, 401));
+        mockServer.enqueue(createErrorResponse("no token was sent and they are required", true, 403));
+        mockServer.enqueue(createErrorResponse("write has been rejected because the payload is too large. Error message returns max size supported. All data in body was rejected and not written", true, 413));
+
+        writeApi = createWriteClient();
+
+        WriteEventListener<WriteErrorEvent> listener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteErrorEvent.class, listener);
+
+        //
+        // 400
+        //
+        writeApi.writeRecord("b1", "org1", ChronoUnit.NANOS,
+                "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
+
+        WriteErrorEvent error = listener.awaitCount(1).popValue();
+        Assertions.assertThat(error.getThrowable())
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("line protocol poorly formed and no points were written");
+
+        //
+        // 401
+        //
+        writeApi.writeRecord("b1", "org1", ChronoUnit.NANOS,
+                "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
+        
+        error = listener.awaitCount(1).popValue();
+        Assertions.assertThat(error.getThrowable())
+                .isInstanceOf(UnauthorizedException.class)
+                .hasMessage("token does not have sufficient permissions to write to this organization and bucket or the organization and bucket do not exist");
+
+        //
+        // 403
+        //
+        writeApi.writeRecord("b1", "org1", ChronoUnit.NANOS,
+                "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
+
+        error = listener.awaitCount(1).popValue();
+        Assertions.assertThat(error.getThrowable())
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("no token was sent and they are required");
+
+        //
+        // 413
+        //
+        writeApi.writeRecord("b1", "org1", ChronoUnit.NANOS,
+                "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
+
+        error = listener.awaitCount(1).popValue();
+        Assertions.assertThat(error.getThrowable())
+                .isInstanceOf(RequestEntityTooLargeException.class)
+                .hasMessage("write has been rejected because the payload is too large. Error message returns max size supported. All data in body was rejected and not written");
+
+        Assertions.assertThat(mockServer.getRequestCount())
+                .isEqualTo(4);
     }
 
     @Nonnull

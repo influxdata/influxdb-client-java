@@ -60,6 +60,13 @@ public class WriteEventListener<T> implements EventListener<T> {
         return values.get(0);
     }
 
+    T popValue()
+    {
+        T value = values.get(0);
+        values.remove(0);
+        return value;
+    }
+
     WriteEventListener<T> awaitCount(@SuppressWarnings("SameParameterValue") final int count) {
 
         long start = System.currentTimeMillis();

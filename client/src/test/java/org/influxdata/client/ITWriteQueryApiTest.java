@@ -38,6 +38,7 @@ import org.influxdata.client.domain.PermissionResource;
 import org.influxdata.client.domain.ResourceType;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.write.Point;
+import org.influxdata.client.write.events.WriteErrorEvent;
 import org.influxdata.client.write.events.WriteSuccessEvent;
 import org.influxdata.query.FluxRecord;
 import org.influxdata.query.FluxTable;
@@ -474,5 +475,36 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         List<FluxTable> tables = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
 
         Assertions.assertThat(tables).hasSize(0);
+    }
+
+    @Test
+    void recovery() {
+
+        String bucketName = bucket.getName();
+
+        writeApi = influxDBClient.getWriteApi();
+        WriteEventListener<WriteErrorEvent> errorListener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteErrorEvent.class, errorListener);
+
+        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, "h2o_feet,location=coyote_creek level\\ water_level=1.0 1x");
+
+        waitToCallback(errorListener.countDownLatch, 10);
+
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
+        Assertions.assertThat(query).hasSize(0);
+
+        WriteEventListener<WriteSuccessEvent> successListener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteSuccessEvent.class, successListener);
+
+        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, "h2o_feet,location=coyote_creek level\\ water_level=1.0 1");
+
+        waitToCallback(successListener.countDownLatch, 10);
+
+        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("location")).isEqualTo("coyote_creek");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("_field")).isEqualTo("level water_level");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValue()).isEqualTo(1.0D);
     }
 }
