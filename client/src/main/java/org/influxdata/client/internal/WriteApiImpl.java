@@ -39,7 +39,6 @@ import org.influxdata.client.write.events.ListenerRegistration;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 
@@ -53,7 +52,7 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
     WriteApiImpl(@Nonnull final WriteOptions writeOptions,
                  @Nonnull final InfluxDBService influxDBService) {
 
-        super(writeOptions, writeOptions.getWriteScheduler(), Schedulers.trampoline());
+        super(writeOptions, writeOptions.getWriteScheduler());
 
         this.influxDBService = influxDBService;
     }

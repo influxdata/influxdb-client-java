@@ -637,9 +637,9 @@ public interface InfluxDBService {
     @POST("/api/v2/write")
     @Nonnull
     Maybe<Response<Void>> writePoints(@Query("org") final String orgID,
-                                @Query("bucket") final String bucket,
-                                @Query("precision") final String precision,
-                                @Body final RequestBody points);
+                                      @Query("bucket") final String bucket,
+                                      @Query("precision") final String precision,
+                                      @Body final RequestBody points);
 
     //
     // Query

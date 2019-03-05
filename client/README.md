@@ -324,6 +324,7 @@ For writing data we use [WriteApi](https://bonitoo-io.github.io/influxdb-client-
     - `WriteSuccessEvent` - published when arrived the success response from Platform server
     - `BackpressureEvent` - published when is **client** backpressure applied
     - `WriteErrorEvent` - published when occurs a unhandled exception
+    - `WriteRetriableErrorEvent` - published when occurs a retriable error
 5. use GZIP compression for data
 
 The writes are processed in batches which are configurable by `WriteOptions`:
@@ -333,7 +334,7 @@ The writes are processed in batches which are configurable by `WriteOptions`:
 | **batchSize** | the number of data point to collect in batch | 1000 |
 | **flushInterval** | the number of milliseconds before the batch is written | 1000 |
 | **jitterInterval** | the number of milliseconds to increase the batch flush interval by a random amount (see documentation above) | 0 |
-| **retryInterval** | the number of milliseconds to retry unsuccessful write | 1000 |
+| **retryInterval** | the number of milliseconds to retry unsuccessful write. The retry interval is used when the InfluxDB server does not specify "Retry-After" header.| 1000 |
 | **bufferLimit** | the maximum number of unwritten stored points | 10000 |
 | **backpressureStrategy** | the strategy to deal with buffer overflow | DROP_OLDEST |
 

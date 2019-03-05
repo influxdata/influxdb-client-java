@@ -67,6 +67,7 @@ public interface InfluxDBClient extends AutoCloseable {
     /**
      * Get the Write client.
      *
+     * @param writeOptions the writes configuration
      * @return the new client instance for the Write API
      */
     @Nonnull

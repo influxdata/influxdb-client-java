@@ -34,6 +34,7 @@ import org.influxdata.client.WriteOptions;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.AbstractWriteEvent;
 import org.influxdata.client.write.events.WriteErrorEvent;
+import org.influxdata.client.write.events.WriteRetriableErrorEvent;
 import org.influxdata.client.write.events.WriteSuccessEvent;
 import org.influxdata.exceptions.BadRequestException;
 import org.influxdata.exceptions.ForbiddenException;
@@ -72,8 +73,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
     private final MeasurementMapper measurementMapper = new MeasurementMapper();
 
     public AbstractWriteClient(@Nonnull final WriteOptions writeOptions,
-                               @Nonnull final Scheduler processorScheduler,
-                               @Nonnull final Scheduler retryScheduler) {
+                               @Nonnull final Scheduler processorScheduler) {
 
         this.writeOptions = writeOptions;
 
@@ -145,7 +145,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                 //
                 // To WritePoints "request creator"
                 //
-                .concatMapMaybe(new ToWritePointsMaybe(retryScheduler))
+                .concatMapMaybe(new ToWritePointsMaybe(processorScheduler))
                 .subscribe(responseNotification -> {
 
                     if (responseNotification.isOnError()) {
@@ -420,7 +420,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
 
             return writeCall(body, organization, bucket, precision)
                     //
-                    // Response is Successful
+                    // Response is not Successful => throw exception
                     //
                     .map((Function<Response<Void>, Response>) response -> {
 
@@ -430,7 +430,13 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
 
                         return response;
                     })
+                    //
+                    // Is exception retriable?
+                    //
                     .retryWhen(AbstractWriteClient.this.retryHandler(retryScheduler, writeOptions))
+                    //
+                    // Map response to Notification => possibility to consume error as event
+                    //
                     .map((Function<Response, Notification<Response>>) response -> {
 
                         if (response.isSuccessful()) {
@@ -484,8 +490,23 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                 //
                 // Retry request
                 //
-                //TODO use from header
-                int retryInterval = writeOptions.getRetryInterval() + jitterDelay();
+                long retryInterval;
+
+                String retryAfter = ((HttpException) throwable).response().headers().get("Retry-After");
+                if (retryAfter != null) {
+
+                    retryInterval = TimeUnit.MILLISECONDS.convert(Integer.valueOf(retryAfter), TimeUnit.SECONDS);
+                } else {
+
+                    retryInterval = writeOptions.getRetryInterval();
+
+                    String msg = "The InfluxDB does not specify \"Retry-After\". Use the default retryInterval: {0}";
+                    LOG.log(Level.FINEST, msg, retryInterval);
+                }
+
+                retryInterval = retryInterval + jitterDelay();
+
+                publish(new WriteRetriableErrorEvent(throwable, retryInterval));
 
                 return Flowable.just("notify").delay(retryInterval, TimeUnit.MILLISECONDS, retryScheduler);
             }

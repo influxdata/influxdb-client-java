@@ -31,6 +31,7 @@ import org.influxdata.client.internal.AbstractInfluxDBClientTest;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.BackpressureEvent;
 import org.influxdata.client.write.events.WriteErrorEvent;
+import org.influxdata.client.write.events.WriteRetriableErrorEvent;
 import org.influxdata.client.write.events.WriteSuccessEvent;
 import org.influxdata.exceptions.BadRequestException;
 import org.influxdata.exceptions.ForbiddenException;
@@ -52,6 +53,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import retrofit2.HttpException;
 
 /**
  * @author Jakub Bednar (bednar@github) (21/09/2018 11:36)
@@ -582,6 +584,45 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         Assertions.assertThat(mockServer.getRequestCount())
                 .isEqualTo(2);
+    }
+
+    @Test
+    void retryWithRetryAfter() throws InterruptedException {
+
+        MockResponse errorResponse = createErrorResponse("token is temporarily over quota", true, 429);
+        errorResponse.addHeader("Retry-After", 5);
+        mockServer.enqueue(errorResponse);
+        mockServer.enqueue(createResponse("{}"));
+
+        writeApi = createWriteClient(WriteOptions.builder().batchSize(1).build());
+
+        WriteEventListener<WriteRetriableErrorEvent> retriableListener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteRetriableErrorEvent.class, retriableListener);
+
+        WriteEventListener<WriteSuccessEvent> successListener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteSuccessEvent.class, successListener);
+
+        writeApi.writePoint("b1", "org1", Point.measurement("h2o").addTag("location", "europe").addField("level", 2));
+
+        retriableListener.awaitCount(1);
+        Assertions.assertThat(retriableListener.getValue().getThrowable())
+                .isInstanceOf(HttpException.class)
+                .hasMessage("HTTP 429 Client Error");
+        
+        Assertions.assertThat(retriableListener.getValue().getRetryInterval()).isEqualTo(5000);
+
+        Thread.sleep(2_000);
+
+        Assertions.assertThat(successListener.values).hasSize(0);
+        successListener.awaitCount(1);
+
+        String body1 = getRequestBody(mockServer);
+        Assertions.assertThat(body1).isEqualTo("h2o,location=europe level=2i");
+
+        String body2 = getRequestBody(mockServer);
+        Assertions.assertThat(body2).isEqualTo("h2o,location=europe level=2i");
+
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(2);
     }
 
     @Test

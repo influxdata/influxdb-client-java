@@ -97,6 +97,10 @@ public final class WriteOptions {
 
 
     /**
+     * The retry interval is used when the InfluxDB server does not specify "Retry-After" header.
+     * <br>
+     * Retry-After: A non-negative decimal integer indicating the seconds to delay after the response is received.
+     *
      * @return the time to wait before retry unsuccessful write (milliseconds)
      * @see WriteOptions.Builder#retryInterval(int)
      */
@@ -210,6 +214,10 @@ public final class WriteOptions {
 
         /**
          * Set the the time to wait before retry unsuccessful write (milliseconds).
+         * <br><br>
+         * The retry interval is used when the InfluxDB server does not specify "Retry-After" header.
+         * <br>
+         * Retry-After: A non-negative decimal integer indicating the seconds to delay after the response is received.
          *
          * @param retryInterval the time to wait before retry unsuccessful write
          * @return {@code this}
