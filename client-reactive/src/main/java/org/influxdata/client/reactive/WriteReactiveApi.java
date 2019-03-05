@@ -30,6 +30,7 @@ import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.AbstractWriteEvent;
 import org.influxdata.client.write.events.BackpressureEvent;
 import org.influxdata.client.write.events.WriteErrorEvent;
+import org.influxdata.client.write.events.WriteRetriableErrorEvent;
 import org.influxdata.client.write.events.WriteSuccessEvent;
 
 import io.reactivex.Flowable;
@@ -187,8 +188,7 @@ public interface WriteReactiveApi extends AutoCloseable {
      * Listen the events produced by {@link WriteApi}.
      * <p>
      * The {@link WriteApi} produces: {@link WriteSuccessEvent},
-     * {@link BackpressureEvent} and
-     * {@link WriteErrorEvent}.
+     * {@link BackpressureEvent}, {@link WriteErrorEvent} and {@link WriteRetriableErrorEvent}.
      *
      * @param eventType type of event to listen
      * @param <T>       type of event to listen

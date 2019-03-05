@@ -33,13 +33,14 @@ import org.influxdata.client.write.events.BackpressureEvent;
 import org.influxdata.client.write.events.EventListener;
 import org.influxdata.client.write.events.ListenerRegistration;
 import org.influxdata.client.write.events.WriteErrorEvent;
+import org.influxdata.client.write.events.WriteRetriableErrorEvent;
 import org.influxdata.client.write.events.WriteSuccessEvent;
 
 /**
  * Write time-series data intoInfluxDB 2.02.0.
  * <p>
  * The data are formatted in <a href="https://bit.ly/2QL99fu">Line Protocol</a>.
- *
+ * <p>
  * //TODO support orgID and orgName (+ query)
  *
  * @author Jakub Bednar (bednar@github) (20/09/2018 10:58)
@@ -143,11 +144,11 @@ public interface WriteApi extends AutoCloseable {
      * Listen the events produced by {@link WriteApi}.
      * <p>
      * The {@link WriteApi} produces: {@link WriteSuccessEvent},
-     * {@link BackpressureEvent} and
-     * {@link WriteErrorEvent}.
+     * {@link BackpressureEvent}, {@link WriteErrorEvent} and {@link WriteRetriableErrorEvent}.
      *
      * @param eventType type of event to listen
      * @param <T>       type of event to listen
+     * @param listener  the listener to listen events
      * @return lister for {@code eventType} events
      */
     @Nonnull

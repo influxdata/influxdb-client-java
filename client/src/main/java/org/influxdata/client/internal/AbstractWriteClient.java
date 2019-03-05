@@ -34,14 +34,19 @@ import org.influxdata.client.WriteOptions;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.AbstractWriteEvent;
 import org.influxdata.client.write.events.WriteErrorEvent;
+import org.influxdata.client.write.events.WriteRetriableErrorEvent;
 import org.influxdata.client.write.events.WriteSuccessEvent;
+import org.influxdata.exceptions.BadRequestException;
+import org.influxdata.exceptions.ForbiddenException;
 import org.influxdata.exceptions.InfluxException;
+import org.influxdata.exceptions.RequestEntityTooLargeException;
+import org.influxdata.exceptions.UnauthorizedException;
 import org.influxdata.internal.AbstractRestClient;
 
-import io.reactivex.Completable;
-import io.reactivex.CompletableSource;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
+import io.reactivex.Maybe;
+import io.reactivex.Notification;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.functions.Function;
@@ -49,6 +54,8 @@ import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subjects.PublishSubject;
 import okhttp3.RequestBody;
 import org.reactivestreams.Publisher;
+import retrofit2.HttpException;
+import retrofit2.Response;
 
 /**
  * @author Jakub Bednar (bednar@github) (21/11/2018 09:26)
@@ -66,8 +73,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
     private final MeasurementMapper measurementMapper = new MeasurementMapper();
 
     public AbstractWriteClient(@Nonnull final WriteOptions writeOptions,
-                               @Nonnull final Scheduler processorScheduler,
-                               @Nonnull final Scheduler retryScheduler) {
+                               @Nonnull final Scheduler processorScheduler) {
 
         this.writeOptions = writeOptions;
 
@@ -139,19 +145,19 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                 //
                 // To WritePoints "request creator"
                 //
-                .concatMapCompletable(new ToWritePointsCompletable(retryScheduler))
-                //
-                // Publish Error event
-                //
-                .subscribe(
-                        () -> LOG.log(Level.FINEST, "Finished batch write."),
-                        throwable -> publish(new WriteErrorEvent(new InfluxException(throwable))));
+                .concatMapMaybe(new ToWritePointsMaybe(processorScheduler))
+                .subscribe(responseNotification -> {
+
+                    if (responseNotification.isOnError()) {
+                        publish(new WriteErrorEvent(toInfluxException(responseNotification.getError())));
+                    }
+                }, throwable -> new WriteErrorEvent(toInfluxException(throwable)));
 
         boundary.subscribe(tempBoundary);
     }
 
     @Nonnull
-    public <T extends AbstractWriteEvent> Observable<T> addEventListener(@Nonnull final Class<T> eventType) {
+    protected <T extends AbstractWriteEvent> Observable<T> addEventListener(@Nonnull final Class<T> eventType) {
 
         Objects.requireNonNull(eventType, "EventType is required");
 
@@ -197,10 +203,10 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                 .subscribe(processor::onNext, throwable -> publish(new WriteErrorEvent(throwable)));
     }
 
-    public abstract Completable writeCall(final RequestBody requestBody,
-                                          final String organization,
-                                          final String bucket,
-                                          final String precision);
+    public abstract Maybe<Response<Void>> writeCall(final RequestBody requestBody,
+                                                    final String organization,
+                                                    final String bucket,
+                                                    final String precision);
 
     @Nonnull
     private String toPrecisionParameter(@Nonnull final ChronoUnit precision) {
@@ -384,28 +390,27 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
         }
     }
 
-    private final class ToWritePointsCompletable implements Function<BatchWriteItem, CompletableSource> {
+    private final class ToWritePointsMaybe implements Function<BatchWriteItem, Maybe<Notification<Response>>> {
 
-        // TODO implement retry, delete retry scheduler?
         private final Scheduler retryScheduler;
 
-        private ToWritePointsCompletable(@Nonnull final Scheduler retryScheduler) {
+        private ToWritePointsMaybe(@Nonnull final Scheduler retryScheduler) {
             this.retryScheduler = retryScheduler;
         }
 
         @Override
-        public CompletableSource apply(final BatchWriteItem batchWrite) {
+        public Maybe<Notification<Response>> apply(final BatchWriteItem batchWrite) {
 
             String content = batchWrite.data.toLineProtocol();
 
             if (content == null || content.isEmpty()) {
-                return Completable.complete();
+                return Maybe.empty();
             }
 
             //
             // InfluxDB Line Protocol => to Request Body
             //
-            RequestBody requestBody = createBody(content);
+            RequestBody body = createBody(content);
 
             //
             // Parameters
@@ -413,8 +418,41 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
             String bucket = batchWrite.batchWriteOptions.bucket;
             String precision = AbstractWriteClient.this.toPrecisionParameter(batchWrite.batchWriteOptions.precision);
 
-            return writeCall(requestBody, organization, bucket, precision)
-                    .doOnComplete(() -> publish(toSuccessEvent(batchWrite, content)));
+            return writeCall(body, organization, bucket, precision)
+                    //
+                    // Response is not Successful => throw exception
+                    //
+                    .map((Function<Response<Void>, Response>) response -> {
+
+                        if (!response.isSuccessful()) {
+                            throw new HttpException(response);
+                        }
+
+                        return response;
+                    })
+                    //
+                    // Is exception retriable?
+                    //
+                    .retryWhen(AbstractWriteClient.this.retryHandler(retryScheduler, writeOptions))
+                    //
+                    // Map response to Notification => possibility to consume error as event
+                    //
+                    .map((Function<Response, Notification<Response>>) response -> {
+
+                        if (response.isSuccessful()) {
+                            return Notification.createOnNext(response);
+                        }
+
+                        return Notification.createOnError(new HttpException(response));
+                    })
+                    .doOnSuccess(responseNotification -> {
+                        if (!responseNotification.isOnError()) {
+                            publish(toSuccessEvent(batchWrite, content));
+                        }
+                    })
+                    .onErrorResumeNext(throwable -> {
+                        return Maybe.just(Notification.createOnError(throwable));
+                    });
         }
 
         @Nonnull
@@ -426,5 +464,71 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                     batchWrite.batchWriteOptions.precision,
                     lineProtocol);
         }
+    }
+
+    private Function<Flowable<Throwable>, Publisher<?>> retryHandler(@Nonnull final Scheduler retryScheduler,
+                                                                     @Nonnull final WriteOptions writeOptions) {
+
+        Objects.requireNonNull(writeOptions, "WriteOptions are required");
+        Objects.requireNonNull(retryScheduler, "RetryScheduler is required");
+
+        return errors -> errors.flatMap(throwable -> {
+
+            if (throwable instanceof HttpException) {
+
+                InfluxException ie = toInfluxException(throwable);
+
+                //
+                // This types is not able to retry
+                //
+                if (ie instanceof BadRequestException || ie instanceof UnauthorizedException
+                        || ie instanceof ForbiddenException || ie instanceof RequestEntityTooLargeException) {
+
+                    return Flowable.error(throwable);
+                }
+
+                //
+                // Retry request
+                //
+                long retryInterval;
+
+                String retryAfter = ((HttpException) throwable).response().headers().get("Retry-After");
+                if (retryAfter != null) {
+
+                    retryInterval = TimeUnit.MILLISECONDS.convert(Integer.valueOf(retryAfter), TimeUnit.SECONDS);
+                } else {
+
+                    retryInterval = writeOptions.getRetryInterval();
+
+                    String msg = "The InfluxDB does not specify \"Retry-After\". Use the default retryInterval: {0}";
+                    LOG.log(Level.FINEST, msg, retryInterval);
+                }
+
+                retryInterval = retryInterval + jitterDelay();
+
+                publish(new WriteRetriableErrorEvent(throwable, retryInterval));
+
+                return Flowable.just("notify").delay(retryInterval, TimeUnit.MILLISECONDS, retryScheduler);
+            }
+
+            //
+            // This type of throwable is not able to retry
+            //
+            return Flowable.error(throwable);
+        });
+    }
+
+    @Nonnull
+    private InfluxException toInfluxException(@Nonnull final Throwable throwable) {
+
+        if (throwable instanceof InfluxException) {
+            return (InfluxException) throwable;
+        }
+
+        if (throwable instanceof HttpException) {
+            return responseToError(((HttpException) throwable).response());
+        }
+
+        return new InfluxException(throwable);
     }
 }

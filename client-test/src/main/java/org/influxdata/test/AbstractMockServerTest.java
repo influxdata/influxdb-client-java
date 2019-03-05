@@ -90,11 +90,18 @@ public abstract class AbstractMockServerTest extends AbstractTest {
 
     @Nonnull
     protected MockResponse createErrorResponse(@Nullable final String influxError, final boolean chunked) {
+        return createErrorResponse(influxError, chunked, INTERNAL_SERVER_ERROR);
+    }
+
+    @Nonnull
+    protected MockResponse createErrorResponse(@Nullable final String influxError,
+                                               final boolean chunked,
+                                               final int responseCode) {
 
         String body = String.format("{\"error\":\"%s\"}", influxError);
 
         MockResponse mockResponse = new MockResponse()
-                .setResponseCode(INTERNAL_SERVER_ERROR)
+                .setResponseCode(responseCode)
                 .addHeader("X-Influx-Error", influxError);
 
         if (chunked) {

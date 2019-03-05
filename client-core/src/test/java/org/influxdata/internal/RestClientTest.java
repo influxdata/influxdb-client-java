@@ -38,6 +38,7 @@ import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.exceptions.NotImplementedException;
 import org.influxdata.exceptions.PaymentRequiredException;
 import org.influxdata.exceptions.ProxyAuthenticationRequiredException;
+import org.influxdata.exceptions.RequestEntityTooLargeException;
 import org.influxdata.exceptions.RequestTimeoutException;
 import org.influxdata.exceptions.ServiceUnavailableException;
 import org.influxdata.exceptions.UnauthorizedException;
@@ -107,6 +108,7 @@ class RestClientTest extends AbstractMockServerTest {
         Assertions.assertThatThrownBy(() -> errorResponse(406)).isInstanceOf(NotAcceptableException.class);
         Assertions.assertThatThrownBy(() -> errorResponse(407)).isInstanceOf(ProxyAuthenticationRequiredException.class);
         Assertions.assertThatThrownBy(() -> errorResponse(408)).isInstanceOf(RequestTimeoutException.class);
+        Assertions.assertThatThrownBy(() -> errorResponse(413)).isInstanceOf(RequestEntityTooLargeException.class);
         Assertions.assertThatThrownBy(() -> errorResponse(422)).isInstanceOf(UnprocessableEntityException.class);
         Assertions.assertThatThrownBy(() -> errorResponse(500)).isInstanceOf(InternalServerErrorException.class);
         Assertions.assertThatThrownBy(() -> errorResponse(501)).isInstanceOf(NotImplementedException.class);

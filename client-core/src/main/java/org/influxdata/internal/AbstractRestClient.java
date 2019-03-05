@@ -42,6 +42,7 @@ import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.exceptions.NotImplementedException;
 import org.influxdata.exceptions.PaymentRequiredException;
 import org.influxdata.exceptions.ProxyAuthenticationRequiredException;
+import org.influxdata.exceptions.RequestEntityTooLargeException;
 import org.influxdata.exceptions.RequestTimeoutException;
 import org.influxdata.exceptions.ServiceUnavailableException;
 import org.influxdata.exceptions.UnauthorizedException;
@@ -129,7 +130,7 @@ public abstract class AbstractRestClient {
 
     @Nonnull
     @SuppressWarnings("MagicNumber")
-    InfluxException responseToError(@Nonnull final Response<?> response) {
+    protected InfluxException responseToError(@Nonnull final Response<?> response) {
 
         Arguments.checkNotNull(response, "response");
 
@@ -152,6 +153,8 @@ public abstract class AbstractRestClient {
                 return new ProxyAuthenticationRequiredException(response);
             case 408:
                 return new RequestTimeoutException(response);
+            case 413:
+                return new RequestEntityTooLargeException(response);
             case 422:
                 return new UnprocessableEntityException(response);
             case 500:

@@ -25,10 +25,11 @@ import javax.annotation.Nonnull;
 
 import org.influxdata.client.domain.Health;
 
-import io.reactivex.Completable;
+import io.reactivex.Maybe;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -63,8 +64,8 @@ interface InfluxDBReactiveService {
     //
     @POST("/api/v2/write")
     @Nonnull
-    Completable writePoints(@Query("org") final String orgID,
-                            @Query("bucket") final String bucket,
-                            @Query("precision") final String precision,
-                            @Body final RequestBody points);
+    Maybe<Response<Void>> writePoints(@Query("org") final String orgID,
+                                      @Query("bucket") final String bucket,
+                                      @Query("precision") final String precision,
+                                      @Body final RequestBody points);
 }
