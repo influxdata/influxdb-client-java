@@ -32,7 +32,7 @@ public final class LogEvent {
      * Time event occurred, RFC3339Nano.
      */
     private Instant time;
-    
+
     /**
      * A description of the event that occurred.
      */

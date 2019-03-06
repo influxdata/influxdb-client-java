@@ -22,6 +22,7 @@
 package org.influxdata.client.domain;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,7 +43,7 @@ public final class Run {
     private Instant finishedAt;
     private Instant requestedAt;
 
-    private List<LogEvent> log;
+    private List<LogEvent> log = new ArrayList<>();
 
     public String getId() {
         return id;
