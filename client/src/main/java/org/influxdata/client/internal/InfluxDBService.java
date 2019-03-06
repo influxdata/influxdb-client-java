@@ -35,6 +35,7 @@ import org.influxdata.client.domain.Health;
 import org.influxdata.client.domain.IsOnboarding;
 import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.Labels;
+import org.influxdata.client.domain.LogEvent;
 import org.influxdata.client.domain.OnboardingResponse;
 import org.influxdata.client.domain.OperationLogEntries;
 import org.influxdata.client.domain.Organization;
@@ -441,9 +442,9 @@ public interface InfluxDBService {
     @GET("/api/v2/tasks/{id}/runs/{runID}/logs")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<List<String>> findRunLogs(@Nonnull @Path("id") final String taskID,
-                                   @Nonnull @Path("runID") final String runID,
-                                   @Nonnull @Query("orgID") final String orgID);
+    Call<List<LogEvent>> findRunLogs(@Nonnull @Path("id") final String taskID,
+                                     @Nonnull @Path("runID") final String runID,
+                                     @Nonnull @Query("orgID") final String orgID);
 
     @POST("/api/v2/tasks/{id}/runs/{runID}/retry")
     @Nonnull
@@ -460,8 +461,8 @@ public interface InfluxDBService {
     @GET("/api/v2/tasks/{id}/logs")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<List<String>> findTaskLogs(@Nonnull @Path("id") final String taskID,
-                                    @Nonnull @Query("orgID") final String orgID);
+    Call<List<LogEvent>> findTaskLogs(@Nonnull @Path("id") final String taskID,
+                                      @Nonnull @Query("orgID") final String orgID);
 
 
     //

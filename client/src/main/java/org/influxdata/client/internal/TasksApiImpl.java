@@ -32,6 +32,7 @@ import javax.annotation.Nullable;
 import org.influxdata.Arguments;
 import org.influxdata.client.TasksApi;
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LogEvent;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
@@ -479,7 +480,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
     @Nonnull
     @Override
-    public List<String> getRunLogs(@Nonnull final Run run, @Nonnull final String orgID) {
+    public List<LogEvent> getRunLogs(@Nonnull final Run run, @Nonnull final String orgID) {
 
         Arguments.checkNotNull(run, "run");
 
@@ -488,7 +489,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
     @Nonnull
     @Override
-    public List<String> getRunLogs(@Nonnull final String taskID,
+    public List<LogEvent> getRunLogs(@Nonnull final String taskID,
                                    @Nonnull final String runID,
                                    @Nonnull final String orgID) {
 
@@ -496,7 +497,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(runID, "Run.ID");
         Arguments.checkNonEmpty(orgID, "Org.ID");
 
-        Call<List<String>> logs = influxDBService.findRunLogs(taskID, runID, orgID);
+        Call<List<LogEvent>> logs = influxDBService.findRunLogs(taskID, runID, orgID);
 
         return execute(logs, NotFoundException.class, new ArrayList<>());
     }
@@ -542,7 +543,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
     @Nonnull
     @Override
-    public List<String> getLogs(@Nonnull final Task task) {
+    public List<LogEvent> getLogs(@Nonnull final Task task) {
 
         Arguments.checkNotNull(task, "task");
 
@@ -551,12 +552,12 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
     @Nonnull
     @Override
-    public List<String> getLogs(@Nonnull final String taskID, @Nonnull final String orgID) {
+    public List<LogEvent> getLogs(@Nonnull final String taskID, @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
         Arguments.checkNonEmpty(orgID, "Org.ID");
 
-        Call<List<String>> execute = influxDBService.findTaskLogs(taskID, orgID);
+        Call<List<LogEvent>> execute = influxDBService.findTaskLogs(taskID, orgID);
 
         return execute(execute, NotFoundException.class, new ArrayList<>());
     }

@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LogEvent;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.Run;
@@ -425,7 +426,7 @@ public interface TasksApi {
      * @return the list of all logs for a run
      */
     @Nonnull
-    List<String> getRunLogs(@Nonnull final Run run, final String orgID);
+    List<LogEvent> getRunLogs(@Nonnull final Run run, final String orgID);
 
     /**
      * Retrieve all logs for a run.
@@ -436,7 +437,7 @@ public interface TasksApi {
      * @return the list of all logs for a run
      */
     @Nonnull
-    List<String> getRunLogs(@Nonnull final String taskID, @Nonnull final String runID, final String orgID);
+    List<LogEvent> getRunLogs(@Nonnull final String taskID, @Nonnull final String runID, final String orgID);
 
     /**
      * Retry a task run.
@@ -479,7 +480,7 @@ public interface TasksApi {
      * @return the list of all logs for a task
      */
     @Nonnull
-    List<String> getLogs(@Nonnull final Task task);
+    List<LogEvent> getLogs(@Nonnull final Task task);
 
     /**
      * Retrieve all logs for a task.
@@ -489,7 +490,7 @@ public interface TasksApi {
      * @return the list of all logs for a task
      */
     @Nonnull
-    List<String> getLogs(@Nonnull final String taskID, @Nonnull final String orgID);
+    List<LogEvent> getLogs(@Nonnull final String taskID, @Nonnull final String orgID);
 
     /**
      * List all labels of a Task.

@@ -22,6 +22,7 @@
 package org.influxdata.client.domain;
 
 import java.time.Instant;
+import java.util.List;
 
 /**
  * The run of a {@link Task}.
@@ -41,7 +42,7 @@ public final class Run {
     private Instant finishedAt;
     private Instant requestedAt;
 
-    private String log;
+    private List<LogEvent> log;
 
     public String getId() {
         return id;
@@ -99,11 +100,11 @@ public final class Run {
         this.requestedAt = requestedAt;
     }
 
-    public String getLog() {
+    public List<LogEvent> getLog() {
         return log;
     }
 
-    public void setLog(final String log) {
+    public void setLog(final List<LogEvent> log) {
         this.log = log;
     }
 }

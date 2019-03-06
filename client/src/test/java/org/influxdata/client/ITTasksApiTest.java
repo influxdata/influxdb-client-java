@@ -33,6 +33,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LogEvent;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
@@ -387,7 +388,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(run.getStartedAt()).isBefore(Instant.now());
         Assertions.assertThat(run.getFinishedAt()).isBefore(Instant.now());
         Assertions.assertThat(run.getRequestedAt()).isNull();
-        Assertions.assertThat(run.getLog()).isEmpty();
+        Assertions.assertThat(run.getLog()).isNull();
     }
 
     @Test
@@ -508,15 +509,16 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         Thread.sleep(5_000);
 
-        List<String> logs = tasksApi.getLogs(task);
+        List<LogEvent> logs = tasksApi.getLogs(task);
         Assertions.assertThat(logs).isNotEmpty();
-        Assertions.assertThat(logs.get(0)).endsWith("Completed successfully");
+        Assertions.assertThat(logs.get(0).getMessage()).startsWith("Started task from script:");
+        Assertions.assertThat(logs.get(logs.size() - 1).getMessage()).endsWith("Completed successfully");
     }
 
     @Test
     void logsNotExist() {
 
-        List<String> logs = tasksApi.getLogs("020f755c3c082000", organization.getId());
+        List<LogEvent> logs = tasksApi.getLogs("020f755c3c082000", organization.getId());
 
         Assertions.assertThat(logs).isEmpty();
     }
@@ -533,10 +535,10 @@ class ITTasksApiTest extends AbstractITClientTest {
         List<Run> runs = tasksApi.getRuns(task, null, null, 1);
         Assertions.assertThat(runs).hasSize(1);
 
-        List<String> logs = tasksApi.getRunLogs(runs.get(0), organization.getId());
+        List<LogEvent> logs = tasksApi.getRunLogs(runs.get(0), organization.getId());
 
-        Assertions.assertThat(logs).hasSize(1);
-        Assertions.assertThat(logs.get(0)).endsWith("Completed successfully");
+        Assertions.assertThat(logs).isNotEmpty();
+        Assertions.assertThat(logs.get(logs.size() - 1).getMessage()).endsWith("Completed successfully");
     }
 
     @Test
@@ -546,7 +548,7 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "5s", organization);
 
-        List<String> logs = tasksApi.getRunLogs(task.getId(), "020f755c3c082000", organization.getId());
+        List<LogEvent> logs = tasksApi.getRunLogs(task.getId(), "020f755c3c082000", organization.getId());
         Assertions.assertThat(logs).isEmpty();
     }
 
