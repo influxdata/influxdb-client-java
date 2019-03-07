@@ -275,8 +275,6 @@ class ITTasksApiTest extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/12322
     void updateTask() {
 
         String taskName = generateName("it task");

@@ -22,7 +22,6 @@
 package org.influxdata.client.internal;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +32,7 @@ import org.influxdata.Arguments;
 import org.influxdata.client.TasksApi;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LogEvent;
+import org.influxdata.client.domain.Logs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
@@ -497,9 +497,11 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(runID, "Run.ID");
         Arguments.checkNonEmpty(orgID, "Org.ID");
 
-        Call<List<LogEvent>> logs = influxDBService.findRunLogs(taskID, runID, orgID);
+        Call<Logs> call = influxDBService.findRunLogs(taskID, runID, orgID);
 
-        return execute(logs, NotFoundException.class, new ArrayList<>());
+        Logs logs = execute(call, NotFoundException.class, new Logs());
+
+        return logs.getEvents();
     }
 
     @Nullable
@@ -557,9 +559,11 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(taskID, "Task.ID");
         Arguments.checkNonEmpty(orgID, "Org.ID");
 
-        Call<List<LogEvent>> execute = influxDBService.findTaskLogs(taskID, orgID);
+        Call<Logs> execute = influxDBService.findTaskLogs(taskID, orgID);
 
-        return execute(execute, NotFoundException.class, new ArrayList<>());
+        Logs logs = execute(execute, NotFoundException.class, new Logs());
+
+        return logs.getEvents();
     }
 
     @Nonnull

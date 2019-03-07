@@ -21,52 +21,21 @@
  */
 package org.influxdata.client.domain;
 
-import com.squareup.moshi.Json;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * @author Jakub Bednar (bednar@github) (02/01/2019 10,19)
+ * @author Jakub Bednar (bednar@github) (07/03/2019 11:05)
  */
-public enum ResourceType {
+public class Logs {
 
-    @Json(name = "authorizations")
-    AUTHORIZATIONS,
+    private List<LogEvent> events = new ArrayList<>();
 
-    @Json(name = "buckets")
-    BUCKETS,
+    public List<LogEvent> getEvents() {
+        return events;
+    }
 
-    @Json(name = "dashboards")
-    DASHBOARDS,
-
-    @Json(name = "orgs")
-    ORGS,
-
-    @Json(name = "sources")
-    SOURCES,
-
-    @Json(name = "tasks")
-    TASKS,
-
-    @Json(name = "telegrafs")
-    TELEGRAFS,
-
-    @Json(name = "users")
-    USERS,
-
-    @Json(name = "variables")
-    VARIABLES,
-
-    @Json(name = "scrapers")
-    SCRAPERS,
-
-    @Json(name = "secrets")
-    SECRETS,
-
-    @Json(name = "labels")
-    LABELS,
-
-    @Json(name = "views")
-    VIEWS,
-
-    @Json(name = "documents")
-    DOCUMENTS
+    public void setEvents(final List<LogEvent> events) {
+        this.events = events;
+    }
 }
