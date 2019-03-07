@@ -146,7 +146,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
         val values = records.map { it.value }.toList()
 
         assert(values).hasSize(10)
-        assert(values).containsExactly(10L, 11L, 20L, 22L, 55L, 35L, 38L, 65L, 45L, 49L)
+        assert(values).containsExactly(10L, 11L, 20L, 22L, 35L, 38L, 55L, 45L, 49L, 65L)
     }
 
     @Test
