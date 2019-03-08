@@ -239,13 +239,13 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
     line should be("#default,_result,,,,,,,,")
 
     line = source.requestNext()
-    line should be(",result,table,_start,_stop,_field,_measurement,host,region,_value")
+    line should be(",result,table,_start,_stop,_measurement,host,region,_field,_value")
 
     line = source.requestNext()
-    line should endWith(",free,mem,A,west,21")
+    line should endWith(",mem,A,west,free,21")
 
     line = source.requestNext()
-    line should endWith(",free,mem,B,west,42")
+    line should endWith(",mem,B,west,free,42")
 
     line = source.requestNext()
     line shouldBe empty
@@ -267,10 +267,10 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
     val source = queryScalaApi.queryRaw(flux, dialect, organization.getId).runWith(TestSink.probe[String])
 
     var line = source.requestNext()
-    line should endWith(",free,mem,A,west,21")
+    line should endWith(",mem,A,west,free,21")
 
     line = source.requestNext()
-    line should endWith(",free,mem,B,west,42")
+    line should endWith(",mem,B,west,free,42")
 
     line = source.requestNext()
     line shouldBe empty
