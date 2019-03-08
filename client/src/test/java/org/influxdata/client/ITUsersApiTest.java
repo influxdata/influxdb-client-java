@@ -30,7 +30,7 @@ import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.OperationLogEntries;
 import org.influxdata.client.domain.OperationLogEntry;
 import org.influxdata.client.domain.User;
-import org.influxdata.exceptions.UnauthorizedException;
+import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -212,8 +212,8 @@ class ITUsersApiTest extends AbstractITClientTest {
     void updatePasswordNotFound() {
 
         Assertions.assertThatThrownBy(() -> usersApi.updateUserPassword("020f755c3c082000", "", "new-password"))
-                .isInstanceOf(UnauthorizedException.class)
-                .hasMessage("read:users/020f755c3c082000 is unauthorized");
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("user not found");
     }
 
     @Test

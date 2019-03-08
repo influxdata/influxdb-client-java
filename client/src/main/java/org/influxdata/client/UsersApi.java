@@ -85,7 +85,7 @@ public interface UsersApi {
      * @param newPassword new password
      * @return user updated
      */
-    @Nullable
+    @Nonnull
     User updateUserPassword(@Nonnull final String userID,
                             @Nonnull final String oldPassword,
                             @Nonnull final String newPassword);

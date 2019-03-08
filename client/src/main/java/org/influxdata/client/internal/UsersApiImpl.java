@@ -133,7 +133,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
         return updateUserPassword(user.getId(), user.getName(), oldPassword, newPassword);
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public User updateUserPassword(@Nonnull final String userID,
                                    @Nonnull final String oldPassword,
@@ -143,12 +143,8 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
         Arguments.checkNotNull(oldPassword, "old password");
         Arguments.checkNotNull(newPassword, "new password");
 
-        User user = findUserByID(userID);
-        if (user == null) {
-
-            LOG.log(Level.WARNING, "User with id: {} not found.", userID);
-            return null;
-        }
+        Call<User> userByID = influxDBService.findUserByID(userID);
+        User user = execute(userByID);
 
         return updateUserPassword(userID, user.getName(), oldPassword, newPassword);
     }

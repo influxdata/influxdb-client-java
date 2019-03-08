@@ -346,7 +346,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         waitToCallback(listener.countDownLatch, 10);
 
         String query = queryApi.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", organization.getId());
-        Assertions.assertThat(query).endsWith("1,water_level,h2o_feet,atlantic\n");
+        Assertions.assertThat(query).endsWith("1,h2o_feet,atlantic,water_level\n");
     }
 
     @Test
