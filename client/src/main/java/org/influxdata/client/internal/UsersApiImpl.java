@@ -37,8 +37,7 @@ import org.influxdata.client.domain.Users;
 import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.exceptions.UnauthorizedException;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
+import com.google.gson.Gson;
 import okhttp3.Credentials;
 import org.json.JSONObject;
 import retrofit2.Call;
@@ -50,13 +49,9 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
     private static final Logger LOG = Logger.getLogger(UsersApiImpl.class.getName());
 
-    private final JsonAdapter<User> adapter;
+    UsersApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Gson gson) {
 
-    UsersApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi) {
-
-        super(influxDBService, moshi);
-
-        this.adapter = moshi.adapter(User.class);
+        super(influxDBService, gson);
     }
 
     @Nullable
@@ -100,7 +95,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Arguments.checkNotNull(user, "User");
 
-        String json = adapter.toJson(user);
+        String json = gson.toJson(user);
 
         Call<User> call = influxDBService.createUser(createBody(json));
 
@@ -113,7 +108,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Arguments.checkNotNull(user, "User");
 
-        String json = adapter.toJson(user);
+        String json = gson.toJson(user);
 
         Call<User> userCall = influxDBService.updateUser(user.getId(), createBody(json));
 
@@ -264,7 +259,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Call<OperationLogEntries> call = influxDBService.findUserLogs(userID, createQueryMap(findOptions));
 
-        return getOperationLogEntries(call);
+        return getOperationLogEntries(call, new OperationLogEntries());
     }
 
     @Nonnull

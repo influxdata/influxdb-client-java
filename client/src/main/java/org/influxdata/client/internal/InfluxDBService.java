@@ -38,11 +38,14 @@ import org.influxdata.client.domain.Labels;
 import org.influxdata.client.domain.Logs;
 import org.influxdata.client.domain.OnboardingResponse;
 import org.influxdata.client.domain.OperationLogEntries;
+import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Organizations;
 import org.influxdata.client.domain.Ready;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
+import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.Run;
 import org.influxdata.client.domain.RunsResponse;
 import org.influxdata.client.domain.ScraperTargetResponse;
@@ -207,13 +210,13 @@ public interface InfluxDBService {
     @GET("/api/v2/orgs/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResourceMembers> findOrganizationOwners(@Nonnull @Path("id") final String orgID);
+    Call<ResourceOwners> findOrganizationOwners(@Nonnull @Path("id") final String orgID);
 
     @POST("/api/v2/orgs/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResourceMember> addOrganizationOwner(@Nonnull @Path("id") final String orgID,
-                                              @Nonnull @Body final RequestBody member);
+    Call<ResourceOwner> addOrganizationOwner(@Nonnull @Path("id") final String orgID,
+                                             @Nonnull @Body final RequestBody member);
 
     @DELETE("/api/v2/orgs/{id}/owners/{userID}")
     @Nonnull
@@ -253,8 +256,8 @@ public interface InfluxDBService {
     @GET("/api/v2/buckets/{id}/log")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<OperationLogEntries> findBucketLogs(@Nonnull @Path("id") final String bucketID,
-                                             @Nonnull @QueryMap final Map<String, Object> findOptions);
+    Call<OperationLogs> findBucketLogs(@Nonnull @Path("id") final String bucketID,
+                                       @Nonnull @QueryMap final Map<String, Object> findOptions);
 
     @GET("/api/v2/buckets")
     @Nonnull
@@ -287,12 +290,12 @@ public interface InfluxDBService {
     @GET("/api/v2/buckets/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResourceMembers> findBucketOwners(@Nonnull @Path("id") final String bucketID);
+    Call<ResourceOwners> findBucketOwners(@Nonnull @Path("id") final String bucketID);
 
     @POST("/api/v2/buckets/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResourceMember> addBucketOwner(@Nonnull @Path("id") final String bucketID,
+    Call<ResourceOwner> addBucketOwner(@Nonnull @Path("id") final String bucketID,
                                         @Nonnull @Body final RequestBody member);
 
     @DELETE("/api/v2/buckets/{id}/owners/{userID}")
@@ -409,12 +412,12 @@ public interface InfluxDBService {
     @GET("/api/v2/tasks/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResourceMembers> findTaskOwners(@Nonnull @Path("id") final String taskID);
+    Call<ResourceOwners> findTaskOwners(@Nonnull @Path("id") final String taskID);
 
     @POST("/api/v2/tasks/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResourceMember> addTaskOwner(@Nonnull @Path("id") final String taskID,
+    Call<ResourceOwner> addTaskOwner(@Nonnull @Path("id") final String taskID,
                                       @Nonnull @Body final RequestBody member);
 
     @DELETE("/api/v2/tasks/{id}/owners/{userID}")
@@ -510,12 +513,12 @@ public interface InfluxDBService {
     @GET("/api/v2/scrapers/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResourceMembers> findScraperTargetOwners(@Nonnull @Path("id") final String scraperTargetID);
+    Call<ResourceOwners> findScraperTargetOwners(@Nonnull @Path("id") final String scraperTargetID);
 
     @POST("/api/v2/scrapers/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResourceMember> addScraperTargetOwner(@Nonnull @Path("id") final String scraperTargetID,
+    Call<ResourceOwner> addScraperTargetOwner(@Nonnull @Path("id") final String scraperTargetID,
                                                @Nonnull @Body final RequestBody member);
 
     @DELETE("/api/v2/scrapers/{id}/owners/{userID}")
@@ -619,12 +622,12 @@ public interface InfluxDBService {
     @GET("/api/v2/telegrafs/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResourceMembers> findTelegrafConfigOwners(@Nonnull @Path("id") final String telegrafConfigID);
+    Call<ResourceOwners> findTelegrafConfigOwners(@Nonnull @Path("id") final String telegrafConfigID);
 
     @POST("/api/v2/telegrafs/{id}/owners")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<ResourceMember> addTelegrafConfigOwner(@Nonnull @Path("id") final String telegrafConfigID,
+    Call<ResourceOwner> addTelegrafConfigOwner(@Nonnull @Path("id") final String telegrafConfigID,
                                                 @Nonnull @Body final RequestBody member);
 
     @DELETE("/api/v2/telegrafs/{id}/owners/{userID}")

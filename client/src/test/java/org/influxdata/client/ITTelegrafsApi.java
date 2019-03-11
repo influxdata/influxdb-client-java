@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.TelegrafConfig;
 import org.influxdata.client.domain.TelegrafPlugin;
 import org.influxdata.client.domain.TelegrafPluginType;
@@ -223,15 +224,15 @@ class ITTelegrafsApi extends AbstractITClientTest {
 
         ResourceMember resourceMember = telegrafsApi.addMember(user, telegrafConfig);
         Assertions.assertThat(resourceMember).isNotNull();
-        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
-        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
+        Assertions.assertThat(resourceMember.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.RoleEnum.MEMBER);
 
         members = telegrafsApi.getMembers(telegrafConfig);
         Assertions.assertThat(members).hasSize(1);
-        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
-        Assertions.assertThat(members.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(members.get(0).getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.RoleEnum.MEMBER);
+        Assertions.assertThat(members.get(0).getId()).isEqualTo(user.getId());
+        Assertions.assertThat(members.get(0).getName()).isEqualTo(user.getName());
 
         telegrafsApi.deleteMember(user, telegrafConfig);
 
@@ -245,23 +246,23 @@ class ITTelegrafsApi extends AbstractITClientTest {
         TelegrafConfig telegrafConfig = telegrafsApi
                 .createTelegrafConfig(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
 
-        List<ResourceMember> owners = telegrafsApi.getOwners(telegrafConfig);
+        List<ResourceOwner> owners = telegrafsApi.getOwners(telegrafConfig);
         Assertions.assertThat(owners).hasSize(1);
-        Assertions.assertThat(owners.get(0).getUserName()).isEqualTo("my-user");
+        Assertions.assertThat(owners.get(0).getName()).isEqualTo("my-user");
 
         User user = usersApi.createUser(generateName("Luke Health"));
 
-        ResourceMember resourceMember = telegrafsApi.addOwner(user, telegrafConfig);
+        ResourceOwner resourceMember = telegrafsApi.addOwner(user, telegrafConfig);
         Assertions.assertThat(resourceMember).isNotNull();
-        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
-        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.OWNER);
+        Assertions.assertThat(resourceMember.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceOwner.RoleEnum.OWNER);
 
         owners = telegrafsApi.getOwners(telegrafConfig);
         Assertions.assertThat(owners).hasSize(2);
-        Assertions.assertThat(owners.get(1).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
-        Assertions.assertThat(owners.get(1).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(owners.get(1).getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(owners.get(1).getRole()).isEqualTo(ResourceOwner.RoleEnum.OWNER);
+        Assertions.assertThat(owners.get(1).getId()).isEqualTo(user.getId());
+        Assertions.assertThat(owners.get(1).getName()).isEqualTo(user.getName());
 
         telegrafsApi.deleteOwner(user, telegrafConfig);
 

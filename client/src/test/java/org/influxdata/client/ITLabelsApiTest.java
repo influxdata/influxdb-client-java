@@ -135,9 +135,9 @@ class ITLabelsApiTest extends AbstractITClientTest {
     void updateLabel() {
 
         Label label = labelsApi.createLabel(generateName("Cool Resource"), new HashMap<>());
-        Assertions.assertThat(label.getProperties()).hasSize(0);
+        Assertions.assertThat(label.getProperties()).isNull();
 
-        label.getProperties().put("color", "blue");
+        label.putPropertiesItem("color", "blue");
 
         label = labelsApi.updateLabel(label);
         Assertions.assertThat(label.getProperties())

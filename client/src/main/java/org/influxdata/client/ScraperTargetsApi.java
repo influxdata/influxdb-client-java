@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ScraperTarget;
 import org.influxdata.client.domain.ScraperTargetResponse;
 import org.influxdata.client.domain.ScraperType;
@@ -184,7 +185,7 @@ public interface ScraperTargetsApi {
      * @return return List all owners of a ScraperTarget.
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final ScraperTarget scraperTarget);
+    List<ResourceOwner> getOwners(@Nonnull final ScraperTarget scraperTarget);
 
     /**
      * List all owners of a ScraperTarget.
@@ -193,7 +194,7 @@ public interface ScraperTargetsApi {
      * @return return List all owners of a ScraperTarget
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final String scraperTargetID);
+    List<ResourceOwner> getOwners(@Nonnull final String scraperTargetID);
 
     /**
      * Add the ScraperTarget owner.
@@ -203,7 +204,7 @@ public interface ScraperTargetsApi {
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final User owner, @Nonnull final ScraperTarget scraperTarget);
+    ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final ScraperTarget scraperTarget);
 
     /**
      * Add the ScraperTarget owner.
@@ -213,7 +214,7 @@ public interface ScraperTargetsApi {
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String scraperTargetID);
+    ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String scraperTargetID);
 
     /**
      * Removes a owner from a ScraperTarget.

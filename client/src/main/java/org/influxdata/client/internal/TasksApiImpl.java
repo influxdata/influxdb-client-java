@@ -30,13 +30,15 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.TasksApi;
+import org.influxdata.client.domain.AddResourceMemberRequestBody;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LogEvent;
 import org.influxdata.client.domain.Logs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
-import org.influxdata.client.domain.ResourceType;
+import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.Run;
 import org.influxdata.client.domain.RunsResponse;
 import org.influxdata.client.domain.Status;
@@ -45,6 +47,7 @@ import org.influxdata.client.domain.Tasks;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.NotFoundException;
 
+import com.google.gson.Gson;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import retrofit2.Call;
@@ -57,14 +60,13 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
     private static final Logger LOG = Logger.getLogger(TasksApiImpl.class.getName());
 
     private final JsonAdapter<Task> adapter;
-    private final JsonAdapter<User> userAdapter;
 
-    TasksApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi) {
+    TasksApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi,
+                 @Nonnull final Gson gson) {
 
-        super(influxDBService, moshi);
+        super(influxDBService, gson);
 
         this.adapter = moshi.adapter(Task.class);
-        this.userAdapter = moshi.adapter(User.class);
     }
 
     @Nullable
@@ -313,10 +315,10 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        User user = new User();
+        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(memberID);
 
-        String json = userAdapter.toJson(user);
+        String json = gson.toJson(user);
         Call<ResourceMember> call = influxDBService.addTaskMember(taskID, createBody(json));
 
         return execute(call);
@@ -343,13 +345,13 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
     @Nonnull
     @Override
-    public List<ResourceMember> getOwners(@Nonnull final String taskID) {
+    public List<ResourceOwner> getOwners(@Nonnull final String taskID) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        Call<ResourceMembers> call = influxDBService.findTaskOwners(taskID);
+        Call<ResourceOwners> call = influxDBService.findTaskOwners(taskID);
 
-        ResourceMembers resourceMembers = execute(call);
+        ResourceOwners resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findTaskMembers found: {0}", resourceMembers);
 
         return resourceMembers.getUsers();
@@ -357,7 +359,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
     @Nonnull
     @Override
-    public List<ResourceMember> getOwners(@Nonnull final Task task) {
+    public List<ResourceOwner> getOwners(@Nonnull final Task task) {
 
         Arguments.checkNotNull(task, "task");
 
@@ -366,7 +368,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
     @Nonnull
     @Override
-    public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Task task) {
+    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Task task) {
 
         Arguments.checkNotNull(task, "task");
         Arguments.checkNotNull(owner, "owner");
@@ -376,16 +378,16 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
     @Nonnull
     @Override
-    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String taskID) {
+    public ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String taskID) {
 
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        User user = new User();
+        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(ownerID);
 
-        String json = userAdapter.toJson(user);
-        Call<ResourceMember> call = influxDBService.addTaskOwner(taskID, createBody(json));
+        String json = gson.toJson(user);
+        Call<ResourceOwner> call = influxDBService.addTaskOwner(taskID, createBody(json));
 
         return execute(call);
     }
@@ -601,7 +603,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(taskID, "taskID");
 
-        return addLabel(labelID, taskID, "tasks", ResourceType.TASKS);
+        return addLabel(labelID, taskID, "tasks");
     }
 
     @Override

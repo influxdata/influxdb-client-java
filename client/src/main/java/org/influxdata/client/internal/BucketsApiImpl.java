@@ -29,22 +29,23 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.BucketsApi;
+import org.influxdata.client.domain.AddResourceMemberRequestBody;
 import org.influxdata.client.domain.Bucket;
+import org.influxdata.client.domain.BucketRetentionRules;
 import org.influxdata.client.domain.Buckets;
 import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.Label;
-import org.influxdata.client.domain.OperationLogEntries;
-import org.influxdata.client.domain.OperationLogEntry;
+import org.influxdata.client.domain.OperationLog;
+import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
-import org.influxdata.client.domain.ResourceType;
-import org.influxdata.client.domain.RetentionRule;
+import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.NotFoundException;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
+import com.google.gson.Gson;
 import retrofit2.Call;
 
 /**
@@ -54,15 +55,9 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
     private static final Logger LOG = Logger.getLogger(BucketsApiImpl.class.getName());
 
-    private final JsonAdapter<Bucket> adapter;
-    private final JsonAdapter<User> userAdapter;
+    BucketsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Gson gson) {
 
-    BucketsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi) {
-
-        super(influxDBService, moshi);
-
-        this.adapter = moshi.adapter(Bucket.class);
-        this.userAdapter = moshi.adapter(User.class);
+        super(influxDBService, gson);
     }
 
     @Nullable
@@ -130,12 +125,12 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
     @Nonnull
     @Override
     public Bucket createBucket(@Nonnull final String name,
-                               @Nullable  final RetentionRule retentionRule,
+                               @Nullable final BucketRetentionRules bucketRetentionRules,
                                @Nonnull final Organization organization) {
 
         Arguments.checkNotNull(organization, "Organization is required");
 
-        return createBucket(name, retentionRule, organization.getId());
+        return createBucket(name, bucketRetentionRules, organization.getId());
     }
 
     @Nonnull
@@ -147,7 +142,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
     @Nonnull
     @Override
     public Bucket createBucket(@Nonnull final String name,
-                               @Nullable final RetentionRule retentionRule,
+                               @Nullable final BucketRetentionRules bucketRetentionRules,
                                @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(name, "Bucket name");
@@ -155,9 +150,9 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
         Bucket bucket = new Bucket();
         bucket.setName(name);
-        bucket.setOrgID(orgID);
-        if (retentionRule != null) {
-            bucket.getRetentionRules().add(retentionRule);
+        bucket.setOrganizationID(orgID);
+        if (bucketRetentionRules != null) {
+            bucket.getRetentionRules().add(bucketRetentionRules);
         }
 
         return createBucket(bucket);
@@ -170,7 +165,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
         Arguments.checkNotNull(bucket, "Bucket is required");
         Arguments.checkNonEmpty(bucket.getName(), "Bucket name");
 
-        Call<Bucket> call = influxDBService.createBucket(createBody(adapter.toJson(bucket)));
+        Call<Bucket> call = influxDBService.createBucket(createBody(gson.toJson(bucket)));
 
         return execute(call);
     }
@@ -181,7 +176,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
         Arguments.checkNotNull(bucket, "Bucket is required");
 
-        String json = adapter.toJson(bucket);
+        String json = gson.toJson(bucket);
 
         Call<Bucket> bucketCall = influxDBService.updateBucket(bucket.getId(), createBody(json));
 
@@ -229,9 +224,9 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
         Bucket cloned = new Bucket();
         cloned.setName(clonedName);
-        cloned.setOrgID(bucket.getOrgID());
-        cloned.setOrgName(bucket.getOrgName());
-        cloned.setRetentionPolicyName(bucket.getRetentionPolicyName());
+        cloned.setOrganizationID(bucket.getOrganizationID());
+        cloned.setOrganization(bucket.getOrganization());
+        cloned.setRp(bucket.getRp());
         cloned.getRetentionRules().addAll(bucket.getRetentionRules());
 
         Bucket created = createBucket(cloned);
@@ -280,10 +275,10 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        User user = new User();
+        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(memberID);
 
-        String json = userAdapter.toJson(user);
+        String json = gson.toJson(user);
         Call<ResourceMember> call = influxDBService.addBucketMember(bucketID, createBody(json));
 
         return execute(call);
@@ -310,7 +305,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
     @Nonnull
     @Override
-    public List<ResourceMember> getOwners(@Nonnull final Bucket bucket) {
+    public List<ResourceOwner> getOwners(@Nonnull final Bucket bucket) {
 
         Arguments.checkNotNull(bucket, "bucket");
 
@@ -319,12 +314,12 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
     @Nonnull
     @Override
-    public List<ResourceMember> getOwners(@Nonnull final String bucketID) {
+    public List<ResourceOwner> getOwners(@Nonnull final String bucketID) {
 
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        Call<ResourceMembers> call = influxDBService.findBucketOwners(bucketID);
-        ResourceMembers resourceMembers = execute(call);
+        Call<ResourceOwners> call = influxDBService.findBucketOwners(bucketID);
+        ResourceOwners resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findBucketOwners found: {0}", resourceMembers);
 
         return resourceMembers.getUsers();
@@ -332,7 +327,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
     @Nonnull
     @Override
-    public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Bucket bucket) {
+    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Bucket bucket) {
 
         Arguments.checkNotNull(bucket, "bucket");
         Arguments.checkNotNull(owner, "owner");
@@ -342,16 +337,16 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
     @Nonnull
     @Override
-    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String bucketID) {
+    public ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String bucketID) {
 
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        User user = new User();
+        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(ownerID);
 
-        String json = userAdapter.toJson(user);
-        Call<ResourceMember> call = influxDBService.addBucketOwner(bucketID, createBody(json));
+        String json = gson.toJson(user);
+        Call<ResourceOwner> call = influxDBService.addBucketOwner(bucketID, createBody(json));
 
         return execute(call);
     }
@@ -377,7 +372,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
     @Nonnull
     @Override
-    public List<OperationLogEntry> findBucketLogs(@Nonnull final Bucket bucket) {
+    public List<OperationLog> findBucketLogs(@Nonnull final Bucket bucket) {
 
         Arguments.checkNotNull(bucket, "bucket");
 
@@ -386,8 +381,8 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
     @Nonnull
     @Override
-    public OperationLogEntries findBucketLogs(@Nonnull final Bucket bucket,
-                                              @Nonnull final FindOptions findOptions) {
+    public OperationLogs findBucketLogs(@Nonnull final Bucket bucket,
+                                        @Nonnull final FindOptions findOptions) {
 
         Arguments.checkNotNull(bucket, "bucket");
         Arguments.checkNotNull(findOptions, "findOptions");
@@ -397,24 +392,24 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
     @Nonnull
     @Override
-    public List<OperationLogEntry> findBucketLogs(@Nonnull final String bucketID) {
+    public List<OperationLog> findBucketLogs(@Nonnull final String bucketID) {
 
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        return findBucketLogs(bucketID, new FindOptions()).getLogs();
+        return findBucketLogs(bucketID, new FindOptions()).getLog();
     }
 
     @Nonnull
     @Override
-    public OperationLogEntries findBucketLogs(@Nonnull final String bucketID,
-                                              @Nonnull final FindOptions findOptions) {
+    public OperationLogs findBucketLogs(@Nonnull final String bucketID,
+                                        @Nonnull final FindOptions findOptions) {
 
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
         Arguments.checkNotNull(findOptions, "findOptions");
 
-        Call<OperationLogEntries> call = influxDBService.findBucketLogs(bucketID, createQueryMap(findOptions));
+        Call<OperationLogs> call = influxDBService.findBucketLogs(bucketID, createQueryMap(findOptions));
 
-        return getOperationLogEntries(call);
+        return getOperationLogEntries(call, new OperationLogs());
     }
 
     @Nonnull
@@ -452,7 +447,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(bucketID, "bucketID");
 
-        return addLabel(labelID, bucketID, "buckets", ResourceType.BUCKETS);
+        return addLabel(labelID, bucketID, "buckets");
     }
 
     @Override

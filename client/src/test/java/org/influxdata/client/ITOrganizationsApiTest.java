@@ -35,6 +35,7 @@ import org.influxdata.client.domain.OperationLogEntries;
 import org.influxdata.client.domain.OperationLogEntry;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.User;
 
 import org.assertj.core.api.Assertions;
@@ -165,15 +166,15 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
 
         ResourceMember resourceMember = organizationsApi.addMember(user, organization);
         Assertions.assertThat(resourceMember).isNotNull();
-        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
-        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
+        Assertions.assertThat(resourceMember.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.RoleEnum.MEMBER);
 
         members = organizationsApi.getMembers(organization);
         Assertions.assertThat(members).hasSize(1);
-        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
-        Assertions.assertThat(members.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(members.get(0).getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.RoleEnum.MEMBER);
+        Assertions.assertThat(members.get(0).getId()).isEqualTo(user.getId());
+        Assertions.assertThat(members.get(0).getName()).isEqualTo(user.getName());
 
         organizationsApi.deleteMember(user, organization);
 
@@ -186,23 +187,23 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
 
         Organization organization = organizationsApi.createOrganization(generateName("Constant Pro"));
 
-        List<ResourceMember> owners = organizationsApi.getOwners(organization);
+        List<ResourceOwner> owners = organizationsApi.getOwners(organization);
         Assertions.assertThat(owners).hasSize(1);
-        Assertions.assertThat(owners.get(0).getUserName()).isEqualTo("my-user");
+        Assertions.assertThat(owners.get(0).getName()).isEqualTo("my-user");
 
         User user = usersApi.createUser(generateName("Luke Health"));
 
-        ResourceMember resourceMember = organizationsApi.addOwner(user, organization);
+        ResourceOwner resourceMember = organizationsApi.addOwner(user, organization);
         Assertions.assertThat(resourceMember).isNotNull();
-        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
-        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.OWNER);
+        Assertions.assertThat(resourceMember.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceOwner.RoleEnum.OWNER);
 
         owners = organizationsApi.getOwners(organization);
         Assertions.assertThat(owners).hasSize(2);
-        Assertions.assertThat(owners.get(1).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
-        Assertions.assertThat(owners.get(1).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(owners.get(1).getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(owners.get(1).getRole()).isEqualTo(ResourceOwner.RoleEnum.OWNER);
+        Assertions.assertThat(owners.get(1).getId()).isEqualTo(user.getId());
+        Assertions.assertThat(owners.get(1).getName()).isEqualTo(user.getName());
 
         organizationsApi.deleteOwner(user, organization);
 

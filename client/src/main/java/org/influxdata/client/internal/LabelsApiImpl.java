@@ -34,29 +34,20 @@ import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.Labels;
 import org.influxdata.exceptions.NotFoundException;
-import org.influxdata.internal.AbstractRestClient;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
+import com.google.gson.Gson;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:48)
  */
-class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
+class LabelsApiImpl extends AbstractInfluxDBRestClient implements LabelsApi {
 
     private static final Logger LOG = Logger.getLogger(LabelsApiImpl.class.getName());
 
-    private final InfluxDBService influxDBService;
-    private final JsonAdapter<Label> adapter;
+    LabelsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Gson gson) {
 
-    LabelsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi) {
-
-        Arguments.checkNotNull(influxDBService, "InfluxDBService");
-        Arguments.checkNotNull(moshi, "Moshi to create adapter");
-
-        this.influxDBService = influxDBService;
-        this.adapter = moshi.adapter(Label.class);
+        super(influxDBService, gson);
     }
 
     @Nonnull
@@ -65,7 +56,7 @@ class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
 
         Arguments.checkNotNull(label, "label");
 
-        Call<LabelResponse> call = influxDBService.createLabel(createBody(adapter.toJson(label)));
+        Call<LabelResponse> call = influxDBService.createLabel(createBody(gson.toJson(label)));
         LabelResponse labelResponse = execute(call);
 
         LOG.log(Level.FINEST, "createLabel response: {0}", labelResponse);
@@ -93,7 +84,7 @@ class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
 
         Arguments.checkNotNull(label, "label");
 
-        String json = adapter.toJson(label);
+        String json = gson.toJson(label);
 
         Call<LabelResponse> call = influxDBService.updateLabel(label.getId(), createBody(json));
         LabelResponse labelResponse = execute(call);
@@ -144,6 +135,10 @@ class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
 
         Label cloned = new Label();
         cloned.setName(clonedName);
+
+        if (label.getProperties() != null) {
+            label.getProperties().forEach(cloned::putPropertiesItem);
+        }
         cloned.getProperties().putAll(label.getProperties());
 
         return createLabel(cloned);

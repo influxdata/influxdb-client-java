@@ -30,6 +30,7 @@ import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LogEvent;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.Run;
 import org.influxdata.client.domain.Task;
 import org.influxdata.client.domain.User;
@@ -301,7 +302,7 @@ public interface TasksApi {
      * @return return List all task owners
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final Task task);
+    List<ResourceOwner> getOwners(@Nonnull final Task task);
 
     /**
      * List all task owners.
@@ -310,7 +311,7 @@ public interface TasksApi {
      * @return return List all task owners
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final String taskID);
+    List<ResourceOwner> getOwners(@Nonnull final String taskID);
 
     /**
      * Add task owner.
@@ -320,7 +321,7 @@ public interface TasksApi {
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Task task);
+    ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Task task);
 
     /**
      * Add task owner.
@@ -330,7 +331,7 @@ public interface TasksApi {
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String taskID);
+    ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String taskID);
 
     /**
      * Removes an owner from an task.

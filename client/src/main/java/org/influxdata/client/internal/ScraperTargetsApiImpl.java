@@ -29,10 +29,12 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.ScraperTargetsApi;
+import org.influxdata.client.domain.AddResourceMemberRequestBody;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
-import org.influxdata.client.domain.ResourceType;
+import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.ScraperTarget;
 import org.influxdata.client.domain.ScraperTargetResponse;
 import org.influxdata.client.domain.ScraperTargetResponses;
@@ -40,6 +42,7 @@ import org.influxdata.client.domain.ScraperType;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.NotFoundException;
 
+import com.google.gson.Gson;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import retrofit2.Call;
@@ -52,14 +55,13 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
     private static final Logger LOG = Logger.getLogger(ScraperTargetsApiImpl.class.getName());
 
     private final JsonAdapter<ScraperTarget> adapter;
-    private final JsonAdapter<User> userAdapter;
 
-    ScraperTargetsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi) {
+    ScraperTargetsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi,
+                          @Nonnull final Gson gson) {
 
-        super(influxDBService, moshi);
+        super(influxDBService, gson);
 
         this.adapter = moshi.adapter(ScraperTarget.class);
-        this.userAdapter = moshi.adapter(User.class);
     }
 
     @Nonnull
@@ -225,10 +227,10 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
-        User user = new User();
+        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(memberID);
 
-        String json = userAdapter.toJson(user);
+        String json = gson.toJson(user);
         Call<ResourceMember> call = influxDBService.addScraperTargetMember(scraperTargetID, createBody(json));
 
         return execute(call);
@@ -255,7 +257,7 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
 
     @Nonnull
     @Override
-    public List<ResourceMember> getOwners(@Nonnull final ScraperTarget scraperTarget) {
+    public List<ResourceOwner> getOwners(@Nonnull final ScraperTarget scraperTarget) {
 
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
 
@@ -264,12 +266,12 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
 
     @Nonnull
     @Override
-    public List<ResourceMember> getOwners(@Nonnull final String scraperTargetID) {
+    public List<ResourceOwner> getOwners(@Nonnull final String scraperTargetID) {
 
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
-        Call<ResourceMembers> call = influxDBService.findScraperTargetOwners(scraperTargetID);
-        ResourceMembers resourceMembers = execute(call);
+        Call<ResourceOwners> call = influxDBService.findScraperTargetOwners(scraperTargetID);
+        ResourceOwners resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findScraperTargetOwners found: {0}", resourceMembers);
 
         return resourceMembers.getUsers();
@@ -277,7 +279,7 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
 
     @Nonnull
     @Override
-    public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final ScraperTarget scraperTarget) {
+    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final ScraperTarget scraperTarget) {
 
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
         Arguments.checkNotNull(owner, "owner");
@@ -287,16 +289,16 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
 
     @Nonnull
     @Override
-    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String scraperTargetID) {
+    public ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String scraperTargetID) {
 
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
-        User user = new User();
+        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(ownerID);
 
-        String json = userAdapter.toJson(user);
-        Call<ResourceMember> call = influxDBService.addScraperTargetOwner(scraperTargetID, createBody(json));
+        String json = gson.toJson(user);
+        Call<ResourceOwner> call = influxDBService.addScraperTargetOwner(scraperTargetID, createBody(json));
 
         return execute(call);
     }
@@ -355,7 +357,7 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
-        return addLabel(labelID, scraperTargetID, "scrapers", ResourceType.SCRAPERS);
+        return addLabel(labelID, scraperTargetID, "scrapers");
     }
 
     @Override

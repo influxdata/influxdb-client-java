@@ -26,14 +26,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.Bucket;
+import org.influxdata.client.domain.BucketRetentionRules;
 import org.influxdata.client.domain.Buckets;
 import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.Label;
-import org.influxdata.client.domain.OperationLogEntries;
-import org.influxdata.client.domain.OperationLogEntry;
+import org.influxdata.client.domain.OperationLog;
+import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
-import org.influxdata.client.domain.RetentionRule;
+import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.User;
 
 /**
@@ -67,13 +68,13 @@ public interface BucketsApi {
      * Creates a new bucket and sets {@link Bucket#getId()} with the new identifier.
      *
      * @param name          name of the bucket
-     * @param retentionRule bucket retention period
+     * @param bucketRetentionRules bucket retention period
      * @param organization  owner of bucket
      * @return Bucket created
      */
     @Nonnull
     Bucket createBucket(@Nonnull final String name,
-                        @Nullable final RetentionRule retentionRule,
+                        @Nullable final BucketRetentionRules bucketRetentionRules,
                         @Nonnull final Organization organization);
 
     /**
@@ -91,13 +92,13 @@ public interface BucketsApi {
      * Creates a new bucket and sets {@link Bucket#getId()} with the new identifier.
      *
      * @param name          name of the bucket
-     * @param retentionRule bucket retention period
+     * @param bucketRetentionRules bucket retention period
      * @param orgID         owner of bucket
      * @return Bucket created
      */
     @Nonnull
     Bucket createBucket(@Nonnull final String name,
-                        @Nullable final RetentionRule retentionRule,
+                        @Nullable final BucketRetentionRules bucketRetentionRules,
                         @Nonnull final String orgID);
 
     /**
@@ -257,7 +258,7 @@ public interface BucketsApi {
      * @return return List all owners of a bucket.
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final Bucket bucket);
+    List<ResourceOwner> getOwners(@Nonnull final Bucket bucket);
 
     /**
      * List all owners of a bucket.
@@ -266,7 +267,7 @@ public interface BucketsApi {
      * @return return List all owners of a bucket
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final String bucketID);
+    List<ResourceOwner> getOwners(@Nonnull final String bucketID);
 
     /**
      * Add the bucket owner.
@@ -276,7 +277,7 @@ public interface BucketsApi {
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Bucket bucket);
+    ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Bucket bucket);
 
     /**
      * Add the bucket owner.
@@ -286,7 +287,7 @@ public interface BucketsApi {
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String bucketID);
+    ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String bucketID);
 
     /**
      * Removes a owner from a bucket.
@@ -311,7 +312,7 @@ public interface BucketsApi {
      * @return logs
      */
     @Nonnull
-    List<OperationLogEntry> findBucketLogs(@Nonnull final Bucket bucket);
+    List<OperationLog> findBucketLogs(@Nonnull final Bucket bucket);
 
     /**
      * Retrieve a bucket's logs.
@@ -321,7 +322,7 @@ public interface BucketsApi {
      * @return logs
      */
     @Nonnull
-    OperationLogEntries findBucketLogs(@Nonnull final Bucket bucket, @Nonnull final FindOptions findOptions);
+    OperationLogs findBucketLogs(@Nonnull final Bucket bucket, @Nonnull final FindOptions findOptions);
 
     /**
      * Retrieve a bucket's logs.
@@ -330,7 +331,7 @@ public interface BucketsApi {
      * @return logs
      */
     @Nonnull
-    List<OperationLogEntry> findBucketLogs(@Nonnull final String bucketID);
+    List<OperationLog> findBucketLogs(@Nonnull final String bucketID);
 
     /**
      * Retrieve a bucket's logs.
@@ -340,7 +341,7 @@ public interface BucketsApi {
      * @return logs
      */
     @Nonnull
-    OperationLogEntries findBucketLogs(@Nonnull final String bucketID, @Nonnull final FindOptions findOptions);
+    OperationLogs findBucketLogs(@Nonnull final String bucketID, @Nonnull final FindOptions findOptions);
 
     /**
      * List all labels of a bucket.

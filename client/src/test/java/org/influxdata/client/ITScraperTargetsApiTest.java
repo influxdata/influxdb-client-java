@@ -29,6 +29,7 @@ import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ScraperTarget;
 import org.influxdata.client.domain.ScraperTargetResponse;
 import org.influxdata.client.domain.User;
@@ -150,15 +151,15 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
 
         ResourceMember resourceMember = scraperTargetsApi.addMember(user, scraper);
         Assertions.assertThat(resourceMember).isNotNull();
-        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
-        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
+        Assertions.assertThat(resourceMember.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.RoleEnum.MEMBER);
 
         members = scraperTargetsApi.getMembers(scraper);
         Assertions.assertThat(members).hasSize(1);
-        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
-        Assertions.assertThat(members.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(members.get(0).getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.RoleEnum.MEMBER);
+        Assertions.assertThat(members.get(0).getId()).isEqualTo(user.getId());
+        Assertions.assertThat(members.get(0).getName()).isEqualTo(user.getName());
 
         scraperTargetsApi.deleteMember(user, scraper);
 
@@ -172,22 +173,22 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
         ScraperTarget scraper =  scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
                 "http://localhost:9999", bucket.getId(), findMyOrg().getId());
 
-        List<ResourceMember> owners = scraperTargetsApi.getOwners(scraper);
+        List<ResourceOwner> owners = scraperTargetsApi.getOwners(scraper);
         Assertions.assertThat(owners).hasSize(1);
 
         User user = usersApi.createUser(generateName("Luke Health"));
 
-        ResourceMember resourceMember = scraperTargetsApi.addOwner(user, scraper);
+        ResourceOwner resourceMember = scraperTargetsApi.addOwner(user, scraper);
         Assertions.assertThat(resourceMember).isNotNull();
-        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
-        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.OWNER);
+        Assertions.assertThat(resourceMember.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceOwner.RoleEnum.OWNER);
 
         owners = scraperTargetsApi.getOwners(scraper);
         Assertions.assertThat(owners).hasSize(2);
-        Assertions.assertThat(owners.get(1).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
-        Assertions.assertThat(owners.get(1).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(owners.get(1).getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(owners.get(1).getRole()).isEqualTo(ResourceOwner.RoleEnum.OWNER);
+        Assertions.assertThat(owners.get(1).getId()).isEqualTo(user.getId());
+        Assertions.assertThat(owners.get(1).getName()).isEqualTo(user.getName());
 
         scraperTargetsApi.deleteOwner(user, scraper);
 

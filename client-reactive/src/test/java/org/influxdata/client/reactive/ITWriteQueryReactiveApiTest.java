@@ -33,10 +33,10 @@ import org.influxdata.client.InfluxDBClientFactory;
 import org.influxdata.client.WriteOptions;
 import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Bucket;
+import org.influxdata.client.domain.BucketRetentionRules;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
 import org.influxdata.client.domain.ResourceType;
-import org.influxdata.client.domain.RetentionRule;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.WriteSuccessEvent;
@@ -71,12 +71,12 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
         InfluxDBClient client = InfluxDBClientFactory.create(influxDB_URL, "my-user",
                 "my-password".toCharArray());
 
-        RetentionRule retentionRule = new RetentionRule();
-        retentionRule.setType("expire");
-        retentionRule.setEverySeconds(3600L);
+        BucketRetentionRules bucketRetentionRules = new BucketRetentionRules();
+        bucketRetentionRules.setType(BucketRetentionRules.TypeEnum.EXPIRE);
+        bucketRetentionRules.setEverySeconds(3600);
 
         bucket = client.getBucketsApi()
-                .createBucket(generateName("h2o"), retentionRule, organization);
+                .createBucket(generateName("h2o"), bucketRetentionRules, organization);
 
         //
         // Add Permissions to read and write to the Bucket

@@ -50,7 +50,7 @@ public class AbstractInfluxDBClientTest extends AbstractMockServerTest {
     @Nonnull
     protected WriteApi createWriteClient(@Nonnull final WriteOptions writeOptions) {
 
-        Optional<Object> influxDBService = ReflectionUtils.readFieldValue(AbstractInfluxDBClient.class, "influxDBService",
+        Optional<Object> influxDBService = ReflectionUtils.readFieldValue(AbstractInfluxDBClient.class, "influxDBServiceMoshi",
                 (AbstractInfluxDBClient) influxDBClient);
 
         if (!influxDBService.isPresent()) {

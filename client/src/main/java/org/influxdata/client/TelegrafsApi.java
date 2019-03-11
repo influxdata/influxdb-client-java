@@ -29,6 +29,7 @@ import javax.annotation.Nullable;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.TelegrafConfig;
 import org.influxdata.client.domain.TelegrafPlugin;
 import org.influxdata.client.domain.User;
@@ -295,7 +296,7 @@ public interface TelegrafsApi {
      * @return a list of telegraf config owners
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final TelegrafConfig telegrafConfig);
+    List<ResourceOwner> getOwners(@Nonnull final TelegrafConfig telegrafConfig);
 
     /**
      * List all owners of a telegraf config.
@@ -304,7 +305,7 @@ public interface TelegrafsApi {
      * @return a list of telegraf config owners
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final String telegrafConfigID);
+    List<ResourceOwner> getOwners(@Nonnull final String telegrafConfigID);
 
     /**
      * Add telegraf config owner.
@@ -314,7 +315,7 @@ public interface TelegrafsApi {
      * @return telegraf config owner added
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final User owner, @Nonnull final TelegrafConfig telegrafConfig);
+    ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final TelegrafConfig telegrafConfig);
 
     /**
      * Add telegraf config owner.
@@ -324,7 +325,7 @@ public interface TelegrafsApi {
      * @return telegraf config owner added
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String telegrafConfigID);
+    ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String telegrafConfigID);
 
     /**
      * Removes an owner from a telegraf config.

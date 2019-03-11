@@ -38,6 +38,7 @@ import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
 import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ResourceType;
 import org.influxdata.client.domain.Run;
 import org.influxdata.client.domain.RunStatus;
@@ -317,15 +318,15 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         ResourceMember resourceMember = tasksApi.addMember(user, task);
         Assertions.assertThat(resourceMember).isNotNull();
-        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
-        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
+        Assertions.assertThat(resourceMember.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.RoleEnum.MEMBER);
 
         members = tasksApi.getMembers(task);
         Assertions.assertThat(members).hasSize(1);
-        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
-        Assertions.assertThat(members.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(members.get(0).getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.RoleEnum.MEMBER);
+        Assertions.assertThat(members.get(0).getId()).isEqualTo(user.getId());
+        Assertions.assertThat(members.get(0).getName()).isEqualTo(user.getName());
 
         tasksApi.deleteMember(user, task);
 
@@ -342,22 +343,22 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         Task task = tasksApi.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", organization);
 
-        List<ResourceMember> owners = tasksApi.getOwners(task);
+        List<ResourceOwner> owners = tasksApi.getOwners(task);
         Assertions.assertThat(owners).hasSize(0);
 
         User user = usersApi.createUser(generateName("Luke Health"));
 
-        ResourceMember resourceMember = tasksApi.addOwner(user, task);
+        ResourceOwner resourceMember = tasksApi.addOwner(user, task);
         Assertions.assertThat(resourceMember).isNotNull();
-        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
-        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.OWNER);
+        Assertions.assertThat(resourceMember.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceOwner.RoleEnum.OWNER);
 
         owners = tasksApi.getOwners(task);
         Assertions.assertThat(owners).hasSize(1);
-        Assertions.assertThat(owners.get(0).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
-        Assertions.assertThat(owners.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(owners.get(0).getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(owners.get(0).getRole()).isEqualTo(ResourceOwner.RoleEnum.OWNER);
+        Assertions.assertThat(owners.get(0).getId()).isEqualTo(user.getId());
+        Assertions.assertThat(owners.get(0).getName()).isEqualTo(user.getName());
 
         tasksApi.deleteOwner(user, task);
 

@@ -48,7 +48,7 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient<InfluxDBR
     @Nonnull
     @Override
     public QueryReactiveApi getQueryReactiveApi() {
-        return new QueryReactiveApiImpl(influxDBService);
+        return new QueryReactiveApiImpl(influxDBServiceMoshi);
     }
 
 
@@ -64,14 +64,14 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient<InfluxDBR
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
-        return new WriteReactiveApiImpl(writeOptions, influxDBService);
+        return new WriteReactiveApiImpl(writeOptions, influxDBServiceMoshi);
     }
 
     @Nonnull
     @Override
     public Single<Health> health() {
 
-        return Single.fromCallable(() -> health(influxDBService.health()));
+        return Single.fromCallable(() -> health(influxDBServiceMoshi.health()));
     }
 
     @Nonnull

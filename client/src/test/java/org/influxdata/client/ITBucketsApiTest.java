@@ -27,13 +27,15 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import org.influxdata.client.domain.Bucket;
+import org.influxdata.client.domain.BucketRetentionRules;
 import org.influxdata.client.domain.Buckets;
 import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.Label;
-import org.influxdata.client.domain.OperationLogEntries;
-import org.influxdata.client.domain.OperationLogEntry;
+import org.influxdata.client.domain.OperationLog;
+import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.NotFoundException;
 
@@ -80,16 +82,17 @@ class ITBucketsApiTest extends AbstractITClientTest {
         Assertions.assertThat(bucket).isNotNull();
         Assertions.assertThat(bucket.getId()).isNotBlank();
         Assertions.assertThat(bucket.getName()).isEqualTo(bucketName);
-        Assertions.assertThat(bucket.getOrgID()).isEqualTo(organization.getId());
-        Assertions.assertThat(bucket.getOrgName()).isEqualTo(organization.getName());
+        Assertions.assertThat(bucket.getOrganizationID()).isEqualTo(organization.getId());
+        Assertions.assertThat(bucket.getOrganization()).isEqualTo(organization.getName());
         Assertions.assertThat(bucket.getRetentionRules()).hasSize(1);
         Assertions.assertThat(bucket.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600L);
-        Assertions.assertThat(bucket.getRetentionRules().get(0).getType()).isEqualTo("expire");
-        Assertions.assertThat(bucket.getLinks()).hasSize(4);
-        Assertions.assertThat(bucket.getLinks()).hasEntrySatisfying("org", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + organization.getId()));
-        Assertions.assertThat(bucket.getLinks()).hasEntrySatisfying("self", value -> Assertions.assertThat(value).isEqualTo("/api/v2/buckets/" + bucket.getId()));
-        Assertions.assertThat(bucket.getLinks()).hasEntrySatisfying("log", value -> Assertions.assertThat(value).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/log"));
-        Assertions.assertThat(bucket.getLinks()).hasEntrySatisfying("labels", value -> Assertions.assertThat(value).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/labels"));
+        Assertions.assertThat(bucket.getRetentionRules().get(0).getType()).isEqualTo(BucketRetentionRules.TypeEnum.EXPIRE);
+        Assertions.assertThat(bucket.getLinks().getOrg()).isEqualTo("/api/v2/orgs/" + organization.getId());
+        Assertions.assertThat(bucket.getLinks().getSelf()).isEqualTo("/api/v2/buckets/" + bucket.getId());
+        Assertions.assertThat(bucket.getLinks().getMembers()).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/members");
+        Assertions.assertThat(bucket.getLinks().getOwners()).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/owners");
+        //TODO https://github.com/influxdata/influxdb/issues/12483
+        // Assertions.assertThat(bucket.getLinks().getWrite()).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/write");
     }
 
     @Test
@@ -104,11 +107,11 @@ class ITBucketsApiTest extends AbstractITClientTest {
         Assertions.assertThat(bucketByID).isNotNull();
         Assertions.assertThat(bucketByID.getId()).isEqualTo(bucket.getId());
         Assertions.assertThat(bucketByID.getName()).isEqualTo(bucket.getName());
-        Assertions.assertThat(bucketByID.getOrgID()).isEqualTo(bucket.getOrgID());
-        Assertions.assertThat(bucketByID.getOrgName()).isEqualTo(bucket.getOrgName());
+        Assertions.assertThat(bucketByID.getOrganizationID()).isEqualTo(bucket.getOrganizationID());
+        Assertions.assertThat(bucketByID.getOrganization()).isEqualTo(bucket.getOrganization());
         Assertions.assertThat(bucketByID.getRetentionRules().size()).isEqualTo(bucket.getRetentionRules().size());
         Assertions.assertThat(bucketByID.getRetentionRules()).hasSize(1);
-        Assertions.assertThat(bucketByID.getLinks()).hasSize(bucket.getLinks().size());
+        Assertions.assertThat(bucketByID.getLinks()).isEqualTo(bucket.getLinks());
     }
 
     @Test
@@ -127,7 +130,7 @@ class ITBucketsApiTest extends AbstractITClientTest {
         Assertions.assertThat(bucket).isNotNull();
         Assertions.assertThat(bucket.getId()).isNotEmpty();
         Assertions.assertThat(bucket.getName()).isEqualTo("my-bucket");
-        Assertions.assertThat(bucket.getOrgID()).isEqualTo(findMyOrg().getId());
+        Assertions.assertThat(bucket.getOrganizationID()).isEqualTo(findMyOrg().getId());
     }
 
     @Test
@@ -164,23 +167,23 @@ class ITBucketsApiTest extends AbstractITClientTest {
 
         Buckets buckets = bucketsApi.findBuckets(findOptions);
         Assertions.assertThat(buckets.getBuckets()).hasSize(5);
-        Assertions.assertThat(buckets.getNextPage()).isNotNull();
+        Assertions.assertThat(buckets.getLinks().getNext()).isEqualTo("/api/v2/buckets?descending=false&limit=5&offset=5");
 
-        buckets = bucketsApi.findBuckets(buckets.getNextPage());
+        buckets = bucketsApi.findBuckets(FindOptions.create(buckets.getLinks().getNext()));
         Assertions.assertThat(buckets.getBuckets()).hasSize(5);
-        Assertions.assertThat(buckets.getNextPage()).isNotNull();
+        Assertions.assertThat(buckets.getLinks().getNext()).isEqualTo("/api/v2/buckets?descending=false&limit=5&offset=10");
 
-        buckets = bucketsApi.findBuckets(buckets.getNextPage());
+        buckets = bucketsApi.findBuckets(FindOptions.create(buckets.getLinks().getNext()));
         Assertions.assertThat(buckets.getBuckets()).hasSize(5);
-        Assertions.assertThat(buckets.getNextPage()).isNotNull();
+        Assertions.assertThat(buckets.getLinks().getNext()).isEqualTo("/api/v2/buckets?descending=false&limit=5&offset=15");
 
-        buckets = bucketsApi.findBuckets(buckets.getNextPage());
+        buckets = bucketsApi.findBuckets(FindOptions.create(buckets.getLinks().getNext()));
         Assertions.assertThat(buckets.getBuckets()).hasSize(5);
-        Assertions.assertThat(buckets.getNextPage()).isNotNull();
+        Assertions.assertThat(buckets.getLinks().getNext()).isEqualTo("/api/v2/buckets?descending=false&limit=5&offset=20");
 
-        buckets = bucketsApi.findBuckets(buckets.getNextPage());
+        buckets = bucketsApi.findBuckets(FindOptions.create(buckets.getLinks().getNext()));
         Assertions.assertThat(buckets.getBuckets()).hasSize(0);
-        Assertions.assertThat(buckets.getNextPage()).isNull();
+        Assertions.assertThat(buckets.getLinks().getNext()).isNull();
     }
 
     @Test
@@ -217,7 +220,7 @@ class ITBucketsApiTest extends AbstractITClientTest {
 
         Bucket createBucket = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);
         createBucket.setName("Therm sensor 2000");
-        createBucket.getRetentionRules().get(0).setEverySeconds(1000L);
+        createBucket.getRetentionRules().get(0).setEverySeconds(1000);
 
         Bucket updatedBucket = bucketsApi.updateBucket(createBucket);
 
@@ -241,15 +244,15 @@ class ITBucketsApiTest extends AbstractITClientTest {
 
         ResourceMember resourceMember = bucketsApi.addMember(user, bucket);
         Assertions.assertThat(resourceMember).isNotNull();
-        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
-        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
+        Assertions.assertThat(resourceMember.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.RoleEnum.MEMBER);
 
         members = bucketsApi.getMembers(bucket);
         Assertions.assertThat(members).hasSize(1);
-        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
-        Assertions.assertThat(members.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(members.get(0).getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.RoleEnum.MEMBER);
+        Assertions.assertThat(members.get(0).getId()).isEqualTo(user.getId());
+        Assertions.assertThat(members.get(0).getName()).isEqualTo(user.getName());
 
         bucketsApi.deleteMember(user, bucket);
 
@@ -264,23 +267,23 @@ class ITBucketsApiTest extends AbstractITClientTest {
 
         Bucket bucket = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);
 
-        List<ResourceMember> owners = bucketsApi.getOwners(bucket);
+        List<ResourceOwner> owners = bucketsApi.getOwners(bucket);
         Assertions.assertThat(owners).hasSize(1);
-        Assertions.assertThat(owners.get(0).getUserName()).isEqualTo("my-user");
+        Assertions.assertThat(owners.get(0).getName()).isEqualTo("my-user");
 
         User user = usersApi.createUser(generateName("Luke Health"));
 
-        ResourceMember resourceMember = bucketsApi.addOwner(user, bucket);
+        ResourceOwner resourceMember = bucketsApi.addOwner(user, bucket);
         Assertions.assertThat(resourceMember).isNotNull();
-        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
-        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.OWNER);
+        Assertions.assertThat(resourceMember.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceOwner.RoleEnum.OWNER);
 
         owners = bucketsApi.getOwners(bucket);
         Assertions.assertThat(owners).hasSize(2);
-        Assertions.assertThat(owners.get(1).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
-        Assertions.assertThat(owners.get(1).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(owners.get(1).getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(owners.get(1).getRole()).isEqualTo(ResourceOwner.RoleEnum.OWNER);
+        Assertions.assertThat(owners.get(1).getId()).isEqualTo(user.getId());
+        Assertions.assertThat(owners.get(1).getName()).isEqualTo(user.getName());
 
         bucketsApi.deleteOwner(user, bucket);
 
@@ -343,7 +346,7 @@ class ITBucketsApiTest extends AbstractITClientTest {
 
         Bucket bucket = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);
 
-        List<OperationLogEntry> logs = bucketsApi.findBucketLogs(bucket);
+        List<OperationLog> logs = bucketsApi.findBucketLogs(bucket);
 
         Assertions.assertThat(logs).hasSize(1);
         Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Bucket Created");
@@ -362,7 +365,7 @@ class ITBucketsApiTest extends AbstractITClientTest {
                     bucketsApi.updateBucket(bucket);
                 });
 
-        List<OperationLogEntry> logs = bucketsApi.findBucketLogs(bucket);
+        List<OperationLog> logs = bucketsApi.findBucketLogs(bucket);
 
         Assertions.assertThat(logs).hasSize(20);
         Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Bucket Created");
@@ -372,54 +375,57 @@ class ITBucketsApiTest extends AbstractITClientTest {
         findOptions.setLimit(5);
         findOptions.setOffset(0);
 
-        OperationLogEntries entries = bucketsApi.findBucketLogs(bucket, findOptions);
-        
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Created");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
+        //TODO .getLog to .getLogs
+        // https://github.com/influxdata/influxdb/issues/12484
+
+        OperationLogs entries = bucketsApi.findBucketLogs(bucket, findOptions);
+
+        Assertions.assertThat(entries.getLog()).hasSize(5);
+        Assertions.assertThat(entries.getLog().get(0).getDescription()).isEqualTo("Bucket Created");
+        Assertions.assertThat(entries.getLog().get(1).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(2).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(3).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(4).getDescription()).isEqualTo("Bucket Updated");
 
         //TODO isNotNull FindOptions also in Log API?
         findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getNextPage()).isNull();
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         entries = bucketsApi.findBucketLogs(bucket, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog()).hasSize(5);
+        Assertions.assertThat(entries.getLog().get(0).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(1).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(2).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(3).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(4).getDescription()).isEqualTo("Bucket Updated");
 
         findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getNextPage()).isNull();
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         entries = bucketsApi.findBucketLogs(bucket, findOptions);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(0).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(1).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(2).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(3).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(4).getDescription()).isEqualTo("Bucket Updated");
 
         findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getNextPage()).isNull();
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         entries = bucketsApi.findBucketLogs(bucket, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog()).hasSize(5);
+        Assertions.assertThat(entries.getLog().get(0).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(1).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(2).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(3).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(4).getDescription()).isEqualTo("Bucket Updated");
 
         findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getNextPage()).isNull();
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         entries = bucketsApi.findBucketLogs(bucket, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(0);
-        Assertions.assertThat(entries.getNextPage()).isNull();
+        Assertions.assertThat(entries.getLog()).hasSize(0);
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         // order
         findOptions = new FindOptions();
@@ -427,15 +433,15 @@ class ITBucketsApiTest extends AbstractITClientTest {
 
         entries = bucketsApi.findBucketLogs(bucket, findOptions);
 
-        Assertions.assertThat(entries.getLogs()).hasSize(20);
-        Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Created");
+        Assertions.assertThat(entries.getLog()).hasSize(20);
+        Assertions.assertThat(entries.getLog().get(19).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLog().get(0).getDescription()).isEqualTo("Bucket Created");
     }
 
     @Test
     void findBucketLogsNotFound() {
 
-        List<OperationLogEntry> bucketLogs = bucketsApi.findBucketLogs("020f755c3c082000");
+        List<OperationLog> bucketLogs = bucketsApi.findBucketLogs("020f755c3c082000");
 
         Assertions.assertThat(bucketLogs).isEmpty();
     }
@@ -443,10 +449,10 @@ class ITBucketsApiTest extends AbstractITClientTest {
     @Test
     void findBucketLogsFindOptionsNotFound() {
 
-        OperationLogEntries entries = bucketsApi.findBucketLogs("020f755c3c082000", new FindOptions());
+        OperationLogs entries = bucketsApi.findBucketLogs("020f755c3c082000", new FindOptions());
 
         Assertions.assertThat(entries).isNotNull();
-        Assertions.assertThat(entries.getLogs()).isEmpty();
+        Assertions.assertThat(entries.getLog()).isEmpty();
     }
 
     @Test
@@ -467,12 +473,12 @@ class ITBucketsApiTest extends AbstractITClientTest {
         Bucket cloned = bucketsApi.cloneBucket(name, source.getId());
 
         Assertions.assertThat(cloned.getName()).isEqualTo(name);
-        Assertions.assertThat(cloned.getOrgID()).isEqualTo(organization.getId());
-        Assertions.assertThat(cloned.getOrgName()).isEqualTo(organization.getName());
-        Assertions.assertThat(cloned.getRetentionPolicyName()).isNull();
+        Assertions.assertThat(cloned.getOrganizationID()).isEqualTo(organization.getId());
+        Assertions.assertThat(cloned.getOrganization()).isEqualTo(organization.getName());
+        Assertions.assertThat(cloned.getRp()).isNull();
         Assertions.assertThat(cloned.getRetentionRules()).hasSize(1);
         Assertions.assertThat(cloned.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600);
-        Assertions.assertThat(cloned.getRetentionRules().get(0).getType()).isEqualTo("expire");
+        Assertions.assertThat(cloned.getRetentionRules().get(0).getType()).isEqualTo(BucketRetentionRules.TypeEnum.EXPIRE);
 
         List<Label> labels = bucketsApi.getLabels(cloned);
         Assertions.assertThat(labels).hasSize(1);

@@ -253,7 +253,7 @@ import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
 import org.influxdata.client.domain.ResourceType;
-import org.influxdata.client.domain.RetentionRule;
+import org.influxdata.client.domain.BucketRetentionRules;
 
 public class InfluxDB2ManagementExample {
 

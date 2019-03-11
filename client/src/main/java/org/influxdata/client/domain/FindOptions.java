@@ -21,6 +21,12 @@
  */
 package org.influxdata.client.domain;
 
+import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import okhttp3.HttpUrl;
+
 /**
  * FindOptions represents options passed to all find methods with multiple results.
  *
@@ -37,6 +43,49 @@ public final class FindOptions {
     private Integer offset;
     private String sortBy;
     private Boolean descending;
+
+    @Nonnull
+    public static FindOptions create(@Nullable final String link) {
+
+        FindOptions options = new FindOptions();
+        if (link == null) {
+            return options;
+        }
+
+        HttpUrl httpUrl = HttpUrl.parse("https://influxdb" + link);
+        if (httpUrl == null) {
+            return options;
+        }
+
+        Set<String> qp = httpUrl.queryParameterNames();
+        if (!qp.contains(LIMIT_KEY) && !qp.contains(OFFSET_KEY) && !qp.contains(SORT_BY_KEY)
+                && !qp.contains(DESCENDING_KEY)) {
+
+            return options;
+        }
+
+        String limit = httpUrl.queryParameter(LIMIT_KEY);
+        if (limit != null) {
+            options.setLimit(Integer.valueOf(limit));
+        }
+
+        String offset = httpUrl.queryParameter(OFFSET_KEY);
+        if (offset != null) {
+            options.setOffset(Integer.valueOf(offset));
+        }
+
+        String sortBy = httpUrl.queryParameter(SORT_BY_KEY);
+        if (sortBy != null) {
+            options.setSortBy(sortBy);
+        }
+
+        String descending = httpUrl.queryParameter(DESCENDING_KEY);
+        if (descending != null) {
+            options.setDescending(Boolean.valueOf(descending));
+        }
+
+        return options;
+    }
 
     public Integer getLimit() {
         return limit;

@@ -35,11 +35,11 @@ import kotlinx.coroutines.runBlocking
 import org.influxdata.annotations.Column
 import org.influxdata.client.InfluxDBClientFactory
 import org.influxdata.client.domain.Bucket
+import org.influxdata.client.domain.BucketRetentionRules
 import org.influxdata.client.domain.Organization
 import org.influxdata.client.domain.Permission
 import org.influxdata.client.domain.PermissionResource
 import org.influxdata.client.domain.ResourceType
-import org.influxdata.client.domain.RetentionRule
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -72,9 +72,9 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
                 .findFirst()
                 .orElseThrow { IllegalStateException() }
 
-        val retentionRule = RetentionRule()
-        retentionRule.type = "expire"
-        retentionRule.everySeconds = 3600L
+        val retentionRule = BucketRetentionRules()
+        retentionRule.type = BucketRetentionRules.TypeEnum.EXPIRE
+        retentionRule.everySeconds = 3600
 
         bucket = client.bucketsApi
                 .createBucket(generateName("h2o"), retentionRule, organization)

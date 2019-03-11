@@ -72,7 +72,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Nonnull
     @Override
     public QueryApi getQueryApi() {
-        return new QueryApiImpl(influxDBService);
+        return new QueryApiImpl(influxDBServiceMoshi);
     }
 
     @Nonnull
@@ -87,74 +87,74 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
-        return new WriteApiImpl(writeOptions, influxDBService);
+        return new WriteApiImpl(writeOptions, influxDBServiceMoshi);
     }
 
     @Nonnull
     @Override
     public AuthorizationsApi getAuthorizationsApi() {
-        return new AuthorizationsApiImpl(influxDBService, moshi);
+        return new AuthorizationsApiImpl(influxDBServiceMoshi, moshi);
     }
 
     @Nonnull
     @Override
     public BucketsApi getBucketsApi() {
-        return new BucketsApiImpl(influxDBService, moshi);
+        return new BucketsApiImpl(influxDBService, gson);
     }
 
     @Nonnull
     @Override
     public OrganizationsApi getOrganizationsApi() {
-        return new OrganizationsApiImpl(influxDBService, moshi);
+        return new OrganizationsApiImpl(influxDBServiceMoshi, moshi, gson);
     }
 
     @Nonnull
     @Override
     public SourcesApi getSourcesApi() {
-        return new SourcesApiImpl(influxDBService, moshi, this);
+        return new SourcesApiImpl(influxDBServiceMoshi, moshi, this);
     }
 
     @Nonnull
     @Override
     public TasksApi getTasksApi() {
-        return new TasksApiImpl(influxDBService, moshi);
+        return new TasksApiImpl(influxDBServiceMoshi, moshi, gson);
     }
 
     @Nonnull
     @Override
     public UsersApi getUsersApi() {
-        return new UsersApiImpl(influxDBService, moshi);
+        return new UsersApiImpl(influxDBServiceMoshi, gson);
     }
 
     @Nonnull
     @Override
     public ScraperTargetsApi getScraperTargetsApi() {
-        return new ScraperTargetsApiImpl(influxDBService, moshi);
+        return new ScraperTargetsApiImpl(influxDBServiceMoshi, moshi, gson);
     }
 
     @Nonnull
     @Override
     public TelegrafsApi getTelegrafsApi() {
-        return new TelegrafsApiImpl(influxDBService, moshi);
+        return new TelegrafsApiImpl(influxDBServiceMoshi, moshi, gson);
     }
 
     @Nonnull
     @Override
     public LabelsApi getLabelsApi() {
-        return new LabelsApiImpl(influxDBService, moshi);
+        return new LabelsApiImpl(influxDBService, gson);
     }
 
     @Nonnull
     @Override
     public Health health() {
 
-        return health(influxDBService.health());
+        return health(influxDBServiceMoshi.health());
     }
 
     @Nullable
     @Override
     public Ready ready() {
-        Call<Ready> call = influxDBService.ready();
+        Call<Ready> call = influxDBServiceMoshi.ready();
         try {
             return execute(call);
         } catch (InfluxException e) {
@@ -171,7 +171,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
 
         String json = onboardingAdapter.toJson(onboarding);
 
-        Call<OnboardingResponse> call = influxDBService.setup(createBody(json));
+        Call<OnboardingResponse> call = influxDBServiceMoshi.setup(createBody(json));
 
         return execute(call);
     }
@@ -180,7 +180,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Override
     public Boolean isOnboardingAllowed() {
 
-        IsOnboarding isOnboarding = execute(influxDBService.setup());
+        IsOnboarding isOnboarding = execute(influxDBServiceMoshi.setup());
 
         return isOnboarding.getAllowed();
     }

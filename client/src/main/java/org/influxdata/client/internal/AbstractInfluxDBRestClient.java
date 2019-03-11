@@ -34,12 +34,9 @@ import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LabelMapping;
 import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.Labels;
-import org.influxdata.client.domain.OperationLogEntries;
-import org.influxdata.client.domain.ResourceType;
 import org.influxdata.internal.AbstractRestClient;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
+import com.google.gson.Gson;
 import retrofit2.Call;
 
 /**
@@ -50,16 +47,16 @@ abstract class AbstractInfluxDBRestClient extends AbstractRestClient {
     private static final Logger LOG = Logger.getLogger(AbstractInfluxDBRestClient.class.getName());
 
     protected final InfluxDBService influxDBService;
-    private final JsonAdapter<LabelMapping> labelMappingAdapter;
+    protected final Gson gson;
 
     AbstractInfluxDBRestClient(@Nonnull final InfluxDBService influxDBService,
-                               @Nonnull final Moshi moshi) {
+                               @Nonnull final Gson gson) {
 
         Arguments.checkNotNull(influxDBService, "InfluxDBService");
-        Arguments.checkNotNull(moshi, "Moshi to create adapter");
+        Arguments.checkNotNull(gson, "Gson to serialize/deserialize adapter");
 
         this.influxDBService = influxDBService;
-        this.labelMappingAdapter = moshi.adapter(LabelMapping.class);
+        this.gson = gson;
     }
 
     @Nonnull
@@ -79,8 +76,7 @@ abstract class AbstractInfluxDBRestClient extends AbstractRestClient {
     @Nonnull
     Label addLabel(@Nonnull final String labelID,
                    @Nonnull final String resourceID,
-                   @Nonnull final String resourcePath,
-                   @Nonnull final ResourceType resourceType) {
+                   @Nonnull final String resourcePath) {
 
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(resourceID, "resourceID");
@@ -88,9 +84,8 @@ abstract class AbstractInfluxDBRestClient extends AbstractRestClient {
 
         LabelMapping labelMapping = new LabelMapping();
         labelMapping.setLabelID(labelID);
-        labelMapping.setResourceType(resourceType);
 
-        String json = labelMappingAdapter.toJson(labelMapping);
+        String json = gson.toJson(labelMapping);
         Call<LabelResponse> call = influxDBService.addResourceLabelOwner(resourceID, resourcePath, createBody(json));
 
         LabelResponse labelResponse = execute(call);
@@ -113,14 +108,15 @@ abstract class AbstractInfluxDBRestClient extends AbstractRestClient {
     }
 
     @Nonnull
-    OperationLogEntries getOperationLogEntries(@Nonnull final Call<OperationLogEntries> call) {
+    <T> T getOperationLogEntries(@Nonnull final Call<T> call, @Nonnull final T defaultValue) {
 
         Arguments.checkNotNull(call, "call");
+        Arguments.checkNotNull(defaultValue, "defaultValue");
 
         //TODO https://github.com/influxdata/influxdb/issues/11632
-        OperationLogEntries entries = execute(call, "oplog not found");
+        T entries = execute(call, "oplog not found");
         if (entries == null) {
-            return new OperationLogEntries();
+            return defaultValue;
         }
 
         return entries;

@@ -32,6 +32,7 @@ import org.influxdata.client.domain.OperationLogEntries;
 import org.influxdata.client.domain.OperationLogEntry;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.User;
 
 /**
@@ -242,7 +243,7 @@ public interface OrganizationsApi {
      * @return return the List all owners of an organization
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final Organization organization);
+    List<ResourceOwner> getOwners(@Nonnull final Organization organization);
 
     /**
      * List all owners of an organization.
@@ -251,7 +252,7 @@ public interface OrganizationsApi {
      * @return return the List all owners of an organization
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final String orgID);
+    List<ResourceOwner> getOwners(@Nonnull final String orgID);
 
     /**
      * Add organization owner.
@@ -261,7 +262,7 @@ public interface OrganizationsApi {
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Organization organization);
+    ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Organization organization);
 
     /**
      * Add organization owner.
@@ -271,7 +272,7 @@ public interface OrganizationsApi {
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String orgID);
+    ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String orgID);
 
     /**
      * Removes a owner from an organization.

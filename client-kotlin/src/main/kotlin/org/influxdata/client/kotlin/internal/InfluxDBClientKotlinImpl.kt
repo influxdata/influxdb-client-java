@@ -35,11 +35,11 @@ import org.influxdata.client.kotlin.QueryKotlinApi
 internal class InfluxDBClientKotlinImpl(options: InfluxDBClientOptions) : AbstractInfluxDBClient<InfluxDBService>(options, InfluxDBService::class.java), InfluxDBClientKotlin {
 
     override fun getQueryKotlinApi(): QueryKotlinApi {
-        return QueryKotlinApiImpl(influxDBService)
+        return QueryKotlinApiImpl(influxDBServiceMoshi)
     }
 
     override fun health(): Health {
-        return health(influxDBService.health())
+        return health(influxDBServiceMoshi.health())
     }
 
     override fun getLogLevel(): LogLevel {

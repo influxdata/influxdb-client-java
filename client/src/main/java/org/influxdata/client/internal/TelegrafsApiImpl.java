@@ -32,11 +32,13 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.TelegrafsApi;
+import org.influxdata.client.domain.AddResourceMemberRequestBody;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
-import org.influxdata.client.domain.ResourceType;
+import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.TelegrafAgent;
 import org.influxdata.client.domain.TelegrafConfig;
 import org.influxdata.client.domain.TelegrafConfigs;
@@ -45,6 +47,7 @@ import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.exceptions.NotFoundException;
 
+import com.google.gson.Gson;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import okhttp3.ResponseBody;
@@ -58,14 +61,13 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
     private static final Logger LOG = Logger.getLogger(TelegrafsApiImpl.class.getName());
 
     private final JsonAdapter<TelegrafConfig> adapter;
-    private final JsonAdapter<User> userAdapter;
 
-    TelegrafsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi) {
+    TelegrafsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi,
+                     @Nonnull final Gson gson) {
 
-        super(influxDBService, moshi);
+        super(influxDBService, gson);
 
         this.adapter = moshi.adapter(TelegrafConfig.class);
-        this.userAdapter = moshi.adapter(User.class);
     }
 
     @Nonnull
@@ -322,10 +324,10 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
 
-        User user = new User();
+        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(memberID);
 
-        String json = userAdapter.toJson(user);
+        String json = gson.toJson(user);
         Call<ResourceMember> call = influxDBService.addTelegrafConfigMember(telegrafConfigID, createBody(json));
 
         return execute(call);
@@ -352,7 +354,7 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public List<ResourceMember> getOwners(@Nonnull final TelegrafConfig telegrafConfig) {
+    public List<ResourceOwner> getOwners(@Nonnull final TelegrafConfig telegrafConfig) {
 
         Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
 
@@ -361,12 +363,12 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public List<ResourceMember> getOwners(@Nonnull final String telegrafConfigID) {
+    public List<ResourceOwner> getOwners(@Nonnull final String telegrafConfigID) {
 
         Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
 
-        Call<ResourceMembers> call = influxDBService.findTelegrafConfigOwners(telegrafConfigID);
-        ResourceMembers resourceMembers = execute(call);
+        Call<ResourceOwners> call = influxDBService.findTelegrafConfigOwners(telegrafConfigID);
+        ResourceOwners resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findTelegrafConfigOwners found: {0}", resourceMembers);
 
         return resourceMembers.getUsers();
@@ -374,7 +376,7 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final TelegrafConfig telegrafConfig) {
+    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final TelegrafConfig telegrafConfig) {
 
         Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
         Arguments.checkNotNull(owner, "owner");
@@ -382,18 +384,20 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
         return addOwner(owner.getId(), telegrafConfig.getId());
     }
 
+    //TODO add to all API the methods with ResourceOwner, ResourceMember parameter
+
     @Nonnull
     @Override
-    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String telegrafConfigID) {
+    public ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String telegrafConfigID) {
 
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
 
-        User user = new User();
+        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(ownerID);
 
-        String json = userAdapter.toJson(user);
-        Call<ResourceMember> call = influxDBService.addTelegrafConfigOwner(telegrafConfigID, createBody(json));
+        String json = gson.toJson(user);
+        Call<ResourceOwner> call = influxDBService.addTelegrafConfigOwner(telegrafConfigID, createBody(json));
 
         return execute(call);
     }
@@ -452,7 +456,7 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(telegrafConfigID, "telegrafConfigID");
 
-        return addLabel(labelID, telegrafConfigID, "telegrafs", ResourceType.TELEGRAFS);
+        return addLabel(labelID, telegrafConfigID, "telegrafs");
     }
 
     @Override
