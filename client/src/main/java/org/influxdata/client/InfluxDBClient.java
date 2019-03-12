@@ -27,12 +27,11 @@ import javax.annotation.Nullable;
 import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Bucket;
-import org.influxdata.client.domain.Health;
+import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.Label;
-import org.influxdata.client.domain.Onboarding;
+import org.influxdata.client.domain.OnboardingRequest;
 import org.influxdata.client.domain.OnboardingResponse;
 import org.influxdata.client.domain.Organization;
-import org.influxdata.client.domain.Ready;
 import org.influxdata.client.domain.ScraperTargetResponse;
 import org.influxdata.client.domain.Source;
 import org.influxdata.client.domain.Task;
@@ -152,7 +151,7 @@ public interface InfluxDBClient extends AutoCloseable {
      * @return health of an instance
      */
     @Nonnull
-    Health health();
+    Check health();
 
     /**
      * The readiness of the InfluxDB 2.0.
@@ -160,7 +159,7 @@ public interface InfluxDBClient extends AutoCloseable {
      * @return return null if the InfluxDB is not ready
      */
     @Nullable
-    Ready ready();
+    Check ready();
 
     /**
      * Post onboarding request, to setup initial user, org and bucket.
@@ -170,7 +169,7 @@ public interface InfluxDBClient extends AutoCloseable {
      * @throws UnprocessableEntityException when an onboarding has already been completed
      */
     @Nonnull
-    OnboardingResponse onBoarding(@Nonnull final Onboarding onboarding) throws UnprocessableEntityException;
+    OnboardingResponse onBoarding(@Nonnull final OnboardingRequest onboarding) throws UnprocessableEntityException;
 
     /**
      * Check if database has default user, org, bucket created, returns true if not.

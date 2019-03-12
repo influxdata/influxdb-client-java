@@ -30,37 +30,31 @@ import javax.annotation.Nullable;
 import org.influxdata.Arguments;
 import org.influxdata.client.SourcesApi;
 import org.influxdata.client.domain.Bucket;
-import org.influxdata.client.domain.Health;
+import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.Source;
 import org.influxdata.client.domain.Sources;
 import org.influxdata.exceptions.NotFoundException;
-import org.influxdata.internal.AbstractRestClient;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
+import com.google.gson.Gson;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (18/09/2018 09:40)
  */
-final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
+final class SourcesApiImpl extends AbstractInfluxDBRestClient implements SourcesApi {
 
     private static final Logger LOG = Logger.getLogger(SourcesApiImpl.class.getName());
 
-    private final InfluxDBService influxDBService;
-    private final JsonAdapter<Source> adapter;
     private final InfluxDBClientImpl influxDBClient;
 
     SourcesApiImpl(@Nonnull final InfluxDBService influxDBService,
-                   @Nonnull final Moshi moshi,
-                   @Nonnull final InfluxDBClientImpl influxDBClient) {
+                   @Nonnull final InfluxDBClientImpl influxDBClient,
+                   @Nonnull final Gson gson) {
 
-        Arguments.checkNotNull(influxDBService, "InfluxDBService");
-        Arguments.checkNotNull(moshi, "Moshi to create adapter");
+        super(influxDBService, gson);
+
         Arguments.checkNotNull(influxDBClient, "InfluxDBClient");
 
-        this.influxDBService = influxDBService;
-        this.adapter = moshi.adapter(Source.class);
         this.influxDBClient = influxDBClient;
     }
 
@@ -70,7 +64,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Arguments.checkNotNull(source, "Source is required");
 
-        String json = adapter.toJson(source);
+        String json = gson.toJson(source);
 
         Call<Source> call = influxDBService.createSource(createBody(json));
         return execute(call);
@@ -82,7 +76,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Arguments.checkNotNull(source, "Source is required");
 
-        String json = adapter.toJson(source);
+        String json = gson.toJson(source);
 
         Call<Source> call = influxDBService.updateSource(source.getId(), createBody(json));
         return execute(call);
@@ -130,7 +124,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
         Source cloned = new Source();
         cloned.setName(clonedName);
         cloned.setOrgID(source.getOrgID());
-        cloned.setDefaultSource(source.isDefaultSource());
+        cloned.setDefault(source.isDefault());
         cloned.setType(source.getType());
         cloned.setUrl(source.getUrl());
         cloned.setInsecureSkipVerify(source.isInsecureSkipVerify());
@@ -189,7 +183,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
     @Nonnull
     @Override
-    public Health health(@Nonnull final Source source) {
+    public Check health(@Nonnull final Source source) {
 
         Arguments.checkNotNull(source, "Source is required");
 
@@ -198,7 +192,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
     @Nonnull
     @Override
-    public Health health(@Nonnull final String sourceID) {
+    public Check health(@Nonnull final String sourceID) {
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 

@@ -27,7 +27,7 @@ import org.influxdata.Arguments;
 import org.influxdata.LogLevel;
 import org.influxdata.client.InfluxDBClientOptions;
 import org.influxdata.client.WriteOptions;
-import org.influxdata.client.domain.Health;
+import org.influxdata.client.domain.Check;
 import org.influxdata.client.internal.AbstractInfluxDBClient;
 import org.influxdata.client.reactive.InfluxDBClientReactive;
 import org.influxdata.client.reactive.QueryReactiveApi;
@@ -48,7 +48,7 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient<InfluxDBR
     @Nonnull
     @Override
     public QueryReactiveApi getQueryReactiveApi() {
-        return new QueryReactiveApiImpl(influxDBServiceMoshi);
+        return new QueryReactiveApiImpl(influxDBService);
     }
 
 
@@ -64,14 +64,14 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient<InfluxDBR
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
-        return new WriteReactiveApiImpl(writeOptions, influxDBServiceMoshi);
+        return new WriteReactiveApiImpl(writeOptions, influxDBService);
     }
 
     @Nonnull
     @Override
-    public Single<Health> health() {
+    public Single<Check> health() {
 
-        return Single.fromCallable(() -> health(influxDBServiceMoshi.health()));
+        return Single.fromCallable(() -> health(influxDBService.health()));
     }
 
     @Nonnull

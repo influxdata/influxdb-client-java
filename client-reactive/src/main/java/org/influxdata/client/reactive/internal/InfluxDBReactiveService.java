@@ -23,7 +23,7 @@ package org.influxdata.client.reactive.internal;
 
 import javax.annotation.Nonnull;
 
-import org.influxdata.client.domain.Health;
+import org.influxdata.client.domain.Check;
 
 import io.reactivex.Maybe;
 import okhttp3.RequestBody;
@@ -48,7 +48,7 @@ interface InfluxDBReactiveService {
     @GET("/health")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<Health> health();
+    Call<Check> health();
 
     //
     // Query

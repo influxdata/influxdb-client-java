@@ -42,15 +42,13 @@ import org.influxdata.client.TelegrafsApi;
 import org.influxdata.client.UsersApi;
 import org.influxdata.client.WriteApi;
 import org.influxdata.client.WriteOptions;
-import org.influxdata.client.domain.Health;
+import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.IsOnboarding;
-import org.influxdata.client.domain.Onboarding;
+import org.influxdata.client.domain.OnboardingRequest;
 import org.influxdata.client.domain.OnboardingResponse;
-import org.influxdata.client.domain.Ready;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.exceptions.UnprocessableEntityException;
 
-import com.squareup.moshi.JsonAdapter;
 import retrofit2.Call;
 
 /**
@@ -60,19 +58,15 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
 
     private static final Logger LOG = Logger.getLogger(InfluxDBClientImpl.class.getName());
 
-    private final JsonAdapter<Onboarding> onboardingAdapter;
-
     public InfluxDBClientImpl(@Nonnull final InfluxDBClientOptions options) {
 
         super(options, InfluxDBService.class);
-
-        this.onboardingAdapter = moshi.adapter(Onboarding.class);
     }
 
     @Nonnull
     @Override
     public QueryApi getQueryApi() {
-        return new QueryApiImpl(influxDBServiceMoshi);
+        return new QueryApiImpl(influxDBService);
     }
 
     @Nonnull
@@ -87,7 +81,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
-        return new WriteApiImpl(writeOptions, influxDBServiceMoshi);
+        return new WriteApiImpl(writeOptions, influxDBService);
     }
 
     @Nonnull
@@ -111,7 +105,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Nonnull
     @Override
     public SourcesApi getSourcesApi() {
-        return new SourcesApiImpl(influxDBServiceMoshi, moshi, this);
+        return new SourcesApiImpl(influxDBService, this, gson);
     }
 
     @Nonnull
@@ -146,15 +140,15 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
 
     @Nonnull
     @Override
-    public Health health() {
+    public Check health() {
 
-        return health(influxDBServiceMoshi.health());
+        return health(influxDBService.health());
     }
 
     @Nullable
     @Override
-    public Ready ready() {
-        Call<Ready> call = influxDBServiceMoshi.ready();
+    public Check ready() {
+        Call<Check> call = influxDBService.ready();
         try {
             return execute(call);
         } catch (InfluxException e) {
@@ -165,13 +159,13 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
 
     @Nonnull
     @Override
-    public OnboardingResponse onBoarding(@Nonnull final Onboarding onboarding) throws UnprocessableEntityException {
+    public OnboardingResponse onBoarding(@Nonnull final OnboardingRequest onboarding) throws UnprocessableEntityException {
 
         Arguments.checkNotNull(onboarding, "onboarding");
 
-        String json = onboardingAdapter.toJson(onboarding);
+        String json = gson.toJson(onboarding);
 
-        Call<OnboardingResponse> call = influxDBServiceMoshi.setup(createBody(json));
+        Call<OnboardingResponse> call = influxDBService.setup(createBody(json));
 
         return execute(call);
     }
@@ -180,9 +174,9 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Override
     public Boolean isOnboardingAllowed() {
 
-        IsOnboarding isOnboarding = execute(influxDBServiceMoshi.setup());
+        IsOnboarding isOnboarding = execute(influxDBService.setup());
 
-        return isOnboarding.getAllowed();
+        return isOnboarding.isAllowed();
     }
 
     @Nonnull

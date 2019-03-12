@@ -23,7 +23,7 @@ package org.influxdata.client.kotlin.internal
 
 import org.influxdata.LogLevel
 import org.influxdata.client.InfluxDBClientOptions
-import org.influxdata.client.domain.Health
+import org.influxdata.client.domain.Check
 import org.influxdata.client.internal.AbstractInfluxDBClient
 import org.influxdata.client.internal.InfluxDBService
 import org.influxdata.client.kotlin.InfluxDBClientKotlin
@@ -35,11 +35,11 @@ import org.influxdata.client.kotlin.QueryKotlinApi
 internal class InfluxDBClientKotlinImpl(options: InfluxDBClientOptions) : AbstractInfluxDBClient<InfluxDBService>(options, InfluxDBService::class.java), InfluxDBClientKotlin {
 
     override fun getQueryKotlinApi(): QueryKotlinApi {
-        return QueryKotlinApiImpl(influxDBServiceMoshi)
+        return QueryKotlinApiImpl(influxDBService)
     }
 
-    override fun health(): Health {
-        return health(influxDBServiceMoshi.health())
+    override fun health(): Check {
+        return health(influxDBService.health())
     }
 
     override fun getLogLevel(): LogLevel {

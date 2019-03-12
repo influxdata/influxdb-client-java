@@ -23,7 +23,7 @@ package org.influxdata.client.scala
 
 import javax.annotation.Nonnull
 import org.influxdata.LogLevel
-import org.influxdata.client.domain.Health
+import org.influxdata.client.domain.Check
 
 /**
  * The reference Scala client that allows query and write for the InfluxDB 2.0 by Akka Streams.
@@ -44,7 +44,7 @@ trait InfluxDBClientScala {
    *
    * @return health of an instance
    */
-  @Nonnull def health: Health
+  @Nonnull def health: Check
 
   /**
    * Gets the [[LogLevel]] that is used for logging requests and responses.

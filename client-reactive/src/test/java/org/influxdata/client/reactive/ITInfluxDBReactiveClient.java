@@ -22,7 +22,7 @@
 package org.influxdata.client.reactive;
 
 import org.influxdata.LogLevel;
-import org.influxdata.client.domain.Health;
+import org.influxdata.client.domain.Check;
 
 import io.reactivex.Single;
 import org.assertj.core.api.Assertions;
@@ -51,15 +51,15 @@ class ITInfluxDBReactiveClient extends AbstractITInfluxDBClientTest {
     @Test
     void health() {
 
-        Single<Health> health = influxDBClient.health();
+        Single<Check> check = influxDBClient.health();
 
-        health
+        check
                 .test()
                 .assertNoErrors()
                 .assertValue(it -> {
 
                     Assertions.assertThat(it).isNotNull();
-                    Assertions.assertThat(it.isHealthy()).isTrue();
+                    Assertions.assertThat(it.getStatus()).isEqualTo(Check.StatusEnum.PASS);
                     Assertions.assertThat(it.getMessage()).isEqualTo("ready for queries and writes");
 
                     return true;
@@ -70,7 +70,7 @@ class ITInfluxDBReactiveClient extends AbstractITInfluxDBClientTest {
     void healthNotRunningInstance() throws Exception {
 
         InfluxDBClientReactive clientNotRunning = InfluxDBClientReactiveFactory.create("http://localhost:8099");
-        Single<Health> health = clientNotRunning.health();
+        Single<Check> health = clientNotRunning.health();
 
         health
                 .test()
@@ -78,7 +78,7 @@ class ITInfluxDBReactiveClient extends AbstractITInfluxDBClientTest {
                 .assertValue(it -> {
 
                     Assertions.assertThat(it).isNotNull();
-                    Assertions.assertThat(it.isHealthy()).isFalse();
+                    Assertions.assertThat(it.getStatus()).isEqualTo(Check.StatusEnum.PASS);
                     Assertions.assertThat(it.getMessage()).startsWith("Failed to connect to");
 
                     return true;

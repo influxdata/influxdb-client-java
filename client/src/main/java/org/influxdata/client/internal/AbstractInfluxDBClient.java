@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.InfluxDBClientOptions;
-import org.influxdata.client.domain.Health;
+import org.influxdata.client.domain.Check;
 import org.influxdata.client.internal.annotations.ToNullJson;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.internal.AbstractRestClient;
@@ -165,15 +165,15 @@ public abstract class AbstractInfluxDBClient<T> extends AbstractRestClient {
     }
 
     @Nonnull
-    protected Health health(final Call<Health> healthCall) {
+    protected Check health(final Call<Check> healthCall) {
 
         Arguments.checkNotNull(healthCall, "health call");
 
         try {
             return execute(healthCall);
         } catch (InfluxException e) {
-            Health health = new Health();
-            health.setStatus("error");
+            Check health = new Check();
+            health.setStatus(Check.StatusEnum.FAIL);
             health.setMessage(e.getMessage());
 
             return health;

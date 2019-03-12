@@ -31,7 +31,7 @@ import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Authorizations;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Buckets;
-import org.influxdata.client.domain.Health;
+import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.IsOnboarding;
 import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.LabelsResponse;
@@ -40,7 +40,6 @@ import org.influxdata.client.domain.OnboardingResponse;
 import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Organizations;
-import org.influxdata.client.domain.Ready;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
 import org.influxdata.client.domain.ResourceOwner;
@@ -88,7 +87,7 @@ public interface InfluxDBService {
     @GET("/health")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<Health> health();
+    Call<Check> health();
 
     //
     // Ready
@@ -96,7 +95,7 @@ public interface InfluxDBService {
     @GET("/ready")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<Ready> ready();
+    Call<Check> ready();
 
     //
     // Setup
@@ -363,7 +362,7 @@ public interface InfluxDBService {
     @GET("/api/v2/sources/{id}/health")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<Health> findSourceHealth(@Nonnull @Path("id") final String sourceID);
+    Call<Check> findSourceHealth(@Nonnull @Path("id") final String sourceID);
 
     //
     // Task

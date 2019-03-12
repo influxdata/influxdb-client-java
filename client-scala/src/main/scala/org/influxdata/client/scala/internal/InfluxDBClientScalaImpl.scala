@@ -25,7 +25,7 @@ import akka.stream.OverflowStrategy
 import javax.annotation.Nonnull
 import org.influxdata.LogLevel
 import org.influxdata.client.InfluxDBClientOptions
-import org.influxdata.client.domain.Health
+import org.influxdata.client.domain.Check
 import org.influxdata.client.internal.{AbstractInfluxDBClient, InfluxDBService}
 import org.influxdata.client.scala.{InfluxDBClientScala, QueryScalaApi}
 
@@ -40,14 +40,14 @@ class InfluxDBClientScalaImpl(@Nonnull options: InfluxDBClientOptions,
    *
    * @return the new client instance for the Query API
    */
-  override def getQueryScalaApi(): QueryScalaApi = new QueryScalaApiImpl(influxDBServiceMoshi, bufferSize, overflowStrategy)
+  override def getQueryScalaApi(): QueryScalaApi = new QueryScalaApiImpl(influxDBService, bufferSize, overflowStrategy)
 
   /**
    * Get the health of an instance.
    *
    * @return health of an instance
    */
-  override def health: Health = health(influxDBServiceMoshi.health())
+  override def health: Check = health(influxDBService.health())
 
   /**
    * Gets the [[LogLevel]] that is used for logging requests and responses.

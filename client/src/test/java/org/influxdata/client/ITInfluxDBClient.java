@@ -21,12 +21,10 @@
  */
 package org.influxdata.client;
 
-import java.time.Instant;
-
-import org.influxdata.client.domain.Health;
-import org.influxdata.client.domain.Onboarding;
+import org.influxdata.LogLevel;
+import org.influxdata.client.domain.Check;
+import org.influxdata.client.domain.OnboardingRequest;
 import org.influxdata.client.domain.OnboardingResponse;
-import org.influxdata.client.domain.Ready;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.UnprocessableEntityException;
 
@@ -44,22 +42,22 @@ class ITInfluxDBClient extends AbstractITClientTest {
     @Test
     void health() {
 
-        Health health = influxDBClient.health();
+        Check check = influxDBClient.health();
 
-        Assertions.assertThat(health).isNotNull();
-        Assertions.assertThat(health.isHealthy()).isTrue();
-        Assertions.assertThat(health.getMessage()).isEqualTo("ready for queries and writes");
+        Assertions.assertThat(check).isNotNull();
+        Assertions.assertThat(check.getStatus()).isEqualTo(Check.StatusEnum.PASS);
+        Assertions.assertThat(check.getMessage()).isEqualTo("ready for queries and writes");
     }
 
     @Test
     void healthNotRunningInstance() throws Exception {
 
         InfluxDBClient clientNotRunning = InfluxDBClientFactory.create("http://localhost:8099");
-        Health health = clientNotRunning.health();
+        Check check = clientNotRunning.health();
 
-        Assertions.assertThat(health).isNotNull();
-        Assertions.assertThat(health.isHealthy()).isFalse();
-        Assertions.assertThat(health.getMessage()).startsWith("Failed to connect to");
+        Assertions.assertThat(check).isNotNull();
+        Assertions.assertThat(check.getStatus()).isEqualTo(Check.StatusEnum.FAIL);
+        Assertions.assertThat(check.getMessage()).startsWith("Failed to connect to");
 
         clientNotRunning.close();
     }
@@ -67,13 +65,17 @@ class ITInfluxDBClient extends AbstractITClientTest {
     @Test
     void ready() {
 
-        Ready ready = influxDBClient.ready();
+        influxDBClient.setLogLevel(LogLevel.BODY);
+
+        Check ready = influxDBClient.ready();
 
         Assertions.assertThat(ready).isNotNull();
-        Assertions.assertThat(ready.getStatus()).isEqualTo("ready");
-        Assertions.assertThat(ready.getStarted()).isNotNull();
-        Assertions.assertThat(ready.getStarted()).isBefore(Instant.now());
-        Assertions.assertThat(ready.getUp()).isNotBlank();
+
+        //TODO https://github.com/influxdata/influxdb/issues/12546
+        // Assertions.assertThat(ready.getStatus()).isEqualTo("ready");
+        // Assertions.assertThat(ready.getStarted()).isNotNull();
+        // Assertions.assertThat(ready.getStarted()).isBefore(Instant.now());
+        // Assertions.assertThat(ready.getUp()).isNotBlank();
     }
 
     @Test
@@ -81,7 +83,7 @@ class ITInfluxDBClient extends AbstractITClientTest {
 
         InfluxDBClient clientNotRunning = InfluxDBClientFactory.create("http://localhost:8099");
 
-        Ready ready = clientNotRunning.ready();
+        Check ready = clientNotRunning.ready();
         Assertions.assertThat(ready).isNull();
 
         clientNotRunning.close();
@@ -118,17 +120,17 @@ class ITInfluxDBClient extends AbstractITClientTest {
         Assertions.assertThat(onboarding.getBucket().getId()).isNotEmpty();
         Assertions.assertThat(onboarding.getBucket().getName()).isEqualTo("test");
 
-        Assertions.assertThat(onboarding.getOrganization()).isNotNull();
-        Assertions.assertThat(onboarding.getOrganization().getId()).isNotEmpty();
-        Assertions.assertThat(onboarding.getOrganization().getName()).isEqualTo("Testing");
+        Assertions.assertThat(onboarding.getOrg()).isNotNull();
+        Assertions.assertThat(onboarding.getOrg().getId()).isNotEmpty();
+        Assertions.assertThat(onboarding.getOrg().getName()).isEqualTo("Testing");
 
-        Assertions.assertThat(onboarding.getAuthorization()).isNotNull();
-        Assertions.assertThat(onboarding.getAuthorization().getId()).isNotEmpty();
-        Assertions.assertThat(onboarding.getAuthorization().getToken()).isNotEmpty();
+        Assertions.assertThat(onboarding.getAuth()).isNotNull();
+        Assertions.assertThat(onboarding.getAuth().getId()).isNotEmpty();
+        Assertions.assertThat(onboarding.getAuth().getToken()).isNotEmpty();
 
         influxDBClient.close();
 
-        influxDBClient = InfluxDBClientFactory.create(url, onboarding.getAuthorization().getToken().toCharArray());
+        influxDBClient = InfluxDBClientFactory.create(url, onboarding.getAuth().getToken().toCharArray());
 
         User me = influxDBClient.getUsersApi().me();
         Assertions.assertThat(me).isNotNull();
@@ -140,7 +142,7 @@ class ITInfluxDBClient extends AbstractITClientTest {
     @Test
     void onboardingAlreadyDone() {
 
-        Onboarding onboarding = new Onboarding();
+        OnboardingRequest onboarding = new OnboardingRequest();
         onboarding.setUsername("admin");
         onboarding.setPassword("11111111");
         onboarding.setOrg("Testing");
