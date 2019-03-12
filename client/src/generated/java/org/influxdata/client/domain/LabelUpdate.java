@@ -28,55 +28,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Label
+ * LabelUpdate
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T13:11:42.908+01:00[Europe/Prague]")
-public class Label {
-  public static final String SERIALIZED_NAME_ID = "id";
-  @SerializedName(SERIALIZED_NAME_ID)
-  private String id = null;
-
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
-
+public class LabelUpdate {
   public static final String SERIALIZED_NAME_PROPERTIES = "properties";
   @SerializedName(SERIALIZED_NAME_PROPERTIES)
   private Map<String, String> properties = null;
 
-   /**
-   * Get id
-   * @return id
-  **/
-  @ApiModelProperty(value = "")
-  public String getId() {
-    return id;
-  }
-
-  public Label name(String name) {
-    this.name = name;
-    return this;
-  }
-
-   /**
-   * Get name
-   * @return name
-  **/
-  @ApiModelProperty(value = "")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public Label properties(Map<String, String> properties) {
+  public LabelUpdate properties(Map<String, String> properties) {
     this.properties = properties;
     return this;
   }
 
-  public Label putPropertiesItem(String key, String propertiesItem) {
+  public LabelUpdate putPropertiesItem(String key, String propertiesItem) {
     if (this.properties == null) {
       this.properties = new HashMap<>();
     }
@@ -106,25 +71,21 @@ public class Label {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Label label = (Label) o;
-    return Objects.equals(this.id, label.id) &&
-        Objects.equals(this.name, label.name) &&
-        Objects.equals(this.properties, label.properties);
+    LabelUpdate labelUpdate = (LabelUpdate) o;
+    return Objects.equals(this.properties, labelUpdate.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, properties);
+    return Objects.hash(properties);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Label {\n");
+    sb.append("class LabelUpdate {\n");
     
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();

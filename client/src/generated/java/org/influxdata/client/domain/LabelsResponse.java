@@ -23,51 +23,41 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import org.influxdata.client.domain.Labels;
 import org.influxdata.client.domain.Links;
-import org.influxdata.client.domain.OperationLog;
 
 /**
- * OperationLogs
+ * LabelsResponse
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T13:11:42.908+01:00[Europe/Prague]")
-public class OperationLogs {
-  public static final String SERIALIZED_NAME_LOGS = "logs";
-  @SerializedName(SERIALIZED_NAME_LOGS)
-  private List<OperationLog> logs = null;
+public class LabelsResponse {
+  public static final String SERIALIZED_NAME_LABELS = "labels";
+  @SerializedName(SERIALIZED_NAME_LABELS)
+  private Labels labels = null;
 
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
   private Links links = null;
 
-  public OperationLogs logs(List<OperationLog> logs) {
-    this.logs = logs;
-    return this;
-  }
-
-  public OperationLogs addLogsItem(OperationLog logsItem) {
-    if (this.logs == null) {
-      this.logs = new ArrayList<>();
-    }
-    this.logs.add(logsItem);
+  public LabelsResponse labels(Labels labels) {
+    this.labels = labels;
     return this;
   }
 
    /**
-   * Get logs
-   * @return logs
+   * Get labels
+   * @return labels
   **/
   @ApiModelProperty(value = "")
-  public List<OperationLog> getLogs() {
-    return logs;
+  public Labels getLabels() {
+    return labels;
   }
 
-  public void setLogs(List<OperationLog> logs) {
-    this.logs = logs;
+  public void setLabels(Labels labels) {
+    this.labels = labels;
   }
 
-  public OperationLogs links(Links links) {
+  public LabelsResponse links(Links links) {
     this.links = links;
     return this;
   }
@@ -94,23 +84,23 @@ public class OperationLogs {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OperationLogs operationLogs = (OperationLogs) o;
-    return Objects.equals(this.logs, operationLogs.logs) &&
-        Objects.equals(this.links, operationLogs.links);
+    LabelsResponse labelsResponse = (LabelsResponse) o;
+    return Objects.equals(this.labels, labelsResponse.labels) &&
+        Objects.equals(this.links, labelsResponse.links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(logs, links);
+    return Objects.hash(labels, links);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class OperationLogs {\n");
+    sb.append("class LabelsResponse {\n");
     
-    sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
+    sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("}");
     return sb.toString();

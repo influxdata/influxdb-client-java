@@ -15,42 +15,15 @@ package org.influxdata.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
-import com.google.gson.TypeAdapter;
-import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import org.influxdata.client.domain.Label;
 
 /**
- * LabelMapping
+ * Labels
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T13:11:42.908+01:00[Europe/Prague]")
-public class LabelMapping {
-  public static final String SERIALIZED_NAME_LABEL_I_D = "labelID";
-  @SerializedName(SERIALIZED_NAME_LABEL_I_D)
-  private String labelID = null;
-
-  public LabelMapping labelID(String labelID) {
-    this.labelID = labelID;
-    return this;
-  }
-
-   /**
-   * Get labelID
-   * @return labelID
-  **/
-  @ApiModelProperty(value = "")
-  public String getLabelID() {
-    return labelID;
-  }
-
-  public void setLabelID(String labelID) {
-    this.labelID = labelID;
-  }
-
+public class Labels extends ArrayList<Label> {
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -60,22 +33,20 @@ public class LabelMapping {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    LabelMapping labelMapping = (LabelMapping) o;
-    return Objects.equals(this.labelID, labelMapping.labelID);
+    return super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(labelID);
+    return Objects.hash(super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class LabelMapping {\n");
-    
-    sb.append("    labelID: ").append(toIndentedString(labelID)).append("\n");
+    sb.append("class Labels {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("}");
     return sb.toString();
   }
