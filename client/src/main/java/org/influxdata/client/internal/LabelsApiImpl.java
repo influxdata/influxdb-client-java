@@ -32,7 +32,8 @@ import org.influxdata.Arguments;
 import org.influxdata.client.LabelsApi;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LabelResponse;
-import org.influxdata.client.domain.Labels;
+import org.influxdata.client.domain.LabelUpdate;
+import org.influxdata.client.domain.LabelsResponse;
 import org.influxdata.exceptions.NotFoundException;
 
 import com.google.gson.Gson;
@@ -84,9 +85,22 @@ class LabelsApiImpl extends AbstractInfluxDBRestClient implements LabelsApi {
 
         Arguments.checkNotNull(label, "label");
 
-        String json = gson.toJson(label);
+        LabelUpdate labelUpdate = new LabelUpdate();
+        labelUpdate.properties(label.getProperties());
 
-        Call<LabelResponse> call = influxDBService.updateLabel(label.getId(), createBody(json));
+        return updateLabel(label.getId(), labelUpdate);
+    }
+
+    @Nonnull
+    @Override
+    public Label updateLabel(@Nonnull final String labelID, @Nonnull final LabelUpdate labelUpdate) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNotNull(labelUpdate, "labelUpdate");
+
+        String json = gson.toJson(labelUpdate);
+
+        Call<LabelResponse> call = influxDBService.updateLabel(labelID, createBody(json));
         LabelResponse labelResponse = execute(call);
 
         LOG.log(Level.FINEST, "updateLabel response: {0}", labelResponse);
@@ -166,9 +180,9 @@ class LabelsApiImpl extends AbstractInfluxDBRestClient implements LabelsApi {
     @Override
     public List<Label> findLabels() {
 
-        Call<Labels> sourcesCall = influxDBService.findLabels();
+        Call<LabelsResponse> sourcesCall = influxDBService.findLabels();
 
-        Labels labels = execute(sourcesCall);
+        LabelsResponse labels = execute(sourcesCall);
         LOG.log(Level.FINEST, "findLabels found: {0}", labels);
 
         return labels.getLabels();

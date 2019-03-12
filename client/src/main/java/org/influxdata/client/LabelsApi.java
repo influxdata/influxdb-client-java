@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelUpdate;
 
 /**
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:37)
@@ -60,6 +61,16 @@ public interface LabelsApi {
      */
     @Nonnull
     Label updateLabel(@Nonnull final Label label);
+
+    /**
+     * Update a single label.
+     *
+     * @param labelID  ID of label to update
+     * @param labelUpdate label update
+     * @return updated label
+     */
+    @Nonnull
+    Label updateLabel(@Nonnull final String labelID, @Nonnull final LabelUpdate labelUpdate);
 
     /**
      * Delete a label.

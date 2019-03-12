@@ -33,7 +33,7 @@ import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LabelMapping;
 import org.influxdata.client.domain.LabelResponse;
-import org.influxdata.client.domain.Labels;
+import org.influxdata.client.domain.LabelsResponse;
 import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.internal.AbstractRestClient;
 
@@ -66,8 +66,8 @@ abstract class AbstractInfluxDBRestClient extends AbstractRestClient {
         Arguments.checkNonEmpty(resourceID, "resourceID");
         Arguments.checkNonEmpty(resourcePath, "resourcePath");
 
-        Call<Labels> call = influxDBService.findResourceLabels(resourceID, resourcePath);
-        Labels labels = execute(call);
+        Call<LabelsResponse> call = influxDBService.findResourceLabels(resourceID, resourcePath);
+        LabelsResponse labels = execute(call);
 
         LOG.log(Level.FINEST, "findResourceLabels response: {0}", labels);
 

@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Organization;

@@ -34,7 +34,7 @@ import org.influxdata.client.domain.Buckets;
 import org.influxdata.client.domain.Health;
 import org.influxdata.client.domain.IsOnboarding;
 import org.influxdata.client.domain.LabelResponse;
-import org.influxdata.client.domain.Labels;
+import org.influxdata.client.domain.LabelsResponse;
 import org.influxdata.client.domain.Logs;
 import org.influxdata.client.domain.OnboardingResponse;
 import org.influxdata.client.domain.OperationLogs;
@@ -549,13 +549,13 @@ public interface InfluxDBService {
     @GET("/api/v2/labels")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<Labels> findLabels();
+    Call<LabelsResponse> findLabels();
 
     @GET("/api/v2/{path}/{id}/labels")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<Labels> findResourceLabels(@Nonnull @Path("id") final String resourceID,
-                                   @Nonnull @Path("path") final String path);
+    Call<LabelsResponse> findResourceLabels(@Nonnull @Path("id") final String resourceID,
+                                            @Nonnull @Path("path") final String path);
 
     @POST("/api/v2/{path}/{id}/labels")
     @Nonnull
