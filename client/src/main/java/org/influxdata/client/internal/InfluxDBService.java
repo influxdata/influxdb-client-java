@@ -132,7 +132,7 @@ public interface InfluxDBService {
                                   @Nonnull @Header("Authorization") final String credentials,
                                   @Nonnull @Body final RequestBody password);
 
-    @GET("/api/v2/users/{id}/log")
+    @GET("/api/v2/users/{id}/logs")
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<OperationLogEntries> findUserLogs(@Nonnull @Path("id") final String userID,
@@ -179,7 +179,7 @@ public interface InfluxDBService {
     @Headers("Content-Type: application/json")
     Call<Organization> findOrganizationByID(@Nonnull @Path("id") final String orgID);
 
-    @GET("/api/v2/orgs/{id}/log")
+    @GET("/api/v2/orgs/{id}/logs")
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<OperationLogEntries> findOrganizationLogs(@Nonnull @Path("id") final String orgID,
@@ -253,7 +253,7 @@ public interface InfluxDBService {
     @Headers("Content-Type: application/json")
     Call<Bucket> findBucketByID(@Nonnull @Path("id") final String bucketID);
 
-    @GET("/api/v2/buckets/{id}/log")
+    @GET("/api/v2/buckets/{id}/logs")
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<OperationLogs> findBucketLogs(@Nonnull @Path("id") final String bucketID,
@@ -598,6 +598,7 @@ public interface InfluxDBService {
     @Headers("Content-Type: application/json")
     Call<TelegrafConfigs> findTelegrafConfigs(@Nullable @Query("orgID") final String orgID);
 
+    //TODO why put => report inconsistency - have to be a Patch
     @PUT("/api/v2/telegrafs/{id}")
     Call<TelegrafConfig> updateTelegrafConfig(@Nonnull @Path("id") final String telegrafConfigID,
                                               @Nonnull @Body final RequestBody telegrafConfig);

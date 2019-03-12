@@ -129,7 +129,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Nonnull
     @Override
     public ScraperTargetsApi getScraperTargetsApi() {
-        return new ScraperTargetsApiImpl(influxDBServiceMoshi, moshi, gson);
+        return new ScraperTargetsApiImpl(influxDBService, gson);
     }
 
     @Nonnull

@@ -156,10 +156,10 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
 
     @Test
     void parseDateTime() {
-        mockServer.enqueue(new MockResponse().setBody("{\"links\":{\"self\":\"/api/v2/buckets/038726b4d3b5c000/log\"},\"log\":[{\"links\":{\"user\":\"/api/v2/users/0387094b4b75c000\"},\"description\":\"Bucket Created\",\"userID\":\"0387094b4b75c000\",\"time\":\"2019-03-11T11:57:30.830995162Z\"}]}"));
+        mockServer.enqueue(new MockResponse().setBody("{\"links\":{\"self\":\"/api/v2/buckets/038726b4d3b5c000/log\"},\"logs\":[{\"links\":{\"user\":\"/api/v2/users/0387094b4b75c000\"},\"description\":\"Bucket Created\",\"userID\":\"0387094b4b75c000\",\"time\":\"2019-03-11T11:57:30.830995162Z\"}]}"));
 
         OperationLogs operationLogs = influxDBClient.getBucketsApi().findBucketLogs("id", new FindOptions());
 
-        Assertions.assertThat(operationLogs.getLog()).hasSize(1);
+        Assertions.assertThat(operationLogs.getLogs()).hasSize(1);
     }
 }

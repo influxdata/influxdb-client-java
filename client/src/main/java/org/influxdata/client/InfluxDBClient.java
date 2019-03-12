@@ -33,7 +33,7 @@ import org.influxdata.client.domain.Onboarding;
 import org.influxdata.client.domain.OnboardingResponse;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Ready;
-import org.influxdata.client.domain.ScraperTarget;
+import org.influxdata.client.domain.ScraperTargetResponse;
 import org.influxdata.client.domain.Source;
 import org.influxdata.client.domain.Task;
 import org.influxdata.client.domain.TelegrafConfig;
@@ -123,7 +123,7 @@ public interface InfluxDBClient extends AutoCloseable {
     UsersApi getUsersApi();
 
     /**
-     * Get the {@link ScraperTarget} client.
+     * Get the {@link ScraperTargetResponse} client.
      *
      * @return the new client instance for Scraper API
      */

@@ -25,12 +25,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
-import org.influxdata.client.domain.ScraperTarget;
 import org.influxdata.client.domain.ScraperTargetResponse;
 import org.influxdata.client.domain.User;
 
@@ -61,24 +61,26 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
     @Test
     void createScraperTarget() {
 
+        influxDBClient.setLogLevel(LogLevel.BODY);
+
         Organization organization = findMyOrg();
         ScraperTargetResponse scraper = scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
                 "http://localhost:9999", bucket.getId(), organization.getId());
 
         Assertions.assertThat(scraper).isNotNull();
-        Assertions.assertThat(scraper.getBucketName()).isEqualTo("my-bucket");
-        Assertions.assertThat(scraper.getOrgName()).isEqualTo("my-org");
-        Assertions.assertThat(scraper.getLinks())
-                .hasSize(3)
-                .hasEntrySatisfying("bucket", value -> Assertions.assertThat(value).isEqualTo("/api/v2/buckets/" + bucket.getId()))
-                .hasEntrySatisfying("organization", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + organization.getId()))
-                .hasEntrySatisfying("self", value -> Assertions.assertThat(value).isEqualTo("/api/v2/scrapers/" + scraper.getId()));
+        Assertions.assertThat(scraper.getBucket()).isEqualTo("my-bucket");
+        Assertions.assertThat(scraper.getOrganization()).isEqualTo("my-org");
+        Assertions.assertThat(scraper.getLinks().getSelf()).isEqualTo("/api/v2/scrapers/" + scraper.getId());
+        Assertions.assertThat(scraper.getLinks().getMembers()).isEqualTo("/api/v2/scrapers/" + scraper.getId() + "/members");
+        Assertions.assertThat(scraper.getLinks().getOwners()).isEqualTo("/api/v2/scrapers/" + scraper.getId() + "/owners");
+        //TODO bucket, organization
+        // https://github.com/influxdata/influxdb/issues/12542
     }
 
     @Test
     void updateScraper() {
 
-        ScraperTarget scraper = scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
+        ScraperTargetResponse scraper = scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
                 "http://localhost:9999", bucket.getId(), findMyOrg().getId());
 
         scraper.setName("Name updated");
@@ -141,7 +143,7 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
     @Test
     void member() {
 
-        ScraperTarget scraper =  scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
+        ScraperTargetResponse scraper =  scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
                 "http://localhost:9999", bucket.getId(), findMyOrg().getId());
 
         List<ResourceMember> members = scraperTargetsApi.getMembers(scraper);
@@ -170,7 +172,7 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
     @Test
     void owner() {
 
-        ScraperTarget scraper =  scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
+        ScraperTargetResponse scraper =  scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
                 "http://localhost:9999", bucket.getId(), findMyOrg().getId());
 
         List<ResourceOwner> owners = scraperTargetsApi.getOwners(scraper);
@@ -201,7 +203,7 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
 
         LabelsApi labelsApi = influxDBClient.getLabelsApi();
 
-        ScraperTarget scraper =  scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
+        ScraperTargetResponse scraper =  scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
                 "http://localhost:9999", bucket.getId(), findMyOrg().getId());
 
         Map<String, String> properties = new HashMap<>();
@@ -233,7 +235,7 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
     @Test
     void cloneScraperTarget() {
 
-        ScraperTarget source = scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
+        ScraperTargetResponse source = scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
                 "http://localhost:9999", bucket.getId(), findMyOrg().getId());
 
         String name = generateName("cloned");
@@ -246,7 +248,7 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
 
         scraperTargetsApi.addLabel(label, source);
 
-        ScraperTarget cloned = scraperTargetsApi.cloneScraperTarget(name, source.getId());
+        ScraperTargetResponse cloned = scraperTargetsApi.cloneScraperTarget(name, source.getId());
 
         Assertions.assertThat(cloned.getName()).isEqualTo(name);
         Assertions.assertThat(cloned.getType()).isEqualTo(source.getType());

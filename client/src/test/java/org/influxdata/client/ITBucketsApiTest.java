@@ -91,8 +91,9 @@ class ITBucketsApiTest extends AbstractITClientTest {
         Assertions.assertThat(bucket.getLinks().getSelf()).isEqualTo("/api/v2/buckets/" + bucket.getId());
         Assertions.assertThat(bucket.getLinks().getMembers()).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/members");
         Assertions.assertThat(bucket.getLinks().getOwners()).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/owners");
-        //TODO https://github.com/influxdata/influxdb/issues/12483
-        // Assertions.assertThat(bucket.getLinks().getWrite()).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/write");
+        Assertions.assertThat(bucket.getLinks().getLabels()).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/labels");
+        Assertions.assertThat(bucket.getLinks().getLogs()).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/logs");
+        Assertions.assertThat(bucket.getLinks().getWrite()).isEqualTo("/api/v2/write?org=" + organization.getId() + "&bucket=" + bucket.getId());
     }
 
     @Test
@@ -375,56 +376,53 @@ class ITBucketsApiTest extends AbstractITClientTest {
         findOptions.setLimit(5);
         findOptions.setOffset(0);
 
-        //TODO .getLog to .getLogs
-        // https://github.com/influxdata/influxdb/issues/12484
-
         OperationLogs entries = bucketsApi.findBucketLogs(bucket, findOptions);
 
-        Assertions.assertThat(entries.getLog()).hasSize(5);
-        Assertions.assertThat(entries.getLog().get(0).getDescription()).isEqualTo("Bucket Created");
-        Assertions.assertThat(entries.getLog().get(1).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(2).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(3).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(4).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Created");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
 
         //TODO isNotNull FindOptions also in Log API?
         findOptions.setOffset(findOptions.getOffset() + 5);
         Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         entries = bucketsApi.findBucketLogs(bucket, findOptions);
-        Assertions.assertThat(entries.getLog()).hasSize(5);
-        Assertions.assertThat(entries.getLog().get(0).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(1).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(2).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(3).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(4).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
 
         findOptions.setOffset(findOptions.getOffset() + 5);
         Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         entries = bucketsApi.findBucketLogs(bucket, findOptions);
-        Assertions.assertThat(entries.getLog().get(0).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(1).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(2).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(3).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(4).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
 
         findOptions.setOffset(findOptions.getOffset() + 5);
         Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         entries = bucketsApi.findBucketLogs(bucket, findOptions);
-        Assertions.assertThat(entries.getLog()).hasSize(5);
-        Assertions.assertThat(entries.getLog().get(0).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(1).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(2).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(3).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(4).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
 
         findOptions.setOffset(findOptions.getOffset() + 5);
         Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         entries = bucketsApi.findBucketLogs(bucket, findOptions);
-        Assertions.assertThat(entries.getLog()).hasSize(0);
+        Assertions.assertThat(entries.getLogs()).hasSize(0);
         Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         // order
@@ -433,9 +431,9 @@ class ITBucketsApiTest extends AbstractITClientTest {
 
         entries = bucketsApi.findBucketLogs(bucket, findOptions);
 
-        Assertions.assertThat(entries.getLog()).hasSize(20);
-        Assertions.assertThat(entries.getLog().get(19).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLog().get(0).getDescription()).isEqualTo("Bucket Created");
+        Assertions.assertThat(entries.getLogs()).hasSize(20);
+        Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("Bucket Updated");
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Created");
     }
 
     @Test
@@ -452,7 +450,7 @@ class ITBucketsApiTest extends AbstractITClientTest {
         OperationLogs entries = bucketsApi.findBucketLogs("020f755c3c082000", new FindOptions());
 
         Assertions.assertThat(entries).isNotNull();
-        Assertions.assertThat(entries.getLog()).isEmpty();
+        Assertions.assertThat(entries.getLogs()).isEmpty();
     }
 
     @Test

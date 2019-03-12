@@ -13,4 +13,4 @@ tree.txt
 **/influxd.bolt
 
 **/.openapi-generator
-**/swagger.yml
+**/swagger*.yml

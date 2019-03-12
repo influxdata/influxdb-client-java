@@ -396,7 +396,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        return findBucketLogs(bucketID, new FindOptions()).getLog();
+        return findBucketLogs(bucketID, new FindOptions()).getLogs();
     }
 
     @Nonnull

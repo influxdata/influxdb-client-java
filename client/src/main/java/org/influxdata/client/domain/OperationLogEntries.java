@@ -31,7 +31,7 @@ import com.squareup.moshi.Json;
  */
 public final class OperationLogEntries extends AbstractPageLinks {
 
-    @Json(name = "log")
+    @Json(name = "logs")
     private List<OperationLogEntry> logs = new ArrayList<>();
 
     public List<OperationLogEntry> getLogs() {

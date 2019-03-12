@@ -27,7 +27,7 @@ SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
 cd ${SCRIPT_PATH}/../client
 
-mvn org.openapitools:openapi-generator-maven-plugin:generate -Djava8=true
+mvn org.openapitools:openapi-generator-maven-plugin:generate
 
 echo
 echo "Generated sources"
@@ -37,7 +37,7 @@ cd ${SCRIPT_PATH}/../client/src/generated/java/org/influxdata/client/domain
 
 for f in *.java; do
    case ${f} in
-      (Bucket.java|BucketLinks.java|BucketRetentionRules.java|Buckets.java|Label.java|LabelMapping.java|LabelResponse.java|Links.java|OperationLogs.java|OperationLog.java|OperationLogLinks.java|User.java|UserLinks.java|Users.java|UsersLinks.java|ResourceMember.java|ResourceMembers.java|ResourceOwner.java|ResourceOwners.java|AddResourceMemberRequestBody.java)
+      (Bucket.java|BucketLinks.java|BucketRetentionRules.java|Buckets.java|Label.java|LabelMapping.java|LabelResponse.java|Links.java|OperationLogs.java|OperationLog.java|OperationLogLinks.java|User.java|UserLinks.java|Users.java|UsersLinks.java|ResourceMember.java|ResourceMembers.java|ResourceOwner.java|ResourceOwners.java|AddResourceMemberRequestBody.java|ScraperTargetRequest.java|ScraperTargetResponse.java|ScraperTargetResponses.java|ScraperTargetResponseLinks.java)
          ;;           # do nothing
       (*)
          rm -- "$f";; # remove the file

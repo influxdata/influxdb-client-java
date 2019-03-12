@@ -75,8 +75,8 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
         Assertions.assertThat(organization.getId()).isNotBlank();
         Assertions.assertThat(organization.getName()).isEqualTo(orgName);
         Assertions.assertThat(organization.getLinks())
-                .hasSize(8)
-                .containsKeys("buckets", "dashboards", "log", "members", "self", "tasks", "labels", "secrets");
+                .hasSize(9)
+                .containsKeys("buckets", "dashboards", "logs", "members", "owners", "self", "tasks", "labels", "secrets");
     }
 
     @Test
@@ -92,8 +92,8 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
         Assertions.assertThat(organizationByID.getId()).isEqualTo(organization.getId());
         Assertions.assertThat(organizationByID.getName()).isEqualTo(organization.getName());
         Assertions.assertThat(organizationByID.getLinks())
-                .hasSize(8)
-                .containsKeys("buckets", "dashboards", "log", "members", "self", "tasks", "labels", "secrets");
+                .hasSize(9)
+                .containsKeys("buckets", "dashboards", "logs", "owners", "members", "self", "tasks", "labels", "secrets");
     }
 
     @Test
@@ -143,13 +143,14 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
         Assertions.assertThat(updatedOrganization.getId()).isEqualTo(createdOrganization.getId());
         Assertions.assertThat(updatedOrganization.getName()).isEqualTo("Master Pb");
 
-        Assertions.assertThat(updatedOrganization.getLinks()).hasSize(8);
+        Assertions.assertThat(updatedOrganization.getLinks()).hasSize(9);
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("buckets", value -> Assertions.assertThat(value).isEqualTo("/api/v2/buckets?org=Master Pb"));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("dashboards", value -> Assertions.assertThat(value).isEqualTo("/api/v2/dashboards?org=Master Pb"));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("self", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId()));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("tasks", value -> Assertions.assertThat(value).isEqualTo("/api/v2/tasks?org=Master Pb"));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("members", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId() + "/members"));
-        Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("log", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId() + "/log"));
+        Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("owners", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId() + "/owners"));
+        Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("logs", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId() + "/logs"));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("labels", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId() + "/labels"));
         Assertions.assertThat(updatedOrganization.getLinks()).hasEntrySatisfying("secrets", value -> Assertions.assertThat(value).isEqualTo("/api/v2/orgs/" + updatedOrganization.getId() + "/secrets"));
     }

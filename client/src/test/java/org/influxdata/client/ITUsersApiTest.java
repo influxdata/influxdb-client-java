@@ -68,7 +68,7 @@ class ITUsersApiTest extends AbstractITClientTest {
         Assertions.assertThat(user).isNotNull();
         Assertions.assertThat(user.getId()).isNotBlank();
         Assertions.assertThat(user.getName()).isEqualTo(userName);
-        Assertions.assertThat(user.getLinks().getLog()).isEqualTo("/api/v2/users/" + user.getId() + "/log");
+        Assertions.assertThat(user.getLinks().getLogs()).isEqualTo("/api/v2/users/" + user.getId() + "/logs");
         Assertions.assertThat(user.getLinks().getSelf()).isEqualTo("/api/v2/users/" + user.getId());
     }
 

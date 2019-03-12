@@ -35,16 +35,13 @@ import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ResourceOwners;
-import org.influxdata.client.domain.ScraperTarget;
+import org.influxdata.client.domain.ScraperTargetRequest;
 import org.influxdata.client.domain.ScraperTargetResponse;
 import org.influxdata.client.domain.ScraperTargetResponses;
-import org.influxdata.client.domain.ScraperType;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.NotFoundException;
 
 import com.google.gson.Gson;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 import retrofit2.Call;
 
 /**
@@ -54,23 +51,18 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
 
     private static final Logger LOG = Logger.getLogger(ScraperTargetsApiImpl.class.getName());
 
-    private final JsonAdapter<ScraperTarget> adapter;
-
-    ScraperTargetsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi,
-                          @Nonnull final Gson gson) {
+    ScraperTargetsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Gson gson) {
 
         super(influxDBService, gson);
-
-        this.adapter = moshi.adapter(ScraperTarget.class);
     }
 
     @Nonnull
     @Override
-    public ScraperTargetResponse createScraperTarget(@Nonnull final ScraperTarget scraperTarget) {
+    public ScraperTargetResponse createScraperTarget(@Nonnull final ScraperTargetRequest scraperTarget) {
 
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
 
-        String json = adapter.toJson(scraperTarget);
+        String json = gson.toJson(scraperTarget);
         Call<ScraperTargetResponse> call = influxDBService.createScraperTarget(createBody(json));
 
         return execute(call);
@@ -88,23 +80,23 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
         Arguments.checkNonEmpty(bucketID, "bucketID");
         Arguments.checkNonEmpty(orgID, " orgID");
 
-        ScraperTarget scraperTarget = new ScraperTarget();
+        ScraperTargetRequest scraperTarget = new ScraperTargetRequest();
         scraperTarget.setName(name);
         scraperTarget.setUrl(url);
         scraperTarget.setBucketID(bucketID);
         scraperTarget.setOrgID(orgID);
-        scraperTarget.setType(ScraperType.PROMETHEUS);
+        scraperTarget.setType(ScraperTargetRequest.TypeEnum.PROMETHEUS);
 
         return createScraperTarget(scraperTarget);
     }
 
     @Nonnull
     @Override
-    public ScraperTargetResponse updateScraperTarget(@Nonnull final ScraperTarget scraperTarget) {
+    public ScraperTargetResponse updateScraperTarget(@Nonnull final ScraperTargetResponse scraperTarget) {
 
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
 
-        String json = adapter.toJson(scraperTarget);
+        String json = gson.toJson(scraperTarget);
 
         Call<ScraperTargetResponse> call = influxDBService.updateScraperTarget(scraperTarget.getId(), createBody(json));
 
@@ -112,7 +104,7 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
     }
 
     @Override
-    public void deleteScraperTarget(@Nonnull final ScraperTarget scraperTarget) {
+    public void deleteScraperTarget(@Nonnull final ScraperTargetResponse scraperTarget) {
 
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
 
@@ -130,12 +122,12 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
 
     @Nonnull
     @Override
-    public ScraperTarget cloneScraperTarget(@Nonnull final String clonedName, @Nonnull final String scraperTargetID) {
+    public ScraperTargetResponse cloneScraperTarget(@Nonnull final String clonedName, @Nonnull final String scraperTargetID) {
 
         Arguments.checkNonEmpty(clonedName, "clonedName");
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
-        ScraperTarget scraperTarget = findScraperTargetByID(scraperTargetID);
+        ScraperTargetResponse scraperTarget = findScraperTargetByID(scraperTargetID);
         if (scraperTarget == null) {
             throw new IllegalStateException("NotFound ScraperTarget with ID: " + scraperTargetID);
         }
@@ -145,20 +137,20 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
 
     @Nonnull
     @Override
-    public ScraperTarget cloneScraperTarget(@Nonnull final String clonedName,
-                                            @Nonnull final ScraperTarget scraperTarget) {
+    public ScraperTargetResponse cloneScraperTarget(@Nonnull final String clonedName,
+                                                    @Nonnull final ScraperTargetResponse scraperTarget) {
 
         Arguments.checkNonEmpty(clonedName, "clonedName");
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
 
-        ScraperTarget cloned = new ScraperTarget();
+        ScraperTargetRequest cloned = new ScraperTargetRequest();
         cloned.setName(clonedName);
         cloned.setType(scraperTarget.getType());
         cloned.setUrl(scraperTarget.getUrl());
         cloned.setOrgID(scraperTarget.getOrgID());
         cloned.setBucketID(scraperTarget.getBucketID());
 
-        ScraperTarget created = createScraperTarget(cloned);
+        ScraperTargetResponse created = createScraperTarget(cloned);
 
         getLabels(scraperTarget).forEach(label -> addLabel(label, created));
 
@@ -185,12 +177,12 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
         ScraperTargetResponses responses = execute(call);
         LOG.log(Level.FINEST, "findScraperTargets found: {0}", responses);
 
-        return responses.getTargetResponses();
+        return responses.getConfigurations();
     }
 
     @Nonnull
     @Override
-    public List<ResourceMember> getMembers(@Nonnull final ScraperTarget scraperTarget) {
+    public List<ResourceMember> getMembers(@Nonnull final ScraperTargetResponse scraperTarget) {
 
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
 
@@ -212,7 +204,7 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
 
     @Nonnull
     @Override
-    public ResourceMember addMember(@Nonnull final User member, @Nonnull final ScraperTarget scraperTarget) {
+    public ResourceMember addMember(@Nonnull final User member, @Nonnull final ScraperTargetResponse scraperTarget) {
 
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
         Arguments.checkNotNull(member, "member");
@@ -237,7 +229,7 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
     }
 
     @Override
-    public void deleteMember(@Nonnull final User member, @Nonnull final ScraperTarget scraperTarget) {
+    public void deleteMember(@Nonnull final User member, @Nonnull final ScraperTargetResponse scraperTarget) {
 
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
         Arguments.checkNotNull(member, "member");
@@ -257,7 +249,7 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
 
     @Nonnull
     @Override
-    public List<ResourceOwner> getOwners(@Nonnull final ScraperTarget scraperTarget) {
+    public List<ResourceOwner> getOwners(@Nonnull final ScraperTargetResponse scraperTarget) {
 
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
 
@@ -279,7 +271,7 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
 
     @Nonnull
     @Override
-    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final ScraperTarget scraperTarget) {
+    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final ScraperTargetResponse scraperTarget) {
 
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
         Arguments.checkNotNull(owner, "owner");
@@ -304,7 +296,7 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
     }
 
     @Override
-    public void deleteOwner(@Nonnull final User owner, @Nonnull final ScraperTarget scraperTarget) {
+    public void deleteOwner(@Nonnull final User owner, @Nonnull final ScraperTargetResponse scraperTarget) {
 
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
         Arguments.checkNotNull(owner, "owner");
@@ -324,7 +316,7 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
 
     @Nonnull
     @Override
-    public List<Label> getLabels(@Nonnull final ScraperTarget scraperTarget) {
+    public List<Label> getLabels(@Nonnull final ScraperTargetResponse scraperTarget) {
 
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
 
@@ -342,7 +334,7 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
 
     @Nonnull
     @Override
-    public Label addLabel(@Nonnull final Label label, @Nonnull final ScraperTarget scraperTarget) {
+    public Label addLabel(@Nonnull final Label label, @Nonnull final ScraperTargetResponse scraperTarget) {
 
         Arguments.checkNotNull(label, "label");
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
@@ -361,7 +353,7 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
     }
 
     @Override
-    public void deleteLabel(@Nonnull final Label label, @Nonnull final ScraperTarget scraperTarget) {
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final ScraperTargetResponse scraperTarget) {
 
         Arguments.checkNotNull(label, "label");
         Arguments.checkNotNull(scraperTarget, "scraperTarget");
