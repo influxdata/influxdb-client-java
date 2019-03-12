@@ -33,32 +33,22 @@ import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Authorizations;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
-import org.influxdata.client.domain.Status;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.NotFoundException;
-import org.influxdata.internal.AbstractRestClient;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
+import com.google.gson.Gson;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (17/09/2018 12:00)
  */
-final class AuthorizationsApiImpl extends AbstractRestClient implements AuthorizationsApi {
+final class AuthorizationsApiImpl extends AbstractInfluxDBRestClient implements AuthorizationsApi {
 
     private static final Logger LOG = Logger.getLogger(AuthorizationsApiImpl.class.getName());
 
-    private final InfluxDBService influxDBService;
-    private final JsonAdapter<Authorization> adapter;
+    AuthorizationsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Gson gson) {
 
-    AuthorizationsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi) {
-
-        Arguments.checkNotNull(influxDBService, "InfluxDBService");
-        Arguments.checkNotNull(moshi, "Moshi to create adapter");
-
-        this.influxDBService = influxDBService;
-        this.adapter = moshi.adapter(Authorization.class);
+        super(influxDBService, gson);
     }
 
     @Nonnull
@@ -83,7 +73,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
         Authorization authorization = new Authorization();
         authorization.setOrgID(orgID);
         authorization.setPermissions(permissions);
-        authorization.setStatus(Status.ACTIVE);
+        authorization.setStatus(Authorization.StatusEnum.ACTIVE);
 
         return createAuthorization(authorization);
     }
@@ -94,7 +84,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
 
         Arguments.checkNotNull(authorization, "Authorization is required");
 
-        String json = adapter.toJson(authorization);
+        String json = gson.toJson(authorization);
 
         Call<Authorization> call = influxDBService.createAuthorization(createBody(json));
 
@@ -145,7 +135,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
 
         Arguments.checkNotNull(authorization, "Authorization is required");
 
-        String json = adapter.toJson(authorization);
+        String json = gson.toJson(authorization);
 
         Call<Authorization> authorizationCall = influxDBService
                 .updateAuthorization(authorization.getId(), createBody(json));
@@ -191,13 +181,10 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
         Arguments.checkNotNull(authorization, "authorization");
 
         Authorization cloned = new Authorization();
-        cloned.setUserID(authorization.getUserID());
-        cloned.setUserName(authorization.getUserName());
         cloned.setOrgID(authorization.getOrgID());
-        cloned.setOrgName(authorization.getOrgName());
-        cloned.setStatus(Status.ACTIVE);
+        cloned.setStatus(Authorization.StatusEnum.ACTIVE);
         cloned.setDescription(authorization.getDescription());
-        cloned.getPermissions().addAll(authorization.getPermissions());
+        cloned.setPermissions(authorization.getPermissions());
 
         return createAuthorization(cloned);
     }

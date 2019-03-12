@@ -39,7 +39,6 @@ import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
-import org.influxdata.client.domain.ResourceType;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.WriteSuccessEvent;
 import org.influxdata.query.FluxRecord;
@@ -93,15 +92,15 @@ public class PlatformExample {
         PermissionResource resource = new PermissionResource();
         resource.setId(temperatureBucket.getId());
         resource.setOrgID(medicalGMBH.getId());
-        resource.setType(ResourceType.BUCKETS);
+        resource.setType(PermissionResource.TypeEnum.BUCKETS);
 
         Permission readBucket = new Permission();
         readBucket.setResource(resource);
-        readBucket.setAction(Permission.READ_ACTION);
+        readBucket.setAction(Permission.ActionEnum.READ);
 
         Permission writeBucket = new Permission();
         writeBucket.setResource(resource);
-        writeBucket.setAction(Permission.WRITE_ACTION);
+        writeBucket.setAction(Permission.ActionEnum.WRITE);
 
         Authorization authorization = influxDBClient.getAuthorizationsApi()
                 .createAuthorization(medicalGMBH, Arrays.asList(readBucket, writeBucket));
@@ -181,7 +180,7 @@ public class PlatformExample {
                 .filter(authorization -> authorization.getPermissions().stream()
                         .map(Permission::getResource)
                         .anyMatch(resource ->
-                                resource.getType().equals(ResourceType.ORGS) &&
+                                resource.getType().equals(PermissionResource.TypeEnum.ORGS) &&
                                         resource.getId() == null &&
                                         resource.getOrgID() == null))
                 .findFirst()

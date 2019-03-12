@@ -39,7 +39,6 @@ import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
-import org.influxdata.client.domain.ResourceType;
 import org.influxdata.client.domain.Run;
 import org.influxdata.client.domain.RunStatus;
 import org.influxdata.client.domain.Status;
@@ -655,36 +654,36 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(ResourceType.TASKS);
+        resource.setType(PermissionResource.TypeEnum.TASKS);
 
         Permission createTask = new Permission();
         createTask.setResource(resource);
-        createTask.setAction(Permission.READ_ACTION);
+        createTask.setAction(Permission.ActionEnum.READ);
 
         Permission deleteTask = new Permission();
         deleteTask.setResource(resource);
-        deleteTask.setAction(Permission.WRITE_ACTION);
+        deleteTask.setAction(Permission.ActionEnum.WRITE);
 
         PermissionResource orgResource = new PermissionResource();
-        orgResource.setType(ResourceType.ORGS);
+        orgResource.setType(PermissionResource.TypeEnum.ORGS);
 
         Permission createOrg = new Permission();
-        createOrg.setAction(Permission.WRITE_ACTION);
+        createOrg.setAction(Permission.ActionEnum.WRITE);
         createOrg.setResource(orgResource);
 
         PermissionResource userResource = new PermissionResource();
-        userResource.setType(ResourceType.USERS);
+        userResource.setType(PermissionResource.TypeEnum.USERS);
 
         Permission createUsers = new Permission();
-        createUsers.setAction(Permission.WRITE_ACTION);
+        createUsers.setAction(Permission.ActionEnum.WRITE);
         createUsers.setResource(userResource);
 
 
         PermissionResource authResource = new PermissionResource();
-        authResource.setType(ResourceType.AUTHORIZATIONS);
+        authResource.setType(PermissionResource.TypeEnum.AUTHORIZATIONS);
 
         Permission createAuth = new Permission();
-        createAuth.setAction(Permission.WRITE_ACTION);
+        createAuth.setAction(Permission.ActionEnum.WRITE);
         createAuth.setResource(userResource);
 
         Bucket bucket = influxDBClient.getBucketsApi().findBucketByName("my-bucket");
@@ -692,16 +691,16 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         PermissionResource bucketResource = new PermissionResource();
         bucketResource.setOrgID(organization.getId());
-        bucketResource.setType(ResourceType.BUCKETS);
+        bucketResource.setType(PermissionResource.TypeEnum.BUCKETS);
         bucketResource.setId(bucket.getId());
 
         Permission readBucket = new Permission();
         readBucket.setResource(bucketResource);
-        readBucket.setAction(Permission.READ_ACTION);
+        readBucket.setAction(Permission.ActionEnum.READ);
 
         Permission writeBucket = new Permission();
         writeBucket.setResource(bucketResource);
-        writeBucket.setAction(Permission.WRITE_ACTION);
+        writeBucket.setAction(Permission.ActionEnum.WRITE);
 
         List<Permission> permissions = new ArrayList<>();
         permissions.add(createTask);

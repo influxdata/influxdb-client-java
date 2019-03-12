@@ -35,7 +35,6 @@ import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
-import org.influxdata.client.domain.ResourceType;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.WriteErrorEvent;
@@ -75,18 +74,18 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         PermissionResource resource = new PermissionResource();
         resource.setId(bucket.getId());
         resource.setOrgID(organization.getId());
-        resource.setType(ResourceType.BUCKETS);
+        resource.setType(PermissionResource.TypeEnum.BUCKETS);
 
         //
         // Add Permissions to read and write to the Bucket
         //
         Permission readBucket = new Permission();
         readBucket.setResource(resource);
-        readBucket.setAction(Permission.READ_ACTION);
+        readBucket.setAction(Permission.ActionEnum.READ);
 
         Permission writeBucket = new Permission();
         writeBucket.setResource(resource);
-        writeBucket.setAction(Permission.WRITE_ACTION);
+        writeBucket.setAction(Permission.ActionEnum.WRITE);
 
         User loggedUser = influxDBClient.getUsersApi().me();
         Assertions.assertThat(loggedUser).isNotNull();
@@ -295,28 +294,28 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         PermissionResource bucketResource = new PermissionResource();
         bucketResource.setId(bucket.getId());
         bucketResource.setOrgID(organization.getId());
-        bucketResource.setType(ResourceType.BUCKETS);
+        bucketResource.setType(PermissionResource.TypeEnum.BUCKETS);
 
         Permission readBucket = new Permission();
         readBucket.setResource(bucketResource);
-        readBucket.setAction(Permission.READ_ACTION);
+        readBucket.setAction(Permission.ActionEnum.READ);
 
         Permission writeBucket = new Permission();
         writeBucket.setResource(bucketResource);
-        writeBucket.setAction(Permission.WRITE_ACTION);
+        writeBucket.setAction(Permission.ActionEnum.WRITE);
 
         PermissionResource orgResource = new PermissionResource();
         orgResource.setId(organization.getId());
         orgResource.setOrgID(organization.getId());
-        orgResource.setType(ResourceType.ORGS);
+        orgResource.setType(PermissionResource.TypeEnum.ORGS);
 
         Permission readOrganization = new Permission();
         readOrganization.setResource(orgResource);
-        readOrganization.setAction(Permission.READ_ACTION);
+        readOrganization.setAction(Permission.ActionEnum.READ);
 
         Permission writeOrganization = new Permission();
         writeOrganization.setResource(orgResource);
-        writeOrganization.setAction(Permission.WRITE_ACTION);
+        writeOrganization.setAction(Permission.ActionEnum.WRITE);
 
         User loggedUser = influxDBClient.getUsersApi().createUser(generateName("Tom Lik"));
         Assertions.assertThat(loggedUser).isNotNull();

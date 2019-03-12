@@ -36,7 +36,6 @@ import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.BucketRetentionRules;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
-import org.influxdata.client.domain.ResourceType;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.WriteSuccessEvent;
@@ -84,16 +83,16 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(ResourceType.BUCKETS);
+        resource.setType(PermissionResource.TypeEnum.BUCKETS);
         resource.setId(bucket.getId());
 
         Permission readBucket = new Permission();
         readBucket.setResource(resource);
-        readBucket.setAction(Permission.READ_ACTION);
+        readBucket.setAction(Permission.ActionEnum.READ);
 
         Permission writeBucket = new Permission();
         writeBucket.setResource(resource);
-        writeBucket.setAction(Permission.WRITE_ACTION);
+        writeBucket.setAction(Permission.ActionEnum.WRITE);
 
         User loggedUser = client.getUsersApi().me();
         Assertions.assertThat(loggedUser).isNotNull();

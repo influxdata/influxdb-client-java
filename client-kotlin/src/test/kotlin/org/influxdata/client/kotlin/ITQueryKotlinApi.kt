@@ -39,7 +39,6 @@ import org.influxdata.client.domain.BucketRetentionRules
 import org.influxdata.client.domain.Organization
 import org.influxdata.client.domain.Permission
 import org.influxdata.client.domain.PermissionResource
-import org.influxdata.client.domain.ResourceType
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -85,16 +84,16 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         val resource = PermissionResource()
         resource.orgID = organization.id
-        resource.type = ResourceType.BUCKETS
+        resource.type = PermissionResource.TypeEnum.BUCKETS
         resource.id = bucket.id
 
         val readBucket = Permission()
         readBucket.resource = resource
-        readBucket.action = Permission.READ_ACTION
+        readBucket.action = Permission.ActionEnum.READ
 
         val writeBucket = Permission()
         writeBucket.resource = resource
-        writeBucket.action = Permission.WRITE_ACTION
+        writeBucket.action = Permission.ActionEnum.WRITE
 
         val authorization = client.authorizationsApi
                 .createAuthorization(organization, Arrays.asList(readBucket, writeBucket))

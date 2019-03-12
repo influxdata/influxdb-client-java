@@ -87,7 +87,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Nonnull
     @Override
     public AuthorizationsApi getAuthorizationsApi() {
-        return new AuthorizationsApiImpl(influxDBServiceMoshi, moshi);
+        return new AuthorizationsApiImpl(influxDBService, gson);
     }
 
     @Nonnull

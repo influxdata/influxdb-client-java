@@ -572,7 +572,6 @@ import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
-import org.influxdata.client.domain.ResourceType;
 import org.influxdata.client.domain.BucketRetentionRules;
 
 public class InfluxDB2ManagementExample {
@@ -597,17 +596,17 @@ public class InfluxDB2ManagementExample {
         PermissionResource resource = new PermissionResource();
         resource.setId(bucket.getId());
         resource.setOrgID("org_id");
-        resource.setType(ResourceType.BUCKETS);
+        resource.setType(PermissionResource.TypeEnum.BUCKETS);
 
         // Read permission
         Permission read = new Permission();
         read.setResource(resource);
-        read.setAction(Permission.READ_ACTION);
+        read.setAction(Permission.ActionEnum.READ);
 
         // Write permission
         Permission write = new Permission();
         write.setResource(resource);
-        write.setAction(Permission.WRITE_ACTION);
+        write.setAction(Permission.ActionEnum.WRITE);
 
         Authorization authorization = influxDBClient.getAuthorizationsApi()
                 .createAuthorization("org_id", Arrays.asList(read, write));

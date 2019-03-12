@@ -75,16 +75,16 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
     val resource = new PermissionResource
     resource.setOrgID(organization.getId)
-    resource.setType(ResourceType.BUCKETS)
+    resource.setType(PermissionResource.TypeEnum.BUCKETS)
     resource.setId(bucket.getId)
 
     val readBucket = new Permission
     readBucket.setResource(resource)
-    readBucket.setAction(Permission.READ_ACTION)
+    readBucket.setAction(Permission.ActionEnum.READ)
 
     val writeBucket = new Permission
     writeBucket.setResource(resource)
-    writeBucket.setAction(Permission.WRITE_ACTION)
+    writeBucket.setAction(Permission.ActionEnum.WRITE)
 
     val authorization = client.getAuthorizationsApi
       .createAuthorization(organization, List(readBucket, writeBucket).asJava)
