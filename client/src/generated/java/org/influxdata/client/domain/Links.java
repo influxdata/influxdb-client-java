@@ -14,52 +14,85 @@
 package org.influxdata.client.domain;
 
 import java.util.Objects;
-
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.IOException;
 
 /**
  * Links
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-11T13:39:12.016+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T10:13:07.695+01:00[Europe/Prague]")
 public class Links {
   public static final String SERIALIZED_NAME_NEXT = "next";
   @SerializedName(SERIALIZED_NAME_NEXT)
-  private String next;
+  private String next = null;
 
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self;
+  private String self = null;
 
   public static final String SERIALIZED_NAME_PREV = "prev";
   @SerializedName(SERIALIZED_NAME_PREV)
-  private String prev;
+  private String prev = null;
+
+  public Links next(String next) {
+    this.next = next;
+    return this;
+  }
 
    /**
-   * URI of resource.
+   * Get next
    * @return next
   **/
-  @ApiModelProperty(value = "URI of resource.")
+  @ApiModelProperty(value = "")
   public String getNext() {
     return next;
   }
 
+  public void setNext(String next) {
+    this.next = next;
+  }
+
+  public Links self(String self) {
+    this.self = self;
+    return this;
+  }
+
    /**
-   * URI of resource.
+   * Get self
    * @return self
   **/
-  @ApiModelProperty(required = true, value = "URI of resource.")
+  @ApiModelProperty(required = true, value = "")
   public String getSelf() {
     return self;
   }
 
+  public void setSelf(String self) {
+    this.self = self;
+  }
+
+  public Links prev(String prev) {
+    this.prev = prev;
+    return this;
+  }
+
    /**
-   * URI of resource.
+   * Get prev
    * @return prev
   **/
-  @ApiModelProperty(value = "URI of resource.")
+  @ApiModelProperty(value = "")
   public String getPrev() {
     return prev;
+  }
+
+  public void setPrev(String prev) {
+    this.prev = prev;
   }
 
 

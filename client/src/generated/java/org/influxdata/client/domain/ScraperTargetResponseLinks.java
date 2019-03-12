@@ -25,15 +25,23 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * UsersLinks
+ * ScraperTargetResponseLinks
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T10:13:07.695+01:00[Europe/Prague]")
-public class UsersLinks {
+public class ScraperTargetResponseLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
   private String self = null;
 
-  public UsersLinks self(String self) {
+  public static final String SERIALIZED_NAME_MEMBERS = "members";
+  @SerializedName(SERIALIZED_NAME_MEMBERS)
+  private String members = null;
+
+  public static final String SERIALIZED_NAME_OWNERS = "owners";
+  @SerializedName(SERIALIZED_NAME_OWNERS)
+  private String owners = null;
+
+  public ScraperTargetResponseLinks self(String self) {
     this.self = self;
     return this;
   }
@@ -51,6 +59,42 @@ public class UsersLinks {
     this.self = self;
   }
 
+  public ScraperTargetResponseLinks members(String members) {
+    this.members = members;
+    return this;
+  }
+
+   /**
+   * Get members
+   * @return members
+  **/
+  @ApiModelProperty(value = "")
+  public String getMembers() {
+    return members;
+  }
+
+  public void setMembers(String members) {
+    this.members = members;
+  }
+
+  public ScraperTargetResponseLinks owners(String owners) {
+    this.owners = owners;
+    return this;
+  }
+
+   /**
+   * Get owners
+   * @return owners
+  **/
+  @ApiModelProperty(value = "")
+  public String getOwners() {
+    return owners;
+  }
+
+  public void setOwners(String owners) {
+    this.owners = owners;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -60,22 +104,26 @@ public class UsersLinks {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    UsersLinks usersLinks = (UsersLinks) o;
-    return Objects.equals(this.self, usersLinks.self);
+    ScraperTargetResponseLinks scraperTargetResponseLinks = (ScraperTargetResponseLinks) o;
+    return Objects.equals(this.self, scraperTargetResponseLinks.self) &&
+        Objects.equals(this.members, scraperTargetResponseLinks.members) &&
+        Objects.equals(this.owners, scraperTargetResponseLinks.owners);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self);
+    return Objects.hash(self, members, owners);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class UsersLinks {\n");
+    sb.append("class ScraperTargetResponseLinks {\n");
     
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
+    sb.append("    members: ").append(toIndentedString(members)).append("\n");
+    sb.append("    owners: ").append(toIndentedString(owners)).append("\n");
     sb.append("}");
     return sb.toString();
   }

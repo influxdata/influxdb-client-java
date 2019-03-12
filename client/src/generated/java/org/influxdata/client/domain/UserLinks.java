@@ -14,22 +14,28 @@
 package org.influxdata.client.domain;
 
 import java.util.Objects;
-
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.IOException;
 
 /**
  * UserLinks
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-11T13:39:12.016+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T10:13:07.695+01:00[Europe/Prague]")
 public class UserLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self;
+  private String self = null;
 
-  public static final String SERIALIZED_NAME_LOG = "log";
-  @SerializedName(SERIALIZED_NAME_LOG)
-  private String log;
+  public static final String SERIALIZED_NAME_LOGS = "logs";
+  @SerializedName(SERIALIZED_NAME_LOGS)
+  private String logs = null;
 
   public UserLinks self(String self) {
     this.self = self;
@@ -49,22 +55,22 @@ public class UserLinks {
     this.self = self;
   }
 
-  public UserLinks log(String log) {
-    this.log = log;
+  public UserLinks logs(String logs) {
+    this.logs = logs;
     return this;
   }
 
    /**
-   * Get log
-   * @return log
+   * Get logs
+   * @return logs
   **/
   @ApiModelProperty(value = "")
-  public String getLog() {
-    return log;
+  public String getLogs() {
+    return logs;
   }
 
-  public void setLog(String log) {
-    this.log = log;
+  public void setLogs(String logs) {
+    this.logs = logs;
   }
 
 
@@ -78,12 +84,12 @@ public class UserLinks {
     }
     UserLinks userLinks = (UserLinks) o;
     return Objects.equals(this.self, userLinks.self) &&
-        Objects.equals(this.log, userLinks.log);
+        Objects.equals(this.logs, userLinks.logs);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self, log);
+    return Objects.hash(self, logs);
   }
 
 
@@ -93,7 +99,7 @@ public class UserLinks {
     sb.append("class UserLinks {\n");
     
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
-    sb.append("    log: ").append(toIndentedString(log)).append("\n");
+    sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
     sb.append("}");
     return sb.toString();
   }

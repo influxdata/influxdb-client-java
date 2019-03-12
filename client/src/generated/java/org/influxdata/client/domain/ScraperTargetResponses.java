@@ -23,32 +23,43 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import org.influxdata.client.domain.ScraperTargetResponse;
 
 /**
- * UsersLinks
+ * ScraperTargetResponses
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T10:13:07.695+01:00[Europe/Prague]")
-public class UsersLinks {
-  public static final String SERIALIZED_NAME_SELF = "self";
-  @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
+public class ScraperTargetResponses {
+  public static final String SERIALIZED_NAME_CONFIGURATIONS = "configurations";
+  @SerializedName(SERIALIZED_NAME_CONFIGURATIONS)
+  private List<ScraperTargetResponse> configurations = null;
 
-  public UsersLinks self(String self) {
-    this.self = self;
+  public ScraperTargetResponses configurations(List<ScraperTargetResponse> configurations) {
+    this.configurations = configurations;
+    return this;
+  }
+
+  public ScraperTargetResponses addConfigurationsItem(ScraperTargetResponse configurationsItem) {
+    if (this.configurations == null) {
+      this.configurations = new ArrayList<>();
+    }
+    this.configurations.add(configurationsItem);
     return this;
   }
 
    /**
-   * Get self
-   * @return self
+   * Get configurations
+   * @return configurations
   **/
   @ApiModelProperty(value = "")
-  public String getSelf() {
-    return self;
+  public List<ScraperTargetResponse> getConfigurations() {
+    return configurations;
   }
 
-  public void setSelf(String self) {
-    this.self = self;
+  public void setConfigurations(List<ScraperTargetResponse> configurations) {
+    this.configurations = configurations;
   }
 
 
@@ -60,22 +71,22 @@ public class UsersLinks {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    UsersLinks usersLinks = (UsersLinks) o;
-    return Objects.equals(this.self, usersLinks.self);
+    ScraperTargetResponses scraperTargetResponses = (ScraperTargetResponses) o;
+    return Objects.equals(this.configurations, scraperTargetResponses.configurations);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self);
+    return Objects.hash(configurations);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class UsersLinks {\n");
+    sb.append("class ScraperTargetResponses {\n");
     
-    sb.append("    self: ").append(toIndentedString(self)).append("\n");
+    sb.append("    configurations: ").append(toIndentedString(configurations)).append("\n");
     sb.append("}");
     return sb.toString();
   }

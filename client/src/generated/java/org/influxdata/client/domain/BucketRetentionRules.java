@@ -13,20 +13,21 @@
 
 package org.influxdata.client.domain;
 
-import java.io.IOException;
 import java.util.Objects;
-
+import java.util.Arrays;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.IOException;
 
 /**
  * BucketRetentionRules
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-11T13:39:12.016+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T10:13:07.695+01:00[Europe/Prague]")
 public class BucketRetentionRules {
   /**
    * Gets or Sets type
@@ -56,7 +57,7 @@ public class BucketRetentionRules {
           return b;
         }
       }
-      throw new IllegalArgumentException("Unexpected value '" + text + "'");
+      return null;
     }
 
     public static class Adapter extends TypeAdapter<TypeEnum> {
@@ -79,7 +80,7 @@ public class BucketRetentionRules {
 
   public static final String SERIALIZED_NAME_EVERY_SECONDS = "everySeconds";
   @SerializedName(SERIALIZED_NAME_EVERY_SECONDS)
-  private Integer everySeconds;
+  private Integer everySeconds = null;
 
   public BucketRetentionRules type(TypeEnum type) {
     this.type = type;
@@ -90,7 +91,7 @@ public class BucketRetentionRules {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -109,7 +110,7 @@ public class BucketRetentionRules {
    * minimum: 1
    * @return everySeconds
   **/
-  @ApiModelProperty(example = "86400", required = true, value = "duration in seconds for how long data will be kept in the database.")
+  @ApiModelProperty(example = "86400", value = "duration in seconds for how long data will be kept in the database.")
   public Integer getEverySeconds() {
     return everySeconds;
   }

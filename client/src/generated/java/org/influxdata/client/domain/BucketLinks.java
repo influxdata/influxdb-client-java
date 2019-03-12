@@ -14,78 +14,173 @@
 package org.influxdata.client.domain;
 
 import java.util.Objects;
-
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.IOException;
 
 /**
  * BucketLinks
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-11T13:39:12.016+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T10:13:07.695+01:00[Europe/Prague]")
 public class BucketLinks {
-  public static final String SERIALIZED_NAME_SELF = "self";
-  @SerializedName(SERIALIZED_NAME_SELF)
-  private String self;
+  public static final String SERIALIZED_NAME_LABELS = "labels";
+  @SerializedName(SERIALIZED_NAME_LABELS)
+  private String labels = null;
 
-  public static final String SERIALIZED_NAME_ORG = "org";
-  @SerializedName(SERIALIZED_NAME_ORG)
-  private String org;
-
-  public static final String SERIALIZED_NAME_WRITE = "write";
-  @SerializedName(SERIALIZED_NAME_WRITE)
-  private String write;
+  public static final String SERIALIZED_NAME_LOGS = "logs";
+  @SerializedName(SERIALIZED_NAME_LOGS)
+  private String logs = null;
 
   public static final String SERIALIZED_NAME_MEMBERS = "members";
   @SerializedName(SERIALIZED_NAME_MEMBERS)
-  private String members;
+  private String members = null;
+
+  public static final String SERIALIZED_NAME_ORG = "org";
+  @SerializedName(SERIALIZED_NAME_ORG)
+  private String org = null;
 
   public static final String SERIALIZED_NAME_OWNERS = "owners";
   @SerializedName(SERIALIZED_NAME_OWNERS)
-  private String owners;
+  private String owners = null;
 
-   /**
-   * URI of resource.
-   * @return self
-  **/
-  @ApiModelProperty(value = "URI of resource.")
-  public String getSelf() {
-    return self;
+  public static final String SERIALIZED_NAME_SELF = "self";
+  @SerializedName(SERIALIZED_NAME_SELF)
+  private String self = null;
+
+  public static final String SERIALIZED_NAME_WRITE = "write";
+  @SerializedName(SERIALIZED_NAME_WRITE)
+  private String write = null;
+
+  public BucketLinks labels(String labels) {
+    this.labels = labels;
+    return this;
   }
 
    /**
-   * URI of resource.
-   * @return org
+   * Get labels
+   * @return labels
   **/
-  @ApiModelProperty(value = "URI of resource.")
-  public String getOrg() {
-    return org;
+  @ApiModelProperty(value = "")
+  public String getLabels() {
+    return labels;
+  }
+
+  public void setLabels(String labels) {
+    this.labels = labels;
+  }
+
+  public BucketLinks logs(String logs) {
+    this.logs = logs;
+    return this;
   }
 
    /**
-   * URI of resource.
-   * @return write
+   * Get logs
+   * @return logs
   **/
-  @ApiModelProperty(value = "URI of resource.")
-  public String getWrite() {
-    return write;
+  @ApiModelProperty(value = "")
+  public String getLogs() {
+    return logs;
+  }
+
+  public void setLogs(String logs) {
+    this.logs = logs;
+  }
+
+  public BucketLinks members(String members) {
+    this.members = members;
+    return this;
   }
 
    /**
-   * URI of resource.
+   * Get members
    * @return members
   **/
-  @ApiModelProperty(value = "URI of resource.")
+  @ApiModelProperty(value = "")
   public String getMembers() {
     return members;
   }
 
+  public void setMembers(String members) {
+    this.members = members;
+  }
+
+  public BucketLinks org(String org) {
+    this.org = org;
+    return this;
+  }
+
    /**
-   * URI of resource.
+   * Get org
+   * @return org
+  **/
+  @ApiModelProperty(value = "")
+  public String getOrg() {
+    return org;
+  }
+
+  public void setOrg(String org) {
+    this.org = org;
+  }
+
+  public BucketLinks owners(String owners) {
+    this.owners = owners;
+    return this;
+  }
+
+   /**
+   * Get owners
    * @return owners
   **/
-  @ApiModelProperty(value = "URI of resource.")
+  @ApiModelProperty(value = "")
   public String getOwners() {
     return owners;
+  }
+
+  public void setOwners(String owners) {
+    this.owners = owners;
+  }
+
+  public BucketLinks self(String self) {
+    this.self = self;
+    return this;
+  }
+
+   /**
+   * Get self
+   * @return self
+  **/
+  @ApiModelProperty(value = "")
+  public String getSelf() {
+    return self;
+  }
+
+  public void setSelf(String self) {
+    this.self = self;
+  }
+
+  public BucketLinks write(String write) {
+    this.write = write;
+    return this;
+  }
+
+   /**
+   * Get write
+   * @return write
+  **/
+  @ApiModelProperty(value = "")
+  public String getWrite() {
+    return write;
+  }
+
+  public void setWrite(String write) {
+    this.write = write;
   }
 
 
@@ -98,16 +193,18 @@ public class BucketLinks {
       return false;
     }
     BucketLinks bucketLinks = (BucketLinks) o;
-    return Objects.equals(this.self, bucketLinks.self) &&
-        Objects.equals(this.org, bucketLinks.org) &&
-        Objects.equals(this.write, bucketLinks.write) &&
+    return Objects.equals(this.labels, bucketLinks.labels) &&
+        Objects.equals(this.logs, bucketLinks.logs) &&
         Objects.equals(this.members, bucketLinks.members) &&
-        Objects.equals(this.owners, bucketLinks.owners);
+        Objects.equals(this.org, bucketLinks.org) &&
+        Objects.equals(this.owners, bucketLinks.owners) &&
+        Objects.equals(this.self, bucketLinks.self) &&
+        Objects.equals(this.write, bucketLinks.write);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self, org, write, members, owners);
+    return Objects.hash(labels, logs, members, org, owners, self, write);
   }
 
 
@@ -116,11 +213,13 @@ public class BucketLinks {
     StringBuilder sb = new StringBuilder();
     sb.append("class BucketLinks {\n");
     
-    sb.append("    self: ").append(toIndentedString(self)).append("\n");
-    sb.append("    org: ").append(toIndentedString(org)).append("\n");
-    sb.append("    write: ").append(toIndentedString(write)).append("\n");
+    sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
+    sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
     sb.append("    members: ").append(toIndentedString(members)).append("\n");
+    sb.append("    org: ").append(toIndentedString(org)).append("\n");
     sb.append("    owners: ").append(toIndentedString(owners)).append("\n");
+    sb.append("    self: ").append(toIndentedString(self)).append("\n");
+    sb.append("    write: ").append(toIndentedString(write)).append("\n");
     sb.append("}");
     return sb.toString();
   }

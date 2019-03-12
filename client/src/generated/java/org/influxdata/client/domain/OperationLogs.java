@@ -13,50 +13,58 @@
 
 package org.influxdata.client.domain;
 
+import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import com.google.gson.annotations.SerializedName;
-import io.swagger.annotations.ApiModelProperty;
+import org.influxdata.client.domain.Links;
+import org.influxdata.client.domain.OperationLog;
 
 /**
  * OperationLogs
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-11T13:39:12.016+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T10:13:07.695+01:00[Europe/Prague]")
 public class OperationLogs {
-  public static final String SERIALIZED_NAME_LOG = "log";
-  @SerializedName(SERIALIZED_NAME_LOG)
-  private List<OperationLog> log = null;
+  public static final String SERIALIZED_NAME_LOGS = "logs";
+  @SerializedName(SERIALIZED_NAME_LOGS)
+  private List<OperationLog> logs = null;
 
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
   private Links links = null;
 
-  public OperationLogs log(List<OperationLog> log) {
-    this.log = log;
+  public OperationLogs logs(List<OperationLog> logs) {
+    this.logs = logs;
     return this;
   }
 
-  public OperationLogs addLogItem(OperationLog logItem) {
-    if (this.log == null) {
-      this.log = new ArrayList<>();
+  public OperationLogs addLogsItem(OperationLog logsItem) {
+    if (this.logs == null) {
+      this.logs = new ArrayList<>();
     }
-    this.log.add(logItem);
+    this.logs.add(logsItem);
     return this;
   }
 
    /**
-   * Get log
-   * @return log
+   * Get logs
+   * @return logs
   **/
   @ApiModelProperty(value = "")
-  public List<OperationLog> getLog() {
-    return log;
+  public List<OperationLog> getLogs() {
+    return logs;
   }
 
-  public void setLog(List<OperationLog> log) {
-    this.log = log;
+  public void setLogs(List<OperationLog> logs) {
+    this.logs = logs;
   }
 
   public OperationLogs links(Links links) {
@@ -87,13 +95,13 @@ public class OperationLogs {
       return false;
     }
     OperationLogs operationLogs = (OperationLogs) o;
-    return Objects.equals(this.log, operationLogs.log) &&
+    return Objects.equals(this.logs, operationLogs.logs) &&
         Objects.equals(this.links, operationLogs.links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(log, links);
+    return Objects.hash(logs, links);
   }
 
 
@@ -102,7 +110,7 @@ public class OperationLogs {
     StringBuilder sb = new StringBuilder();
     sb.append("class OperationLogs {\n");
     
-    sb.append("    log: ").append(toIndentedString(log)).append("\n");
+    sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("}");
     return sb.toString();
