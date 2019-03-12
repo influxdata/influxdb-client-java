@@ -25,49 +25,23 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Links;
-import org.influxdata.client.domain.OperationLog;
 
 /**
- * OperationLogs
+ * Authorizations
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T14:39:51.939+01:00[Europe/Prague]")
-public class OperationLogs {
-  public static final String SERIALIZED_NAME_LOGS = "logs";
-  @SerializedName(SERIALIZED_NAME_LOGS)
-  private List<OperationLog> logs = null;
-
+public class Authorizations {
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
   private Links links = null;
 
-  public OperationLogs logs(List<OperationLog> logs) {
-    this.logs = logs;
-    return this;
-  }
+  public static final String SERIALIZED_NAME_AUTHORIZATIONS = "authorizations";
+  @SerializedName(SERIALIZED_NAME_AUTHORIZATIONS)
+  private List<Authorization> authorizations = null;
 
-  public OperationLogs addLogsItem(OperationLog logsItem) {
-    if (this.logs == null) {
-      this.logs = new ArrayList<>();
-    }
-    this.logs.add(logsItem);
-    return this;
-  }
-
-   /**
-   * Get logs
-   * @return logs
-  **/
-  @ApiModelProperty(value = "")
-  public List<OperationLog> getLogs() {
-    return logs;
-  }
-
-  public void setLogs(List<OperationLog> logs) {
-    this.logs = logs;
-  }
-
-  public OperationLogs links(Links links) {
+  public Authorizations links(Links links) {
     this.links = links;
     return this;
   }
@@ -85,6 +59,32 @@ public class OperationLogs {
     this.links = links;
   }
 
+  public Authorizations authorizations(List<Authorization> authorizations) {
+    this.authorizations = authorizations;
+    return this;
+  }
+
+  public Authorizations addAuthorizationsItem(Authorization authorizationsItem) {
+    if (this.authorizations == null) {
+      this.authorizations = new ArrayList<>();
+    }
+    this.authorizations.add(authorizationsItem);
+    return this;
+  }
+
+   /**
+   * Get authorizations
+   * @return authorizations
+  **/
+  @ApiModelProperty(value = "")
+  public List<Authorization> getAuthorizations() {
+    return authorizations;
+  }
+
+  public void setAuthorizations(List<Authorization> authorizations) {
+    this.authorizations = authorizations;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -94,24 +94,24 @@ public class OperationLogs {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OperationLogs operationLogs = (OperationLogs) o;
-    return Objects.equals(this.logs, operationLogs.logs) &&
-        Objects.equals(this.links, operationLogs.links);
+    Authorizations authorizations = (Authorizations) o;
+    return Objects.equals(this.links, authorizations.links) &&
+        Objects.equals(this.authorizations, authorizations.authorizations);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(logs, links);
+    return Objects.hash(links, authorizations);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class OperationLogs {\n");
+    sb.append("class Authorizations {\n");
     
-    sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
+    sb.append("    authorizations: ").append(toIndentedString(authorizations)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -23,24 +23,25 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import org.influxdata.client.domain.User;
-import org.influxdata.client.domain.UserLinks;
+import org.influxdata.client.domain.PermissionResource;
 
 /**
- * ResourceMember
+ * Permission
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T14:39:51.939+01:00[Europe/Prague]")
-public class ResourceMember extends User {
+public class Permission {
   /**
-   * Gets or Sets role
+   * Gets or Sets action
    */
-  @JsonAdapter(RoleEnum.Adapter.class)
-  public enum RoleEnum {
-    MEMBER("member");
+  @JsonAdapter(ActionEnum.Adapter.class)
+  public enum ActionEnum {
+    READ("read"),
+    
+    WRITE("write");
 
     private String value;
 
-    RoleEnum(String value) {
+    ActionEnum(String value) {
       this.value = value;
     }
 
@@ -53,8 +54,8 @@ public class ResourceMember extends User {
       return String.valueOf(value);
     }
 
-    public static RoleEnum fromValue(String text) {
-      for (RoleEnum b : RoleEnum.values()) {
+    public static ActionEnum fromValue(String text) {
+      for (ActionEnum b : ActionEnum.values()) {
         if (String.valueOf(b.value).equals(text)) {
           return b;
         }
@@ -62,40 +63,62 @@ public class ResourceMember extends User {
       return null;
     }
 
-    public static class Adapter extends TypeAdapter<RoleEnum> {
+    public static class Adapter extends TypeAdapter<ActionEnum> {
       @Override
-      public void write(final JsonWriter jsonWriter, final RoleEnum enumeration) throws IOException {
+      public void write(final JsonWriter jsonWriter, final ActionEnum enumeration) throws IOException {
         jsonWriter.value(enumeration.getValue());
       }
 
       @Override
-      public RoleEnum read(final JsonReader jsonReader) throws IOException {
+      public ActionEnum read(final JsonReader jsonReader) throws IOException {
         String value = jsonReader.nextString();
-        return RoleEnum.fromValue(String.valueOf(value));
+        return ActionEnum.fromValue(String.valueOf(value));
       }
     }
   }
 
-  public static final String SERIALIZED_NAME_ROLE = "role";
-  @SerializedName(SERIALIZED_NAME_ROLE)
-  private RoleEnum role = RoleEnum.MEMBER;
+  public static final String SERIALIZED_NAME_ACTION = "action";
+  @SerializedName(SERIALIZED_NAME_ACTION)
+  private ActionEnum action = null;
 
-  public ResourceMember role(RoleEnum role) {
-    this.role = role;
+  public static final String SERIALIZED_NAME_RESOURCE = "resource";
+  @SerializedName(SERIALIZED_NAME_RESOURCE)
+  private PermissionResource resource = null;
+
+  public Permission action(ActionEnum action) {
+    this.action = action;
     return this;
   }
 
    /**
-   * Get role
-   * @return role
+   * Get action
+   * @return action
   **/
-  @ApiModelProperty(value = "")
-  public RoleEnum getRole() {
-    return role;
+  @ApiModelProperty(required = true, value = "")
+  public ActionEnum getAction() {
+    return action;
   }
 
-  public void setRole(RoleEnum role) {
-    this.role = role;
+  public void setAction(ActionEnum action) {
+    this.action = action;
+  }
+
+  public Permission resource(PermissionResource resource) {
+    this.resource = resource;
+    return this;
+  }
+
+   /**
+   * Get resource
+   * @return resource
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public PermissionResource getResource() {
+    return resource;
+  }
+
+  public void setResource(PermissionResource resource) {
+    this.resource = resource;
   }
 
 
@@ -107,23 +130,24 @@ public class ResourceMember extends User {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ResourceMember resourceMember = (ResourceMember) o;
-    return Objects.equals(this.role, resourceMember.role) &&
-        super.equals(o);
+    Permission permission = (Permission) o;
+    return Objects.equals(this.action, permission.action) &&
+        Objects.equals(this.resource, permission.resource);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(role, super.hashCode());
+    return Objects.hash(action, resource);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ResourceMember {\n");
-    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    role: ").append(toIndentedString(role)).append("\n");
+    sb.append("class Permission {\n");
+    
+    sb.append("    action: ").append(toIndentedString(action)).append("\n");
+    sb.append("    resource: ").append(toIndentedString(resource)).append("\n");
     sb.append("}");
     return sb.toString();
   }

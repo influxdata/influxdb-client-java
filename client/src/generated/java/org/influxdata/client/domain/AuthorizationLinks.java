@@ -23,43 +23,36 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
- * LabelUpdate
+ * AuthorizationLinks
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T14:39:51.939+01:00[Europe/Prague]")
-public class LabelUpdate {
-  public static final String SERIALIZED_NAME_PROPERTIES = "properties";
-  @SerializedName(SERIALIZED_NAME_PROPERTIES)
-  private Map<String, String> properties = null;
+public class AuthorizationLinks {
+  public static final String SERIALIZED_NAME_SELF = "self";
+  @SerializedName(SERIALIZED_NAME_SELF)
+  private String self = null;
 
-  public LabelUpdate properties(Map<String, String> properties) {
-    this.properties = properties;
-    return this;
-  }
+  public static final String SERIALIZED_NAME_USER = "user";
+  @SerializedName(SERIALIZED_NAME_USER)
+  private String user = null;
 
-  public LabelUpdate putPropertiesItem(String key, String propertiesItem) {
-    if (this.properties == null) {
-      this.properties = new HashMap<>();
-    }
-    this.properties.put(key, propertiesItem);
-    return this;
+   /**
+   * Get self
+   * @return self
+  **/
+  @ApiModelProperty(value = "")
+  public String getSelf() {
+    return self;
   }
 
    /**
-   * Key/Value pairs associated with this label. Keys can be removed by sending an update with an empty value.
-   * @return properties
+   * Get user
+   * @return user
   **/
-  @ApiModelProperty(example = "{\"color\":\"ffb3b3\",\"description\":\"this is a description\"}", value = "Key/Value pairs associated with this label. Keys can be removed by sending an update with an empty value.")
-  public Map<String, String> getProperties() {
-    return properties;
-  }
-
-  public void setProperties(Map<String, String> properties) {
-    this.properties = properties;
+  @ApiModelProperty(value = "")
+  public String getUser() {
+    return user;
   }
 
 
@@ -71,22 +64,24 @@ public class LabelUpdate {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    LabelUpdate labelUpdate = (LabelUpdate) o;
-    return Objects.equals(this.properties, labelUpdate.properties);
+    AuthorizationLinks authorizationLinks = (AuthorizationLinks) o;
+    return Objects.equals(this.self, authorizationLinks.self) &&
+        Objects.equals(this.user, authorizationLinks.user);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(properties);
+    return Objects.hash(self, user);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class LabelUpdate {\n");
+    sb.append("class AuthorizationLinks {\n");
     
-    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
+    sb.append("    self: ").append(toIndentedString(self)).append("\n");
+    sb.append("    user: ").append(toIndentedString(user)).append("\n");
     sb.append("}");
     return sb.toString();
   }
