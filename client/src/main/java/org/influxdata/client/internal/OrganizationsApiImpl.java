@@ -34,8 +34,8 @@ import org.influxdata.client.OrganizationsApi;
 import org.influxdata.client.domain.AddResourceMemberRequestBody;
 import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.Label;
-import org.influxdata.client.domain.OperationLogEntries;
-import org.influxdata.client.domain.OperationLogEntry;
+import org.influxdata.client.domain.OperationLog;
+import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Organizations;
 import org.influxdata.client.domain.ResourceMember;
@@ -47,8 +47,6 @@ import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.NotFoundException;
 
 import com.google.gson.Gson;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 import retrofit2.Call;
 
 /**
@@ -58,18 +56,9 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
     private static final Logger LOG = Logger.getLogger(OrganizationsApiImpl.class.getName());
 
-    private final JsonAdapter<Organization> adapter;
-    private final JsonAdapter<Map> mapAdapter;
-    private final JsonAdapter<List> listAdapter;
-
-    OrganizationsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi,
-                         @Nonnull final Gson gson) {
+    OrganizationsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Gson gson) {
 
         super(influxDBService, gson);
-
-        this.adapter = moshi.adapter(Organization.class);
-        this.mapAdapter = moshi.adapter(Map.class);
-        this.listAdapter = moshi.adapter(List.class);
     }
 
     @Nullable
@@ -113,7 +102,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
         Arguments.checkNotNull(organization, "Organization");
 
-        String json = adapter.toJson(organization);
+        String json = gson.toJson(organization);
 
         Call<Organization> call = influxDBService.createOrganization(createBody(json));
 
@@ -126,7 +115,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
         Arguments.checkNotNull(organization, "Organization");
 
-        String json = adapter.toJson(organization);
+        String json = gson.toJson(organization);
 
         Call<Organization> orgCall = influxDBService.updateOrganization(organization.getId(), createBody(json));
 
@@ -217,7 +206,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
         Arguments.checkNonEmpty(orgID, "Organization ID");
         Arguments.checkNotNull(secrets, "secrets");
 
-        Call<Void> call = influxDBService.putSecrets(orgID, createBody(mapAdapter.toJson(secrets)));
+        Call<Void> call = influxDBService.putSecrets(orgID, createBody(gson.toJson(secrets)));
         execute(call);
     }
 
@@ -236,7 +225,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
         Arguments.checkNonEmpty(orgID, "Organization ID");
         Arguments.checkNotNull(secrets, "secrets");
 
-        Call<Void> call = influxDBService.deleteSecrets(orgID, createBody(listAdapter.toJson(secrets)));
+        Call<Void> call = influxDBService.deleteSecrets(orgID, createBody(gson.toJson(secrets)));
         execute(call);
     }
 
@@ -431,7 +420,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
     @Nonnull
     @Override
-    public List<OperationLogEntry> findOrganizationLogs(@Nonnull final Organization organization) {
+    public List<OperationLog> findOrganizationLogs(@Nonnull final Organization organization) {
 
         Arguments.checkNotNull(organization, "organization");
 
@@ -440,8 +429,8 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
     @Nonnull
     @Override
-    public OperationLogEntries findOrganizationLogs(@Nonnull final Organization organization,
-                                                    @Nonnull final FindOptions findOptions) {
+    public OperationLogs findOrganizationLogs(@Nonnull final Organization organization,
+                                              @Nonnull final FindOptions findOptions) {
 
         Arguments.checkNotNull(organization, "organization");
         Arguments.checkNotNull(findOptions, "findOptions");
@@ -451,7 +440,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
     @Nonnull
     @Override
-    public List<OperationLogEntry> findOrganizationLogs(@Nonnull final String orgID) {
+    public List<OperationLog> findOrganizationLogs(@Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(orgID, "orgID");
 
@@ -460,14 +449,14 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
     @Nonnull
     @Override
-    public OperationLogEntries findOrganizationLogs(@Nonnull final String orgID,
+    public OperationLogs findOrganizationLogs(@Nonnull final String orgID,
                                                     @Nonnull final FindOptions findOptions) {
 
         Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(findOptions, "findOptions");
 
-        Call<OperationLogEntries> call = influxDBService.findOrganizationLogs(orgID, createQueryMap(findOptions));
+        Call<OperationLogs> call = influxDBService.findOrganizationLogs(orgID, createQueryMap(findOptions));
 
-        return getOperationLogEntries(call, new OperationLogEntries());
+        return getOperationLogEntries(call);
     }
 }

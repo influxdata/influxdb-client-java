@@ -409,7 +409,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
         Call<OperationLogs> call = influxDBService.findBucketLogs(bucketID, createQueryMap(findOptions));
 
-        return getOperationLogEntries(call, new OperationLogs());
+        return getOperationLogEntries(call);
     }
 
     @Nonnull

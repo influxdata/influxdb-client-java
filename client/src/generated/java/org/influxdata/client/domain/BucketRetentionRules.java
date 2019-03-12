@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * BucketRetentionRules
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T10:13:07.695+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T12:55:15.239+01:00[Europe/Prague]")
 public class BucketRetentionRules {
   /**
    * Gets or Sets type

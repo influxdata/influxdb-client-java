@@ -105,7 +105,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Nonnull
     @Override
     public OrganizationsApi getOrganizationsApi() {
-        return new OrganizationsApiImpl(influxDBServiceMoshi, moshi, gson);
+        return new OrganizationsApiImpl(influxDBService, gson);
     }
 
     @Nonnull
@@ -123,7 +123,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Nonnull
     @Override
     public UsersApi getUsersApi() {
-        return new UsersApiImpl(influxDBServiceMoshi, gson);
+        return new UsersApiImpl(influxDBService, gson);
     }
 
     @Nonnull

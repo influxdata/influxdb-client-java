@@ -30,8 +30,8 @@ import javax.annotation.Nullable;
 import org.influxdata.Arguments;
 import org.influxdata.client.UsersApi;
 import org.influxdata.client.domain.FindOptions;
-import org.influxdata.client.domain.OperationLogEntries;
-import org.influxdata.client.domain.OperationLogEntry;
+import org.influxdata.client.domain.OperationLog;
+import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.domain.Users;
 import org.influxdata.exceptions.NotFoundException;
@@ -224,7 +224,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
     @Nonnull
     @Override
-    public List<OperationLogEntry> findUserLogs(@Nonnull final User user) {
+    public List<OperationLog> findUserLogs(@Nonnull final User user) {
 
         Arguments.checkNotNull(user, "User");
 
@@ -233,7 +233,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
     @Nonnull
     @Override
-    public List<OperationLogEntry> findUserLogs(@Nonnull final String userID) {
+    public List<OperationLog> findUserLogs(@Nonnull final String userID) {
 
         Arguments.checkNonEmpty(userID, "User ID");
 
@@ -242,7 +242,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
     @Nonnull
     @Override
-    public OperationLogEntries findUserLogs(@Nonnull final User user, @Nonnull final FindOptions findOptions) {
+    public OperationLogs findUserLogs(@Nonnull final User user, @Nonnull final FindOptions findOptions) {
 
         Arguments.checkNotNull(user, "User");
         Arguments.checkNotNull(findOptions, "findOptions");
@@ -252,14 +252,14 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
     @Nonnull
     @Override
-    public OperationLogEntries findUserLogs(@Nonnull final String userID, @Nonnull final FindOptions findOptions) {
+    public OperationLogs findUserLogs(@Nonnull final String userID, @Nonnull final FindOptions findOptions) {
 
         Arguments.checkNonEmpty(userID, "User ID");
         Arguments.checkNotNull(findOptions, "findOptions");
 
-        Call<OperationLogEntries> call = influxDBService.findUserLogs(userID, createQueryMap(findOptions));
+        Call<OperationLogs> call = influxDBService.findUserLogs(userID, createQueryMap(findOptions));
 
-        return getOperationLogEntries(call, new OperationLogEntries());
+        return getOperationLogEntries(call);
     }
 
     @Nonnull

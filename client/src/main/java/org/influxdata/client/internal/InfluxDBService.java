@@ -37,7 +37,6 @@ import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.Labels;
 import org.influxdata.client.domain.Logs;
 import org.influxdata.client.domain.OnboardingResponse;
-import org.influxdata.client.domain.OperationLogEntries;
 import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Organizations;
@@ -135,7 +134,7 @@ public interface InfluxDBService {
     @GET("/api/v2/users/{id}/logs")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<OperationLogEntries> findUserLogs(@Nonnull @Path("id") final String userID,
+    Call<OperationLogs> findUserLogs(@Nonnull @Path("id") final String userID,
                                            @Nonnull @QueryMap final Map<String, Object> findOptions);
 
     @GET("/api/v2/users/{id}")
@@ -182,7 +181,7 @@ public interface InfluxDBService {
     @GET("/api/v2/orgs/{id}/logs")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<OperationLogEntries> findOrganizationLogs(@Nonnull @Path("id") final String orgID,
+    Call<OperationLogs> findOrganizationLogs(@Nonnull @Path("id") final String orgID,
                                              @Nonnull @QueryMap final Map<String, Object> findOptions);
 
     @GET("/api/v2/orgs")

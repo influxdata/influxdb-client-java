@@ -61,8 +61,6 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
     @Test
     void createScraperTarget() {
 
-        influxDBClient.setLogLevel(LogLevel.BODY);
-
         Organization organization = findMyOrg();
         ScraperTargetResponse scraper = scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
                 "http://localhost:9999", bucket.getId(), organization.getId());

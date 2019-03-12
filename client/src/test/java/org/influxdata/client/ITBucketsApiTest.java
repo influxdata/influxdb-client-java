@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.BucketRetentionRules;
 import org.influxdata.client.domain.Buckets;

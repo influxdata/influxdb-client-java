@@ -34,6 +34,7 @@ import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LabelMapping;
 import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.Labels;
+import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.internal.AbstractRestClient;
 
 import com.google.gson.Gson;
@@ -108,15 +109,14 @@ abstract class AbstractInfluxDBRestClient extends AbstractRestClient {
     }
 
     @Nonnull
-    <T> T getOperationLogEntries(@Nonnull final Call<T> call, @Nonnull final T defaultValue) {
+    OperationLogs getOperationLogEntries(@Nonnull final Call<OperationLogs> call) {
 
         Arguments.checkNotNull(call, "call");
-        Arguments.checkNotNull(defaultValue, "defaultValue");
 
         //TODO https://github.com/influxdata/influxdb/issues/11632
-        T entries = execute(call, "oplog not found");
+        OperationLogs entries = execute(call, "oplog not found");
         if (entries == null) {
-            return defaultValue;
+            return new OperationLogs();
         }
 
         return entries;

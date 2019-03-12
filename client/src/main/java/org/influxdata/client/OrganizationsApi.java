@@ -28,8 +28,8 @@ import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.Label;
-import org.influxdata.client.domain.OperationLogEntries;
-import org.influxdata.client.domain.OperationLogEntry;
+import org.influxdata.client.domain.OperationLog;
+import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
@@ -351,7 +351,7 @@ public interface OrganizationsApi {
      * @return logs
      */
     @Nonnull
-    List<OperationLogEntry> findOrganizationLogs(@Nonnull final Organization organization);
+    List<OperationLog> findOrganizationLogs(@Nonnull final Organization organization);
 
     /**
      * Retrieve an organization's logs.
@@ -360,8 +360,8 @@ public interface OrganizationsApi {
      * @return logs
      */
     @Nonnull
-    OperationLogEntries findOrganizationLogs(@Nonnull final Organization organization,
-                                             @Nonnull final FindOptions findOptions);
+    OperationLogs findOrganizationLogs(@Nonnull final Organization organization,
+                                       @Nonnull final FindOptions findOptions);
 
     /**
      * Retrieve an organization's logs.
@@ -370,7 +370,7 @@ public interface OrganizationsApi {
      * @return logs
      */
     @Nonnull
-    List<OperationLogEntry> findOrganizationLogs(@Nonnull final String orgID);
+    List<OperationLog> findOrganizationLogs(@Nonnull final String orgID);
 
     /**
      * Retrieve an organization's logs.
@@ -379,5 +379,5 @@ public interface OrganizationsApi {
      * @return logs
      */
     @Nonnull
-    OperationLogEntries findOrganizationLogs(@Nonnull final String orgID, @Nonnull final FindOptions findOptions);
+    OperationLogs findOrganizationLogs(@Nonnull final String orgID, @Nonnull final FindOptions findOptions);
 }

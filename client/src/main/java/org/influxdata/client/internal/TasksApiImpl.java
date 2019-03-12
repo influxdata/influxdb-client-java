@@ -171,10 +171,9 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(cron, "cron expression");
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Organization organization = new Organization();
-        organization.setId(orgID);
+        Task task = createTask(name, flux, null, cron, orgID);
 
-        return createTaskCron(name, flux, cron, organization);
+        return createTask(task);
     }
 
     @Nonnull
@@ -206,10 +205,9 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(every, "every expression");
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Organization organization = new Organization();
-        organization.setId(orgID);
+        Task task = createTask(name, flux, every, null, orgID);
 
-        return createTaskEvery(name, flux, every, organization);
+        return createTask(task);
     }
 
 
