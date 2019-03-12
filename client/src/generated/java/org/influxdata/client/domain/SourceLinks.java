@@ -25,23 +25,27 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * ScraperTargetResponseLinks
+ * SourceLinks
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T14:34:00.193+01:00[Europe/Prague]")
-public class ScraperTargetResponseLinks {
+public class SourceLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
   private String self = null;
 
-  public static final String SERIALIZED_NAME_MEMBERS = "members";
-  @SerializedName(SERIALIZED_NAME_MEMBERS)
-  private String members = null;
+  public static final String SERIALIZED_NAME_QUERY = "query";
+  @SerializedName(SERIALIZED_NAME_QUERY)
+  private String query = null;
 
-  public static final String SERIALIZED_NAME_OWNERS = "owners";
-  @SerializedName(SERIALIZED_NAME_OWNERS)
-  private String owners = null;
+  public static final String SERIALIZED_NAME_HEALTH = "health";
+  @SerializedName(SERIALIZED_NAME_HEALTH)
+  private String health = null;
 
-  public ScraperTargetResponseLinks self(String self) {
+  public static final String SERIALIZED_NAME_BUCKETS = "buckets";
+  @SerializedName(SERIALIZED_NAME_BUCKETS)
+  private String buckets = null;
+
+  public SourceLinks self(String self) {
     this.self = self;
     return this;
   }
@@ -59,40 +63,58 @@ public class ScraperTargetResponseLinks {
     this.self = self;
   }
 
-  public ScraperTargetResponseLinks members(String members) {
-    this.members = members;
+  public SourceLinks query(String query) {
+    this.query = query;
     return this;
   }
 
    /**
-   * Get members
-   * @return members
+   * Get query
+   * @return query
   **/
   @ApiModelProperty(value = "")
-  public String getMembers() {
-    return members;
+  public String getQuery() {
+    return query;
   }
 
-  public void setMembers(String members) {
-    this.members = members;
+  public void setQuery(String query) {
+    this.query = query;
   }
 
-  public ScraperTargetResponseLinks owners(String owners) {
-    this.owners = owners;
+  public SourceLinks health(String health) {
+    this.health = health;
     return this;
   }
 
    /**
-   * Get owners
-   * @return owners
+   * Get health
+   * @return health
   **/
   @ApiModelProperty(value = "")
-  public String getOwners() {
-    return owners;
+  public String getHealth() {
+    return health;
   }
 
-  public void setOwners(String owners) {
-    this.owners = owners;
+  public void setHealth(String health) {
+    this.health = health;
+  }
+
+  public SourceLinks buckets(String buckets) {
+    this.buckets = buckets;
+    return this;
+  }
+
+   /**
+   * Get buckets
+   * @return buckets
+  **/
+  @ApiModelProperty(value = "")
+  public String getBuckets() {
+    return buckets;
+  }
+
+  public void setBuckets(String buckets) {
+    this.buckets = buckets;
   }
 
 
@@ -104,26 +126,28 @@ public class ScraperTargetResponseLinks {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ScraperTargetResponseLinks scraperTargetResponseLinks = (ScraperTargetResponseLinks) o;
-    return Objects.equals(this.self, scraperTargetResponseLinks.self) &&
-        Objects.equals(this.members, scraperTargetResponseLinks.members) &&
-        Objects.equals(this.owners, scraperTargetResponseLinks.owners);
+    SourceLinks sourceLinks = (SourceLinks) o;
+    return Objects.equals(this.self, sourceLinks.self) &&
+        Objects.equals(this.query, sourceLinks.query) &&
+        Objects.equals(this.health, sourceLinks.health) &&
+        Objects.equals(this.buckets, sourceLinks.buckets);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self, members, owners);
+    return Objects.hash(self, query, health, buckets);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ScraperTargetResponseLinks {\n");
+    sb.append("class SourceLinks {\n");
     
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
-    sb.append("    members: ").append(toIndentedString(members)).append("\n");
-    sb.append("    owners: ").append(toIndentedString(owners)).append("\n");
+    sb.append("    query: ").append(toIndentedString(query)).append("\n");
+    sb.append("    health: ").append(toIndentedString(health)).append("\n");
+    sb.append("    buckets: ").append(toIndentedString(buckets)).append("\n");
     sb.append("}");
     return sb.toString();
   }

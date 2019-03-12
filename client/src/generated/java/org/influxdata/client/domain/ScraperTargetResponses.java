@@ -30,7 +30,7 @@ import org.influxdata.client.domain.ScraperTargetResponse;
 /**
  * ScraperTargetResponses
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T13:11:42.908+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T14:34:00.193+01:00[Europe/Prague]")
 public class ScraperTargetResponses {
   public static final String SERIALIZED_NAME_CONFIGURATIONS = "configurations";
   @SerializedName(SERIALIZED_NAME_CONFIGURATIONS)

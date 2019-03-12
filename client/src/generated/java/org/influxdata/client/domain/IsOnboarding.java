@@ -23,66 +23,32 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import org.influxdata.client.domain.Links;
-import org.influxdata.client.domain.OperationLog;
 
 /**
- * OperationLogs
+ * IsOnboarding
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T14:34:00.193+01:00[Europe/Prague]")
-public class OperationLogs {
-  public static final String SERIALIZED_NAME_LOGS = "logs";
-  @SerializedName(SERIALIZED_NAME_LOGS)
-  private List<OperationLog> logs = null;
+public class IsOnboarding {
+  public static final String SERIALIZED_NAME_ALLOWED = "allowed";
+  @SerializedName(SERIALIZED_NAME_ALLOWED)
+  private Boolean allowed = null;
 
-  public static final String SERIALIZED_NAME_LINKS = "links";
-  @SerializedName(SERIALIZED_NAME_LINKS)
-  private Links links = null;
-
-  public OperationLogs logs(List<OperationLog> logs) {
-    this.logs = logs;
-    return this;
-  }
-
-  public OperationLogs addLogsItem(OperationLog logsItem) {
-    if (this.logs == null) {
-      this.logs = new ArrayList<>();
-    }
-    this.logs.add(logsItem);
+  public IsOnboarding allowed(Boolean allowed) {
+    this.allowed = allowed;
     return this;
   }
 
    /**
-   * Get logs
-   * @return logs
+   * true means that the influxdb instance has NOT had initial setup; false means that the database has been setup.
+   * @return allowed
   **/
-  @ApiModelProperty(value = "")
-  public List<OperationLog> getLogs() {
-    return logs;
+  @ApiModelProperty(value = "true means that the influxdb instance has NOT had initial setup; false means that the database has been setup.")
+  public Boolean isAllowed() {
+    return allowed;
   }
 
-  public void setLogs(List<OperationLog> logs) {
-    this.logs = logs;
-  }
-
-  public OperationLogs links(Links links) {
-    this.links = links;
-    return this;
-  }
-
-   /**
-   * Get links
-   * @return links
-  **/
-  @ApiModelProperty(value = "")
-  public Links getLinks() {
-    return links;
-  }
-
-  public void setLinks(Links links) {
-    this.links = links;
+  public void setAllowed(Boolean allowed) {
+    this.allowed = allowed;
   }
 
 
@@ -94,24 +60,22 @@ public class OperationLogs {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OperationLogs operationLogs = (OperationLogs) o;
-    return Objects.equals(this.logs, operationLogs.logs) &&
-        Objects.equals(this.links, operationLogs.links);
+    IsOnboarding isOnboarding = (IsOnboarding) o;
+    return Objects.equals(this.allowed, isOnboarding.allowed);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(logs, links);
+    return Objects.hash(allowed);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class OperationLogs {\n");
+    sb.append("class IsOnboarding {\n");
     
-    sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
+    sb.append("    allowed: ").append(toIndentedString(allowed)).append("\n");
     sb.append("}");
     return sb.toString();
   }

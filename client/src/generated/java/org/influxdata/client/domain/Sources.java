@@ -25,23 +25,23 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.Source;
 import org.influxdata.client.domain.UsersLinks;
 
 /**
- * ResourceOwners
+ * Sources
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T14:34:00.193+01:00[Europe/Prague]")
-public class ResourceOwners {
+public class Sources {
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
   private UsersLinks links = null;
 
-  public static final String SERIALIZED_NAME_USERS = "users";
-  @SerializedName(SERIALIZED_NAME_USERS)
-  private List<ResourceOwner> users = null;
+  public static final String SERIALIZED_NAME_SOURCES = "sources";
+  @SerializedName(SERIALIZED_NAME_SOURCES)
+  private List<Source> sources = null;
 
-  public ResourceOwners links(UsersLinks links) {
+  public Sources links(UsersLinks links) {
     this.links = links;
     return this;
   }
@@ -59,30 +59,30 @@ public class ResourceOwners {
     this.links = links;
   }
 
-  public ResourceOwners users(List<ResourceOwner> users) {
-    this.users = users;
+  public Sources sources(List<Source> sources) {
+    this.sources = sources;
     return this;
   }
 
-  public ResourceOwners addUsersItem(ResourceOwner usersItem) {
-    if (this.users == null) {
-      this.users = new ArrayList<>();
+  public Sources addSourcesItem(Source sourcesItem) {
+    if (this.sources == null) {
+      this.sources = new ArrayList<>();
     }
-    this.users.add(usersItem);
+    this.sources.add(sourcesItem);
     return this;
   }
 
    /**
-   * Get users
-   * @return users
+   * Get sources
+   * @return sources
   **/
   @ApiModelProperty(value = "")
-  public List<ResourceOwner> getUsers() {
-    return users;
+  public List<Source> getSources() {
+    return sources;
   }
 
-  public void setUsers(List<ResourceOwner> users) {
-    this.users = users;
+  public void setSources(List<Source> sources) {
+    this.sources = sources;
   }
 
 
@@ -94,24 +94,24 @@ public class ResourceOwners {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ResourceOwners resourceOwners = (ResourceOwners) o;
-    return Objects.equals(this.links, resourceOwners.links) &&
-        Objects.equals(this.users, resourceOwners.users);
+    Sources sources = (Sources) o;
+    return Objects.equals(this.links, sources.links) &&
+        Objects.equals(this.sources, sources.sources);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, users);
+    return Objects.hash(links, sources);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ResourceOwners {\n");
+    sb.append("class Sources {\n");
     
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
-    sb.append("    users: ").append(toIndentedString(users)).append("\n");
+    sb.append("    sources: ").append(toIndentedString(sources)).append("\n");
     sb.append("}");
     return sb.toString();
   }

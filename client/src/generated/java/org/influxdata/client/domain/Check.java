@@ -23,29 +23,35 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import org.influxdata.client.domain.UserLinks;
+import java.util.ArrayList;
+import java.util.List;
+import org.influxdata.client.domain.Check;
 
 /**
- * User
+ * Check
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T14:34:00.193+01:00[Europe/Prague]")
-public class User {
-  public static final String SERIALIZED_NAME_ID = "id";
-  @SerializedName(SERIALIZED_NAME_ID)
-  private String id = null;
-
+public class Check {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name = null;
 
+  public static final String SERIALIZED_NAME_MESSAGE = "message";
+  @SerializedName(SERIALIZED_NAME_MESSAGE)
+  private String message = null;
+
+  public static final String SERIALIZED_NAME_CHECKS = "checks";
+  @SerializedName(SERIALIZED_NAME_CHECKS)
+  private List<Check> checks = null;
+
   /**
-   * if inactive the user is inactive.
+   * Gets or Sets status
    */
   @JsonAdapter(StatusEnum.Adapter.class)
   public enum StatusEnum {
-    ACTIVE("active"),
+    PASS("pass"),
     
-    INACTIVE("inactive");
+    FAIL("fail");
 
     private String value;
 
@@ -87,22 +93,9 @@ public class User {
 
   public static final String SERIALIZED_NAME_STATUS = "status";
   @SerializedName(SERIALIZED_NAME_STATUS)
-  private StatusEnum status = StatusEnum.ACTIVE;
+  private StatusEnum status = null;
 
-  public static final String SERIALIZED_NAME_LINKS = "links";
-  @SerializedName(SERIALIZED_NAME_LINKS)
-  private UserLinks links = null;
-
-   /**
-   * Get id
-   * @return id
-  **/
-  @ApiModelProperty(value = "")
-  public String getId() {
-    return id;
-  }
-
-  public User name(String name) {
+  public Check name(String name) {
     this.name = name;
     return this;
   }
@@ -120,40 +113,66 @@ public class User {
     this.name = name;
   }
 
-  public User status(StatusEnum status) {
+  public Check message(String message) {
+    this.message = message;
+    return this;
+  }
+
+   /**
+   * Get message
+   * @return message
+  **/
+  @ApiModelProperty(value = "")
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+  public Check checks(List<Check> checks) {
+    this.checks = checks;
+    return this;
+  }
+
+  public Check addChecksItem(Check checksItem) {
+    if (this.checks == null) {
+      this.checks = new ArrayList<>();
+    }
+    this.checks.add(checksItem);
+    return this;
+  }
+
+   /**
+   * Get checks
+   * @return checks
+  **/
+  @ApiModelProperty(value = "")
+  public List<Check> getChecks() {
+    return checks;
+  }
+
+  public void setChecks(List<Check> checks) {
+    this.checks = checks;
+  }
+
+  public Check status(StatusEnum status) {
     this.status = status;
     return this;
   }
 
    /**
-   * if inactive the user is inactive.
+   * Get status
    * @return status
   **/
-  @ApiModelProperty(value = "if inactive the user is inactive.")
+  @ApiModelProperty(required = true, value = "")
   public StatusEnum getStatus() {
     return status;
   }
 
   public void setStatus(StatusEnum status) {
     this.status = status;
-  }
-
-  public User links(UserLinks links) {
-    this.links = links;
-    return this;
-  }
-
-   /**
-   * Get links
-   * @return links
-  **/
-  @ApiModelProperty(value = "")
-  public UserLinks getLinks() {
-    return links;
-  }
-
-  public void setLinks(UserLinks links) {
-    this.links = links;
   }
 
 
@@ -165,28 +184,28 @@ public class User {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    User user = (User) o;
-    return Objects.equals(this.id, user.id) &&
-        Objects.equals(this.name, user.name) &&
-        Objects.equals(this.status, user.status) &&
-        Objects.equals(this.links, user.links);
+    Check check = (Check) o;
+    return Objects.equals(this.name, check.name) &&
+        Objects.equals(this.message, check.message) &&
+        Objects.equals(this.checks, check.checks) &&
+        Objects.equals(this.status, check.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, status, links);
+    return Objects.hash(name, message, checks, status);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class User {\n");
+    sb.append("class Check {\n");
     
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    checks: ").append(toIndentedString(checks)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("}");
     return sb.toString();
   }
