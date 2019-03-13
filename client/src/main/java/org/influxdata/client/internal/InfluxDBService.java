@@ -48,7 +48,7 @@ import org.influxdata.client.domain.Run;
 import org.influxdata.client.domain.RunsResponse;
 import org.influxdata.client.domain.ScraperTargetResponse;
 import org.influxdata.client.domain.ScraperTargetResponses;
-import org.influxdata.client.domain.Secrets;
+import org.influxdata.client.domain.SecretKeys;
 import org.influxdata.client.domain.Source;
 import org.influxdata.client.domain.Sources;
 import org.influxdata.client.domain.Task;
@@ -223,7 +223,7 @@ public interface InfluxDBService {
                                        @Nonnull @Path("userID") final String userID);
 
     @GET("/api/v2/orgs/{id}/secrets")
-    Call<Secrets> getSecrets(@Nonnull @Path("id") final String orgID);
+    Call<SecretKeys> getSecrets(@Nonnull @Path("id") final String orgID);
 
     @PATCH("/api/v2/orgs/{id}/secrets")
     Call<Void> putSecrets(@Nonnull @Path("id") final String orgID, @Nonnull @Body final RequestBody secrets);

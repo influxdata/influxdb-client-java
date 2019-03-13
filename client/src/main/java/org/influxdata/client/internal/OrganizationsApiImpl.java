@@ -42,7 +42,7 @@ import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ResourceOwners;
-import org.influxdata.client.domain.Secrets;
+import org.influxdata.client.domain.SecretKeys;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.NotFoundException;
 
@@ -172,7 +172,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
     }
 
     @Override
-    public List<String> getSecrets(@Nonnull final Organization organization) {
+    public SecretKeys getSecrets(@Nonnull final Organization organization) {
 
         Arguments.checkNotNull(organization, "Organization");
 
@@ -180,16 +180,13 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
     }
 
     @Override
-    public List<String> getSecrets(@Nonnull final String orgID) {
+    public SecretKeys getSecrets(@Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<Secrets> call = influxDBService.getSecrets(orgID);
+        Call<SecretKeys> call = influxDBService.getSecrets(orgID);
 
-        Secrets secrets = execute(call);
-        LOG.log(Level.FINEST, "getSecrets found: {0}", secrets);
-
-        return secrets.getSecrets();
+        return execute(call);
     }
 
     @Override

@@ -25,7 +25,6 @@ import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.OperationLogs;
-import org.influxdata.client.domain.Status;
 import org.influxdata.client.internal.AbstractInfluxDBClientTest;
 
 import okhttp3.mockwebserver.MockResponse;
@@ -147,7 +146,7 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
 
         Authorization authorization = influxDBClient.getAuthorizationsApi().findAuthorizationByID("id");
         Assertions.assertThat(authorization).isNotNull();
-        Assertions.assertThat(authorization.getStatus()).isEqualTo(Status.ACTIVE);
+        Assertions.assertThat(authorization.getStatus()).isEqualTo(Authorization.StatusEnum.ACTIVE);
 
         authorization = influxDBClient.getAuthorizationsApi().findAuthorizationByID("id");
         Assertions.assertThat(authorization).isNotNull();

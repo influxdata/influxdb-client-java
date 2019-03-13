@@ -21,7 +21,6 @@
  */
 package org.influxdata.client;
 
-import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.OnboardingRequest;
 import org.influxdata.client.domain.OnboardingResponse;
@@ -64,8 +63,6 @@ class ITInfluxDBClient extends AbstractITClientTest {
 
     @Test
     void ready() {
-
-        influxDBClient.setLogLevel(LogLevel.BODY);
 
         Check ready = influxDBClient.ready();
 

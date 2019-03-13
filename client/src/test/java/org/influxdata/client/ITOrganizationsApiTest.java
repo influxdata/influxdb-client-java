@@ -36,6 +36,7 @@ import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.SecretKeys;
 import org.influxdata.client.domain.User;
 
 import org.assertj.core.api.Assertions;
@@ -213,8 +214,8 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
 
         Organization organization = organizationsApi.createOrganization(generateName("Constant Pro"));
 
-        List<String> secrets = organizationsApi.getSecrets(organization);
-        Assertions.assertThat(secrets).isEmpty();
+        SecretKeys secrets = organizationsApi.getSecrets(organization);
+        Assertions.assertThat(secrets.getSecrets()).isEmpty();
 
         Map<String, String> secretsKV = new HashMap<>();
         secretsKV.put("gh", "123456789");
@@ -223,12 +224,15 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
         organizationsApi.putSecrets(secretsKV, organization);
 
         secrets = organizationsApi.getSecrets(organization);
-        Assertions.assertThat(secrets).hasSize(2).contains("gh", "az");
+        Assertions.assertThat(secrets.getSecrets()).hasSize(2).contains("gh", "az");
+        Assertions.assertThat(secrets.getLinks().getOrg()).isEqualTo("/api/v2/orgs/" + organization.getId());
+        //TODO https://github.com/influxdata/influxdb/issues/12587
+        // Assertions.assertThat(secrets.getLinks().getSelf()).isEqualTo("/api/v2/orgs/" + organization.getId() + "/secrets");
 
         organizationsApi.deleteSecrets(Collections.singletonList("gh"), organization);
 
         secrets = organizationsApi.getSecrets(organization);
-        Assertions.assertThat(secrets).hasSize(1).contains("az");
+        Assertions.assertThat(secrets.getSecrets()).hasSize(1).contains("az");
     }
 
     @Test

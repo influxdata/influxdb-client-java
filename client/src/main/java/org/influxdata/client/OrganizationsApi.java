@@ -33,6 +33,7 @@ import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.SecretKeys;
 import org.influxdata.client.domain.User;
 
 /**
@@ -133,7 +134,7 @@ public interface OrganizationsApi {
      * @param organization the organization for get secrets
      * @return the secret keys
      */
-    List<String> getSecrets(@Nonnull final Organization organization);
+    SecretKeys getSecrets(@Nonnull final Organization organization);
 
     /**
      * List of secret keys the are stored for Organization.
@@ -148,7 +149,7 @@ public interface OrganizationsApi {
      * @param orgID the organization for get secrets
      * @return the secret keys
      */
-    List<String> getSecrets(@Nonnull final String orgID);
+    SecretKeys getSecrets(@Nonnull final String orgID);
 
     /**
      * Patches all provided secrets and updates any previous values.
