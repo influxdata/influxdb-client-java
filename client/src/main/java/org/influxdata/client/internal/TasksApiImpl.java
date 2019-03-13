@@ -22,6 +22,7 @@
 package org.influxdata.client.internal;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,16 +41,16 @@ import org.influxdata.client.domain.ResourceMembers;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.Run;
-import org.influxdata.client.domain.RunsResponse;
-import org.influxdata.client.domain.Status;
+import org.influxdata.client.domain.RunManually;
+import org.influxdata.client.domain.Runs;
 import org.influxdata.client.domain.Task;
+import org.influxdata.client.domain.TaskCreateRequest;
+import org.influxdata.client.domain.TaskUpdateRequest;
 import org.influxdata.client.domain.Tasks;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.NotFoundException;
 
 import com.google.gson.Gson;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 import retrofit2.Call;
 
 /**
@@ -59,14 +60,9 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
     private static final Logger LOG = Logger.getLogger(TasksApiImpl.class.getName());
 
-    private final JsonAdapter<Task> adapter;
-
-    TasksApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi,
-                 @Nonnull final Gson gson) {
+    TasksApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Gson gson) {
 
         super(influxDBService, gson);
-
-        this.adapter = moshi.adapter(Task.class);
     }
 
     @Nullable
@@ -137,7 +133,25 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
         Arguments.checkNotNull(task, "task");
 
-        Call<Task> call = influxDBService.createTask(createBody(adapter.toJson(task)));
+        TaskCreateRequest request = new TaskCreateRequest();
+        request.setFlux(task.getFlux());
+        request.setOrgID(task.getOrgID());
+        request.setOrg(task.getOrg());
+
+        if (task.getStatus() != null) {
+            request.setStatus(TaskCreateRequest.StatusEnum.fromValue(task.getStatus().getValue()));
+        }
+
+        return createTask(request);
+    }
+
+    @Nonnull
+    @Override
+    public Task createTask(@Nonnull final TaskCreateRequest taskCreateRequest) {
+
+        Arguments.checkNotNull(taskCreateRequest, "taskCreateRequest");
+
+        Call<Task> call = influxDBService.createTask(createBody(gson.toJson(taskCreateRequest)));
 
         return execute(call);
     }
@@ -218,7 +232,25 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNotNull(task, "Task is required");
         Arguments.checkDurationNotRequired(task.getEvery(), "Task.every");
 
-        Call<Task> call = influxDBService.updateTask(task.getId(), createBody(adapter.toJson(task)));
+        TaskUpdateRequest taskUpdateRequest = new TaskUpdateRequest();
+        taskUpdateRequest.setStatus(TaskUpdateRequest.StatusEnum.fromValue(task.getStatus().getValue()));
+        taskUpdateRequest.setFlux(task.getFlux());
+        taskUpdateRequest.setName(task.getName());
+        taskUpdateRequest.setEvery(task.getEvery());
+        taskUpdateRequest.setCron(task.getCron());
+        taskUpdateRequest.setOffset(task.getOffset());
+
+        return updateTask(task.getId(), taskUpdateRequest);
+    }
+
+    @Nonnull
+    @Override
+    public Task updateTask(@Nonnull final String taskID, @Nonnull final TaskUpdateRequest request) {
+
+        Arguments.checkNotNull(request, "request");
+        Arguments.checkNonEmpty(taskID, "taskID");
+
+        Call<Task> call = influxDBService.updateTask(taskID, createBody(gson.toJson(request)));
 
         return execute(call);
     }
@@ -264,7 +296,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         cloned.setName(task.getName());
         cloned.setOrgID(task.getOrgID());
         cloned.setFlux(task.getFlux());
-        cloned.setStatus(Status.ACTIVE);
+        cloned.setStatus(Task.StatusEnum.ACTIVE);
 
         Task created = createTask(cloned);
 
@@ -451,8 +483,8 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(taskID, "Task.ID");
         Arguments.checkNonEmpty(orgID, "Org.ID");
 
-        Call<RunsResponse> runs = influxDBService.findTaskRuns(taskID, afterTime, beforeTime, limit, orgID);
-        RunsResponse execute = execute(runs, NotFoundException.class, new RunsResponse());
+        Call<Runs> runs = influxDBService.findTaskRuns(taskID, afterTime, beforeTime, limit, orgID);
+        Runs execute = execute(runs, NotFoundException.class, new Runs().runs(new ArrayList<>()));
 
         return execute.getRuns();
     }
@@ -502,6 +534,27 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Logs logs = execute(call, NotFoundException.class, new Logs());
 
         return logs.getEvents();
+    }
+
+    @Nonnull
+    @Override
+    public Run runManually(@Nonnull final Task task) {
+
+        Arguments.checkNotNull(task, "task");
+
+        return runManually(task.getId(), new RunManually());
+    }
+
+    @Nonnull
+    @Override
+    public Run runManually(@Nonnull final String taskId, @Nonnull final RunManually runManually) {
+
+        Arguments.checkNonEmpty(taskId, "taskId");
+        Arguments.checkNotNull(runManually, "runManually");
+
+        Call<Run> call = influxDBService.runTaskManually(taskId, createBody(gson.toJson(runManually)));
+
+        return execute(call);
     }
 
     @Nullable
@@ -561,7 +614,10 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
         Call<Logs> execute = influxDBService.findTaskLogs(taskID, orgID);
 
-        Logs logs = execute(execute, NotFoundException.class, new Logs());
+        Logs logs = execute(execute, NotFoundException.class);
+        if (logs == null) {
+            return new ArrayList<>();
+        }
 
         return logs.getEvents();
     }
@@ -637,7 +693,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Task task = new Task();
         task.setName(name);
         task.setOrgID(orgID);
-        task.setStatus(Status.ACTIVE);
+        task.setStatus(Task.StatusEnum.ACTIVE);
         task.setFlux(flux);
 
         String repetition = "";

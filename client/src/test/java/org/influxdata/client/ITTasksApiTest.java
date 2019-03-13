@@ -22,6 +22,7 @@
 package org.influxdata.client;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,8 +41,7 @@ import org.influxdata.client.domain.PermissionResource;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.Run;
-import org.influxdata.client.domain.RunStatus;
-import org.influxdata.client.domain.Status;
+import org.influxdata.client.domain.RunManually;
 import org.influxdata.client.domain.Task;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.InfluxException;
@@ -100,7 +100,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         task.setName(taskName);
         task.setOrgID(organization.getId());
         task.setFlux(flux);
-        task.setStatus(Status.ACTIVE);
+        task.setStatus(Task.StatusEnum.ACTIVE);
 
         task = tasksApi.createTask(task);
 
@@ -108,7 +108,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(task.getId()).isNotBlank();
         Assertions.assertThat(task.getName()).isEqualTo(taskName);
         Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
-        Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
+        Assertions.assertThat(task.getStatus()).isEqualTo(Task.StatusEnum.ACTIVE);
         Assertions.assertThat(task.getEvery()).isEqualTo("1h0m0s");
         Assertions.assertThat(task.getCron()).isNull();
         Assertions.assertThat(task.getFlux()).isEqualToIgnoringWhitespace(flux);
@@ -129,7 +129,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         task.setName(taskName);
         task.setOrgID(organization.getId());
         task.setFlux(flux);
-        task.setStatus(Status.ACTIVE);
+        task.setStatus(Task.StatusEnum.ACTIVE);
 
         task = tasksApi.createTask(task);
 
@@ -148,7 +148,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(task.getId()).isNotBlank();
         Assertions.assertThat(task.getName()).isEqualTo(taskName);
         Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
-        Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
+        Assertions.assertThat(task.getStatus()).isEqualTo(Task.StatusEnum.ACTIVE);
         Assertions.assertThat(task.getEvery()).isEqualTo("1h0m0s");
         Assertions.assertThat(task.getCron()).isNull();
         Assertions.assertThat(task.getFlux()).endsWith(TASK_FLUX);
@@ -165,10 +165,18 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(task.getId()).isNotBlank();
         Assertions.assertThat(task.getName()).isEqualTo(taskName);
         Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
-        Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
+        Assertions.assertThat(task.getStatus()).isEqualTo(Task.StatusEnum.ACTIVE);
         Assertions.assertThat(task.getCron()).isEqualTo("0 2 * * *");
         Assertions.assertThat(task.getEvery()).isNull();
         Assertions.assertThat(task.getFlux()).endsWith(TASK_FLUX);
+        Assertions.assertThat(task.getLinks()).isNotNull();
+        Assertions.assertThat(task.getLinks().getLogs()).isEqualTo("/api/v2/tasks/" + task.getId() + "/logs");
+        Assertions.assertThat(task.getLinks().getMembers()).isEqualTo("/api/v2/tasks/" + task.getId() + "/members");
+        Assertions.assertThat(task.getLinks().getOwners()).isEqualTo("/api/v2/tasks/" + task.getId() + "/owners");
+        Assertions.assertThat(task.getLinks().getRuns()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs");
+        Assertions.assertThat(task.getLinks().getSelf()).isEqualTo("/api/v2/tasks/" + task.getId());
+        //TODO missing get labels
+        // Assertions.assertThat(task.getLinks().getLabels()).isEqualTo("/api/v2/tasks/" + task.getId() + "/labels");
     }
 
     @Test
@@ -188,7 +196,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(taskByID.getEvery()).isNull();
         Assertions.assertThat(taskByID.getCron()).isEqualTo(task.getCron());
         Assertions.assertThat(taskByID.getFlux()).isEqualTo(task.getFlux());
-        Assertions.assertThat(taskByID.getStatus()).isEqualTo(Status.ACTIVE);
+        Assertions.assertThat(taskByID.getStatus()).isEqualTo(Task.StatusEnum.ACTIVE);
         Assertions.assertThat(taskByID.getCreatedAt()).isNotNull();
     }
 
@@ -282,11 +290,12 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         String flux = "option task = {\n"
                 + "    name: \"" + taskName + "\",\n"
-                + "    every: 3m\n"
+                + "    every: 180000000000ns\n"
                 + "}\n\n" + TASK_FLUX;
 
-        cronTask.setFlux(flux);
-        cronTask.setStatus(Status.INACTIVE);
+        cronTask.setCron(null);
+        cronTask.setEvery("3m");
+        cronTask.setStatus(Task.StatusEnum.INACTIVE);
 
         Task updatedTask = tasksApi.updateTask(cronTask);
 
@@ -295,7 +304,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(updatedTask.getEvery()).isEqualTo("3m0s");
         Assertions.assertThat(updatedTask.getCron()).isNull();
         Assertions.assertThat(updatedTask.getFlux()).isEqualToIgnoringWhitespace(flux);
-        Assertions.assertThat(updatedTask.getStatus()).isEqualTo(Status.INACTIVE);
+        Assertions.assertThat(updatedTask.getStatus()).isEqualTo(Task.StatusEnum.INACTIVE);
         Assertions.assertThat(updatedTask.getOrgID()).isEqualTo(cronTask.getOrgID());
         Assertions.assertThat(updatedTask.getName()).isEqualTo(cronTask.getName());
         Assertions.assertThat(updatedTask.getUpdatedAt()).isNotNull();
@@ -381,12 +390,16 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         Assertions.assertThat(run.getId()).isNotBlank();
         Assertions.assertThat(run.getTaskID()).isEqualTo(task.getId());
-        Assertions.assertThat(run.getStatus()).isEqualTo(RunStatus.SUCCESS);
-        Assertions.assertThat(run.getScheduledFor()).isBefore(Instant.now());
-        Assertions.assertThat(run.getStartedAt()).isBefore(Instant.now());
-        Assertions.assertThat(run.getFinishedAt()).isBefore(Instant.now());
+        Assertions.assertThat(run.getStatus()).isEqualTo(Run.StatusEnum.SUCCESS);
+        Assertions.assertThat(run.getScheduledFor()).isBefore(OffsetDateTime.now());
+        Assertions.assertThat(run.getStartedAt()).isBefore(OffsetDateTime.now());
+        Assertions.assertThat(run.getFinishedAt()).isBefore(OffsetDateTime.now());
         Assertions.assertThat(run.getRequestedAt()).isNull();
-        Assertions.assertThat(run.getLog()).isNull();
+        Assertions.assertThat(run.getLinks()).isNotNull();
+        Assertions.assertThat(run.getLinks().getLogs()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId() + "/logs");
+        Assertions.assertThat(run.getLinks().getRetry()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId() + "/retry");
+        Assertions.assertThat(run.getLinks().getSelf()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId());
+        Assertions.assertThat(run.getLinks().getTask()).isEqualTo("/api/v2/tasks/" + task.getId());
     }
 
     @Test
@@ -466,6 +479,25 @@ class ITTasksApiTest extends AbstractITClientTest {
     }
 
     @Test
+    void runTaskManually() {
+
+        Task task = tasksApi.createTaskEvery(generateName("it task"), TASK_FLUX, "1s", organization);
+
+        Run run = tasksApi.runManually(task);
+
+        Assertions.assertThat(run).isNotNull();
+        Assertions.assertThat(run.getStatus()).isEqualTo(Run.StatusEnum.SCHEDULED);
+    }
+
+    @Test
+    void runTaskManuallyNotExist() {
+
+        Assertions.assertThatThrownBy(() -> tasksApi.runManually("020f755c3c082000", new RunManually()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("failed to force run");
+    }
+
+    @Test
     void retryRun() throws InterruptedException {
 
         String taskName = generateName("it task");
@@ -482,7 +514,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(run).isNotNull();
         Assertions.assertThat(run.getTaskID()).isEqualTo(runs.get(0).getTaskID());
 
-        Assertions.assertThat(run.getStatus()).isEqualTo(RunStatus.SCHEDULED);
+        Assertions.assertThat(run.getStatus()).isEqualTo(Run.StatusEnum.SCHEDULED);
         Assertions.assertThat(run.getTaskID()).isEqualTo(task.getId());
     }
 

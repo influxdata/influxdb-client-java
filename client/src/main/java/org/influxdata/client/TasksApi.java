@@ -32,7 +32,10 @@ import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.Run;
+import org.influxdata.client.domain.RunManually;
 import org.influxdata.client.domain.Task;
+import org.influxdata.client.domain.TaskCreateRequest;
+import org.influxdata.client.domain.TaskUpdateRequest;
 import org.influxdata.client.domain.User;
 
 /**
@@ -65,6 +68,15 @@ public interface TasksApi {
      */
     @Nonnull
     Task createTask(@Nonnull final Task task);
+
+    /**
+     * Create a new task
+     *
+     * @param taskCreateRequest task to create (required)
+     * @return Task created
+     */
+    @Nonnull
+    Task createTask(@Nonnull final TaskCreateRequest taskCreateRequest);
 
     /**
      * Creates a new task with task repetition by cron.
@@ -142,6 +154,16 @@ public interface TasksApi {
      */
     @Nonnull
     Task updateTask(@Nonnull final Task task);
+
+    /**
+     * Update a task. This will cancel all queued runs.
+     *
+     * @param taskID  ID of task to get
+     * @param request task update to apply
+     * @return task updated
+     */
+    @Nonnull
+    Task updateTask(@Nonnull String taskID, @Nonnull TaskUpdateRequest request);
 
     /**
      * Delete a task. Deletes a task and all associated records.
@@ -441,6 +463,25 @@ public interface TasksApi {
     List<LogEvent> getRunLogs(@Nonnull final String taskID, @Nonnull final String runID, final String orgID);
 
     /**
+     * Manually start a run of the task now overriding the current schedule.
+     *
+     * @param task the task to run
+     * @return Run scheduled to start
+     */
+    @Nonnull
+    Run runManually(@Nonnull final Task task);
+
+    /**
+     * Manually start a run of the task now overriding the current schedule.
+     *
+     * @param taskId      ID of task to run
+     * @param runManually to specify time
+     * @return Run scheduled to start
+     */
+    @Nonnull
+    Run runManually(@Nonnull final String taskId, @Nonnull final RunManually runManually);
+
+    /**
      * Retry a task run.
      *
      * @param run the run with a taskID and a runID to retry
@@ -456,6 +497,7 @@ public interface TasksApi {
      * @param runID  ID of run
      * @return the executed run
      */
+    //TODO Notnull - look to all Nullable
     @Nullable
     Run retryRun(@Nonnull final String taskID, @Nonnull final String runID);
 

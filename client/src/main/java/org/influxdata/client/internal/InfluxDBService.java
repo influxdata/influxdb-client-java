@@ -45,7 +45,7 @@ import org.influxdata.client.domain.ResourceMembers;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.Run;
-import org.influxdata.client.domain.RunsResponse;
+import org.influxdata.client.domain.Runs;
 import org.influxdata.client.domain.ScraperTargetResponse;
 import org.influxdata.client.domain.ScraperTargetResponses;
 import org.influxdata.client.domain.SecretKeys;
@@ -428,11 +428,17 @@ public interface InfluxDBService {
     @GET("/api/v2/tasks/{id}/runs")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<RunsResponse> findTaskRuns(@Nonnull @Path("id") final String taskID,
+    Call<Runs> findTaskRuns(@Nonnull @Path("id") final String taskID,
                                     @Nullable @Query("afterTime") final Instant afterTime,
                                     @Nullable @Query("beforeTime") final Instant beforeTime,
                                     @Nullable @Query("limit") final Integer limit,
                                     @Nonnull @Query("orgID") final String orgID);
+
+    @POST("/api/v2/tasks/{id}/runs")
+    @Nonnull
+    @Headers("Content-Type: application/json")
+    Call<Run> runTaskManually(@Nonnull @Path("id") final String taskID,
+                              @Nonnull @Body final RequestBody runManually);
 
     @GET("/api/v2/tasks/{id}/runs/{runID}")
     @Nonnull

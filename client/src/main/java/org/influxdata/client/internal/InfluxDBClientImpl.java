@@ -111,7 +111,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Nonnull
     @Override
     public TasksApi getTasksApi() {
-        return new TasksApiImpl(influxDBServiceMoshi, moshi, gson);
+        return new TasksApiImpl(influxDBService, gson);
     }
 
     @Nonnull
