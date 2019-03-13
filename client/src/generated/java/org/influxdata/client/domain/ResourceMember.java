@@ -29,7 +29,7 @@ import org.influxdata.client.domain.UserLinks;
 /**
  * ResourceMember
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T08:06:20.606+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
 public class ResourceMember extends User {
   /**
    * Gets or Sets role

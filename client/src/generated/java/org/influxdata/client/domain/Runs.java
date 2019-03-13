@@ -23,41 +23,25 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import org.influxdata.client.domain.Labels;
+import java.util.ArrayList;
+import java.util.List;
 import org.influxdata.client.domain.Links;
+import org.influxdata.client.domain.Run;
 
 /**
- * LabelsResponse
+ * Runs
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
-public class LabelsResponse {
-  public static final String SERIALIZED_NAME_LABELS = "labels";
-  @SerializedName(SERIALIZED_NAME_LABELS)
-  private Labels labels = null;
-
+public class Runs {
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
   private Links links = null;
 
-  public LabelsResponse labels(Labels labels) {
-    this.labels = labels;
-    return this;
-  }
+  public static final String SERIALIZED_NAME_RUNS = "runs";
+  @SerializedName(SERIALIZED_NAME_RUNS)
+  private List<Run> runs = null;
 
-   /**
-   * Get labels
-   * @return labels
-  **/
-  @ApiModelProperty(value = "")
-  public Labels getLabels() {
-    return labels;
-  }
-
-  public void setLabels(Labels labels) {
-    this.labels = labels;
-  }
-
-  public LabelsResponse links(Links links) {
+  public Runs links(Links links) {
     this.links = links;
     return this;
   }
@@ -75,6 +59,32 @@ public class LabelsResponse {
     this.links = links;
   }
 
+  public Runs runs(List<Run> runs) {
+    this.runs = runs;
+    return this;
+  }
+
+  public Runs addRunsItem(Run runsItem) {
+    if (this.runs == null) {
+      this.runs = new ArrayList<>();
+    }
+    this.runs.add(runsItem);
+    return this;
+  }
+
+   /**
+   * Get runs
+   * @return runs
+  **/
+  @ApiModelProperty(value = "")
+  public List<Run> getRuns() {
+    return runs;
+  }
+
+  public void setRuns(List<Run> runs) {
+    this.runs = runs;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -84,24 +94,24 @@ public class LabelsResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    LabelsResponse labelsResponse = (LabelsResponse) o;
-    return Objects.equals(this.labels, labelsResponse.labels) &&
-        Objects.equals(this.links, labelsResponse.links);
+    Runs runs = (Runs) o;
+    return Objects.equals(this.links, runs.links) &&
+        Objects.equals(this.runs, runs.runs);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(labels, links);
+    return Objects.hash(links, runs);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class LabelsResponse {\n");
+    sb.append("class Runs {\n");
     
-    sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
+    sb.append("    runs: ").append(toIndentedString(runs)).append("\n");
     sb.append("}");
     return sb.toString();
   }

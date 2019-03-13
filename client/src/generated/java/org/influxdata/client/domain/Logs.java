@@ -23,56 +23,26 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import org.influxdata.client.domain.Labels;
-import org.influxdata.client.domain.Links;
+import java.util.ArrayList;
+import java.util.List;
+import org.influxdata.client.domain.LogEvent;
 
 /**
- * LabelsResponse
+ * Logs
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
-public class LabelsResponse {
-  public static final String SERIALIZED_NAME_LABELS = "labels";
-  @SerializedName(SERIALIZED_NAME_LABELS)
-  private Labels labels = null;
-
-  public static final String SERIALIZED_NAME_LINKS = "links";
-  @SerializedName(SERIALIZED_NAME_LINKS)
-  private Links links = null;
-
-  public LabelsResponse labels(Labels labels) {
-    this.labels = labels;
-    return this;
-  }
+public class Logs {
+  public static final String SERIALIZED_NAME_EVENTS = "events";
+  @SerializedName(SERIALIZED_NAME_EVENTS)
+  private List<LogEvent> events = null;
 
    /**
-   * Get labels
-   * @return labels
+   * Get events
+   * @return events
   **/
   @ApiModelProperty(value = "")
-  public Labels getLabels() {
-    return labels;
-  }
-
-  public void setLabels(Labels labels) {
-    this.labels = labels;
-  }
-
-  public LabelsResponse links(Links links) {
-    this.links = links;
-    return this;
-  }
-
-   /**
-   * Get links
-   * @return links
-  **/
-  @ApiModelProperty(value = "")
-  public Links getLinks() {
-    return links;
-  }
-
-  public void setLinks(Links links) {
-    this.links = links;
+  public List<LogEvent> getEvents() {
+    return events;
   }
 
 
@@ -84,24 +54,22 @@ public class LabelsResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    LabelsResponse labelsResponse = (LabelsResponse) o;
-    return Objects.equals(this.labels, labelsResponse.labels) &&
-        Objects.equals(this.links, labelsResponse.links);
+    Logs logs = (Logs) o;
+    return Objects.equals(this.events, logs.events);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(labels, links);
+    return Objects.hash(events);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class LabelsResponse {\n");
+    sb.append("class Logs {\n");
     
-    sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
+    sb.append("    events: ").append(toIndentedString(events)).append("\n");
     sb.append("}");
     return sb.toString();
   }

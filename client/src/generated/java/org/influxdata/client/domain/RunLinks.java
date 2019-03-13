@@ -25,19 +25,27 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * SecretKeysLinks
+ * RunLinks
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
-public class SecretKeysLinks {
+public class RunLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
   private String self = null;
 
-  public static final String SERIALIZED_NAME_ORG = "org";
-  @SerializedName(SERIALIZED_NAME_ORG)
-  private String org = null;
+  public static final String SERIALIZED_NAME_TASK = "task";
+  @SerializedName(SERIALIZED_NAME_TASK)
+  private String task = null;
 
-  public SecretKeysLinks self(String self) {
+  public static final String SERIALIZED_NAME_LOGS = "logs";
+  @SerializedName(SERIALIZED_NAME_LOGS)
+  private String logs = null;
+
+  public static final String SERIALIZED_NAME_RETRY = "retry";
+  @SerializedName(SERIALIZED_NAME_RETRY)
+  private String retry = null;
+
+  public RunLinks self(String self) {
     this.self = self;
     return this;
   }
@@ -55,22 +63,58 @@ public class SecretKeysLinks {
     this.self = self;
   }
 
-  public SecretKeysLinks org(String org) {
-    this.org = org;
+  public RunLinks task(String task) {
+    this.task = task;
     return this;
   }
 
    /**
-   * Get org
-   * @return org
+   * Get task
+   * @return task
   **/
   @ApiModelProperty(value = "")
-  public String getOrg() {
-    return org;
+  public String getTask() {
+    return task;
   }
 
-  public void setOrg(String org) {
-    this.org = org;
+  public void setTask(String task) {
+    this.task = task;
+  }
+
+  public RunLinks logs(String logs) {
+    this.logs = logs;
+    return this;
+  }
+
+   /**
+   * Get logs
+   * @return logs
+  **/
+  @ApiModelProperty(value = "")
+  public String getLogs() {
+    return logs;
+  }
+
+  public void setLogs(String logs) {
+    this.logs = logs;
+  }
+
+  public RunLinks retry(String retry) {
+    this.retry = retry;
+    return this;
+  }
+
+   /**
+   * Get retry
+   * @return retry
+  **/
+  @ApiModelProperty(value = "")
+  public String getRetry() {
+    return retry;
+  }
+
+  public void setRetry(String retry) {
+    this.retry = retry;
   }
 
 
@@ -82,24 +126,28 @@ public class SecretKeysLinks {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SecretKeysLinks secretKeysLinks = (SecretKeysLinks) o;
-    return Objects.equals(this.self, secretKeysLinks.self) &&
-        Objects.equals(this.org, secretKeysLinks.org);
+    RunLinks runLinks = (RunLinks) o;
+    return Objects.equals(this.self, runLinks.self) &&
+        Objects.equals(this.task, runLinks.task) &&
+        Objects.equals(this.logs, runLinks.logs) &&
+        Objects.equals(this.retry, runLinks.retry);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self, org);
+    return Objects.hash(self, task, logs, retry);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class SecretKeysLinks {\n");
+    sb.append("class RunLinks {\n");
     
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
-    sb.append("    org: ").append(toIndentedString(org)).append("\n");
+    sb.append("    task: ").append(toIndentedString(task)).append("\n");
+    sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
+    sb.append("    retry: ").append(toIndentedString(retry)).append("\n");
     sb.append("}");
     return sb.toString();
   }

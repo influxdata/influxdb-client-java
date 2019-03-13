@@ -23,56 +23,37 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import org.influxdata.client.domain.Labels;
-import org.influxdata.client.domain.Links;
+import java.time.OffsetDateTime;
 
 /**
- * LabelsResponse
+ * LogEvent
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
-public class LabelsResponse {
-  public static final String SERIALIZED_NAME_LABELS = "labels";
-  @SerializedName(SERIALIZED_NAME_LABELS)
-  private Labels labels = null;
+public class LogEvent {
+  public static final String SERIALIZED_NAME_TIME = "time";
+  @SerializedName(SERIALIZED_NAME_TIME)
+  private OffsetDateTime time = null;
 
-  public static final String SERIALIZED_NAME_LINKS = "links";
-  @SerializedName(SERIALIZED_NAME_LINKS)
-  private Links links = null;
+  public static final String SERIALIZED_NAME_MESSAGE = "message";
+  @SerializedName(SERIALIZED_NAME_MESSAGE)
+  private String message = null;
 
-  public LabelsResponse labels(Labels labels) {
-    this.labels = labels;
-    return this;
+   /**
+   * Time event occurred, RFC3339Nano.
+   * @return time
+  **/
+  @ApiModelProperty(value = "Time event occurred, RFC3339Nano.")
+  public OffsetDateTime getTime() {
+    return time;
   }
 
    /**
-   * Get labels
-   * @return labels
+   * A description of the event that occurred.
+   * @return message
   **/
-  @ApiModelProperty(value = "")
-  public Labels getLabels() {
-    return labels;
-  }
-
-  public void setLabels(Labels labels) {
-    this.labels = labels;
-  }
-
-  public LabelsResponse links(Links links) {
-    this.links = links;
-    return this;
-  }
-
-   /**
-   * Get links
-   * @return links
-  **/
-  @ApiModelProperty(value = "")
-  public Links getLinks() {
-    return links;
-  }
-
-  public void setLinks(Links links) {
-    this.links = links;
+  @ApiModelProperty(example = "Halt and catch fire", value = "A description of the event that occurred.")
+  public String getMessage() {
+    return message;
   }
 
 
@@ -84,24 +65,24 @@ public class LabelsResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    LabelsResponse labelsResponse = (LabelsResponse) o;
-    return Objects.equals(this.labels, labelsResponse.labels) &&
-        Objects.equals(this.links, labelsResponse.links);
+    LogEvent logEvent = (LogEvent) o;
+    return Objects.equals(this.time, logEvent.time) &&
+        Objects.equals(this.message, logEvent.message);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(labels, links);
+    return Objects.hash(time, message);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class LabelsResponse {\n");
+    sb.append("class LogEvent {\n");
     
-    sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
+    sb.append("    time: ").append(toIndentedString(time)).append("\n");
+    sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("}");
     return sb.toString();
   }

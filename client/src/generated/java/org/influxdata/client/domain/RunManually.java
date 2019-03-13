@@ -23,56 +23,33 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import org.influxdata.client.domain.Labels;
-import org.influxdata.client.domain.Links;
+import java.time.OffsetDateTime;
 
 /**
- * LabelsResponse
+ * RunManually
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
-public class LabelsResponse {
-  public static final String SERIALIZED_NAME_LABELS = "labels";
-  @SerializedName(SERIALIZED_NAME_LABELS)
-  private Labels labels = null;
+public class RunManually {
+  public static final String SERIALIZED_NAME_SCHEDULED_FOR = "scheduledFor";
+  @SerializedName(SERIALIZED_NAME_SCHEDULED_FOR)
+  private OffsetDateTime scheduledFor = null;
 
-  public static final String SERIALIZED_NAME_LINKS = "links";
-  @SerializedName(SERIALIZED_NAME_LINKS)
-  private Links links = null;
-
-  public LabelsResponse labels(Labels labels) {
-    this.labels = labels;
+  public RunManually scheduledFor(OffsetDateTime scheduledFor) {
+    this.scheduledFor = scheduledFor;
     return this;
   }
 
    /**
-   * Get labels
-   * @return labels
+   * Time used for run&#39;s \&quot;now\&quot; option, RFC3339.  Default is the server&#39;s now time.
+   * @return scheduledFor
   **/
-  @ApiModelProperty(value = "")
-  public Labels getLabels() {
-    return labels;
+  @ApiModelProperty(value = "Time used for run's \"now\" option, RFC3339.  Default is the server's now time.")
+  public OffsetDateTime getScheduledFor() {
+    return scheduledFor;
   }
 
-  public void setLabels(Labels labels) {
-    this.labels = labels;
-  }
-
-  public LabelsResponse links(Links links) {
-    this.links = links;
-    return this;
-  }
-
-   /**
-   * Get links
-   * @return links
-  **/
-  @ApiModelProperty(value = "")
-  public Links getLinks() {
-    return links;
-  }
-
-  public void setLinks(Links links) {
-    this.links = links;
+  public void setScheduledFor(OffsetDateTime scheduledFor) {
+    this.scheduledFor = scheduledFor;
   }
 
 
@@ -84,24 +61,22 @@ public class LabelsResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    LabelsResponse labelsResponse = (LabelsResponse) o;
-    return Objects.equals(this.labels, labelsResponse.labels) &&
-        Objects.equals(this.links, labelsResponse.links);
+    RunManually runManually = (RunManually) o;
+    return Objects.equals(this.scheduledFor, runManually.scheduledFor);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(labels, links);
+    return Objects.hash(scheduledFor);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class LabelsResponse {\n");
+    sb.append("class RunManually {\n");
     
-    sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
+    sb.append("    scheduledFor: ").append(toIndentedString(scheduledFor)).append("\n");
     sb.append("}");
     return sb.toString();
   }
