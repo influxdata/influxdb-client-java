@@ -22,7 +22,7 @@ import org.influxdata.client.domain.Label;
 /**
  * Labels
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T14:39:51.939+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T08:06:20.606+01:00[Europe/Prague]")
 public class Labels extends ArrayList<Label> {
 
   @Override

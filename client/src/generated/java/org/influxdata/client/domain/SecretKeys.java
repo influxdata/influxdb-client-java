@@ -25,23 +25,22 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.influxdata.client.domain.Source;
-import org.influxdata.client.domain.UsersLinks;
+import org.influxdata.client.domain.SecretKeysLinks;
 
 /**
- * Sources
+ * SecretKeys
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T08:06:20.606+01:00[Europe/Prague]")
-public class Sources {
+public class SecretKeys {
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
-  private UsersLinks links = null;
+  private SecretKeysLinks links = null;
 
-  public static final String SERIALIZED_NAME_SOURCES = "sources";
-  @SerializedName(SERIALIZED_NAME_SOURCES)
-  private List<Source> sources = null;
+  public static final String SERIALIZED_NAME_SECRETS = "secrets";
+  @SerializedName(SERIALIZED_NAME_SECRETS)
+  private List<String> secrets = null;
 
-  public Sources links(UsersLinks links) {
+  public SecretKeys links(SecretKeysLinks links) {
     this.links = links;
     return this;
   }
@@ -51,38 +50,38 @@ public class Sources {
    * @return links
   **/
   @ApiModelProperty(value = "")
-  public UsersLinks getLinks() {
+  public SecretKeysLinks getLinks() {
     return links;
   }
 
-  public void setLinks(UsersLinks links) {
+  public void setLinks(SecretKeysLinks links) {
     this.links = links;
   }
 
-  public Sources sources(List<Source> sources) {
-    this.sources = sources;
+  public SecretKeys secrets(List<String> secrets) {
+    this.secrets = secrets;
     return this;
   }
 
-  public Sources addSourcesItem(Source sourcesItem) {
-    if (this.sources == null) {
-      this.sources = new ArrayList<>();
+  public SecretKeys addSecretsItem(String secretsItem) {
+    if (this.secrets == null) {
+      this.secrets = new ArrayList<>();
     }
-    this.sources.add(sourcesItem);
+    this.secrets.add(secretsItem);
     return this;
   }
 
    /**
-   * Get sources
-   * @return sources
+   * Get secrets
+   * @return secrets
   **/
   @ApiModelProperty(value = "")
-  public List<Source> getSources() {
-    return sources;
+  public List<String> getSecrets() {
+    return secrets;
   }
 
-  public void setSources(List<Source> sources) {
-    this.sources = sources;
+  public void setSecrets(List<String> secrets) {
+    this.secrets = secrets;
   }
 
 
@@ -94,24 +93,24 @@ public class Sources {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Sources sources = (Sources) o;
-    return Objects.equals(this.links, sources.links) &&
-        Objects.equals(this.sources, sources.sources);
+    SecretKeys secretKeys = (SecretKeys) o;
+    return Objects.equals(this.links, secretKeys.links) &&
+        Objects.equals(this.secrets, secretKeys.secrets);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, sources);
+    return Objects.hash(links, secrets);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Sources {\n");
+    sb.append("class SecretKeys {\n");
     
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
-    sb.append("    sources: ").append(toIndentedString(sources)).append("\n");
+    sb.append("    secrets: ").append(toIndentedString(secrets)).append("\n");
     sb.append("}");
     return sb.toString();
   }

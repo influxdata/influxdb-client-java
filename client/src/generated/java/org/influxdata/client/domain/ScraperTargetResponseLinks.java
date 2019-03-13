@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * ScraperTargetResponseLinks
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-12T14:39:51.939+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T08:06:20.606+01:00[Europe/Prague]")
 public class ScraperTargetResponseLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
@@ -40,6 +40,14 @@ public class ScraperTargetResponseLinks {
   public static final String SERIALIZED_NAME_OWNERS = "owners";
   @SerializedName(SERIALIZED_NAME_OWNERS)
   private String owners = null;
+
+  public static final String SERIALIZED_NAME_BUCKET = "bucket";
+  @SerializedName(SERIALIZED_NAME_BUCKET)
+  private String bucket = null;
+
+  public static final String SERIALIZED_NAME_ORGANIZATION = "organization";
+  @SerializedName(SERIALIZED_NAME_ORGANIZATION)
+  private String organization = null;
 
   public ScraperTargetResponseLinks self(String self) {
     this.self = self;
@@ -95,6 +103,42 @@ public class ScraperTargetResponseLinks {
     this.owners = owners;
   }
 
+  public ScraperTargetResponseLinks bucket(String bucket) {
+    this.bucket = bucket;
+    return this;
+  }
+
+   /**
+   * Get bucket
+   * @return bucket
+  **/
+  @ApiModelProperty(value = "")
+  public String getBucket() {
+    return bucket;
+  }
+
+  public void setBucket(String bucket) {
+    this.bucket = bucket;
+  }
+
+  public ScraperTargetResponseLinks organization(String organization) {
+    this.organization = organization;
+    return this;
+  }
+
+   /**
+   * Get organization
+   * @return organization
+  **/
+  @ApiModelProperty(value = "")
+  public String getOrganization() {
+    return organization;
+  }
+
+  public void setOrganization(String organization) {
+    this.organization = organization;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -107,12 +151,14 @@ public class ScraperTargetResponseLinks {
     ScraperTargetResponseLinks scraperTargetResponseLinks = (ScraperTargetResponseLinks) o;
     return Objects.equals(this.self, scraperTargetResponseLinks.self) &&
         Objects.equals(this.members, scraperTargetResponseLinks.members) &&
-        Objects.equals(this.owners, scraperTargetResponseLinks.owners);
+        Objects.equals(this.owners, scraperTargetResponseLinks.owners) &&
+        Objects.equals(this.bucket, scraperTargetResponseLinks.bucket) &&
+        Objects.equals(this.organization, scraperTargetResponseLinks.organization);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self, members, owners);
+    return Objects.hash(self, members, owners, bucket, organization);
   }
 
 
@@ -124,6 +170,8 @@ public class ScraperTargetResponseLinks {
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
     sb.append("    members: ").append(toIndentedString(members)).append("\n");
     sb.append("    owners: ").append(toIndentedString(owners)).append("\n");
+    sb.append("    bucket: ").append(toIndentedString(bucket)).append("\n");
+    sb.append("    organization: ").append(toIndentedString(organization)).append("\n");
     sb.append("}");
     return sb.toString();
   }

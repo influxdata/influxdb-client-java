@@ -23,66 +23,54 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import org.influxdata.client.domain.Source;
-import org.influxdata.client.domain.UsersLinks;
 
 /**
- * Sources
+ * SecretKeysLinks
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T08:06:20.606+01:00[Europe/Prague]")
-public class Sources {
-  public static final String SERIALIZED_NAME_LINKS = "links";
-  @SerializedName(SERIALIZED_NAME_LINKS)
-  private UsersLinks links = null;
+public class SecretKeysLinks {
+  public static final String SERIALIZED_NAME_SELF = "self";
+  @SerializedName(SERIALIZED_NAME_SELF)
+  private String self = null;
 
-  public static final String SERIALIZED_NAME_SOURCES = "sources";
-  @SerializedName(SERIALIZED_NAME_SOURCES)
-  private List<Source> sources = null;
+  public static final String SERIALIZED_NAME_ORG = "org";
+  @SerializedName(SERIALIZED_NAME_ORG)
+  private String org = null;
 
-  public Sources links(UsersLinks links) {
-    this.links = links;
+  public SecretKeysLinks self(String self) {
+    this.self = self;
     return this;
   }
 
    /**
-   * Get links
-   * @return links
+   * Get self
+   * @return self
   **/
   @ApiModelProperty(value = "")
-  public UsersLinks getLinks() {
-    return links;
+  public String getSelf() {
+    return self;
   }
 
-  public void setLinks(UsersLinks links) {
-    this.links = links;
+  public void setSelf(String self) {
+    this.self = self;
   }
 
-  public Sources sources(List<Source> sources) {
-    this.sources = sources;
-    return this;
-  }
-
-  public Sources addSourcesItem(Source sourcesItem) {
-    if (this.sources == null) {
-      this.sources = new ArrayList<>();
-    }
-    this.sources.add(sourcesItem);
+  public SecretKeysLinks org(String org) {
+    this.org = org;
     return this;
   }
 
    /**
-   * Get sources
-   * @return sources
+   * Get org
+   * @return org
   **/
   @ApiModelProperty(value = "")
-  public List<Source> getSources() {
-    return sources;
+  public String getOrg() {
+    return org;
   }
 
-  public void setSources(List<Source> sources) {
-    this.sources = sources;
+  public void setOrg(String org) {
+    this.org = org;
   }
 
 
@@ -94,24 +82,24 @@ public class Sources {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Sources sources = (Sources) o;
-    return Objects.equals(this.links, sources.links) &&
-        Objects.equals(this.sources, sources.sources);
+    SecretKeysLinks secretKeysLinks = (SecretKeysLinks) o;
+    return Objects.equals(this.self, secretKeysLinks.self) &&
+        Objects.equals(this.org, secretKeysLinks.org);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, sources);
+    return Objects.hash(self, org);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Sources {\n");
+    sb.append("class SecretKeysLinks {\n");
     
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
-    sb.append("    sources: ").append(toIndentedString(sources)).append("\n");
+    sb.append("    self: ").append(toIndentedString(self)).append("\n");
+    sb.append("    org: ").append(toIndentedString(org)).append("\n");
     sb.append("}");
     return sb.toString();
   }
