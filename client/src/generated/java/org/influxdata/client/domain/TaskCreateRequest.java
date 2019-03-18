@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * TaskCreateRequest
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:18:15.931+01:00[Europe/Prague]")
 public class TaskCreateRequest {
   public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
