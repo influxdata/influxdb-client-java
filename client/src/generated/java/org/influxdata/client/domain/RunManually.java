@@ -28,7 +28,7 @@ import java.time.OffsetDateTime;
 /**
  * RunManually
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class RunManually {
   public static final String SERIALIZED_NAME_SCHEDULED_FOR = "scheduledFor";
   @SerializedName(SERIALIZED_NAME_SCHEDULED_FOR)
@@ -75,7 +75,6 @@ public class RunManually {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class RunManually {\n");
-    
     sb.append("    scheduledFor: ").append(toIndentedString(scheduledFor)).append("\n");
     sb.append("}");
     return sb.toString();

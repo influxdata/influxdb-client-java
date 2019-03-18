@@ -31,7 +31,7 @@ import org.influxdata.client.domain.User;
 /**
  * OnboardingResponse
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class OnboardingResponse {
   public static final String SERIALIZED_NAME_USER = "user";
   @SerializedName(SERIALIZED_NAME_USER)
@@ -147,7 +147,6 @@ public class OnboardingResponse {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class OnboardingResponse {\n");
-    
     sb.append("    user: ").append(toIndentedString(user)).append("\n");
     sb.append("    org: ").append(toIndentedString(org)).append("\n");
     sb.append("    bucket: ").append(toIndentedString(bucket)).append("\n");

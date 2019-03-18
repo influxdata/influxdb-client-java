@@ -28,7 +28,7 @@ import java.time.OffsetDateTime;
 /**
  * LogEvent
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class LogEvent {
   public static final String SERIALIZED_NAME_TIME = "time";
   @SerializedName(SERIALIZED_NAME_TIME)
@@ -80,7 +80,6 @@ public class LogEvent {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class LogEvent {\n");
-    
     sb.append("    time: ").append(toIndentedString(time)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("}");

@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * SourceLinks
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class SourceLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
@@ -143,7 +143,6 @@ public class SourceLinks {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class SourceLinks {\n");
-    
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
     sb.append("    health: ").append(toIndentedString(health)).append("\n");

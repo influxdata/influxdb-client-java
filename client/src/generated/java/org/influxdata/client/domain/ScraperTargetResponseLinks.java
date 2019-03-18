@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * ScraperTargetResponseLinks
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class ScraperTargetResponseLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
@@ -166,7 +166,6 @@ public class ScraperTargetResponseLinks {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ScraperTargetResponseLinks {\n");
-    
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
     sb.append("    members: ").append(toIndentedString(members)).append("\n");
     sb.append("    owners: ").append(toIndentedString(owners)).append("\n");

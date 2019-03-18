@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * Links
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class Links {
   public static final String SERIALIZED_NAME_NEXT = "next";
   @SerializedName(SERIALIZED_NAME_NEXT)
@@ -120,7 +120,6 @@ public class Links {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Links {\n");
-    
     sb.append("    next: ").append(toIndentedString(next)).append("\n");
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
     sb.append("    prev: ").append(toIndentedString(prev)).append("\n");

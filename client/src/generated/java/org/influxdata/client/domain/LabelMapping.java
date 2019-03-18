@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * LabelMapping
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class LabelMapping {
   public static final String SERIALIZED_NAME_LABEL_I_D = "labelID";
   @SerializedName(SERIALIZED_NAME_LABEL_I_D)
@@ -74,7 +74,6 @@ public class LabelMapping {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class LabelMapping {\n");
-    
     sb.append("    labelID: ").append(toIndentedString(labelID)).append("\n");
     sb.append("}");
     return sb.toString();

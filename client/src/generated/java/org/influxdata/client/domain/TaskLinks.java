@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * TaskLinks
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class TaskLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
@@ -48,6 +48,10 @@ public class TaskLinks {
   public static final String SERIALIZED_NAME_LOGS = "logs";
   @SerializedName(SERIALIZED_NAME_LOGS)
   private String logs = null;
+
+  public static final String SERIALIZED_NAME_LABELS = "labels";
+  @SerializedName(SERIALIZED_NAME_LABELS)
+  private String labels = null;
 
   public TaskLinks self(String self) {
     this.self = self;
@@ -139,6 +143,24 @@ public class TaskLinks {
     this.logs = logs;
   }
 
+  public TaskLinks labels(String labels) {
+    this.labels = labels;
+    return this;
+  }
+
+   /**
+   * Get labels
+   * @return labels
+  **/
+  @ApiModelProperty(value = "")
+  public String getLabels() {
+    return labels;
+  }
+
+  public void setLabels(String labels) {
+    this.labels = labels;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -153,12 +175,13 @@ public class TaskLinks {
         Objects.equals(this.owners, taskLinks.owners) &&
         Objects.equals(this.members, taskLinks.members) &&
         Objects.equals(this.runs, taskLinks.runs) &&
-        Objects.equals(this.logs, taskLinks.logs);
+        Objects.equals(this.logs, taskLinks.logs) &&
+        Objects.equals(this.labels, taskLinks.labels);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self, owners, members, runs, logs);
+    return Objects.hash(self, owners, members, runs, logs, labels);
   }
 
 
@@ -166,12 +189,12 @@ public class TaskLinks {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class TaskLinks {\n");
-    
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
     sb.append("    owners: ").append(toIndentedString(owners)).append("\n");
     sb.append("    members: ").append(toIndentedString(members)).append("\n");
     sb.append("    runs: ").append(toIndentedString(runs)).append("\n");
     sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
+    sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
     sb.append("}");
     return sb.toString();
   }

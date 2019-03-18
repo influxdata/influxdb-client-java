@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * Label
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class Label {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
@@ -42,7 +42,7 @@ public class Label {
 
   public static final String SERIALIZED_NAME_PROPERTIES = "properties";
   @SerializedName(SERIALIZED_NAME_PROPERTIES)
-  private Map<String, String> properties = null;
+  private Map<String, String> properties = new HashMap<>();
 
    /**
    * Get id
@@ -122,7 +122,6 @@ public class Label {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Label {\n");
-    
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");

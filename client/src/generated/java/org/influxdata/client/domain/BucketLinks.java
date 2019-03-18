@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * BucketLinks
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class BucketLinks {
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)
@@ -212,7 +212,6 @@ public class BucketLinks {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class BucketLinks {\n");
-    
     sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
     sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
     sb.append("    members: ").append(toIndentedString(members)).append("\n");

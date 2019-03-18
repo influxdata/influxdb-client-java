@@ -30,7 +30,7 @@ import org.influxdata.client.domain.SecretKeysLinks;
 /**
  * SecretKeys
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class SecretKeys {
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
@@ -38,7 +38,7 @@ public class SecretKeys {
 
   public static final String SERIALIZED_NAME_SECRETS = "secrets";
   @SerializedName(SERIALIZED_NAME_SECRETS)
-  private List<String> secrets = null;
+  private List<String> secrets = new ArrayList<>();
 
   public SecretKeys links(SecretKeysLinks links) {
     this.links = links;
@@ -108,7 +108,6 @@ public class SecretKeys {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class SecretKeys {\n");
-    
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("    secrets: ").append(toIndentedString(secrets)).append("\n");
     sb.append("}");

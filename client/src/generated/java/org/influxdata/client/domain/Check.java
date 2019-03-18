@@ -30,7 +30,7 @@ import org.influxdata.client.domain.Check;
 /**
  * Check
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class Check {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
@@ -42,7 +42,7 @@ public class Check {
 
   public static final String SERIALIZED_NAME_CHECKS = "checks";
   @SerializedName(SERIALIZED_NAME_CHECKS)
-  private List<Check> checks = null;
+  private List<Check> checks = new ArrayList<>();
 
   /**
    * Gets or Sets status
@@ -201,7 +201,6 @@ public class Check {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Check {\n");
-    
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("    checks: ").append(toIndentedString(checks)).append("\n");

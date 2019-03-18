@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * AddResourceMemberRequestBody
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class AddResourceMemberRequestBody {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
@@ -97,7 +97,6 @@ public class AddResourceMemberRequestBody {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AddResourceMemberRequestBody {\n");
-    
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("}");

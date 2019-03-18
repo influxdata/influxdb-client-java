@@ -28,7 +28,7 @@ import org.influxdata.client.domain.PermissionResource;
 /**
  * Permission
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class Permission {
   /**
    * Gets or Sets action
@@ -145,7 +145,6 @@ public class Permission {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Permission {\n");
-    
     sb.append("    action: ").append(toIndentedString(action)).append("\n");
     sb.append("    resource: ").append(toIndentedString(resource)).append("\n");
     sb.append("}");

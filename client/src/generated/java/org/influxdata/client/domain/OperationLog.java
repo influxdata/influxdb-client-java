@@ -29,7 +29,7 @@ import org.influxdata.client.domain.OperationLogLinks;
 /**
  * OperationLog
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class OperationLog {
   public static final String SERIALIZED_NAME_DESCRIPTION = "description";
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
@@ -122,7 +122,6 @@ public class OperationLog {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class OperationLog {\n");
-    
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    time: ").append(toIndentedString(time)).append("\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");

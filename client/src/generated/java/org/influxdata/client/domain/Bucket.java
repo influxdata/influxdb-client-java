@@ -27,12 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 import org.influxdata.client.domain.BucketLinks;
 import org.influxdata.client.domain.BucketRetentionRules;
-import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.Labels;
 
 /**
  * Bucket
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class Bucket {
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
@@ -64,7 +64,7 @@ public class Bucket {
 
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)
-  private List<Label> labels = null;
+  private Labels labels = null;
 
   public Bucket links(BucketLinks links) {
     this.links = links;
@@ -188,16 +188,8 @@ public class Bucket {
     this.retentionRules = retentionRules;
   }
 
-  public Bucket labels(List<Label> labels) {
+  public Bucket labels(Labels labels) {
     this.labels = labels;
-    return this;
-  }
-
-  public Bucket addLabelsItem(Label labelsItem) {
-    if (this.labels == null) {
-      this.labels = new ArrayList<>();
-    }
-    this.labels.add(labelsItem);
     return this;
   }
 
@@ -206,11 +198,11 @@ public class Bucket {
    * @return labels
   **/
   @ApiModelProperty(value = "")
-  public List<Label> getLabels() {
+  public Labels getLabels() {
     return labels;
   }
 
-  public void setLabels(List<Label> labels) {
+  public void setLabels(Labels labels) {
     this.labels = labels;
   }
 
@@ -244,7 +236,6 @@ public class Bucket {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Bucket {\n");
-    
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");

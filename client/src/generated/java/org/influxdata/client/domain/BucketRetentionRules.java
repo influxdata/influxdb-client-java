@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * BucketRetentionRules
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class BucketRetentionRules {
   /**
    * Gets or Sets type
@@ -143,7 +143,6 @@ public class BucketRetentionRules {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class BucketRetentionRules {\n");
-    
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    everySeconds: ").append(toIndentedString(everySeconds)).append("\n");
     sb.append("}");

@@ -29,7 +29,7 @@ import org.influxdata.client.domain.Links;
 /**
  * LabelResponse
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class LabelResponse {
   public static final String SERIALIZED_NAME_LABEL = "label";
   @SerializedName(SERIALIZED_NAME_LABEL)
@@ -99,7 +99,6 @@ public class LabelResponse {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class LabelResponse {\n");
-    
     sb.append("    label: ").append(toIndentedString(label)).append("\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("}");

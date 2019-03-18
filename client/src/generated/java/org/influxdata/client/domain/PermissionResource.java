@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * PermissionResource
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class PermissionResource {
   /**
    * Gets or Sets type
@@ -225,7 +225,6 @@ public class PermissionResource {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class PermissionResource {\n");
-    
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");

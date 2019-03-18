@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * OnboardingRequest
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class OnboardingRequest {
   public static final String SERIALIZED_NAME_USERNAME = "username";
   @SerializedName(SERIALIZED_NAME_USERNAME)
@@ -166,7 +166,6 @@ public class OnboardingRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class OnboardingRequest {\n");
-    
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("    org: ").append(toIndentedString(org)).append("\n");

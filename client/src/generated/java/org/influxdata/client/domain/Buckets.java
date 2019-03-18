@@ -31,7 +31,7 @@ import org.influxdata.client.domain.Links;
 /**
  * Buckets
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class Buckets {
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
@@ -39,7 +39,7 @@ public class Buckets {
 
   public static final String SERIALIZED_NAME_BUCKETS = "buckets";
   @SerializedName(SERIALIZED_NAME_BUCKETS)
-  private List<Bucket> buckets = null;
+  private List<Bucket> buckets = new ArrayList<>();
 
   public Buckets links(Links links) {
     this.links = links;
@@ -109,7 +109,6 @@ public class Buckets {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Buckets {\n");
-    
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("    buckets: ").append(toIndentedString(buckets)).append("\n");
     sb.append("}");

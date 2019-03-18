@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * TaskUpdateRequest
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class TaskUpdateRequest {
   /**
    * Starting state of the task. &#39;inactive&#39; tasks are not run until they are updated to &#39;active&#39;
@@ -259,7 +259,6 @@ public class TaskUpdateRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class TaskUpdateRequest {\n");
-    
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    flux: ").append(toIndentedString(flux)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");

@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * UserLinks
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class UserLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
@@ -97,7 +97,6 @@ public class UserLinks {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserLinks {\n");
-    
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
     sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
     sb.append("}");

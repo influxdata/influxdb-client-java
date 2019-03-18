@@ -30,7 +30,7 @@ import org.influxdata.client.domain.SourceLinks;
 /**
  * Source
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2019-03-13T10:17:07.519+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:14:51.923+01:00[Europe/Prague]")
 public class Source {
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
@@ -192,7 +192,7 @@ public class Source {
 
   public static final String SERIALIZED_NAME_LANGUAGES = "languages";
   @SerializedName(SERIALIZED_NAME_LANGUAGES)
-  private List<LanguagesEnum> languages = null;
+  private List<LanguagesEnum> languages = new ArrayList<>();
 
   public Source links(SourceLinks links) {
     this.links = links;
@@ -511,7 +511,6 @@ public class Source {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Source {\n");
-    
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
