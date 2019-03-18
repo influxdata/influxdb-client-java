@@ -53,8 +53,8 @@ import org.influxdata.client.domain.Source;
 import org.influxdata.client.domain.Sources;
 import org.influxdata.client.domain.Task;
 import org.influxdata.client.domain.Tasks;
-import org.influxdata.client.domain.TelegrafConfig;
-import org.influxdata.client.domain.TelegrafConfigs;
+import org.influxdata.client.domain.Telegraf;
+import org.influxdata.client.domain.Telegrafs;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.domain.Users;
 
@@ -582,7 +582,7 @@ public interface InfluxDBService {
     @POST("/api/v2/telegrafs")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<TelegrafConfig> createTelegrafConfig(@Nonnull @Body final RequestBody source);
+    Call<Telegraf> createTelegrafConfig(@Nonnull @Body final RequestBody source);
 
     @DELETE("/api/v2/telegrafs/{id}")
     Call<Void> deleteTelegrafConfig(@Nonnull @Path("id") final String telegrafConfigID);
@@ -590,7 +590,7 @@ public interface InfluxDBService {
     @GET("/api/v2/telegrafs/{id}")
     @Nonnull
     @Headers({"Content-Type: application/json", "accept: application/json"})
-    Call<TelegrafConfig> findTelegrafConfigByID(@Nonnull @Path("id") final String telegrafConfigID);
+    Call<Telegraf> findTelegrafConfigByID(@Nonnull @Path("id") final String telegrafConfigID);
 
     @GET("/api/v2/telegrafs/{id}")
     @Nonnull
@@ -600,11 +600,11 @@ public interface InfluxDBService {
     @GET("/api/v2/telegrafs")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<TelegrafConfigs> findTelegrafConfigs(@Nullable @Query("orgID") final String orgID);
+    Call<Telegrafs> findTelegrafConfigs(@Nullable @Query("orgID") final String orgID);
 
     //TODO why put => report inconsistency - have to be a Patch
     @PUT("/api/v2/telegrafs/{id}")
-    Call<TelegrafConfig> updateTelegrafConfig(@Nonnull @Path("id") final String telegrafConfigID,
+    Call<Telegraf> updateTelegrafConfig(@Nonnull @Path("id") final String telegrafConfigID,
                                               @Nonnull @Body final RequestBody telegrafConfig);
 
     @GET("/api/v2/telegrafs/{id}/members")

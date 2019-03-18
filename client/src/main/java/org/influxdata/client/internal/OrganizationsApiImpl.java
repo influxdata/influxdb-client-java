@@ -30,9 +30,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
+import org.influxdata.client.FindOptions;
 import org.influxdata.client.OrganizationsApi;
 import org.influxdata.client.domain.AddResourceMemberRequestBody;
-import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;

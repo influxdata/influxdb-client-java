@@ -23,7 +23,6 @@ package org.influxdata.client.internal;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,17 +38,16 @@ import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ResourceOwners;
-import org.influxdata.client.domain.TelegrafAgent;
-import org.influxdata.client.domain.TelegrafConfig;
-import org.influxdata.client.domain.TelegrafConfigs;
-import org.influxdata.client.domain.TelegrafPlugin;
+import org.influxdata.client.domain.Telegraf;
+import org.influxdata.client.domain.TelegrafRequest;
+import org.influxdata.client.domain.TelegrafRequestAgent;
+import org.influxdata.client.domain.TelegrafRequestPlugin;
+import org.influxdata.client.domain.Telegrafs;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.exceptions.NotFoundException;
 
 import com.google.gson.Gson;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -60,36 +58,31 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     private static final Logger LOG = Logger.getLogger(TelegrafsApiImpl.class.getName());
 
-    private final JsonAdapter<TelegrafConfig> adapter;
-
-    TelegrafsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi,
-                     @Nonnull final Gson gson) {
+    TelegrafsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Gson gson) {
 
         super(influxDBService, gson);
-
-        this.adapter = moshi.adapter(TelegrafConfig.class);
     }
 
     @Nonnull
     @Override
-    public TelegrafConfig createTelegrafConfig(@Nonnull final TelegrafConfig telegrafConfig) {
+    public Telegraf createTelegrafConfig(@Nonnull final TelegrafRequest telegrafRequest) {
 
-        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+        Arguments.checkNotNull(telegrafRequest, "telegrafRequest");
 
-        String json = adapter.toJson(telegrafConfig);
+        String json = gson.toJson(telegrafRequest);
 
-        Call<TelegrafConfig> call = influxDBService.createTelegrafConfig(createBody(json));
+        Call<Telegraf> call = influxDBService.createTelegrafConfig(createBody(json));
 
         return execute(call);
     }
 
     @Nonnull
     @Override
-    public TelegrafConfig createTelegrafConfig(@Nonnull final String name,
-                                               @Nullable final String description,
-                                               @Nonnull final String orgID,
-                                               @Nonnull final Integer collectionInterval,
-                                               @Nonnull final TelegrafPlugin... plugins) {
+    public Telegraf createTelegrafConfig(@Nonnull final String name,
+                                         @Nullable final String description,
+                                         @Nonnull final String orgID,
+                                         @Nonnull final Integer collectionInterval,
+                                         @Nonnull final TelegrafRequestPlugin... plugins) {
 
         Arguments.checkNonEmpty(name, "TelegrafConfig.name");
         Arguments.checkNonEmpty(orgID, "TelegrafConfig.orgID");
@@ -100,11 +93,11 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public TelegrafConfig createTelegrafConfig(@Nonnull final String name,
-                                               @Nullable final String description,
-                                               @Nonnull final Organization org,
-                                               @Nonnull final Integer collectionInterval,
-                                               @Nonnull final TelegrafPlugin... plugins) {
+    public Telegraf createTelegrafConfig(@Nonnull final String name,
+                                         @Nullable final String description,
+                                         @Nonnull final Organization org,
+                                         @Nonnull final Integer collectionInterval,
+                                         @Nonnull final TelegrafRequestPlugin... plugins) {
 
         Arguments.checkNonEmpty(name, "TelegrafConfig.name");
         Arguments.checkNotNull(org, "TelegrafConfig.org");
@@ -115,11 +108,11 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public TelegrafConfig createTelegrafConfig(@Nonnull final String name,
-                                               @Nullable final String description,
-                                               @Nonnull final Organization org,
-                                               @Nonnull final Integer collectionInterval,
-                                               @Nonnull final Collection<TelegrafPlugin> plugins) {
+    public Telegraf createTelegrafConfig(@Nonnull final String name,
+                                         @Nullable final String description,
+                                         @Nonnull final Organization org,
+                                         @Nonnull final Integer collectionInterval,
+                                         @Nonnull final List<TelegrafRequestPlugin> plugins) {
 
         Arguments.checkNonEmpty(name, "TelegrafConfig.name");
         Arguments.checkNotNull(org, "TelegrafConfig.org");
@@ -130,45 +123,58 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public TelegrafConfig createTelegrafConfig(@Nonnull final String name,
-                                               @Nullable final String description,
-                                               @Nonnull final String orgID,
-                                               @Nonnull final Integer collectionInterval,
-                                               @Nonnull final Collection<TelegrafPlugin> plugins) {
+    public Telegraf createTelegrafConfig(@Nonnull final String name,
+                                         @Nullable final String description,
+                                         @Nonnull final String orgID,
+                                         @Nonnull final Integer collectionInterval,
+                                         @Nonnull final List<TelegrafRequestPlugin> plugins) {
 
         Arguments.checkNonEmpty(name, "TelegrafConfig.name");
         Arguments.checkNonEmpty(orgID, "TelegrafConfig.orgID");
         Arguments.checkPositiveNumber(collectionInterval, "TelegrafConfig.collectionInterval");
 
-        TelegrafAgent telegrafAgent = new TelegrafAgent();
+        TelegrafRequestAgent telegrafAgent = new TelegrafRequestAgent();
         telegrafAgent.setCollectionInterval(collectionInterval);
 
-        TelegrafConfig telegrafConfig = new TelegrafConfig();
+        TelegrafRequest telegrafConfig = new TelegrafRequest();
         telegrafConfig.setName(name);
         telegrafConfig.setDescription(description);
-        telegrafConfig.setOrgID(orgID);
+        telegrafConfig.setOrganizationID(orgID);
         telegrafConfig.setAgent(telegrafAgent);
-        telegrafConfig.getPlugins().addAll(plugins);
+        telegrafConfig.plugins(plugins);
 
         return createTelegrafConfig(telegrafConfig);
     }
 
     @Nonnull
     @Override
-    public TelegrafConfig updateTelegrafConfig(@Nonnull final TelegrafConfig telegrafConfig) {
+    public Telegraf updateTelegrafConfig(@Nonnull final Telegraf telegrafConfig) {
 
         Arguments.checkNotNull(telegrafConfig, "TelegrafConfig");
 
-        String json = adapter.toJson(telegrafConfig);
+        Call<Telegraf> telegrafConfigCall = influxDBService
+                .updateTelegrafConfig(telegrafConfig.getId(), createBody(gson.toJson(telegrafConfig)));
 
-        Call<TelegrafConfig> telegrafConfigCall = influxDBService
-                .updateTelegrafConfig(telegrafConfig.getId(), createBody(json));
+        return execute(telegrafConfigCall);
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf updateTelegrafConfig(@Nonnull final String telegrafID,
+                                         @Nonnull final TelegrafRequest telegrafRequest) {
+
+        Arguments.checkNotNull(telegrafRequest, "TelegrafRequest");
+
+        String json = gson.toJson(telegrafRequest);
+
+        Call<Telegraf> telegrafConfigCall = influxDBService
+                .updateTelegrafConfig(telegrafID, createBody(json));
 
         return execute(telegrafConfigCall);
     }
 
     @Override
-    public void deleteTelegrafConfig(@Nonnull final TelegrafConfig telegrafConfig) {
+    public void deleteTelegrafConfig(@Nonnull final Telegraf telegrafConfig) {
 
         Arguments.checkNotNull(telegrafConfig, "TelegrafConfig");
 
@@ -186,15 +192,15 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public TelegrafConfig cloneTelegrafConfig(@Nonnull final String clonedName,
-                                              @Nonnull final String telegrafConfigID) {
+    public Telegraf cloneTelegrafConfig(@Nonnull final String clonedName,
+                                        @Nonnull final String telegrafConfigID) {
 
         Arguments.checkNonEmpty(clonedName, "clonedName");
         Arguments.checkNonEmpty(telegrafConfigID, "telegrafConfigID");
 
-        TelegrafConfig telegrafConfig = findTelegrafConfigByID(telegrafConfigID);
+        Telegraf telegrafConfig = findTelegrafConfigByID(telegrafConfigID);
         if (telegrafConfig == null) {
-            throw new IllegalStateException("NotFound TelegrafConfig with ID: " + telegrafConfigID);
+            throw new IllegalStateException("NotFound Telegraf with ID: " + telegrafConfigID);
         }
 
         return cloneTelegrafConfig(clonedName, telegrafConfig);
@@ -202,21 +208,22 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public TelegrafConfig cloneTelegrafConfig(@Nonnull final String clonedName,
-                                              @Nonnull final TelegrafConfig telegrafConfig) {
+    public Telegraf cloneTelegrafConfig(@Nonnull final String clonedName,
+                                        @Nonnull final Telegraf telegrafConfig) {
 
         Arguments.checkNonEmpty(clonedName, "clonedName");
         Arguments.checkNotNull(telegrafConfig, "TelegrafConfig");
 
-        TelegrafConfig cloned = new TelegrafConfig();
+        Telegraf cloned = new Telegraf();
         cloned.setName(clonedName);
-        cloned.setOrgID(telegrafConfig.getOrgID());
+        cloned.setOrganizationID(telegrafConfig.getOrganizationID());
         cloned.setDescription(telegrafConfig.getDescription());
-        cloned.setAgent(new TelegrafAgent());
+        cloned.setAgent(new TelegrafRequestAgent());
         cloned.getAgent().setCollectionInterval(telegrafConfig.getAgent().getCollectionInterval());
         cloned.getPlugins().addAll(telegrafConfig.getPlugins());
 
-        TelegrafConfig created = createTelegrafConfig(cloned);
+        Call<Telegraf> call = influxDBService.createTelegrafConfig(createBody(gson.toJson(cloned)));
+        Telegraf created = execute(call);
 
         getLabels(telegrafConfig).forEach(label -> addLabel(label, created));
 
@@ -225,24 +232,24 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nullable
     @Override
-    public TelegrafConfig findTelegrafConfigByID(@Nonnull final String telegrafConfigID) {
+    public Telegraf findTelegrafConfigByID(@Nonnull final String telegrafConfigID) {
 
         Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig ID");
 
-        Call<TelegrafConfig> telegrafConfig = influxDBService.findTelegrafConfigByID(telegrafConfigID);
+        Call<Telegraf> telegrafConfig = influxDBService.findTelegrafConfigByID(telegrafConfigID);
 
         return execute(telegrafConfig, NotFoundException.class);
     }
 
     @Nonnull
     @Override
-    public List<TelegrafConfig> findTelegrafConfigs() {
+    public List<Telegraf> findTelegrafConfigs() {
         return findTelegrafConfigsByOrgId(null);
     }
 
     @Nonnull
     @Override
-    public List<TelegrafConfig> findTelegrafConfigsByOrg(@Nonnull final Organization organization) {
+    public List<Telegraf> findTelegrafConfigsByOrg(@Nonnull final Organization organization) {
 
         Arguments.checkNotNull(organization, "organization");
 
@@ -251,19 +258,19 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public List<TelegrafConfig> findTelegrafConfigsByOrgId(@Nullable final String orgID) {
+    public List<Telegraf> findTelegrafConfigsByOrgId(@Nullable final String orgID) {
 
-        Call<TelegrafConfigs> configsCall = influxDBService.findTelegrafConfigs(orgID);
+        Call<Telegrafs> configsCall = influxDBService.findTelegrafConfigs(orgID);
 
-        TelegrafConfigs telegrafConfigs = execute(configsCall);
+        Telegrafs telegrafConfigs = execute(configsCall);
         LOG.log(Level.FINEST, "findTelegrafConfigs found: {0}", telegrafConfigs);
 
-        return telegrafConfigs.getConfigs();
+        return telegrafConfigs.getConfigurations();
     }
 
     @Nonnull
     @Override
-    public String getTOML(@Nonnull final TelegrafConfig telegrafConfig) {
+    public String getTOML(@Nonnull final Telegraf telegrafConfig) {
 
         Arguments.checkNotNull(telegrafConfig, "TelegrafConfig");
 
@@ -287,7 +294,7 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public List<ResourceMember> getMembers(@Nonnull final TelegrafConfig telegrafConfig) {
+    public List<ResourceMember> getMembers(@Nonnull final Telegraf telegrafConfig) {
 
         Arguments.checkNotNull(telegrafConfig, "TelegrafConfig");
 
@@ -309,7 +316,7 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public ResourceMember addMember(@Nonnull final User member, @Nonnull final TelegrafConfig telegrafConfig) {
+    public ResourceMember addMember(@Nonnull final User member, @Nonnull final Telegraf telegrafConfig) {
 
         Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
         Arguments.checkNotNull(member, "member");
@@ -334,7 +341,7 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
     }
 
     @Override
-    public void deleteMember(@Nonnull final User member, @Nonnull final TelegrafConfig telegrafConfig) {
+    public void deleteMember(@Nonnull final User member, @Nonnull final Telegraf telegrafConfig) {
 
         Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
         Arguments.checkNotNull(member, "member");
@@ -354,7 +361,7 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public List<ResourceOwner> getOwners(@Nonnull final TelegrafConfig telegrafConfig) {
+    public List<ResourceOwner> getOwners(@Nonnull final Telegraf telegrafConfig) {
 
         Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
 
@@ -376,7 +383,7 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final TelegrafConfig telegrafConfig) {
+    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Telegraf telegrafConfig) {
 
         Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
         Arguments.checkNotNull(owner, "owner");
@@ -403,7 +410,7 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
     }
 
     @Override
-    public void deleteOwner(@Nonnull final User owner, @Nonnull final TelegrafConfig telegrafConfig) {
+    public void deleteOwner(@Nonnull final User owner, @Nonnull final Telegraf telegrafConfig) {
 
         Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
         Arguments.checkNotNull(owner, "owner");
@@ -423,7 +430,7 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public List<Label> getLabels(@Nonnull final TelegrafConfig telegrafConfig) {
+    public List<Label> getLabels(@Nonnull final Telegraf telegrafConfig) {
 
         Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
 
@@ -441,7 +448,7 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public Label addLabel(@Nonnull final Label label, @Nonnull final TelegrafConfig telegrafConfig) {
+    public Label addLabel(@Nonnull final Label label, @Nonnull final Telegraf telegrafConfig) {
 
         Arguments.checkNotNull(label, "label");
         Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
@@ -460,7 +467,7 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
     }
 
     @Override
-    public void deleteLabel(@Nonnull final Label label, @Nonnull final TelegrafConfig telegrafConfig) {
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final Telegraf telegrafConfig) {
 
         Arguments.checkNotNull(label, "label");
         Arguments.checkNotNull(telegrafConfig, "telegrafConfig");

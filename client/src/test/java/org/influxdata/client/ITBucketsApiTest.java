@@ -29,7 +29,6 @@ import java.util.stream.IntStream;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.BucketRetentionRules;
 import org.influxdata.client.domain.Buckets;
-import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;

@@ -26,7 +26,6 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;

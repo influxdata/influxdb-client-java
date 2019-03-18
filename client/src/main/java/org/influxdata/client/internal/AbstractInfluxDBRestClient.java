@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import org.influxdata.Arguments;
-import org.influxdata.client.domain.FindOptions;
+import org.influxdata.client.FindOptions;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LabelMapping;
 import org.influxdata.client.domain.LabelResponse;

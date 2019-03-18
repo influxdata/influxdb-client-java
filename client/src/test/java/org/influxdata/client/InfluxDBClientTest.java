@@ -23,7 +23,6 @@ package org.influxdata.client;
 
 import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Authorization;
-import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.internal.AbstractInfluxDBClientTest;
 

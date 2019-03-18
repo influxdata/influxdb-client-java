@@ -19,66 +19,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.influxdata.client.domain;
+package org.influxdata.client;
 
 import java.util.Set;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.influxdata.Arguments;
 
 import okhttp3.HttpUrl;
 
-import static org.influxdata.client.domain.FindOptions.DESCENDING_KEY;
-import static org.influxdata.client.domain.FindOptions.LIMIT_KEY;
-import static org.influxdata.client.domain.FindOptions.OFFSET_KEY;
-import static org.influxdata.client.domain.FindOptions.SORT_BY_KEY;
-
 /**
- * PagingLinks represents paging links.
+ * FindOptions represents options passed to all find methods with multiple results.
  *
- * @author Jakub Bednar (bednar@github) (30/01/2019 08:26)
+ * @author Jakub Bednar (bednar@github) (30/01/2019 07:41)
  */
-public abstract class AbstractPageLinks extends AbstractHasLinks {
+public final class FindOptions {
 
-    @Nullable
-    public FindOptions getPrevPage() {
-        return getFindOptions("prev");
-    }
+    public static final String LIMIT_KEY = "limit";
+    public static final String OFFSET_KEY = "offset";
+    public static final String SORT_BY_KEY = "sortBy";
+    public static final String DESCENDING_KEY = "descending";
 
-    @Nullable
-    public FindOptions getSelfPage() {
-        return getFindOptions("self");
-    }
+    private Integer limit;
+    private Integer offset;
+    private String sortBy;
+    private Boolean descending;
 
-    @Nullable
-    public FindOptions getNextPage() {
-        return getFindOptions("next");
-    }
+    @Nonnull
+    public static FindOptions create(@Nullable final String link) {
 
-    @Nullable
-    private FindOptions getFindOptions(final String key) {
-
-        Arguments.checkNonEmpty(key, "key");
-
-        String link = getLinks().get(key);
+        FindOptions options = new FindOptions();
         if (link == null) {
-            return null;
+            return options;
         }
-
 
         HttpUrl httpUrl = HttpUrl.parse("https://influxdb" + link);
         if (httpUrl == null) {
-            return null;
+            return options;
         }
 
         Set<String> qp = httpUrl.queryParameterNames();
         if (!qp.contains(LIMIT_KEY) && !qp.contains(OFFSET_KEY) && !qp.contains(SORT_BY_KEY)
                 && !qp.contains(DESCENDING_KEY)) {
 
-            return null;
+            return options;
         }
-
-        FindOptions options = new FindOptions();
 
         String limit = httpUrl.queryParameter(LIMIT_KEY);
         if (limit != null) {
@@ -103,4 +87,35 @@ public abstract class AbstractPageLinks extends AbstractHasLinks {
         return options;
     }
 
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(final Integer limit) {
+        this.limit = limit;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(final Integer offset) {
+        this.offset = offset;
+    }
+
+    public String getSortBy() {
+        return sortBy;
+    }
+
+    public void setSortBy(final String sortBy) {
+        this.sortBy = sortBy;
+    }
+
+    public Boolean getDescending() {
+        return descending;
+    }
+
+    public void setDescending(final Boolean descending) {
+        this.descending = descending;
+    }
 }

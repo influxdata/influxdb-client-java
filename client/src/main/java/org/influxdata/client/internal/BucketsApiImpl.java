@@ -29,11 +29,11 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.BucketsApi;
+import org.influxdata.client.FindOptions;
 import org.influxdata.client.domain.AddResourceMemberRequestBody;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.BucketRetentionRules;
 import org.influxdata.client.domain.Buckets;
-import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;

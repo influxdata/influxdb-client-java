@@ -28,8 +28,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
+import org.influxdata.client.FindOptions;
 import org.influxdata.client.UsersApi;
-import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.User;

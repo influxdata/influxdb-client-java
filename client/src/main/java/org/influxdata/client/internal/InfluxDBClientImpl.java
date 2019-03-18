@@ -129,7 +129,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Nonnull
     @Override
     public TelegrafsApi getTelegrafsApi() {
-        return new TelegrafsApiImpl(influxDBServiceMoshi, moshi, gson);
+        return new TelegrafsApiImpl(influxDBService, gson);
     }
 
     @Nonnull

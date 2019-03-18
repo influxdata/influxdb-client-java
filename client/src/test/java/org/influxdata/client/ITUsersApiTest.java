@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
-import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.User;
