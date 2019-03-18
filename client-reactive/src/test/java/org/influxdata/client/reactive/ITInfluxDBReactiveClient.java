@@ -78,7 +78,7 @@ class ITInfluxDBReactiveClient extends AbstractITInfluxDBClientTest {
                 .assertValue(it -> {
 
                     Assertions.assertThat(it).isNotNull();
-                    Assertions.assertThat(it.getStatus()).isEqualTo(Check.StatusEnum.PASS);
+                    Assertions.assertThat(it.getStatus()).isEqualTo(Check.StatusEnum.FAIL);
                     Assertions.assertThat(it.getMessage()).startsWith("Failed to connect to");
 
                     return true;
