@@ -122,7 +122,8 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
 
     @Nonnull
     @Override
-    public ScraperTargetResponse cloneScraperTarget(@Nonnull final String clonedName, @Nonnull final String scraperTargetID) {
+    public ScraperTargetResponse cloneScraperTarget(@Nonnull final String clonedName,
+                                                    @Nonnull final String scraperTargetID) {
 
         Arguments.checkNonEmpty(clonedName, "clonedName");
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");

@@ -25,20 +25,25 @@
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
+# Generate OpenAPI generator
+cd ${SCRIPT_PATH}/../openapi-generator/
+mvn clean install -DskipTests
+
 cd ${SCRIPT_PATH}/../client
 
+# Generate client
 mvn org.openapitools:openapi-generator-maven-plugin:generate
 
-echo
-echo "Generated sources"
-echo
-
 cd ${SCRIPT_PATH}/../client/src/generated/java/org/influxdata/client/domain
+
+# Clear useless files
 
 for f in *.java; do
    case ${f} in
       (Bucket.java|BucketLinks.java|BucketRetentionRules.java|Buckets.java|Label.java|LabelMapping.java|LabelResponse.java|Links.java|OperationLogs.java|OperationLog.java|OperationLogLinks.java|User.java|UserLinks.java|Users.java|UsersLinks.java|ResourceMember.java|ResourceMembers.java|ResourceOwner.java|ResourceOwners.java|AddResourceMemberRequestBody.java|ScraperTargetRequest.java|ScraperTargetResponse.java|ScraperTargetResponses.java|ScraperTargetResponseLinks.java|Organization.java|OrganizationLinks.java|Organizations.java|LabelUpdate.java|LabelsResponse.java|Labels.java|Source.java|SourceLinks.java|Sources.java|Check.java|OnboardingRequest.java|OnboardingResponse.java|IsOnboarding.java|Authorization.java|AuthorizationLinks.java|Authorizations.java|Permission.java|PermissionResource.java|SecretKeys.java|SecretKeysLinks.java|Task.java|TaskCreateRequest.java|TaskLinks.java|TaskUpdateRequest.java|LogEvent.java|Logs.java|Run.java|RunLinks.java|RunManually.java|Runs.java|Tasks.java)
-         ;;           # do nothing
+         ;;
+      (Telegraf*.java)
+        ;;
       (*)
          rm -- "$f";; # remove the file
    esac

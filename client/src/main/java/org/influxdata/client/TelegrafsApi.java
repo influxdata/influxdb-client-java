@@ -149,7 +149,7 @@ public interface TelegrafsApi {
     Telegraf updateTelegrafConfig(@Nonnull final Telegraf telegrafConfig);
 
     /**
-     * Update a telegraf config
+     * Update a telegraf config.
      *
      * @param telegrafID      ID of telegraf config
      * @param telegrafRequest telegraf config update to apply

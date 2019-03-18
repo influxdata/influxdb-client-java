@@ -70,7 +70,7 @@ public interface TasksApi {
     Task createTask(@Nonnull final Task task);
 
     /**
-     * Create a new task
+     * Create a new task.
      *
      * @param taskCreateRequest task to create (required)
      * @return Task created

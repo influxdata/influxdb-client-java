@@ -159,7 +159,8 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
 
     @Nonnull
     @Override
-    public OnboardingResponse onBoarding(@Nonnull final OnboardingRequest onboarding) throws UnprocessableEntityException {
+    public OnboardingResponse onBoarding(@Nonnull final OnboardingRequest onboarding)
+            throws UnprocessableEntityException {
 
         Arguments.checkNotNull(onboarding, "onboarding");
 

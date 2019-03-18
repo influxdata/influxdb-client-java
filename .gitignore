@@ -12,5 +12,5 @@ tree.txt
 **nightly**
 **/influxd.bolt
 
-**/.openapi-generator
-**/swagger*.yml
+**/.openapi-generator*
+**/swagger2.yml

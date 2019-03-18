@@ -105,7 +105,8 @@ public interface ScraperTargetsApi {
      * @return cloned ScraperTarget
      */
     @Nonnull
-    ScraperTargetResponse cloneScraperTarget(@Nonnull final String clonedName, @Nonnull final ScraperTargetResponse scraperTarget);
+    ScraperTargetResponse cloneScraperTarget(@Nonnull final String clonedName,
+                                             @Nonnull final ScraperTargetResponse scraperTarget);
 
     /**
      * Retrieve a ScraperTarget.

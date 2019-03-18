@@ -53,23 +53,31 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>3.3.4</version>
+                <version>3.0.3</version>
                 <configuration>
                     <inputSpec>${project.basedir}/src/main/resources/swagger.yml</inputSpec>
-                    <generatorName>java</generatorName>
+                    <generatorName>influx-java</generatorName>
+                    <library>retrofit2</library>
                     <configOptions>
                         <sourceFolder>java</sourceFolder>
                         <dateLibrary>java8</dateLibrary>
                     </configOptions>
                     <generateModelDocumentation>false</generateModelDocumentation>
+                    <generateApiDocumentation>false</generateApiDocumentation>
                     <generateApis>false</generateApis>
-                    <generateSupportingFiles>false</generateSupportingFiles>
-                    <library>retrofit2</library>
+                    <generateSupportingFiles>true</generateSupportingFiles>
                     <verbose>false</verbose>
                     <output>${project.basedir}/src/generated</output>
                     <addCompileSourceRoot>false</addCompileSourceRoot>
                     <modelPackage>org.influxdata.client.domain</modelPackage>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.influxdata</groupId>
+                        <artifactId>openapi-generator</artifactId>
+                        <version>1.0.0</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -117,11 +125,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>converter-moshi</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.squareup.okio</groupId>
             <artifactId>okio</artifactId>
         </dependency>
@@ -129,13 +132,16 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.8.5</version>
         </dependency>
 
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
-            <version>1.5.22</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.gsonfire</groupId>
+            <artifactId>gson-fire</artifactId>
         </dependency>
 
         <dependency>
