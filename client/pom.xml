@@ -64,12 +64,14 @@
                     </configOptions>
                     <generateModelDocumentation>false</generateModelDocumentation>
                     <generateApiDocumentation>false</generateApiDocumentation>
-                    <generateApis>false</generateApis>
+                    <generateApis>true</generateApis>
+                    <generateApiTests>false</generateApiTests>
                     <generateSupportingFiles>true</generateSupportingFiles>
                     <verbose>false</verbose>
                     <output>${project.basedir}/src/generated</output>
                     <addCompileSourceRoot>false</addCompileSourceRoot>
                     <modelPackage>org.influxdata.client.domain</modelPackage>
+                    <apiPackage>org.influxdata.client.service</apiPackage>
                 </configuration>
                 <dependencies>
                     <dependency>

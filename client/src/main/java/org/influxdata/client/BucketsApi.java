@@ -29,6 +29,7 @@ import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.BucketRetentionRules;
 import org.influxdata.client.domain.Buckets;
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
@@ -368,7 +369,7 @@ public interface BucketsApi {
      * @return added label
      */
     @Nonnull
-    Label addLabel(@Nonnull final Label label, @Nonnull final Bucket bucket);
+    LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Bucket bucket);
 
     /**
      * Add the bucket label.
@@ -378,7 +379,7 @@ public interface BucketsApi {
      * @return added label
      */
     @Nonnull
-    Label addLabel(@Nonnull final String labelID, @Nonnull final String bucketID);
+    LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String bucketID);
 
     /**
      * Removes a label from a bucket.

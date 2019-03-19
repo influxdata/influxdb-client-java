@@ -21,8 +21,8 @@
  */
 package org.influxdata.client;
 
-import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -412,7 +412,7 @@ class ITTasksApiTest extends AbstractITClientTest {
     @Test
     void runsByTime() throws InterruptedException {
 
-        Instant now = Instant.now();
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
 
         String taskName = generateName("it task");
 
@@ -548,7 +548,7 @@ class ITTasksApiTest extends AbstractITClientTest {
     @Test
     void logsNotExist() {
 
-        List<LogEvent> logs = tasksApi.getLogs("020f755c3c082000", organization.getId());
+        List<LogEvent> logs = tasksApi.getLogs("020f755c3c082000");
 
         Assertions.assertThat(logs).isEmpty();
     }
@@ -565,7 +565,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         List<Run> runs = tasksApi.getRuns(task, null, null, 1);
         Assertions.assertThat(runs).hasSize(1);
 
-        List<LogEvent> logs = tasksApi.getRunLogs(runs.get(0), organization.getId());
+        List<LogEvent> logs = tasksApi.getRunLogs(runs.get(0));
 
         Assertions.assertThat(logs).isNotEmpty();
         Assertions.assertThat(logs.get(logs.size() - 1).getMessage()).endsWith("Completed successfully");
@@ -578,7 +578,7 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "5s", organization);
 
-        List<LogEvent> logs = tasksApi.getRunLogs(task.getId(), "020f755c3c082000", organization.getId());
+        List<LogEvent> logs = tasksApi.getRunLogs(task.getId(), "020f755c3c082000");
         Assertions.assertThat(logs).isEmpty();
     }
 
@@ -624,7 +624,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         List<Label> labels = tasksApi.getLabels(task);
         Assertions.assertThat(labels).hasSize(0);
 
-        Label addedLabel = tasksApi.addLabel(label, task);
+        Label addedLabel = tasksApi.addLabel(label, task).getLabel();
         Assertions.assertThat(addedLabel).isNotNull();
         Assertions.assertThat(addedLabel.getId()).isEqualTo(label.getId());
         Assertions.assertThat(addedLabel.getName()).isEqualTo(label.getName());
@@ -711,6 +711,13 @@ class ITTasksApiTest extends AbstractITClientTest {
         createUsers.setResource(userResource);
 
 
+        PermissionResource labelResource = new PermissionResource();
+        labelResource.setType(PermissionResource.TypeEnum.LABELS);
+
+        Permission createLabels = new Permission();
+        createLabels.setAction(Permission.ActionEnum.WRITE);
+        createLabels.setResource(labelResource);
+
         PermissionResource authResource = new PermissionResource();
         authResource.setType(PermissionResource.TypeEnum.AUTHORIZATIONS);
 
@@ -742,6 +749,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         permissions.add(createAuth);
         permissions.add(readBucket);
         permissions.add(writeBucket);
+        permissions.add(createLabels);
 
         return influxDBClient.getAuthorizationsApi().createAuthorization(organization, permissions);
     }

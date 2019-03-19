@@ -34,6 +34,9 @@ import org.influxdata.client.FindOptions;
 import org.influxdata.client.OrganizationsApi;
 import org.influxdata.client.domain.AddResourceMemberRequestBody;
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelMapping;
+import org.influxdata.client.domain.LabelResponse;
+import org.influxdata.client.domain.LabelsResponse;
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
@@ -44,6 +47,7 @@ import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.SecretKeys;
 import org.influxdata.client.domain.User;
+import org.influxdata.client.service.OrganizationsService;
 import org.influxdata.exceptions.NotFoundException;
 
 import com.google.gson.Gson;
@@ -56,9 +60,15 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
     private static final Logger LOG = Logger.getLogger(OrganizationsApiImpl.class.getName());
 
-    OrganizationsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Gson gson) {
+    private final OrganizationsService service;
+
+    OrganizationsApiImpl(@Nonnull final InfluxDBService influxDBService,
+                         @Nonnull final OrganizationsService service,
+                         @Nonnull final Gson gson) {
 
         super(influxDBService, gson);
+
+        this.service = service;
     }
 
     @Nullable
@@ -67,7 +77,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<Organization> organization = influxDBService.findOrganizationByID(orgID);
+        Call<Organization> organization = service.orgsOrgIDGet(orgID, null);
 
         return execute(organization, NotFoundException.class);
     }
@@ -76,7 +86,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
     @Override
     public List<Organization> findOrganizations() {
 
-        Call<Organizations> organizationsCall = influxDBService.findOrganizations();
+        Call<Organizations> organizationsCall = service.orgsGet(null, null, null);
 
         Organizations organizations = execute(organizationsCall);
         LOG.log(Level.FINEST, "findOrganizations found: {0}", organizations);
@@ -102,9 +112,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
         Arguments.checkNotNull(organization, "Organization");
 
-        String json = gson.toJson(organization);
-
-        Call<Organization> call = influxDBService.createOrganization(createBody(json));
+        Call<Organization> call = service.orgsPost(organization, null);
 
         return execute(call);
     }
@@ -115,9 +123,8 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
         Arguments.checkNotNull(organization, "Organization");
 
-        String json = gson.toJson(organization);
-
-        Call<Organization> orgCall = influxDBService.updateOrganization(organization.getId(), createBody(json));
+        Call<Organization> orgCall = service
+                .orgsOrgIDPatch(organization.getId(), organization, null);
 
         return execute(orgCall);
     }
@@ -135,7 +142,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<Void> call = influxDBService.deleteOrganization(orgID);
+        Call<Void> call = service.orgsOrgIDDelete(orgID, null);
         execute(call);
     }
 
@@ -184,7 +191,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<SecretKeys> call = influxDBService.getSecrets(orgID);
+        Call<SecretKeys> call = service.orgsOrgIDSecretsGet(orgID, null);
 
         return execute(call);
     }
@@ -203,7 +210,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
         Arguments.checkNonEmpty(orgID, "Organization ID");
         Arguments.checkNotNull(secrets, "secrets");
 
-        Call<Void> call = influxDBService.putSecrets(orgID, createBody(gson.toJson(secrets)));
+        Call<Void> call = service.orgsOrgIDSecretsPatch(orgID, secrets, null);
         execute(call);
     }
 
@@ -222,7 +229,19 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
         Arguments.checkNonEmpty(orgID, "Organization ID");
         Arguments.checkNotNull(secrets, "secrets");
 
-        Call<Void> call = influxDBService.deleteSecrets(orgID, createBody(gson.toJson(secrets)));
+        SecretKeys secretKeys = new SecretKeys();
+        secrets.forEach(secretKeys::addSecretsItem);
+
+        deleteSecrets(secretKeys, orgID);
+    }
+
+    @Override
+    public void deleteSecrets(@Nonnull final SecretKeys secretKeys, @Nonnull final String orgID) {
+
+        Arguments.checkNonEmpty(orgID, "Organization ID");
+        Arguments.checkNotNull(secretKeys, "secretKeys");
+
+        Call<Void> call = service.orgsOrgIDSecretsDeletePost(orgID, secretKeys, null);
         execute(call);
     }
 
@@ -241,7 +260,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<ResourceMembers> call = influxDBService.findOrganizationMembers(orgID);
+        Call<ResourceMembers> call = service.orgsOrgIDMembersGet(orgID, null);
         ResourceMembers resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findOrganizationMembers found: {0}", resourceMembers);
 
@@ -268,8 +287,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(memberID);
 
-        String json = gson.toJson(user);
-        Call<ResourceMember> call = influxDBService.addOrganizationMember(orgID, createBody(json));
+        Call<ResourceMember> call = service.orgsOrgIDMembersPost(orgID, user, null);
 
         return execute(call);
     }
@@ -289,7 +307,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<Void> call = influxDBService.deleteOrganizationMember(orgID, memberID);
+        Call<Void> call = service.orgsOrgIDMembersUserIDDelete(memberID, orgID, null);
         execute(call);
     }
 
@@ -308,7 +326,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<ResourceOwners> call = influxDBService.findOrganizationOwners(orgID);
+        Call<ResourceOwners> call = service.orgsOrgIDOwnersGet(orgID, null);
         ResourceOwners resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findOrganizationOwners found: {0}", resourceMembers);
 
@@ -335,8 +353,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(ownerID);
 
-        String json = gson.toJson(user);
-        Call<ResourceOwner> call = influxDBService.addOrganizationOwner(orgID, createBody(json));
+        Call<ResourceOwner> call = service.orgsOrgIDOwnersPost(orgID, user, null);
 
         return execute(call);
     }
@@ -355,7 +372,7 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<Void> call = influxDBService.deleteOrganizationOwner(orgID, ownerID);
+        Call<Void> call = service.orgsOrgIDOwnersUserIDDelete(ownerID, orgID, null);
         execute(call);
     }
 
@@ -374,12 +391,14 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
         Arguments.checkNonEmpty(orgID, "orgID");
 
-        return getLabels(orgID, "orgs");
+        Call<LabelsResponse> call = service.orgsOrgIDLabelsGet(orgID, null);
+
+        return execute(call).getLabels();
     }
 
     @Nonnull
     @Override
-    public Label addLabel(@Nonnull final Label label, @Nonnull final Organization organization) {
+    public LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Organization organization) {
 
         Arguments.checkNotNull(label, "label");
         Arguments.checkNotNull(organization, "organization");
@@ -389,12 +408,17 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
 
     @Nonnull
     @Override
-    public Label addLabel(@Nonnull final String labelID, @Nonnull final String orgID) {
+    public LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(orgID, "orgID");
 
-        return addLabel(labelID, orgID, "orgs");
+        LabelMapping labelMapping = new LabelMapping();
+        labelMapping.setLabelID(labelID);
+
+        Call<LabelResponse> call = service.orgsOrgIDLabelsPost(orgID, labelMapping, null);
+
+        return execute(call);
     }
 
     @Override
@@ -412,7 +436,8 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(orgID, "orgID");
 
-        deleteLabel(labelID, orgID, "orgs");
+        Call<Void> call = service.orgsOrgIDLabelsLabelIDDelete(orgID, labelID, null);
+        execute(call);
     }
 
     @Nonnull
@@ -447,12 +472,13 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
     @Nonnull
     @Override
     public OperationLogs findOrganizationLogs(@Nonnull final String orgID,
-                                                    @Nonnull final FindOptions findOptions) {
+                                              @Nonnull final FindOptions findOptions) {
 
         Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(findOptions, "findOptions");
 
-        Call<OperationLogs> call = influxDBService.findOrganizationLogs(orgID, createQueryMap(findOptions));
+        Call<OperationLogs> call = service
+                .orgsOrgIDLogsGet(orgID, null, findOptions.getOffset(), findOptions.getLimit());
 
         return getOperationLogEntries(call);
     }

@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ScraperTargetRequest;
@@ -42,11 +43,11 @@ public interface ScraperTargetsApi {
     /**
      * Creates a new ScraperTarget and sets {@link ScraperTargetResponse#getId()} with the new identifier.
      *
-     * @param scraperTarget the scraper to create
+     * @param scraperTargetRequest the scraper to create
      * @return ScraperTarget created
      */
     @Nonnull
-    ScraperTargetResponse createScraperTarget(@Nonnull final ScraperTargetRequest scraperTarget);
+    ScraperTargetResponse createScraperTarget(@Nonnull final ScraperTargetRequest scraperTargetRequest);
 
     /**
      * Create new ScraperTarget with {@link ScraperTargetRequest#getType()} set to
@@ -67,18 +68,29 @@ public interface ScraperTargetsApi {
     /**
      * Update a ScraperTarget.
      *
-     * @param scraperTarget ScraperTarget update to apply
+     * @param scraperTargetResponse ScraperTarget update to apply
      * @return ScraperTarget updated
      */
     @Nonnull
-    ScraperTargetResponse updateScraperTarget(@Nonnull final ScraperTargetResponse scraperTarget);
+    ScraperTargetResponse updateScraperTarget(@Nonnull final ScraperTargetResponse scraperTargetResponse);
+
+    /**
+     * Update a ScraperTarget.
+     *
+     * @param scraperTargetID      id of the scraper target (required)
+     * @param scraperTargetRequest ScraperTarget update to apply
+     * @return ScraperTarget updated
+     */
+    @Nonnull
+    ScraperTargetResponse updateScraperTarget(@Nonnull final String scraperTargetID,
+                                              @Nonnull final ScraperTargetRequest scraperTargetRequest);
 
     /**
      * Delete a ScraperTarget.
      *
-     * @param scraperTarget ScraperTarget to delete
+     * @param scraperTargetResponse ScraperTarget to delete
      */
-    void deleteScraperTarget(@Nonnull final ScraperTargetResponse scraperTarget);
+    void deleteScraperTarget(@Nonnull final ScraperTargetResponse scraperTargetResponse);
 
     /**
      * Delete a ScraperTarget.
@@ -101,12 +113,12 @@ public interface ScraperTargetsApi {
      * Clone a ScraperTarget.
      *
      * @param clonedName    name of cloned ScraperTarget
-     * @param scraperTarget ScraperTarget to clone
+     * @param scraperTargetResponse ScraperTarget to clone
      * @return cloned ScraperTarget
      */
     @Nonnull
     ScraperTargetResponse cloneScraperTarget(@Nonnull final String clonedName,
-                                             @Nonnull final ScraperTargetResponse scraperTarget);
+                                             @Nonnull final ScraperTargetResponse scraperTargetResponse);
 
     /**
      * Retrieve a ScraperTarget.
@@ -128,11 +140,11 @@ public interface ScraperTargetsApi {
     /**
      * List all users with member privileges for a ScraperTarget.
      *
-     * @param scraperTarget the ScraperTarget with members
+     * @param scraperTargetResponse the ScraperTarget with members
      * @return return the list all users with member privileges for a ScraperTarget
      */
     @Nonnull
-    List<ResourceMember> getMembers(@Nonnull final ScraperTargetResponse scraperTarget);
+    List<ResourceMember> getMembers(@Nonnull final ScraperTargetResponse scraperTargetResponse);
 
     /**
      * List all users with member privileges for a ScraperTarget.
@@ -147,11 +159,11 @@ public interface ScraperTargetsApi {
      * Add the scraperTarget member.
      *
      * @param member the member of an ScraperTarget
-     * @param scraperTarget the ScraperTarget for the member
+     * @param scraperTargetResponse the ScraperTarget for the member
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addMember(@Nonnull final User member, @Nonnull final ScraperTargetResponse scraperTarget);
+    ResourceMember addMember(@Nonnull final User member, @Nonnull final ScraperTargetResponse scraperTargetResponse);
 
     /**
      * Add the ScraperTarget member.
@@ -167,9 +179,9 @@ public interface ScraperTargetsApi {
      * Removes a member from a ScraperTarget.
      *
      * @param member the member of a ScraperTarget
-     * @param scraperTarget the scraperTarget
+     * @param scraperTargetResponse the scraperTarget
      */
-    void deleteMember(@Nonnull final User member, @Nonnull final ScraperTargetResponse scraperTarget);
+    void deleteMember(@Nonnull final User member, @Nonnull final ScraperTargetResponse scraperTargetResponse);
 
     /**
      * Removes a member from a ScraperTarget.
@@ -182,11 +194,11 @@ public interface ScraperTargetsApi {
     /**
      * List all owners of a ScraperTarget.
      *
-     * @param scraperTarget the ScraperTarget with owners
+     * @param scraperTargetResponse the ScraperTarget with owners
      * @return return List all owners of a ScraperTarget.
      */
     @Nonnull
-    List<ResourceOwner> getOwners(@Nonnull final ScraperTargetResponse scraperTarget);
+    List<ResourceOwner> getOwners(@Nonnull final ScraperTargetResponse scraperTargetResponse);
 
     /**
      * List all owners of a ScraperTarget.
@@ -201,11 +213,11 @@ public interface ScraperTargetsApi {
      * Add the ScraperTarget owner.
      *
      * @param owner  the owner of a ScraperTarget
-     * @param scraperTarget the ScraperTarget
+     * @param scraperTargetResponse the ScraperTarget
      * @return created mapping
      */
     @Nonnull
-    ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final ScraperTargetResponse scraperTarget);
+    ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final ScraperTargetResponse scraperTargetResponse);
 
     /**
      * Add the ScraperTarget owner.
@@ -221,9 +233,9 @@ public interface ScraperTargetsApi {
      * Removes a owner from a ScraperTarget.
      *
      * @param owner  the owner of a ScraperTarget
-     * @param scraperTarget the scraperTarget
+     * @param scraperTargetResponse the scraperTarget
      */
-    void deleteOwner(@Nonnull final User owner, @Nonnull final ScraperTargetResponse scraperTarget);
+    void deleteOwner(@Nonnull final User owner, @Nonnull final ScraperTargetResponse scraperTargetResponse);
 
     /**
      * Removes a owner from a ScraperTarget.
@@ -237,11 +249,11 @@ public interface ScraperTargetsApi {
     /**
      * List all labels of a ScraperTarget.
      *
-     * @param scraperTarget the ScraperTarget with labels
+     * @param scraperTargetResponse the ScraperTarget with labels
      * @return return List all labels of a ScraperTarget.
      */
     @Nonnull
-    List<Label> getLabels(@Nonnull final ScraperTargetResponse scraperTarget);
+    List<Label> getLabels(@Nonnull final ScraperTargetResponse scraperTargetResponse);
 
     /**
      * List all labels of a ScraperTarget.
@@ -256,11 +268,11 @@ public interface ScraperTargetsApi {
      * Add the ScraperTarget label.
      *
      * @param label         the label of a ScraperTarget
-     * @param scraperTarget the ScraperTarget
+     * @param scraperTargetResponse the ScraperTarget
      * @return added label
      */
     @Nonnull
-    Label addLabel(@Nonnull final Label label, @Nonnull final ScraperTargetResponse scraperTarget);
+    LabelResponse addLabel(@Nonnull final Label label, @Nonnull final ScraperTargetResponse scraperTargetResponse);
 
     /**
      * Add the ScraperTarget label.
@@ -270,15 +282,15 @@ public interface ScraperTargetsApi {
      * @return added label
      */
     @Nonnull
-    Label addLabel(@Nonnull final String labelID, @Nonnull final String scraperTargetID);
+    LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String scraperTargetID);
 
     /**
      * Removes a label from a ScraperTarget.
      *
      * @param label         the label of a ScraperTarget
-     * @param scraperTarget the ScraperTarget
+     * @param scraperTargetResponse the ScraperTarget
      */
-    void deleteLabel(@Nonnull final Label label, @Nonnull final ScraperTargetResponse scraperTarget);
+    void deleteLabel(@Nonnull final Label label, @Nonnull final ScraperTargetResponse scraperTargetResponse);
 
     /**
      * Removes a label from a ScraperTarget.

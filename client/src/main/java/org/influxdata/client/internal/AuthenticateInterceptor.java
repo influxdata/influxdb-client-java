@@ -48,8 +48,8 @@ class AuthenticateInterceptor implements Interceptor {
 
     private static final Logger LOG = Logger.getLogger(InfluxDBClientImpl.class.getName());
 
-    private static final List<String> NO_AUTH_ROUTE = Arrays.asList("/api/v2/signin", "/api/v2/signout",
-            "/api/v2/setup");
+    private static final List<String> NO_AUTH_ROUTE = Arrays.asList("signin", "signout",
+            "setup");
 
     private final InfluxDBClientOptions influxDBClientOptions;
 
@@ -117,7 +117,7 @@ class AuthenticateInterceptor implements Interceptor {
                     .basic(influxDBClientOptions.getUsername(), string(influxDBClientOptions.getPassword()));
 
             Request authRequest = new Request.Builder()
-                    .url(influxDBClientOptions.getUrl() + "/api/v2/signin")
+                    .url(influxDBClientOptions.getUrl() + "signin")
                     .addHeader("Authorization", credentials)
                     .post(RequestBody.create(null, ""))
                     .build();
@@ -158,7 +158,7 @@ class AuthenticateInterceptor implements Interceptor {
         this.sessionToken = null;
 
         Request authRequest = new Request.Builder()
-                .url(influxDBClientOptions.getUrl() + "/api/v2/signout")
+                .url(influxDBClientOptions.getUrl() + "signout")
                 .post(RequestBody.create(null, ""))
                 .build();
 

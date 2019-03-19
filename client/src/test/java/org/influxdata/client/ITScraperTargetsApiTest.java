@@ -212,7 +212,7 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
         List<Label> labels = scraperTargetsApi.getLabels(scraper);
         Assertions.assertThat(labels).hasSize(0);
 
-        Label addedLabel = scraperTargetsApi.addLabel(label, scraper);
+        Label addedLabel = scraperTargetsApi.addLabel(label, scraper).getLabel();
         Assertions.assertThat(addedLabel).isNotNull();
         Assertions.assertThat(addedLabel.getId()).isEqualTo(label.getId());
         Assertions.assertThat(addedLabel.getName()).isEqualTo(label.getName());

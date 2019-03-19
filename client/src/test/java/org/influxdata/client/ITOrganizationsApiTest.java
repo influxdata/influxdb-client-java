@@ -21,7 +21,6 @@
  */
 package org.influxdata.client;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -225,13 +224,12 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
         secrets = organizationsApi.getSecrets(organization);
         Assertions.assertThat(secrets.getSecrets()).hasSize(2).contains("gh", "az");
         Assertions.assertThat(secrets.getLinks().getOrg()).isEqualTo("/api/v2/orgs/" + organization.getId());
-        //TODO https://github.com/influxdata/influxdb/issues/12587
-        // Assertions.assertThat(secrets.getLinks().getSelf()).isEqualTo("/api/v2/orgs/" + organization.getId() + "/secrets");
+        Assertions.assertThat(secrets.getLinks().getSelf()).isEqualTo("/api/v2/orgs/" + organization.getId() + "/secrets");
 
-        organizationsApi.deleteSecrets(Collections.singletonList("gh"), organization);
-
-        secrets = organizationsApi.getSecrets(organization);
-        Assertions.assertThat(secrets.getSecrets()).hasSize(1).contains("az");
+        //TODO https://github.com/influxdata/influxdb/issues/12716
+        // organizationsApi.deleteSecrets(Collections.singletonList("gh"), organization);
+        // secrets = organizationsApi.getSecrets(organization);
+        // Assertions.assertThat(secrets.getSecrets()).hasSize(1).contains("az");
     }
 
     @Test
@@ -250,7 +248,7 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
         List<Label> labels = organizationsApi.getLabels(organization);
         Assertions.assertThat(labels).hasSize(0);
 
-        Label addedLabel = organizationsApi.addLabel(label, organization);
+        Label addedLabel = organizationsApi.addLabel(label, organization).getLabel();
         Assertions.assertThat(addedLabel).isNotNull();
         Assertions.assertThat(addedLabel.getId()).isEqualTo(label.getId());
         Assertions.assertThat(addedLabel.getName()).isEqualTo(label.getName());

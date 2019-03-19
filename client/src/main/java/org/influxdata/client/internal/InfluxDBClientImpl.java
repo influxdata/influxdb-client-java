@@ -46,6 +46,14 @@ import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.IsOnboarding;
 import org.influxdata.client.domain.OnboardingRequest;
 import org.influxdata.client.domain.OnboardingResponse;
+import org.influxdata.client.service.AuthorizationsService;
+import org.influxdata.client.service.BucketsService;
+import org.influxdata.client.service.LabelsService;
+import org.influxdata.client.service.OrganizationsService;
+import org.influxdata.client.service.ScraperTargetsService;
+import org.influxdata.client.service.SourcesService;
+import org.influxdata.client.service.TasksService;
+import org.influxdata.client.service.TelegrafsService;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.exceptions.UnprocessableEntityException;
 
@@ -87,31 +95,31 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Nonnull
     @Override
     public AuthorizationsApi getAuthorizationsApi() {
-        return new AuthorizationsApiImpl(influxDBService, gson);
+        return new AuthorizationsApiImpl(influxDBService, retrofit.create(AuthorizationsService.class), gson);
     }
 
     @Nonnull
     @Override
     public BucketsApi getBucketsApi() {
-        return new BucketsApiImpl(influxDBService, gson);
+        return new BucketsApiImpl(influxDBService, retrofit.create(BucketsService.class), gson);
     }
 
     @Nonnull
     @Override
     public OrganizationsApi getOrganizationsApi() {
-        return new OrganizationsApiImpl(influxDBService, gson);
+        return new OrganizationsApiImpl(influxDBService, retrofit.create(OrganizationsService.class), gson);
     }
 
     @Nonnull
     @Override
     public SourcesApi getSourcesApi() {
-        return new SourcesApiImpl(influxDBService, this, gson);
+        return new SourcesApiImpl(influxDBService, retrofit.create(SourcesService.class), this, gson);
     }
 
     @Nonnull
     @Override
     public TasksApi getTasksApi() {
-        return new TasksApiImpl(influxDBService, gson);
+        return new TasksApiImpl(influxDBService, retrofit.create(TasksService.class), gson);
     }
 
     @Nonnull
@@ -123,19 +131,19 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Nonnull
     @Override
     public ScraperTargetsApi getScraperTargetsApi() {
-        return new ScraperTargetsApiImpl(influxDBService, gson);
+        return new ScraperTargetsApiImpl(influxDBService, retrofit.create(ScraperTargetsService.class), gson);
     }
 
     @Nonnull
     @Override
     public TelegrafsApi getTelegrafsApi() {
-        return new TelegrafsApiImpl(influxDBService, gson);
+        return new TelegrafsApiImpl(influxDBService, retrofit.create(TelegrafsService.class), gson);
     }
 
     @Nonnull
     @Override
     public LabelsApi getLabelsApi() {
-        return new LabelsApiImpl(influxDBService, gson);
+        return new LabelsApiImpl(influxDBService, retrofit.create(LabelsService.class), gson);
     }
 
     @Nonnull

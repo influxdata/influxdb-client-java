@@ -30,9 +30,11 @@ import javax.annotation.Nullable;
 import org.influxdata.Arguments;
 import org.influxdata.client.SourcesApi;
 import org.influxdata.client.domain.Bucket;
+import org.influxdata.client.domain.Buckets;
 import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.Source;
 import org.influxdata.client.domain.Sources;
+import org.influxdata.client.service.SourcesService;
 import org.influxdata.exceptions.NotFoundException;
 
 import com.google.gson.Gson;
@@ -46,8 +48,10 @@ final class SourcesApiImpl extends AbstractInfluxDBRestClient implements Sources
     private static final Logger LOG = Logger.getLogger(SourcesApiImpl.class.getName());
 
     private final InfluxDBClientImpl influxDBClient;
+    private final SourcesService sourcesService;
 
     SourcesApiImpl(@Nonnull final InfluxDBService influxDBService,
+                   @Nonnull final SourcesService sourcesService,
                    @Nonnull final InfluxDBClientImpl influxDBClient,
                    @Nonnull final Gson gson) {
 
@@ -55,6 +59,7 @@ final class SourcesApiImpl extends AbstractInfluxDBRestClient implements Sources
 
         Arguments.checkNotNull(influxDBClient, "InfluxDBClient");
 
+        this.sourcesService = sourcesService;
         this.influxDBClient = influxDBClient;
     }
 
@@ -64,9 +69,7 @@ final class SourcesApiImpl extends AbstractInfluxDBRestClient implements Sources
 
         Arguments.checkNotNull(source, "Source is required");
 
-        String json = gson.toJson(source);
-
-        Call<Source> call = influxDBService.createSource(createBody(json));
+        Call<Source> call = sourcesService.sourcesPost(source, null);
         return execute(call);
     }
 
@@ -76,9 +79,7 @@ final class SourcesApiImpl extends AbstractInfluxDBRestClient implements Sources
 
         Arguments.checkNotNull(source, "Source is required");
 
-        String json = gson.toJson(source);
-
-        Call<Source> call = influxDBService.updateSource(source.getId(), createBody(json));
+        Call<Source> call = sourcesService.sourcesSourceIDPatch(source.getId(), source, null);
         return execute(call);
     }
 
@@ -95,7 +96,7 @@ final class SourcesApiImpl extends AbstractInfluxDBRestClient implements Sources
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
-        Call<Void> call = influxDBService.deleteSource(sourceID);
+        Call<Void> call = sourcesService.sourcesSourceIDDelete(sourceID);
         execute(call);
     }
 
@@ -145,7 +146,7 @@ final class SourcesApiImpl extends AbstractInfluxDBRestClient implements Sources
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
-        Call<Source> call = influxDBService.findSource(sourceID);
+        Call<Source> call = sourcesService.sourcesSourceIDGet(sourceID, null);
 
         return execute(call, NotFoundException.class);
     }
@@ -153,7 +154,7 @@ final class SourcesApiImpl extends AbstractInfluxDBRestClient implements Sources
     @Nonnull
     @Override
     public List<Source> findSources() {
-        Call<Sources> sourcesCall = influxDBService.findSources();
+        Call<Sources> sourcesCall = sourcesService.sourcesGet(null, null);
 
         Sources sources = execute(sourcesCall);
         LOG.log(Level.FINEST, "findSources found: {0}", sources);
@@ -170,15 +171,15 @@ final class SourcesApiImpl extends AbstractInfluxDBRestClient implements Sources
         return findBucketsBySourceID(source.getId());
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public List<Bucket> findBucketsBySourceID(@Nonnull final String sourceID) {
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
-        Call<List<Bucket>> call = influxDBService.findSourceBuckets(sourceID);
+        Call<Buckets> call = sourcesService.sourcesSourceIDBucketsGet(sourceID, null, null);
 
-        return execute(call, NotFoundException.class);
+        return execute(call).getBuckets();
     }
 
     @Nonnull
@@ -196,6 +197,6 @@ final class SourcesApiImpl extends AbstractInfluxDBRestClient implements Sources
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
-        return influxDBClient.health(influxDBService.findSourceHealth(sourceID));
+        return influxDBClient.health(sourcesService.sourcesSourceIDHealthGet(sourceID, null));
     }
 }

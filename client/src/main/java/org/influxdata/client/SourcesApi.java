@@ -120,7 +120,7 @@ public interface SourcesApi {
      * @param sourceID filter buckets to a specific source ID
      * @return buckets for source. If source does not exist than return null.
      */
-    @Nullable
+    @Nonnull
     List<Bucket> findBucketsBySourceID(@Nonnull final String sourceID);
 
     /**

@@ -56,7 +56,6 @@ class ITAuthorizationsApiTest extends AbstractITClientTest {
 
     @BeforeEach
     void setUp() {
-
         authorizationsApi = influxDBClient.getAuthorizationsApi();
 
         user = influxDBClient.getUsersApi().me();

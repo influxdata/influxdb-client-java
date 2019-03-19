@@ -21,12 +21,13 @@
  */
 package org.influxdata.client;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.LogEvent;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
@@ -391,8 +392,8 @@ public interface TasksApi {
      */
     @Nonnull
     List<Run> getRuns(@Nonnull final Task task,
-                      @Nullable final Instant afterTime,
-                      @Nullable final Instant beforeTime,
+                      @Nullable final OffsetDateTime afterTime,
+                      @Nullable final OffsetDateTime beforeTime,
                       @Nullable final Integer limit);
 
     /**
@@ -418,8 +419,8 @@ public interface TasksApi {
     @Nonnull
     List<Run> getRuns(@Nonnull final String taskID,
                       @Nonnull final String orgID,
-                      @Nullable final Instant afterTime,
-                      @Nullable final Instant beforeTime,
+                      @Nullable final OffsetDateTime afterTime,
+                      @Nullable final OffsetDateTime beforeTime,
                       @Nullable final Integer limit);
 
     /**
@@ -445,22 +446,20 @@ public interface TasksApi {
      * Retrieve all logs for a run.
      *
      * @param run   the run with a taskID and a runID
-     * @param orgID ID of organization
      * @return the list of all logs for a run
      */
     @Nonnull
-    List<LogEvent> getRunLogs(@Nonnull final Run run, final String orgID);
+    List<LogEvent> getRunLogs(@Nonnull final Run run);
 
     /**
      * Retrieve all logs for a run.
      *
      * @param taskID ID of task to get logs for it
      * @param runID  ID of run
-     * @param orgID  ID of organization
      * @return the list of all logs for a run
      */
     @Nonnull
-    List<LogEvent> getRunLogs(@Nonnull final String taskID, @Nonnull final String runID, final String orgID);
+    List<LogEvent> getRunLogs(@Nonnull final String taskID, @Nonnull final String runID);
 
     /**
      * Manually start a run of the task now overriding the current schedule.
@@ -529,11 +528,10 @@ public interface TasksApi {
      * Retrieve all logs for a task.
      *
      * @param taskID ID of task to get logs for
-     * @param orgID  ID of organization
      * @return the list of all logs for a task
      */
     @Nonnull
-    List<LogEvent> getLogs(@Nonnull final String taskID, @Nonnull final String orgID);
+    List<LogEvent> getLogs(@Nonnull final String taskID);
 
     /**
      * List all labels of a Task.
@@ -561,7 +559,7 @@ public interface TasksApi {
      * @return added label
      */
     @Nonnull
-    Label addLabel(@Nonnull final Label label, @Nonnull final Task task);
+    LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Task task);
 
     /**
      * Add the Task label.
@@ -571,7 +569,7 @@ public interface TasksApi {
      * @return added label
      */
     @Nonnull
-    Label addLabel(@Nonnull final String labelID, @Nonnull final String taskID);
+    LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String taskID);
 
     /**
      * Removes a label from a Task.

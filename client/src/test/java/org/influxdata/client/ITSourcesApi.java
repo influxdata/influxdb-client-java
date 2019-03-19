@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.Source;
+import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -171,9 +172,9 @@ class ITSourcesApi extends AbstractITClientTest {
     @Test
     void findBucketsBySourceByUnknownSource() {
 
-        List<Bucket> buckets = sourcesApi.findBucketsBySourceID("020f755c3d082000");
-
-        Assertions.assertThat(buckets).isNull();
+        Assertions.assertThatThrownBy(() -> sourcesApi.findBucketsBySourceID("020f755c3d082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("source not found");
     }
 
     @Test

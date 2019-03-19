@@ -35,6 +35,9 @@ import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.BucketRetentionRules;
 import org.influxdata.client.domain.Buckets;
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelMapping;
+import org.influxdata.client.domain.LabelResponse;
+import org.influxdata.client.domain.LabelsResponse;
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
@@ -43,6 +46,7 @@ import org.influxdata.client.domain.ResourceMembers;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.User;
+import org.influxdata.client.service.BucketsService;
 import org.influxdata.exceptions.NotFoundException;
 
 import com.google.gson.Gson;
@@ -55,9 +59,15 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
     private static final Logger LOG = Logger.getLogger(BucketsApiImpl.class.getName());
 
-    BucketsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Gson gson) {
+    private final BucketsService service;
+
+    BucketsApiImpl(@Nonnull final InfluxDBService influxDBService,
+                   @Nonnull final BucketsService service,
+                   @Nonnull final Gson gson) {
 
         super(influxDBService, gson);
+
+        this.service = service;
     }
 
     @Nullable
@@ -66,7 +76,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
         Arguments.checkNonEmpty(bucketID, "Bucket ID");
 
-        Call<Bucket> bucket = influxDBService.findBucketByID(bucketID);
+        Call<Bucket> bucket = service.bucketsBucketIDGet(bucketID, null);
 
         return execute(bucket, NotFoundException.class);
     }
@@ -77,7 +87,8 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
         Arguments.checkNonEmpty(bucketName, "Bucket Name");
 
-        Call<Buckets> bucket = influxDBService.findBucketByName(bucketName);
+        Call<Buckets> bucket = service
+                .bucketsGet(null, null, null, null, null, bucketName);
 
         return execute(bucket).getBuckets().stream().findFirst().orElse(null);
     }
@@ -165,7 +176,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
         Arguments.checkNotNull(bucket, "Bucket is required");
         Arguments.checkNonEmpty(bucket.getName(), "Bucket name");
 
-        Call<Bucket> call = influxDBService.createBucket(createBody(gson.toJson(bucket)));
+        Call<Bucket> call = service.bucketsPost(bucket, null);
 
         return execute(call);
     }
@@ -176,9 +187,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
         Arguments.checkNotNull(bucket, "Bucket is required");
 
-        String json = gson.toJson(bucket);
-
-        Call<Bucket> bucketCall = influxDBService.updateBucket(bucket.getId(), createBody(json));
+        Call<Bucket> bucketCall = service.bucketsBucketIDPatch(bucket.getId(), bucket, null);
 
         return execute(bucketCall);
     }
@@ -196,7 +205,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
         Arguments.checkNonEmpty(bucketID, "bucketID");
 
-        Call<Void> call = influxDBService.deleteBucket(bucketID);
+        Call<Void> call = service.bucketsBucketIDDelete(bucketID, null);
         execute(call);
     }
 
@@ -251,7 +260,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        Call<ResourceMembers> call = influxDBService.findBucketMembers(bucketID);
+        Call<ResourceMembers> call = service.bucketsBucketIDMembersGet(bucketID, null);
         ResourceMembers resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findBucketMembers found: {0}", resourceMembers);
 
@@ -278,8 +287,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(memberID);
 
-        String json = gson.toJson(user);
-        Call<ResourceMember> call = influxDBService.addBucketMember(bucketID, createBody(json));
+        Call<ResourceMember> call = service.bucketsBucketIDMembersPost(bucketID, user, null);
 
         return execute(call);
     }
@@ -299,7 +307,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        Call<Void> call = influxDBService.deleteBucketMember(bucketID, memberID);
+        Call<Void> call = service.bucketsBucketIDMembersUserIDDelete(memberID, bucketID, null);
         execute(call);
     }
 
@@ -318,7 +326,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        Call<ResourceOwners> call = influxDBService.findBucketOwners(bucketID);
+        Call<ResourceOwners> call = service.bucketsBucketIDOwnersGet(bucketID, null);
         ResourceOwners resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findBucketOwners found: {0}", resourceMembers);
 
@@ -345,8 +353,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(ownerID);
 
-        String json = gson.toJson(user);
-        Call<ResourceOwner> call = influxDBService.addBucketOwner(bucketID, createBody(json));
+        Call<ResourceOwner> call = service.bucketsBucketIDOwnersPost(bucketID, user, null);
 
         return execute(call);
     }
@@ -366,7 +373,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        Call<Void> call = influxDBService.deleteBucketOwner(bucketID, ownerID);
+        Call<Void> call = service.bucketsBucketIDOwnersUserIDDelete(ownerID, bucketID, null);
         execute(call);
     }
 
@@ -407,7 +414,8 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
         Arguments.checkNotNull(findOptions, "findOptions");
 
-        Call<OperationLogs> call = influxDBService.findBucketLogs(bucketID, createQueryMap(findOptions));
+        Call<OperationLogs> call = service.bucketsBucketIDLogsGet(bucketID, null,
+                findOptions.getOffset(), findOptions.getLimit());
 
         return getOperationLogEntries(call);
     }
@@ -427,12 +435,14 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
         Arguments.checkNonEmpty(bucketID, "bucketID");
 
-        return getLabels(bucketID, "buckets");
+        Call<LabelsResponse> call = service.bucketsBucketIDLabelsGet(bucketID, null);
+
+        return execute(call).getLabels();
     }
 
     @Nonnull
     @Override
-    public Label addLabel(@Nonnull final Label label, @Nonnull final Bucket bucket) {
+    public LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Bucket bucket) {
 
         Arguments.checkNotNull(label, "label");
         Arguments.checkNotNull(bucket, "bucket");
@@ -442,12 +452,17 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
 
     @Nonnull
     @Override
-    public Label addLabel(@Nonnull final String labelID, @Nonnull final String bucketID) {
+    public LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String bucketID) {
 
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(bucketID, "bucketID");
 
-        return addLabel(labelID, bucketID, "buckets");
+        LabelMapping labelMapping = new LabelMapping();
+        labelMapping.setLabelID(labelID);
+
+        Call<LabelResponse> call = service.bucketsBucketIDLabelsPost(bucketID, labelMapping, null);
+
+        return execute(call);
     }
 
     @Override
@@ -465,14 +480,16 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(bucketID, "bucketID");
 
-        deleteLabel(labelID, bucketID, "buckets");
+        Call<Void> call = service.bucketsBucketIDLabelsLabelIDDelete(bucketID, labelID, null);
+        execute(call);
     }
 
     @Nonnull
-    private Buckets findBuckets(@Nullable final String orgNae,
+    private Buckets findBuckets(@Nullable final String orgName,
                                 @Nonnull final FindOptions findOptions) {
 
-        Call<Buckets> bucketsCall = influxDBService.findBuckets(orgNae, createQueryMap(findOptions));
+        Call<Buckets> bucketsCall = service.bucketsGet(null, findOptions.getOffset(),
+                findOptions.getLimit(), orgName, null, null);
 
         return execute(bucketsCall);
     }

@@ -22,18 +22,12 @@
 package org.influxdata.client.internal;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.FindOptions;
-import org.influxdata.client.domain.Label;
-import org.influxdata.client.domain.LabelMapping;
-import org.influxdata.client.domain.LabelResponse;
-import org.influxdata.client.domain.LabelsResponse;
 import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.internal.AbstractRestClient;
 
@@ -43,6 +37,7 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:06)
  */
+//TODO delete?
 abstract class AbstractInfluxDBRestClient extends AbstractRestClient {
 
     private static final Logger LOG = Logger.getLogger(AbstractInfluxDBRestClient.class.getName());
@@ -58,54 +53,6 @@ abstract class AbstractInfluxDBRestClient extends AbstractRestClient {
 
         this.influxDBService = influxDBService;
         this.gson = gson;
-    }
-
-    @Nonnull
-    List<Label> getLabels(@Nonnull final String resourceID, @Nonnull final String resourcePath) {
-
-        Arguments.checkNonEmpty(resourceID, "resourceID");
-        Arguments.checkNonEmpty(resourcePath, "resourcePath");
-
-        Call<LabelsResponse> call = influxDBService.findResourceLabels(resourceID, resourcePath);
-        LabelsResponse labels = execute(call);
-
-        LOG.log(Level.FINEST, "findResourceLabels response: {0}", labels);
-
-        return labels.getLabels();
-    }
-
-    @Nonnull
-    Label addLabel(@Nonnull final String labelID,
-                   @Nonnull final String resourceID,
-                   @Nonnull final String resourcePath) {
-
-        Arguments.checkNonEmpty(labelID, "labelID");
-        Arguments.checkNonEmpty(resourceID, "resourceID");
-        Arguments.checkNonEmpty(resourcePath, "resourcePath");
-
-        LabelMapping labelMapping = new LabelMapping();
-        labelMapping.setLabelID(labelID);
-
-        String json = gson.toJson(labelMapping);
-        Call<LabelResponse> call = influxDBService.addResourceLabelOwner(resourceID, resourcePath, createBody(json));
-
-        LabelResponse labelResponse = execute(call);
-
-        LOG.log(Level.FINEST, "addResourceLabelOwner response: {0}", labelResponse);
-
-        return labelResponse.getLabel();
-    }
-
-    void deleteLabel(@Nonnull final String labelID, @Nonnull final String resourceID,
-                     @Nonnull final String resourcePath) {
-
-        Arguments.checkNonEmpty(labelID, "labelID");
-        Arguments.checkNonEmpty(resourceID, "resourceID");
-        Arguments.checkNonEmpty(resourcePath, "resourcePath");
-
-        Call<Void> call = influxDBService.deleteResourceLabelOwner(resourceID, resourcePath, labelID);
-
-        execute(call);
     }
 
     @Nonnull

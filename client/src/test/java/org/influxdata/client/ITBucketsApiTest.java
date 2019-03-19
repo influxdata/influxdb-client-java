@@ -307,7 +307,7 @@ class ITBucketsApiTest extends AbstractITClientTest {
         List<Label> labels = bucketsApi.getLabels(bucket);
         Assertions.assertThat(labels).hasSize(0);
 
-        Label addedLabel = bucketsApi.addLabel(label, bucket);
+        Label addedLabel = bucketsApi.addLabel(label, bucket).getLabel();
         Assertions.assertThat(addedLabel).isNotNull();
         Assertions.assertThat(addedLabel.getId()).isEqualTo(label.getId());
         Assertions.assertThat(addedLabel.getName()).isEqualTo(label.getName());

@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
@@ -183,6 +184,14 @@ public interface OrganizationsApi {
     void deleteSecrets(@Nonnull final List<String> secrets, @Nonnull final String orgID);
 
     /**
+     * Delete provided secrets.
+     *
+     * @param secretKeys secret key to deleted (required)
+     * @param orgID ID of the organization (required)
+     */
+    void deleteSecrets(@Nonnull final SecretKeys secretKeys, @Nonnull final String orgID);
+
+    /**
      * List all members of an organization.
      *
      * @param organization of the members
@@ -316,7 +325,7 @@ public interface OrganizationsApi {
      * @return added label
      */
     @Nonnull
-    Label addLabel(@Nonnull final Label label, @Nonnull final Organization organization);
+    LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Organization organization);
 
     /**
      * Add the organization label.
@@ -326,7 +335,7 @@ public interface OrganizationsApi {
      * @return added label
      */
     @Nonnull
-    Label addLabel(@Nonnull final String labelID, @Nonnull final String orgID);
+    LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String orgID);
 
     /**
      * Removes a label from an organization.
