@@ -32,6 +32,7 @@ import javax.annotation.Nullable;
 
 import org.openapitools.codegen.CodegenConfig;
 import org.openapitools.codegen.CodegenModel;
+import org.openapitools.codegen.CodegenOperation;
 import org.openapitools.codegen.CodegenProperty;
 import org.openapitools.codegen.languages.JavaClientCodegen;
 
@@ -221,8 +222,8 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                 pluginModel.vars.remove(typeProperty);
                 pluginModel.vars.remove(nameProperty);
                 pluginModel.vars.get(pluginModel.vars.size() - 1).hasMore = false;
-                }
-            });
+            }
+        });
 
         //
         // Configure Gson Type Selectors
@@ -247,6 +248,66 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         supportingFiles = supportingFiles.stream()
                 .filter(supportingFile -> supportingFile.destinationFilename.equals("JSON.java"))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Object> postProcessOperationsWithModels(final Map<String, Object> objs,
+                                                               final List<Object> allModels) {
+
+        Map<String, Object> operationsWithModels = super.postProcessOperationsWithModels(objs, allModels);
+
+        List<CodegenOperation> operations = (List<CodegenOperation>) ((HashMap) operationsWithModels.get("operations"))
+                .get("operation");
+
+        List<CodegenOperation> operationToSplit = operations.stream()
+                .filter(operation -> operation.produces.size() > 1)
+                .collect(Collectors.toList());
+
+        //
+        // For operations with more response type generate additional implementation
+        //
+        operationToSplit.forEach(operation -> {
+
+            List<String> returnTypes = operation.produces.stream()
+                    .filter(produce -> !produce.get("mediaType").equals("application/json"))
+                    .map(produce -> {
+
+                        switch (produce.get("mediaType")) {
+                            default:
+                            case "application/toml":
+                            case "application/octet-stream":
+                                return "ResponseBody";
+                        }
+                    })
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            returnTypes.forEach(returnType -> {
+                CodegenOperation codegenOperation = new CodegenOperation();
+                codegenOperation.baseName = operation.baseName + returnType;
+                codegenOperation.summary = operation.summary;
+                codegenOperation.notes = operation.notes;
+                codegenOperation.allParams = operation.allParams;
+                codegenOperation.httpMethod = operation.httpMethod;
+                codegenOperation.path = operation.path;
+                codegenOperation.returnType = returnType;
+                codegenOperation.operationId = operation.operationId + returnType;
+
+                operations.add(operations.indexOf(operation) + 1, codegenOperation);
+            });
+        });
+
+        return operationsWithModels;
+
+    }
+
+    @Override
+    public String toApiName(String name) {
+
+        if (name.length() == 0) {
+            return super.toApiName(name);
+        }
+        return camelize(name) + "Service";
     }
 
     private void normalizeImports(@Nonnull final HashMap requestConfig, @Nonnull final HashMap pluginConfig) {
