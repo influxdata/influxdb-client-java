@@ -81,7 +81,7 @@ public interface BucketsService {
    * @param bucketID ID of the bucket (required)
    * @param labelMapping label to add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;LabelsResponse&gt;
+   * @return Call&lt;LabelResponse&gt;
    */
   @Headers({
     "Content-Type:application/json"

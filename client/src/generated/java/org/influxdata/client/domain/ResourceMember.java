@@ -13,20 +13,23 @@
 
 package org.influxdata.client.domain;
 
-import java.io.IOException;
 import java.util.Objects;
-
+import java.util.Arrays;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.IOException;
+import org.influxdata.client.domain.User;
+import org.influxdata.client.domain.UserLinks;
 
 /**
  * ResourceMember
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-19T13:40:25.759+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-19T14:55:47.021+01:00[Europe/Prague]")
 public class ResourceMember extends User {
   /**
    * Gets or Sets role

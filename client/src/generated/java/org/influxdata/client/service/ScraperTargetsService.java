@@ -120,16 +120,16 @@ public interface ScraperTargetsService {
    * add a label to a scraper target
    * 
    * @param scraperTargetID ID of the scraper target (required)
-   * @param label label to add (required)
+   * @param labelMapping label to add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;LabelsResponse&gt;
+   * @return Call&lt;LabelResponse&gt;
    */
   @Headers({
     "Content-Type:application/json"
   })
   @POST("scrapers/{scraperTargetID}/labels")
   Call<LabelResponse> scrapersScraperTargetIDLabelsPost(
-          @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Body LabelMapping label, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**

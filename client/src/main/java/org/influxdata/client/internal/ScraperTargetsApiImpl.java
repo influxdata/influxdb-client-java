@@ -376,7 +376,7 @@ final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements 
         LabelMapping labelMapping = new LabelMapping();
         labelMapping.setLabelID(labelID);
 
-        Call<LabelResponse> call = service.scrapersScraperTargetIDLabelsPost(labelID, labelMapping, null);
+        Call<LabelResponse> call = service.scrapersScraperTargetIDLabelsPost(scraperTargetID, labelMapping, null);
 
         return execute(call);
     }

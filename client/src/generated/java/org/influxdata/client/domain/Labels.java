@@ -13,13 +13,16 @@
 
 package org.influxdata.client.domain;
 
-import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import org.influxdata.client.domain.Label;
 
 /**
  * Labels
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-19T13:40:25.759+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-19T14:55:47.021+01:00[Europe/Prague]")
 public class Labels extends ArrayList<Label> {
 
   @Override
