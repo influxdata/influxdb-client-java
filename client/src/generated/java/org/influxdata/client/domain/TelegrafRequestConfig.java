@@ -14,25 +14,11 @@
 package org.influxdata.client.domain;
 
 import java.util.Objects;
-import java.util.Arrays;
-import java.util.List;
-import org.influxdata.client.domain.TelegrafPluginConfig;
-import org.influxdata.client.domain.TelegrafPluginInputDockerConfig;
-import org.influxdata.client.domain.TelegrafPluginInputFileConfig;
-import org.influxdata.client.domain.TelegrafPluginInputKubernetesConfig;
-import org.influxdata.client.domain.TelegrafPluginInputLogParserConfig;
-import org.influxdata.client.domain.TelegrafPluginInputProcstatConfig;
-import org.influxdata.client.domain.TelegrafPluginInputPrometheusConfig;
-import org.influxdata.client.domain.TelegrafPluginInputRedisConfig;
-import org.influxdata.client.domain.TelegrafPluginInputSyslogConfig;
-import org.influxdata.client.domain.TelegrafPluginOutputFileConfig;
-import org.influxdata.client.domain.TelegrafPluginOutputFileConfigFiles;
-import org.influxdata.client.domain.TelegrafPluginOutputInfluxDBV2Config;
 
 /**
  * TelegrafRequestConfig
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:18:15.931+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-19T13:40:25.759+01:00[Europe/Prague]")
 public class TelegrafRequestConfig {
 
   @Override

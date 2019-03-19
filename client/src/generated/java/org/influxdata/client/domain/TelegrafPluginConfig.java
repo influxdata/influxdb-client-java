@@ -14,12 +14,11 @@
 package org.influxdata.client.domain;
 
 import java.util.Objects;
-import java.util.Arrays;
 
 /**
  * TelegrafPluginConfig
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-18T13:18:15.931+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-19T13:40:25.759+01:00[Europe/Prague]")
 public class TelegrafPluginConfig {
 
   @Override
