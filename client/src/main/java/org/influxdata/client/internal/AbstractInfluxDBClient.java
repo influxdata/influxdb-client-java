@@ -30,10 +30,10 @@ import org.influxdata.Arguments;
 import org.influxdata.client.InfluxDBClientOptions;
 import org.influxdata.client.JSON;
 import org.influxdata.client.domain.Check;
+import org.influxdata.client.domain.Dialect;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.internal.AbstractRestClient;
 
-import com.google.gson.Gson;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -48,10 +48,15 @@ public abstract class AbstractInfluxDBClient<T> extends AbstractRestClient {
 
     private static final Logger LOG = Logger.getLogger(AbstractInfluxDBClient.class.getName());
 
+    public static final Dialect DEFAULT_DIALECT =  new Dialect().header(true)
+            .delimiter(",")
+            .commentPrefix("#")
+            .addAnnotationsItem(Dialect.AnnotationsEnum.DATATYPE)
+            .addAnnotationsItem(Dialect.AnnotationsEnum.GROUP).addAnnotationsItem(Dialect.AnnotationsEnum.DEFAULT);
+
     public final T influxDBService;
 
-    final Gson gson;
-    final Retrofit retrofit;
+    protected final Retrofit retrofit;
 
     protected final HttpLoggingInterceptor loggingInterceptor;
     protected final GzipInterceptor gzipInterceptor;
@@ -76,12 +81,10 @@ public abstract class AbstractInfluxDBClient<T> extends AbstractRestClient {
 
         this.authenticateInterceptor.initToken(okHttpClient);
 
-        this.gson = new JSON().getGson();
-
         this.retrofit = new Retrofit.Builder()
                 .baseUrl(options.getUrl())
                 .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create(this.gson))
+                .addConverterFactory(GsonConverterFactory.create(new JSON().getGson()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 

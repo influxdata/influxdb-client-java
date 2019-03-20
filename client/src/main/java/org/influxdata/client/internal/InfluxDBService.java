@@ -27,7 +27,6 @@ import org.influxdata.client.domain.Check;
 
 import io.reactivex.Maybe;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
@@ -35,7 +34,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
-import retrofit2.http.Streaming;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 13:30)
@@ -66,14 +64,4 @@ public interface InfluxDBService {
                                       @Query("bucket") final String bucket,
                                       @Query("precision") final String precision,
                                       @Body final RequestBody points);
-
-    //
-    // Query
-    //
-    @Streaming
-    @POST("/api/v2/query")
-    @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<ResponseBody> query(@Query("orgID") final String orgID, @Nonnull @Body final RequestBody query);
-
 }

@@ -50,12 +50,14 @@ import org.influxdata.client.service.AuthorizationsService;
 import org.influxdata.client.service.BucketsService;
 import org.influxdata.client.service.LabelsService;
 import org.influxdata.client.service.OrganizationsService;
+import org.influxdata.client.service.QueryService;
 import org.influxdata.client.service.ScraperTargetsService;
 import org.influxdata.client.service.SetupService;
 import org.influxdata.client.service.SourcesService;
 import org.influxdata.client.service.TasksService;
 import org.influxdata.client.service.TelegrafsService;
 import org.influxdata.client.service.UsersService;
+import org.influxdata.client.service.WriteService;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.exceptions.UnprocessableEntityException;
 
@@ -67,6 +69,7 @@ import retrofit2.Call;
 public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBService> implements InfluxDBClient {
 
     private static final Logger LOG = Logger.getLogger(InfluxDBClientImpl.class.getName());
+
     private final SetupService setupService;
 
     public InfluxDBClientImpl(@Nonnull final InfluxDBClientOptions options) {
@@ -79,7 +82,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Nonnull
     @Override
     public QueryApi getQueryApi() {
-        return new QueryApiImpl(influxDBService);
+        return new QueryApiImpl(retrofit.create(QueryService.class));
     }
 
     @Nonnull
@@ -94,7 +97,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
-        return new WriteApiImpl(writeOptions, influxDBService);
+        return new WriteApiImpl(writeOptions, retrofit.create(WriteService.class), influxDBService);
     }
 
     @Nonnull

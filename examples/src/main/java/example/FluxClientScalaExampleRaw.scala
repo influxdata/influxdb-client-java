@@ -47,7 +47,7 @@ object FluxClientScalaExampleRaw {
       + " |> sample(n: 5, pos: 1)")
 
     //Result is returned as a stream
-    val sink = fluxClient.getQueryScalaApi().queryRaw(fluxQuery, "{header: false}", "my-org")
+    val sink = fluxClient.getQueryScalaApi().queryRaw(fluxQuery, "my-org")
       //print results
       .runWith(Sink.foreach[String](it => println(s"Line: $it")))
 

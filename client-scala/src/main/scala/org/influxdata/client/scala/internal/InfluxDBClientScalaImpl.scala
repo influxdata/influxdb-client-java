@@ -28,6 +28,7 @@ import org.influxdata.client.InfluxDBClientOptions
 import org.influxdata.client.domain.Check
 import org.influxdata.client.internal.{AbstractInfluxDBClient, InfluxDBService}
 import org.influxdata.client.scala.{InfluxDBClientScala, QueryScalaApi}
+import org.influxdata.client.service.QueryService
 
 /**
  * @author Jakub Bednar (bednar@github) (08/02/2019 09:26)
@@ -40,7 +41,7 @@ class InfluxDBClientScalaImpl(@Nonnull options: InfluxDBClientOptions,
    *
    * @return the new client instance for the Query API
    */
-  override def getQueryScalaApi(): QueryScalaApi = new QueryScalaApiImpl(influxDBService, bufferSize, overflowStrategy)
+  override def getQueryScalaApi(): QueryScalaApi = new QueryScalaApiImpl(retrofit.create(classOf[QueryService]), bufferSize, overflowStrategy)
 
   /**
    * Get the health of an instance.

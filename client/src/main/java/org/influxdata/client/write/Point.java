@@ -35,6 +35,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.influxdata.Arguments;
+import org.influxdata.client.domain.WritePrecision;
 
 /**
  * Point defines the values that will be written to the database.
@@ -45,7 +46,7 @@ import org.influxdata.Arguments;
 @NotThreadSafe
 public final class Point {
 
-    private static final ChronoUnit DEFAULT_WRITE_PRECISION = ChronoUnit.NANOS;
+    private static final WritePrecision DEFAULT_WRITE_PRECISION = WritePrecision.NS;
 
     private static final int MAX_FRACTION_DIGITS = 340;
     private static final ThreadLocal<NumberFormat> NUMBER_FORMATTER =
@@ -62,7 +63,7 @@ public final class Point {
     private final Map<String, String> tags = new TreeMap<>();
     private final Map<String, Object> fields = new TreeMap<>();
     private Long time;
-    private ChronoUnit precision = DEFAULT_WRITE_PRECISION;
+    private WritePrecision precision = DEFAULT_WRITE_PRECISION;
 
     /**
      * Create a new Point withe specified a measurement name.
@@ -165,9 +166,7 @@ public final class Point {
      * @return this
      */
     @Nonnull
-    public Point time(@Nullable final Instant time, @Nonnull final ChronoUnit precision) {
-
-        Arguments.checkPrecision(precision);
+    public Point time(@Nullable final Instant time, @Nonnull final WritePrecision precision) {
 
         if (time == null) {
             return time((Long) null, precision);
@@ -178,16 +177,16 @@ public final class Point {
         Duration plus = Duration.ofNanos(time.getNano()).plus(time.getEpochSecond(), ChronoUnit.SECONDS);
         switch (precision) {
 
-            case NANOS:
+            case NS:
                 longTime = TimeUnit.NANOSECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);
                 break;
-            case MICROS:
+            case US:
                 longTime = TimeUnit.MICROSECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);
                 break;
-            case MILLIS:
+            case MS:
                 longTime = TimeUnit.MILLISECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);
                 break;
-            case SECONDS:
+            case S:
                 longTime = TimeUnit.SECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);
                 break;
             default:
@@ -205,9 +204,7 @@ public final class Point {
      * @return this
      */
     @Nonnull
-    public Point time(@Nullable final Long time, @Nonnull final ChronoUnit precision) {
-
-        Arguments.checkPrecision(precision);
+    public Point time(@Nullable final Long time, @Nonnull final WritePrecision precision) {
 
         this.time = time;
         this.precision = precision;
@@ -219,7 +216,7 @@ public final class Point {
      * @return the data point precision
      */
     @Nonnull
-    public ChronoUnit getPrecision() {
+    public WritePrecision getPrecision() {
         return precision;
     }
 

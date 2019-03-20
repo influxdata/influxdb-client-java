@@ -32,6 +32,7 @@ import org.influxdata.client.internal.AbstractInfluxDBClient;
 import org.influxdata.client.reactive.InfluxDBClientReactive;
 import org.influxdata.client.reactive.QueryReactiveApi;
 import org.influxdata.client.reactive.WriteReactiveApi;
+import org.influxdata.client.service.QueryService;
 
 import io.reactivex.Single;
 
@@ -48,9 +49,8 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient<InfluxDBR
     @Nonnull
     @Override
     public QueryReactiveApi getQueryReactiveApi() {
-        return new QueryReactiveApiImpl(influxDBService);
+        return new QueryReactiveApiImpl(retrofit.create(QueryService.class));
     }
-
 
     @Nonnull
     @Override

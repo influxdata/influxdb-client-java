@@ -23,7 +23,6 @@ package org.influxdata.client.scala
 
 import java.net.ConnectException
 import java.time.Instant
-import java.time.temporal.ChronoUnit
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
@@ -33,7 +32,6 @@ import org.influxdata.client.InfluxDBClientFactory
 import org.influxdata.client.domain._
 import org.influxdata.exceptions.InfluxException
 import org.influxdata.query.FluxRecord
-import org.json.JSONObject
 import org.scalatest.Matchers
 
 import scala.collection.JavaConverters._
@@ -101,7 +99,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       .mkString("\n")
 
     val writeApi = client.getWriteApi
-    writeApi.writeRecord(bucket.getName, organization.getId, ChronoUnit.NANOS, records)
+    writeApi.writeRecord(bucket.getName, organization.getId, WritePrecision.NS, records)
     writeApi.close()
 
     client.close()
@@ -260,9 +258,8 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n\t" +
       "|> sum()"
 
-    val dialect = new JSONObject()
-      .put("header", false)
-      .toString()
+    val dialect = new Dialect()
+      .header( false)
 
     val source = queryScalaApi.queryRaw(flux, dialect, organization.getId).runWith(TestSink.probe[String])
 

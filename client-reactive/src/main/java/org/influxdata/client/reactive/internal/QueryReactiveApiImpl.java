@@ -27,7 +27,11 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.Cancellable;
+import org.influxdata.client.domain.Dialect;
+import org.influxdata.client.domain.Query;
+import org.influxdata.client.internal.AbstractInfluxDBClient;
 import org.influxdata.client.reactive.QueryReactiveApi;
+import org.influxdata.client.service.QueryService;
 import org.influxdata.internal.AbstractQueryApi;
 import org.influxdata.query.FluxRecord;
 import org.influxdata.query.FluxTable;
@@ -43,13 +47,13 @@ import org.reactivestreams.Publisher;
  */
 final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReactiveApi {
 
-    private final InfluxDBReactiveService influxDBService;
+    private final QueryService service;
 
-    QueryReactiveApiImpl(@Nonnull final InfluxDBReactiveService influxDBService) {
+    QueryReactiveApiImpl(@Nonnull final QueryService service) {
 
-        Arguments.checkNotNull(influxDBService, "InfluxDBReactiveService");
+        Arguments.checkNotNull(service, "InfluxDBReactiveService");
 
-        this.influxDBService = influxDBService;
+        this.service = service;
     }
 
     @Nonnull
@@ -84,7 +88,8 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
         return Flowable
                 .fromPublisher(queryStream)
-                .map(it -> influxDBService.query(orgID, createBody(DEFAULT_DIALECT.toString(), it)))
+                .map(it -> service
+                        .queryPostResponseBody(null, "text/csv", "application/json", null, orgID, new Query().query(it).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT)))
                 .flatMap(queryCall -> {
 
                     Observable<FluxRecord> observable = Observable.create(subscriber -> {
@@ -149,13 +154,13 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
         Arguments.checkNotNull(queryStream, "queryStream");
         Arguments.checkNonEmpty(orgID, "orgID");
 
-        return queryRaw(queryStream, DEFAULT_DIALECT.toString(), orgID);
+        return queryRaw(queryStream, AbstractInfluxDBClient.DEFAULT_DIALECT, orgID);
     }
 
     @Nonnull
     @Override
     public Flowable<String> queryRaw(@Nonnull final String query,
-                                     @Nullable final String dialect,
+                                     @Nullable final Dialect dialect,
                                      @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(query, "Flux query");
@@ -167,7 +172,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
     @Nonnull
     @Override
     public Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream,
-                                     @Nullable final String dialect,
+                                     @Nullable final Dialect dialect,
                                      @Nonnull final String orgID) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
@@ -175,7 +180,8 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
         return Flowable
                 .fromPublisher(queryStream)
-                .map(it -> influxDBService.query(orgID, createBody(dialect, it)))
+                .map(it -> service
+                        .queryPostResponseBody(null, "text/csv", "application/json", null, orgID, new Query().query(it).dialect(dialect)))
                 .flatMap(queryCall -> {
 
                     Observable<String> observable = Observable.create(subscriber -> {

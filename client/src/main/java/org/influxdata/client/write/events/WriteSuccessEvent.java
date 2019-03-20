@@ -21,10 +21,11 @@
  */
 package org.influxdata.client.write.events;
 
-import java.time.temporal.ChronoUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+
+import org.influxdata.client.domain.WritePrecision;
 
 /**
  * The event is published when arrived the success response from InfluxDB 2.0 server.
@@ -37,12 +38,12 @@ public final class WriteSuccessEvent extends AbstractWriteEvent {
 
     private String organization;
     private String bucket;
-    private ChronoUnit precision;
+    private WritePrecision precision;
     private String lineProtocol;
 
     public WriteSuccessEvent(@Nonnull final String organization,
                              @Nonnull final String bucket,
-                             @Nonnull final ChronoUnit precision,
+                             @Nonnull final WritePrecision precision,
                              @Nonnull final String lineProtocol) {
 
 
@@ -69,7 +70,7 @@ public final class WriteSuccessEvent extends AbstractWriteEvent {
     /**
      * @return The Precision that was used for write data.
      */
-    public ChronoUnit getPrecision() {
+    public WritePrecision getPrecision() {
         return precision;
     }
 

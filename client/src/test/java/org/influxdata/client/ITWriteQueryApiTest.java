@@ -22,7 +22,6 @@
 package org.influxdata.client;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +35,7 @@ import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
 import org.influxdata.client.domain.User;
+import org.influxdata.client.domain.WritePrecision;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.WriteErrorEvent;
 import org.influxdata.client.write.events.WriteSuccessEvent;
@@ -124,7 +124,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
 
         LOG.log(Level.FINEST, "Write Event Listener count down: {0}. Before write.", countDownLatch);
 
-        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, record);
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record);
 
         waitToCallback(listener.countDownLatch, 10);
 
@@ -158,7 +158,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
-        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.MICROS, record);
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.MS, record);
 
         waitToCallback(listener.countDownLatch, 10);
 
@@ -180,7 +180,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
-        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.MILLIS, record);
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.MS, record);
 
         waitToCallback(listener.countDownLatch, 10);
 
@@ -202,7 +202,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
-        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.SECONDS, record);
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.S, record);
 
         waitToCallback(listener.countDownLatch, 10);
 
@@ -223,8 +223,8 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
 
         Instant time = Instant.now();
 
-        Point point1 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 1).time(time, ChronoUnit.MILLIS);
-        Point point2 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusMillis(10), ChronoUnit.MILLIS);
+        Point point1 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 1).time(time, WritePrecision.MS);
+        Point point2 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusMillis(10), WritePrecision.MS);
 
         writeApi.writePoints(bucketName, organization.getId(), Arrays.asList(point1, point2, point2));
 
@@ -259,7 +259,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         H2OFeetMeasurement measurement = new H2OFeetMeasurement(
                 "coyote_creek", 2.927, null, millis);
 
-        writeApi.writeMeasurement(bucketName, organization.getId(), ChronoUnit.NANOS, measurement);
+        writeApi.writeMeasurement(bucketName, organization.getId(), WritePrecision.NS, measurement);
 
         waitToCallback(listener.countDownLatch, 10);
 
@@ -334,7 +334,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         Point point = Point.measurement("h2o_feet")
                 .addTag("location", "atlantic")
                 .addField("water_level", 1)
-                .time(Instant.now(), ChronoUnit.MICROS);
+                .time(Instant.now(), WritePrecision.MS);
 
         writeApi = influxDBClient.getWriteApi();
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
@@ -358,7 +358,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
-        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, record);
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record);
 
         List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
         Assertions.assertThat(query).hasSize(0);
@@ -386,7 +386,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         String record4 = "h2o_feet,location=coyote_creek level\\ water_level=4.0 4";
         String record5 = "h2o_feet,location=coyote_creek level\\ water_level=5.0 5";
 
-        writeApi.writeRecords(bucketName, organization.getId(), ChronoUnit.NANOS, Arrays.asList(record1, record2, record3, record4, record5));
+        writeApi.writeRecords(bucketName, organization.getId(), WritePrecision.NS, Arrays.asList(record1, record2, record3, record4, record5));
 
         List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", organization.getId());
         Assertions.assertThat(query).hasSize(0);
@@ -414,17 +414,17 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         String record5 = "h2o_feet,location=coyote_creek level\\ water_level=5.0 5";
         String record6 = "h2o_feet,location=coyote_creek level\\ water_level=6.0 6";
 
-        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, record1);
-        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, record2);
-        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, record3);
-        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, record4);
-        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, record5);
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record1);
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record2);
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record3);
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record4);
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record5);
 
         Thread.sleep(100);
         List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
-        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, record6);
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record6);
         Thread.sleep(100);
 
         query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", organization.getId());
@@ -444,7 +444,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
-        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, record);
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record);
 
         List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
         Assertions.assertThat(query).hasSize(0);
@@ -467,7 +467,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         String record1 = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
         String record2 = "h2o_feet,location=coyote_hill level\\ water_level=2.0 2x";
 
-        writeApi.writeRecords(bucket.getName(), organization.getId(), ChronoUnit.NANOS, Arrays.asList(record1, record2));
+        writeApi.writeRecords(bucket.getName(), organization.getId(), WritePrecision.NS, Arrays.asList(record1, record2));
 
         writeApi.close();
 
@@ -485,7 +485,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         WriteEventListener<WriteErrorEvent> errorListener = new WriteEventListener<>();
         writeApi.listenEvents(WriteErrorEvent.class, errorListener);
 
-        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, "h2o_feet,location=coyote_creek level\\ water_level=1.0 1x");
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, "h2o_feet,location=coyote_creek level\\ water_level=1.0 1x");
 
         waitToCallback(errorListener.countDownLatch, 10);
 
@@ -495,7 +495,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         WriteEventListener<WriteSuccessEvent> successListener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, successListener);
 
-        writeApi.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, "h2o_feet,location=coyote_creek level\\ water_level=1.0 1");
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, "h2o_feet,location=coyote_creek level\\ water_level=1.0 1");
 
         waitToCallback(successListener.countDownLatch, 10);
 

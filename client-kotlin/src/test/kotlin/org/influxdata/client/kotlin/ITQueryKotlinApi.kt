@@ -22,31 +22,19 @@
 package org.influxdata.client.kotlin
 
 import assertk.assert
-import assertk.assertions.containsExactly
-import assertk.assertions.endsWith
-import assertk.assertions.hasSize
-import assertk.assertions.isEmpty
-import assertk.assertions.isEqualTo
-import assertk.assertions.isInstanceOf
-import assertk.assertions.isTrue
+import assertk.assertions.*
 import kotlinx.coroutines.channels.map
 import kotlinx.coroutines.channels.toList
 import kotlinx.coroutines.runBlocking
 import org.influxdata.annotations.Column
 import org.influxdata.client.InfluxDBClientFactory
-import org.influxdata.client.domain.Bucket
-import org.influxdata.client.domain.BucketRetentionRules
-import org.influxdata.client.domain.Organization
-import org.influxdata.client.domain.Permission
-import org.influxdata.client.domain.PermissionResource
-import org.json.JSONObject
+import org.influxdata.client.domain.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
 import java.net.ConnectException
 import java.time.Instant
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 /**
@@ -110,7 +98,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
                 .joinToString("\n")
 
         val writeApi = client.writeApi
-        writeApi.writeRecord(bucket.name, organization.id, ChronoUnit.NANOS, records)
+        writeApi.writeRecord(bucket.name, organization.id, WritePrecision.NS, records)
         writeApi.close()
 
         client.close()
@@ -227,9 +215,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
                 "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\t" +
                 "|> sum()"
 
-        val dialect = JSONObject()
-                .put("header", false)
-                .toString()
+        val dialect = Dialect().header(false)
 
         val lines = queryKotlinApi.queryRaw(flux, dialect, organization.id).toList()
 

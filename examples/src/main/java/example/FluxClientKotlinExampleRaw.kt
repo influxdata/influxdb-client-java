@@ -36,7 +36,7 @@ fun main(args: Array<String>) = runBlocking {
             + " |> sample(n: 5, pos: 1)")
 
     //Result is returned as a stream
-    val results = fluxClient.getQueryKotlinApi().queryRaw(fluxQuery, "my-org", "{header: false}")
+    val results = fluxClient.getQueryKotlinApi().queryRaw(fluxQuery, "my-org")
 
     //print results
     results.consumeEach { println("Line: $it") }

@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.WriteOptions;
+import org.influxdata.client.domain.WritePrecision;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.AbstractWriteEvent;
 import org.influxdata.client.write.events.WriteErrorEvent;
@@ -188,12 +189,11 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
 
     public void write(@Nonnull final String bucket,
                       @Nonnull final String organization,
-                      @Nonnull final ChronoUnit precision,
+                      @Nonnull final WritePrecision precision,
                       @Nonnull final Publisher<AbstractWriteClient.BatchWriteData> stream) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(organization, "organization");
-        Arguments.checkPrecision(precision);
         Arguments.checkNotNull(stream, "data to write");
 
         BatchWriteOptions batchWriteOptions = new BatchWriteOptions(bucket, organization, precision);
@@ -309,10 +309,10 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
     public final class BatchWriteDataMeasurement implements BatchWriteData {
 
         private final Object measurement;
-        private final ChronoUnit precision;
+        private final WritePrecision precision;
 
         public BatchWriteDataMeasurement(@Nullable final Object measurement,
-                                         @Nonnull final ChronoUnit precision) {
+                                         @Nonnull final WritePrecision precision) {
             this.measurement = measurement;
             this.precision = precision;
         }
@@ -355,11 +355,11 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
 
         private String bucket;
         private String organization;
-        private ChronoUnit precision;
+        private WritePrecision precision;
 
         private BatchWriteOptions(@Nonnull final String bucket,
                                   @Nonnull final String organization,
-                                  @Nonnull final ChronoUnit precision) {
+                                  @Nonnull final WritePrecision precision) {
 
             Arguments.checkNonEmpty(bucket, "bucket");
             Arguments.checkNonEmpty(organization, "organization");
@@ -416,7 +416,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
             // Parameters
             String organization = batchWrite.batchWriteOptions.organization;
             String bucket = batchWrite.batchWriteOptions.bucket;
-            String precision = AbstractWriteClient.this.toPrecisionParameter(batchWrite.batchWriteOptions.precision);
+            String precision = batchWrite.batchWriteOptions.precision.getValue();
 
             return writeCall(body, organization, bucket, precision)
                     //

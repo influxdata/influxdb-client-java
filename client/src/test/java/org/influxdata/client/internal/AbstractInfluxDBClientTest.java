@@ -57,6 +57,6 @@ public class AbstractInfluxDBClientTest extends AbstractMockServerTest {
             Assertions.fail();
         }
 
-        return new WriteApiImpl(writeOptions, (InfluxDBService) influxDBService.get());
+        return new WriteApiImpl(writeOptions, null, (InfluxDBService) influxDBService.get());
     }
 }

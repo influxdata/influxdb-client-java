@@ -22,7 +22,6 @@
 package example;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -39,6 +38,7 @@ import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
+import org.influxdata.client.domain.WritePrecision;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.WriteSuccessEvent;
 import org.influxdata.query.FluxRecord;
@@ -133,7 +133,7 @@ public class PlatformExample {
             temperature.location = "south";
             temperature.value = 62D;
             temperature.time = Instant.now();
-            writeApi.writeMeasurement("temperature-sensors", medicalGMBH.getId(), ChronoUnit.NANOS, temperature);
+            writeApi.writeMeasurement("temperature-sensors", medicalGMBH.getId(), WritePrecision.NS, temperature);
 
             //
             // Write by Point
@@ -141,14 +141,14 @@ public class PlatformExample {
             Point point = Point.measurement("temperature")
                     .addTag("location", "west")
                     .addField("value", 55D)
-                    .time(Instant.now().toEpochMilli(), ChronoUnit.NANOS);
+                    .time(Instant.now().toEpochMilli(), WritePrecision.NS);
             writeApi.writePoint("temperature-sensors", medicalGMBH.getId(), point);
 
             //
             // Write by LineProtocol
             //
             String record = "temperature,location=north value=60.0";
-            writeApi.writeRecord("temperature-sensors", medicalGMBH.getId(), ChronoUnit.NANOS, record);
+            writeApi.writeRecord("temperature-sensors", medicalGMBH.getId(), WritePrecision.NS, record);
 
             countDownLatch.await(2, TimeUnit.SECONDS);
         }
