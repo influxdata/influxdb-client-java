@@ -8,7 +8,7 @@ import okhttp3.ResponseBody;
 import okhttp3.MultipartBody;
 
 import org.influxdata.client.domain.Error;
-import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelCreateRequest;
 import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.LabelUpdate;
 import org.influxdata.client.domain.LabelsResponse;
@@ -71,7 +71,7 @@ public interface LabelsService {
   /**
    * Create a label
    * 
-   * @param label label to create (required)
+   * @param labelCreateRequest label to create (required)
    * @return Call&lt;LabelResponse&gt;
    */
   @Headers({
@@ -79,7 +79,7 @@ public interface LabelsService {
   })
   @POST("labels")
   Call<LabelResponse> labelsPost(
-    @retrofit2.http.Body Label label
+    @retrofit2.http.Body LabelCreateRequest labelCreateRequest
   );
 
 }

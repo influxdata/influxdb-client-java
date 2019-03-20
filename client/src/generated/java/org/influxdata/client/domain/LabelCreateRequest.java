@@ -28,14 +28,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Label
+ * LabelCreateRequest
  */
 @javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-20T09:31:34.049872+01:00[Europe/Prague]")
-public class Label {
-  public static final String SERIALIZED_NAME_ID = "id";
-  @SerializedName(SERIALIZED_NAME_ID)
-  private String id = null;
-
+public class LabelCreateRequest {
   public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
   private String orgID = null;
@@ -48,25 +44,25 @@ public class Label {
   @SerializedName(SERIALIZED_NAME_PROPERTIES)
   private Map<String, String> properties = new HashMap<>();
 
-   /**
-   * Get id
-   * @return id
-  **/
-  @ApiModelProperty(value = "")
-  public String getId() {
-    return id;
+  public LabelCreateRequest orgID(String orgID) {
+    this.orgID = orgID;
+    return this;
   }
 
    /**
    * Get orgID
    * @return orgID
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getOrgID() {
     return orgID;
   }
 
-  public Label name(String name) {
+  public void setOrgID(String orgID) {
+    this.orgID = orgID;
+  }
+
+  public LabelCreateRequest name(String name) {
     this.name = name;
     return this;
   }
@@ -84,12 +80,12 @@ public class Label {
     this.name = name;
   }
 
-  public Label properties(Map<String, String> properties) {
+  public LabelCreateRequest properties(Map<String, String> properties) {
     this.properties = properties;
     return this;
   }
 
-  public Label putPropertiesItem(String key, String propertiesItem) {
+  public LabelCreateRequest putPropertiesItem(String key, String propertiesItem) {
     if (this.properties == null) {
       this.properties = new HashMap<>();
     }
@@ -119,24 +115,22 @@ public class Label {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Label label = (Label) o;
-    return Objects.equals(this.id, label.id) &&
-        Objects.equals(this.orgID, label.orgID) &&
-        Objects.equals(this.name, label.name) &&
-        Objects.equals(this.properties, label.properties);
+    LabelCreateRequest labelCreateRequest = (LabelCreateRequest) o;
+    return Objects.equals(this.orgID, labelCreateRequest.orgID) &&
+        Objects.equals(this.name, labelCreateRequest.name) &&
+        Objects.equals(this.properties, labelCreateRequest.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, orgID, name, properties);
+    return Objects.hash(orgID, name, properties);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Label {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("class LabelCreateRequest {\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");

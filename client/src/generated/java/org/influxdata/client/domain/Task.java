@@ -30,7 +30,7 @@ import org.influxdata.client.domain.TaskLinks;
 /**
  * Task
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-19T14:55:47.021+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-20T09:31:34.049872+01:00[Europe/Prague]")
 public class Task {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
@@ -316,10 +316,10 @@ public class Task {
   }
 
    /**
-   * Duration to delay after the schedule, before executing the task; parsed from flux.
+   * Duration to delay after the schedule, before executing the task; parsed from flux, if set to zero it will remove this option and use 0 as the default.
    * @return offset
   **/
-  @ApiModelProperty(value = "Duration to delay after the schedule, before executing the task; parsed from flux.")
+  @ApiModelProperty(value = "Duration to delay after the schedule, before executing the task; parsed from flux, if set to zero it will remove this option and use 0 as the default.")
   public String getOffset() {
     return offset;
   }

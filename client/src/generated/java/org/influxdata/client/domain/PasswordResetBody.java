@@ -15,12 +15,42 @@ package org.influxdata.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import java.io.IOException;
 
 /**
- * TelegrafPluginConfig
+ * PasswordResetBody
  */
 @javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-20T09:31:34.049872+01:00[Europe/Prague]")
-public class TelegrafPluginConfig {
+public class PasswordResetBody {
+  public static final String SERIALIZED_NAME_PASSWORD = "password";
+  @SerializedName(SERIALIZED_NAME_PASSWORD)
+  private String password = null;
+
+  public PasswordResetBody password(String password) {
+    this.password = password;
+    return this;
+  }
+
+   /**
+   * Get password
+   * @return password
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -30,19 +60,21 @@ public class TelegrafPluginConfig {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    return true;
+    PasswordResetBody passwordResetBody = (PasswordResetBody) o;
+    return Objects.equals(this.password, passwordResetBody.password);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash();
+    return Objects.hash(password);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class TelegrafPluginConfig {\n");
+    sb.append("class PasswordResetBody {\n");
+    sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("}");
     return sb.toString();
   }
