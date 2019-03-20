@@ -24,6 +24,7 @@ package org.influxdata.client.internal;
 import javax.annotation.Nonnull;
 
 import org.influxdata.client.domain.Check;
+import org.influxdata.client.domain.Ready;
 
 import io.reactivex.Maybe;
 import okhttp3.RequestBody;
@@ -54,7 +55,7 @@ public interface InfluxDBService {
     @GET("/ready")
     @Nonnull
     @Headers("Content-Type: application/json")
-    Call<Check> ready();
+    Call<Ready> ready();
 
     // Write
     //

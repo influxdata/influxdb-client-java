@@ -21,9 +21,13 @@
  */
 package org.influxdata.client;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
 import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.OnboardingRequest;
 import org.influxdata.client.domain.OnboardingResponse;
+import org.influxdata.client.domain.Ready;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.UnprocessableEntityException;
 
@@ -64,15 +68,15 @@ class ITInfluxDBClient extends AbstractITClientTest {
     @Test
     void ready() {
 
-        Check ready = influxDBClient.ready();
+        Ready ready = influxDBClient.ready();
 
         Assertions.assertThat(ready).isNotNull();
 
-        //TODO https://github.com/influxdata/influxdb/issues/12546
-        // Assertions.assertThat(ready.getStatus()).isEqualTo("ready");
-        // Assertions.assertThat(ready.getStarted()).isNotNull();
-        // Assertions.assertThat(ready.getStarted()).isBefore(Instant.now());
-        // Assertions.assertThat(ready.getUp()).isNotBlank();
+
+        Assertions.assertThat(ready.getStatus()).isEqualTo(Ready.StatusEnum.READY);
+        Assertions.assertThat(ready.getStarted()).isNotNull();
+        Assertions.assertThat(ready.getStarted()).isBefore(OffsetDateTime.now(ZoneOffset.UTC));
+        Assertions.assertThat(ready.getUp()).isNotBlank();
     }
 
     @Test
@@ -80,7 +84,7 @@ class ITInfluxDBClient extends AbstractITClientTest {
 
         InfluxDBClient clientNotRunning = InfluxDBClientFactory.create("http://localhost:8099");
 
-        Check ready = clientNotRunning.ready();
+        Ready ready = clientNotRunning.ready();
         Assertions.assertThat(ready).isNull();
 
         clientNotRunning.close();

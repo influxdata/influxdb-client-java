@@ -14,6 +14,7 @@
 package org.influxdata.client.domain;
 
 import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 import com.google.gson.TypeAdapter;
@@ -24,30 +25,16 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Organization
+ * Ready
  */
 @javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-20T15:07:36.004852+01:00[Europe/Prague]")
-public class Organization {
-  public static final String SERIALIZED_NAME_LINKS = "links";
-  @SerializedName(SERIALIZED_NAME_LINKS)
-  private OrganizationLinks links = null;
-
-  public static final String SERIALIZED_NAME_ID = "id";
-  @SerializedName(SERIALIZED_NAME_ID)
-  private String id = null;
-
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
-
+public class Ready {
   /**
-   * if inactive the organization is inactive.
+   * Gets or Sets status
    */
   @JsonAdapter(StatusEnum.Adapter.class)
   public enum StatusEnum {
-    ACTIVE("active"),
-    
-    INACTIVE("inactive");
+    READY("ready");
 
     private String value;
 
@@ -89,69 +76,68 @@ public class Organization {
 
   public static final String SERIALIZED_NAME_STATUS = "status";
   @SerializedName(SERIALIZED_NAME_STATUS)
-  private StatusEnum status = StatusEnum.ACTIVE;
+  private StatusEnum status = null;
 
-  public Organization links(OrganizationLinks links) {
-    this.links = links;
-    return this;
-  }
+  public static final String SERIALIZED_NAME_STARTED = "started";
+  @SerializedName(SERIALIZED_NAME_STARTED)
+  private OffsetDateTime started = null;
 
-   /**
-   * Get links
-   * @return links
-  **/
-  @ApiModelProperty(value = "")
-  public OrganizationLinks getLinks() {
-    return links;
-  }
+  public static final String SERIALIZED_NAME_UP = "up";
+  @SerializedName(SERIALIZED_NAME_UP)
+  private String up = null;
 
-  public void setLinks(OrganizationLinks links) {
-    this.links = links;
-  }
-
-   /**
-   * Get id
-   * @return id
-  **/
-  @ApiModelProperty(value = "")
-  public String getId() {
-    return id;
-  }
-
-  public Organization name(String name) {
-    this.name = name;
-    return this;
-  }
-
-   /**
-   * Get name
-   * @return name
-  **/
-  @ApiModelProperty(required = true, value = "")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public Organization status(StatusEnum status) {
+  public Ready status(StatusEnum status) {
     this.status = status;
     return this;
   }
 
    /**
-   * if inactive the organization is inactive.
+   * Get status
    * @return status
   **/
-  @ApiModelProperty(value = "if inactive the organization is inactive.")
+  @ApiModelProperty(value = "")
   public StatusEnum getStatus() {
     return status;
   }
 
   public void setStatus(StatusEnum status) {
     this.status = status;
+  }
+
+  public Ready started(OffsetDateTime started) {
+    this.started = started;
+    return this;
+  }
+
+   /**
+   * Get started
+   * @return started
+  **/
+  @ApiModelProperty(value = "")
+  public OffsetDateTime getStarted() {
+    return started;
+  }
+
+  public void setStarted(OffsetDateTime started) {
+    this.started = started;
+  }
+
+  public Ready up(String up) {
+    this.up = up;
+    return this;
+  }
+
+   /**
+   * Get up
+   * @return up
+  **/
+  @ApiModelProperty(example = "14m45.911966424s", value = "")
+  public String getUp() {
+    return up;
+  }
+
+  public void setUp(String up) {
+    this.up = up;
   }
 
 
@@ -163,27 +149,25 @@ public class Organization {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Organization organization = (Organization) o;
-    return Objects.equals(this.links, organization.links) &&
-        Objects.equals(this.id, organization.id) &&
-        Objects.equals(this.name, organization.name) &&
-        Objects.equals(this.status, organization.status);
+    Ready ready = (Ready) o;
+    return Objects.equals(this.status, ready.status) &&
+        Objects.equals(this.started, ready.started) &&
+        Objects.equals(this.up, ready.up);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, id, name, status);
+    return Objects.hash(status, started, up);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Organization {\n");
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("class Ready {\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    started: ").append(toIndentedString(started)).append("\n");
+    sb.append("    up: ").append(toIndentedString(up)).append("\n");
     sb.append("}");
     return sb.toString();
   }

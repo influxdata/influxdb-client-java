@@ -44,7 +44,7 @@ for f in *.java; do
          ;;
       (Telegraf*.java|PasswordResetBody.java|LabelCreateRequest.java|WritePrecision.java)
         ;;
-      (Query*.java|LineProtocolError.java|LineProtocolLengthError.java|FluxSuggestions.java|LanguageRequest.java|AnalyzeQueryResponse.java|ASTResponse.java|Dialect.java|Field.java|FluxSuggestionsFuncs.java|AnalyzeQueryResponseErrors.java|ModelPackage.java)
+      (Query*.java|LineProtocolError.java|LineProtocolLengthError.java|FluxSuggestions.java|LanguageRequest.java|AnalyzeQueryResponse.java|ASTResponse.java|Dialect.java|Field.java|FluxSuggestionsFuncs.java|AnalyzeQueryResponseErrors.java|ModelPackage.java|Ready.java)
         ;;
       (*)
          rm -- "$f";; # remove the file

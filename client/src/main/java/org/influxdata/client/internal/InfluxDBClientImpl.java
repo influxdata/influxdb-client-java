@@ -46,6 +46,7 @@ import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.IsOnboarding;
 import org.influxdata.client.domain.OnboardingRequest;
 import org.influxdata.client.domain.OnboardingResponse;
+import org.influxdata.client.domain.Ready;
 import org.influxdata.client.service.AuthorizationsService;
 import org.influxdata.client.service.BucketsService;
 import org.influxdata.client.service.LabelsService;
@@ -163,8 +164,8 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
 
     @Nullable
     @Override
-    public Check ready() {
-        Call<Check> call = influxDBService.ready();
+    public Ready ready() {
+        Call<Ready> call = influxDBService.ready();
         try {
             return execute(call);
         } catch (InfluxException e) {

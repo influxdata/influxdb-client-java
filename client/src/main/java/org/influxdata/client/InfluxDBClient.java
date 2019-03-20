@@ -32,6 +32,7 @@ import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.OnboardingRequest;
 import org.influxdata.client.domain.OnboardingResponse;
 import org.influxdata.client.domain.Organization;
+import org.influxdata.client.domain.Ready;
 import org.influxdata.client.domain.ScraperTargetResponse;
 import org.influxdata.client.domain.Source;
 import org.influxdata.client.domain.Task;
@@ -159,7 +160,7 @@ public interface InfluxDBClient extends AutoCloseable {
      * @return return null if the InfluxDB is not ready
      */
     @Nullable
-    Check ready();
+    Ready ready();
 
     /**
      * Post onboarding request, to setup initial user, org and bucket.
