@@ -28,7 +28,7 @@ import org.influxdata.client.domain.TelegrafPluginInputLogParserConfig;
 /**
  * TelegrafPluginInputLogParser
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-20T10:13:55.735566+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-20T14:55:38.715334+01:00[Europe/Prague]")
 public class TelegrafPluginInputLogParser extends TelegrafPlugin<TelegrafPluginInputLogParser.NameEnum, TelegrafPluginInputLogParserConfig> {
   /**
    * Gets or Sets name

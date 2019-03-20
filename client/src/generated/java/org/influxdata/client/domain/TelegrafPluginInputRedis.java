@@ -28,7 +28,7 @@ import org.influxdata.client.domain.TelegrafPluginInputRedisConfig;
 /**
  * TelegrafPluginInputRedis
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-20T10:13:55.735566+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-20T14:55:38.715334+01:00[Europe/Prague]")
 public class TelegrafPluginInputRedis extends TelegrafPlugin<TelegrafPluginInputRedis.NameEnum, TelegrafPluginInputRedisConfig> {
   /**
    * Gets or Sets name
