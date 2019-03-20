@@ -28,7 +28,7 @@ import java.time.OffsetDateTime;
 /**
  * RunManually
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-20T09:31:34.049872+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-20T10:13:55.735566+01:00[Europe/Prague]")
 public class RunManually {
   public static final String SERIALIZED_NAME_SCHEDULED_FOR = "scheduledFor";
   @SerializedName(SERIALIZED_NAME_SCHEDULED_FOR)
