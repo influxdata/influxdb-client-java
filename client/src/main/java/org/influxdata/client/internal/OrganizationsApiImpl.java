@@ -49,24 +49,22 @@ import org.influxdata.client.domain.SecretKeys;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.service.OrganizationsService;
 import org.influxdata.exceptions.NotFoundException;
+import org.influxdata.internal.AbstractRestClient;
 
-import com.google.gson.Gson;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (12/09/2018 08:57)
  */
-final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements OrganizationsApi {
+final class OrganizationsApiImpl extends AbstractRestClient implements OrganizationsApi {
 
     private static final Logger LOG = Logger.getLogger(OrganizationsApiImpl.class.getName());
 
     private final OrganizationsService service;
 
-    OrganizationsApiImpl(@Nonnull final InfluxDBService influxDBService,
-                         @Nonnull final OrganizationsService service,
-                         @Nonnull final Gson gson) {
+    OrganizationsApiImpl(@Nonnull final OrganizationsService service) {
 
-        super(influxDBService, gson);
+        Arguments.checkNotNull(service, "service");
 
         this.service = service;
     }
@@ -480,6 +478,6 @@ final class OrganizationsApiImpl extends AbstractInfluxDBRestClient implements O
         Call<OperationLogs> call = service
                 .orgsOrgIDLogsGet(orgID, null, findOptions.getOffset(), findOptions.getLimit());
 
-        return getOperationLogEntries(call);
+        return execute(call);
     }
 }

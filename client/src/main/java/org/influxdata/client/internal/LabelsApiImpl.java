@@ -37,26 +37,24 @@ import org.influxdata.client.domain.LabelUpdate;
 import org.influxdata.client.domain.LabelsResponse;
 import org.influxdata.client.service.LabelsService;
 import org.influxdata.exceptions.NotFoundException;
+import org.influxdata.internal.AbstractRestClient;
 
-import com.google.gson.Gson;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:48)
  */
-class LabelsApiImpl extends AbstractInfluxDBRestClient implements LabelsApi {
+class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
 
     private static final Logger LOG = Logger.getLogger(LabelsApiImpl.class.getName());
 
-    private final LabelsService labelsService;
+    private final LabelsService service;
 
-    LabelsApiImpl(@Nonnull final InfluxDBService influxDBService,
-                  @Nonnull final LabelsService labelsService,
-                  @Nonnull final Gson gson) {
+    LabelsApiImpl(@Nonnull final LabelsService service) {
 
-        super(influxDBService, gson);
+        Arguments.checkNotNull(service, "service");
 
-        this.labelsService = labelsService;
+        this.service = service;
     }
 
     @Nonnull
@@ -93,7 +91,7 @@ class LabelsApiImpl extends AbstractInfluxDBRestClient implements LabelsApi {
 
         Arguments.checkNotNull(request, "request");
 
-        Call<LabelResponse> call = labelsService.labelsPost(request);
+        Call<LabelResponse> call = service.labelsPost(request);
         LabelResponse labelResponse = execute(call);
 
         LOG.log(Level.FINEST, "createLabel response: {0}", labelResponse);
@@ -120,7 +118,7 @@ class LabelsApiImpl extends AbstractInfluxDBRestClient implements LabelsApi {
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNotNull(labelUpdate, "labelUpdate");
 
-        Call<LabelResponse> call = labelsService.labelsLabelIDPatch(labelID, labelUpdate, null);
+        Call<LabelResponse> call = service.labelsLabelIDPatch(labelID, labelUpdate, null);
         LabelResponse labelResponse = execute(call);
 
         LOG.log(Level.FINEST, "updateLabel response: {0}", labelResponse);
@@ -141,7 +139,7 @@ class LabelsApiImpl extends AbstractInfluxDBRestClient implements LabelsApi {
 
         Arguments.checkNonEmpty(labelID, "labelID");
 
-        Call<Void> call = labelsService.labelsLabelIDDelete(labelID, null);
+        Call<Void> call = service.labelsLabelIDDelete(labelID, null);
         execute(call);
     }
 
@@ -184,7 +182,7 @@ class LabelsApiImpl extends AbstractInfluxDBRestClient implements LabelsApi {
 
         Arguments.checkNonEmpty(labelID, "labelID");
 
-        Call<LabelResponse> call = labelsService.labelsLabelIDGet(labelID, null);
+        Call<LabelResponse> call = service.labelsLabelIDGet(labelID, null);
         LabelResponse labelResponse = execute(call, NotFoundException.class);
 
         if (labelResponse == null) {
@@ -200,7 +198,7 @@ class LabelsApiImpl extends AbstractInfluxDBRestClient implements LabelsApi {
     @Override
     public List<Label> findLabels() {
 
-        Call<LabelsResponse> sourcesCall = labelsService.labelsGet();
+        Call<LabelsResponse> sourcesCall = service.labelsGet();
 
         LabelsResponse labels = execute(sourcesCall);
         LOG.log(Level.FINEST, "findLabels found: {0}", labels);

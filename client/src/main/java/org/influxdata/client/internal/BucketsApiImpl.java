@@ -48,24 +48,22 @@ import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.service.BucketsService;
 import org.influxdata.exceptions.NotFoundException;
+import org.influxdata.internal.AbstractRestClient;
 
-import com.google.gson.Gson;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (13/09/2018 10:47)
  */
-final class BucketsApiImpl extends AbstractInfluxDBRestClient implements BucketsApi {
+final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
 
     private static final Logger LOG = Logger.getLogger(BucketsApiImpl.class.getName());
 
     private final BucketsService service;
 
-    BucketsApiImpl(@Nonnull final InfluxDBService influxDBService,
-                   @Nonnull final BucketsService service,
-                   @Nonnull final Gson gson) {
+    BucketsApiImpl(@Nonnull final BucketsService service) {
 
-        super(influxDBService, gson);
+        Arguments.checkNotNull(service, "service");
 
         this.service = service;
     }
@@ -417,7 +415,7 @@ final class BucketsApiImpl extends AbstractInfluxDBRestClient implements Buckets
         Call<OperationLogs> call = service.bucketsBucketIDLogsGet(bucketID, null,
                 findOptions.getOffset(), findOptions.getLimit());
 
-        return getOperationLogEntries(call);
+        return execute(call);
     }
 
     @Nonnull

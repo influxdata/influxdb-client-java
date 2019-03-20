@@ -21,15 +21,9 @@
  */
 package org.influxdata.client.internal;
 
-import java.util.Map;
 import javax.annotation.Nonnull;
 
 import org.influxdata.client.domain.Check;
-import org.influxdata.client.domain.IsOnboarding;
-import org.influxdata.client.domain.OnboardingResponse;
-import org.influxdata.client.domain.OperationLogs;
-import org.influxdata.client.domain.User;
-import org.influxdata.client.domain.Users;
 
 import io.reactivex.Maybe;
 import okhttp3.RequestBody;
@@ -37,16 +31,10 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.Headers;
-import retrofit2.http.PATCH;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.QueryMap;
 import retrofit2.http.Streaming;
 
 /**
@@ -69,68 +57,6 @@ public interface InfluxDBService {
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<Check> ready();
-
-    //
-    // Setup
-    //
-    @GET("/api/v2/setup")
-    @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<IsOnboarding> setup();
-
-    @POST("/api/v2/setup")
-    @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<OnboardingResponse> setup(@Nonnull @Body final RequestBody onboarding);
-
-    //
-    // User
-    //
-    @POST("/api/v2/users")
-    @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<User> createUser(@Nonnull @Body final RequestBody user);
-
-    @DELETE("/api/v2/users/{id}")
-    Call<Void> deleteUser(@Nonnull @Path("id") final String userID);
-
-    @PATCH("/api/v2/users/{id}")
-    Call<User> updateUser(@Nonnull @Path("id") final String userID, @Nonnull @Body final RequestBody user);
-
-    @PUT("/api/v2/users/{id}/password")
-    Call<User> updateUserPassword(@Nonnull @Path("id") final String userID,
-                                  //TODO set user password -> https://github.com/influxdata/influxdb/issues/11590
-                                  @Nonnull @Header("Authorization") final String credentials,
-                                  @Nonnull @Body final RequestBody password);
-
-    @GET("/api/v2/users/{id}/logs")
-    @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<OperationLogs> findUserLogs(@Nonnull @Path("id") final String userID,
-                                           @Nonnull @QueryMap final Map<String, Object> findOptions);
-
-    @GET("/api/v2/users/{id}")
-    @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<User> findUserByID(@Nonnull @Path("id") final String userID);
-
-    @GET("/api/v2/users/")
-    @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<Users> findUsers();
-
-    @GET("/api/v2/me")
-    @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<User> me();
-
-    @PUT("/api/v2/me/password")
-    @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<User> mePassword(@Nonnull @Header("Authorization") final String credentials,
-                          @Nonnull @Body final RequestBody password);
-
-
 
     // Write
     //

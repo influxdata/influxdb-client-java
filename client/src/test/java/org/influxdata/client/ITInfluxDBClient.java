@@ -97,7 +97,7 @@ class ITInfluxDBClient extends AbstractITClientTest {
     @Test
     void onboarding() throws Exception {
 
-        String url = "http://" + influxDB_IP + ":9990";
+        String url = "http://" + influxDB_IP + ":9990/api/v2/";
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create(url);
 

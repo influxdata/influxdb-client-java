@@ -38,28 +38,25 @@ import org.influxdata.client.domain.Users;
 import org.influxdata.client.service.UsersService;
 import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.exceptions.UnauthorizedException;
+import org.influxdata.internal.AbstractRestClient;
 
-import com.google.gson.Gson;
 import okhttp3.Credentials;
-import org.json.JSONObject;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/09/2018 10:16)
  */
-final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi {
+final class UsersApiImpl extends AbstractRestClient implements UsersApi {
 
     private static final Logger LOG = Logger.getLogger(UsersApiImpl.class.getName());
 
-    private final UsersService usersService;
+    private final UsersService service;
 
-    UsersApiImpl(@Nonnull final InfluxDBService influxDBService,
-                 @Nonnull final UsersService usersService,
-                 @Nonnull final Gson gson) {
+    UsersApiImpl(@Nonnull final UsersService service) {
 
-        super(influxDBService, gson);
+        Arguments.checkNotNull(service, "service");
 
-        this.usersService = usersService;
+        this.service = service;
     }
 
     @Nullable
@@ -68,7 +65,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Arguments.checkNonEmpty(userID, "User ID");
 
-        Call<User> user = usersService.usersUserIDGet(userID, null);
+        Call<User> user = service.usersUserIDGet(userID, null);
 
         return execute(user, NotFoundException.class);
     }
@@ -77,7 +74,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
     @Override
     public List<User> findUsers() {
 
-        Call<Users> usersCall = usersService.usersGet(null);
+        Call<Users> usersCall = service.usersGet(null);
 
         Users users = execute(usersCall);
         LOG.log(Level.FINEST, "findUsers found: {0}", users);
@@ -103,7 +100,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Arguments.checkNotNull(user, "User");
 
-        Call<User> call = usersService.usersPost(user);
+        Call<User> call = service.usersPost(user);
 
         return execute(call);
     }
@@ -114,7 +111,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Arguments.checkNotNull(user, "User");
 
-        Call<User> userCall = usersService.usersUserIDPatch(user.getId(), user, null);
+        Call<User> userCall = service.usersUserIDPatch(user.getId(), user, null);
 
         return execute(userCall);
     }
@@ -142,7 +139,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
         Arguments.checkNotNull(oldPassword, "old password");
         Arguments.checkNotNull(newPassword, "new password");
 
-        Call<User> userByID = usersService.usersUserIDGet(userID, null);
+        Call<User> userByID = service.usersUserIDGet(userID, null);
         User user = execute(userByID);
 
         return updateUserPassword(userID, user.getName(), oldPassword, newPassword);
@@ -161,7 +158,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Arguments.checkNonEmpty(userID, "User ID");
 
-        Call<Void> call = usersService.usersUserIDDelete(userID, null);
+        Call<Void> call = service.usersUserIDDelete(userID, null);
         execute(call);
     }
 
@@ -197,7 +194,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
     @Override
     public User me() {
 
-        Call<User> call = usersService.meGet(null);
+        Call<User> call = service.meGet(null);
 
         return execute(call, UnauthorizedException.class);
     }
@@ -221,7 +218,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         PasswordResetBody passwordResetBody = new PasswordResetBody().password(newPassword);
 
-        Call<User> call = usersService.mePasswordPut(passwordResetBody, null, credentials);
+        Call<User> call = service.mePasswordPut(passwordResetBody, null, credentials);
 
         return execute(call, UnauthorizedException.class);
     }
@@ -261,11 +258,11 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
         Arguments.checkNonEmpty(userID, "User ID");
         Arguments.checkNotNull(findOptions, "findOptions");
 
-        Call<OperationLogs> call = usersService.usersUserIDLogsGet(userID, null,
+        Call<OperationLogs> call = service.usersUserIDLogsGet(userID, null,
                 findOptions.getOffset(),
                 findOptions.getLimit());
 
-        return getOperationLogEntries(call);
+        return execute(call);
     }
 
     @Nonnull
@@ -283,7 +280,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
                 .basic(userName, oldPassword);
 
         PasswordResetBody resetBody = new PasswordResetBody().password(newPassword);
-        Call<User> call = usersService.usersUserIDPasswordPut(userID, resetBody ,null, credentials);
+        Call<User> call = service.usersUserIDPasswordPut(userID, resetBody ,null, credentials);
 
         return execute(call);
     }

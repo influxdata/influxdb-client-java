@@ -54,7 +54,7 @@ cd ${SCRIPT_PATH}/../client/src/generated/java/org/influxdata/client/service
 
 for f in *.java; do
    case ${f} in
-      (AuthorizationsService.java|SourcesService.java|BucketsService.java|OrganizationsService.java|ScraperTargetsService.java|TelegrafsService.java|TasksService.java|LabelsService.java|UsersService.java)
+      (AuthorizationsService.java|SourcesService.java|BucketsService.java|OrganizationsService.java|ScraperTargetsService.java|TelegrafsService.java|TasksService.java|LabelsService.java|UsersService.java|SetupService.java)
          ;;
       (*)
          rm -- "$f";; # remove the file

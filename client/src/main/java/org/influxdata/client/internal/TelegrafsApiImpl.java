@@ -50,25 +50,23 @@ import org.influxdata.client.domain.User;
 import org.influxdata.client.service.TelegrafsService;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.exceptions.NotFoundException;
+import org.influxdata.internal.AbstractRestClient;
 
-import com.google.gson.Gson;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (28/02/2019 10:25)
  */
-final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements TelegrafsApi {
+final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi {
 
     private static final Logger LOG = Logger.getLogger(TelegrafsApiImpl.class.getName());
 
     private final TelegrafsService service;
 
-    TelegrafsApiImpl(@Nonnull final InfluxDBService influxDBService,
-                     @Nonnull final TelegrafsService service,
-                     @Nonnull final Gson gson) {
+    TelegrafsApiImpl(@Nonnull final TelegrafsService service) {
 
-        super(influxDBService, gson);
+        Arguments.checkNotNull(service, "service");
 
         this.service = service;
     }

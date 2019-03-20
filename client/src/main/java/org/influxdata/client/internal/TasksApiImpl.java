@@ -53,24 +53,22 @@ import org.influxdata.client.domain.Tasks;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.service.TasksService;
 import org.influxdata.exceptions.NotFoundException;
+import org.influxdata.internal.AbstractRestClient;
 
-import com.google.gson.Gson;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/09/2018 07:59)
  */
-final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi {
+final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
     private static final Logger LOG = Logger.getLogger(TasksApiImpl.class.getName());
 
     private final TasksService service;
 
-    TasksApiImpl(@Nonnull final InfluxDBService influxDBService,
-                 @Nonnull final TasksService service,
-                 @Nonnull final Gson gson) {
+    TasksApiImpl(@Nonnull final TasksService service) {
 
-        super(influxDBService, gson);
+        Arguments.checkNotNull(service, "service");
 
         this.service = service;
     }

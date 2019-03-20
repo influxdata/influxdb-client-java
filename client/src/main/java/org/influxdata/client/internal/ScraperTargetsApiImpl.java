@@ -44,24 +44,22 @@ import org.influxdata.client.domain.ScraperTargetResponses;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.service.ScraperTargetsService;
 import org.influxdata.exceptions.NotFoundException;
+import org.influxdata.internal.AbstractRestClient;
 
-import com.google.gson.Gson;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (22/01/2019 08:17)
  */
-final class ScraperTargetsApiImpl extends AbstractInfluxDBRestClient implements ScraperTargetsApi {
+final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperTargetsApi {
 
     private static final Logger LOG = Logger.getLogger(ScraperTargetsApiImpl.class.getName());
 
     private final ScraperTargetsService service;
 
-    ScraperTargetsApiImpl(@Nonnull final InfluxDBService influxDBService,
-                          @Nonnull final ScraperTargetsService service,
-                          @Nonnull final Gson gson) {
+    ScraperTargetsApiImpl(@Nonnull final ScraperTargetsService service) {
 
-        super(influxDBService, gson);
+        Arguments.checkNotNull(service, "service");
 
         this.service = service;
     }

@@ -51,6 +51,7 @@ import org.influxdata.client.service.BucketsService;
 import org.influxdata.client.service.LabelsService;
 import org.influxdata.client.service.OrganizationsService;
 import org.influxdata.client.service.ScraperTargetsService;
+import org.influxdata.client.service.SetupService;
 import org.influxdata.client.service.SourcesService;
 import org.influxdata.client.service.TasksService;
 import org.influxdata.client.service.TelegrafsService;
@@ -66,10 +67,13 @@ import retrofit2.Call;
 public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBService> implements InfluxDBClient {
 
     private static final Logger LOG = Logger.getLogger(InfluxDBClientImpl.class.getName());
+    private final SetupService setupService;
 
     public InfluxDBClientImpl(@Nonnull final InfluxDBClientOptions options) {
 
         super(options, InfluxDBService.class);
+
+        setupService = retrofit.create(SetupService.class);
     }
 
     @Nonnull
@@ -96,55 +100,55 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Nonnull
     @Override
     public AuthorizationsApi getAuthorizationsApi() {
-        return new AuthorizationsApiImpl(influxDBService, retrofit.create(AuthorizationsService.class), gson);
+        return new AuthorizationsApiImpl(retrofit.create(AuthorizationsService.class));
     }
 
     @Nonnull
     @Override
     public BucketsApi getBucketsApi() {
-        return new BucketsApiImpl(influxDBService, retrofit.create(BucketsService.class), gson);
+        return new BucketsApiImpl(retrofit.create(BucketsService.class));
     }
 
     @Nonnull
     @Override
     public OrganizationsApi getOrganizationsApi() {
-        return new OrganizationsApiImpl(influxDBService, retrofit.create(OrganizationsService.class), gson);
+        return new OrganizationsApiImpl(retrofit.create(OrganizationsService.class));
     }
 
     @Nonnull
     @Override
     public SourcesApi getSourcesApi() {
-        return new SourcesApiImpl(influxDBService, retrofit.create(SourcesService.class), this, gson);
+        return new SourcesApiImpl(retrofit.create(SourcesService.class), this);
     }
 
     @Nonnull
     @Override
     public TasksApi getTasksApi() {
-        return new TasksApiImpl(influxDBService, retrofit.create(TasksService.class), gson);
+        return new TasksApiImpl(retrofit.create(TasksService.class));
     }
 
     @Nonnull
     @Override
     public UsersApi getUsersApi() {
-        return new UsersApiImpl(influxDBService, retrofit.create(UsersService.class), gson);
+        return new UsersApiImpl(retrofit.create(UsersService.class));
     }
 
     @Nonnull
     @Override
     public ScraperTargetsApi getScraperTargetsApi() {
-        return new ScraperTargetsApiImpl(influxDBService, retrofit.create(ScraperTargetsService.class), gson);
+        return new ScraperTargetsApiImpl(retrofit.create(ScraperTargetsService.class));
     }
 
     @Nonnull
     @Override
     public TelegrafsApi getTelegrafsApi() {
-        return new TelegrafsApiImpl(influxDBService, retrofit.create(TelegrafsService.class), gson);
+        return new TelegrafsApiImpl(retrofit.create(TelegrafsService.class));
     }
 
     @Nonnull
     @Override
     public LabelsApi getLabelsApi() {
-        return new LabelsApiImpl(influxDBService, retrofit.create(LabelsService.class), gson);
+        return new LabelsApiImpl(retrofit.create(LabelsService.class));
     }
 
     @Nonnull
@@ -173,9 +177,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
 
         Arguments.checkNotNull(onboarding, "onboarding");
 
-        String json = gson.toJson(onboarding);
-
-        Call<OnboardingResponse> call = influxDBService.setup(createBody(json));
+        Call<OnboardingResponse> call = setupService.setupPost(onboarding, null);
 
         return execute(call);
     }
@@ -184,7 +186,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Override
     public Boolean isOnboardingAllowed() {
 
-        IsOnboarding isOnboarding = execute(influxDBService.setup());
+        IsOnboarding isOnboarding = execute(setupService.setupGet(null));
 
         return isOnboarding.isAllowed();
     }

@@ -36,26 +36,24 @@ import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.service.AuthorizationsService;
 import org.influxdata.exceptions.NotFoundException;
+import org.influxdata.internal.AbstractRestClient;
 
-import com.google.gson.Gson;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (17/09/2018 12:00)
  */
-final class AuthorizationsApiImpl extends AbstractInfluxDBRestClient implements AuthorizationsApi {
+final class AuthorizationsApiImpl extends AbstractRestClient implements AuthorizationsApi {
 
     private static final Logger LOG = Logger.getLogger(AuthorizationsApiImpl.class.getName());
 
-    private final AuthorizationsService authorizationsService;
+    private final AuthorizationsService service;
 
-    AuthorizationsApiImpl(@Nonnull final InfluxDBService influxDBService,
-                          @Nonnull final AuthorizationsService authorizationsService,
-                          @Nonnull final Gson gson) {
+    AuthorizationsApiImpl(@Nonnull final AuthorizationsService service) {
 
-        super(influxDBService, gson);
+        Arguments.checkNotNull(service, "service");
 
-        this.authorizationsService = authorizationsService;
+        this.service = service;
     }
 
     @Nonnull
@@ -91,7 +89,7 @@ final class AuthorizationsApiImpl extends AbstractInfluxDBRestClient implements 
 
         Arguments.checkNotNull(authorization, "Authorization is required");
 
-        Call<Authorization> call = authorizationsService.authorizationsPost(authorization, null);
+        Call<Authorization> call = service.authorizationsPost(authorization, null);
 
         return execute(call);
     }
@@ -108,7 +106,7 @@ final class AuthorizationsApiImpl extends AbstractInfluxDBRestClient implements 
 
         Arguments.checkNonEmpty(authorizationID, "authorizationID");
 
-        Call<Authorization> call = authorizationsService.authorizationsAuthIDGet(authorizationID, null);
+        Call<Authorization> call = service.authorizationsAuthIDGet(authorizationID, null);
 
         return execute(call, NotFoundException.class);
     }
@@ -140,7 +138,7 @@ final class AuthorizationsApiImpl extends AbstractInfluxDBRestClient implements 
 
         Arguments.checkNotNull(authorization, "Authorization is required");
 
-        Call<Authorization> authorizationCall = authorizationsService
+        Call<Authorization> authorizationCall = service
                 .authorizationsAuthIDPatch(authorization.getId(), authorization, null);
 
         return execute(authorizationCall);
@@ -159,7 +157,7 @@ final class AuthorizationsApiImpl extends AbstractInfluxDBRestClient implements 
 
         Arguments.checkNonEmpty(authorizationID, "authorizationID");
 
-        Call<Void> call = authorizationsService.authorizationsAuthIDDelete(authorizationID, null);
+        Call<Void> call = service.authorizationsAuthIDDelete(authorizationID, null);
         execute(call);
     }
 
@@ -195,7 +193,7 @@ final class AuthorizationsApiImpl extends AbstractInfluxDBRestClient implements 
     @Nonnull
     private List<Authorization> findAuthorizations(@Nullable final String userID, @Nullable final String userName) {
 
-        Call<Authorizations> authorizationsCall = authorizationsService.authorizationsGet(null, userID, userName);
+        Call<Authorizations> authorizationsCall = service.authorizationsGet(null, userID, userName);
 
         Authorizations authorizations = execute(authorizationsCall);
         LOG.log(Level.FINEST, "findAuthorizations found: {0}", authorizations);
