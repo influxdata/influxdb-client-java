@@ -54,6 +54,7 @@ import org.influxdata.client.service.ScraperTargetsService;
 import org.influxdata.client.service.SourcesService;
 import org.influxdata.client.service.TasksService;
 import org.influxdata.client.service.TelegrafsService;
+import org.influxdata.client.service.UsersService;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.exceptions.UnprocessableEntityException;
 
@@ -125,7 +126,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Nonnull
     @Override
     public UsersApi getUsersApi() {
-        return new UsersApiImpl(influxDBService, gson);
+        return new UsersApiImpl(influxDBService, retrofit.create(UsersService.class), gson);
     }
 
     @Nonnull

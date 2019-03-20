@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +34,9 @@ import javax.annotation.Nullable;
 import org.openapitools.codegen.CodegenConfig;
 import org.openapitools.codegen.CodegenModel;
 import org.openapitools.codegen.CodegenOperation;
+import org.openapitools.codegen.CodegenParameter;
 import org.openapitools.codegen.CodegenProperty;
+import org.openapitools.codegen.CodegenSecurity;
 import org.openapitools.codegen.languages.JavaClientCodegen;
 
 public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenConfig {
@@ -111,8 +114,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                 //
                 // Use Plugin type from TelegrafRequestPlugin.TypeEnum
                 //
-                if (modelName.equals("TelegrafPlugin"))
-                {
+                if (modelName.equals("TelegrafPlugin")) {
                     CodegenProperty typeProperty = getCodegenProperty(model, "type");
                     typeProperty.isEnum = false;
                     typeProperty.baseType = "TelegrafRequestPlugin.TypeEnum";
@@ -259,13 +261,12 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         List<CodegenOperation> operations = (List<CodegenOperation>) ((HashMap) operationsWithModels.get("operations"))
                 .get("operation");
 
-        List<CodegenOperation> operationToSplit = operations.stream()
-                .filter(operation -> operation.produces.size() > 1)
-                .collect(Collectors.toList());
-
         //
         // For operations with more response type generate additional implementation
         //
+        List<CodegenOperation> operationToSplit = operations.stream()
+                .filter(operation -> operation.produces.size() > 1)
+                .collect(Collectors.toList());
         operationToSplit.forEach(operation -> {
 
             List<String> returnTypes = operation.produces.stream()
@@ -296,6 +297,31 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                 operations.add(operations.indexOf(operation) + 1, codegenOperation);
             });
         });
+
+        //
+        // For basic auth add authorization header
+        //
+        operations.stream()
+                .filter(operation -> operation.hasAuthMethods)
+                .forEach(operation -> {
+
+                    operation.authMethods.stream()
+                            .filter(security -> security.isBasic)
+                            .forEach(security -> {
+                                
+                                CodegenParameter authorization = new CodegenParameter();
+                                authorization.isHeaderParam = true;
+                                authorization.isPrimitiveType = true;
+                                authorization.isString = true;
+                                authorization.baseName = "Authorization";
+                                authorization.paramName = "authorization";
+                                authorization.dataType = "String";
+                                authorization.description = "An auth credential for the Basic scheme";
+
+                                operation.allParams.get(operation.allParams.size() - 1).hasMore = true;
+                                operation.allParams.add(authorization);
+                            });
+                });
 
         return operationsWithModels;
 

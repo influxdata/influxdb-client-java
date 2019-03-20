@@ -32,8 +32,10 @@ import org.influxdata.client.FindOptions;
 import org.influxdata.client.UsersApi;
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;
+import org.influxdata.client.domain.PasswordResetBody;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.domain.Users;
+import org.influxdata.client.service.UsersService;
 import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.exceptions.UnauthorizedException;
 
@@ -49,9 +51,15 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
     private static final Logger LOG = Logger.getLogger(UsersApiImpl.class.getName());
 
-    UsersApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Gson gson) {
+    private final UsersService usersService;
+
+    UsersApiImpl(@Nonnull final InfluxDBService influxDBService,
+                 @Nonnull final UsersService usersService,
+                 @Nonnull final Gson gson) {
 
         super(influxDBService, gson);
+
+        this.usersService = usersService;
     }
 
     @Nullable
@@ -60,7 +68,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Arguments.checkNonEmpty(userID, "User ID");
 
-        Call<User> user = influxDBService.findUserByID(userID);
+        Call<User> user = usersService.usersUserIDGet(userID, null);
 
         return execute(user, NotFoundException.class);
     }
@@ -69,7 +77,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
     @Override
     public List<User> findUsers() {
 
-        Call<Users> usersCall = influxDBService.findUsers();
+        Call<Users> usersCall = usersService.usersGet(null);
 
         Users users = execute(usersCall);
         LOG.log(Level.FINEST, "findUsers found: {0}", users);
@@ -95,9 +103,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Arguments.checkNotNull(user, "User");
 
-        String json = gson.toJson(user);
-
-        Call<User> call = influxDBService.createUser(createBody(json));
+        Call<User> call = usersService.usersPost(user);
 
         return execute(call);
     }
@@ -108,9 +114,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Arguments.checkNotNull(user, "User");
 
-        String json = gson.toJson(user);
-
-        Call<User> userCall = influxDBService.updateUser(user.getId(), createBody(json));
+        Call<User> userCall = usersService.usersUserIDPatch(user.getId(), user, null);
 
         return execute(userCall);
     }
@@ -138,7 +142,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
         Arguments.checkNotNull(oldPassword, "old password");
         Arguments.checkNotNull(newPassword, "new password");
 
-        Call<User> userByID = influxDBService.findUserByID(userID);
+        Call<User> userByID = usersService.usersUserIDGet(userID, null);
         User user = execute(userByID);
 
         return updateUserPassword(userID, user.getName(), oldPassword, newPassword);
@@ -157,7 +161,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Arguments.checkNonEmpty(userID, "User ID");
 
-        Call<Void> call = influxDBService.deleteUser(userID);
+        Call<Void> call = usersService.usersUserIDDelete(userID, null);
         execute(call);
     }
 
@@ -193,7 +197,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
     @Override
     public User me() {
 
-        Call<User> call = influxDBService.me();
+        Call<User> call = usersService.meGet(null);
 
         return execute(call, UnauthorizedException.class);
     }
@@ -212,12 +216,12 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
             return null;
         }
 
-        String json = new JSONObject().put("password", newPassword).toString();
-
         String credentials = Credentials
                 .basic(user.getName(), oldPassword);
 
-        Call<User> call = influxDBService.mePassword(credentials, createBody(json));
+        PasswordResetBody passwordResetBody = new PasswordResetBody().password(newPassword);
+
+        Call<User> call = usersService.mePasswordPut(passwordResetBody, null, credentials);
 
         return execute(call, UnauthorizedException.class);
     }
@@ -257,7 +261,9 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
         Arguments.checkNonEmpty(userID, "User ID");
         Arguments.checkNotNull(findOptions, "findOptions");
 
-        Call<OperationLogs> call = influxDBService.findUserLogs(userID, createQueryMap(findOptions));
+        Call<OperationLogs> call = usersService.usersUserIDLogsGet(userID, null,
+                findOptions.getOffset(),
+                findOptions.getLimit());
 
         return getOperationLogEntries(call);
     }
@@ -276,9 +282,8 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
         String credentials = Credentials
                 .basic(userName, oldPassword);
 
-        String json = new JSONObject().put("password", newPassword).toString();
-
-        Call<User> call = influxDBService.updateUserPassword(userID, credentials, createBody(json));
+        PasswordResetBody resetBody = new PasswordResetBody().password(newPassword);
+        Call<User> call = usersService.usersUserIDPasswordPut(userID, resetBody ,null, credentials);
 
         return execute(call);
     }

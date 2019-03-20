@@ -74,6 +74,9 @@ public abstract class AbstractRestClient {
         return execute(call, (String) null);
     }
 
+    //
+    // TODO null catch can be only used for "search" not for getByID
+    //
     protected <T> T execute(@Nonnull final Call<T> call, @Nullable final String nullError) throws InfluxException {
         return execute(call, nullError, null, null);
     }

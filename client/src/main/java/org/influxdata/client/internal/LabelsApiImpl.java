@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 import org.influxdata.Arguments;
 import org.influxdata.client.LabelsApi;
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelCreateRequest;
 import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.LabelUpdate;
 import org.influxdata.client.domain.LabelsResponse;
@@ -64,12 +65,12 @@ class LabelsApiImpl extends AbstractInfluxDBRestClient implements LabelsApi {
 
         Arguments.checkNotNull(label, "label");
 
-        Call<LabelResponse> call = labelsService.labelsPost(label);
-        LabelResponse labelResponse = execute(call);
+        LabelCreateRequest request = new LabelCreateRequest();
+        request.setOrgID(label.getOrgID());
+        request.setName(label.getName());
+        request.setProperties(label.getProperties());
 
-        LOG.log(Level.FINEST, "createLabel response: {0}", labelResponse);
-
-        return labelResponse.getLabel();
+        return createLabel(request);
     }
 
     @Nonnull
@@ -84,6 +85,20 @@ class LabelsApiImpl extends AbstractInfluxDBRestClient implements LabelsApi {
         label.setProperties(properties);
 
         return createLabel(label);
+    }
+
+    @Nonnull
+    @Override
+    public Label createLabel(@Nonnull final LabelCreateRequest request) {
+
+        Arguments.checkNotNull(request, "request");
+
+        Call<LabelResponse> call = labelsService.labelsPost(request);
+        LabelResponse labelResponse = execute(call);
+
+        LOG.log(Level.FINEST, "createLabel response: {0}", labelResponse);
+
+        return labelResponse.getLabel();
     }
 
     @Nonnull

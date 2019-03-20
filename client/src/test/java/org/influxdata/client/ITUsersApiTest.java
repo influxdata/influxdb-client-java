@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
+import org.influxdata.LogLevel;
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.User;
@@ -155,6 +156,8 @@ class ITUsersApiTest extends AbstractITClientTest {
     @Test
     @Tag("basic_auth")
     void updateMePassword() {
+
+        influxDBClient.setLogLevel(LogLevel.BODY);
 
         User user = usersApi.meUpdatePassword("my-password", "my-password");
 

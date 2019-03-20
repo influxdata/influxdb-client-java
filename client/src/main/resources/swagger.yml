@@ -4390,6 +4390,10 @@ paths:
       responses:
         '204':
           description: password succesfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
         default:
           description: unsuccessful authentication
           content:
@@ -4762,6 +4766,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
   parameters:
     Offset:
       in: query
