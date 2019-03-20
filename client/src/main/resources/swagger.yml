@@ -1669,7 +1669,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Label"
+                $ref: "#/components/schemas/LabelCreateRequest"
       responses:
         '201':
           description: Added label
@@ -5770,7 +5770,7 @@ components:
           description: A task repetition schedule in the form '* * * * * *'; parsed from Flux.
           type: string
         offset:
-          description: Duration to delay after the schedule, before executing the task; parsed from flux.
+          description: Duration to delay after the schedule, before executing the task; parsed from flux, if set to zero it will remove this option and use 0 as the default.
           type: string
         latestCompleted:
           description: Timestamp of latest scheduled, completed run, RFC3339.
@@ -6769,7 +6769,7 @@ components:
                   type: string
                   format: date
             cells:
-              $ref: "#/components/schemas/Cells"
+                $ref: "#/components/schemas/Cells"
             labels:
                 $ref: "#/components/schemas/Labels"
     Dashboards:
@@ -7770,6 +7770,23 @@ components:
       properties:
         id:
           readOnly: true
+          type: string
+        orgID:
+          readOnly: true
+          type: string
+        name:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+          description: Key/Value pairs associated with this label. Keys can be removed by sending an update with an empty value.
+          example: {"color": "ffb3b3", "description": "this is a description"}
+    LabelCreateRequest:
+      type: object
+      required: [orgID]
+      properties:
+        orgID:
           type: string
         name:
           type: string
