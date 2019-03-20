@@ -158,7 +158,7 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
-        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.MS, record);
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.US, record);
 
         waitToCallback(listener.countDownLatch, 10);
 
