@@ -22,13 +22,25 @@
 package org.influxdata.client.kotlin
 
 import assertk.assert
-import assertk.assertions.*
+import assertk.assertions.containsExactly
+import assertk.assertions.endsWith
+import assertk.assertions.hasSize
+import assertk.assertions.isEmpty
+import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
+import assertk.assertions.isTrue
 import kotlinx.coroutines.channels.map
 import kotlinx.coroutines.channels.toList
 import kotlinx.coroutines.runBlocking
 import org.influxdata.annotations.Column
 import org.influxdata.client.InfluxDBClientFactory
-import org.influxdata.client.domain.*
+import org.influxdata.client.domain.Bucket
+import org.influxdata.client.domain.BucketRetentionRules
+import org.influxdata.client.domain.Dialect
+import org.influxdata.client.domain.Organization
+import org.influxdata.client.domain.Permission
+import org.influxdata.client.domain.PermissionResource
+import org.influxdata.client.domain.WritePrecision
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.platform.runner.JUnitPlatform
@@ -133,7 +145,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
         val values = records.map { it.value }.toList()
 
         assert(values).hasSize(10)
-        assert(values).containsExactly(10L, 11L, 20L, 22L, 35L, 38L, 55L, 45L, 49L, 65L)
+        assert(values).containsExactly(55L, 65L, 35L, 38L, 45L, 49L, 10L, 11L, 20L, 22L)
     }
 
     @Test

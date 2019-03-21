@@ -61,6 +61,7 @@
                     <configOptions>
                         <sourceFolder>java</sourceFolder>
                         <dateLibrary>java8</dateLibrary>
+                        <hideGenerationTimestamp>true</hideGenerationTimestamp>
                     </configOptions>
                     <generateModelDocumentation>false</generateModelDocumentation>
                     <generateApiDocumentation>false</generateApiDocumentation>

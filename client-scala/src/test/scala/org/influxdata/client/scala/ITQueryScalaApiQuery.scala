@@ -139,16 +139,16 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
     val source = queryScalaApi.query(flux, organization.getId).map(it => it.getValue).runWith(TestSink.probe[Object])
 
+    source.requestNext() should be(55L)
+    source.requestNext() should be(65L)
+    source.requestNext() should be(35L)
+    source.requestNext() should be(38L)
+    source.requestNext() should be(45L)
+    source.requestNext() should be(49L)
     source.requestNext() should be(10L)
     source.requestNext() should be(11L)
     source.requestNext() should be(20L)
     source.requestNext() should be(22L)
-    source.requestNext() should be(35L)
-    source.requestNext() should be(38L)
-    source.requestNext() should be(55L)
-    source.requestNext() should be(45L)
-    source.requestNext() should be(49L)
-    source.requestNext() should be(65L)
 
     source.expectComplete()
   }
