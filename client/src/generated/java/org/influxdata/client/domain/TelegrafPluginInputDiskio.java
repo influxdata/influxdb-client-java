@@ -28,7 +28,7 @@ import org.influxdata.client.domain.TelegrafPluginConfig;
 /**
  * TelegrafPluginInputDiskio
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T11:26:21.429+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T13:31:19.701+01:00[Europe/Prague]")
 public class TelegrafPluginInputDiskio extends TelegrafPlugin<TelegrafPluginInputDiskio.NameEnum, TelegrafPluginConfig> {
   /**
    * Gets or Sets name

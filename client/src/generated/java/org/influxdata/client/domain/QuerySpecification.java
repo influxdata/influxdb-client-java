@@ -34,7 +34,7 @@ import org.influxdata.client.domain.QuerySpecificationResources;
  * consists of a set of operations and a set of edges between those operations to instruct the query engine to operate.
  */
 @ApiModel(description = "consists of a set of operations and a set of edges between those operations to instruct the query engine to operate.")
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T11:26:21.429+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T13:31:19.701+01:00[Europe/Prague]")
 public class QuerySpecification {
   public static final String SERIALIZED_NAME_OPERATIONS = "operations";
   @SerializedName(SERIALIZED_NAME_OPERATIONS)

@@ -30,7 +30,7 @@ import org.influxdata.client.domain.QuerySpecification;
  * query influx with specified return formatting. The spec and query fields are mutually exclusive.
  */
 @ApiModel(description = "query influx with specified return formatting. The spec and query fields are mutually exclusive.")
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T11:26:21.429+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T13:31:19.701+01:00[Europe/Prague]")
 public class Query {
   public static final String SERIALIZED_NAME_EXTERN = "extern";
   @SerializedName(SERIALIZED_NAME_EXTERN)
