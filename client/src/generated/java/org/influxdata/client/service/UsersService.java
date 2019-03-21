@@ -31,7 +31,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
-  @GET("buckets/{bucketID}/members")
+  @GET("api/v2/buckets/{bucketID}/members")
   Call<ResourceMembers> bucketsBucketIDMembersGet(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -47,7 +47,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("buckets/{bucketID}/members")
+  @POST("api/v2/buckets/{bucketID}/members")
   Call<ResourceMember> bucketsBucketIDMembersPost(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -60,7 +60,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("buckets/{bucketID}/members/{userID}")
+  @DELETE("api/v2/buckets/{bucketID}/members/{userID}")
   Call<Void> bucketsBucketIDMembersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -72,7 +72,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
-  @GET("buckets/{bucketID}/owners")
+  @GET("api/v2/buckets/{bucketID}/owners")
   Call<ResourceOwners> bucketsBucketIDOwnersGet(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -88,7 +88,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("buckets/{bucketID}/owners")
+  @POST("api/v2/buckets/{bucketID}/owners")
   Call<ResourceOwner> bucketsBucketIDOwnersPost(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -101,7 +101,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("buckets/{bucketID}/owners/{userID}")
+  @DELETE("api/v2/buckets/{bucketID}/owners/{userID}")
   Call<Void> bucketsBucketIDOwnersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -113,7 +113,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
-  @GET("dashboards/{dashboardID}/members")
+  @GET("api/v2/dashboards/{dashboardID}/members")
   Call<ResourceMembers> dashboardsDashboardIDMembersGet(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -129,7 +129,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("dashboards/{dashboardID}/members")
+  @POST("api/v2/dashboards/{dashboardID}/members")
   Call<ResourceMember> dashboardsDashboardIDMembersPost(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -142,7 +142,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("dashboards/{dashboardID}/members/{userID}")
+  @DELETE("api/v2/dashboards/{dashboardID}/members/{userID}")
   Call<Void> dashboardsDashboardIDMembersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -154,7 +154,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
-  @GET("dashboards/{dashboardID}/owners")
+  @GET("api/v2/dashboards/{dashboardID}/owners")
   Call<ResourceOwners> dashboardsDashboardIDOwnersGet(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -170,7 +170,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("dashboards/{dashboardID}/owners")
+  @POST("api/v2/dashboards/{dashboardID}/owners")
   Call<ResourceOwner> dashboardsDashboardIDOwnersPost(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -183,7 +183,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("dashboards/{dashboardID}/owners/{userID}")
+  @DELETE("api/v2/dashboards/{dashboardID}/owners/{userID}")
   Call<Void> dashboardsDashboardIDOwnersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -194,7 +194,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;User&gt;
    */
-  @GET("me")
+  @GET("api/v2/me")
   Call<User> meGet(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -210,7 +210,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @PUT("me/password")
+  @PUT("api/v2/me/password")
   Call<User> mePasswordPut(
     @retrofit2.http.Body PasswordResetBody passwordResetBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Authorization") String authorization
   );
@@ -222,7 +222,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
-  @GET("orgs/{orgID}/members")
+  @GET("api/v2/orgs/{orgID}/members")
   Call<ResourceMembers> orgsOrgIDMembersGet(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -238,7 +238,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("orgs/{orgID}/members")
+  @POST("api/v2/orgs/{orgID}/members")
   Call<ResourceMember> orgsOrgIDMembersPost(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -251,7 +251,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("orgs/{orgID}/members/{userID}")
+  @DELETE("api/v2/orgs/{orgID}/members/{userID}")
   Call<Void> orgsOrgIDMembersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -263,7 +263,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
-  @GET("orgs/{orgID}/owners")
+  @GET("api/v2/orgs/{orgID}/owners")
   Call<ResourceOwners> orgsOrgIDOwnersGet(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -279,7 +279,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("orgs/{orgID}/owners")
+  @POST("api/v2/orgs/{orgID}/owners")
   Call<ResourceOwner> orgsOrgIDOwnersPost(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -292,7 +292,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("orgs/{orgID}/owners/{userID}")
+  @DELETE("api/v2/orgs/{orgID}/owners/{userID}")
   Call<Void> orgsOrgIDOwnersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -304,7 +304,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
-  @GET("scrapers/{scraperTargetID}/members")
+  @GET("api/v2/scrapers/{scraperTargetID}/members")
   Call<ResourceMembers> scrapersScraperTargetIDMembersGet(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -320,7 +320,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("scrapers/{scraperTargetID}/members")
+  @POST("api/v2/scrapers/{scraperTargetID}/members")
   Call<ResourceMember> scrapersScraperTargetIDMembersPost(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -333,7 +333,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("scrapers/{scraperTargetID}/members/{userID}")
+  @DELETE("api/v2/scrapers/{scraperTargetID}/members/{userID}")
   Call<Void> scrapersScraperTargetIDMembersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -345,7 +345,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
-  @GET("scrapers/{scraperTargetID}/owners")
+  @GET("api/v2/scrapers/{scraperTargetID}/owners")
   Call<ResourceOwners> scrapersScraperTargetIDOwnersGet(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -361,7 +361,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("scrapers/{scraperTargetID}/owners")
+  @POST("api/v2/scrapers/{scraperTargetID}/owners")
   Call<ResourceOwner> scrapersScraperTargetIDOwnersPost(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -374,7 +374,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("scrapers/{scraperTargetID}/owners/{userID}")
+  @DELETE("api/v2/scrapers/{scraperTargetID}/owners/{userID}")
   Call<Void> scrapersScraperTargetIDOwnersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -386,7 +386,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
-  @GET("tasks/{taskID}/members")
+  @GET("api/v2/tasks/{taskID}/members")
   Call<ResourceMembers> tasksTaskIDMembersGet(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -402,7 +402,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("tasks/{taskID}/members")
+  @POST("api/v2/tasks/{taskID}/members")
   Call<ResourceMember> tasksTaskIDMembersPost(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -415,7 +415,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("tasks/{taskID}/members/{userID}")
+  @DELETE("api/v2/tasks/{taskID}/members/{userID}")
   Call<Void> tasksTaskIDMembersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -427,7 +427,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
-  @GET("tasks/{taskID}/owners")
+  @GET("api/v2/tasks/{taskID}/owners")
   Call<ResourceOwners> tasksTaskIDOwnersGet(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -443,7 +443,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("tasks/{taskID}/owners")
+  @POST("api/v2/tasks/{taskID}/owners")
   Call<ResourceOwner> tasksTaskIDOwnersPost(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -456,7 +456,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("tasks/taskID}/owners/{userID}")
+  @DELETE("api/v2/tasks/taskID}/owners/{userID}")
   Call<Void> tasksTaskIDOwnersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -468,7 +468,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
-  @GET("telegrafs/{telegrafID}/members")
+  @GET("api/v2/telegrafs/{telegrafID}/members")
   Call<ResourceMembers> telegrafsTelegrafIDMembersGet(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -484,7 +484,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("telegrafs/{telegrafID}/members")
+  @POST("api/v2/telegrafs/{telegrafID}/members")
   Call<ResourceMember> telegrafsTelegrafIDMembersPost(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -497,7 +497,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("telegrafs/{telegrafID}/members/{userID}")
+  @DELETE("api/v2/telegrafs/{telegrafID}/members/{userID}")
   Call<Void> telegrafsTelegrafIDMembersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -509,7 +509,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
-  @GET("telegrafs/{telegrafID}/owners")
+  @GET("api/v2/telegrafs/{telegrafID}/owners")
   Call<ResourceOwners> telegrafsTelegrafIDOwnersGet(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -525,7 +525,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("telegrafs/{telegrafID}/owners")
+  @POST("api/v2/telegrafs/{telegrafID}/owners")
   Call<ResourceOwner> telegrafsTelegrafIDOwnersPost(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -538,7 +538,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("telegrafs/{telegrafID}/owners/{userID}")
+  @DELETE("api/v2/telegrafs/{telegrafID}/owners/{userID}")
   Call<Void> telegrafsTelegrafIDOwnersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -549,7 +549,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Users&gt;
    */
-  @GET("users")
+  @GET("api/v2/users")
   Call<Users> usersGet(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -563,7 +563,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("users")
+  @POST("api/v2/users")
   Call<User> usersPost(
     @retrofit2.http.Body User user
   );
@@ -575,7 +575,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("users/{userID}")
+  @DELETE("api/v2/users/{userID}")
   Call<Void> usersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -587,7 +587,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;User&gt;
    */
-  @GET("users/{userID}")
+  @GET("api/v2/users/{userID}")
   Call<User> usersUserIDGet(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -601,7 +601,7 @@ public interface UsersService {
    * @param limit  (optional, default to 20)
    * @return Call&lt;OperationLogs&gt;
    */
-  @GET("users/{userID}/logs")
+  @GET("api/v2/users/{userID}/logs")
   Call<OperationLogs> usersUserIDLogsGet(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
   );
@@ -618,7 +618,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @PUT("users/{userID}/password")
+  @PUT("api/v2/users/{userID}/password")
   Call<User> usersUserIDPasswordPut(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Body PasswordResetBody passwordResetBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Authorization") String authorization
   );
@@ -634,7 +634,7 @@ public interface UsersService {
   @Headers({
     "Content-Type:application/json"
   })
-  @PATCH("users/{userID}")
+  @PATCH("api/v2/users/{userID}")
   Call<User> usersUserIDPatch(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Body User user, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );

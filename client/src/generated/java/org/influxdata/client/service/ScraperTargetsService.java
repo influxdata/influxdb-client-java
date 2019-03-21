@@ -32,7 +32,7 @@ public interface ScraperTargetsService {
    * 
    * @return Call&lt;ScraperTargetResponses&gt;
    */
-  @GET("scrapers")
+  @GET("api/v2/scrapers")
   Call<ScraperTargetResponses> scrapersGet();
     
 
@@ -45,7 +45,7 @@ public interface ScraperTargetsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("scrapers")
+  @POST("api/v2/scrapers")
   Call<ScraperTargetResponse> scrapersPost(
     @retrofit2.http.Body ScraperTargetRequest scraperTargetRequest
   );
@@ -57,7 +57,7 @@ public interface ScraperTargetsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("scrapers/{scraperTargetID}")
+  @DELETE("api/v2/scrapers/{scraperTargetID}")
   Call<Void> scrapersScraperTargetIDDelete(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -69,7 +69,7 @@ public interface ScraperTargetsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ScraperTargetResponse&gt;
    */
-  @GET("scrapers/{scraperTargetID}")
+  @GET("api/v2/scrapers/{scraperTargetID}")
   Call<ScraperTargetResponse> scrapersScraperTargetIDGet(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -81,7 +81,7 @@ public interface ScraperTargetsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
-  @GET("scrapers/{scraperTargetID}/labels")
+  @GET("api/v2/scrapers/{scraperTargetID}/labels")
   Call<LabelsResponse> scrapersScraperTargetIDLabelsGet(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -94,7 +94,7 @@ public interface ScraperTargetsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("scrapers/{scraperTargetID}/labels/{labelID}")
+  @DELETE("api/v2/scrapers/{scraperTargetID}/labels/{labelID}")
   Call<Void> scrapersScraperTargetIDLabelsLabelIDDelete(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -111,7 +111,7 @@ public interface ScraperTargetsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @PATCH("scrapers/{scraperTargetID}/labels/{labelID}")
+  @PATCH("api/v2/scrapers/{scraperTargetID}/labels/{labelID}")
   Call<Void> scrapersScraperTargetIDLabelsLabelIDPatch(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Body Label label, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -127,7 +127,7 @@ public interface ScraperTargetsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("scrapers/{scraperTargetID}/labels")
+  @POST("api/v2/scrapers/{scraperTargetID}/labels")
   Call<LabelResponse> scrapersScraperTargetIDLabelsPost(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -139,7 +139,7 @@ public interface ScraperTargetsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
-  @GET("scrapers/{scraperTargetID}/members")
+  @GET("api/v2/scrapers/{scraperTargetID}/members")
   Call<ResourceMembers> scrapersScraperTargetIDMembersGet(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -155,7 +155,7 @@ public interface ScraperTargetsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("scrapers/{scraperTargetID}/members")
+  @POST("api/v2/scrapers/{scraperTargetID}/members")
   Call<ResourceMember> scrapersScraperTargetIDMembersPost(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -168,7 +168,7 @@ public interface ScraperTargetsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("scrapers/{scraperTargetID}/members/{userID}")
+  @DELETE("api/v2/scrapers/{scraperTargetID}/members/{userID}")
   Call<Void> scrapersScraperTargetIDMembersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -180,7 +180,7 @@ public interface ScraperTargetsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
-  @GET("scrapers/{scraperTargetID}/owners")
+  @GET("api/v2/scrapers/{scraperTargetID}/owners")
   Call<ResourceOwners> scrapersScraperTargetIDOwnersGet(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -196,7 +196,7 @@ public interface ScraperTargetsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("scrapers/{scraperTargetID}/owners")
+  @POST("api/v2/scrapers/{scraperTargetID}/owners")
   Call<ResourceOwner> scrapersScraperTargetIDOwnersPost(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -209,7 +209,7 @@ public interface ScraperTargetsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("scrapers/{scraperTargetID}/owners/{userID}")
+  @DELETE("api/v2/scrapers/{scraperTargetID}/owners/{userID}")
   Call<Void> scrapersScraperTargetIDOwnersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -225,7 +225,7 @@ public interface ScraperTargetsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @PATCH("scrapers/{scraperTargetID}")
+  @PATCH("api/v2/scrapers/{scraperTargetID}")
   Call<ScraperTargetResponse> scrapersScraperTargetIDPatch(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Body ScraperTargetRequest scraperTargetRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );

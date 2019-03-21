@@ -33,7 +33,7 @@ public interface TelegrafsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Telegrafs&gt;
    */
-  @GET("telegrafs")
+  @GET("api/v2/telegrafs")
   Call<Telegrafs> telegrafsGet(
     @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -48,7 +48,7 @@ public interface TelegrafsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("telegrafs")
+  @POST("api/v2/telegrafs")
   Call<Telegraf> telegrafsPost(
     @retrofit2.http.Body TelegrafRequest telegrafRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -60,7 +60,7 @@ public interface TelegrafsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("telegrafs/{telegrafID}")
+  @DELETE("api/v2/telegrafs/{telegrafID}")
   Call<Void> telegrafsTelegrafIDDelete(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -73,7 +73,7 @@ public interface TelegrafsService {
    * @param accept specifies the return content format. (optional, default to application/json)
    * @return Call&lt;Telegraf&gt;
    */
-  @GET("telegrafs/{telegrafID}")
+  @GET("api/v2/telegrafs/{telegrafID}")
   Call<Telegraf> telegrafsTelegrafIDGet(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept
   );
@@ -86,7 +86,7 @@ public interface TelegrafsService {
    * @param accept specifies the return content format. (optional, default to application/json)
    * @return Call&lt;ResponseBody&gt;
    */
-  @GET("telegrafs/{telegrafID}")
+  @GET("api/v2/telegrafs/{telegrafID}")
   Call<ResponseBody> telegrafsTelegrafIDGetResponseBody(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept
   );
@@ -98,7 +98,7 @@ public interface TelegrafsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
-  @GET("telegrafs/{telegrafID}/labels")
+  @GET("api/v2/telegrafs/{telegrafID}/labels")
   Call<LabelsResponse> telegrafsTelegrafIDLabelsGet(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -111,7 +111,7 @@ public interface TelegrafsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("telegrafs/{telegrafID}/labels/{labelID}")
+  @DELETE("api/v2/telegrafs/{telegrafID}/labels/{labelID}")
   Call<Void> telegrafsTelegrafIDLabelsLabelIDDelete(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -127,7 +127,7 @@ public interface TelegrafsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("telegrafs/{telegrafID}/labels")
+  @POST("api/v2/telegrafs/{telegrafID}/labels")
   Call<LabelResponse> telegrafsTelegrafIDLabelsPost(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -139,7 +139,7 @@ public interface TelegrafsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
-  @GET("telegrafs/{telegrafID}/members")
+  @GET("api/v2/telegrafs/{telegrafID}/members")
   Call<ResourceMembers> telegrafsTelegrafIDMembersGet(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -155,7 +155,7 @@ public interface TelegrafsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("telegrafs/{telegrafID}/members")
+  @POST("api/v2/telegrafs/{telegrafID}/members")
   Call<ResourceMember> telegrafsTelegrafIDMembersPost(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -168,7 +168,7 @@ public interface TelegrafsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("telegrafs/{telegrafID}/members/{userID}")
+  @DELETE("api/v2/telegrafs/{telegrafID}/members/{userID}")
   Call<Void> telegrafsTelegrafIDMembersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -180,7 +180,7 @@ public interface TelegrafsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
-  @GET("telegrafs/{telegrafID}/owners")
+  @GET("api/v2/telegrafs/{telegrafID}/owners")
   Call<ResourceOwners> telegrafsTelegrafIDOwnersGet(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -196,7 +196,7 @@ public interface TelegrafsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("telegrafs/{telegrafID}/owners")
+  @POST("api/v2/telegrafs/{telegrafID}/owners")
   Call<ResourceOwner> telegrafsTelegrafIDOwnersPost(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -209,7 +209,7 @@ public interface TelegrafsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("telegrafs/{telegrafID}/owners/{userID}")
+  @DELETE("api/v2/telegrafs/{telegrafID}/owners/{userID}")
   Call<Void> telegrafsTelegrafIDOwnersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -225,7 +225,7 @@ public interface TelegrafsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @PUT("telegrafs/{telegrafID}")
+  @PUT("api/v2/telegrafs/{telegrafID}")
   Call<Telegraf> telegrafsTelegrafIDPut(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Body TelegrafRequest telegrafRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );

@@ -26,7 +26,7 @@ public interface SourcesService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Sources&gt;
    */
-  @GET("sources")
+  @GET("api/v2/sources")
   Call<Sources> sourcesGet(
     @retrofit2.http.Query("org") String org, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -41,7 +41,7 @@ public interface SourcesService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("sources")
+  @POST("api/v2/sources")
   Call<Source> sourcesPost(
     @retrofit2.http.Body Source source, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -54,7 +54,7 @@ public interface SourcesService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Buckets&gt;
    */
-  @GET("sources/{sourceID}/buckets")
+  @GET("api/v2/sources/{sourceID}/buckets")
   Call<Buckets> sourcesSourceIDBucketsGet(
     @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Query("org") String org, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -65,7 +65,7 @@ public interface SourcesService {
    * @param sourceID ID of the source (required)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("sources/{sourceID}")
+  @DELETE("api/v2/sources/{sourceID}")
   Call<Void> sourcesSourceIDDelete(
     @retrofit2.http.Path("sourceID") String sourceID
   );
@@ -77,7 +77,7 @@ public interface SourcesService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Source&gt;
    */
-  @GET("sources/{sourceID}")
+  @GET("api/v2/sources/{sourceID}")
   Call<Source> sourcesSourceIDGet(
     @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -89,7 +89,7 @@ public interface SourcesService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Check&gt;
    */
-  @GET("sources/{sourceID}/health")
+  @GET("api/v2/sources/{sourceID}/health")
   Call<Check> sourcesSourceIDHealthGet(
     @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -105,7 +105,7 @@ public interface SourcesService {
   @Headers({
     "Content-Type:application/json"
   })
-  @PATCH("sources/{sourceID}")
+  @PATCH("api/v2/sources/{sourceID}")
   Call<Source> sourcesSourceIDPatch(
     @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Body Source source, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );

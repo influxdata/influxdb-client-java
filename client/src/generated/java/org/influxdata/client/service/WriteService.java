@@ -35,7 +35,7 @@ public interface WriteService {
   @Headers({
     "Content-Type:text/plain"
   })
-  @POST("write")
+  @POST("api/v2/write")
   Call<Void> writePost(
     @retrofit2.http.Query("org") String org, @retrofit2.http.Query("bucket") String bucket, @retrofit2.http.Body String body, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Content-Encoding") String contentEncoding, @retrofit2.http.Header("Content-Type") String contentType, @retrofit2.http.Header("Content-Length") Integer contentLength, @retrofit2.http.Header("Accept") String accept, @retrofit2.http.Query("precision") WritePrecision precision
   );

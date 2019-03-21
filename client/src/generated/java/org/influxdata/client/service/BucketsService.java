@@ -33,7 +33,7 @@ public interface BucketsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("buckets/{bucketID}")
+  @DELETE("api/v2/buckets/{bucketID}")
   Call<Void> bucketsBucketIDDelete(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -45,7 +45,7 @@ public interface BucketsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Bucket&gt;
    */
-  @GET("buckets/{bucketID}")
+  @GET("api/v2/buckets/{bucketID}")
   Call<Bucket> bucketsBucketIDGet(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -57,7 +57,7 @@ public interface BucketsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
-  @GET("buckets/{bucketID}/labels")
+  @GET("api/v2/buckets/{bucketID}/labels")
   Call<LabelsResponse> bucketsBucketIDLabelsGet(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -70,7 +70,7 @@ public interface BucketsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("buckets/{bucketID}/labels/{labelID}")
+  @DELETE("api/v2/buckets/{bucketID}/labels/{labelID}")
   Call<Void> bucketsBucketIDLabelsLabelIDDelete(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -86,7 +86,7 @@ public interface BucketsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("buckets/{bucketID}/labels")
+  @POST("api/v2/buckets/{bucketID}/labels")
   Call<LabelResponse> bucketsBucketIDLabelsPost(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -100,7 +100,7 @@ public interface BucketsService {
    * @param limit  (optional, default to 20)
    * @return Call&lt;OperationLogs&gt;
    */
-  @GET("buckets/{bucketID}/logs")
+  @GET("api/v2/buckets/{bucketID}/logs")
   Call<OperationLogs> bucketsBucketIDLogsGet(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
   );
@@ -112,7 +112,7 @@ public interface BucketsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
-  @GET("buckets/{bucketID}/members")
+  @GET("api/v2/buckets/{bucketID}/members")
   Call<ResourceMembers> bucketsBucketIDMembersGet(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -128,7 +128,7 @@ public interface BucketsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("buckets/{bucketID}/members")
+  @POST("api/v2/buckets/{bucketID}/members")
   Call<ResourceMember> bucketsBucketIDMembersPost(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -141,7 +141,7 @@ public interface BucketsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("buckets/{bucketID}/members/{userID}")
+  @DELETE("api/v2/buckets/{bucketID}/members/{userID}")
   Call<Void> bucketsBucketIDMembersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -153,7 +153,7 @@ public interface BucketsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
-  @GET("buckets/{bucketID}/owners")
+  @GET("api/v2/buckets/{bucketID}/owners")
   Call<ResourceOwners> bucketsBucketIDOwnersGet(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -169,7 +169,7 @@ public interface BucketsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("buckets/{bucketID}/owners")
+  @POST("api/v2/buckets/{bucketID}/owners")
   Call<ResourceOwner> bucketsBucketIDOwnersPost(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -182,7 +182,7 @@ public interface BucketsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("buckets/{bucketID}/owners/{userID}")
+  @DELETE("api/v2/buckets/{bucketID}/owners/{userID}")
   Call<Void> bucketsBucketIDOwnersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -198,7 +198,7 @@ public interface BucketsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @PATCH("buckets/{bucketID}")
+  @PATCH("api/v2/buckets/{bucketID}")
   Call<Bucket> bucketsBucketIDPatch(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Body Bucket bucket, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -214,7 +214,7 @@ public interface BucketsService {
    * @param name only returns buckets with the specified name (optional)
    * @return Call&lt;Buckets&gt;
    */
-  @GET("buckets")
+  @GET("api/v2/buckets")
   Call<Buckets> bucketsGet(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("name") String name
   );
@@ -229,7 +229,7 @@ public interface BucketsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("buckets")
+  @POST("api/v2/buckets")
   Call<Bucket> bucketsPost(
     @retrofit2.http.Body Bucket bucket, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -242,7 +242,7 @@ public interface BucketsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Buckets&gt;
    */
-  @GET("sources/{sourceID}/buckets")
+  @GET("api/v2/sources/{sourceID}/buckets")
   Call<Buckets> sourcesSourceIDBucketsGet(
     @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Query("org") String org, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );

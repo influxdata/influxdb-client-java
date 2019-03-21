@@ -24,7 +24,7 @@ public interface LabelsService {
    * 
    * @return Call&lt;LabelsResponse&gt;
    */
-  @GET("labels")
+  @GET("api/v2/labels")
   Call<LabelsResponse> labelsGet();
     
 
@@ -35,7 +35,7 @@ public interface LabelsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("labels/{labelID}")
+  @DELETE("api/v2/labels/{labelID}")
   Call<Void> labelsLabelIDDelete(
     @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -47,7 +47,7 @@ public interface LabelsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelResponse&gt;
    */
-  @GET("labels/{labelID}")
+  @GET("api/v2/labels/{labelID}")
   Call<LabelResponse> labelsLabelIDGet(
     @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -63,7 +63,7 @@ public interface LabelsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @PATCH("labels/{labelID}")
+  @PATCH("api/v2/labels/{labelID}")
   Call<LabelResponse> labelsLabelIDPatch(
     @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Body LabelUpdate labelUpdate, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -77,7 +77,7 @@ public interface LabelsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("labels")
+  @POST("api/v2/labels")
   Call<LabelResponse> labelsPost(
     @retrofit2.http.Body LabelCreateRequest labelCreateRequest
   );

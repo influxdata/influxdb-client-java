@@ -43,7 +43,7 @@ public interface TasksService {
    * @param limit the number of tasks to return (optional, default to 100)
    * @return Call&lt;Tasks&gt;
    */
-  @GET("tasks")
+  @GET("api/v2/tasks")
   Call<Tasks> tasksGet(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("after") String after, @retrofit2.http.Query("user") String user, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("limit") Integer limit
   );
@@ -58,7 +58,7 @@ public interface TasksService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("tasks")
+  @POST("api/v2/tasks")
   Call<Task> tasksPost(
     @retrofit2.http.Body TaskCreateRequest taskCreateRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -70,7 +70,7 @@ public interface TasksService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("tasks/{taskID}")
+  @DELETE("api/v2/tasks/{taskID}")
   Call<Void> tasksTaskIDDelete(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -82,7 +82,7 @@ public interface TasksService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Task&gt;
    */
-  @GET("tasks/{taskID}")
+  @GET("api/v2/tasks/{taskID}")
   Call<Task> tasksTaskIDGet(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -94,7 +94,7 @@ public interface TasksService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
-  @GET("tasks/{taskID}/labels")
+  @GET("api/v2/tasks/{taskID}/labels")
   Call<LabelsResponse> tasksTaskIDLabelsGet(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -107,7 +107,7 @@ public interface TasksService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("tasks/{taskID}/labels/{labelID}")
+  @DELETE("api/v2/tasks/{taskID}/labels/{labelID}")
   Call<Void> tasksTaskIDLabelsLabelIDDelete(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -123,7 +123,7 @@ public interface TasksService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("tasks/{taskID}/labels")
+  @POST("api/v2/tasks/{taskID}/labels")
   Call<LabelResponse> tasksTaskIDLabelsPost(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -135,7 +135,7 @@ public interface TasksService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Logs&gt;
    */
-  @GET("tasks/{taskID}/logs")
+  @GET("api/v2/tasks/{taskID}/logs")
   Call<Logs> tasksTaskIDLogsGet(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -147,7 +147,7 @@ public interface TasksService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
-  @GET("tasks/{taskID}/members")
+  @GET("api/v2/tasks/{taskID}/members")
   Call<ResourceMembers> tasksTaskIDMembersGet(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -163,7 +163,7 @@ public interface TasksService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("tasks/{taskID}/members")
+  @POST("api/v2/tasks/{taskID}/members")
   Call<ResourceMember> tasksTaskIDMembersPost(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -176,7 +176,7 @@ public interface TasksService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("tasks/{taskID}/members/{userID}")
+  @DELETE("api/v2/tasks/{taskID}/members/{userID}")
   Call<Void> tasksTaskIDMembersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -188,7 +188,7 @@ public interface TasksService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
-  @GET("tasks/{taskID}/owners")
+  @GET("api/v2/tasks/{taskID}/owners")
   Call<ResourceOwners> tasksTaskIDOwnersGet(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -204,7 +204,7 @@ public interface TasksService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("tasks/{taskID}/owners")
+  @POST("api/v2/tasks/{taskID}/owners")
   Call<ResourceOwner> tasksTaskIDOwnersPost(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -217,7 +217,7 @@ public interface TasksService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("tasks/taskID}/owners/{userID}")
+  @DELETE("api/v2/tasks/taskID}/owners/{userID}")
   Call<Void> tasksTaskIDOwnersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -233,7 +233,7 @@ public interface TasksService {
   @Headers({
     "Content-Type:application/json"
   })
-  @PATCH("tasks/{taskID}")
+  @PATCH("api/v2/tasks/{taskID}")
   Call<Task> tasksTaskIDPatch(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Body TaskUpdateRequest taskUpdateRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -249,7 +249,7 @@ public interface TasksService {
    * @param beforeTime filter runs to those scheduled before this time, RFC3339 (optional)
    * @return Call&lt;Runs&gt;
    */
-  @GET("tasks/{taskID}/runs")
+  @GET("api/v2/tasks/{taskID}/runs")
   Call<Runs> tasksTaskIDRunsGet(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("after") String after, @retrofit2.http.Query("limit") Integer limit, @retrofit2.http.Query("afterTime") OffsetDateTime afterTime, @retrofit2.http.Query("beforeTime") OffsetDateTime beforeTime
   );
@@ -264,7 +264,7 @@ public interface TasksService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("tasks/{taskID}/runs")
+  @POST("api/v2/tasks/{taskID}/runs")
   Call<Run> tasksTaskIDRunsPost(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Body RunManually runManually
   );
@@ -277,7 +277,7 @@ public interface TasksService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("tasks/{taskID}/runs/{runID}")
+  @DELETE("api/v2/tasks/{taskID}/runs/{runID}")
   Call<Void> tasksTaskIDRunsRunIDDelete(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Path("runID") String runID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -290,7 +290,7 @@ public interface TasksService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Run&gt;
    */
-  @GET("tasks/{taskID}/runs/{runID}")
+  @GET("api/v2/tasks/{taskID}/runs/{runID}")
   Call<Run> tasksTaskIDRunsRunIDGet(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Path("runID") String runID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -303,7 +303,7 @@ public interface TasksService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Logs&gt;
    */
-  @GET("tasks/{taskID}/runs/{runID}/logs")
+  @GET("api/v2/tasks/{taskID}/runs/{runID}/logs")
   Call<Logs> tasksTaskIDRunsRunIDLogsGet(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Path("runID") String runID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -316,7 +316,7 @@ public interface TasksService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Run&gt;
    */
-  @POST("tasks/{taskID}/runs/{runID}/retry")
+  @POST("api/v2/tasks/{taskID}/runs/{runID}/retry")
   Call<Run> tasksTaskIDRunsRunIDRetryPost(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Path("runID") String runID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );

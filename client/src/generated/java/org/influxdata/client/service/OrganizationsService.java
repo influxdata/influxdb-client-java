@@ -35,7 +35,7 @@ public interface OrganizationsService {
    * @param orgID filter organizations to a specific organization ID (optional)
    * @return Call&lt;Organizations&gt;
    */
-  @GET("orgs")
+  @GET("api/v2/orgs")
   Call<Organizations> orgsGet(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID
   );
@@ -47,7 +47,7 @@ public interface OrganizationsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("orgs/{orgID}")
+  @DELETE("api/v2/orgs/{orgID}")
   Call<Void> orgsOrgIDDelete(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -59,7 +59,7 @@ public interface OrganizationsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Organization&gt;
    */
-  @GET("orgs/{orgID}")
+  @GET("api/v2/orgs/{orgID}")
   Call<Organization> orgsOrgIDGet(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -71,7 +71,7 @@ public interface OrganizationsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
-  @GET("orgs/{orgID}/labels")
+  @GET("api/v2/orgs/{orgID}/labels")
   Call<LabelsResponse> orgsOrgIDLabelsGet(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -84,7 +84,7 @@ public interface OrganizationsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("orgs/{orgID}/labels/{labelID}")
+  @DELETE("api/v2/orgs/{orgID}/labels/{labelID}")
   Call<Void> orgsOrgIDLabelsLabelIDDelete(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -100,7 +100,7 @@ public interface OrganizationsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("orgs/{orgID}/labels")
+  @POST("api/v2/orgs/{orgID}/labels")
   Call<LabelResponse> orgsOrgIDLabelsPost(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -114,7 +114,7 @@ public interface OrganizationsService {
    * @param limit  (optional, default to 20)
    * @return Call&lt;OperationLogs&gt;
    */
-  @GET("orgs/{orgID}/logs")
+  @GET("api/v2/orgs/{orgID}/logs")
   Call<OperationLogs> orgsOrgIDLogsGet(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
   );
@@ -126,7 +126,7 @@ public interface OrganizationsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
-  @GET("orgs/{orgID}/members")
+  @GET("api/v2/orgs/{orgID}/members")
   Call<ResourceMembers> orgsOrgIDMembersGet(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -142,7 +142,7 @@ public interface OrganizationsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("orgs/{orgID}/members")
+  @POST("api/v2/orgs/{orgID}/members")
   Call<ResourceMember> orgsOrgIDMembersPost(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -155,7 +155,7 @@ public interface OrganizationsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("orgs/{orgID}/members/{userID}")
+  @DELETE("api/v2/orgs/{orgID}/members/{userID}")
   Call<Void> orgsOrgIDMembersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -167,7 +167,7 @@ public interface OrganizationsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
-  @GET("orgs/{orgID}/owners")
+  @GET("api/v2/orgs/{orgID}/owners")
   Call<ResourceOwners> orgsOrgIDOwnersGet(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -183,7 +183,7 @@ public interface OrganizationsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("orgs/{orgID}/owners")
+  @POST("api/v2/orgs/{orgID}/owners")
   Call<ResourceOwner> orgsOrgIDOwnersPost(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -196,7 +196,7 @@ public interface OrganizationsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("orgs/{orgID}/owners/{userID}")
+  @DELETE("api/v2/orgs/{orgID}/owners/{userID}")
   Call<Void> orgsOrgIDOwnersUserIDDelete(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -212,7 +212,7 @@ public interface OrganizationsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @PATCH("orgs/{orgID}")
+  @PATCH("api/v2/orgs/{orgID}")
   Call<Organization> orgsOrgIDPatch(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body Organization organization, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -228,7 +228,7 @@ public interface OrganizationsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("orgs/{orgID}/secrets/delete")
+  @POST("api/v2/orgs/{orgID}/secrets/delete")
   Call<Void> orgsOrgIDSecretsDeletePost(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body SecretKeys secretKeys, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -240,7 +240,7 @@ public interface OrganizationsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;SecretKeys&gt;
    */
-  @GET("orgs/{orgID}/secrets")
+  @GET("api/v2/orgs/{orgID}/secrets")
   Call<SecretKeys> orgsOrgIDSecretsGet(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -256,7 +256,7 @@ public interface OrganizationsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @PATCH("orgs/{orgID}/secrets")
+  @PATCH("api/v2/orgs/{orgID}/secrets")
   Call<Void> orgsOrgIDSecretsPatch(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body Map<String, String> requestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
@@ -271,7 +271,7 @@ public interface OrganizationsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @POST("orgs")
+  @POST("api/v2/orgs")
   Call<Organization> orgsPost(
     @retrofit2.http.Body Organization organization, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
