@@ -26,7 +26,7 @@ import javax.annotation.Nonnull
 import org.influxdata.LogLevel
 import org.influxdata.client.InfluxDBClientOptions
 import org.influxdata.client.domain.Check
-import org.influxdata.client.internal.{AbstractInfluxDBClient, InfluxDBService}
+import org.influxdata.client.internal.AbstractInfluxDBClient
 import org.influxdata.client.scala.{InfluxDBClientScala, QueryScalaApi}
 import org.influxdata.client.service.QueryService
 
@@ -35,7 +35,7 @@ import org.influxdata.client.service.QueryService
  */
 class InfluxDBClientScalaImpl(@Nonnull options: InfluxDBClientOptions,
                               @Nonnull val bufferSize: Int,
-                              @Nonnull val overflowStrategy: OverflowStrategy) extends AbstractInfluxDBClient(options, classOf[InfluxDBService]) with InfluxDBClientScala {
+                              @Nonnull val overflowStrategy: OverflowStrategy) extends AbstractInfluxDBClient(options) with InfluxDBClientScala {
   /**
    * Get the Query client.
    *

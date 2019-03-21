@@ -68,7 +68,7 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (11/10/2018 09:36)
  */
-public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBService> implements InfluxDBClient {
+public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements InfluxDBClient {
 
     private static final Logger LOG = Logger.getLogger(InfluxDBClientImpl.class.getName());
 
@@ -78,7 +78,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
 
     public InfluxDBClientImpl(@Nonnull final InfluxDBClientOptions options) {
 
-        super(options, InfluxDBService.class);
+        super(options);
 
         setupService = retrofit.create(SetupService.class);
         readyService = retrofit.create(ReadyService.class);
@@ -102,7 +102,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
-        return new WriteApiImpl(writeOptions, retrofit.create(WriteService.class), influxDBService);
+        return new WriteApiImpl(writeOptions, retrofit.create(WriteService.class));
     }
 
     @Nonnull

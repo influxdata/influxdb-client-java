@@ -29,6 +29,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Organization;
@@ -65,6 +66,8 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
 
     @BeforeEach
     void setUp() throws Exception {
+
+        influxDBClient.setLogLevel(LogLevel.BODY);
 
         organization = findMyOrg();
 

@@ -411,21 +411,21 @@
             </dependency>
 
             <dependency>
-                <groupId>com.squareup.okio</groupId>
-                <artifactId>okio</artifactId>
-                <version>1.17.3</version>
+                <groupId>com.squareup.retrofit2</groupId>
+                <artifactId>converter-scalars</artifactId>
+                <version>${dependency.retrofit.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.squareup.retrofit2</groupId>
-                <artifactId>adapter-rxjava2</artifactId>
+                <artifactId>converter-gson</artifactId>
                 <version>${dependency.retrofit.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>io.reactivex.rxjava2</groupId>
-                        <artifactId>rxjava</artifactId>
-                    </exclusion>
-                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>com.squareup.okio</groupId>
+                <artifactId>okio</artifactId>
+                <version>1.17.3</version>
             </dependency>
 
             <dependency>

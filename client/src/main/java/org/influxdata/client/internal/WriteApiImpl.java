@@ -38,28 +38,17 @@ import org.influxdata.client.write.events.EventListener;
 import org.influxdata.client.write.events.ListenerRegistration;
 
 import io.reactivex.Flowable;
-import io.reactivex.Maybe;
 import io.reactivex.disposables.Disposable;
-import okhttp3.RequestBody;
-import retrofit2.Response;
 
 /**
  * @author Jakub Bednar (bednar@github) (15/10/2018 09:42)
  */
 final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
 
-    private final InfluxDBService influxDBService;
-
-    private final WriteService service;
-
     WriteApiImpl(@Nonnull final WriteOptions writeOptions,
-                 @Nonnull final WriteService service,
-                 @Nonnull final InfluxDBService influxDBService) {
+                 @Nonnull final WriteService service) {
 
-        super(writeOptions, writeOptions.getWriteScheduler());
-
-        this.service = service;
-        this.influxDBService = influxDBService;
+        super(writeOptions, writeOptions.getWriteScheduler(), service);
     }
 
     @Override
@@ -168,14 +157,5 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
     @Override
     public void close() {
         super.close();
-    }
-
-    @Nonnull
-    public Maybe<Response<Void>> writeCall(final RequestBody requestBody,
-                                           final String organization,
-                                           final String bucket,
-                                           final String precision) {
-
-        return influxDBService.writePoints(organization, bucket, precision, requestBody);
     }
 }

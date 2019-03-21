@@ -122,11 +122,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>adapter-rxjava2</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.squareup.okio</groupId>
             <artifactId>okio</artifactId>
         </dependency>
@@ -148,9 +143,14 @@
 
         <dependency>
             <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>converter-gson</artifactId>
-            <version>${dependency.retrofit.version}</version>
+            <artifactId>converter-scalars</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>converter-gson</artifactId>
+        </dependency>
+        
     </dependencies>
 
 </project>

@@ -29,29 +29,24 @@ import org.influxdata.client.WriteOptions;
 import org.influxdata.client.domain.WritePrecision;
 import org.influxdata.client.internal.AbstractWriteClient;
 import org.influxdata.client.reactive.WriteReactiveApi;
+import org.influxdata.client.service.WriteService;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.AbstractWriteEvent;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
-import okhttp3.RequestBody;
 import org.reactivestreams.Publisher;
-import retrofit2.Response;
 
 /**
  * @author Jakub Bednar (bednar@github) (22/11/2018 06:50)
  */
 public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteReactiveApi {
 
-    private final InfluxDBReactiveService influxDBService;
-
     WriteReactiveApiImpl(@Nonnull final WriteOptions writeOptions,
-                         @Nonnull final InfluxDBReactiveService influxDBService) {
+                         @Nonnull final WriteService service) {
 
-        super(writeOptions, writeOptions.getWriteScheduler());
-
-        this.influxDBService = influxDBService;
+        super(writeOptions, writeOptions.getWriteScheduler(), service);
     }
 
     @Override
@@ -189,14 +184,5 @@ public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteRe
     @Override
     public void close() {
         super.close();
-    }
-
-    @Override
-    public Maybe<Response<Void>> writeCall(final RequestBody requestBody,
-                                           final String organization,
-                                           final String bucket,
-                                           final String precision) {
-
-        return influxDBService.writePoints(organization, bucket, precision, requestBody);
     }
 }

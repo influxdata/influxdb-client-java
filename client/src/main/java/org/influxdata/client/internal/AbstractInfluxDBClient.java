@@ -39,13 +39,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 07:13)
  */
-public abstract class AbstractInfluxDBClient<T> extends AbstractRestClient {
+public abstract class AbstractInfluxDBClient extends AbstractRestClient {
 
     private static final Logger LOG = Logger.getLogger(AbstractInfluxDBClient.class.getName());
 
@@ -55,7 +55,6 @@ public abstract class AbstractInfluxDBClient<T> extends AbstractRestClient {
             .addAnnotationsItem(Dialect.AnnotationsEnum.DATATYPE)
             .addAnnotationsItem(Dialect.AnnotationsEnum.GROUP).addAnnotationsItem(Dialect.AnnotationsEnum.DEFAULT);
 
-    public final T influxDBService;
     public final HealthService healthService;
 
     protected final Retrofit retrofit;
@@ -65,10 +64,9 @@ public abstract class AbstractInfluxDBClient<T> extends AbstractRestClient {
     private final AuthenticateInterceptor authenticateInterceptor;
     private final OkHttpClient okHttpClient;
 
-    public AbstractInfluxDBClient(@Nonnull final InfluxDBClientOptions options, @Nonnull final Class<T> serviceType) {
+    public AbstractInfluxDBClient(@Nonnull final InfluxDBClientOptions options) {
 
         Arguments.checkNotNull(options, "InfluxDBClientOptions");
-        Arguments.checkNotNull(serviceType, "InfluxDB service type");
 
         this.loggingInterceptor = new HttpLoggingInterceptor();
         this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
@@ -86,11 +84,10 @@ public abstract class AbstractInfluxDBClient<T> extends AbstractRestClient {
         this.retrofit = new Retrofit.Builder()
                 .baseUrl(options.getUrl())
                 .client(okHttpClient)
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(new JSON().getGson()))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
-        this.influxDBService = retrofit.create(serviceType);
         this.healthService = retrofit.create(HealthService.class);
     }
 
