@@ -59,28 +59,18 @@ class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
 
     @Nonnull
     @Override
-    public Label createLabel(@Nonnull final Label label) {
+    public Label createLabel(@Nonnull final String name,
+                             @Nonnull final Map<String, String> properties,
+                             @Nonnull final String orgID) {
 
-        Arguments.checkNotNull(label, "label");
-
-        LabelCreateRequest request = new LabelCreateRequest();
-        request.setOrgID(label.getOrgID());
-        request.setName(label.getName());
-        request.setProperties(label.getProperties());
-
-        return createLabel(request);
-    }
-
-    @Nonnull
-    @Override
-    public Label createLabel(@Nonnull final String name, @Nonnull final Map<String, String> properties) {
-
+        Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNonEmpty(name, "name");
         Arguments.checkNotNull(properties, "properties");
 
-        Label label = new Label();
+        LabelCreateRequest label = new LabelCreateRequest();
         label.setName(name);
         label.setProperties(properties);
+        label.setOrgID(orgID);
 
         return createLabel(label);
     }
@@ -165,8 +155,9 @@ class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
         Arguments.checkNonEmpty(clonedName, "clonedName");
         Arguments.checkNotNull(label, "label");
 
-        Label cloned = new Label();
+        LabelCreateRequest cloned = new LabelCreateRequest();
         cloned.setName(clonedName);
+        cloned.setOrgID(label.getOrgID());
 
         if (label.getProperties() != null) {
             label.getProperties().forEach(cloned::putPropertiesItem);

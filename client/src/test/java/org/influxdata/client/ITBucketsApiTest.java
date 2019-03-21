@@ -302,7 +302,7 @@ class ITBucketsApiTest extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties);
+        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties, organization.getId());
 
         List<Label> labels = bucketsApi.getLabels(bucket);
         Assertions.assertThat(labels).hasSize(0);
@@ -463,7 +463,7 @@ class ITBucketsApiTest extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties);
+        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties, organization.getId());
 
         bucketsApi.addLabel(label, source);
 

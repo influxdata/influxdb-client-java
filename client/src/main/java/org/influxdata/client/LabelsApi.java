@@ -38,21 +38,13 @@ public interface LabelsApi {
     /**
      * Creates a new label and sets {@link Label#getId()} with the new identifier.
      *
-     * @param label label to create
-     * @return Label created
-     */
-    @Nonnull
-    Label createLabel(@Nonnull final Label label);
-
-    /**
-     * Creates a new label and sets {@link Label#getId()} with the new identifier.
-     *
      * @param name       name of a label
      * @param properties properties of a label
+     * @param orgID
      * @return Label created
      */
     @Nonnull
-    Label createLabel(@Nonnull final String name, @Nonnull final Map<String, String> properties);
+    Label createLabel(@Nonnull final String name, @Nonnull final Map<String, String> properties, final String orgID);
 
     /**
      * Create a label.

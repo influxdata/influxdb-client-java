@@ -200,14 +200,15 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
 
         LabelsApi labelsApi = influxDBClient.getLabelsApi();
 
+        Organization organization = findMyOrg();
         ScraperTargetResponse scraper =  scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
-                "http://localhost:9999", bucket.getId(), findMyOrg().getId());
+                "http://localhost:9999", bucket.getId(), organization.getId());
 
         Map<String, String> properties = new HashMap<>();
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties);
+        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties, organization.getId());
 
         List<Label> labels = scraperTargetsApi.getLabels(scraper);
         Assertions.assertThat(labels).hasSize(0);
@@ -232,8 +233,10 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
     @Test
     void cloneScraperTarget() {
 
+        Organization organization = findMyOrg();
+
         ScraperTargetResponse source = scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
-                "http://localhost:9999", bucket.getId(), findMyOrg().getId());
+                "http://localhost:9999", bucket.getId(), organization.getId());
 
         String name = generateName("cloned");
 
@@ -241,7 +244,7 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties);
+        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties, organization.getId());
 
         scraperTargetsApi.addLabel(label, source);
 

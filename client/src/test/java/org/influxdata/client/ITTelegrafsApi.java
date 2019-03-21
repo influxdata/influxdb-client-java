@@ -350,7 +350,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties);
+        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties, organization.getId());
 
         List<Label> labels = telegrafsApi.getLabels(telegrafConfig);
         Assertions.assertThat(labels).hasSize(0);
@@ -403,7 +403,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties);
+        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties, organization.getId());
 
         telegrafsApi.addLabel(label, source);
 

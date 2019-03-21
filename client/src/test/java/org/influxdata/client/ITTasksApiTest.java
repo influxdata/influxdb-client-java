@@ -619,7 +619,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties);
+        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties, organization.getId());
 
         List<Label> labels = tasksApi.getLabels(task);
         Assertions.assertThat(labels).hasSize(0);
@@ -656,7 +656,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties);
+        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties, organization.getId());
 
         tasksApi.addLabel(label, source);
 
@@ -703,6 +703,10 @@ class ITTasksApiTest extends AbstractITClientTest {
         createOrg.setAction(Permission.ActionEnum.WRITE);
         createOrg.setResource(orgResource);
 
+        Permission readOrg = new Permission();
+        readOrg.setAction(Permission.ActionEnum.READ);
+        readOrg.setResource(orgResource);
+
         PermissionResource userResource = new PermissionResource();
         userResource.setType(PermissionResource.TypeEnum.USERS);
 
@@ -745,6 +749,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         permissions.add(createTask);
         permissions.add(deleteTask);
         permissions.add(createOrg);
+        permissions.add(readOrg);
         permissions.add(createUsers);
         permissions.add(createAuth);
         permissions.add(readBucket);

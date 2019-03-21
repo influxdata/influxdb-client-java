@@ -23,15 +23,10 @@ package org.influxdata.client.internal;
 
 import javax.annotation.Nonnull;
 
-import org.influxdata.client.domain.Ready;
-
 import io.reactivex.Maybe;
 import okhttp3.RequestBody;
-import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -39,13 +34,6 @@ import retrofit2.http.Query;
  * @author Jakub Bednar (bednar@github) (05/09/2018 13:30)
  */
 public interface InfluxDBService {
-
-    // Ready
-    //
-    @GET("/ready")
-    @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<Ready> ready();
 
     // Write
     //
