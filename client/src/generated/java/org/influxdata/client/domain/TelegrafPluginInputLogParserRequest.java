@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * TelegrafPluginInputLogParserRequest
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T13:31:19.701+01:00[Europe/Prague]")
+
 public class TelegrafPluginInputLogParserRequest extends TelegrafRequestPlugin<TelegrafPluginInputLogParser.NameEnum, TelegrafPluginInputLogParserConfig> {
   public static final String SERIALIZED_NAME_COMMENT = "comment";
   @SerializedName(SERIALIZED_NAME_COMMENT)

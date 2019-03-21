@@ -29,7 +29,7 @@ import org.influxdata.client.domain.Links;
 /**
  * LabelResponse
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T13:31:19.701+01:00[Europe/Prague]")
+
 public class LabelResponse {
   public static final String SERIALIZED_NAME_LABEL = "label";
   @SerializedName(SERIALIZED_NAME_LABEL)

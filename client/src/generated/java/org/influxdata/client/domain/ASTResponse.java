@@ -29,7 +29,7 @@ import org.influxdata.client.domain.ModelPackage;
  * contains the AST for the supplied Flux query
  */
 @ApiModel(description = "contains the AST for the supplied Flux query")
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T13:31:19.701+01:00[Europe/Prague]")
+
 public class ASTResponse {
   public static final String SERIALIZED_NAME_AST = "ast";
   @SerializedName(SERIALIZED_NAME_AST)

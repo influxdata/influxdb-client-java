@@ -28,7 +28,7 @@ import org.influxdata.client.domain.TelegrafPluginConfig;
 /**
  * TelegrafPluginInputNginx
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T13:31:19.701+01:00[Europe/Prague]")
+
 public class TelegrafPluginInputNginx extends TelegrafPlugin<TelegrafPluginInputNginx.NameEnum, TelegrafPluginConfig> {
   /**
    * Gets or Sets name

@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * QueryConfigRange
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T13:31:19.701+01:00[Europe/Prague]")
+
 public class QueryConfigRange {
   public static final String SERIALIZED_NAME_LOWER = "lower";
   @SerializedName(SERIALIZED_NAME_LOWER)

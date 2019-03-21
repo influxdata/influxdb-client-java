@@ -28,7 +28,7 @@ import org.influxdata.client.domain.PermissionResource;
 /**
  * Permission
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T13:31:19.701+01:00[Europe/Prague]")
+
 public class Permission {
   /**
    * Gets or Sets action

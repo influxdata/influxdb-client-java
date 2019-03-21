@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * TelegrafPluginInputPrometheusConfig
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T13:31:19.701+01:00[Europe/Prague]")
+
 public class TelegrafPluginInputPrometheusConfig {
   public static final String SERIALIZED_NAME_URLS = "urls";
   @SerializedName(SERIALIZED_NAME_URLS)

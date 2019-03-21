@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * TaskUpdateRequest
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T13:31:19.701+01:00[Europe/Prague]")
+
 public class TaskUpdateRequest {
   /**
    * Starting state of the task. &#39;inactive&#39; tasks are not run until they are updated to &#39;active&#39;
