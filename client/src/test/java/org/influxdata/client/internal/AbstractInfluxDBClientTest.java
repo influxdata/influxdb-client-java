@@ -21,18 +21,11 @@
  */
 package org.influxdata.client.internal;
 
-import java.util.Optional;
-import javax.annotation.Nonnull;
-
 import org.influxdata.client.InfluxDBClient;
 import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.WriteApi;
-import org.influxdata.client.WriteOptions;
 import org.influxdata.test.AbstractMockServerTest;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 12:29)
@@ -45,18 +38,5 @@ public class AbstractInfluxDBClientTest extends AbstractMockServerTest {
     protected void setUp() {
 
         influxDBClient = InfluxDBClientFactory.create(startMockServer());
-    }
-
-    @Nonnull
-    protected WriteApi createWriteClient(@Nonnull final WriteOptions writeOptions) {
-
-        Optional<Object> influxDBService = ReflectionUtils.readFieldValue(AbstractInfluxDBClient.class, "influxDBService",
-                (AbstractInfluxDBClient) influxDBClient);
-
-        if (!influxDBService.isPresent()) {
-            Assertions.fail();
-        }
-
-        return new WriteApiImpl(writeOptions, null);
     }
 }

@@ -45,7 +45,6 @@ import org.influxdata.internal.AbstractRestClient;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.Maybe;
-import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.Notification;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
@@ -54,7 +53,6 @@ import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subjects.PublishSubject;
 import org.reactivestreams.Publisher;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.HttpException;
 import retrofit2.Response;
 
@@ -393,28 +391,14 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
             String bucket = batchWrite.batchWriteOptions.bucket;
             WritePrecision precision = batchWrite.batchWriteOptions.precision;
 
-            MaybeOnSubscribe<Response<Void>> requestSource = emitter ->
-                    service
+            Maybe<Response<Void>> requestSource = Maybe
+                    .fromCallable(() -> service
                             .writePost(organization, bucket, content, null,
-                                    "utf-8", "text/plain", null,
-                                    "application/json", precision)
-                            .enqueue(new Callback<Void>() {
-                                @Override
-                                public void onResponse(@Nonnull final Call<Void> call,
-                                                       @Nonnull final Response<Void> response) {
-                                    emitter.onSuccess(response);
-                                    emitter.onComplete();
-                                }
+                            "utf-8", "text/plain", null,
+                            "application/json", precision))
+                    .map(Call::execute);
 
-                                @Override
-                                public void onFailure(@Nonnull final Call<Void> call,
-                                                      @Nonnull final Throwable t) {
-
-                                    emitter.onError(t);
-                                }
-                            });
-
-            return Maybe.create(requestSource)
+            return requestSource
                     //
                     // Response is not Successful => throw exception
                     //
