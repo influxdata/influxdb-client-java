@@ -13,17 +13,23 @@
 
 package org.influxdata.client.domain;
 
+import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import com.google.gson.annotations.SerializedName;
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * TelegrafPluginInputRedisConfig
  */
-@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-20T15:07:36.004852+01:00[Europe/Prague]")
+@javax.annotation.Generated(value = "org.influxdata.codegen.InfluxJavaGenerator", date = "2019-03-21T09:57:56.036+01:00[Europe/Prague]")
 public class TelegrafPluginInputRedisConfig {
   public static final String SERIALIZED_NAME_SERVERS = "servers";
   @SerializedName(SERIALIZED_NAME_SERVERS)
