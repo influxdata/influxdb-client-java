@@ -225,7 +225,8 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
 
     @Nonnull
     @Override
-    public ResourceMember addMember(@Nonnull final User member, @Nonnull final ScraperTargetResponse scraperTargetResponse) {
+    public ResourceMember addMember(@Nonnull final User member,
+                                    @Nonnull final ScraperTargetResponse scraperTargetResponse) {
 
         Arguments.checkNotNull(scraperTargetResponse, "scraperTarget");
         Arguments.checkNotNull(member, "member");
@@ -292,7 +293,8 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
 
     @Nonnull
     @Override
-    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final ScraperTargetResponse scraperTargetResponse) {
+    public ResourceOwner addOwner(@Nonnull final User owner,
+                                  @Nonnull final ScraperTargetResponse scraperTargetResponse) {
 
         Arguments.checkNotNull(scraperTargetResponse, "scraperTarget");
         Arguments.checkNotNull(owner, "owner");
@@ -356,7 +358,8 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
 
     @Nonnull
     @Override
-    public LabelResponse addLabel(@Nonnull final Label label, @Nonnull final ScraperTargetResponse scraperTargetResponse) {
+    public LabelResponse addLabel(@Nonnull final Label label,
+                                  @Nonnull final ScraperTargetResponse scraperTargetResponse) {
 
         Arguments.checkNotNull(label, "label");
         Arguments.checkNotNull(scraperTargetResponse, "scraperTarget");

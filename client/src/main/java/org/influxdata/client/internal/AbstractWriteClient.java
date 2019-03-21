@@ -21,6 +21,8 @@
  */
 package org.influxdata.client.internal;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -62,6 +64,7 @@ import retrofit2.Response;
 public abstract class AbstractWriteClient extends AbstractRestClient {
 
     private static final Logger LOG = Logger.getLogger(AbstractWriteClient.class.getName());
+    private static final List<Integer> NOT_ABLE_TO_RETRY_ERRORS = Arrays.asList(400, 401, 403, 413);
 
     private final WriteOptions writeOptions;
 
@@ -474,7 +477,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                 //
                 // This types is not able to retry
                 //
-                if (ie.code() == 400 || ie.code() == 401 || ie.code() == 403 || ie.code() == 413) {
+                if (NOT_ABLE_TO_RETRY_ERRORS.contains(ie.code())) {
 
                     return Flowable.error(throwable);
                 }

@@ -88,8 +88,8 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
         return Flowable
                 .fromPublisher(queryStream)
-                .map(it -> service
-                        .queryPostResponseBody(null, "text/csv", "application/json", null, orgID, new Query().query(it).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT)))
+                .map(it -> service.queryPostResponseBody(null, "text/csv", "application/json",
+                        null, orgID, new Query().query(it).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT)))
                 .flatMap(queryCall -> {
 
                     Observable<FluxRecord> observable = Observable.create(subscriber -> {
@@ -180,8 +180,8 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
         return Flowable
                 .fromPublisher(queryStream)
-                .map(it -> service
-                        .queryPostResponseBody(null, "text/csv", "application/json", null, orgID, new Query().query(it).dialect(dialect)))
+                .map(it -> service.queryPostResponseBody(null, "text/csv", "application/json",
+                        null, orgID, new Query().query(it).dialect(dialect)))
                 .flatMap(queryCall -> {
 
                     Observable<String> observable = Observable.create(subscriber -> {

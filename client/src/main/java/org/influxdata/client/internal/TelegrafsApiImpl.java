@@ -281,7 +281,8 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
         Arguments.checkNonEmpty(telegrafID, "TelegrafConfig ID");
 
-        Call<ResponseBody> telegrafConfig = service.telegrafsTelegrafIDGetResponseBody(telegrafID, null, "application/toml");
+        Call<ResponseBody> telegrafConfig = service
+                .telegrafsTelegrafIDGetResponseBody(telegrafID, null, "application/toml");
 
         try {
             return execute(telegrafConfig).string();
