@@ -50,7 +50,7 @@ abstract class AbstractITClientTest extends AbstractTest {
     void initInfluxDBClientClient(TestInfo testInfo) throws Exception {
 
         influxDB_IP = getInfluxDb2Ip();
-        influxDB_URL = getInfluxDb2Url() + "/api/v2/";
+        influxDB_URL = getInfluxDb2Url();
         LOG.log(Level.FINEST, "InfluxDB URL: {0}", influxDB_URL);
 
         influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-user", "my-password".toCharArray());

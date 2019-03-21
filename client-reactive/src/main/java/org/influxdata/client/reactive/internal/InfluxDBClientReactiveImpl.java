@@ -71,7 +71,7 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient<InfluxDBR
     @Override
     public Single<Check> health() {
 
-        return Single.fromCallable(() -> health(influxDBService.health()));
+        return Single.fromCallable(() -> health(healthService.healthGet(null)));
     }
 
     @Nonnull

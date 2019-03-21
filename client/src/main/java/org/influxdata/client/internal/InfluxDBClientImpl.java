@@ -52,6 +52,7 @@ import org.influxdata.client.service.BucketsService;
 import org.influxdata.client.service.LabelsService;
 import org.influxdata.client.service.OrganizationsService;
 import org.influxdata.client.service.QueryService;
+import org.influxdata.client.service.ReadyService;
 import org.influxdata.client.service.ScraperTargetsService;
 import org.influxdata.client.service.SetupService;
 import org.influxdata.client.service.SourcesService;
@@ -72,12 +73,15 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     private static final Logger LOG = Logger.getLogger(InfluxDBClientImpl.class.getName());
 
     private final SetupService setupService;
+    private final ReadyService readyService;
+
 
     public InfluxDBClientImpl(@Nonnull final InfluxDBClientOptions options) {
 
         super(options, InfluxDBService.class);
 
         setupService = retrofit.create(SetupService.class);
+        readyService = retrofit.create(ReadyService.class);
     }
 
     @Nonnull
@@ -159,13 +163,13 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Override
     public Check health() {
 
-        return health(influxDBService.health());
+        return health(healthService.healthGet(null));
     }
 
     @Nullable
     @Override
     public Ready ready() {
-        Call<Ready> call = influxDBService.ready();
+        Call<Ready> call = readyService.readyGet();
         try {
             return execute(call);
         } catch (InfluxException e) {

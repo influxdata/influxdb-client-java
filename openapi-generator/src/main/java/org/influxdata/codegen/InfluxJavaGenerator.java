@@ -26,17 +26,18 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.media.Schema;
 import org.openapitools.codegen.CodegenConfig;
 import org.openapitools.codegen.CodegenModel;
 import org.openapitools.codegen.CodegenOperation;
 import org.openapitools.codegen.CodegenParameter;
 import org.openapitools.codegen.CodegenProperty;
-import org.openapitools.codegen.CodegenSecurity;
 import org.openapitools.codegen.languages.JavaClientCodegen;
 
 public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenConfig {
@@ -325,6 +326,27 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
 
         return operationsWithModels;
 
+    }
+
+    @Override
+    public CodegenOperation fromOperation(String path, String httpMethod, Operation operation, Map<String, Schema> definitions, OpenAPI openAPI) {
+
+        CodegenOperation op = super.fromOperation(path, httpMethod, operation, definitions, openAPI);
+
+        String url;
+        if (operation.getServers() != null)
+        {
+            url = operation.getServers().get(0).getUrl();
+        }                                                       else {
+            url = openAPI.getServers().get(0).getUrl();
+        }
+
+        if (!url.equals("/"))
+        {
+            op.path = url + op.path;
+        }
+
+        return op;
     }
 
     @Override

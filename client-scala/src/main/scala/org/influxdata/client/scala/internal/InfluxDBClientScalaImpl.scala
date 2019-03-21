@@ -48,7 +48,7 @@ class InfluxDBClientScalaImpl(@Nonnull options: InfluxDBClientOptions,
    *
    * @return health of an instance
    */
-  override def health: Check = health(influxDBService.health())
+  override def health: Check = health(healthService.healthGet(null))
 
   /**
    * Gets the [[LogLevel]] that is used for logging requests and responses.

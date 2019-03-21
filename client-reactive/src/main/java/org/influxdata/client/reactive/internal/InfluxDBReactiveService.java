@@ -23,41 +23,17 @@ package org.influxdata.client.reactive.internal;
 
 import javax.annotation.Nonnull;
 
-import org.influxdata.client.domain.Check;
-
 import io.reactivex.Maybe;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
-import retrofit2.http.Streaming;
 
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 07:19)
  */
 interface InfluxDBReactiveService {
-
-    //
-    // Health
-    //
-    @GET("/health")
-    @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<Check> health();
-
-    //
-    // Query
-    //
-    @Streaming
-    @POST("/api/v2/query")
-    @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<ResponseBody> query(@Query("orgID") final String orgID, @Nonnull @Body final RequestBody query);
 
 
     // Write

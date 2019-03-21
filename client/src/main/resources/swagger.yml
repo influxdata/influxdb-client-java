@@ -1397,6 +1397,8 @@ paths:
                 $ref: "#/components/schemas/Error"
   /ready:
     get:
+      servers:
+        - url: /
       tags:
         - Ready
       summary: Get the readiness of a instance at startup. Allow us to confirm the instance is prepared to accept requests.
@@ -1415,6 +1417,8 @@ paths:
                 $ref: "#/components/schemas/Error"
   /health:
     get:
+      servers:
+        - url: /
       tags:
         - Health
       summary: Get the health of an instance anytime during execution. Allow us to check if the instance is still healthy.

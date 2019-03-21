@@ -23,7 +23,6 @@ package org.influxdata.client.internal;
 
 import javax.annotation.Nonnull;
 
-import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.Ready;
 
 import io.reactivex.Maybe;
@@ -41,15 +40,6 @@ import retrofit2.http.Query;
  */
 public interface InfluxDBService {
 
-    //
-    // Health
-    //
-    @GET("/health")
-    @Nonnull
-    @Headers("Content-Type: application/json")
-    Call<Check> health();
-
-    //
     // Ready
     //
     @GET("/ready")
