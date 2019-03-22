@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 - 2019 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 92,
+      <title>File: 41,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -47,608 +47,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.ScraperTargetsApi.java">org/influxdata/client/ScraperTargetsApi.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.User.java">org/influxdata/client/domain/User.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Logs.java">org/influxdata/client/domain/Logs.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Task.java">org/influxdata/client/domain/Task.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.write.events.WriteErrorEvent.java">org/influxdata/client/write/events/WriteErrorEvent.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.AbstractInfluxDBRestClient.java">org/influxdata/client/internal/AbstractInfluxDBRestClient.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.ResourceMember.java">org/influxdata/client/domain/ResourceMember.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.LogEvent.java">org/influxdata/client/domain/LogEvent.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.ScraperTarget.java">org/influxdata/client/domain/ScraperTarget.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Authorization.java">org/influxdata/client/domain/Authorization.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.WriteOptions.java">org/influxdata/client/WriteOptions.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.InfluxDBClientFactory.java">org/influxdata/client/InfluxDBClientFactory.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.TelegrafAgent.java">org/influxdata/client/domain/TelegrafAgent.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.TelegrafPlugin.java">org/influxdata/client/domain/TelegrafPlugin.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.InfluxDBClient.java">org/influxdata/client/InfluxDBClient.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.OperationLogEntry.java">org/influxdata/client/domain/OperationLogEntry.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Bucket.java">org/influxdata/client/domain/Bucket.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.write.events.ListenerRegistration.java">org/influxdata/client/write/events/ListenerRegistration.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.BucketsApiImpl.java">org/influxdata/client/internal/BucketsApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Status.java">org/influxdata/client/domain/Status.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Organization.java">org/influxdata/client/domain/Organization.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Label.java">org/influxdata/client/domain/Label.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.GzipInterceptor.java">org/influxdata/client/internal/GzipInterceptor.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.InfluxDBClientImpl.java">org/influxdata/client/internal/InfluxDBClientImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Secrets.java">org/influxdata/client/domain/Secrets.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.LabelMapping.java">org/influxdata/client/domain/LabelMapping.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Users.java">org/influxdata/client/domain/Users.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.TelegrafPluginType.java">org/influxdata/client/domain/TelegrafPluginType.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.AuthorizationsApi.java">org/influxdata/client/AuthorizationsApi.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.AbstractHasLabels.java">org/influxdata/client/domain/AbstractHasLabels.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.FindOptions.java">org/influxdata/client/domain/FindOptions.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Health.java">org/influxdata/client/domain/Health.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.ResourceMembers.java">org/influxdata/client/domain/ResourceMembers.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.OnboardingResponse.java">org/influxdata/client/domain/OnboardingResponse.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.QueryApi.java">org/influxdata/client/QueryApi.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.annotations.ToNullJson.java">org/influxdata/client/internal/annotations/ToNullJson.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.SourcesApiImpl.java">org/influxdata/client/internal/SourcesApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.AbstractWriteClient.java">org/influxdata/client/internal/AbstractWriteClient.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.TelegrafConfigs.java">org/influxdata/client/domain/TelegrafConfigs.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.TelegrafConfig.java">org/influxdata/client/domain/TelegrafConfig.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.ScraperTargetsApiImpl.java">org/influxdata/client/internal/ScraperTargetsApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.AuthenticateInterceptor.java">org/influxdata/client/internal/AuthenticateInterceptor.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Source.java">org/influxdata/client/domain/Source.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.ScraperTargetResponse.java">org/influxdata/client/domain/ScraperTargetResponse.java</a>
                 </td>
                 <td>
                   0
@@ -690,7 +88,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.AbstractHasLinks.java">org/influxdata/client/domain/AbstractHasLinks.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.write.events.WriteErrorEvent.java">org/influxdata/client/write/events/WriteErrorEvent.java</a>
                 </td>
                 <td>
                   0
@@ -760,35 +158,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.LabelResponse.java">org/influxdata/client/domain/LabelResponse.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.OrganizationsApi.java">org/influxdata/client/OrganizationsApi.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Onboarding.java">org/influxdata/client/domain/Onboarding.java</a>
                 </td>
                 <td>
                   0
@@ -816,49 +186,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Sources.java">org/influxdata/client/domain/Sources.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.write.events.EventListener.java">org/influxdata/client/write/events/EventListener.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Authorizations.java">org/influxdata/client/domain/Authorizations.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.PermissionResource.java">org/influxdata/client/domain/PermissionResource.java</a>
                 </td>
                 <td>
                   0
@@ -886,7 +214,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.ScraperTargetResponses.java">org/influxdata/client/domain/ScraperTargetResponses.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.WriteOptions.java">org/influxdata/client/WriteOptions.java</a>
                 </td>
                 <td>
                   0
@@ -900,7 +228,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Organizations.java">org/influxdata/client/domain/Organizations.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.InfluxDBClientFactory.java">org/influxdata/client/InfluxDBClientFactory.java</a>
                 </td>
                 <td>
                   0
@@ -914,21 +242,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Ready.java">org/influxdata/client/domain/Ready.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.ResourceType.java">org/influxdata/client/domain/ResourceType.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.InfluxDBClient.java">org/influxdata/client/InfluxDBClient.java</a>
                 </td>
                 <td>
                   0
@@ -984,6 +298,34 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.write.events.ListenerRegistration.java">org/influxdata/client/write/events/ListenerRegistration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.BucketsApiImpl.java">org/influxdata/client/internal/BucketsApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.AbstractInfluxDBClient.java">org/influxdata/client/internal/AbstractInfluxDBClient.java</a>
                 </td>
                 <td>
@@ -998,7 +340,21 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.RunStatus.java">org/influxdata/client/domain/RunStatus.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.GzipInterceptor.java">org/influxdata/client/internal/GzipInterceptor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.InfluxDBClientImpl.java">org/influxdata/client/internal/InfluxDBClientImpl.java</a>
                 </td>
                 <td>
                   0
@@ -1040,35 +396,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Run.java">org/influxdata/client/domain/Run.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.OperationLogEntries.java">org/influxdata/client/domain/OperationLogEntries.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.RunsResponse.java">org/influxdata/client/domain/RunsResponse.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.FindOptions.java">org/influxdata/client/FindOptions.java</a>
                 </td>
                 <td>
                   0
@@ -1083,20 +411,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.QueryApiImpl.java">org/influxdata/client/internal/QueryApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Labels.java">org/influxdata/client/domain/Labels.java</a>
                 </td>
                 <td>
                   0
@@ -1138,7 +452,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.IsOnboarding.java">org/influxdata/client/domain/IsOnboarding.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.AuthorizationsApi.java">org/influxdata/client/AuthorizationsApi.java</a>
                 </td>
                 <td>
                   0
@@ -1180,20 +494,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.AbstractPageLinks.java">org/influxdata/client/domain/AbstractPageLinks.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.TasksApi.java">org/influxdata/client/TasksApi.java</a>
                 </td>
                 <td>
@@ -1208,7 +508,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Tasks.java">org/influxdata/client/domain/Tasks.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.QueryApi.java">org/influxdata/client/QueryApi.java</a>
                 </td>
                 <td>
                   0
@@ -1223,6 +523,34 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.write.events.AbstractWriteEvent.java">org/influxdata/client/write/events/AbstractWriteEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.SourcesApiImpl.java">org/influxdata/client/internal/SourcesApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.AbstractWriteClient.java">org/influxdata/client/internal/AbstractWriteClient.java</a>
                 </td>
                 <td>
                   0
@@ -1264,7 +592,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Buckets.java">org/influxdata/client/domain/Buckets.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.ScraperTargetsApiImpl.java">org/influxdata/client/internal/ScraperTargetsApiImpl.java</a>
                 </td>
                 <td>
                   0
@@ -1278,49 +606,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.Permission.java">org/influxdata/client/domain/Permission.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.InfluxDBService.java">org/influxdata/client/internal/InfluxDBService.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.ScraperType.java">org/influxdata/client/domain/ScraperType.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.domain.RetentionRule.java">org/influxdata/client/domain/RetentionRule.java</a>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.AuthenticateInterceptor.java">org/influxdata/client/internal/AuthenticateInterceptor.java</a>
                 </td>
                 <td>
                   0

@@ -6,9 +6,9 @@ org.influxdata.client.domain
 org.influxdata.client.flux
 org.influxdata.client.flux.internal
 org.influxdata.client.internal
-org.influxdata.client.internal.annotations
 org.influxdata.client.reactive
 org.influxdata.client.reactive.internal
+org.influxdata.client.service
 org.influxdata.client.write
 org.influxdata.client.write.events
 org.influxdata.exceptions

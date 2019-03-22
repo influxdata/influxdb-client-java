@@ -250,6 +250,26 @@
         <div class="values members">
               <h3>Abstract Value Members</h3>
               <ol><li name="org.influxdata.client.scala.QueryScalaApi#query" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="query[M](query:org.influxdata.client.domain.Query,orgID:String,measurementType:Class[M]):akka.stream.scaladsl.Source[M,akka.NotUsed]"></a><a id="query[M](Query,String,Class[M]):Source[M,NotUsed]"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/client/scala/QueryScalaApi.html#query[M](query:org.influxdata.client.domain.Query,orgID:String,measurementType:Class[M]):akka.stream.scaladsl.Source[M,akka.NotUsed]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">query</span><span class="tparams">[<span name="M">M</span>]</span><span class="params">(<span name="query">query: <span class="extype" name="org.influxdata.client.domain.Query">Query</span></span>, <span name="orgID">orgID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="measurementType">measurementType: <span class="extype" name="scala.Predef.Class">Class</span>[<span class="extype" name="org.influxdata.client.scala.QueryScalaApi.query.M">M</span>]</span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="org.influxdata.client.scala.QueryScalaApi.query.M">M</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream measurements to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream measurements to <span class="extype" name="Stream">Stream</span>.
+</p></div><dl class="paramcmts block"><dt class="tparam">M</dt><dd class="cmt"><p>the type of the measurement (POJO)</p></dd><dt class="param">query</dt><dd class="cmt"><p>the flux query to execute</p></dd><dt class="param">orgID</dt><dd class="cmt"><p>specifies the source organization</p></dd><dt class="param">measurementType</dt><dd class="cmt"><p>the measurement (POJO)</p></dd><dt>returns</dt><dd class="cmt"><p>the stream of measurements</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.client.scala.QueryScalaApi#query" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="query[M](query:String,orgID:String,measurementType:Class[M]):akka.stream.scaladsl.Source[M,akka.NotUsed]"></a><a id="query[M](String,String,Class[M]):Source[M,NotUsed]"></a>
       <span class="permalink">
       <a href="../../../../org/influxdata/client/scala/QueryScalaApi.html#query[M](query:String,orgID:String,measurementType:Class[M]):akka.stream.scaladsl.Source[M,akka.NotUsed]" title="Permalink">
@@ -266,6 +286,26 @@
       
       <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream measurements to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream measurements to <span class="extype" name="Stream">Stream</span>.
 </p></div><dl class="paramcmts block"><dt class="tparam">M</dt><dd class="cmt"><p>the type of the measurement (POJO)</p></dd><dt class="param">query</dt><dd class="cmt"><p>the flux query to execute</p></dd><dt class="param">orgID</dt><dd class="cmt"><p>specifies the source organization</p></dd><dt class="param">measurementType</dt><dd class="cmt"><p>the measurement (POJO)</p></dd><dt>returns</dt><dd class="cmt"><p>the stream of measurements</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.client.scala.QueryScalaApi#query" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="query(query:org.influxdata.client.domain.Query,orgID:String):akka.stream.scaladsl.Source[org.influxdata.query.FluxRecord,akka.NotUsed]"></a><a id="query(Query,String):Source[FluxRecord,NotUsed]"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/client/scala/QueryScalaApi.html#query(query:org.influxdata.client.domain.Query,orgID:String):akka.stream.scaladsl.Source[org.influxdata.query.FluxRecord,akka.NotUsed]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">query</span><span class="params">(<span name="query">query: <span class="extype" name="org.influxdata.client.domain.Query">Query</span></span>, <span name="orgID">orgID: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="org.influxdata.query.FluxRecord">FluxRecord</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream <span class="extype" name="FluxRecord">FluxRecord</span>s to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream <span class="extype" name="FluxRecord">FluxRecord</span>s to <span class="extype" name="Stream">Stream</span>.
+</p></div><dl class="paramcmts block"><dt class="param">query</dt><dd class="cmt"><p>the flux query to execute</p></dd><dt class="param">orgID</dt><dd class="cmt"><p>specifies the source organization</p></dd><dt>returns</dt><dd class="cmt"><p>the stream of <span class="extype" name="FluxRecord">FluxRecord</span>s</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@Nonnull</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -290,9 +330,9 @@
               
         </dd></dl></div>
     </li><li name="org.influxdata.client.scala.QueryScalaApi#queryRaw" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="queryRaw(query:String,dialect:String,orgID:String):akka.stream.scaladsl.Source[String,akka.NotUsed]"></a><a id="queryRaw(String,String,String):Source[String,NotUsed]"></a>
+      <a id="queryRaw(query:org.influxdata.client.domain.Query,orgID:String):akka.stream.scaladsl.Source[String,akka.NotUsed]"></a><a id="queryRaw(Query,String):Source[String,NotUsed]"></a>
       <span class="permalink">
-      <a href="../../../../org/influxdata/client/scala/QueryScalaApi.html#queryRaw(query:String,dialect:String,orgID:String):akka.stream.scaladsl.Source[String,akka.NotUsed]" title="Permalink">
+      <a href="../../../../org/influxdata/client/scala/QueryScalaApi.html#queryRaw(query:org.influxdata.client.domain.Query,orgID:String):akka.stream.scaladsl.Source[String,akka.NotUsed]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -301,7 +341,27 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">queryRaw</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="dialect">dialect: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="orgID">orgID: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+        <span class="name">queryRaw</span><span class="params">(<span name="query">query: <span class="extype" name="org.influxdata.client.domain.Query">Query</span></span>, <span name="orgID">orgID: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.
+</p></div><dl class="paramcmts block"><dt class="param">query</dt><dd class="cmt"><p>the flux query to execute</p></dd><dt class="param">orgID</dt><dd class="cmt"><p>specifies the source organization</p></dd><dt>returns</dt><dd class="cmt"><p>the response stream</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="org.influxdata.client.scala.QueryScalaApi#queryRaw" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="queryRaw(query:String,dialect:org.influxdata.client.domain.Dialect,orgID:String):akka.stream.scaladsl.Source[String,akka.NotUsed]"></a><a id="queryRaw(String,Dialect,String):Source[String,NotUsed]"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/client/scala/QueryScalaApi.html#queryRaw(query:String,dialect:org.influxdata.client.domain.Dialect,orgID:String):akka.stream.scaladsl.Source[String,akka.NotUsed]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">queryRaw</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="dialect">dialect: <span class="extype" name="org.influxdata.client.domain.Dialect">Dialect</span></span>, <span name="orgID">orgID: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       <p class="shortcomment cmt">Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Executes the Flux query against the InfluxDB and asynchronously stream response to <span class="extype" name="Stream">Stream</span>.
