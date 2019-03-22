@@ -22,10 +22,10 @@
 package org.influxdata.client.internal;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 import org.influxdata.annotations.Column;
 import org.influxdata.annotations.Measurement;
+import org.influxdata.client.domain.WritePrecision;
 import org.influxdata.client.write.Point;
 
 import org.assertj.core.api.Assertions;
@@ -58,10 +58,10 @@ class MeasurementMapperTest {
         pojo.value = 15;
         pojo.timestamp = Instant.parse("1970-01-01T00:00:10.999999999Z");
 
-        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.SECONDS).toLineProtocol()).isEqualTo("pojo,tag=value value=\"15\" 10");
-        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.MILLIS).toLineProtocol()).isEqualTo("pojo,tag=value value=\"15\" 10999");
-        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.MICROS).toLineProtocol()).isEqualTo("pojo,tag=value value=\"15\" 10999999");
-        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.NANOS).toLineProtocol()).isEqualTo("pojo,tag=value value=\"15\" 10999999999");
+        Assertions.assertThat(mapper.toPoint(pojo, WritePrecision.S).toLineProtocol()).isEqualTo("pojo,tag=value value=\"15\" 10");
+        Assertions.assertThat(mapper.toPoint(pojo, WritePrecision.MS).toLineProtocol()).isEqualTo("pojo,tag=value value=\"15\" 10999");
+        Assertions.assertThat(mapper.toPoint(pojo, WritePrecision.US).toLineProtocol()).isEqualTo("pojo,tag=value value=\"15\" 10999999");
+        Assertions.assertThat(mapper.toPoint(pojo, WritePrecision.NS).toLineProtocol()).isEqualTo("pojo,tag=value value=\"15\" 10999999999");
     }
 
     @Test
@@ -73,7 +73,7 @@ class MeasurementMapperTest {
         pojo.valueWithoutDefaultName = 20;
         pojo.valueWithEmptyName = 25;
 
-        Assertions.assertThat(mapper.toPoint(pojo, ChronoUnit.SECONDS).toLineProtocol()).isEqualTo("pojo,tag=tag\\ val value=\"15\",valueWithEmptyName=25i,valueWithoutDefaultName=20i");
+        Assertions.assertThat(mapper.toPoint(pojo, WritePrecision.S).toLineProtocol()).isEqualTo("pojo,tag=tag\\ val value=\"15\",valueWithEmptyName=25i,valueWithoutDefaultName=20i");
     }
 
     @Test
@@ -88,7 +88,7 @@ class MeasurementMapperTest {
             }
         };
 
-        Point point = mapper.toPoint(pojo, ChronoUnit.NANOS);
+        Point point = mapper.toPoint(pojo, WritePrecision.NS);
         Assertions.assertThat(point.toLineProtocol()).isEqualTo("pojo,tag=value value=\"to-string\"");
     }
 

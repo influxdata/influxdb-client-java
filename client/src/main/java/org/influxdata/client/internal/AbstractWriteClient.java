@@ -21,7 +21,8 @@
  */
 package org.influxdata.client.internal;
 
-import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -31,16 +32,14 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.WriteOptions;
+import org.influxdata.client.domain.WritePrecision;
+import org.influxdata.client.service.WriteService;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.AbstractWriteEvent;
 import org.influxdata.client.write.events.WriteErrorEvent;
 import org.influxdata.client.write.events.WriteRetriableErrorEvent;
 import org.influxdata.client.write.events.WriteSuccessEvent;
-import org.influxdata.exceptions.BadRequestException;
-import org.influxdata.exceptions.ForbiddenException;
 import org.influxdata.exceptions.InfluxException;
-import org.influxdata.exceptions.RequestEntityTooLargeException;
-import org.influxdata.exceptions.UnauthorizedException;
 import org.influxdata.internal.AbstractRestClient;
 
 import io.reactivex.Flowable;
@@ -52,8 +51,8 @@ import io.reactivex.Scheduler;
 import io.reactivex.functions.Function;
 import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subjects.PublishSubject;
-import okhttp3.RequestBody;
 import org.reactivestreams.Publisher;
+import retrofit2.Call;
 import retrofit2.HttpException;
 import retrofit2.Response;
 
@@ -63,6 +62,7 @@ import retrofit2.Response;
 public abstract class AbstractWriteClient extends AbstractRestClient {
 
     private static final Logger LOG = Logger.getLogger(AbstractWriteClient.class.getName());
+    private static final List<Integer> NOT_ABLE_TO_RETRY_ERRORS = Arrays.asList(400, 401, 403, 413);
 
     private final WriteOptions writeOptions;
 
@@ -71,12 +71,14 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
     private final PublishSubject<AbstractWriteEvent> eventPublisher;
 
     private final MeasurementMapper measurementMapper = new MeasurementMapper();
+    private final WriteService service;
 
     public AbstractWriteClient(@Nonnull final WriteOptions writeOptions,
-                               @Nonnull final Scheduler processorScheduler) {
+                               @Nonnull final Scheduler processorScheduler,
+                               @Nonnull final WriteService service) {
 
         this.writeOptions = writeOptions;
-
+        this.service = service;
 
         this.flushPublisher = PublishProcessor.create();
         this.eventPublisher = PublishSubject.create();
@@ -188,12 +190,11 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
 
     public void write(@Nonnull final String bucket,
                       @Nonnull final String organization,
-                      @Nonnull final ChronoUnit precision,
+                      @Nonnull final WritePrecision precision,
                       @Nonnull final Publisher<AbstractWriteClient.BatchWriteData> stream) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(organization, "organization");
-        Arguments.checkPrecision(precision);
         Arguments.checkNotNull(stream, "data to write");
 
         BatchWriteOptions batchWriteOptions = new BatchWriteOptions(bucket, organization, precision);
@@ -201,28 +202,6 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
         Flowable.fromPublisher(stream)
                 .map(it -> new BatchWriteItem(batchWriteOptions, it))
                 .subscribe(processor::onNext, throwable -> publish(new WriteErrorEvent(throwable)));
-    }
-
-    public abstract Maybe<Response<Void>> writeCall(final RequestBody requestBody,
-                                                    final String organization,
-                                                    final String bucket,
-                                                    final String precision);
-
-    @Nonnull
-    private String toPrecisionParameter(@Nonnull final ChronoUnit precision) {
-
-        switch (precision) {
-            case NANOS:
-                return "ns";
-            case MICROS:
-                return "us";
-            case MILLIS:
-                return "ms";
-            case SECONDS:
-                return "s";
-            default:
-                throw new IllegalArgumentException("Not supported precision: " + precision);
-        }
     }
 
     @Nonnull
@@ -309,10 +288,10 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
     public final class BatchWriteDataMeasurement implements BatchWriteData {
 
         private final Object measurement;
-        private final ChronoUnit precision;
+        private final WritePrecision precision;
 
         public BatchWriteDataMeasurement(@Nullable final Object measurement,
-                                         @Nonnull final ChronoUnit precision) {
+                                         @Nonnull final WritePrecision precision) {
             this.measurement = measurement;
             this.precision = precision;
         }
@@ -355,11 +334,11 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
 
         private String bucket;
         private String organization;
-        private ChronoUnit precision;
+        private WritePrecision precision;
 
         private BatchWriteOptions(@Nonnull final String bucket,
                                   @Nonnull final String organization,
-                                  @Nonnull final ChronoUnit precision) {
+                                  @Nonnull final WritePrecision precision) {
 
             Arguments.checkNonEmpty(bucket, "bucket");
             Arguments.checkNonEmpty(organization, "organization");
@@ -407,18 +386,19 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                 return Maybe.empty();
             }
 
-            //
-            // InfluxDB Line Protocol => to Request Body
-            //
-            RequestBody body = createBody(content);
-
-            //
             // Parameters
             String organization = batchWrite.batchWriteOptions.organization;
             String bucket = batchWrite.batchWriteOptions.bucket;
-            String precision = AbstractWriteClient.this.toPrecisionParameter(batchWrite.batchWriteOptions.precision);
+            WritePrecision precision = batchWrite.batchWriteOptions.precision;
 
-            return writeCall(body, organization, bucket, precision)
+            Maybe<Response<Void>> requestSource = Maybe
+                    .fromCallable(() -> service
+                            .writePost(organization, bucket, content, null,
+                            "utf-8", "text/plain", null,
+                            "application/json", precision))
+                    .map(Call::execute);
+
+            return requestSource
                     //
                     // Response is not Successful => throw exception
                     //
@@ -476,13 +456,12 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
 
             if (throwable instanceof HttpException) {
 
-                InfluxException ie = toInfluxException(throwable);
+                HttpException ie = (HttpException) throwable;
 
                 //
                 // This types is not able to retry
                 //
-                if (ie instanceof BadRequestException || ie instanceof UnauthorizedException
-                        || ie instanceof ForbiddenException || ie instanceof RequestEntityTooLargeException) {
+                if (NOT_ABLE_TO_RETRY_ERRORS.contains(ie.code())) {
 
                     return Flowable.error(throwable);
                 }

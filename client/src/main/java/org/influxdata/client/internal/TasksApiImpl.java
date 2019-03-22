@@ -21,7 +21,8 @@
  */
 package org.influxdata.client.internal;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,41 +31,46 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.TasksApi;
+import org.influxdata.client.domain.AddResourceMemberRequestBody;
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelMapping;
+import org.influxdata.client.domain.LabelResponse;
+import org.influxdata.client.domain.LabelsResponse;
 import org.influxdata.client.domain.LogEvent;
 import org.influxdata.client.domain.Logs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
-import org.influxdata.client.domain.ResourceType;
+import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.Run;
-import org.influxdata.client.domain.RunsResponse;
-import org.influxdata.client.domain.Status;
+import org.influxdata.client.domain.RunManually;
+import org.influxdata.client.domain.Runs;
 import org.influxdata.client.domain.Task;
+import org.influxdata.client.domain.TaskCreateRequest;
+import org.influxdata.client.domain.TaskUpdateRequest;
 import org.influxdata.client.domain.Tasks;
 import org.influxdata.client.domain.User;
+import org.influxdata.client.service.TasksService;
 import org.influxdata.exceptions.NotFoundException;
+import org.influxdata.internal.AbstractRestClient;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/09/2018 07:59)
  */
-final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi {
+final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
     private static final Logger LOG = Logger.getLogger(TasksApiImpl.class.getName());
 
-    private final JsonAdapter<Task> adapter;
-    private final JsonAdapter<User> userAdapter;
+    private final TasksService service;
 
-    TasksApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi) {
+    TasksApiImpl(@Nonnull final TasksService service) {
 
-        super(influxDBService, moshi);
+        Arguments.checkNotNull(service, "service");
 
-        this.adapter = moshi.adapter(Task.class);
-        this.userAdapter = moshi.adapter(User.class);
+        this.service = service;
     }
 
     @Nullable
@@ -73,7 +79,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
         Arguments.checkNonEmpty(taskID, "taskID");
 
-        Call<Task> call = influxDBService.findTaskByID(taskID);
+        Call<Task> call = service.tasksTaskIDGet(taskID, null);
 
         return execute(call, NotFoundException.class);
     }
@@ -121,7 +127,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
                                 @Nullable final String userID,
                                 @Nullable final String orgID) {
 
-        Call<Tasks> call = influxDBService.findTasks(afterID, userID, orgID);
+        Call<Tasks> call = service.tasksGet(null, afterID, userID, null, orgID, null);
 
         Tasks tasks = execute(call);
         LOG.log(Level.FINEST, "findTasks found: {0}", tasks);
@@ -135,7 +141,25 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
         Arguments.checkNotNull(task, "task");
 
-        Call<Task> call = influxDBService.createTask(createBody(adapter.toJson(task)));
+        TaskCreateRequest request = new TaskCreateRequest();
+        request.setFlux(task.getFlux());
+        request.setOrgID(task.getOrgID());
+        request.setOrg(task.getOrg());
+
+        if (task.getStatus() != null) {
+            request.setStatus(TaskCreateRequest.StatusEnum.fromValue(task.getStatus().getValue()));
+        }
+
+        return createTask(request);
+    }
+
+    @Nonnull
+    @Override
+    public Task createTask(@Nonnull final TaskCreateRequest taskCreateRequest) {
+
+        Arguments.checkNotNull(taskCreateRequest, "taskCreateRequest");
+
+        Call<Task> call = service.tasksPost(taskCreateRequest, null);
 
         return execute(call);
     }
@@ -169,10 +193,9 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(cron, "cron expression");
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Organization organization = new Organization();
-        organization.setId(orgID);
+        Task task = createTask(name, flux, null, cron, orgID);
 
-        return createTaskCron(name, flux, cron, organization);
+        return createTask(task);
     }
 
     @Nonnull
@@ -204,10 +227,9 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(every, "every expression");
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Organization organization = new Organization();
-        organization.setId(orgID);
+        Task task = createTask(name, flux, every, null, orgID);
 
-        return createTaskEvery(name, flux, every, organization);
+        return createTask(task);
     }
 
 
@@ -218,7 +240,25 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNotNull(task, "Task is required");
         Arguments.checkDurationNotRequired(task.getEvery(), "Task.every");
 
-        Call<Task> call = influxDBService.updateTask(task.getId(), createBody(adapter.toJson(task)));
+        TaskUpdateRequest taskUpdateRequest = new TaskUpdateRequest();
+        taskUpdateRequest.setStatus(TaskUpdateRequest.StatusEnum.fromValue(task.getStatus().getValue()));
+        taskUpdateRequest.setFlux(task.getFlux());
+        taskUpdateRequest.setName(task.getName());
+        taskUpdateRequest.setEvery(task.getEvery());
+        taskUpdateRequest.setCron(task.getCron());
+        taskUpdateRequest.setOffset(task.getOffset());
+
+        return updateTask(task.getId(), taskUpdateRequest);
+    }
+
+    @Nonnull
+    @Override
+    public Task updateTask(@Nonnull final String taskID, @Nonnull final TaskUpdateRequest request) {
+
+        Arguments.checkNotNull(request, "request");
+        Arguments.checkNonEmpty(taskID, "taskID");
+
+        Call<Task> call = service.tasksTaskIDPatch(taskID, request, null);
 
         return execute(call);
     }
@@ -236,7 +276,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
         Arguments.checkNonEmpty(taskID, "taskID");
 
-        Call<Void> call = influxDBService.deleteTask(taskID);
+        Call<Void> call = service.tasksTaskIDDelete(taskID, null);
         execute(call);
     }
 
@@ -264,7 +304,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         cloned.setName(task.getName());
         cloned.setOrgID(task.getOrgID());
         cloned.setFlux(task.getFlux());
-        cloned.setStatus(Status.ACTIVE);
+        cloned.setStatus(Task.StatusEnum.ACTIVE);
 
         Task created = createTask(cloned);
 
@@ -279,7 +319,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        Call<ResourceMembers> call = influxDBService.findTaskMembers(taskID);
+        Call<ResourceMembers> call = service.tasksTaskIDMembersGet(taskID, null);
 
         ResourceMembers resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findTaskMembers found: {0}", resourceMembers);
@@ -313,11 +353,10 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        User user = new User();
+        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(memberID);
 
-        String json = userAdapter.toJson(user);
-        Call<ResourceMember> call = influxDBService.addTaskMember(taskID, createBody(json));
+        Call<ResourceMember> call = service.tasksTaskIDMembersPost(taskID, user, null);
 
         return execute(call);
     }
@@ -337,19 +376,19 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        Call<Void> call = influxDBService.deleteTaskMember(taskID, memberID);
+        Call<Void> call = service.tasksTaskIDMembersUserIDDelete(memberID, taskID, null);
         execute(call);
     }
 
     @Nonnull
     @Override
-    public List<ResourceMember> getOwners(@Nonnull final String taskID) {
+    public List<ResourceOwner> getOwners(@Nonnull final String taskID) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        Call<ResourceMembers> call = influxDBService.findTaskOwners(taskID);
+        Call<ResourceOwners> call = service.tasksTaskIDOwnersGet(taskID, null);
 
-        ResourceMembers resourceMembers = execute(call);
+        ResourceOwners resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findTaskMembers found: {0}", resourceMembers);
 
         return resourceMembers.getUsers();
@@ -357,7 +396,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
     @Nonnull
     @Override
-    public List<ResourceMember> getOwners(@Nonnull final Task task) {
+    public List<ResourceOwner> getOwners(@Nonnull final Task task) {
 
         Arguments.checkNotNull(task, "task");
 
@@ -366,7 +405,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
     @Nonnull
     @Override
-    public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Task task) {
+    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Task task) {
 
         Arguments.checkNotNull(task, "task");
         Arguments.checkNotNull(owner, "owner");
@@ -376,16 +415,15 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
     @Nonnull
     @Override
-    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String taskID) {
+    public ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String taskID) {
 
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        User user = new User();
+        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(ownerID);
 
-        String json = userAdapter.toJson(user);
-        Call<ResourceMember> call = influxDBService.addTaskOwner(taskID, createBody(json));
+        Call<ResourceOwner> call = service.tasksTaskIDOwnersPost(taskID, user, null);
 
         return execute(call);
     }
@@ -405,7 +443,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        Call<Void> call = influxDBService.deleteTaskOwner(taskID, ownerID);
+        Call<Void> call = service.tasksTaskIDOwnersUserIDDelete(ownerID, taskID, null);
         execute(call);
     }
 
@@ -421,8 +459,8 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
     @Nonnull
     @Override
     public List<Run> getRuns(@Nonnull final Task task,
-                             @Nullable final Instant afterTime,
-                             @Nullable final Instant beforeTime,
+                             @Nullable final OffsetDateTime afterTime,
+                             @Nullable final OffsetDateTime beforeTime,
                              @Nullable final Integer limit) {
 
         Arguments.checkNotNull(task, "task");
@@ -444,15 +482,15 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
     @Override
     public List<Run> getRuns(@Nonnull final String taskID,
                              @Nonnull final String orgID,
-                             @Nullable final Instant afterTime,
-                             @Nullable final Instant beforeTime,
+                             @Nullable final OffsetDateTime afterTime,
+                             @Nullable final OffsetDateTime beforeTime,
                              @Nullable final Integer limit) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
         Arguments.checkNonEmpty(orgID, "Org.ID");
 
-        Call<RunsResponse> runs = influxDBService.findTaskRuns(taskID, afterTime, beforeTime, limit, orgID);
-        RunsResponse execute = execute(runs, NotFoundException.class, new RunsResponse());
+        Call<Runs> runs = service.tasksTaskIDRunsGet(taskID, null, null, limit, afterTime, beforeTime);
+        Runs execute = execute(runs, NotFoundException.class, new Runs().runs(new ArrayList<>()));
 
         return execute.getRuns();
     }
@@ -473,35 +511,54 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(taskID, "Task.ID");
         Arguments.checkNonEmpty(runID, "Run.ID");
 
-        Call<Run> run = influxDBService.findTaskRun(taskID, runID);
+        Call<Run> run = service.tasksTaskIDRunsRunIDGet(taskID, runID, null);
 
         return execute(run, NotFoundException.class);
     }
 
     @Nonnull
     @Override
-    public List<LogEvent> getRunLogs(@Nonnull final Run run, @Nonnull final String orgID) {
+    public List<LogEvent> getRunLogs(@Nonnull final Run run) {
 
         Arguments.checkNotNull(run, "run");
 
-        return getRunLogs(run.getTaskID(), run.getId(), orgID);
+        return getRunLogs(run.getTaskID(), run.getId());
     }
 
     @Nonnull
     @Override
     public List<LogEvent> getRunLogs(@Nonnull final String taskID,
-                                   @Nonnull final String runID,
-                                   @Nonnull final String orgID) {
+                                     @Nonnull final String runID) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
         Arguments.checkNonEmpty(runID, "Run.ID");
-        Arguments.checkNonEmpty(orgID, "Org.ID");
 
-        Call<Logs> call = influxDBService.findRunLogs(taskID, runID, orgID);
+        Call<Logs> call = service.tasksTaskIDRunsRunIDLogsGet(taskID, runID, null);
 
         Logs logs = execute(call, NotFoundException.class, new Logs());
 
         return logs.getEvents();
+    }
+
+    @Nonnull
+    @Override
+    public Run runManually(@Nonnull final Task task) {
+
+        Arguments.checkNotNull(task, "task");
+
+        return runManually(task.getId(), new RunManually());
+    }
+
+    @Nonnull
+    @Override
+    public Run runManually(@Nonnull final String taskId, @Nonnull final RunManually runManually) {
+
+        Arguments.checkNonEmpty(taskId, "taskId");
+        Arguments.checkNotNull(runManually, "runManually");
+
+        Call<Run> call = service.tasksTaskIDRunsPost(taskId, runManually);
+
+        return execute(call);
     }
 
     @Nullable
@@ -520,7 +577,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(taskID, "Task.ID");
         Arguments.checkNonEmpty(runID, "Run.ID");
 
-        Call<Run> run = influxDBService.retryTaskRun(taskID, runID);
+        Call<Run> run = service.tasksTaskIDRunsRunIDRetryPost(taskID, runID, null);
 
         return execute(run, NotFoundException.class);
     }
@@ -539,7 +596,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(taskID, "Task.ID");
         Arguments.checkNonEmpty(runID, "Run.ID");
 
-        Call<Void> run = influxDBService.cancelRun(taskID, runID);
+        Call<Void> run = service.tasksTaskIDRunsRunIDDelete(taskID, runID, null);
         execute(run);
     }
 
@@ -549,19 +606,21 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
         Arguments.checkNotNull(task, "task");
 
-        return getLogs(task.getId(), task.getOrgID());
+        return getLogs(task.getId());
     }
 
     @Nonnull
     @Override
-    public List<LogEvent> getLogs(@Nonnull final String taskID, @Nonnull final String orgID) {
+    public List<LogEvent> getLogs(@Nonnull final String taskID) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
-        Arguments.checkNonEmpty(orgID, "Org.ID");
 
-        Call<Logs> execute = influxDBService.findTaskLogs(taskID, orgID);
+        Call<Logs> execute = service.tasksTaskIDLogsGet(taskID, null);
 
-        Logs logs = execute(execute, NotFoundException.class, new Logs());
+        Logs logs = execute(execute, NotFoundException.class);
+        if (logs == null) {
+            return new ArrayList<>();
+        }
 
         return logs.getEvents();
     }
@@ -581,12 +640,14 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
         Arguments.checkNonEmpty(taskID, "taskID");
 
-        return getLabels(taskID, "tasks");
+        Call<LabelsResponse> call = service.tasksTaskIDLabelsGet(taskID, null);
+
+        return execute(call).getLabels();
     }
 
     @Nonnull
     @Override
-    public Label addLabel(@Nonnull final Label label, @Nonnull final Task task) {
+    public LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Task task) {
 
         Arguments.checkNotNull(label, "label");
         Arguments.checkNotNull(task, "task");
@@ -596,12 +657,17 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
 
     @Nonnull
     @Override
-    public Label addLabel(@Nonnull final String labelID, @Nonnull final String taskID) {
+    public LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String taskID) {
 
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(taskID, "taskID");
 
-        return addLabel(labelID, taskID, "tasks", ResourceType.TASKS);
+        LabelMapping labelMapping = new LabelMapping();
+        labelMapping.setLabelID(labelID);
+
+        Call<LabelResponse> call = service.tasksTaskIDLabelsPost(taskID, labelMapping, null);
+
+        return execute(call);
     }
 
     @Override
@@ -619,7 +685,8 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(taskID, "taskID");
 
-        deleteLabel(labelID, taskID, "tasks");
+        Call<Void> call = service.tasksTaskIDLabelsLabelIDDelete(taskID, labelID, null);
+        execute(call);
     }
 
     @Nonnull
@@ -637,7 +704,7 @@ final class TasksApiImpl extends AbstractInfluxDBRestClient implements TasksApi 
         Task task = new Task();
         task.setName(name);
         task.setOrgID(orgID);
-        task.setStatus(Status.ACTIVE);
+        task.setStatus(Task.StatusEnum.ACTIVE);
         task.setFlux(flux);
 
         String repetition = "";

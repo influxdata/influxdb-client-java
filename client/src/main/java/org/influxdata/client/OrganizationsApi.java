@@ -26,12 +26,14 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.influxdata.client.domain.FindOptions;
 import org.influxdata.client.domain.Label;
-import org.influxdata.client.domain.OperationLogEntries;
-import org.influxdata.client.domain.OperationLogEntry;
+import org.influxdata.client.domain.LabelResponse;
+import org.influxdata.client.domain.OperationLog;
+import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.SecretKeys;
 import org.influxdata.client.domain.User;
 
 /**
@@ -132,7 +134,7 @@ public interface OrganizationsApi {
      * @param organization the organization for get secrets
      * @return the secret keys
      */
-    List<String> getSecrets(@Nonnull final Organization organization);
+    SecretKeys getSecrets(@Nonnull final Organization organization);
 
     /**
      * List of secret keys the are stored for Organization.
@@ -147,7 +149,7 @@ public interface OrganizationsApi {
      * @param orgID the organization for get secrets
      * @return the secret keys
      */
-    List<String> getSecrets(@Nonnull final String orgID);
+    SecretKeys getSecrets(@Nonnull final String orgID);
 
     /**
      * Patches all provided secrets and updates any previous values.
@@ -180,6 +182,14 @@ public interface OrganizationsApi {
      * @param orgID   the organization for delete secrets
      */
     void deleteSecrets(@Nonnull final List<String> secrets, @Nonnull final String orgID);
+
+    /**
+     * Delete provided secrets.
+     *
+     * @param secretKeys secret key to deleted (required)
+     * @param orgID ID of the organization (required)
+     */
+    void deleteSecrets(@Nonnull final SecretKeys secretKeys, @Nonnull final String orgID);
 
     /**
      * List all members of an organization.
@@ -242,7 +252,7 @@ public interface OrganizationsApi {
      * @return return the List all owners of an organization
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final Organization organization);
+    List<ResourceOwner> getOwners(@Nonnull final Organization organization);
 
     /**
      * List all owners of an organization.
@@ -251,7 +261,7 @@ public interface OrganizationsApi {
      * @return return the List all owners of an organization
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final String orgID);
+    List<ResourceOwner> getOwners(@Nonnull final String orgID);
 
     /**
      * Add organization owner.
@@ -261,7 +271,7 @@ public interface OrganizationsApi {
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Organization organization);
+    ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Organization organization);
 
     /**
      * Add organization owner.
@@ -271,7 +281,7 @@ public interface OrganizationsApi {
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String orgID);
+    ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String orgID);
 
     /**
      * Removes a owner from an organization.
@@ -315,7 +325,7 @@ public interface OrganizationsApi {
      * @return added label
      */
     @Nonnull
-    Label addLabel(@Nonnull final Label label, @Nonnull final Organization organization);
+    LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Organization organization);
 
     /**
      * Add the organization label.
@@ -325,7 +335,7 @@ public interface OrganizationsApi {
      * @return added label
      */
     @Nonnull
-    Label addLabel(@Nonnull final String labelID, @Nonnull final String orgID);
+    LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String orgID);
 
     /**
      * Removes a label from an organization.
@@ -350,7 +360,7 @@ public interface OrganizationsApi {
      * @return logs
      */
     @Nonnull
-    List<OperationLogEntry> findOrganizationLogs(@Nonnull final Organization organization);
+    List<OperationLog> findOrganizationLogs(@Nonnull final Organization organization);
 
     /**
      * Retrieve an organization's logs.
@@ -359,8 +369,8 @@ public interface OrganizationsApi {
      * @return logs
      */
     @Nonnull
-    OperationLogEntries findOrganizationLogs(@Nonnull final Organization organization,
-                                             @Nonnull final FindOptions findOptions);
+    OperationLogs findOrganizationLogs(@Nonnull final Organization organization,
+                                       @Nonnull final FindOptions findOptions);
 
     /**
      * Retrieve an organization's logs.
@@ -369,7 +379,7 @@ public interface OrganizationsApi {
      * @return logs
      */
     @Nonnull
-    List<OperationLogEntry> findOrganizationLogs(@Nonnull final String orgID);
+    List<OperationLog> findOrganizationLogs(@Nonnull final String orgID);
 
     /**
      * Retrieve an organization's logs.
@@ -378,5 +388,5 @@ public interface OrganizationsApi {
      * @return logs
      */
     @Nonnull
-    OperationLogEntries findOrganizationLogs(@Nonnull final String orgID, @Nonnull final FindOptions findOptions);
+    OperationLogs findOrganizationLogs(@Nonnull final String orgID, @Nonnull final FindOptions findOptions);
 }

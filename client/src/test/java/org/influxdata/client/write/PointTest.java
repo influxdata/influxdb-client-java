@@ -23,7 +23,8 @@ package org.influxdata.client.write;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+
+import org.influxdata.client.domain.WritePrecision;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -136,7 +137,7 @@ class PointTest {
         Point point = Point.measurement("h2o")
                 .addTag("location", "europe")
                 .addField("level", 2)
-                .time(123L, ChronoUnit.SECONDS);
+                .time(123L, WritePrecision.S);
 
         Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe level=2i 123");
     }
@@ -148,20 +149,7 @@ class PointTest {
                 .addTag("location", "europe")
                 .addField("level", 2);
 
-        Assertions.assertThat(point.getPrecision()).isEqualTo(ChronoUnit.NANOS);
-    }
-
-    @Test
-    void timePrecisionNotSupported() {
-
-        Point point = Point.measurement("h2o")
-                .addTag("location", "europe")
-                .addField("level", 2);
-
-
-        Assertions.assertThatThrownBy(() -> point.time(123L, ChronoUnit.DAYS))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Precision must be one of: [Nanos, Micros, Millis, Seconds]");
+        Assertions.assertThat(point.getPrecision()).isEqualTo(WritePrecision.NS);
     }
 
     @Test
@@ -170,7 +158,7 @@ class PointTest {
         Point point = Point.measurement("h2o")
                 .addTag("location", "europe")
                 .addField("level", 2)
-                .time((Instant) null, ChronoUnit.SECONDS);
+                .time((Instant) null, WritePrecision.S);
 
         Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe level=2i");
     }

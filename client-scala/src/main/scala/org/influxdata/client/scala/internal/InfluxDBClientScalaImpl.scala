@@ -25,29 +25,30 @@ import akka.stream.OverflowStrategy
 import javax.annotation.Nonnull
 import org.influxdata.LogLevel
 import org.influxdata.client.InfluxDBClientOptions
-import org.influxdata.client.domain.Health
-import org.influxdata.client.internal.{AbstractInfluxDBClient, InfluxDBService}
+import org.influxdata.client.domain.Check
+import org.influxdata.client.internal.AbstractInfluxDBClient
 import org.influxdata.client.scala.{InfluxDBClientScala, QueryScalaApi}
+import org.influxdata.client.service.QueryService
 
 /**
  * @author Jakub Bednar (bednar@github) (08/02/2019 09:26)
  */
 class InfluxDBClientScalaImpl(@Nonnull options: InfluxDBClientOptions,
                               @Nonnull val bufferSize: Int,
-                              @Nonnull val overflowStrategy: OverflowStrategy) extends AbstractInfluxDBClient(options, classOf[InfluxDBService]) with InfluxDBClientScala {
+                              @Nonnull val overflowStrategy: OverflowStrategy) extends AbstractInfluxDBClient(options) with InfluxDBClientScala {
   /**
    * Get the Query client.
    *
    * @return the new client instance for the Query API
    */
-  override def getQueryScalaApi(): QueryScalaApi = new QueryScalaApiImpl(influxDBService, bufferSize, overflowStrategy)
+  override def getQueryScalaApi(): QueryScalaApi = new QueryScalaApiImpl(retrofit.create(classOf[QueryService]), bufferSize, overflowStrategy)
 
   /**
    * Get the health of an instance.
    *
    * @return health of an instance
    */
-  override def health: Health = health(influxDBService.health())
+  override def health: Check = health(healthService.healthGet(null))
 
   /**
    * Gets the [[LogLevel]] that is used for logging requests and responses.

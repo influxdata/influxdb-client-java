@@ -21,7 +21,8 @@
  */
 package org.influxdata.client;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,10 +39,9 @@ import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
 import org.influxdata.client.domain.ResourceMember;
-import org.influxdata.client.domain.ResourceType;
+import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.Run;
-import org.influxdata.client.domain.RunStatus;
-import org.influxdata.client.domain.Status;
+import org.influxdata.client.domain.RunManually;
 import org.influxdata.client.domain.Task;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.InfluxException;
@@ -100,7 +100,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         task.setName(taskName);
         task.setOrgID(organization.getId());
         task.setFlux(flux);
-        task.setStatus(Status.ACTIVE);
+        task.setStatus(Task.StatusEnum.ACTIVE);
 
         task = tasksApi.createTask(task);
 
@@ -108,7 +108,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(task.getId()).isNotBlank();
         Assertions.assertThat(task.getName()).isEqualTo(taskName);
         Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
-        Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
+        Assertions.assertThat(task.getStatus()).isEqualTo(Task.StatusEnum.ACTIVE);
         Assertions.assertThat(task.getEvery()).isEqualTo("1h0m0s");
         Assertions.assertThat(task.getCron()).isNull();
         Assertions.assertThat(task.getFlux()).isEqualToIgnoringWhitespace(flux);
@@ -129,7 +129,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         task.setName(taskName);
         task.setOrgID(organization.getId());
         task.setFlux(flux);
-        task.setStatus(Status.ACTIVE);
+        task.setStatus(Task.StatusEnum.ACTIVE);
 
         task = tasksApi.createTask(task);
 
@@ -148,7 +148,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(task.getId()).isNotBlank();
         Assertions.assertThat(task.getName()).isEqualTo(taskName);
         Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
-        Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
+        Assertions.assertThat(task.getStatus()).isEqualTo(Task.StatusEnum.ACTIVE);
         Assertions.assertThat(task.getEvery()).isEqualTo("1h0m0s");
         Assertions.assertThat(task.getCron()).isNull();
         Assertions.assertThat(task.getFlux()).endsWith(TASK_FLUX);
@@ -165,10 +165,18 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(task.getId()).isNotBlank();
         Assertions.assertThat(task.getName()).isEqualTo(taskName);
         Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
-        Assertions.assertThat(task.getStatus()).isEqualTo(Status.ACTIVE);
+        Assertions.assertThat(task.getStatus()).isEqualTo(Task.StatusEnum.ACTIVE);
         Assertions.assertThat(task.getCron()).isEqualTo("0 2 * * *");
         Assertions.assertThat(task.getEvery()).isNull();
         Assertions.assertThat(task.getFlux()).endsWith(TASK_FLUX);
+        Assertions.assertThat(task.getLinks()).isNotNull();
+        Assertions.assertThat(task.getLinks().getLogs()).isEqualTo("/api/v2/tasks/" + task.getId() + "/logs");
+        Assertions.assertThat(task.getLinks().getMembers()).isEqualTo("/api/v2/tasks/" + task.getId() + "/members");
+        Assertions.assertThat(task.getLinks().getOwners()).isEqualTo("/api/v2/tasks/" + task.getId() + "/owners");
+        Assertions.assertThat(task.getLinks().getRuns()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs");
+        Assertions.assertThat(task.getLinks().getSelf()).isEqualTo("/api/v2/tasks/" + task.getId());
+        //TODO missing get labels
+        // Assertions.assertThat(task.getLinks().getLabels()).isEqualTo("/api/v2/tasks/" + task.getId() + "/labels");
     }
 
     @Test
@@ -188,7 +196,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(taskByID.getEvery()).isNull();
         Assertions.assertThat(taskByID.getCron()).isEqualTo(task.getCron());
         Assertions.assertThat(taskByID.getFlux()).isEqualTo(task.getFlux());
-        Assertions.assertThat(taskByID.getStatus()).isEqualTo(Status.ACTIVE);
+        Assertions.assertThat(taskByID.getStatus()).isEqualTo(Task.StatusEnum.ACTIVE);
         Assertions.assertThat(taskByID.getCreatedAt()).isNotNull();
     }
 
@@ -282,11 +290,12 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         String flux = "option task = {\n"
                 + "    name: \"" + taskName + "\",\n"
-                + "    every: 3m\n"
+                + "    every: 180000000000ns\n"
                 + "}\n\n" + TASK_FLUX;
 
-        cronTask.setFlux(flux);
-        cronTask.setStatus(Status.INACTIVE);
+        cronTask.setCron(null);
+        cronTask.setEvery("3m");
+        cronTask.setStatus(Task.StatusEnum.INACTIVE);
 
         Task updatedTask = tasksApi.updateTask(cronTask);
 
@@ -295,7 +304,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(updatedTask.getEvery()).isEqualTo("3m0s");
         Assertions.assertThat(updatedTask.getCron()).isNull();
         Assertions.assertThat(updatedTask.getFlux()).isEqualToIgnoringWhitespace(flux);
-        Assertions.assertThat(updatedTask.getStatus()).isEqualTo(Status.INACTIVE);
+        Assertions.assertThat(updatedTask.getStatus()).isEqualTo(Task.StatusEnum.INACTIVE);
         Assertions.assertThat(updatedTask.getOrgID()).isEqualTo(cronTask.getOrgID());
         Assertions.assertThat(updatedTask.getName()).isEqualTo(cronTask.getName());
         Assertions.assertThat(updatedTask.getUpdatedAt()).isNotNull();
@@ -317,15 +326,15 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         ResourceMember resourceMember = tasksApi.addMember(user, task);
         Assertions.assertThat(resourceMember).isNotNull();
-        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
-        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
+        Assertions.assertThat(resourceMember.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.RoleEnum.MEMBER);
 
         members = tasksApi.getMembers(task);
         Assertions.assertThat(members).hasSize(1);
-        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.UserType.MEMBER);
-        Assertions.assertThat(members.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(members.get(0).getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.RoleEnum.MEMBER);
+        Assertions.assertThat(members.get(0).getId()).isEqualTo(user.getId());
+        Assertions.assertThat(members.get(0).getName()).isEqualTo(user.getName());
 
         tasksApi.deleteMember(user, task);
 
@@ -342,22 +351,22 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         Task task = tasksApi.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", organization);
 
-        List<ResourceMember> owners = tasksApi.getOwners(task);
+        List<ResourceOwner> owners = tasksApi.getOwners(task);
         Assertions.assertThat(owners).hasSize(0);
 
         User user = usersApi.createUser(generateName("Luke Health"));
 
-        ResourceMember resourceMember = tasksApi.addOwner(user, task);
+        ResourceOwner resourceMember = tasksApi.addOwner(user, task);
         Assertions.assertThat(resourceMember).isNotNull();
-        Assertions.assertThat(resourceMember.getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(resourceMember.getUserName()).isEqualTo(user.getName());
-        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.UserType.OWNER);
+        Assertions.assertThat(resourceMember.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceOwner.RoleEnum.OWNER);
 
         owners = tasksApi.getOwners(task);
         Assertions.assertThat(owners).hasSize(1);
-        Assertions.assertThat(owners.get(0).getRole()).isEqualTo(ResourceMember.UserType.OWNER);
-        Assertions.assertThat(owners.get(0).getUserID()).isEqualTo(user.getId());
-        Assertions.assertThat(owners.get(0).getUserName()).isEqualTo(user.getName());
+        Assertions.assertThat(owners.get(0).getRole()).isEqualTo(ResourceOwner.RoleEnum.OWNER);
+        Assertions.assertThat(owners.get(0).getId()).isEqualTo(user.getId());
+        Assertions.assertThat(owners.get(0).getName()).isEqualTo(user.getName());
 
         tasksApi.deleteOwner(user, task);
 
@@ -381,12 +390,16 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         Assertions.assertThat(run.getId()).isNotBlank();
         Assertions.assertThat(run.getTaskID()).isEqualTo(task.getId());
-        Assertions.assertThat(run.getStatus()).isEqualTo(RunStatus.SUCCESS);
-        Assertions.assertThat(run.getScheduledFor()).isBefore(Instant.now());
-        Assertions.assertThat(run.getStartedAt()).isBefore(Instant.now());
-        Assertions.assertThat(run.getFinishedAt()).isBefore(Instant.now());
+        Assertions.assertThat(run.getStatus()).isEqualTo(Run.StatusEnum.SUCCESS);
+        Assertions.assertThat(run.getScheduledFor()).isBefore(OffsetDateTime.now());
+        Assertions.assertThat(run.getStartedAt()).isBefore(OffsetDateTime.now());
+        Assertions.assertThat(run.getFinishedAt()).isBefore(OffsetDateTime.now());
         Assertions.assertThat(run.getRequestedAt()).isNull();
-        Assertions.assertThat(run.getLog()).isNull();
+        Assertions.assertThat(run.getLinks()).isNotNull();
+        Assertions.assertThat(run.getLinks().getLogs()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId() + "/logs");
+        Assertions.assertThat(run.getLinks().getRetry()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId() + "/retry");
+        Assertions.assertThat(run.getLinks().getSelf()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId());
+        Assertions.assertThat(run.getLinks().getTask()).isEqualTo("/api/v2/tasks/" + task.getId());
     }
 
     @Test
@@ -399,7 +412,7 @@ class ITTasksApiTest extends AbstractITClientTest {
     @Test
     void runsByTime() throws InterruptedException {
 
-        Instant now = Instant.now();
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
 
         String taskName = generateName("it task");
 
@@ -466,6 +479,25 @@ class ITTasksApiTest extends AbstractITClientTest {
     }
 
     @Test
+    void runTaskManually() {
+
+        Task task = tasksApi.createTaskEvery(generateName("it task"), TASK_FLUX, "1s", organization);
+
+        Run run = tasksApi.runManually(task);
+
+        Assertions.assertThat(run).isNotNull();
+        Assertions.assertThat(run.getStatus()).isEqualTo(Run.StatusEnum.SCHEDULED);
+    }
+
+    @Test
+    void runTaskManuallyNotExist() {
+
+        Assertions.assertThatThrownBy(() -> tasksApi.runManually("020f755c3c082000", new RunManually()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("failed to force run");
+    }
+
+    @Test
     void retryRun() throws InterruptedException {
 
         String taskName = generateName("it task");
@@ -482,7 +514,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(run).isNotNull();
         Assertions.assertThat(run.getTaskID()).isEqualTo(runs.get(0).getTaskID());
 
-        Assertions.assertThat(run.getStatus()).isEqualTo(RunStatus.SCHEDULED);
+        Assertions.assertThat(run.getStatus()).isEqualTo(Run.StatusEnum.SCHEDULED);
         Assertions.assertThat(run.getTaskID()).isEqualTo(task.getId());
     }
 
@@ -510,13 +542,14 @@ class ITTasksApiTest extends AbstractITClientTest {
         List<LogEvent> logs = tasksApi.getLogs(task);
         Assertions.assertThat(logs).isNotEmpty();
         Assertions.assertThat(logs.get(0).getMessage()).startsWith("Started task from script:");
-        Assertions.assertThat(logs.get(logs.size() - 1).getMessage()).endsWith("Completed successfully");
+        Assertions.assertThat(logs.get(1).getMessage()).contains("total_duration");
+        Assertions.assertThat(logs.get(2).getMessage()).contains("Completed successfully");
     }
 
     @Test
     void logsNotExist() {
 
-        List<LogEvent> logs = tasksApi.getLogs("020f755c3c082000", organization.getId());
+        List<LogEvent> logs = tasksApi.getLogs("020f755c3c082000");
 
         Assertions.assertThat(logs).isEmpty();
     }
@@ -533,7 +566,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         List<Run> runs = tasksApi.getRuns(task, null, null, 1);
         Assertions.assertThat(runs).hasSize(1);
 
-        List<LogEvent> logs = tasksApi.getRunLogs(runs.get(0), organization.getId());
+        List<LogEvent> logs = tasksApi.getRunLogs(runs.get(0));
 
         Assertions.assertThat(logs).isNotEmpty();
         Assertions.assertThat(logs.get(logs.size() - 1).getMessage()).endsWith("Completed successfully");
@@ -546,7 +579,7 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "5s", organization);
 
-        List<LogEvent> logs = tasksApi.getRunLogs(task.getId(), "020f755c3c082000", organization.getId());
+        List<LogEvent> logs = tasksApi.getRunLogs(task.getId(), "020f755c3c082000");
         Assertions.assertThat(logs).isEmpty();
     }
 
@@ -587,12 +620,12 @@ class ITTasksApiTest extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties);
+        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties, organization.getId());
 
         List<Label> labels = tasksApi.getLabels(task);
         Assertions.assertThat(labels).hasSize(0);
 
-        Label addedLabel = tasksApi.addLabel(label, task);
+        Label addedLabel = tasksApi.addLabel(label, task).getLabel();
         Assertions.assertThat(addedLabel).isNotNull();
         Assertions.assertThat(addedLabel.getId()).isEqualTo(label.getId());
         Assertions.assertThat(addedLabel.getName()).isEqualTo(label.getName());
@@ -624,7 +657,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties);
+        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties, organization.getId());
 
         tasksApi.addLabel(label, source);
 
@@ -654,36 +687,47 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(ResourceType.TASKS);
+        resource.setType(PermissionResource.TypeEnum.TASKS);
 
         Permission createTask = new Permission();
         createTask.setResource(resource);
-        createTask.setAction(Permission.READ_ACTION);
+        createTask.setAction(Permission.ActionEnum.READ);
 
         Permission deleteTask = new Permission();
         deleteTask.setResource(resource);
-        deleteTask.setAction(Permission.WRITE_ACTION);
+        deleteTask.setAction(Permission.ActionEnum.WRITE);
 
         PermissionResource orgResource = new PermissionResource();
-        orgResource.setType(ResourceType.ORGS);
+        orgResource.setType(PermissionResource.TypeEnum.ORGS);
 
         Permission createOrg = new Permission();
-        createOrg.setAction(Permission.WRITE_ACTION);
+        createOrg.setAction(Permission.ActionEnum.WRITE);
         createOrg.setResource(orgResource);
 
+        Permission readOrg = new Permission();
+        readOrg.setAction(Permission.ActionEnum.READ);
+        readOrg.setResource(orgResource);
+
         PermissionResource userResource = new PermissionResource();
-        userResource.setType(ResourceType.USERS);
+        userResource.setType(PermissionResource.TypeEnum.USERS);
 
         Permission createUsers = new Permission();
-        createUsers.setAction(Permission.WRITE_ACTION);
+        createUsers.setAction(Permission.ActionEnum.WRITE);
         createUsers.setResource(userResource);
 
 
+        PermissionResource labelResource = new PermissionResource();
+        labelResource.setType(PermissionResource.TypeEnum.LABELS);
+
+        Permission createLabels = new Permission();
+        createLabels.setAction(Permission.ActionEnum.WRITE);
+        createLabels.setResource(labelResource);
+
         PermissionResource authResource = new PermissionResource();
-        authResource.setType(ResourceType.AUTHORIZATIONS);
+        authResource.setType(PermissionResource.TypeEnum.AUTHORIZATIONS);
 
         Permission createAuth = new Permission();
-        createAuth.setAction(Permission.WRITE_ACTION);
+        createAuth.setAction(Permission.ActionEnum.WRITE);
         createAuth.setResource(userResource);
 
         Bucket bucket = influxDBClient.getBucketsApi().findBucketByName("my-bucket");
@@ -691,25 +735,27 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         PermissionResource bucketResource = new PermissionResource();
         bucketResource.setOrgID(organization.getId());
-        bucketResource.setType(ResourceType.BUCKETS);
+        bucketResource.setType(PermissionResource.TypeEnum.BUCKETS);
         bucketResource.setId(bucket.getId());
 
         Permission readBucket = new Permission();
         readBucket.setResource(bucketResource);
-        readBucket.setAction(Permission.READ_ACTION);
+        readBucket.setAction(Permission.ActionEnum.READ);
 
         Permission writeBucket = new Permission();
         writeBucket.setResource(bucketResource);
-        writeBucket.setAction(Permission.WRITE_ACTION);
+        writeBucket.setAction(Permission.ActionEnum.WRITE);
 
         List<Permission> permissions = new ArrayList<>();
         permissions.add(createTask);
         permissions.add(deleteTask);
         permissions.add(createOrg);
+        permissions.add(readOrg);
         permissions.add(createUsers);
         permissions.add(createAuth);
         permissions.add(readBucket);
         permissions.add(writeBucket);
+        permissions.add(createLabels);
 
         return influxDBClient.getAuthorizationsApi().createAuthorization(organization, permissions);
     }

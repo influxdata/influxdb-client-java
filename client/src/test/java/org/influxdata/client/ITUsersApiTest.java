@@ -21,14 +21,13 @@
  */
 package org.influxdata.client;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
-import org.influxdata.client.domain.FindOptions;
-import org.influxdata.client.domain.OperationLogEntries;
-import org.influxdata.client.domain.OperationLogEntry;
+import org.influxdata.client.domain.OperationLog;
+import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.NotFoundException;
 
@@ -68,10 +67,8 @@ class ITUsersApiTest extends AbstractITClientTest {
         Assertions.assertThat(user).isNotNull();
         Assertions.assertThat(user.getId()).isNotBlank();
         Assertions.assertThat(user.getName()).isEqualTo(userName);
-        Assertions.assertThat(user.getLinks())
-                .hasSize(2)
-                .hasEntrySatisfying("self", link -> Assertions.assertThat(link).isEqualTo("/api/v2/users/" + user.getId()))
-                .hasEntrySatisfying("log", link -> Assertions.assertThat(link).isEqualTo("/api/v2/users/" + user.getId() + "/log"));
+        Assertions.assertThat(user.getLinks().getLogs()).isEqualTo("/api/v2/users/" + user.getId() + "/logs");
+        Assertions.assertThat(user.getLinks().getSelf()).isEqualTo("/api/v2/users/" + user.getId());
     }
 
     @Test
@@ -233,23 +230,24 @@ class ITUsersApiTest extends AbstractITClientTest {
     @Test
     void findUserLogs() {
 
-        Instant now = Instant.now();
+        OffsetDateTime now = OffsetDateTime.now();
 
         User user = usersApi.me();
         Assertions.assertThat(user).isNotNull();
 
         usersApi.updateUser(user);
 
-        List<OperationLogEntry> userLogs = usersApi.findUserLogs(user);
+        List<OperationLog> userLogs = usersApi.findUserLogs(user);
         Assertions.assertThat(userLogs).isNotEmpty();
         Assertions.assertThat(userLogs.get(userLogs.size() - 1).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(userLogs.get(userLogs.size() - 1).getUserID()).isEqualTo(user.getId());
         Assertions.assertThat(userLogs.get(userLogs.size() - 1).getTime()).isAfter(now);
+        //TODO https://github.com/influxdata/influxdb/issues/12544
+        // Assertions.assertThat(userLogs.get(userLogs.size() - 1).get()).isEqualTo(user.getId());
     }
 
     @Test
     void findUserLogsNotFound() {
-        List<OperationLogEntry> userLogs = usersApi.findUserLogs("020f755c3c082000");
+        List<OperationLog> userLogs = usersApi.findUserLogs("020f755c3c082000");
         Assertions.assertThat(userLogs).isEmpty();
     }
 
@@ -266,7 +264,7 @@ class ITUsersApiTest extends AbstractITClientTest {
                     usersApi.updateUser(user);
                 });
 
-        List<OperationLogEntry> logs = usersApi.findUserLogs(user);
+        List<OperationLog> logs = usersApi.findUserLogs(user);
 
         Assertions.assertThat(logs).hasSize(20);
         Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("User Created");
@@ -276,7 +274,7 @@ class ITUsersApiTest extends AbstractITClientTest {
         findOptions.setLimit(5);
         findOptions.setOffset(0);
 
-        OperationLogEntries entries = usersApi.findUserLogs(user, findOptions);
+        OperationLogs entries = usersApi.findUserLogs(user, findOptions);
 
         Assertions.assertThat(entries.getLogs()).hasSize(5);
         Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Created");
@@ -287,7 +285,7 @@ class ITUsersApiTest extends AbstractITClientTest {
 
         //TODO isNotNull FindOptions also in Log API?
         findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getNextPage()).isNull();
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         entries = usersApi.findUserLogs(user, findOptions);
         Assertions.assertThat(entries.getLogs()).hasSize(5);
@@ -298,7 +296,7 @@ class ITUsersApiTest extends AbstractITClientTest {
         Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("User Updated");
 
         findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getNextPage()).isNull();
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         entries = usersApi.findUserLogs(user, findOptions);
         Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Updated");
@@ -308,7 +306,7 @@ class ITUsersApiTest extends AbstractITClientTest {
         Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("User Updated");
 
         findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getNextPage()).isNull();
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         entries = usersApi.findUserLogs(user, findOptions);
         Assertions.assertThat(entries.getLogs()).hasSize(5);
@@ -319,11 +317,11 @@ class ITUsersApiTest extends AbstractITClientTest {
         Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("User Updated");
 
         findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getNextPage()).isNull();
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         entries = usersApi.findUserLogs(user, findOptions);
         Assertions.assertThat(entries.getLogs()).hasSize(0);
-        Assertions.assertThat(entries.getNextPage()).isNull();
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
         // order
         findOptions = new FindOptions();

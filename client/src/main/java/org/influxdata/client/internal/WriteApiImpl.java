@@ -21,7 +21,6 @@
  */
 package org.influxdata.client.internal;
 
-import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -31,41 +30,36 @@ import javax.annotation.Nullable;
 import org.influxdata.Arguments;
 import org.influxdata.client.WriteApi;
 import org.influxdata.client.WriteOptions;
+import org.influxdata.client.domain.WritePrecision;
+import org.influxdata.client.service.WriteService;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.AbstractWriteEvent;
 import org.influxdata.client.write.events.EventListener;
 import org.influxdata.client.write.events.ListenerRegistration;
 
 import io.reactivex.Flowable;
-import io.reactivex.Maybe;
 import io.reactivex.disposables.Disposable;
-import okhttp3.RequestBody;
-import retrofit2.Response;
 
 /**
  * @author Jakub Bednar (bednar@github) (15/10/2018 09:42)
  */
 final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
 
-    private final InfluxDBService influxDBService;
-
     WriteApiImpl(@Nonnull final WriteOptions writeOptions,
-                 @Nonnull final InfluxDBService influxDBService) {
+                 @Nonnull final WriteService service) {
 
-        super(writeOptions, writeOptions.getWriteScheduler());
-
-        this.influxDBService = influxDBService;
+        super(writeOptions, writeOptions.getWriteScheduler(), service);
     }
 
     @Override
     public void writeRecord(@Nonnull final String bucket,
                             @Nonnull final String orgID,
-                            @Nonnull final ChronoUnit precision,
+                            @Nonnull final WritePrecision precision,
                             @Nullable final String record) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(orgID, "orgID");
-        Arguments.checkNotNull(precision, "TimeUnit.precision is required");
+        Arguments.checkNotNull(precision, "WritePrecision is required");
 
         if (record == null) {
             return;
@@ -77,12 +71,12 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
     @Override
     public void writeRecords(@Nonnull final String bucket,
                              @Nonnull final String orgID,
-                             @Nonnull final ChronoUnit precision,
+                             @Nonnull final WritePrecision precision,
                              @Nonnull final List<String> records) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(orgID, "orgID");
-        Arguments.checkNotNull(precision, "TimeUnit.precision is required");
+        Arguments.checkNotNull(precision, "WritePrecision is required");
         Arguments.checkNotNull(records, "records");
 
         Flowable<BatchWriteData> stream = Flowable.fromIterable(records).map(BatchWriteDataRecord::new);
@@ -120,7 +114,7 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
     @Override
     public <M> void writeMeasurement(@Nonnull final String bucket,
                                      @Nonnull final String orgID,
-                                     @Nonnull final ChronoUnit precision,
+                                     @Nonnull final WritePrecision precision,
                                      @Nullable final M measurement) {
 
         if (measurement == null) {
@@ -133,12 +127,12 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
     @Override
     public <M> void writeMeasurements(@Nonnull final String bucket,
                                       @Nonnull final String orgID,
-                                      @Nonnull final ChronoUnit precision,
+                                      @Nonnull final WritePrecision precision,
                                       @Nonnull final List<M> measurements) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(orgID, "orgID");
-        Arguments.checkNotNull(precision, "TimeUnit.precision is required");
+        Arguments.checkNotNull(precision, "WritePrecision is required");
         Arguments.checkNotNull(measurements, "records");
 
         Flowable<BatchWriteData> stream = Flowable
@@ -163,14 +157,5 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
     @Override
     public void close() {
         super.close();
-    }
-
-    @Nonnull
-    public Maybe<Response<Void>> writeCall(final RequestBody requestBody,
-                                           final String organization,
-                                           final String bucket,
-                                           final String precision) {
-
-        return influxDBService.writePoints(organization, bucket, precision, requestBody);
     }
 }

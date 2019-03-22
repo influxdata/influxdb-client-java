@@ -25,9 +25,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.influxdata.client.domain.FindOptions;
-import org.influxdata.client.domain.OperationLogEntries;
-import org.influxdata.client.domain.OperationLogEntry;
+import org.influxdata.client.domain.OperationLog;
+import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.User;
 
 /**
@@ -166,7 +165,7 @@ public interface UsersApi {
      * @return logs
      */
     @Nonnull
-    List<OperationLogEntry> findUserLogs(@Nonnull final User user);
+    List<OperationLog> findUserLogs(@Nonnull final User user);
 
     /**
      * Retrieve an user's logs.
@@ -175,7 +174,7 @@ public interface UsersApi {
      * @return logs
      */
     @Nonnull
-    OperationLogEntries findUserLogs(@Nonnull final User user, @Nonnull final FindOptions findOptions);
+    OperationLogs findUserLogs(@Nonnull final User user, @Nonnull final FindOptions findOptions);
 
     /**
      * Retrieve an user's logs.
@@ -184,7 +183,7 @@ public interface UsersApi {
      * @return logs
      */
     @Nonnull
-    List<OperationLogEntry> findUserLogs(@Nonnull final String userID);
+    List<OperationLog> findUserLogs(@Nonnull final String userID);
 
     /**
      * Retrieve an user's logs.
@@ -193,5 +192,5 @@ public interface UsersApi {
      * @return logs
      */
     @Nonnull
-    OperationLogEntries findUserLogs(@Nonnull final String userID, @Nonnull final FindOptions findOptions);
+    OperationLogs findUserLogs(@Nonnull final String userID, @Nonnull final FindOptions findOptions);
 }

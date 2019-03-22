@@ -25,8 +25,11 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import org.influxdata.Arguments
 import org.influxdata.Cancellable
-import org.influxdata.client.internal.InfluxDBService
+import org.influxdata.client.domain.Dialect
+import org.influxdata.client.domain.Query
+import org.influxdata.client.internal.AbstractInfluxDBClient
 import org.influxdata.client.kotlin.QueryKotlinApi
+import org.influxdata.client.service.QueryService
 import org.influxdata.internal.AbstractQueryApi
 import org.influxdata.query.FluxRecord
 import org.influxdata.query.FluxTable
@@ -37,11 +40,19 @@ import java.util.function.Consumer
 /**
  * @author Jakub Bednar (bednar@github) (30/10/2018 08:51)
  */
-internal class QueryKotlinApiImpl(private val influxDBService: InfluxDBService) : AbstractQueryApi(), QueryKotlinApi {
+internal class QueryKotlinApiImpl(private val service: QueryService) : AbstractQueryApi(), QueryKotlinApi {
 
     override fun query(query: String, orgID: String): Channel<FluxRecord> {
 
         Arguments.checkNonEmpty(query, "query")
+        Arguments.checkNonEmpty(orgID, "orgID")
+
+        return query(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(query), orgID)
+    }
+
+    override fun query(query: Query, orgID: String): Channel<FluxRecord> {
+
+        Arguments.checkNotNull(query, "query")
         Arguments.checkNonEmpty(orgID, "orgID")
 
         val consumer = BiConsumer { channel: Channel<FluxRecord>, record: FluxRecord ->
@@ -50,7 +61,7 @@ internal class QueryKotlinApiImpl(private val influxDBService: InfluxDBService) 
             }
         }
 
-        return query(query, AbstractQueryApi.DEFAULT_DIALECT.toString(), orgID, consumer)
+        return query(query, orgID, consumer)
     }
 
     override fun <M> query(query: String, orgID: String, measurementType: Class<M>): Channel<M> {
@@ -65,7 +76,22 @@ internal class QueryKotlinApiImpl(private val influxDBService: InfluxDBService) 
             }
         }
 
-        return query(query, AbstractQueryApi.DEFAULT_DIALECT.toString(), orgID, consumer)
+        return query(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(query), orgID, consumer)
+    }
+
+    override fun <M> query(query: Query, orgID: String, measurementType: Class<M>): Channel<M> {
+
+        Arguments.checkNotNull(query, "query")
+        Arguments.checkNonEmpty(orgID, "orgID")
+        Arguments.checkNotNull(measurementType, "measurementType")
+
+        val consumer = BiConsumer { channel: Channel<M>, record: FluxRecord ->
+            runBlocking {
+                channel.send(resultMapper.toPOJO(record, measurementType))
+            }
+        }
+
+        return query(query, orgID, consumer)
     }
 
     override fun queryRaw(query: String, orgID: String): Channel<String> {
@@ -73,17 +99,26 @@ internal class QueryKotlinApiImpl(private val influxDBService: InfluxDBService) 
         Arguments.checkNonEmpty(query, "query")
         Arguments.checkNonEmpty(orgID, "orgID")
 
-        return queryRaw(query, AbstractQueryApi.DEFAULT_DIALECT.toString(), orgID)
+        return queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, orgID)
     }
 
-    override fun queryRaw(query: String, dialect: String, orgID: String): Channel<String> {
+    override fun queryRaw(query: String, dialect: Dialect, orgID: String): Channel<String> {
 
         Arguments.checkNonEmpty(query, "query")
         Arguments.checkNonEmpty(orgID, "orgID")
 
-                val channel = Channel<String>()
+        return queryRaw(Query().dialect(dialect).query(query), orgID)
+    }
 
-        val queryCall = influxDBService.query(orgID, createBody(dialect, query))
+    override fun queryRaw(query: Query, orgID: String): Channel<String> {
+
+        Arguments.checkNotNull(query, "query")
+        Arguments.checkNonEmpty(orgID, "orgID")
+
+        val channel = Channel<String>()
+
+        val queryCall = service.queryPostResponseBody(null, "text/csv", "application/json",
+                null, orgID, query)
 
         val consumer = BiConsumer { cancellable: Cancellable, line: String ->
 
@@ -99,17 +134,18 @@ internal class QueryKotlinApiImpl(private val influxDBService: InfluxDBService) 
         queryRaw(queryCall, consumer, Consumer { channel.close(it) }, Runnable { channel.close() }, true)
 
         return channel
+
     }
 
-    private fun <T> query(query: String, dialect: String, orgID: String, consumer: BiConsumer<Channel<T>, FluxRecord>): Channel<T> {
+    private fun <T> query(query: Query, orgID: String, consumer: BiConsumer<Channel<T>, FluxRecord>): Channel<T> {
 
-        Arguments.checkNonEmpty(query, "query")
+        Arguments.checkNotNull(query, "query")
         Arguments.checkNonEmpty(orgID, "orgID")
-        Arguments.checkNonEmpty(dialect, "dialect")
 
         val channel = Channel<T>()
 
-        val queryCall = influxDBService.query(orgID, createBody(dialect, query))
+        val queryCall = service.queryPostResponseBody(null, "text/csv", "application/json",
+                null, orgID, query)
 
         val responseConsumer = object : FluxResponseConsumer {
 

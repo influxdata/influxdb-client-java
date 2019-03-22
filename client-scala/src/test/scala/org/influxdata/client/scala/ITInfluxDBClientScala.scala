@@ -22,6 +22,7 @@
 package org.influxdata.client.scala
 
 import org.influxdata.LogLevel
+import org.influxdata.client.domain.Check
 import org.scalatest.Matchers
 
 /**
@@ -43,7 +44,7 @@ class ITInfluxDBClientScala extends AbstractITQueryScalaApi with Matchers {
     val health = influxDBClient.health
 
     health should not be null
-    health.isHealthy should be(true)
+    health.getStatus should be(Check.StatusEnum.PASS)
     health.getMessage should be("ready for queries and writes")
   }
 
@@ -54,7 +55,7 @@ class ITInfluxDBClientScala extends AbstractITQueryScalaApi with Matchers {
     val health = client.health
 
     health should not be null
-    health.isHealthy should be(false)
+    health.getStatus should be(Check.StatusEnum.FAIL)
     health.getMessage should startWith("Failed to connect to")
 
     client.close()

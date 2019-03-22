@@ -27,6 +27,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelCreateRequest;
+import org.influxdata.client.domain.LabelUpdate;
 
 /**
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:37)
@@ -36,21 +38,22 @@ public interface LabelsApi {
     /**
      * Creates a new label and sets {@link Label#getId()} with the new identifier.
      *
-     * @param label label to create
-     * @return Label created
-     */
-    @Nonnull
-    Label createLabel(@Nonnull final Label label);
-
-    /**
-     * Creates a new label and sets {@link Label#getId()} with the new identifier.
-     *
      * @param name       name of a label
      * @param properties properties of a label
+     * @param orgID
      * @return Label created
      */
     @Nonnull
-    Label createLabel(@Nonnull final String name, @Nonnull final Map<String, String> properties);
+    Label createLabel(@Nonnull final String name, @Nonnull final Map<String, String> properties, final String orgID);
+
+    /**
+     * Create a label.
+     *
+     * @param request label to create
+     * @return Added label
+     */
+    @Nonnull
+    Label createLabel(@Nonnull LabelCreateRequest request);
 
     /**
      * Updates a label's properties.
@@ -60,6 +63,16 @@ public interface LabelsApi {
      */
     @Nonnull
     Label updateLabel(@Nonnull final Label label);
+
+    /**
+     * Update a single label.
+     *
+     * @param labelID     ID of label to update
+     * @param labelUpdate label update
+     * @return updated label
+     */
+    @Nonnull
+    Label updateLabel(@Nonnull final String labelID, @Nonnull final LabelUpdate labelUpdate);
 
     /**
      * Delete a label.

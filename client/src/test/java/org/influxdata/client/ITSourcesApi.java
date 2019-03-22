@@ -28,11 +28,13 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import org.influxdata.client.domain.Bucket;
-import org.influxdata.client.domain.Health;
+import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.Source;
+import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -59,9 +61,9 @@ class ITSourcesApi extends AbstractITClientTest {
         Source source = new Source();
 
         source.setOrgID("02cebf26d7fc1000");
-        source.setDefaultSource(false);
+        source.setDefault(false);
         source.setName(generateName("Source"));
-        source.setType(Source.SourceType.V1SourceType);
+        source.setType(Source.TypeEnum.V1);
         source.setUrl("http://localhost:8086");
         source.setInsecureSkipVerify(true);
         source.setTelegraf("telegraf");
@@ -78,7 +80,7 @@ class ITSourcesApi extends AbstractITClientTest {
 
         Assertions.assertThat(createdSource.getId()).isNotBlank();
         Assertions.assertThat(createdSource.getOrgID()).isEqualTo(source.getOrgID());
-        Assertions.assertThat(createdSource.isDefaultSource()).isEqualTo(source.isDefaultSource());
+        Assertions.assertThat(createdSource.isDefault()).isEqualTo(source.isDefault());
         Assertions.assertThat(createdSource.getName()).isEqualTo(source.getName());
         Assertions.assertThat(createdSource.getType()).isEqualTo(source.getType());
         Assertions.assertThat(createdSource.getUrl()).isEqualTo(source.getUrl());
@@ -96,13 +98,14 @@ class ITSourcesApi extends AbstractITClientTest {
     void updateSource() {
 
         Source source = newSource();
+        source.setInsecureSkipVerify(false);
 
         source = sourcesApi.createSource(source);
-        source.setInsecureSkipVerify(false);
+        source.setInsecureSkipVerify(true);
 
         source = sourcesApi.updateSource(source);
 
-        Assertions.assertThat(source.isInsecureSkipVerify()).isFalse();
+        Assertions.assertThat(source.isInsecureSkipVerify()).isTrue();
     }
 
     @Test
@@ -168,11 +171,13 @@ class ITSourcesApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/12814
     void findBucketsBySourceByUnknownSource() {
 
-        List<Bucket> buckets = sourcesApi.findBucketsBySourceID("020f755c3d082000");
-
-        Assertions.assertThat(buckets).isNull();
+        Assertions.assertThatThrownBy(() -> sourcesApi.findBucketsBySourceID("020f755c3d082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("source not found");
     }
 
     @Test
@@ -180,10 +185,10 @@ class ITSourcesApi extends AbstractITClientTest {
 
         Source source = sourcesApi.createSource(newSource());
 
-        Health health = sourcesApi.health(source);
+        Check check = sourcesApi.health(source);
 
-        Assertions.assertThat(health).isNotNull();
-        Assertions.assertThat(health.isHealthy()).isTrue();
+        Assertions.assertThat(check).isNotNull();
+        Assertions.assertThat(check.getStatus()).isEqualTo(Check.StatusEnum.PASS);
     }
 
     @Test
@@ -197,7 +202,7 @@ class ITSourcesApi extends AbstractITClientTest {
 
         Assertions.assertThat(cloned.getName()).isEqualTo(name);
         Assertions.assertThat(cloned.getOrgID()).isEqualTo(source.getOrgID());
-        Assertions.assertThat(cloned.isDefaultSource()).isEqualTo(source.isDefaultSource());
+        Assertions.assertThat(cloned.isDefault()).isEqualTo(source.isDefault());
         Assertions.assertThat(cloned.getType()).isEqualTo(source.getType());
         Assertions.assertThat(cloned.getUrl()).isEqualTo(source.getUrl());
         Assertions.assertThat(cloned.isInsecureSkipVerify()).isEqualTo(source.isInsecureSkipVerify());
@@ -224,7 +229,7 @@ class ITSourcesApi extends AbstractITClientTest {
 
         source.setName(generateName("Source"));
         source.setOrgID("02cebf26d7fc1000");
-        source.setType(Source.SourceType.V1SourceType);
+        source.setType(Source.TypeEnum.V1);
         source.setUrl("http://influxdb:8086");
         source.setInsecureSkipVerify(true);
 

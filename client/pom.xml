@@ -50,6 +50,57 @@
                     <header>../scripts/license_header.txt</header>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>3.0.3</version>
+                <configuration>
+                    <inputSpec>${project.basedir}/src/main/resources/swagger.yml</inputSpec>
+                    <generatorName>influx-java</generatorName>
+                    <library>retrofit2</library>
+                    <configOptions>
+                        <sourceFolder>java</sourceFolder>
+                        <dateLibrary>java8</dateLibrary>
+                        <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                    </configOptions>
+                    <generateModelDocumentation>false</generateModelDocumentation>
+                    <generateApiDocumentation>false</generateApiDocumentation>
+                    <generateApis>true</generateApis>
+                    <generateApiTests>false</generateApiTests>
+                    <generateSupportingFiles>true</generateSupportingFiles>
+                    <verbose>false</verbose>
+                    <output>${project.basedir}/src/generated</output>
+                    <addCompileSourceRoot>false</addCompileSourceRoot>
+                    <modelPackage>org.influxdata.client.domain</modelPackage>
+                    <apiPackage>org.influxdata.client.service</apiPackage>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.influxdata</groupId>
+                        <artifactId>openapi-generator</artifactId>
+                        <version>1.0.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.basedir}/src/generated/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -72,20 +123,35 @@
         </dependency>
 
         <dependency>
-            <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>adapter-rxjava2</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>converter-moshi</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.squareup.okio</groupId>
             <artifactId>okio</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.gsonfire</groupId>
+            <artifactId>gson-fire</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>converter-scalars</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>converter-gson</artifactId>
+        </dependency>
+        
     </dependencies>
 
 </project>

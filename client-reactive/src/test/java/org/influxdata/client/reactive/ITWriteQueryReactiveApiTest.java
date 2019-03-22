@@ -22,7 +22,6 @@
 package org.influxdata.client.reactive;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
@@ -33,11 +32,11 @@ import org.influxdata.client.InfluxDBClientFactory;
 import org.influxdata.client.WriteOptions;
 import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Bucket;
+import org.influxdata.client.domain.BucketRetentionRules;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
-import org.influxdata.client.domain.ResourceType;
-import org.influxdata.client.domain.RetentionRule;
 import org.influxdata.client.domain.User;
+import org.influxdata.client.domain.WritePrecision;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.WriteSuccessEvent;
 import org.influxdata.query.FluxRecord;
@@ -71,12 +70,12 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
         InfluxDBClient client = InfluxDBClientFactory.create(influxDB_URL, "my-user",
                 "my-password".toCharArray());
 
-        RetentionRule retentionRule = new RetentionRule();
-        retentionRule.setType("expire");
-        retentionRule.setEverySeconds(3600L);
+        BucketRetentionRules bucketRetentionRules = new BucketRetentionRules();
+        bucketRetentionRules.setType(BucketRetentionRules.TypeEnum.EXPIRE);
+        bucketRetentionRules.setEverySeconds(3600);
 
         bucket = client.getBucketsApi()
-                .createBucket(generateName("h2o"), retentionRule, organization);
+                .createBucket(generateName("h2o"), bucketRetentionRules, organization);
 
         //
         // Add Permissions to read and write to the Bucket
@@ -84,16 +83,16 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(ResourceType.BUCKETS);
+        resource.setType(PermissionResource.TypeEnum.BUCKETS);
         resource.setId(bucket.getId());
 
         Permission readBucket = new Permission();
         readBucket.setResource(resource);
-        readBucket.setAction(Permission.READ_ACTION);
+        readBucket.setAction(Permission.ActionEnum.READ);
 
         Permission writeBucket = new Permission();
         writeBucket.setResource(resource);
-        writeBucket.setAction(Permission.WRITE_ACTION);
+        writeBucket.setAction(Permission.ActionEnum.WRITE);
 
         User loggedUser = client.getUsersApi().me();
         Assertions.assertThat(loggedUser).isNotNull();
@@ -142,7 +141,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
                     countDownLatch.countDown();
                 });
 
-        writeClient.writeRecord(bucketName, organization.getId(), ChronoUnit.NANOS, record);
+        writeClient.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record);
 
         waitToCallback();
 
@@ -166,7 +165,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
 
         writeClient = influxDBClient.getWriteReactiveApi();
 
-        writeClient.writeRecord(bucket.getName(), organization.getId(), ChronoUnit.SECONDS, Maybe.empty());
+        writeClient.writeRecord(bucket.getName(), organization.getId(), WritePrecision.S, Maybe.empty());
     }
 
     @Test
@@ -184,7 +183,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
                 .listenEvents(WriteSuccessEvent.class)
                 .subscribe(event -> countDownLatch.countDown());
 
-        writeClient.writeRecords(bucket.getName(), organization.getId(), ChronoUnit.SECONDS, records);
+        writeClient.writeRecords(bucket.getName(), organization.getId(), WritePrecision.S, records);
 
         waitToCallback();
 
@@ -218,7 +217,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
         writeClient = influxDBClient.getWriteReactiveApi();
 
         Instant time = Instant.ofEpochSecond(1000);
-        Point point = Point.measurement("h2o_feet").addTag("location", "south").addField("water_level", 1).time(time, ChronoUnit.MILLIS);
+        Point point = Point.measurement("h2o_feet").addTag("location", "south").addField("water_level", 1).time(time, WritePrecision.MS);
 
         writeClient
                 .listenEvents(WriteSuccessEvent.class)
@@ -251,8 +250,8 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
 
         Instant time = Instant.ofEpochSecond(2000);
 
-        Point point1 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 1).time(time, ChronoUnit.MILLIS);
-        Point point2 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusSeconds(10), ChronoUnit.SECONDS);
+        Point point1 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 1).time(time, WritePrecision.MS);
+        Point point2 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusSeconds(10), WritePrecision.S);
 
         writeClient
                 .listenEvents(WriteSuccessEvent.class)
@@ -282,7 +281,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
                 .listenEvents(WriteSuccessEvent.class)
                 .subscribe(event -> countDownLatch.countDown());
 
-        writeClient.writeMeasurement(bucket.getName(), organization.getId(), ChronoUnit.NANOS, Maybe.just(measurement));
+        writeClient.writeMeasurement(bucket.getName(), organization.getId(), WritePrecision.NS, Maybe.just(measurement));
 
         waitToCallback();
 
@@ -319,7 +318,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
                 .listenEvents(WriteSuccessEvent.class)
                 .subscribe(event -> countDownLatch.countDown());
 
-        writeClient.writeMeasurements(bucket.getName(), organization.getId(), ChronoUnit.NANOS, (Publisher<H2O>) Flowable.just(measurement1, measurement2));
+        writeClient.writeMeasurements(bucket.getName(), organization.getId(), WritePrecision.NS, (Publisher<H2O>) Flowable.just(measurement1, measurement2));
 
         waitToCallback();
 
@@ -356,7 +355,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
                 .listenEvents(WriteSuccessEvent.class)
                 .subscribe(event -> countDownLatch.countDown());
 
-        writeClient.writeRecord(bucket.getName(), organization.getId(), ChronoUnit.NANOS, Maybe.just("h2o_feet,location=coyote_creek level\\ water_level=1.0 1"));
+        writeClient.writeRecord(bucket.getName(), organization.getId(), WritePrecision.NS, Maybe.just("h2o_feet,location=coyote_creek level\\ water_level=1.0 1"));
 
         waitToCallback();
 
@@ -385,7 +384,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
                 .listenEvents(WriteSuccessEvent.class)
                 .subscribe(event -> countDownLatch.countDown());
 
-        writeClient.writeRecord(bucket.getName(), organization.getId(), ChronoUnit.NANOS, Maybe.just("h2o_feet,location=coyote_creek level\\ water_level=1.0 1"));
+        writeClient.writeRecord(bucket.getName(), organization.getId(), WritePrecision.NS, Maybe.just("h2o_feet,location=coyote_creek level\\ water_level=1.0 1"));
 
         waitToCallback();
 

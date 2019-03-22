@@ -21,16 +21,18 @@
  */
 package org.influxdata.client;
 
-import java.util.Collection;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
-import org.influxdata.client.domain.TelegrafConfig;
-import org.influxdata.client.domain.TelegrafPlugin;
+import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.Telegraf;
+import org.influxdata.client.domain.TelegrafRequest;
+import org.influxdata.client.domain.TelegrafRequestPlugin;
 import org.influxdata.client.domain.User;
 
 /**
@@ -53,8 +55,8 @@ import org.influxdata.client.domain.User;
  * cpu.setName("cpu");
  * cpu.setType(TelegrafPluginType.INPUT);
  *
- * TelegrafConfig telegrafConfig = telegrafsApi
- *      .createTelegrafConfig("Telegraf config", "test-config", organization, 1_000, output, cpu);
+ * Telegraf telegrafConfig = telegrafsApi
+ *      .createTelegraf("Telegraf config", "test-config", organization, 1_000, output, cpu);
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (28/02/2019 08:38)
@@ -64,11 +66,11 @@ public interface TelegrafsApi {
     /**
      * Create a telegraf config.
      *
-     * @param telegrafConfig Telegraf Configuration to create
+     * @param telegrafRequest Telegraf Configuration to create
      * @return Telegraf config created
      */
     @Nonnull
-    TelegrafConfig createTelegrafConfig(@Nonnull final TelegrafConfig telegrafConfig);
+    Telegraf createTelegraf(@Nonnull final TelegrafRequest telegrafRequest);
 
     /**
      * Create a telegraf config.
@@ -81,11 +83,11 @@ public interface TelegrafsApi {
      * @return Telegraf config created
      */
     @Nonnull
-    TelegrafConfig createTelegrafConfig(@Nonnull final String name,
-                                        @Nullable final String description,
-                                        @Nonnull final String orgID,
-                                        @Nonnull final Integer collectionInterval,
-                                        @Nonnull final TelegrafPlugin... plugins);
+    Telegraf createTelegraf(@Nonnull final String name,
+                            @Nullable final String description,
+                            @Nonnull final String orgID,
+                            @Nonnull final Integer collectionInterval,
+                            @Nonnull final TelegrafRequestPlugin... plugins);
 
     /**
      * Create a telegraf config.
@@ -98,11 +100,11 @@ public interface TelegrafsApi {
      * @return Telegraf config created
      */
     @Nonnull
-    TelegrafConfig createTelegrafConfig(@Nonnull final String name,
-                                        @Nullable final String description,
-                                        @Nonnull final Organization org,
-                                        @Nonnull final Integer collectionInterval,
-                                        @Nonnull final TelegrafPlugin... plugins);
+    Telegraf createTelegraf(@Nonnull final String name,
+                            @Nullable final String description,
+                            @Nonnull final Organization org,
+                            @Nonnull final Integer collectionInterval,
+                            @Nonnull final TelegrafRequestPlugin... plugins);
 
     /**
      * Create a telegraf config.
@@ -115,11 +117,11 @@ public interface TelegrafsApi {
      * @return Telegraf config created
      */
     @Nonnull
-    TelegrafConfig createTelegrafConfig(@Nonnull final String name,
-                                        @Nullable final String description,
-                                        @Nonnull final String orgID,
-                                        @Nonnull final Integer collectionInterval,
-                                        @Nonnull final Collection<TelegrafPlugin> plugins);
+    Telegraf createTelegraf(@Nonnull final String name,
+                            @Nullable final String description,
+                            @Nonnull final String orgID,
+                            @Nonnull final Integer collectionInterval,
+                            @Nonnull final List<TelegrafRequestPlugin> plugins);
 
     /**
      * Create a telegraf config.
@@ -132,34 +134,45 @@ public interface TelegrafsApi {
      * @return Telegraf config created
      */
     @Nonnull
-    TelegrafConfig createTelegrafConfig(@Nonnull final String name,
-                                        @Nullable final String description,
-                                        @Nonnull final Organization org,
-                                        @Nonnull final Integer collectionInterval,
-                                        @Nonnull final Collection<TelegrafPlugin> plugins);
+    Telegraf createTelegraf(@Nonnull final String name,
+                            @Nullable final String description,
+                            @Nonnull final Organization org,
+                            @Nonnull final Integer collectionInterval,
+                            @Nonnull final List<TelegrafRequestPlugin> plugins);
 
     /**
      * Update a telegraf config.
      *
-     * @param telegrafConfig telegraf config update to apply
+     * @param telegraf telegraf config update to apply
      * @return An updated telegraf
      */
     @Nonnull
-    TelegrafConfig updateTelegrafConfig(@Nonnull final TelegrafConfig telegrafConfig);
+    Telegraf updateTelegraf(@Nonnull final Telegraf telegraf);
+
+    /**
+     * Update a telegraf config.
+     *
+     * @param telegrafID      ID of telegraf config
+     * @param telegrafRequest telegraf config update to apply
+     * @return An updated telegraf
+     */
+    @Nonnull
+    Telegraf updateTelegraf(@Nonnull final String telegrafID,
+                            @Nonnull final TelegrafRequest telegrafRequest);
 
     /**
      * Delete a telegraf config.
      *
-     * @param telegrafConfig telegraf config to delete
+     * @param telegraf telegraf config to delete
      */
-    void deleteTelegrafConfig(@Nonnull final TelegrafConfig telegrafConfig);
+    void deleteTelegraf(@Nonnull final Telegraf telegraf);
 
     /**
      * Delete a telegraf config.
      *
-     * @param telegrafConfigID ID of telegraf config to delete
+     * @param telegrafID ID of telegraf config to delete
      */
-    void deleteTelegrafConfig(@Nonnull final String telegrafConfigID);
+    void deleteTelegraf(@Nonnull final String telegrafID);
 
     /**
      * Clone a telegraf config.
@@ -169,26 +182,26 @@ public interface TelegrafsApi {
      * @return cloned telegraf config
      */
     @Nonnull
-    TelegrafConfig cloneTelegrafConfig(@Nonnull final String clonedName, @Nonnull final String telegrafConfigID);
+    Telegraf cloneTelegraf(@Nonnull final String clonedName, @Nonnull final String telegrafConfigID);
 
     /**
      * Clone a telegraf config.
      *
-     * @param clonedName     name of cloned telegraf config
-     * @param telegrafConfig telegraf config to clone
+     * @param clonedName name of cloned telegraf config
+     * @param telegraf   telegraf config to clone
      * @return cloned telegraf config
      */
     @Nonnull
-    TelegrafConfig cloneTelegrafConfig(@Nonnull final String clonedName, @Nonnull final TelegrafConfig telegrafConfig);
+    Telegraf cloneTelegraf(@Nonnull final String clonedName, @Nonnull final Telegraf telegraf);
 
     /**
      * Retrieve a telegraf config.
      *
-     * @param telegrafConfigID ID of telegraf config to get
+     * @param telegrafID ID of telegraf config to get
      * @return telegraf config details
      */
     @Nullable
-    TelegrafConfig findTelegrafConfigByID(@Nonnull final String telegrafConfigID);
+    Telegraf findTelegrafByID(@Nonnull final String telegrafID);
 
     /**
      * Returns a list of telegraf configs.
@@ -196,7 +209,7 @@ public interface TelegrafsApi {
      * @return A list of telegraf configs
      */
     @Nonnull
-    List<TelegrafConfig> findTelegrafConfigs();
+    List<Telegraf> findTelegrafs();
 
     /**
      * Returns a list of telegraf configs for specified {@code organization}.
@@ -205,7 +218,7 @@ public interface TelegrafsApi {
      * @return A list of telegraf configs
      */
     @Nonnull
-    List<TelegrafConfig> findTelegrafConfigsByOrg(@Nonnull final Organization organization);
+    List<Telegraf> findTelegrafsByOrg(@Nonnull final Organization organization);
 
     /**
      * Returns a list of telegraf configs for specified {@code orgID}.
@@ -214,185 +227,185 @@ public interface TelegrafsApi {
      * @return A list of telegraf configs
      */
     @Nonnull
-    List<TelegrafConfig> findTelegrafConfigsByOrgId(@Nullable final String orgID);
+    List<Telegraf> findTelegrafsByOrgId(@Nullable final String orgID);
 
     /**
      * Retrieve a telegraf config in TOML.
      *
-     * @param telegrafConfig telegraf config to get
+     * @param telegraf telegraf config to get
      * @return telegraf config details in TOML format
      */
     @Nonnull
-    String getTOML(@Nonnull final TelegrafConfig telegrafConfig);
+    String getTOML(@Nonnull final Telegraf telegraf);
 
     /**
      * Retrieve a telegraf config in TOML.
      *
-     * @param telegrafConfigID ID of telegraf config to get
+     * @param telegrafID ID of telegraf config to get
      * @return telegraf config details in TOML format
      */
     @Nonnull
-    String getTOML(@Nonnull final String telegrafConfigID);
+    String getTOML(@Nonnull final String telegrafID);
 
     /**
      * List all users with member privileges for a telegraf config.
      *
-     * @param telegrafConfig the telegraf config
+     * @param telegraf the telegraf config
      * @return a list of telegraf config members
      */
     @Nonnull
-    List<ResourceMember> getMembers(@Nonnull final TelegrafConfig telegrafConfig);
+    List<ResourceMember> getMembers(@Nonnull final Telegraf telegraf);
 
     /**
      * List all users with member privileges for a telegraf config.
      *
-     * @param telegrafConfigID ID of the telegraf config
+     * @param telegrafID ID of the telegraf config
      * @return a list of telegraf config members
      */
     @Nonnull
-    List<ResourceMember> getMembers(@Nonnull final String telegrafConfigID);
+    List<ResourceMember> getMembers(@Nonnull final String telegrafID);
 
     /**
      * Add telegraf config member.
      *
-     * @param member         user to add as member
-     * @param telegrafConfig the telegraf config
+     * @param member   user to add as member
+     * @param telegraf the telegraf config
      * @return member added to telegraf
      */
     @Nonnull
-    ResourceMember addMember(@Nonnull final User member, @Nonnull final TelegrafConfig telegrafConfig);
+    ResourceMember addMember(@Nonnull final User member, @Nonnull final Telegraf telegraf);
 
     /**
      * Add telegraf config member.
      *
-     * @param memberID         user ID to add as member
-     * @param telegrafConfigID ID of the telegraf config
+     * @param memberID   user ID to add as member
+     * @param telegrafID ID of the telegraf config
      * @return member added to telegraf
      */
     @Nonnull
-    ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String telegrafConfigID);
+    ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String telegrafID);
 
     /**
      * Removes a member from a telegraf config.
      *
-     * @param member         member to remove
-     * @param telegrafConfig the telegraf
+     * @param member   member to remove
+     * @param telegraf the telegraf
      */
-    void deleteMember(@Nonnull final User member, @Nonnull final TelegrafConfig telegrafConfig);
+    void deleteMember(@Nonnull final User member, @Nonnull final Telegraf telegraf);
 
     /**
      * Removes a member from a telegraf config.
      *
-     * @param telegrafConfigID ID of the telegraf
-     * @param memberID         ID of member to remove
+     * @param telegrafID ID of the telegraf
+     * @param memberID   ID of member to remove
      */
-    void deleteMember(@Nonnull final String memberID, @Nonnull final String telegrafConfigID);
+    void deleteMember(@Nonnull final String memberID, @Nonnull final String telegrafID);
 
     /**
      * List all owners of a telegraf config.
      *
-     * @param telegrafConfig the telegraf config
+     * @param telegraf the telegraf config
      * @return a list of telegraf config owners
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final TelegrafConfig telegrafConfig);
+    List<ResourceOwner> getOwners(@Nonnull final Telegraf telegraf);
 
     /**
      * List all owners of a telegraf config.
      *
-     * @param telegrafConfigID ID of the telegraf config
+     * @param telegrafID ID of the telegraf config
      * @return a list of telegraf config owners
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final String telegrafConfigID);
+    List<ResourceOwner> getOwners(@Nonnull final String telegrafID);
 
     /**
      * Add telegraf config owner.
      *
-     * @param owner          user to add as owner
-     * @param telegrafConfig the telegraf config
+     * @param owner    user to add as owner
+     * @param telegraf the telegraf config
      * @return telegraf config owner added
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final User owner, @Nonnull final TelegrafConfig telegrafConfig);
+    ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Telegraf telegraf);
 
     /**
      * Add telegraf config owner.
      *
-     * @param telegrafConfigID ID of the telegraf config
-     * @param ownerID          ID of user to add as owner
+     * @param telegrafID ID of the telegraf config
+     * @param ownerID    ID of user to add as owner
      * @return telegraf config owner added
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String telegrafConfigID);
+    ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String telegrafID);
 
     /**
      * Removes an owner from a telegraf config.
      *
-     * @param owner          owner to remove
-     * @param telegrafConfig the telegraf config
+     * @param owner    owner to remove
+     * @param telegraf the telegraf config
      */
-    void deleteOwner(@Nonnull final User owner, @Nonnull final TelegrafConfig telegrafConfig);
+    void deleteOwner(@Nonnull final User owner, @Nonnull final Telegraf telegraf);
 
     /**
      * Removes an owner from a telegraf config.
      *
-     * @param telegrafConfigID ID of the telegraf config
-     * @param ownerID          ID of owner to remove
+     * @param telegrafID ID of the telegraf config
+     * @param ownerID    ID of owner to remove
      */
-    void deleteOwner(@Nonnull final String ownerID, @Nonnull final String telegrafConfigID);
+    void deleteOwner(@Nonnull final String ownerID, @Nonnull final String telegrafID);
 
     /**
      * List all labels for a telegraf config.
      *
-     * @param telegrafConfig the telegraf config
+     * @param telegraf the telegraf config
      * @return a list of all labels for a telegraf config
      */
     @Nonnull
-    List<Label> getLabels(@Nonnull final TelegrafConfig telegrafConfig);
+    List<Label> getLabels(@Nonnull final Telegraf telegraf);
 
     /**
      * List all labels for a telegraf config.
      *
-     * @param telegrafConfigID ID of the telegraf config
+     * @param telegrafID ID of the telegraf config
      * @return a list of all labels for a telegraf config
      */
     @Nonnull
-    List<Label> getLabels(@Nonnull final String telegrafConfigID);
+    List<Label> getLabels(@Nonnull final String telegrafID);
 
     /**
      * Add a label to a telegraf config.
      *
-     * @param label          label to add
-     * @param telegrafConfig the telegraf config
+     * @param label    label to add
+     * @param telegraf the telegraf config
      * @return added label
      */
     @Nonnull
-    Label addLabel(@Nonnull final Label label, @Nonnull final TelegrafConfig telegrafConfig);
+    LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Telegraf telegraf);
 
     /**
      * Add a label to a telegraf config.
      *
-     * @param telegrafConfigID ID of the telegraf config
-     * @param labelID          ID of label to add
+     * @param telegrafID ID of the telegraf config
+     * @param labelID    ID of label to add
      * @return added label
      */
     @Nonnull
-    Label addLabel(@Nonnull final String labelID, @Nonnull final String telegrafConfigID);
+    LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String telegrafID);
 
     /**
      * Delete a label from a telegraf config.
      *
-     * @param label          label to delete
-     * @param telegrafConfig the telegraf config
+     * @param label    label to delete
+     * @param telegraf the telegraf config
      */
-    void deleteLabel(@Nonnull final Label label, @Nonnull final TelegrafConfig telegrafConfig);
+    void deleteLabel(@Nonnull final Label label, @Nonnull final Telegraf telegraf);
 
     /**
      * Delete a label from a telegraf config.
      *
-     * @param telegrafConfigID ID of the telegraf config
-     * @param labelID          ID of label to delete
+     * @param telegrafID ID of the telegraf config
+     * @param labelID    ID of label to delete
      */
-    void deleteLabel(@Nonnull final String labelID, @Nonnull final String telegrafConfigID);
+    void deleteLabel(@Nonnull final String labelID, @Nonnull final String telegrafID);
 }

@@ -24,6 +24,7 @@ package org.influxdata.client.scala
 import akka.NotUsed
 import akka.stream.scaladsl.Source
 import javax.annotation.Nonnull
+import org.influxdata.client.domain.{Dialect, Query}
 import org.influxdata.query.FluxRecord
 
 /**
@@ -43,6 +44,15 @@ trait QueryScalaApi {
   @Nonnull def query(@Nonnull query: String, @Nonnull orgID: String): Source[FluxRecord, NotUsed]
 
   /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
+   *
+   * @param query the flux query to execute
+   * @param orgID specifies the source organization
+   * @return the stream of [[FluxRecord]]s
+   */
+  @Nonnull def query(@Nonnull query: Query, @Nonnull orgID: String): Source[FluxRecord, NotUsed]
+
+  /**
    * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
    *
    * @param query           the flux query to execute
@@ -52,6 +62,17 @@ trait QueryScalaApi {
    * @return the stream of measurements
    */
   @Nonnull def query[M](@Nonnull query: String, @Nonnull orgID: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed]
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+   *
+   * @param query           the flux query to execute
+   * @param orgID           specifies the source organization
+   * @param measurementType the measurement (POJO)
+   * @tparam M the type of the measurement (POJO)
+   * @return the stream of measurements
+   */
+  @Nonnull def query[M](@Nonnull query: Query, @Nonnull orgID: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed]
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
@@ -71,5 +92,14 @@ trait QueryScalaApi {
    * @param orgID   specifies the source organization
    * @return the response stream
    */
-  @Nonnull def queryRaw(@Nonnull query: String, @Nonnull dialect: String, @Nonnull orgID: String): Source[String, NotUsed]
+  @Nonnull def queryRaw(@Nonnull query: String, @Nonnull dialect: Dialect, @Nonnull orgID: String): Source[String, NotUsed]
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+   *
+   * @param query   the flux query to execute
+   * @param orgID   specifies the source organization
+   * @return the response stream
+   */
+  @Nonnull def queryRaw(@Nonnull query: Query, @Nonnull orgID: String): Source[String, NotUsed]
 }

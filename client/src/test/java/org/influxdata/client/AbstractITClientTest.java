@@ -25,10 +25,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
+import org.influxdata.client.domain.BucketRetentionRules;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
-import org.influxdata.client.domain.ResourceType;
-import org.influxdata.client.domain.RetentionRule;
+import org.influxdata.client.domain.PermissionResource;
 import org.influxdata.test.AbstractTest;
 
 import org.junit.jupiter.api.AfterEach;
@@ -72,11 +72,11 @@ abstract class AbstractITClientTest extends AbstractTest {
     }
 
     @Nonnull
-    RetentionRule retentionRule() {
-        RetentionRule retentionRule = new RetentionRule();
-        retentionRule.setType("expire");
-        retentionRule.setEverySeconds(3600L);
-        return retentionRule;
+    BucketRetentionRules retentionRule() {
+        BucketRetentionRules bucketRetentionRules = new BucketRetentionRules();
+        bucketRetentionRules.setType(BucketRetentionRules.TypeEnum.EXPIRE);
+        bucketRetentionRules.setEverySeconds(3600);
+        return bucketRetentionRules;
     }
 
     @Nonnull
@@ -87,7 +87,7 @@ abstract class AbstractITClientTest extends AbstractTest {
                 .filter(authorization -> authorization.getPermissions().stream()
                         .map(Permission::getResource)
                         .anyMatch(resource ->
-                                resource.getType().equals(ResourceType.ORGS) &&
+                                resource.getType().equals(PermissionResource.TypeEnum.ORGS) &&
                                         resource.getId() == null &&
                                         resource.getOrgID() == null))
                 .findFirst()

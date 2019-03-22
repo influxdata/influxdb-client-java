@@ -31,13 +31,14 @@ import javax.annotation.Nullable;
 import org.influxdata.Arguments;
 import org.influxdata.client.LabelsApi;
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelCreateRequest;
 import org.influxdata.client.domain.LabelResponse;
-import org.influxdata.client.domain.Labels;
+import org.influxdata.client.domain.LabelUpdate;
+import org.influxdata.client.domain.LabelsResponse;
+import org.influxdata.client.service.LabelsService;
 import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.internal.AbstractRestClient;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 import retrofit2.Call;
 
 /**
@@ -47,25 +48,40 @@ class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
 
     private static final Logger LOG = Logger.getLogger(LabelsApiImpl.class.getName());
 
-    private final InfluxDBService influxDBService;
-    private final JsonAdapter<Label> adapter;
+    private final LabelsService service;
 
-    LabelsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi) {
+    LabelsApiImpl(@Nonnull final LabelsService service) {
 
-        Arguments.checkNotNull(influxDBService, "InfluxDBService");
-        Arguments.checkNotNull(moshi, "Moshi to create adapter");
+        Arguments.checkNotNull(service, "service");
 
-        this.influxDBService = influxDBService;
-        this.adapter = moshi.adapter(Label.class);
+        this.service = service;
     }
 
     @Nonnull
     @Override
-    public Label createLabel(@Nonnull final Label label) {
+    public Label createLabel(@Nonnull final String name,
+                             @Nonnull final Map<String, String> properties,
+                             @Nonnull final String orgID) {
 
-        Arguments.checkNotNull(label, "label");
+        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNonEmpty(name, "name");
+        Arguments.checkNotNull(properties, "properties");
 
-        Call<LabelResponse> call = influxDBService.createLabel(createBody(adapter.toJson(label)));
+        LabelCreateRequest label = new LabelCreateRequest();
+        label.setName(name);
+        label.setProperties(properties);
+        label.setOrgID(orgID);
+
+        return createLabel(label);
+    }
+
+    @Nonnull
+    @Override
+    public Label createLabel(@Nonnull final LabelCreateRequest request) {
+
+        Arguments.checkNotNull(request, "request");
+
+        Call<LabelResponse> call = service.labelsPost(request);
         LabelResponse labelResponse = execute(call);
 
         LOG.log(Level.FINEST, "createLabel response: {0}", labelResponse);
@@ -75,27 +91,24 @@ class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
 
     @Nonnull
     @Override
-    public Label createLabel(@Nonnull final String name, @Nonnull final Map<String, String> properties) {
-
-        Arguments.checkNonEmpty(name, "name");
-        Arguments.checkNotNull(properties, "properties");
-
-        Label label = new Label();
-        label.setName(name);
-        label.setProperties(properties);
-
-        return createLabel(label);
-    }
-
-    @Nonnull
-    @Override
     public Label updateLabel(@Nonnull final Label label) {
 
         Arguments.checkNotNull(label, "label");
 
-        String json = adapter.toJson(label);
+        LabelUpdate labelUpdate = new LabelUpdate();
+        labelUpdate.properties(label.getProperties());
 
-        Call<LabelResponse> call = influxDBService.updateLabel(label.getId(), createBody(json));
+        return updateLabel(label.getId(), labelUpdate);
+    }
+
+    @Nonnull
+    @Override
+    public Label updateLabel(@Nonnull final String labelID, @Nonnull final LabelUpdate labelUpdate) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNotNull(labelUpdate, "labelUpdate");
+
+        Call<LabelResponse> call = service.labelsLabelIDPatch(labelID, labelUpdate, null);
         LabelResponse labelResponse = execute(call);
 
         LOG.log(Level.FINEST, "updateLabel response: {0}", labelResponse);
@@ -116,7 +129,7 @@ class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
 
         Arguments.checkNonEmpty(labelID, "labelID");
 
-        Call<Void> call = influxDBService.deleteLabel(labelID);
+        Call<Void> call = service.labelsLabelIDDelete(labelID, null);
         execute(call);
     }
 
@@ -142,8 +155,13 @@ class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
         Arguments.checkNonEmpty(clonedName, "clonedName");
         Arguments.checkNotNull(label, "label");
 
-        Label cloned = new Label();
+        LabelCreateRequest cloned = new LabelCreateRequest();
         cloned.setName(clonedName);
+        cloned.setOrgID(label.getOrgID());
+
+        if (label.getProperties() != null) {
+            label.getProperties().forEach(cloned::putPropertiesItem);
+        }
         cloned.getProperties().putAll(label.getProperties());
 
         return createLabel(cloned);
@@ -155,7 +173,7 @@ class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
 
         Arguments.checkNonEmpty(labelID, "labelID");
 
-        Call<LabelResponse> call = influxDBService.findLabelByID(labelID);
+        Call<LabelResponse> call = service.labelsLabelIDGet(labelID, null);
         LabelResponse labelResponse = execute(call, NotFoundException.class);
 
         if (labelResponse == null) {
@@ -171,9 +189,9 @@ class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
     @Override
     public List<Label> findLabels() {
 
-        Call<Labels> sourcesCall = influxDBService.findLabels();
+        Call<LabelsResponse> sourcesCall = service.labelsGet();
 
-        Labels labels = execute(sourcesCall);
+        LabelsResponse labels = execute(sourcesCall);
         LOG.log(Level.FINEST, "findLabels found: {0}", labels);
 
         return labels.getLabels();

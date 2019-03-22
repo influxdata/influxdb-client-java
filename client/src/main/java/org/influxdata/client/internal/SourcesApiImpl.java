@@ -30,14 +30,14 @@ import javax.annotation.Nullable;
 import org.influxdata.Arguments;
 import org.influxdata.client.SourcesApi;
 import org.influxdata.client.domain.Bucket;
-import org.influxdata.client.domain.Health;
+import org.influxdata.client.domain.Buckets;
+import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.Source;
 import org.influxdata.client.domain.Sources;
+import org.influxdata.client.service.SourcesService;
 import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.internal.AbstractRestClient;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 import retrofit2.Call;
 
 /**
@@ -47,20 +47,16 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
     private static final Logger LOG = Logger.getLogger(SourcesApiImpl.class.getName());
 
-    private final InfluxDBService influxDBService;
-    private final JsonAdapter<Source> adapter;
     private final InfluxDBClientImpl influxDBClient;
+    private final SourcesService service;
 
-    SourcesApiImpl(@Nonnull final InfluxDBService influxDBService,
-                   @Nonnull final Moshi moshi,
+    SourcesApiImpl(@Nonnull final SourcesService service,
                    @Nonnull final InfluxDBClientImpl influxDBClient) {
 
-        Arguments.checkNotNull(influxDBService, "InfluxDBService");
-        Arguments.checkNotNull(moshi, "Moshi to create adapter");
-        Arguments.checkNotNull(influxDBClient, "InfluxDBClient");
+        Arguments.checkNotNull(service, "service");
+        Arguments.checkNotNull(influxDBClient, "influxDBClient");
 
-        this.influxDBService = influxDBService;
-        this.adapter = moshi.adapter(Source.class);
+        this.service = service;
         this.influxDBClient = influxDBClient;
     }
 
@@ -70,9 +66,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Arguments.checkNotNull(source, "Source is required");
 
-        String json = adapter.toJson(source);
-
-        Call<Source> call = influxDBService.createSource(createBody(json));
+        Call<Source> call = service.sourcesPost(source, null);
         return execute(call);
     }
 
@@ -82,9 +76,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Arguments.checkNotNull(source, "Source is required");
 
-        String json = adapter.toJson(source);
-
-        Call<Source> call = influxDBService.updateSource(source.getId(), createBody(json));
+        Call<Source> call = service.sourcesSourceIDPatch(source.getId(), source, null);
         return execute(call);
     }
 
@@ -101,7 +93,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
-        Call<Void> call = influxDBService.deleteSource(sourceID);
+        Call<Void> call = service.sourcesSourceIDDelete(sourceID);
         execute(call);
     }
 
@@ -130,7 +122,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
         Source cloned = new Source();
         cloned.setName(clonedName);
         cloned.setOrgID(source.getOrgID());
-        cloned.setDefaultSource(source.isDefaultSource());
+        cloned.setDefault(source.isDefault());
         cloned.setType(source.getType());
         cloned.setUrl(source.getUrl());
         cloned.setInsecureSkipVerify(source.isInsecureSkipVerify());
@@ -151,7 +143,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
-        Call<Source> call = influxDBService.findSource(sourceID);
+        Call<Source> call = service.sourcesSourceIDGet(sourceID, null);
 
         return execute(call, NotFoundException.class);
     }
@@ -159,7 +151,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
     @Nonnull
     @Override
     public List<Source> findSources() {
-        Call<Sources> sourcesCall = influxDBService.findSources();
+        Call<Sources> sourcesCall = service.sourcesGet(null, null);
 
         Sources sources = execute(sourcesCall);
         LOG.log(Level.FINEST, "findSources found: {0}", sources);
@@ -176,20 +168,20 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
         return findBucketsBySourceID(source.getId());
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public List<Bucket> findBucketsBySourceID(@Nonnull final String sourceID) {
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
-        Call<List<Bucket>> call = influxDBService.findSourceBuckets(sourceID);
+        Call<Buckets> call = service.sourcesSourceIDBucketsGet(sourceID, null, null);
 
-        return execute(call, NotFoundException.class);
+        return execute(call).getBuckets();
     }
 
     @Nonnull
     @Override
-    public Health health(@Nonnull final Source source) {
+    public Check health(@Nonnull final Source source) {
 
         Arguments.checkNotNull(source, "Source is required");
 
@@ -198,10 +190,10 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
     @Nonnull
     @Override
-    public Health health(@Nonnull final String sourceID) {
+    public Check health(@Nonnull final String sourceID) {
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
-        return influxDBClient.health(influxDBService.findSourceHealth(sourceID));
+        return influxDBClient.health(service.sourcesSourceIDHealthGet(sourceID, null));
     }
 }

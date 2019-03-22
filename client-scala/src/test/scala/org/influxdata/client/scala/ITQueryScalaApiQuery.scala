@@ -23,7 +23,6 @@ package org.influxdata.client.scala
 
 import java.net.ConnectException
 import java.time.Instant
-import java.time.temporal.ChronoUnit
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
@@ -33,7 +32,6 @@ import org.influxdata.client.InfluxDBClientFactory
 import org.influxdata.client.domain._
 import org.influxdata.exceptions.InfluxException
 import org.influxdata.query.FluxRecord
-import org.json.JSONObject
 import org.scalatest.Matchers
 
 import scala.collection.JavaConverters._
@@ -62,9 +60,9 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       .filter(o => o.getName == "my-org").findFirst()
       .orElseThrow(() => new IllegalStateException())
 
-    val retentionRule = new RetentionRule()
-    retentionRule.setType("expire")
-    retentionRule.setEverySeconds(3600L)
+    val retentionRule = new BucketRetentionRules()
+    retentionRule.setType(BucketRetentionRules.TypeEnum.EXPIRE)
+    retentionRule.setEverySeconds(3600)
 
     val bucket = client.getBucketsApi.createBucket(influxDBUtils.generateName("h2o"), retentionRule, organization)
     fluxPrefix = "from(bucket:\"" + bucket.getName + "\")\n\t"
@@ -75,16 +73,16 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
     val resource = new PermissionResource
     resource.setOrgID(organization.getId)
-    resource.setType(ResourceType.BUCKETS)
+    resource.setType(PermissionResource.TypeEnum.BUCKETS)
     resource.setId(bucket.getId)
 
     val readBucket = new Permission
     readBucket.setResource(resource)
-    readBucket.setAction(Permission.READ_ACTION)
+    readBucket.setAction(Permission.ActionEnum.READ)
 
     val writeBucket = new Permission
     writeBucket.setResource(resource)
-    writeBucket.setAction(Permission.WRITE_ACTION)
+    writeBucket.setAction(Permission.ActionEnum.WRITE)
 
     val authorization = client.getAuthorizationsApi
       .createAuthorization(organization, List(readBucket, writeBucket).asJava)
@@ -101,7 +99,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       .mkString("\n")
 
     val writeApi = client.getWriteApi
-    writeApi.writeRecord(bucket.getName, organization.getId, ChronoUnit.NANOS, records)
+    writeApi.writeRecord(bucket.getName, organization.getId, WritePrecision.NS, records)
     writeApi.close()
 
     client.close()
@@ -141,16 +139,16 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
     val source = queryScalaApi.query(flux, organization.getId).map(it => it.getValue).runWith(TestSink.probe[Object])
 
+    source.requestNext() should be(55L)
+    source.requestNext() should be(65L)
+    source.requestNext() should be(35L)
+    source.requestNext() should be(38L)
+    source.requestNext() should be(45L)
+    source.requestNext() should be(49L)
     source.requestNext() should be(10L)
     source.requestNext() should be(11L)
     source.requestNext() should be(20L)
     source.requestNext() should be(22L)
-    source.requestNext() should be(35L)
-    source.requestNext() should be(38L)
-    source.requestNext() should be(55L)
-    source.requestNext() should be(45L)
-    source.requestNext() should be(49L)
-    source.requestNext() should be(65L)
 
     source.expectComplete()
   }
@@ -260,9 +258,8 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n\t" +
       "|> sum()"
 
-    val dialect = new JSONObject()
-      .put("header", false)
-      .toString()
+    val dialect = new Dialect()
+      .header( false)
 
     val source = queryScalaApi.queryRaw(flux, dialect, organization.getId).runWith(TestSink.probe[String])
 

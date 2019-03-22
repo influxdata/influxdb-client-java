@@ -23,23 +23,23 @@ package org.influxdata.client.kotlin.internal
 
 import org.influxdata.LogLevel
 import org.influxdata.client.InfluxDBClientOptions
-import org.influxdata.client.domain.Health
+import org.influxdata.client.domain.Check
 import org.influxdata.client.internal.AbstractInfluxDBClient
-import org.influxdata.client.internal.InfluxDBService
 import org.influxdata.client.kotlin.InfluxDBClientKotlin
 import org.influxdata.client.kotlin.QueryKotlinApi
+import org.influxdata.client.service.QueryService
 
 /**
  * @author Jakub Bednar (bednar@github) (07/02/2019 13:21)
  */
-internal class InfluxDBClientKotlinImpl(options: InfluxDBClientOptions) : AbstractInfluxDBClient<InfluxDBService>(options, InfluxDBService::class.java), InfluxDBClientKotlin {
+internal class InfluxDBClientKotlinImpl(options: InfluxDBClientOptions) : AbstractInfluxDBClient(options), InfluxDBClientKotlin {
 
     override fun getQueryKotlinApi(): QueryKotlinApi {
-        return QueryKotlinApiImpl(influxDBService)
+        return QueryKotlinApiImpl(retrofit.create<QueryService>(QueryService::class.java))
     }
 
-    override fun health(): Health {
-        return health(influxDBService.health())
+    override fun health(): Check {
+        return health(healthService.healthGet(null))
     }
 
     override fun getLogLevel(): LogLevel {

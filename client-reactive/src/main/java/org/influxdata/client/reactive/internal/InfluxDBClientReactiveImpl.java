@@ -27,30 +27,31 @@ import org.influxdata.Arguments;
 import org.influxdata.LogLevel;
 import org.influxdata.client.InfluxDBClientOptions;
 import org.influxdata.client.WriteOptions;
-import org.influxdata.client.domain.Health;
+import org.influxdata.client.domain.Check;
 import org.influxdata.client.internal.AbstractInfluxDBClient;
 import org.influxdata.client.reactive.InfluxDBClientReactive;
 import org.influxdata.client.reactive.QueryReactiveApi;
 import org.influxdata.client.reactive.WriteReactiveApi;
+import org.influxdata.client.service.QueryService;
+import org.influxdata.client.service.WriteService;
 
 import io.reactivex.Single;
 
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 07:12)
  */
-public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient<InfluxDBReactiveService>
+public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient
         implements InfluxDBClientReactive {
 
     public InfluxDBClientReactiveImpl(@Nonnull final InfluxDBClientOptions options) {
-        super(options, InfluxDBReactiveService.class);
+        super(options);
     }
 
     @Nonnull
     @Override
     public QueryReactiveApi getQueryReactiveApi() {
-        return new QueryReactiveApiImpl(influxDBService);
+        return new QueryReactiveApiImpl(retrofit.create(QueryService.class));
     }
-
 
     @Nonnull
     @Override
@@ -64,14 +65,14 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient<InfluxDBR
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
-        return new WriteReactiveApiImpl(writeOptions, influxDBService);
+        return new WriteReactiveApiImpl(writeOptions, retrofit.create(WriteService.class));
     }
 
     @Nonnull
     @Override
-    public Single<Health> health() {
+    public Single<Check> health() {
 
-        return Single.fromCallable(() -> health(influxDBService.health()));
+        return Single.fromCallable(() -> health(healthService.healthGet(null)));
     }
 
     @Nonnull

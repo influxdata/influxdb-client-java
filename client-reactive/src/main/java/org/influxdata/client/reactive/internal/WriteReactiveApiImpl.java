@@ -21,43 +21,38 @@
  */
 package org.influxdata.client.reactive.internal;
 
-import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.WriteOptions;
+import org.influxdata.client.domain.WritePrecision;
 import org.influxdata.client.internal.AbstractWriteClient;
 import org.influxdata.client.reactive.WriteReactiveApi;
+import org.influxdata.client.service.WriteService;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.AbstractWriteEvent;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
-import okhttp3.RequestBody;
 import org.reactivestreams.Publisher;
-import retrofit2.Response;
 
 /**
  * @author Jakub Bednar (bednar@github) (22/11/2018 06:50)
  */
 public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteReactiveApi {
 
-    private final InfluxDBReactiveService influxDBService;
-
     WriteReactiveApiImpl(@Nonnull final WriteOptions writeOptions,
-                         @Nonnull final InfluxDBReactiveService influxDBService) {
+                         @Nonnull final WriteService service) {
 
-        super(writeOptions, writeOptions.getWriteScheduler());
-
-        this.influxDBService = influxDBService;
+        super(writeOptions, writeOptions.getWriteScheduler(), service);
     }
 
     @Override
     public void writeRecord(@Nonnull final String bucket,
                             @Nonnull final String orgID,
-                            @Nonnull final ChronoUnit precision,
+                            @Nonnull final WritePrecision precision,
                             @Nonnull final Maybe<String> record) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
@@ -71,7 +66,7 @@ public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteRe
     @Override
     public void writeRecords(@Nonnull final String bucket,
                              @Nonnull final String orgID,
-                             @Nonnull final ChronoUnit precision,
+                             @Nonnull final WritePrecision precision,
                              @Nonnull final Flowable<String> records) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
@@ -87,7 +82,7 @@ public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteRe
     @Override
     public void writeRecords(@Nonnull final String bucket,
                              @Nonnull final String orgID,
-                             @Nonnull final ChronoUnit precision,
+                             @Nonnull final WritePrecision precision,
                              @Nonnull final Publisher<String> records) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
@@ -139,7 +134,7 @@ public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteRe
     @Override
     public <M> void writeMeasurement(@Nonnull final String bucket,
                                      @Nonnull final String orgID,
-                                     @Nonnull final ChronoUnit precision,
+                                     @Nonnull final WritePrecision precision,
                                      @Nonnull final Maybe<M> measurement) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
@@ -153,7 +148,7 @@ public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteRe
     @Override
     public <M> void writeMeasurements(@Nonnull final String bucket,
                                       @Nonnull final String orgID,
-                                      @Nonnull final ChronoUnit precision,
+                                      @Nonnull final WritePrecision precision,
                                       @Nonnull final Flowable<M> measurements) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
@@ -169,7 +164,7 @@ public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteRe
     @Override
     public <M> void writeMeasurements(@Nonnull final String bucket,
                                       @Nonnull final String orgID,
-                                      @Nonnull final ChronoUnit precision,
+                                      @Nonnull final WritePrecision precision,
                                       @Nonnull final Publisher<M> measurements) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
@@ -189,14 +184,5 @@ public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteRe
     @Override
     public void close() {
         super.close();
-    }
-
-    @Override
-    public Maybe<Response<Void>> writeCall(final RequestBody requestBody,
-                                           final String organization,
-                                           final String bucket,
-                                           final String precision) {
-
-        return influxDBService.writePoints(organization, bucket, precision, requestBody);
     }
 }

@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelCreateRequest;
+import org.influxdata.client.domain.Organization;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +42,7 @@ import org.junit.runner.RunWith;
 class ITLabelsApiTest extends AbstractITClientTest {
 
     private LabelsApi labelsApi;
+    private Organization organization;
 
     @BeforeEach
     void setUp() {
@@ -47,6 +50,7 @@ class ITLabelsApiTest extends AbstractITClientTest {
         labelsApi = influxDBClient.getLabelsApi();
 
         labelsApi.findLabels().forEach(label -> labelsApi.deleteLabel(label));
+        organization = findMyOrg();
     }
 
     @Test
@@ -58,7 +62,7 @@ class ITLabelsApiTest extends AbstractITClientTest {
         properties.put("color", "red");
         properties.put("source", "remote api");
 
-        Label label = labelsApi.createLabel(name, properties);
+        Label label = labelsApi.createLabel(name, properties, organization.getId());
 
         Assertions.assertThat(label).isNotNull();
         Assertions.assertThat(label.getId()).isNotBlank();
@@ -74,10 +78,11 @@ class ITLabelsApiTest extends AbstractITClientTest {
 
         String name = generateName("Cool Resource");
 
-        Label label = new Label();
-        label.setName(name);
+        LabelCreateRequest request = new LabelCreateRequest();
+        request.setName(name);
+        request.setOrgID(organization.getId());
 
-        label = labelsApi.createLabel(label);
+        Label label = labelsApi.createLabel(request);
 
         Assertions.assertThat(label).isNotNull();
         Assertions.assertThat(label.getId()).isNotBlank();
@@ -87,7 +92,7 @@ class ITLabelsApiTest extends AbstractITClientTest {
     @Test
     void findLabelByID() {
 
-        Label label = labelsApi.createLabel(generateName("Cool Resource"), new HashMap<>());
+        Label label = labelsApi.createLabel(generateName("Cool Resource"), new HashMap<>(), organization.getId());
 
         Label labelByID = labelsApi.findLabelByID(label.getId());
 
@@ -109,7 +114,7 @@ class ITLabelsApiTest extends AbstractITClientTest {
 
         int size = labelsApi.findLabels().size();
 
-        labelsApi.createLabel(generateName("Cool Resource"), new HashMap<>());
+        labelsApi.createLabel(generateName("Cool Resource"), new HashMap<>(), organization.getId());
 
         List<Label> labels = labelsApi.findLabels();
         Assertions.assertThat(labels).hasSize(size + 1);
@@ -118,7 +123,7 @@ class ITLabelsApiTest extends AbstractITClientTest {
     @Test
     void deleteLabel() {
 
-        Label createdLabel = labelsApi.createLabel(generateName("Cool Resource"), new HashMap<>());
+        Label createdLabel = labelsApi.createLabel(generateName("Cool Resource"), new HashMap<>(), organization.getId());
         Assertions.assertThat(createdLabel).isNotNull();
 
         Label foundLabel = labelsApi.findLabelByID(createdLabel.getId());
@@ -134,10 +139,10 @@ class ITLabelsApiTest extends AbstractITClientTest {
     @Test
     void updateLabel() {
 
-        Label label = labelsApi.createLabel(generateName("Cool Resource"), new HashMap<>());
-        Assertions.assertThat(label.getProperties()).hasSize(0);
+        Label label = labelsApi.createLabel(generateName("Cool Resource"), new HashMap<>(), organization.getId());
+        Assertions.assertThat(label.getProperties()).isEmpty();
 
-        label.getProperties().put("color", "blue");
+        label.putPropertiesItem("color", "blue");
 
         label = labelsApi.updateLabel(label);
         Assertions.assertThat(label.getProperties())
@@ -172,7 +177,7 @@ class ITLabelsApiTest extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties);
+        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties, organization.getId());
 
         Label cloned = labelsApi.cloneLabel(name, label);
 

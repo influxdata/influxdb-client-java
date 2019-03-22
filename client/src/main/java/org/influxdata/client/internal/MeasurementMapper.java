@@ -23,7 +23,6 @@ package org.influxdata.client.internal;
 
 import java.lang.reflect.Field;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
@@ -33,6 +32,7 @@ import javax.annotation.Nonnull;
 import org.influxdata.Arguments;
 import org.influxdata.annotations.Column;
 import org.influxdata.annotations.Measurement;
+import org.influxdata.client.domain.WritePrecision;
 import org.influxdata.client.write.Point;
 import org.influxdata.exceptions.InfluxException;
 
@@ -47,10 +47,9 @@ class MeasurementMapper {
             = new ConcurrentHashMap<>();
 
     @Nonnull
-    <M> Point toPoint(@Nonnull final M measurement, @Nonnull final ChronoUnit precision) throws InfluxException {
+    <M> Point toPoint(@Nonnull final M measurement, @Nonnull final WritePrecision precision) throws InfluxException {
 
         Arguments.checkNotNull(measurement, "measurement");
-        Arguments.checkPrecision(precision);
 
         Class<?> measurementType = measurement.getClass();
         cacheMeasurementClass(measurementType);

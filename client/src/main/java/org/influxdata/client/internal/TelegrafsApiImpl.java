@@ -23,7 +23,6 @@ package org.influxdata.client.internal;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,249 +31,258 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.TelegrafsApi;
+import org.influxdata.client.domain.AddResourceMemberRequestBody;
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelMapping;
+import org.influxdata.client.domain.LabelResponse;
+import org.influxdata.client.domain.LabelsResponse;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
-import org.influxdata.client.domain.ResourceType;
-import org.influxdata.client.domain.TelegrafAgent;
-import org.influxdata.client.domain.TelegrafConfig;
-import org.influxdata.client.domain.TelegrafConfigs;
-import org.influxdata.client.domain.TelegrafPlugin;
+import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.ResourceOwners;
+import org.influxdata.client.domain.Telegraf;
+import org.influxdata.client.domain.TelegrafRequest;
+import org.influxdata.client.domain.TelegrafRequestAgent;
+import org.influxdata.client.domain.TelegrafRequestPlugin;
+import org.influxdata.client.domain.Telegrafs;
 import org.influxdata.client.domain.User;
+import org.influxdata.client.service.TelegrafsService;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.exceptions.NotFoundException;
+import org.influxdata.internal.AbstractRestClient;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (28/02/2019 10:25)
  */
-final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements TelegrafsApi {
+final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi {
 
     private static final Logger LOG = Logger.getLogger(TelegrafsApiImpl.class.getName());
 
-    private final JsonAdapter<TelegrafConfig> adapter;
-    private final JsonAdapter<User> userAdapter;
+    private final TelegrafsService service;
 
-    TelegrafsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi) {
+    TelegrafsApiImpl(@Nonnull final TelegrafsService service) {
 
-        super(influxDBService, moshi);
+        Arguments.checkNotNull(service, "service");
 
-        this.adapter = moshi.adapter(TelegrafConfig.class);
-        this.userAdapter = moshi.adapter(User.class);
+        this.service = service;
     }
 
     @Nonnull
     @Override
-    public TelegrafConfig createTelegrafConfig(@Nonnull final TelegrafConfig telegrafConfig) {
+    public Telegraf createTelegraf(@Nonnull final TelegrafRequest telegrafRequest) {
 
-        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+        Arguments.checkNotNull(telegrafRequest, "telegrafRequest");
 
-        String json = adapter.toJson(telegrafConfig);
-
-        Call<TelegrafConfig> call = influxDBService.createTelegrafConfig(createBody(json));
+        Call<Telegraf> call = service.telegrafsPost(telegrafRequest, null);
 
         return execute(call);
     }
 
     @Nonnull
     @Override
-    public TelegrafConfig createTelegrafConfig(@Nonnull final String name,
-                                               @Nullable final String description,
-                                               @Nonnull final String orgID,
-                                               @Nonnull final Integer collectionInterval,
-                                               @Nonnull final TelegrafPlugin... plugins) {
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final String orgID,
+                                   @Nonnull final Integer collectionInterval,
+                                   @Nonnull final TelegrafRequestPlugin... plugins) {
 
         Arguments.checkNonEmpty(name, "TelegrafConfig.name");
         Arguments.checkNonEmpty(orgID, "TelegrafConfig.orgID");
         Arguments.checkPositiveNumber(collectionInterval, "TelegrafConfig.collectionInterval");
 
-        return createTelegrafConfig(name, description, orgID, collectionInterval, Arrays.asList(plugins));
+        return createTelegraf(name, description, orgID, collectionInterval, Arrays.asList(plugins));
     }
 
     @Nonnull
     @Override
-    public TelegrafConfig createTelegrafConfig(@Nonnull final String name,
-                                               @Nullable final String description,
-                                               @Nonnull final Organization org,
-                                               @Nonnull final Integer collectionInterval,
-                                               @Nonnull final TelegrafPlugin... plugins) {
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final Organization org,
+                                   @Nonnull final Integer collectionInterval,
+                                   @Nonnull final TelegrafRequestPlugin... plugins) {
 
         Arguments.checkNonEmpty(name, "TelegrafConfig.name");
         Arguments.checkNotNull(org, "TelegrafConfig.org");
         Arguments.checkPositiveNumber(collectionInterval, "TelegrafConfig.collectionInterval");
 
-        return createTelegrafConfig(name, description, org.getId(), collectionInterval, plugins);
+        return createTelegraf(name, description, org.getId(), collectionInterval, plugins);
     }
 
     @Nonnull
     @Override
-    public TelegrafConfig createTelegrafConfig(@Nonnull final String name,
-                                               @Nullable final String description,
-                                               @Nonnull final Organization org,
-                                               @Nonnull final Integer collectionInterval,
-                                               @Nonnull final Collection<TelegrafPlugin> plugins) {
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final Organization org,
+                                   @Nonnull final Integer collectionInterval,
+                                   @Nonnull final List<TelegrafRequestPlugin> plugins) {
 
         Arguments.checkNonEmpty(name, "TelegrafConfig.name");
         Arguments.checkNotNull(org, "TelegrafConfig.org");
         Arguments.checkPositiveNumber(collectionInterval, "TelegrafConfig.collectionInterval");
 
-        return createTelegrafConfig(name, description, org.getId(), collectionInterval, plugins);
+        return createTelegraf(name, description, org.getId(), collectionInterval, plugins);
     }
 
     @Nonnull
     @Override
-    public TelegrafConfig createTelegrafConfig(@Nonnull final String name,
-                                               @Nullable final String description,
-                                               @Nonnull final String orgID,
-                                               @Nonnull final Integer collectionInterval,
-                                               @Nonnull final Collection<TelegrafPlugin> plugins) {
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final String orgID,
+                                   @Nonnull final Integer collectionInterval,
+                                   @Nonnull final List<TelegrafRequestPlugin> plugins) {
 
         Arguments.checkNonEmpty(name, "TelegrafConfig.name");
         Arguments.checkNonEmpty(orgID, "TelegrafConfig.orgID");
         Arguments.checkPositiveNumber(collectionInterval, "TelegrafConfig.collectionInterval");
 
-        TelegrafAgent telegrafAgent = new TelegrafAgent();
+        TelegrafRequestAgent telegrafAgent = new TelegrafRequestAgent();
         telegrafAgent.setCollectionInterval(collectionInterval);
 
-        TelegrafConfig telegrafConfig = new TelegrafConfig();
+        TelegrafRequest telegrafConfig = new TelegrafRequest();
         telegrafConfig.setName(name);
         telegrafConfig.setDescription(description);
-        telegrafConfig.setOrgID(orgID);
+        telegrafConfig.setOrganizationID(orgID);
         telegrafConfig.setAgent(telegrafAgent);
-        telegrafConfig.getPlugins().addAll(plugins);
+        telegrafConfig.plugins(plugins);
 
-        return createTelegrafConfig(telegrafConfig);
+        return createTelegraf(telegrafConfig);
     }
 
     @Nonnull
     @Override
-    public TelegrafConfig updateTelegrafConfig(@Nonnull final TelegrafConfig telegrafConfig) {
+    public Telegraf updateTelegraf(@Nonnull final Telegraf telegraf) {
 
-        Arguments.checkNotNull(telegrafConfig, "TelegrafConfig");
+        Arguments.checkNotNull(telegraf, "TelegrafConfig");
 
-        String json = adapter.toJson(telegrafConfig);
+        TelegrafRequest telegrafRequest = toTelegrafRequest(telegraf);
 
-        Call<TelegrafConfig> telegrafConfigCall = influxDBService
-                .updateTelegrafConfig(telegrafConfig.getId(), createBody(json));
+        return updateTelegraf(telegraf.getId(), telegrafRequest);
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf updateTelegraf(@Nonnull final String telegrafID,
+                                   @Nonnull final TelegrafRequest telegrafRequest) {
+
+        Arguments.checkNotNull(telegrafRequest, "TelegrafRequest");
+
+
+        Call<Telegraf> telegrafConfigCall = service.telegrafsTelegrafIDPut(telegrafID, telegrafRequest, null);
 
         return execute(telegrafConfigCall);
     }
 
     @Override
-    public void deleteTelegrafConfig(@Nonnull final TelegrafConfig telegrafConfig) {
+    public void deleteTelegraf(@Nonnull final Telegraf telegraf) {
 
-        Arguments.checkNotNull(telegrafConfig, "TelegrafConfig");
+        Arguments.checkNotNull(telegraf, "TelegrafConfig");
 
-        deleteTelegrafConfig(telegrafConfig.getId());
+        deleteTelegraf(telegraf.getId());
     }
 
     @Override
-    public void deleteTelegrafConfig(@Nonnull final String telegrafConfigID) {
+    public void deleteTelegraf(@Nonnull final String telegrafID) {
 
-        Arguments.checkNonEmpty(telegrafConfigID, "telegrafConfigID");
+        Arguments.checkNonEmpty(telegrafID, "telegrafConfigID");
 
-        Call<Void> call = influxDBService.deleteTelegrafConfig(telegrafConfigID);
+        Call<Void> call = service.telegrafsTelegrafIDDelete(telegrafID, null);
         execute(call);
     }
 
     @Nonnull
     @Override
-    public TelegrafConfig cloneTelegrafConfig(@Nonnull final String clonedName,
-                                              @Nonnull final String telegrafConfigID) {
+    public Telegraf cloneTelegraf(@Nonnull final String clonedName,
+                                  @Nonnull final String telegrafConfigID) {
 
         Arguments.checkNonEmpty(clonedName, "clonedName");
         Arguments.checkNonEmpty(telegrafConfigID, "telegrafConfigID");
 
-        TelegrafConfig telegrafConfig = findTelegrafConfigByID(telegrafConfigID);
+        Telegraf telegrafConfig = findTelegrafByID(telegrafConfigID);
         if (telegrafConfig == null) {
-            throw new IllegalStateException("NotFound TelegrafConfig with ID: " + telegrafConfigID);
+            throw new IllegalStateException("NotFound Telegraf with ID: " + telegrafConfigID);
         }
 
-        return cloneTelegrafConfig(clonedName, telegrafConfig);
+        return cloneTelegraf(clonedName, telegrafConfig);
     }
 
     @Nonnull
     @Override
-    public TelegrafConfig cloneTelegrafConfig(@Nonnull final String clonedName,
-                                              @Nonnull final TelegrafConfig telegrafConfig) {
+    public Telegraf cloneTelegraf(@Nonnull final String clonedName,
+                                  @Nonnull final Telegraf telegraf) {
 
         Arguments.checkNonEmpty(clonedName, "clonedName");
-        Arguments.checkNotNull(telegrafConfig, "TelegrafConfig");
+        Arguments.checkNotNull(telegraf, "TelegrafConfig");
 
-        TelegrafConfig cloned = new TelegrafConfig();
-        cloned.setName(clonedName);
-        cloned.setOrgID(telegrafConfig.getOrgID());
-        cloned.setDescription(telegrafConfig.getDescription());
-        cloned.setAgent(new TelegrafAgent());
-        cloned.getAgent().setCollectionInterval(telegrafConfig.getAgent().getCollectionInterval());
-        cloned.getPlugins().addAll(telegrafConfig.getPlugins());
 
-        TelegrafConfig created = createTelegrafConfig(cloned);
+        TelegrafRequest telegrafRequest = toTelegrafRequest(telegraf);
 
-        getLabels(telegrafConfig).forEach(label -> addLabel(label, created));
+        Telegraf created = createTelegraf(telegrafRequest);
+        created.setName(clonedName);
+
+        getLabels(telegraf).forEach(label -> addLabel(label, created));
 
         return created;
     }
 
     @Nullable
     @Override
-    public TelegrafConfig findTelegrafConfigByID(@Nonnull final String telegrafConfigID) {
+    public Telegraf findTelegrafByID(@Nonnull final String telegrafID) {
 
-        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig ID");
+        Arguments.checkNonEmpty(telegrafID, "TelegrafConfig ID");
 
-        Call<TelegrafConfig> telegrafConfig = influxDBService.findTelegrafConfigByID(telegrafConfigID);
+        Call<Telegraf> telegrafConfig = service.telegrafsTelegrafIDGet(telegrafID, null, "application/json");
 
         return execute(telegrafConfig, NotFoundException.class);
     }
 
     @Nonnull
     @Override
-    public List<TelegrafConfig> findTelegrafConfigs() {
-        return findTelegrafConfigsByOrgId(null);
+    public List<Telegraf> findTelegrafs() {
+        return findTelegrafsByOrgId(null);
     }
 
     @Nonnull
     @Override
-    public List<TelegrafConfig> findTelegrafConfigsByOrg(@Nonnull final Organization organization) {
+    public List<Telegraf> findTelegrafsByOrg(@Nonnull final Organization organization) {
 
         Arguments.checkNotNull(organization, "organization");
 
-        return findTelegrafConfigsByOrgId(organization.getId());
+        return findTelegrafsByOrgId(organization.getId());
     }
 
     @Nonnull
     @Override
-    public List<TelegrafConfig> findTelegrafConfigsByOrgId(@Nullable final String orgID) {
+    public List<Telegraf> findTelegrafsByOrgId(@Nullable final String orgID) {
 
-        Call<TelegrafConfigs> configsCall = influxDBService.findTelegrafConfigs(orgID);
+        Call<Telegrafs> configsCall = service.telegrafsGet(orgID, null);
 
-        TelegrafConfigs telegrafConfigs = execute(configsCall);
-        LOG.log(Level.FINEST, "findTelegrafConfigs found: {0}", telegrafConfigs);
+        Telegrafs telegrafConfigs = execute(configsCall);
+        LOG.log(Level.FINEST, "findTelegrafs found: {0}", telegrafConfigs);
 
-        return telegrafConfigs.getConfigs();
+        return telegrafConfigs.getConfigurations();
     }
 
     @Nonnull
     @Override
-    public String getTOML(@Nonnull final TelegrafConfig telegrafConfig) {
+    public String getTOML(@Nonnull final Telegraf telegraf) {
 
-        Arguments.checkNotNull(telegrafConfig, "TelegrafConfig");
+        Arguments.checkNotNull(telegraf, "TelegrafConfig");
 
-        return getTOML(telegrafConfig.getId());
+        return getTOML(telegraf.getId());
     }
 
     @Nonnull
     @Override
-    public String getTOML(@Nonnull final String telegrafConfigID) {
+    public String getTOML(@Nonnull final String telegrafID) {
 
-        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig ID");
+        Arguments.checkNonEmpty(telegrafID, "TelegrafConfig ID");
 
-        Call<ResponseBody> telegrafConfig = influxDBService.findTelegrafConfigByIDInTOML(telegrafConfigID);
+        Call<ResponseBody> telegrafConfig = service
+                .telegrafsTelegrafIDGetResponseBody(telegrafID, null, "application/toml");
 
         try {
             return execute(telegrafConfig).string();
@@ -285,20 +293,20 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public List<ResourceMember> getMembers(@Nonnull final TelegrafConfig telegrafConfig) {
+    public List<ResourceMember> getMembers(@Nonnull final Telegraf telegraf) {
 
-        Arguments.checkNotNull(telegrafConfig, "TelegrafConfig");
+        Arguments.checkNotNull(telegraf, "TelegrafConfig");
 
-        return getMembers(telegrafConfig.getId());
+        return getMembers(telegraf.getId());
     }
 
     @Nonnull
     @Override
-    public List<ResourceMember> getMembers(@Nonnull final String telegrafConfigID) {
+    public List<ResourceMember> getMembers(@Nonnull final String telegrafID) {
 
-        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
+        Arguments.checkNonEmpty(telegrafID, "TelegrafConfig.ID");
 
-        Call<ResourceMembers> call = influxDBService.findTelegrafConfigMembers(telegrafConfigID);
+        Call<ResourceMembers> call = service.telegrafsTelegrafIDMembersGet(telegrafID, null);
         ResourceMembers resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findTelegrafConfigMembers found: {0}", resourceMembers);
 
@@ -307,66 +315,65 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public ResourceMember addMember(@Nonnull final User member, @Nonnull final TelegrafConfig telegrafConfig) {
+    public ResourceMember addMember(@Nonnull final User member, @Nonnull final Telegraf telegraf) {
 
-        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+        Arguments.checkNotNull(telegraf, "telegrafConfig");
         Arguments.checkNotNull(member, "member");
 
-        return addMember(member.getId(), telegrafConfig.getId());
+        return addMember(member.getId(), telegraf.getId());
     }
 
     @Nonnull
     @Override
-    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String telegrafConfigID) {
+    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String telegrafID) {
 
         Arguments.checkNonEmpty(memberID, "Member ID");
-        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
+        Arguments.checkNonEmpty(telegrafID, "TelegrafConfig.ID");
 
-        User user = new User();
+        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(memberID);
 
-        String json = userAdapter.toJson(user);
-        Call<ResourceMember> call = influxDBService.addTelegrafConfigMember(telegrafConfigID, createBody(json));
+        Call<ResourceMember> call = service.telegrafsTelegrafIDMembersPost(telegrafID, user, null);
 
         return execute(call);
     }
 
     @Override
-    public void deleteMember(@Nonnull final User member, @Nonnull final TelegrafConfig telegrafConfig) {
+    public void deleteMember(@Nonnull final User member, @Nonnull final Telegraf telegraf) {
 
-        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+        Arguments.checkNotNull(telegraf, "telegrafConfig");
         Arguments.checkNotNull(member, "member");
 
-        deleteMember(member.getId(), telegrafConfig.getId());
+        deleteMember(member.getId(), telegraf.getId());
     }
 
     @Override
-    public void deleteMember(@Nonnull final String memberID, @Nonnull final String telegrafConfigID) {
+    public void deleteMember(@Nonnull final String memberID, @Nonnull final String telegrafID) {
 
         Arguments.checkNonEmpty(memberID, "Member ID");
-        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
+        Arguments.checkNonEmpty(telegrafID, "TelegrafConfig.ID");
 
-        Call<Void> call = influxDBService.deleteTelegrafConfigMember(telegrafConfigID, memberID);
+        Call<Void> call = service.telegrafsTelegrafIDMembersUserIDDelete(memberID, telegrafID, null);
         execute(call);
     }
 
     @Nonnull
     @Override
-    public List<ResourceMember> getOwners(@Nonnull final TelegrafConfig telegrafConfig) {
+    public List<ResourceOwner> getOwners(@Nonnull final Telegraf telegraf) {
 
-        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+        Arguments.checkNotNull(telegraf, "telegrafConfig");
 
-        return getOwners(telegrafConfig.getId());
+        return getOwners(telegraf.getId());
     }
 
     @Nonnull
     @Override
-    public List<ResourceMember> getOwners(@Nonnull final String telegrafConfigID) {
+    public List<ResourceOwner> getOwners(@Nonnull final String telegrafID) {
 
-        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
+        Arguments.checkNonEmpty(telegrafID, "TelegrafConfig.ID");
 
-        Call<ResourceMembers> call = influxDBService.findTelegrafConfigOwners(telegrafConfigID);
-        ResourceMembers resourceMembers = execute(call);
+        Call<ResourceOwners> call = service.telegrafsTelegrafIDOwnersGet(telegrafID, null);
+        ResourceOwners resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findTelegrafConfigOwners found: {0}", resourceMembers);
 
         return resourceMembers.getUsers();
@@ -374,102 +381,135 @@ final class TelegrafsApiImpl extends AbstractInfluxDBRestClient implements Teleg
 
     @Nonnull
     @Override
-    public ResourceMember addOwner(@Nonnull final User owner, @Nonnull final TelegrafConfig telegrafConfig) {
+    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Telegraf telegraf) {
 
-        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+        Arguments.checkNotNull(telegraf, "telegrafConfig");
         Arguments.checkNotNull(owner, "owner");
 
-        return addOwner(owner.getId(), telegrafConfig.getId());
+        return addOwner(owner.getId(), telegraf.getId());
     }
+
+    //TODO add to all API the methods with ResourceOwner, ResourceMember parameter
 
     @Nonnull
     @Override
-    public ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String telegrafConfigID) {
+    public ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String telegrafID) {
 
         Arguments.checkNonEmpty(ownerID, "Owner ID");
-        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
+        Arguments.checkNonEmpty(telegrafID, "TelegrafConfig.ID");
 
-        User user = new User();
+        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(ownerID);
 
-        String json = userAdapter.toJson(user);
-        Call<ResourceMember> call = influxDBService.addTelegrafConfigOwner(telegrafConfigID, createBody(json));
+        Call<ResourceOwner> call = service.telegrafsTelegrafIDOwnersPost(telegrafID, user, null);
 
         return execute(call);
     }
 
     @Override
-    public void deleteOwner(@Nonnull final User owner, @Nonnull final TelegrafConfig telegrafConfig) {
+    public void deleteOwner(@Nonnull final User owner, @Nonnull final Telegraf telegraf) {
 
-        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+        Arguments.checkNotNull(telegraf, "telegrafConfig");
         Arguments.checkNotNull(owner, "owner");
 
-        deleteOwner(owner.getId(), telegrafConfig.getId());
+        deleteOwner(owner.getId(), telegraf.getId());
     }
 
     @Override
-    public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String telegrafConfigID) {
+    public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String telegrafID) {
 
         Arguments.checkNonEmpty(ownerID, "Owner ID");
-        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
+        Arguments.checkNonEmpty(telegrafID, "TelegrafConfig.ID");
 
-        Call<Void> call = influxDBService.deleteTelegrafConfigOwner(telegrafConfigID, ownerID);
+        Call<Void> call = service.telegrafsTelegrafIDOwnersUserIDDelete(ownerID, telegrafID, null);
         execute(call);
     }
 
     @Nonnull
     @Override
-    public List<Label> getLabels(@Nonnull final TelegrafConfig telegrafConfig) {
+    public List<Label> getLabels(@Nonnull final Telegraf telegraf) {
 
-        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+        Arguments.checkNotNull(telegraf, "telegrafConfig");
 
-        return getLabels(telegrafConfig.getId());
+        return getLabels(telegraf.getId());
     }
 
     @Nonnull
     @Override
-    public List<Label> getLabels(@Nonnull final String telegrafConfigID) {
+    public List<Label> getLabels(@Nonnull final String telegrafID) {
 
-        Arguments.checkNonEmpty(telegrafConfigID, "TelegrafConfig.ID");
+        Arguments.checkNonEmpty(telegrafID, "TelegrafConfig.ID");
 
-        return getLabels(telegrafConfigID, "telegrafs");
+        Call<LabelsResponse> call = service.telegrafsTelegrafIDLabelsGet(telegrafID, null);
+
+        return execute(call).getLabels();
     }
 
     @Nonnull
     @Override
-    public Label addLabel(@Nonnull final Label label, @Nonnull final TelegrafConfig telegrafConfig) {
+    public LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Telegraf telegraf) {
 
         Arguments.checkNotNull(label, "label");
-        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+        Arguments.checkNotNull(telegraf, "telegrafConfig");
 
-        return addLabel(label.getId(), telegrafConfig.getId());
+        return addLabel(label.getId(), telegraf.getId());
     }
 
     @Nonnull
     @Override
-    public Label addLabel(@Nonnull final String labelID, @Nonnull final String telegrafConfigID) {
+    public LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String telegrafID) {
 
         Arguments.checkNonEmpty(labelID, "labelID");
-        Arguments.checkNonEmpty(telegrafConfigID, "telegrafConfigID");
+        Arguments.checkNonEmpty(telegrafID, "telegrafConfigID");
 
-        return addLabel(labelID, telegrafConfigID, "telegrafs", ResourceType.TELEGRAFS);
+        LabelMapping labelMapping = new LabelMapping();
+        labelMapping.setLabelID(labelID);
+
+        Call<LabelResponse> call = service.telegrafsTelegrafIDLabelsPost(telegrafID, labelMapping, null);
+
+        return execute(call);
     }
 
     @Override
-    public void deleteLabel(@Nonnull final Label label, @Nonnull final TelegrafConfig telegrafConfig) {
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final Telegraf telegraf) {
 
         Arguments.checkNotNull(label, "label");
-        Arguments.checkNotNull(telegrafConfig, "telegrafConfig");
+        Arguments.checkNotNull(telegraf, "telegrafConfig");
 
-        deleteLabel(label.getId(), telegrafConfig.getId());
+        deleteLabel(label.getId(), telegraf.getId());
     }
 
     @Override
-    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String telegrafConfigID) {
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String telegrafID) {
 
         Arguments.checkNonEmpty(labelID, "labelID");
-        Arguments.checkNonEmpty(telegrafConfigID, "telegrafConfigID");
+        Arguments.checkNonEmpty(telegrafID, "telegrafConfigID");
 
-        deleteLabel(labelID, telegrafConfigID, "telegrafs");
+        Call<Void> call = service.telegrafsTelegrafIDLabelsLabelIDDelete(telegrafID, labelID, null);
+        execute(call);
+    }
+
+    @Nonnull
+    private TelegrafRequest toTelegrafRequest(@Nonnull final Telegraf telegraf) {
+
+        Arguments.checkNotNull(telegraf, "telegraf");
+
+        TelegrafRequest telegrafRequest = new TelegrafRequest();
+        telegrafRequest.setName(telegraf.getName());
+        telegrafRequest.setDescription(telegraf.getDescription());
+        telegrafRequest.setAgent(telegraf.getAgent());
+        telegrafRequest.setOrganizationID(telegraf.getOrganizationID());
+        if (telegraf.getPlugins() != null) {
+            telegraf.getPlugins().forEach(telegrafPlugin -> {
+                TelegrafRequestPlugin<Object, Object> requestPlugin = new TelegrafRequestPlugin<>();
+                requestPlugin.setType(telegrafPlugin.getType());
+                requestPlugin.setName(telegrafPlugin.getName());
+                requestPlugin.setConfig(telegrafPlugin.getConfig());
+
+                telegrafRequest.addPluginsItem(requestPlugin);
+            });
+        }
+
+        return telegrafRequest;
     }
 }

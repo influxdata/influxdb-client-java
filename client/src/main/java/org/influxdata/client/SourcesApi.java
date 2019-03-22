@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.Bucket;
-import org.influxdata.client.domain.Health;
+import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.Source;
 
 /**
@@ -120,7 +120,7 @@ public interface SourcesApi {
      * @param sourceID filter buckets to a specific source ID
      * @return buckets for source. If source does not exist than return null.
      */
-    @Nullable
+    @Nonnull
     List<Bucket> findBucketsBySourceID(@Nonnull final String sourceID);
 
     /**
@@ -131,7 +131,7 @@ public interface SourcesApi {
      * @return health of source
      */
     @Nonnull
-    Health health(@Nonnull final Source source);
+    Check health(@Nonnull final Source source);
 
     /**
      * Get a sources health.
@@ -141,5 +141,5 @@ public interface SourcesApi {
      * @return health of source
      */
     @Nonnull
-    Health health(@Nonnull final String sourceID);
+    Check health(@Nonnull final String sourceID);
 }

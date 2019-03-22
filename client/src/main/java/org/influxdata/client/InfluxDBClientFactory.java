@@ -24,7 +24,7 @@ package org.influxdata.client;
 import javax.annotation.Nonnull;
 
 import org.influxdata.Arguments;
-import org.influxdata.client.domain.Onboarding;
+import org.influxdata.client.domain.OnboardingRequest;
 import org.influxdata.client.domain.OnboardingResponse;
 import org.influxdata.client.internal.InfluxDBClientImpl;
 
@@ -133,7 +133,7 @@ public final class InfluxDBClientFactory {
         Arguments.checkNonEmpty(org, "org");
         Arguments.checkNonEmpty(bucket, "bucket");
 
-        Onboarding onboarding = new Onboarding();
+        OnboardingRequest onboarding = new OnboardingRequest();
         onboarding.setUsername(username);
         onboarding.setPassword(password);
         onboarding.setOrg(org);
@@ -152,7 +152,7 @@ public final class InfluxDBClientFactory {
      */
     @Nonnull
     public static OnboardingResponse onBoarding(@Nonnull final String url,
-                                                @Nonnull final Onboarding onboarding) {
+                                                @Nonnull final OnboardingRequest onboarding) {
         Arguments.checkNonEmpty(url, "url");
         Arguments.checkNotNull(onboarding, "onboarding");
 

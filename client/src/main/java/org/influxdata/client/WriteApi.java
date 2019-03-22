@@ -21,12 +21,11 @@
  */
 package org.influxdata.client;
 
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.influxdata.client.domain.WritePrecision;
 import org.influxdata.client.write.Point;
 import org.influxdata.client.write.events.AbstractWriteEvent;
 import org.influxdata.client.write.events.BackpressureEvent;
@@ -52,16 +51,13 @@ public interface WriteApi extends AutoCloseable {
      *
      * @param bucket    specifies the destination bucket for writes
      * @param orgID     specifies the destination organization for writes
-     * @param precision specifies the precision for the unix timestamps within the body line-protocol.
-     *                  Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
-     *                  {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
-     *                  Default value : {@link TimeUnit#NANOSECONDS}.
+     * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
      * @param record    specifies the record in InfluxDB Line Protocol.
      *                  The {@code record} is considered as one batch unit.
      */
     void writeRecord(@Nonnull final String bucket,
                      @Nonnull final String orgID,
-                     @Nonnull final ChronoUnit precision,
+                     @Nonnull final WritePrecision precision,
                      @Nullable final String record);
 
 
@@ -70,15 +66,12 @@ public interface WriteApi extends AutoCloseable {
      *
      * @param bucket    specifies the destination bucket for writes
      * @param orgID     specifies the destination organization for writes
-     * @param precision specifies the precision for the unix timestamps within the body line-protocol.
-     *                  Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
-     *                  {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
-     *                  Default value : {@link TimeUnit#NANOSECONDS}.
+     * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
      * @param records   specifies the records in InfluxDB Line Protocol
      */
     void writeRecords(@Nonnull final String bucket,
                       @Nonnull final String orgID,
-                      @Nonnull final ChronoUnit precision,
+                      @Nonnull final WritePrecision precision,
                       @Nonnull final List<String> records);
 
     /**
@@ -110,16 +103,13 @@ public interface WriteApi extends AutoCloseable {
      *
      * @param bucket      specifies the destination bucket for writes
      * @param orgID       specifies the destination organization for writes
-     * @param precision   specifies the precision for the unix timestamps within the body line-protocol.
-     *                    Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
-     *                    {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
-     *                    Default value : {@link TimeUnit#NANOSECONDS}.
+     * @param precision   specifies the precision for the unix timestamps within the body line-protocol (optional)
      * @param <M>         measurement type
      * @param measurement specifies the Measurement to write into bucket
      */
     <M> void writeMeasurement(@Nonnull final String bucket,
                               @Nonnull final String orgID,
-                              @Nonnull final ChronoUnit precision,
+                              @Nonnull final WritePrecision precision,
                               @Nullable final M measurement);
 
 
@@ -128,16 +118,13 @@ public interface WriteApi extends AutoCloseable {
      *
      * @param bucket       specifies the destination bucket for writes
      * @param orgID        specifies the destination organization for writes
-     * @param precision    specifies the precision for the unix timestamps within the body line-protocol.
-     *                     Available values : {@link ChronoUnit#NANOS}, {@link ChronoUnit#MICROS},
-     *                     {@link ChronoUnit#MILLIS}, {@link ChronoUnit#SECONDS}.
-     *                     Default value : {@link TimeUnit#NANOSECONDS}.
+     * @param precision    specifies the precision for the unix timestamps within the body line-protocol (optional)
      * @param <M>          measurement type
      * @param measurements specifies the Measurements to write into bucket
      */
     <M> void writeMeasurements(@Nonnull final String bucket,
                                @Nonnull final String orgID,
-                               @Nonnull final ChronoUnit precision,
+                               @Nonnull final WritePrecision precision,
                                @Nonnull final List<M> measurements);
 
     /**

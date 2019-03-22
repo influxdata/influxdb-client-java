@@ -33,13 +33,11 @@ import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Authorizations;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
-import org.influxdata.client.domain.Status;
 import org.influxdata.client.domain.User;
+import org.influxdata.client.service.AuthorizationsService;
 import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.internal.AbstractRestClient;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 import retrofit2.Call;
 
 /**
@@ -49,16 +47,13 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
 
     private static final Logger LOG = Logger.getLogger(AuthorizationsApiImpl.class.getName());
 
-    private final InfluxDBService influxDBService;
-    private final JsonAdapter<Authorization> adapter;
+    private final AuthorizationsService service;
 
-    AuthorizationsApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi) {
+    AuthorizationsApiImpl(@Nonnull final AuthorizationsService service) {
 
-        Arguments.checkNotNull(influxDBService, "InfluxDBService");
-        Arguments.checkNotNull(moshi, "Moshi to create adapter");
+        Arguments.checkNotNull(service, "service");
 
-        this.influxDBService = influxDBService;
-        this.adapter = moshi.adapter(Authorization.class);
+        this.service = service;
     }
 
     @Nonnull
@@ -83,7 +78,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
         Authorization authorization = new Authorization();
         authorization.setOrgID(orgID);
         authorization.setPermissions(permissions);
-        authorization.setStatus(Status.ACTIVE);
+        authorization.setStatus(Authorization.StatusEnum.ACTIVE);
 
         return createAuthorization(authorization);
     }
@@ -94,9 +89,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
 
         Arguments.checkNotNull(authorization, "Authorization is required");
 
-        String json = adapter.toJson(authorization);
-
-        Call<Authorization> call = influxDBService.createAuthorization(createBody(json));
+        Call<Authorization> call = service.authorizationsPost(authorization, null);
 
         return execute(call);
     }
@@ -113,7 +106,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
 
         Arguments.checkNonEmpty(authorizationID, "authorizationID");
 
-        Call<Authorization> call = influxDBService.findAuthorization(authorizationID);
+        Call<Authorization> call = service.authorizationsAuthIDGet(authorizationID, null);
 
         return execute(call, NotFoundException.class);
     }
@@ -145,10 +138,8 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
 
         Arguments.checkNotNull(authorization, "Authorization is required");
 
-        String json = adapter.toJson(authorization);
-
-        Call<Authorization> authorizationCall = influxDBService
-                .updateAuthorization(authorization.getId(), createBody(json));
+        Call<Authorization> authorizationCall = service
+                .authorizationsAuthIDPatch(authorization.getId(), authorization, null);
 
         return execute(authorizationCall);
     }
@@ -166,7 +157,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
 
         Arguments.checkNonEmpty(authorizationID, "authorizationID");
 
-        Call<Void> call = influxDBService.deleteAuthorization(authorizationID);
+        Call<Void> call = service.authorizationsAuthIDDelete(authorizationID, null);
         execute(call);
     }
 
@@ -191,13 +182,10 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
         Arguments.checkNotNull(authorization, "authorization");
 
         Authorization cloned = new Authorization();
-        cloned.setUserID(authorization.getUserID());
-        cloned.setUserName(authorization.getUserName());
         cloned.setOrgID(authorization.getOrgID());
-        cloned.setOrgName(authorization.getOrgName());
-        cloned.setStatus(Status.ACTIVE);
+        cloned.setStatus(Authorization.StatusEnum.ACTIVE);
         cloned.setDescription(authorization.getDescription());
-        cloned.getPermissions().addAll(authorization.getPermissions());
+        cloned.setPermissions(authorization.getPermissions());
 
         return createAuthorization(cloned);
     }
@@ -205,7 +193,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
     @Nonnull
     private List<Authorization> findAuthorizations(@Nullable final String userID, @Nullable final String userName) {
 
-        Call<Authorizations> authorizationsCall = influxDBService.findAuthorizations(userID, userName);
+        Call<Authorizations> authorizationsCall = service.authorizationsGet(null, userID, userName);
 
         Authorizations authorizations = execute(authorizationsCall);
         LOG.log(Level.FINEST, "findAuthorizations found: {0}", authorizations);

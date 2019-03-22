@@ -27,8 +27,10 @@ import akka.NotUsed
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.Source
 import javax.annotation.Nonnull
-import org.influxdata.client.internal.InfluxDBService
+import org.influxdata.client.domain.{Dialect, Query}
+import org.influxdata.client.internal.AbstractInfluxDBClient
 import org.influxdata.client.scala.QueryScalaApi
+import org.influxdata.client.service.QueryService
 import org.influxdata.internal.AbstractQueryApi
 import org.influxdata.query.internal.FluxCsvParser
 import org.influxdata.query.{FluxRecord, FluxTable}
@@ -39,7 +41,7 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
 /**
  * @author Jakub Bednar (bednar@github) (06/11/2018 08:19)
  */
-class QueryScalaApiImpl(@Nonnull influxDBService: InfluxDBService,
+class QueryScalaApiImpl(@Nonnull service: QueryService,
                         @Nonnull val bufferSize: Int,
                         @Nonnull val overflowStrategy: OverflowStrategy)
 
@@ -60,9 +62,26 @@ class QueryScalaApiImpl(@Nonnull influxDBService: InfluxDBService,
     Arguments.checkNonEmpty(query, "query")
     Arguments.checkNonEmpty(orgID, "orgID")
 
+    this.query(new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT), orgID)
+  }
+
+  /**
+    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
+    *
+    * @param query the flux query to execute
+    * @param orgID specifies the source organization
+    * @return the stream of [[FluxRecord]]s
+    */
+  override def query(query: Query, orgID: String): Source[FluxRecord, NotUsed] = {
+
+    Arguments.checkNotNull(query, "query")
+    Arguments.checkNonEmpty(orgID, "orgID")
+
     Source
       .single(query)
-      .map(it => influxDBService.query(orgID, createBody(AbstractQueryApi.DEFAULT_DIALECT.toString, it)))
+      .map(_ => service
+        .queryPostResponseBody(null, "text/csv", "application/json",
+        null, orgID, query))
       .flatMapConcat(queryCall => {
         Source.queue[FluxRecord](bufferSize, overflowStrategy)
           .mapMaterializedValue(queue => {
@@ -88,7 +107,7 @@ class QueryScalaApiImpl(@Nonnull influxDBService: InfluxDBService,
 
             this.query(queryCall, consumer, onError, () => queue.complete, true)
           })
-    })
+      })
   }
 
   /**
@@ -109,6 +128,24 @@ class QueryScalaApiImpl(@Nonnull influxDBService: InfluxDBService,
   }
 
   /**
+    * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+    *
+    * @param query           the flux query to execute
+    * @param orgID           specifies the source organization
+    * @param measurementType the measurement (POJO)
+    * @tparam M the type of the measurement (POJO)
+    * @return the stream of measurements
+    */
+  override def query[M](query: Query, orgID: String, measurementType: Class[M]): Source[M, NotUsed] = {
+
+    Arguments.checkNotNull(query, "query")
+    Arguments.checkNonEmpty(orgID, "orgID")
+    Arguments.checkNotNull(measurementType, "measurementType")
+
+    this.query(query, orgID).map(t => resultMapper.toPOJO(t, measurementType))
+  }
+
+  /**
    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
    *
    * @param query the flux query to execute
@@ -119,7 +156,7 @@ class QueryScalaApiImpl(@Nonnull influxDBService: InfluxDBService,
     Arguments.checkNonEmpty(query, "query")
     Arguments.checkNonEmpty(orgID, "orgID")
 
-    queryRaw(query, AbstractQueryApi.DEFAULT_DIALECT.toString, orgID)
+    queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, orgID)
   }
 
   /**
@@ -130,14 +167,31 @@ class QueryScalaApiImpl(@Nonnull influxDBService: InfluxDBService,
    *                [[http://bit.ly/flux-dialect See dialect SPEC]].
    * @return the response stream
    */
-  override def queryRaw(query: String, dialect: String, orgID: String): Source[String, NotUsed] = {
+  override def queryRaw(query: String, dialect: Dialect, orgID: String): Source[String, NotUsed] = {
 
     Arguments.checkNonEmpty(query, "query")
     Arguments.checkNonEmpty(orgID, "orgID")
 
+    this.queryRaw(new Query().query(query).dialect(dialect), orgID)
+  }
+
+  /**
+    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+    *
+    * @param query the flux query to execute
+    * @param orgID specifies the source organization
+    * @return the response stream
+    */
+  override def queryRaw(query: Query, orgID: String): Source[String, NotUsed] = {
+
+    Arguments.checkNotNull(query, "query")
+    Arguments.checkNonEmpty(orgID, "orgID")
+
     Source
       .single(query)
-      .map(it => influxDBService.query(orgID, createBody(dialect, it)))
+      .map(it => service
+        .queryPostResponseBody(null, "text/csv", "application/json",
+          null, orgID, query))
       .flatMapConcat(queryCall => {
         Source.queue[String](bufferSize, overflowStrategy)
           .mapMaterializedValue(queue => {

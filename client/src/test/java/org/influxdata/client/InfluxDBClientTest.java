@@ -23,7 +23,7 @@ package org.influxdata.client;
 
 import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Authorization;
-import org.influxdata.client.domain.Status;
+import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.internal.AbstractInfluxDBClientTest;
 
 import okhttp3.mockwebserver.MockResponse;
@@ -145,10 +145,19 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
 
         Authorization authorization = influxDBClient.getAuthorizationsApi().findAuthorizationByID("id");
         Assertions.assertThat(authorization).isNotNull();
-        Assertions.assertThat(authorization.getStatus()).isEqualTo(Status.ACTIVE);
+        Assertions.assertThat(authorization.getStatus()).isEqualTo(Authorization.StatusEnum.ACTIVE);
 
         authorization = influxDBClient.getAuthorizationsApi().findAuthorizationByID("id");
         Assertions.assertThat(authorization).isNotNull();
         Assertions.assertThat(authorization.getStatus()).isNull();
+    }
+
+    @Test
+    void parseDateTime() {
+        mockServer.enqueue(new MockResponse().setBody("{\"links\":{\"self\":\"/api/v2/buckets/038726b4d3b5c000/log\"},\"logs\":[{\"links\":{\"user\":\"/api/v2/users/0387094b4b75c000\"},\"description\":\"Bucket Created\",\"userID\":\"0387094b4b75c000\",\"time\":\"2019-03-11T11:57:30.830995162Z\"}]}"));
+
+        OperationLogs operationLogs = influxDBClient.getBucketsApi().findBucketLogs("id", new FindOptions());
+
+        Assertions.assertThat(operationLogs.getLogs()).hasSize(1);
     }
 }

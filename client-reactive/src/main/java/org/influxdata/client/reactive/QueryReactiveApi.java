@@ -24,6 +24,7 @@ package org.influxdata.client.reactive;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.influxdata.client.domain.Dialect;
 import org.influxdata.query.FluxRecord;
 
 import io.reactivex.Flowable;
@@ -119,7 +120,7 @@ public interface QueryReactiveApi {
      */
     @Nonnull
     Flowable<String> queryRaw(@Nonnull final String query,
-                              @Nullable final String dialect,
+                              @Nullable final Dialect dialect,
                               @Nonnull final String orgID);
 
     /**
@@ -133,6 +134,6 @@ public interface QueryReactiveApi {
      */
     @Nonnull
     Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream,
-                              @Nullable final String dialect,
+                              @Nullable final Dialect dialect,
                               @Nonnull final String orgID);
 }

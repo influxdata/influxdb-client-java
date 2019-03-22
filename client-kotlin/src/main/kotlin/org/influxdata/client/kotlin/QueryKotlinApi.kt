@@ -23,6 +23,8 @@
 package org.influxdata.client.kotlin
 
 import kotlinx.coroutines.channels.Channel
+import org.influxdata.client.domain.Dialect
+import org.influxdata.client.domain.Query
 import org.influxdata.query.FluxRecord
 
 /**
@@ -42,6 +44,15 @@ interface QueryKotlinApi {
     fun query(query: String, orgID: String): Channel<FluxRecord>
 
     /**
+     * Executes the Flux query against the InfluxDB and asynchronously stream [FluxRecord]s to [Channel].
+     *
+     * @param query the flux query to execute
+     * @param orgID specifies the source organization
+     * @return the stream of [FluxRecord]s
+     */
+    fun query(query: Query, orgID: String): Channel<FluxRecord>
+
+    /**
      * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [Channel].
      *
      * @param query the flux query to execute
@@ -50,6 +61,16 @@ interface QueryKotlinApi {
      * @return the stream of measurements
      */
     fun <M> query(query: String, orgID: String, measurementType: Class<M>): Channel<M>
+
+    /**
+     * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [Channel].
+     *
+     * @param query the flux query to execute
+     * @param orgID specifies the source organization
+     * @param <M> the type of the measurement (POJO)
+     * @return the stream of measurements
+     */
+    fun <M> query(query: Query, orgID: String, measurementType: Class<M>): Channel<M>
 
     /**
      * Executes the Flux query against the InfluxDB and asynchronously stream response to [Channel].
@@ -69,6 +90,15 @@ interface QueryKotlinApi {
      *                  [See dialect SPEC](http://bit.ly/flux-dialect).
      * @return the response stream
      */
-    fun queryRaw(query: String, dialect: String, orgID: String): Channel<String>
+    fun queryRaw(query: String, dialect: Dialect, orgID: String): Channel<String>
 
+
+    /**
+     * Executes the Flux query against the InfluxDB and asynchronously stream response to [Channel].
+     *
+     * @param query the flux query to execute
+     * @param orgID specifies the source organization
+     * @return the response stream
+     */
+    fun queryRaw(query: Query, orgID: String): Channel<String>
 }

@@ -35,19 +35,18 @@ import kotlinx.coroutines.runBlocking
 import org.influxdata.annotations.Column
 import org.influxdata.client.InfluxDBClientFactory
 import org.influxdata.client.domain.Bucket
+import org.influxdata.client.domain.BucketRetentionRules
+import org.influxdata.client.domain.Dialect
 import org.influxdata.client.domain.Organization
 import org.influxdata.client.domain.Permission
 import org.influxdata.client.domain.PermissionResource
-import org.influxdata.client.domain.ResourceType
-import org.influxdata.client.domain.RetentionRule
-import org.json.JSONObject
+import org.influxdata.client.domain.WritePrecision
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
 import java.net.ConnectException
 import java.time.Instant
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 /**
@@ -72,9 +71,9 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
                 .findFirst()
                 .orElseThrow { IllegalStateException() }
 
-        val retentionRule = RetentionRule()
-        retentionRule.type = "expire"
-        retentionRule.everySeconds = 3600L
+        val retentionRule = BucketRetentionRules()
+        retentionRule.type = BucketRetentionRules.TypeEnum.EXPIRE
+        retentionRule.everySeconds = 3600
 
         bucket = client.bucketsApi
                 .createBucket(generateName("h2o"), retentionRule, organization)
@@ -85,16 +84,16 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         val resource = PermissionResource()
         resource.orgID = organization.id
-        resource.type = ResourceType.BUCKETS
+        resource.type = PermissionResource.TypeEnum.BUCKETS
         resource.id = bucket.id
 
         val readBucket = Permission()
         readBucket.resource = resource
-        readBucket.action = Permission.READ_ACTION
+        readBucket.action = Permission.ActionEnum.READ
 
         val writeBucket = Permission()
         writeBucket.resource = resource
-        writeBucket.action = Permission.WRITE_ACTION
+        writeBucket.action = Permission.ActionEnum.WRITE
 
         val authorization = client.authorizationsApi
                 .createAuthorization(organization, Arrays.asList(readBucket, writeBucket))
@@ -111,7 +110,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
                 .joinToString("\n")
 
         val writeApi = client.writeApi
-        writeApi.writeRecord(bucket.name, organization.id, ChronoUnit.NANOS, records)
+        writeApi.writeRecord(bucket.name, organization.id, WritePrecision.NS, records)
         writeApi.close()
 
         client.close()
@@ -146,7 +145,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
         val values = records.map { it.value }.toList()
 
         assert(values).hasSize(10)
-        assert(values).containsExactly(10L, 11L, 20L, 22L, 35L, 38L, 55L, 45L, 49L, 65L)
+        assert(values).containsExactly(55L, 65L, 35L, 38L, 45L, 49L, 10L, 11L, 20L, 22L)
     }
 
     @Test
@@ -228,9 +227,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
                 "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\t" +
                 "|> sum()"
 
-        val dialect = JSONObject()
-                .put("header", false)
-                .toString()
+        val dialect = Dialect().header(false)
 
         val lines = queryKotlinApi.queryRaw(flux, dialect, organization.id).toList()
 

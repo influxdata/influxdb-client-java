@@ -28,35 +28,35 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
+import org.influxdata.client.FindOptions;
 import org.influxdata.client.UsersApi;
-import org.influxdata.client.domain.FindOptions;
-import org.influxdata.client.domain.OperationLogEntries;
-import org.influxdata.client.domain.OperationLogEntry;
+import org.influxdata.client.domain.OperationLog;
+import org.influxdata.client.domain.OperationLogs;
+import org.influxdata.client.domain.PasswordResetBody;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.domain.Users;
+import org.influxdata.client.service.UsersService;
 import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.exceptions.UnauthorizedException;
+import org.influxdata.internal.AbstractRestClient;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 import okhttp3.Credentials;
-import org.json.JSONObject;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/09/2018 10:16)
  */
-final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi {
+final class UsersApiImpl extends AbstractRestClient implements UsersApi {
 
     private static final Logger LOG = Logger.getLogger(UsersApiImpl.class.getName());
 
-    private final JsonAdapter<User> adapter;
+    private final UsersService service;
 
-    UsersApiImpl(@Nonnull final InfluxDBService influxDBService, @Nonnull final Moshi moshi) {
+    UsersApiImpl(@Nonnull final UsersService service) {
 
-        super(influxDBService, moshi);
+        Arguments.checkNotNull(service, "service");
 
-        this.adapter = moshi.adapter(User.class);
+        this.service = service;
     }
 
     @Nullable
@@ -65,7 +65,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Arguments.checkNonEmpty(userID, "User ID");
 
-        Call<User> user = influxDBService.findUserByID(userID);
+        Call<User> user = service.usersUserIDGet(userID, null);
 
         return execute(user, NotFoundException.class);
     }
@@ -74,7 +74,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
     @Override
     public List<User> findUsers() {
 
-        Call<Users> usersCall = influxDBService.findUsers();
+        Call<Users> usersCall = service.usersGet(null);
 
         Users users = execute(usersCall);
         LOG.log(Level.FINEST, "findUsers found: {0}", users);
@@ -100,9 +100,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Arguments.checkNotNull(user, "User");
 
-        String json = adapter.toJson(user);
-
-        Call<User> call = influxDBService.createUser(createBody(json));
+        Call<User> call = service.usersPost(user);
 
         return execute(call);
     }
@@ -113,9 +111,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Arguments.checkNotNull(user, "User");
 
-        String json = adapter.toJson(user);
-
-        Call<User> userCall = influxDBService.updateUser(user.getId(), createBody(json));
+        Call<User> userCall = service.usersUserIDPatch(user.getId(), user, null);
 
         return execute(userCall);
     }
@@ -143,7 +139,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
         Arguments.checkNotNull(oldPassword, "old password");
         Arguments.checkNotNull(newPassword, "new password");
 
-        Call<User> userByID = influxDBService.findUserByID(userID);
+        Call<User> userByID = service.usersUserIDGet(userID, null);
         User user = execute(userByID);
 
         return updateUserPassword(userID, user.getName(), oldPassword, newPassword);
@@ -162,7 +158,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
         Arguments.checkNonEmpty(userID, "User ID");
 
-        Call<Void> call = influxDBService.deleteUser(userID);
+        Call<Void> call = service.usersUserIDDelete(userID, null);
         execute(call);
     }
 
@@ -198,7 +194,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
     @Override
     public User me() {
 
-        Call<User> call = influxDBService.me();
+        Call<User> call = service.meGet(null);
 
         return execute(call, UnauthorizedException.class);
     }
@@ -217,19 +213,19 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
             return null;
         }
 
-        String json = new JSONObject().put("password", newPassword).toString();
-
         String credentials = Credentials
                 .basic(user.getName(), oldPassword);
 
-        Call<User> call = influxDBService.mePassword(credentials, createBody(json));
+        PasswordResetBody passwordResetBody = new PasswordResetBody().password(newPassword);
+
+        Call<User> call = service.mePasswordPut(passwordResetBody, null, credentials);
 
         return execute(call, UnauthorizedException.class);
     }
 
     @Nonnull
     @Override
-    public List<OperationLogEntry> findUserLogs(@Nonnull final User user) {
+    public List<OperationLog> findUserLogs(@Nonnull final User user) {
 
         Arguments.checkNotNull(user, "User");
 
@@ -238,7 +234,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
     @Nonnull
     @Override
-    public List<OperationLogEntry> findUserLogs(@Nonnull final String userID) {
+    public List<OperationLog> findUserLogs(@Nonnull final String userID) {
 
         Arguments.checkNonEmpty(userID, "User ID");
 
@@ -247,7 +243,7 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
     @Nonnull
     @Override
-    public OperationLogEntries findUserLogs(@Nonnull final User user, @Nonnull final FindOptions findOptions) {
+    public OperationLogs findUserLogs(@Nonnull final User user, @Nonnull final FindOptions findOptions) {
 
         Arguments.checkNotNull(user, "User");
         Arguments.checkNotNull(findOptions, "findOptions");
@@ -257,14 +253,16 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
 
     @Nonnull
     @Override
-    public OperationLogEntries findUserLogs(@Nonnull final String userID, @Nonnull final FindOptions findOptions) {
+    public OperationLogs findUserLogs(@Nonnull final String userID, @Nonnull final FindOptions findOptions) {
 
         Arguments.checkNonEmpty(userID, "User ID");
         Arguments.checkNotNull(findOptions, "findOptions");
 
-        Call<OperationLogEntries> call = influxDBService.findUserLogs(userID, createQueryMap(findOptions));
+        Call<OperationLogs> call = service.usersUserIDLogsGet(userID, null,
+                findOptions.getOffset(),
+                findOptions.getLimit());
 
-        return getOperationLogEntries(call);
+        return execute(call);
     }
 
     @Nonnull
@@ -278,12 +276,10 @@ final class UsersApiImpl extends AbstractInfluxDBRestClient implements UsersApi 
         Arguments.checkNotNull(oldPassword, "old password");
         Arguments.checkNotNull(newPassword, "new password");
 
-        String credentials = Credentials
-                .basic(userName, oldPassword);
+        String credentials = Credentials.basic(userName, oldPassword);
 
-        String json = new JSONObject().put("password", newPassword).toString();
-
-        Call<User> call = influxDBService.updateUserPassword(userID, credentials, createBody(json));
+        PasswordResetBody resetBody = new PasswordResetBody().password(newPassword);
+        Call<User> call = service.usersUserIDPasswordPut(userID, resetBody, null, credentials);
 
         return execute(call);
     }

@@ -21,17 +21,22 @@
  */
 package org.influxdata.client;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.LogEvent;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.Run;
+import org.influxdata.client.domain.RunManually;
 import org.influxdata.client.domain.Task;
+import org.influxdata.client.domain.TaskCreateRequest;
+import org.influxdata.client.domain.TaskUpdateRequest;
 import org.influxdata.client.domain.User;
 
 /**
@@ -64,6 +69,15 @@ public interface TasksApi {
      */
     @Nonnull
     Task createTask(@Nonnull final Task task);
+
+    /**
+     * Create a new task.
+     *
+     * @param taskCreateRequest task to create (required)
+     * @return Task created
+     */
+    @Nonnull
+    Task createTask(@Nonnull final TaskCreateRequest taskCreateRequest);
 
     /**
      * Creates a new task with task repetition by cron.
@@ -141,6 +155,16 @@ public interface TasksApi {
      */
     @Nonnull
     Task updateTask(@Nonnull final Task task);
+
+    /**
+     * Update a task. This will cancel all queued runs.
+     *
+     * @param taskID  ID of task to get
+     * @param request task update to apply
+     * @return task updated
+     */
+    @Nonnull
+    Task updateTask(@Nonnull String taskID, @Nonnull TaskUpdateRequest request);
 
     /**
      * Delete a task. Deletes a task and all associated records.
@@ -301,7 +325,7 @@ public interface TasksApi {
      * @return return List all task owners
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final Task task);
+    List<ResourceOwner> getOwners(@Nonnull final Task task);
 
     /**
      * List all task owners.
@@ -310,7 +334,7 @@ public interface TasksApi {
      * @return return List all task owners
      */
     @Nonnull
-    List<ResourceMember> getOwners(@Nonnull final String taskID);
+    List<ResourceOwner> getOwners(@Nonnull final String taskID);
 
     /**
      * Add task owner.
@@ -320,7 +344,7 @@ public interface TasksApi {
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final User owner, @Nonnull final Task task);
+    ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Task task);
 
     /**
      * Add task owner.
@@ -330,7 +354,7 @@ public interface TasksApi {
      * @return created mapping
      */
     @Nonnull
-    ResourceMember addOwner(@Nonnull final String ownerID, @Nonnull final String taskID);
+    ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String taskID);
 
     /**
      * Removes an owner from an task.
@@ -368,8 +392,8 @@ public interface TasksApi {
      */
     @Nonnull
     List<Run> getRuns(@Nonnull final Task task,
-                      @Nullable final Instant afterTime,
-                      @Nullable final Instant beforeTime,
+                      @Nullable final OffsetDateTime afterTime,
+                      @Nullable final OffsetDateTime beforeTime,
                       @Nullable final Integer limit);
 
     /**
@@ -395,8 +419,8 @@ public interface TasksApi {
     @Nonnull
     List<Run> getRuns(@Nonnull final String taskID,
                       @Nonnull final String orgID,
-                      @Nullable final Instant afterTime,
-                      @Nullable final Instant beforeTime,
+                      @Nullable final OffsetDateTime afterTime,
+                      @Nullable final OffsetDateTime beforeTime,
                       @Nullable final Integer limit);
 
     /**
@@ -422,22 +446,39 @@ public interface TasksApi {
      * Retrieve all logs for a run.
      *
      * @param run   the run with a taskID and a runID
-     * @param orgID ID of organization
      * @return the list of all logs for a run
      */
     @Nonnull
-    List<LogEvent> getRunLogs(@Nonnull final Run run, final String orgID);
+    List<LogEvent> getRunLogs(@Nonnull final Run run);
 
     /**
      * Retrieve all logs for a run.
      *
      * @param taskID ID of task to get logs for it
      * @param runID  ID of run
-     * @param orgID  ID of organization
      * @return the list of all logs for a run
      */
     @Nonnull
-    List<LogEvent> getRunLogs(@Nonnull final String taskID, @Nonnull final String runID, final String orgID);
+    List<LogEvent> getRunLogs(@Nonnull final String taskID, @Nonnull final String runID);
+
+    /**
+     * Manually start a run of the task now overriding the current schedule.
+     *
+     * @param task the task to run
+     * @return Run scheduled to start
+     */
+    @Nonnull
+    Run runManually(@Nonnull final Task task);
+
+    /**
+     * Manually start a run of the task now overriding the current schedule.
+     *
+     * @param taskId      ID of task to run
+     * @param runManually to specify time
+     * @return Run scheduled to start
+     */
+    @Nonnull
+    Run runManually(@Nonnull final String taskId, @Nonnull final RunManually runManually);
 
     /**
      * Retry a task run.
@@ -455,6 +496,7 @@ public interface TasksApi {
      * @param runID  ID of run
      * @return the executed run
      */
+    //TODO Notnull - look to all Nullable
     @Nullable
     Run retryRun(@Nonnull final String taskID, @Nonnull final String runID);
 
@@ -486,11 +528,10 @@ public interface TasksApi {
      * Retrieve all logs for a task.
      *
      * @param taskID ID of task to get logs for
-     * @param orgID  ID of organization
      * @return the list of all logs for a task
      */
     @Nonnull
-    List<LogEvent> getLogs(@Nonnull final String taskID, @Nonnull final String orgID);
+    List<LogEvent> getLogs(@Nonnull final String taskID);
 
     /**
      * List all labels of a Task.
@@ -518,7 +559,7 @@ public interface TasksApi {
      * @return added label
      */
     @Nonnull
-    Label addLabel(@Nonnull final Label label, @Nonnull final Task task);
+    LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Task task);
 
     /**
      * Add the Task label.
@@ -528,7 +569,7 @@ public interface TasksApi {
      * @return added label
      */
     @Nonnull
-    Label addLabel(@Nonnull final String labelID, @Nonnull final String taskID);
+    LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String taskID);
 
     /**
      * Removes a label from a Task.

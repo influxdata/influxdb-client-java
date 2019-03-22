@@ -42,37 +42,52 @@ import org.influxdata.client.TelegrafsApi;
 import org.influxdata.client.UsersApi;
 import org.influxdata.client.WriteApi;
 import org.influxdata.client.WriteOptions;
-import org.influxdata.client.domain.Health;
+import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.IsOnboarding;
-import org.influxdata.client.domain.Onboarding;
+import org.influxdata.client.domain.OnboardingRequest;
 import org.influxdata.client.domain.OnboardingResponse;
 import org.influxdata.client.domain.Ready;
+import org.influxdata.client.service.AuthorizationsService;
+import org.influxdata.client.service.BucketsService;
+import org.influxdata.client.service.LabelsService;
+import org.influxdata.client.service.OrganizationsService;
+import org.influxdata.client.service.QueryService;
+import org.influxdata.client.service.ReadyService;
+import org.influxdata.client.service.ScraperTargetsService;
+import org.influxdata.client.service.SetupService;
+import org.influxdata.client.service.SourcesService;
+import org.influxdata.client.service.TasksService;
+import org.influxdata.client.service.TelegrafsService;
+import org.influxdata.client.service.UsersService;
+import org.influxdata.client.service.WriteService;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.exceptions.UnprocessableEntityException;
 
-import com.squareup.moshi.JsonAdapter;
 import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/10/2018 09:36)
  */
-public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBService> implements InfluxDBClient {
+public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements InfluxDBClient {
 
     private static final Logger LOG = Logger.getLogger(InfluxDBClientImpl.class.getName());
 
-    private final JsonAdapter<Onboarding> onboardingAdapter;
+    private final SetupService setupService;
+    private final ReadyService readyService;
+
 
     public InfluxDBClientImpl(@Nonnull final InfluxDBClientOptions options) {
 
-        super(options, InfluxDBService.class);
+        super(options);
 
-        this.onboardingAdapter = moshi.adapter(Onboarding.class);
+        setupService = retrofit.create(SetupService.class);
+        readyService = retrofit.create(ReadyService.class);
     }
 
     @Nonnull
     @Override
     public QueryApi getQueryApi() {
-        return new QueryApiImpl(influxDBService);
+        return new QueryApiImpl(retrofit.create(QueryService.class));
     }
 
     @Nonnull
@@ -87,74 +102,74 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
-        return new WriteApiImpl(writeOptions, influxDBService);
+        return new WriteApiImpl(writeOptions, retrofit.create(WriteService.class));
     }
 
     @Nonnull
     @Override
     public AuthorizationsApi getAuthorizationsApi() {
-        return new AuthorizationsApiImpl(influxDBService, moshi);
+        return new AuthorizationsApiImpl(retrofit.create(AuthorizationsService.class));
     }
 
     @Nonnull
     @Override
     public BucketsApi getBucketsApi() {
-        return new BucketsApiImpl(influxDBService, moshi);
+        return new BucketsApiImpl(retrofit.create(BucketsService.class));
     }
 
     @Nonnull
     @Override
     public OrganizationsApi getOrganizationsApi() {
-        return new OrganizationsApiImpl(influxDBService, moshi);
+        return new OrganizationsApiImpl(retrofit.create(OrganizationsService.class));
     }
 
     @Nonnull
     @Override
     public SourcesApi getSourcesApi() {
-        return new SourcesApiImpl(influxDBService, moshi, this);
+        return new SourcesApiImpl(retrofit.create(SourcesService.class), this);
     }
 
     @Nonnull
     @Override
     public TasksApi getTasksApi() {
-        return new TasksApiImpl(influxDBService, moshi);
+        return new TasksApiImpl(retrofit.create(TasksService.class));
     }
 
     @Nonnull
     @Override
     public UsersApi getUsersApi() {
-        return new UsersApiImpl(influxDBService, moshi);
+        return new UsersApiImpl(retrofit.create(UsersService.class));
     }
 
     @Nonnull
     @Override
     public ScraperTargetsApi getScraperTargetsApi() {
-        return new ScraperTargetsApiImpl(influxDBService, moshi);
+        return new ScraperTargetsApiImpl(retrofit.create(ScraperTargetsService.class));
     }
 
     @Nonnull
     @Override
     public TelegrafsApi getTelegrafsApi() {
-        return new TelegrafsApiImpl(influxDBService, moshi);
+        return new TelegrafsApiImpl(retrofit.create(TelegrafsService.class));
     }
 
     @Nonnull
     @Override
     public LabelsApi getLabelsApi() {
-        return new LabelsApiImpl(influxDBService, moshi);
+        return new LabelsApiImpl(retrofit.create(LabelsService.class));
     }
 
     @Nonnull
     @Override
-    public Health health() {
+    public Check health() {
 
-        return health(influxDBService.health());
+        return health(healthService.healthGet(null));
     }
 
     @Nullable
     @Override
     public Ready ready() {
-        Call<Ready> call = influxDBService.ready();
+        Call<Ready> call = readyService.readyGet();
         try {
             return execute(call);
         } catch (InfluxException e) {
@@ -165,13 +180,12 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
 
     @Nonnull
     @Override
-    public OnboardingResponse onBoarding(@Nonnull final Onboarding onboarding) throws UnprocessableEntityException {
+    public OnboardingResponse onBoarding(@Nonnull final OnboardingRequest onboarding)
+            throws UnprocessableEntityException {
 
         Arguments.checkNotNull(onboarding, "onboarding");
 
-        String json = onboardingAdapter.toJson(onboarding);
-
-        Call<OnboardingResponse> call = influxDBService.setup(createBody(json));
+        Call<OnboardingResponse> call = setupService.setupPost(onboarding, null);
 
         return execute(call);
     }
@@ -180,9 +194,9 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient<InfluxDBSer
     @Override
     public Boolean isOnboardingAllowed() {
 
-        IsOnboarding isOnboarding = execute(influxDBService.setup());
+        IsOnboarding isOnboarding = execute(setupService.setupGet(null));
 
-        return isOnboarding.getAllowed();
+        return isOnboarding.isAllowed();
     }
 
     @Nonnull
