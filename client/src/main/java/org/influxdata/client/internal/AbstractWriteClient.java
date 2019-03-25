@@ -62,7 +62,7 @@ import retrofit2.Response;
 public abstract class AbstractWriteClient extends AbstractRestClient {
 
     private static final Logger LOG = Logger.getLogger(AbstractWriteClient.class.getName());
-    private static final List<Integer> NOT_ABLE_TO_RETRY_ERRORS = Arrays.asList(400, 401, 403, 413);
+    private static final List<Integer> ABLE_TO_RETRY_ERRORS = Arrays.asList(429, 503);
 
     private final WriteOptions writeOptions;
 
@@ -459,9 +459,9 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                 HttpException ie = (HttpException) throwable;
 
                 //
-                // This types is not able to retry
+                // The type of error is not able to retry
                 //
-                if (NOT_ABLE_TO_RETRY_ERRORS.contains(ie.code())) {
+                if (!ABLE_TO_RETRY_ERRORS.contains(ie.code())) {
 
                     return Flowable.error(throwable);
                 }
