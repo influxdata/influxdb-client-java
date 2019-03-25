@@ -254,6 +254,33 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - Templates
+      summary: Delete a template
+      parameters:
+        - $ref: '#/components/parameters/TraceSpan'
+        - in: path
+          name: templateID
+          schema:
+            type: string
+          required: true
+          description: ID of template to delete
+      responses:
+        '204':
+          description: delete has been accepted
+        '404':
+          description: template not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /telegrafs:
     get:
       tags:
@@ -6944,6 +6971,15 @@ components:
           type: object
         labels:
           $ref: "#/components/schemas/Labels"
+        links:
+          type: object
+          readOnly: true
+          example:
+            self: "/api/v2/documents/templates/1"
+          properties:
+            self:
+              description: URL for this document
+              $ref: "#/components/schemas/Link"
       required:
         - id
         - meta
@@ -6986,6 +7022,15 @@ components:
           $ref: "#/components/schemas/DocumentMeta"
         labels:
           $ref: "#/components/schemas/Labels"
+        links:
+          type: object
+          readOnly: true
+          example:
+            self: "/api/v2/documents/templates/1"
+          properties:
+            self:
+              description: URL for this document
+              $ref: "#/components/schemas/Link"
       required:
         - id
         - meta

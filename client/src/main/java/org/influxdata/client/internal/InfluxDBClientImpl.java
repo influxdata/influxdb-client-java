@@ -39,6 +39,7 @@ import org.influxdata.client.ScraperTargetsApi;
 import org.influxdata.client.SourcesApi;
 import org.influxdata.client.TasksApi;
 import org.influxdata.client.TelegrafsApi;
+import org.influxdata.client.TemplatesApi;
 import org.influxdata.client.UsersApi;
 import org.influxdata.client.WriteApi;
 import org.influxdata.client.WriteOptions;
@@ -58,6 +59,7 @@ import org.influxdata.client.service.SetupService;
 import org.influxdata.client.service.SourcesService;
 import org.influxdata.client.service.TasksService;
 import org.influxdata.client.service.TelegrafsService;
+import org.influxdata.client.service.TemplatesService;
 import org.influxdata.client.service.UsersService;
 import org.influxdata.client.service.WriteService;
 import org.influxdata.exceptions.InfluxException;
@@ -157,6 +159,12 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Override
     public LabelsApi getLabelsApi() {
         return new LabelsApiImpl(retrofit.create(LabelsService.class));
+    }
+
+    @Nonnull
+    @Override
+    public TemplatesApi getTemplatesApi() {
+        return new TemplatesApiImpl(retrofit.create(TemplatesService.class));
     }
 
     @Nonnull

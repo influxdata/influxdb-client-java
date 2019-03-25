@@ -28,6 +28,7 @@ import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Check;
+import org.influxdata.client.domain.Document;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.OnboardingRequest;
 import org.influxdata.client.domain.OnboardingResponse;
@@ -145,6 +146,14 @@ public interface InfluxDBClient extends AutoCloseable {
      */
     @Nonnull
     LabelsApi getLabelsApi();
+
+    /**
+     * Get the {@link Document} client.
+     *
+     * @return the new client instance for Template API
+     */
+    @Nonnull
+    TemplatesApi getTemplatesApi();
 
     /**
      * Get the health of an instance.

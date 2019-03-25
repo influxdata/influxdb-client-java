@@ -44,7 +44,7 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:48)
  */
-class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
+final class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
 
     private static final Logger LOG = Logger.getLogger(LabelsApiImpl.class.getName());
 
