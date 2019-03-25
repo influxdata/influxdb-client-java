@@ -143,6 +143,29 @@ class ITWriteQueryApiTest extends AbstractITClientTest {
         Assertions.assertThat(query.get(0).getRecords().get(0).getTime()).isEqualTo(Instant.ofEpochSecond(0,1));
     }
 
+    /**
+     * Test WriteEventLister.onEvent invocation on write error.
+     */
+    @Test
+    void writeErrorListenerTest () {
+        String bucketName = "non_existing_bucket";
+
+        writeApi = influxDBClient.getWriteApi();
+
+        String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
+
+        WriteEventListener listener = new WriteEventListener();
+
+        writeApi.listenEvents(WriteErrorEvent.class, listener);
+
+        LOG.log(Level.INFO, "Write Event Listener count down: {0}. Before write.", countDownLatch);
+
+        writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record);
+
+        //check that error event is fired.
+        waitToCallback(listener.countDownLatch, 5);
+    }
+
     @Test
     void writePrecisionMicros() {
 
