@@ -257,7 +257,7 @@ paths:
     delete:
       tags:
         - Templates
-      summary: Delete a template
+      summary: delete a template document
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
         - in: path
@@ -265,16 +265,10 @@ paths:
           schema:
             type: string
           required: true
-          description: ID of template to delete
+          description: ID of template
       responses:
         '204':
           description: delete has been accepted
-        '404':
-          description: template not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
         default:
           description: unexpected error
           content:
@@ -6555,11 +6549,12 @@ components:
           items:
             type: string
         arguments:
-          type: object
-          oneOf:
-            - $ref: "#/components/schemas/QueryVariableProperties"
-            - $ref: "#/components/schemas/ConstantVariableProperties"
-            - $ref: "#/components/schemas/MapVariableProperties"
+          type: array
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/QueryVariableProperties"
+              - $ref: "#/components/schemas/ConstantVariableProperties"
+              - $ref: "#/components/schemas/MapVariableProperties"
     Variables:
       type: object
       example:

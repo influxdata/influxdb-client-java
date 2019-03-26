@@ -68,6 +68,6 @@ public final class WriteRetriableErrorEvent extends AbstractWriteEvent {
     @Override
     public void logEvent() {
         String msg = "The retriable error occurred during writing of data. Retry in: {0} [ms]";
-        LOG.log(Level.SEVERE, msg, retryInterval);
+        LOG.log(Level.WARNING, msg, retryInterval);
     }
 }

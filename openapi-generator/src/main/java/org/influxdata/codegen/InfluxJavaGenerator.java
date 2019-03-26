@@ -26,12 +26,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import org.openapitools.codegen.CodegenConfig;
 import org.openapitools.codegen.CodegenModel;
@@ -64,6 +67,18 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
 
     public InfluxJavaGenerator() {
         super();
+
+        importMapping.put("JSON", "org.influxdata.client.JSON");
+        importMapping.put("JsonDeserializer", "com.google.gson.JsonDeserializer");
+        importMapping.put("JsonDeserializationContext", "com.google.gson.JsonDeserializationContext");
+        importMapping.put("JsonParseException", "com.google.gson.JsonParseException");
+        importMapping.put("ArrayList", "java.util.ArrayList");
+        importMapping.put("List", "java.util.List");
+        importMapping.put("JsonArray", "com.google.gson.JsonArray");
+        importMapping.put("JsonElement", "com.google.gson.JsonElement");
+        importMapping.put("HashMap", "java.util.HashMap");
+        importMapping.put("Map", "java.util.Map");
+        importMapping.put("ReflectType", "java.lang.reflect.Type");
     }
 
     @Override
@@ -253,6 +268,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                 .collect(Collectors.toList());
     }
 
+
     @Override
     public Map<String, Object> postProcessOperationsWithModels(final Map<String, Object> objs,
                                                                final List<Object> allModels) {
@@ -349,6 +365,52 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         return op;
     }
 
+
+    @Override
+    public CodegenModel fromModel(final String name, final Schema model, final Map<String, Schema> allDefinitions) {
+        CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
+        if (name.equals("Variable")) {
+            model.getProperties().forEach(new BiConsumer<String, Schema>() {
+                @Override
+                public void accept(final String s, final Schema schema) {
+                    if (schema instanceof ArraySchema) {
+                        Schema items = ((ArraySchema) schema).getItems();
+
+                        if (items instanceof ComposedSchema) {
+                            CodegenProperty codegenProperty = getCodegenProperty(codegenModel, s);
+                            String adapterName = name + codegenProperty.nameInCamelCase + "Adapter";
+
+                            codegenProperty.vendorExtensions.put("x-has-type-adapter", Boolean.TRUE);
+                            codegenProperty.vendorExtensions.put("x-type-adapter", adapterName);
+
+                            Map<String, TypeAdapter> adapters = (HashMap<String, TypeAdapter>) codegenModel.vendorExtensions
+                                    .getOrDefault("x-type-adapters", new HashMap<String, TypeAdapter>());
+
+                            TypeAdapter typeAdapter = new TypeAdapter();
+                            typeAdapter.classname = adapterName;
+                            
+                            adapters.put(adapterName, typeAdapter);
+
+                            codegenModel.vendorExtensions.put("x-type-adapters", adapters);
+                            codegenModel.imports.add("JsonDeserializer");
+                            codegenModel.imports.add("ArrayList");
+                            codegenModel.imports.add("List");
+                            codegenModel.imports.add("JsonArray");
+                            codegenModel.imports.add("JsonElement");
+                            codegenModel.imports.add("JsonParseException");
+                            codegenModel.imports.add("JsonDeserializationContext");
+                            codegenModel.imports.add("Map");
+                            codegenModel.imports.add("HashMap");
+                            codegenModel.imports.add("ReflectType");
+                        }
+                    }
+                }
+
+            });
+        }
+        return codegenModel;
+    }
+
     @Override
     public String toApiName(String name) {
 
@@ -404,5 +466,10 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         HashMap models = (HashMap) ((ArrayList) modelConfig.get("models")).get(0);
 
         return (CodegenModel) models.get("model");
+    }
+
+    public class TypeAdapter
+    {
+        public String classname;
     }
 }

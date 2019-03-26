@@ -81,6 +81,9 @@ public class {{classname}}{{#vendorExtensions.x-has-generic-type}}{{{vendorExten
   {{#gson}}
   public static final String SERIALIZED_NAME_{{nameInSnakeCase}} = "{{baseName}}";
   @SerializedName(SERIALIZED_NAME_{{nameInSnakeCase}})
+  {{#vendorExtensions.x-has-type-adapter}}
+  @JsonAdapter({{vendorExtensions.x-type-adapter}}.class)
+  {{/vendorExtensions.x-has-type-adapter}}
   {{/gson}}
   private {{{datatypeWithEnum}}} {{name}}{{#defaultValue}} = {{{.}}}{{/defaultValue}};
 
@@ -316,4 +319,32 @@ public class {{classname}}{{#vendorExtensions.x-has-generic-type}}{{{vendorExten
     }
   };
 {{/parcelableModel}}
+{{#vendorExtensions.x-type-adapters.entrySet}}
+  public class {{value.classname}} implements JsonDeserializer<List<Object>> {
+    private final Map<String, Class> types = new HashMap<>();
+    private final String discriminator = "type";
+
+    public {{value.classname}}() {
+    }
+
+    @Override
+    public List<Object> deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+      List list = new ArrayList<>();
+
+      JsonArray ja = json.getAsJsonArray();
+      for (JsonElement je : ja) {
+        String type = je.getAsJsonObject().get(discriminator).getAsString();
+
+        Class c = types.get(type);
+        if (c == null) {
+          c = Object.class;
+        }
+
+        list.add(context.deserialize(je, c)) ;
+      }
+
+      return list;
+    }
+  }
+{{/vendorExtensions.x-type-adapters.entrySet}}
 }

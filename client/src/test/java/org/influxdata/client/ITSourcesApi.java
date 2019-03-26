@@ -171,8 +171,6 @@ class ITSourcesApi extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/12814
     void findBucketsBySourceByUnknownSource() {
 
         Assertions.assertThatThrownBy(() -> sourcesApi.findBucketsBySourceID("020f755c3d082000"))

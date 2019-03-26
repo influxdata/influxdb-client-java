@@ -42,7 +42,7 @@ for f in *.java; do
    case ${f} in
       (Bucket.java|BucketLinks.java|BucketRetentionRules.java|Buckets.java|Label.java|LabelMapping.java|LabelResponse.java|Links.java|OperationLogs.java|OperationLog.java|OperationLogLinks.java|User.java|UserLinks.java|Users.java|UsersLinks.java|ResourceMember.java|ResourceMembers.java|ResourceOwner.java|ResourceOwners.java|AddResourceMemberRequestBody.java|ScraperTargetRequest.java|ScraperTargetResponse.java|ScraperTargetResponses.java|ScraperTargetResponseLinks.java|Organization.java|OrganizationLinks.java|Organizations.java|LabelUpdate.java|LabelsResponse.java|Labels.java|Source.java|SourceLinks.java|Sources.java|Check.java|OnboardingRequest.java|OnboardingResponse.java|IsOnboarding.java|Authorization.java|AuthorizationLinks.java|Authorizations.java|Permission.java|PermissionResource.java|SecretKeys.java|SecretKeysLinks.java|Task.java|TaskCreateRequest.java|TaskLinks.java|TaskUpdateRequest.java|LogEvent.java|Logs.java|Run.java|RunLinks.java|RunManually.java|Runs.java|Tasks.java|Error.java)
          ;;
-      (Telegraf*.java|PasswordResetBody.java|LabelCreateRequest.java|WritePrecision.java|Document*.java)
+      (Telegraf*.java|PasswordResetBody.java|LabelCreateRequest.java|WritePrecision.java|Document*.java|Variable.java|Variables.java|QueryVariableProperties.java|ConstantVariableProperties.java|MapVariableProperties.java)
         ;;
       (Query*.java|LineProtocolError.java|LineProtocolLengthError.java|FluxSuggestions.java|LanguageRequest.java|AnalyzeQueryResponse.java|ASTResponse.java|Dialect.java|Field.java|FluxSuggestionsFuncs.java|AnalyzeQueryResponseErrors.java|ModelPackage.java|Ready.java)
         ;;
@@ -56,7 +56,7 @@ cd ${SCRIPT_PATH}/../client/src/generated/java/org/influxdata/client/service
 
 for f in *.java; do
    case ${f} in
-      (AuthorizationsService.java|SourcesService.java|BucketsService.java|OrganizationsService.java|ScraperTargetsService.java|TelegrafsService.java|TasksService.java|LabelsService.java|UsersService.java|SetupService.java|QueryService.java|WriteService.java|ReadyService.java|HealthService.java|TemplatesService.java)
+      (AuthorizationsService.java|SourcesService.java|BucketsService.java|OrganizationsService.java|ScraperTargetsService.java|TelegrafsService.java|TasksService.java|LabelsService.java|UsersService.java|SetupService.java|QueryService.java|WriteService.java|ReadyService.java|HealthService.java|TemplatesService.java|VariablesService.java)
          ;;
       (*)
          rm -- "$f";; # remove the file
