@@ -23,42 +23,54 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * SecretKeys
+ * SecretKeysResponseLinks
  */
 
-public class SecretKeys {
-  public static final String SERIALIZED_NAME_SECRETS = "secrets";
-  @SerializedName(SERIALIZED_NAME_SECRETS)
-  private List<String> secrets = new ArrayList<>();
+public class SecretKeysResponseLinks {
+  public static final String SERIALIZED_NAME_SELF = "self";
+  @SerializedName(SERIALIZED_NAME_SELF)
+  private String self = null;
 
-  public SecretKeys secrets(List<String> secrets) {
-    this.secrets = secrets;
-    return this;
-  }
+  public static final String SERIALIZED_NAME_ORG = "org";
+  @SerializedName(SERIALIZED_NAME_ORG)
+  private String org = null;
 
-  public SecretKeys addSecretsItem(String secretsItem) {
-    if (this.secrets == null) {
-      this.secrets = new ArrayList<>();
-    }
-    this.secrets.add(secretsItem);
+  public SecretKeysResponseLinks self(String self) {
+    this.self = self;
     return this;
   }
 
    /**
-   * Get secrets
-   * @return secrets
+   * Get self
+   * @return self
   **/
   @ApiModelProperty(value = "")
-  public List<String> getSecrets() {
-    return secrets;
+  public String getSelf() {
+    return self;
   }
 
-  public void setSecrets(List<String> secrets) {
-    this.secrets = secrets;
+  public void setSelf(String self) {
+    this.self = self;
+  }
+
+  public SecretKeysResponseLinks org(String org) {
+    this.org = org;
+    return this;
+  }
+
+   /**
+   * Get org
+   * @return org
+  **/
+  @ApiModelProperty(value = "")
+  public String getOrg() {
+    return org;
+  }
+
+  public void setOrg(String org) {
+    this.org = org;
   }
 
 
@@ -70,21 +82,23 @@ public class SecretKeys {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SecretKeys secretKeys = (SecretKeys) o;
-    return Objects.equals(this.secrets, secretKeys.secrets);
+    SecretKeysResponseLinks secretKeysResponseLinks = (SecretKeysResponseLinks) o;
+    return Objects.equals(this.self, secretKeysResponseLinks.self) &&
+        Objects.equals(this.org, secretKeysResponseLinks.org);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(secrets);
+    return Objects.hash(self, org);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class SecretKeys {\n");
-    sb.append("    secrets: ").append(toIndentedString(secrets)).append("\n");
+    sb.append("class SecretKeysResponseLinks {\n");
+    sb.append("    self: ").append(toIndentedString(self)).append("\n");
+    sb.append("    org: ").append(toIndentedString(org)).append("\n");
     sb.append("}");
     return sb.toString();
   }
