@@ -128,11 +128,11 @@ final class TemplatesApiImpl extends AbstractRestClient implements TemplatesApi 
 
     @Nonnull
     @Override
-    public List<DocumentListEntry> findTemplates(@Nonnull final String org) {
+    public List<DocumentListEntry> findTemplates(@Nonnull final String orgName) {
 
-        Arguments.checkNonEmpty(org, "org");
+        Arguments.checkNonEmpty(orgName, "orgName");
 
-        Call<Documents> call = service.documentsTemplatesGet(org, null);
+        Call<Documents> call = service.documentsTemplatesGet(orgName, null);
 
         return execute(call).getDocuments();
     }

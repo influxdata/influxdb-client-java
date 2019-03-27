@@ -92,7 +92,6 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
         scraperTarget.setUrl(url);
         scraperTarget.setBucketID(bucketID);
         scraperTarget.setOrgID(orgID);
-        scraperTarget.setType(ScraperTargetRequest.TypeEnum.PROMETHEUS);
 
         return createScraperTarget(scraperTarget);
     }
@@ -166,7 +165,6 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
 
         ScraperTargetRequest cloned = new ScraperTargetRequest();
         cloned.setName(clonedName);
-        cloned.setType(scraperTargetResponse.getType());
         cloned.setUrl(scraperTargetResponse.getUrl());
         cloned.setOrgID(scraperTargetResponse.getOrgID());
         cloned.setBucketID(scraperTargetResponse.getBucketID());

@@ -98,9 +98,9 @@ public interface TemplatesApi {
     /**
      * List of template documents.
      *
-     * @param org specifies the name of the organization of the template (required)
+     * @param orgName specifies the name of the organization of the template (required)
      * @return a list of template documents
      */
     @Nonnull
-    List<DocumentListEntry> findTemplates(@Nonnull final String org);
+    List<DocumentListEntry> findTemplates(@Nonnull final String orgName);
 }

@@ -47,9 +47,9 @@ public interface TemplatesService {
   );
 
   /**
-   * Delete a template
+   * delete a template document
    * 
-   * @param templateID ID of template to delete (required)
+   * @param templateID ID of template (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */

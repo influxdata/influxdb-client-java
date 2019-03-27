@@ -20,6 +20,7 @@ import org.influxdata.client.domain.ResourceMembers;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.SecretKeys;
+import org.influxdata.client.domain.SecretKeysResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -238,10 +239,10 @@ public interface OrganizationsService {
    * 
    * @param orgID ID of the organization (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;SecretKeys&gt;
+   * @return Call&lt;SecretKeysResponse&gt;
    */
   @GET("api/v2/orgs/{orgID}/secrets")
-  Call<SecretKeys> orgsOrgIDSecretsGet(
+  Call<SecretKeysResponse> orgsOrgIDSecretsGet(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

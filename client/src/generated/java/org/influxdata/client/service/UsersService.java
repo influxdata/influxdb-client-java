@@ -205,13 +205,13 @@ public interface UsersService {
    * @param passwordResetBody new password (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param authorization An auth credential for the Basic scheme (optional)
-   * @return Call&lt;User&gt;
+   * @return Call&lt;Void&gt;
    */
   @Headers({
     "Content-Type:application/json"
   })
   @PUT("api/v2/me/password")
-  Call<User> mePasswordPut(
+  Call<Void> mePasswordPut(
     @retrofit2.http.Body PasswordResetBody passwordResetBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Authorization") String authorization
   );
 
@@ -613,13 +613,13 @@ public interface UsersService {
    * @param passwordResetBody new password (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param authorization An auth credential for the Basic scheme (optional)
-   * @return Call&lt;User&gt;
+   * @return Call&lt;Void&gt;
    */
   @Headers({
     "Content-Type:application/json"
   })
   @PUT("api/v2/users/{userID}/password")
-  Call<User> usersUserIDPasswordPut(
+  Call<Void> usersUserIDPasswordPut(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Body PasswordResetBody passwordResetBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Authorization") String authorization
   );
 

@@ -76,7 +76,7 @@ public class LineProtocolLengthError {
 
   public static final String SERIALIZED_NAME_CODE = "code";
   @SerializedName(SERIALIZED_NAME_CODE)
-  private CodeEnum code = null;
+  private CodeEnum code = CodeEnum.INVALID;
 
   public static final String SERIALIZED_NAME_MESSAGE = "message";
   @SerializedName(SERIALIZED_NAME_MESSAGE)

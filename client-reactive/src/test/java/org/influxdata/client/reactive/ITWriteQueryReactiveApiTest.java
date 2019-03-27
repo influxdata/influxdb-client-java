@@ -71,7 +71,6 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
                 "my-password".toCharArray());
 
         BucketRetentionRules bucketRetentionRules = new BucketRetentionRules();
-        bucketRetentionRules.setType(BucketRetentionRules.TypeEnum.EXPIRE);
         bucketRetentionRules.setEverySeconds(3600);
 
         bucket = client.getBucketsApi()

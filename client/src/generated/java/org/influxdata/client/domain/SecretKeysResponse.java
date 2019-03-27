@@ -23,42 +23,35 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import org.influxdata.client.domain.SecretKeys;
+import org.influxdata.client.domain.SecretKeysResponseLinks;
 
 /**
- * SecretKeys
+ * SecretKeysResponse
  */
 
-public class SecretKeys {
-  public static final String SERIALIZED_NAME_SECRETS = "secrets";
-  @SerializedName(SERIALIZED_NAME_SECRETS)
-  private List<String> secrets = new ArrayList<>();
+public class SecretKeysResponse extends SecretKeys {
+  public static final String SERIALIZED_NAME_LINKS = "links";
+  @SerializedName(SERIALIZED_NAME_LINKS)
+  private SecretKeysResponseLinks links = null;
 
-  public SecretKeys secrets(List<String> secrets) {
-    this.secrets = secrets;
-    return this;
-  }
-
-  public SecretKeys addSecretsItem(String secretsItem) {
-    if (this.secrets == null) {
-      this.secrets = new ArrayList<>();
-    }
-    this.secrets.add(secretsItem);
+  public SecretKeysResponse links(SecretKeysResponseLinks links) {
+    this.links = links;
     return this;
   }
 
    /**
-   * Get secrets
-   * @return secrets
+   * Get links
+   * @return links
   **/
   @ApiModelProperty(value = "")
-  public List<String> getSecrets() {
-    return secrets;
+  public SecretKeysResponseLinks getLinks() {
+    return links;
   }
 
-  public void setSecrets(List<String> secrets) {
-    this.secrets = secrets;
+  public void setLinks(SecretKeysResponseLinks links) {
+    this.links = links;
   }
 
 
@@ -70,21 +63,23 @@ public class SecretKeys {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SecretKeys secretKeys = (SecretKeys) o;
-    return Objects.equals(this.secrets, secretKeys.secrets);
+    SecretKeysResponse secretKeysResponse = (SecretKeysResponse) o;
+    return Objects.equals(this.links, secretKeysResponse.links) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(secrets);
+    return Objects.hash(links, super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class SecretKeys {\n");
-    sb.append("    secrets: ").append(toIndentedString(secrets)).append("\n");
+    sb.append("class SecretKeysResponse {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("}");
     return sb.toString();
   }

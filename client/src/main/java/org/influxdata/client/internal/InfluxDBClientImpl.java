@@ -41,6 +41,7 @@ import org.influxdata.client.TasksApi;
 import org.influxdata.client.TelegrafsApi;
 import org.influxdata.client.TemplatesApi;
 import org.influxdata.client.UsersApi;
+import org.influxdata.client.VariablesApi;
 import org.influxdata.client.WriteApi;
 import org.influxdata.client.WriteOptions;
 import org.influxdata.client.domain.Check;
@@ -61,6 +62,7 @@ import org.influxdata.client.service.TasksService;
 import org.influxdata.client.service.TelegrafsService;
 import org.influxdata.client.service.TemplatesService;
 import org.influxdata.client.service.UsersService;
+import org.influxdata.client.service.VariablesService;
 import org.influxdata.client.service.WriteService;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.exceptions.UnprocessableEntityException;
@@ -165,6 +167,12 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Override
     public TemplatesApi getTemplatesApi() {
         return new TemplatesApiImpl(retrofit.create(TemplatesService.class));
+    }
+
+    @Nonnull
+    @Override
+    public VariablesApi getVariablesApi() {
+        return new VariablesApiImpl(retrofit.create(VariablesService.class));
     }
 
     @Nonnull

@@ -80,11 +80,6 @@ public class ResourceMember extends User {
   @SerializedName(SERIALIZED_NAME_ROLE)
   private RoleEnum role = RoleEnum.MEMBER;
 
-  public ResourceMember role(RoleEnum role) {
-    this.role = role;
-    return this;
-  }
-
    /**
    * Get role
    * @return role
@@ -92,10 +87,6 @@ public class ResourceMember extends User {
   @ApiModelProperty(value = "")
   public RoleEnum getRole() {
     return role;
-  }
-
-  public void setRole(RoleEnum role) {
-    this.role = role;
   }
 
 

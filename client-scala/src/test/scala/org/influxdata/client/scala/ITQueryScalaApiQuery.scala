@@ -61,7 +61,6 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       .orElseThrow(() => new IllegalStateException())
 
     val retentionRule = new BucketRetentionRules()
-    retentionRule.setType(BucketRetentionRules.TypeEnum.EXPIRE)
     retentionRule.setEverySeconds(3600)
 
     val bucket = client.getBucketsApi.createBucket(influxDBUtils.generateName("h2o"), retentionRule, organization)

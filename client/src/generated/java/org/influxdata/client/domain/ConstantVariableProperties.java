@@ -23,18 +23,20 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * BucketRetentionRules
+ * ConstantVariableProperties
  */
 
-public class BucketRetentionRules {
+public class ConstantVariableProperties {
   /**
    * Gets or Sets type
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
-    EXPIRE("expire");
+    CONSTANT("constant");
 
     private String value;
 
@@ -76,11 +78,11 @@ public class BucketRetentionRules {
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = TypeEnum.EXPIRE;
+  private TypeEnum type = TypeEnum.CONSTANT;
 
-  public static final String SERIALIZED_NAME_EVERY_SECONDS = "everySeconds";
-  @SerializedName(SERIALIZED_NAME_EVERY_SECONDS)
-  private Integer everySeconds = null;
+  public static final String SERIALIZED_NAME_VALUES = "values";
+  @SerializedName(SERIALIZED_NAME_VALUES)
+  private List<String> values = new ArrayList<>();
 
    /**
    * Get type
@@ -91,23 +93,30 @@ public class BucketRetentionRules {
     return type;
   }
 
-  public BucketRetentionRules everySeconds(Integer everySeconds) {
-    this.everySeconds = everySeconds;
+  public ConstantVariableProperties values(List<String> values) {
+    this.values = values;
+    return this;
+  }
+
+  public ConstantVariableProperties addValuesItem(String valuesItem) {
+    if (this.values == null) {
+      this.values = new ArrayList<>();
+    }
+    this.values.add(valuesItem);
     return this;
   }
 
    /**
-   * duration in seconds for how long data will be kept in the database.
-   * minimum: 1
-   * @return everySeconds
+   * Get values
+   * @return values
   **/
-  @ApiModelProperty(example = "86400", value = "duration in seconds for how long data will be kept in the database.")
-  public Integer getEverySeconds() {
-    return everySeconds;
+  @ApiModelProperty(value = "")
+  public List<String> getValues() {
+    return values;
   }
 
-  public void setEverySeconds(Integer everySeconds) {
-    this.everySeconds = everySeconds;
+  public void setValues(List<String> values) {
+    this.values = values;
   }
 
 
@@ -119,23 +128,23 @@ public class BucketRetentionRules {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    BucketRetentionRules bucketRetentionRules = (BucketRetentionRules) o;
-    return Objects.equals(this.type, bucketRetentionRules.type) &&
-        Objects.equals(this.everySeconds, bucketRetentionRules.everySeconds);
+    ConstantVariableProperties constantVariableProperties = (ConstantVariableProperties) o;
+    return Objects.equals(this.type, constantVariableProperties.type) &&
+        Objects.equals(this.values, constantVariableProperties.values);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, everySeconds);
+    return Objects.hash(type, values);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class BucketRetentionRules {\n");
+    sb.append("class ConstantVariableProperties {\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    everySeconds: ").append(toIndentedString(everySeconds)).append("\n");
+    sb.append("    values: ").append(toIndentedString(values)).append("\n");
     sb.append("}");
     return sb.toString();
   }

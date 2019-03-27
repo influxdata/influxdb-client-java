@@ -21,6 +21,7 @@
  */
 package org.influxdata.client;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
-import org.influxdata.client.domain.SecretKeys;
+import org.influxdata.client.domain.SecretKeysResponse;
 import org.influxdata.client.domain.User;
 
 import org.assertj.core.api.Assertions;
@@ -212,7 +213,7 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
 
         Organization organization = organizationsApi.createOrganization(generateName("Constant Pro"));
 
-        SecretKeys secrets = organizationsApi.getSecrets(organization);
+        SecretKeysResponse secrets = organizationsApi.getSecrets(organization);
         Assertions.assertThat(secrets.getSecrets()).isEmpty();
 
         Map<String, String> secretsKV = new HashMap<>();
@@ -226,10 +227,9 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
         Assertions.assertThat(secrets.getLinks().getOrg()).isEqualTo("/api/v2/orgs/" + organization.getId());
         Assertions.assertThat(secrets.getLinks().getSelf()).isEqualTo("/api/v2/orgs/" + organization.getId() + "/secrets");
 
-        //TODO https://github.com/influxdata/influxdb/issues/12716
-        // organizationsApi.deleteSecrets(Collections.singletonList("gh"), organization);
-        // secrets = organizationsApi.getSecrets(organization);
-        // Assertions.assertThat(secrets.getSecrets()).hasSize(1).contains("az");
+        organizationsApi.deleteSecrets(Collections.singletonList("gh"), organization);
+        secrets = organizationsApi.getSecrets(organization);
+        Assertions.assertThat(secrets.getSecrets()).hasSize(1).contains("az");
     }
 
     @Test
@@ -269,7 +269,7 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
     void findOrganizationLogs() {
 
         Organization organization = organizationsApi.createOrganization(generateName("Constant Pro"));
-        
+
         List<OperationLog> userLogs = organizationsApi.findOrganizationLogs(organization);
         Assertions.assertThat(userLogs).isNotEmpty();
         Assertions.assertThat(userLogs.get(0).getDescription()).isEqualTo("Organization Created");

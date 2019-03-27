@@ -25,40 +25,41 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.influxdata.client.domain.Variable;
 
 /**
- * SecretKeys
+ * Variables
  */
 
-public class SecretKeys {
-  public static final String SERIALIZED_NAME_SECRETS = "secrets";
-  @SerializedName(SERIALIZED_NAME_SECRETS)
-  private List<String> secrets = new ArrayList<>();
+public class Variables {
+  public static final String SERIALIZED_NAME_VARIABLES = "variables";
+  @SerializedName(SERIALIZED_NAME_VARIABLES)
+  private List<Variable> variables = new ArrayList<>();
 
-  public SecretKeys secrets(List<String> secrets) {
-    this.secrets = secrets;
+  public Variables variables(List<Variable> variables) {
+    this.variables = variables;
     return this;
   }
 
-  public SecretKeys addSecretsItem(String secretsItem) {
-    if (this.secrets == null) {
-      this.secrets = new ArrayList<>();
+  public Variables addVariablesItem(Variable variablesItem) {
+    if (this.variables == null) {
+      this.variables = new ArrayList<>();
     }
-    this.secrets.add(secretsItem);
+    this.variables.add(variablesItem);
     return this;
   }
 
    /**
-   * Get secrets
-   * @return secrets
+   * Get variables
+   * @return variables
   **/
   @ApiModelProperty(value = "")
-  public List<String> getSecrets() {
-    return secrets;
+  public List<Variable> getVariables() {
+    return variables;
   }
 
-  public void setSecrets(List<String> secrets) {
-    this.secrets = secrets;
+  public void setVariables(List<Variable> variables) {
+    this.variables = variables;
   }
 
 
@@ -70,21 +71,21 @@ public class SecretKeys {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SecretKeys secretKeys = (SecretKeys) o;
-    return Objects.equals(this.secrets, secretKeys.secrets);
+    Variables variables = (Variables) o;
+    return Objects.equals(this.variables, variables.variables);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(secrets);
+    return Objects.hash(variables);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class SecretKeys {\n");
-    sb.append("    secrets: ").append(toIndentedString(secrets)).append("\n");
+    sb.append("class Variables {\n");
+    sb.append("    variables: ").append(toIndentedString(variables)).append("\n");
     sb.append("}");
     return sb.toString();
   }
