@@ -6305,12 +6305,12 @@ components:
       - shape
       - type
       properties:
+        type:
+          type: string
+          enum: ["log-viewer"]
         shape:
             type: string
             enum: ["chronograf-v2"]
-        type:
-            type: string
-            enum: ["log-viewer"]
         columns:
           description: Defines the order, names, and visibility of columns in the log
             viewer table
@@ -6511,6 +6511,8 @@ components:
           enum: ["map"]
         values:
           type: object
+          additionalProperties:
+            type: string
     QueryVariableProperties:
       properties:
         type:
@@ -6537,6 +6539,9 @@ components:
             self:
               type: string
               format: uri
+            org:
+              type: string
+              format: uri
         id:
           readOnly: true
           type: string
@@ -6549,12 +6554,11 @@ components:
           items:
             type: string
         arguments:
-          type: array
-          items:
-            oneOf:
-              - $ref: "#/components/schemas/QueryVariableProperties"
-              - $ref: "#/components/schemas/ConstantVariableProperties"
-              - $ref: "#/components/schemas/MapVariableProperties"
+          type: object
+          oneOf:
+            - $ref: "#/components/schemas/QueryVariableProperties"
+            - $ref: "#/components/schemas/ConstantVariableProperties"
+            - $ref: "#/components/schemas/MapVariableProperties"
     Variables:
       type: object
       example:

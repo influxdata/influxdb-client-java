@@ -320,30 +320,29 @@ public class {{classname}}{{#vendorExtensions.x-has-generic-type}}{{{vendorExten
   };
 {{/parcelableModel}}
 {{#vendorExtensions.x-type-adapters.entrySet}}
-  public class {{value.classname}} implements JsonDeserializer<List<Object>> {
-    private final Map<String, Class> types = new HashMap<>();
-    private final String discriminator = "type";
+  public class {{value.classname}} implements JsonDeserializer<Object>, JsonSerializer<Object> {
+    private final String discriminator = "{{value.discriminator}}";
 
     public {{value.classname}}() {
     }
 
     @Override
-    public List<Object> deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
-      List list = new ArrayList<>();
+    public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+      String type = json.getAsJsonObject().get(discriminator).getAsString();
 
-      JsonArray ja = json.getAsJsonArray();
-      for (JsonElement je : ja) {
-        String type = je.getAsJsonObject().get(discriminator).getAsString();
-
-        Class c = types.get(type);
-        if (c == null) {
-          c = Object.class;
-        }
-
-        list.add(context.deserialize(je, c)) ;
+      {{#value.items}}
+      if ("{{discriminatorValue}}".equals(type)) {
+        return context.deserialize(json, {{classname}}.class);
       }
+      {{/value.items}}
+  
+      return context.deserialize(json, Object.class);
+    }
 
-      return list;
+    @Override
+    public JsonElement serialize(Object object, Type typeOfSrc, JsonSerializationContext context) {
+
+      return context.serialize(object);
     }
   }
 {{/vendorExtensions.x-type-adapters.entrySet}}

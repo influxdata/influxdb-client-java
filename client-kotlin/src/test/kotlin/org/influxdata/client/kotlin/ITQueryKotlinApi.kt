@@ -22,25 +22,13 @@
 package org.influxdata.client.kotlin
 
 import assertk.assert
-import assertk.assertions.containsExactly
-import assertk.assertions.endsWith
-import assertk.assertions.hasSize
-import assertk.assertions.isEmpty
-import assertk.assertions.isEqualTo
-import assertk.assertions.isInstanceOf
-import assertk.assertions.isTrue
+import assertk.assertions.*
 import kotlinx.coroutines.channels.map
 import kotlinx.coroutines.channels.toList
 import kotlinx.coroutines.runBlocking
 import org.influxdata.annotations.Column
 import org.influxdata.client.InfluxDBClientFactory
-import org.influxdata.client.domain.Bucket
-import org.influxdata.client.domain.BucketRetentionRules
-import org.influxdata.client.domain.Dialect
-import org.influxdata.client.domain.Organization
-import org.influxdata.client.domain.Permission
-import org.influxdata.client.domain.PermissionResource
-import org.influxdata.client.domain.WritePrecision
+import org.influxdata.client.domain.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.platform.runner.JUnitPlatform
@@ -72,7 +60,6 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
                 .orElseThrow { IllegalStateException() }
 
         val retentionRule = BucketRetentionRules()
-        retentionRule.type = BucketRetentionRules.TypeEnum.EXPIRE
         retentionRule.everySeconds = 3600
 
         bucket = client.bucketsApi

@@ -13,16 +13,19 @@
 
 package org.influxdata.client.domain;
 
+import java.lang.reflect.Type;
 import java.util.Objects;
-import java.util.Arrays;
-import com.google.gson.TypeAdapter;
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.io.IOException;
 
 /**
  * optional set of contraints on the resources the query can consume
@@ -32,6 +35,7 @@ import java.io.IOException;
 public class QuerySpecificationResources {
   public static final String SERIALIZED_NAME_PRIORITY = "priority";
   @SerializedName(SERIALIZED_NAME_PRIORITY)
+  @JsonAdapter(QuerySpecification_resourcesPriorityAdapter.class)
   private Object priority = null;
 
   public static final String SERIALIZED_NAME_CONCURRENCY_QUOTA = "concurrency_quota";
@@ -139,5 +143,25 @@ public class QuerySpecificationResources {
     return o.toString().replace("\n", "\n    ");
   }
 
+  public class QuerySpecification_resourcesPriorityAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+    private final String discriminator = "";
+
+    public QuerySpecification_resourcesPriorityAdapter() {
+    }
+
+    @Override
+    public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+      String type = json.getAsJsonObject().get(discriminator).getAsString();
+
+  
+      return context.deserialize(json, Object.class);
+    }
+
+    @Override
+    public JsonElement serialize(Object object, Type typeOfSrc, JsonSerializationContext context) {
+
+      return context.serialize(object);
+    }
+  }
 }
 

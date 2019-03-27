@@ -39,6 +39,7 @@ import org.influxdata.client.domain.Source;
 import org.influxdata.client.domain.Task;
 import org.influxdata.client.domain.Telegraf;
 import org.influxdata.client.domain.User;
+import org.influxdata.client.domain.Variable;
 import org.influxdata.exceptions.UnprocessableEntityException;
 
 /**
@@ -154,6 +155,14 @@ public interface InfluxDBClient extends AutoCloseable {
      */
     @Nonnull
     TemplatesApi getTemplatesApi();
+
+    /**
+     * Get the {@link Variable} client.
+     *
+     * @return the new client instance for Variable API
+     */
+    @Nonnull
+    VariablesApi getVariablesApi();
 
     /**
      * Get the health of an instance.

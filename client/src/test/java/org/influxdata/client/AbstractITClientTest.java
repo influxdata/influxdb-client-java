@@ -74,7 +74,6 @@ abstract class AbstractITClientTest extends AbstractTest {
     @Nonnull
     BucketRetentionRules retentionRule() {
         BucketRetentionRules bucketRetentionRules = new BucketRetentionRules();
-        bucketRetentionRules.setType(BucketRetentionRules.TypeEnum.EXPIRE);
         bucketRetentionRules.setEverySeconds(3600);
         return bucketRetentionRules;
     }

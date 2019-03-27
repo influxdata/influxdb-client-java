@@ -33,15 +33,16 @@ import javax.annotation.Nullable;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
-import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.StringSchema;
 import org.openapitools.codegen.CodegenConfig;
 import org.openapitools.codegen.CodegenModel;
 import org.openapitools.codegen.CodegenOperation;
 import org.openapitools.codegen.CodegenParameter;
 import org.openapitools.codegen.CodegenProperty;
 import org.openapitools.codegen.languages.JavaClientCodegen;
+import org.openapitools.codegen.utils.ModelUtils;
 
 public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenConfig {
 
@@ -71,6 +72,8 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         importMapping.put("JSON", "org.influxdata.client.JSON");
         importMapping.put("JsonDeserializer", "com.google.gson.JsonDeserializer");
         importMapping.put("JsonDeserializationContext", "com.google.gson.JsonDeserializationContext");
+        importMapping.put("JsonSerializationContext", "com.google.gson.JsonSerializationContext");
+        importMapping.put("JsonSerializer", "com.google.gson.JsonSerializer");
         importMapping.put("JsonParseException", "com.google.gson.JsonParseException");
         importMapping.put("ArrayList", "java.util.ArrayList");
         importMapping.put("List", "java.util.List");
@@ -268,6 +271,17 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void postProcessModelProperty(CodegenModel model, CodegenProperty property) {
+
+        super.postProcessModelProperty(model, property);
+
+
+        if (property.isEnum && property.get_enum() != null && property.get_enum().size() == 1) {
+            property.isReadOnly = true;
+            property.defaultValue = property.enumName + "." + getEnumDefaultValue(model, property.name);
+        }
+    }
 
     @Override
     public Map<String, Object> postProcessOperationsWithModels(final Map<String, Object> objs,
@@ -325,7 +339,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                     operation.authMethods.stream()
                             .filter(security -> security.isBasic)
                             .forEach(security -> {
-                                
+
                                 CodegenParameter authorization = new CodegenParameter();
                                 authorization.isHeaderParam = true;
                                 authorization.isPrimitiveType = true;
@@ -350,15 +364,13 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         CodegenOperation op = super.fromOperation(path, httpMethod, operation, definitions, openAPI);
 
         String url;
-        if (operation.getServers() != null)
-        {
+        if (operation.getServers() != null) {
             url = operation.getServers().get(0).getUrl();
-        }                                                       else {
+        } else {
             url = openAPI.getServers().get(0).getUrl();
         }
 
-        if (!url.equals("/"))
-        {
+        if (!url.equals("/")) {
             op.path = url + op.path;
         }
 
@@ -369,15 +381,14 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
     @Override
     public CodegenModel fromModel(final String name, final Schema model, final Map<String, Schema> allDefinitions) {
         CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
-        if (name.equals("Variable")) {
-            model.getProperties().forEach(new BiConsumer<String, Schema>() {
-                @Override
-                public void accept(final String s, final Schema schema) {
-                    if (schema instanceof ArraySchema) {
-                        Schema items = ((ArraySchema) schema).getItems();
 
-                        if (items instanceof ComposedSchema) {
-                            CodegenProperty codegenProperty = getCodegenProperty(codegenModel, s);
+
+        if (model.getProperties() != null) {
+            model.getProperties()
+                    .forEach((BiConsumer<String, Schema>) (property, propertySchema) -> {
+                        if (propertySchema instanceof ComposedSchema) {
+
+                            CodegenProperty codegenProperty = getCodegenProperty(codegenModel, property);
                             String adapterName = name + codegenProperty.nameInCamelCase + "Adapter";
 
                             codegenProperty.vendorExtensions.put("x-has-type-adapter", Boolean.TRUE);
@@ -388,26 +399,52 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
 
                             TypeAdapter typeAdapter = new TypeAdapter();
                             typeAdapter.classname = adapterName;
-                            
+                            for (Schema oneOf : ((ComposedSchema) propertySchema).getOneOf()) {
+
+                                if (oneOf.get$ref() == null) {
+                                    continue;
+                                }
+                                
+                                String refSchemaName = ModelUtils.getSimpleRef(oneOf.get$ref());
+                                Schema refSchema = allDefinitions.get(refSchemaName);
+
+                                String key = (String) refSchema.getProperties().keySet().stream().findFirst().get();
+                                Schema keyScheme = (Schema) refSchema.getProperties().get(key);
+                                if (!(keyScheme instanceof StringSchema)) {
+                                    continue;
+                                }
+                                String keyValue = ((StringSchema) keyScheme).getEnum().get(0);
+
+                                if (typeAdapter.discriminator != null && !typeAdapter.discriminator.equals(key)) {
+                                    String message = "Discriminators has to be same: '" +
+                                            typeAdapter.discriminator + "' != '" + key + " ' for: " + refSchemaName;
+
+                                    throw new IllegalStateException(message);
+                                }
+
+                                typeAdapter.discriminator = key;
+                                TypeAdapterItem typeAdapterItem = new TypeAdapterItem();
+                                typeAdapterItem.discriminatorValue = keyValue;
+                                typeAdapterItem.classname = refSchemaName;
+                                typeAdapter.items.add(typeAdapterItem);
+                            }
+
                             adapters.put(adapterName, typeAdapter);
 
                             codegenModel.vendorExtensions.put("x-type-adapters", adapters);
                             codegenModel.imports.add("JsonDeserializer");
+                            codegenModel.imports.add("JsonDeserializationContext");
+                            codegenModel.imports.add("JsonSerializer");
+                            codegenModel.imports.add("JsonSerializationContext");
                             codegenModel.imports.add("ArrayList");
                             codegenModel.imports.add("List");
-                            codegenModel.imports.add("JsonArray");
                             codegenModel.imports.add("JsonElement");
                             codegenModel.imports.add("JsonParseException");
-                            codegenModel.imports.add("JsonDeserializationContext");
-                            codegenModel.imports.add("Map");
-                            codegenModel.imports.add("HashMap");
                             codegenModel.imports.add("ReflectType");
                         }
-                    }
-                }
-
-            });
+                    });
         }
+
         return codegenModel;
     }
 
@@ -468,8 +505,14 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         return (CodegenModel) models.get("model");
     }
 
-    public class TypeAdapter
-    {
+    public class TypeAdapter {
+        public String classname;
+        public String discriminator;
+        public List<TypeAdapterItem> items = new ArrayList<>();
+    }
+
+    public class TypeAdapterItem {
+        public String discriminatorValue;
         public String classname;
     }
 }
