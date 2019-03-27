@@ -46,6 +46,7 @@ import org.influxdata.client.domain.ResourceMembers;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.SecretKeys;
+import org.influxdata.client.domain.SecretKeysResponse;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.service.OrganizationsService;
 import org.influxdata.exceptions.NotFoundException;
@@ -177,7 +178,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
     }
 
     @Override
-    public SecretKeys getSecrets(@Nonnull final Organization organization) {
+    public SecretKeysResponse getSecrets(@Nonnull final Organization organization) {
 
         Arguments.checkNotNull(organization, "Organization");
 
@@ -185,11 +186,11 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
     }
 
     @Override
-    public SecretKeys getSecrets(@Nonnull final String orgID) {
+    public SecretKeysResponse getSecrets(@Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<SecretKeys> call = service.orgsOrgIDSecretsGet(orgID, null);
+        Call<SecretKeysResponse> call = service.orgsOrgIDSecretsGet(orgID, null);
 
         return execute(call);
     }

@@ -3627,7 +3627,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SecretKeys"
+                $ref: "#/components/schemas/SecretKeysResponse"
         default:
           description: unexpected error
           content:
@@ -4414,11 +4414,7 @@ paths:
               $ref: "#/components/schemas/PasswordResetBody"
       responses:
         '204':
-          description: password succesfully updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
+          description: password successfully updated
         default:
           description: unsuccessful authentication
           content:
@@ -4749,12 +4745,8 @@ paths:
             schema:
               $ref: "#/components/schemas/PasswordResetBody"
       responses:
-        '200':
-          description: user details
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
+        '204':
+          description: password successfully updated
         default:
           description: unsuccessful authentication
           content:
@@ -6709,18 +6701,25 @@ components:
       example:
         apikey: abc123xyz
     SecretKeys:
+      type: object
       properties:
-        links:
-          type: object
-          properties:
-            self:
-              type: string
-            org:
-              type: string
         secrets:
           type: array
           items:
             type: string
+    SecretKeysResponse:
+      allOf:
+        - $ref: "#/components/schemas/SecretKeys"
+        - type: object
+          properties:
+            links:
+              readOnly: true
+              type: object
+              properties:
+                self:
+                  type: string
+                org:
+                  type: string
     CreateProtoResourcesRequest:
       properties:
         orgID:

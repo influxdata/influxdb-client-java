@@ -69,10 +69,8 @@ public interface UsersApi {
      * @param user        user to update password
      * @param oldPassword old password
      * @param newPassword new password
-     * @return user updated
      */
-    @Nonnull
-    User updateUserPassword(@Nonnull final User user,
+    void updateUserPassword(@Nonnull final User user,
                             @Nonnull final String oldPassword,
                             @Nonnull final String newPassword);
 
@@ -82,10 +80,8 @@ public interface UsersApi {
      * @param userID      ID of user to update password
      * @param oldPassword old password
      * @param newPassword new password
-     * @return user updated
      */
-    @Nonnull
-    User updateUserPassword(@Nonnull final String userID,
+    void updateUserPassword(@Nonnull final String userID,
                             @Nonnull final String oldPassword,
                             @Nonnull final String newPassword);
 
@@ -136,10 +132,8 @@ public interface UsersApi {
      *
      * @param oldPassword old password
      * @param newPassword new password
-     * @return currently authenticated user
      */
-    @Nullable
-    User meUpdatePassword(@Nonnull final String oldPassword, @Nonnull final String newPassword);
+    void meUpdatePassword(@Nonnull final String oldPassword, @Nonnull final String newPassword);
 
     /**
      * Retrieve an user.

@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-import org.influxdata.LogLevel;
 import org.influxdata.client.domain.ConstantVariableProperties;
 import org.influxdata.client.domain.MapVariableProperties;
 import org.influxdata.client.domain.Organization;
@@ -61,8 +60,6 @@ class ITVariablesApiTest extends AbstractITClientTest {
 
     @Test
     void create() {
-
-        influxDBClient.setLogLevel(LogLevel.BODY);
 
         Variable variable = newConstantVariable();
 

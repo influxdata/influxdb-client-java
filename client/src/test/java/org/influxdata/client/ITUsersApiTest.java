@@ -29,6 +29,7 @@ import java.util.stream.IntStream;
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.User;
+import org.influxdata.exceptions.ForbiddenException;
 import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
@@ -146,7 +147,7 @@ class ITUsersApiTest extends AbstractITClientTest {
     void meNotAuthenticated() throws Exception {
 
         influxDBClient.close();
-        
+
         User me = usersApi.me();
 
         Assertions.assertThat(me).isNull();
@@ -156,20 +157,16 @@ class ITUsersApiTest extends AbstractITClientTest {
     @Tag("basic_auth")
     void updateMePassword() {
 
-        User user = usersApi.meUpdatePassword("my-password", "my-password");
-
-        Assertions.assertThat(user).isNotNull();
-        Assertions.assertThat(user.getName()).isEqualTo("my-user");
+        usersApi.meUpdatePassword("my-password", "my-password");
     }
 
     @Test
-    void updateMePasswordNotAuthenticate() throws Exception {
+    @Tag("basic_auth")
+    void updateMePasswordWrongPassword() {
 
-        influxDBClient.close();
-
-        User user = usersApi.meUpdatePassword("my-password", "my-password");
-
-        Assertions.assertThat(user).isNull();
+        Assertions.assertThatThrownBy(() -> usersApi.meUpdatePassword("my-password-wrong", "my-password-new"))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("your username or password is incorrect");
     }
 
     @Test
@@ -179,11 +176,7 @@ class ITUsersApiTest extends AbstractITClientTest {
         User user = usersApi.me();
         Assertions.assertThat(user).isNotNull();
 
-        User updatedUser = usersApi.updateUserPassword(user, "my-password", "my-password");
-
-        Assertions.assertThat(updatedUser).isNotNull();
-        Assertions.assertThat(updatedUser.getName()).isEqualTo(user.getName());
-        Assertions.assertThat(updatedUser.getId()).isEqualTo(user.getId());
+        usersApi.updateUserPassword(user, "my-password", "my-password");
     }
 
     //TODO set user password -> https://github.com/influxdata/influxdb/issues/11590
@@ -199,9 +192,7 @@ class ITUsersApiTest extends AbstractITClientTest {
         influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-user", "my-password".toCharArray());
         usersApi = influxDBClient.getUsersApi();
 
-        User user = usersApi.updateUserPassword(myNewUser, "", "strong-password");
-
-        Assertions.assertThat(myNewUser.getId()).isEqualTo(user.getId());
+        usersApi.updateUserPassword(myNewUser, "", "strong-password");
     }
 
     @Test
@@ -220,11 +211,7 @@ class ITUsersApiTest extends AbstractITClientTest {
         User user = usersApi.me();
         Assertions.assertThat(user).isNotNull();
 
-        User updatedUser = usersApi.updateUserPassword(user.getId(), "my-password", "my-password");
-
-        Assertions.assertThat(updatedUser).isNotNull();
-        Assertions.assertThat(updatedUser.getName()).isEqualTo(user.getName());
-        Assertions.assertThat(updatedUser.getId()).isEqualTo(user.getId());
+        usersApi.updateUserPassword(user.getId(), "my-password", "my-password");
     }
 
     @Test
