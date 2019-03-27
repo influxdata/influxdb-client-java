@@ -80,7 +80,7 @@ public class ScraperTargetRequest {
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = null;
+  private TypeEnum type = TypeEnum.PROMETHEUS;
 
   public static final String SERIALIZED_NAME_URL = "url";
   @SerializedName(SERIALIZED_NAME_URL)
@@ -112,11 +112,6 @@ public class ScraperTargetRequest {
     this.name = name;
   }
 
-  public ScraperTargetRequest type(TypeEnum type) {
-    this.type = type;
-    return this;
-  }
-
    /**
    * type of the metrics to be parsed
    * @return type
@@ -124,10 +119,6 @@ public class ScraperTargetRequest {
   @ApiModelProperty(value = "type of the metrics to be parsed")
   public TypeEnum getType() {
     return type;
-  }
-
-  public void setType(TypeEnum type) {
-    this.type = type;
   }
 
   public ScraperTargetRequest url(String url) {

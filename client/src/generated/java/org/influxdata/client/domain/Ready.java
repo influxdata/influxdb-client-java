@@ -77,7 +77,7 @@ public class Ready {
 
   public static final String SERIALIZED_NAME_STATUS = "status";
   @SerializedName(SERIALIZED_NAME_STATUS)
-  private StatusEnum status = null;
+  private StatusEnum status = StatusEnum.READY;
 
   public static final String SERIALIZED_NAME_STARTED = "started";
   @SerializedName(SERIALIZED_NAME_STARTED)
@@ -87,11 +87,6 @@ public class Ready {
   @SerializedName(SERIALIZED_NAME_UP)
   private String up = null;
 
-  public Ready status(StatusEnum status) {
-    this.status = status;
-    return this;
-  }
-
    /**
    * Get status
    * @return status
@@ -99,10 +94,6 @@ public class Ready {
   @ApiModelProperty(value = "")
   public StatusEnum getStatus() {
     return status;
-  }
-
-  public void setStatus(StatusEnum status) {
-    this.status = status;
   }
 
   public Ready started(OffsetDateTime started) {

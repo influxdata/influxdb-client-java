@@ -77,16 +77,11 @@ public class QueryVariableProperties {
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = null;
+  private TypeEnum type = TypeEnum.QUERY;
 
   public static final String SERIALIZED_NAME_VALUES = "values";
   @SerializedName(SERIALIZED_NAME_VALUES)
   private QueryVariablePropertiesValues values = null;
-
-  public QueryVariableProperties type(TypeEnum type) {
-    this.type = type;
-    return this;
-  }
 
    /**
    * Get type
@@ -95,10 +90,6 @@ public class QueryVariableProperties {
   @ApiModelProperty(value = "")
   public TypeEnum getType() {
     return type;
-  }
-
-  public void setType(TypeEnum type) {
-    this.type = type;
   }
 
   public QueryVariableProperties values(QueryVariablePropertiesValues values) {
