@@ -29,9 +29,11 @@ import org.influxdata.client.domain.MarkdownViewProperties;
 import org.influxdata.client.domain.Proto;
 import org.influxdata.client.domain.ProtoDashboard;
 import org.influxdata.client.domain.View;
+import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -81,7 +83,31 @@ class ITProtosApiTest extends AbstractITClientTest {
         View view = protoDashboard.getViews().entrySet().iterator().next().getValue();
         Assertions.assertThat(view.getId()).isNotBlank();
         Assertions.assertThat(view.getName()).isEqualTo("Name this Cell");
-        Assertions.assertThat((MarkdownViewProperties)view.getProperties()).isNotNull();
+        Assertions.assertThat((MarkdownViewProperties) view.getProperties()).isNotNull();
         Assertions.assertThat(((MarkdownViewProperties) view.getProperties()).getNote()).startsWith("This dashboard gives you an overview of System metrics with metrics from `system`");
+    }
+
+    @Test
+    void createProtoDashboard() {
+
+        List<Dashboard> dashboards = protosApi.createProtoDashboard(protosApi.getProtos().get(0), findMyOrg());
+
+        Assertions.assertThat(dashboards).hasSize(1);
+        Assertions.assertThat(dashboards.get(0)).isNotNull();
+        Assertions.assertThat(dashboards.get(0).getName()).isEqualTo("System");
+        Assertions.assertThat(dashboards.get(0).getDescription()).isEqualTo("A collection of useful visualizations for monitoring your System");
+        Assertions.assertThat(dashboards.get(0).getCells()).hasSize(13);
+    }
+
+    @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/12979
+    void createProtoDashboardNotFoundProto() {
+
+        Assertions.assertThatThrownBy(() -> protosApi
+                .createProtoDashboard("020f755c3c082000", findMyOrg().getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("proto not found");
+
     }
 }

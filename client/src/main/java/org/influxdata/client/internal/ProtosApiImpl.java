@@ -26,6 +26,10 @@ import javax.annotation.Nonnull;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.ProtosApi;
+import org.influxdata.client.domain.CreateProtoResourcesRequest;
+import org.influxdata.client.domain.Dashboard;
+import org.influxdata.client.domain.Dashboards;
+import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Proto;
 import org.influxdata.client.domain.Protos;
 import org.influxdata.client.service.ProtosService;
@@ -54,5 +58,30 @@ final class ProtosApiImpl extends AbstractRestClient implements ProtosApi {
         Call<Protos> call = service.protosGet(null);
 
         return execute(call).getProtos();
+    }
+
+    @Nonnull
+    @Override
+    public List<Dashboard> createProtoDashboard(@Nonnull final Proto proto, @Nonnull final Organization organization) {
+
+        Arguments.checkNotNull(proto, "proto");
+        Arguments.checkNotNull(organization, "organization");
+
+        return createProtoDashboard(proto.getId(), organization.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<Dashboard> createProtoDashboard(@Nonnull final String protoID,
+                                                @Nonnull final String orgID) {
+
+        Arguments.checkNonEmpty(protoID, "protoID");
+        Arguments.checkNonEmpty(orgID, "organizationID");
+
+        CreateProtoResourcesRequest request = new CreateProtoResourcesRequest().orgID(orgID);
+
+        Call<Dashboards> call = service.protosProtoIDDashboardsPost(protoID, request, null);
+
+        return execute(call).getDashboards();
     }
 }

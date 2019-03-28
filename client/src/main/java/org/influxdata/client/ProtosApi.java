@@ -24,6 +24,8 @@ package org.influxdata.client;
 import java.util.List;
 import javax.annotation.Nonnull;
 
+import org.influxdata.client.domain.Dashboard;
+import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Proto;
 
 /**
@@ -40,4 +42,24 @@ public interface ProtosApi {
      */
     @Nonnull
     List<Proto> getProtos();
+
+    /**
+     * Create instance of a proto dashboard.
+     *
+     * @param proto        proto to create
+     * @param organization organization that the dashboard will be created as
+     * @return List of dashboards that was created
+     */
+    @Nonnull
+    List<Dashboard> createProtoDashboard(@Nonnull final Proto proto, @Nonnull final Organization organization);
+
+    /**
+     * Create instance of a proto dashboard.
+     *
+     * @param protoID ID of proto
+     * @param orgID   organization id that the dashboard will be created as
+     * @return List of dashboards that was created
+     */
+    @Nonnull
+    List<Dashboard> createProtoDashboard(@Nonnull final String protoID, @Nonnull final String orgID);
 }
