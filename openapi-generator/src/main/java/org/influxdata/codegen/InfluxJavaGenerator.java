@@ -487,7 +487,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
 
         String enumValue = getEnumValue(model, propertyName);
 
-        return enumValue.toUpperCase();
+        return enumValue.toUpperCase().replace("-", "_");
     }
 
     @Nullable

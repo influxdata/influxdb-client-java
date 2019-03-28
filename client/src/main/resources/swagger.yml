@@ -6333,6 +6333,21 @@ components:
           settings:
           - type: visibility
             value: hidden
+    MarkdownViewProperties:
+      type: object
+      required:
+      - note
+      - shape
+      - type
+      properties:
+        type:
+          type: string
+          enum: ["markdown"]
+        shape:
+          type: string
+          enum: ["chronograf-v2"]
+        note:
+          type: string
     LogViewerColumn:
       description: Contains a specific column's settings.
       type: object
@@ -6608,6 +6623,7 @@ components:
             - $ref: "#/components/schemas/V1ViewProperties"
             - $ref: "#/components/schemas/EmptyViewProperties"
             - $ref: "#/components/schemas/LogViewProperties"
+            - $ref: "#/components/schemas/MarkdownViewProperties"
     Views:
       type: object
       properties:
@@ -6743,17 +6759,22 @@ components:
         dashboards:
           type: array
           items:
-            $ref: "#/components/schemas/Dashboard"
-        views:
-          type: object
-          additionalProperties:
-            $ref: "#/components/schemas/View"
+            $ref: "#/components/schemas/ProtoDashboard"
     Protos:
       properties:
         protos:
           type: array
           items:
             $ref: "#/components/schemas/Proto"
+    ProtoDashboard:
+      type: object
+      properties:
+        dashboard:
+          $ref: "#/components/schemas/Dashboard"
+        views:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/View"
     CreateDashboardRequest:
       properties:
         orgID:
@@ -6801,10 +6822,10 @@ components:
               properties:
                 createdAt:
                   type: string
-                  format: date
+                  format: date-time
                 updatedAt:
                   type: string
-                  format: date
+                  format: date-time
             cells:
                 $ref: "#/components/schemas/Cells"
             labels:
