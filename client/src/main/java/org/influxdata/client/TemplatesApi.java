@@ -78,6 +78,26 @@ public interface TemplatesApi {
     void deleteTemplate(@Nonnull final String templateID);
 
     /**
+     * Clone a template.
+     *
+     * @param clonedName name of cloned template
+     * @param templateID ID of template to clone
+     * @return cloned template
+     */
+    @Nonnull
+    Document cloneTemplate(@Nonnull final String clonedName, @Nonnull final String templateID);
+
+    /**
+     * Clone a template.
+     *
+     * @param clonedName name of cloned template
+     * @param template   template to clone
+     * @return cloned template
+     */
+    @Nonnull
+    Document cloneTemplate(@Nonnull final String clonedName, @Nonnull final Document template);
+
+    /**
      * Retrieve a template.
      *
      * @param templateID ID of template

@@ -108,6 +108,35 @@ final class TemplatesApiImpl extends AbstractRestClient implements TemplatesApi 
 
     @Nonnull
     @Override
+    public Document cloneTemplate(@Nonnull final String clonedName, @Nonnull final String templateID) {
+
+        Arguments.checkNonEmpty(templateID, "templateID");
+
+        return cloneTemplate(clonedName, findTemplateByID(templateID));
+    }
+
+    @Nonnull
+    @Override
+    public Document cloneTemplate(@Nonnull final String clonedName, @Nonnull final Document template) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNotNull(template, "template");
+
+        DocumentCreate documentCreate = new DocumentCreate();
+        documentCreate
+                .meta(template.getMeta().name(clonedName))
+                .content(template.getContent());
+
+        if (template.getLabels() != null) {
+
+            template.getLabels().forEach(label -> documentCreate.addLabelsItem(label.getName()));
+        }
+
+        return createTemplate(documentCreate);
+    }
+
+    @Nonnull
+    @Override
     public Document findTemplateByID(@Nonnull final String templateID) {
 
         Arguments.checkNonEmpty(templateID, "templateID");

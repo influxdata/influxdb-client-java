@@ -38,6 +38,7 @@ import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -233,6 +234,22 @@ class ITTemplatesApiTest extends AbstractITClientTest {
         Assertions.assertThat(updated.getMeta()).isNotNull();
         Assertions.assertThat(updated.getMeta().getVersion()).isEqualTo("2");
         Assertions.assertThat(updated.getMeta().getName()).isEqualTo("changed_name.txt");
+    }
+
+    @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/12968
+    void cloneTemplate() {
+
+        Document template = templatesApi.createTemplate(createDoc());
+
+        Document cloned = templatesApi.cloneTemplate(generateName("cloned-template"), template.getId());
+
+        Assertions.assertThat(cloned).isNotNull();
+        Assertions.assertThat(cloned.getContent()).isEqualTo("templates content");
+        Assertions.assertThat(cloned.getMeta()).isNotNull();
+        Assertions.assertThat(cloned.getMeta().getVersion()).isEqualTo("1");
+        Assertions.assertThat(cloned.getMeta().getName()).startsWith("cloned-template");
     }
 
     @Nonnull
