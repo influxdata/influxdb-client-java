@@ -90,6 +90,32 @@ final class VariablesApiImpl extends AbstractRestClient implements VariablesApi 
 
     @Nonnull
     @Override
+    public Variable cloneVariable(@Nonnull final String clonedName, @Nonnull final String variableID) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNonEmpty(variableID, "variableID");
+
+        return cloneVariable(clonedName, findVariableByID(variableID));
+    }
+
+    @Nonnull
+    @Override
+    public Variable cloneVariable(@Nonnull final String clonedName, @Nonnull final Variable variable) {
+
+        Arguments.checkNonEmpty(clonedName, "clonedName");
+        Arguments.checkNotNull(variable, "variable");
+
+        Variable cloned = new Variable();
+        cloned.name(clonedName)
+                .orgID(variable.getOrgID())
+                .selected(variable.getSelected())
+                .arguments(variable.getArguments());
+
+        return createVariable(cloned);
+    }
+
+    @Nonnull
+    @Override
     public Variable findVariableByID(@Nonnull final String variableID) {
 
         Arguments.checkNonEmpty(variableID, "variableID");

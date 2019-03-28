@@ -67,6 +67,26 @@ public interface VariablesApi {
     void deleteVariable(@Nonnull final String variableID);
 
     /**
+     * Clone a variable.
+     *
+     * @param clonedName name of cloned variable
+     * @param variableID ID of variable to clone
+     * @return cloned variable
+     */
+    @Nonnull
+    Variable cloneVariable(@Nonnull final String clonedName, @Nonnull final String variableID);
+
+    /**
+     * Clone a variable.
+     *
+     * @param clonedName name of cloned variable
+     * @param variable   variable to clone
+     * @return cloned variable
+     */
+    @Nonnull
+    Variable cloneVariable(@Nonnull final String clonedName, @Nonnull final Variable variable);
+
+    /**
      * Get a variable.
      *
      * @param variableID ID of the variable (required)

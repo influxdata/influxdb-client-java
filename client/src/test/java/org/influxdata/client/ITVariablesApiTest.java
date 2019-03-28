@@ -258,6 +258,29 @@ class ITVariablesApiTest extends AbstractITClientTest {
         Assertions.assertThat(updated.getLinks().getSelf()).isEqualTo("/api/v2/variables/" + updated.getId());
     }
 
+    @Test
+    void cloneVariable() {
+
+        Variable variable = variablesApi.createVariable(newConstantVariable());
+
+        Variable cloned = variablesApi.cloneVariable(generateName("cloned"), variable.getId());
+
+        Assertions.assertThat(cloned).isNotNull();
+        Assertions.assertThat(cloned.getId()).isNotBlank();
+        Assertions.assertThat(cloned.getOrgID()).isEqualTo(organization.getId());
+        Assertions.assertThat(cloned.getName()).startsWith("cloned");
+        Assertions.assertThat(cloned.getSelected()).hasSize(1);
+        Assertions.assertThat(cloned.getSelected()).contains("constant2");
+        Assertions.assertThat(cloned.getArguments()).isNotNull();
+        Assertions.assertThat((ConstantVariableProperties) cloned.getArguments()).isNotNull();
+        Assertions.assertThat(((ConstantVariableProperties) cloned.getArguments()).getType()).isEqualTo(ConstantVariableProperties.TypeEnum.CONSTANT);
+        Assertions.assertThat(((ConstantVariableProperties) cloned.getArguments()).getValues()).hasSize(3);
+        Assertions.assertThat(((ConstantVariableProperties) cloned.getArguments()).getValues()).containsExactlyInAnyOrder("constant1", "constant2", "constant3");
+        Assertions.assertThat(cloned.getLinks()).isNotNull();
+        Assertions.assertThat(cloned.getLinks().getOrg()).isEqualTo("/api/v2/orgs/" + organization.getId());
+        Assertions.assertThat(cloned.getLinks().getSelf()).isEqualTo("/api/v2/variables/" + cloned.getId());
+    }
+
     @Nonnull
     private Variable newConstantVariable() {
 
