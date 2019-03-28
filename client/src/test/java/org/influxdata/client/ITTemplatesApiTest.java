@@ -38,7 +38,6 @@ import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -97,24 +96,19 @@ class ITTemplatesApiTest extends AbstractITClientTest {
         Assertions.assertThat(template.getLinks()).isNotNull();
         Assertions.assertThat(template.getLinks().getSelf()).isEqualTo("/api/v2/documents/templates/" + template.getId());
 
-        //TODO https://github.com/influxdata/influxdb/issues/12858
-        // Assertions.assertThat(template.getLabels()).hasSize(1);
-        // Assertions.assertThat(template.getLabels().get(0)).isEqualTo(labelCreateRequest.getName());
+        Assertions.assertThat(template.getLabels()).hasSize(1);
+        Assertions.assertThat(template.getLabels().get(0).getName()).isEqualTo(labelCreateRequest.getName());
     }
 
     @Test
-    @Disabled
-        //TODO https://github.com/influxdata/influxdb/issues/12861
     void createEmpty() {
 
         Assertions.assertThatThrownBy(() -> templatesApi.createTemplate(new DocumentCreate()))
                 .isInstanceOf(BadRequestException.class)
-                .hasMessage("Documents requires meta");
+                .hasMessage("missing document body");
     }
 
     @Test
-    @Disabled
-        //TODO https://github.com/influxdata/influxdb/issues/12860
     void notExistLabel() {
 
         DocumentCreate documentCreate = createDoc();
@@ -142,9 +136,8 @@ class ITTemplatesApiTest extends AbstractITClientTest {
         // delete template
         templatesApi.deleteTemplate(createdTemplate);
 
-        //TODO https://github.com/influxdata/influxdb/issues/12864
-        // Assertions.assertThatThrownBy(() -> templatesApi.findTemplateByID(createdTemplate.getId()))
-        //        .isInstanceOf(NotFoundException.class);
+        Assertions.assertThatThrownBy(() -> templatesApi.findTemplateByID(createdTemplate.getId()))
+                .isInstanceOf(NotFoundException.class);
     }
 
     @Test
@@ -160,13 +153,11 @@ class ITTemplatesApiTest extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-        // TODO https://github.com/influxdata/influxdb/issues/12864
     void findTemplateByIDNull() {
 
         Assertions.assertThatThrownBy(() -> templatesApi.findTemplateByID("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("template not found");
+                .hasMessage("document not found");
     }
 
     @Test
