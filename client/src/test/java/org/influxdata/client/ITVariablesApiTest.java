@@ -22,10 +22,13 @@
 package org.influxdata.client;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 
 import org.influxdata.client.domain.ConstantVariableProperties;
+import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.MapVariableProperties;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.QueryVariableProperties;
@@ -279,6 +282,56 @@ class ITVariablesApiTest extends AbstractITClientTest {
         Assertions.assertThat(cloned.getLinks()).isNotNull();
         Assertions.assertThat(cloned.getLinks().getOrg()).isEqualTo("/api/v2/orgs/" + organization.getId());
         Assertions.assertThat(cloned.getLinks().getSelf()).isEqualTo("/api/v2/variables/" + cloned.getId());
+    }
+
+    @Test
+    void labels() {
+
+        LabelsApi labelsApi = influxDBClient.getLabelsApi();
+
+        Variable variable = variablesApi.createVariable(newConstantVariable());
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties, organization.getId());
+
+        List<Label> labels = variablesApi.getLabels(variable);
+        Assertions.assertThat(labels).hasSize(0);
+
+        Label created = variablesApi.addLabel(label, variable);
+        Assertions.assertThat(created).isNotNull();
+        Assertions.assertThat(created.getId()).isEqualTo(label.getId());
+        Assertions.assertThat(created.getName()).isEqualTo(label.getName());
+        Assertions.assertThat(created.getProperties()).isEqualTo(label.getProperties());
+
+        labels = variablesApi.getLabels(variable);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
+        Assertions.assertThat(labels.get(0).getName()).isEqualTo(label.getName());
+
+        variablesApi.deleteLabel(label, variable);
+
+        labels = variablesApi.getLabels(variable);
+        Assertions.assertThat(labels).hasSize(0);
+    }
+
+    @Test
+    void labelAddNotExists() {
+
+        Variable variable = variablesApi.createVariable(newConstantVariable());
+
+        Assertions.assertThatThrownBy(() -> variablesApi.addLabel("020f755c3c082000", variable.getId()))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void labelDeleteNotExists() {
+
+        Variable variable = variablesApi.createVariable(newConstantVariable());
+
+        variablesApi.deleteLabel("020f755c3c082000", variable.getId());
     }
 
     @Nonnull

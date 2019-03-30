@@ -24,6 +24,7 @@ package org.influxdata.client;
 import java.util.List;
 import javax.annotation.Nonnull;
 
+import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Variable;
 
@@ -112,4 +113,58 @@ public interface VariablesApi {
      */
     @Nonnull
     List<Variable> findVariables(@Nonnull final String orgID);
+
+    /**
+     * List all labels for a variable.
+     *
+     * @param variable the variable
+     * @return a list of all labels for a variable
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final Variable variable);
+
+    /**
+     * List all labels for a variable.
+     *
+     * @param variableID ID of the variable
+     * @return a list of all labels for a variable
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final String variableID);
+
+    /**
+     * Add a label to a variable.
+     *
+     * @param label    label to add
+     * @param variable the variable
+     * @return a list of all labels for a variable
+     */
+    @Nonnull
+    Label addLabel(@Nonnull final Label label, @Nonnull final Variable variable);
+
+    /**
+     * Add a label to a variable.
+     *
+     * @param variableID ID of the variable
+     * @param labelID    the ID of label to add
+     * @return a list of all labels for a variable
+     */
+    @Nonnull
+    Label addLabel(@Nonnull final String labelID, @Nonnull final String variableID);
+
+    /**
+     * Delete a label from a variable.
+     *
+     * @param label    the label to delete
+     * @param variable the variable
+     */
+    void deleteLabel(@Nonnull final Label label, @Nonnull final Variable variable);
+
+    /**
+     * Delete a label from a variable.
+     *
+     * @param variableID ID of the variable
+     * @param labelID    the ID of a label
+     */
+    void deleteLabel(@Nonnull final String labelID, @Nonnull final String variableID);
 }

@@ -26,6 +26,10 @@ import javax.annotation.Nonnull;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.VariablesApi;
+import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelMapping;
+import org.influxdata.client.domain.LabelResponse;
+import org.influxdata.client.domain.LabelsResponse;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Variable;
 import org.influxdata.client.domain.Variables;
@@ -143,5 +147,68 @@ final class VariablesApiImpl extends AbstractRestClient implements VariablesApi 
         Call<Variables> call = service.variablesGet(null, null, orgID);
 
         return execute(call).getVariables();
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final Variable variable) {
+
+        Arguments.checkNotNull(variable, "variable");
+
+        return getLabels(variable.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final String variableID) {
+
+        Arguments.checkNonEmpty("variableID", variableID);
+
+        Call<LabelsResponse> call = service.variablesVariableIDLabelsGet(variableID, null);
+
+        return execute(call).getLabels();
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final Label label,
+                                   @Nonnull final Variable variable) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(variable, "variable");
+
+        return addLabel(label.getId(), variable.getId());
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final String labelID, @Nonnull final String variableID) {
+
+        Arguments.checkNonEmpty("variableID", variableID);
+        Arguments.checkNonEmpty("labelID", labelID);
+
+        Call<LabelResponse> call = service
+                .variablesVariableIDLabelsPost(variableID, new LabelMapping().labelID(labelID), null);
+
+        return execute(call).getLabel();
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final Variable variable) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(variable, "variable");
+
+        deleteLabel(label.getId(), variable.getId());
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String variableID) {
+
+        Arguments.checkNonEmpty("variableID", variableID);
+        Arguments.checkNonEmpty("labelID", labelID);
+
+        Call<Void> call = service.variablesVariableIDLabelsLabelIDDelete(variableID, labelID, null);
+        execute(call);
     }
 }
