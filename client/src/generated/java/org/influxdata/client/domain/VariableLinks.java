@@ -37,6 +37,10 @@ public class VariableLinks {
   @SerializedName(SERIALIZED_NAME_ORG)
   private String org = null;
 
+  public static final String SERIALIZED_NAME_LABELS = "labels";
+  @SerializedName(SERIALIZED_NAME_LABELS)
+  private String labels = null;
+
   public VariableLinks self(String self) {
     this.self = self;
     return this;
@@ -73,6 +77,24 @@ public class VariableLinks {
     this.org = org;
   }
 
+  public VariableLinks labels(String labels) {
+    this.labels = labels;
+    return this;
+  }
+
+   /**
+   * Get labels
+   * @return labels
+  **/
+  @ApiModelProperty(value = "")
+  public String getLabels() {
+    return labels;
+  }
+
+  public void setLabels(String labels) {
+    this.labels = labels;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -84,12 +106,13 @@ public class VariableLinks {
     }
     VariableLinks variableLinks = (VariableLinks) o;
     return Objects.equals(this.self, variableLinks.self) &&
-        Objects.equals(this.org, variableLinks.org);
+        Objects.equals(this.org, variableLinks.org) &&
+        Objects.equals(this.labels, variableLinks.labels);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self, org);
+    return Objects.hash(self, org, labels);
   }
 
 
@@ -99,6 +122,7 @@ public class VariableLinks {
     sb.append("class VariableLinks {\n");
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
     sb.append("    org: ").append(toIndentedString(org)).append("\n");
+    sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
     sb.append("}");
     return sb.toString();
   }

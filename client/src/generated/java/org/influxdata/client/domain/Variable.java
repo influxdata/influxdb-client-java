@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import org.influxdata.client.domain.Labels;
 import org.influxdata.client.domain.VariableLinks;
 
 /**
@@ -58,6 +59,10 @@ public class Variable {
   public static final String SERIALIZED_NAME_SELECTED = "selected";
   @SerializedName(SERIALIZED_NAME_SELECTED)
   private List<String> selected = new ArrayList<>();
+
+  public static final String SERIALIZED_NAME_LABELS = "labels";
+  @SerializedName(SERIALIZED_NAME_LABELS)
+  private Labels labels = null;
 
   public static final String SERIALIZED_NAME_ARGUMENTS = "arguments";
   @SerializedName(SERIALIZED_NAME_ARGUMENTS)
@@ -153,6 +158,24 @@ public class Variable {
     this.selected = selected;
   }
 
+  public Variable labels(Labels labels) {
+    this.labels = labels;
+    return this;
+  }
+
+   /**
+   * Get labels
+   * @return labels
+  **/
+  @ApiModelProperty(value = "")
+  public Labels getLabels() {
+    return labels;
+  }
+
+  public void setLabels(Labels labels) {
+    this.labels = labels;
+  }
+
   public Variable arguments(Object arguments) {
     this.arguments = arguments;
     return this;
@@ -186,12 +209,13 @@ public class Variable {
         Objects.equals(this.orgID, variable.orgID) &&
         Objects.equals(this.name, variable.name) &&
         Objects.equals(this.selected, variable.selected) &&
+        Objects.equals(this.labels, variable.labels) &&
         Objects.equals(this.arguments, variable.arguments);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, id, orgID, name, selected, arguments);
+    return Objects.hash(links, id, orgID, name, selected, labels, arguments);
   }
 
 
@@ -204,6 +228,7 @@ public class Variable {
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    selected: ").append(toIndentedString(selected)).append("\n");
+    sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
     sb.append("    arguments: ").append(toIndentedString(arguments)).append("\n");
     sb.append("}");
     return sb.toString();
