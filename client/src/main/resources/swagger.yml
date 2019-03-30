@@ -1298,6 +1298,98 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  '/variables/{variableID}/labels':
+    get:
+      tags:
+        - Variables
+      summary: list all labels for a variable
+      parameters:
+        - $ref: '#/components/parameters/TraceSpan'
+        - in: path
+          name: variableID
+          schema:
+            type: string
+          required: true
+          description: ID of the variable
+      responses:
+        '200':
+          description: a list of all labels for a variable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LabelsResponse"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+        - Variables
+      summary: add a label to a variable
+      parameters:
+        - $ref: '#/components/parameters/TraceSpan'
+        - in: path
+          name: variableID
+          schema:
+            type: string
+          required: true
+          description: ID of the variable
+      requestBody:
+        description: label to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LabelMapping"
+      responses:
+        '200':
+          description: a list of all labels for a variable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LabelsResponse"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  '/variables/{variableID}/labels/{labelID}':
+    delete:
+      tags:
+        - Variables
+      summary: delete a label from a variable
+      parameters:
+        - $ref: '#/components/parameters/TraceSpan'
+        - in: path
+          name: variableID
+          schema:
+            type: string
+          required: true
+          description: ID of the variable
+        - in: path
+          name: labelID
+          schema:
+            type: string
+          required: true
+          description: the label id to delete
+      responses:
+        '204':
+          description: delete has been accepted
+        '404':
+          description: variable not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /write:
     post:
       tags:
@@ -2740,7 +2832,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Authorization"
+              $ref: "#/components/schemas/AuthorizationUpdateRequest"
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
         - in: path
@@ -5414,12 +5506,8 @@ components:
               type: string
               nullable: true
               description: optional name of the organization of the organization with orgID.
-    Authorization:
-      required: [orgID, permissions]
+    AuthorizationUpdateRequest:
       properties:
-        orgID:
-          type: string
-          description: ID of org that authorization is scoped to.
         status:
           description: if inactive the token is inactive and requests using the token will be rejected.
           default: active
@@ -5430,46 +5518,55 @@ components:
         description:
           type: string
           description: A description of the token.
-        permissions:
-          type: array
-          minLength: 1
-          description: List of permissions for an auth.  An auth must have at least one Permission.
-          items:
-            $ref: "#/components/schemas/Permission"
-        id:
-          readOnly: true
-          type: string
-        token:
-          readOnly: true
-          type: string
-          description: Passed via the Authorization Header and Token Authentication type.
-        userID:
-          readOnly: true
-          type: string
-          description: ID of user that created and owns the token.
-        user:
-          readOnly: true
-          type: string
-          description: Name of user that created and owns the token.
-        org:
-          readOnly: true
-          type: string
-          description: Name of the org token is scoped to.
-        links:
-          type: object
-          readOnly: true
-          example:
-            self: "/api/v2/authorizations/1"
-            user: "/api/v2/users/12"
+    Authorization:
+      required: [orgID, permissions]
+      allOf:
+        - $ref: "#/components/schemas/AuthorizationUpdateRequest"
+        - type: object
           properties:
-            self:
+            orgID:
+              type: string
+              description: ID of org that authorization is scoped to.
+            permissions:
+              type: array
+              minLength: 1
+              description: List of permissions for an auth.  An auth must have at least one Permission.
+              items:
+                $ref: "#/components/schemas/Permission"
+            id:
               readOnly: true
               type: string
-              format: uri
+            token:
+              readOnly: true
+              type: string
+              description: Passed via the Authorization Header and Token Authentication type.
+            userID:
+              readOnly: true
+              type: string
+              description: ID of user that created and owns the token.
             user:
               readOnly: true
               type: string
-              format: uri
+              description: Name of user that created and owns the token.
+            org:
+              readOnly: true
+              type: string
+              description: Name of the org token is scoped to.
+            links:
+              type: object
+              readOnly: true
+              example:
+                self: "/api/v2/authorizations/1"
+                user: "/api/v2/users/12"
+              properties:
+                self:
+                  readOnly: true
+                  type: string
+                  format: uri
+                user:
+                  readOnly: true
+                  type: string
+                  format: uri
     Authorizations:
       type: object
       properties:
@@ -6549,6 +6646,9 @@ components:
             org:
               type: string
               format: uri
+            labels:
+              type: string
+              format: uri
         id:
           readOnly: true
           type: string
@@ -6560,6 +6660,8 @@ components:
           type: array
           items:
             type: string
+        labels:
+            $ref: "#/components/schemas/Labels"
         arguments:
           type: object
           oneOf:
@@ -7652,6 +7754,7 @@ components:
                 owners:
                   $ref: "#/components/schemas/Link"
             labels:
+              readOnly: true
               $ref: "#/components/schemas/Labels"
             plugins:
               type: array
