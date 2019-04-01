@@ -313,7 +313,6 @@ class ITOrganizationsApiTest extends AbstractITClientTest {
         Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Organization Updated");
         Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Organization Updated");
 
-        //TODO isNotNull FindOptions also in Log API?
         findOptions.setOffset(findOptions.getOffset() + 5);
         Assertions.assertThat(entries.getLinks().getNext()).isNull();
 

@@ -29,6 +29,8 @@ import org.influxdata.client.domain.CreateDashboardRequest;
 import org.influxdata.client.domain.Dashboard;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LabelResponse;
+import org.influxdata.client.domain.OperationLog;
+import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
@@ -119,6 +121,44 @@ public interface DashboardsApi {
      */
     @Nonnull
     List<Dashboard> findDashboardsByOrgName(@Nullable final String orgName);
+
+    /**
+     * Retrieve operation logs for a dashboard.
+     *
+     * @param dashboard the dashboard
+     * @return operation logs for the dashboard
+     */
+    @Nonnull
+    List<OperationLog> findDashboardLogs(@Nonnull final Dashboard dashboard);
+
+    /**
+     * Retrieve operation logs for a dashboard.
+     *
+     * @param dashboard   the dashboard
+     * @param findOptions the find options
+     * @return operation logs for the dashboard
+     */
+    @Nonnull
+    OperationLogs findDashboardLogs(@Nonnull final Dashboard dashboard, @Nonnull final FindOptions findOptions);
+
+    /**
+     * Retrieve operation logs for a dashboard.
+     *
+     * @param dashboardID ID of the dashboard
+     * @return operation logs for the dashboard
+     */
+    @Nonnull
+    List<OperationLog> findDashboardLogs(@Nonnull final String dashboardID);
+
+    /**
+     * Retrieve operation logs for a dashboard.
+     *
+     * @param dashboardID ID of the dashboard
+     * @param findOptions the find options
+     * @return operation logs for the dashboard
+     */
+    @Nonnull
+    OperationLogs findDashboardLogs(@Nonnull final String dashboardID, @Nonnull final FindOptions findOptions);
 
     /**
      * List all dashboard members.

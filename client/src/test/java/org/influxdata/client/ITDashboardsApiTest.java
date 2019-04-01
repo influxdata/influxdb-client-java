@@ -26,10 +26,13 @@ import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Dashboard;
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.OperationLog;
+import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
@@ -276,5 +279,103 @@ class ITDashboardsApiTest extends AbstractITClientTest {
         Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
 
         dashboardsApi.deleteLabel("020f755c3c082000", dashboard.getId());
+    }
+
+    @Test
+    void findLogs() {
+
+        Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        List<OperationLog> userLogs = dashboardsApi.findDashboardLogs(dashboard);
+        Assertions.assertThat(userLogs).isNotEmpty();
+        Assertions.assertThat(userLogs.get(0).getDescription()).isEqualTo("Dashboard Created");
+    }
+
+    @Test
+    void findLogsNotFound() {
+        List<OperationLog> userLogs = dashboardsApi.findDashboardLogs("020f755c3c082000");
+        Assertions.assertThat(userLogs).isEmpty();
+    }
+
+    @Test
+    void findLogsPaging() {
+
+        Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        IntStream
+                .range(0, 19)
+                .forEach(value -> {
+
+                    dashboard.setName(value + "_" + dashboard.getName());
+                    dashboardsApi.updateDashboard(dashboard);
+                });
+
+        List<OperationLog> logs = dashboardsApi.findDashboardLogs(dashboard);
+
+        Assertions.assertThat(logs).hasSize(20);
+        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Dashboard Created");
+        Assertions.assertThat(logs.get(19).getDescription()).isEqualTo("Dashboard Updated");
+
+        FindOptions findOptions = new FindOptions();
+        findOptions.setLimit(5);
+        findOptions.setOffset(0);
+
+        OperationLogs entries = dashboardsApi.findDashboardLogs(dashboard, findOptions);
+
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Dashboard Created");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Dashboard Updated");
+
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
+
+        entries = dashboardsApi.findDashboardLogs(dashboard, findOptions);
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Dashboard Updated");
+
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
+
+        entries = dashboardsApi.findDashboardLogs(dashboard, findOptions);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Dashboard Updated");
+
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
+
+        entries = dashboardsApi.findDashboardLogs(dashboard, findOptions);
+        Assertions.assertThat(entries.getLogs()).hasSize(5);
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Dashboard Updated");
+
+        findOptions.setOffset(findOptions.getOffset() + 5);
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
+
+        entries = dashboardsApi.findDashboardLogs(dashboard, findOptions);
+        Assertions.assertThat(entries.getLogs()).hasSize(0);
+        Assertions.assertThat(entries.getLinks().getNext()).isNull();
+
+        // order
+        findOptions = new FindOptions();
+        findOptions.setDescending(false);
+
+        entries = dashboardsApi.findDashboardLogs(dashboard, findOptions);
+
+        Assertions.assertThat(entries.getLogs()).hasSize(20);
+        Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("Dashboard Updated");
+        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Dashboard Created");
     }
 }
