@@ -30,6 +30,7 @@ import org.influxdata.Arguments;
 import org.influxdata.LogLevel;
 import org.influxdata.client.AuthorizationsApi;
 import org.influxdata.client.BucketsApi;
+import org.influxdata.client.DashboardsApi;
 import org.influxdata.client.InfluxDBClient;
 import org.influxdata.client.InfluxDBClientOptions;
 import org.influxdata.client.LabelsApi;
@@ -52,6 +53,7 @@ import org.influxdata.client.domain.OnboardingResponse;
 import org.influxdata.client.domain.Ready;
 import org.influxdata.client.service.AuthorizationsService;
 import org.influxdata.client.service.BucketsService;
+import org.influxdata.client.service.DashboardsService;
 import org.influxdata.client.service.LabelsService;
 import org.influxdata.client.service.OrganizationsService;
 import org.influxdata.client.service.ProtosService;
@@ -181,6 +183,12 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Override
     public ProtosApi getProtosApi() {
         return new ProtosApiImpl(retrofit.create(ProtosService.class));
+    }
+
+    @Nonnull
+    @Override
+    public DashboardsApi getDashboardsApi() {
+        return new DashboardsApiImpl(retrofit.create(DashboardsService.class));
     }
 
     @Nonnull

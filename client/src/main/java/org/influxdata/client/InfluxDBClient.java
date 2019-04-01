@@ -28,6 +28,7 @@ import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Check;
+import org.influxdata.client.domain.Dashboard;
 import org.influxdata.client.domain.Document;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.OnboardingRequest;
@@ -172,6 +173,14 @@ public interface InfluxDBClient extends AutoCloseable {
      */
     @Nonnull
     ProtosApi getProtosApi();
+
+    /**
+     * Get the {@link Dashboard} client.
+     *
+     * @return the new client instance for Dashboard API
+     */
+    @Nonnull
+    DashboardsApi getDashboardsApi();
 
     /**
      * Get the health of an instance.
