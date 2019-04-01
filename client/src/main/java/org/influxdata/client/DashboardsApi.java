@@ -27,6 +27,8 @@ import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.CreateDashboardRequest;
 import org.influxdata.client.domain.Dashboard;
+import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
@@ -226,4 +228,57 @@ public interface DashboardsApi {
      */
     void deleteOwner(@Nonnull final String ownerID, @Nonnull final String dashboardID);
 
+    /**
+     * List all labels for a dashboard.
+     *
+     * @param dashboard the dashboard
+     * @return a list of all labels for a dashboard
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final Dashboard dashboard);
+
+    /**
+     * List all labels for a dashboard.
+     *
+     * @param dashboardID ID of the dashboard
+     * @return a list of all labels for a dashboard
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final String dashboardID);
+
+    /**
+     * Add a label to a dashboard.
+     *
+     * @param label     label to add
+     * @param dashboard the dashboard
+     * @return the label added to the dashboard
+     */
+    @Nonnull
+    LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Dashboard dashboard);
+
+    /**
+     * Add a label to a dashboard.
+     *
+     * @param labelID     label ID to add
+     * @param dashboardID ID of the dashboard
+     * @return the label added to the dashboard
+     */
+    @Nonnull
+    LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String dashboardID);
+
+    /**
+     * Delete a label from a dashboard.
+     *
+     * @param label     the label to delete
+     * @param dashboard the dashboard
+     */
+    void deleteLabel(@Nonnull final Label label, @Nonnull final Dashboard dashboard);
+
+    /**
+     * Delete a label from a dashboard.
+     *
+     * @param labelID     the label id to delete
+     * @param dashboardID ID of the dashboard
+     */
+    void deleteLabel(@Nonnull final String labelID, @Nonnull final String dashboardID);
 }

@@ -31,6 +31,10 @@ import org.influxdata.client.domain.AddResourceMemberRequestBody;
 import org.influxdata.client.domain.CreateDashboardRequest;
 import org.influxdata.client.domain.Dashboard;
 import org.influxdata.client.domain.Dashboards;
+import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelMapping;
+import org.influxdata.client.domain.LabelResponse;
+import org.influxdata.client.domain.LabelsResponse;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
@@ -266,6 +270,70 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
         Arguments.checkNotNull(dashboardID, "dashboardID");
 
         Call<Void> call = service.dashboardsDashboardIDOwnersUserIDDelete(ownerID, dashboardID, null);
+
+        execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        return getLabels(dashboard.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final String dashboardID) {
+
+        Arguments.checkNotNull(dashboardID, "dashboardID");
+
+        Call<LabelsResponse> call = service.dashboardsDashboardIDLabelsGet(dashboardID, null);
+
+        return execute(call).getLabels();
+    }
+
+    @Nonnull
+    @Override
+    public LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        return addLabel(label.getId(), dashboard.getId());
+    }
+
+    @Nonnull
+    @Override
+    public LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String dashboardID) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNonEmpty(dashboardID, "dashboardID");
+
+        LabelMapping labelMapping = new LabelMapping().labelID(labelID);
+
+        Call<LabelResponse> call = service.dashboardsDashboardIDLabelsPost(dashboardID, labelMapping, null);
+
+        return execute(call);
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        deleteLabel(label.getId(), dashboard.getId());
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String dashboardID) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNonEmpty(dashboardID, "dashboardID");
+
+        Call<Void> call = service.dashboardsDashboardIDLabelsLabelIDDelete(dashboardID, labelID, null);
 
         execute(call);
     }

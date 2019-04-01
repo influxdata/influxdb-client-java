@@ -23,10 +23,13 @@ package org.influxdata.client;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Dashboard;
+import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
@@ -56,11 +59,14 @@ class ITDashboardsApiTest extends AbstractITClientTest {
         usersApi = influxDBClient.getUsersApi();
         organization = findMyOrg();
 
+        dashboardsApi.findDashboards().forEach(dashboard -> dashboardsApi.deleteDashboard(dashboard));
         influxDBClient.setLogLevel(LogLevel.BODY);
     }
 
     @Test
     void createDashboard() {
+
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
 
         Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
 
@@ -69,8 +75,8 @@ class ITDashboardsApiTest extends AbstractITClientTest {
         Assertions.assertThat(dashboard.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(dashboard.getCells()).hasSize(0);
         Assertions.assertThat(dashboard.getMeta()).isNotNull();
-        Assertions.assertThat(dashboard.getMeta().getCreatedAt()).isBefore(OffsetDateTime.now(ZoneOffset.UTC));
-        Assertions.assertThat(dashboard.getMeta().getUpdatedAt()).isBefore(OffsetDateTime.now(ZoneOffset.UTC));
+        Assertions.assertThat(dashboard.getMeta().getCreatedAt()).isAfter(now);
+        Assertions.assertThat(dashboard.getMeta().getUpdatedAt()).isAfter(now);
         Assertions.assertThat(dashboard.getLabels()).hasSize(0);
         Assertions.assertThat(dashboard.getLinks()).isNotNull();
         Assertions.assertThat(dashboard.getLinks().getSelf()).isEqualTo("/api/v2/dashboards/" + dashboard.getId());
@@ -220,5 +226,55 @@ class ITDashboardsApiTest extends AbstractITClientTest {
 
         owners = dashboardsApi.getOwners(dashboard);
         Assertions.assertThat(owners).hasSize(1);
+    }
+
+    @Test
+    void labels() {
+
+        LabelsApi labelsApi = influxDBClient.getLabelsApi();
+
+        Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties, organization.getId());
+
+        List<Label> labels = dashboardsApi.getLabels(dashboard);
+        Assertions.assertThat(labels).hasSize(0);
+
+        Label addedLabel = dashboardsApi.addLabel(label, dashboard).getLabel();
+        Assertions.assertThat(addedLabel).isNotNull();
+        Assertions.assertThat(addedLabel.getId()).isEqualTo(label.getId());
+        Assertions.assertThat(addedLabel.getName()).isEqualTo(label.getName());
+        Assertions.assertThat(addedLabel.getProperties()).isEqualTo(label.getProperties());
+
+        labels = dashboardsApi.getLabels(dashboard);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
+        Assertions.assertThat(labels.get(0).getName()).isEqualTo(label.getName());
+
+        dashboardsApi.deleteLabel(label, dashboard);
+
+        labels = dashboardsApi.getLabels(dashboard);
+        Assertions.assertThat(labels).hasSize(0);
+    }
+
+    @Test
+    void labelAddNotExists() {
+
+        Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        Assertions.assertThatThrownBy(() -> dashboardsApi.addLabel("020f755c3c082000", dashboard.getId()))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void labelDeleteNotExists() {
+
+        Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        dashboardsApi.deleteLabel("020f755c3c082000", dashboard.getId());
     }
 }
