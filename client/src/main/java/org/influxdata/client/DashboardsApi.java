@@ -28,6 +28,9 @@ import javax.annotation.Nullable;
 import org.influxdata.client.domain.CreateDashboardRequest;
 import org.influxdata.client.domain.Dashboard;
 import org.influxdata.client.domain.Organization;
+import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.User;
 
 /**
  * The client of the InfluxDB 2.0 that implement Dashboards HTTP API endpoint.
@@ -114,4 +117,113 @@ public interface DashboardsApi {
      */
     @Nonnull
     List<Dashboard> findDashboardsByOrgName(@Nullable final String orgName);
+
+    /**
+     * List all dashboard members.
+     *
+     * @param dashboard the dashboard
+     * @return a list of users who have member privileges for a dashboard
+     */
+    @Nonnull
+    List<ResourceMember> getMembers(@Nonnull final Dashboard dashboard);
+
+    /**
+     * List all dashboard members.
+     *
+     * @param dashboardID ID of the dashboard
+     * @return a list of users who have member privileges for a dashboard
+     */
+    @Nonnull
+    List<ResourceMember> getMembers(@Nonnull final String dashboardID);
+
+    /**
+     * Add dashboard member.
+     *
+     * @param member    user to add as member
+     * @param dashboard the dashboard
+     * @return added to dashboard members
+     */
+    @Nonnull
+    ResourceMember addMember(@Nonnull final User member, @Nonnull final Dashboard dashboard);
+
+    /**
+     * Add dashboard member.
+     *
+     * @param memberID    user to add as member
+     * @param dashboardID ID of the dashboard
+     * @return added to dashboard members
+     */
+    @Nonnull
+    ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String dashboardID);
+
+    /**
+     * Removes a member from an dashboard.
+     *
+     * @param member    member to remove
+     * @param dashboard the dashboard
+     */
+    void deleteMember(@Nonnull final User member, @Nonnull final Dashboard dashboard);
+
+    /**
+     * Removes a member from an dashboard.
+     *
+     * @param memberID    ID of member to remove
+     * @param dashboardID ID of the dashboard
+     */
+    void deleteMember(@Nonnull final String memberID, @Nonnull final String dashboardID);
+
+    /**
+     * List all dashboard owners.
+     *
+     * @param dashboard the dashboard
+     * @return a list of users who have owner privileges for a dashboard
+     */
+    @Nonnull
+    List<ResourceOwner> getOwners(@Nonnull final Dashboard dashboard);
+
+    /**
+     * List all dashboard owners.
+     *
+     * @param dashboardID ID of the dashboard
+     * @return a list of users who have owner privileges for a dashboard
+     */
+    @Nonnull
+    List<ResourceOwner> getOwners(@Nonnull final String dashboardID);
+
+    /**
+     * Add dashboard owner.
+     *
+     * @param owner     user to add as owner
+     * @param dashboard the dashboard
+     * @return added to dashboard owners
+     */
+    @Nonnull
+    ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Dashboard dashboard);
+
+    /**
+     * Add dashboard owner.
+     *
+     * @param ownerID     user to add as owner
+     * @param dashboardID ID of the dashboard
+     * @return added to dashboard owners
+     */
+    @Nonnull
+    ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String dashboardID);
+
+    /**
+     * Removes an owner from a dashboard.
+     *
+     * @param owner     owner to remove
+     * @param dashboard the dashboard
+     */
+    void deleteOwner(@Nonnull final User owner, @Nonnull final Dashboard dashboard);
+
+    /**
+     * Removes an owner from a dashboard.
+     *
+     * @param ownerID     ID of owner to remove
+     * @param dashboardID ID of the dashboard
+     */
+    void deleteOwner(@Nonnull final String ownerID, @Nonnull final String dashboardID);
+
 }

@@ -28,6 +28,9 @@ import java.util.List;
 import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Dashboard;
 import org.influxdata.client.domain.Organization;
+import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
@@ -44,11 +47,13 @@ class ITDashboardsApiTest extends AbstractITClientTest {
 
     private DashboardsApi dashboardsApi;
     private Organization organization;
+    private UsersApi usersApi;
 
     @BeforeEach
     void setUp() {
 
         dashboardsApi = influxDBClient.getDashboardsApi();
+        usersApi = influxDBClient.getUsersApi();
         organization = findMyOrg();
 
         influxDBClient.setLogLevel(LogLevel.BODY);
@@ -158,5 +163,62 @@ class ITDashboardsApiTest extends AbstractITClientTest {
         dashboards = dashboardsApi.findDashboardsByOrganization(organization);
 
         Assertions.assertThat(dashboards).hasSize(1);
+    }
+
+    @Test
+    void member() {
+
+        Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        List<ResourceMember> members = dashboardsApi.getMembers(dashboard);
+        Assertions.assertThat(members).hasSize(0);
+
+        User user = usersApi.createUser(generateName("Luke Health"));
+
+        ResourceMember resourceMember = dashboardsApi.addMember(user, dashboard);
+        Assertions.assertThat(resourceMember).isNotNull();
+        Assertions.assertThat(resourceMember.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceMember.RoleEnum.MEMBER);
+
+        members = dashboardsApi.getMembers(dashboard);
+        Assertions.assertThat(members).hasSize(1);
+        Assertions.assertThat(members.get(0).getRole()).isEqualTo(ResourceMember.RoleEnum.MEMBER);
+        Assertions.assertThat(members.get(0).getId()).isEqualTo(user.getId());
+        Assertions.assertThat(members.get(0).getName()).isEqualTo(user.getName());
+
+        dashboardsApi.deleteMember(user, dashboard);
+
+        members = dashboardsApi.getMembers(dashboard);
+        Assertions.assertThat(members).hasSize(0);
+    }
+
+    @Test
+    void owner() {
+
+        Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        List<ResourceOwner> owners = dashboardsApi.getOwners(dashboard);
+        Assertions.assertThat(owners).hasSize(1);
+        Assertions.assertThat(owners.get(0).getName()).isEqualTo("my-user");
+
+        User user = usersApi.createUser(generateName("Luke Health"));
+
+        ResourceOwner resourceMember = dashboardsApi.addOwner(user, dashboard);
+        Assertions.assertThat(resourceMember).isNotNull();
+        Assertions.assertThat(resourceMember.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(resourceMember.getName()).isEqualTo(user.getName());
+        Assertions.assertThat(resourceMember.getRole()).isEqualTo(ResourceOwner.RoleEnum.OWNER);
+
+        owners = dashboardsApi.getOwners(dashboard);
+        Assertions.assertThat(owners).hasSize(2);
+        Assertions.assertThat(owners.get(1).getRole()).isEqualTo(ResourceOwner.RoleEnum.OWNER);
+        Assertions.assertThat(owners.get(1).getId()).isEqualTo(user.getId());
+        Assertions.assertThat(owners.get(1).getName()).isEqualTo(user.getName());
+
+        dashboardsApi.deleteOwner(user, dashboard);
+
+        owners = dashboardsApi.getOwners(dashboard);
+        Assertions.assertThat(owners).hasSize(1);
     }
 }

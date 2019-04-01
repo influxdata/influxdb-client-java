@@ -27,10 +27,16 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.DashboardsApi;
+import org.influxdata.client.domain.AddResourceMemberRequestBody;
 import org.influxdata.client.domain.CreateDashboardRequest;
 import org.influxdata.client.domain.Dashboard;
 import org.influxdata.client.domain.Dashboards;
 import org.influxdata.client.domain.Organization;
+import org.influxdata.client.domain.ResourceMember;
+import org.influxdata.client.domain.ResourceMembers;
+import org.influxdata.client.domain.ResourceOwner;
+import org.influxdata.client.domain.ResourceOwners;
+import org.influxdata.client.domain.User;
 import org.influxdata.client.service.DashboardsService;
 import org.influxdata.internal.AbstractRestClient;
 
@@ -134,5 +140,133 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
                 .dashboardsGet(null, null, null, null, null, orgName);
 
         return execute(call).getDashboards();
+    }
+
+    @Nonnull
+    @Override
+    public List<ResourceMember> getMembers(@Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        return getMembers(dashboard.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<ResourceMember> getMembers(@Nonnull final String dashboardID) {
+
+        Arguments.checkNotNull(dashboardID, "dashboardID");
+
+        Call<ResourceMembers> call = service.dashboardsDashboardIDMembersGet(dashboardID, null);
+
+        return execute(call).getUsers();
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final User member, @Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(member, "member");
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        return addMember(member.getId(), dashboard.getId());
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String dashboardID) {
+
+        Arguments.checkNotNull(memberID, "memberID");
+        Arguments.checkNotNull(dashboardID, "dashboardID");
+
+        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody().id(memberID);
+
+        Call<ResourceMember> call = service.dashboardsDashboardIDMembersPost(dashboardID, user, null);
+
+        return execute(call);
+    }
+
+    @Override
+    public void deleteMember(@Nonnull final User member, @Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(member, "member");
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        deleteMember(member.getId(), dashboard.getId());
+    }
+
+    @Override
+    public void deleteMember(@Nonnull final String memberID, @Nonnull final String dashboardID) {
+
+        Arguments.checkNotNull(memberID, "memberID");
+        Arguments.checkNotNull(dashboardID, "dashboardID");
+
+        Call<Void> call = service.dashboardsDashboardIDMembersUserIDDelete(memberID, dashboardID, null);
+
+        execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public List<ResourceOwner> getOwners(@Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        return getOwners(dashboard.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<ResourceOwner> getOwners(@Nonnull final String dashboardID) {
+
+        Arguments.checkNotNull(dashboardID, "dashboardID");
+
+        Call<ResourceOwners> call = service.dashboardsDashboardIDOwnersGet(dashboardID, null);
+        
+        return execute(call).getUsers();
+    }
+
+    @Nonnull
+    @Override
+    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(owner, "owner");
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        return addOwner(owner.getId(), dashboard.getId());
+    }
+
+    @Nonnull
+    @Override
+    public ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String dashboardID) {
+
+        Arguments.checkNotNull(ownerID, "ownerID");
+        Arguments.checkNotNull(dashboardID, "dashboardID");
+
+        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody().id(ownerID);
+
+        Call<ResourceOwner> call = service.dashboardsDashboardIDOwnersPost(dashboardID, user, null);
+
+        return execute(call);
+    }
+
+    @Override
+    public void deleteOwner(@Nonnull final User owner, @Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(owner, "owner");
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        deleteOwner(owner.getId(), dashboard.getId());
+    }
+
+    @Override
+    public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String dashboardID) {
+
+        Arguments.checkNotNull(ownerID, "ownerID");
+        Arguments.checkNotNull(dashboardID, "dashboardID");
+
+        Call<Void> call = service.dashboardsDashboardIDOwnersUserIDDelete(ownerID, dashboardID, null);
+
+        execute(call);
     }
 }
