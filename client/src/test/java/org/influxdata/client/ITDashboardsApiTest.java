@@ -23,10 +23,12 @@ package org.influxdata.client;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 
 import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Dashboard;
 import org.influxdata.client.domain.Organization;
+import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,5 +77,86 @@ class ITDashboardsApiTest extends AbstractITClientTest {
         //TODO https://github.com/influxdata/influxdb/issues/13036
         // Assertions.assertThat(dashboard.getLinks().getLabels()).isEqualTo("/api/v2/dashboards/" + dashboard.getId() + "/labels");
         // Assertions.assertThat(dashboard.getLinks().getOrg()).isEqualTo("/api/v2/orgs/" + organization.getId());
+    }
+
+    @Test
+    void updateDashboard() {
+
+        Dashboard created = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        created
+                .name(generateName("updated-"))
+                .description("changed description");
+
+        Dashboard updated = dashboardsApi.updateDashboard(created);
+
+        Assertions.assertThat(updated.getName()).startsWith("updated");
+        Assertions.assertThat(updated.getDescription()).isEqualTo("changed description");
+        Assertions.assertThat(created.getMeta().getUpdatedAt()).isBefore(updated.getMeta().getUpdatedAt());
+    }
+
+    @Test
+    void deleteDashboard() {
+
+        Dashboard created = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        Assertions.assertThat(created).isNotNull();
+
+        Dashboard foundDashboard = dashboardsApi.findDashboardByID(created.getId());
+        Assertions.assertThat(foundDashboard).isNotNull();
+
+        // delete Dashboard
+        dashboardsApi.deleteDashboard(created);
+
+        Assertions.assertThatThrownBy(() -> dashboardsApi.findDashboardByID(created.getId()))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void findDashboardByID() {
+
+        Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        Dashboard dashboardByID = dashboardsApi.findDashboardByID(dashboard.getId());
+
+        Assertions.assertThat(dashboardByID).isNotNull();
+        Assertions.assertThat(dashboardByID.getId()).isEqualTo(dashboard.getId());
+        Assertions.assertThat(dashboardByID.getName()).isEqualTo(dashboard.getName());
+    }
+
+    @Test
+    void findDashboardByIDNotFound() {
+
+        Assertions.assertThatThrownBy(() -> dashboardsApi.findDashboardByID("020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("dashboard not found");
+    }
+
+    @Test
+    void findDashboards() {
+
+        int count = dashboardsApi.findDashboards().size();
+
+        dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        List<Dashboard> dashboards = dashboardsApi.findDashboards();
+
+        Assertions.assertThat(dashboards).hasSize(count + 1);
+    }
+
+    @Test
+    void findDashboardByOrganization() {
+
+        Organization organization = influxDBClient.getOrganizationsApi().createOrganization(generateName("org for dashboard"));
+
+        List<Dashboard> dashboards = dashboardsApi.findDashboardsByOrganization(organization);
+
+        Assertions.assertThat(dashboards).hasSize(0);
+
+        dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        dashboards = dashboardsApi.findDashboardsByOrganization(organization);
+
+        Assertions.assertThat(dashboards).hasSize(1);
     }
 }

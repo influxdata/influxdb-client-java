@@ -21,6 +21,7 @@
  */
 package org.influxdata.client.internal;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -28,6 +29,8 @@ import org.influxdata.Arguments;
 import org.influxdata.client.DashboardsApi;
 import org.influxdata.client.domain.CreateDashboardRequest;
 import org.influxdata.client.domain.Dashboard;
+import org.influxdata.client.domain.Dashboards;
+import org.influxdata.client.domain.Organization;
 import org.influxdata.client.service.DashboardsService;
 import org.influxdata.internal.AbstractRestClient;
 
@@ -68,5 +71,68 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
         Call<Dashboard> call = service.dashboardsPost(createDashboardRequest, null);
 
         return execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public Dashboard updateDashboard(@Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(dashboard, "Dashboard");
+
+        Call<Dashboard> call = service.dashboardsDashboardIDPatch(dashboard.getId(), dashboard, null);
+
+        return execute(call);
+    }
+
+    @Override
+    public void deleteDashboard(@Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        deleteDashboard(dashboard.getId());
+    }
+
+    @Override
+    public void deleteDashboard(@Nonnull final String dashboardID) {
+
+        Arguments.checkNotNull(dashboardID, "dashboardID");
+
+        Call<Void> call = service.dashboardsDashboardIDDelete(dashboardID, null);
+
+        execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public Dashboard findDashboardByID(@Nonnull final String dashboardID) {
+
+        Arguments.checkNotNull(dashboardID, "dashboardID");
+
+        Call<Dashboard> call = service.dashboardsDashboardIDGet(dashboardID, null);
+
+        return execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public List<Dashboard> findDashboards() {
+        return findDashboardsByOrgName(null);
+    }
+
+    @Nonnull
+    @Override
+    public List<Dashboard> findDashboardsByOrganization(@Nonnull final Organization organization) {
+
+        return findDashboardsByOrgName(organization.getName());
+    }
+
+    @Nonnull
+    @Override
+    public List<Dashboard> findDashboardsByOrgName(@Nullable final String orgName) {
+
+        Call<Dashboards> call = service
+                .dashboardsGet(null, null, null, null, null, orgName);
+
+        return execute(call).getDashboards();
     }
 }
