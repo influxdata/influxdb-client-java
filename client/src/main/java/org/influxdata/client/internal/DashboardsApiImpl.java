@@ -222,7 +222,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
         Arguments.checkNotNull(dashboardID, "dashboardID");
 
         Call<ResourceOwners> call = service.dashboardsDashboardIDOwnersGet(dashboardID, null);
-        
+
         return execute(call).getUsers();
     }
 
