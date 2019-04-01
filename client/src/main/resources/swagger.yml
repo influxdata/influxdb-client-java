@@ -1349,7 +1349,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LabelsResponse"
+                $ref: "#/components/schemas/LabelResponse"
         default:
           description: unexpected error
           content:
