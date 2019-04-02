@@ -109,7 +109,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(task.getName()).isEqualTo(taskName);
         Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(task.getStatus()).isEqualTo(Task.StatusEnum.ACTIVE);
-        Assertions.assertThat(task.getEvery()).isEqualTo("1h0m0s");
+        Assertions.assertThat(task.getEvery()).isEqualTo("1h");
         Assertions.assertThat(task.getCron()).isNull();
         Assertions.assertThat(task.getFlux()).isEqualToIgnoringWhitespace(flux);
     }
@@ -134,7 +134,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         task = tasksApi.createTask(task);
 
         Assertions.assertThat(task).isNotNull();
-        Assertions.assertThat(task.getOffset()).isEqualTo("30m0s");
+        Assertions.assertThat(task.getOffset()).isEqualTo("30m");
     }
 
     @Test
@@ -149,7 +149,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(task.getName()).isEqualTo(taskName);
         Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(task.getStatus()).isEqualTo(Task.StatusEnum.ACTIVE);
-        Assertions.assertThat(task.getEvery()).isEqualTo("1h0m0s");
+        Assertions.assertThat(task.getEvery()).isEqualTo("1h");
         Assertions.assertThat(task.getCron()).isNull();
         Assertions.assertThat(task.getFlux()).endsWith(TASK_FLUX);
     }
@@ -290,7 +290,7 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         String flux = "option task = {\n"
                 + "    name: \"" + taskName + "\",\n"
-                + "    every: 180000000000ns\n"
+                + "    every: 3m\n"
                 + "}\n\n" + TASK_FLUX;
 
         cronTask.setCron(null);
@@ -301,7 +301,7 @@ class ITTasksApiTest extends AbstractITClientTest {
 
         Assertions.assertThat(updatedTask).isNotNull();
         Assertions.assertThat(updatedTask.getId()).isEqualTo(cronTask.getId());
-        Assertions.assertThat(updatedTask.getEvery()).isEqualTo("3m0s");
+        Assertions.assertThat(updatedTask.getEvery()).isEqualTo("3m");
         Assertions.assertThat(updatedTask.getCron()).isNull();
         Assertions.assertThat(updatedTask.getFlux()).isEqualToIgnoringWhitespace(flux);
         Assertions.assertThat(updatedTask.getStatus()).isEqualTo(Task.StatusEnum.INACTIVE);
