@@ -49,6 +49,14 @@ public class DashboardLinks {
   @SerializedName(SERIALIZED_NAME_LOGS)
   private String logs = null;
 
+  public static final String SERIALIZED_NAME_LABELS = "labels";
+  @SerializedName(SERIALIZED_NAME_LABELS)
+  private String labels = null;
+
+  public static final String SERIALIZED_NAME_ORG = "org";
+  @SerializedName(SERIALIZED_NAME_ORG)
+  private String org = null;
+
   public DashboardLinks self(String self) {
     this.self = self;
     return this;
@@ -139,6 +147,42 @@ public class DashboardLinks {
     this.logs = logs;
   }
 
+  public DashboardLinks labels(String labels) {
+    this.labels = labels;
+    return this;
+  }
+
+   /**
+   * Get labels
+   * @return labels
+  **/
+  @ApiModelProperty(value = "")
+  public String getLabels() {
+    return labels;
+  }
+
+  public void setLabels(String labels) {
+    this.labels = labels;
+  }
+
+  public DashboardLinks org(String org) {
+    this.org = org;
+    return this;
+  }
+
+   /**
+   * Get org
+   * @return org
+  **/
+  @ApiModelProperty(value = "")
+  public String getOrg() {
+    return org;
+  }
+
+  public void setOrg(String org) {
+    this.org = org;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -153,12 +197,14 @@ public class DashboardLinks {
         Objects.equals(this.cells, dashboardLinks.cells) &&
         Objects.equals(this.members, dashboardLinks.members) &&
         Objects.equals(this.owners, dashboardLinks.owners) &&
-        Objects.equals(this.logs, dashboardLinks.logs);
+        Objects.equals(this.logs, dashboardLinks.logs) &&
+        Objects.equals(this.labels, dashboardLinks.labels) &&
+        Objects.equals(this.org, dashboardLinks.org);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self, cells, members, owners, logs);
+    return Objects.hash(self, cells, members, owners, logs, labels, org);
   }
 
 
@@ -171,6 +217,8 @@ public class DashboardLinks {
     sb.append("    members: ").append(toIndentedString(members)).append("\n");
     sb.append("    owners: ").append(toIndentedString(owners)).append("\n");
     sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
+    sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
+    sb.append("    org: ").append(toIndentedString(org)).append("\n");
     sb.append("}");
     return sb.toString();
   }

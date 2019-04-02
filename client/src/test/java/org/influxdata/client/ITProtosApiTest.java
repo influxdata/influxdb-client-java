@@ -33,7 +33,6 @@ import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -100,14 +99,11 @@ class ITProtosApiTest extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/12979
     void createProtoDashboardNotFoundProto() {
 
         Assertions.assertThatThrownBy(() -> protosApi
                 .createProtoDashboard("020f755c3c082000", findMyOrg().getId()))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("proto not found");
-
     }
 }

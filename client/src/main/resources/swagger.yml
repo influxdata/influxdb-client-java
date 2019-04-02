@@ -470,7 +470,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '200':
+        '201':
           description: "the label added to the telegraf config"
           content:
             application/json:
@@ -855,8 +855,8 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '200':
-          description: a list of all labels for a scraper target
+        '201':
+          description: the newly added label
           content:
             application/json:
               schema:
@@ -1344,8 +1344,8 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '200':
-          description: a list of all labels for a variable
+        '201':
+          description: the newly added label
           content:
             application/json:
               schema:
@@ -1509,9 +1509,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
   /ready:
-    get:
-      servers:
+    servers:
         - url: /
+    get:
       tags:
         - Ready
       summary: Get the readiness of a instance at startup. Allow us to confirm the instance is prepared to accept requests.
@@ -1529,9 +1529,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
   /health:
-    get:
-      servers:
+    servers:
         - url: /
+    get:
       tags:
         - Health
       summary: Get the health of an instance anytime during execution. Allow us to check if the instance is still healthy.
@@ -2373,7 +2373,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '200':
+        '201':
           description: the label added to the dashboard
           content:
             application/json:
@@ -3213,8 +3213,8 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '200':
-          description: a list of all labels for a bucket
+        '201':
+          description: the newly added label
           content:
             application/json:
               schema:
@@ -3653,7 +3653,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '200':
+        '201':
           description: returns the created label
           content:
             application/json:
@@ -6905,6 +6905,8 @@ components:
                 owners: "/api/v2/dashboards/1/owners"
                 members: "/api/v2/dashboards/1/members"
                 logs: "/api/v2/dashboards/1/logs"
+                labels: "/api/v2/dashboards/1/labels"
+                org: "/api/v2/labels/1"
               properties:
                 self:
                   $ref: "#/components/schemas/Link"
@@ -6915,6 +6917,10 @@ components:
                 owners:
                   $ref: "#/components/schemas/Link"
                 logs:
+                  $ref: "#/components/schemas/Link"
+                labels:
+                  $ref: "#/components/schemas/Link"
+                org:
                   $ref: "#/components/schemas/Link"
             id:
               readOnly: true
