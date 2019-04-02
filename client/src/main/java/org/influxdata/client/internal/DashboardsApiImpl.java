@@ -29,6 +29,9 @@ import org.influxdata.Arguments;
 import org.influxdata.client.DashboardsApi;
 import org.influxdata.client.FindOptions;
 import org.influxdata.client.domain.AddResourceMemberRequestBody;
+import org.influxdata.client.domain.Cell;
+import org.influxdata.client.domain.CellUpdate;
+import org.influxdata.client.domain.CreateCell;
 import org.influxdata.client.domain.CreateDashboardRequest;
 import org.influxdata.client.domain.Dashboard;
 import org.influxdata.client.domain.Dashboards;
@@ -44,6 +47,7 @@ import org.influxdata.client.domain.ResourceMembers;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.User;
+import org.influxdata.client.domain.View;
 import org.influxdata.client.service.DashboardsService;
 import org.influxdata.internal.AbstractRestClient;
 
@@ -381,5 +385,154 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
         Call<Void> call = service.dashboardsDashboardIDLabelsLabelIDDelete(dashboardID, labelID, null);
 
         execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public Cell addCell(@Nonnull final CreateCell createCell, @Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(createCell, "createCell");
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        return addCell(createCell, dashboard.getId());
+    }
+
+    @Nonnull
+    @Override
+    public Cell addCell(@Nonnull final CreateCell createCell, @Nonnull final String dashboardID) {
+
+        Arguments.checkNotNull(createCell, "createCell");
+        Arguments.checkNonEmpty(dashboardID, "dashboardID");
+
+        Call<Cell> call = service.dashboardsDashboardIDCellsPost(dashboardID, createCell, null);
+
+        return execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public Dashboard replaceCells(@Nonnull final List<Cell> cells, @Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(cells, "cells");
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        return replaceCells(cells, dashboard.getId());
+    }
+
+    @Nonnull
+    @Override
+    public Dashboard replaceCells(@Nonnull final List<Cell> cells, @Nonnull final String dashboardID) {
+
+        Arguments.checkNotNull(cells, "cells");
+        Arguments.checkNonEmpty(dashboardID, "dashboardID");
+
+        Call<Dashboard> call = service.dashboardsDashboardIDCellsPut(dashboardID, cells, null);
+
+        return execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public Cell updateCell(@Nonnull final CellUpdate cellUpdate,
+                           @Nonnull final String cellID,
+                           @Nonnull final String dashboardID) {
+
+        Arguments.checkNotNull(cellUpdate, "cellUpdate");
+        Arguments.checkNonEmpty(cellID, "cellID");
+        Arguments.checkNonEmpty(dashboardID, "dashboardID");
+
+        Call<Cell> call = service.dashboardsDashboardIDCellsCellIDPatch(dashboardID, cellID, cellUpdate, null);
+
+        return execute(call);
+    }
+
+    @Override
+    public void deleteCell(@Nonnull final Cell cell, @Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(cell, "cell");
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        deleteCell(cell.getId(), dashboard.getId());
+    }
+
+    @Override
+    public void deleteCell(@Nonnull final String cellID, @Nonnull final String dashboardID) {
+
+        Arguments.checkNonEmpty(cellID, "cellID");
+        Arguments.checkNonEmpty(dashboardID, "dashboardID");
+
+        Call<Void> call = service.dashboardsDashboardIDCellsCellIDDelete(dashboardID, cellID, null);
+
+        execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public View addCellView(@Nonnull final View view, @Nonnull final Cell cell, @Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(view, "view");
+        Arguments.checkNotNull(cell, "cell");
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        return addCellView(view, cell.getId(), dashboard.getId());
+    }
+
+    @Nonnull
+    @Override
+    public View addCellView(@Nonnull final View view, @Nonnull final String cellID, final @Nonnull String dashboardID) {
+
+        Arguments.checkNotNull(view, "view");
+        Arguments.checkNonEmpty(cellID, "cellID");
+        Arguments.checkNonEmpty(dashboardID, "dashboardID");
+
+        return updateCellView(view, cellID, dashboardID);
+    }
+
+    @Nonnull
+    @Override
+    public View updateCellView(@Nonnull final View view, @Nonnull final Cell cell, @Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(view, "view");
+        Arguments.checkNotNull(cell, "cell");
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        return updateCellView(view, cell.getId(), dashboard.getId());
+    }
+
+    @Nonnull
+    @Override
+    public View updateCellView(@Nonnull final View view,
+                               @Nonnull final String cellID,
+                               @Nonnull final String dashboardID) {
+
+        Arguments.checkNotNull(view, "view");
+        Arguments.checkNonEmpty(cellID, "cellID");
+        Arguments.checkNonEmpty(dashboardID, "dashboardID");
+
+        Call<View> call = service.dashboardsDashboardIDCellsCellIDViewPatch(dashboardID, cellID, view, null);
+
+        return execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public View getCellView(@Nonnull final Cell cell, @Nonnull final Dashboard dashboard) {
+
+        Arguments.checkNotNull(cell, "cell");
+        Arguments.checkNotNull(dashboard, "dashboard");
+
+        return getCellView(cell.getId(), dashboard.getId());
+    }
+
+    @Nonnull
+    @Override
+    public View getCellView(@Nonnull final String cellID, @Nonnull final String dashboardID) {
+
+        Arguments.checkNonEmpty(cellID, "cellID");
+        Arguments.checkNonEmpty(dashboardID, "dashboardID");
+
+        Call<View> call = service.dashboardsDashboardIDCellsCellIDViewGet(dashboardID, cellID, null);
+
+        return execute(call);
     }
 }

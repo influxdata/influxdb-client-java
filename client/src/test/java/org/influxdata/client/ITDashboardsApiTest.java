@@ -23,20 +23,26 @@ package org.influxdata.client;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
 import org.influxdata.LogLevel;
+import org.influxdata.client.domain.Cell;
+import org.influxdata.client.domain.Cells;
+import org.influxdata.client.domain.CreateCell;
 import org.influxdata.client.domain.Dashboard;
 import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.MarkdownViewProperties;
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.User;
+import org.influxdata.client.domain.View;
 import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
@@ -375,5 +381,340 @@ class ITDashboardsApiTest extends AbstractITClientTest {
         Assertions.assertThat(entries.getLogs()).hasSize(20);
         Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("Dashboard Updated");
         Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Dashboard Created");
+    }
+
+    @Test
+    void addCell() {
+
+        Dashboard dashboard = dashboardsApi
+                .createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+        Assertions.assertThat(dashboard.getCells()).hasSize(0);
+
+        CreateCell createCell = new CreateCell()
+                .h(10)
+                .w(15)
+                .x(20)
+                .y(25)
+                .viewID("020f755c3c082000")
+                .name("my-cell");
+
+        Cell cell = dashboardsApi.addCell(createCell, dashboard);
+
+        Assertions.assertThat(cell.getId()).isNotNull();
+        //TODO https://github.com/influxdata/influxdb/issues/13079
+        // Assertions.assertThat(cell.getName()).isEqualTo("my-cell");
+        Assertions.assertThat(cell.getX()).isEqualTo(20);
+        Assertions.assertThat(cell.getY()).isEqualTo(25);
+        Assertions.assertThat(cell.getW()).isEqualTo(15);
+        Assertions.assertThat(cell.getH()).isEqualTo(10);
+        Assertions.assertThat(cell.getLinks()).isNotNull();
+        Assertions.assertThat(cell.getLinks().getSelf()).isEqualTo("/api/v2/dashboards/" + dashboard.getId() + "/cells/" + cell.getId());
+        Assertions.assertThat(cell.getLinks().getView()).isEqualTo("/api/v2/dashboards/" + dashboard.getId() + "/cells/" + cell.getId() + "/view");
+        Assertions.assertThat(cell.getViewID()).isNull();
+
+        Cells cells = dashboardsApi.findDashboardByID(dashboard.getId()).getCells();
+        Assertions.assertThat(cells).hasSize(1);
+    }
+
+    @Test
+    void updateCell() {
+
+        Dashboard dashboard = dashboardsApi
+                .createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+        Assertions.assertThat(dashboard.getCells()).hasSize(0);
+
+        CreateCell createCell = new CreateCell()
+                .h(10)
+                .w(15)
+                .x(20)
+                .y(25)
+                .viewID("020f755c3c082000")
+                .name("my-cell");
+
+        Cell cell = dashboardsApi.addCell(createCell, dashboard);
+
+        //TODO https://github.com/influxdata/influxdb/issues/13081
+        // Cell changedCell = dashboardsApi.updateCell(new CellUpdate().name("changed name"), cell.getId(), dashboard.getId());
+
+        //TODO https://github.com/influxdata/influxdb/issues/13079
+        // Assertions.assertThat(changedCell.getName()).isEqualTo("changed name");
+    }
+
+    @Test
+    void addCellDashboardNotFound() {
+
+        CreateCell createCell = new CreateCell()
+                .h(10)
+                .w(15)
+                .x(20)
+                .y(25)
+                .name("my-cell");
+
+        Assertions.assertThatThrownBy(() -> dashboardsApi.addCell(createCell, "020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("dashboard not found");
+    }
+
+    @Test
+    void addCellCopyView() {
+
+        Dashboard dashboard = dashboardsApi
+                .createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        Cell cell = dashboardsApi.addCell(new CreateCell()
+                .h(10)
+                .w(15)
+                .x(20)
+                .y(25)
+                .name("my-cell"), dashboard);
+
+        View view = new View()
+                .name("view-name")
+                .properties(new MarkdownViewProperties().note("my-note"));
+
+        view = dashboardsApi.addCellView(view, cell, dashboard);
+
+        CreateCell newCell = new CreateCell()
+                .h(10)
+                .w(15)
+                .x(20)
+                .y(25)
+                .name("my-cell-2")
+                .usingView(view.getId());
+
+        Cell cellWithView = dashboardsApi.addCell(newCell, dashboard);
+
+        //TODO https://github.com/influxdata/influxdb/issues/13084
+        // View cellView = dashboardsApi.getCellView(cellWithView, dashboard);
+        // Assertions.assertThat(cellView).isNotNull();
+
+        //TODO https://github.com/influxdata/influxdb/issues/13086
+        // Assertions.assertThat(((MarkdownViewProperties)cellView.getProperties()).getType()).isEqualTo(MarkdownViewProperties.TypeEnum.MARKDOWN);
+        // Assertions.assertThat(((MarkdownViewProperties)cellView.getProperties()).getNote()).isEqualTo("my-note");
+    }
+
+    @Test
+    void addCellDirectToView() {
+
+        Dashboard dashboard = dashboardsApi
+                .createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        Cell cell = dashboardsApi.addCell(new CreateCell()
+                .h(10)
+                .w(15)
+                .x(20)
+                .y(25)
+                .name("my-cell"), dashboard);
+
+        //TODO https://github.com/influxdata/influxdb/issues/13084
+        // View emptyProperties = dashboardsApi.getCellView(cell, dashboard);
+        // Assertions.assertThat(((EmptyViewProperties)emptyProperties.getProperties()).getType()).isEqualTo(EmptyViewProperties.TypeEnum.EMPTY);
+
+        View view = new View()
+                .name("view-name")
+                .properties(new MarkdownViewProperties().note("my-note"));
+
+        view = dashboardsApi.addCellView(view, cell, dashboard);
+
+        CreateCell newCell = new CreateCell()
+                .h(10)
+                .w(15)
+                .x(20)
+                .y(25)
+                .name("my-cell-2")
+                .viewID(view.getId());
+
+        Cell cellWithView = dashboardsApi.addCell(newCell, dashboard);
+
+        //TODO https://github.com/influxdata/influxdb/issues/13084
+        // View cellView = dashboardsApi.getCellView(cellWithView, dashboard);
+        // Assertions.assertThat(cellView).isNotNull();
+
+        //TODO https://github.com/influxdata/influxdb/issues/13086
+        // Assertions.assertThat(((MarkdownViewProperties)cellView.getProperties()).getType()).isEqualTo(MarkdownViewProperties.TypeEnum.MARKDOWN);
+        // Assertions.assertThat(((MarkdownViewProperties)cellView.getProperties()).getNote()).isEqualTo("my-note");
+    }
+
+    @Test
+    void deleteCell() {
+
+        Dashboard dashboard = dashboardsApi
+                .createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        CreateCell createCell = new CreateCell()
+                .h(10)
+                .w(15)
+                .x(20)
+                .y(25)
+                .name("my-cell");
+
+        Cell cell = dashboardsApi.addCell(createCell, dashboard);
+
+        dashboard = dashboardsApi.findDashboardByID(dashboard.getId());
+        Assertions.assertThat(dashboard.getCells()).hasSize(1);
+
+        dashboardsApi.deleteCell(cell, dashboard);
+
+        dashboard = dashboardsApi.findDashboardByID(dashboard.getId());
+        Assertions.assertThat(dashboard.getCells()).hasSize(0);
+    }
+
+    @Test
+    void deleteCellNotFound() {
+
+        Dashboard dashboard = dashboardsApi
+                .createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        Assertions.assertThatThrownBy(() -> dashboardsApi.deleteCell("020f755c3c082000", dashboard.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("cell not found");
+    }
+
+    @Test
+    void deleteCellDashboardNotFound() {
+
+        Dashboard dashboard = dashboardsApi
+                .createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        CreateCell createCell = new CreateCell()
+                .h(10)
+                .w(15)
+                .x(20)
+                .y(25)
+                .name("my-cell");
+
+        Cell cell = dashboardsApi.addCell(createCell, dashboard);
+
+        Assertions.assertThatThrownBy(() -> dashboardsApi.deleteCell(cell.getId(), "020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("dashboard not found");
+    }
+
+    @Test
+    void replaceCells() {
+
+        Dashboard dashboard = dashboardsApi
+                .createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        CreateCell createCell = new CreateCell()
+                .h(1)
+                .w(2)
+                .x(3)
+                .y(4)
+                .name("my-cell-1");
+
+        Cell cell1 = dashboardsApi.addCell(createCell, dashboard);
+        Cell cell2 = dashboardsApi.addCell(createCell.h(5)
+                .w(6)
+                .x(7)
+                .y(8).name("my-cell-2"), dashboard);
+
+        Dashboard dashboardWithCells = dashboardsApi.replaceCells(Arrays.asList(cell1, cell2), dashboard);
+
+        Assertions.assertThat(dashboardWithCells.getCells()).hasSize(2);
+        Assertions.assertThat(dashboardWithCells.getCells().get(0).getH()).isEqualTo(1);
+        Assertions.assertThat(dashboardWithCells.getCells().get(0).getW()).isEqualTo(2);
+        Assertions.assertThat(dashboardWithCells.getCells().get(0).getX()).isEqualTo(3);
+        Assertions.assertThat(dashboardWithCells.getCells().get(0).getY()).isEqualTo(4);
+        Assertions.assertThat(dashboardWithCells.getCells().get(1).getH()).isEqualTo(5);
+        Assertions.assertThat(dashboardWithCells.getCells().get(1).getW()).isEqualTo(6);
+        Assertions.assertThat(dashboardWithCells.getCells().get(1).getX()).isEqualTo(7);
+        Assertions.assertThat(dashboardWithCells.getCells().get(1).getY()).isEqualTo(8);
+    }
+
+    @Test
+    void cellView() {
+
+        Dashboard dashboard = dashboardsApi
+                .createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        CreateCell createCell = new CreateCell()
+                .h(10)
+                .w(15)
+                .x(20)
+                .y(25)
+                .name("my-cell");
+
+        Cell cell = dashboardsApi.addCell(createCell, dashboard);
+        Assertions.assertThat(cell.getViewID()).isNull();
+
+        View view = new View()
+                .name("view-name")
+                .properties(new MarkdownViewProperties().note("my-note"));
+
+        View created = dashboardsApi.addCellView(view, cell, dashboard);
+        Assertions.assertThat(created.getId()).isNotNull();
+        Assertions.assertThat(created.getName()).isEqualTo("view-name");
+        Assertions.assertThat(created.getProperties()).isNotNull();
+        Assertions.assertThat(((MarkdownViewProperties) created.getProperties()).getNote()).isEqualTo("my-note");
+        Assertions.assertThat(((MarkdownViewProperties) created.getProperties()).getType()).isEqualTo(MarkdownViewProperties.TypeEnum.MARKDOWN);
+        Assertions.assertThat(((MarkdownViewProperties) created.getProperties()).getShape()).isEqualTo(MarkdownViewProperties.ShapeEnum.CHRONOGRAF_V2);
+
+        cell = dashboardsApi.findDashboardByID(dashboard.getId()).getCells().get(0);
+
+        //TODO https://github.com/influxdata/influxdb/issues/13080
+        // Assertions.assertThat(cell.getViewID()).isNotNull();
+
+        View updated = dashboardsApi.updateCellView(view.name("updated-name"), cell, dashboard);
+        Assertions.assertThat(updated.getId()).isNotNull();
+        Assertions.assertThat(updated.getName()).isEqualTo("updated-name");
+
+        View viewByGet = dashboardsApi.getCellView(cell, dashboard);
+
+        Assertions.assertThat(viewByGet.getId()).isEqualTo(created.getId());
+    }
+
+    @Test
+    void addCellViewNotFound() {
+
+        Dashboard dashboard = dashboardsApi
+                .createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        CreateCell createCell = new CreateCell()
+                .h(10)
+                .w(15)
+                .x(20)
+                .y(25)
+                .name("my-cell");
+
+        Cell cell = dashboardsApi.addCell(createCell, dashboard);
+
+        View view = new View()
+                .name("view-name")
+                .properties(new MarkdownViewProperties().note("my-note"));
+
+        Assertions.assertThatThrownBy(() -> dashboardsApi.addCellView(view, cell.getId(), "020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("dashboard not found");
+
+        //TODO https://github.com/influxdata/influxdb/issues/13083
+        // Assertions.assertThatThrownBy(() -> dashboardsApi.addCellView(view, "020f755c3c082000", dashboard.getId()))
+        //        .isInstanceOf(NotFoundException.class)
+        //        .hasMessage("cell not found");
+    }
+
+    @Test
+    void getCellViewNotFound() {
+
+        Dashboard dashboard = dashboardsApi
+                .createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
+
+        CreateCell createCell = new CreateCell()
+                .h(10)
+                .w(15)
+                .x(20)
+                .y(25)
+                .name("my-cell");
+
+        Cell cell = dashboardsApi.addCell(createCell, dashboard);
+
+        Assertions.assertThatThrownBy(() -> dashboardsApi.getCellView(cell.getId(), "020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("dashboard not found");
+
+        //TODO https://github.com/influxdata/influxdb/issues/13083
+        // Assertions.assertThatThrownBy(() -> dashboardsApi.getCellView("ffffffffffffffff", dashboard.getId()))
+        //        .isInstanceOf(NotFoundException.class)
+        //        .hasMessage("cell not found");
     }
 }

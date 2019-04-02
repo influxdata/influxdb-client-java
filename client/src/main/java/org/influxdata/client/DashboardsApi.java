@@ -25,6 +25,9 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.influxdata.client.domain.Cell;
+import org.influxdata.client.domain.CellUpdate;
+import org.influxdata.client.domain.CreateCell;
 import org.influxdata.client.domain.CreateDashboardRequest;
 import org.influxdata.client.domain.Dashboard;
 import org.influxdata.client.domain.Label;
@@ -35,6 +38,7 @@ import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.User;
+import org.influxdata.client.domain.View;
 
 /**
  * The client of the InfluxDB 2.0 that implement Dashboards HTTP API endpoint.
@@ -321,4 +325,140 @@ public interface DashboardsApi {
      * @param dashboardID ID of the dashboard
      */
     void deleteLabel(@Nonnull final String labelID, @Nonnull final String dashboardID);
+
+    /**
+     * Create a dashboard cell.
+     *
+     * @param createCell cell that will be added
+     * @param dashboard  dashboard to update
+     * @return Cell successfully added
+     */
+    @Nonnull
+    Cell addCell(@Nonnull final CreateCell createCell, @Nonnull final Dashboard dashboard);
+
+    /**
+     * Create a dashboard cell.
+     *
+     * @param createCell  cell that will be added
+     * @param dashboardID ID of dashboard to update
+     * @return Cell successfully added
+     */
+    @Nonnull
+    Cell addCell(@Nonnull final CreateCell createCell, @Nonnull final String dashboardID);
+
+    /**
+     * Update the non positional information related to a cell
+     * (because updates to a single cells positional data could cause grid conflicts).
+     *
+     * @param cellUpdate  updates the non positional information related to a cell
+     * @param cellID      ID of cell to update
+     * @param dashboardID ID of dashboard to update
+     * @return Updated dashboard cell
+     */
+    @Nonnull
+    Cell updateCell(@Nonnull final CellUpdate cellUpdate,
+                    @Nonnull final String cellID,
+                    @Nonnull final String dashboardID);
+
+    /**
+     * Delete a dashboard cell.
+     *
+     * @param cell      cell to delete
+     * @param dashboard dashboard to delete
+     */
+    void deleteCell(@Nonnull final Cell cell, @Nonnull final Dashboard dashboard);
+
+    /**
+     * Delete a dashboard cell.
+     *
+     * @param cellID      ID of cell to delete
+     * @param dashboardID ID of dashboard to delete
+     */
+    void deleteCell(@Nonnull final String cellID, @Nonnull final String dashboardID);
+
+    /**
+     * Replace a dashboards cells.
+     *
+     * @param cells     batch replaces all of a dashboards cells (this is used primarily to update
+     *                  the positional information of all of the cells)
+     * @param dashboard dashboard to update
+     * @return Replaced dashboard cells
+     */
+    @Nonnull
+    Dashboard replaceCells(@Nonnull final List<Cell> cells, @Nonnull final Dashboard dashboard);
+
+    /**
+     * Replace a dashboards cells.
+     *
+     * @param cells       batch replaces all of a dashboards cells (this is used primarily to update
+     *                    the positional information of all of the cells)
+     * @param dashboardID ID of dashboard to update
+     * @return Replaced dashboard cells
+     */
+    @Nonnull
+    Dashboard replaceCells(@Nonnull final List<Cell> cells, @Nonnull final String dashboardID);
+
+    /**
+     * Add the view to a cell.
+     *
+     * @param view      the view for a cell
+     * @param cell      cell to update
+     * @param dashboard dashboard to update
+     * @return Added cell view
+     */
+    @Nonnull
+    View addCellView(@Nonnull final View view, @Nonnull final Cell cell, @Nonnull final Dashboard dashboard);
+
+    /**
+     * Add the view to a cell.
+     *
+     * @param view        the view for a cell
+     * @param cellID      ID of cell to update
+     * @param dashboardID ID of dashboard to update
+     * @return Added cell view
+     */
+    @Nonnull
+    View addCellView(@Nonnull final View view, @Nonnull final String cellID, @Nonnull final String dashboardID);
+
+    /**
+     * Update the view for a cell.
+     *
+     * @param view      updates the view for a cell
+     * @param cell      cell to update
+     * @param dashboard dashboard to update
+     * @return Updated cell view
+     */
+    @Nonnull
+    View updateCellView(@Nonnull final View view, @Nonnull final Cell cell, @Nonnull final Dashboard dashboard);
+
+    /**
+     * Update the view for a cell.
+     *
+     * @param view        updates the view for a cell
+     * @param cellID      ID of cell to update
+     * @param dashboardID ID of dashboard to update
+     * @return Updated cell view
+     */
+    @Nonnull
+    View updateCellView(@Nonnull final View view, @Nonnull final String cellID, @Nonnull final String dashboardID);
+
+    /**
+     * Retrieve the view for a cell in a dashboard.
+     *
+     * @param cell      cell
+     * @param dashboard dashboard
+     * @return A dashboard cells view
+     */
+    @Nonnull
+    View getCellView(@Nonnull final Cell cell, @Nonnull final Dashboard dashboard);
+
+    /**
+     * Retrieve the view for a cell in a dashboard.
+     *
+     * @param cellID      ID of cell
+     * @param dashboardID ID of dashboard
+     * @return A dashboard cells view
+     */
+    @Nonnull
+    View getCellView(@Nonnull final String cellID, @Nonnull final String dashboardID);
 }
