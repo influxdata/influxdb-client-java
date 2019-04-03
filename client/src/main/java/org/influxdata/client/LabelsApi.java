@@ -31,6 +31,8 @@ import org.influxdata.client.domain.LabelCreateRequest;
 import org.influxdata.client.domain.LabelUpdate;
 
 /**
+ * The client of the InfluxDB 2.0 that implement Labels HTTP API endpoint.
+ *
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:37)
  */
 public interface LabelsApi {

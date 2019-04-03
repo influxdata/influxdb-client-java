@@ -384,7 +384,6 @@ class ITBucketsApiTest extends AbstractITClientTest {
         Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
         Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
 
-        //TODO isNotNull FindOptions also in Log API?
         findOptions.setOffset(findOptions.getOffset() + 5);
         Assertions.assertThat(entries.getLinks().getNext()).isNull();
 

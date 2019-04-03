@@ -366,6 +366,8 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         String url;
         if (operation.getServers() != null) {
             url = operation.getServers().get(0).getUrl();
+        } else if (openAPI.getPaths().get(path).getServers() != null) {
+            url = openAPI.getPaths().get(path).getServers().get(0).getUrl();
         } else {
             url = openAPI.getServers().get(0).getUrl();
         }
@@ -404,7 +406,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                                 if (oneOf.get$ref() == null) {
                                     continue;
                                 }
-                                
+
                                 String refSchemaName = ModelUtils.getSimpleRef(oneOf.get$ref());
                                 Schema refSchema = allDefinitions.get(refSchemaName);
 

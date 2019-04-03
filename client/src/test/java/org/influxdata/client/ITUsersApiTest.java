@@ -270,7 +270,6 @@ class ITUsersApiTest extends AbstractITClientTest {
         Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("User Updated");
         Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("User Updated");
 
-        //TODO isNotNull FindOptions also in Log API?
         findOptions.setOffset(findOptions.getOffset() + 5);
         Assertions.assertThat(entries.getLinks().getNext()).isNull();
 
