@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 - 2019 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 142,
+      <title>File: 144,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -341,6 +341,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/checkstyle.html#org.influxdata.exceptions.ProxyAuthenticationRequiredException.java">org/influxdata/exceptions/ProxyAuthenticationRequiredException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/checkstyle.html#org.influxdata.client.DashboardsApi.java">org/influxdata/client/DashboardsApi.java</a>
                 </td>
                 <td>
                   0
@@ -2021,6 +2035,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/bonitoo-io/influxdb-client-java/checkstyle.html#org.influxdata.query.dsl.functions.GroupFlux.java">org/influxdata/query/dsl/functions/GroupFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bonitoo-io/influxdb-client-java/checkstyle.html#org.influxdata.client.internal.DashboardsApiImpl.java">org/influxdata/client/internal/DashboardsApiImpl.java</a>
                 </td>
                 <td>
                   0
