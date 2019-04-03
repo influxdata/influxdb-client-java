@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Cell;
 import org.influxdata.client.domain.Cells;
 import org.influxdata.client.domain.CreateCell;
@@ -69,7 +68,6 @@ class ITDashboardsApiTest extends AbstractITClientTest {
         organization = findMyOrg();
 
         dashboardsApi.findDashboards().forEach(dashboard -> dashboardsApi.deleteDashboard(dashboard));
-        influxDBClient.setLogLevel(LogLevel.BODY);
     }
 
     @Test

@@ -21,6 +21,7 @@
  */
 package org.influxdata.client;
 
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
@@ -28,7 +29,9 @@ import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.OnboardingRequest;
 import org.influxdata.client.domain.OnboardingResponse;
 import org.influxdata.client.domain.Ready;
+import org.influxdata.client.domain.Routes;
 import org.influxdata.client.domain.User;
+import org.influxdata.client.service.DefaultService;
 import org.influxdata.exceptions.UnprocessableEntityException;
 
 import org.assertj.core.api.Assertions;
@@ -152,5 +155,34 @@ class ITInfluxDBClient extends AbstractITClientTest {
         Assertions.assertThatThrownBy(() -> influxDBClient.onBoarding(onboarding))
                 .isInstanceOf(UnprocessableEntityException.class)
                 .hasMessage("onboarding has already been completed");
+    }
+
+    @Test
+    void defaultService() throws IOException {
+
+        DefaultService service = influxDBClient.getService(DefaultService.class);
+
+        Assertions.assertThat(service).isNotNull();
+
+        Routes routes = service.rootGet(null).execute().body();
+
+        Assertions.assertThat(routes).isNotNull();
+        Assertions.assertThat(routes.getAuthorizations()).isEqualTo("/api/v2/authorizations");
+        Assertions.assertThat(routes.getBuckets()).isEqualTo("/api/v2/buckets");
+        Assertions.assertThat(routes.getDashboards()).isEqualTo("/api/v2/dashboards");
+        Assertions.assertThat(routes.getVariables()).isEqualTo("/api/v2/variables");
+        Assertions.assertThat(routes.getMe()).isEqualTo("/api/v2/me");
+        Assertions.assertThat(routes.getOrgs()).isEqualTo("/api/v2/orgs");
+        Assertions.assertThat(routes.getProtos()).isEqualTo("/api/v2/protos");
+        Assertions.assertThat(routes.getQuery()).isNotNull();
+        Assertions.assertThat(routes.getSetup()).isEqualTo("/api/v2/setup");
+        Assertions.assertThat(routes.getSignin()).isEqualTo("/api/v2/signin");
+        Assertions.assertThat(routes.getSignout()).isEqualTo("/api/v2/signout");
+        Assertions.assertThat(routes.getSources()).isEqualTo("/api/v2/sources");
+        Assertions.assertThat(routes.getSystem()).isNotNull();
+        Assertions.assertThat(routes.getTasks()).isEqualTo("/api/v2/tasks");
+        Assertions.assertThat(routes.getTelegrafs()).isEqualTo("/api/v2/telegrafs");
+        Assertions.assertThat(routes.getUsers()).isEqualTo("/api/v2/users");
+        Assertions.assertThat(routes.getWrite()).isEqualTo("/api/v2/write");
     }
 }

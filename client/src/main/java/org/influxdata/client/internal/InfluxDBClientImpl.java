@@ -193,6 +193,15 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
 
     @Nonnull
     @Override
+    public <S> S getService(@Nonnull final Class<S> service) {
+
+        Arguments.checkNotNull(service, "service");
+
+        return retrofit.create(service);
+    }
+
+    @Nonnull
+    @Override
     public Check health() {
 
         return health(healthService.healthGet(null));

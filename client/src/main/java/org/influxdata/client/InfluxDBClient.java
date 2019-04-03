@@ -183,6 +183,18 @@ public interface InfluxDBClient extends AutoCloseable {
     DashboardsApi getDashboardsApi();
 
     /**
+     * Create an implementation of the API endpoints defined by the {@code service} interface.
+     *
+     * The endpoints are defined in {@link org.influxdata.client.service}.
+     *
+     * @param service service to instantiate
+     * @param <S>     type of service
+     * @return instance of service
+     */
+    @Nonnull
+    <S> S getService(@Nonnull final Class<S> service);
+
+    /**
      * Get the health of an instance.
      *
      * @return health of an instance
