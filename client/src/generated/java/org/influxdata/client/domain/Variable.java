@@ -56,6 +56,10 @@ public class Variable {
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name = null;
 
+  public static final String SERIALIZED_NAME_DESCRIPTION = "description";
+  @SerializedName(SERIALIZED_NAME_DESCRIPTION)
+  private String description = null;
+
   public static final String SERIALIZED_NAME_SELECTED = "selected";
   @SerializedName(SERIALIZED_NAME_SELECTED)
   private List<String> selected = new ArrayList<>();
@@ -130,6 +134,24 @@ public class Variable {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Variable description(String description) {
+    this.description = description;
+    return this;
+  }
+
+   /**
+   * Get description
+   * @return description
+  **/
+  @ApiModelProperty(value = "")
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public Variable selected(List<String> selected) {
@@ -208,6 +230,7 @@ public class Variable {
         Objects.equals(this.id, variable.id) &&
         Objects.equals(this.orgID, variable.orgID) &&
         Objects.equals(this.name, variable.name) &&
+        Objects.equals(this.description, variable.description) &&
         Objects.equals(this.selected, variable.selected) &&
         Objects.equals(this.labels, variable.labels) &&
         Objects.equals(this.arguments, variable.arguments);
@@ -215,7 +238,7 @@ public class Variable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, id, orgID, name, selected, labels, arguments);
+    return Objects.hash(links, id, orgID, name, description, selected, labels, arguments);
   }
 
 
@@ -227,6 +250,7 @@ public class Variable {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    selected: ").append(toIndentedString(selected)).append("\n");
     sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
     sb.append("    arguments: ").append(toIndentedString(arguments)).append("\n");

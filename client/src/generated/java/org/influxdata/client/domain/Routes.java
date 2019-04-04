@@ -60,10 +60,6 @@ public class Routes {
   @SerializedName(SERIALIZED_NAME_ORGS)
   private String orgs = null;
 
-  public static final String SERIALIZED_NAME_PROTOS = "protos";
-  @SerializedName(SERIALIZED_NAME_PROTOS)
-  private String protos = null;
-
   public static final String SERIALIZED_NAME_QUERY = "query";
   @SerializedName(SERIALIZED_NAME_QUERY)
   private RoutesQuery query = null;
@@ -228,24 +224,6 @@ public class Routes {
 
   public void setOrgs(String orgs) {
     this.orgs = orgs;
-  }
-
-  public Routes protos(String protos) {
-    this.protos = protos;
-    return this;
-  }
-
-   /**
-   * Get protos
-   * @return protos
-  **/
-  @ApiModelProperty(value = "")
-  public String getProtos() {
-    return protos;
-  }
-
-  public void setProtos(String protos) {
-    this.protos = protos;
   }
 
   public Routes query(RoutesQuery query) {
@@ -445,7 +423,6 @@ public class Routes {
         Objects.equals(this.variables, routes.variables) &&
         Objects.equals(this.me, routes.me) &&
         Objects.equals(this.orgs, routes.orgs) &&
-        Objects.equals(this.protos, routes.protos) &&
         Objects.equals(this.query, routes.query) &&
         Objects.equals(this.setup, routes.setup) &&
         Objects.equals(this.signin, routes.signin) &&
@@ -460,7 +437,7 @@ public class Routes {
 
   @Override
   public int hashCode() {
-    return Objects.hash(authorizations, buckets, dashboards, external, variables, me, orgs, protos, query, setup, signin, signout, sources, system, tasks, telegrafs, users, write);
+    return Objects.hash(authorizations, buckets, dashboards, external, variables, me, orgs, query, setup, signin, signout, sources, system, tasks, telegrafs, users, write);
   }
 
 
@@ -475,7 +452,6 @@ public class Routes {
     sb.append("    variables: ").append(toIndentedString(variables)).append("\n");
     sb.append("    me: ").append(toIndentedString(me)).append("\n");
     sb.append("    orgs: ").append(toIndentedString(orgs)).append("\n");
-    sb.append("    protos: ").append(toIndentedString(protos)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
     sb.append("    setup: ").append(toIndentedString(setup)).append("\n");
     sb.append("    signin: ").append(toIndentedString(signin)).append("\n");
