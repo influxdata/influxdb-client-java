@@ -32,6 +32,9 @@ mvn clean install -DskipTests
 cd ${SCRIPT_PATH}/../client
 
 # Generate client
+rm ${SCRIPT_PATH}/../client/src/generated/java/org/influxdata/client/domain/*.java
+rm ${SCRIPT_PATH}/../client/src/generated/java/org/influxdata/client/service/*.java
+
 mvn org.openapitools:openapi-generator-maven-plugin:generate
 
 cd ${SCRIPT_PATH}/../client/src/generated/java/org/influxdata/client/domain

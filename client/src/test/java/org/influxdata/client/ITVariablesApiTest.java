@@ -72,6 +72,7 @@ class ITVariablesApiTest extends AbstractITClientTest {
         Assertions.assertThat(created.getId()).isNotBlank();
         Assertions.assertThat(created.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(created.getName()).startsWith("my-variable");
+        Assertions.assertThat(created.getDescription()).isEqualTo("my-top-variable");
         Assertions.assertThat(created.getSelected()).hasSize(1);
         Assertions.assertThat(created.getSelected()).contains("constant2");
         Assertions.assertThat(created.getArguments()).isNotNull();
@@ -341,6 +342,7 @@ class ITVariablesApiTest extends AbstractITClientTest {
         variable.name(generateName("my-variable"));
         variable.orgID(organization.getId());
         variable.addSelectedItem("constant2");
+        variable.setDescription("my-top-variable");
 
         ConstantVariableProperties type = new ConstantVariableProperties()
                 .addValuesItem("constant1")

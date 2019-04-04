@@ -35,7 +35,6 @@ import org.influxdata.client.InfluxDBClient;
 import org.influxdata.client.InfluxDBClientOptions;
 import org.influxdata.client.LabelsApi;
 import org.influxdata.client.OrganizationsApi;
-import org.influxdata.client.ProtosApi;
 import org.influxdata.client.QueryApi;
 import org.influxdata.client.ScraperTargetsApi;
 import org.influxdata.client.SourcesApi;
@@ -56,7 +55,6 @@ import org.influxdata.client.service.BucketsService;
 import org.influxdata.client.service.DashboardsService;
 import org.influxdata.client.service.LabelsService;
 import org.influxdata.client.service.OrganizationsService;
-import org.influxdata.client.service.ProtosService;
 import org.influxdata.client.service.QueryService;
 import org.influxdata.client.service.ReadyService;
 import org.influxdata.client.service.ScraperTargetsService;
@@ -177,12 +175,6 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Override
     public VariablesApi getVariablesApi() {
         return new VariablesApiImpl(retrofit.create(VariablesService.class));
-    }
-
-    @Nonnull
-    @Override
-    public ProtosApi getProtosApi() {
-        return new ProtosApiImpl(retrofit.create(ProtosService.class));
     }
 
     @Nonnull

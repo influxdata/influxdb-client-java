@@ -34,7 +34,6 @@ import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.OnboardingRequest;
 import org.influxdata.client.domain.OnboardingResponse;
 import org.influxdata.client.domain.Organization;
-import org.influxdata.client.domain.Proto;
 import org.influxdata.client.domain.Ready;
 import org.influxdata.client.domain.ScraperTargetResponse;
 import org.influxdata.client.domain.Source;
@@ -165,14 +164,6 @@ public interface InfluxDBClient extends AutoCloseable {
      */
     @Nonnull
     VariablesApi getVariablesApi();
-
-    /**
-     * Get the {@link Proto} client.
-     *
-     * @return the new client instance for Proto API
-     */
-    @Nonnull
-    ProtosApi getProtosApi();
 
     /**
      * Get the {@link Dashboard} client.

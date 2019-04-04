@@ -173,7 +173,6 @@ class ITInfluxDBClient extends AbstractITClientTest {
         Assertions.assertThat(routes.getVariables()).isEqualTo("/api/v2/variables");
         Assertions.assertThat(routes.getMe()).isEqualTo("/api/v2/me");
         Assertions.assertThat(routes.getOrgs()).isEqualTo("/api/v2/orgs");
-        Assertions.assertThat(routes.getProtos()).isEqualTo("/api/v2/protos");
         Assertions.assertThat(routes.getQuery()).isNotNull();
         Assertions.assertThat(routes.getSetup()).isEqualTo("/api/v2/setup");
         Assertions.assertThat(routes.getSignin()).isEqualTo("/api/v2/signin");
