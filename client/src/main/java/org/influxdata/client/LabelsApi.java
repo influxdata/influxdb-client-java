@@ -29,6 +29,7 @@ import javax.annotation.Nullable;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LabelCreateRequest;
 import org.influxdata.client.domain.LabelUpdate;
+import org.influxdata.client.domain.Organization;
 
 /**
  * The client of the InfluxDB 2.0 that implement Labels HTTP API endpoint.
@@ -120,10 +121,28 @@ public interface LabelsApi {
     Label findLabelByID(@Nonnull final String labelID);
 
     /**
-     * List all labels.
+     * Get all labels.
      *
-     * @return list all labels.
+     * @return all labels
      */
     @Nonnull
     List<Label> findLabels();
+
+    /**
+     * Get all labels.
+     *
+     * @param organization specifies the organization of the resource
+     * @return all labels
+     */
+    @Nonnull
+    List<Label> findLabelsByOrg(@Nonnull final Organization organization);
+
+    /**
+     * Get all labels.
+     *
+     * @param orgID specifies the organization ID of the resource
+     * @return all labels
+     */
+    @Nonnull
+    List<Label> findLabelsByOrgId(@Nullable final String orgID);
 }

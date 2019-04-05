@@ -121,6 +121,23 @@ class ITLabelsApiTest extends AbstractITClientTest {
     }
 
     @Test
+    void findLabelsByOrganization() {
+
+        Organization organization = influxDBClient.getOrganizationsApi().createOrganization(generateName("org"));
+
+        List<Label> labels = labelsApi.findLabelsByOrg(organization);
+        Assertions.assertThat(labels).hasSize(0);
+
+        labelsApi.createLabel(generateName("Cool Resource"), new HashMap<>(), organization.getId());
+        labels = labelsApi.findLabelsByOrg(organization);
+        Assertions.assertThat(labels).hasSize(1);
+
+        labelsApi.deleteLabel(labels.get(0));
+
+        influxDBClient.getOrganizationsApi().deleteOrganization(organization);
+    }
+
+    @Test
     void deleteLabel() {
 
         Label createdLabel = labelsApi.createLabel(generateName("Cool Resource"), new HashMap<>(), organization.getId());

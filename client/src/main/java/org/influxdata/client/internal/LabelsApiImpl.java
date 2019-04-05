@@ -35,6 +35,7 @@ import org.influxdata.client.domain.LabelCreateRequest;
 import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.LabelUpdate;
 import org.influxdata.client.domain.LabelsResponse;
+import org.influxdata.client.domain.Organization;
 import org.influxdata.client.service.LabelsService;
 import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.internal.AbstractRestClient;
@@ -189,7 +190,23 @@ final class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
     @Override
     public List<Label> findLabels() {
 
-        Call<LabelsResponse> sourcesCall = service.labelsGet();
+        return findLabelsByOrgId(null);
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> findLabelsByOrg(@Nonnull final Organization organization) {
+
+        Arguments.checkNotNull(organization, "organization");
+
+        return findLabelsByOrgId(organization.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> findLabelsByOrgId(@Nullable final String orgID) {
+
+        Call<LabelsResponse> sourcesCall = service.labelsGet(orgID, null);
 
         LabelsResponse labels = execute(sourcesCall);
         LOG.log(Level.FINEST, "findLabels found: {0}", labels);

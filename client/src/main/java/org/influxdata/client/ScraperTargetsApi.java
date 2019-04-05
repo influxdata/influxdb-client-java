@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LabelResponse;
+import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ScraperTargetRequest;
@@ -130,12 +131,30 @@ public interface ScraperTargetsApi {
     ScraperTargetResponse findScraperTargetByID(@Nonnull final String scraperTargetID);
 
     /**
-     * List all ScraperTargets.
+     * Get all scraper targets.
      *
      * @return List all ScraperTargets
      */
     @Nonnull
     List<ScraperTargetResponse> findScraperTargets();
+
+    /**
+     * Get all scraper targets.
+     *
+     * @param organization specifies the organization of the resource
+     * @return all scraper targets
+     */
+    @Nonnull
+    List<ScraperTargetResponse> findScraperTargetsByOrg(@Nonnull Organization organization);
+
+    /**
+     * Get all scraper targets.
+     *
+     * @param orgID specifies the organization ID of the resource
+     * @return all scraper targets
+     */
+    @Nonnull
+    List<ScraperTargetResponse> findScraperTargetsByOrgId(@Nullable String orgID);
 
     /**
      * List all users with member privileges for a ScraperTarget.

@@ -34,6 +34,7 @@ import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LabelMapping;
 import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.LabelsResponse;
+import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceMembers;
 import org.influxdata.client.domain.ResourceOwner;
@@ -191,7 +192,23 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
     @Override
     public List<ScraperTargetResponse> findScraperTargets() {
 
-        Call<ScraperTargetResponses> call = service.scrapersGet();
+        return findScraperTargetsByOrgId(null);
+    }
+
+    @Nonnull
+    @Override
+    public List<ScraperTargetResponse> findScraperTargetsByOrg(@Nonnull final Organization organization) {
+
+        Arguments.checkNotNull(organization, "organization");
+
+        return findScraperTargetsByOrgId(organization.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<ScraperTargetResponse> findScraperTargetsByOrgId(@Nullable final String orgID) {
+
+        Call<ScraperTargetResponses> call = service.scrapersGet(orgID, null);
 
         ScraperTargetResponses responses = execute(call);
         LOG.log(Level.FINEST, "findScraperTargets found: {0}", responses);

@@ -100,6 +100,24 @@ class ITScraperTargetsApiTest extends AbstractITClientTest {
     }
 
     @Test
+    void findScrapersByOrganization() {
+
+        Organization organization = influxDBClient.getOrganizationsApi().createOrganization(generateName("org"));
+
+        List<ScraperTargetResponse> scraperTargets = scraperTargetsApi.findScraperTargetsByOrg(organization);
+        Assertions.assertThat(scraperTargets).hasSize(0);
+
+        scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
+                "http://localhost:9999", bucket.getId(), organization.getId());
+
+        scraperTargets = scraperTargetsApi.findScraperTargetsByOrg(organization);
+        Assertions.assertThat(scraperTargets).hasSize(1);
+
+        influxDBClient.getOrganizationsApi().deleteOrganization(organization);
+        scraperTargetsApi.deleteScraperTarget(scraperTargets.get(0));
+    }
+
+    @Test
     void findScraperByID() {
 
         ScraperTargetResponse scraper = scraperTargetsApi.createScraperTarget(generateName("InfluxDB scraper"),
