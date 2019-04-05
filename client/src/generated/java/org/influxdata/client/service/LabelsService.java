@@ -22,11 +22,14 @@ public interface LabelsService {
   /**
    * Get all labels
    * 
+   * @param orgID specifies the organization of the resource (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
   @GET("api/v2/labels")
-  Call<LabelsResponse> labelsGet();
-    
+  Call<LabelsResponse> labelsGet(
+    @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
 
   /**
    * Delete a label
