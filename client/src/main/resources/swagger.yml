@@ -646,6 +646,14 @@ paths:
       tags:
         - ScraperTargets
       summary: get all scraper targets
+      parameters:
+          - $ref: '#/components/parameters/TraceSpan'
+          - in: query
+            name: orgID
+            description: specifies the organization of the resource
+            required: true
+            schema:
+              type: string
       responses:
         '200':
           description: all scraper targets
@@ -1751,6 +1759,14 @@ paths:
       tags:
         - Labels
       summary: Get all labels
+      parameters:
+          - $ref: '#/components/parameters/TraceSpan'
+          - in: query
+            name: orgID
+            description: specifies the organization of the resource
+            required: true
+            schema:
+              type: string
       responses:
         '200':
           description: all labels
@@ -6603,32 +6619,32 @@ components:
       type: object
       example:
         variables:
-        - id: '1221432'
-          name: ":ok:"
+        - id: 'debac1e0deadbeef'
+          name: ":status:"
           selected:
-          - hello
+          - running
           arguments:
             type: constant
             values:
-            - howdy
-            - hello
-            - hi
-            - yo
-            - oy
-        - id: '1221432'
-          name: ":ok:"
+            - created
+            - running
+            - canceled
+            - deleted
+        - id: '03a60ec119771000'
+          name: ":states:"
           selected:
-          - c
+          - FL
           arguments:
             type: map
             values:
-              a: fdjaklfdjkldsfjlkjdsa
-              b: dfaksjfkljekfajekdljfas
-              c: fdjksajfdkfeawfeea
-        - id: '1221432'
-          name: ":ok:"
-          selected:
-          - host
+              CO: Colorado
+              HI: Hawaii
+              MO: Missouri
+              NJ: New Jersey
+              FL: Florida
+              ME: Maine
+        - id: '03a60edaaa371000'
+          name: ":show_measurements:"
           arguments:
             type: query
             query: 'from(bucket: "foo") |> showMeasurements()'
