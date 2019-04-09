@@ -48,7 +48,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (13/09/2018 10:49)
  */
 @RunWith(JUnitPlatform.class)
-class ITBucketsApiTest extends AbstractITClientTest {
+class ITBucketsApi extends AbstractITClientTest {
 
     private Organization organization;
 

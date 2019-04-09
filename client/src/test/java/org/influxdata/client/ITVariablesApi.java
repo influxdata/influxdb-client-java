@@ -46,7 +46,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (27/03/2019 09:46)
  */
 @RunWith(JUnitPlatform.class)
-class ITVariablesApiTest extends AbstractITClientTest {
+class ITVariablesApi extends AbstractITClientTest {
 
     private VariablesApi variablesApi;
     private Organization organization;

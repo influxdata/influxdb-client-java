@@ -58,9 +58,9 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (05/09/2018 15:54)
  */
 @RunWith(JUnitPlatform.class)
-class ITTasksApiTest extends AbstractITClientTest {
+class ITTasksApi extends AbstractITClientTest {
 
-    private static final Logger LOG = Logger.getLogger(ITTasksApiTest.class.getName());
+    private static final Logger LOG = Logger.getLogger(ITTasksApi.class.getName());
     private static final String TASK_FLUX = "from(bucket:\"my-bucket\") |> range(start: 0) |> last()";
 
     private Organization organization;
@@ -394,8 +394,7 @@ class ITTasksApiTest extends AbstractITClientTest {
         Assertions.assertThat(run.getScheduledFor()).isBefore(OffsetDateTime.now());
         Assertions.assertThat(run.getStartedAt()).isBefore(OffsetDateTime.now());
         Assertions.assertThat(run.getFinishedAt()).isBefore(OffsetDateTime.now());
-        //TODO https://github.com/influxdata/influxdb/issues/13012
-        // Assertions.assertThat(run.getRequestedAt()).isNull();
+        Assertions.assertThat(run.getRequestedAt()).isNull();
         Assertions.assertThat(run.getLinks()).isNotNull();
         Assertions.assertThat(run.getLinks().getLogs()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId() + "/logs");
         Assertions.assertThat(run.getLinks().getRetry()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId() + "/retry");

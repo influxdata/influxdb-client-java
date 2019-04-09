@@ -54,7 +54,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (01/04/2019 10:58)
  */
 @RunWith(JUnitPlatform.class)
-class ITDashboardsApiTest extends AbstractITClientTest {
+class ITDashboardsApi extends AbstractITClientTest {
 
     private DashboardsApi dashboardsApi;
     private Organization organization;

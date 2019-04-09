@@ -141,8 +141,6 @@ class ITTelegrafsApi extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/12671
     void pluginWithoutConfiguration() {
 
         String name = generateName("TelegrafConfig");

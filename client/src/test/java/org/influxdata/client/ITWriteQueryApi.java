@@ -53,9 +53,9 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (25/09/2018 13:39)
  */
 @RunWith(JUnitPlatform.class)
-class ITWriteQueryApiTest extends AbstractITClientTest {
+class ITWriteQueryApi extends AbstractITClientTest {
 
-    private static final Logger LOG = Logger.getLogger(ITWriteQueryApiTest.class.getName());
+    private static final Logger LOG = Logger.getLogger(ITWriteQueryApi.class.getName());
 
     private WriteApi writeApi;
     private QueryApi queryApi;

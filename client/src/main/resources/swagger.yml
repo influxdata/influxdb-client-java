@@ -2690,7 +2690,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/FluxSuggestions"
+                $ref: "#/components/schemas/FluxSuggestion"
         default:
           description: Any response other than 200 is an internal server error
           content:
@@ -5336,57 +5336,60 @@ components:
       description: consists of a set of operations and a set of edges between those operations to instruct the query engine to operate.
       type: object
       properties:
-        operations:
-          type: array
-          items:
-            type: object
-            properties:
-              kind:
-                description: name of the operation to perform
-                type: string
-              id:
-                description: identifier for this operation; it must be unique per query specification; used in edges
-                type: string
-              spec:
-                description: set of properties that specify details of the operation. These vary by the kind of operation.
-                type: object
-        edges:
-          description: list of declaring a parent child id relationship between operations
-          type: array
-          items:
-            type: object
-            properties:
-              parent:
-                description: id of parent node of child within graph of opertions
-                type: string
-              child:
-                description: id of child node of parent within the graph of operations
-                type: string
-        resources:
-          description: optional set of contraints on the resources the query can consume
+        spec:
           type: object
           properties:
-            priority:
-              description: priority of the query
-              oneOf:
-              - type: string
-                description: lower value will move to the front of the priority queue
-                pattern: '^\d+$'
-              - type: string
-                description: constants to represent the extreme high and low priorities; high is effectively 0.
-                enum:
-                  - high
-                  - low
-            concurrency_quota:
-              description: number of concurrent workers allowed to process this query; 0 indicates the planner can pick the optimal concurrency.
-              type: integer
-              default: 0
-            memory_bytes_quota:
-              description: number of bytes of RAM this query may consume; 0 means unlimited.
-              type: integer
-              default: 0
-        dialect:
-          $ref: "#/components/schemas/Dialect"
+            operations:
+              type: array
+              items:
+                type: object
+                properties:
+                  kind:
+                    description: name of the operation to perform
+                    type: string
+                  id:
+                    description: identifier for this operation; it must be unique per query specification; used in edges
+                    type: string
+                  spec:
+                    description: set of properties that specify details of the operation. These vary by the kind of operation.
+                    type: object
+            edges:
+              description: list of declaring a parent child id relationship between operations
+              type: array
+              items:
+                type: object
+                properties:
+                  parent:
+                    description: id of parent node of child within graph of opertions
+                    type: string
+                  child:
+                    description: id of child node of parent within the graph of operations
+                    type: string
+            resources:
+              description: optional set of contraints on the resources the query can consume
+              type: object
+              properties:
+                priority:
+                  description: priority of the query
+                  oneOf:
+                  - type: string
+                    description: lower value will move to the front of the priority queue
+                    pattern: '^\d+$'
+                  - type: string
+                    description: constants to represent the extreme high and low priorities; high is effectively 0.
+                    enum:
+                      - high
+                      - low
+                concurrency_quota:
+                  description: number of concurrent workers allowed to process this query; 0 indicates the planner can pick the optimal concurrency.
+                  type: integer
+                  default: 0
+                memory_bytes_quota:
+                  description: number of bytes of RAM this query may consume; 0 means unlimited.
+                  type: integer
+                  default: 0
+            dialect:
+              $ref: "#/components/schemas/Dialect"
     Dialect:
           description: dialect are options to change the default CSV output format; https://www.w3.org/TR/2015/REC-tabular-metadata-20151217/#dialect-descriptions
           type: object
@@ -5985,12 +5988,18 @@ components:
       type: object
       properties:
         funcs:
+          type: array
+          items:
+            $ref: "#/components/schemas/FluxSuggestion"
+    FluxSuggestion:
+      type: object
+      properties:
+        name:
+          type: string
+        params:
           type: object
-          properties:
-            name:
-              type: string
-            params:
-              type: object
+          additionalProperties:
+            type: string
     Routes:
       properties:
         authorizations:

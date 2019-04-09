@@ -14,3 +14,4 @@ tree.txt
 
 **/.openapi-generator*
 **/swagger2.yml
+**/response.json

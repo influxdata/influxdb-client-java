@@ -44,7 +44,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (22/01/2019 08:23)
  */
 @RunWith(JUnitPlatform.class)
-class ITScraperTargetsApiTest extends AbstractITClientTest {
+class ITScraperTargetsApi extends AbstractITClientTest {
 
     private ScraperTargetsApi scraperTargetsApi;
     private UsersApi usersApi;

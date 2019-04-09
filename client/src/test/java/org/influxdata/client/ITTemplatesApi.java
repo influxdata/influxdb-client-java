@@ -47,7 +47,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (25/03/2019 09:52)
  */
 @RunWith(JUnitPlatform.class)
-class ITTemplatesApiTest extends AbstractITClientTest {
+class ITTemplatesApi extends AbstractITClientTest {
 
     private TemplatesApi templatesApi;
     private Organization organization;

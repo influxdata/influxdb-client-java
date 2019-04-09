@@ -48,9 +48,9 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (12/09/2018 09:51)
  */
 @RunWith(JUnitPlatform.class)
-class ITOrganizationsApiTest extends AbstractITClientTest {
+class ITOrganizationsApi extends AbstractITClientTest {
 
-    private static final Logger LOG = Logger.getLogger(ITOrganizationsApiTest.class.getName());
+    private static final Logger LOG = Logger.getLogger(ITOrganizationsApi.class.getName());
 
     private OrganizationsApi organizationsApi;
     private UsersApi usersApi;

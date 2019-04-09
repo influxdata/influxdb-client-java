@@ -33,6 +33,7 @@ import javax.annotation.Nullable;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
@@ -77,11 +78,17 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         importMapping.put("JsonParseException", "com.google.gson.JsonParseException");
         importMapping.put("ArrayList", "java.util.ArrayList");
         importMapping.put("List", "java.util.List");
+        importMapping.put("JsonObject", "com.google.gson.JsonObject");
         importMapping.put("JsonArray", "com.google.gson.JsonArray");
         importMapping.put("JsonElement", "com.google.gson.JsonElement");
         importMapping.put("HashMap", "java.util.HashMap");
         importMapping.put("Map", "java.util.Map");
         importMapping.put("ReflectType", "java.lang.reflect.Type");
+
+        //
+        // File is mapped to schema not to java.io.File
+        //
+        importMapping.remove("File");
     }
 
     @Override
@@ -213,12 +220,12 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
 
         models.forEach((modelName, modelConfig) -> {
 
+            CodegenModel pluginModel = getModel((HashMap) modelConfig);
+
             //
             // Replace TelegrafPluginInputDiskio, TelegrafPluginInputProcesses, ... TelegrafPlugin*
             //
             if (modelName.startsWith("TelegrafPlugin") && !modelName.equals("TelegrafPlugin") && !modelName.endsWith("Request") && !modelName.toLowerCase().contains("config")) {
-
-                CodegenModel pluginModel = getModel((HashMap) modelConfig);
 
                 CodegenProperty configProperty = getCodegenProperty(pluginModel, "config");
                 CodegenProperty typeProperty = getCodegenProperty(pluginModel, "type");
@@ -243,6 +250,25 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                 pluginModel.vars.remove(typeProperty);
                 pluginModel.vars.remove(nameProperty);
                 pluginModel.vars.get(pluginModel.vars.size() - 1).hasMore = false;
+            }
+
+            //
+            // The "interfaces" extends base object
+            //
+            if (!pluginModel.hasVars && pluginModel.interfaces != null && !modelName.equals("TelegrafRequestConfig")) {
+
+                for (String interfaceModelName : pluginModel.interfaces) {
+
+                    CodegenModel interfaceModel = getModel((HashMap) models.get(interfaceModelName));
+                    interfaceModel.setParent(pluginModel.classname);
+                }
+
+                pluginModel.interfaces.clear();
+            }
+
+            if (modelName.equals("PropertyKey")) {
+
+                pluginModel.setParent("Expression");
             }
         });
 
@@ -382,40 +408,88 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
 
     @Override
     public CodegenModel fromModel(final String name, final Schema model, final Map<String, Schema> allDefinitions) {
-        CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
 
+        CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
 
         if (model.getProperties() != null) {
             model.getProperties()
                     .forEach((BiConsumer<String, Schema>) (property, propertySchema) -> {
-                        if (propertySchema instanceof ComposedSchema) {
+
+                        Schema schema = propertySchema;
+
+                        //
+                        // Reference to List of Object
+                        //
+                        if (schema instanceof ArraySchema) {
+                            String ref = ((ArraySchema) schema).getItems().get$ref();
+                            if (ref != null) {
+                                String refSchemaName = ModelUtils.getSimpleRef(ref);
+                                Schema refSchema = allDefinitions.get(refSchemaName);
+
+                                if (refSchema instanceof ComposedSchema) {
+                                    if (((ComposedSchema) refSchema).getOneOf() != null) {
+                                        schema = refSchema;
+                                    }
+                                }
+                            }
+                        }
+
+                        //
+                        // Reference to Object
+                        //
+                        else if (schema.get$ref() != null) {
+                            String refSchemaName = ModelUtils.getSimpleRef(schema.get$ref());
+                            Schema refSchema = allDefinitions.get(refSchemaName);
+
+                            if (refSchema instanceof ComposedSchema) {
+                                if (((ComposedSchema) refSchema).getOneOf() != null) {
+                                    schema = refSchema;
+                                }
+                            }
+                        }
+
+                        if (schema instanceof ComposedSchema) {
 
                             CodegenProperty codegenProperty = getCodegenProperty(codegenModel, property);
                             String adapterName = name + codegenProperty.nameInCamelCase + "Adapter";
-
-                            codegenProperty.vendorExtensions.put("x-has-type-adapter", Boolean.TRUE);
-                            codegenProperty.vendorExtensions.put("x-type-adapter", adapterName);
 
                             Map<String, TypeAdapter> adapters = (HashMap<String, TypeAdapter>) codegenModel.vendorExtensions
                                     .getOrDefault("x-type-adapters", new HashMap<String, TypeAdapter>());
 
                             TypeAdapter typeAdapter = new TypeAdapter();
                             typeAdapter.classname = adapterName;
-                            for (Schema oneOf : ((ComposedSchema) propertySchema).getOneOf()) {
+
+                            for (Schema oneOf : getOneOf(schema, allDefinitions)) {
+
+                                String refSchemaName;
+                                Schema refSchema;
 
                                 if (oneOf.get$ref() == null) {
-                                    continue;
+                                    refSchema = oneOf;
+                                    refSchemaName = oneOf.getName();
+                                } else {
+                                    refSchemaName = ModelUtils.getSimpleRef(oneOf.get$ref());
+                                    refSchema = allDefinitions.get(refSchemaName);
                                 }
-
-                                String refSchemaName = ModelUtils.getSimpleRef(oneOf.get$ref());
-                                Schema refSchema = allDefinitions.get(refSchemaName);
 
                                 String key = (String) refSchema.getProperties().keySet().stream().findFirst().get();
+                                String keyValue;
+
                                 Schema keyScheme = (Schema) refSchema.getProperties().get(key);
+                                if (keyScheme.get$ref() != null) {
+                                    keyScheme = allDefinitions.get(ModelUtils.getSimpleRef(keyScheme.get$ref()));
+                                }
+
                                 if (!(keyScheme instanceof StringSchema)) {
                                     continue;
+                                } else {
+
+                                    if (((StringSchema) keyScheme).getEnum() != null) {
+                                        keyValue = ((StringSchema) keyScheme).getEnum().get(0);
+                                    } else {
+                                        keyValue = refSchemaName;
+                                    }
                                 }
-                                String keyValue = ((StringSchema) keyScheme).getEnum().get(0);
 
                                 if (typeAdapter.discriminator != null && !typeAdapter.discriminator.equals(key)) {
                                     String message = "Discriminators has to be same: '" +
@@ -425,24 +499,33 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                                 }
 
                                 typeAdapter.discriminator = key;
+                                typeAdapter.isArray = propertySchema instanceof ArraySchema;
                                 TypeAdapterItem typeAdapterItem = new TypeAdapterItem();
                                 typeAdapterItem.discriminatorValue = keyValue;
                                 typeAdapterItem.classname = refSchemaName;
                                 typeAdapter.items.add(typeAdapterItem);
                             }
 
-                            adapters.put(adapterName, typeAdapter);
+                            if (!typeAdapter.items.isEmpty()) {
 
-                            codegenModel.vendorExtensions.put("x-type-adapters", adapters);
-                            codegenModel.imports.add("JsonDeserializer");
-                            codegenModel.imports.add("JsonDeserializationContext");
-                            codegenModel.imports.add("JsonSerializer");
-                            codegenModel.imports.add("JsonSerializationContext");
-                            codegenModel.imports.add("ArrayList");
-                            codegenModel.imports.add("List");
-                            codegenModel.imports.add("JsonElement");
-                            codegenModel.imports.add("JsonParseException");
-                            codegenModel.imports.add("ReflectType");
+                                codegenProperty.vendorExtensions.put("x-has-type-adapter", Boolean.TRUE);
+                                codegenProperty.vendorExtensions.put("x-type-adapter", adapterName);
+
+                                adapters.put(adapterName, typeAdapter);
+
+                                codegenModel.vendorExtensions.put("x-type-adapters", adapters);
+                                codegenModel.imports.add("JsonDeserializer");
+                                codegenModel.imports.add("JsonDeserializationContext");
+                                codegenModel.imports.add("JsonSerializer");
+                                codegenModel.imports.add("JsonSerializationContext");
+                                codegenModel.imports.add("ArrayList");
+                                codegenModel.imports.add("List");
+                                codegenModel.imports.add("JsonElement");
+                                codegenModel.imports.add("JsonObject");
+                                codegenModel.imports.add("JsonArray");
+                                codegenModel.imports.add("JsonParseException");
+                                codegenModel.imports.add("ReflectType");
+                            }
                         }
                     });
         }
@@ -507,9 +590,34 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         return (CodegenModel) models.get("model");
     }
 
+    private List<Schema> getOneOf(final Schema schema, final Map<String, Schema> allDefinitions) {
+
+        List<Schema> schemas = new ArrayList<>();
+
+        if (schema instanceof ComposedSchema) {
+
+            ComposedSchema composedSchema = (ComposedSchema) schema;
+            for (Schema oneOfSchema : composedSchema.getOneOf()) {
+
+                if (oneOfSchema.get$ref() != null) {
+
+                    Schema refSchema = allDefinitions.get(ModelUtils.getSimpleRef(oneOfSchema.get$ref()));
+                    if (refSchema instanceof ComposedSchema) {
+                        schemas.addAll(((ComposedSchema) refSchema).getOneOf());
+                    } else {
+                        schemas.add(oneOfSchema);
+                    }
+                }
+            }
+        }
+
+        return schemas;
+    }
+
     public class TypeAdapter {
         public String classname;
         public String discriminator;
+        public boolean isArray;
         public List<TypeAdapterItem> items = new ArrayList<>();
     }
 

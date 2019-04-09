@@ -206,7 +206,7 @@
                     <includes>**, **/META-INF/services/**</includes>
                     <excludes>**/target/**, **/*.jar, **/.git/**, **/.*, **/*.png, **/*.iml, **/*.bolt, .idea/**,
                         **/*nightly*/**, **/.m2/**, LICENSE, **/*.md, **/PLACEHOLDER, **/.influxdb/**, **/generated/**,
-                        **/openapi-generator/**, **/swagger.yml
+                        **/openapi-generator/**, **/swagger.yml, **/*.json
                     </excludes>
                     <properties>
                         <organizationName>${project.organization.name}</organizationName>

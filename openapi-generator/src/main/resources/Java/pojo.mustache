@@ -328,21 +328,44 @@ public class {{classname}}{{#vendorExtensions.x-has-generic-type}}{{{vendorExten
 
     @Override
     public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
-      String type = json.getAsJsonObject().get(discriminator).getAsString();
 
-      {{#value.items}}
-      if ("{{discriminatorValue}}".equals(type)) {
-        return context.deserialize(json, {{classname}}.class);
+      {{#value.isArray}}
+      List<Object> results = new ArrayList<>();
+
+      for (JsonElement arrayItem: json.getAsJsonArray()){
+        JsonObject jsonObject = arrayItem.getAsJsonObject();
+
+        String type = jsonObject.get(discriminator).getAsString();
+
+        results.add(deserialize(type, jsonObject, context));
       }
-      {{/value.items}}
-  
-      return context.deserialize(json, Object.class);
+
+      return results;
+      {{/value.isArray}}
+      {{^value.isArray}}
+      JsonObject jsonObject = json.getAsJsonObject();
+
+      String type = jsonObject.get(discriminator).getAsString();
+
+      return deserialize(type, jsonObject, context);
+      {{/value.isArray}}
     }
 
     @Override
     public JsonElement serialize(Object object, Type typeOfSrc, JsonSerializationContext context) {
 
       return context.serialize(object);
+    }
+
+    private Object deserialize(final String type, final JsonElement json, final JsonDeserializationContext context) {
+
+      {{#value.items}}
+      if ("{{discriminatorValue}}".equals(type)) {
+        return context.deserialize(json, {{classname}}.class);
+      }
+      {{/value.items}}
+
+      return context.deserialize(json, Object.class);
     }
   }
 {{/vendorExtensions.x-type-adapters.entrySet}}
