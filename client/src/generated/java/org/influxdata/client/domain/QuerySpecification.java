@@ -23,12 +23,7 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import org.influxdata.client.domain.Dialect;
-import org.influxdata.client.domain.QuerySpecificationEdges;
-import org.influxdata.client.domain.QuerySpecificationOperations;
-import org.influxdata.client.domain.QuerySpecificationResources;
+import org.influxdata.client.domain.QuerySpecificationSpec;
 
 /**
  * consists of a set of operations and a set of edges between those operations to instruct the query engine to operate.
@@ -36,108 +31,26 @@ import org.influxdata.client.domain.QuerySpecificationResources;
 @ApiModel(description = "consists of a set of operations and a set of edges between those operations to instruct the query engine to operate.")
 
 public class QuerySpecification {
-  public static final String SERIALIZED_NAME_OPERATIONS = "operations";
-  @SerializedName(SERIALIZED_NAME_OPERATIONS)
-  private List<QuerySpecificationOperations> operations = new ArrayList<>();
+  public static final String SERIALIZED_NAME_SPEC = "spec";
+  @SerializedName(SERIALIZED_NAME_SPEC)
+  private QuerySpecificationSpec spec = null;
 
-  public static final String SERIALIZED_NAME_EDGES = "edges";
-  @SerializedName(SERIALIZED_NAME_EDGES)
-  private List<QuerySpecificationEdges> edges = new ArrayList<>();
-
-  public static final String SERIALIZED_NAME_RESOURCES = "resources";
-  @SerializedName(SERIALIZED_NAME_RESOURCES)
-  private QuerySpecificationResources resources = null;
-
-  public static final String SERIALIZED_NAME_DIALECT = "dialect";
-  @SerializedName(SERIALIZED_NAME_DIALECT)
-  private Dialect dialect = null;
-
-  public QuerySpecification operations(List<QuerySpecificationOperations> operations) {
-    this.operations = operations;
-    return this;
-  }
-
-  public QuerySpecification addOperationsItem(QuerySpecificationOperations operationsItem) {
-    if (this.operations == null) {
-      this.operations = new ArrayList<>();
-    }
-    this.operations.add(operationsItem);
+  public QuerySpecification spec(QuerySpecificationSpec spec) {
+    this.spec = spec;
     return this;
   }
 
    /**
-   * Get operations
-   * @return operations
+   * Get spec
+   * @return spec
   **/
   @ApiModelProperty(value = "")
-  public List<QuerySpecificationOperations> getOperations() {
-    return operations;
+  public QuerySpecificationSpec getSpec() {
+    return spec;
   }
 
-  public void setOperations(List<QuerySpecificationOperations> operations) {
-    this.operations = operations;
-  }
-
-  public QuerySpecification edges(List<QuerySpecificationEdges> edges) {
-    this.edges = edges;
-    return this;
-  }
-
-  public QuerySpecification addEdgesItem(QuerySpecificationEdges edgesItem) {
-    if (this.edges == null) {
-      this.edges = new ArrayList<>();
-    }
-    this.edges.add(edgesItem);
-    return this;
-  }
-
-   /**
-   * list of declaring a parent child id relationship between operations
-   * @return edges
-  **/
-  @ApiModelProperty(value = "list of declaring a parent child id relationship between operations")
-  public List<QuerySpecificationEdges> getEdges() {
-    return edges;
-  }
-
-  public void setEdges(List<QuerySpecificationEdges> edges) {
-    this.edges = edges;
-  }
-
-  public QuerySpecification resources(QuerySpecificationResources resources) {
-    this.resources = resources;
-    return this;
-  }
-
-   /**
-   * Get resources
-   * @return resources
-  **/
-  @ApiModelProperty(value = "")
-  public QuerySpecificationResources getResources() {
-    return resources;
-  }
-
-  public void setResources(QuerySpecificationResources resources) {
-    this.resources = resources;
-  }
-
-  public QuerySpecification dialect(Dialect dialect) {
-    this.dialect = dialect;
-    return this;
-  }
-
-   /**
-   * Get dialect
-   * @return dialect
-  **/
-  @ApiModelProperty(value = "")
-  public Dialect getDialect() {
-    return dialect;
-  }
-
-  public void setDialect(Dialect dialect) {
-    this.dialect = dialect;
+  public void setSpec(QuerySpecificationSpec spec) {
+    this.spec = spec;
   }
 
 
@@ -150,15 +63,12 @@ public class QuerySpecification {
       return false;
     }
     QuerySpecification querySpecification = (QuerySpecification) o;
-    return Objects.equals(this.operations, querySpecification.operations) &&
-        Objects.equals(this.edges, querySpecification.edges) &&
-        Objects.equals(this.resources, querySpecification.resources) &&
-        Objects.equals(this.dialect, querySpecification.dialect);
+    return Objects.equals(this.spec, querySpecification.spec);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(operations, edges, resources, dialect);
+    return Objects.hash(spec);
   }
 
 
@@ -166,10 +76,7 @@ public class QuerySpecification {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class QuerySpecification {\n");
-    sb.append("    operations: ").append(toIndentedString(operations)).append("\n");
-    sb.append("    edges: ").append(toIndentedString(edges)).append("\n");
-    sb.append("    resources: ").append(toIndentedString(resources)).append("\n");
-    sb.append("    dialect: ").append(toIndentedString(dialect)).append("\n");
+    sb.append("    spec: ").append(toIndentedString(spec)).append("\n");
     sb.append("}");
     return sb.toString();
   }

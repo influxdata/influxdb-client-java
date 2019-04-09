@@ -24,6 +24,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import org.influxdata.client.domain.Dialect;
+import org.influxdata.client.domain.File;
 import org.influxdata.client.domain.QuerySpecification;
 
 /**
@@ -34,7 +35,7 @@ import org.influxdata.client.domain.QuerySpecification;
 public class Query {
   public static final String SERIALIZED_NAME_EXTERN = "extern";
   @SerializedName(SERIALIZED_NAME_EXTERN)
-  private java.io.File extern = null;
+  private File extern = null;
 
   public static final String SERIALIZED_NAME_QUERY = "query";
   @SerializedName(SERIALIZED_NAME_QUERY)
@@ -111,7 +112,7 @@ public class Query {
   @SerializedName(SERIALIZED_NAME_DIALECT)
   private Dialect dialect = null;
 
-  public Query extern(java.io.File extern) {
+  public Query extern(File extern) {
     this.extern = extern;
     return this;
   }
@@ -121,11 +122,11 @@ public class Query {
    * @return extern
   **/
   @ApiModelProperty(value = "")
-  public java.io.File getExtern() {
+  public File getExtern() {
     return extern;
   }
 
-  public void setExtern(java.io.File extern) {
+  public void setExtern(File extern) {
     this.extern = extern;
   }
 

@@ -23,43 +23,65 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import org.influxdata.client.domain.FluxSuggestion;
+import java.util.Map;
 
 /**
- * FluxSuggestions
+ * FluxSuggestion
  */
 
-public class FluxSuggestions {
-  public static final String SERIALIZED_NAME_FUNCS = "funcs";
-  @SerializedName(SERIALIZED_NAME_FUNCS)
-  private List<FluxSuggestion> funcs = new ArrayList<>();
+public class FluxSuggestion {
+  public static final String SERIALIZED_NAME_NAME = "name";
+  @SerializedName(SERIALIZED_NAME_NAME)
+  private String name = null;
 
-  public FluxSuggestions funcs(List<FluxSuggestion> funcs) {
-    this.funcs = funcs;
-    return this;
-  }
+  public static final String SERIALIZED_NAME_PARAMS = "params";
+  @SerializedName(SERIALIZED_NAME_PARAMS)
+  private Map<String, String> params = new HashMap<>();
 
-  public FluxSuggestions addFuncsItem(FluxSuggestion funcsItem) {
-    if (this.funcs == null) {
-      this.funcs = new ArrayList<>();
-    }
-    this.funcs.add(funcsItem);
+  public FluxSuggestion name(String name) {
+    this.name = name;
     return this;
   }
 
    /**
-   * Get funcs
-   * @return funcs
+   * Get name
+   * @return name
   **/
   @ApiModelProperty(value = "")
-  public List<FluxSuggestion> getFuncs() {
-    return funcs;
+  public String getName() {
+    return name;
   }
 
-  public void setFuncs(List<FluxSuggestion> funcs) {
-    this.funcs = funcs;
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public FluxSuggestion params(Map<String, String> params) {
+    this.params = params;
+    return this;
+  }
+
+  public FluxSuggestion putParamsItem(String key, String paramsItem) {
+    if (this.params == null) {
+      this.params = new HashMap<>();
+    }
+    this.params.put(key, paramsItem);
+    return this;
+  }
+
+   /**
+   * Get params
+   * @return params
+  **/
+  @ApiModelProperty(value = "")
+  public Map<String, String> getParams() {
+    return params;
+  }
+
+  public void setParams(Map<String, String> params) {
+    this.params = params;
   }
 
 
@@ -71,21 +93,23 @@ public class FluxSuggestions {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    FluxSuggestions fluxSuggestions = (FluxSuggestions) o;
-    return Objects.equals(this.funcs, fluxSuggestions.funcs);
+    FluxSuggestion fluxSuggestion = (FluxSuggestion) o;
+    return Objects.equals(this.name, fluxSuggestion.name) &&
+        Objects.equals(this.params, fluxSuggestion.params);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(funcs);
+    return Objects.hash(name, params);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class FluxSuggestions {\n");
-    sb.append("    funcs: ").append(toIndentedString(funcs)).append("\n");
+    sb.append("class FluxSuggestion {\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    params: ").append(toIndentedString(params)).append("\n");
     sb.append("}");
     return sb.toString();
   }

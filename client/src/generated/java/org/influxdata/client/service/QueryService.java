@@ -10,6 +10,7 @@ import okhttp3.MultipartBody;
 import org.influxdata.client.domain.ASTResponse;
 import org.influxdata.client.domain.AnalyzeQueryResponse;
 import org.influxdata.client.domain.Error;
+import org.influxdata.client.domain.FluxSuggestion;
 import org.influxdata.client.domain.FluxSuggestions;
 import org.influxdata.client.domain.LanguageRequest;
 import org.influxdata.client.domain.Query;
@@ -120,10 +121,10 @@ public interface QueryService {
    * 
    * @param name name of branching suggestion (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;FluxSuggestions&gt;
+   * @return Call&lt;FluxSuggestion&gt;
    */
   @GET("api/v2/query/suggestions/{name}")
-  Call<FluxSuggestions> querySuggestionsNameGet(
+  Call<FluxSuggestion> querySuggestionsNameGet(
     @retrofit2.http.Path("name") String name, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

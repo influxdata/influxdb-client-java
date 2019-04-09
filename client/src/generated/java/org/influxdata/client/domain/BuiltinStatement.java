@@ -23,43 +23,56 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import org.influxdata.client.domain.FluxSuggestion;
+import org.influxdata.client.domain.Identifier;
 
 /**
- * FluxSuggestions
+ * declares a builtin identifier and its type
  */
+@ApiModel(description = "declares a builtin identifier and its type")
 
-public class FluxSuggestions {
-  public static final String SERIALIZED_NAME_FUNCS = "funcs";
-  @SerializedName(SERIALIZED_NAME_FUNCS)
-  private List<FluxSuggestion> funcs = new ArrayList<>();
+public class BuiltinStatement extends Statement {
+  public static final String SERIALIZED_NAME_TYPE = "type";
+  @SerializedName(SERIALIZED_NAME_TYPE)
+  private String type = null;
 
-  public FluxSuggestions funcs(List<FluxSuggestion> funcs) {
-    this.funcs = funcs;
-    return this;
-  }
+  public static final String SERIALIZED_NAME_ID = "id";
+  @SerializedName(SERIALIZED_NAME_ID)
+  private Identifier id = null;
 
-  public FluxSuggestions addFuncsItem(FluxSuggestion funcsItem) {
-    if (this.funcs == null) {
-      this.funcs = new ArrayList<>();
-    }
-    this.funcs.add(funcsItem);
+  public BuiltinStatement type(String type) {
+    this.type = type;
     return this;
   }
 
    /**
-   * Get funcs
-   * @return funcs
+   * Get type
+   * @return type
   **/
   @ApiModelProperty(value = "")
-  public List<FluxSuggestion> getFuncs() {
-    return funcs;
+  public String getType() {
+    return type;
   }
 
-  public void setFuncs(List<FluxSuggestion> funcs) {
-    this.funcs = funcs;
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public BuiltinStatement id(Identifier id) {
+    this.id = id;
+    return this;
+  }
+
+   /**
+   * Get id
+   * @return id
+  **/
+  @ApiModelProperty(value = "")
+  public Identifier getId() {
+    return id;
+  }
+
+  public void setId(Identifier id) {
+    this.id = id;
   }
 
 
@@ -71,21 +84,25 @@ public class FluxSuggestions {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    FluxSuggestions fluxSuggestions = (FluxSuggestions) o;
-    return Objects.equals(this.funcs, fluxSuggestions.funcs);
+    BuiltinStatement builtinStatement = (BuiltinStatement) o;
+    return Objects.equals(this.type, builtinStatement.type) &&
+        Objects.equals(this.id, builtinStatement.id) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(funcs);
+    return Objects.hash(type, id, super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class FluxSuggestions {\n");
-    sb.append("    funcs: ").append(toIndentedString(funcs)).append("\n");
+    sb.append("class BuiltinStatement {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("}");
     return sb.toString();
   }

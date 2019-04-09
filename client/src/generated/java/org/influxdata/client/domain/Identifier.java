@@ -23,43 +23,55 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import org.influxdata.client.domain.FluxSuggestion;
 
 /**
- * FluxSuggestions
+ * a valid Flux identifier
  */
+@ApiModel(description = "a valid Flux identifier")
 
-public class FluxSuggestions {
-  public static final String SERIALIZED_NAME_FUNCS = "funcs";
-  @SerializedName(SERIALIZED_NAME_FUNCS)
-  private List<FluxSuggestion> funcs = new ArrayList<>();
+public class Identifier extends PropertyKey {
+  public static final String SERIALIZED_NAME_TYPE = "type";
+  @SerializedName(SERIALIZED_NAME_TYPE)
+  private String type = null;
 
-  public FluxSuggestions funcs(List<FluxSuggestion> funcs) {
-    this.funcs = funcs;
-    return this;
-  }
+  public static final String SERIALIZED_NAME_NAME = "name";
+  @SerializedName(SERIALIZED_NAME_NAME)
+  private String name = null;
 
-  public FluxSuggestions addFuncsItem(FluxSuggestion funcsItem) {
-    if (this.funcs == null) {
-      this.funcs = new ArrayList<>();
-    }
-    this.funcs.add(funcsItem);
+  public Identifier type(String type) {
+    this.type = type;
     return this;
   }
 
    /**
-   * Get funcs
-   * @return funcs
+   * Get type
+   * @return type
   **/
   @ApiModelProperty(value = "")
-  public List<FluxSuggestion> getFuncs() {
-    return funcs;
+  public String getType() {
+    return type;
   }
 
-  public void setFuncs(List<FluxSuggestion> funcs) {
-    this.funcs = funcs;
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public Identifier name(String name) {
+    this.name = name;
+    return this;
+  }
+
+   /**
+   * Get name
+   * @return name
+  **/
+  @ApiModelProperty(value = "")
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
 
@@ -71,21 +83,25 @@ public class FluxSuggestions {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    FluxSuggestions fluxSuggestions = (FluxSuggestions) o;
-    return Objects.equals(this.funcs, fluxSuggestions.funcs);
+    Identifier identifier = (Identifier) o;
+    return Objects.equals(this.type, identifier.type) &&
+        Objects.equals(this.name, identifier.name) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(funcs);
+    return Objects.hash(type, name, super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class FluxSuggestions {\n");
-    sb.append("    funcs: ").append(toIndentedString(funcs)).append("\n");
+    sb.append("class Identifier {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("}");
     return sb.toString();
   }

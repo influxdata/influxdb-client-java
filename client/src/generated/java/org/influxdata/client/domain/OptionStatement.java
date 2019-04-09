@@ -34,91 +34,56 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import org.influxdata.client.domain.ViewLinks;
 
 /**
- * View
+ * a single variable declaration
  */
+@ApiModel(description = "a single variable declaration")
 
-public class View {
-  public static final String SERIALIZED_NAME_LINKS = "links";
-  @SerializedName(SERIALIZED_NAME_LINKS)
-  private ViewLinks links = null;
+public class OptionStatement extends Statement {
+  public static final String SERIALIZED_NAME_TYPE = "type";
+  @SerializedName(SERIALIZED_NAME_TYPE)
+  private String type = null;
 
-  public static final String SERIALIZED_NAME_ID = "id";
-  @SerializedName(SERIALIZED_NAME_ID)
-  private String id = null;
+  public static final String SERIALIZED_NAME_ASSIGNMENT = "assignment";
+  @SerializedName(SERIALIZED_NAME_ASSIGNMENT)
+  @JsonAdapter(OptionStatementAssignmentAdapter.class)
+  private Object assignment = null;
 
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
-
-  public static final String SERIALIZED_NAME_PROPERTIES = "properties";
-  @SerializedName(SERIALIZED_NAME_PROPERTIES)
-  @JsonAdapter(ViewPropertiesAdapter.class)
-  private Object properties = null;
-
-  public View links(ViewLinks links) {
-    this.links = links;
+  public OptionStatement type(String type) {
+    this.type = type;
     return this;
   }
 
    /**
-   * Get links
-   * @return links
+   * Get type
+   * @return type
   **/
   @ApiModelProperty(value = "")
-  public ViewLinks getLinks() {
-    return links;
+  public String getType() {
+    return type;
   }
 
-  public void setLinks(ViewLinks links) {
-    this.links = links;
+  public void setType(String type) {
+    this.type = type;
   }
 
-   /**
-   * Get id
-   * @return id
-  **/
-  @ApiModelProperty(value = "")
-  public String getId() {
-    return id;
-  }
-
-  public View name(String name) {
-    this.name = name;
+  public OptionStatement assignment(Object assignment) {
+    this.assignment = assignment;
     return this;
   }
 
    /**
-   * Get name
-   * @return name
+   * Get assignment
+   * @return assignment
   **/
   @ApiModelProperty(value = "")
-  public String getName() {
-    return name;
+  public Object getAssignment() {
+    return assignment;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public View properties(Object properties) {
-    this.properties = properties;
-    return this;
-  }
-
-   /**
-   * Get properties
-   * @return properties
-  **/
-  @ApiModelProperty(value = "")
-  public Object getProperties() {
-    return properties;
-  }
-
-  public void setProperties(Object properties) {
-    this.properties = properties;
+  public void setAssignment(Object assignment) {
+    this.assignment = assignment;
   }
 
 
@@ -130,27 +95,25 @@ public class View {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    View view = (View) o;
-    return Objects.equals(this.links, view.links) &&
-        Objects.equals(this.id, view.id) &&
-        Objects.equals(this.name, view.name) &&
-        Objects.equals(this.properties, view.properties);
+    OptionStatement optionStatement = (OptionStatement) o;
+    return Objects.equals(this.type, optionStatement.type) &&
+        Objects.equals(this.assignment, optionStatement.assignment) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, id, name, properties);
+    return Objects.hash(type, assignment, super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class View {\n");
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
+    sb.append("class OptionStatement {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    assignment: ").append(toIndentedString(assignment)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -166,10 +129,10 @@ public class View {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class ViewPropertiesAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public class OptionStatementAssignmentAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
     private final String discriminator = "type";
 
-    public ViewPropertiesAdapter() {
+    public OptionStatementAssignmentAdapter() {
     }
 
     @Override
@@ -190,17 +153,11 @@ public class View {
 
     private Object deserialize(final String type, final JsonElement json, final JsonDeserializationContext context) {
 
-      if ("chronograf-v1".equals(type)) {
-        return context.deserialize(json, V1ViewProperties.class);
+      if ("VariableAssignment".equals(type)) {
+        return context.deserialize(json, VariableAssignment.class);
       }
-      if ("empty".equals(type)) {
-        return context.deserialize(json, EmptyViewProperties.class);
-      }
-      if ("log-viewer".equals(type)) {
-        return context.deserialize(json, LogViewProperties.class);
-      }
-      if ("markdown".equals(type)) {
-        return context.deserialize(json, MarkdownViewProperties.class);
+      if ("MemberAssignment".equals(type)) {
+        return context.deserialize(json, MemberAssignment.class);
       }
 
       return context.deserialize(json, Object.class);

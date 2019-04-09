@@ -25,10 +25,10 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * QuerySpecificationOperations
+ * QuerySpecificationSpecOperations
  */
 
-public class QuerySpecificationOperations {
+public class QuerySpecificationSpecOperations {
   public static final String SERIALIZED_NAME_KIND = "kind";
   @SerializedName(SERIALIZED_NAME_KIND)
   private String kind = null;
@@ -41,7 +41,7 @@ public class QuerySpecificationOperations {
   @SerializedName(SERIALIZED_NAME_SPEC)
   private Object spec = null;
 
-  public QuerySpecificationOperations kind(String kind) {
+  public QuerySpecificationSpecOperations kind(String kind) {
     this.kind = kind;
     return this;
   }
@@ -59,7 +59,7 @@ public class QuerySpecificationOperations {
     this.kind = kind;
   }
 
-  public QuerySpecificationOperations id(String id) {
+  public QuerySpecificationSpecOperations id(String id) {
     this.id = id;
     return this;
   }
@@ -77,7 +77,7 @@ public class QuerySpecificationOperations {
     this.id = id;
   }
 
-  public QuerySpecificationOperations spec(Object spec) {
+  public QuerySpecificationSpecOperations spec(Object spec) {
     this.spec = spec;
     return this;
   }
@@ -104,10 +104,10 @@ public class QuerySpecificationOperations {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    QuerySpecificationOperations querySpecificationOperations = (QuerySpecificationOperations) o;
-    return Objects.equals(this.kind, querySpecificationOperations.kind) &&
-        Objects.equals(this.id, querySpecificationOperations.id) &&
-        Objects.equals(this.spec, querySpecificationOperations.spec);
+    QuerySpecificationSpecOperations querySpecificationSpecOperations = (QuerySpecificationSpecOperations) o;
+    return Objects.equals(this.kind, querySpecificationSpecOperations.kind) &&
+        Objects.equals(this.id, querySpecificationSpecOperations.id) &&
+        Objects.equals(this.spec, querySpecificationSpecOperations.spec);
   }
 
   @Override
@@ -119,7 +119,7 @@ public class QuerySpecificationOperations {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class QuerySpecificationOperations {\n");
+    sb.append("class QuerySpecificationSpecOperations {\n");
     sb.append("    kind: ").append(toIndentedString(kind)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    spec: ").append(toIndentedString(spec)).append("\n");

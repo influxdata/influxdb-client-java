@@ -25,52 +25,53 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * FluxSuggestionsFuncs
+ * expressions begin and end with double quote marks
  */
+@ApiModel(description = "expressions begin and end with double quote marks")
 
-public class FluxSuggestionsFuncs {
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
+public class StringLiteral extends PropertyKey {
+  public static final String SERIALIZED_NAME_TYPE = "type";
+  @SerializedName(SERIALIZED_NAME_TYPE)
+  private String type = null;
 
-  public static final String SERIALIZED_NAME_PARAMS = "params";
-  @SerializedName(SERIALIZED_NAME_PARAMS)
-  private Object params = null;
+  public static final String SERIALIZED_NAME_VALUE = "value";
+  @SerializedName(SERIALIZED_NAME_VALUE)
+  private String value = null;
 
-  public FluxSuggestionsFuncs name(String name) {
-    this.name = name;
+  public StringLiteral type(String type) {
+    this.type = type;
     return this;
   }
 
    /**
-   * Get name
-   * @return name
+   * Get type
+   * @return type
   **/
   @ApiModelProperty(value = "")
-  public String getName() {
-    return name;
+  public String getType() {
+    return type;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setType(String type) {
+    this.type = type;
   }
 
-  public FluxSuggestionsFuncs params(Object params) {
-    this.params = params;
+  public StringLiteral value(String value) {
+    this.value = value;
     return this;
   }
 
    /**
-   * Get params
-   * @return params
+   * Get value
+   * @return value
   **/
   @ApiModelProperty(value = "")
-  public Object getParams() {
-    return params;
+  public String getValue() {
+    return value;
   }
 
-  public void setParams(Object params) {
-    this.params = params;
+  public void setValue(String value) {
+    this.value = value;
   }
 
 
@@ -82,23 +83,25 @@ public class FluxSuggestionsFuncs {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    FluxSuggestionsFuncs fluxSuggestionsFuncs = (FluxSuggestionsFuncs) o;
-    return Objects.equals(this.name, fluxSuggestionsFuncs.name) &&
-        Objects.equals(this.params, fluxSuggestionsFuncs.params);
+    StringLiteral stringLiteral = (StringLiteral) o;
+    return Objects.equals(this.type, stringLiteral.type) &&
+        Objects.equals(this.value, stringLiteral.value) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, params);
+    return Objects.hash(type, value, super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class FluxSuggestionsFuncs {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    params: ").append(toIndentedString(params)).append("\n");
+    sb.append("class StringLiteral {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    value: ").append(toIndentedString(value)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -15,12 +15,6 @@ package org.influxdata.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -29,19 +23,15 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * optional set of contraints on the resources the query can consume
  */
 @ApiModel(description = "optional set of contraints on the resources the query can consume")
 
-public class QuerySpecificationResources {
+public class QuerySpecificationSpecResources {
   public static final String SERIALIZED_NAME_PRIORITY = "priority";
   @SerializedName(SERIALIZED_NAME_PRIORITY)
-  @JsonAdapter(QuerySpecification_resourcesPriorityAdapter.class)
   private Object priority = null;
 
   public static final String SERIALIZED_NAME_CONCURRENCY_QUOTA = "concurrency_quota";
@@ -52,7 +42,7 @@ public class QuerySpecificationResources {
   @SerializedName(SERIALIZED_NAME_MEMORY_BYTES_QUOTA)
   private Integer memoryBytesQuota = 0;
 
-  public QuerySpecificationResources priority(Object priority) {
+  public QuerySpecificationSpecResources priority(Object priority) {
     this.priority = priority;
     return this;
   }
@@ -70,7 +60,7 @@ public class QuerySpecificationResources {
     this.priority = priority;
   }
 
-  public QuerySpecificationResources concurrencyQuota(Integer concurrencyQuota) {
+  public QuerySpecificationSpecResources concurrencyQuota(Integer concurrencyQuota) {
     this.concurrencyQuota = concurrencyQuota;
     return this;
   }
@@ -88,7 +78,7 @@ public class QuerySpecificationResources {
     this.concurrencyQuota = concurrencyQuota;
   }
 
-  public QuerySpecificationResources memoryBytesQuota(Integer memoryBytesQuota) {
+  public QuerySpecificationSpecResources memoryBytesQuota(Integer memoryBytesQuota) {
     this.memoryBytesQuota = memoryBytesQuota;
     return this;
   }
@@ -115,10 +105,10 @@ public class QuerySpecificationResources {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    QuerySpecificationResources querySpecificationResources = (QuerySpecificationResources) o;
-    return Objects.equals(this.priority, querySpecificationResources.priority) &&
-        Objects.equals(this.concurrencyQuota, querySpecificationResources.concurrencyQuota) &&
-        Objects.equals(this.memoryBytesQuota, querySpecificationResources.memoryBytesQuota);
+    QuerySpecificationSpecResources querySpecificationSpecResources = (QuerySpecificationSpecResources) o;
+    return Objects.equals(this.priority, querySpecificationSpecResources.priority) &&
+        Objects.equals(this.concurrencyQuota, querySpecificationSpecResources.concurrencyQuota) &&
+        Objects.equals(this.memoryBytesQuota, querySpecificationSpecResources.memoryBytesQuota);
   }
 
   @Override
@@ -130,7 +120,7 @@ public class QuerySpecificationResources {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class QuerySpecificationResources {\n");
+    sb.append("class QuerySpecificationSpecResources {\n");
     sb.append("    priority: ").append(toIndentedString(priority)).append("\n");
     sb.append("    concurrencyQuota: ").append(toIndentedString(concurrencyQuota)).append("\n");
     sb.append("    memoryBytesQuota: ").append(toIndentedString(memoryBytesQuota)).append("\n");
@@ -149,25 +139,5 @@ public class QuerySpecificationResources {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class QuerySpecification_resourcesPriorityAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
-    private final String discriminator = "";
-
-    public QuerySpecification_resourcesPriorityAdapter() {
-    }
-
-    @Override
-    public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
-      String type = json.getAsJsonObject().get(discriminator).getAsString();
-
-  
-      return context.deserialize(json, Object.class);
-    }
-
-    @Override
-    public JsonElement serialize(Object object, Type typeOfSrc, JsonSerializationContext context) {
-
-      return context.serialize(object);
-    }
-  }
 }
 

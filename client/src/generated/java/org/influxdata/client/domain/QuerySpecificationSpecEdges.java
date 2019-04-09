@@ -25,10 +25,10 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * QuerySpecificationEdges
+ * QuerySpecificationSpecEdges
  */
 
-public class QuerySpecificationEdges {
+public class QuerySpecificationSpecEdges {
   public static final String SERIALIZED_NAME_PARENT = "parent";
   @SerializedName(SERIALIZED_NAME_PARENT)
   private String parent = null;
@@ -37,7 +37,7 @@ public class QuerySpecificationEdges {
   @SerializedName(SERIALIZED_NAME_CHILD)
   private String child = null;
 
-  public QuerySpecificationEdges parent(String parent) {
+  public QuerySpecificationSpecEdges parent(String parent) {
     this.parent = parent;
     return this;
   }
@@ -55,7 +55,7 @@ public class QuerySpecificationEdges {
     this.parent = parent;
   }
 
-  public QuerySpecificationEdges child(String child) {
+  public QuerySpecificationSpecEdges child(String child) {
     this.child = child;
     return this;
   }
@@ -82,9 +82,9 @@ public class QuerySpecificationEdges {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    QuerySpecificationEdges querySpecificationEdges = (QuerySpecificationEdges) o;
-    return Objects.equals(this.parent, querySpecificationEdges.parent) &&
-        Objects.equals(this.child, querySpecificationEdges.child);
+    QuerySpecificationSpecEdges querySpecificationSpecEdges = (QuerySpecificationSpecEdges) o;
+    return Objects.equals(this.parent, querySpecificationSpecEdges.parent) &&
+        Objects.equals(this.child, querySpecificationSpecEdges.child);
   }
 
   @Override
@@ -96,7 +96,7 @@ public class QuerySpecificationEdges {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class QuerySpecificationEdges {\n");
+    sb.append("class QuerySpecificationSpecEdges {\n");
     sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    child: ").append(toIndentedString(child)).append("\n");
     sb.append("}");

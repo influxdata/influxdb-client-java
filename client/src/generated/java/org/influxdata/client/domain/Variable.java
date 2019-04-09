@@ -15,9 +15,11 @@ package org.influxdata.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
@@ -277,7 +279,21 @@ public class Variable {
 
     @Override
     public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
-      String type = json.getAsJsonObject().get(discriminator).getAsString();
+
+      JsonObject jsonObject = json.getAsJsonObject();
+
+      String type = jsonObject.get(discriminator).getAsString();
+
+      return deserialize(type, jsonObject, context);
+    }
+
+    @Override
+    public JsonElement serialize(Object object, Type typeOfSrc, JsonSerializationContext context) {
+
+      return context.serialize(object);
+    }
+
+    private Object deserialize(final String type, final JsonElement json, final JsonDeserializationContext context) {
 
       if ("query".equals(type)) {
         return context.deserialize(json, QueryVariableProperties.class);
@@ -288,14 +304,8 @@ public class Variable {
       if ("map".equals(type)) {
         return context.deserialize(json, MapVariableProperties.class);
       }
-  
+
       return context.deserialize(json, Object.class);
-    }
-
-    @Override
-    public JsonElement serialize(Object object, Type typeOfSrc, JsonSerializationContext context) {
-
-      return context.serialize(object);
     }
   }
 }

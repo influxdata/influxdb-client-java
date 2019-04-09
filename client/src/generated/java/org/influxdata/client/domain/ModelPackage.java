@@ -25,6 +25,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.influxdata.client.domain.File;
 
 /**
  * represents a complete package source tree
@@ -46,7 +47,7 @@ public class ModelPackage {
 
   public static final String SERIALIZED_NAME_FILES = "files";
   @SerializedName(SERIALIZED_NAME_FILES)
-  private List<java.io.File> files = new ArrayList<>();
+  private List<File> files = new ArrayList<>();
 
   public ModelPackage type(String type) {
     this.type = type;
@@ -102,12 +103,12 @@ public class ModelPackage {
     this._package = _package;
   }
 
-  public ModelPackage files(List<java.io.File> files) {
+  public ModelPackage files(List<File> files) {
     this.files = files;
     return this;
   }
 
-  public ModelPackage addFilesItem(java.io.File filesItem) {
+  public ModelPackage addFilesItem(File filesItem) {
     if (this.files == null) {
       this.files = new ArrayList<>();
     }
@@ -120,11 +121,11 @@ public class ModelPackage {
    * @return files
   **/
   @ApiModelProperty(value = "package files")
-  public List<java.io.File> getFiles() {
+  public List<File> getFiles() {
     return files;
   }
 
-  public void setFiles(List<java.io.File> files) {
+  public void setFiles(List<File> files) {
     this.files = files;
   }
 
