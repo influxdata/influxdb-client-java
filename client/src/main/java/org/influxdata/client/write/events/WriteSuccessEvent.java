@@ -84,6 +84,6 @@ public final class WriteSuccessEvent extends AbstractWriteEvent {
     @Override
     public void logEvent() {
 
-        LOG.log(Level.INFO, "The data was successfully written to InfluxDB.");
+        LOG.log(Level.FINE, "The data was successfully written to InfluxDB.");
     }
 }
