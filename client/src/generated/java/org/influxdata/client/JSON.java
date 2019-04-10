@@ -36,7 +36,6 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -49,76 +48,7 @@ public class JSON {
 
     public static GsonBuilder createGson() {
         GsonFireBuilder fireBuilder = new GsonFireBuilder()
-        
         ;
-        fireBuilder.registerTypeSelector(TelegrafRequestPlugin.class, new TypeSelector<TelegrafRequestPlugin>() {
-
-            private final Map<String, Class<? extends TelegrafRequestPlugin>> classByDiscriminatorValue = new HashMap<String, Class<? extends TelegrafRequestPlugin>>() { {
-                    put("diskio", TelegrafPluginInputDiskioRequest.class);
-                    put("kubernetes", TelegrafPluginInputKubernetesRequest.class);
-                    put("processes", TelegrafPluginInputProcessesRequest.class);
-                    put("influxdb_v2", TelegrafPluginOutputInfluxDBV2Request.class);
-                    put("nginx", TelegrafPluginInputNginxRequest.class);
-                    put("swap", TelegrafPluginInputSwapRequest.class);
-                    put("kernel", TelegrafPluginInputKernelRequest.class);
-                    put("tail", TelegrafPluginInputTailRequest.class);
-                    put("cpu", TelegrafPluginInputCpuRequest.class);
-                    put("syslog", TelegrafPluginInputSyslogRequest.class);
-                    put("logparser", TelegrafPluginInputLogParserRequest.class);
-                    put("redis", TelegrafPluginInputRedisRequest.class);
-                    put("docker", TelegrafPluginInputDockerRequest.class);
-                    put("net_response", TelegrafPluginInputNetResponseRequest.class);
-                    put("disk", TelegrafPluginInputDiskRequest.class);
-                    put("file", TelegrafPluginOutputFileRequest.class);
-                    put("system", TelegrafPluginInputSystemRequest.class);
-                    put("mem", TelegrafPluginInputMemRequest.class);
-                    put("procstat", TelegrafPluginInputProcstatRequest.class);
-                    put("prometheus", TelegrafPluginInputPrometheusRequest.class);
-                    put("net", TelegrafPluginInputNetRequest.class);
-            } };
-
-            @Override
-            public Class<? extends TelegrafRequestPlugin> getClassForElement(JsonElement readElement) {
-
-                String value = getDiscriminatorValue(readElement, "name");
-
-                return classByDiscriminatorValue.getOrDefault(value, TelegrafRequestPlugin.class);
-            }
-        });
-        fireBuilder.registerTypeSelector(TelegrafPlugin.class, new TypeSelector<TelegrafPlugin>() {
-
-            private final Map<String, Class<? extends TelegrafPlugin>> classByDiscriminatorValue = new HashMap<String, Class<? extends TelegrafPlugin>>() { {
-                    put("diskio", TelegrafPluginInputDiskio.class);
-                    put("kubernetes", TelegrafPluginInputKubernetes.class);
-                    put("processes", TelegrafPluginInputProcesses.class);
-                    put("influxdb_v2", TelegrafPluginOutputInfluxDBV2.class);
-                    put("nginx", TelegrafPluginInputNginx.class);
-                    put("swap", TelegrafPluginInputSwap.class);
-                    put("kernel", TelegrafPluginInputKernel.class);
-                    put("tail", TelegrafPluginInputTail.class);
-                    put("cpu", TelegrafPluginInputCpu.class);
-                    put("syslog", TelegrafPluginInputSyslog.class);
-                    put("logparser", TelegrafPluginInputLogParser.class);
-                    put("redis", TelegrafPluginInputRedis.class);
-                    put("docker", TelegrafPluginInputDocker.class);
-                    put("net_response", TelegrafPluginInputNetResponse.class);
-                    put("disk", TelegrafPluginInputDisk.class);
-                    put("file", TelegrafPluginOutputFile.class);
-                    put("system", TelegrafPluginInputSystem.class);
-                    put("mem", TelegrafPluginInputMem.class);
-                    put("procstat", TelegrafPluginInputProcstat.class);
-                    put("prometheus", TelegrafPluginInputPrometheus.class);
-                    put("net", TelegrafPluginInputNet.class);
-            } };
-
-            @Override
-            public Class<? extends TelegrafPlugin> getClassForElement(JsonElement readElement) {
-
-                String value = getDiscriminatorValue(readElement, "name");
-
-                return classByDiscriminatorValue.getOrDefault(value, TelegrafPlugin.class);
-            }
-        });
         return fireBuilder.createGsonBuilder();
     }
 
@@ -131,7 +61,7 @@ public class JSON {
     }
 
     private static Class getClassByDiscriminator(Map classByDiscriminatorValue, String discriminatorValue) {
-        Class clazz = (Class) classByDiscriminatorValue.get(discriminatorValue.toUpperCase(Locale.ROOT));
+        Class clazz = (Class) classByDiscriminatorValue.get(discriminatorValue.toUpperCase());
         if(null == clazz) {
             throw new IllegalArgumentException("cannot determine model class of name: <" + discriminatorValue + ">");
         }

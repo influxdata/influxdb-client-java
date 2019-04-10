@@ -23,13 +23,12 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import org.influxdata.client.domain.TelegrafPluginConfig;
 
 /**
  * TelegrafPluginInputTail
  */
 
-public class TelegrafPluginInputTail extends TelegrafPlugin<TelegrafPluginInputTail.NameEnum, TelegrafPluginConfig> {
+public class TelegrafPluginInputTail extends TelegrafRequestPlugin<TelegrafPluginInputTail.NameEnum, Void> {
   /**
    * Gets or Sets name
    */

@@ -29,7 +29,7 @@ import org.influxdata.client.domain.TelegrafPluginInputRedisConfig;
  * TelegrafPluginInputRedis
  */
 
-public class TelegrafPluginInputRedis extends TelegrafPlugin<TelegrafPluginInputRedis.NameEnum, TelegrafPluginInputRedisConfig> {
+public class TelegrafPluginInputRedis extends TelegrafRequestPlugin<TelegrafPluginInputRedis.NameEnum, TelegrafPluginInputRedisConfig> {
   /**
    * Gets or Sets name
    */

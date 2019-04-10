@@ -161,7 +161,7 @@ final class TemplatesApiImpl extends AbstractRestClient implements TemplatesApi 
 
         Arguments.checkNonEmpty(orgName, "orgName");
 
-        Call<Documents> call = service.documentsTemplatesGet(orgName, null);
+        Call<Documents> call = service.documentsTemplatesGet(null, orgName, null);
 
         return execute(call).getDocuments();
     }

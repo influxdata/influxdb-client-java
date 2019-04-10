@@ -15,6 +15,14 @@ package org.influxdata.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -23,6 +31,7 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import org.influxdata.client.domain.TelegrafRequestAgent;
@@ -47,6 +56,7 @@ public class TelegrafRequest {
 
   public static final String SERIALIZED_NAME_PLUGINS = "plugins";
   @SerializedName(SERIALIZED_NAME_PLUGINS)
+  @JsonAdapter(TelegrafRequestPluginsAdapter.class)
   private List<TelegrafRequestPlugin> plugins = new ArrayList<>();
 
   public static final String SERIALIZED_NAME_ORGANIZATION_I_D = "organizationID";
@@ -198,5 +208,78 @@ public class TelegrafRequest {
     return o.toString().replace("\n", "\n    ");
   }
 
+  public class TelegrafRequestPluginsAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+    private final String discriminator = "name";
+
+    public TelegrafRequestPluginsAdapter() {
+    }
+
+    @Override
+    public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+
+      List<Object> results = new ArrayList<>();
+
+      for (JsonElement arrayItem: json.getAsJsonArray()){
+        JsonObject jsonObject = arrayItem.getAsJsonObject();
+
+        String type = jsonObject.get(discriminator).getAsString();
+
+        results.add(deserialize(type, jsonObject, context));
+      }
+
+      return results;
+    }
+
+    @Override
+    public JsonElement serialize(Object object, Type typeOfSrc, JsonSerializationContext context) {
+
+      return context.serialize(object);
+    }
+
+    private Object deserialize(final String type, final JsonElement json, final JsonDeserializationContext context) {
+
+      if ("cpu".equals(type)) {
+        return context.deserialize(json, TelegrafPluginInputCpu.class);
+      }
+      if ("disk".equals(type)) {
+        return context.deserialize(json, TelegrafPluginInputDisk.class);
+      }
+      if ("diskio".equals(type)) {
+        return context.deserialize(json, TelegrafPluginInputDiskio.class);
+      }
+      if ("docker".equals(type)) {
+        return context.deserialize(json, TelegrafPluginInputDocker.class);
+      }
+      if ("file".equals(type)) {
+        return context.deserialize(json, TelegrafPluginInputFile.class);
+      }
+      if ("kubernetes".equals(type)) {
+        return context.deserialize(json, TelegrafPluginInputKubernetes.class);
+      }
+      if ("logparser".equals(type)) {
+        return context.deserialize(json, TelegrafPluginInputLogParser.class);
+      }
+      if ("procstat".equals(type)) {
+        return context.deserialize(json, TelegrafPluginInputProcstat.class);
+      }
+      if ("prometheus".equals(type)) {
+        return context.deserialize(json, TelegrafPluginInputPrometheus.class);
+      }
+      if ("redis".equals(type)) {
+        return context.deserialize(json, TelegrafPluginInputRedis.class);
+      }
+      if ("syslog".equals(type)) {
+        return context.deserialize(json, TelegrafPluginInputSyslog.class);
+      }
+      if ("file".equals(type)) {
+        return context.deserialize(json, TelegrafPluginOutputFile.class);
+      }
+      if ("influxdb_v2".equals(type)) {
+        return context.deserialize(json, TelegrafPluginOutputInfluxDBV2.class);
+      }
+
+      return context.deserialize(json, Object.class);
+    }
+  }
 }
 

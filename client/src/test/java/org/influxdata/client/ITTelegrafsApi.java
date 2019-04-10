@@ -33,14 +33,10 @@ import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.Telegraf;
-import org.influxdata.client.domain.TelegrafPlugin;
-import org.influxdata.client.domain.TelegrafPluginConfig;
 import org.influxdata.client.domain.TelegrafPluginInputCpu;
-import org.influxdata.client.domain.TelegrafPluginInputCpuRequest;
-import org.influxdata.client.domain.TelegrafPluginInputKernelRequest;
+import org.influxdata.client.domain.TelegrafPluginInputKernel;
 import org.influxdata.client.domain.TelegrafPluginOutputInfluxDBV2;
 import org.influxdata.client.domain.TelegrafPluginOutputInfluxDBV2Config;
-import org.influxdata.client.domain.TelegrafPluginOutputInfluxDBV2Request;
 import org.influxdata.client.domain.TelegrafRequestPlugin;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.NotFoundException;
@@ -129,7 +125,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
                 .createTelegraf(name, "test-config", organization, 1_000, output, custom);
 
         Assertions.assertThat(telegrafConfig.getPlugins()).hasSize(2);
-        TelegrafPlugin telegrafPlugin = telegrafConfig.getPlugins().get(1);
+        TelegrafRequestPlugin telegrafPlugin = telegrafConfig.getPlugins().get(1);
         Assertions.assertThat(telegrafPlugin.getName()).isEqualTo("ping-plugin");
         Assertions.assertThat(telegrafPlugin.getType()).isEqualTo(TelegrafRequestPlugin.TypeEnum.INPUT);
 
@@ -430,18 +426,15 @@ class ITTelegrafsApi extends AbstractITClientTest {
     @Nonnull
     private TelegrafRequestPlugin newCpuPlugin() {
 
-        TelegrafPluginInputCpuRequest cpu = new TelegrafPluginInputCpuRequest();
-        cpu.setType(TelegrafPluginInputCpuRequest.TypeEnum.INPUT);
-        cpu.setConfig(new TelegrafPluginConfig());
+        TelegrafPluginInputCpu cpu = new TelegrafPluginInputCpu();
 
         return cpu;
     }
 
     @Nonnull
     private TelegrafRequestPlugin newKernelPlugin() {
-        
-        TelegrafPluginInputKernelRequest kernel = new TelegrafPluginInputKernelRequest();
-        kernel.setType(TelegrafPluginInputKernelRequest.TypeEnum.INPUT);
+
+        TelegrafPluginInputKernel kernel = new TelegrafPluginInputKernel();
 
         return kernel;
     }
@@ -449,8 +442,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
     @Nonnull
     private TelegrafRequestPlugin newOutputPlugin() {
 
-        TelegrafPluginOutputInfluxDBV2Request output = new TelegrafPluginOutputInfluxDBV2Request();
-        output.setType(TelegrafPluginOutputInfluxDBV2Request.TypeEnum.OUTPUT);
+        TelegrafPluginOutputInfluxDBV2 output = new TelegrafPluginOutputInfluxDBV2();
         output.setComment("Output to Influx 2.0");
         output.setConfig(new TelegrafPluginOutputInfluxDBV2Config());
         output.getConfig().setOrganization("my-org");

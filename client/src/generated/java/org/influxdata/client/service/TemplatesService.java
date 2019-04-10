@@ -22,13 +22,14 @@ public interface TemplatesService {
   /**
    * 
    * 
-   * @param org specifies the name of the organization of the template (required)
    * @param zapTraceSpan OpenTracing span context (optional)
+   * @param org specifies the name of the organization of the template (optional)
+   * @param orgID specifies the organization id of the template (optional)
    * @return Call&lt;Documents&gt;
    */
   @GET("api/v2/documents/templates")
   Call<Documents> documentsTemplatesGet(
-    @retrofit2.http.Query("org") String org, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID
   );
 
   /**

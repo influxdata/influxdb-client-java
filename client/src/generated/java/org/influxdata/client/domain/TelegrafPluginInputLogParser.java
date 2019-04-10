@@ -29,7 +29,7 @@ import org.influxdata.client.domain.TelegrafPluginInputLogParserConfig;
  * TelegrafPluginInputLogParser
  */
 
-public class TelegrafPluginInputLogParser extends TelegrafPlugin<TelegrafPluginInputLogParser.NameEnum, TelegrafPluginInputLogParserConfig> {
+public class TelegrafPluginInputLogParser extends TelegrafRequestPlugin<TelegrafPluginInputLogParser.NameEnum, TelegrafPluginInputLogParserConfig> {
   /**
    * Gets or Sets name
    */

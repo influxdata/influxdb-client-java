@@ -29,7 +29,7 @@ import org.influxdata.client.domain.TelegrafPluginInputPrometheusConfig;
  * TelegrafPluginInputPrometheus
  */
 
-public class TelegrafPluginInputPrometheus extends TelegrafPlugin<TelegrafPluginInputPrometheus.NameEnum, TelegrafPluginInputPrometheusConfig> {
+public class TelegrafPluginInputPrometheus extends TelegrafRequestPlugin<TelegrafPluginInputPrometheus.NameEnum, TelegrafPluginInputPrometheusConfig> {
   /**
    * Gets or Sets name
    */

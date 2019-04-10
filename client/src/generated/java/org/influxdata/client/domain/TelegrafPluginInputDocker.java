@@ -29,7 +29,7 @@ import org.influxdata.client.domain.TelegrafPluginInputDockerConfig;
  * TelegrafPluginInputDocker
  */
 
-public class TelegrafPluginInputDocker extends TelegrafPlugin<TelegrafPluginInputDocker.NameEnum, TelegrafPluginInputDockerConfig> {
+public class TelegrafPluginInputDocker extends TelegrafRequestPlugin<TelegrafPluginInputDocker.NameEnum, TelegrafPluginInputDockerConfig> {
   /**
    * Gets or Sets name
    */

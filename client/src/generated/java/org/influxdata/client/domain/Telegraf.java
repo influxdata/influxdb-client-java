@@ -23,19 +23,18 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import org.influxdata.client.domain.Labels;
 import org.influxdata.client.domain.TelegrafLinks;
-import org.influxdata.client.domain.TelegrafPlugin;
 import org.influxdata.client.domain.TelegrafRequest;
 import org.influxdata.client.domain.TelegrafRequestAgent;
+import org.influxdata.client.domain.TelegrafRequestPlugin;
 
 /**
  * Telegraf
  */
 
-public class Telegraf {
+public class Telegraf extends TelegrafRequest {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private String id = null;
@@ -48,31 +47,6 @@ public class Telegraf {
   @SerializedName(SERIALIZED_NAME_LABELS)
   private Labels labels = null;
 
-  public static final String SERIALIZED_NAME_PLUGINS = "plugins";
-  @SerializedName(SERIALIZED_NAME_PLUGINS)
-  private List<TelegrafPlugin> plugins = new ArrayList<>();
-
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
-
-  public static final String SERIALIZED_NAME_DESCRIPTION = "description";
-  @SerializedName(SERIALIZED_NAME_DESCRIPTION)
-  private String description = null;
-
-  public static final String SERIALIZED_NAME_AGENT = "agent";
-  @SerializedName(SERIALIZED_NAME_AGENT)
-  private TelegrafRequestAgent agent = null;
-
-  public static final String SERIALIZED_NAME_ORGANIZATION_I_D = "organizationID";
-  @SerializedName(SERIALIZED_NAME_ORGANIZATION_I_D)
-  private String organizationID = null;
-
-  public Telegraf id(String id) {
-    this.id = id;
-    return this;
-  }
-
    /**
    * Get id
    * @return id
@@ -80,10 +54,6 @@ public class Telegraf {
   @ApiModelProperty(value = "")
   public String getId() {
     return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
   }
 
   public Telegraf links(TelegrafLinks links) {
@@ -122,104 +92,6 @@ public class Telegraf {
     this.labels = labels;
   }
 
-  public Telegraf plugins(List<TelegrafPlugin> plugins) {
-    this.plugins = plugins;
-    return this;
-  }
-
-  public Telegraf addPluginsItem(TelegrafPlugin pluginsItem) {
-    if (this.plugins == null) {
-      this.plugins = new ArrayList<>();
-    }
-    this.plugins.add(pluginsItem);
-    return this;
-  }
-
-   /**
-   * Get plugins
-   * @return plugins
-  **/
-  @ApiModelProperty(value = "")
-  public List<TelegrafPlugin> getPlugins() {
-    return plugins;
-  }
-
-  public void setPlugins(List<TelegrafPlugin> plugins) {
-    this.plugins = plugins;
-  }
-
-  public Telegraf name(String name) {
-    this.name = name;
-    return this;
-  }
-
-   /**
-   * Get name
-   * @return name
-  **/
-  @ApiModelProperty(value = "")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public Telegraf description(String description) {
-    this.description = description;
-    return this;
-  }
-
-   /**
-   * Get description
-   * @return description
-  **/
-  @ApiModelProperty(value = "")
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public Telegraf agent(TelegrafRequestAgent agent) {
-    this.agent = agent;
-    return this;
-  }
-
-   /**
-   * Get agent
-   * @return agent
-  **/
-  @ApiModelProperty(value = "")
-  public TelegrafRequestAgent getAgent() {
-    return agent;
-  }
-
-  public void setAgent(TelegrafRequestAgent agent) {
-    this.agent = agent;
-  }
-
-  public Telegraf organizationID(String organizationID) {
-    this.organizationID = organizationID;
-    return this;
-  }
-
-   /**
-   * Get organizationID
-   * @return organizationID
-  **/
-  @ApiModelProperty(value = "")
-  public String getOrganizationID() {
-    return organizationID;
-  }
-
-  public void setOrganizationID(String organizationID) {
-    this.organizationID = organizationID;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -233,16 +105,12 @@ public class Telegraf {
     return Objects.equals(this.id, telegraf.id) &&
         Objects.equals(this.links, telegraf.links) &&
         Objects.equals(this.labels, telegraf.labels) &&
-        Objects.equals(this.plugins, telegraf.plugins) &&
-        Objects.equals(this.name, telegraf.name) &&
-        Objects.equals(this.description, telegraf.description) &&
-        Objects.equals(this.agent, telegraf.agent) &&
-        Objects.equals(this.organizationID, telegraf.organizationID);
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, links, labels, plugins, name, description, agent, organizationID);
+    return Objects.hash(id, links, labels, super.hashCode());
   }
 
 
@@ -250,14 +118,10 @@ public class Telegraf {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Telegraf {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
-    sb.append("    plugins: ").append(toIndentedString(plugins)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    agent: ").append(toIndentedString(agent)).append("\n");
-    sb.append("    organizationID: ").append(toIndentedString(organizationID)).append("\n");
     sb.append("}");
     return sb.toString();
   }

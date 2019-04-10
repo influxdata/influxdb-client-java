@@ -29,7 +29,7 @@ import org.influxdata.client.domain.TelegrafPluginInputSyslogConfig;
  * TelegrafPluginInputSyslog
  */
 
-public class TelegrafPluginInputSyslog extends TelegrafPlugin<TelegrafPluginInputSyslog.NameEnum, TelegrafPluginInputSyslogConfig> {
+public class TelegrafPluginInputSyslog extends TelegrafRequestPlugin<TelegrafPluginInputSyslog.NameEnum, TelegrafPluginInputSyslogConfig> {
   /**
    * Gets or Sets name
    */

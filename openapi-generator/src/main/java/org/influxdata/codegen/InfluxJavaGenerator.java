@@ -68,6 +68,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
     }
 
     public InfluxJavaGenerator() {
+
         super();
 
         importMapping.put("JSON", "org.influxdata.client.JSON");
@@ -94,144 +95,30 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
     @Override
     public Map<String, Object> postProcessAllModels(final Map<String, Object> models) {
 
-        Map<String, String> pluginTypes = new HashMap<>();
-        Map<String, String> pluginRequestTypes = new HashMap<>();
+        //
+        // Remove type selectors
+        //
+        Map<String, Object> allModels = super.postProcessAllModels(models);
+        additionalProperties.remove("parent");
 
-        models.forEach((modelName, modelConfig) -> {
+        for (Map.Entry<String, Object> entry : allModels.entrySet()) {
 
-            //
-            // Set TelegrafPlugin and TelegrafRequestPlugin to generics
-            //
-            if (modelName.equals("TelegrafRequestPlugin") || modelName.equals("TelegrafPlugin")) {
-
-                CodegenModel model = getModel((HashMap) modelConfig);
-                model.setDiscriminator(null);
-
-                //
-                // Set name as generic
-                //
-                CodegenProperty nameProperty = model.getAllVars().get(0);
-                nameProperty.dataType = "T";
-                nameProperty.datatypeWithEnum = "T";
-
-                model.allVars.get(model.allVars.size() - 1).hasMore = true;
-
-                //
-                // Add generic config
-                //
-                CodegenProperty configProperty = new CodegenProperty();
-                configProperty.name = "config";
-                configProperty.baseName = "config";
-                configProperty.getter = "getConfig";
-                configProperty.setter = "setConfig";
-                configProperty.dataType = "C";
-                configProperty.datatypeWithEnum = "C";
-                configProperty.nameInSnakeCase = "CONFIG";
-                configProperty.isReadOnly = false;
-                model.vars.add(configProperty);
-                model.readWriteVars.add(configProperty);
-
-                //
-                // Add generics to class
-                //
-                model.vendorExtensions.put("x-has-generic-type", Boolean.TRUE);
-                model.vendorExtensions.put("x-generic-type", "<T, C>");
-
-                //
-                // Use Plugin type from TelegrafRequestPlugin.TypeEnum
-                //
-                if (modelName.equals("TelegrafPlugin")) {
-                    CodegenProperty typeProperty = getCodegenProperty(model, "type");
-                    typeProperty.isEnum = false;
-                    typeProperty.baseType = "TelegrafRequestPlugin.TypeEnum";
-                    typeProperty.dataType = "TelegrafRequestPlugin.TypeEnum";
-                    typeProperty.datatypeWithEnum = "TelegrafRequestPlugin.TypeEnum";
-                }
-            }
-
-            //
-            // Replace TelegrafPluginInputDiskioRequest, TelegrafPluginInputProcessesRequest, ... TelegrafPlugin*Request
-            //
-            if (modelName.startsWith("TelegrafPlugin") && modelName.endsWith("Request")) {
-
-                HashMap requestConfig = (HashMap) modelConfig;
-                CodegenModel requestModel = getModel(requestConfig);
-
-                HashMap pluginConfig = (HashMap) models.get(requestModel.getInterfaces().get(1));
-                CodegenModel pluginModel = getModel(pluginConfig);
-
-                //
-                // Copy properties for Plugin definition
-                //
-                requestModel.setDataType(pluginModel.dataType);
-                List<CodegenProperty> properties = pluginModel.getVars().stream()
-                        .filter(property -> !property.name.equals("type") && !property.name.equals("name") && !property.name.equals("config"))
-                        .map(CodegenProperty::clone)
-                        .collect(Collectors.toList());
-                requestModel.setVars(properties);
-                requestModel.hasVars = !requestModel.vars.isEmpty();
-
-                requestModel.vars.get(requestModel.vars.size() - 1).hasMore = false;
-
-                //
-                // Set type of PluginConfiguration
-                //
-                CodegenProperty configProperty = getCodegenProperty(pluginModel, "config");
-                String configType = configProperty != null ? configProperty.baseType : "Map<String, String>";
-
-                //
-                // Set generic parent type
-                //
-                requestModel.setParent(requestModel.parent + "<" + pluginModel.name + ".NameEnum, " + configType + ">");
-
-                //
-                // Set Name and Type in Constructor
-                //
-                ArrayList<Object> constructorItems = new ArrayList<>();
-                constructorItems.add(String.format("setName(%s);", pluginModel.name + ".NameEnum." + getEnumDefaultValue(pluginModel, "name")));
-                constructorItems.add(String.format("setType(%s);", "TelegrafRequestPlugin.TypeEnum." + getEnumDefaultValue(pluginModel, "type")));
-
-                requestModel.vendorExtensions.put("x-has-constructor-items", Boolean.TRUE);
-                requestModel.vendorExtensions.put("x-constructor-items", constructorItems);
-
-                pluginRequestTypes.put(getEnumValue(pluginModel, "name"), requestModel.name + ".class");
-
-                normalizeImports(requestConfig, pluginConfig);
-            }
-
-            //
-            // Copy properties to Telegraf
-            //
-            if (modelName.equals("Telegraf")) {
-
-                HashMap telegrafConfig = (HashMap) modelConfig;
-                CodegenModel telegrafModel = getModel(telegrafConfig);
-
-                HashMap requestConfig = (HashMap) models.get(telegrafModel.getInterfaces().get(0));
-                CodegenModel requestModel = getModel(requestConfig);
-
-                telegrafModel.setParent(null);
-                telegrafModel.vars.get(telegrafModel.vars.size() - 1).hasMore = true;
-                requestModel.getVars().stream().filter(property -> !property.name.equals("plugins"))
-                        .forEach(requestProperty -> telegrafModel.vars.add(requestProperty.clone()));
-
-            }
-        });
-
-        models.forEach((modelName, modelConfig) -> {
+            String modelName = entry.getKey();
+            Object modelConfig = entry.getValue();
 
             CodegenModel pluginModel = getModel((HashMap) modelConfig);
 
             //
-            // Replace TelegrafPluginInputDiskio, TelegrafPluginInputProcesses, ... TelegrafPlugin*
+            // Set Telegraf Plugin name and type in constructors
             //
-            if (modelName.startsWith("TelegrafPlugin") && !modelName.equals("TelegrafPlugin") && !modelName.endsWith("Request") && !modelName.toLowerCase().contains("config")) {
+            if (modelName.startsWith("TelegrafPlugin") && !modelName.endsWith("Request") && !modelName.toLowerCase().contains("config")) {
 
                 CodegenProperty configProperty = getCodegenProperty(pluginModel, "config");
                 CodegenProperty typeProperty = getCodegenProperty(pluginModel, "type");
                 CodegenProperty nameProperty = getCodegenProperty(pluginModel, "name");
 
-                pluginModel.parent = "TelegrafPlugin<" + pluginModel.name + ".NameEnum, " + configProperty.baseType + ">";
+                // set generic type: name + config
+                pluginModel.parent = "TelegrafRequestPlugin<" + pluginModel.name + ".NameEnum, " + (configProperty != null ? configProperty.baseType : "Void") + ">";
 
                 // Set Name and Type in Constructor
                 ArrayList<Object> constructorItems = new ArrayList<>();
@@ -244,8 +131,6 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                 pluginModel.vendorExtensions.put("x-has-inner-enums", Boolean.TRUE);
                 pluginModel.vendorExtensions.put("x-inner-enums", Arrays.asList(nameProperty));
 
-                pluginTypes.put(getEnumValue(pluginModel, "name"), pluginModel.name + ".class");
-
                 pluginModel.vars.remove(configProperty);
                 pluginModel.vars.remove(typeProperty);
                 pluginModel.vars.remove(nameProperty);
@@ -255,7 +140,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
             //
             // The "interfaces" extends base object
             //
-            if (!pluginModel.hasVars && pluginModel.interfaces != null && !modelName.equals("TelegrafRequestConfig")) {
+            if (!pluginModel.hasVars && pluginModel.interfaces != null && !modelName.startsWith("Telegraf")) {
 
                 for (String interfaceModelName : pluginModel.interfaces) {
 
@@ -266,32 +151,26 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                 pluginModel.interfaces.clear();
             }
 
+            //
+            //
+            //
             if (modelName.equals("PropertyKey")) {
 
                 pluginModel.setParent("Expression");
             }
-        });
+        }
 
-        //
-        // Configure Gson Type Selectors
-        //
-        HashMap<String, Object> pluginRequest = new HashMap<>();
-        pluginRequest.put("name", "TelegrafRequestPlugin");
-        pluginRequest.put("types", pluginRequestTypes.entrySet());
-
-        HashMap<String, Object> plugin = new HashMap<>();
-        plugin.put("name", "TelegrafPlugin");
-        plugin.put("types", pluginTypes.entrySet());
-
-        additionalProperties.put("vendorExtensions.x-type-selectors", Arrays.asList(pluginRequest, plugin));
-
-        return super.postProcessAllModels(models);
+        return allModels;
     }
 
     @Override
     public void processOpts() {
+
         super.processOpts();
 
+        //
+        // We want to use only the JSON.java
+        //
         supportingFiles = supportingFiles.stream()
                 .filter(supportingFile -> supportingFile.destinationFilename.equals("JSON.java"))
                 .collect(Collectors.toList());
@@ -302,7 +181,9 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
 
         super.postProcessModelProperty(model, property);
 
-
+        //
+        // If its a constant then set default value
+        //
         if (property.isEnum && property.get_enum() != null && property.get_enum().size() == 1) {
             property.isReadOnly = true;
             property.defaultValue = property.enumName + "." + getEnumDefaultValue(model, property.name);
@@ -389,6 +270,9 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
 
         CodegenOperation op = super.fromOperation(path, httpMethod, operation, definitions, openAPI);
 
+        //
+        // Set base path
+        //
         String url;
         if (operation.getServers() != null) {
             url = operation.getServers().get(0).getUrl();
@@ -412,7 +296,11 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
 
         if (model.getProperties() != null) {
-            model.getProperties()
+
+
+            Map properties = model.getProperties();
+
+            properties
                     .forEach((BiConsumer<String, Schema>) (property, propertySchema) -> {
 
                         Schema schema = propertySchema;
@@ -530,6 +418,87 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                     });
         }
 
+        //
+        // Add generic name, type and config property
+        //
+        if (name.equals("TelegrafRequestPlugin")) {
+
+            codegenModel.interfaces.clear();
+
+            //
+            // Add generic name
+            //
+            CodegenProperty nameProperty = new CodegenProperty();
+            nameProperty.name = "name";
+            nameProperty.baseName = "name";
+            nameProperty.getter = "getName";
+            nameProperty.setter = "setName";
+            nameProperty.dataType = "T";
+            nameProperty.datatypeWithEnum = "T";
+            nameProperty.nameInSnakeCase = "NAME";
+            nameProperty.isReadOnly = false;
+            nameProperty.hasMore = true;
+            nameProperty.hasMoreNonReadOnly = true;
+            postProcessModelProperty(codegenModel, nameProperty);
+            codegenModel.vars.add(nameProperty);
+            codegenModel.readWriteVars.add(nameProperty);
+
+            //
+            // Add type
+            //
+            CodegenProperty typeProperty = new CodegenProperty();
+            typeProperty.name = "type";
+            typeProperty.baseName = "type";
+            typeProperty.getter = "getType";
+            typeProperty.setter = "setType";
+            typeProperty.dataType = "String";
+            typeProperty.isEnum = true;
+            typeProperty.set_enum(Arrays.asList("input", "output"));
+
+            final HashMap<String, Object> allowableValues = new HashMap<>();
+
+            List<Map<String, String>> enumVars = new ArrayList<>();
+            for (String value : Arrays.asList("input", "output")) {
+                Map<String, String> enumVar = new HashMap<>();
+                enumVar.put("name", value.toUpperCase());
+                enumVar.put("value", "\"" + value + "\"");
+                enumVars.add(enumVar);
+            }
+            allowableValues.put("enumVars", enumVars);
+
+            typeProperty.setAllowableValues(allowableValues);
+            typeProperty.datatypeWithEnum = "TypeEnum";
+            typeProperty.nameInSnakeCase = "TYPE";
+            typeProperty.isReadOnly = false;
+            typeProperty.hasMore = true;
+            typeProperty.hasMoreNonReadOnly = true;
+            postProcessModelProperty(codegenModel, typeProperty);
+            codegenModel.vars.add(typeProperty);
+            codegenModel.readWriteVars.add(typeProperty);
+
+            //
+            // Add generic config
+            //
+            CodegenProperty configProperty = new CodegenProperty();
+            configProperty.name = "config";
+            configProperty.baseName = "config";
+            configProperty.getter = "getConfig";
+            configProperty.setter = "setConfig";
+            configProperty.dataType = "C";
+            configProperty.datatypeWithEnum = "C";
+            configProperty.nameInSnakeCase = "CONFIG";
+            configProperty.isReadOnly = false;
+            postProcessModelProperty(codegenModel, configProperty);
+            codegenModel.vars.add(configProperty);
+            codegenModel.readWriteVars.add(configProperty);
+
+            //
+            // Add generics to class
+            //
+            codegenModel.vendorExtensions.put("x-has-generic-type", Boolean.TRUE);
+            codegenModel.vendorExtensions.put("x-generic-type", "<T, C>");
+        }
+
         return codegenModel;
     }
 
@@ -539,21 +508,11 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         if (name.length() == 0) {
             return super.toApiName(name);
         }
+
+        //
+        // Rename "Api" to "Service"
+        //
         return camelize(name) + "Service";
-    }
-
-    private void normalizeImports(@Nonnull final HashMap requestConfig, @Nonnull final HashMap pluginConfig) {
-
-        // add all
-        ((List) requestConfig.get("imports")).addAll(((List) pluginConfig.get("imports")));
-
-        // filter from same package
-        List<HashMap<String, String>> filtered = ((List<HashMap<String, String>>) requestConfig.get("imports")).stream()
-                .filter(imp -> !imp.get("import").startsWith("org.influxdata.client.domain"))
-                .collect(Collectors.toList());
-
-        // override
-        requestConfig.put("imports", filtered);
     }
 
     @Nonnull
@@ -615,6 +574,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
     }
 
     public class TypeAdapter {
+
         public String classname;
         public String discriminator;
         public boolean isArray;
@@ -622,6 +582,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
     }
 
     public class TypeAdapterItem {
+
         public String discriminatorValue;
         public String classname;
     }

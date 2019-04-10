@@ -29,7 +29,7 @@ import org.influxdata.client.domain.TelegrafPluginOutputInfluxDBV2Config;
  * TelegrafPluginOutputInfluxDBV2
  */
 
-public class TelegrafPluginOutputInfluxDBV2 extends TelegrafPlugin<TelegrafPluginOutputInfluxDBV2.NameEnum, TelegrafPluginOutputInfluxDBV2Config> {
+public class TelegrafPluginOutputInfluxDBV2 extends TelegrafRequestPlugin<TelegrafPluginOutputInfluxDBV2.NameEnum, TelegrafPluginOutputInfluxDBV2Config> {
   /**
    * Gets or Sets name
    */

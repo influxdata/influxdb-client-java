@@ -23,6 +23,20 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import org.influxdata.client.domain.TelegrafPluginInputCpu;
+import org.influxdata.client.domain.TelegrafPluginInputDisk;
+import org.influxdata.client.domain.TelegrafPluginInputDiskio;
+import org.influxdata.client.domain.TelegrafPluginInputDocker;
+import org.influxdata.client.domain.TelegrafPluginInputFile;
+import org.influxdata.client.domain.TelegrafPluginInputKubernetes;
+import org.influxdata.client.domain.TelegrafPluginInputLogParser;
+import org.influxdata.client.domain.TelegrafPluginInputProcstat;
+import org.influxdata.client.domain.TelegrafPluginInputPrometheus;
+import org.influxdata.client.domain.TelegrafPluginInputRedis;
+import org.influxdata.client.domain.TelegrafPluginInputSyslog;
+import org.influxdata.client.domain.TelegrafPluginOutputFile;
+import org.influxdata.client.domain.TelegrafPluginOutputInfluxDBV2;
+import org.influxdata.client.domain.TelegrafPluginOutputInfluxDBV2Config;
 
 /**
  * TelegrafRequestPlugin
@@ -31,7 +45,7 @@ import java.io.IOException;
 public class TelegrafRequestPlugin<T, C> {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
-  private T name = null;
+  private T name;
 
   /**
    * Gets or Sets type
@@ -82,7 +96,7 @@ public class TelegrafRequestPlugin<T, C> {
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = null;
+  private TypeEnum type;
 
   public static final String SERIALIZED_NAME_CONFIG = "config";
   @SerializedName(SERIALIZED_NAME_CONFIG)
@@ -97,7 +111,7 @@ public class TelegrafRequestPlugin<T, C> {
    * Get name
    * @return name
   **/
-  @ApiModelProperty(example = "cpu", required = true, value = "")
+  @ApiModelProperty(value = "")
   public T getName() {
     return name;
   }
@@ -115,7 +129,7 @@ public class TelegrafRequestPlugin<T, C> {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -151,10 +165,7 @@ public class TelegrafRequestPlugin<T, C> {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    TelegrafRequestPlugin telegrafRequestPlugin = (TelegrafRequestPlugin) o;
-    return Objects.equals(this.name, telegrafRequestPlugin.name) &&
-        Objects.equals(this.type, telegrafRequestPlugin.type) &&
-        Objects.equals(this.config, telegrafRequestPlugin.config);
+    return true;
   }
 
   @Override
