@@ -31,6 +31,11 @@ import org.influxdata.client.domain.DocumentCreate;
 import org.influxdata.client.domain.DocumentListEntry;
 import org.influxdata.client.domain.DocumentUpdate;
 import org.influxdata.client.domain.Documents;
+import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelMapping;
+import org.influxdata.client.domain.LabelResponse;
+import org.influxdata.client.domain.Labels;
+import org.influxdata.client.domain.LabelsResponse;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.service.TemplatesService;
 import org.influxdata.internal.AbstractRestClient;
@@ -102,6 +107,76 @@ final class TemplatesApiImpl extends AbstractRestClient implements TemplatesApi 
         Arguments.checkNonEmpty(templateID, "templateID");
 
         Call<Void> call = service.documentsTemplatesTemplateIDDelete(templateID, null);
+
+        execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final Document template) {
+
+        Arguments.checkNotNull(template, "template");
+
+        return getLabels(template.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<Label> getLabels(@Nonnull final String templateID) {
+
+        Arguments.checkNonEmpty(templateID, "templateID");
+
+        Call<LabelsResponse> call = service.documentsTemplatesTemplateIDLabelsGet(templateID, null);
+
+        Labels labels = execute(call).getLabels();
+
+        //TODO https://github.com/influxdata/influxdb/issues/13317
+        return labels != null ? labels : new Labels();
+    }
+
+    @Nonnull
+    @Override
+    public LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Document template) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(template, "template");
+
+
+        return addLabel(label.getId(), template.getId());
+    }
+
+    @Nonnull
+    @Override
+    public LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String templateID) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNonEmpty(templateID, "templateID");
+
+        LabelMapping mapping = new LabelMapping()
+                .labelID(labelID);
+
+        Call<LabelResponse> call = service.documentsTemplatesTemplateIDLabelsPost(templateID, mapping, null);
+
+        return execute(call);
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final Document template) {
+
+        Arguments.checkNotNull(label, "label");
+        Arguments.checkNotNull(template, "template");
+
+        deleteLabel(label.getId(), template.getId());
+
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String templateID) {
+
+        Arguments.checkNonEmpty(labelID, "labelID");
+        Arguments.checkNonEmpty(templateID, "templateID");
+
+        Call<Void> call = service.documentsTemplatesTemplateIDLabelsLabelIDDelete(templateID, labelID, null);
 
         execute(call);
     }

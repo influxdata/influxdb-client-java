@@ -12,6 +12,9 @@ import org.influxdata.client.domain.DocumentCreate;
 import org.influxdata.client.domain.DocumentUpdate;
 import org.influxdata.client.domain.Documents;
 import org.influxdata.client.domain.Error;
+import org.influxdata.client.domain.LabelMapping;
+import org.influxdata.client.domain.LabelResponse;
+import org.influxdata.client.domain.LabelsResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +72,47 @@ public interface TemplatesService {
   @GET("api/v2/documents/templates/{templateID}")
   Call<Document> documentsTemplatesTemplateIDGet(
     @retrofit2.http.Path("templateID") String templateID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * list all labels for a template
+   * 
+   * @param templateID ID of template (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;LabelsResponse&gt;
+   */
+  @GET("api/v2/documents/templates/{templateID}/labels")
+  Call<LabelsResponse> documentsTemplatesTemplateIDLabelsGet(
+    @retrofit2.http.Path("templateID") String templateID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * delete a label from a template
+   * 
+   * @param templateID ID of template (required)
+   * @param labelID the label ID (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/documents/templates/{templateID}/labels/{labelID}")
+  Call<Void> documentsTemplatesTemplateIDLabelsLabelIDDelete(
+    @retrofit2.http.Path("templateID") String templateID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * add a label to a template
+   * 
+   * @param templateID ID of template (required)
+   * @param labelMapping label to add (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;LabelResponse&gt;
+   */
+  @Headers({
+    "Content-Type:application/json"
+  })
+  @POST("api/v2/documents/templates/{templateID}/labels")
+  Call<LabelResponse> documentsTemplatesTemplateIDLabelsPost(
+    @retrofit2.http.Path("templateID") String templateID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**

@@ -23,7 +23,9 @@ package org.influxdata.client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 
 import org.influxdata.client.domain.Document;
@@ -237,11 +239,70 @@ class ITTemplatesApi extends AbstractITClientTest {
     }
 
     @Test
+    void labels() {
+
+        LabelsApi labelsApi = influxDBClient.getLabelsApi();
+
+        Document template = templatesApi.createTemplate(createDoc());
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties, organization.getId());
+
+        List<Label> labels = templatesApi.getLabels(template);
+        Assertions.assertThat(labels).hasSize(0);
+
+        Label addedLabel = templatesApi.addLabel(label, template).getLabel();
+        Assertions.assertThat(addedLabel).isNotNull();
+        Assertions.assertThat(addedLabel.getId()).isEqualTo(label.getId());
+        Assertions.assertThat(addedLabel.getName()).isEqualTo(label.getName());
+        Assertions.assertThat(addedLabel.getProperties()).isEqualTo(label.getProperties());
+
+        labels = templatesApi.getLabels(template);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
+        Assertions.assertThat(labels.get(0).getName()).isEqualTo(label.getName());
+
+        templatesApi.deleteLabel(label, template);
+
+        labels = templatesApi.getLabels(template);
+        Assertions.assertThat(labels).hasSize(0);
+    }
+
+    @Test
+    void labelAddNotExists() {
+
+        Document template = templatesApi.createTemplate(createDoc());
+
+        Assertions.assertThatThrownBy(() -> templatesApi.addLabel("020f755c3c082000", template.getId()))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void labelDeleteNotExists() {
+
+        Document template = templatesApi.createTemplate(createDoc());
+
+        Assertions.assertThatThrownBy(() -> templatesApi.deleteLabel("020f755c3c082000", template.getId()))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
     @Disabled
     //TODO https://github.com/influxdata/influxdb/issues/12968
     void cloneTemplate() {
 
         Document template = templatesApi.createTemplate(createDoc());
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("color", "green");
+        properties.put("location", "west");
+
+        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties, organization.getId());
+
+        templatesApi.addLabel(label, template);
 
         Document cloned = templatesApi.cloneTemplate(generateName("cloned-template"), template.getId());
 
@@ -250,6 +311,10 @@ class ITTemplatesApi extends AbstractITClientTest {
         Assertions.assertThat(cloned.getMeta()).isNotNull();
         Assertions.assertThat(cloned.getMeta().getVersion()).isEqualTo("1");
         Assertions.assertThat(cloned.getMeta().getName()).startsWith("cloned-template");
+
+        List<Label> labels = templatesApi.getLabels(cloned);
+        Assertions.assertThat(labels).hasSize(1);
+        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
     }
 
     @Nonnull

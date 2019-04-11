@@ -28,6 +28,8 @@ import org.influxdata.client.domain.Document;
 import org.influxdata.client.domain.DocumentCreate;
 import org.influxdata.client.domain.DocumentListEntry;
 import org.influxdata.client.domain.DocumentUpdate;
+import org.influxdata.client.domain.Label;
+import org.influxdata.client.domain.LabelResponse;
 import org.influxdata.client.domain.Organization;
 
 /**
@@ -76,6 +78,60 @@ public interface TemplatesApi {
      * @param templateID ID of template to delete
      */
     void deleteTemplate(@Nonnull final String templateID);
+
+    /**
+     * List all labels for a template.
+     *
+     * @param template the template
+     * @return return a list of all labels for a template
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final Document template);
+
+    /**
+     * List all labels for a template.
+     *
+     * @param templateID ID of template
+     * @return return a list of all labels for a template
+     */
+    @Nonnull
+    List<Label> getLabels(@Nonnull final String templateID);
+
+    /**
+     * Add a label to a template.
+     *
+     * @param label    label to add
+     * @param template the template
+     * @return added label
+     */
+    @Nonnull
+    LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Document template);
+
+    /**
+     * Add a label to a template.
+     *
+     * @param templateID ID of template
+     * @param labelID    the ID of label to add
+     * @return added label
+     */
+    @Nonnull
+    LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String templateID);
+
+    /**
+     * Delete a label from a template.
+     *
+     * @param label    the label
+     * @param template the template
+     */
+    void deleteLabel(@Nonnull final Label label, @Nonnull final Document template);
+
+    /**
+     * Delete a label from a template.
+     *
+     * @param templateID   ID of template
+     * @param labelID the label ID
+     */
+    void deleteLabel(@Nonnull final String labelID, @Nonnull final String templateID);
 
     /**
      * Clone a template.
