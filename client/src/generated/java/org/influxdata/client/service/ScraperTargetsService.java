@@ -66,9 +66,9 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * Retrieve a  scraper target
+   * get a scraper target by id
    * 
-   * @param scraperTargetID ID of of the scraper target to get (required)
+   * @param scraperTargetID id of the scraper target (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ScraperTargetResponse&gt;
    */

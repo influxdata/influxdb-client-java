@@ -785,24 +785,24 @@ paths:
     get:
       tags:
         - ScraperTargets
-      summary: Retrieve a  scraper target
+      summary: get a scraper target by id
       parameters:
         - $ref: '#/components/parameters/TraceSpan'
         - in: path
           name: scraperTargetID
+          required: true
           schema:
             type: string
-          required: true
-          description: ID of of the scraper target to get
+          description: id of the scraper target
       responses:
         '200':
-          description: the scraper target details
+          description: scraper target updated
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ScraperTargetResponse"
         default:
-          description: unexpected error
+          description: internal server error
           content:
             application/json:
               schema:
@@ -7127,7 +7127,7 @@ components:
           description: must specify one of orgID and org
         labels:
           type: array
-          description: this is an array of label strings that will be added as labels to the document
+          description: this is an array of label IDs that will be added as labels to the document
           items:
             type: string
       required:

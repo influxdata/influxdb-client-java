@@ -138,10 +138,10 @@ public class DocumentCreate {
   }
 
    /**
-   * this is an array of label strings that will be added as labels to the document
+   * this is an array of label IDs that will be added as labels to the document
    * @return labels
   **/
-  @ApiModelProperty(value = "this is an array of label strings that will be added as labels to the document")
+  @ApiModelProperty(value = "this is an array of label IDs that will be added as labels to the document")
   public List<String> getLabels() {
     return labels;
   }

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
+import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Document;
 import org.influxdata.client.domain.DocumentCreate;
 import org.influxdata.client.domain.DocumentListEntry;
@@ -62,6 +63,8 @@ class ITTemplatesApi extends AbstractITClientTest {
 
         templatesApi.findTemplates(organization)
                 .forEach(documentListEntry -> templatesApi.deleteTemplate(documentListEntry.getId()));
+
+        influxDBClient.setLogLevel(LogLevel.BODY);
     }
 
     @Test
@@ -85,7 +88,7 @@ class ITTemplatesApi extends AbstractITClientTest {
         documentCreate.setContent("templates content");
 
         ArrayList<String> labels = new ArrayList<>();
-        labels.add(label.getName());
+        labels.add(label.getId());
         documentCreate.setLabels(labels);
 
         Document template = templatesApi.createTemplate(documentCreate);
@@ -117,7 +120,7 @@ class ITTemplatesApi extends AbstractITClientTest {
         DocumentCreate documentCreate = createDoc();
 
         ArrayList<String> labels = new ArrayList<>();
-        labels.add(generateName("not_exists_label_"));
+        labels.add("020f755c3c082000");
         documentCreate.setLabels(labels);
 
         Assertions.assertThatThrownBy(() -> templatesApi.createTemplate(documentCreate))
@@ -187,7 +190,7 @@ class ITTemplatesApi extends AbstractITClientTest {
         documentCreate.setMeta(meta);
         documentCreate.setOrgID(org.getId());
         documentCreate.setContent("templates content");
-        documentCreate.setLabels(Arrays.asList(label.getName()));
+        documentCreate.setLabels(Arrays.asList(label.getId()));
 
         templatesApi.createTemplate(documentCreate);
         templates = templatesApi.findTemplates(org);
