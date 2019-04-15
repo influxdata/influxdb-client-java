@@ -1860,7 +1860,6 @@ paths:
           - in: query
             name: orgID
             description: specifies the organization of the resource
-            required: true
             schema:
               type: string
       responses:

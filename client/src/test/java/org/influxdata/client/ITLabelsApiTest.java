@@ -28,6 +28,7 @@ import java.util.Map;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LabelCreateRequest;
 import org.influxdata.client.domain.Organization;
+import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -104,9 +105,9 @@ class ITLabelsApiTest extends AbstractITClientTest {
     @Test
     void findLabelByIDNull() {
 
-        Label labelByID = labelsApi.findLabelByID("020f755c3c082000");
-
-        Assertions.assertThat(labelByID).isNull();
+        Assertions.assertThatThrownBy(() -> labelsApi.findLabelByID("020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("label not found");
     }
 
     @Test
@@ -149,8 +150,9 @@ class ITLabelsApiTest extends AbstractITClientTest {
         // delete user
         labelsApi.deleteLabel(createdLabel);
 
-        foundLabel = labelsApi.findLabelByID(createdLabel.getId());
-        Assertions.assertThat(foundLabel).isNull();
+        Assertions.assertThatThrownBy(() -> labelsApi.findLabelByID(createdLabel.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("label not found");
     }
 
     @Test
@@ -208,7 +210,7 @@ class ITLabelsApiTest extends AbstractITClientTest {
     @Test
     void cloneLabelNotFound() {
         Assertions.assertThatThrownBy(() -> labelsApi.cloneLabel(generateName("cloned"), "020f755c3c082000"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("NotFound Label with ID: 020f755c3c082000");
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("label not found");
     }
 }

@@ -37,7 +37,6 @@ import org.influxdata.client.domain.LabelUpdate;
 import org.influxdata.client.domain.LabelsResponse;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.service.LabelsService;
-import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.internal.AbstractRestClient;
 
 import retrofit2.Call;
@@ -175,15 +174,8 @@ final class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
         Arguments.checkNonEmpty(labelID, "labelID");
 
         Call<LabelResponse> call = service.labelsLabelIDGet(labelID, null);
-        LabelResponse labelResponse = execute(call, NotFoundException.class);
 
-        if (labelResponse == null) {
-            return null;
-        }
-
-        LOG.log(Level.FINEST, "findLabelByID response: {0}", labelResponse);
-
-        return labelResponse.getLabel();
+        return execute(call).getLabel();
     }
 
     @Nonnull

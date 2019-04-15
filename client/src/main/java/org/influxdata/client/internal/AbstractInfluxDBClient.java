@@ -118,6 +118,7 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
             return execute(healthCall);
         } catch (InfluxException e) {
             Check health = new Check();
+            health.setName("influxdb");
             health.setStatus(Check.StatusEnum.FAIL);
             health.setMessage(e.getMessage());
 

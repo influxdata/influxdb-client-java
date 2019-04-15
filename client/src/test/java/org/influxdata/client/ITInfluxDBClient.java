@@ -51,6 +51,7 @@ class ITInfluxDBClient extends AbstractITClientTest {
         Check check = influxDBClient.health();
 
         Assertions.assertThat(check).isNotNull();
+        Assertions.assertThat(check.getName()).isEqualTo("influxdb");
         Assertions.assertThat(check.getStatus()).isEqualTo(Check.StatusEnum.PASS);
         Assertions.assertThat(check.getMessage()).isEqualTo("ready for queries and writes");
     }
@@ -62,6 +63,7 @@ class ITInfluxDBClient extends AbstractITClientTest {
         Check check = clientNotRunning.health();
 
         Assertions.assertThat(check).isNotNull();
+        Assertions.assertThat(check.getName()).isEqualTo("influxdb");
         Assertions.assertThat(check.getStatus()).isEqualTo(Check.StatusEnum.FAIL);
         Assertions.assertThat(check.getMessage()).startsWith("Failed to connect to");
 
