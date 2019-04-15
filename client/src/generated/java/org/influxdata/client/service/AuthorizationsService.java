@@ -64,11 +64,13 @@ public interface AuthorizationsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param userID filter authorizations belonging to a user id (optional)
    * @param user filter authorizations belonging to a user name (optional)
+   * @param orgID filter authorizations belonging to a org id (optional)
+   * @param org filter authorizations belonging to a org name (optional)
    * @return Call&lt;Authorizations&gt;
    */
   @GET("api/v2/authorizations")
   Call<Authorizations> authorizationsGet(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("userID") String userID, @retrofit2.http.Query("user") String user
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("userID") String userID, @retrofit2.http.Query("user") String user, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("org") String org
   );
 
   /**

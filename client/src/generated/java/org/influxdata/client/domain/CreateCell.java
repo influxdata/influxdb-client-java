@@ -49,10 +49,6 @@ public class CreateCell {
   @SerializedName(SERIALIZED_NAME_H)
   private Integer h = null;
 
-  public static final String SERIALIZED_NAME_VIEW_I_D = "viewID";
-  @SerializedName(SERIALIZED_NAME_VIEW_I_D)
-  private String viewID = null;
-
   public static final String SERIALIZED_NAME_USING_VIEW = "usingView";
   @SerializedName(SERIALIZED_NAME_USING_VIEW)
   private String usingView = null;
@@ -147,24 +143,6 @@ public class CreateCell {
     this.h = h;
   }
 
-  public CreateCell viewID(String viewID) {
-    this.viewID = viewID;
-    return this;
-  }
-
-   /**
-   * uses the view provided in the request
-   * @return viewID
-  **/
-  @ApiModelProperty(value = "uses the view provided in the request")
-  public String getViewID() {
-    return viewID;
-  }
-
-  public void setViewID(String viewID) {
-    this.viewID = viewID;
-  }
-
   public CreateCell usingView(String usingView) {
     this.usingView = usingView;
     return this;
@@ -198,13 +176,12 @@ public class CreateCell {
         Objects.equals(this.y, createCell.y) &&
         Objects.equals(this.w, createCell.w) &&
         Objects.equals(this.h, createCell.h) &&
-        Objects.equals(this.viewID, createCell.viewID) &&
         Objects.equals(this.usingView, createCell.usingView);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, x, y, w, h, viewID, usingView);
+    return Objects.hash(name, x, y, w, h, usingView);
   }
 
 
@@ -217,7 +194,6 @@ public class CreateCell {
     sb.append("    y: ").append(toIndentedString(y)).append("\n");
     sb.append("    w: ").append(toIndentedString(w)).append("\n");
     sb.append("    h: ").append(toIndentedString(h)).append("\n");
-    sb.append("    viewID: ").append(toIndentedString(viewID)).append("\n");
     sb.append("    usingView: ").append(toIndentedString(usingView)).append("\n");
     sb.append("}");
     return sb.toString();
