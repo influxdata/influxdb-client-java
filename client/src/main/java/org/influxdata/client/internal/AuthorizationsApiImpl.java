@@ -117,19 +117,34 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
 
         Arguments.checkNotNull(user, "User is required");
 
-        return findAuthorizations(user.getId(), null);
+        return findAuthorizations(user.getId(), null, null);
     }
 
     @Nonnull
     @Override
     public List<Authorization> findAuthorizationsByUserID(@Nullable final String userID) {
-        return findAuthorizations(userID, null);
+        return findAuthorizations(userID, null, null);
     }
 
     @Nonnull
     @Override
     public List<Authorization> findAuthorizationsByUserName(@Nullable final String userName) {
-        return findAuthorizations(null, userName);
+        return findAuthorizations(null, userName, null);
+    }
+
+    @Nonnull
+    @Override
+    public List<Authorization> findAuthorizationsByOrg(@Nonnull final Organization organization) {
+
+        Arguments.checkNotNull(organization, "organization");
+
+        return findAuthorizationsByOrgID(organization.getId());
+    }
+
+    @Nonnull
+    @Override
+    public List<Authorization> findAuthorizationsByOrgID(@Nullable final String orgID) {
+        return findAuthorizations(null, null, orgID);
     }
 
     @Nonnull
@@ -191,9 +206,11 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
     }
 
     @Nonnull
-    private List<Authorization> findAuthorizations(@Nullable final String userID, @Nullable final String userName) {
+    private List<Authorization> findAuthorizations(@Nullable final String userID,
+                                                   @Nullable final String userName,
+                                                   @Nullable final String orgID) {
 
-        Call<Authorizations> authorizationsCall = service.authorizationsGet(null, userID, userName);
+        Call<Authorizations> authorizationsCall = service.authorizationsGet(null, userID, userName, orgID, null);
 
         Authorizations authorizations = execute(authorizationsCall);
         LOG.log(Level.FINEST, "findAuthorizations found: {0}", authorizations);

@@ -34,7 +34,6 @@ import org.influxdata.client.domain.Documents;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LabelMapping;
 import org.influxdata.client.domain.LabelResponse;
-import org.influxdata.client.domain.Labels;
 import org.influxdata.client.domain.LabelsResponse;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.service.TemplatesService;
@@ -128,10 +127,7 @@ final class TemplatesApiImpl extends AbstractRestClient implements TemplatesApi 
 
         Call<LabelsResponse> call = service.documentsTemplatesTemplateIDLabelsGet(templateID, null);
 
-        Labels labels = execute(call).getLabels();
-
-        //TODO https://github.com/influxdata/influxdb/issues/13317
-        return labels != null ? labels : new Labels();
+        return execute(call).getLabels();
     }
 
     @Nonnull

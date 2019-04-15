@@ -393,7 +393,6 @@ class ITDashboardsApi extends AbstractITClientTest {
                 .w(15)
                 .x(20)
                 .y(25)
-                .viewID("020f755c3c082000")
                 .name("my-cell");
 
         Cell cell = dashboardsApi.addCell(createCell, dashboard);
@@ -408,7 +407,6 @@ class ITDashboardsApi extends AbstractITClientTest {
         Assertions.assertThat(cell.getLinks()).isNotNull();
         Assertions.assertThat(cell.getLinks().getSelf()).isEqualTo("/api/v2/dashboards/" + dashboard.getId() + "/cells/" + cell.getId());
         Assertions.assertThat(cell.getLinks().getView()).isEqualTo("/api/v2/dashboards/" + dashboard.getId() + "/cells/" + cell.getId() + "/view");
-        Assertions.assertThat(cell.getViewID()).isNull();
 
         Cells cells = dashboardsApi.findDashboardByID(dashboard.getId()).getCells();
         Assertions.assertThat(cells).hasSize(1);
@@ -426,7 +424,6 @@ class ITDashboardsApi extends AbstractITClientTest {
                 .w(15)
                 .x(20)
                 .y(25)
-                .viewID("020f755c3c082000")
                 .name("my-cell");
 
         Cell cell = dashboardsApi.addCell(createCell, dashboard);
@@ -519,8 +516,7 @@ class ITDashboardsApi extends AbstractITClientTest {
                 .w(15)
                 .x(20)
                 .y(25)
-                .name("my-cell-2")
-                .viewID(view.getId());
+                .name("my-cell-2");
 
         Cell cellWithView = dashboardsApi.addCell(newCell, dashboard);
 
@@ -634,7 +630,6 @@ class ITDashboardsApi extends AbstractITClientTest {
                 .name("my-cell");
 
         Cell cell = dashboardsApi.addCell(createCell, dashboard);
-        Assertions.assertThat(cell.getViewID()).isNull();
 
         View view = new View()
                 .name("view-name")
@@ -649,9 +644,6 @@ class ITDashboardsApi extends AbstractITClientTest {
         Assertions.assertThat(((MarkdownViewProperties) created.getProperties()).getShape()).isEqualTo(MarkdownViewProperties.ShapeEnum.CHRONOGRAF_V2);
 
         cell = dashboardsApi.findDashboardByID(dashboard.getId()).getCells().get(0);
-
-        //TODO https://github.com/influxdata/influxdb/issues/13080
-        // Assertions.assertThat(cell.getViewID()).isNotNull();
 
         View updated = dashboardsApi.updateCellView(view.name("updated-name"), cell, dashboard);
         Assertions.assertThat(updated.getId()).isNotNull();

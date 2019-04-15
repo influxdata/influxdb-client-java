@@ -152,4 +152,22 @@ public interface AuthorizationsApi {
      */
     @Nonnull
     List<Authorization> findAuthorizationsByUserName(@Nullable final String userName);
+
+    /**
+     * List all authorizations for specified {@code organization}.
+     *
+     * @param organization filter authorizations belonging to a org
+     * @return A list of authorizations
+     */
+    @Nonnull
+    List<Authorization> findAuthorizationsByOrg(@Nonnull final Organization organization);
+
+    /**
+     * List all authorizations for specified {@code orgID}.
+     *
+     * @param orgID filter authorizations belonging to a org id
+     * @return A list of authorizations
+     */
+    @Nonnull
+    List<Authorization> findAuthorizationsByOrgID(@Nullable final String orgID);
 }

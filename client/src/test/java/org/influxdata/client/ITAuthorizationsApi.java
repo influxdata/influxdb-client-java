@@ -259,6 +259,25 @@ class ITAuthorizationsApi extends AbstractITClientTest {
     }
 
     @Test
+    void findAuthorizationsByOrg() {
+
+        int size = authorizationsApi.findAuthorizationsByOrg(organization).size();
+
+        authorizationsApi.createAuthorization(organization, newPermissions());
+
+        List<Authorization> authorizations = authorizationsApi.findAuthorizationsByOrg(organization);
+        Assertions.assertThat(authorizations).hasSize(size + 1);
+    }
+
+    @Test
+    void findAuthorizationsByOrgNotFound() {
+
+        List<Authorization> authorizationsByOrgID = authorizationsApi.findAuthorizationsByOrgID("ffffffffffffffff");
+
+        Assertions.assertThat(authorizationsByOrgID).isEmpty();
+    }
+
+    @Test
     void updateAuthorizationStatus() {
 
         PermissionResource resource = new PermissionResource();

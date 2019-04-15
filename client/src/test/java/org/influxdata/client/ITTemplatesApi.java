@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
-import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Document;
 import org.influxdata.client.domain.DocumentCreate;
 import org.influxdata.client.domain.DocumentListEntry;
@@ -63,8 +62,6 @@ class ITTemplatesApi extends AbstractITClientTest {
 
         templatesApi.findTemplates(organization)
                 .forEach(documentListEntry -> templatesApi.deleteTemplate(documentListEntry.getId()));
-
-        influxDBClient.setLogLevel(LogLevel.BODY);
     }
 
     @Test

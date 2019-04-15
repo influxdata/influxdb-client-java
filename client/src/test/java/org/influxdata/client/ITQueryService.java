@@ -24,7 +24,6 @@ package org.influxdata.client;
 import java.io.IOException;
 import java.util.Map;
 
-import org.influxdata.LogLevel;
 import org.influxdata.client.domain.ASTResponse;
 import org.influxdata.client.domain.AnalyzeQueryResponse;
 import org.influxdata.client.domain.CallExpression;
@@ -59,7 +58,6 @@ class ITQueryService extends AbstractITClientTest {
     @BeforeEach
     void setUp() {
         queryService = influxDBClient.getService(QueryService.class);
-        influxDBClient.setLogLevel(LogLevel.BODY);
     }
 
     @Test
