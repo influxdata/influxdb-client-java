@@ -31,6 +31,7 @@ import org.influxdata.client.domain.OperationLogs;
 import org.influxdata.client.domain.User;
 import org.influxdata.exceptions.ForbiddenException;
 import org.influxdata.exceptions.NotFoundException;
+import org.influxdata.exceptions.UnauthorizedException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -148,9 +149,9 @@ class ITUsersApiTest extends AbstractITClientTest {
 
         influxDBClient.close();
 
-        User me = usersApi.me();
-
-        Assertions.assertThat(me).isNull();
+        Assertions.assertThatThrownBy(() -> usersApi.me())
+                .isInstanceOf(UnauthorizedException.class)
+                .hasMessage("unauthorized access");
     }
 
     @Test

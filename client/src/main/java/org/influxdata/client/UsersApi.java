@@ -124,7 +124,7 @@ public interface UsersApi {
      *
      * @return user
      */
-    @Nullable
+    @Nonnull
     User me();
 
     /**

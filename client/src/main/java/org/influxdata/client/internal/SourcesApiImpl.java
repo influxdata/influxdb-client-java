@@ -35,7 +35,6 @@ import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.Source;
 import org.influxdata.client.domain.Sources;
 import org.influxdata.client.service.SourcesService;
-import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.internal.AbstractRestClient;
 
 import retrofit2.Call;

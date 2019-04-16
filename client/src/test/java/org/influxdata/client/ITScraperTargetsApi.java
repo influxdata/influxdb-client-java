@@ -59,8 +59,8 @@ class ITScraperTargetsApi extends AbstractITClientTest {
         bucket = influxDBClient.getBucketsApi().findBucketByName("my-bucket");
         organization = findMyOrg();
 
-//        scraperTargetsApi.findScraperTargets()
-//                .forEach(scraperTargetResponse -> scraperTargetsApi.deleteScraperTarget(scraperTargetResponse));
+        scraperTargetsApi.findScraperTargets()
+                .forEach(scraperTargetResponse -> scraperTargetsApi.deleteScraperTarget(scraperTargetResponse));
     }
 
     @Test

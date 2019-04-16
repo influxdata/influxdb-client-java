@@ -116,7 +116,6 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
         return execute(userCall);
     }
 
-    @Nonnull
     @Override
     public void updateUserPassword(@Nonnull final User user,
                                    @Nonnull final String oldPassword,
@@ -129,7 +128,6 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
         updateUserPassword(user.getId(), user.getName(), oldPassword, newPassword);
     }
 
-    @Nonnull
     @Override
     public void updateUserPassword(@Nonnull final String userID,
                                    @Nonnull final String oldPassword,
@@ -190,13 +188,13 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
         return createUser(cloned);
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public User me() {
 
         Call<User> call = service.meGet(null);
 
-        return execute(call, UnauthorizedException.class);
+        return execute(call);
     }
 
     @Override
@@ -206,11 +204,6 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
         Arguments.checkNotNull(newPassword, "new password");
 
         User user = me();
-        if (user == null) {
-            LOG.warning("User is not authenticated.");
-
-            return;
-        }
 
         String credentials = Credentials
                 .basic(user.getName(), oldPassword);
@@ -264,7 +257,6 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
         return execute(call);
     }
 
-    @Nonnull
     private void updateUserPassword(@Nonnull final String userID,
                                     @Nonnull final String userName,
                                     @Nonnull final String oldPassword,

@@ -145,7 +145,7 @@ public interface ScraperTargetsApi {
      * @return all scraper targets
      */
     @Nonnull
-    List<ScraperTargetResponse> findScraperTargetsByOrg(@Nonnull Organization organization);
+    List<ScraperTargetResponse> findScraperTargetsByOrg(@Nonnull final Organization organization);
 
     /**
      * Get all scraper targets.
@@ -154,7 +154,7 @@ public interface ScraperTargetsApi {
      * @return all scraper targets
      */
     @Nonnull
-    List<ScraperTargetResponse> findScraperTargetsByOrgId(@Nullable String orgID);
+    List<ScraperTargetResponse> findScraperTargetsByOrgId(@Nullable final String orgID);
 
     /**
      * List all users with member privileges for a ScraperTarget.
