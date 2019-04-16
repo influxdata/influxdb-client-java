@@ -94,7 +94,7 @@ public interface SourcesApi {
      * @param sourceID ID of source to get
      * @return source details
      */
-    @Nullable
+    @Nonnull
     Source findSourceByID(@Nonnull final String sourceID);
 
     /**

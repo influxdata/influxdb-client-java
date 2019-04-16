@@ -117,7 +117,7 @@ public interface LabelsApi {
      * @param labelID ID of a label to get
      * @return label details
      */
-    @Nullable
+    @Nonnull
     Label findLabelByID(@Nonnull final String labelID);
 
     /**

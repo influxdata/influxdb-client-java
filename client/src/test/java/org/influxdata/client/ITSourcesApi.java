@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
+import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.Source;
@@ -34,7 +35,6 @@ import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -53,6 +53,9 @@ class ITSourcesApi extends AbstractITClientTest {
     void setUp() {
 
         sourcesApi = influxDBClient.getSourcesApi();
+        sourcesApi.findSources().stream()
+                .filter(source -> !Boolean.TRUE.equals(source.isDefault()))
+                .forEach(source -> sourcesApi.deleteSource(source));
     }
 
     @Test
@@ -101,8 +104,9 @@ class ITSourcesApi extends AbstractITClientTest {
         source.setInsecureSkipVerify(false);
 
         source = sourcesApi.createSource(source);
-        source.setInsecureSkipVerify(true);
+        Assertions.assertThat(source.isInsecureSkipVerify()).isNull();
 
+        source.setInsecureSkipVerify(true);
         source = sourcesApi.updateSource(source);
 
         Assertions.assertThat(source.isInsecureSkipVerify()).isTrue();
@@ -120,8 +124,10 @@ class ITSourcesApi extends AbstractITClientTest {
         // delete source
         sourcesApi.deleteSource(createdSource);
 
-        foundSource = sourcesApi.findSourceByID(createdSource.getId());
-        Assertions.assertThat(foundSource).isNull();
+        Assertions.assertThatThrownBy(() -> sourcesApi.findSourceByID(createdSource.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("source not found");
+
     }
 
     @Test
@@ -143,9 +149,9 @@ class ITSourcesApi extends AbstractITClientTest {
     @Test
     void findSourceByIDNull() {
 
-        Source source = sourcesApi.findSourceByID("020f755c3d082000");
-
-        Assertions.assertThat(source).isNull();
+        Assertions.assertThatThrownBy(() -> sourcesApi.findSourceByID("020f755c3d082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("source not found");
     }
 
     @Test
@@ -164,6 +170,7 @@ class ITSourcesApi extends AbstractITClientTest {
 
         Source source = sourcesApi.createSource(newSource());
 
+        influxDBClient.setLogLevel(LogLevel.BODY);
         List<Bucket> buckets = sourcesApi.findBucketsBySource(source);
 
         Assertions.assertThat(buckets).isNotNull();
@@ -216,8 +223,8 @@ class ITSourcesApi extends AbstractITClientTest {
     @Test
     void cloneSourceNotFound() {
         Assertions.assertThatThrownBy(() -> sourcesApi.cloneSource(generateName("cloned"), "da7aba5e5d81e550"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("NotFound Source with ID: da7aba5e5d81e550");
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("source not found");
     }
 
     @Nonnull

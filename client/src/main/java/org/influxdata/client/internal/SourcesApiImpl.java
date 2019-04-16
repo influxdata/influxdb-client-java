@@ -105,9 +105,6 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
         Source source = findSourceByID(sourceID);
-        if (source == null) {
-            throw new IllegalStateException("NotFound Source with ID: " + sourceID);
-        }
 
         return cloneSource(clonedName, source);
     }
@@ -137,7 +134,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
         return createSource(cloned);
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public Source findSourceByID(@Nonnull final String sourceID) {
 
@@ -145,7 +142,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Call<Source> call = service.sourcesSourceIDGet(sourceID, null);
 
-        return execute(call, NotFoundException.class);
+        return execute(call);
     }
 
     @Nonnull

@@ -54,6 +54,10 @@ public class Cell {
   @SerializedName(SERIALIZED_NAME_H)
   private Integer h = null;
 
+  public static final String SERIALIZED_NAME_VIEW_I_D = "viewID";
+  @SerializedName(SERIALIZED_NAME_VIEW_I_D)
+  private String viewID = null;
+
   public Cell id(String id) {
     this.id = id;
     return this;
@@ -162,6 +166,24 @@ public class Cell {
     this.h = h;
   }
 
+  public Cell viewID(String viewID) {
+    this.viewID = viewID;
+    return this;
+  }
+
+   /**
+   * The reference to a view from the views API
+   * @return viewID
+  **/
+  @ApiModelProperty(value = "The reference to a view from the views API")
+  public String getViewID() {
+    return viewID;
+  }
+
+  public void setViewID(String viewID) {
+    this.viewID = viewID;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -177,12 +199,13 @@ public class Cell {
         Objects.equals(this.x, cell.x) &&
         Objects.equals(this.y, cell.y) &&
         Objects.equals(this.w, cell.w) &&
-        Objects.equals(this.h, cell.h);
+        Objects.equals(this.h, cell.h) &&
+        Objects.equals(this.viewID, cell.viewID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, links, x, y, w, h);
+    return Objects.hash(id, links, x, y, w, h, viewID);
   }
 
 
@@ -196,6 +219,7 @@ public class Cell {
     sb.append("    y: ").append(toIndentedString(y)).append("\n");
     sb.append("    w: ").append(toIndentedString(w)).append("\n");
     sb.append("    h: ").append(toIndentedString(h)).append("\n");
+    sb.append("    viewID: ").append(toIndentedString(viewID)).append("\n");
     sb.append("}");
     return sb.toString();
   }

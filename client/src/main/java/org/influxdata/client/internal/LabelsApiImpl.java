@@ -167,7 +167,7 @@ final class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
         return createLabel(cloned);
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public Label findLabelByID(@Nonnull final String labelID) {
 
