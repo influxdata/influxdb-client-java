@@ -203,9 +203,9 @@ class ITTasksApi extends AbstractITClientTest {
     @Test
     void findTaskByIDNull() {
 
-        Task task = tasksApi.findTaskByID("020f755c3d082000");
-
-        Assertions.assertThat(task).isNull();
+        Assertions.assertThatThrownBy(() -> tasksApi.findTaskByID("020f755c3d082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("failed to find task");
     }
 
     @Test
@@ -278,8 +278,9 @@ class ITTasksApi extends AbstractITClientTest {
         // delete task
         tasksApi.deleteTask(createdTask);
 
-        foundTask = tasksApi.findTaskByID(createdTask.getId());
-        Assertions.assertThat(foundTask).isNull();
+        Assertions.assertThatThrownBy(() -> tasksApi.findTaskByID(createdTask.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("failed to find task");
     }
 
     @Test
@@ -474,8 +475,9 @@ class ITTasksApi extends AbstractITClientTest {
 
         Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "5s", organization);
 
-        Run run = tasksApi.getRun(task.getId(), "020f755c3c082000");
-        Assertions.assertThat(run).isNull();
+        Assertions.assertThatThrownBy(() -> tasksApi.getRun(task.getId(), "020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("failed to find run");
     }
 
     @Test
@@ -525,9 +527,9 @@ class ITTasksApi extends AbstractITClientTest {
 
         Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "5s", organization);
 
-        Run run = tasksApi.retryRun(task.getId(), "020f755c3c082000");
-
-        Assertions.assertThat(run).isNull();
+        Assertions.assertThatThrownBy(() -> tasksApi.retryRun(task.getId(), "020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("failed to retry run");
     }
 
     @Test
@@ -678,8 +680,8 @@ class ITTasksApi extends AbstractITClientTest {
     @Test
     void cloneTaskNotFound() {
         Assertions.assertThatThrownBy(() -> tasksApi.cloneTask("020f755c3c082000"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("NotFound Task with ID: 020f755c3c082000");
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("failed to find task");
     }
 
     @Nonnull

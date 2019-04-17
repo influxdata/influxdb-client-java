@@ -73,7 +73,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         this.service = service;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public Task findTaskByID(@Nonnull final String taskID) {
 
@@ -81,7 +81,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Call<Task> call = service.tasksTaskIDGet(taskID, null);
 
-        return execute(call, NotFoundException.class);
+        return execute(call);
     }
 
     @Nonnull
@@ -495,7 +495,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         return execute.getRuns();
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public Run getRun(@Nonnull final Run run) {
 
@@ -504,7 +504,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         return getRun(run.getTaskID(), run.getId());
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public Run getRun(@Nonnull final String taskID, @Nonnull final String runID) {
 
@@ -513,7 +513,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Call<Run> run = service.tasksTaskIDRunsRunIDGet(taskID, runID, null);
 
-        return execute(run, NotFoundException.class);
+        return execute(run);
     }
 
     @Nonnull
@@ -561,7 +561,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         return execute(call);
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public Run retryRun(@Nonnull final Run run) {
 
@@ -570,7 +570,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         return retryRun(run.getTaskID(), run.getId());
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public Run retryRun(@Nonnull final String taskID, @Nonnull final String runID) {
 
@@ -579,7 +579,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Call<Run> run = service.tasksTaskIDRunsRunIDRetryPost(taskID, runID, null);
 
-        return execute(run, NotFoundException.class);
+        return execute(run);
     }
 
     @Override

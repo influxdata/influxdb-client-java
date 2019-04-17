@@ -123,7 +123,7 @@ public interface AuthorizationsApi {
      * @param authorizationID ID of authorization to get
      * @return authorization details
      */
-    @Nullable
+    @Nonnull
     Authorization findAuthorizationByID(@Nonnull final String authorizationID);
 
     /**

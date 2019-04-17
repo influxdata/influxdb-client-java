@@ -77,6 +77,7 @@ class ITTemplatesApi extends AbstractITClientTest {
 
         DocumentMeta meta = new DocumentMeta();
         meta.setName(generateName("document-name"));
+        meta.setType("testing");
         meta.setVersion("1");
 
         DocumentCreate documentCreate = new DocumentCreate();
@@ -96,6 +97,7 @@ class ITTemplatesApi extends AbstractITClientTest {
         Assertions.assertThat(template.getMeta()).isNotNull();
         Assertions.assertThat(template.getMeta().getName()).isEqualTo(meta.getName());
         Assertions.assertThat(template.getMeta().getVersion()).isEqualTo("1");
+        Assertions.assertThat(template.getMeta().getType()).isEqualTo("testing");
         Assertions.assertThat(template.getLinks()).isNotNull();
         Assertions.assertThat(template.getLinks().getSelf()).isEqualTo("/api/v2/documents/templates/" + template.getId());
 

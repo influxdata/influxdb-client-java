@@ -22,13 +22,13 @@ public interface SourcesService {
   /**
    * Get all sources
    * 
-   * @param org specifies the organization of the resource (required)
    * @param zapTraceSpan OpenTracing span context (optional)
+   * @param org specifies the organization of the resource (optional)
    * @return Call&lt;Sources&gt;
    */
   @GET("api/v2/sources")
   Call<Sources> sourcesGet(
-    @retrofit2.http.Query("org") String org, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("org") String org
   );
 
   /**
@@ -50,13 +50,13 @@ public interface SourcesService {
    * Get a sources buckets (will return dbrps in the form of buckets if it is a v1 source)
    * 
    * @param sourceID ID of the source (required)
-   * @param org specifies the organization of the resource (required)
    * @param zapTraceSpan OpenTracing span context (optional)
+   * @param org specifies the organization of the resource (optional)
    * @return Call&lt;Buckets&gt;
    */
   @GET("api/v2/sources/{sourceID}/buckets")
   Call<Buckets> sourcesSourceIDBucketsGet(
-    @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Query("org") String org, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("org") String org
   );
 
   /**

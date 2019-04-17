@@ -35,7 +35,6 @@ import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.service.AuthorizationsService;
-import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.internal.AbstractRestClient;
 
 import retrofit2.Call;
@@ -100,7 +99,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
         return findAuthorizationsByUserID(null);
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public Authorization findAuthorizationByID(@Nonnull final String authorizationID) {
 
@@ -108,7 +107,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
 
         Call<Authorization> call = service.authorizationsAuthIDGet(authorizationID, null);
 
-        return execute(call, NotFoundException.class);
+        return execute(call);
     }
 
     @Nonnull
@@ -183,9 +182,6 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
         Arguments.checkNonEmpty(authorizationID, "authorizationID");
 
         Authorization authorization = findAuthorizationByID(authorizationID);
-        if (authorization == null) {
-            throw new IllegalStateException("NotFound Authorization with ID: " + authorizationID);
-        }
 
         return cloneAuthorization(authorization);
     }

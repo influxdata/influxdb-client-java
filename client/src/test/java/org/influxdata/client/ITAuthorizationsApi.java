@@ -34,6 +34,7 @@ import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.Permission;
 import org.influxdata.client.domain.PermissionResource;
 import org.influxdata.client.domain.User;
+import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -220,9 +221,9 @@ class ITAuthorizationsApi extends AbstractITClientTest {
     @Test
     void findAuthorizationsByIDNull() {
 
-        Authorization authorization = authorizationsApi.findAuthorizationByID("020f755c3c082000");
-
-        Assertions.assertThat(authorization).isNull();
+        Assertions.assertThatThrownBy(() -> authorizationsApi.findAuthorizationByID("020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("authorization not found");
     }
 
     @Test
@@ -318,8 +319,9 @@ class ITAuthorizationsApi extends AbstractITClientTest {
         // delete authorization
         authorizationsApi.deleteAuthorization(createdAuthorization);
 
-        foundAuthorization = authorizationsApi.findAuthorizationByID(createdAuthorization.getId());
-        Assertions.assertThat(foundAuthorization).isNull();
+        Assertions.assertThatThrownBy(() -> authorizationsApi.findAuthorizationByID(createdAuthorization.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("authorization not found");
     }
 
     @Test
@@ -345,9 +347,10 @@ class ITAuthorizationsApi extends AbstractITClientTest {
 
     @Test
     void cloneAuthorizationNotFound() {
+        
         Assertions.assertThatThrownBy(() -> authorizationsApi.cloneAuthorization("020f755c3c082000"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("NotFound Authorization with ID: 020f755c3c082000");
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("authorization not found");
     }
 
     @Nonnull

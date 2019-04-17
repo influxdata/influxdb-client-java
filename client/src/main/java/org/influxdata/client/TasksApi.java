@@ -204,7 +204,7 @@ public interface TasksApi {
      * @param taskID ID of task to get
      * @return task details
      */
-    @Nullable
+    @Nonnull
     Task findTaskByID(@Nonnull final String taskID);
 
     /**
@@ -429,7 +429,7 @@ public interface TasksApi {
      * @param run the run with a taskID and a runID
      * @return a single run record for a task
      */
-    @Nullable
+    @Nonnull
     Run getRun(@Nonnull final Run run);
 
     /**
@@ -439,7 +439,7 @@ public interface TasksApi {
      * @param runID  ID of run
      * @return a single run record for a task
      */
-    @Nullable
+    @Nonnull
     Run getRun(@Nonnull final String taskID, @Nonnull final String runID);
 
     /**
@@ -486,7 +486,7 @@ public interface TasksApi {
      * @param run the run with a taskID and a runID to retry
      * @return the executed run
      */
-    @Nullable
+    @Nonnull
     Run retryRun(@Nonnull final Run run);
 
     /**
@@ -497,7 +497,7 @@ public interface TasksApi {
      * @return the executed run
      */
     //TODO Notnull - look to all Nullable
-    @Nullable
+    @Nonnull
     Run retryRun(@Nonnull final String taskID, @Nonnull final String runID);
 
     /**
