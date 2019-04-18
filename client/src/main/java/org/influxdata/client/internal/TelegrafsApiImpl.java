@@ -49,7 +49,6 @@ import org.influxdata.client.domain.Telegrafs;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.service.TelegrafsService;
 import org.influxdata.exceptions.InfluxException;
-import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.internal.AbstractRestClient;
 
 import okhttp3.ResponseBody;
@@ -202,9 +201,6 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         Arguments.checkNonEmpty(telegrafConfigID, "telegrafConfigID");
 
         Telegraf telegrafConfig = findTelegrafByID(telegrafConfigID);
-        if (telegrafConfig == null) {
-            throw new IllegalStateException("NotFound Telegraf with ID: " + telegrafConfigID);
-        }
 
         return cloneTelegraf(clonedName, telegrafConfig);
     }
@@ -228,7 +224,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         return created;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public Telegraf findTelegrafByID(@Nonnull final String telegrafID) {
 
@@ -236,7 +232,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
         Call<Telegraf> telegrafConfig = service.telegrafsTelegrafIDGet(telegrafID, null, "application/json");
 
-        return execute(telegrafConfig, NotFoundException.class);
+        return execute(telegrafConfig);
     }
 
     @Nonnull

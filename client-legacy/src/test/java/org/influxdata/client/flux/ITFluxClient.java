@@ -148,7 +148,7 @@ class ITFluxClient extends AbstractITFluxClient {
 
         String flux = FROM_FLUX_DATABASE + "\n"
                 + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
-                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" AND r[\"_field\"] == \"free\"))\n"
+                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n"
                 + "\t|> sum()";
 
         List<FluxTable> fluxTables = fluxClient.query(flux);
@@ -161,7 +161,7 @@ class ITFluxClient extends AbstractITFluxClient {
 
         String flux = FROM_FLUX_DATABASE + "\n"
                 + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
-                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" AND r[\"_field\"] == \"free\"))";
+                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))";
 
         List<FluxTable> fluxTables = fluxClient.query(flux);
 
@@ -184,7 +184,7 @@ class ITFluxClient extends AbstractITFluxClient {
 
         Assertions.assertThatThrownBy(() -> fluxClient.query("from(bucket:\"telegraf\")"))
                 .isInstanceOf(InfluxException.class)
-                .hasMessageStartingWith("failed to create physical plan:")
+                .hasMessageStartingWith("failed to plan query:")
                 .hasMessageEndingWith("results from \"telegraf\" must be bounded");
     }
 
@@ -196,7 +196,7 @@ class ITFluxClient extends AbstractITFluxClient {
 
         String flux = FROM_FLUX_DATABASE + "\n"
                 + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
-                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" AND r[\"_field\"] == \"free\"))\n"
+                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n"
                 + "\t|> sum()";
 
         fluxClient.query(flux, (cancellable, record) -> {
@@ -232,7 +232,7 @@ class ITFluxClient extends AbstractITFluxClient {
 
         String flux = FROM_FLUX_DATABASE + "\n"
                 + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
-                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" AND r[\"_field\"] == \"free\"))";
+                + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))";
 
         List<Mem> memory = new ArrayList<>();
         countDownLatch = new CountDownLatch(4);

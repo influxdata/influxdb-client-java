@@ -200,7 +200,7 @@ public interface TelegrafsApi {
      * @param telegrafID ID of telegraf config to get
      * @return telegraf config details
      */
-    @Nullable
+    @Nonnull
     Telegraf findTelegrafByID(@Nonnull final String telegrafID);
 
     /**

@@ -182,8 +182,9 @@ class ITTelegrafsApi extends AbstractITClientTest {
         // delete source
         telegrafsApi.deleteTelegraf(createdConfig);
 
-        foundTelegrafConfig = telegrafsApi.findTelegrafByID(createdConfig.getId());
-        Assertions.assertThat(foundTelegrafConfig).isNull();
+        Assertions.assertThatThrownBy(() -> telegrafsApi.findTelegrafByID(createdConfig.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("telegraf configuration not found");
     }
 
     @Test
@@ -214,9 +215,9 @@ class ITTelegrafsApi extends AbstractITClientTest {
     @Test
     void findTelegrafConfigByIDNull() {
 
-        Telegraf telegrafConfig = telegrafsApi.findTelegrafByID("020f755c3d082000");
-
-        Assertions.assertThat(telegrafConfig).isNull();
+        Assertions.assertThatThrownBy(() -> telegrafsApi.findTelegrafByID("020f755c3d082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("telegraf configuration not found");
     }
 
     @Test
@@ -419,8 +420,8 @@ class ITTelegrafsApi extends AbstractITClientTest {
     @Test
     void cloneTelegrafConfigNotFound() {
         Assertions.assertThatThrownBy(() -> telegrafsApi.cloneTelegraf(generateName("cloned"), "020f755c3c082000"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("NotFound Telegraf with ID: 020f755c3c082000");
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("telegraf configuration not found");
     }
 
     @Nonnull
