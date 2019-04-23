@@ -22,13 +22,26 @@
 package org.influxdata.client.kotlin
 
 import assertk.assert
-import assertk.assertions.*
+import assertk.assertions.containsExactly
+import assertk.assertions.endsWith
+import assertk.assertions.hasSize
+import assertk.assertions.isEmpty
+import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
+import assertk.assertions.isTrue
 import kotlinx.coroutines.channels.map
 import kotlinx.coroutines.channels.toList
 import kotlinx.coroutines.runBlocking
+import org.influxdata.LogLevel
 import org.influxdata.annotations.Column
 import org.influxdata.client.InfluxDBClientFactory
-import org.influxdata.client.domain.*
+import org.influxdata.client.domain.Bucket
+import org.influxdata.client.domain.BucketRetentionRules
+import org.influxdata.client.domain.Dialect
+import org.influxdata.client.domain.Organization
+import org.influxdata.client.domain.Permission
+import org.influxdata.client.domain.PermissionResource
+import org.influxdata.client.domain.WritePrecision
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.platform.runner.JUnitPlatform
@@ -104,6 +117,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         influxDBClient.close()
         influxDBClient = InfluxDBClientKotlinFactory.create(influxDb2Url, token.toCharArray())
+        influxDBClient.setLogLevel(LogLevel.BODY)
         queryKotlinApi = influxDBClient.getQueryKotlinApi()
     }
 
@@ -111,7 +125,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
     fun `Simple query mapped to FluxRecords`(): Unit = runBlocking {
 
         val flux = "from(bucket:\"${bucket.name}\")\n\t" +
-                "|> range(start: 1970-01-01T00:00:00.000000000Z)\n\t" +
+                "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
                 "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n\t" +
                 "|> sum()"
 
@@ -125,7 +139,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
     fun `Simple query FluxRecords order`(): Unit = runBlocking {
 
         val flux = "from(bucket:\"${bucket.name}\")\n\t" +
-                "|> range(start: 1970-01-01T00:00:00.000000000Z)\n\t |> sort(columns:[\"value\"])"
+                "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t |> sort(columns:[\"value\"])"
 
         val records = queryKotlinApi.query(flux, organization.id)
 
@@ -139,7 +153,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
     fun `Mapping to POJO`(): Unit = runBlocking {
 
         val flux = "from(bucket:\"${bucket.name}\")\n\t" +
-                "|> range(start: 1970-01-01T00:00:00.000000000Z)\n\t" +
+                "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
                 "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))"
 
         val query = queryKotlinApi.query(flux, organization.id, Mem::class.java)
@@ -191,7 +205,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
     fun `Map to String`(): Unit = runBlocking {
 
         val flux = "from(bucket:\"${bucket.name}\")\n\t" +
-                "|> range(start: 1970-01-01T00:00:00.000000000Z)\n\t" +
+                "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
                 "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\t" +
                 "|> sum()"
 
@@ -210,7 +224,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
     fun `Custom dialect`(): Unit = runBlocking {
 
         val flux = "from(bucket:\"${bucket.name}\")\n\t" +
-                "|> range(start: 1970-01-01T00:00:00.000000000Z)\n\t" +
+                "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
                 "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\t" +
                 "|> sum()"
 

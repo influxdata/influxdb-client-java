@@ -111,7 +111,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
   test("Simple query mapped to FluxRecords") {
 
     val flux = fluxPrefix +
-      "|> range(start: 1970-01-01T00:00:00.000000000Z)\n\t" +
+      "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
       "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n\t" +
       "|> sum()"
 
@@ -133,7 +133,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
   test("Simple query FluxRecords order") {
 
     val flux = fluxPrefix +
-      "|> range(start: 1970-01-01T00:00:00.000000000Z)\n\t" +
+      "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
       "|> sort(columns:[\"value\"])"
 
     val source = queryScalaApi.query(flux, organization.getId).map(it => it.getValue).runWith(TestSink.probe[Object])
@@ -155,7 +155,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
   test("Mapping to POJO") {
 
     val flux = fluxPrefix + "" +
-      "|> range(start: 1970-01-01T00:00:00.000000000Z)\n\t" +
+      "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
       "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))"
 
     val source = queryScalaApi.query(flux, organization.getId, classOf[Mem]).runWith(TestSink.probe[Mem])
@@ -190,7 +190,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
   test("Error propagation") {
 
     val flux = fluxPrefix +
-      "|> range(start: 1970-01-01T00:00:00.000000000Z)\n\t" +
+      "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
       "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n\t" +
       "|> sum_wrong()"
 
@@ -206,7 +206,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
     val clientNotRunning = InfluxDBClientScalaFactory.create("http://localhost:8099")
 
     val flux = fluxPrefix +
-      "|> range(start: 1970-01-01T00:00:00.000000000Z)"
+      "|> range(start: 1970-01-01T00:00:00.000000001Z)"
 
     val source = clientNotRunning.getQueryScalaApi().query(flux, organization.getId).runWith(TestSink.probe[FluxRecord])
 
@@ -220,7 +220,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
   test("Map to String") {
 
     val flux = fluxPrefix  +
-      "|> range(start: 1970-01-01T00:00:00.000000000Z)\n\t" +
+      "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
       "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n\t" +
       "|> sum()"
 
@@ -253,7 +253,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
   test("Custom dialect") {
 
     val flux = fluxPrefix  +
-      "|> range(start: 1970-01-01T00:00:00.000000000Z)\n\t" +
+      "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
       "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n\t" +
       "|> sum()"
 
