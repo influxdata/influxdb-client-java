@@ -24,7 +24,6 @@ package org.influxdata.client;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.LabelResponse;
@@ -111,7 +110,7 @@ public interface OrganizationsApi {
      * @param orgID ID of organization to get
      * @return organization details
      */
-    @Nullable
+    @Nonnull
     Organization findOrganizationByID(@Nonnull final String orgID);
 
     /**

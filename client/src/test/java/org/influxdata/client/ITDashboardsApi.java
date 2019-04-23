@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import org.influxdata.client.domain.Cell;
+import org.influxdata.client.domain.CellUpdate;
 import org.influxdata.client.domain.Cells;
 import org.influxdata.client.domain.CreateCell;
 import org.influxdata.client.domain.Dashboard;
@@ -431,11 +432,12 @@ class ITDashboardsApi extends AbstractITClientTest {
 
         Cell cell = dashboardsApi.addCell(createCell, dashboard);
 
-        //TODO https://github.com/influxdata/influxdb/issues/13081
-        // Cell changedCell = dashboardsApi.updateCell(new CellUpdate().name("changed name"), cell.getId(), dashboard.getId());
+        Cell changedCell = dashboardsApi.updateCell(new CellUpdate().x(1).y(2).h(3).w(4), cell.getId(), dashboard.getId());
 
-        //TODO https://github.com/influxdata/influxdb/issues/13079
-        // Assertions.assertThat(changedCell.getName()).isEqualTo("changed name");
+        Assertions.assertThat(changedCell.getX()).isEqualTo(1);
+        Assertions.assertThat(changedCell.getY()).isEqualTo(2);
+        Assertions.assertThat(changedCell.getH()).isEqualTo(3);
+        Assertions.assertThat(changedCell.getW()).isEqualTo(4);
     }
 
     @Test

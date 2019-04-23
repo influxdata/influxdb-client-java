@@ -29,6 +29,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Organization;
@@ -133,7 +134,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         Assertions.assertThat(listener.getValue().getOrganization()).isEqualTo(organization.getId());
         Assertions.assertThat(listener.getValue().getLineProtocol()).isEqualTo(record);
 
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
@@ -182,7 +183,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         waitToCallback(listener.countDownLatch, 10);
 
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords().get(0).getTime()).isEqualTo(Instant.ofEpochSecond(0, 1000));
@@ -204,7 +205,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         waitToCallback(listener.countDownLatch, 10);
 
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords().get(0).getTime()).isEqualTo(Instant.ofEpochMilli(1));
@@ -226,7 +227,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         waitToCallback(listener.countDownLatch, 10);
 
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords().get(0).getTime()).isEqualTo(Instant.ofEpochSecond(1));
@@ -253,7 +254,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         List<FluxRecord> fluxRecords = new ArrayList<>();
 
         CountDownLatch queryCountDown = new CountDownLatch(2);
-        queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", organization.getId(), (cancellable, fluxRecord) -> {
+        queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId(), (cancellable, fluxRecord) -> {
             fluxRecords.add(fluxRecord);
             queryCountDown.countDown();
 
@@ -283,7 +284,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         waitToCallback(listener.countDownLatch, 10);
 
-        List<H2OFeetMeasurement> measurements = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last() |> rename(columns:{_value: \"water_level\"})", organization.getId(), H2OFeetMeasurement.class);
+        List<H2OFeetMeasurement> measurements = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last() |> rename(columns:{_value: \"water_level\"})", organization.getId(), H2OFeetMeasurement.class);
 
         Assertions.assertThat(measurements).hasSize(1);
         Assertions.assertThat(measurements.get(0).location).isEqualTo("coyote_creek");
@@ -364,7 +365,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         waitToCallback(listener.countDownLatch, 10);
 
-        String query = queryApi.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", organization.getId());
+        String query = queryApi.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
         Assertions.assertThat(query).endsWith("1,h2o_feet,atlantic,water_level\n");
     }
 
@@ -380,13 +381,13 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record);
 
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
         writeApi.flush();
         Thread.sleep(10);
 
-        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
+        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
@@ -408,12 +409,12 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         writeApi.writeRecords(bucketName, organization.getId(), WritePrecision.NS, Arrays.asList(record1, record2, record3, record4, record5));
 
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", organization.getId());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
         Thread.sleep(500);
 
-        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", organization.getId());
+        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(5);
@@ -441,13 +442,13 @@ class ITWriteQueryApi extends AbstractITClientTest {
         writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record5);
 
         Thread.sleep(100);
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", organization.getId());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
         writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record6);
         Thread.sleep(100);
 
-        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0)", organization.getId());
+        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(6);
@@ -466,12 +467,12 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record);
 
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
         Thread.sleep(5000);
 
-        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
+        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
@@ -491,7 +492,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         writeApi.close();
 
-        List<FluxTable> tables = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
+        List<FluxTable> tables = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
 
         Assertions.assertThat(tables).hasSize(0);
     }
@@ -509,7 +510,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         waitToCallback(errorListener.countDownLatch, 10);
 
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
         WriteEventListener<WriteSuccessEvent> successListener = new WriteEventListener<>();
@@ -519,7 +520,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         waitToCallback(successListener.countDownLatch, 10);
 
-        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
+        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("location")).isEqualTo("coyote_creek");

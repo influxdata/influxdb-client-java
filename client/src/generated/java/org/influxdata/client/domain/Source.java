@@ -148,9 +148,7 @@ public class Source {
   public enum LanguagesEnum {
     FLUX("flux"),
     
-    INFLUXQL("influxql"),
-    
-    SPEC("spec");
+    INFLUXQL("influxql");
 
     private String value;
 

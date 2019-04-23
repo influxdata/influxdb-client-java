@@ -81,8 +81,7 @@ class ITBucketsApi extends AbstractITClientTest {
         Assertions.assertThat(bucket).isNotNull();
         Assertions.assertThat(bucket.getId()).isNotBlank();
         Assertions.assertThat(bucket.getName()).isEqualTo(bucketName);
-        Assertions.assertThat(bucket.getOrganizationID()).isEqualTo(organization.getId());
-        Assertions.assertThat(bucket.getOrganization()).isEqualTo(organization.getName());
+        Assertions.assertThat(bucket.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(bucket.getRetentionRules()).hasSize(1);
         Assertions.assertThat(bucket.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600L);
         Assertions.assertThat(bucket.getRetentionRules().get(0).getType()).isEqualTo(BucketRetentionRules.TypeEnum.EXPIRE);
@@ -107,8 +106,7 @@ class ITBucketsApi extends AbstractITClientTest {
         Assertions.assertThat(bucketByID).isNotNull();
         Assertions.assertThat(bucketByID.getId()).isEqualTo(bucket.getId());
         Assertions.assertThat(bucketByID.getName()).isEqualTo(bucket.getName());
-        Assertions.assertThat(bucketByID.getOrganizationID()).isEqualTo(bucket.getOrganizationID());
-        Assertions.assertThat(bucketByID.getOrganization()).isEqualTo(bucket.getOrganization());
+        Assertions.assertThat(bucketByID.getOrgID()).isEqualTo(bucket.getOrgID());
         Assertions.assertThat(bucketByID.getRetentionRules().size()).isEqualTo(bucket.getRetentionRules().size());
         Assertions.assertThat(bucketByID.getRetentionRules()).hasSize(1);
         Assertions.assertThat(bucketByID.getLinks()).isEqualTo(bucket.getLinks());
@@ -117,9 +115,9 @@ class ITBucketsApi extends AbstractITClientTest {
     @Test
     void findBucketByIDNull() {
 
-        Bucket bucket = bucketsApi.findBucketByID("020f755c3c082000");
-
-        Assertions.assertThat(bucket).isNull();
+        Assertions.assertThatThrownBy(() -> bucketsApi.findBucketByID("020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("bucket not found");
     }
 
     @Test
@@ -130,7 +128,7 @@ class ITBucketsApi extends AbstractITClientTest {
         Assertions.assertThat(bucket).isNotNull();
         Assertions.assertThat(bucket.getId()).isNotEmpty();
         Assertions.assertThat(bucket.getName()).isEqualTo("my-bucket");
-        Assertions.assertThat(bucket.getOrganizationID()).isEqualTo(findMyOrg().getId());
+        Assertions.assertThat(bucket.getOrgID()).isEqualTo(findMyOrg().getId());
     }
 
     @Test
@@ -211,8 +209,9 @@ class ITBucketsApi extends AbstractITClientTest {
         // delete task
         bucketsApi.deleteBucket(createBucket);
 
-        foundBucket = bucketsApi.findBucketByID(createBucket.getId());
-        Assertions.assertThat(foundBucket).isNull();
+        Assertions.assertThatThrownBy(() -> bucketsApi.findBucketByID(createBucket.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("bucket not found");
     }
 
     @Test
@@ -469,8 +468,7 @@ class ITBucketsApi extends AbstractITClientTest {
         Bucket cloned = bucketsApi.cloneBucket(name, source.getId());
 
         Assertions.assertThat(cloned.getName()).isEqualTo(name);
-        Assertions.assertThat(cloned.getOrganizationID()).isEqualTo(organization.getId());
-        Assertions.assertThat(cloned.getOrganization()).isEqualTo(organization.getName());
+        Assertions.assertThat(cloned.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(cloned.getRp()).isNull();
         Assertions.assertThat(cloned.getRetentionRules()).hasSize(1);
         Assertions.assertThat(cloned.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600);
@@ -484,7 +482,7 @@ class ITBucketsApi extends AbstractITClientTest {
     @Test
     void cloneBucketNotFound() {
          Assertions.assertThatThrownBy(() -> bucketsApi.cloneBucket(generateName("cloned"), "020f755c3c082000"))
-                 .isInstanceOf(IllegalStateException.class)
-                 .hasMessage("NotFound Bucket with ID: 020f755c3c082000");
+                 .isInstanceOf(NotFoundException.class)
+                 .hasMessage("bucket not found");
     }
 }

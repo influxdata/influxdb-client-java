@@ -22,7 +22,6 @@
 package org.influxdata.client.internal;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,7 +51,7 @@ import org.influxdata.client.domain.TaskUpdateRequest;
 import org.influxdata.client.domain.Tasks;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.service.TasksService;
-import org.influxdata.exceptions.NotFoundException;
+import org.influxdata.exceptions.InternalServerErrorException;
 import org.influxdata.internal.AbstractRestClient;
 
 import retrofit2.Call;
@@ -129,7 +128,8 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Call<Tasks> call = service.tasksGet(null, afterID, userID, null, orgID, null);
 
-        Tasks tasks = execute(call);
+        //TODO https://github.com/influxdata/influxdb/issues/13576
+        Tasks tasks = execute(call, InternalServerErrorException.class, new Tasks());
         LOG.log(Level.FINEST, "findTasks found: {0}", tasks);
 
         return tasks.getTasks();
@@ -287,9 +287,6 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Arguments.checkNonEmpty(taskID, "taskID");
 
         Task task = findTaskByID(taskID);
-        if (task == null) {
-            throw new IllegalStateException("NotFound Task with ID: " + taskID);
-        }
 
         return cloneTask(task);
     }
@@ -490,7 +487,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Arguments.checkNonEmpty(orgID, "Org.ID");
 
         Call<Runs> runs = service.tasksTaskIDRunsGet(taskID, null, null, limit, afterTime, beforeTime);
-        Runs execute = execute(runs, NotFoundException.class, new Runs().runs(new ArrayList<>()));
+        Runs execute = execute(runs);
 
         return execute.getRuns();
     }
@@ -535,7 +532,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Call<Logs> call = service.tasksTaskIDRunsRunIDLogsGet(taskID, runID, null);
 
-        Logs logs = execute(call, NotFoundException.class, new Logs());
+        Logs logs = execute(call);
 
         return logs.getEvents();
     }
@@ -617,10 +614,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Call<Logs> execute = service.tasksTaskIDLogsGet(taskID, null);
 
-        Logs logs = execute(execute, NotFoundException.class);
-        if (logs == null) {
-            return new ArrayList<>();
-        }
+        Logs logs = execute(execute);
 
         return logs.getEvents();
     }

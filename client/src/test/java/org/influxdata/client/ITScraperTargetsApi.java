@@ -32,6 +32,7 @@ import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ScraperTargetResponse;
 import org.influxdata.client.domain.User;
+import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,7 +72,7 @@ class ITScraperTargetsApi extends AbstractITClientTest {
 
         Assertions.assertThat(scraper).isNotNull();
         Assertions.assertThat(scraper.getBucket()).isEqualTo("my-bucket");
-        Assertions.assertThat(scraper.getOrganization()).isEqualTo("my-org");
+        Assertions.assertThat(scraper.getOrg()).isEqualTo("my-org");
         Assertions.assertThat(scraper.getLinks().getSelf()).isEqualTo("/api/v2/scrapers/" + scraper.getId());
         Assertions.assertThat(scraper.getLinks().getMembers()).isEqualTo("/api/v2/scrapers/" + scraper.getId() + "/members");
         Assertions.assertThat(scraper.getLinks().getOwners()).isEqualTo("/api/v2/scrapers/" + scraper.getId() + "/owners");
@@ -141,9 +142,9 @@ class ITScraperTargetsApi extends AbstractITClientTest {
     @Test
     void findScraperByIDNull() {
 
-        ScraperTargetResponse scraper = scraperTargetsApi.findScraperTargetByID("020f755c3c082000");
-
-        Assertions.assertThat(scraper).isNull();
+        Assertions.assertThatThrownBy(() -> scraperTargetsApi.findScraperTargetByID("020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("scraper target is not found");
     }
 
     @Test
@@ -159,8 +160,9 @@ class ITScraperTargetsApi extends AbstractITClientTest {
         // delete scraper
         scraperTargetsApi.deleteScraperTarget(createdScraper);
 
-        foundScraper = scraperTargetsApi.findScraperTargetByID(createdScraper.getId());
-        Assertions.assertThat(foundScraper).isNull();
+        Assertions.assertThatThrownBy(() -> scraperTargetsApi.findScraperTargetByID(createdScraper.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("scraper target is not found");
     }
 
     @Test
@@ -287,7 +289,7 @@ class ITScraperTargetsApi extends AbstractITClientTest {
     @Test
     void cloneScraperTargetNotFound() {
         Assertions.assertThatThrownBy(() -> scraperTargetsApi.cloneScraperTarget(generateName("cloned"), "020f755c3c082000"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("NotFound ScraperTarget with ID: 020f755c3c082000");
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("scraper target is not found");
     }
 }

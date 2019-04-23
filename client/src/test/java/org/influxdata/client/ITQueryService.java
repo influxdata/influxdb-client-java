@@ -22,7 +22,6 @@
 package org.influxdata.client;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.influxdata.client.domain.ASTResponse;
 import org.influxdata.client.domain.AnalyzeQueryResponse;
@@ -37,7 +36,6 @@ import org.influxdata.client.domain.ObjectExpression;
 import org.influxdata.client.domain.PipeExpression;
 import org.influxdata.client.domain.Property;
 import org.influxdata.client.domain.Query;
-import org.influxdata.client.domain.QuerySpecification;
 import org.influxdata.client.domain.UnaryExpression;
 import org.influxdata.client.service.QueryService;
 
@@ -58,52 +56,6 @@ class ITQueryService extends AbstractITClientTest {
     @BeforeEach
     void setUp() {
         queryService = influxDBClient.getService(QueryService.class);
-    }
-
-    @Test
-    void spec() throws IOException {
-
-        LanguageRequest languageRequest = new LanguageRequest().query("from(bucket: \"telegraf\")\n"
-                + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))"
-                + " |> range(start: -1d)");
-
-        QuerySpecification specification = queryService.querySpecPost(null, null, languageRequest)
-                .execute().body();
-
-        Assertions.assertThat(specification).isNotNull();
-        Assertions.assertThat(specification.getSpec()).isNotNull();
-
-        // Operations
-        Assertions.assertThat(specification.getSpec().getOperations()).hasSize(3);
-        Assertions.assertThat(specification.getSpec().getOperations().get(0).getKind()).isEqualTo("influxDBFrom");
-        Assertions.assertThat(specification.getSpec().getOperations().get(0).getId()).isEqualTo("influxDBFrom0");
-        Assertions.assertThat(((Map<String, Object>) specification.getSpec().getOperations().get(0).getSpec()).get("bucket")).isEqualTo("telegraf");
-        Assertions.assertThat(specification.getSpec().getOperations().get(1).getKind()).isEqualTo("filter");
-        Assertions.assertThat(specification.getSpec().getOperations().get(1).getId()).isEqualTo("filter1");
-        Assertions.assertThat(((Map<String, Object>) specification.getSpec().getOperations().get(1).getSpec()).get("fn")).isInstanceOf(Map.class);
-        Assertions.assertThat(specification.getSpec().getOperations().get(2).getKind()).isEqualTo("range");
-        Assertions.assertThat(specification.getSpec().getOperations().get(2).getId()).isEqualTo("range2");
-        Assertions.assertThat(((Map<String, Object>) specification.getSpec().getOperations().get(2).getSpec()).get("start")).isEqualTo("-24h0m0s");
-        Assertions.assertThat(((Map<String, Object>) specification.getSpec().getOperations().get(2).getSpec()).get("stop")).isEqualTo("now");
-        Assertions.assertThat(((Map<String, Object>) specification.getSpec().getOperations().get(2).getSpec()).get("timeColumn")).isEqualTo("_time");
-        Assertions.assertThat(((Map<String, Object>) specification.getSpec().getOperations().get(2).getSpec()).get("startColumn")).isEqualTo("_start");
-        Assertions.assertThat(((Map<String, Object>) specification.getSpec().getOperations().get(2).getSpec()).get("stopColumn")).isEqualTo("_stop");
-
-        // Edges
-        Assertions.assertThat(specification.getSpec().getEdges()).hasSize(2);
-        Assertions.assertThat(specification.getSpec().getEdges().get(0).getParent()).isEqualTo("influxDBFrom0");
-        Assertions.assertThat(specification.getSpec().getEdges().get(0).getChild()).isEqualTo("filter1");
-        Assertions.assertThat(specification.getSpec().getEdges().get(1).getParent()).isEqualTo("filter1");
-        Assertions.assertThat(specification.getSpec().getEdges().get(1).getChild()).isEqualTo("range2");
-
-        // Resources
-        Assertions.assertThat(specification.getSpec().getResources()).isNotNull();
-        Assertions.assertThat(specification.getSpec().getResources().getPriority()).isEqualTo("high");
-        Assertions.assertThat(specification.getSpec().getResources().getConcurrencyQuota()).isEqualTo(0);
-        Assertions.assertThat(specification.getSpec().getResources().getMemoryBytesQuota()).isEqualTo(0);
-
-        //TODO https://github.com/influxdata/influxdb/issues/13217
-        // Assertions.assertThat(specification.getSpec().getDialect()).isNotNull();
     }
 
     @Test

@@ -150,7 +150,7 @@ public interface BucketsApi {
      * @param bucketID ID of bucket to get
      * @return bucket details
      */
-    @Nullable
+    @Nonnull
     Bucket findBucketByID(@Nonnull final String bucketID);
 
     /**

@@ -37,6 +37,7 @@ import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.SecretKeysResponse;
 import org.influxdata.client.domain.User;
+import org.influxdata.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -104,9 +105,9 @@ class ITOrganizationsApi extends AbstractITClientTest {
     @Test
     void findOrganizationByIDNull() {
 
-        Organization organization = organizationsApi.findOrganizationByID("020f755c3c082000");
-
-        Assertions.assertThat(organization).isNull();
+        Assertions.assertThatThrownBy(() -> organizationsApi.findOrganizationByID("020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("organization not found");
     }
 
     @Test
@@ -132,8 +133,9 @@ class ITOrganizationsApi extends AbstractITClientTest {
         // delete organization
         organizationsApi.deleteOrganization(createdOrganization);
 
-        foundOrganization = organizationsApi.findOrganizationByID(createdOrganization.getId());
-        Assertions.assertThat(foundOrganization).isNull();
+        Assertions.assertThatThrownBy(() -> organizationsApi.findOrganizationByID(createdOrganization.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("organization not found");
     }
 
     @Test
@@ -390,7 +392,7 @@ class ITOrganizationsApi extends AbstractITClientTest {
     @Test
     void cloneOrganizationNotFound() {
         Assertions.assertThatThrownBy(() -> organizationsApi.cloneOrganization(generateName("cloned"), "020f755c3c082000"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("NotFound Organization with ID: 020f755c3c082000");
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("organization not found");
     }
 }

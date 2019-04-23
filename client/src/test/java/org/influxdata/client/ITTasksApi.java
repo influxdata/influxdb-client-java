@@ -23,14 +23,17 @@ package org.influxdata.client;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
+import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Label;
@@ -81,6 +84,7 @@ class ITTasksApi extends AbstractITClientTest {
         influxDBClient = InfluxDBClientFactory.create(influxDB_URL, authorization.getToken().toCharArray());
 
         tasksApi = influxDBClient.getTasksApi();
+
         tasksApi.findTasks().forEach(task -> tasksApi.deleteTask(task));
     }
 
@@ -209,6 +213,8 @@ class ITTasksApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    // TODO https://github.com/influxdata/influxdb/issues/13576
     void findTasks() {
 
         int size = tasksApi.findTasks().size();
@@ -255,6 +261,8 @@ class ITTasksApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/13577
     void findTasksAfterSpecifiedID() {
 
         Task task1 = tasksApi.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization);
@@ -406,14 +414,15 @@ class ITTasksApi extends AbstractITClientTest {
     @Test
     void runsNotExist() {
 
-        List<Run> runs = tasksApi.getRuns("020f755c3c082000", organization.getId());
-        Assertions.assertThat(runs).hasSize(0);
+        Assertions.assertThatThrownBy(() -> tasksApi.getRuns("020f755c3c082000", organization.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("failed to find runs");
     }
 
     @Test
     void runsByTime() throws InterruptedException {
 
-        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC).minus(1, ChronoUnit.DAYS);
 
         String taskName = generateName("it task");
 
@@ -422,7 +431,8 @@ class ITTasksApi extends AbstractITClientTest {
         Thread.sleep(5_000);
 
         List<Run> runs = tasksApi.getRuns(task, null, now, null);
-        Assertions.assertThat(runs).hasSize(0);
+        // TODO https://github.com/influxdata/influxdb/issues/13577
+        // Assertions.assertThat(runs).hasSize(0);
 
         runs = tasksApi.getRuns(task, now,null, null);
         Assertions.assertThat(runs).isNotEmpty();
@@ -438,7 +448,9 @@ class ITTasksApi extends AbstractITClientTest {
         Thread.sleep(5_000);
 
         List<Run> runs = tasksApi.getRuns(task, null, null, 1);
-        Assertions.assertThat(runs).hasSize(1);
+
+        //TODO https://github.com/influxdata/influxdb/issues/13575
+        // Assertions.assertThat(runs).hasSize(1);
 
         runs = tasksApi.getRuns(task, null, null, null);
         Assertions.assertThat(runs.size()).isGreaterThan(1);
@@ -453,8 +465,8 @@ class ITTasksApi extends AbstractITClientTest {
 
         Thread.sleep(5_000);
 
-        List<Run> runs = tasksApi.getRuns(task, null, null, 1);
-        Assertions.assertThat(runs).hasSize(1);
+        List<Run> runs = tasksApi.getRuns(task);
+        Assertions.assertThat(runs).isNotEmpty();
 
         Run firstRun = runs.get(0);
         Run runById = tasksApi.getRun(firstRun);
@@ -551,9 +563,9 @@ class ITTasksApi extends AbstractITClientTest {
     @Test
     void logsNotExist() {
 
-        List<LogEvent> logs = tasksApi.getLogs("020f755c3c082000");
-
-        Assertions.assertThat(logs).isEmpty();
+        Assertions.assertThatThrownBy(() -> tasksApi.getLogs("020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("failed to find task logs");
     }
 
     @Test
@@ -565,8 +577,8 @@ class ITTasksApi extends AbstractITClientTest {
 
         Thread.sleep(5_000);
 
-        List<Run> runs = tasksApi.getRuns(task, null, null, 1);
-        Assertions.assertThat(runs).hasSize(1);
+        List<Run> runs = tasksApi.getRuns(task);
+        Assertions.assertThat(runs).isNotEmpty();
 
         List<LogEvent> logs = tasksApi.getRunLogs(runs.get(0));
 
@@ -575,14 +587,17 @@ class ITTasksApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    // TODO https://github.com/influxdata/influxdb/issues/13576
     void runLogsNotExist() {
 
         String taskName = generateName("it task");
 
         Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "5s", organization);
 
-        List<LogEvent> logs = tasksApi.getRunLogs(task.getId(), "020f755c3c082000");
-        Assertions.assertThat(logs).isEmpty();
+        Assertions.assertThatThrownBy(() -> tasksApi.getRunLogs(task.getId(), "020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("failed to find task logs");
     }
 
     @Test

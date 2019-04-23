@@ -5593,9 +5593,7 @@ components:
           type: string
         name:
           type: string
-        organizationID:
-          type: string
-        organization:
+        orgID:
           type: string
         rp:
           type: string

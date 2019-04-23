@@ -47,7 +47,6 @@ import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.ResourceOwners;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.service.BucketsService;
-import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.internal.AbstractRestClient;
 
 import retrofit2.Call;
@@ -68,7 +67,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
         this.service = service;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public Bucket findBucketByID(@Nonnull final String bucketID) {
 
@@ -76,7 +75,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
 
         Call<Bucket> bucket = service.bucketsBucketIDGet(bucketID, null);
 
-        return execute(bucket, NotFoundException.class);
+        return execute(bucket);
     }
 
     @Nullable
@@ -159,7 +158,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
 
         Bucket bucket = new Bucket();
         bucket.setName(name);
-        bucket.setOrganizationID(orgID);
+        bucket.setOrgID(orgID);
         if (bucketRetentionRules != null) {
             bucket.getRetentionRules().add(bucketRetentionRules);
         }
@@ -215,9 +214,6 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
         Arguments.checkNonEmpty(bucketID, "bucketID");
 
         Bucket bucket = findBucketByID(bucketID);
-        if (bucket == null) {
-            throw new IllegalStateException("NotFound Bucket with ID: " + bucketID);
-        }
 
         return cloneBucket(clonedName, bucket);
     }
@@ -231,8 +227,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
 
         Bucket cloned = new Bucket();
         cloned.setName(clonedName);
-        cloned.setOrganizationID(bucket.getOrganizationID());
-        cloned.setOrganization(bucket.getOrganization());
+        cloned.setOrgID(bucket.getOrgID());
         cloned.setRp(bucket.getRp());
         cloned.getRetentionRules().addAll(bucket.getRetentionRules());
 

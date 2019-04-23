@@ -90,9 +90,9 @@ class ITUsersApiTest extends AbstractITClientTest {
     @Test
     void findUserByIDNull() {
 
-        User user = usersApi.findUserByID("020f755c3c082000");
-
-        Assertions.assertThat(user).isNull();
+        Assertions.assertThatThrownBy(() -> usersApi.findUserByID("020f755c3c082000"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("user not found");
     }
 
     @Test
@@ -118,8 +118,9 @@ class ITUsersApiTest extends AbstractITClientTest {
         // delete user
         usersApi.deleteUser(createdUser);
 
-        foundUser = usersApi.findUserByID(createdUser.getId());
-        Assertions.assertThat(foundUser).isNull();
+        Assertions.assertThatThrownBy(() -> usersApi.findUserByID(createdUser.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("user not found");
     }
 
     @Test
@@ -336,7 +337,7 @@ class ITUsersApiTest extends AbstractITClientTest {
     @Test
     void cloneUserNotFound() {
         Assertions.assertThatThrownBy(() -> usersApi.cloneUser(generateName("cloned"), "020f755c3c082000"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("NotFound User with ID: 020f755c3c082000");
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("user not found");
     }
 }

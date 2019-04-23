@@ -14,7 +14,6 @@ import org.influxdata.client.domain.FluxSuggestion;
 import org.influxdata.client.domain.FluxSuggestions;
 import org.influxdata.client.domain.LanguageRequest;
 import org.influxdata.client.domain.Query;
-import org.influxdata.client.domain.QuerySpecification;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,8 +59,8 @@ public interface QueryService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param accept specifies the return content format. Each response content type will have its own dialect options. (optional, default to text/csv)
    * @param contentType  (optional)
-   * @param org specifies the name of the organization executing the query; if both orgID and org are specified, orgID takes precendence. (optional)
-   * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, orgID takes precendence. (optional)
+   * @param org specifies the name of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
+   * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
    * @param query flux query or specification to execute (optional)
    * @return Call&lt;String&gt;
    */
@@ -79,30 +78,14 @@ public interface QueryService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param accept specifies the return content format. Each response content type will have its own dialect options. (optional, default to text/csv)
    * @param contentType  (optional)
-   * @param org specifies the name of the organization executing the query; if both orgID and org are specified, orgID takes precendence. (optional)
-   * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, orgID takes precendence. (optional)
+   * @param org specifies the name of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
+   * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
    * @param query flux query or specification to execute (optional)
    * @return Call&lt;ResponseBody&gt;
    */
   @POST("api/v2/query")
   Call<ResponseBody> queryPostResponseBody(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept, @retrofit2.http.Header("Content-Type") String contentType, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Body Query query
-  );
-
-  /**
-   * 
-   * analyzes flux query and generates a query specification.
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param contentType  (optional)
-   * @param languageRequest analyzed flux query to generate specification. (optional)
-   * @return Call&lt;QuerySpecification&gt;
-   */
-  @Headers({
-    "Content-Type:application/json"
-  })
-  @POST("api/v2/query/spec")
-  Call<QuerySpecification> querySpecPost(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Content-Type") String contentType, @retrofit2.http.Body LanguageRequest languageRequest
   );
 
   /**

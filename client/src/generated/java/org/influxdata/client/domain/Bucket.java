@@ -46,13 +46,9 @@ public class Bucket {
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name = null;
 
-  public static final String SERIALIZED_NAME_ORGANIZATION_I_D = "organizationID";
-  @SerializedName(SERIALIZED_NAME_ORGANIZATION_I_D)
-  private String organizationID = null;
-
-  public static final String SERIALIZED_NAME_ORGANIZATION = "organization";
-  @SerializedName(SERIALIZED_NAME_ORGANIZATION)
-  private String organization = null;
+  public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
+  @SerializedName(SERIALIZED_NAME_ORG_I_D)
+  private String orgID = null;
 
   public static final String SERIALIZED_NAME_RP = "rp";
   @SerializedName(SERIALIZED_NAME_RP)
@@ -111,40 +107,22 @@ public class Bucket {
     this.name = name;
   }
 
-  public Bucket organizationID(String organizationID) {
-    this.organizationID = organizationID;
+  public Bucket orgID(String orgID) {
+    this.orgID = orgID;
     return this;
   }
 
    /**
-   * Get organizationID
-   * @return organizationID
+   * Get orgID
+   * @return orgID
   **/
   @ApiModelProperty(value = "")
-  public String getOrganizationID() {
-    return organizationID;
+  public String getOrgID() {
+    return orgID;
   }
 
-  public void setOrganizationID(String organizationID) {
-    this.organizationID = organizationID;
-  }
-
-  public Bucket organization(String organization) {
-    this.organization = organization;
-    return this;
-  }
-
-   /**
-   * Get organization
-   * @return organization
-  **/
-  @ApiModelProperty(value = "")
-  public String getOrganization() {
-    return organization;
-  }
-
-  public void setOrganization(String organization) {
-    this.organization = organization;
+  public void setOrgID(String orgID) {
+    this.orgID = orgID;
   }
 
   public Bucket rp(String rp) {
@@ -219,8 +197,7 @@ public class Bucket {
     return Objects.equals(this.links, bucket.links) &&
         Objects.equals(this.id, bucket.id) &&
         Objects.equals(this.name, bucket.name) &&
-        Objects.equals(this.organizationID, bucket.organizationID) &&
-        Objects.equals(this.organization, bucket.organization) &&
+        Objects.equals(this.orgID, bucket.orgID) &&
         Objects.equals(this.rp, bucket.rp) &&
         Objects.equals(this.retentionRules, bucket.retentionRules) &&
         Objects.equals(this.labels, bucket.labels);
@@ -228,7 +205,7 @@ public class Bucket {
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, id, name, organizationID, organization, rp, retentionRules, labels);
+    return Objects.hash(links, id, name, orgID, rp, retentionRules, labels);
   }
 
 
@@ -239,8 +216,7 @@ public class Bucket {
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    organizationID: ").append(toIndentedString(organizationID)).append("\n");
-    sb.append("    organization: ").append(toIndentedString(organization)).append("\n");
+    sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
     sb.append("    rp: ").append(toIndentedString(rp)).append("\n");
     sb.append("    retentionRules: ").append(toIndentedString(retentionRules)).append("\n");
     sb.append("    labels: ").append(toIndentedString(labels)).append("\n");

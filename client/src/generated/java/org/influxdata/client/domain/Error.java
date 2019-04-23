@@ -50,6 +50,8 @@ public class Error {
     
     FORBIDDEN("forbidden"),
     
+    TOO_MANY_REQUESTS("too many requests"),
+    
     UNAUTHORIZED("unauthorized"),
     
     METHOD_NOT_ALLOWED("method not allowed");

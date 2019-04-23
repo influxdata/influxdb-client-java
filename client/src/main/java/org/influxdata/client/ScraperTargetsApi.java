@@ -127,7 +127,7 @@ public interface ScraperTargetsApi {
      * @param scraperTargetID ID of ScraperTarget to get
      * @return ScraperTarget details
      */
-    @Nullable
+    @Nonnull
     ScraperTargetResponse findScraperTargetByID(@Nonnull final String scraperTargetID);
 
     /**

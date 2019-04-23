@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.FindOptions;
@@ -36,7 +35,6 @@ import org.influxdata.client.domain.PasswordResetBody;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.domain.Users;
 import org.influxdata.client.service.UsersService;
-import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.exceptions.UnauthorizedException;
 import org.influxdata.internal.AbstractRestClient;
 
@@ -59,7 +57,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
         this.service = service;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public User findUserByID(@Nonnull final String userID) {
 
@@ -67,7 +65,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
 
         Call<User> user = service.usersUserIDGet(userID, null);
 
-        return execute(user, NotFoundException.class);
+        return execute(user);
     }
 
     @Nonnull

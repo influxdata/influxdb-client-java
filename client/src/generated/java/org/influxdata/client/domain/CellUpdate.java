@@ -29,26 +29,92 @@ import java.io.IOException;
  */
 
 public class CellUpdate {
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
+  public static final String SERIALIZED_NAME_X = "x";
+  @SerializedName(SERIALIZED_NAME_X)
+  private Integer x = null;
 
-  public CellUpdate name(String name) {
-    this.name = name;
+  public static final String SERIALIZED_NAME_Y = "y";
+  @SerializedName(SERIALIZED_NAME_Y)
+  private Integer y = null;
+
+  public static final String SERIALIZED_NAME_W = "w";
+  @SerializedName(SERIALIZED_NAME_W)
+  private Integer w = null;
+
+  public static final String SERIALIZED_NAME_H = "h";
+  @SerializedName(SERIALIZED_NAME_H)
+  private Integer h = null;
+
+  public CellUpdate x(Integer x) {
+    this.x = x;
     return this;
   }
 
    /**
-   * Get name
-   * @return name
+   * Get x
+   * @return x
   **/
   @ApiModelProperty(value = "")
-  public String getName() {
-    return name;
+  public Integer getX() {
+    return x;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setX(Integer x) {
+    this.x = x;
+  }
+
+  public CellUpdate y(Integer y) {
+    this.y = y;
+    return this;
+  }
+
+   /**
+   * Get y
+   * @return y
+  **/
+  @ApiModelProperty(value = "")
+  public Integer getY() {
+    return y;
+  }
+
+  public void setY(Integer y) {
+    this.y = y;
+  }
+
+  public CellUpdate w(Integer w) {
+    this.w = w;
+    return this;
+  }
+
+   /**
+   * Get w
+   * @return w
+  **/
+  @ApiModelProperty(value = "")
+  public Integer getW() {
+    return w;
+  }
+
+  public void setW(Integer w) {
+    this.w = w;
+  }
+
+  public CellUpdate h(Integer h) {
+    this.h = h;
+    return this;
+  }
+
+   /**
+   * Get h
+   * @return h
+  **/
+  @ApiModelProperty(value = "")
+  public Integer getH() {
+    return h;
+  }
+
+  public void setH(Integer h) {
+    this.h = h;
   }
 
 
@@ -61,12 +127,15 @@ public class CellUpdate {
       return false;
     }
     CellUpdate cellUpdate = (CellUpdate) o;
-    return Objects.equals(this.name, cellUpdate.name);
+    return Objects.equals(this.x, cellUpdate.x) &&
+        Objects.equals(this.y, cellUpdate.y) &&
+        Objects.equals(this.w, cellUpdate.w) &&
+        Objects.equals(this.h, cellUpdate.h);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name);
+    return Objects.hash(x, y, w, h);
   }
 
 
@@ -74,7 +143,10 @@ public class CellUpdate {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CellUpdate {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    x: ").append(toIndentedString(x)).append("\n");
+    sb.append("    y: ").append(toIndentedString(y)).append("\n");
+    sb.append("    w: ").append(toIndentedString(w)).append("\n");
+    sb.append("    h: ").append(toIndentedString(h)).append("\n");
     sb.append("}");
     return sb.toString();
   }

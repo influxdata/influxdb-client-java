@@ -23,11 +23,9 @@ package org.influxdata.client.internal;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.client.FindOptions;
@@ -49,7 +47,6 @@ import org.influxdata.client.domain.SecretKeys;
 import org.influxdata.client.domain.SecretKeysResponse;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.service.OrganizationsService;
-import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.internal.AbstractRestClient;
 
 import retrofit2.Call;
@@ -70,7 +67,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         this.service = service;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public Organization findOrganizationByID(@Nonnull final String orgID) {
 
@@ -78,7 +75,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
 
         Call<Organization> organization = service.orgsOrgIDGet(orgID, null);
 
-        return execute(organization, NotFoundException.class);
+        return execute(organization);
     }
 
     @Nonnull
@@ -131,7 +128,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
     @Override
     public void deleteOrganization(@Nonnull final Organization organization) {
 
-        Objects.requireNonNull(organization, "Organization is required");
+        Arguments.checkNotNull(organization, "Organization is required");
 
         deleteOrganization(organization.getId());
     }

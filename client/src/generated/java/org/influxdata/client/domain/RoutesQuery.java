@@ -41,10 +41,6 @@ public class RoutesQuery {
   @SerializedName(SERIALIZED_NAME_ANALYZE)
   private String analyze = null;
 
-  public static final String SERIALIZED_NAME_SPEC = "spec";
-  @SerializedName(SERIALIZED_NAME_SPEC)
-  private String spec = null;
-
   public static final String SERIALIZED_NAME_SUGGESTIONS = "suggestions";
   @SerializedName(SERIALIZED_NAME_SUGGESTIONS)
   private String suggestions = null;
@@ -103,24 +99,6 @@ public class RoutesQuery {
     this.analyze = analyze;
   }
 
-  public RoutesQuery spec(String spec) {
-    this.spec = spec;
-    return this;
-  }
-
-   /**
-   * Get spec
-   * @return spec
-  **/
-  @ApiModelProperty(value = "")
-  public String getSpec() {
-    return spec;
-  }
-
-  public void setSpec(String spec) {
-    this.spec = spec;
-  }
-
   public RoutesQuery suggestions(String suggestions) {
     this.suggestions = suggestions;
     return this;
@@ -152,13 +130,12 @@ public class RoutesQuery {
     return Objects.equals(this.self, routesQuery.self) &&
         Objects.equals(this.ast, routesQuery.ast) &&
         Objects.equals(this.analyze, routesQuery.analyze) &&
-        Objects.equals(this.spec, routesQuery.spec) &&
         Objects.equals(this.suggestions, routesQuery.suggestions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self, ast, analyze, spec, suggestions);
+    return Objects.hash(self, ast, analyze, suggestions);
   }
 
 
@@ -169,7 +146,6 @@ public class RoutesQuery {
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
     sb.append("    ast: ").append(toIndentedString(ast)).append("\n");
     sb.append("    analyze: ").append(toIndentedString(analyze)).append("\n");
-    sb.append("    spec: ").append(toIndentedString(spec)).append("\n");
     sb.append("    suggestions: ").append(toIndentedString(suggestions)).append("\n");
     sb.append("}");
     return sb.toString();

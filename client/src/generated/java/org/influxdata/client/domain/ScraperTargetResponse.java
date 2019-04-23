@@ -35,9 +35,9 @@ public class ScraperTargetResponse extends ScraperTargetRequest {
   @SerializedName(SERIALIZED_NAME_ID)
   private String id = null;
 
-  public static final String SERIALIZED_NAME_ORGANIZATION = "organization";
-  @SerializedName(SERIALIZED_NAME_ORGANIZATION)
-  private String organization = null;
+  public static final String SERIALIZED_NAME_ORG = "org";
+  @SerializedName(SERIALIZED_NAME_ORG)
+  private String org = null;
 
   public static final String SERIALIZED_NAME_BUCKET = "bucket";
   @SerializedName(SERIALIZED_NAME_BUCKET)
@@ -56,22 +56,22 @@ public class ScraperTargetResponse extends ScraperTargetRequest {
     return id;
   }
 
-  public ScraperTargetResponse organization(String organization) {
-    this.organization = organization;
+  public ScraperTargetResponse org(String org) {
+    this.org = org;
     return this;
   }
 
    /**
    * name of the organization
-   * @return organization
+   * @return org
   **/
   @ApiModelProperty(value = "name of the organization")
-  public String getOrganization() {
-    return organization;
+  public String getOrg() {
+    return org;
   }
 
-  public void setOrganization(String organization) {
-    this.organization = organization;
+  public void setOrg(String org) {
+    this.org = org;
   }
 
   public ScraperTargetResponse bucket(String bucket) {
@@ -121,7 +121,7 @@ public class ScraperTargetResponse extends ScraperTargetRequest {
     }
     ScraperTargetResponse scraperTargetResponse = (ScraperTargetResponse) o;
     return Objects.equals(this.id, scraperTargetResponse.id) &&
-        Objects.equals(this.organization, scraperTargetResponse.organization) &&
+        Objects.equals(this.org, scraperTargetResponse.org) &&
         Objects.equals(this.bucket, scraperTargetResponse.bucket) &&
         Objects.equals(this.links, scraperTargetResponse.links) &&
         super.equals(o);
@@ -129,7 +129,7 @@ public class ScraperTargetResponse extends ScraperTargetRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, organization, bucket, links, super.hashCode());
+    return Objects.hash(id, org, bucket, links, super.hashCode());
   }
 
 
@@ -139,7 +139,7 @@ public class ScraperTargetResponse extends ScraperTargetRequest {
     sb.append("class ScraperTargetResponse {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    organization: ").append(toIndentedString(organization)).append("\n");
+    sb.append("    org: ").append(toIndentedString(org)).append("\n");
     sb.append("    bucket: ").append(toIndentedString(bucket)).append("\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("}");

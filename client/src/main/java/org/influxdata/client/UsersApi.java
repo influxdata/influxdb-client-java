@@ -23,7 +23,6 @@ package org.influxdata.client;
 
 import java.util.List;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.influxdata.client.domain.OperationLog;
 import org.influxdata.client.domain.OperationLogs;
@@ -141,7 +140,7 @@ public interface UsersApi {
      * @param userID ID of user to get
      * @return user details
      */
-    @Nullable
+    @Nonnull
     User findUserByID(@Nonnull final String userID);
 
     /**

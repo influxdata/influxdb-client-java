@@ -25,12 +25,11 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import org.influxdata.client.domain.Dialect;
 import org.influxdata.client.domain.File;
-import org.influxdata.client.domain.QuerySpecification;
 
 /**
- * query influx with specified return formatting. The spec and query fields are mutually exclusive.
+ * query influx with specified return formatting.
  */
-@ApiModel(description = "query influx with specified return formatting. The spec and query fields are mutually exclusive.")
+@ApiModel(description = "query influx with specified return formatting.")
 
 public class Query {
   public static final String SERIALIZED_NAME_EXTERN = "extern";
@@ -40,10 +39,6 @@ public class Query {
   public static final String SERIALIZED_NAME_QUERY = "query";
   @SerializedName(SERIALIZED_NAME_QUERY)
   private String query = null;
-
-  public static final String SERIALIZED_NAME_SPEC = "spec";
-  @SerializedName(SERIALIZED_NAME_SPEC)
-  private QuerySpecification spec = null;
 
   /**
    * type of query
@@ -148,24 +143,6 @@ public class Query {
     this.query = query;
   }
 
-  public Query spec(QuerySpecification spec) {
-    this.spec = spec;
-    return this;
-  }
-
-   /**
-   * Get spec
-   * @return spec
-  **/
-  @ApiModelProperty(value = "")
-  public QuerySpecification getSpec() {
-    return spec;
-  }
-
-  public void setSpec(QuerySpecification spec) {
-    this.spec = spec;
-  }
-
   public Query type(TypeEnum type) {
     this.type = type;
     return this;
@@ -268,7 +245,6 @@ public class Query {
     Query query = (Query) o;
     return Objects.equals(this.extern, query.extern) &&
         Objects.equals(this.query, query.query) &&
-        Objects.equals(this.spec, query.spec) &&
         Objects.equals(this.type, query.type) &&
         Objects.equals(this.db, query.db) &&
         Objects.equals(this.rp, query.rp) &&
@@ -278,7 +254,7 @@ public class Query {
 
   @Override
   public int hashCode() {
-    return Objects.hash(extern, query, spec, type, db, rp, cluster, dialect);
+    return Objects.hash(extern, query, type, db, rp, cluster, dialect);
   }
 
 
@@ -288,7 +264,6 @@ public class Query {
     sb.append("class Query {\n");
     sb.append("    extern: ").append(toIndentedString(extern)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
-    sb.append("    spec: ").append(toIndentedString(spec)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    db: ").append(toIndentedString(db)).append("\n");
     sb.append("    rp: ").append(toIndentedString(rp)).append("\n");

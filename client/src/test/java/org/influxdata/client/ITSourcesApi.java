@@ -27,7 +27,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
-import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Check;
 import org.influxdata.client.domain.Source;
@@ -170,7 +169,6 @@ class ITSourcesApi extends AbstractITClientTest {
 
         Source source = sourcesApi.createSource(newSource());
 
-        influxDBClient.setLogLevel(LogLevel.BODY);
         List<Bucket> buckets = sourcesApi.findBucketsBySource(source);
 
         Assertions.assertThat(buckets).isNotNull();

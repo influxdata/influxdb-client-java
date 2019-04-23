@@ -44,7 +44,6 @@ import org.influxdata.client.domain.ScraperTargetResponse;
 import org.influxdata.client.domain.ScraperTargetResponses;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.service.ScraperTargetsService;
-import org.influxdata.exceptions.NotFoundException;
 import org.influxdata.internal.AbstractRestClient;
 
 import retrofit2.Call;
@@ -174,7 +173,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
         return created;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public ScraperTargetResponse findScraperTargetByID(@Nonnull final String scraperTargetID) {
 
@@ -182,7 +181,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
 
         Call<ScraperTargetResponse> call = service.scrapersScraperTargetIDGet(scraperTargetID, null);
 
-        return execute(call, NotFoundException.class);
+        return execute(call);
     }
 
     @Nonnull
