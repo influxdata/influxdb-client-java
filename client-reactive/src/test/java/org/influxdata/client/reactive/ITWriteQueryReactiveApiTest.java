@@ -146,7 +146,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
 
         Assertions.assertThat(countDownLatch.getCount()).isEqualTo(0);
 
-        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 0) |> last()", organization.getId());
+        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
 
         result.test().assertValueCount(1).assertValue(fluxRecord -> {
 
@@ -186,7 +186,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
 
         waitToCallback();
 
-        Flowable<FluxRecord> results = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0)", organization.getId());
+        Flowable<FluxRecord> results = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
         results.test()
                 .assertValueCount(2)
@@ -226,7 +226,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
 
         waitToCallback();
 
-        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", organization.getId());
+        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
 
         result.test().assertValueCount(1).assertValue(fluxRecord -> {
 
@@ -260,7 +260,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
 
         waitToCallback();
 
-        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0)", organization.getId());
+        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
         result
                 .test()
@@ -284,7 +284,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
 
         waitToCallback();
 
-        Flowable<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last() |> rename(columns:{_value: \"water_level\"})", organization.getId(), H2O.class);
+        Flowable<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last() |> rename(columns:{_value: \"water_level\"})", organization.getId(), H2O.class);
 
         measurements.test().assertValueCount(1).assertValueAt(0, h2O -> {
 
@@ -321,7 +321,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
 
         waitToCallback();
 
-        Flowable<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> sort(desc: false, columns:[\"_time\"]) |>rename(columns:{_value: \"water_level\"})", organization.getId(), H2O.class);
+        Flowable<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> sort(desc: false, columns:[\"_time\"]) |>rename(columns:{_value: \"water_level\"})", organization.getId(), H2O.class);
 
         measurements
                 .test()
@@ -358,7 +358,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
 
         waitToCallback();
 
-        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", organization.getId());
+        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
 
         result.test()
                 .assertValueCount(6)
@@ -387,7 +387,7 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
 
         waitToCallback();
 
-        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 0) |> last()", null, organization.getId());
+        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", null, organization.getId());
 
         result.test()
                 .assertValueCount(3)
