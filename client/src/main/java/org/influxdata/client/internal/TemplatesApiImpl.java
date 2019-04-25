@@ -195,7 +195,7 @@ final class TemplatesApiImpl extends AbstractRestClient implements TemplatesApi 
 
         DocumentCreate documentCreate = new DocumentCreate();
         documentCreate
-                .meta(template.getMeta().name(clonedName))
+                .meta(template.getMeta().name(clonedName).description(template.getMeta().getDescription()))
                 .content(template.getContent());
 
         if (template.getLabels() != null) {

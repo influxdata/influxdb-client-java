@@ -229,6 +229,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
         cloned.setName(clonedName);
         cloned.setOrgID(bucket.getOrgID());
         cloned.setRp(bucket.getRp());
+        cloned.setDescription(bucket.getDescription());
         cloned.getRetentionRules().addAll(bucket.getRetentionRules());
 
         Bucket created = createBucket(cloned);

@@ -150,9 +150,6 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         Arguments.checkNonEmpty(orgID, "orgID");
 
         Organization organization = findOrganizationByID(orgID);
-        if (organization == null) {
-            throw new IllegalStateException("NotFound Organization with ID: " + orgID);
-        }
 
         return cloneOrganization(clonedName, organization);
     }
@@ -166,6 +163,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
 
         Organization cloned = new Organization();
         cloned.setName(clonedName);
+        cloned.setDescription(organization.getDescription());
 
         Organization created = createOrganization(cloned);
 
