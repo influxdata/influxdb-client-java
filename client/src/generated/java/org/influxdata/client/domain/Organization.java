@@ -42,6 +42,10 @@ public class Organization {
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name = null;
 
+  public static final String SERIALIZED_NAME_DESCRIPTION = "description";
+  @SerializedName(SERIALIZED_NAME_DESCRIPTION)
+  private String description = null;
+
   /**
    * if inactive the organization is inactive.
    */
@@ -138,6 +142,24 @@ public class Organization {
     this.name = name;
   }
 
+  public Organization description(String description) {
+    this.description = description;
+    return this;
+  }
+
+   /**
+   * Get description
+   * @return description
+  **/
+  @ApiModelProperty(value = "")
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
   public Organization status(StatusEnum status) {
     this.status = status;
     return this;
@@ -169,12 +191,13 @@ public class Organization {
     return Objects.equals(this.links, organization.links) &&
         Objects.equals(this.id, organization.id) &&
         Objects.equals(this.name, organization.name) &&
+        Objects.equals(this.description, organization.description) &&
         Objects.equals(this.status, organization.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, id, name, status);
+    return Objects.hash(links, id, name, description, status);
   }
 
 
@@ -185,6 +208,7 @@ public class Organization {
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
     return sb.toString();

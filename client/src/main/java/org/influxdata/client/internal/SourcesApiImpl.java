@@ -92,7 +92,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
-        Call<Void> call = service.sourcesSourceIDDelete(sourceID);
+        Call<Void> call = service.sourcesSourceIDDelete(sourceID, null);
         execute(call);
     }
 

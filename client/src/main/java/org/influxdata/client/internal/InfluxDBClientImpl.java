@@ -202,7 +202,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Nullable
     @Override
     public Ready ready() {
-        Call<Ready> call = readyService.readyGet();
+        Call<Ready> call = readyService.readyGet(null);
         try {
             return execute(call);
         } catch (InfluxException e) {

@@ -230,8 +230,7 @@ class ITUsersApiTest extends AbstractITClientTest {
         Assertions.assertThat(userLogs).isNotEmpty();
         Assertions.assertThat(userLogs.get(userLogs.size() - 1).getDescription()).isEqualTo("User Updated");
         Assertions.assertThat(userLogs.get(userLogs.size() - 1).getTime()).isAfter(now);
-        //TODO https://github.com/influxdata/influxdb/issues/12544
-        // Assertions.assertThat(userLogs.get(userLogs.size() - 1).get()).isEqualTo(user.getId());
+        Assertions.assertThat(userLogs.get(userLogs.size() - 1).getUserID()).isEqualTo(user.getId());
     }
 
     @Test

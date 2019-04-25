@@ -21,7 +21,6 @@
  */
 package org.influxdata.client.internal;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -48,10 +47,8 @@ import org.influxdata.client.domain.TelegrafRequestPlugin;
 import org.influxdata.client.domain.Telegrafs;
 import org.influxdata.client.domain.User;
 import org.influxdata.client.service.TelegrafsService;
-import org.influxdata.exceptions.InfluxException;
 import org.influxdata.internal.AbstractRestClient;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 /**
@@ -230,7 +227,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
         Arguments.checkNonEmpty(telegrafID, "TelegrafConfig ID");
 
-        Call<Telegraf> telegrafConfig = service.telegrafsTelegrafIDGet(telegrafID, null, "application/json");
+        Call<Telegraf> telegrafConfig = service.telegrafsTelegrafIDGetTelegraf(telegrafID, null, "application/json");
 
         return execute(telegrafConfig);
     }
@@ -277,14 +274,10 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
         Arguments.checkNonEmpty(telegrafID, "TelegrafConfig ID");
 
-        Call<ResponseBody> telegrafConfig = service
-                .telegrafsTelegrafIDGetResponseBody(telegrafID, null, "application/toml");
+        Call<String> telegrafConfig = service
+                .telegrafsTelegrafIDGet(telegrafID, null, "application/toml");
 
-        try {
-            return execute(telegrafConfig).string();
-        } catch (IOException e) {
-            throw new InfluxException(e);
-        }
+        return execute(telegrafConfig);
     }
 
     @Nonnull

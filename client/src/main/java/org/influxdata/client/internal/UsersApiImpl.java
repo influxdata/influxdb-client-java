@@ -98,7 +98,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
 
         Arguments.checkNotNull(user, "User");
 
-        Call<User> call = service.usersPost(user);
+        Call<User> call = service.usersPost(user, null);
 
         return execute(call);
     }

@@ -39,6 +39,10 @@ public class OperationLog {
   @SerializedName(SERIALIZED_NAME_TIME)
   private OffsetDateTime time = null;
 
+  public static final String SERIALIZED_NAME_USER_I_D = "userID";
+  @SerializedName(SERIALIZED_NAME_USER_I_D)
+  private String userID = null;
+
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
   private OperationLogLinks links = null;
@@ -79,6 +83,24 @@ public class OperationLog {
     this.time = time;
   }
 
+  public OperationLog userID(String userID) {
+    this.userID = userID;
+    return this;
+  }
+
+   /**
+   * ID of the user who operated the event.
+   * @return userID
+  **/
+  @ApiModelProperty(value = "ID of the user who operated the event.")
+  public String getUserID() {
+    return userID;
+  }
+
+  public void setUserID(String userID) {
+    this.userID = userID;
+  }
+
   public OperationLog links(OperationLogLinks links) {
     this.links = links;
     return this;
@@ -109,12 +131,13 @@ public class OperationLog {
     OperationLog operationLog = (OperationLog) o;
     return Objects.equals(this.description, operationLog.description) &&
         Objects.equals(this.time, operationLog.time) &&
+        Objects.equals(this.userID, operationLog.userID) &&
         Objects.equals(this.links, operationLog.links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(description, time, links);
+    return Objects.hash(description, time, userID, links);
   }
 
 
@@ -124,6 +147,7 @@ public class OperationLog {
     sb.append("class OperationLog {\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    time: ").append(toIndentedString(time)).append("\n");
+    sb.append("    userID: ").append(toIndentedString(userID)).append("\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("}");
     return sb.toString();

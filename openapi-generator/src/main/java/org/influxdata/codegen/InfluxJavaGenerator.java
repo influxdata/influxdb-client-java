@@ -33,10 +33,12 @@ import javax.annotation.Nullable;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
+import org.apache.commons.lang3.StringUtils;
 import org.openapitools.codegen.CodegenConfig;
 import org.openapitools.codegen.CodegenModel;
 import org.openapitools.codegen.CodegenOperation;
@@ -66,6 +68,8 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
     public String getHelp() {
         return "Generates a influx-java client library.";
     }
+
+    private OpenAPI openAPI;
 
     public InfluxJavaGenerator() {
 
@@ -205,21 +209,53 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         List<CodegenOperation> operationToSplit = operations.stream()
                 .filter(operation -> operation.produces.size() > 1)
                 .collect(Collectors.toList());
+
         operationToSplit.forEach(operation -> {
 
             List<String> returnTypes = operation.produces.stream()
-                    .filter(produce -> !produce.get("mediaType").equals("application/json"))
+                    .filter(produce -> operation.produces.indexOf(produce) != 0)
                     .map(produce -> {
 
-                        switch (produce.get("mediaType")) {
+                        PathItem path = openAPI.getPaths().get(StringUtils.substringAfter(operation.path, "/v2"));
+
+                        Operation apiOperation;
+                        switch (operation.httpMethod.toLowerCase()) {
+
+                            case "get":
+                                apiOperation = path.getGet();
+                                break;
+
+                            case "post":
+                                apiOperation = path.getPost();
+                                break;
+
                             default:
-                            case "application/toml":
-                            case "application/octet-stream":
-                                return "ResponseBody";
+                                throw new IllegalStateException();
                         }
+
+                        Schema responseSchema = apiOperation.getResponses().get("200").getContent().get(produce.get("mediaType")).getSchema();
+
+                        if (responseSchema.get$ref() != null) {
+
+                            String modelName = ModelUtils.getSimpleRef(responseSchema.get$ref());
+
+                            CodegenModel model = (CodegenModel) ((HashMap) allModels.stream()
+                                    .filter(it -> modelName.equals(((CodegenModel) ((HashMap) it).get("model")).name))
+                                    .findFirst()
+                                    .get()).get("model");
+
+                            return model.classname;
+                        } else {
+                            return camelize(responseSchema.getType());
+                        }
+
                     })
                     .distinct()
                     .collect(Collectors.toList());
+
+            if (!returnTypes.isEmpty()) {
+                returnTypes.add("ResponseBody");
+            }
 
             returnTypes.forEach(returnType -> {
                 CodegenOperation codegenOperation = new CodegenOperation();
@@ -513,6 +549,13 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         // Rename "Api" to "Service"
         //
         return camelize(name) + "Service";
+    }
+
+    @Override
+    public void preprocessOpenAPI(final OpenAPI openAPI) {
+        super.preprocessOpenAPI(openAPI);
+
+        this.openAPI = openAPI;
     }
 
     @Nonnull

@@ -558,6 +558,7 @@ public interface UsersService {
    * Create a user
    * 
    * @param user user to create (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;User&gt;
    */
   @Headers({
@@ -565,7 +566,7 @@ public interface UsersService {
   })
   @POST("api/v2/users")
   Call<User> usersPost(
-    @retrofit2.http.Body User user
+    @retrofit2.http.Body User user, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**

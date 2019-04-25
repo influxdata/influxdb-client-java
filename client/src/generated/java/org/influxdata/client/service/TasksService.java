@@ -258,6 +258,7 @@ public interface TasksService {
    * manually start a run of the task now overriding the current schedule.
    * 
    * @param taskID  (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
    * @param runManually  (optional)
    * @return Call&lt;Run&gt;
    */
@@ -266,7 +267,7 @@ public interface TasksService {
   })
   @POST("api/v2/tasks/{taskID}/runs")
   Call<Run> tasksTaskIDRunsPost(
-    @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Body RunManually runManually
+    @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Body RunManually runManually
   );
 
   /**

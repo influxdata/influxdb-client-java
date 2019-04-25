@@ -46,6 +46,10 @@ public class Bucket {
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name = null;
 
+  public static final String SERIALIZED_NAME_DESCRIPTION = "description";
+  @SerializedName(SERIALIZED_NAME_DESCRIPTION)
+  private String description = null;
+
   public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
   private String orgID = null;
@@ -105,6 +109,24 @@ public class Bucket {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Bucket description(String description) {
+    this.description = description;
+    return this;
+  }
+
+   /**
+   * Get description
+   * @return description
+  **/
+  @ApiModelProperty(value = "")
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public Bucket orgID(String orgID) {
@@ -197,6 +219,7 @@ public class Bucket {
     return Objects.equals(this.links, bucket.links) &&
         Objects.equals(this.id, bucket.id) &&
         Objects.equals(this.name, bucket.name) &&
+        Objects.equals(this.description, bucket.description) &&
         Objects.equals(this.orgID, bucket.orgID) &&
         Objects.equals(this.rp, bucket.rp) &&
         Objects.equals(this.retentionRules, bucket.retentionRules) &&
@@ -205,7 +228,7 @@ public class Bucket {
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, id, name, orgID, rp, retentionRules, labels);
+    return Objects.hash(links, id, name, description, orgID, rp, retentionRules, labels);
   }
 
 
@@ -216,6 +239,7 @@ public class Bucket {
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
     sb.append("    rp: ").append(toIndentedString(rp)).append("\n");
     sb.append("    retentionRules: ").append(toIndentedString(retentionRules)).append("\n");

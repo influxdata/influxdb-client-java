@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.BucketRetentionRules;
 import org.influxdata.client.domain.Buckets;
@@ -92,6 +93,21 @@ class ITBucketsApi extends AbstractITClientTest {
         Assertions.assertThat(bucket.getLinks().getLabels()).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/labels");
         Assertions.assertThat(bucket.getLinks().getLogs()).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/logs");
         Assertions.assertThat(bucket.getLinks().getWrite()).isEqualTo("/api/v2/write?org=" + organization.getId() + "&bucket=" + bucket.getId());
+    }
+
+    @Test
+    void bucketDescription() {
+
+        Bucket bucket = new Bucket();
+        bucket.setName(generateName("robot sensor"));
+        bucket.setOrgID(organization.getId());
+        bucket.getRetentionRules().add(retentionRule());
+        bucket.setDescription("description _ test");
+
+        bucket = bucketsApi.createBucket(bucket);
+
+        Assertions.assertThat(bucket).isNotNull();
+        Assertions.assertThat(bucket.getDescription()).isEqualTo("description _ test");
     }
 
     @Test

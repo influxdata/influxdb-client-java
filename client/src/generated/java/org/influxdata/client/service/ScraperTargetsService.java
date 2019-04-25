@@ -43,6 +43,7 @@ public interface ScraperTargetsService {
    * create a scraper target
    * 
    * @param scraperTargetRequest scraper target to create (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ScraperTargetResponse&gt;
    */
   @Headers({
@@ -50,7 +51,7 @@ public interface ScraperTargetsService {
   })
   @POST("api/v2/scrapers")
   Call<ScraperTargetResponse> scrapersPost(
-    @retrofit2.http.Body ScraperTargetRequest scraperTargetRequest
+    @retrofit2.http.Body ScraperTargetRequest scraperTargetRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**

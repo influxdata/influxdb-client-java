@@ -63,11 +63,12 @@ public interface SourcesService {
    * Delete a source
    * 
    * @param sourceID ID of the source (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
   @DELETE("api/v2/sources/{sourceID}")
   Call<Void> sourcesSourceIDDelete(
-    @retrofit2.http.Path("sourceID") String sourceID
+    @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**

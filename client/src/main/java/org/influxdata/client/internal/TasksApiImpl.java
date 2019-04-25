@@ -553,7 +553,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Arguments.checkNonEmpty(taskId, "taskId");
         Arguments.checkNotNull(runManually, "runManually");
 
-        Call<Run> call = service.tasksTaskIDRunsPost(taskId, runManually);
+        Call<Run> call = service.tasksTaskIDRunsPost(taskId, null, runManually);
 
         return execute(call);
     }

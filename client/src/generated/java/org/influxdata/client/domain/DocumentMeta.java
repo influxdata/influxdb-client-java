@@ -37,6 +37,10 @@ public class DocumentMeta {
   @SerializedName(SERIALIZED_NAME_TYPE)
   private String type = null;
 
+  public static final String SERIALIZED_NAME_DESCRIPTION = "description";
+  @SerializedName(SERIALIZED_NAME_DESCRIPTION)
+  private String description = null;
+
   public static final String SERIALIZED_NAME_VERSION = "version";
   @SerializedName(SERIALIZED_NAME_VERSION)
   private String version = null;
@@ -77,6 +81,24 @@ public class DocumentMeta {
     this.type = type;
   }
 
+  public DocumentMeta description(String description) {
+    this.description = description;
+    return this;
+  }
+
+   /**
+   * Get description
+   * @return description
+  **/
+  @ApiModelProperty(value = "")
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
   public DocumentMeta version(String version) {
     this.version = version;
     return this;
@@ -107,12 +129,13 @@ public class DocumentMeta {
     DocumentMeta documentMeta = (DocumentMeta) o;
     return Objects.equals(this.name, documentMeta.name) &&
         Objects.equals(this.type, documentMeta.type) &&
+        Objects.equals(this.description, documentMeta.description) &&
         Objects.equals(this.version, documentMeta.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, type, version);
+    return Objects.hash(name, type, description, version);
   }
 
 
@@ -122,6 +145,7 @@ public class DocumentMeta {
     sb.append("class DocumentMeta {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
     return sb.toString();

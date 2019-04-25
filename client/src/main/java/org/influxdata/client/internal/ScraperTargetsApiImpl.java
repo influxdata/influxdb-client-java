@@ -70,7 +70,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
 
         Arguments.checkNotNull(scraperTargetRequest, "scraperTargetRequest");
 
-        Call<ScraperTargetResponse> call = service.scrapersPost(scraperTargetRequest);
+        Call<ScraperTargetResponse> call = service.scrapersPost(scraperTargetRequest, null);
 
         return execute(call);
     }

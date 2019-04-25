@@ -88,6 +88,18 @@ class ITOrganizationsApi extends AbstractITClientTest {
     }
 
     @Test
+    void createOrganizationDescription() {
+
+        Organization organization = new Organization();
+        organization.setName(generateName("org"));
+        organization.setDescription("description of org");
+
+        organization = organizationsApi.createOrganization(organization);
+
+        Assertions.assertThat(organization.getDescription()).isEqualTo("description of org");
+    }
+
+    @Test
     void findOrganizationByID() {
 
         String orgName = generateName("Constant Pro");

@@ -29,13 +29,13 @@ public interface TelegrafsService {
   /**
    * 
    * 
-   * @param orgID specifies the organization of the resource (required)
    * @param zapTraceSpan OpenTracing span context (optional)
+   * @param orgID specifies the organization of the resource (optional)
    * @return Call&lt;Telegrafs&gt;
    */
   @GET("api/v2/telegrafs")
   Call<Telegrafs> telegrafsGet(
-    @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("orgID") String orgID
   );
 
   /**
@@ -70,11 +70,11 @@ public interface TelegrafsService {
    * 
    * @param telegrafID ID of telegraf config (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param accept specifies the return content format. (optional, default to application/json)
-   * @return Call&lt;Telegraf&gt;
+   * @param accept  (optional, default to application/toml)
+   * @return Call&lt;String&gt;
    */
   @GET("api/v2/telegrafs/{telegrafID}")
-  Call<Telegraf> telegrafsTelegrafIDGet(
+  Call<String> telegrafsTelegrafIDGet(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept
   );
 
@@ -83,11 +83,37 @@ public interface TelegrafsService {
    * 
    * @param telegrafID ID of telegraf config (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param accept specifies the return content format. (optional, default to application/json)
+   * @param accept  (optional, default to application/toml)
    * @return Call&lt;ResponseBody&gt;
    */
   @GET("api/v2/telegrafs/{telegrafID}")
   Call<ResponseBody> telegrafsTelegrafIDGetResponseBody(
+    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept
+  );
+
+  /**
+   * Retrieve a telegraf config
+   * 
+   * @param telegrafID ID of telegraf config (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @param accept  (optional, default to application/toml)
+   * @return Call&lt;String&gt;
+   */
+  @GET("api/v2/telegrafs/{telegrafID}")
+  Call<String> telegrafsTelegrafIDGetString(
+    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept
+  );
+
+  /**
+   * Retrieve a telegraf config
+   * 
+   * @param telegrafID ID of telegraf config (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @param accept  (optional, default to application/toml)
+   * @return Call&lt;Telegraf&gt;
+   */
+  @GET("api/v2/telegrafs/{telegrafID}")
+  Call<Telegraf> telegrafsTelegrafIDGetTelegraf(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept
   );
 
