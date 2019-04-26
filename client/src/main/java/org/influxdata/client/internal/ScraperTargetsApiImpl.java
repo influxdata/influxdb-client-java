@@ -145,9 +145,6 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
         ScraperTargetResponse scraperTarget = findScraperTargetByID(scraperTargetID);
-        if (scraperTarget == null) {
-            throw new IllegalStateException("NotFound ScraperTarget with ID: " + scraperTargetID);
-        }
 
         return cloneScraperTarget(clonedName, scraperTarget);
     }
