@@ -31,12 +31,15 @@ public interface ScraperTargetsService {
    * get all scraper targets
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param orgID specifies the organization of the resource (optional)
+   * @param name specifies the name of the scraper target. (optional)
+   * @param id ID list of scraper targets to return. If both this and owner are specified, only ids is used. (optional)
+   * @param orgID specifies the organization id of the scraper target (optional)
+   * @param org specifies the organization name of the scraper target (optional)
    * @return Call&lt;ScraperTargetResponses&gt;
    */
   @GET("api/v2/scrapers")
   Call<ScraperTargetResponses> scrapersGet(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("orgID") String orgID
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("name") String name, @retrofit2.http.Query("id") List<String> id, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("org") String org
   );
 
   /**

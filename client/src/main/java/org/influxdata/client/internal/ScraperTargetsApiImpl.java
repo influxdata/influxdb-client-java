@@ -204,7 +204,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
     @Override
     public List<ScraperTargetResponse> findScraperTargetsByOrgId(@Nullable final String orgID) {
 
-        Call<ScraperTargetResponses> call = service.scrapersGet(orgID, null);
+        Call<ScraperTargetResponses> call = service.scrapersGet(null, null, null, orgID, null);
 
         ScraperTargetResponses responses = execute(call);
         LOG.log(Level.FINEST, "findScraperTargets found: {0}", responses);
