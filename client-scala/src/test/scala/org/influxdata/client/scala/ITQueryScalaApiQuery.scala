@@ -112,7 +112,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
     val flux = fluxPrefix +
       "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
-      "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n\t" +
+      "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\" and r[\"host\"] == \"A\"))" +
       "|> sum()"
 
     val source = queryScalaApi.query(flux, organization.getId).runWith(TestSink.probe[FluxRecord])
@@ -122,11 +122,6 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
     record1.getMeasurement should be("mem")
     record1.getValue should be(21)
 
-    val record2 = source.requestNext()
-
-    record2.getMeasurement should be("mem")
-    record2.getValue should be(42)
-
     source.expectComplete()
   }
 
@@ -134,21 +129,13 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
     val flux = fluxPrefix +
       "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
+      "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\" and r[\"host\"] == \"A\"))"+
       "|> sort(columns:[\"value\"])"
 
     val source = queryScalaApi.query(flux, organization.getId).map(it => it.getValue).runWith(TestSink.probe[Object])
 
-    source.requestNext() should be(55L)
-    source.requestNext() should be(65L)
-    source.requestNext() should be(35L)
-    source.requestNext() should be(38L)
-    source.requestNext() should be(45L)
-    source.requestNext() should be(49L)
     source.requestNext() should be(10L)
     source.requestNext() should be(11L)
-    source.requestNext() should be(20L)
-    source.requestNext() should be(22L)
-
     source.expectComplete()
   }
 
@@ -156,7 +143,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
     val flux = fluxPrefix + "" +
       "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
-      "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))"
+      "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\" and r[\"host\"] == \"A\"))"
 
     val source = queryScalaApi.query(flux, organization.getId, classOf[Mem]).runWith(TestSink.probe[Mem])
 
@@ -170,18 +157,6 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
     mem.host should be("A")
     mem.region should be("west")
     mem.free should be(11L)
-    mem.time should be(Instant.ofEpochSecond(20))
-
-    mem = source.requestNext()
-    mem.host should be("B")
-    mem.region should be("west")
-    mem.free should be(20L)
-    mem.time should be(Instant.ofEpochSecond(10))
-
-    mem = source.requestNext()
-    mem.host should be("B")
-    mem.region should be("west")
-    mem.free should be(22L)
     mem.time should be(Instant.ofEpochSecond(20))
 
     source.expectComplete()
@@ -221,7 +196,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
     val flux = fluxPrefix  +
       "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
-      "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n\t" +
+      "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\" and r[\"host\"] == \"A\"))" +
       "|> sum()"
 
     val source = queryScalaApi.queryRaw(flux, organization.getId).runWith(TestSink.probe[String])
@@ -236,13 +211,10 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
     line should be("#default,_result,,,,,,,,")
 
     line = source.requestNext()
-    line should be(",result,table,_start,_stop,_measurement,host,region,_field,_value")
+    line should be(",result,table,_start,_stop,_field,_measurement,host,region,_value")
 
     line = source.requestNext()
-    line should endWith(",mem,A,west,free,21")
-
-    line = source.requestNext()
-    line should endWith(",mem,B,west,free,42")
+    line should endWith(",free,mem,A,west,21")
 
     line = source.requestNext()
     line shouldBe empty
@@ -254,7 +226,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
     val flux = fluxPrefix  +
       "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
-      "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n\t" +
+      "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\" and r[\"host\"] == \"A\"))\n\t" +
       "|> sum()"
 
     val dialect = new Dialect()
@@ -263,10 +235,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
     val source = queryScalaApi.queryRaw(flux, dialect, organization.getId).runWith(TestSink.probe[String])
 
     var line = source.requestNext()
-    line should endWith(",mem,A,west,free,21")
-
-    line = source.requestNext()
-    line should endWith(",mem,B,west,free,42")
+    line should endWith(",free,mem,A,west,21")
 
     line = source.requestNext()
     line shouldBe empty

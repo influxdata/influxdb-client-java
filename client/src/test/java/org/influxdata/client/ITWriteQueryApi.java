@@ -29,7 +29,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Organization;
@@ -366,7 +365,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         waitToCallback(listener.countDownLatch, 10);
 
         String query = queryApi.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
-        Assertions.assertThat(query).endsWith("1,h2o_feet,atlantic,water_level\n");
+        Assertions.assertThat(query).endsWith("1,water_level,h2o_feet,atlantic\n");
     }
 
     @Test

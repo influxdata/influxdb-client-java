@@ -365,10 +365,10 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
                 .assertValueAt(0, "#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string")
                 .assertValueAt(1, "#group,false,false,true,true,false,false,true,true,true")
                 .assertValueAt(2, "#default,_result,,,,,,,,")
-                .assertValueAt(3, ",result,table,_start,_stop,_time,_value,_measurement,location,_field")
+                .assertValueAt(3, ",result,table,_start,_stop,_time,_value,_field,_measurement,location")
                 .assertValueAt(4, value -> {
 
-                    Assertions.assertThat(value).endsWith("1970-01-01T00:00:00.000000001Z,1,h2o_feet,coyote_creek,level water_level");
+                    Assertions.assertThat(value).endsWith("1970-01-01T00:00:00.000000001Z,1,level water_level,h2o_feet,coyote_creek");
 
                     return true;
                 })
@@ -391,10 +391,10 @@ class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
 
         result.test()
                 .assertValueCount(3)
-                .assertValueAt(0, ",result,table,_start,_stop,_time,_value,_measurement,location,_field")
+                .assertValueAt(0, ",result,table,_start,_stop,_time,_value,_field,_measurement,location")
                 .assertValueAt(1, value -> {
 
-                    Assertions.assertThat(value).endsWith("1970-01-01T00:00:00.000000001Z,1,h2o_feet,coyote_creek,level water_level");
+                    Assertions.assertThat(value).endsWith("1970-01-01T00:00:00.000000001Z,1,level water_level,h2o_feet,coyote_creek");
 
                     return true;
                 })

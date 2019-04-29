@@ -32,7 +32,6 @@ import assertk.assertions.isTrue
 import kotlinx.coroutines.channels.map
 import kotlinx.coroutines.channels.toList
 import kotlinx.coroutines.runBlocking
-import org.influxdata.LogLevel
 import org.influxdata.annotations.Column
 import org.influxdata.client.InfluxDBClientFactory
 import org.influxdata.client.domain.Bucket
@@ -117,7 +116,6 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         influxDBClient.close()
         influxDBClient = InfluxDBClientKotlinFactory.create(influxDb2Url, token.toCharArray())
-        influxDBClient.setLogLevel(LogLevel.BODY)
         queryKotlinApi = influxDBClient.getQueryKotlinApi()
     }
 
@@ -139,14 +137,16 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
     fun `Simple query FluxRecords order`(): Unit = runBlocking {
 
         val flux = "from(bucket:\"${bucket.name}\")\n\t" +
-                "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t |> sort(columns:[\"value\"])"
+                "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t "+
+                "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\" and r[\"host\"] == \"A\"))" +
+                "|> sort(columns:[\"value\"])"
 
         val records = queryKotlinApi.query(flux, organization.id)
 
         val values = records.map { it.value }.toList()
 
-        assert(values).hasSize(10)
-        assert(values).containsExactly(55L, 65L, 35L, 38L, 45L, 49L, 10L, 11L, 20L, 22L)
+        assert(values).hasSize(2)
+        assert(values).containsExactly(10L, 11L)
     }
 
     @Test
@@ -154,12 +154,12 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         val flux = "from(bucket:\"${bucket.name}\")\n\t" +
                 "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
-                "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))"
+                "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\" and r[\"host\"] == \"A\"))"
 
         val query = queryKotlinApi.query(flux, organization.id, Mem::class.java)
         val memory = query.toList()
 
-        assert(memory).hasSize(4)
+        assert(memory).hasSize(2)
 
         assert(memory[0].host).isEqualTo("A")
         assert(memory[0].region).isEqualTo("west")
@@ -170,16 +170,6 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
         assert(memory[1].region).isEqualTo("west")
         assert(memory[1].free).isEqualTo(11L)
         assert(memory[1].time).isEqualTo(Instant.ofEpochSecond(20))
-
-        assert(memory[2].host).isEqualTo("B")
-        assert(memory[2].region).isEqualTo("west")
-        assert(memory[2].free).isEqualTo(20L)
-        assert(memory[2].time).isEqualTo(Instant.ofEpochSecond(10))
-
-        assert(memory[3].host).isEqualTo("B")
-        assert(memory[3].region).isEqualTo("west")
-        assert(memory[3].free).isEqualTo(22L)
-        assert(memory[3].time).isEqualTo(Instant.ofEpochSecond(20))
     }
 
     @Test
@@ -206,18 +196,17 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         val flux = "from(bucket:\"${bucket.name}\")\n\t" +
                 "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
-                "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\t" +
+                "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\" and r[\"host\"] == \"A\"))" +
                 "|> sum()"
 
         val lines = queryKotlinApi.queryRaw(flux, organization.id).toList()
-        assert(lines).hasSize(7)
+        assert(lines).hasSize(6)
         assert(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
         assert(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
         assert(lines[2]).isEqualTo("#default,_result,,,,,,,,")
-        assert(lines[3]).isEqualTo(",result,table,_start,_stop,_measurement,host,region,_field,_value")
-        assert(lines[4]).endsWith(",mem,A,west,free,21")
-        assert(lines[5]).endsWith(",mem,B,west,free,42")
-        assert(lines[6]).isEmpty()
+        assert(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
+        assert(lines[4]).endsWith(",free,mem,A,west,21")
+        assert(lines[5]).isEmpty()
     }
 
     @Test
@@ -225,17 +214,16 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         val flux = "from(bucket:\"${bucket.name}\")\n\t" +
                 "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
-                "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\t" +
+                "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\" and r[\"host\"] == \"A\"))"  +
                 "|> sum()"
 
         val dialect = Dialect().header(false)
 
         val lines = queryKotlinApi.queryRaw(flux, dialect, organization.id).toList()
 
-        assert(lines).hasSize(3)
-        assert(lines[0]).endsWith(",mem,A,west,free,21")
-        assert(lines[1]).endsWith(",mem,B,west,free,42")
-        assert(lines[2]).isEmpty()
+        assert(lines).hasSize(2)
+        assert(lines[0]).endsWith(",free,mem,A,west,21")
+        assert(lines[1]).isEmpty()
     }
 
     class Mem {
