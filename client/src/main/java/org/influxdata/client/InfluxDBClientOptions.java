@@ -188,6 +188,9 @@ public final class InfluxDBClientOptions {
         public InfluxDBClientOptions.Builder url(@Nonnull final String url) {
             Arguments.checkNonEmpty(url, "url");
             this.url = url;
+//            if (!this.url.endsWith("/"))  {
+//                this.url += "/";
+//            }
             return this;
         }
 

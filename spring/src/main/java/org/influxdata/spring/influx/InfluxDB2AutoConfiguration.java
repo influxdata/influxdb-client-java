@@ -79,7 +79,7 @@ public class InfluxDB2AutoConfiguration {
 
         if (StringUtils.hasLength(properties.getToken())) {
             influxBuilder.authenticateToken(properties.getToken().toCharArray());
-        } else {
+        } else if (StringUtils.hasLength(properties.getUsername()) && StringUtils.hasLength(properties.getPassword())) {
             influxBuilder.authenticate(properties.getUsername(), properties.getPassword().toCharArray());
         }
 
