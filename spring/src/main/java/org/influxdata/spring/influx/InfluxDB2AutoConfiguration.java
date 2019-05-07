@@ -73,6 +73,8 @@ public class InfluxDB2AutoConfiguration {
 
         InfluxDBClientOptions.Builder influxBuilder = InfluxDBClientOptions.builder()
                 .url(properties.getUrl())
+                .bucket(properties.getBucket())
+                .org(properties.getOrg())
                 .okHttpClient(okHttpBuilder);
 
         if (StringUtils.hasLength(properties.getToken())) {

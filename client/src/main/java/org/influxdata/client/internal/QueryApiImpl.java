@@ -32,6 +32,7 @@ import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
 import org.influxdata.Cancellable;
+import org.influxdata.client.InfluxDBClientOptions;
 import org.influxdata.client.QueryApi;
 import org.influxdata.client.domain.Dialect;
 import org.influxdata.client.domain.Query;
@@ -52,12 +53,24 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
     private static final Logger LOG = Logger.getLogger(QueryApiImpl.class.getName());
 
     private final QueryService service;
+    private final InfluxDBClientOptions options;
 
-    QueryApiImpl(@Nonnull final QueryService service) {
+    QueryApiImpl(@Nonnull final QueryService service, @Nonnull final InfluxDBClientOptions options) {
 
         Arguments.checkNotNull(service, "service");
+        Arguments.checkNotNull(options, "options");
 
         this.service = service;
+        this.options = options;
+    }
+
+    @Nonnull
+    @Override
+    public List<FluxTable> query(@Nonnull final String query) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return query(query, options.getOrg());
     }
 
     @Nonnull
@@ -68,6 +81,15 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Arguments.checkNonEmpty(orgID, "orgID");
 
         return query(new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT), orgID);
+    }
+
+    @Nonnull
+    @Override
+    public List<FluxTable> query(@Nonnull final Query query) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return query(query, options.getOrg());
     }
 
     @Nonnull
@@ -87,6 +109,15 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
 
     @Nonnull
     @Override
+    public <M> List<M> query(@Nonnull final String query, @Nonnull final Class<M> measurementType) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return query(query, options.getOrg(), measurementType);
+    }
+
+    @Nonnull
+    @Override
     public <M> List<M> query(@Nonnull final String query,
                              @Nonnull final String orgID,
                              @Nonnull final Class<M> measurementType) {
@@ -96,6 +127,15 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Query dialect = new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT);
 
         return query(dialect, orgID, measurementType);
+    }
+
+    @Nonnull
+    @Override
+    public <M> List<M> query(@Nonnull final Query query, @Nonnull final Class<M> measurementType) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return query(query, options.getOrg(), measurementType);
     }
 
     @Nonnull
@@ -132,6 +172,14 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
     }
 
     @Override
+    public void query(@Nonnull final String query, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        query(query, options.getOrg(), onNext);
+    }
+
+    @Override
     public void query(@Nonnull final String query,
                       @Nonnull final String orgID,
                       @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext) {
@@ -143,6 +191,14 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
     }
 
     @Override
+    public void query(@Nonnull final Query query, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        query(query, options.getOrg(), onNext);
+    }
+
+    @Override
     public void query(@Nonnull final Query query,
                       @Nonnull final String orgID,
                       @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext) {
@@ -151,6 +207,16 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Arguments.checkNotNull(onNext, "onNext");
 
         query(query, orgID, onNext, ERROR_CONSUMER);
+    }
+
+    @Override
+    public <M> void query(@Nonnull final String query,
+                          @Nonnull final Class<M> measurementType,
+                          @Nonnull final BiConsumer<Cancellable, M> onNext) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        query(query, options.getOrg(), measurementType, onNext);
     }
 
     @Override
@@ -169,6 +235,16 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
 
     @Override
     public <M> void query(@Nonnull final Query query,
+                          @Nonnull final Class<M> measurementType,
+                          @Nonnull final BiConsumer<Cancellable, M> onNext) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        query(query, options.getOrg(), measurementType, onNext);
+    }
+
+    @Override
+    public <M> void query(@Nonnull final Query query,
                           @Nonnull final String orgID,
                           @Nonnull final Class<M> measurementType,
                           @Nonnull final BiConsumer<Cancellable, M> onNext) {
@@ -179,6 +255,16 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Arguments.checkNotNull(measurementType, "measurementType");
 
         query(query, orgID, measurementType, onNext, ERROR_CONSUMER);
+    }
+
+    @Override
+    public void query(@Nonnull final String query,
+                      @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
+                      @Nonnull final Consumer<? super Throwable> onError) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        query(query, options.getOrg(), onNext, onError);
     }
 
     @Override
@@ -197,6 +283,16 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
 
     @Override
     public void query(@Nonnull final Query query,
+                      @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
+                      @Nonnull final Consumer<? super Throwable> onError) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        query(query, options.getOrg(), onNext, onError);
+    }
+
+    @Override
+    public void query(@Nonnull final Query query,
                       @Nonnull final String orgID,
                       @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
                       @Nonnull final Consumer<? super Throwable> onError) {
@@ -207,6 +303,17 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Arguments.checkNotNull(onError, "onError");
 
         query(query, orgID, onNext, onError, EMPTY_ACTION);
+    }
+
+    @Override
+    public <M> void query(@Nonnull final String query,
+                          @Nonnull final Class<M> measurementType,
+                          @Nonnull final BiConsumer<Cancellable, M> onNext,
+                          @Nonnull final Consumer<? super Throwable> onError) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        query(query, options.getOrg(), measurementType, onNext, onError);
     }
 
     @Override
@@ -227,6 +334,17 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
 
     @Override
     public <M> void query(@Nonnull final Query query,
+                          @Nonnull final Class<M> measurementType,
+                          @Nonnull final BiConsumer<Cancellable, M> onNext,
+                          @Nonnull final Consumer<? super Throwable> onError) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        query(query, options.getOrg(), measurementType, onNext, onError);
+    }
+
+    @Override
+    public <M> void query(@Nonnull final Query query,
                           @Nonnull final String orgID,
                           @Nonnull final Class<M> measurementType,
                           @Nonnull final BiConsumer<Cancellable, M> onNext,
@@ -239,6 +357,17 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Arguments.checkNotNull(measurementType, "measurementType");
 
         query(query, orgID, measurementType, onNext, onError, EMPTY_ACTION);
+    }
+
+    @Override
+    public void query(@Nonnull final String query,
+                      @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
+                      @Nonnull final Consumer<? super Throwable> onError,
+                      @Nonnull final Runnable onComplete) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        query(query, options.getOrg(), onNext, onError, onComplete);
     }
 
     @Override
@@ -257,6 +386,17 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Query queryObj = new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT);
 
         query(queryObj, orgID, onNext, onError, onComplete);
+    }
+
+    @Override
+    public void query(@Nonnull final Query query,
+                      @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
+                      @Nonnull final Consumer<? super Throwable> onError,
+                      @Nonnull final Runnable onComplete) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        query(query, options.getOrg(), onNext, onError, onComplete);
     }
 
     @Override
@@ -293,6 +433,18 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
 
     @Override
     public <M> void query(@Nonnull final String query,
+                          @Nonnull final Class<M> measurementType,
+                          @Nonnull final BiConsumer<Cancellable, M> onNext,
+                          @Nonnull final Consumer<? super Throwable> onError,
+                          @Nonnull final Runnable onComplete) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        query(query, options.getOrg(), measurementType, onNext, onError, onComplete);
+    }
+
+    @Override
+    public <M> void query(@Nonnull final String query,
                           @Nonnull final String orgID,
                           @Nonnull final Class<M> measurementType,
                           @Nonnull final BiConsumer<Cancellable, M> onNext,
@@ -309,6 +461,18 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Query queryObj = new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT);
 
         query(queryObj, orgID, measurementType,  onNext, onError, onComplete);
+    }
+
+    @Override
+    public <M> void query(@Nonnull final Query query,
+                          @Nonnull final Class<M> measurementType,
+                          @Nonnull final BiConsumer<Cancellable, M> onNext,
+                          @Nonnull final Consumer<? super Throwable> onError,
+                          @Nonnull final Runnable onComplete) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        query(query, options.getOrg(), measurementType, onNext, onError, onComplete);
     }
 
     @Override
@@ -350,12 +514,30 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
 
     @Nonnull
     @Override
+    public String queryRaw(@Nonnull final String query) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return queryRaw(query, options.getOrg());
+    }
+
+    @Nonnull
+    @Override
     public String queryRaw(@Nonnull final String query, @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(query, "query");
         Arguments.checkNonEmpty(orgID, "orgID");
 
         return queryRaw(new Query().query(query), orgID);
+    }
+
+    @Nonnull
+    @Override
+    public String queryRaw(@Nonnull final String query, @Nullable final Dialect dialect) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return queryRaw(query, dialect, options.getOrg());
     }
 
     @Nonnull
@@ -368,6 +550,15 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Arguments.checkNonEmpty(orgID, "orgID");
 
         return queryRaw(new Query().query(query).dialect(dialect), orgID);
+    }
+
+    @Nonnull
+    @Override
+    public String queryRaw(@Nonnull final Query query) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return queryRaw(query, options.getOrg());
     }
 
     @Nonnull
@@ -387,6 +578,14 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
     }
 
     @Override
+    public void queryRaw(@Nonnull final String query, @Nonnull final BiConsumer<Cancellable, String> onResponse) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        queryRaw(query, options.getOrg(), onResponse);
+    }
+
+    @Override
     public void queryRaw(@Nonnull final String query,
                          @Nonnull final String orgID,
                          @Nonnull final BiConsumer<Cancellable, String> onResponse) {
@@ -396,6 +595,14 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Arguments.checkNotNull(onResponse, "onResponse");
 
         queryRaw(query, null, orgID, onResponse);
+    }
+
+    @Override
+    public void queryRaw(@Nonnull final Query query, @Nonnull final BiConsumer<Cancellable, String> onResponse) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        queryRaw(query, options.getOrg(), onResponse);
     }
 
     @Override
@@ -413,6 +620,16 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
     @Override
     public void queryRaw(@Nonnull final String query,
                          @Nullable final Dialect dialect,
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        queryRaw(query, dialect, options.getOrg(), onResponse);
+    }
+
+    @Override
+    public void queryRaw(@Nonnull final String query,
+                         @Nullable final Dialect dialect,
                          @Nonnull final String orgID,
                          @Nonnull final BiConsumer<Cancellable, String> onResponse) {
 
@@ -421,6 +638,16 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Arguments.checkNotNull(onResponse, "onResponse");
 
         queryRaw(query, dialect, orgID, onResponse, ERROR_CONSUMER);
+    }
+
+    @Override
+    public void queryRaw(@Nonnull final String query,
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                         @Nonnull final Consumer<? super Throwable> onError) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        queryRaw(query, options.getOrg(), onResponse, onError);
     }
 
     @Override
@@ -438,11 +665,32 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
 
     @Override
     public void queryRaw(@Nonnull final Query query,
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                         @Nonnull final Consumer<? super Throwable> onError) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        queryRaw(query, options.getOrg(), onResponse, onError);
+    }
+
+    @Override
+    public void queryRaw(@Nonnull final Query query,
                          @Nonnull final String orgID,
                          @Nonnull final BiConsumer<Cancellable, String> onResponse,
                          @Nonnull final Consumer<? super Throwable> onError) {
 
         queryRaw(query, orgID, onResponse, onError, EMPTY_ACTION);
+    }
+
+    @Override
+    public void queryRaw(@Nonnull final String query,
+                         @Nullable final Dialect dialect,
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                         @Nonnull final Consumer<? super Throwable> onError) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        queryRaw(query, options.getOrg(), onResponse, onError);
     }
 
     @Override
@@ -458,6 +706,17 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Arguments.checkNotNull(onError, "onError");
 
         queryRaw(query, dialect, orgID, onResponse, onError, EMPTY_ACTION);
+    }
+
+    @Override
+    public void queryRaw(@Nonnull final String query,
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                         @Nonnull final Consumer<? super Throwable> onError,
+                         @Nonnull final Runnable onComplete) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        queryRaw(query, options.getOrg(), onResponse, onError, onComplete);
     }
 
     @Override
@@ -479,6 +738,18 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
     @Override
     public void queryRaw(@Nonnull final String query,
                          @Nullable final Dialect dialect,
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                         @Nonnull final Consumer<? super Throwable> onError,
+                         @Nonnull final Runnable onComplete) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        queryRaw(query, dialect, options.getOrg(), onResponse, onError, onComplete);
+    }
+
+    @Override
+    public void queryRaw(@Nonnull final String query,
+                         @Nullable final Dialect dialect,
                          @Nonnull final String orgID,
                          @Nonnull final BiConsumer<Cancellable, String> onResponse,
                          @Nonnull final Consumer<? super Throwable> onError,
@@ -491,6 +762,17 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Arguments.checkNotNull(onComplete, "onComplete");
 
         queryRaw(new Query().query(query).dialect(dialect), orgID, onResponse, onError, onComplete, true);
+    }
+
+    @Override
+    public void queryRaw(@Nonnull final Query query,
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                         @Nonnull final Consumer<? super Throwable> onError,
+                         @Nonnull final Runnable onComplete) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        queryRaw(query, options.getOrg(), onResponse, onError, onComplete);
     }
 
     @Override

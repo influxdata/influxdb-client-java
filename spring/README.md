@@ -1,11 +1,6 @@
-# influxdb-spring
-
-> This library is under development and no stable version has been released yet.  
-> The API can change at any moment.
+# Spring Integration for InfluxDB 2.0
 
 [![javadoc](https://img.shields.io/badge/javadoc-link-brightgreen.svg)](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html)
-
-Spring Integration for InfluxDB 2.0
 
 ## Features
 

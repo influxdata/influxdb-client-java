@@ -93,7 +93,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Nonnull
     @Override
     public QueryApi getQueryApi() {
-        return new QueryApiImpl(retrofit.create(QueryService.class));
+        return new QueryApiImpl(retrofit.create(QueryService.class), options);
     }
 
     @Nonnull
@@ -108,7 +108,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
-        return new WriteApiImpl(writeOptions, retrofit.create(WriteService.class));
+        return new WriteApiImpl(writeOptions, retrofit.create(WriteService.class), options);
     }
 
     @Nonnull

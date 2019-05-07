@@ -41,13 +41,27 @@ public class InfluxDB2HealthIndicator extends AbstractHealthIndicator {
     public InfluxDB2HealthIndicator(final InfluxDBClient influxDBClient) {
         super("InfluxDBClient 2 health check failed");
         Assert.notNull(influxDBClient, "InfluxDBClient must not be null");
+
         this.influxDBClient = influxDBClient;
     }
 
     @Override
     protected void doHealthCheck(final Health.Builder builder) {
         Check check = this.influxDBClient.health();
-        builder.up().withDetail("status", check.getStatus());
-    }
 
+        switch (check.getStatus()) {
+            case PASS:
+                builder.up();
+                break;
+            case FAIL:
+                builder.down();
+                break;
+            default:
+                builder.unknown();
+        }
+
+        builder
+                .withDetail("status", check.getStatus())
+                .withDetail("message", check.getMessage());
+    }
 }

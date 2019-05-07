@@ -53,16 +53,16 @@ import org.springframework.context.annotation.Configuration;
 public class InfluxDB2HealthIndicatorAutoConfiguration
         extends CompositeHealthIndicatorConfiguration<InfluxDB2HealthIndicator, InfluxDBClient> {
 
-    private final Map<String, InfluxDBClient> influxDbs;
+    private final Map<String, InfluxDBClient> influxDBClients;
 
-    public InfluxDB2HealthIndicatorAutoConfiguration(final Map<String, InfluxDBClient> influxDbs) {
-        this.influxDbs = influxDbs;
+    public InfluxDB2HealthIndicatorAutoConfiguration(final Map<String, InfluxDBClient> influxDBClients) {
+        this.influxDBClients = influxDBClients;
     }
 
     @Bean
     @ConditionalOnMissingBean(name = "influxDB2HealthIndicator")
     public HealthIndicator influxDbHealthIndicator() {
-        return createHealthIndicator(this.influxDbs);
+        return createHealthIndicator(this.influxDBClients);
     }
 
 }

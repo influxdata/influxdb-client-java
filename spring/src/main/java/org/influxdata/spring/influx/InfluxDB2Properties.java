@@ -52,11 +52,20 @@ public class InfluxDB2Properties {
      */
     private String password;
 
-
     /**
      * Token to use for the authorization.
      */
     private String token;
+
+    /**
+     * Default destination organization for writes and queries.
+     */
+    private String org;
+
+    /**
+     * Default destination bucket for writes.
+     */
+    private String bucket;
 
     /**
      * The log level for logging the HTTP request and HTTP response.
@@ -116,6 +125,22 @@ public class InfluxDB2Properties {
 
     public void setLogLevel(final LogLevel logLevel) {
         this.logLevel = logLevel;
+    }
+
+    public String getOrg() {
+        return org;
+    }
+
+    public void setOrg(final String org) {
+        this.org = org;
+    }
+
+    public String getBucket() {
+        return bucket;
+    }
+
+    public void setBucket(final String bucket) {
+        this.bucket = bucket;
     }
 
     public Duration getReadTimeout() {

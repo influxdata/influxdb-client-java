@@ -21,7 +21,9 @@
  */
 package org.influxdata.client;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
@@ -683,6 +685,91 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         Assertions.assertThat(mockServer.getRequestCount())
                 .isEqualTo(4);
+    }
+
+    @Test
+    void parametersFromOptions() throws InterruptedException, IOException {
+
+        tearDown();
+        after();
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url(startMockServer())
+                .bucket("my-top-bucket")
+                .org("123456")
+                .build();
+
+        influxDBClient = InfluxDBClientFactory.create(options);
+
+        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).build());
+
+        // Points
+        mockServer.enqueue(createResponse("{}"));
+
+        writeApi.writePoints(Collections.singletonList(Point.measurement("h2o")
+                .addTag("location", "europe")
+                .addField("level", 1)
+                .time(1L, WritePrecision.MS)));
+
+        RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("my-top-bucket");
+
+        // Point
+        mockServer.enqueue(createResponse("{}"));
+
+        writeApi.writePoint(Point.measurement("h2o")
+                .addTag("location", "europe")
+                .addField("level", 1)
+                .time(1L, WritePrecision.MS));
+
+        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("my-top-bucket");
+
+        // Record
+        mockServer.enqueue(createResponse("{}"));
+
+        writeApi.writeRecord(WritePrecision.NS, "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
+
+        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("my-top-bucket");
+
+        // Records
+        mockServer.enqueue(createResponse("{}"));
+
+        writeApi.writeRecords(WritePrecision.NS, Collections.singletonList("h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1"));
+
+        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("my-top-bucket");
+
+        // Measurement
+        mockServer.enqueue(createResponse("{}"));
+
+        writeApi.writeMeasurement(WritePrecision.NS, new H2OFeetMeasurement(
+                "coyote_creek", 2.927, "below 3 feet", 1440046800L));
+
+        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("my-top-bucket");
+
+        // Measurements
+        mockServer.enqueue(createResponse("{}"));
+
+        writeApi.writeMeasurements(WritePrecision.NS, Collections.singletonList(new H2OFeetMeasurement(
+                "coyote_creek", 2.927, "below 3 feet", 1440046800L)));
+
+        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("my-top-bucket");
     }
 
     @Nonnull

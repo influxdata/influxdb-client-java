@@ -44,6 +44,9 @@ public final class InfluxDBClientOptions {
     private String username;
     private char[] password;
 
+    private String org;
+    private String bucket;
+
     private InfluxDBClientOptions(@Nonnull final InfluxDBClientOptions.Builder builder) {
 
         Arguments.checkNotNull(builder, "InfluxDBClientOptions.Builder");
@@ -54,6 +57,9 @@ public final class InfluxDBClientOptions {
         this.token = builder.token;
         this.username = builder.username;
         this.password = builder.password;
+
+        this.org = builder.org;
+        this.bucket = builder.bucket;
     }
 
     /**
@@ -119,6 +125,24 @@ public final class InfluxDBClientOptions {
     }
 
     /**
+     * @return the default destination organization for writes and queries
+     * @see InfluxDBClientOptions.Builder#org(String)
+     */
+    @Nullable
+    public String getOrg() {
+        return org;
+    }
+
+    /**
+     * @return default destination bucket for writes
+     * @see InfluxDBClientOptions.Builder#bucket(String)
+     */
+    @Nullable
+    public String getBucket() {
+        return bucket;
+    }
+
+    /**
      * @return HTTP client to use for communication with InfluxDB
      * @see InfluxDBClientOptions.Builder#okHttpClient(OkHttpClient.Builder)
      */
@@ -150,6 +174,9 @@ public final class InfluxDBClientOptions {
         private char[] token;
         private String username;
         private char[] password;
+
+        private String org;
+        private String bucket;
 
         /**
          * Set the url to connect to InfluxDB.
@@ -214,6 +241,34 @@ public final class InfluxDBClientOptions {
 
             this.authScheme = AuthScheme.TOKEN;
             this.token = token;
+
+            return this;
+        }
+
+        /**
+         * Specify the default destination organization for writes and queries.
+         *
+         * @param org the default destination organization for writes and queries
+         * @return {@link InfluxDBClientOptions}
+         */
+        @Nonnull
+        public InfluxDBClientOptions.Builder org(@Nullable final String org) {
+
+            this.org = org;
+
+            return this;
+        }
+
+        /**
+         * Specify the default destination bucket for writes.
+         *
+         * @param bucket default destination bucket for writes
+         * @return {@link InfluxDBClientOptions}
+         */
+        @Nonnull
+        public InfluxDBClientOptions.Builder bucket(@Nullable final String bucket) {
+
+            this.bucket = bucket;
 
             return this;
         }
