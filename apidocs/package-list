@@ -20,4 +20,7 @@ org.influxdata.query.dsl.functions.properties
 org.influxdata.query.dsl.functions.restriction
 org.influxdata.query.exceptions
 org.influxdata.query.internal
+org.influxdata.spring.health
+org.influxdata.spring.influx
+org.influxdata.spring.metrics
 org.influxdata.test
