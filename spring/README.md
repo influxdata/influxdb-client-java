@@ -4,9 +4,29 @@
 
 ## Features
 
+- [InfluxDB2 auto-configuration](#influxdb2-auto-configuration)
 - [Actuator for InfluxDB2 micrometer registry](#actuator-for-influxdb2-micrometer-registry)
 - [Actuator for InfluxDB2 health](#actuator-for-influxdb2-health)
-- [InfluxDB2 auto-configuration](#influxdb2-auto-configuration)
+
+## InfluxDB2 auto-configuration
+
+To enable `InfluxDBClient` support you need to set a `spring.influx2.url` property, and include `influxdb-client-java` on your classpath.
+
+The default configuration can be override via properties:
+
+```yaml
+spring.influx2:
+    url: http://localhost:8086/api/v2 # URL to connect to InfluxDB.
+    username: my-user # Username to use in the basic auth.
+    password: my-password # Password to use in the basic auth.
+    token: my-token # Token to use for the authorization.
+    org: my-org # Default destination organization for writes and queries.
+    bucket: my-bucket # Default destination bucket for writes.
+    logLevel: BODY # The log level for logging the HTTP request and HTTP response. (Default: NONE)
+    readTimeout: 5s # Read timeout for OkHttpClient. (Default: 10s)
+    writeTimeout: 5s # Write timeout for OkHttpClient. (Default: 10s)
+    connectTimeout: 5s # Connection timeout for OkHttpClient. (Default: 10s)
+```
 
 ## Actuator for InfluxDB2 micrometer registry
 
@@ -47,7 +67,6 @@ management.metrics.export.influx2:
 ```
  
 ## Actuator for InfluxDB2 health
-## InfluxDB2 auto-configuration
 
 ## Version
 
