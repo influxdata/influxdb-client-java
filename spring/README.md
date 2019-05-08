@@ -10,7 +10,9 @@
 
 ## InfluxDB2 auto-configuration
 
-To enable `InfluxDBClient` support you need to set a `spring.influx2.url` property, and include `influxdb-client-java` on your classpath.
+To enable `InfluxDBClient` support you need to set a `spring.influx2.url` property, and include `influxdb-client-java` on your classpath. 
+
+`InfluxDBClient` relies on OkHttp. If you need to tune the http client, you can register an `InfluxDB2OkHttpClientBuilderProvider` bean.
 
 The default configuration can be override via properties:
 
@@ -68,6 +70,14 @@ dependencies {
 ```
  
 ## Actuator for InfluxDB2 health
+
+The `/health` endpoint can monitor an **InfluxDB 2.0** server.
+
+InfluxDB 2.0 health check relies on `InfluxDBClient` and can be configured via:
+
+```yaml
+management.health.influxdb2.enabled=true # Whether to enable InfluxDB 2.0 health check.
+```
 
 ## Version
 
