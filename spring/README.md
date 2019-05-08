@@ -30,22 +30,7 @@ spring.influx2:
 
 ## Actuator for InfluxDB2 micrometer registry
 
-The Influx2 micrometer registry should be defined as a Maven dependency:
-
-```xml
-<dependency>
-    <groupId>io.micrometer</groupId>
-    <artifactId>micrometer-registry-influx2</artifactId>
-    <version>1.2.0-bonitoo-SNAPSHOT</version>
-</dependency>
-```
-
-or when using with Gradle:
-```groovy
-dependencies {
-    compile "io.micrometer:micrometer-registry-influx2:1.2.0-bonitoo-SNAPSHOT"
-}
-```
+The enable export metrics to **InfluxDB 2.0** you need to include `micrometer-registry-influx2` on your classpath.
 
 The default configuration can be override via properties:
 
@@ -64,6 +49,22 @@ management.metrics.export.influx2:
     read-timeout: 10s # Read timeout for requests to this backend. (Default: 10s)
     num-threads: 2 # Number of threads to use with the metrics publishing scheduler. (Default: 2)
     batch-size: 10000 # Number of measurements per request to use for this backend. If more measurements are found, then multiple requests will be made. (Default: 10000)
+```
+Maven dependency:
+
+```xml
+<dependency>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-registry-influx2</artifactId>
+    <version>1.2.0-bonitoo-SNAPSHOT</version>
+</dependency>
+```
+
+or when using with Gradle:
+```groovy
+dependencies {
+    compile "io.micrometer:micrometer-registry-influx2:1.2.0-bonitoo-SNAPSHOT"
+}
 ```
  
 ## Actuator for InfluxDB2 health
