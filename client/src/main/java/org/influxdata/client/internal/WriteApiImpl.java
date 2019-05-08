@@ -28,6 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
+import org.influxdata.client.InfluxDBClientOptions;
 import org.influxdata.client.WriteApi;
 import org.influxdata.client.WriteOptions;
 import org.influxdata.client.domain.WritePrecision;
@@ -45,10 +46,26 @@ import io.reactivex.disposables.Disposable;
  */
 final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
 
+    private final InfluxDBClientOptions options;
+
     WriteApiImpl(@Nonnull final WriteOptions writeOptions,
-                 @Nonnull final WriteService service) {
+                 @Nonnull final WriteService service,
+                 @Nonnull final InfluxDBClientOptions options) {
 
         super(writeOptions, writeOptions.getWriteScheduler(), service);
+
+        Arguments.checkNotNull(options, "options");
+
+        this.options = options;
+    }
+
+    @Override
+    public void writeRecord(@Nonnull final WritePrecision precision, @Nullable final String record) {
+
+        Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        writeRecord(options.getBucket(), options.getOrg(), precision, record);
     }
 
     @Override
@@ -69,6 +86,15 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
     }
 
     @Override
+    public void writeRecords(@Nonnull final WritePrecision precision, @Nonnull final List<String> records) {
+
+        Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        writeRecords(options.getBucket(), options.getOrg(), precision, records);
+    }
+
+    @Override
     public void writeRecords(@Nonnull final String bucket,
                              @Nonnull final String orgID,
                              @Nonnull final WritePrecision precision,
@@ -85,6 +111,15 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
     }
 
     @Override
+    public void writePoint(@Nullable final Point point) {
+
+        Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        writePoint(options.getBucket(), options.getOrg(), point);
+    }
+
+    @Override
     public void writePoint(@Nonnull final String bucket,
                            @Nonnull final String orgID,
                            @Nullable final Point point) {
@@ -94,6 +129,15 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
         }
 
         writePoints(bucket, orgID, Collections.singletonList(point));
+    }
+
+    @Override
+    public void writePoints(@Nonnull final List<Point> points) {
+
+        Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        writePoints(options.getBucket(), options.getOrg(), points);
     }
 
     @Override
@@ -112,6 +156,15 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
     }
 
     @Override
+    public <M> void writeMeasurement(@Nonnull final WritePrecision precision, @Nullable final M measurement) {
+
+        Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        writeMeasurement(options.getBucket(), options.getOrg(), precision, measurement);
+    }
+
+    @Override
     public <M> void writeMeasurement(@Nonnull final String bucket,
                                      @Nonnull final String orgID,
                                      @Nonnull final WritePrecision precision,
@@ -122,6 +175,15 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
         }
 
         writeMeasurements(bucket, orgID, precision, Collections.singletonList(measurement));
+    }
+
+    @Override
+    public <M> void writeMeasurements(@Nonnull final WritePrecision precision, @Nonnull final List<M> measurements) {
+
+        Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        writeMeasurements(options.getBucket(), options.getOrg(), precision, measurements);
     }
 
     @Override

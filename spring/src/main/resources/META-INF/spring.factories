@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.influxdata.spring.health.InfluxDB2HealthIndicatorAutoConfiguration,\
+org.influxdata.spring.influx.InfluxDB2AutoConfiguration,\
+org.influxdata.spring.metrics.Influx2MetricsExportAutoConfiguration

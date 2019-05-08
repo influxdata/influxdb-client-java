@@ -58,6 +58,7 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
     public final HealthService healthService;
 
     protected final Retrofit retrofit;
+    protected final InfluxDBClientOptions options;
 
     protected final HttpLoggingInterceptor loggingInterceptor;
     protected final GzipInterceptor gzipInterceptor;
@@ -68,6 +69,7 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
 
         Arguments.checkNotNull(options, "InfluxDBClientOptions");
 
+        this.options = options;
         this.loggingInterceptor = new HttpLoggingInterceptor();
         this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         this.authenticateInterceptor = new AuthenticateInterceptor(options);
