@@ -145,6 +145,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         request.setFlux(task.getFlux());
         request.setOrgID(task.getOrgID());
         request.setOrg(task.getOrg());
+        request.setDescription(task.getDescription());
 
         if (task.getStatus() != null) {
             request.setStatus(TaskCreateRequest.StatusEnum.fromValue(task.getStatus().getValue()));
@@ -247,6 +248,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         taskUpdateRequest.setEvery(task.getEvery());
         taskUpdateRequest.setCron(task.getCron());
         taskUpdateRequest.setOffset(task.getOffset());
+        taskUpdateRequest.setDescription(task.getDescription());
 
         return updateTask(task.getId(), taskUpdateRequest);
     }

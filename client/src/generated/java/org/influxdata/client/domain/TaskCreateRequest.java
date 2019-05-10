@@ -92,6 +92,10 @@ public class TaskCreateRequest {
   @SerializedName(SERIALIZED_NAME_FLUX)
   private String flux = null;
 
+  public static final String SERIALIZED_NAME_DESCRIPTION = "description";
+  @SerializedName(SERIALIZED_NAME_DESCRIPTION)
+  private String description = null;
+
   public static final String SERIALIZED_NAME_TOKEN = "token";
   @SerializedName(SERIALIZED_NAME_TOKEN)
   private String token = null;
@@ -168,6 +172,24 @@ public class TaskCreateRequest {
     this.flux = flux;
   }
 
+  public TaskCreateRequest description(String description) {
+    this.description = description;
+    return this;
+  }
+
+   /**
+   * Get description
+   * @return description
+  **/
+  @ApiModelProperty(value = "")
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
   public TaskCreateRequest token(String token) {
     this.token = token;
     return this;
@@ -200,12 +222,13 @@ public class TaskCreateRequest {
         Objects.equals(this.org, taskCreateRequest.org) &&
         Objects.equals(this.status, taskCreateRequest.status) &&
         Objects.equals(this.flux, taskCreateRequest.flux) &&
+        Objects.equals(this.description, taskCreateRequest.description) &&
         Objects.equals(this.token, taskCreateRequest.token);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(orgID, org, status, flux, token);
+    return Objects.hash(orgID, org, status, flux, description, token);
   }
 
 
@@ -217,6 +240,7 @@ public class TaskCreateRequest {
     sb.append("    org: ").append(toIndentedString(org)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    flux: ").append(toIndentedString(flux)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    token: ").append(toIndentedString(token)).append("\n");
     sb.append("}");
     return sb.toString();

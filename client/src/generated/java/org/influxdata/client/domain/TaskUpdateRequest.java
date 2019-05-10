@@ -100,6 +100,10 @@ public class TaskUpdateRequest {
   @SerializedName(SERIALIZED_NAME_OFFSET)
   private String offset = null;
 
+  public static final String SERIALIZED_NAME_DESCRIPTION = "description";
+  @SerializedName(SERIALIZED_NAME_DESCRIPTION)
+  private String description = null;
+
   public static final String SERIALIZED_NAME_TOKEN = "token";
   @SerializedName(SERIALIZED_NAME_TOKEN)
   private String token = null;
@@ -212,6 +216,24 @@ public class TaskUpdateRequest {
     this.offset = offset;
   }
 
+  public TaskUpdateRequest description(String description) {
+    this.description = description;
+    return this;
+  }
+
+   /**
+   * Get description
+   * @return description
+  **/
+  @ApiModelProperty(value = "")
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
   public TaskUpdateRequest token(String token) {
     this.token = token;
     return this;
@@ -246,12 +268,13 @@ public class TaskUpdateRequest {
         Objects.equals(this.every, taskUpdateRequest.every) &&
         Objects.equals(this.cron, taskUpdateRequest.cron) &&
         Objects.equals(this.offset, taskUpdateRequest.offset) &&
+        Objects.equals(this.description, taskUpdateRequest.description) &&
         Objects.equals(this.token, taskUpdateRequest.token);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(status, flux, name, every, cron, offset, token);
+    return Objects.hash(status, flux, name, every, cron, offset, description, token);
   }
 
 
@@ -265,6 +288,7 @@ public class TaskUpdateRequest {
     sb.append("    every: ").append(toIndentedString(every)).append("\n");
     sb.append("    cron: ").append(toIndentedString(cron)).append("\n");
     sb.append("    offset: ").append(toIndentedString(offset)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    token: ").append(toIndentedString(token)).append("\n");
     sb.append("}");
     return sb.toString();

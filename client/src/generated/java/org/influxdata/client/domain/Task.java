@@ -48,6 +48,10 @@ public class Task {
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name = null;
 
+  public static final String SERIALIZED_NAME_DESCRIPTION = "description";
+  @SerializedName(SERIALIZED_NAME_DESCRIPTION)
+  private String description = null;
+
   /**
    * The current status of the task. When updated to &#39;inactive&#39;, cancels all queued jobs of this task.
    */
@@ -190,16 +194,34 @@ public class Task {
   }
 
    /**
-   * A description of the task.
+   * The name of the task.
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "A description of the task.")
+  @ApiModelProperty(required = true, value = "The name of the task.")
   public String getName() {
     return name;
   }
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Task description(String description) {
+    this.description = description;
+    return this;
+  }
+
+   /**
+   * Get description
+   * @return description
+  **/
+  @ApiModelProperty(value = "")
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public Task status(StatusEnum status) {
@@ -387,6 +409,7 @@ public class Task {
         Objects.equals(this.orgID, task.orgID) &&
         Objects.equals(this.org, task.org) &&
         Objects.equals(this.name, task.name) &&
+        Objects.equals(this.description, task.description) &&
         Objects.equals(this.status, task.status) &&
         Objects.equals(this.labels, task.labels) &&
         Objects.equals(this.authorizationID, task.authorizationID) &&
@@ -402,7 +425,7 @@ public class Task {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, orgID, org, name, status, labels, authorizationID, flux, every, cron, offset, latestCompleted, createdAt, updatedAt, links);
+    return Objects.hash(id, orgID, org, name, description, status, labels, authorizationID, flux, every, cron, offset, latestCompleted, createdAt, updatedAt, links);
   }
 
 
@@ -414,6 +437,7 @@ public class Task {
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
     sb.append("    org: ").append(toIndentedString(org)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
     sb.append("    authorizationID: ").append(toIndentedString(authorizationID)).append("\n");

@@ -28,12 +28,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
-import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Authorization;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.Label;
@@ -105,6 +103,7 @@ class ITTasksApi extends AbstractITClientTest {
         task.setOrgID(organization.getId());
         task.setFlux(flux);
         task.setStatus(Task.StatusEnum.ACTIVE);
+        task.setDescription("Task description");
 
         task = tasksApi.createTask(task);
 
@@ -116,6 +115,7 @@ class ITTasksApi extends AbstractITClientTest {
         Assertions.assertThat(task.getEvery()).isEqualTo("1h");
         Assertions.assertThat(task.getCron()).isNull();
         Assertions.assertThat(task.getFlux()).isEqualToIgnoringWhitespace(flux);
+        Assertions.assertThat(task.getDescription()).isEqualTo("Task description");
     }
 
     @Test
@@ -305,6 +305,7 @@ class ITTasksApi extends AbstractITClientTest {
         cronTask.setCron(null);
         cronTask.setEvery("3m");
         cronTask.setStatus(Task.StatusEnum.INACTIVE);
+        cronTask.setDescription("Updated description");
 
         Task updatedTask = tasksApi.updateTask(cronTask);
 
@@ -317,6 +318,7 @@ class ITTasksApi extends AbstractITClientTest {
         Assertions.assertThat(updatedTask.getOrgID()).isEqualTo(cronTask.getOrgID());
         Assertions.assertThat(updatedTask.getName()).isEqualTo(cronTask.getName());
         Assertions.assertThat(updatedTask.getUpdatedAt()).isNotNull();
+        Assertions.assertThat(updatedTask.getDescription()).isEqualTo("Updated description");
     }
 
     @Test
