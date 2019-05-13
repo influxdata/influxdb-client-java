@@ -31,7 +31,7 @@ import java.io.IOException;
 public class RoutesExternal {
   public static final String SERIALIZED_NAME_STATUS_FEED = "statusFeed";
   @SerializedName(SERIALIZED_NAME_STATUS_FEED)
-  private String statusFeed = null;
+  private String statusFeed;
 
   public RoutesExternal statusFeed(String statusFeed) {
     this.statusFeed = statusFeed;

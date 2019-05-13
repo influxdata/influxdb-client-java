@@ -37,7 +37,7 @@ public class TelegrafPluginInputRedisConfig {
 
   public static final String SERIALIZED_NAME_PASSWORD = "password";
   @SerializedName(SERIALIZED_NAME_PASSWORD)
-  private String password = null;
+  private String password;
 
   public TelegrafPluginInputRedisConfig servers(List<String> servers) {
     this.servers = servers;

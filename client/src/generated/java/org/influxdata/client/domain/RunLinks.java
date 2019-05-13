@@ -31,19 +31,19 @@ import java.io.IOException;
 public class RunLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
+  private String self;
 
   public static final String SERIALIZED_NAME_TASK = "task";
   @SerializedName(SERIALIZED_NAME_TASK)
-  private String task = null;
+  private String task;
 
   public static final String SERIALIZED_NAME_LOGS = "logs";
   @SerializedName(SERIALIZED_NAME_LOGS)
-  private String logs = null;
+  private String logs;
 
   public static final String SERIALIZED_NAME_RETRY = "retry";
   @SerializedName(SERIALIZED_NAME_RETRY)
-  private String retry = null;
+  private String retry;
 
   public RunLinks self(String self) {
     this.self = self;

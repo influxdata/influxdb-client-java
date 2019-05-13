@@ -31,11 +31,11 @@ import java.io.IOException;
 public class TaskCreateRequest {
   public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
-  private String orgID = null;
+  private String orgID;
 
   public static final String SERIALIZED_NAME_ORG = "org";
   @SerializedName(SERIALIZED_NAME_ORG)
-  private String org = null;
+  private String org;
 
   /**
    * Starting state of the task. &#39;inactive&#39; tasks are not run until they are updated to &#39;active&#39;
@@ -90,15 +90,15 @@ public class TaskCreateRequest {
 
   public static final String SERIALIZED_NAME_FLUX = "flux";
   @SerializedName(SERIALIZED_NAME_FLUX)
-  private String flux = null;
+  private String flux;
 
   public static final String SERIALIZED_NAME_DESCRIPTION = "description";
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
-  private String description = null;
+  private String description;
 
   public static final String SERIALIZED_NAME_TOKEN = "token";
   @SerializedName(SERIALIZED_NAME_TOKEN)
-  private String token = null;
+  private String token;
 
   public TaskCreateRequest orgID(String orgID) {
     this.orgID = orgID;
@@ -178,10 +178,10 @@ public class TaskCreateRequest {
   }
 
    /**
-   * Get description
+   * An optional description of the task.
    * @return description
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "An optional description of the task.")
   public String getDescription() {
     return description;
   }

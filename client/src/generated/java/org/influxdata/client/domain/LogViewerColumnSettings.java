@@ -32,15 +32,15 @@ import java.io.IOException;
 public class LogViewerColumnSettings {
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private String type = null;
+  private String type;
 
   public static final String SERIALIZED_NAME_VALUE = "value";
   @SerializedName(SERIALIZED_NAME_VALUE)
-  private String value = null;
+  private String value;
 
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
+  private String name;
 
   public LogViewerColumnSettings type(String type) {
     this.type = type;
@@ -51,7 +51,7 @@ public class LogViewerColumnSettings {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getType() {
     return type;
   }
@@ -69,7 +69,7 @@ public class LogViewerColumnSettings {
    * Get value
    * @return value
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getValue() {
     return value;
   }

@@ -31,19 +31,19 @@ import java.io.IOException;
 public class RoutesQuery {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
+  private String self;
 
   public static final String SERIALIZED_NAME_AST = "ast";
   @SerializedName(SERIALIZED_NAME_AST)
-  private String ast = null;
+  private String ast;
 
   public static final String SERIALIZED_NAME_ANALYZE = "analyze";
   @SerializedName(SERIALIZED_NAME_ANALYZE)
-  private String analyze = null;
+  private String analyze;
 
   public static final String SERIALIZED_NAME_SUGGESTIONS = "suggestions";
   @SerializedName(SERIALIZED_NAME_SUGGESTIONS)
-  private String suggestions = null;
+  private String suggestions;
 
   public RoutesQuery self(String self) {
     this.self = self;

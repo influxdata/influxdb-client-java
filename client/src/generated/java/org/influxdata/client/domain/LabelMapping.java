@@ -31,7 +31,7 @@ import java.io.IOException;
 public class LabelMapping {
   public static final String SERIALIZED_NAME_LABEL_I_D = "labelID";
   @SerializedName(SERIALIZED_NAME_LABEL_I_D)
-  private String labelID = null;
+  private String labelID;
 
   public LabelMapping labelID(String labelID) {
     this.labelID = labelID;

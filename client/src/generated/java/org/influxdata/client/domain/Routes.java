@@ -34,15 +34,15 @@ import org.influxdata.client.domain.RoutesSystem;
 public class Routes {
   public static final String SERIALIZED_NAME_AUTHORIZATIONS = "authorizations";
   @SerializedName(SERIALIZED_NAME_AUTHORIZATIONS)
-  private String authorizations = null;
+  private String authorizations;
 
   public static final String SERIALIZED_NAME_BUCKETS = "buckets";
   @SerializedName(SERIALIZED_NAME_BUCKETS)
-  private String buckets = null;
+  private String buckets;
 
   public static final String SERIALIZED_NAME_DASHBOARDS = "dashboards";
   @SerializedName(SERIALIZED_NAME_DASHBOARDS)
-  private String dashboards = null;
+  private String dashboards;
 
   public static final String SERIALIZED_NAME_EXTERNAL = "external";
   @SerializedName(SERIALIZED_NAME_EXTERNAL)
@@ -50,15 +50,15 @@ public class Routes {
 
   public static final String SERIALIZED_NAME_VARIABLES = "variables";
   @SerializedName(SERIALIZED_NAME_VARIABLES)
-  private String variables = null;
+  private String variables;
 
   public static final String SERIALIZED_NAME_ME = "me";
   @SerializedName(SERIALIZED_NAME_ME)
-  private String me = null;
+  private String me;
 
   public static final String SERIALIZED_NAME_ORGS = "orgs";
   @SerializedName(SERIALIZED_NAME_ORGS)
-  private String orgs = null;
+  private String orgs;
 
   public static final String SERIALIZED_NAME_QUERY = "query";
   @SerializedName(SERIALIZED_NAME_QUERY)
@@ -66,19 +66,19 @@ public class Routes {
 
   public static final String SERIALIZED_NAME_SETUP = "setup";
   @SerializedName(SERIALIZED_NAME_SETUP)
-  private String setup = null;
+  private String setup;
 
   public static final String SERIALIZED_NAME_SIGNIN = "signin";
   @SerializedName(SERIALIZED_NAME_SIGNIN)
-  private String signin = null;
+  private String signin;
 
   public static final String SERIALIZED_NAME_SIGNOUT = "signout";
   @SerializedName(SERIALIZED_NAME_SIGNOUT)
-  private String signout = null;
+  private String signout;
 
   public static final String SERIALIZED_NAME_SOURCES = "sources";
   @SerializedName(SERIALIZED_NAME_SOURCES)
-  private String sources = null;
+  private String sources;
 
   public static final String SERIALIZED_NAME_SYSTEM = "system";
   @SerializedName(SERIALIZED_NAME_SYSTEM)
@@ -86,19 +86,19 @@ public class Routes {
 
   public static final String SERIALIZED_NAME_TASKS = "tasks";
   @SerializedName(SERIALIZED_NAME_TASKS)
-  private String tasks = null;
+  private String tasks;
 
   public static final String SERIALIZED_NAME_TELEGRAFS = "telegrafs";
   @SerializedName(SERIALIZED_NAME_TELEGRAFS)
-  private String telegrafs = null;
+  private String telegrafs;
 
   public static final String SERIALIZED_NAME_USERS = "users";
   @SerializedName(SERIALIZED_NAME_USERS)
-  private String users = null;
+  private String users;
 
   public static final String SERIALIZED_NAME_WRITE = "write";
   @SerializedName(SERIALIZED_NAME_WRITE)
-  private String write = null;
+  private String write;
 
   public Routes authorizations(String authorizations) {
     this.authorizations = authorizations;

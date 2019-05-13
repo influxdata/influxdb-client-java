@@ -23,7 +23,9 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import org.influxdata.client.domain.Labels;
+import java.util.ArrayList;
+import java.util.List;
+import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Links;
 
 /**
@@ -33,14 +35,22 @@ import org.influxdata.client.domain.Links;
 public class LabelsResponse {
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)
-  private Labels labels = null;
+  private List<Label> labels = new ArrayList<>();
 
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
   private Links links = null;
 
-  public LabelsResponse labels(Labels labels) {
+  public LabelsResponse labels(List<Label> labels) {
     this.labels = labels;
+    return this;
+  }
+
+  public LabelsResponse addLabelsItem(Label labelsItem) {
+    if (this.labels == null) {
+      this.labels = new ArrayList<>();
+    }
+    this.labels.add(labelsItem);
     return this;
   }
 
@@ -49,11 +59,11 @@ public class LabelsResponse {
    * @return labels
   **/
   @ApiModelProperty(value = "")
-  public Labels getLabels() {
+  public List<Label> getLabels() {
     return labels;
   }
 
-  public void setLabels(Labels labels) {
+  public void setLabels(List<Label> labels) {
     this.labels = labels;
   }
 

@@ -118,10 +118,10 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
         Source cloned = new Source();
         cloned.setName(clonedName);
         cloned.setOrgID(source.getOrgID());
-        cloned.setDefault(source.isDefault());
+        cloned.setDefault(source.getDefault());
         cloned.setType(source.getType());
         cloned.setUrl(source.getUrl());
-        cloned.setInsecureSkipVerify(source.isInsecureSkipVerify());
+        cloned.setInsecureSkipVerify(source.getInsecureSkipVerify());
         cloned.setTelegraf(source.getTelegraf());
         cloned.setToken(source.getToken());
         cloned.setUsername(source.getUsername());

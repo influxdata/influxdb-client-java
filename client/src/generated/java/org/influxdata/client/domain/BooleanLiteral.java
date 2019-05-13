@@ -32,11 +32,11 @@ import java.io.IOException;
 public class BooleanLiteral extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private String type = null;
+  private String type;
 
   public static final String SERIALIZED_NAME_VALUE = "value";
   @SerializedName(SERIALIZED_NAME_VALUE)
-  private Boolean value = null;
+  private Boolean value;
 
   public BooleanLiteral type(String type) {
     this.type = type;
@@ -44,10 +44,10 @@ public class BooleanLiteral extends Expression {
   }
 
    /**
-   * Get type
+   * type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "type of AST node")
   public String getType() {
     return type;
   }
@@ -66,7 +66,7 @@ public class BooleanLiteral extends Expression {
    * @return value
   **/
   @ApiModelProperty(value = "")
-  public Boolean isValue() {
+  public Boolean getValue() {
     return value;
   }
 

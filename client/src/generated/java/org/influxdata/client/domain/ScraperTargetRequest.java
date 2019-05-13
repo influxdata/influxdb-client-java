@@ -31,7 +31,7 @@ import java.io.IOException;
 public class ScraperTargetRequest {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
+  private String name;
 
   /**
    * type of the metrics to be parsed
@@ -84,15 +84,15 @@ public class ScraperTargetRequest {
 
   public static final String SERIALIZED_NAME_URL = "url";
   @SerializedName(SERIALIZED_NAME_URL)
-  private String url = null;
+  private String url;
 
   public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
-  private String orgID = null;
+  private String orgID;
 
   public static final String SERIALIZED_NAME_BUCKET_I_D = "bucketID";
   @SerializedName(SERIALIZED_NAME_BUCKET_I_D)
-  private String bucketID = null;
+  private String bucketID;
 
   public ScraperTargetRequest name(String name) {
     this.name = name;

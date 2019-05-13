@@ -35,7 +35,7 @@ import org.influxdata.client.domain.Duration;
 public class DurationLiteral extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private String type = null;
+  private String type;
 
   public static final String SERIALIZED_NAME_VALUES = "values";
   @SerializedName(SERIALIZED_NAME_VALUES)
@@ -47,10 +47,10 @@ public class DurationLiteral extends Expression {
   }
 
    /**
-   * Get type
+   * type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "type of AST node")
   public String getType() {
     return type;
   }

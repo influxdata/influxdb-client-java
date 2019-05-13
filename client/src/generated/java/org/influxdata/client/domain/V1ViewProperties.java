@@ -175,7 +175,7 @@ public class V1ViewProperties {
 
   public static final String SERIALIZED_NAME_TIME_FORMAT = "timeFormat";
   @SerializedName(SERIALIZED_NAME_TIME_FORMAT)
-  private String timeFormat = null;
+  private String timeFormat;
 
   public static final String SERIALIZED_NAME_DECIMAL_POINTS = "decimalPoints";
   @SerializedName(SERIALIZED_NAME_DECIMAL_POINTS)

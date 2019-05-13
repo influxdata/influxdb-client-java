@@ -31,15 +31,15 @@ import java.io.IOException;
 public class VariableLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
+  private String self;
 
   public static final String SERIALIZED_NAME_ORG = "org";
   @SerializedName(SERIALIZED_NAME_ORG)
-  private String org = null;
+  private String org;
 
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)
-  private String labels = null;
+  private String labels;
 
   public VariableLinks self(String self) {
     this.self = self;

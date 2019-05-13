@@ -37,15 +37,15 @@ public class TelegrafPluginOutputInfluxDBV2Config {
 
   public static final String SERIALIZED_NAME_TOKEN = "token";
   @SerializedName(SERIALIZED_NAME_TOKEN)
-  private String token = null;
+  private String token;
 
   public static final String SERIALIZED_NAME_ORGANIZATION = "organization";
   @SerializedName(SERIALIZED_NAME_ORGANIZATION)
-  private String organization = null;
+  private String organization;
 
   public static final String SERIALIZED_NAME_BUCKET = "bucket";
   @SerializedName(SERIALIZED_NAME_BUCKET)
-  private String bucket = null;
+  private String bucket;
 
   public TelegrafPluginOutputInfluxDBV2Config urls(List<String> urls) {
     this.urls = urls;

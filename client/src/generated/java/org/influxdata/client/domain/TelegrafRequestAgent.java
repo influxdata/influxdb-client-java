@@ -31,7 +31,7 @@ import java.io.IOException;
 public class TelegrafRequestAgent {
   public static final String SERIALIZED_NAME_COLLECTION_INTERVAL = "collectionInterval";
   @SerializedName(SERIALIZED_NAME_COLLECTION_INTERVAL)
-  private Integer collectionInterval = null;
+  private Integer collectionInterval;
 
   public TelegrafRequestAgent collectionInterval(Integer collectionInterval) {
     this.collectionInterval = collectionInterval;

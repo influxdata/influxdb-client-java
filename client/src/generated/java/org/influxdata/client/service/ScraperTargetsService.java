@@ -32,7 +32,7 @@ public interface ScraperTargetsService {
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param name specifies the name of the scraper target. (optional)
-   * @param id ID list of scraper targets to return. If both this and owner are specified, only ids is used. (optional)
+   * @param id ID list of scraper targets to return. If both this and owner are specified, only ids is used. (optional, default to new ArrayList&lt;&gt;())
    * @param orgID specifies the organization id of the scraper target (optional)
    * @param org specifies the organization name of the scraper target (optional)
    * @return Call&lt;ScraperTargetResponses&gt;

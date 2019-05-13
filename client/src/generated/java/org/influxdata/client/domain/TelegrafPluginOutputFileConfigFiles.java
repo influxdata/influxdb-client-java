@@ -78,11 +78,11 @@ public class TelegrafPluginOutputFileConfigFiles {
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = null;
+  private TypeEnum type;
 
   public static final String SERIALIZED_NAME_PATH = "path";
   @SerializedName(SERIALIZED_NAME_PATH)
-  private String path = null;
+  private String path;
 
   public TelegrafPluginOutputFileConfigFiles type(TypeEnum type) {
     this.type = type;

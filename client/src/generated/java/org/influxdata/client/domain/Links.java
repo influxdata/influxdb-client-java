@@ -31,68 +31,41 @@ import java.io.IOException;
 public class Links {
   public static final String SERIALIZED_NAME_NEXT = "next";
   @SerializedName(SERIALIZED_NAME_NEXT)
-  private String next = null;
+  private String next;
 
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
+  private String self;
 
   public static final String SERIALIZED_NAME_PREV = "prev";
   @SerializedName(SERIALIZED_NAME_PREV)
-  private String prev = null;
-
-  public Links next(String next) {
-    this.next = next;
-    return this;
-  }
+  private String prev;
 
    /**
-   * Get next
+   * URI of resource.
    * @return next
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getNext() {
     return next;
   }
 
-  public void setNext(String next) {
-    this.next = next;
-  }
-
-  public Links self(String self) {
-    this.self = self;
-    return this;
-  }
-
    /**
-   * Get self
+   * URI of resource.
    * @return self
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(required = true, value = "URI of resource.")
   public String getSelf() {
     return self;
   }
 
-  public void setSelf(String self) {
-    this.self = self;
-  }
-
-  public Links prev(String prev) {
-    this.prev = prev;
-    return this;
-  }
-
    /**
-   * Get prev
+   * URI of resource.
    * @return prev
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getPrev() {
     return prev;
-  }
-
-  public void setPrev(String prev) {
-    this.prev = prev;
   }
 
 

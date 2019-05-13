@@ -31,112 +31,67 @@ import java.io.IOException;
 public class ScraperTargetResponseLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
+  private String self;
 
   public static final String SERIALIZED_NAME_MEMBERS = "members";
   @SerializedName(SERIALIZED_NAME_MEMBERS)
-  private String members = null;
+  private String members;
 
   public static final String SERIALIZED_NAME_OWNERS = "owners";
   @SerializedName(SERIALIZED_NAME_OWNERS)
-  private String owners = null;
+  private String owners;
 
   public static final String SERIALIZED_NAME_BUCKET = "bucket";
   @SerializedName(SERIALIZED_NAME_BUCKET)
-  private String bucket = null;
+  private String bucket;
 
   public static final String SERIALIZED_NAME_ORGANIZATION = "organization";
   @SerializedName(SERIALIZED_NAME_ORGANIZATION)
-  private String organization = null;
-
-  public ScraperTargetResponseLinks self(String self) {
-    this.self = self;
-    return this;
-  }
+  private String organization;
 
    /**
-   * Get self
+   * URI of resource.
    * @return self
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getSelf() {
     return self;
   }
 
-  public void setSelf(String self) {
-    this.self = self;
-  }
-
-  public ScraperTargetResponseLinks members(String members) {
-    this.members = members;
-    return this;
-  }
-
    /**
-   * Get members
+   * URI of resource.
    * @return members
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getMembers() {
     return members;
   }
 
-  public void setMembers(String members) {
-    this.members = members;
-  }
-
-  public ScraperTargetResponseLinks owners(String owners) {
-    this.owners = owners;
-    return this;
-  }
-
    /**
-   * Get owners
+   * URI of resource.
    * @return owners
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getOwners() {
     return owners;
   }
 
-  public void setOwners(String owners) {
-    this.owners = owners;
-  }
-
-  public ScraperTargetResponseLinks bucket(String bucket) {
-    this.bucket = bucket;
-    return this;
-  }
-
    /**
-   * Get bucket
+   * URI of resource.
    * @return bucket
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getBucket() {
     return bucket;
   }
 
-  public void setBucket(String bucket) {
-    this.bucket = bucket;
-  }
-
-  public ScraperTargetResponseLinks organization(String organization) {
-    this.organization = organization;
-    return this;
-  }
-
    /**
-   * Get organization
+   * URI of resource.
    * @return organization
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getOrganization() {
     return organization;
-  }
-
-  public void setOrganization(String organization) {
-    this.organization = organization;
   }
 
 

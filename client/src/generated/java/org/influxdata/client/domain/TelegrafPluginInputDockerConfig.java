@@ -31,7 +31,7 @@ import java.io.IOException;
 public class TelegrafPluginInputDockerConfig {
   public static final String SERIALIZED_NAME_ENDPOINT = "endpoint";
   @SerializedName(SERIALIZED_NAME_ENDPOINT)
-  private String endpoint = null;
+  private String endpoint;
 
   public TelegrafPluginInputDockerConfig endpoint(String endpoint) {
     this.endpoint = endpoint;

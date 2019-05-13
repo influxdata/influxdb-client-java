@@ -80,13 +80,13 @@ public class BucketRetentionRules {
 
   public static final String SERIALIZED_NAME_EVERY_SECONDS = "everySeconds";
   @SerializedName(SERIALIZED_NAME_EVERY_SECONDS)
-  private Integer everySeconds = null;
+  private Integer everySeconds;
 
    /**
    * Get type
    * @return type
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -101,7 +101,7 @@ public class BucketRetentionRules {
    * minimum: 1
    * @return everySeconds
   **/
-  @ApiModelProperty(example = "86400", value = "duration in seconds for how long data will be kept in the database.")
+  @ApiModelProperty(example = "86400", required = true, value = "duration in seconds for how long data will be kept in the database.")
   public Integer getEverySeconds() {
     return everySeconds;
   }

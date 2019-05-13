@@ -32,7 +32,7 @@ import java.io.IOException;
 public class PipeLiteral extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private String type = null;
+  private String type;
 
   public PipeLiteral type(String type) {
     this.type = type;
@@ -40,10 +40,10 @@ public class PipeLiteral extends Expression {
   }
 
    /**
-   * Get type
+   * type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "type of AST node")
   public String getType() {
     return type;
   }

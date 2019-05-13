@@ -31,19 +31,19 @@ import java.io.IOException;
 public class SourceLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
+  private String self;
 
   public static final String SERIALIZED_NAME_QUERY = "query";
   @SerializedName(SERIALIZED_NAME_QUERY)
-  private String query = null;
+  private String query;
 
   public static final String SERIALIZED_NAME_HEALTH = "health";
   @SerializedName(SERIALIZED_NAME_HEALTH)
-  private String health = null;
+  private String health;
 
   public static final String SERIALIZED_NAME_BUCKETS = "buckets";
   @SerializedName(SERIALIZED_NAME_BUCKETS)
-  private String buckets = null;
+  private String buckets;
 
   public SourceLinks self(String self) {
     this.self = self;

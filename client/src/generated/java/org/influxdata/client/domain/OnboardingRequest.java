@@ -31,23 +31,23 @@ import java.io.IOException;
 public class OnboardingRequest {
   public static final String SERIALIZED_NAME_USERNAME = "username";
   @SerializedName(SERIALIZED_NAME_USERNAME)
-  private String username = null;
+  private String username;
 
   public static final String SERIALIZED_NAME_PASSWORD = "password";
   @SerializedName(SERIALIZED_NAME_PASSWORD)
-  private String password = null;
+  private String password;
 
   public static final String SERIALIZED_NAME_ORG = "org";
   @SerializedName(SERIALIZED_NAME_ORG)
-  private String org = null;
+  private String org;
 
   public static final String SERIALIZED_NAME_BUCKET = "bucket";
   @SerializedName(SERIALIZED_NAME_BUCKET)
-  private String bucket = null;
+  private String bucket;
 
   public static final String SERIALIZED_NAME_RETENTION_PERIOD_HRS = "retentionPeriodHrs";
   @SerializedName(SERIALIZED_NAME_RETENTION_PERIOD_HRS)
-  private Integer retentionPeriodHrs = null;
+  private Integer retentionPeriodHrs;
 
   public OnboardingRequest username(String username) {
     this.username = username;

@@ -35,15 +35,15 @@ import org.influxdata.client.domain.File;
 public class ModelPackage {
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private String type = null;
+  private String type;
 
   public static final String SERIALIZED_NAME_PATH = "path";
   @SerializedName(SERIALIZED_NAME_PATH)
-  private String path = null;
+  private String path;
 
   public static final String SERIALIZED_NAME_PACKAGE = "package";
   @SerializedName(SERIALIZED_NAME_PACKAGE)
-  private String _package = null;
+  private String _package;
 
   public static final String SERIALIZED_NAME_FILES = "files";
   @SerializedName(SERIALIZED_NAME_FILES)
@@ -55,10 +55,10 @@ public class ModelPackage {
   }
 
    /**
-   * Get type
+   * type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "type of AST node")
   public String getType() {
     return type;
   }

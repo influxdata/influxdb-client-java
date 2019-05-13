@@ -31,19 +31,19 @@ import java.io.IOException;
 public class CellUpdate {
   public static final String SERIALIZED_NAME_X = "x";
   @SerializedName(SERIALIZED_NAME_X)
-  private Integer x = null;
+  private Integer x;
 
   public static final String SERIALIZED_NAME_Y = "y";
   @SerializedName(SERIALIZED_NAME_Y)
-  private Integer y = null;
+  private Integer y;
 
   public static final String SERIALIZED_NAME_W = "w";
   @SerializedName(SERIALIZED_NAME_W)
-  private Integer w = null;
+  private Integer w;
 
   public static final String SERIALIZED_NAME_H = "h";
   @SerializedName(SERIALIZED_NAME_H)
-  private Integer h = null;
+  private Integer h;
 
   public CellUpdate x(Integer x) {
     this.x = x;

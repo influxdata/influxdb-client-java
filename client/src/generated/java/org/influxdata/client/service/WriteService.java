@@ -29,7 +29,7 @@ public interface WriteService {
    * @param contentType Content-Type is used to indicate the format of the data sent to the server. (optional, default to text/plain; charset&#x3D;utf-8)
    * @param contentLength Content-Length is an entity header is indicating the size of the entity-body, in bytes, sent to the database. If the length is greater than the database max body configuration option, a 413 response is sent. (optional)
    * @param accept specifies the return content format. (optional, default to application/json)
-   * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
+   * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional, default to null)
    * @return Call&lt;Void&gt;
    */
   @Headers({

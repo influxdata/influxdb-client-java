@@ -82,7 +82,7 @@ public class AuthorizationUpdateRequest {
 
   public static final String SERIALIZED_NAME_DESCRIPTION = "description";
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
-  private String description = null;
+  private String description;
 
   public AuthorizationUpdateRequest status(StatusEnum status) {
     this.status = status;

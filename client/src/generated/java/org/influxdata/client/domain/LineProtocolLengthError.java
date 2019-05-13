@@ -80,11 +80,11 @@ public class LineProtocolLengthError {
 
   public static final String SERIALIZED_NAME_MESSAGE = "message";
   @SerializedName(SERIALIZED_NAME_MESSAGE)
-  private String message = null;
+  private String message;
 
   public static final String SERIALIZED_NAME_MAX_LENGTH = "maxLength";
   @SerializedName(SERIALIZED_NAME_MAX_LENGTH)
-  private Integer maxLength = null;
+  private Integer maxLength;
 
    /**
    * code is the machine-readable error code.

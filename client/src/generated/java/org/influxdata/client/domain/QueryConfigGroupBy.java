@@ -33,7 +33,7 @@ import java.util.List;
 public class QueryConfigGroupBy {
   public static final String SERIALIZED_NAME_TIME = "time";
   @SerializedName(SERIALIZED_NAME_TIME)
-  private String time = null;
+  private String time;
 
   public static final String SERIALIZED_NAME_TAGS = "tags";
   @SerializedName(SERIALIZED_NAME_TAGS)
@@ -48,7 +48,7 @@ public class QueryConfigGroupBy {
    * Get time
    * @return time
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getTime() {
     return time;
   }
@@ -63,9 +63,6 @@ public class QueryConfigGroupBy {
   }
 
   public QueryConfigGroupBy addTagsItem(String tagsItem) {
-    if (this.tags == null) {
-      this.tags = new ArrayList<>();
-    }
     this.tags.add(tagsItem);
     return this;
   }
@@ -74,7 +71,7 @@ public class QueryConfigGroupBy {
    * Get tags
    * @return tags
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public List<String> getTags() {
     return tags;
   }

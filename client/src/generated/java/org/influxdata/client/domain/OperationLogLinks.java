@@ -31,24 +31,15 @@ import java.io.IOException;
 public class OperationLogLinks {
   public static final String SERIALIZED_NAME_USER = "user";
   @SerializedName(SERIALIZED_NAME_USER)
-  private String user = null;
-
-  public OperationLogLinks user(String user) {
-    this.user = user;
-    return this;
-  }
+  private String user;
 
    /**
-   * Get user
+   * URI of resource.
    * @return user
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getUser() {
     return user;
-  }
-
-  public void setUser(String user) {
-    this.user = user;
   }
 
 

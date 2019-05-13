@@ -81,11 +81,11 @@ public class Ready {
 
   public static final String SERIALIZED_NAME_STARTED = "started";
   @SerializedName(SERIALIZED_NAME_STARTED)
-  private OffsetDateTime started = null;
+  private OffsetDateTime started;
 
   public static final String SERIALIZED_NAME_UP = "up";
   @SerializedName(SERIALIZED_NAME_UP)
-  private String up = null;
+  private String up;
 
    /**
    * Get status

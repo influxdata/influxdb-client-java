@@ -23,11 +23,13 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import org.influxdata.client.domain.Cells;
+import java.util.ArrayList;
+import java.util.List;
+import org.influxdata.client.domain.Cell;
 import org.influxdata.client.domain.CreateDashboardRequest;
 import org.influxdata.client.domain.DashboardLinks;
 import org.influxdata.client.domain.DashboardMeta;
-import org.influxdata.client.domain.Labels;
+import org.influxdata.client.domain.Label;
 
 /**
  * Dashboard
@@ -40,7 +42,7 @@ public class Dashboard extends CreateDashboardRequest {
 
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
-  private String id = null;
+  private String id;
 
   public static final String SERIALIZED_NAME_META = "meta";
   @SerializedName(SERIALIZED_NAME_META)
@@ -48,11 +50,11 @@ public class Dashboard extends CreateDashboardRequest {
 
   public static final String SERIALIZED_NAME_CELLS = "cells";
   @SerializedName(SERIALIZED_NAME_CELLS)
-  private Cells cells = null;
+  private List<Cell> cells = new ArrayList<>();
 
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)
-  private Labels labels = null;
+  private List<Label> labels = new ArrayList<>();
 
   public Dashboard links(DashboardLinks links) {
     this.links = links;
@@ -99,8 +101,16 @@ public class Dashboard extends CreateDashboardRequest {
     this.meta = meta;
   }
 
-  public Dashboard cells(Cells cells) {
+  public Dashboard cells(List<Cell> cells) {
     this.cells = cells;
+    return this;
+  }
+
+  public Dashboard addCellsItem(Cell cellsItem) {
+    if (this.cells == null) {
+      this.cells = new ArrayList<>();
+    }
+    this.cells.add(cellsItem);
     return this;
   }
 
@@ -109,16 +119,24 @@ public class Dashboard extends CreateDashboardRequest {
    * @return cells
   **/
   @ApiModelProperty(value = "")
-  public Cells getCells() {
+  public List<Cell> getCells() {
     return cells;
   }
 
-  public void setCells(Cells cells) {
+  public void setCells(List<Cell> cells) {
     this.cells = cells;
   }
 
-  public Dashboard labels(Labels labels) {
+  public Dashboard labels(List<Label> labels) {
     this.labels = labels;
+    return this;
+  }
+
+  public Dashboard addLabelsItem(Label labelsItem) {
+    if (this.labels == null) {
+      this.labels = new ArrayList<>();
+    }
+    this.labels.add(labelsItem);
     return this;
   }
 
@@ -127,11 +145,11 @@ public class Dashboard extends CreateDashboardRequest {
    * @return labels
   **/
   @ApiModelProperty(value = "")
-  public Labels getLabels() {
+  public List<Label> getLabels() {
     return labels;
   }
 
-  public void setLabels(Labels labels) {
+  public void setLabels(List<Label> labels) {
     this.labels = labels;
   }
 

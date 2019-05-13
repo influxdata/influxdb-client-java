@@ -31,11 +31,11 @@ import java.io.IOException;
 public class QueryVariablePropertiesValues {
   public static final String SERIALIZED_NAME_QUERY = "query";
   @SerializedName(SERIALIZED_NAME_QUERY)
-  private String query = null;
+  private String query;
 
   public static final String SERIALIZED_NAME_LANGUAGE = "language";
   @SerializedName(SERIALIZED_NAME_LANGUAGE)
-  private String language = null;
+  private String language;
 
   public QueryVariablePropertiesValues query(String query) {
     this.query = query;

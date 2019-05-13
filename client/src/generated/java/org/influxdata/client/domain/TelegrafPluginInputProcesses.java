@@ -76,7 +76,7 @@ public class TelegrafPluginInputProcesses extends TelegrafRequestPlugin<Telegraf
 
   public static final String SERIALIZED_NAME_COMMENT = "comment";
   @SerializedName(SERIALIZED_NAME_COMMENT)
-  private String comment = null;
+  private String comment;
 
   public TelegrafPluginInputProcesses() {
     setName(TelegrafPluginInputProcesses.NameEnum.PROCESSES);

@@ -129,7 +129,7 @@ public class MarkdownViewProperties {
 
   public static final String SERIALIZED_NAME_NOTE = "note";
   @SerializedName(SERIALIZED_NAME_NOTE)
-  private String note = null;
+  private String note;
 
    /**
    * Get type

@@ -76,7 +76,7 @@ public class TelegrafPluginInputSystem extends TelegrafRequestPlugin<TelegrafPlu
 
   public static final String SERIALIZED_NAME_COMMENT = "comment";
   @SerializedName(SERIALIZED_NAME_COMMENT)
-  private String comment = null;
+  private String comment;
 
   public TelegrafPluginInputSystem() {
     setName(TelegrafPluginInputSystem.NameEnum.SYSTEM);

@@ -5556,12 +5556,10 @@ components:
               properties:
                 self:
                   readOnly: true
-                  type: string
-                  format: uri
+                  $ref: "#/components/schemas/Link"
                 user:
                   readOnly: true
-                  type: string
-                  format: uri
+                  $ref: "#/components/schemas/Link"
     Authorizations:
       type: object
       properties:
@@ -5871,7 +5869,7 @@ components:
           description: The name of the task.
           type: string
         description:
-          descripton: An optional description of the task.
+          description: An optional description of the task.
           type: string
         status:
           description: The current status of the task. When updated to 'inactive', cancels all queued jobs of this task.
@@ -7815,7 +7813,7 @@ components:
           description: The Flux script to run for this task.
           type: string
         description:
-          descripton: An optional description of the task.
+          description: An optional description of the task.
           type: string
         token:
           description: The token to use for authenticating this task when it executes queries. If omitted, uses the token associated with the request that creates the task.
@@ -7847,7 +7845,7 @@ components:
           description: Override the 'offset' option in the flux script.
           type: string
         description:
-          descripton: An optional description of the task.
+          description: An optional description of the task.
           type: string
         token:
           description: Override the existing token associated with the task.

@@ -42,11 +42,11 @@ public class DocumentCreate {
 
   public static final String SERIALIZED_NAME_ORG = "org";
   @SerializedName(SERIALIZED_NAME_ORG)
-  private String org = null;
+  private String org;
 
   public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
-  private String orgID = null;
+  private String orgID;
 
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)

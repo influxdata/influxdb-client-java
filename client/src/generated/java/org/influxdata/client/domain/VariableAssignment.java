@@ -45,7 +45,7 @@ import org.influxdata.client.domain.Identifier;
 public class VariableAssignment extends Statement {
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private String type = null;
+  private String type;
 
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
@@ -62,10 +62,10 @@ public class VariableAssignment extends Statement {
   }
 
    /**
-   * Get type
+   * type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "type of AST node")
   public String getType() {
     return type;
   }

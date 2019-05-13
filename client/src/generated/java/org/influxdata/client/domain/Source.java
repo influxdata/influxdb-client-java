@@ -38,19 +38,19 @@ public class Source {
 
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
-  private String id = null;
+  private String id;
 
   public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
-  private String orgID = null;
+  private String orgID;
 
   public static final String SERIALIZED_NAME_DEFAULT = "default";
   @SerializedName(SERIALIZED_NAME_DEFAULT)
-  private Boolean _default = null;
+  private Boolean _default;
 
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
+  private String name;
 
   /**
    * Gets or Sets type
@@ -103,43 +103,43 @@ public class Source {
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = null;
+  private TypeEnum type;
 
   public static final String SERIALIZED_NAME_URL = "url";
   @SerializedName(SERIALIZED_NAME_URL)
-  private String url = null;
+  private String url;
 
   public static final String SERIALIZED_NAME_INSECURE_SKIP_VERIFY = "insecureSkipVerify";
   @SerializedName(SERIALIZED_NAME_INSECURE_SKIP_VERIFY)
-  private Boolean insecureSkipVerify = null;
+  private Boolean insecureSkipVerify;
 
   public static final String SERIALIZED_NAME_TELEGRAF = "telegraf";
   @SerializedName(SERIALIZED_NAME_TELEGRAF)
-  private String telegraf = null;
+  private String telegraf;
 
   public static final String SERIALIZED_NAME_TOKEN = "token";
   @SerializedName(SERIALIZED_NAME_TOKEN)
-  private String token = null;
+  private String token;
 
   public static final String SERIALIZED_NAME_USERNAME = "username";
   @SerializedName(SERIALIZED_NAME_USERNAME)
-  private String username = null;
+  private String username;
 
   public static final String SERIALIZED_NAME_PASSWORD = "password";
   @SerializedName(SERIALIZED_NAME_PASSWORD)
-  private String password = null;
+  private String password;
 
   public static final String SERIALIZED_NAME_SHARED_SECRET = "sharedSecret";
   @SerializedName(SERIALIZED_NAME_SHARED_SECRET)
-  private String sharedSecret = null;
+  private String sharedSecret;
 
   public static final String SERIALIZED_NAME_META_URL = "metaUrl";
   @SerializedName(SERIALIZED_NAME_META_URL)
-  private String metaUrl = null;
+  private String metaUrl;
 
   public static final String SERIALIZED_NAME_DEFAULT_R_P = "defaultRP";
   @SerializedName(SERIALIZED_NAME_DEFAULT_R_P)
-  private String defaultRP = null;
+  private String defaultRP;
 
   /**
    * Gets or Sets languages
@@ -256,7 +256,7 @@ public class Source {
    * @return _default
   **/
   @ApiModelProperty(value = "")
-  public Boolean isDefault() {
+  public Boolean getDefault() {
     return _default;
   }
 
@@ -328,7 +328,7 @@ public class Source {
    * @return insecureSkipVerify
   **/
   @ApiModelProperty(value = "")
-  public Boolean isInsecureSkipVerify() {
+  public Boolean getInsecureSkipVerify() {
     return insecureSkipVerify;
   }
 

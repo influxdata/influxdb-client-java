@@ -53,7 +53,7 @@ class ITSourcesApi extends AbstractITClientTest {
 
         sourcesApi = influxDBClient.getSourcesApi();
         sourcesApi.findSources().stream()
-                .filter(source -> !Boolean.TRUE.equals(source.isDefault()))
+                .filter(source -> !Boolean.TRUE.equals(source.getDefault()))
                 .forEach(source -> sourcesApi.deleteSource(source));
     }
 
@@ -82,11 +82,11 @@ class ITSourcesApi extends AbstractITClientTest {
 
         Assertions.assertThat(createdSource.getId()).isNotBlank();
         Assertions.assertThat(createdSource.getOrgID()).isEqualTo(source.getOrgID());
-        Assertions.assertThat(createdSource.isDefault()).isEqualTo(source.isDefault());
+        Assertions.assertThat(createdSource.getDefault()).isEqualTo(source.getDefault());
         Assertions.assertThat(createdSource.getName()).isEqualTo(source.getName());
         Assertions.assertThat(createdSource.getType()).isEqualTo(source.getType());
         Assertions.assertThat(createdSource.getUrl()).isEqualTo(source.getUrl());
-        Assertions.assertThat(createdSource.isInsecureSkipVerify()).isEqualTo(source.isInsecureSkipVerify());
+        Assertions.assertThat(createdSource.getInsecureSkipVerify()).isEqualTo(source.getInsecureSkipVerify()  );
         Assertions.assertThat(createdSource.getTelegraf()).isEqualTo(source.getTelegraf());
         Assertions.assertThat(createdSource.getToken()).isEqualTo(source.getToken());
         Assertions.assertThat(createdSource.getUsername()).isEqualTo(source.getUsername());
@@ -103,12 +103,12 @@ class ITSourcesApi extends AbstractITClientTest {
         source.setInsecureSkipVerify(false);
 
         source = sourcesApi.createSource(source);
-        Assertions.assertThat(source.isInsecureSkipVerify()).isNull();
+        Assertions.assertThat(source.getInsecureSkipVerify()).isNull();
 
         source.setInsecureSkipVerify(true);
         source = sourcesApi.updateSource(source);
 
-        Assertions.assertThat(source.isInsecureSkipVerify()).isTrue();
+        Assertions.assertThat(source.getInsecureSkipVerify()).isTrue();
     }
 
     @Test
@@ -142,7 +142,7 @@ class ITSourcesApi extends AbstractITClientTest {
         Assertions.assertThat(sourceByID.getOrgID()).isEqualTo(source.getOrgID());
         Assertions.assertThat(sourceByID.getType()).isEqualTo(source.getType());
         Assertions.assertThat(sourceByID.getUrl()).isEqualTo(source.getUrl());
-        Assertions.assertThat(sourceByID.isInsecureSkipVerify()).isEqualTo(source.isInsecureSkipVerify());
+        Assertions.assertThat(sourceByID.getInsecureSkipVerify()).isEqualTo(source.getInsecureSkipVerify());
     }
 
     @Test
@@ -205,10 +205,10 @@ class ITSourcesApi extends AbstractITClientTest {
 
         Assertions.assertThat(cloned.getName()).isEqualTo(name);
         Assertions.assertThat(cloned.getOrgID()).isEqualTo(source.getOrgID());
-        Assertions.assertThat(cloned.isDefault()).isEqualTo(source.isDefault());
+        Assertions.assertThat(cloned.getDefault()).isEqualTo(source.getDefault());
         Assertions.assertThat(cloned.getType()).isEqualTo(source.getType());
         Assertions.assertThat(cloned.getUrl()).isEqualTo(source.getUrl());
-        Assertions.assertThat(cloned.isInsecureSkipVerify()).isEqualTo(source.isInsecureSkipVerify());
+        Assertions.assertThat(cloned.getInsecureSkipVerify()).isEqualTo(source.getInsecureSkipVerify());
         Assertions.assertThat(cloned.getTelegraf()).isEqualTo(source.getTelegraf());
         Assertions.assertThat(cloned.getToken()).isEqualTo(source.getToken());
         Assertions.assertThat(cloned.getUsername()).isEqualTo(source.getUsername());

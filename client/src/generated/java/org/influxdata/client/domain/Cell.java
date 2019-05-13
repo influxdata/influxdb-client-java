@@ -32,7 +32,7 @@ import org.influxdata.client.domain.CellLinks;
 public class Cell {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
-  private String id = null;
+  private String id;
 
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
@@ -40,23 +40,23 @@ public class Cell {
 
   public static final String SERIALIZED_NAME_X = "x";
   @SerializedName(SERIALIZED_NAME_X)
-  private Integer x = null;
+  private Integer x;
 
   public static final String SERIALIZED_NAME_Y = "y";
   @SerializedName(SERIALIZED_NAME_Y)
-  private Integer y = null;
+  private Integer y;
 
   public static final String SERIALIZED_NAME_W = "w";
   @SerializedName(SERIALIZED_NAME_W)
-  private Integer w = null;
+  private Integer w;
 
   public static final String SERIALIZED_NAME_H = "h";
   @SerializedName(SERIALIZED_NAME_H)
-  private Integer h = null;
+  private Integer h;
 
   public static final String SERIALIZED_NAME_VIEW_I_D = "viewID";
   @SerializedName(SERIALIZED_NAME_VIEW_I_D)
-  private String viewID = null;
+  private String viewID;
 
   public Cell id(String id) {
     this.id = id;

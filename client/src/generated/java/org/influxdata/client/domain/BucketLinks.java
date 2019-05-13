@@ -31,156 +31,93 @@ import java.io.IOException;
 public class BucketLinks {
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)
-  private String labels = null;
+  private String labels;
 
   public static final String SERIALIZED_NAME_LOGS = "logs";
   @SerializedName(SERIALIZED_NAME_LOGS)
-  private String logs = null;
+  private String logs;
 
   public static final String SERIALIZED_NAME_MEMBERS = "members";
   @SerializedName(SERIALIZED_NAME_MEMBERS)
-  private String members = null;
+  private String members;
 
   public static final String SERIALIZED_NAME_ORG = "org";
   @SerializedName(SERIALIZED_NAME_ORG)
-  private String org = null;
+  private String org;
 
   public static final String SERIALIZED_NAME_OWNERS = "owners";
   @SerializedName(SERIALIZED_NAME_OWNERS)
-  private String owners = null;
+  private String owners;
 
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
+  private String self;
 
   public static final String SERIALIZED_NAME_WRITE = "write";
   @SerializedName(SERIALIZED_NAME_WRITE)
-  private String write = null;
-
-  public BucketLinks labels(String labels) {
-    this.labels = labels;
-    return this;
-  }
+  private String write;
 
    /**
-   * Get labels
+   * URI of resource.
    * @return labels
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getLabels() {
     return labels;
   }
 
-  public void setLabels(String labels) {
-    this.labels = labels;
-  }
-
-  public BucketLinks logs(String logs) {
-    this.logs = logs;
-    return this;
-  }
-
    /**
-   * Get logs
+   * URI of resource.
    * @return logs
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getLogs() {
     return logs;
   }
 
-  public void setLogs(String logs) {
-    this.logs = logs;
-  }
-
-  public BucketLinks members(String members) {
-    this.members = members;
-    return this;
-  }
-
    /**
-   * Get members
+   * URI of resource.
    * @return members
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getMembers() {
     return members;
   }
 
-  public void setMembers(String members) {
-    this.members = members;
-  }
-
-  public BucketLinks org(String org) {
-    this.org = org;
-    return this;
-  }
-
    /**
-   * Get org
+   * URI of resource.
    * @return org
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getOrg() {
     return org;
   }
 
-  public void setOrg(String org) {
-    this.org = org;
-  }
-
-  public BucketLinks owners(String owners) {
-    this.owners = owners;
-    return this;
-  }
-
    /**
-   * Get owners
+   * URI of resource.
    * @return owners
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getOwners() {
     return owners;
   }
 
-  public void setOwners(String owners) {
-    this.owners = owners;
-  }
-
-  public BucketLinks self(String self) {
-    this.self = self;
-    return this;
-  }
-
    /**
-   * Get self
+   * URI of resource.
    * @return self
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getSelf() {
     return self;
   }
 
-  public void setSelf(String self) {
-    this.self = self;
-  }
-
-  public BucketLinks write(String write) {
-    this.write = write;
-    return this;
-  }
-
    /**
-   * Get write
+   * URI of resource.
    * @return write
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getWrite() {
     return write;
-  }
-
-  public void setWrite(String write) {
-    this.write = write;
   }
 
 

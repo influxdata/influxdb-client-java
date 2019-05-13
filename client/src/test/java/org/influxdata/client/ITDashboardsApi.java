@@ -31,7 +31,6 @@ import java.util.stream.IntStream;
 
 import org.influxdata.client.domain.Cell;
 import org.influxdata.client.domain.CellUpdate;
-import org.influxdata.client.domain.Cells;
 import org.influxdata.client.domain.CreateCell;
 import org.influxdata.client.domain.Dashboard;
 import org.influxdata.client.domain.Label;
@@ -411,7 +410,7 @@ class ITDashboardsApi extends AbstractITClientTest {
         Assertions.assertThat(cell.getLinks().getView()).isEqualTo("/api/v2/dashboards/" + dashboard.getId() + "/cells/" + cell.getId() + "/view");
         Assertions.assertThat(cell.getViewID()).isNull();
 
-        Cells cells = dashboardsApi.findDashboardByID(dashboard.getId()).getCells();
+        List<Cell> cells = dashboardsApi.findDashboardByID(dashboard.getId()).getCells();
         Assertions.assertThat(cells).hasSize(1);
     }
 

@@ -36,27 +36,27 @@ import org.influxdata.client.domain.QueryConfigRange;
 public class QueryConfig {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
-  private String id = null;
+  private String id;
 
   public static final String SERIALIZED_NAME_DATABASE = "database";
   @SerializedName(SERIALIZED_NAME_DATABASE)
-  private String database = null;
+  private String database;
 
   public static final String SERIALIZED_NAME_MEASUREMENT = "measurement";
   @SerializedName(SERIALIZED_NAME_MEASUREMENT)
-  private String measurement = null;
+  private String measurement;
 
   public static final String SERIALIZED_NAME_RETENTION_POLICY = "retentionPolicy";
   @SerializedName(SERIALIZED_NAME_RETENTION_POLICY)
-  private String retentionPolicy = null;
+  private String retentionPolicy;
 
   public static final String SERIALIZED_NAME_ARE_TAGS_ACCEPTED = "areTagsAccepted";
   @SerializedName(SERIALIZED_NAME_ARE_TAGS_ACCEPTED)
-  private Boolean areTagsAccepted = null;
+  private Boolean areTagsAccepted;
 
   public static final String SERIALIZED_NAME_RAW_TEXT = "rawText";
   @SerializedName(SERIALIZED_NAME_RAW_TEXT)
-  private String rawText = null;
+  private String rawText;
 
   public static final String SERIALIZED_NAME_TAGS = "tags";
   @SerializedName(SERIALIZED_NAME_TAGS)
@@ -156,7 +156,7 @@ public class QueryConfig {
    * @return areTagsAccepted
   **/
   @ApiModelProperty(required = true, value = "")
-  public Boolean isAreTagsAccepted() {
+  public Boolean getAreTagsAccepted() {
     return areTagsAccepted;
   }
 

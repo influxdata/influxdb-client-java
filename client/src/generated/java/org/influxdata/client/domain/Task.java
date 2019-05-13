@@ -24,7 +24,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
-import org.influxdata.client.domain.Labels;
+import java.util.ArrayList;
+import java.util.List;
+import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.TaskLinks;
 
 /**
@@ -34,23 +36,23 @@ import org.influxdata.client.domain.TaskLinks;
 public class Task {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
-  private String id = null;
+  private String id;
 
   public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
-  private String orgID = null;
+  private String orgID;
 
   public static final String SERIALIZED_NAME_ORG = "org";
   @SerializedName(SERIALIZED_NAME_ORG)
-  private String org = null;
+  private String org;
 
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
+  private String name;
 
   public static final String SERIALIZED_NAME_DESCRIPTION = "description";
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
-  private String description = null;
+  private String description;
 
   /**
    * The current status of the task. When updated to &#39;inactive&#39;, cancels all queued jobs of this task.
@@ -105,39 +107,39 @@ public class Task {
 
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)
-  private Labels labels = null;
+  private List<Label> labels = new ArrayList<>();
 
   public static final String SERIALIZED_NAME_AUTHORIZATION_I_D = "authorizationID";
   @SerializedName(SERIALIZED_NAME_AUTHORIZATION_I_D)
-  private String authorizationID = null;
+  private String authorizationID;
 
   public static final String SERIALIZED_NAME_FLUX = "flux";
   @SerializedName(SERIALIZED_NAME_FLUX)
-  private String flux = null;
+  private String flux;
 
   public static final String SERIALIZED_NAME_EVERY = "every";
   @SerializedName(SERIALIZED_NAME_EVERY)
-  private String every = null;
+  private String every;
 
   public static final String SERIALIZED_NAME_CRON = "cron";
   @SerializedName(SERIALIZED_NAME_CRON)
-  private String cron = null;
+  private String cron;
 
   public static final String SERIALIZED_NAME_OFFSET = "offset";
   @SerializedName(SERIALIZED_NAME_OFFSET)
-  private String offset = null;
+  private String offset;
 
   public static final String SERIALIZED_NAME_LATEST_COMPLETED = "latestCompleted";
   @SerializedName(SERIALIZED_NAME_LATEST_COMPLETED)
-  private OffsetDateTime latestCompleted = null;
+  private OffsetDateTime latestCompleted;
 
   public static final String SERIALIZED_NAME_CREATED_AT = "createdAt";
   @SerializedName(SERIALIZED_NAME_CREATED_AT)
-  private OffsetDateTime createdAt = null;
+  private OffsetDateTime createdAt;
 
   public static final String SERIALIZED_NAME_UPDATED_AT = "updatedAt";
   @SerializedName(SERIALIZED_NAME_UPDATED_AT)
-  private OffsetDateTime updatedAt = null;
+  private OffsetDateTime updatedAt;
 
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
@@ -212,10 +214,10 @@ public class Task {
   }
 
    /**
-   * Get description
+   * An optional description of the task.
    * @return description
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "An optional description of the task.")
   public String getDescription() {
     return description;
   }
@@ -242,8 +244,16 @@ public class Task {
     this.status = status;
   }
 
-  public Task labels(Labels labels) {
+  public Task labels(List<Label> labels) {
     this.labels = labels;
+    return this;
+  }
+
+  public Task addLabelsItem(Label labelsItem) {
+    if (this.labels == null) {
+      this.labels = new ArrayList<>();
+    }
+    this.labels.add(labelsItem);
     return this;
   }
 
@@ -252,11 +262,11 @@ public class Task {
    * @return labels
   **/
   @ApiModelProperty(value = "")
-  public Labels getLabels() {
+  public List<Label> getLabels() {
     return labels;
   }
 
-  public void setLabels(Labels labels) {
+  public void setLabels(List<Label> labels) {
     this.labels = labels;
   }
 

@@ -31,200 +31,119 @@ import java.io.IOException;
 public class OrganizationLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
+  private String self;
 
   public static final String SERIALIZED_NAME_MEMBERS = "members";
   @SerializedName(SERIALIZED_NAME_MEMBERS)
-  private String members = null;
+  private String members;
 
   public static final String SERIALIZED_NAME_OWNERS = "owners";
   @SerializedName(SERIALIZED_NAME_OWNERS)
-  private String owners = null;
+  private String owners;
 
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)
-  private String labels = null;
+  private String labels;
 
   public static final String SERIALIZED_NAME_SECRETS = "secrets";
   @SerializedName(SERIALIZED_NAME_SECRETS)
-  private String secrets = null;
+  private String secrets;
 
   public static final String SERIALIZED_NAME_BUCKETS = "buckets";
   @SerializedName(SERIALIZED_NAME_BUCKETS)
-  private String buckets = null;
+  private String buckets;
 
   public static final String SERIALIZED_NAME_TASKS = "tasks";
   @SerializedName(SERIALIZED_NAME_TASKS)
-  private String tasks = null;
+  private String tasks;
 
   public static final String SERIALIZED_NAME_DASHBOARDS = "dashboards";
   @SerializedName(SERIALIZED_NAME_DASHBOARDS)
-  private String dashboards = null;
+  private String dashboards;
 
   public static final String SERIALIZED_NAME_LOGS = "logs";
   @SerializedName(SERIALIZED_NAME_LOGS)
-  private String logs = null;
-
-  public OrganizationLinks self(String self) {
-    this.self = self;
-    return this;
-  }
+  private String logs;
 
    /**
-   * Get self
+   * URI of resource.
    * @return self
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getSelf() {
     return self;
   }
 
-  public void setSelf(String self) {
-    this.self = self;
-  }
-
-  public OrganizationLinks members(String members) {
-    this.members = members;
-    return this;
-  }
-
    /**
-   * Get members
+   * URI of resource.
    * @return members
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getMembers() {
     return members;
   }
 
-  public void setMembers(String members) {
-    this.members = members;
-  }
-
-  public OrganizationLinks owners(String owners) {
-    this.owners = owners;
-    return this;
-  }
-
    /**
-   * Get owners
+   * URI of resource.
    * @return owners
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getOwners() {
     return owners;
   }
 
-  public void setOwners(String owners) {
-    this.owners = owners;
-  }
-
-  public OrganizationLinks labels(String labels) {
-    this.labels = labels;
-    return this;
-  }
-
    /**
-   * Get labels
+   * URI of resource.
    * @return labels
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getLabels() {
     return labels;
   }
 
-  public void setLabels(String labels) {
-    this.labels = labels;
-  }
-
-  public OrganizationLinks secrets(String secrets) {
-    this.secrets = secrets;
-    return this;
-  }
-
    /**
-   * Get secrets
+   * URI of resource.
    * @return secrets
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getSecrets() {
     return secrets;
   }
 
-  public void setSecrets(String secrets) {
-    this.secrets = secrets;
-  }
-
-  public OrganizationLinks buckets(String buckets) {
-    this.buckets = buckets;
-    return this;
-  }
-
    /**
-   * Get buckets
+   * URI of resource.
    * @return buckets
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getBuckets() {
     return buckets;
   }
 
-  public void setBuckets(String buckets) {
-    this.buckets = buckets;
-  }
-
-  public OrganizationLinks tasks(String tasks) {
-    this.tasks = tasks;
-    return this;
-  }
-
    /**
-   * Get tasks
+   * URI of resource.
    * @return tasks
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getTasks() {
     return tasks;
   }
 
-  public void setTasks(String tasks) {
-    this.tasks = tasks;
-  }
-
-  public OrganizationLinks dashboards(String dashboards) {
-    this.dashboards = dashboards;
-    return this;
-  }
-
    /**
-   * Get dashboards
+   * URI of resource.
    * @return dashboards
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getDashboards() {
     return dashboards;
   }
 
-  public void setDashboards(String dashboards) {
-    this.dashboards = dashboards;
-  }
-
-  public OrganizationLinks logs(String logs) {
-    this.logs = logs;
-    return this;
-  }
-
    /**
-   * Get logs
+   * URI of resource.
    * @return logs
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getLogs() {
     return logs;
-  }
-
-  public void setLogs(String logs) {
-    this.logs = logs;
   }
 
 

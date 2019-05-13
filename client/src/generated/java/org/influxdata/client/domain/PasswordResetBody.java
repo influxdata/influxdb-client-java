@@ -31,7 +31,7 @@ import java.io.IOException;
 public class PasswordResetBody {
   public static final String SERIALIZED_NAME_PASSWORD = "password";
   @SerializedName(SERIALIZED_NAME_PASSWORD)
-  private String password = null;
+  private String password;
 
   public PasswordResetBody password(String password) {
     this.password = password;

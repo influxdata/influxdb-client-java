@@ -32,11 +32,11 @@ import java.io.IOException;
 public class BadStatement extends Statement {
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private String type = null;
+  private String type;
 
   public static final String SERIALIZED_NAME_TEXT = "text";
   @SerializedName(SERIALIZED_NAME_TEXT)
-  private String text = null;
+  private String text;
 
   public BadStatement type(String type) {
     this.type = type;
@@ -44,10 +44,10 @@ public class BadStatement extends Statement {
   }
 
    /**
-   * Get type
+   * type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "type of AST node")
   public String getType() {
     return type;
   }

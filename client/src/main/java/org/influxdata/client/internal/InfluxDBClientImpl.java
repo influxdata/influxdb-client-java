@@ -229,7 +229,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
 
         IsOnboarding isOnboarding = execute(setupService.setupGet(null));
 
-        return isOnboarding.isAllowed();
+        return isOnboarding.getAllowed();
     }
 
     @Nonnull

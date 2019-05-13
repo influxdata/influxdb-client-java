@@ -32,7 +32,7 @@ import java.io.IOException;
 public class DashboardColor {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
-  private String id = null;
+  private String id;
 
   /**
    * Type is how the color is used.
@@ -85,19 +85,19 @@ public class DashboardColor {
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = null;
+  private TypeEnum type;
 
   public static final String SERIALIZED_NAME_HEX = "hex";
   @SerializedName(SERIALIZED_NAME_HEX)
-  private String hex = null;
+  private String hex;
 
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
+  private String name;
 
   public static final String SERIALIZED_NAME_VALUE = "value";
   @SerializedName(SERIALIZED_NAME_VALUE)
-  private String value = null;
+  private String value;
 
   public DashboardColor id(String id) {
     this.id = id;

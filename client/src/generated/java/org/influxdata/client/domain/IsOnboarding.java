@@ -31,7 +31,7 @@ import java.io.IOException;
 public class IsOnboarding {
   public static final String SERIALIZED_NAME_ALLOWED = "allowed";
   @SerializedName(SERIALIZED_NAME_ALLOWED)
-  private Boolean allowed = null;
+  private Boolean allowed;
 
   public IsOnboarding allowed(Boolean allowed) {
     this.allowed = allowed;
@@ -43,7 +43,7 @@ public class IsOnboarding {
    * @return allowed
   **/
   @ApiModelProperty(value = "true means that the influxdb instance has NOT had initial setup; false means that the database has been setup.")
-  public Boolean isAllowed() {
+  public Boolean getAllowed() {
     return allowed;
   }
 

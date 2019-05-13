@@ -31,26 +31,26 @@ import java.io.IOException;
 public class AuthorizationLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
+  private String self;
 
   public static final String SERIALIZED_NAME_USER = "user";
   @SerializedName(SERIALIZED_NAME_USER)
-  private String user = null;
+  private String user;
 
    /**
-   * Get self
+   * URI of resource.
    * @return self
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getSelf() {
     return self;
   }
 
    /**
-   * Get user
+   * URI of resource.
    * @return user
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getUser() {
     return user;
   }

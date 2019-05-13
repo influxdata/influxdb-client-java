@@ -31,15 +31,15 @@ import java.io.IOException;
 public class RoutesSystem {
   public static final String SERIALIZED_NAME_METRICS = "metrics";
   @SerializedName(SERIALIZED_NAME_METRICS)
-  private String metrics = null;
+  private String metrics;
 
   public static final String SERIALIZED_NAME_DEBUG = "debug";
   @SerializedName(SERIALIZED_NAME_DEBUG)
-  private String debug = null;
+  private String debug;
 
   public static final String SERIALIZED_NAME_HEALTH = "health";
   @SerializedName(SERIALIZED_NAME_HEALTH)
-  private String health = null;
+  private String health;
 
   public RoutesSystem metrics(String metrics) {
     this.metrics = metrics;

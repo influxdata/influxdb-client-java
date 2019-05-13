@@ -38,23 +38,23 @@ public class Axis {
 
   public static final String SERIALIZED_NAME_LABEL = "label";
   @SerializedName(SERIALIZED_NAME_LABEL)
-  private String label = null;
+  private String label;
 
   public static final String SERIALIZED_NAME_PREFIX = "prefix";
   @SerializedName(SERIALIZED_NAME_PREFIX)
-  private String prefix = null;
+  private String prefix;
 
   public static final String SERIALIZED_NAME_SUFFIX = "suffix";
   @SerializedName(SERIALIZED_NAME_SUFFIX)
-  private String suffix = null;
+  private String suffix;
 
   public static final String SERIALIZED_NAME_BASE = "base";
   @SerializedName(SERIALIZED_NAME_BASE)
-  private String base = null;
+  private String base;
 
   public static final String SERIALIZED_NAME_SCALE = "scale";
   @SerializedName(SERIALIZED_NAME_SCALE)
-  private String scale = null;
+  private String scale;
 
   public Axis bounds(List<Long> bounds) {
     this.bounds = bounds;

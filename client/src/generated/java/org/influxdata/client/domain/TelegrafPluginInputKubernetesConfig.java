@@ -31,7 +31,7 @@ import java.io.IOException;
 public class TelegrafPluginInputKubernetesConfig {
   public static final String SERIALIZED_NAME_URL = "url";
   @SerializedName(SERIALIZED_NAME_URL)
-  private String url = null;
+  private String url;
 
   public TelegrafPluginInputKubernetesConfig url(String url) {
     this.url = url;

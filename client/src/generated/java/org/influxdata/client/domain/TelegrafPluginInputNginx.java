@@ -76,7 +76,7 @@ public class TelegrafPluginInputNginx extends TelegrafRequestPlugin<TelegrafPlug
 
   public static final String SERIALIZED_NAME_COMMENT = "comment";
   @SerializedName(SERIALIZED_NAME_COMMENT)
-  private String comment = null;
+  private String comment;
 
   public TelegrafPluginInputNginx() {
     setName(TelegrafPluginInputNginx.NameEnum.NGINX);

@@ -31,7 +31,7 @@ import java.io.IOException;
 public class TelegrafPluginInputSyslogConfig {
   public static final String SERIALIZED_NAME_SERVER = "server";
   @SerializedName(SERIALIZED_NAME_SERVER)
-  private String server = null;
+  private String server;
 
   public TelegrafPluginInputSyslogConfig server(String server) {
     this.server = server;

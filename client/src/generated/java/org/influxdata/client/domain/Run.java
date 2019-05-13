@@ -33,11 +33,11 @@ import org.influxdata.client.domain.RunLinks;
 public class Run {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
-  private String id = null;
+  private String id;
 
   public static final String SERIALIZED_NAME_TASK_I_D = "taskID";
   @SerializedName(SERIALIZED_NAME_TASK_I_D)
-  private String taskID = null;
+  private String taskID;
 
   /**
    * Gets or Sets status
@@ -94,23 +94,23 @@ public class Run {
 
   public static final String SERIALIZED_NAME_STATUS = "status";
   @SerializedName(SERIALIZED_NAME_STATUS)
-  private StatusEnum status = null;
+  private StatusEnum status;
 
   public static final String SERIALIZED_NAME_SCHEDULED_FOR = "scheduledFor";
   @SerializedName(SERIALIZED_NAME_SCHEDULED_FOR)
-  private OffsetDateTime scheduledFor = null;
+  private OffsetDateTime scheduledFor;
 
   public static final String SERIALIZED_NAME_STARTED_AT = "startedAt";
   @SerializedName(SERIALIZED_NAME_STARTED_AT)
-  private OffsetDateTime startedAt = null;
+  private OffsetDateTime startedAt;
 
   public static final String SERIALIZED_NAME_FINISHED_AT = "finishedAt";
   @SerializedName(SERIALIZED_NAME_FINISHED_AT)
-  private OffsetDateTime finishedAt = null;
+  private OffsetDateTime finishedAt;
 
   public static final String SERIALIZED_NAME_REQUESTED_AT = "requestedAt";
   @SerializedName(SERIALIZED_NAME_REQUESTED_AT)
-  private OffsetDateTime requestedAt = null;
+  private OffsetDateTime requestedAt;
 
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)

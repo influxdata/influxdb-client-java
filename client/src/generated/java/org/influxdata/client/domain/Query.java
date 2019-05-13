@@ -38,7 +38,7 @@ public class Query {
 
   public static final String SERIALIZED_NAME_QUERY = "query";
   @SerializedName(SERIALIZED_NAME_QUERY)
-  private String query = null;
+  private String query;
 
   /**
    * type of query
@@ -93,15 +93,15 @@ public class Query {
 
   public static final String SERIALIZED_NAME_DB = "db";
   @SerializedName(SERIALIZED_NAME_DB)
-  private String db = null;
+  private String db;
 
   public static final String SERIALIZED_NAME_RP = "rp";
   @SerializedName(SERIALIZED_NAME_RP)
-  private String rp = null;
+  private String rp;
 
   public static final String SERIALIZED_NAME_CLUSTER = "cluster";
   @SerializedName(SERIALIZED_NAME_CLUSTER)
-  private String cluster = null;
+  private String cluster;
 
   public static final String SERIALIZED_NAME_DIALECT = "dialect";
   @SerializedName(SERIALIZED_NAME_DIALECT)

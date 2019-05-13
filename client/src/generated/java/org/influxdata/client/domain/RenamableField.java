@@ -32,15 +32,15 @@ import java.io.IOException;
 public class RenamableField {
   public static final String SERIALIZED_NAME_INTERNAL_NAME = "internalName";
   @SerializedName(SERIALIZED_NAME_INTERNAL_NAME)
-  private String internalName = null;
+  private String internalName;
 
   public static final String SERIALIZED_NAME_DISPLAY_NAME = "displayName";
   @SerializedName(SERIALIZED_NAME_DISPLAY_NAME)
-  private String displayName = null;
+  private String displayName;
 
   public static final String SERIALIZED_NAME_VISIBLE = "visible";
   @SerializedName(SERIALIZED_NAME_VISIBLE)
-  private Boolean visible = null;
+  private Boolean visible;
 
    /**
    * This is the calculated name of a field
@@ -79,7 +79,7 @@ public class RenamableField {
    * @return visible
   **/
   @ApiModelProperty(value = "Indicates whether this field should be visible on the table")
-  public Boolean isVisible() {
+  public Boolean getVisible() {
     return visible;
   }
 

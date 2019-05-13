@@ -82,31 +82,31 @@ public class TaskUpdateRequest {
 
   public static final String SERIALIZED_NAME_FLUX = "flux";
   @SerializedName(SERIALIZED_NAME_FLUX)
-  private String flux = null;
+  private String flux;
 
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
+  private String name;
 
   public static final String SERIALIZED_NAME_EVERY = "every";
   @SerializedName(SERIALIZED_NAME_EVERY)
-  private String every = null;
+  private String every;
 
   public static final String SERIALIZED_NAME_CRON = "cron";
   @SerializedName(SERIALIZED_NAME_CRON)
-  private String cron = null;
+  private String cron;
 
   public static final String SERIALIZED_NAME_OFFSET = "offset";
   @SerializedName(SERIALIZED_NAME_OFFSET)
-  private String offset = null;
+  private String offset;
 
   public static final String SERIALIZED_NAME_DESCRIPTION = "description";
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
-  private String description = null;
+  private String description;
 
   public static final String SERIALIZED_NAME_TOKEN = "token";
   @SerializedName(SERIALIZED_NAME_TOKEN)
-  private String token = null;
+  private String token;
 
   public TaskUpdateRequest status(StatusEnum status) {
     this.status = status;
@@ -222,10 +222,10 @@ public class TaskUpdateRequest {
   }
 
    /**
-   * Get description
+   * An optional description of the task.
    * @return description
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "An optional description of the task.")
   public String getDescription() {
     return description;
   }

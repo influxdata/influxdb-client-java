@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.influxdata.client.domain.BucketLinks;
 import org.influxdata.client.domain.BucketRetentionRules;
-import org.influxdata.client.domain.Labels;
+import org.influxdata.client.domain.Label;
 
 /**
  * Bucket
@@ -40,23 +40,23 @@ public class Bucket {
 
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
-  private String id = null;
+  private String id;
 
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
+  private String name;
 
   public static final String SERIALIZED_NAME_DESCRIPTION = "description";
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
-  private String description = null;
+  private String description;
 
   public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
-  private String orgID = null;
+  private String orgID;
 
   public static final String SERIALIZED_NAME_RP = "rp";
   @SerializedName(SERIALIZED_NAME_RP)
-  private String rp = null;
+  private String rp;
 
   public static final String SERIALIZED_NAME_RETENTION_RULES = "retentionRules";
   @SerializedName(SERIALIZED_NAME_RETENTION_RULES)
@@ -64,7 +64,7 @@ public class Bucket {
 
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)
-  private Labels labels = null;
+  private List<Label> labels = new ArrayList<>();
 
   public Bucket links(BucketLinks links) {
     this.links = links;
@@ -188,8 +188,16 @@ public class Bucket {
     this.retentionRules = retentionRules;
   }
 
-  public Bucket labels(Labels labels) {
+  public Bucket labels(List<Label> labels) {
     this.labels = labels;
+    return this;
+  }
+
+  public Bucket addLabelsItem(Label labelsItem) {
+    if (this.labels == null) {
+      this.labels = new ArrayList<>();
+    }
+    this.labels.add(labelsItem);
     return this;
   }
 
@@ -198,11 +206,11 @@ public class Bucket {
    * @return labels
   **/
   @ApiModelProperty(value = "")
-  public Labels getLabels() {
+  public List<Label> getLabels() {
     return labels;
   }
 
-  public void setLabels(Labels labels) {
+  public void setLabels(List<Label> labels) {
     this.labels = labels;
   }
 

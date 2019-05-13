@@ -32,11 +32,11 @@ import java.io.IOException;
 public class DashboardQueryRange {
   public static final String SERIALIZED_NAME_UPPER = "upper";
   @SerializedName(SERIALIZED_NAME_UPPER)
-  private Long upper = null;
+  private Long upper;
 
   public static final String SERIALIZED_NAME_LOWER = "lower";
   @SerializedName(SERIALIZED_NAME_LOWER)
-  private Long lower = null;
+  private Long lower;
 
   public DashboardQueryRange upper(Long upper) {
     this.upper = upper;
@@ -47,7 +47,7 @@ public class DashboardQueryRange {
    * Upper bound of the display range of the Y-axis
    * @return upper
   **/
-  @ApiModelProperty(value = "Upper bound of the display range of the Y-axis")
+  @ApiModelProperty(required = true, value = "Upper bound of the display range of the Y-axis")
   public Long getUpper() {
     return upper;
   }
@@ -65,7 +65,7 @@ public class DashboardQueryRange {
    * Lower bound of the display range of the Y-axis
    * @return lower
   **/
-  @ApiModelProperty(value = "Lower bound of the display range of the Y-axis")
+  @ApiModelProperty(required = true, value = "Lower bound of the display range of the Y-axis")
   public Long getLower() {
     return lower;
   }

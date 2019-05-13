@@ -32,7 +32,7 @@ import java.io.IOException;
 public class LanguageRequest {
   public static final String SERIALIZED_NAME_QUERY = "query";
   @SerializedName(SERIALIZED_NAME_QUERY)
-  private String query = null;
+  private String query;
 
   public LanguageRequest query(String query) {
     this.query = query;

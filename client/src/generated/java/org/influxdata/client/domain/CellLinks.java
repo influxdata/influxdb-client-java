@@ -31,11 +31,11 @@ import java.io.IOException;
 public class CellLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
+  private String self;
 
   public static final String SERIALIZED_NAME_VIEW = "view";
   @SerializedName(SERIALIZED_NAME_VIEW)
-  private String view = null;
+  private String view;
 
   public CellLinks self(String self) {
     this.self = self;

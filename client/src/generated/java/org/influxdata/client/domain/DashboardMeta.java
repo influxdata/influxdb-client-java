@@ -32,11 +32,11 @@ import java.time.OffsetDateTime;
 public class DashboardMeta {
   public static final String SERIALIZED_NAME_CREATED_AT = "createdAt";
   @SerializedName(SERIALIZED_NAME_CREATED_AT)
-  private OffsetDateTime createdAt = null;
+  private OffsetDateTime createdAt;
 
   public static final String SERIALIZED_NAME_UPDATED_AT = "updatedAt";
   @SerializedName(SERIALIZED_NAME_UPDATED_AT)
-  private OffsetDateTime updatedAt = null;
+  private OffsetDateTime updatedAt;
 
   public DashboardMeta createdAt(OffsetDateTime createdAt) {
     this.createdAt = createdAt;

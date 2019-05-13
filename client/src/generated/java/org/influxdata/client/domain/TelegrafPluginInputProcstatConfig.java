@@ -31,7 +31,7 @@ import java.io.IOException;
 public class TelegrafPluginInputProcstatConfig {
   public static final String SERIALIZED_NAME_EXE = "exe";
   @SerializedName(SERIALIZED_NAME_EXE)
-  private String exe = null;
+  private String exe;
 
   public TelegrafPluginInputProcstatConfig exe(String exe) {
     this.exe = exe;

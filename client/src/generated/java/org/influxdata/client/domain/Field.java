@@ -34,7 +34,7 @@ import org.influxdata.client.domain.Field;
 public class Field {
   public static final String SERIALIZED_NAME_VALUE = "value";
   @SerializedName(SERIALIZED_NAME_VALUE)
-  private String value = null;
+  private String value;
 
   /**
    * type describes the field type. func is a function; field is a field reference
@@ -93,11 +93,11 @@ public class Field {
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = null;
+  private TypeEnum type;
 
   public static final String SERIALIZED_NAME_ALIAS = "alias";
   @SerializedName(SERIALIZED_NAME_ALIAS)
-  private String alias = null;
+  private String alias;
 
   public static final String SERIALIZED_NAME_ARGS = "args";
   @SerializedName(SERIALIZED_NAME_ARGS)

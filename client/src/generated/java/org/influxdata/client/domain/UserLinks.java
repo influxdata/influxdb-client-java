@@ -31,11 +31,11 @@ import java.io.IOException;
 public class UserLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
+  private String self;
 
   public static final String SERIALIZED_NAME_LOGS = "logs";
   @SerializedName(SERIALIZED_NAME_LOGS)
-  private String logs = null;
+  private String logs;
 
   public UserLinks self(String self) {
     this.self = self;

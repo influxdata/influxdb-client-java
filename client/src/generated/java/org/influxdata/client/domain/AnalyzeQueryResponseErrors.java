@@ -31,19 +31,19 @@ import java.io.IOException;
 public class AnalyzeQueryResponseErrors {
   public static final String SERIALIZED_NAME_LINE = "line";
   @SerializedName(SERIALIZED_NAME_LINE)
-  private Integer line = null;
+  private Integer line;
 
   public static final String SERIALIZED_NAME_COLUMN = "column";
   @SerializedName(SERIALIZED_NAME_COLUMN)
-  private Integer column = null;
+  private Integer column;
 
   public static final String SERIALIZED_NAME_CHARACTER = "character";
   @SerializedName(SERIALIZED_NAME_CHARACTER)
-  private Integer character = null;
+  private Integer character;
 
   public static final String SERIALIZED_NAME_MESSAGE = "message";
   @SerializedName(SERIALIZED_NAME_MESSAGE)
-  private String message = null;
+  private String message;
 
   public AnalyzeQueryResponseErrors line(Integer line) {
     this.line = line;

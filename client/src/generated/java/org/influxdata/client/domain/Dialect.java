@@ -158,7 +158,7 @@ public class Dialect {
    * @return header
   **/
   @ApiModelProperty(value = "if true, the results will contain a header row")
-  public Boolean isHeader() {
+  public Boolean getHeader() {
     return header;
   }
 

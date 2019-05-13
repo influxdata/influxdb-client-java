@@ -31,90 +31,54 @@ import java.io.IOException;
 public class TelegrafLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
+  private String self;
 
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)
-  private String labels = null;
+  private String labels;
 
   public static final String SERIALIZED_NAME_MEMBERS = "members";
   @SerializedName(SERIALIZED_NAME_MEMBERS)
-  private String members = null;
+  private String members;
 
   public static final String SERIALIZED_NAME_OWNERS = "owners";
   @SerializedName(SERIALIZED_NAME_OWNERS)
-  private String owners = null;
-
-  public TelegrafLinks self(String self) {
-    this.self = self;
-    return this;
-  }
+  private String owners;
 
    /**
-   * Get self
+   * URI of resource.
    * @return self
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getSelf() {
     return self;
   }
 
-  public void setSelf(String self) {
-    this.self = self;
-  }
-
-  public TelegrafLinks labels(String labels) {
-    this.labels = labels;
-    return this;
-  }
-
    /**
-   * Get labels
+   * URI of resource.
    * @return labels
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getLabels() {
     return labels;
   }
 
-  public void setLabels(String labels) {
-    this.labels = labels;
-  }
-
-  public TelegrafLinks members(String members) {
-    this.members = members;
-    return this;
-  }
-
    /**
-   * Get members
+   * URI of resource.
    * @return members
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getMembers() {
     return members;
   }
 
-  public void setMembers(String members) {
-    this.members = members;
-  }
-
-  public TelegrafLinks owners(String owners) {
-    this.owners = owners;
-    return this;
-  }
-
    /**
-   * Get owners
+   * URI of resource.
    * @return owners
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getOwners() {
     return owners;
-  }
-
-  public void setOwners(String owners) {
-    this.owners = owners;
   }
 
 

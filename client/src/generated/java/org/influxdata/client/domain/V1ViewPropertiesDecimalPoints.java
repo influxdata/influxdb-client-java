@@ -32,11 +32,11 @@ import java.io.IOException;
 public class V1ViewPropertiesDecimalPoints {
   public static final String SERIALIZED_NAME_IS_ENFORCED = "isEnforced";
   @SerializedName(SERIALIZED_NAME_IS_ENFORCED)
-  private Boolean isEnforced = null;
+  private Boolean isEnforced;
 
   public static final String SERIALIZED_NAME_DIGITS = "digits";
   @SerializedName(SERIALIZED_NAME_DIGITS)
-  private Integer digits = null;
+  private Integer digits;
 
   public V1ViewPropertiesDecimalPoints isEnforced(Boolean isEnforced) {
     this.isEnforced = isEnforced;
@@ -48,7 +48,7 @@ public class V1ViewPropertiesDecimalPoints {
    * @return isEnforced
   **/
   @ApiModelProperty(value = "Indicates whether decimal point setting should be enforced")
-  public Boolean isIsEnforced() {
+  public Boolean getIsEnforced() {
     return isEnforced;
   }
 

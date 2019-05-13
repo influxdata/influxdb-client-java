@@ -31,11 +31,11 @@ import java.io.IOException;
 public class QueryConfigRange {
   public static final String SERIALIZED_NAME_LOWER = "lower";
   @SerializedName(SERIALIZED_NAME_LOWER)
-  private String lower = null;
+  private String lower;
 
   public static final String SERIALIZED_NAME_UPPER = "upper";
   @SerializedName(SERIALIZED_NAME_UPPER)
-  private String upper = null;
+  private String upper;
 
   public QueryConfigRange lower(String lower) {
     this.lower = lower;
@@ -46,7 +46,7 @@ public class QueryConfigRange {
    * Get lower
    * @return lower
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getLower() {
     return lower;
   }
@@ -64,7 +64,7 @@ public class QueryConfigRange {
    * Get upper
    * @return upper
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getUpper() {
     return upper;
   }

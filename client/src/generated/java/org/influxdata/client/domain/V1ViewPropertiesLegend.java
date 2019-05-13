@@ -132,7 +132,7 @@ public class V1ViewPropertiesLegend {
 
   public static final String SERIALIZED_NAME_ORIENTATION = "orientation";
   @SerializedName(SERIALIZED_NAME_ORIENTATION)
-  private OrientationEnum orientation = null;
+  private OrientationEnum orientation;
 
    /**
    * type is the style of the legend

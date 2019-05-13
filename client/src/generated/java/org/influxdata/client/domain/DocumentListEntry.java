@@ -23,9 +23,11 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.influxdata.client.domain.DocumentLinks;
 import org.influxdata.client.domain.DocumentMeta;
-import org.influxdata.client.domain.Labels;
+import org.influxdata.client.domain.Label;
 
 /**
  * DocumentListEntry
@@ -34,7 +36,7 @@ import org.influxdata.client.domain.Labels;
 public class DocumentListEntry {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
-  private String id = null;
+  private String id;
 
   public static final String SERIALIZED_NAME_META = "meta";
   @SerializedName(SERIALIZED_NAME_META)
@@ -42,7 +44,7 @@ public class DocumentListEntry {
 
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)
-  private Labels labels = null;
+  private List<Label> labels = new ArrayList<>();
 
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
@@ -75,8 +77,16 @@ public class DocumentListEntry {
     this.meta = meta;
   }
 
-  public DocumentListEntry labels(Labels labels) {
+  public DocumentListEntry labels(List<Label> labels) {
     this.labels = labels;
+    return this;
+  }
+
+  public DocumentListEntry addLabelsItem(Label labelsItem) {
+    if (this.labels == null) {
+      this.labels = new ArrayList<>();
+    }
+    this.labels.add(labelsItem);
     return this;
   }
 
@@ -85,11 +95,11 @@ public class DocumentListEntry {
    * @return labels
   **/
   @ApiModelProperty(value = "")
-  public Labels getLabels() {
+  public List<Label> getLabels() {
     return labels;
   }
 
-  public void setLabels(Labels labels) {
+  public void setLabels(List<Label> labels) {
     this.labels = labels;
   }
 

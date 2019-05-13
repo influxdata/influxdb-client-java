@@ -306,7 +306,7 @@ public interface DashboardsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param owner specifies the owner id to return resources for (optional)
    * @param sortBy specifies the owner id to return resources for (optional)
-   * @param id ID list of dashboards to return. If both this and owner are specified, only ids is used. (optional)
+   * @param id ID list of dashboards to return. If both this and owner are specified, only ids is used. (optional, default to new ArrayList&lt;&gt;())
    * @param orgID specifies the organization id of the resource (optional)
    * @param org specifies the organization name of the resource (optional)
    * @return Call&lt;Dashboards&gt;

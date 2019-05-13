@@ -44,11 +44,11 @@ import org.influxdata.client.domain.TelegrafRequestPlugin;
 public class TelegrafRequest {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
+  private String name;
 
   public static final String SERIALIZED_NAME_DESCRIPTION = "description";
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
-  private String description = null;
+  private String description;
 
   public static final String SERIALIZED_NAME_AGENT = "agent";
   @SerializedName(SERIALIZED_NAME_AGENT)
@@ -61,7 +61,7 @@ public class TelegrafRequest {
 
   public static final String SERIALIZED_NAME_ORGANIZATION_I_D = "organizationID";
   @SerializedName(SERIALIZED_NAME_ORGANIZATION_I_D)
-  private String organizationID = null;
+  private String organizationID;
 
   public TelegrafRequest name(String name) {
     this.name = name;

@@ -76,7 +76,7 @@ public class TelegrafPluginInputTail extends TelegrafRequestPlugin<TelegrafPlugi
 
   public static final String SERIALIZED_NAME_COMMENT = "comment";
   @SerializedName(SERIALIZED_NAME_COMMENT)
-  private String comment = null;
+  private String comment;
 
   public TelegrafPluginInputTail() {
     setName(TelegrafPluginInputTail.NameEnum.TAIL);

@@ -45,7 +45,7 @@ import org.influxdata.client.domain.Expression;
 public class PipeExpression extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private String type = null;
+  private String type;
 
   public static final String SERIALIZED_NAME_ARGUMENT = "argument";
   @SerializedName(SERIALIZED_NAME_ARGUMENT)
@@ -62,10 +62,10 @@ public class PipeExpression extends Expression {
   }
 
    /**
-   * Get type
+   * type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "type of AST node")
   public String getType() {
     return type;
   }

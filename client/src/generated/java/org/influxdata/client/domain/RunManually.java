@@ -32,7 +32,7 @@ import java.time.OffsetDateTime;
 public class RunManually {
   public static final String SERIALIZED_NAME_SCHEDULED_FOR = "scheduledFor";
   @SerializedName(SERIALIZED_NAME_SCHEDULED_FOR)
-  private OffsetDateTime scheduledFor = null;
+  private OffsetDateTime scheduledFor;
 
   public RunManually scheduledFor(OffsetDateTime scheduledFor) {
     this.scheduledFor = scheduledFor;

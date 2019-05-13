@@ -77,7 +77,7 @@ public class TelegrafPluginInputKubernetes extends TelegrafRequestPlugin<Telegra
 
   public static final String SERIALIZED_NAME_COMMENT = "comment";
   @SerializedName(SERIALIZED_NAME_COMMENT)
-  private String comment = null;
+  private String comment;
 
   public TelegrafPluginInputKubernetes() {
     setName(TelegrafPluginInputKubernetes.NameEnum.KUBERNETES);

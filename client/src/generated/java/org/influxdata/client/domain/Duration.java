@@ -32,15 +32,15 @@ import java.io.IOException;
 public class Duration {
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private String type = null;
+  private String type;
 
   public static final String SERIALIZED_NAME_MAGNITUDE = "magnitude";
   @SerializedName(SERIALIZED_NAME_MAGNITUDE)
-  private Integer magnitude = null;
+  private Integer magnitude;
 
   public static final String SERIALIZED_NAME_UNIT = "unit";
   @SerializedName(SERIALIZED_NAME_UNIT)
-  private String unit = null;
+  private String unit;
 
   public Duration type(String type) {
     this.type = type;
@@ -48,10 +48,10 @@ public class Duration {
   }
 
    /**
-   * Get type
+   * type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "type of AST node")
   public String getType() {
     return type;
   }

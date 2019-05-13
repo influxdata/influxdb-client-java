@@ -86,23 +86,23 @@ public class LineProtocolError {
 
   public static final String SERIALIZED_NAME_CODE = "code";
   @SerializedName(SERIALIZED_NAME_CODE)
-  private CodeEnum code = null;
+  private CodeEnum code;
 
   public static final String SERIALIZED_NAME_MESSAGE = "message";
   @SerializedName(SERIALIZED_NAME_MESSAGE)
-  private String message = null;
+  private String message;
 
   public static final String SERIALIZED_NAME_OP = "op";
   @SerializedName(SERIALIZED_NAME_OP)
-  private String op = null;
+  private String op;
 
   public static final String SERIALIZED_NAME_ERR = "err";
   @SerializedName(SERIALIZED_NAME_ERR)
-  private String err = null;
+  private String err;
 
   public static final String SERIALIZED_NAME_LINE = "line";
   @SerializedName(SERIALIZED_NAME_LINE)
-  private Integer line = null;
+  private Integer line;
 
    /**
    * code is the machine-readable error code.

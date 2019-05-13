@@ -31,24 +31,15 @@ import java.io.IOException;
 public class DocumentLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
-
-  public DocumentLinks self(String self) {
-    this.self = self;
-    return this;
-  }
+  private String self;
 
    /**
-   * Get self
+   * URI of resource.
    * @return self
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "URI of resource.")
   public String getSelf() {
     return self;
-  }
-
-  public void setSelf(String self) {
-    this.self = self;
   }
 
 

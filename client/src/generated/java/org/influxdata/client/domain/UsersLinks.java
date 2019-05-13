@@ -31,7 +31,7 @@ import java.io.IOException;
 public class UsersLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
-  private String self = null;
+  private String self;
 
   public UsersLinks self(String self) {
     this.self = self;

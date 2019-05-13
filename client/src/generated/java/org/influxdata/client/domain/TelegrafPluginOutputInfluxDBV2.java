@@ -77,7 +77,7 @@ public class TelegrafPluginOutputInfluxDBV2 extends TelegrafRequestPlugin<Telegr
 
   public static final String SERIALIZED_NAME_COMMENT = "comment";
   @SerializedName(SERIALIZED_NAME_COMMENT)
-  private String comment = null;
+  private String comment;
 
   public TelegrafPluginOutputInfluxDBV2() {
     setName(TelegrafPluginOutputInfluxDBV2.NameEnum.INFLUXDB_V2);

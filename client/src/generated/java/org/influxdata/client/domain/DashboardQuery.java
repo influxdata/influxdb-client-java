@@ -33,7 +33,7 @@ import org.influxdata.client.domain.QueryConfig;
 public class DashboardQuery {
   public static final String SERIALIZED_NAME_LABEL = "label";
   @SerializedName(SERIALIZED_NAME_LABEL)
-  private String label = null;
+  private String label;
 
   public static final String SERIALIZED_NAME_RANGE = "range";
   @SerializedName(SERIALIZED_NAME_RANGE)
@@ -41,11 +41,11 @@ public class DashboardQuery {
 
   public static final String SERIALIZED_NAME_QUERY = "query";
   @SerializedName(SERIALIZED_NAME_QUERY)
-  private String query = null;
+  private String query;
 
   public static final String SERIALIZED_NAME_SOURCE = "source";
   @SerializedName(SERIALIZED_NAME_SOURCE)
-  private String source = null;
+  private String source;
 
   public static final String SERIALIZED_NAME_QUERY_CONFIG = "queryConfig";
   @SerializedName(SERIALIZED_NAME_QUERY_CONFIG)

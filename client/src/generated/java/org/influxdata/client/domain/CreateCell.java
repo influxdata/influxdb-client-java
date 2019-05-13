@@ -31,31 +31,31 @@ import java.io.IOException;
 public class CreateCell {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
-  private String name = null;
+  private String name;
 
   public static final String SERIALIZED_NAME_X = "x";
   @SerializedName(SERIALIZED_NAME_X)
-  private Integer x = null;
+  private Integer x;
 
   public static final String SERIALIZED_NAME_Y = "y";
   @SerializedName(SERIALIZED_NAME_Y)
-  private Integer y = null;
+  private Integer y;
 
   public static final String SERIALIZED_NAME_W = "w";
   @SerializedName(SERIALIZED_NAME_W)
-  private Integer w = null;
+  private Integer w;
 
   public static final String SERIALIZED_NAME_H = "h";
   @SerializedName(SERIALIZED_NAME_H)
-  private Integer h = null;
+  private Integer h;
 
   public static final String SERIALIZED_NAME_VIEW_I_D = "viewID";
   @SerializedName(SERIALIZED_NAME_VIEW_I_D)
-  private String viewID = null;
+  private String viewID;
 
   public static final String SERIALIZED_NAME_USING_VIEW = "usingView";
   @SerializedName(SERIALIZED_NAME_USING_VIEW)
-  private String usingView = null;
+  private String usingView;
 
   public CreateCell name(String name) {
     this.name = name;

@@ -32,11 +32,11 @@ import java.time.OffsetDateTime;
 public class LogEvent {
   public static final String SERIALIZED_NAME_TIME = "time";
   @SerializedName(SERIALIZED_NAME_TIME)
-  private OffsetDateTime time = null;
+  private OffsetDateTime time;
 
   public static final String SERIALIZED_NAME_MESSAGE = "message";
   @SerializedName(SERIALIZED_NAME_MESSAGE)
-  private String message = null;
+  private String message;
 
    /**
    * Time event occurred, RFC3339Nano.
