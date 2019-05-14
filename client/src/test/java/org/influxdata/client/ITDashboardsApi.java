@@ -393,14 +393,11 @@ class ITDashboardsApi extends AbstractITClientTest {
                 .w(15)
                 .x(20)
                 .y(25)
-                .viewID("020f755c3c082000")
-                .name("my-cell");
+                .name("my-view");
 
         Cell cell = dashboardsApi.addCell(createCell, dashboard);
 
         Assertions.assertThat(cell.getId()).isNotNull();
-        //TODO https://github.com/influxdata/influxdb/issues/13079
-        // Assertions.assertThat(cell.getName()).isEqualTo("my-cell");
         Assertions.assertThat(cell.getX()).isEqualTo(20);
         Assertions.assertThat(cell.getY()).isEqualTo(25);
         Assertions.assertThat(cell.getW()).isEqualTo(15);
@@ -426,7 +423,6 @@ class ITDashboardsApi extends AbstractITClientTest {
                 .w(15)
                 .x(20)
                 .y(25)
-                .viewID("020f755c3c082000")
                 .name("my-cell");
 
         Cell cell = dashboardsApi.addCell(createCell, dashboard);
@@ -484,12 +480,11 @@ class ITDashboardsApi extends AbstractITClientTest {
         Cell cellWithView = dashboardsApi.addCell(newCell, dashboard);
 
         //TODO https://github.com/influxdata/influxdb/issues/13084
-        // View cellView = dashboardsApi.getCellView(cellWithView, dashboard);
-        // Assertions.assertThat(cellView).isNotNull();
-
-        //TODO https://github.com/influxdata/influxdb/issues/13086
-        // Assertions.assertThat(((MarkdownViewProperties)cellView.getProperties()).getType()).isEqualTo(MarkdownViewProperties.TypeEnum.MARKDOWN);
-        // Assertions.assertThat(((MarkdownViewProperties)cellView.getProperties()).getNote()).isEqualTo("my-note");
+//        View cellView = dashboardsApi.getCellView(cellWithView, dashboard);
+//        Assertions.assertThat(cellView).isNotNull();
+//        Assertions.assertThat(cellView.getId()).isEqualTo(view.getId());
+//        Assertions.assertThat(((MarkdownViewProperties) cellView.getProperties()).getType()).isEqualTo(MarkdownViewProperties.TypeEnum.MARKDOWN);
+//        Assertions.assertThat(((MarkdownViewProperties) cellView.getProperties()).getNote()).isEqualTo("my-note");
     }
 
     @Test
@@ -520,16 +515,13 @@ class ITDashboardsApi extends AbstractITClientTest {
                 .w(15)
                 .x(20)
                 .y(25)
-                .name("my-cell-2")
-                .viewID(view.getId());
+                .name("my-cell-2");
 
         Cell cellWithView = dashboardsApi.addCell(newCell, dashboard);
 
         //TODO https://github.com/influxdata/influxdb/issues/13084
         // View cellView = dashboardsApi.getCellView(cellWithView, dashboard);
         // Assertions.assertThat(cellView).isNotNull();
-
-        //TODO https://github.com/influxdata/influxdb/issues/13086
         // Assertions.assertThat(((MarkdownViewProperties)cellView.getProperties()).getType()).isEqualTo(MarkdownViewProperties.TypeEnum.MARKDOWN);
         // Assertions.assertThat(((MarkdownViewProperties)cellView.getProperties()).getNote()).isEqualTo("my-note");
     }
