@@ -156,7 +156,6 @@ public class MemberAssignment extends Statement {
   }
 
   public class MemberAssignmentInitAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
-    private final String discriminator = "type";
 
     public MemberAssignmentInitAdapter() {
     }
@@ -164,11 +163,13 @@ public class MemberAssignment extends Statement {
     @Override
     public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
 
+      List<String> discriminator = Arrays.asList("type");
+
       JsonObject jsonObject = json.getAsJsonObject();
 
-      String type = jsonObject.get(discriminator).getAsString();
+      String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
 
-      return deserialize(type, jsonObject, context);
+      return deserialize(types, jsonObject, context);
     }
 
     @Override
@@ -177,69 +178,69 @@ public class MemberAssignment extends Statement {
       return context.serialize(object);
     }
 
-    private Object deserialize(final String type, final JsonElement json, final JsonDeserializationContext context) {
+    private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
 
-      if ("ArrayExpression".equals(type)) {
+      if (Arrays.equals(new String[]{ "ArrayExpression" }, types)) {
         return context.deserialize(json, ArrayExpression.class);
       }
-      if ("FunctionExpression".equals(type)) {
+      if (Arrays.equals(new String[]{ "FunctionExpression" }, types)) {
         return context.deserialize(json, FunctionExpression.class);
       }
-      if ("BinaryExpression".equals(type)) {
+      if (Arrays.equals(new String[]{ "BinaryExpression" }, types)) {
         return context.deserialize(json, BinaryExpression.class);
       }
-      if ("CallExpression".equals(type)) {
+      if (Arrays.equals(new String[]{ "CallExpression" }, types)) {
         return context.deserialize(json, CallExpression.class);
       }
-      if ("ConditionalExpression".equals(type)) {
+      if (Arrays.equals(new String[]{ "ConditionalExpression" }, types)) {
         return context.deserialize(json, ConditionalExpression.class);
       }
-      if ("LogicalExpression".equals(type)) {
+      if (Arrays.equals(new String[]{ "LogicalExpression" }, types)) {
         return context.deserialize(json, LogicalExpression.class);
       }
-      if ("MemberExpression".equals(type)) {
+      if (Arrays.equals(new String[]{ "MemberExpression" }, types)) {
         return context.deserialize(json, MemberExpression.class);
       }
-      if ("IndexExpression".equals(type)) {
+      if (Arrays.equals(new String[]{ "IndexExpression" }, types)) {
         return context.deserialize(json, IndexExpression.class);
       }
-      if ("ObjectExpression".equals(type)) {
+      if (Arrays.equals(new String[]{ "ObjectExpression" }, types)) {
         return context.deserialize(json, ObjectExpression.class);
       }
-      if ("PipeExpression".equals(type)) {
+      if (Arrays.equals(new String[]{ "PipeExpression" }, types)) {
         return context.deserialize(json, PipeExpression.class);
       }
-      if ("UnaryExpression".equals(type)) {
+      if (Arrays.equals(new String[]{ "UnaryExpression" }, types)) {
         return context.deserialize(json, UnaryExpression.class);
       }
-      if ("BooleanLiteral".equals(type)) {
+      if (Arrays.equals(new String[]{ "BooleanLiteral" }, types)) {
         return context.deserialize(json, BooleanLiteral.class);
       }
-      if ("DateTimeLiteral".equals(type)) {
+      if (Arrays.equals(new String[]{ "DateTimeLiteral" }, types)) {
         return context.deserialize(json, DateTimeLiteral.class);
       }
-      if ("DurationLiteral".equals(type)) {
+      if (Arrays.equals(new String[]{ "DurationLiteral" }, types)) {
         return context.deserialize(json, DurationLiteral.class);
       }
-      if ("FloatLiteral".equals(type)) {
+      if (Arrays.equals(new String[]{ "FloatLiteral" }, types)) {
         return context.deserialize(json, FloatLiteral.class);
       }
-      if ("IntegerLiteral".equals(type)) {
+      if (Arrays.equals(new String[]{ "IntegerLiteral" }, types)) {
         return context.deserialize(json, IntegerLiteral.class);
       }
-      if ("PipeLiteral".equals(type)) {
+      if (Arrays.equals(new String[]{ "PipeLiteral" }, types)) {
         return context.deserialize(json, PipeLiteral.class);
       }
-      if ("RegexpLiteral".equals(type)) {
+      if (Arrays.equals(new String[]{ "RegexpLiteral" }, types)) {
         return context.deserialize(json, RegexpLiteral.class);
       }
-      if ("StringLiteral".equals(type)) {
+      if (Arrays.equals(new String[]{ "StringLiteral" }, types)) {
         return context.deserialize(json, StringLiteral.class);
       }
-      if ("UnsignedIntegerLiteral".equals(type)) {
+      if (Arrays.equals(new String[]{ "UnsignedIntegerLiteral" }, types)) {
         return context.deserialize(json, UnsignedIntegerLiteral.class);
       }
-      if ("Identifier".equals(type)) {
+      if (Arrays.equals(new String[]{ "Identifier" }, types)) {
         return context.deserialize(json, Identifier.class);
       }
 

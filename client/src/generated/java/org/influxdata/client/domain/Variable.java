@@ -280,7 +280,6 @@ public class Variable {
   }
 
   public class VariableArgumentsAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
-    private final String discriminator = "type";
 
     public VariableArgumentsAdapter() {
     }
@@ -288,11 +287,13 @@ public class Variable {
     @Override
     public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
 
+      List<String> discriminator = Arrays.asList("type");
+
       JsonObject jsonObject = json.getAsJsonObject();
 
-      String type = jsonObject.get(discriminator).getAsString();
+      String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
 
-      return deserialize(type, jsonObject, context);
+      return deserialize(types, jsonObject, context);
     }
 
     @Override
@@ -301,15 +302,15 @@ public class Variable {
       return context.serialize(object);
     }
 
-    private Object deserialize(final String type, final JsonElement json, final JsonDeserializationContext context) {
+    private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
 
-      if ("query".equals(type)) {
+      if (Arrays.equals(new String[]{ "query" }, types)) {
         return context.deserialize(json, QueryVariableProperties.class);
       }
-      if ("constant".equals(type)) {
+      if (Arrays.equals(new String[]{ "constant" }, types)) {
         return context.deserialize(json, ConstantVariableProperties.class);
       }
-      if ("map".equals(type)) {
+      if (Arrays.equals(new String[]{ "map" }, types)) {
         return context.deserialize(json, MapVariableProperties.class);
       }
 

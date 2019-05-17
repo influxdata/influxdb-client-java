@@ -209,7 +209,6 @@ public class TelegrafRequest {
   }
 
   public class TelegrafRequestPluginsAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
-    private final String discriminator = "name";
 
     public TelegrafRequestPluginsAdapter() {
     }
@@ -217,14 +216,16 @@ public class TelegrafRequest {
     @Override
     public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
 
+      List<String> discriminator = Arrays.asList("name", "type");
+
       List<Object> results = new ArrayList<>();
 
       for (JsonElement arrayItem: json.getAsJsonArray()){
         JsonObject jsonObject = arrayItem.getAsJsonObject();
 
-        String type = jsonObject.get(discriminator).getAsString();
+        String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
 
-        results.add(deserialize(type, jsonObject, context));
+        results.add(deserialize(types, jsonObject, context));
       }
 
       return results;
@@ -236,45 +237,45 @@ public class TelegrafRequest {
       return context.serialize(object);
     }
 
-    private Object deserialize(final String type, final JsonElement json, final JsonDeserializationContext context) {
+    private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
 
-      if ("cpu".equals(type)) {
+      if (Arrays.equals(new String[]{ "cpu", "input" }, types)) {
         return context.deserialize(json, TelegrafPluginInputCpu.class);
       }
-      if ("disk".equals(type)) {
+      if (Arrays.equals(new String[]{ "disk", "input" }, types)) {
         return context.deserialize(json, TelegrafPluginInputDisk.class);
       }
-      if ("diskio".equals(type)) {
+      if (Arrays.equals(new String[]{ "diskio", "input" }, types)) {
         return context.deserialize(json, TelegrafPluginInputDiskio.class);
       }
-      if ("docker".equals(type)) {
+      if (Arrays.equals(new String[]{ "docker", "input" }, types)) {
         return context.deserialize(json, TelegrafPluginInputDocker.class);
       }
-      if ("file".equals(type)) {
+      if (Arrays.equals(new String[]{ "file", "input" }, types)) {
         return context.deserialize(json, TelegrafPluginInputFile.class);
       }
-      if ("kubernetes".equals(type)) {
+      if (Arrays.equals(new String[]{ "kubernetes", "input" }, types)) {
         return context.deserialize(json, TelegrafPluginInputKubernetes.class);
       }
-      if ("logparser".equals(type)) {
+      if (Arrays.equals(new String[]{ "logparser", "input" }, types)) {
         return context.deserialize(json, TelegrafPluginInputLogParser.class);
       }
-      if ("procstat".equals(type)) {
+      if (Arrays.equals(new String[]{ "procstat", "input" }, types)) {
         return context.deserialize(json, TelegrafPluginInputProcstat.class);
       }
-      if ("prometheus".equals(type)) {
+      if (Arrays.equals(new String[]{ "prometheus", "input" }, types)) {
         return context.deserialize(json, TelegrafPluginInputPrometheus.class);
       }
-      if ("redis".equals(type)) {
+      if (Arrays.equals(new String[]{ "redis", "input" }, types)) {
         return context.deserialize(json, TelegrafPluginInputRedis.class);
       }
-      if ("syslog".equals(type)) {
+      if (Arrays.equals(new String[]{ "syslog", "input" }, types)) {
         return context.deserialize(json, TelegrafPluginInputSyslog.class);
       }
-      if ("file".equals(type)) {
+      if (Arrays.equals(new String[]{ "file", "output" }, types)) {
         return context.deserialize(json, TelegrafPluginOutputFile.class);
       }
-      if ("influxdb_v2".equals(type)) {
+      if (Arrays.equals(new String[]{ "influxdb_v2", "output" }, types)) {
         return context.deserialize(json, TelegrafPluginOutputInfluxDBV2.class);
       }
 

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -39,6 +40,7 @@ import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openapitools.codegen.CodegenConfig;
 import org.openapitools.codegen.CodegenModel;
@@ -429,36 +431,35 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                                     refSchema = allDefinitions.get(refSchemaName);
                                 }
 
-                                String key = (String) refSchema.getProperties().keySet().stream().findFirst().get();
-                                String keyValue;
+                                String[] keys = getDiscriminatorKeys(refSchema);
 
-                                Schema keyScheme = (Schema) refSchema.getProperties().get(key);
-                                if (keyScheme.get$ref() != null) {
-                                    keyScheme = allDefinitions.get(ModelUtils.getSimpleRef(keyScheme.get$ref()));
-                                }
+                                String[] discriminator = new String[]{};
+                                String[] discriminatorValue = new String[]{};
 
-                                if (!(keyScheme instanceof StringSchema)) {
-                                    continue;
-                                } else {
-
-                                    if (((StringSchema) keyScheme).getEnum() != null) {
-                                        keyValue = ((StringSchema) keyScheme).getEnum().get(0);
-                                    } else {
-                                        keyValue = refSchemaName;
+                                for (String key : keys) {
+                                    Schema keyScheme = (Schema) refSchema.getProperties().get(key);
+                                    if (keyScheme.get$ref() != null) {
+                                        keyScheme = allDefinitions.get(ModelUtils.getSimpleRef(keyScheme.get$ref()));
                                     }
+
+                                    if (!(keyScheme instanceof StringSchema)) {
+                                        continue;
+                                    } else {
+
+                                        if (((StringSchema) keyScheme).getEnum() != null) {
+                                            discriminatorValue = ArrayUtils.add(discriminatorValue, ((StringSchema) keyScheme).getEnum().get(0));
+                                        } else {
+                                            discriminatorValue = ArrayUtils.add(discriminatorValue, refSchemaName);
+                                        }
+                                    }
+
+                                    discriminator = ArrayUtils.add(discriminator, key);
                                 }
 
-                                if (typeAdapter.discriminator != null && !typeAdapter.discriminator.equals(key)) {
-                                    String message = "Discriminators has to be same: '" +
-                                            typeAdapter.discriminator + "' != '" + key + " ' for: " + refSchemaName;
-
-                                    throw new IllegalStateException(message);
-                                }
-
-                                typeAdapter.discriminator = key;
                                 typeAdapter.isArray = propertySchema instanceof ArraySchema;
+                                typeAdapter.discriminator = Stream.of(discriminator).map(v -> "\"" + v + "\"").collect(Collectors.joining(", "));
                                 TypeAdapterItem typeAdapterItem = new TypeAdapterItem();
-                                typeAdapterItem.discriminatorValue = keyValue;
+                                typeAdapterItem.discriminatorValue = Stream.of(discriminatorValue).map(v -> "\"" + v + "\"").collect(Collectors.joining(", "));
                                 typeAdapterItem.classname = refSchemaName;
                                 typeAdapter.items.add(typeAdapterItem);
                             }
@@ -647,6 +648,22 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         }
 
         return schemas;
+    }
+
+    private String[] getDiscriminatorKeys(final Schema refSchema) {
+        List<String> keys = new ArrayList<>();
+
+        refSchema.getProperties().forEach((BiConsumer<String, Schema>) (property, propertySchema) -> {
+
+            if (keys.isEmpty()) {
+                keys.add(property);
+
+            } else if (propertySchema.getEnum() != null && propertySchema.getEnum().size() == 1) {
+                keys.add(property);
+            }
+        });
+
+        return keys.toArray(new String[0]);
     }
 
     public class TypeAdapter {

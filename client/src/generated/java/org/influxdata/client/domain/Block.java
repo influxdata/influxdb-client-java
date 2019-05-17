@@ -139,7 +139,6 @@ public class Block extends Node {
   }
 
   public class BlockBodyAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
-    private final String discriminator = "type";
 
     public BlockBodyAdapter() {
     }
@@ -147,14 +146,16 @@ public class Block extends Node {
     @Override
     public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
 
+      List<String> discriminator = Arrays.asList("type");
+
       List<Object> results = new ArrayList<>();
 
       for (JsonElement arrayItem: json.getAsJsonArray()){
         JsonObject jsonObject = arrayItem.getAsJsonObject();
 
-        String type = jsonObject.get(discriminator).getAsString();
+        String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
 
-        results.add(deserialize(type, jsonObject, context));
+        results.add(deserialize(types, jsonObject, context));
       }
 
       return results;
@@ -166,30 +167,30 @@ public class Block extends Node {
       return context.serialize(object);
     }
 
-    private Object deserialize(final String type, final JsonElement json, final JsonDeserializationContext context) {
+    private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
 
-      if ("BadStatement".equals(type)) {
+      if (Arrays.equals(new String[]{ "BadStatement" }, types)) {
         return context.deserialize(json, BadStatement.class);
       }
-      if ("VariableAssignment".equals(type)) {
+      if (Arrays.equals(new String[]{ "VariableAssignment" }, types)) {
         return context.deserialize(json, VariableAssignment.class);
       }
-      if ("MemberAssignment".equals(type)) {
+      if (Arrays.equals(new String[]{ "MemberAssignment" }, types)) {
         return context.deserialize(json, MemberAssignment.class);
       }
-      if ("ExpressionStatement".equals(type)) {
+      if (Arrays.equals(new String[]{ "ExpressionStatement" }, types)) {
         return context.deserialize(json, ExpressionStatement.class);
       }
-      if ("ReturnStatement".equals(type)) {
+      if (Arrays.equals(new String[]{ "ReturnStatement" }, types)) {
         return context.deserialize(json, ReturnStatement.class);
       }
-      if ("OptionStatement".equals(type)) {
+      if (Arrays.equals(new String[]{ "OptionStatement" }, types)) {
         return context.deserialize(json, OptionStatement.class);
       }
-      if ("BuiltinStatement".equals(type)) {
+      if (Arrays.equals(new String[]{ "BuiltinStatement" }, types)) {
         return context.deserialize(json, BuiltinStatement.class);
       }
-      if ("TestStatement".equals(type)) {
+      if (Arrays.equals(new String[]{ "TestStatement" }, types)) {
         return context.deserialize(json, TestStatement.class);
       }
 

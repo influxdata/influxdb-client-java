@@ -167,7 +167,6 @@ public class View {
   }
 
   public class ViewPropertiesAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
-    private final String discriminator = "type";
 
     public ViewPropertiesAdapter() {
     }
@@ -175,11 +174,13 @@ public class View {
     @Override
     public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
 
+      List<String> discriminator = Arrays.asList("type", "shape");
+
       JsonObject jsonObject = json.getAsJsonObject();
 
-      String type = jsonObject.get(discriminator).getAsString();
+      String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
 
-      return deserialize(type, jsonObject, context);
+      return deserialize(types, jsonObject, context);
     }
 
     @Override
@@ -188,18 +189,18 @@ public class View {
       return context.serialize(object);
     }
 
-    private Object deserialize(final String type, final JsonElement json, final JsonDeserializationContext context) {
+    private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
 
-      if ("chronograf-v1".equals(type)) {
+      if (Arrays.equals(new String[]{ "chronograf-v1" }, types)) {
         return context.deserialize(json, V1ViewProperties.class);
       }
-      if ("empty".equals(type)) {
+      if (Arrays.equals(new String[]{ "empty" }, types)) {
         return context.deserialize(json, EmptyViewProperties.class);
       }
-      if ("log-viewer".equals(type)) {
+      if (Arrays.equals(new String[]{ "chronograf-v2", "log-viewer" }, types)) {
         return context.deserialize(json, LogViewProperties.class);
       }
-      if ("markdown".equals(type)) {
+      if (Arrays.equals(new String[]{ "markdown", "chronograf-v2" }, types)) {
         return context.deserialize(json, MarkdownViewProperties.class);
       }
 

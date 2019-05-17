@@ -6381,12 +6381,12 @@ components:
       - shape
       - type
       properties:
-        type:
-          type: string
-          enum: ["log-viewer"]
         shape:
             type: string
             enum: ["chronograf-v2"]
+        type:
+            type: string
+            enum: ["log-viewer"]
         columns:
           description: Defines the order, names, and visibility of columns in the log
             viewer table

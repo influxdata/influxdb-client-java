@@ -34,55 +34,6 @@ import org.influxdata.client.domain.LogViewerColumn;
 
 public class LogViewProperties {
   /**
-   * Gets or Sets type
-   */
-  @JsonAdapter(TypeEnum.Adapter.class)
-  public enum TypeEnum {
-    LOG_VIEWER("log-viewer");
-
-    private String value;
-
-    TypeEnum(String value) {
-      this.value = value;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static TypeEnum fromValue(String text) {
-      for (TypeEnum b : TypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    public static class Adapter extends TypeAdapter<TypeEnum> {
-      @Override
-      public void write(final JsonWriter jsonWriter, final TypeEnum enumeration) throws IOException {
-        jsonWriter.value(enumeration.getValue());
-      }
-
-      @Override
-      public TypeEnum read(final JsonReader jsonReader) throws IOException {
-        String value = jsonReader.nextString();
-        return TypeEnum.fromValue(String.valueOf(value));
-      }
-    }
-  }
-
-  public static final String SERIALIZED_NAME_TYPE = "type";
-  @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = TypeEnum.LOG_VIEWER;
-
-  /**
    * Gets or Sets shape
    */
   @JsonAdapter(ShapeEnum.Adapter.class)
@@ -131,18 +82,58 @@ public class LogViewProperties {
   @SerializedName(SERIALIZED_NAME_SHAPE)
   private ShapeEnum shape = ShapeEnum.CHRONOGRAF_V2;
 
+  /**
+   * Gets or Sets type
+   */
+  @JsonAdapter(TypeEnum.Adapter.class)
+  public enum TypeEnum {
+    LOG_VIEWER("log-viewer");
+
+    private String value;
+
+    TypeEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static TypeEnum fromValue(String text) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<TypeEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final TypeEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public TypeEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return TypeEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+
+  public static final String SERIALIZED_NAME_TYPE = "type";
+  @SerializedName(SERIALIZED_NAME_TYPE)
+  private TypeEnum type = TypeEnum.LOG_VIEWER;
+
   public static final String SERIALIZED_NAME_COLUMNS = "columns";
   @SerializedName(SERIALIZED_NAME_COLUMNS)
   private List<LogViewerColumn> columns = new ArrayList<>();
-
-   /**
-   * Get type
-   * @return type
-  **/
-  @ApiModelProperty(required = true, value = "")
-  public TypeEnum getType() {
-    return type;
-  }
 
    /**
    * Get shape
@@ -151,6 +142,15 @@ public class LogViewProperties {
   @ApiModelProperty(required = true, value = "")
   public ShapeEnum getShape() {
     return shape;
+  }
+
+   /**
+   * Get type
+   * @return type
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public TypeEnum getType() {
+    return type;
   }
 
   public LogViewProperties columns(List<LogViewerColumn> columns) {
@@ -186,14 +186,14 @@ public class LogViewProperties {
       return false;
     }
     LogViewProperties logViewProperties = (LogViewProperties) o;
-    return Objects.equals(this.type, logViewProperties.type) &&
-        Objects.equals(this.shape, logViewProperties.shape) &&
+    return Objects.equals(this.shape, logViewProperties.shape) &&
+        Objects.equals(this.type, logViewProperties.type) &&
         Objects.equals(this.columns, logViewProperties.columns);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, shape, columns);
+    return Objects.hash(shape, type, columns);
   }
 
 
@@ -201,8 +201,8 @@ public class LogViewProperties {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class LogViewProperties {\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    columns: ").append(toIndentedString(columns)).append("\n");
     sb.append("}");
     return sb.toString();

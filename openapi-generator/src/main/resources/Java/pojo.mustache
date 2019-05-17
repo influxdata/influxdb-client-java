@@ -321,7 +321,6 @@ public class {{classname}}{{#vendorExtensions.x-has-generic-type}}{{{vendorExten
 {{/parcelableModel}}
 {{#vendorExtensions.x-type-adapters.entrySet}}
   public class {{value.classname}} implements JsonDeserializer<Object>, JsonSerializer<Object> {
-    private final String discriminator = "{{value.discriminator}}";
 
     public {{value.classname}}() {
     }
@@ -329,15 +328,17 @@ public class {{classname}}{{#vendorExtensions.x-has-generic-type}}{{{vendorExten
     @Override
     public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
 
+      List<String> discriminator = Arrays.asList({{{value.discriminator}}});
+
       {{#value.isArray}}
       List<Object> results = new ArrayList<>();
 
       for (JsonElement arrayItem: json.getAsJsonArray()){
         JsonObject jsonObject = arrayItem.getAsJsonObject();
 
-        String type = jsonObject.get(discriminator).getAsString();
+        String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
 
-        results.add(deserialize(type, jsonObject, context));
+        results.add(deserialize(types, jsonObject, context));
       }
 
       return results;
@@ -345,9 +346,9 @@ public class {{classname}}{{#vendorExtensions.x-has-generic-type}}{{{vendorExten
       {{^value.isArray}}
       JsonObject jsonObject = json.getAsJsonObject();
 
-      String type = jsonObject.get(discriminator).getAsString();
+      String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
 
-      return deserialize(type, jsonObject, context);
+      return deserialize(types, jsonObject, context);
       {{/value.isArray}}
     }
 
@@ -357,10 +358,10 @@ public class {{classname}}{{#vendorExtensions.x-has-generic-type}}{{{vendorExten
       return context.serialize(object);
     }
 
-    private Object deserialize(final String type, final JsonElement json, final JsonDeserializationContext context) {
+    private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
 
       {{#value.items}}
-      if ("{{discriminatorValue}}".equals(type)) {
+      if (Arrays.equals(new String[]{ {{{discriminatorValue}}} }, types)) {
         return context.deserialize(json, {{classname}}.class);
       }
       {{/value.items}}
