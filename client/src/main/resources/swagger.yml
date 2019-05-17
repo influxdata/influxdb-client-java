@@ -7031,6 +7031,14 @@ components:
           type: string
         version:
           type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
       required:
         - name
         - version

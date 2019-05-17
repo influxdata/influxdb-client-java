@@ -23,6 +23,7 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.time.OffsetDateTime;
 
 /**
  * DocumentMeta
@@ -44,6 +45,14 @@ public class DocumentMeta {
   public static final String SERIALIZED_NAME_VERSION = "version";
   @SerializedName(SERIALIZED_NAME_VERSION)
   private String version;
+
+  public static final String SERIALIZED_NAME_CREATED_AT = "createdAt";
+  @SerializedName(SERIALIZED_NAME_CREATED_AT)
+  private OffsetDateTime createdAt;
+
+  public static final String SERIALIZED_NAME_UPDATED_AT = "updatedAt";
+  @SerializedName(SERIALIZED_NAME_UPDATED_AT)
+  private OffsetDateTime updatedAt;
 
   public DocumentMeta name(String name) {
     this.name = name;
@@ -117,6 +126,24 @@ public class DocumentMeta {
     this.version = version;
   }
 
+   /**
+   * Get createdAt
+   * @return createdAt
+  **/
+  @ApiModelProperty(value = "")
+  public OffsetDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+   /**
+   * Get updatedAt
+   * @return updatedAt
+  **/
+  @ApiModelProperty(value = "")
+  public OffsetDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -130,12 +157,14 @@ public class DocumentMeta {
     return Objects.equals(this.name, documentMeta.name) &&
         Objects.equals(this.type, documentMeta.type) &&
         Objects.equals(this.description, documentMeta.description) &&
-        Objects.equals(this.version, documentMeta.version);
+        Objects.equals(this.version, documentMeta.version) &&
+        Objects.equals(this.createdAt, documentMeta.createdAt) &&
+        Objects.equals(this.updatedAt, documentMeta.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, type, description, version);
+    return Objects.hash(name, type, description, version, createdAt, updatedAt);
   }
 
 
@@ -147,6 +176,8 @@ public class DocumentMeta {
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
+    sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");
     return sb.toString();
   }

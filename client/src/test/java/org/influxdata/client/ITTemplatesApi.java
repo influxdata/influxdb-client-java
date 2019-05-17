@@ -21,6 +21,8 @@
  */
 package org.influxdata.client;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -67,6 +69,8 @@ class ITTemplatesApi extends AbstractITClientTest {
     @Test
     void create() {
 
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+
         LabelCreateRequest labelCreateRequest = new LabelCreateRequest();
         labelCreateRequest.setOrgID(organization.getId());
         labelCreateRequest.setName(generateName("label"));
@@ -100,6 +104,7 @@ class ITTemplatesApi extends AbstractITClientTest {
         Assertions.assertThat(template.getMeta().getVersion()).isEqualTo("1");
         Assertions.assertThat(template.getMeta().getType()).isEqualTo("testing");
         Assertions.assertThat(template.getMeta().getDescription()).isEqualTo(" meta description ");
+        Assertions.assertThat(template.getMeta().getCreatedAt()).isAfter(now);
         Assertions.assertThat(template.getLinks()).isNotNull();
         Assertions.assertThat(template.getLinks().getSelf()).isEqualTo("/api/v2/documents/templates/" + template.getId());
 
@@ -223,6 +228,8 @@ class ITTemplatesApi extends AbstractITClientTest {
     @Test
     void updateTemplate() {
 
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+
         DocumentCreate documentCreate = createDoc();
 
         Document template = templatesApi.createTemplate(documentCreate);
@@ -240,6 +247,8 @@ class ITTemplatesApi extends AbstractITClientTest {
         Assertions.assertThat(updated.getMeta()).isNotNull();
         Assertions.assertThat(updated.getMeta().getVersion()).isEqualTo("2");
         Assertions.assertThat(updated.getMeta().getName()).isEqualTo("changed_name.txt");
+        Assertions.assertThat(updated.getMeta().getUpdatedAt()).isAfter(now);
+        Assertions.assertThat(updated.getMeta().getUpdatedAt()).isAfter(updated.getMeta().getCreatedAt());
     }
 
     @Test
