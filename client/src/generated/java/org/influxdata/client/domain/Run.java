@@ -24,6 +24,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import org.influxdata.client.domain.LogEvent;
 import org.influxdata.client.domain.RunLinks;
 
 /**
@@ -100,6 +103,10 @@ public class Run {
   @SerializedName(SERIALIZED_NAME_SCHEDULED_FOR)
   private OffsetDateTime scheduledFor;
 
+  public static final String SERIALIZED_NAME_LOG = "log";
+  @SerializedName(SERIALIZED_NAME_LOG)
+  private List<LogEvent> log = new ArrayList<>();
+
   public static final String SERIALIZED_NAME_STARTED_AT = "startedAt";
   @SerializedName(SERIALIZED_NAME_STARTED_AT)
   private OffsetDateTime startedAt;
@@ -162,6 +169,15 @@ public class Run {
   }
 
    /**
+   * An array of logs associated with the run.
+   * @return log
+  **/
+  @ApiModelProperty(value = "An array of logs associated with the run.")
+  public List<LogEvent> getLog() {
+    return log;
+  }
+
+   /**
    * Time run started executing, RFC3339Nano.
    * @return startedAt
   **/
@@ -220,6 +236,7 @@ public class Run {
         Objects.equals(this.taskID, run.taskID) &&
         Objects.equals(this.status, run.status) &&
         Objects.equals(this.scheduledFor, run.scheduledFor) &&
+        Objects.equals(this.log, run.log) &&
         Objects.equals(this.startedAt, run.startedAt) &&
         Objects.equals(this.finishedAt, run.finishedAt) &&
         Objects.equals(this.requestedAt, run.requestedAt) &&
@@ -228,7 +245,7 @@ public class Run {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, taskID, status, scheduledFor, startedAt, finishedAt, requestedAt, links);
+    return Objects.hash(id, taskID, status, scheduledFor, log, startedAt, finishedAt, requestedAt, links);
   }
 
 
@@ -240,6 +257,7 @@ public class Run {
     sb.append("    taskID: ").append(toIndentedString(taskID)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    scheduledFor: ").append(toIndentedString(scheduledFor)).append("\n");
+    sb.append("    log: ").append(toIndentedString(log)).append("\n");
     sb.append("    startedAt: ").append(toIndentedString(startedAt)).append("\n");
     sb.append("    finishedAt: ").append(toIndentedString(finishedAt)).append("\n");
     sb.append("    requestedAt: ").append(toIndentedString(requestedAt)).append("\n");

@@ -5616,6 +5616,14 @@ components:
           type: string
         rp:
           type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
         retentionRules:
           type: array
           description: rules to expire or retain data.  No rules means data never expires.
@@ -5800,6 +5808,12 @@ components:
           description: Time used for run's "now" option, RFC3339.
           type: string
           format: date-time
+        log:
+          description: An array of logs associated with the run.
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/LogEvent"
         startedAt:
           readOnly: true
           description: Time run started executing, RFC3339Nano.

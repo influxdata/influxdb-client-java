@@ -23,6 +23,7 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.influxdata.client.domain.BucketLinks;
@@ -57,6 +58,14 @@ public class Bucket {
   public static final String SERIALIZED_NAME_RP = "rp";
   @SerializedName(SERIALIZED_NAME_RP)
   private String rp;
+
+  public static final String SERIALIZED_NAME_CREATED_AT = "createdAt";
+  @SerializedName(SERIALIZED_NAME_CREATED_AT)
+  private OffsetDateTime createdAt;
+
+  public static final String SERIALIZED_NAME_UPDATED_AT = "updatedAt";
+  @SerializedName(SERIALIZED_NAME_UPDATED_AT)
+  private OffsetDateTime updatedAt;
 
   public static final String SERIALIZED_NAME_RETENTION_RULES = "retentionRules";
   @SerializedName(SERIALIZED_NAME_RETENTION_RULES)
@@ -165,6 +174,24 @@ public class Bucket {
     this.rp = rp;
   }
 
+   /**
+   * Get createdAt
+   * @return createdAt
+  **/
+  @ApiModelProperty(value = "")
+  public OffsetDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+   /**
+   * Get updatedAt
+   * @return updatedAt
+  **/
+  @ApiModelProperty(value = "")
+  public OffsetDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
   public Bucket retentionRules(List<BucketRetentionRules> retentionRules) {
     this.retentionRules = retentionRules;
     return this;
@@ -230,13 +257,15 @@ public class Bucket {
         Objects.equals(this.description, bucket.description) &&
         Objects.equals(this.orgID, bucket.orgID) &&
         Objects.equals(this.rp, bucket.rp) &&
+        Objects.equals(this.createdAt, bucket.createdAt) &&
+        Objects.equals(this.updatedAt, bucket.updatedAt) &&
         Objects.equals(this.retentionRules, bucket.retentionRules) &&
         Objects.equals(this.labels, bucket.labels);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, id, name, description, orgID, rp, retentionRules, labels);
+    return Objects.hash(links, id, name, description, orgID, rp, createdAt, updatedAt, retentionRules, labels);
   }
 
 
@@ -250,6 +279,8 @@ public class Bucket {
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
     sb.append("    rp: ").append(toIndentedString(rp)).append("\n");
+    sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
+    sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    retentionRules: ").append(toIndentedString(retentionRules)).append("\n");
     sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
     sb.append("}");

@@ -471,6 +471,12 @@ class ITTasksApi extends AbstractITClientTest {
         Assertions.assertThat(runs).isNotEmpty();
 
         Run firstRun = runs.get(0);
+
+        List<LogEvent> logs = firstRun.getLog();
+        Assertions.assertThat(logs).isNotEmpty();
+        Assertions.assertThat(logs.get(0).getMessage()).startsWith("Started task from script");
+        Assertions.assertThat(logs.get(2).getMessage()).startsWith("Completed successfully");
+
         Run runById = tasksApi.getRun(firstRun);
 
         Assertions.assertThat(runById).isNotNull();

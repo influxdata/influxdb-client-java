@@ -21,12 +21,13 @@
  */
 package org.influxdata.client;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Bucket;
 import org.influxdata.client.domain.BucketRetentionRules;
 import org.influxdata.client.domain.Buckets;
@@ -75,6 +76,8 @@ class ITBucketsApi extends AbstractITClientTest {
     @Test
     void createBucket() {
 
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+
         String bucketName = generateName("robot sensor");
 
         Bucket bucket = bucketsApi.createBucket(bucketName, retentionRule(), organization);
@@ -83,6 +86,8 @@ class ITBucketsApi extends AbstractITClientTest {
         Assertions.assertThat(bucket.getId()).isNotBlank();
         Assertions.assertThat(bucket.getName()).isEqualTo(bucketName);
         Assertions.assertThat(bucket.getOrgID()).isEqualTo(organization.getId());
+        Assertions.assertThat(bucket.getCreatedAt()).isAfter(now);
+        Assertions.assertThat(bucket.getUpdatedAt()).isAfter(now);
         Assertions.assertThat(bucket.getRetentionRules()).hasSize(1);
         Assertions.assertThat(bucket.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600L);
         Assertions.assertThat(bucket.getRetentionRules().get(0).getType()).isEqualTo(BucketRetentionRules.TypeEnum.EXPIRE);
@@ -231,17 +236,20 @@ class ITBucketsApi extends AbstractITClientTest {
     }
 
     @Test
-    void updateOrganization() {
+    void updateBucket() {
 
         Bucket createBucket = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);
         createBucket.setName("Therm sensor 2000");
         createBucket.getRetentionRules().get(0).setEverySeconds(1000);
+
+        OffsetDateTime updatedAt = createBucket.getUpdatedAt();
 
         Bucket updatedBucket = bucketsApi.updateBucket(createBucket);
 
         Assertions.assertThat(updatedBucket).isNotNull();
         Assertions.assertThat(updatedBucket.getId()).isEqualTo(createBucket.getId());
         Assertions.assertThat(updatedBucket.getName()).isEqualTo("Therm sensor 2000");
+        Assertions.assertThat(updatedBucket.getUpdatedAt()).isAfter(updatedAt);
         Assertions.assertThat(updatedBucket.getRetentionRules().get(0).getEverySeconds()).isEqualTo(1000L);
     }
 
