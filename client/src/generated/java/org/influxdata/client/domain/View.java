@@ -174,7 +174,7 @@ public class View {
     @Override
     public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
 
-      List<String> discriminator = Arrays.asList("type", "shape");
+      List<String> discriminator = Arrays.asList("shape", "type");
 
       JsonObject jsonObject = json.getAsJsonObject();
 
@@ -191,17 +191,32 @@ public class View {
 
     private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
 
-      if (Arrays.equals(new String[]{ "chronograf-v1" }, types)) {
-        return context.deserialize(json, V1ViewProperties.class);
+      if (Arrays.equals(new String[]{ "chronograf-v2", "line-plus-single-stat" }, types)) {
+        return context.deserialize(json, LinePlusSingleStatProperties.class);
       }
-      if (Arrays.equals(new String[]{ "empty" }, types)) {
-        return context.deserialize(json, EmptyViewProperties.class);
+      if (Arrays.equals(new String[]{ "chronograf-v2", "xy" }, types)) {
+        return context.deserialize(json, XYViewProperties.class);
+      }
+      if (Arrays.equals(new String[]{ "chronograf-v2", "single-stat" }, types)) {
+        return context.deserialize(json, SingleStatViewProperties.class);
+      }
+      if (Arrays.equals(new String[]{ "chronograf-v2", "histogram" }, types)) {
+        return context.deserialize(json, HistogramViewProperties.class);
+      }
+      if (Arrays.equals(new String[]{ "chronograf-v2", "gauge" }, types)) {
+        return context.deserialize(json, GaugeViewProperties.class);
+      }
+      if (Arrays.equals(new String[]{ "chronograf-v2", "table" }, types)) {
+        return context.deserialize(json, TableViewProperties.class);
+      }
+      if (Arrays.equals(new String[]{ "chronograf-v2", "markdown" }, types)) {
+        return context.deserialize(json, MarkdownViewProperties.class);
       }
       if (Arrays.equals(new String[]{ "chronograf-v2", "log-viewer" }, types)) {
         return context.deserialize(json, LogViewProperties.class);
       }
-      if (Arrays.equals(new String[]{ "markdown", "chronograf-v2" }, types)) {
-        return context.deserialize(json, MarkdownViewProperties.class);
+      if (Arrays.equals(new String[]{ "chronograf-v2", "empty" }, types)) {
+        return context.deserialize(json, EmptyViewProperties.class);
       }
 
       return context.deserialize(json, Object.class);

@@ -23,12 +23,23 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.util.List;
+import org.influxdata.client.domain.Axes;
+import org.influxdata.client.domain.DashboardColor;
+import org.influxdata.client.domain.DashboardQuery;
+import org.influxdata.client.domain.DecimalPlaces;
+import org.influxdata.client.domain.Legend;
+import org.influxdata.client.domain.ViewProperties;
 
 /**
- * MarkdownViewProperties
+ * LinePlusSingleStatProperties
  */
 
-public class MarkdownViewProperties {
+public class LinePlusSingleStatProperties extends ViewProperties {
+  public static final String SERIALIZED_NAME_AXES = "axes";
+  @SerializedName(SERIALIZED_NAME_AXES)
+  private Axes axes = null;
+
   /**
    * Gets or Sets shape
    */
@@ -83,7 +94,7 @@ public class MarkdownViewProperties {
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
-    MARKDOWN("markdown");
+    LINE_PLUS_SINGLE_STAT("line-plus-single-stat");
 
     private String value;
 
@@ -125,11 +136,41 @@ public class MarkdownViewProperties {
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = TypeEnum.MARKDOWN;
+  private TypeEnum type = TypeEnum.LINE_PLUS_SINGLE_STAT;
 
-  public static final String SERIALIZED_NAME_NOTE = "note";
-  @SerializedName(SERIALIZED_NAME_NOTE)
-  private String note;
+  public static final String SERIALIZED_NAME_LEGEND = "legend";
+  @SerializedName(SERIALIZED_NAME_LEGEND)
+  private Legend legend = null;
+
+  public static final String SERIALIZED_NAME_PREFIX = "prefix";
+  @SerializedName(SERIALIZED_NAME_PREFIX)
+  private String prefix;
+
+  public static final String SERIALIZED_NAME_SUFFIX = "suffix";
+  @SerializedName(SERIALIZED_NAME_SUFFIX)
+  private String suffix;
+
+  public static final String SERIALIZED_NAME_DECIMAL_PLACES = "decimalPlaces";
+  @SerializedName(SERIALIZED_NAME_DECIMAL_PLACES)
+  private DecimalPlaces decimalPlaces = null;
+
+  public LinePlusSingleStatProperties axes(Axes axes) {
+    this.axes = axes;
+    return this;
+  }
+
+   /**
+   * Get axes
+   * @return axes
+  **/
+  @ApiModelProperty(value = "")
+  public Axes getAxes() {
+    return axes;
+  }
+
+  public void setAxes(Axes axes) {
+    this.axes = axes;
+  }
 
    /**
    * Get shape
@@ -149,22 +190,76 @@ public class MarkdownViewProperties {
     return type;
   }
 
-  public MarkdownViewProperties note(String note) {
-    this.note = note;
+  public LinePlusSingleStatProperties legend(Legend legend) {
+    this.legend = legend;
     return this;
   }
 
    /**
-   * Get note
-   * @return note
+   * Get legend
+   * @return legend
   **/
   @ApiModelProperty(value = "")
-  public String getNote() {
-    return note;
+  public Legend getLegend() {
+    return legend;
   }
 
-  public void setNote(String note) {
-    this.note = note;
+  public void setLegend(Legend legend) {
+    this.legend = legend;
+  }
+
+  public LinePlusSingleStatProperties prefix(String prefix) {
+    this.prefix = prefix;
+    return this;
+  }
+
+   /**
+   * Get prefix
+   * @return prefix
+  **/
+  @ApiModelProperty(value = "")
+  public String getPrefix() {
+    return prefix;
+  }
+
+  public void setPrefix(String prefix) {
+    this.prefix = prefix;
+  }
+
+  public LinePlusSingleStatProperties suffix(String suffix) {
+    this.suffix = suffix;
+    return this;
+  }
+
+   /**
+   * Get suffix
+   * @return suffix
+  **/
+  @ApiModelProperty(value = "")
+  public String getSuffix() {
+    return suffix;
+  }
+
+  public void setSuffix(String suffix) {
+    this.suffix = suffix;
+  }
+
+  public LinePlusSingleStatProperties decimalPlaces(DecimalPlaces decimalPlaces) {
+    this.decimalPlaces = decimalPlaces;
+    return this;
+  }
+
+   /**
+   * Get decimalPlaces
+   * @return decimalPlaces
+  **/
+  @ApiModelProperty(value = "")
+  public DecimalPlaces getDecimalPlaces() {
+    return decimalPlaces;
+  }
+
+  public void setDecimalPlaces(DecimalPlaces decimalPlaces) {
+    this.decimalPlaces = decimalPlaces;
   }
 
 
@@ -176,25 +271,35 @@ public class MarkdownViewProperties {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    MarkdownViewProperties markdownViewProperties = (MarkdownViewProperties) o;
-    return Objects.equals(this.shape, markdownViewProperties.shape) &&
-        Objects.equals(this.type, markdownViewProperties.type) &&
-        Objects.equals(this.note, markdownViewProperties.note);
+    LinePlusSingleStatProperties linePlusSingleStatProperties = (LinePlusSingleStatProperties) o;
+    return Objects.equals(this.axes, linePlusSingleStatProperties.axes) &&
+        Objects.equals(this.shape, linePlusSingleStatProperties.shape) &&
+        Objects.equals(this.type, linePlusSingleStatProperties.type) &&
+        Objects.equals(this.legend, linePlusSingleStatProperties.legend) &&
+        Objects.equals(this.prefix, linePlusSingleStatProperties.prefix) &&
+        Objects.equals(this.suffix, linePlusSingleStatProperties.suffix) &&
+        Objects.equals(this.decimalPlaces, linePlusSingleStatProperties.decimalPlaces) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(shape, type, note);
+    return Objects.hash(axes, shape, type, legend, prefix, suffix, decimalPlaces, super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class MarkdownViewProperties {\n");
+    sb.append("class LinePlusSingleStatProperties {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    axes: ").append(toIndentedString(axes)).append("\n");
     sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    note: ").append(toIndentedString(note)).append("\n");
+    sb.append("    legend: ").append(toIndentedString(legend)).append("\n");
+    sb.append("    prefix: ").append(toIndentedString(prefix)).append("\n");
+    sb.append("    suffix: ").append(toIndentedString(suffix)).append("\n");
+    sb.append("    decimalPlaces: ").append(toIndentedString(decimalPlaces)).append("\n");
     sb.append("}");
     return sb.toString();
   }

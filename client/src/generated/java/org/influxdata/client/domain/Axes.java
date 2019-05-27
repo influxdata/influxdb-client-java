@@ -30,7 +30,7 @@ import org.influxdata.client.domain.Axis;
  */
 @ApiModel(description = "The viewport for a View's visualizations")
 
-public class V1ViewPropertiesAxes {
+public class Axes {
   public static final String SERIALIZED_NAME_X = "x";
   @SerializedName(SERIALIZED_NAME_X)
   private Axis x = null;
@@ -43,7 +43,7 @@ public class V1ViewPropertiesAxes {
   @SerializedName(SERIALIZED_NAME_Y2)
   private Axis y2 = null;
 
-  public V1ViewPropertiesAxes x(Axis x) {
+  public Axes x(Axis x) {
     this.x = x;
     return this;
   }
@@ -61,7 +61,7 @@ public class V1ViewPropertiesAxes {
     this.x = x;
   }
 
-  public V1ViewPropertiesAxes y(Axis y) {
+  public Axes y(Axis y) {
     this.y = y;
     return this;
   }
@@ -79,7 +79,7 @@ public class V1ViewPropertiesAxes {
     this.y = y;
   }
 
-  public V1ViewPropertiesAxes y2(Axis y2) {
+  public Axes y2(Axis y2) {
     this.y2 = y2;
     return this;
   }
@@ -106,10 +106,10 @@ public class V1ViewPropertiesAxes {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    V1ViewPropertiesAxes v1ViewPropertiesAxes = (V1ViewPropertiesAxes) o;
-    return Objects.equals(this.x, v1ViewPropertiesAxes.x) &&
-        Objects.equals(this.y, v1ViewPropertiesAxes.y) &&
-        Objects.equals(this.y2, v1ViewPropertiesAxes.y2);
+    Axes axes = (Axes) o;
+    return Objects.equals(this.x, axes.x) &&
+        Objects.equals(this.y, axes.y) &&
+        Objects.equals(this.y2, axes.y2);
   }
 
   @Override
@@ -121,7 +121,7 @@ public class V1ViewPropertiesAxes {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class V1ViewPropertiesAxes {\n");
+    sb.append("class Axes {\n");
     sb.append("    x: ").append(toIndentedString(x)).append("\n");
     sb.append("    y: ").append(toIndentedString(y)).append("\n");
     sb.append("    y2: ").append(toIndentedString(y2)).append("\n");

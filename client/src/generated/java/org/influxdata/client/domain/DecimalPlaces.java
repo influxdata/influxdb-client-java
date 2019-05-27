@@ -25,11 +25,11 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * decimal points indicates whether and how many digits to show after decimal point
+ * indicates whether decimal places should be enforced, and how many digits it should show.
  */
-@ApiModel(description = "decimal points indicates whether and how many digits to show after decimal point")
+@ApiModel(description = "indicates whether decimal places should be enforced, and how many digits it should show.")
 
-public class V1ViewPropertiesDecimalPoints {
+public class DecimalPlaces {
   public static final String SERIALIZED_NAME_IS_ENFORCED = "isEnforced";
   @SerializedName(SERIALIZED_NAME_IS_ENFORCED)
   private Boolean isEnforced;
@@ -38,7 +38,7 @@ public class V1ViewPropertiesDecimalPoints {
   @SerializedName(SERIALIZED_NAME_DIGITS)
   private Integer digits;
 
-  public V1ViewPropertiesDecimalPoints isEnforced(Boolean isEnforced) {
+  public DecimalPlaces isEnforced(Boolean isEnforced) {
     this.isEnforced = isEnforced;
     return this;
   }
@@ -56,16 +56,16 @@ public class V1ViewPropertiesDecimalPoints {
     this.isEnforced = isEnforced;
   }
 
-  public V1ViewPropertiesDecimalPoints digits(Integer digits) {
+  public DecimalPlaces digits(Integer digits) {
     this.digits = digits;
     return this;
   }
 
    /**
-   * The number of digists after decimal to display
+   * The number of digits after decimal to display
    * @return digits
   **/
-  @ApiModelProperty(value = "The number of digists after decimal to display")
+  @ApiModelProperty(value = "The number of digits after decimal to display")
   public Integer getDigits() {
     return digits;
   }
@@ -83,9 +83,9 @@ public class V1ViewPropertiesDecimalPoints {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    V1ViewPropertiesDecimalPoints v1ViewPropertiesDecimalPoints = (V1ViewPropertiesDecimalPoints) o;
-    return Objects.equals(this.isEnforced, v1ViewPropertiesDecimalPoints.isEnforced) &&
-        Objects.equals(this.digits, v1ViewPropertiesDecimalPoints.digits);
+    DecimalPlaces decimalPlaces = (DecimalPlaces) o;
+    return Objects.equals(this.isEnforced, decimalPlaces.isEnforced) &&
+        Objects.equals(this.digits, decimalPlaces.digits);
   }
 
   @Override
@@ -97,7 +97,7 @@ public class V1ViewPropertiesDecimalPoints {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class V1ViewPropertiesDecimalPoints {\n");
+    sb.append("class DecimalPlaces {\n");
     sb.append("    isEnforced: ").append(toIndentedString(isEnforced)).append("\n");
     sb.append("    digits: ").append(toIndentedString(digits)).append("\n");
     sb.append("}");

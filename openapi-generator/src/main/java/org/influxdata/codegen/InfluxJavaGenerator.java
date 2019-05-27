@@ -429,6 +429,9 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                                 } else {
                                     refSchemaName = ModelUtils.getSimpleRef(oneOf.get$ref());
                                     refSchema = allDefinitions.get(refSchemaName);
+                                    if (refSchema instanceof ComposedSchema) {
+                                        refSchema = ((ComposedSchema) refSchema).getAllOf().stream().filter(it -> it instanceof ObjectSchema).findFirst().get();
+                                    }
                                 }
 
                                 String[] keys = getDiscriminatorKeys(refSchema);
@@ -638,7 +641,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                 if (oneOfSchema.get$ref() != null) {
 
                     Schema refSchema = allDefinitions.get(ModelUtils.getSimpleRef(oneOfSchema.get$ref()));
-                    if (refSchema instanceof ComposedSchema) {
+                    if (refSchema instanceof ComposedSchema && ((ComposedSchema) refSchema).getOneOf() != null) {
                         schemas.addAll(((ComposedSchema) refSchema).getOneOf());
                     } else {
                         schemas.add(oneOfSchema);

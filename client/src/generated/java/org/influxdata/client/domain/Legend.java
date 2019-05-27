@@ -29,7 +29,7 @@ import java.io.IOException;
  */
 @ApiModel(description = "Legend define encoding of data into a view's legend")
 
-public class V1ViewPropertiesLegend {
+public class Legend {
   /**
    * type is the style of the legend
    */
@@ -143,7 +143,7 @@ public class V1ViewPropertiesLegend {
     return type;
   }
 
-  public V1ViewPropertiesLegend orientation(OrientationEnum orientation) {
+  public Legend orientation(OrientationEnum orientation) {
     this.orientation = orientation;
     return this;
   }
@@ -170,9 +170,9 @@ public class V1ViewPropertiesLegend {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    V1ViewPropertiesLegend v1ViewPropertiesLegend = (V1ViewPropertiesLegend) o;
-    return Objects.equals(this.type, v1ViewPropertiesLegend.type) &&
-        Objects.equals(this.orientation, v1ViewPropertiesLegend.orientation);
+    Legend legend = (Legend) o;
+    return Objects.equals(this.type, legend.type) &&
+        Objects.equals(this.orientation, legend.orientation);
   }
 
   @Override
@@ -184,7 +184,7 @@ public class V1ViewPropertiesLegend {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class V1ViewPropertiesLegend {\n");
+    sb.append("class Legend {\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    orientation: ").append(toIndentedString(orientation)).append("\n");
     sb.append("}");

@@ -23,12 +23,22 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.util.List;
+import org.influxdata.client.domain.Axes;
+import org.influxdata.client.domain.DashboardColor;
+import org.influxdata.client.domain.DashboardQuery;
+import org.influxdata.client.domain.Legend;
+import org.influxdata.client.domain.ViewProperties;
 
 /**
- * EmptyViewProperties
+ * XYViewProperties
  */
 
-public class EmptyViewProperties {
+public class XYViewProperties extends ViewProperties {
+  public static final String SERIALIZED_NAME_AXES = "axes";
+  @SerializedName(SERIALIZED_NAME_AXES)
+  private Axes axes = null;
+
   /**
    * Gets or Sets shape
    */
@@ -83,7 +93,7 @@ public class EmptyViewProperties {
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
-    EMPTY("empty");
+    XY("xy");
 
     private String value;
 
@@ -125,7 +135,84 @@ public class EmptyViewProperties {
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = TypeEnum.EMPTY;
+  private TypeEnum type = TypeEnum.XY;
+
+  public static final String SERIALIZED_NAME_LEGEND = "legend";
+  @SerializedName(SERIALIZED_NAME_LEGEND)
+  private Legend legend = null;
+
+  /**
+   * Gets or Sets geom
+   */
+  @JsonAdapter(GeomEnum.Adapter.class)
+  public enum GeomEnum {
+    LINE("line"),
+    
+    STEP("step"),
+    
+    STACKED("stacked"),
+    
+    BAR("bar");
+
+    private String value;
+
+    GeomEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static GeomEnum fromValue(String text) {
+      for (GeomEnum b : GeomEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<GeomEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final GeomEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public GeomEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return GeomEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+
+  public static final String SERIALIZED_NAME_GEOM = "geom";
+  @SerializedName(SERIALIZED_NAME_GEOM)
+  private GeomEnum geom;
+
+  public XYViewProperties axes(Axes axes) {
+    this.axes = axes;
+    return this;
+  }
+
+   /**
+   * Get axes
+   * @return axes
+  **/
+  @ApiModelProperty(value = "")
+  public Axes getAxes() {
+    return axes;
+  }
+
+  public void setAxes(Axes axes) {
+    this.axes = axes;
+  }
 
    /**
    * Get shape
@@ -145,6 +232,42 @@ public class EmptyViewProperties {
     return type;
   }
 
+  public XYViewProperties legend(Legend legend) {
+    this.legend = legend;
+    return this;
+  }
+
+   /**
+   * Get legend
+   * @return legend
+  **/
+  @ApiModelProperty(value = "")
+  public Legend getLegend() {
+    return legend;
+  }
+
+  public void setLegend(Legend legend) {
+    this.legend = legend;
+  }
+
+  public XYViewProperties geom(GeomEnum geom) {
+    this.geom = geom;
+    return this;
+  }
+
+   /**
+   * Get geom
+   * @return geom
+  **/
+  @ApiModelProperty(value = "")
+  public GeomEnum getGeom() {
+    return geom;
+  }
+
+  public void setGeom(GeomEnum geom) {
+    this.geom = geom;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -154,23 +277,31 @@ public class EmptyViewProperties {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    EmptyViewProperties emptyViewProperties = (EmptyViewProperties) o;
-    return Objects.equals(this.shape, emptyViewProperties.shape) &&
-        Objects.equals(this.type, emptyViewProperties.type);
+    XYViewProperties xyViewProperties = (XYViewProperties) o;
+    return Objects.equals(this.axes, xyViewProperties.axes) &&
+        Objects.equals(this.shape, xyViewProperties.shape) &&
+        Objects.equals(this.type, xyViewProperties.type) &&
+        Objects.equals(this.legend, xyViewProperties.legend) &&
+        Objects.equals(this.geom, xyViewProperties.geom) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(shape, type);
+    return Objects.hash(axes, shape, type, legend, geom, super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class EmptyViewProperties {\n");
+    sb.append("class XYViewProperties {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    axes: ").append(toIndentedString(axes)).append("\n");
     sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    legend: ").append(toIndentedString(legend)).append("\n");
+    sb.append("    geom: ").append(toIndentedString(geom)).append("\n");
     sb.append("}");
     return sb.toString();
   }

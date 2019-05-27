@@ -23,12 +23,18 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.util.List;
+import org.influxdata.client.domain.DashboardColor;
+import org.influxdata.client.domain.DashboardQuery;
+import org.influxdata.client.domain.DecimalPlaces;
+import org.influxdata.client.domain.Legend;
+import org.influxdata.client.domain.ViewProperties;
 
 /**
- * EmptyViewProperties
+ * GaugeViewProperties
  */
 
-public class EmptyViewProperties {
+public class GaugeViewProperties extends ViewProperties {
   /**
    * Gets or Sets shape
    */
@@ -83,7 +89,7 @@ public class EmptyViewProperties {
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
-    EMPTY("empty");
+    GAUGE("gauge");
 
     private String value;
 
@@ -125,7 +131,23 @@ public class EmptyViewProperties {
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = TypeEnum.EMPTY;
+  private TypeEnum type = TypeEnum.GAUGE;
+
+  public static final String SERIALIZED_NAME_PREFIX = "prefix";
+  @SerializedName(SERIALIZED_NAME_PREFIX)
+  private String prefix;
+
+  public static final String SERIALIZED_NAME_SUFFIX = "suffix";
+  @SerializedName(SERIALIZED_NAME_SUFFIX)
+  private String suffix;
+
+  public static final String SERIALIZED_NAME_LEGEND = "legend";
+  @SerializedName(SERIALIZED_NAME_LEGEND)
+  private Legend legend = null;
+
+  public static final String SERIALIZED_NAME_DECIMAL_PLACES = "decimalPlaces";
+  @SerializedName(SERIALIZED_NAME_DECIMAL_PLACES)
+  private DecimalPlaces decimalPlaces = null;
 
    /**
    * Get shape
@@ -145,6 +167,78 @@ public class EmptyViewProperties {
     return type;
   }
 
+  public GaugeViewProperties prefix(String prefix) {
+    this.prefix = prefix;
+    return this;
+  }
+
+   /**
+   * Get prefix
+   * @return prefix
+  **/
+  @ApiModelProperty(value = "")
+  public String getPrefix() {
+    return prefix;
+  }
+
+  public void setPrefix(String prefix) {
+    this.prefix = prefix;
+  }
+
+  public GaugeViewProperties suffix(String suffix) {
+    this.suffix = suffix;
+    return this;
+  }
+
+   /**
+   * Get suffix
+   * @return suffix
+  **/
+  @ApiModelProperty(value = "")
+  public String getSuffix() {
+    return suffix;
+  }
+
+  public void setSuffix(String suffix) {
+    this.suffix = suffix;
+  }
+
+  public GaugeViewProperties legend(Legend legend) {
+    this.legend = legend;
+    return this;
+  }
+
+   /**
+   * Get legend
+   * @return legend
+  **/
+  @ApiModelProperty(value = "")
+  public Legend getLegend() {
+    return legend;
+  }
+
+  public void setLegend(Legend legend) {
+    this.legend = legend;
+  }
+
+  public GaugeViewProperties decimalPlaces(DecimalPlaces decimalPlaces) {
+    this.decimalPlaces = decimalPlaces;
+    return this;
+  }
+
+   /**
+   * Get decimalPlaces
+   * @return decimalPlaces
+  **/
+  @ApiModelProperty(value = "")
+  public DecimalPlaces getDecimalPlaces() {
+    return decimalPlaces;
+  }
+
+  public void setDecimalPlaces(DecimalPlaces decimalPlaces) {
+    this.decimalPlaces = decimalPlaces;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -154,23 +248,33 @@ public class EmptyViewProperties {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    EmptyViewProperties emptyViewProperties = (EmptyViewProperties) o;
-    return Objects.equals(this.shape, emptyViewProperties.shape) &&
-        Objects.equals(this.type, emptyViewProperties.type);
+    GaugeViewProperties gaugeViewProperties = (GaugeViewProperties) o;
+    return Objects.equals(this.shape, gaugeViewProperties.shape) &&
+        Objects.equals(this.type, gaugeViewProperties.type) &&
+        Objects.equals(this.prefix, gaugeViewProperties.prefix) &&
+        Objects.equals(this.suffix, gaugeViewProperties.suffix) &&
+        Objects.equals(this.legend, gaugeViewProperties.legend) &&
+        Objects.equals(this.decimalPlaces, gaugeViewProperties.decimalPlaces) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(shape, type);
+    return Objects.hash(shape, type, prefix, suffix, legend, decimalPlaces, super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class EmptyViewProperties {\n");
+    sb.append("class GaugeViewProperties {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    prefix: ").append(toIndentedString(prefix)).append("\n");
+    sb.append("    suffix: ").append(toIndentedString(suffix)).append("\n");
+    sb.append("    legend: ").append(toIndentedString(legend)).append("\n");
+    sb.append("    decimalPlaces: ").append(toIndentedString(decimalPlaces)).append("\n");
     sb.append("}");
     return sb.toString();
   }
