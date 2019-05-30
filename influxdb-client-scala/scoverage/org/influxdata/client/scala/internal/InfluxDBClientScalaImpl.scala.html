@@ -72,7 +72,7 @@
 </span>48 <span style=''>   *
 </span>49 <span style=''>   * @return health of an instance
 </span>50 <span style=''>   */
-</span>51 <span style=''>  override def health: Check = health(healthService.healthGet(null))
+</span>51 <span style=''>  override def health: Check = health(healthService.getHealth(null))
 </span>52 <span style=''>
 </span>53 <span style=''>  /**
 </span>54 <span style=''>   * Gets the [[LogLevel]] that is used for logging requests and responses.
@@ -235,7 +235,7 @@
           org.influxdata.client.internal.AbstractInfluxDBClient.health
         </td>
         <td style="background: #F0ADAD">
-          InfluxDBClientScalaImpl.this.health(InfluxDBClientScalaImpl.this.healthService.healthGet(null))
+          InfluxDBClientScalaImpl.this.health(InfluxDBClientScalaImpl.this.healthService.getHealth(null))
         </td>
       </tr><tr>
         <td>
@@ -253,10 +253,10 @@
           Apply
         </td>
         <td>
-          org.influxdata.client.service.HealthService.healthGet
+          org.influxdata.client.service.HealthService.getHealth
         </td>
         <td style="background: #F0ADAD">
-          InfluxDBClientScalaImpl.this.healthService.healthGet(null)
+          InfluxDBClientScalaImpl.this.healthService.getHealth(null)
         </td>
       </tr><tr>
         <td>

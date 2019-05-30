@@ -104,7 +104,7 @@
 </span>80 <span style=''>    Source
 </span>81 <span style=''>      .single(query)
 </span>82 <span style=''>      .map(_ =&gt; service
-</span>83 <span style=''>        .queryPostResponseBody(null, &quot;text/csv&quot;, &quot;application/json&quot;,
+</span>83 <span style=''>        .postQueryResponseBody(null, &quot;application/json&quot;,
 </span>84 <span style=''>        null, orgID, query))
 </span>85 <span style=''>      .flatMapConcat(queryCall =&gt; {
 </span>86 <span style=''>        Source.queue[FluxRecord](bufferSize, overflowStrategy)
@@ -214,7 +214,7 @@
 </span>190 <span style=''>    Source
 </span>191 <span style=''>      .single(query)
 </span>192 <span style=''>      .map(it =&gt; service
-</span>193 <span style=''>        .queryPostResponseBody(null, &quot;text/csv&quot;, &quot;application/json&quot;,
+</span>193 <span style=''>        .postQueryResponseBody(null, &quot;application/json&quot;,
 </span>194 <span style=''>          null, orgID, query))
 </span>195 <span style=''>      .flatMapConcat(queryCall =&gt; {
 </span>196 <span style=''>        Source.queue[String](bufferSize, overflowStrategy)
@@ -539,10 +539,10 @@
           Apply
         </td>
         <td>
-          org.influxdata.client.service.QueryService.queryPostResponseBody
+          org.influxdata.client.service.QueryService.postQueryResponseBody
         </td>
         <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.service.queryPostResponseBody(null, &quot;text/csv&quot;, &quot;application/json&quot;, null, orgID, query)
+          QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, orgID, query)
         </td>
       </tr><tr>
         <td>
@@ -552,9 +552,9 @@
           59
         </td>
         <td>
-          3322
+          3310
           -
-          3322
+          3310
         </td>
         <td>
           Apply
@@ -563,7 +563,7 @@
           akka.stream.scaladsl.FlowOps.flatMapConcat
         </td>
         <td style="background: #F0ADAD">
-          akka.stream.scaladsl.Source.single[org.influxdata.client.domain.Query](query).map[retrofit2.Call[okhttp3.ResponseBody]](((x$1: org.influxdata.client.domain.Query) =&gt; QueryScalaApiImpl.this.service.queryPostResponseBody(null, &quot;text/csv&quot;, &quot;application/json&quot;, null, orgID, query))).flatMapConcat[org.influxdata.query.FluxRecord, Unit](((queryCall: retrofit2.Call[okhttp3.ResponseBody]) =&gt; akka.stream.scaladsl.Source.queue[org.influxdata.query.FluxRecord](QueryScalaApiImpl.this.bufferSize, QueryScalaApiImpl.this.overflowStrategy).mapMaterializedValue[Unit](((queue: akka.stream.scaladsl.SourceQueueWithComplete[org.influxdata.query.FluxRecord]) =&gt; {
+          akka.stream.scaladsl.Source.single[org.influxdata.client.domain.Query](query).map[retrofit2.Call[okhttp3.ResponseBody]](((x$1: org.influxdata.client.domain.Query) =&gt; QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, orgID, query))).flatMapConcat[org.influxdata.query.FluxRecord, Unit](((queryCall: retrofit2.Call[okhttp3.ResponseBody]) =&gt; akka.stream.scaladsl.Source.queue[org.influxdata.query.FluxRecord](QueryScalaApiImpl.this.bufferSize, QueryScalaApiImpl.this.overflowStrategy).mapMaterializedValue[Unit](((queue: akka.stream.scaladsl.SourceQueueWithComplete[org.influxdata.query.FluxRecord]) =&gt; {
   val eventualDone: scala.concurrent.Future[akka.Done] = queue.watchCompletion();
   val consumer: org.influxdata.query.internal.FluxCsvParser.FluxResponseConsumer = {
     final class $anon extends Object with org.influxdata.query.internal.FluxCsvParser.FluxResponseConsumer {
@@ -594,9 +594,9 @@
           43
         </td>
         <td>
-          3383
+          3371
           -
-          3383
+          3371
         </td>
         <td>
           Select
@@ -615,9 +615,9 @@
           42
         </td>
         <td>
-          3371
+          3359
           -
-          3371
+          3359
         </td>
         <td>
           Select
@@ -636,9 +636,9 @@
           58
         </td>
         <td>
-          3432
+          3420
           -
-          3432
+          3420
         </td>
         <td>
           Apply
@@ -678,9 +678,9 @@
           44
         </td>
         <td>
-          3497
+          3485
           -
-          3497
+          3485
         </td>
         <td>
           Apply
@@ -699,9 +699,9 @@
           52
         </td>
         <td>
-          3527
+          3515
           -
-          3527
+          3515
         </td>
         <td>
           Apply
@@ -720,9 +720,9 @@
           45
         </td>
         <td>
-          3701
+          3689
           -
-          3701
+          3689
         </td>
         <td>
           Literal
@@ -741,9 +741,9 @@
           46
         </td>
         <td>
-          3887
+          3875
           -
-          3887
+          3875
         </td>
         <td>
           Select
@@ -762,9 +762,9 @@
           47
         </td>
         <td>
-          3938
+          3926
           -
-          3938
+          3926
         </td>
         <td>
           Apply
@@ -783,9 +783,9 @@
           48
         </td>
         <td>
-          3938
+          3926
           -
-          3938
+          3926
         </td>
         <td>
           Block
@@ -804,9 +804,9 @@
           50
         </td>
         <td>
-          3995
+          3983
           -
-          3995
+          3983
         </td>
         <td>
           Literal
@@ -825,9 +825,9 @@
           49
         </td>
         <td>
-          3995
+          3983
           -
-          3995
+          3983
         </td>
         <td>
           Apply
@@ -846,9 +846,9 @@
           51
         </td>
         <td>
-          3995
+          3983
           -
-          3995
+          3983
         </td>
         <td>
           Block
@@ -870,9 +870,9 @@
           53
         </td>
         <td>
-          4121
+          4109
           -
-          4121
+          4109
         </td>
         <td>
           Apply
@@ -891,9 +891,9 @@
           54
         </td>
         <td>
-          4104
+          4092
           -
-          4104
+          4092
         </td>
         <td>
           Apply
@@ -912,9 +912,9 @@
           56
         </td>
         <td>
-          4202
+          4190
           -
-          4202
+          4190
         </td>
         <td>
           ApplyImplicitView
@@ -933,9 +933,9 @@
           55
         </td>
         <td>
-          4192
+          4180
           -
-          4192
+          4180
         </td>
         <td>
           Apply
@@ -954,9 +954,9 @@
           57
         </td>
         <td>
-          4149
+          4137
           -
-          4149
+          4137
         </td>
         <td>
           Apply
@@ -975,9 +975,9 @@
           60
         </td>
         <td>
-          4711
+          4699
           -
-          4711
+          4699
         </td>
         <td>
           Apply
@@ -996,9 +996,9 @@
           61
         </td>
         <td>
-          4755
+          4743
           -
-          4755
+          4743
         </td>
         <td>
           Apply
@@ -1017,9 +1017,9 @@
           62
         </td>
         <td>
-          4798
+          4786
           -
-          4798
+          4786
         </td>
         <td>
           Apply
@@ -1038,9 +1038,9 @@
           64
         </td>
         <td>
-          4868
+          4856
           -
-          4868
+          4856
         </td>
         <td>
           Apply
@@ -1059,9 +1059,9 @@
           63
         </td>
         <td>
-          4893
+          4881
           -
-          4893
+          4881
         </td>
         <td>
           Apply
@@ -1080,9 +1080,9 @@
           65
         </td>
         <td>
-          5437
+          5425
           -
-          5437
+          5425
         </td>
         <td>
           Apply
@@ -1101,9 +1101,9 @@
           66
         </td>
         <td>
-          5481
+          5469
           -
-          5481
+          5469
         </td>
         <td>
           Apply
@@ -1122,9 +1122,9 @@
           67
         </td>
         <td>
-          5524
+          5512
           -
-          5524
+          5512
         </td>
         <td>
           Apply
@@ -1143,9 +1143,9 @@
           68
         </td>
         <td>
-          5619
+          5607
           -
-          5619
+          5607
         </td>
         <td>
           Apply
@@ -1164,9 +1164,9 @@
           69
         </td>
         <td>
-          5594
+          5582
           -
-          5594
+          5582
         </td>
         <td>
           Apply
@@ -1185,9 +1185,9 @@
           70
         </td>
         <td>
-          5969
+          5957
           -
-          5969
+          5957
         </td>
         <td>
           Apply
@@ -1206,9 +1206,9 @@
           71
         </td>
         <td>
-          6013
+          6001
           -
-          6013
+          6001
         </td>
         <td>
           Apply
@@ -1227,9 +1227,9 @@
           73
         </td>
         <td>
-          6043
+          6031
           -
-          6043
+          6031
         </td>
         <td>
           Apply
@@ -1248,9 +1248,9 @@
           72
         </td>
         <td>
-          6074
+          6062
           -
-          6074
+          6062
         </td>
         <td>
           Select
@@ -1269,9 +1269,9 @@
           74
         </td>
         <td>
-          6594
+          6582
           -
-          6594
+          6582
         </td>
         <td>
           Apply
@@ -1290,9 +1290,9 @@
           75
         </td>
         <td>
-          6638
+          6626
           -
-          6638
+          6626
         </td>
         <td>
           Apply
@@ -1311,9 +1311,9 @@
           77
         </td>
         <td>
-          6673
+          6661
           -
-          6673
+          6661
         </td>
         <td>
           Apply
@@ -1332,9 +1332,9 @@
           76
         </td>
         <td>
-          6706
+          6694
           -
-          6706
+          6694
         </td>
         <td>
           Apply
@@ -1353,9 +1353,9 @@
           78
         </td>
         <td>
-          7090
+          7078
           -
-          7090
+          7078
         </td>
         <td>
           Apply
@@ -1374,9 +1374,9 @@
           79
         </td>
         <td>
-          7134
+          7122
           -
-          7134
+          7122
         </td>
         <td>
           Apply
@@ -1395,18 +1395,18 @@
           80
         </td>
         <td>
-          7239
+          7227
           -
-          7239
+          7227
         </td>
         <td>
           Apply
         </td>
         <td>
-          org.influxdata.client.service.QueryService.queryPostResponseBody
+          org.influxdata.client.service.QueryService.postQueryResponseBody
         </td>
         <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.service.queryPostResponseBody(null, &quot;text/csv&quot;, &quot;application/json&quot;, null, orgID, query)
+          QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, orgID, query)
         </td>
       </tr><tr>
         <td>
@@ -1416,9 +1416,9 @@
           97
         </td>
         <td>
-          7329
+          7305
           -
-          7329
+          7305
         </td>
         <td>
           Apply
@@ -1427,7 +1427,7 @@
           akka.stream.scaladsl.FlowOps.flatMapConcat
         </td>
         <td style="background: #F0ADAD">
-          akka.stream.scaladsl.Source.single[org.influxdata.client.domain.Query](query).map[retrofit2.Call[okhttp3.ResponseBody]](((it: org.influxdata.client.domain.Query) =&gt; QueryScalaApiImpl.this.service.queryPostResponseBody(null, &quot;text/csv&quot;, &quot;application/json&quot;, null, orgID, query))).flatMapConcat[String, Unit](((queryCall: retrofit2.Call[okhttp3.ResponseBody]) =&gt; akka.stream.scaladsl.Source.queue[String](QueryScalaApiImpl.this.bufferSize, QueryScalaApiImpl.this.overflowStrategy).mapMaterializedValue[Unit](((queue: akka.stream.scaladsl.SourceQueueWithComplete[String]) =&gt; {
+          akka.stream.scaladsl.Source.single[org.influxdata.client.domain.Query](query).map[retrofit2.Call[okhttp3.ResponseBody]](((it: org.influxdata.client.domain.Query) =&gt; QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, orgID, query))).flatMapConcat[String, Unit](((queryCall: retrofit2.Call[okhttp3.ResponseBody]) =&gt; akka.stream.scaladsl.Source.queue[String](QueryScalaApiImpl.this.bufferSize, QueryScalaApiImpl.this.overflowStrategy).mapMaterializedValue[Unit](((queue: akka.stream.scaladsl.SourceQueueWithComplete[String]) =&gt; {
   val eventualDone: scala.concurrent.Future[akka.Done] = queue.watchCompletion();
   val onResponse: java.util.function.BiConsumer[org.influxdata.Cancellable,String] = {
     final class $anon extends Object with java.util.function.BiConsumer[org.influxdata.Cancellable,String] {
@@ -1457,9 +1457,9 @@
           82
         </td>
         <td>
-          7386
+          7362
           -
-          7386
+          7362
         </td>
         <td>
           Select
@@ -1478,9 +1478,9 @@
           81
         </td>
         <td>
-          7374
+          7350
           -
-          7374
+          7350
         </td>
         <td>
           Select
@@ -1499,9 +1499,9 @@
           96
         </td>
         <td>
-          7435
+          7411
           -
-          7435
+          7411
         </td>
         <td>
           Apply
@@ -1540,9 +1540,9 @@
           83
         </td>
         <td>
-          7500
+          7476
           -
-          7500
+          7476
         </td>
         <td>
           Apply
@@ -1561,9 +1561,9 @@
           90
         </td>
         <td>
-          7533
+          7509
           -
-          7533
+          7509
         </td>
         <td>
           Apply
@@ -1582,9 +1582,9 @@
           84
         </td>
         <td>
-          7688
+          7664
           -
-          7688
+          7664
         </td>
         <td>
           Select
@@ -1603,9 +1603,9 @@
           86
         </td>
         <td>
-          7739
+          7715
           -
-          7739
+          7715
         </td>
         <td>
           Block
@@ -1624,9 +1624,9 @@
           85
         </td>
         <td>
-          7739
+          7715
           -
-          7739
+          7715
         </td>
         <td>
           Apply
@@ -1645,9 +1645,9 @@
           89
         </td>
         <td>
-          7796
+          7772
           -
-          7796
+          7772
         </td>
         <td>
           Block
@@ -1669,9 +1669,9 @@
           88
         </td>
         <td>
-          7796
+          7772
           -
-          7796
+          7772
         </td>
         <td>
           Literal
@@ -1690,9 +1690,9 @@
           87
         </td>
         <td>
-          7796
+          7772
           -
-          7796
+          7772
         </td>
         <td>
           Apply
@@ -1711,9 +1711,9 @@
           92
         </td>
         <td>
-          7903
+          7879
           -
-          7903
+          7879
         </td>
         <td>
           Apply
@@ -1732,9 +1732,9 @@
           91
         </td>
         <td>
-          7920
+          7896
           -
-          7920
+          7896
         </td>
         <td>
           Apply
@@ -1753,9 +1753,9 @@
           95
         </td>
         <td>
-          7951
+          7927
           -
-          7951
+          7927
         </td>
         <td>
           Apply
@@ -1774,9 +1774,9 @@
           94
         </td>
         <td>
-          8006
+          7982
           -
-          8006
+          7982
         </td>
         <td>
           ApplyImplicitView
@@ -1795,9 +1795,9 @@
           93
         </td>
         <td>
-          7996
+          7972
           -
-          7996
+          7972
         </td>
         <td>
           Apply
