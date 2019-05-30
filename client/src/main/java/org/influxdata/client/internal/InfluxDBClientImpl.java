@@ -196,13 +196,13 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Override
     public Check health() {
 
-        return health(healthService.healthGet(null));
+        return health(healthService.getHealth(null));
     }
 
     @Nullable
     @Override
     public Ready ready() {
-        Call<Ready> call = readyService.readyGet(null);
+        Call<Ready> call = readyService.getReady(null);
         try {
             return execute(call);
         } catch (InfluxException e) {
@@ -218,7 +218,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
 
         Arguments.checkNotNull(onboarding, "onboarding");
 
-        Call<OnboardingResponse> call = setupService.setupPost(onboarding, null);
+        Call<OnboardingResponse> call = setupService.postSetup(onboarding, null);
 
         return execute(call);
     }
@@ -227,7 +227,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Override
     public Boolean isOnboardingAllowed() {
 
-        IsOnboarding isOnboarding = execute(setupService.setupGet(null));
+        IsOnboarding isOnboarding = execute(setupService.getSetup(null));
 
         return isOnboarding.getAllowed();
     }

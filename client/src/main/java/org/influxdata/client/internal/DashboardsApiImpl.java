@@ -85,7 +85,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
 
         Arguments.checkNotNull(createDashboardRequest, "createDashboardRequest");
 
-        Call<Dashboard> call = service.dashboardsPost(createDashboardRequest, null);
+        Call<Dashboard> call = service.postDashboards(createDashboardRequest, null);
 
         return execute(call);
     }
@@ -96,7 +96,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
 
         Arguments.checkNotNull(dashboard, "Dashboard");
 
-        Call<Dashboard> call = service.dashboardsDashboardIDPatch(dashboard.getId(), dashboard, null);
+        Call<Dashboard> call = service.patchDashboardsID(dashboard.getId(), dashboard, null);
 
         return execute(call);
     }
@@ -114,7 +114,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
 
         Arguments.checkNotNull(dashboardID, "dashboardID");
 
-        Call<Void> call = service.dashboardsDashboardIDDelete(dashboardID, null);
+        Call<Void> call = service.deleteDashboardsID(dashboardID, null);
 
         execute(call);
     }
@@ -125,7 +125,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
 
         Arguments.checkNotNull(dashboardID, "dashboardID");
 
-        Call<Dashboard> call = service.dashboardsDashboardIDGet(dashboardID, null);
+        Call<Dashboard> call = service.getDashboardsID(dashboardID, null);
 
         return execute(call);
     }
@@ -148,7 +148,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
     public List<Dashboard> findDashboardsByOrgName(@Nullable final String orgName) {
 
         Call<Dashboards> call = service
-                .dashboardsGet(null, null, null, null, null, orgName);
+                .getDashboards(null, null, null, null, null, orgName);
 
         return execute(call).getDashboards();
     }
@@ -190,7 +190,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
         Arguments.checkNotNull(findOptions, "findOptions");
 
         Call<OperationLogs> call = service
-                .dashboardsDashboardIDLogsGet(dashboardID, null, findOptions.getOffset(), findOptions.getLimit());
+                .getDashboardsIDLogs(dashboardID, null, findOptions.getOffset(), findOptions.getLimit());
 
         return execute(call);
     }
@@ -210,7 +210,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
 
         Arguments.checkNotNull(dashboardID, "dashboardID");
 
-        Call<ResourceMembers> call = service.dashboardsDashboardIDMembersGet(dashboardID, null);
+        Call<ResourceMembers> call = service.getDashboardsIDMembers(dashboardID, null);
 
         return execute(call).getUsers();
     }
@@ -234,7 +234,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
 
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody().id(memberID);
 
-        Call<ResourceMember> call = service.dashboardsDashboardIDMembersPost(dashboardID, user, null);
+        Call<ResourceMember> call = service.postDashboardsIDMembers(dashboardID, user, null);
 
         return execute(call);
     }
@@ -254,7 +254,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
         Arguments.checkNotNull(memberID, "memberID");
         Arguments.checkNotNull(dashboardID, "dashboardID");
 
-        Call<Void> call = service.dashboardsDashboardIDMembersUserIDDelete(memberID, dashboardID, null);
+        Call<Void> call = service.deleteDashboardsIDMembersID(memberID, dashboardID, null);
 
         execute(call);
     }
@@ -274,7 +274,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
 
         Arguments.checkNotNull(dashboardID, "dashboardID");
 
-        Call<ResourceOwners> call = service.dashboardsDashboardIDOwnersGet(dashboardID, null);
+        Call<ResourceOwners> call = service.getDashboardsIDOwners(dashboardID, null);
 
         return execute(call).getUsers();
     }
@@ -298,7 +298,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
 
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody().id(ownerID);
 
-        Call<ResourceOwner> call = service.dashboardsDashboardIDOwnersPost(dashboardID, user, null);
+        Call<ResourceOwner> call = service.postDashboardsIDOwners(dashboardID, user, null);
 
         return execute(call);
     }
@@ -318,7 +318,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
         Arguments.checkNotNull(ownerID, "ownerID");
         Arguments.checkNotNull(dashboardID, "dashboardID");
 
-        Call<Void> call = service.dashboardsDashboardIDOwnersUserIDDelete(ownerID, dashboardID, null);
+        Call<Void> call = service.deleteDashboardsIDOwnersID(ownerID, dashboardID, null);
 
         execute(call);
     }
@@ -338,7 +338,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
 
         Arguments.checkNotNull(dashboardID, "dashboardID");
 
-        Call<LabelsResponse> call = service.dashboardsDashboardIDLabelsGet(dashboardID, null);
+        Call<LabelsResponse> call = service.getDashboardsIDLabels(dashboardID, null);
 
         return execute(call).getLabels();
     }
@@ -362,7 +362,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
 
         LabelMapping labelMapping = new LabelMapping().labelID(labelID);
 
-        Call<LabelResponse> call = service.dashboardsDashboardIDLabelsPost(dashboardID, labelMapping, null);
+        Call<LabelResponse> call = service.postDashboardsIDLabels(dashboardID, labelMapping, null);
 
         return execute(call);
     }
@@ -382,7 +382,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(dashboardID, "dashboardID");
 
-        Call<Void> call = service.dashboardsDashboardIDLabelsLabelIDDelete(dashboardID, labelID, null);
+        Call<Void> call = service.deleteDashboardsIDLabelsID(dashboardID, labelID, null);
 
         execute(call);
     }
@@ -404,7 +404,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
         Arguments.checkNotNull(createCell, "createCell");
         Arguments.checkNonEmpty(dashboardID, "dashboardID");
 
-        Call<Cell> call = service.dashboardsDashboardIDCellsPost(dashboardID, createCell, null);
+        Call<Cell> call = service.postDashboardsIDCells(dashboardID, createCell, null);
 
         return execute(call);
     }
@@ -426,7 +426,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
         Arguments.checkNotNull(cells, "cells");
         Arguments.checkNonEmpty(dashboardID, "dashboardID");
 
-        Call<Dashboard> call = service.dashboardsDashboardIDCellsPut(dashboardID, cells, null);
+        Call<Dashboard> call = service.putDashboardsIDCells(dashboardID, cells, null);
 
         return execute(call);
     }
@@ -441,7 +441,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
         Arguments.checkNonEmpty(cellID, "cellID");
         Arguments.checkNonEmpty(dashboardID, "dashboardID");
 
-        Call<Cell> call = service.dashboardsDashboardIDCellsCellIDPatch(dashboardID, cellID, cellUpdate, null);
+        Call<Cell> call = service.patchDashboardsIDCellsID(dashboardID, cellID, cellUpdate, null);
 
         return execute(call);
     }
@@ -461,7 +461,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
         Arguments.checkNonEmpty(cellID, "cellID");
         Arguments.checkNonEmpty(dashboardID, "dashboardID");
 
-        Call<Void> call = service.dashboardsDashboardIDCellsCellIDDelete(dashboardID, cellID, null);
+        Call<Void> call = service.deleteDashboardsIDCellsID(dashboardID, cellID, null);
 
         execute(call);
     }
@@ -509,7 +509,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
         Arguments.checkNonEmpty(cellID, "cellID");
         Arguments.checkNonEmpty(dashboardID, "dashboardID");
 
-        Call<View> call = service.dashboardsDashboardIDCellsCellIDViewPatch(dashboardID, cellID, view, null);
+        Call<View> call = service.patchDashboardsIDCellsIDView(dashboardID, cellID, view, null);
 
         return execute(call);
     }
@@ -531,7 +531,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
         Arguments.checkNonEmpty(cellID, "cellID");
         Arguments.checkNonEmpty(dashboardID, "dashboardID");
 
-        Call<View> call = service.dashboardsDashboardIDCellsCellIDViewGet(dashboardID, cellID, null);
+        Call<View> call = service.getDashboardsIDCellsIDView(dashboardID, cellID, null);
 
         return execute(call);
     }

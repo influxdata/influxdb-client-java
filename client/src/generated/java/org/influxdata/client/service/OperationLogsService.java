@@ -26,7 +26,7 @@ public interface OperationLogsService {
    * @return Call&lt;OperationLogs&gt;
    */
   @GET("api/v2/buckets/{bucketID}/logs")
-  Call<OperationLogs> bucketsBucketIDLogsGet(
+  Call<OperationLogs> getBucketsIDLogs(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
   );
 
@@ -40,7 +40,7 @@ public interface OperationLogsService {
    * @return Call&lt;OperationLogs&gt;
    */
   @GET("api/v2/dashboards/{dashboardID}/logs")
-  Call<OperationLogs> dashboardsDashboardIDLogsGet(
+  Call<OperationLogs> getDashboardsIDLogs(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
   );
 
@@ -54,7 +54,7 @@ public interface OperationLogsService {
    * @return Call&lt;OperationLogs&gt;
    */
   @GET("api/v2/orgs/{orgID}/logs")
-  Call<OperationLogs> orgsOrgIDLogsGet(
+  Call<OperationLogs> getOrgsIDLogs(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
   );
 
@@ -68,7 +68,7 @@ public interface OperationLogsService {
    * @return Call&lt;OperationLogs&gt;
    */
   @GET("api/v2/users/{userID}/logs")
-  Call<OperationLogs> usersUserIDLogsGet(
+  Call<OperationLogs> getUsersIDLogs(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
   );
 

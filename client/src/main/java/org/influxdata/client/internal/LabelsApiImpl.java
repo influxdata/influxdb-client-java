@@ -81,7 +81,7 @@ final class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
 
         Arguments.checkNotNull(request, "request");
 
-        Call<LabelResponse> call = service.labelsPost(request);
+        Call<LabelResponse> call = service.postLabels(request);
         LabelResponse labelResponse = execute(call);
 
         LOG.log(Level.FINEST, "createLabel response: {0}", labelResponse);
@@ -108,7 +108,7 @@ final class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNotNull(labelUpdate, "labelUpdate");
 
-        Call<LabelResponse> call = service.labelsLabelIDPatch(labelID, labelUpdate, null);
+        Call<LabelResponse> call = service.patchLabelsID(labelID, labelUpdate, null);
         LabelResponse labelResponse = execute(call);
 
         LOG.log(Level.FINEST, "updateLabel response: {0}", labelResponse);
@@ -129,7 +129,7 @@ final class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
 
         Arguments.checkNonEmpty(labelID, "labelID");
 
-        Call<Void> call = service.labelsLabelIDDelete(labelID, null);
+        Call<Void> call = service.deleteLabelsID(labelID, null);
         execute(call);
     }
 
@@ -173,7 +173,7 @@ final class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
 
         Arguments.checkNonEmpty(labelID, "labelID");
 
-        Call<LabelResponse> call = service.labelsLabelIDGet(labelID, null);
+        Call<LabelResponse> call = service.getLabelsID(labelID, null);
 
         return execute(call).getLabel();
     }
@@ -198,7 +198,7 @@ final class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
     @Override
     public List<Label> findLabelsByOrgId(@Nullable final String orgID) {
 
-        Call<LabelsResponse> sourcesCall = service.labelsGet(orgID, null);
+        Call<LabelsResponse> sourcesCall = service.getLabels(orgID, null);
 
         LabelsResponse labels = execute(sourcesCall);
         LOG.log(Level.FINEST, "findLabels found: {0}", labels);

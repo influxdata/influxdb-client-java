@@ -73,7 +73,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
 
         Arguments.checkNonEmpty(bucketID, "Bucket ID");
 
-        Call<Bucket> bucket = service.bucketsBucketIDGet(bucketID, null);
+        Call<Bucket> bucket = service.getBucketsID(bucketID, null);
 
         return execute(bucket);
     }
@@ -85,7 +85,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
         Arguments.checkNonEmpty(bucketName, "Bucket Name");
 
         Call<Buckets> bucket = service
-                .bucketsGet(null, null, null, null, null, bucketName);
+                .getBuckets(null, null, null, null, null, bucketName);
 
         return execute(bucket).getBuckets().stream().findFirst().orElse(null);
     }
@@ -173,7 +173,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
         Arguments.checkNotNull(bucket, "Bucket is required");
         Arguments.checkNonEmpty(bucket.getName(), "Bucket name");
 
-        Call<Bucket> call = service.bucketsPost(bucket, null);
+        Call<Bucket> call = service.postBuckets(bucket, null);
 
         return execute(call);
     }
@@ -184,7 +184,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
 
         Arguments.checkNotNull(bucket, "Bucket is required");
 
-        Call<Bucket> bucketCall = service.bucketsBucketIDPatch(bucket.getId(), bucket, null);
+        Call<Bucket> bucketCall = service.patchBucketsID(bucket.getId(), bucket, null);
 
         return execute(bucketCall);
     }
@@ -202,7 +202,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
 
         Arguments.checkNonEmpty(bucketID, "bucketID");
 
-        Call<Void> call = service.bucketsBucketIDDelete(bucketID, null);
+        Call<Void> call = service.deleteBucketsID(bucketID, null);
         execute(call);
     }
 
@@ -254,7 +254,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
 
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        Call<ResourceMembers> call = service.bucketsBucketIDMembersGet(bucketID, null);
+        Call<ResourceMembers> call = service.getBucketsIDMembers(bucketID, null);
         ResourceMembers resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findBucketMembers found: {0}", resourceMembers);
 
@@ -281,7 +281,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(memberID);
 
-        Call<ResourceMember> call = service.bucketsBucketIDMembersPost(bucketID, user, null);
+        Call<ResourceMember> call = service.postBucketsIDMembers(bucketID, user, null);
 
         return execute(call);
     }
@@ -301,7 +301,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        Call<Void> call = service.bucketsBucketIDMembersUserIDDelete(memberID, bucketID, null);
+        Call<Void> call = service.deleteBucketsIDMembersID(memberID, bucketID, null);
         execute(call);
     }
 
@@ -320,7 +320,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
 
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        Call<ResourceOwners> call = service.bucketsBucketIDOwnersGet(bucketID, null);
+        Call<ResourceOwners> call = service.getBucketsIDOwners(bucketID, null);
         ResourceOwners resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findBucketOwners found: {0}", resourceMembers);
 
@@ -347,7 +347,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(ownerID);
 
-        Call<ResourceOwner> call = service.bucketsBucketIDOwnersPost(bucketID, user, null);
+        Call<ResourceOwner> call = service.postBucketsIDOwners(bucketID, user, null);
 
         return execute(call);
     }
@@ -367,7 +367,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
 
-        Call<Void> call = service.bucketsBucketIDOwnersUserIDDelete(ownerID, bucketID, null);
+        Call<Void> call = service.deleteBucketsIDOwnersID(ownerID, bucketID, null);
         execute(call);
     }
 
@@ -408,7 +408,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
         Arguments.checkNonEmpty(bucketID, "Bucket.ID");
         Arguments.checkNotNull(findOptions, "findOptions");
 
-        Call<OperationLogs> call = service.bucketsBucketIDLogsGet(bucketID, null,
+        Call<OperationLogs> call = service.getBucketsIDLogs(bucketID, null,
                 findOptions.getOffset(), findOptions.getLimit());
 
         return execute(call);
@@ -429,7 +429,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
 
         Arguments.checkNonEmpty(bucketID, "bucketID");
 
-        Call<LabelsResponse> call = service.bucketsBucketIDLabelsGet(bucketID, null);
+        Call<LabelsResponse> call = service.getBucketsIDLabels(bucketID, null);
 
         return execute(call).getLabels();
     }
@@ -454,7 +454,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
         LabelMapping labelMapping = new LabelMapping();
         labelMapping.setLabelID(labelID);
 
-        Call<LabelResponse> call = service.bucketsBucketIDLabelsPost(bucketID, labelMapping, null);
+        Call<LabelResponse> call = service.postBucketsIDLabels(bucketID, labelMapping, null);
 
         return execute(call);
     }
@@ -474,7 +474,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(bucketID, "bucketID");
 
-        Call<Void> call = service.bucketsBucketIDLabelsLabelIDDelete(bucketID, labelID, null);
+        Call<Void> call = service.deleteBucketsIDLabelsID(bucketID, labelID, null);
         execute(call);
     }
 
@@ -482,7 +482,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
     private Buckets findBuckets(@Nullable final String orgName,
                                 @Nonnull final FindOptions findOptions) {
 
-        Call<Buckets> bucketsCall = service.bucketsGet(null, findOptions.getOffset(),
+        Call<Buckets> bucketsCall = service.getBuckets(null, findOptions.getOffset(),
                 findOptions.getLimit(), orgName, null, null);
 
         return execute(bucketsCall);

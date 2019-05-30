@@ -32,6 +32,18 @@ import java.util.Map;
 
 public interface DashboardsService {
   /**
+   * Delete a dashboard
+   * 
+   * @param dashboardID ID of dashboard to update (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/dashboards/{dashboardID}")
+  Call<Void> deleteDashboardsID(
+    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
    * Delete a dashboard cell
    * 
    * @param dashboardID ID of dashboard to delte (required)
@@ -40,8 +52,154 @@ public interface DashboardsService {
    * @return Call&lt;Void&gt;
    */
   @DELETE("api/v2/dashboards/{dashboardID}/cells/{cellID}")
-  Call<Void> dashboardsDashboardIDCellsCellIDDelete(
+  Call<Void> deleteDashboardsIDCellsID(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Path("cellID") String cellID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * delete a label from a dashboard
+   * 
+   * @param dashboardID ID of the dashboard (required)
+   * @param labelID the label id to delete (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/dashboards/{dashboardID}/labels/{labelID}")
+  Call<Void> deleteDashboardsIDLabelsID(
+    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * removes a member from an dashboard
+   * 
+   * @param userID ID of member to remove (required)
+   * @param dashboardID ID of the dashboard (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/dashboards/{dashboardID}/members/{userID}")
+  Call<Void> deleteDashboardsIDMembersID(
+    @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * removes an owner from a dashboard
+   * 
+   * @param userID ID of owner to remove (required)
+   * @param dashboardID ID of the dashboard (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/dashboards/{dashboardID}/owners/{userID}")
+  Call<Void> deleteDashboardsIDOwnersID(
+    @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * Get all dashboards
+   * 
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @param owner specifies the owner id to return resources for (optional)
+   * @param sortBy specifies the owner id to return resources for (optional)
+   * @param id ID list of dashboards to return. If both this and owner are specified, only ids is used. (optional, default to new ArrayList&lt;&gt;())
+   * @param orgID specifies the organization id of the resource (optional)
+   * @param org specifies the organization name of the resource (optional)
+   * @return Call&lt;Dashboards&gt;
+   */
+  @GET("api/v2/dashboards")
+  Call<Dashboards> getDashboards(
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("owner") String owner, @retrofit2.http.Query("sortBy") String sortBy, @retrofit2.http.Query("id") List<String> id, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("org") String org
+  );
+
+  /**
+   * Get a single Dashboard
+   * 
+   * @param dashboardID ID of dashboard to update (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Dashboard&gt;
+   */
+  @GET("api/v2/dashboards/{dashboardID}")
+  Call<Dashboard> getDashboardsID(
+    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * Retrieve the view for a cell in a dashboard
+   * 
+   * @param dashboardID ID of dashboard (required)
+   * @param cellID ID of cell (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;View&gt;
+   */
+  @GET("api/v2/dashboards/{dashboardID}/cells/{cellID}/view")
+  Call<View> getDashboardsIDCellsIDView(
+    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Path("cellID") String cellID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * list all labels for a dashboard
+   * 
+   * @param dashboardID ID of the dashboard (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;LabelsResponse&gt;
+   */
+  @GET("api/v2/dashboards/{dashboardID}/labels")
+  Call<LabelsResponse> getDashboardsIDLabels(
+    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * Retrieve operation logs for a dashboard
+   * 
+   * @param dashboardID ID of the dashboard (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @param offset  (optional)
+   * @param limit  (optional, default to 20)
+   * @return Call&lt;OperationLogs&gt;
+   */
+  @GET("api/v2/dashboards/{dashboardID}/logs")
+  Call<OperationLogs> getDashboardsIDLogs(
+    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
+  );
+
+  /**
+   * List all dashboard members
+   * 
+   * @param dashboardID ID of the dashboard (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;ResourceMembers&gt;
+   */
+  @GET("api/v2/dashboards/{dashboardID}/members")
+  Call<ResourceMembers> getDashboardsIDMembers(
+    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * List all dashboard owners
+   * 
+   * @param dashboardID ID of the dashboard (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;ResourceOwners&gt;
+   */
+  @GET("api/v2/dashboards/{dashboardID}/owners")
+  Call<ResourceOwners> getDashboardsIDOwners(
+    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * Update a single dashboard
+   * 
+   * @param dashboardID ID of dashboard to update (required)
+   * @param dashboard patching of a dashboard (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Dashboard&gt;
+   */
+  @Headers({
+    "Content-Type:application/json"
+  })
+  @PATCH("api/v2/dashboards/{dashboardID}")
+  Call<Dashboard> patchDashboardsID(
+    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Body Dashboard dashboard, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -57,21 +215,8 @@ public interface DashboardsService {
     "Content-Type:application/json"
   })
   @PATCH("api/v2/dashboards/{dashboardID}/cells/{cellID}")
-  Call<Cell> dashboardsDashboardIDCellsCellIDPatch(
+  Call<Cell> patchDashboardsIDCellsID(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Path("cellID") String cellID, @retrofit2.http.Body CellUpdate cellUpdate, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Retrieve the view for a cell in a dashboard
-   * 
-   * @param dashboardID ID of dashboard (required)
-   * @param cellID ID of cell (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;View&gt;
-   */
-  @GET("api/v2/dashboards/{dashboardID}/cells/{cellID}/view")
-  Call<View> dashboardsDashboardIDCellsCellIDViewGet(
-    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Path("cellID") String cellID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -87,8 +232,23 @@ public interface DashboardsService {
     "Content-Type:application/json"
   })
   @PATCH("api/v2/dashboards/{dashboardID}/cells/{cellID}/view")
-  Call<View> dashboardsDashboardIDCellsCellIDViewPatch(
+  Call<View> patchDashboardsIDCellsIDView(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Path("cellID") String cellID, @retrofit2.http.Body View view, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * Create a dashboard
+   * 
+   * @param createDashboardRequest dashboard to create (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Dashboard&gt;
+   */
+  @Headers({
+    "Content-Type:application/json"
+  })
+  @POST("api/v2/dashboards")
+  Call<Dashboard> postDashboards(
+    @retrofit2.http.Body CreateDashboardRequest createDashboardRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -103,73 +263,8 @@ public interface DashboardsService {
     "Content-Type:application/json"
   })
   @POST("api/v2/dashboards/{dashboardID}/cells")
-  Call<Cell> dashboardsDashboardIDCellsPost(
+  Call<Cell> postDashboardsIDCells(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Body CreateCell createCell, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Replace a dashboards cells
-   * 
-   * @param dashboardID ID of dashboard to update (required)
-   * @param cell batch replaces all of a dashboards cells (this is used primarily to update the positional information of all of the cells) (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Dashboard&gt;
-   */
-  @Headers({
-    "Content-Type:application/json"
-  })
-  @PUT("api/v2/dashboards/{dashboardID}/cells")
-  Call<Dashboard> dashboardsDashboardIDCellsPut(
-    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Body List<Cell> cell, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Delete a dashboard
-   * 
-   * @param dashboardID ID of dashboard to update (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/dashboards/{dashboardID}")
-  Call<Void> dashboardsDashboardIDDelete(
-    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Get a single Dashboard
-   * 
-   * @param dashboardID ID of dashboard to update (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Dashboard&gt;
-   */
-  @GET("api/v2/dashboards/{dashboardID}")
-  Call<Dashboard> dashboardsDashboardIDGet(
-    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * list all labels for a dashboard
-   * 
-   * @param dashboardID ID of the dashboard (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;LabelsResponse&gt;
-   */
-  @GET("api/v2/dashboards/{dashboardID}/labels")
-  Call<LabelsResponse> dashboardsDashboardIDLabelsGet(
-    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * delete a label from a dashboard
-   * 
-   * @param dashboardID ID of the dashboard (required)
-   * @param labelID the label id to delete (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/dashboards/{dashboardID}/labels/{labelID}")
-  Call<Void> dashboardsDashboardIDLabelsLabelIDDelete(
-    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -184,34 +279,8 @@ public interface DashboardsService {
     "Content-Type:application/json"
   })
   @POST("api/v2/dashboards/{dashboardID}/labels")
-  Call<LabelResponse> dashboardsDashboardIDLabelsPost(
+  Call<LabelResponse> postDashboardsIDLabels(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Retrieve operation logs for a dashboard
-   * 
-   * @param dashboardID ID of the dashboard (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param offset  (optional)
-   * @param limit  (optional, default to 20)
-   * @return Call&lt;OperationLogs&gt;
-   */
-  @GET("api/v2/dashboards/{dashboardID}/logs")
-  Call<OperationLogs> dashboardsDashboardIDLogsGet(
-    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
-  );
-
-  /**
-   * List all dashboard members
-   * 
-   * @param dashboardID ID of the dashboard (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;ResourceMembers&gt;
-   */
-  @GET("api/v2/dashboards/{dashboardID}/members")
-  Call<ResourceMembers> dashboardsDashboardIDMembersGet(
-    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -226,33 +295,8 @@ public interface DashboardsService {
     "Content-Type:application/json"
   })
   @POST("api/v2/dashboards/{dashboardID}/members")
-  Call<ResourceMember> dashboardsDashboardIDMembersPost(
+  Call<ResourceMember> postDashboardsIDMembers(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * removes a member from an dashboard
-   * 
-   * @param userID ID of member to remove (required)
-   * @param dashboardID ID of the dashboard (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/dashboards/{dashboardID}/members/{userID}")
-  Call<Void> dashboardsDashboardIDMembersUserIDDelete(
-    @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * List all dashboard owners
-   * 
-   * @param dashboardID ID of the dashboard (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;ResourceOwners&gt;
-   */
-  @GET("api/v2/dashboards/{dashboardID}/owners")
-  Call<ResourceOwners> dashboardsDashboardIDOwnersGet(
-    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -267,68 +311,24 @@ public interface DashboardsService {
     "Content-Type:application/json"
   })
   @POST("api/v2/dashboards/{dashboardID}/owners")
-  Call<ResourceOwner> dashboardsDashboardIDOwnersPost(
+  Call<ResourceOwner> postDashboardsIDOwners(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
-   * removes an owner from a dashboard
-   * 
-   * @param userID ID of owner to remove (required)
-   * @param dashboardID ID of the dashboard (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/dashboards/{dashboardID}/owners/{userID}")
-  Call<Void> dashboardsDashboardIDOwnersUserIDDelete(
-    @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Update a single dashboard
+   * Replace a dashboards cells
    * 
    * @param dashboardID ID of dashboard to update (required)
-   * @param dashboard patching of a dashboard (required)
+   * @param cell batch replaces all of a dashboards cells (this is used primarily to update the positional information of all of the cells) (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Dashboard&gt;
    */
   @Headers({
     "Content-Type:application/json"
   })
-  @PATCH("api/v2/dashboards/{dashboardID}")
-  Call<Dashboard> dashboardsDashboardIDPatch(
-    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Body Dashboard dashboard, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Get all dashboards
-   * 
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param owner specifies the owner id to return resources for (optional)
-   * @param sortBy specifies the owner id to return resources for (optional)
-   * @param id ID list of dashboards to return. If both this and owner are specified, only ids is used. (optional, default to new ArrayList&lt;&gt;())
-   * @param orgID specifies the organization id of the resource (optional)
-   * @param org specifies the organization name of the resource (optional)
-   * @return Call&lt;Dashboards&gt;
-   */
-  @GET("api/v2/dashboards")
-  Call<Dashboards> dashboardsGet(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("owner") String owner, @retrofit2.http.Query("sortBy") String sortBy, @retrofit2.http.Query("id") List<String> id, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("org") String org
-  );
-
-  /**
-   * Create a dashboard
-   * 
-   * @param createDashboardRequest dashboard to create (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Dashboard&gt;
-   */
-  @Headers({
-    "Content-Type:application/json"
-  })
-  @POST("api/v2/dashboards")
-  Call<Dashboard> dashboardsPost(
-    @retrofit2.http.Body CreateDashboardRequest createDashboardRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  @PUT("api/v2/dashboards/{dashboardID}/cells")
+  Call<Dashboard> putDashboardsIDCells(
+    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Body List<Cell> cell, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
 }

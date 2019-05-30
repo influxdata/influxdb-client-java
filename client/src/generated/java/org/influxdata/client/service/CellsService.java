@@ -29,7 +29,20 @@ public interface CellsService {
    * @return Call&lt;Void&gt;
    */
   @DELETE("api/v2/dashboards/{dashboardID}/cells/{cellID}")
-  Call<Void> dashboardsDashboardIDCellsCellIDDelete(
+  Call<Void> deleteDashboardsIDCellsID(
+    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Path("cellID") String cellID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * Retrieve the view for a cell in a dashboard
+   * 
+   * @param dashboardID ID of dashboard (required)
+   * @param cellID ID of cell (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;View&gt;
+   */
+  @GET("api/v2/dashboards/{dashboardID}/cells/{cellID}/view")
+  Call<View> getDashboardsIDCellsIDView(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Path("cellID") String cellID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -46,21 +59,8 @@ public interface CellsService {
     "Content-Type:application/json"
   })
   @PATCH("api/v2/dashboards/{dashboardID}/cells/{cellID}")
-  Call<Cell> dashboardsDashboardIDCellsCellIDPatch(
+  Call<Cell> patchDashboardsIDCellsID(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Path("cellID") String cellID, @retrofit2.http.Body CellUpdate cellUpdate, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Retrieve the view for a cell in a dashboard
-   * 
-   * @param dashboardID ID of dashboard (required)
-   * @param cellID ID of cell (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;View&gt;
-   */
-  @GET("api/v2/dashboards/{dashboardID}/cells/{cellID}/view")
-  Call<View> dashboardsDashboardIDCellsCellIDViewGet(
-    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Path("cellID") String cellID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -76,7 +76,7 @@ public interface CellsService {
     "Content-Type:application/json"
   })
   @PATCH("api/v2/dashboards/{dashboardID}/cells/{cellID}/view")
-  Call<View> dashboardsDashboardIDCellsCellIDViewPatch(
+  Call<View> patchDashboardsIDCellsIDView(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Path("cellID") String cellID, @retrofit2.http.Body View view, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -92,7 +92,7 @@ public interface CellsService {
     "Content-Type:application/json"
   })
   @POST("api/v2/dashboards/{dashboardID}/cells")
-  Call<Cell> dashboardsDashboardIDCellsPost(
+  Call<Cell> postDashboardsIDCells(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Body CreateCell createCell, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -108,7 +108,7 @@ public interface CellsService {
     "Content-Type:application/json"
   })
   @PUT("api/v2/dashboards/{dashboardID}/cells")
-  Call<Dashboard> dashboardsDashboardIDCellsPut(
+  Call<Dashboard> putDashboardsIDCells(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Body List<Cell> cell, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

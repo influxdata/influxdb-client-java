@@ -23,7 +23,7 @@ public interface ReadyService {
    * @return Call&lt;Ready&gt;
    */
   @GET("ready")
-  Call<Ready> readyGet(
+  Call<Ready> getReady(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

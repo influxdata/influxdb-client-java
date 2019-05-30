@@ -24,7 +24,7 @@ public interface SetupService {
    * @return Call&lt;IsOnboarding&gt;
    */
   @GET("api/v2/setup")
-  Call<IsOnboarding> setupGet(
+  Call<IsOnboarding> getSetup(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -39,7 +39,7 @@ public interface SetupService {
     "Content-Type:application/json"
   })
   @POST("api/v2/setup")
-  Call<OnboardingResponse> setupPost(
+  Call<OnboardingResponse> postSetup(
     @retrofit2.http.Body OnboardingRequest onboardingRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

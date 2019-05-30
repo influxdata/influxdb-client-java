@@ -23,6 +23,31 @@ import java.util.Map;
 
 public interface TemplatesService {
   /**
+   * delete a template document
+   * 
+   * @param templateID ID of template (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/documents/templates/{templateID}")
+  Call<Void> deleteDocumentsTemplatesID(
+    @retrofit2.http.Path("templateID") String templateID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * delete a label from a template
+   * 
+   * @param templateID ID of template (required)
+   * @param labelID the label ID (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/documents/templates/{templateID}/labels/{labelID}")
+  Call<Void> deleteDocumentsTemplatesIDLabelsID(
+    @retrofit2.http.Path("templateID") String templateID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
    * 
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -31,8 +56,32 @@ public interface TemplatesService {
    * @return Call&lt;Documents&gt;
    */
   @GET("api/v2/documents/templates")
-  Call<Documents> documentsTemplatesGet(
+  Call<Documents> getDocumentsTemplates(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID
+  );
+
+  /**
+   * 
+   * 
+   * @param templateID ID of template (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Document&gt;
+   */
+  @GET("api/v2/documents/templates/{templateID}")
+  Call<Document> getDocumentsTemplatesID(
+    @retrofit2.http.Path("templateID") String templateID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * list all labels for a template
+   * 
+   * @param templateID ID of template (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;LabelsResponse&gt;
+   */
+  @GET("api/v2/documents/templates/{templateID}/labels")
+  Call<LabelsResponse> getDocumentsTemplatesIDLabels(
+    @retrofit2.http.Path("templateID") String templateID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -46,57 +95,8 @@ public interface TemplatesService {
     "Content-Type:application/json"
   })
   @POST("api/v2/documents/templates")
-  Call<Document> documentsTemplatesPost(
+  Call<Document> postDocumentsTemplates(
     @retrofit2.http.Body DocumentCreate documentCreate, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * delete a template document
-   * 
-   * @param templateID ID of template (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/documents/templates/{templateID}")
-  Call<Void> documentsTemplatesTemplateIDDelete(
-    @retrofit2.http.Path("templateID") String templateID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * 
-   * 
-   * @param templateID ID of template (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Document&gt;
-   */
-  @GET("api/v2/documents/templates/{templateID}")
-  Call<Document> documentsTemplatesTemplateIDGet(
-    @retrofit2.http.Path("templateID") String templateID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * list all labels for a template
-   * 
-   * @param templateID ID of template (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;LabelsResponse&gt;
-   */
-  @GET("api/v2/documents/templates/{templateID}/labels")
-  Call<LabelsResponse> documentsTemplatesTemplateIDLabelsGet(
-    @retrofit2.http.Path("templateID") String templateID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * delete a label from a template
-   * 
-   * @param templateID ID of template (required)
-   * @param labelID the label ID (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/documents/templates/{templateID}/labels/{labelID}")
-  Call<Void> documentsTemplatesTemplateIDLabelsLabelIDDelete(
-    @retrofit2.http.Path("templateID") String templateID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -111,7 +111,7 @@ public interface TemplatesService {
     "Content-Type:application/json"
   })
   @POST("api/v2/documents/templates/{templateID}/labels")
-  Call<LabelResponse> documentsTemplatesTemplateIDLabelsPost(
+  Call<LabelResponse> postDocumentsTemplatesIDLabels(
     @retrofit2.http.Path("templateID") String templateID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -127,7 +127,7 @@ public interface TemplatesService {
     "Content-Type:application/json"
   })
   @PUT("api/v2/documents/templates/{templateID}")
-  Call<Document> documentsTemplatesTemplateIDPut(
+  Call<Document> putDocumentsTemplatesID(
     @retrofit2.http.Path("templateID") String templateID, @retrofit2.http.Body DocumentUpdate documentUpdate, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

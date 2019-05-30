@@ -73,7 +73,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
         Arguments.checkNotNull(telegrafRequest, "telegrafRequest");
 
-        Call<Telegraf> call = service.telegrafsPost(telegrafRequest, null);
+        Call<Telegraf> call = service.postTelegrafs(telegrafRequest, null);
 
         return execute(call);
     }
@@ -167,7 +167,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         Arguments.checkNotNull(telegrafRequest, "TelegrafRequest");
 
 
-        Call<Telegraf> telegrafConfigCall = service.telegrafsTelegrafIDPut(telegrafID, telegrafRequest, null);
+        Call<Telegraf> telegrafConfigCall = service.putTelegrafsID(telegrafID, telegrafRequest, null);
 
         return execute(telegrafConfigCall);
     }
@@ -185,7 +185,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
         Arguments.checkNonEmpty(telegrafID, "telegrafConfigID");
 
-        Call<Void> call = service.telegrafsTelegrafIDDelete(telegrafID, null);
+        Call<Void> call = service.deleteTelegrafsID(telegrafID, null);
         execute(call);
     }
 
@@ -227,7 +227,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
         Arguments.checkNonEmpty(telegrafID, "TelegrafConfig ID");
 
-        Call<Telegraf> telegrafConfig = service.telegrafsTelegrafIDGetTelegraf(telegrafID, null, "application/json");
+        Call<Telegraf> telegrafConfig = service.getTelegrafsIDTelegraf(telegrafID, null, "application/json");
 
         return execute(telegrafConfig);
     }
@@ -251,7 +251,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
     @Override
     public List<Telegraf> findTelegrafsByOrgId(@Nullable final String orgID) {
 
-        Call<Telegrafs> configsCall = service.telegrafsGet(orgID, null);
+        Call<Telegrafs> configsCall = service.getTelegrafs(orgID, null);
 
         Telegrafs telegrafConfigs = execute(configsCall);
         LOG.log(Level.FINEST, "findTelegrafs found: {0}", telegrafConfigs);
@@ -275,7 +275,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         Arguments.checkNonEmpty(telegrafID, "TelegrafConfig ID");
 
         Call<String> telegrafConfig = service
-                .telegrafsTelegrafIDGet(telegrafID, null, "application/toml");
+                .getTelegrafsID(telegrafID, null, "application/toml");
 
         return execute(telegrafConfig);
     }
@@ -295,7 +295,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
         Arguments.checkNonEmpty(telegrafID, "TelegrafConfig.ID");
 
-        Call<ResourceMembers> call = service.telegrafsTelegrafIDMembersGet(telegrafID, null);
+        Call<ResourceMembers> call = service.getTelegrafsIDMembers(telegrafID, null);
         ResourceMembers resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findTelegrafConfigMembers found: {0}", resourceMembers);
 
@@ -322,7 +322,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(memberID);
 
-        Call<ResourceMember> call = service.telegrafsTelegrafIDMembersPost(telegrafID, user, null);
+        Call<ResourceMember> call = service.postTelegrafsIDMembers(telegrafID, user, null);
 
         return execute(call);
     }
@@ -342,7 +342,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(telegrafID, "TelegrafConfig.ID");
 
-        Call<Void> call = service.telegrafsTelegrafIDMembersUserIDDelete(memberID, telegrafID, null);
+        Call<Void> call = service.deleteTelegrafsIDMembersID(memberID, telegrafID, null);
         execute(call);
     }
 
@@ -361,7 +361,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
         Arguments.checkNonEmpty(telegrafID, "TelegrafConfig.ID");
 
-        Call<ResourceOwners> call = service.telegrafsTelegrafIDOwnersGet(telegrafID, null);
+        Call<ResourceOwners> call = service.getTelegrafsIDOwners(telegrafID, null);
         ResourceOwners resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findTelegrafConfigOwners found: {0}", resourceMembers);
 
@@ -390,7 +390,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(ownerID);
 
-        Call<ResourceOwner> call = service.telegrafsTelegrafIDOwnersPost(telegrafID, user, null);
+        Call<ResourceOwner> call = service.postTelegrafsIDOwners(telegrafID, user, null);
 
         return execute(call);
     }
@@ -410,7 +410,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(telegrafID, "TelegrafConfig.ID");
 
-        Call<Void> call = service.telegrafsTelegrafIDOwnersUserIDDelete(ownerID, telegrafID, null);
+        Call<Void> call = service.deleteTelegrafsIDOwnersID(ownerID, telegrafID, null);
         execute(call);
     }
 
@@ -429,7 +429,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
         Arguments.checkNonEmpty(telegrafID, "TelegrafConfig.ID");
 
-        Call<LabelsResponse> call = service.telegrafsTelegrafIDLabelsGet(telegrafID, null);
+        Call<LabelsResponse> call = service.getTelegrafsIDLabels(telegrafID, null);
 
         return execute(call).getLabels();
     }
@@ -454,7 +454,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         LabelMapping labelMapping = new LabelMapping();
         labelMapping.setLabelID(labelID);
 
-        Call<LabelResponse> call = service.telegrafsTelegrafIDLabelsPost(telegrafID, labelMapping, null);
+        Call<LabelResponse> call = service.postTelegrafsIDLabels(telegrafID, labelMapping, null);
 
         return execute(call);
     }
@@ -474,7 +474,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(telegrafID, "telegrafConfigID");
 
-        Call<Void> call = service.telegrafsTelegrafIDLabelsLabelIDDelete(telegrafID, labelID, null);
+        Call<Void> call = service.deleteTelegrafsIDLabelsID(telegrafID, labelID, null);
         execute(call);
     }
 

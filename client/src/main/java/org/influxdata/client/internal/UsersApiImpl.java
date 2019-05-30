@@ -63,7 +63,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
 
         Arguments.checkNonEmpty(userID, "User ID");
 
-        Call<User> user = service.usersUserIDGet(userID, null);
+        Call<User> user = service.getUsersID(userID, null);
 
         return execute(user);
     }
@@ -72,7 +72,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
     @Override
     public List<User> findUsers() {
 
-        Call<Users> usersCall = service.usersGet(null);
+        Call<Users> usersCall = service.getUsers(null);
 
         Users users = execute(usersCall);
         LOG.log(Level.FINEST, "findUsers found: {0}", users);
@@ -98,7 +98,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
 
         Arguments.checkNotNull(user, "User");
 
-        Call<User> call = service.usersPost(user, null);
+        Call<User> call = service.postUsers(user, null);
 
         return execute(call);
     }
@@ -109,7 +109,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
 
         Arguments.checkNotNull(user, "User");
 
-        Call<User> userCall = service.usersUserIDPatch(user.getId(), user, null);
+        Call<User> userCall = service.patchUsersID(user.getId(), user, null);
 
         return execute(userCall);
     }
@@ -135,7 +135,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
         Arguments.checkNotNull(oldPassword, "old password");
         Arguments.checkNotNull(newPassword, "new password");
 
-        Call<User> userByID = service.usersUserIDGet(userID, null);
+        Call<User> userByID = service.getUsersID(userID, null);
         User user = execute(userByID);
 
         updateUserPassword(userID, user.getName(), oldPassword, newPassword);
@@ -154,7 +154,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
 
         Arguments.checkNonEmpty(userID, "User ID");
 
-        Call<Void> call = service.usersUserIDDelete(userID, null);
+        Call<Void> call = service.deleteUsersID(userID, null);
         execute(call);
     }
 
@@ -190,7 +190,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
     @Override
     public User me() {
 
-        Call<User> call = service.meGet(null);
+        Call<User> call = service.getMe(null);
 
         return execute(call);
     }
@@ -208,7 +208,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
 
         PasswordResetBody passwordResetBody = new PasswordResetBody().password(newPassword);
 
-        Call<Void> call = service.mePasswordPut(passwordResetBody, null, credentials);
+        Call<Void> call = service.putMePassword(passwordResetBody, null, credentials);
 
         execute(call, UnauthorizedException.class);
     }
@@ -248,7 +248,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
         Arguments.checkNonEmpty(userID, "User ID");
         Arguments.checkNotNull(findOptions, "findOptions");
 
-        Call<OperationLogs> call = service.usersUserIDLogsGet(userID, null,
+        Call<OperationLogs> call = service.getUsersIDLogs(userID, null,
                 findOptions.getOffset(),
                 findOptions.getLimit());
 
@@ -268,7 +268,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
         String credentials = Credentials.basic(userName, oldPassword);
 
         PasswordResetBody resetBody = new PasswordResetBody().password(newPassword);
-        Call<Void> call = service.usersUserIDPasswordPut(userID, resetBody, null, credentials);
+        Call<Void> call = service.putUsersIDPassword(userID, resetBody, null, credentials);
 
         execute(call);
     }

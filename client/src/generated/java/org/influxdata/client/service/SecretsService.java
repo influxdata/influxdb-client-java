@@ -29,7 +29,7 @@ public interface SecretsService {
     "Content-Type:application/json"
   })
   @POST("api/v2/orgs/{orgID}/secrets/delete")
-  Call<Void> orgsOrgIDSecretsDeletePost(
+  Call<Void> deleteOrgsIDSecrets(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body SecretKeys secretKeys, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -41,7 +41,7 @@ public interface SecretsService {
    * @return Call&lt;SecretKeysResponse&gt;
    */
   @GET("api/v2/orgs/{orgID}/secrets")
-  Call<SecretKeysResponse> orgsOrgIDSecretsGet(
+  Call<SecretKeysResponse> getOrgsIDSecrets(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -57,7 +57,7 @@ public interface SecretsService {
     "Content-Type:application/json"
   })
   @PATCH("api/v2/orgs/{orgID}/secrets")
-  Call<Void> orgsOrgIDSecretsPatch(
+  Call<Void> patchOrgsIDSecrets(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body Map<String, String> requestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

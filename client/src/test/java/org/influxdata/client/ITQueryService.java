@@ -65,7 +65,7 @@ class ITQueryService extends AbstractITClientTest {
                 + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))"
                 + " |> range(start: -1d)");
 
-        AnalyzeQueryResponse analyze = queryService.queryAnalyzePost(null, null, query).execute().body();
+        AnalyzeQueryResponse analyze = queryService.postQueryAnalyze(null, null, query).execute().body();
 
         Assertions.assertThat(analyze).isNotNull();
         Assertions.assertThat(analyze.getErrors()).isEmpty();
@@ -74,7 +74,7 @@ class ITQueryService extends AbstractITClientTest {
                 + " |> filter(fn: (r) => (r[\"_measurement\"] !=!=! \"cpu\"))"
                 + " |> range(start: -1d)");
 
-        analyze = queryService.queryAnalyzePost(null, null, query).execute().body();
+        analyze = queryService.postQueryAnalyze(null, null, query).execute().body();
 
         Assertions.assertThat(analyze).isNotNull();
 
@@ -93,7 +93,7 @@ class ITQueryService extends AbstractITClientTest {
                 + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))"
                 + " |> range(start: -1d)");
 
-        ASTResponse ast = queryService.queryAstPost(null, null, languageRequest)
+        ASTResponse ast = queryService.postQueryAst(null, null, languageRequest)
                 .execute().body();
 
         Assertions.assertThat(ast).isNotNull();
@@ -139,7 +139,7 @@ class ITQueryService extends AbstractITClientTest {
     @Test
     void suggestions() throws IOException {
 
-        FluxSuggestions suggestions = queryService.querySuggestionsGet(null).execute().body();
+        FluxSuggestions suggestions = queryService.getQuerySuggestions(null).execute().body();
 
         Assertions.assertThat(suggestions).isNotNull();
         Assertions.assertThat(suggestions.getFuncs().size()).isGreaterThan(140);
@@ -154,7 +154,7 @@ class ITQueryService extends AbstractITClientTest {
                 .hasEntrySatisfying("tables", value -> Assertions.assertThat(value).isEqualTo("object"))
                 .hasEntrySatisfying("valueColumn", value -> Assertions.assertThat(value).isEqualTo("string"));
 
-        FluxSuggestion suggestion = queryService.querySuggestionsNameGet("range", null).execute().body();
+        FluxSuggestion suggestion = queryService.getQuerySuggestionsName("range", null).execute().body();
         Assertions.assertThat(suggestion).isNotNull();
         Assertions.assertThat(suggestion.getParams())
                 .hasSize(6)

@@ -25,7 +25,7 @@ public interface ViewsService {
    * @return Call&lt;View&gt;
    */
   @GET("api/v2/dashboards/{dashboardID}/cells/{cellID}/view")
-  Call<View> dashboardsDashboardIDCellsCellIDViewGet(
+  Call<View> getDashboardsIDCellsIDView(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Path("cellID") String cellID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -42,7 +42,7 @@ public interface ViewsService {
     "Content-Type:application/json"
   })
   @PATCH("api/v2/dashboards/{dashboardID}/cells/{cellID}/view")
-  Call<View> dashboardsDashboardIDCellsCellIDViewPatch(
+  Call<View> patchDashboardsIDCellsIDView(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Path("cellID") String cellID, @retrofit2.http.Body View view, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

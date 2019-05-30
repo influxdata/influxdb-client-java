@@ -73,7 +73,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
 
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<Organization> organization = service.orgsOrgIDGet(orgID, null);
+        Call<Organization> organization = service.getOrgsID(orgID, null);
 
         return execute(organization);
     }
@@ -82,7 +82,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
     @Override
     public List<Organization> findOrganizations() {
 
-        Call<Organizations> organizationsCall = service.orgsGet(null, null, null);
+        Call<Organizations> organizationsCall = service.getOrgs(null, null, null);
 
         Organizations organizations = execute(organizationsCall);
         LOG.log(Level.FINEST, "findOrganizations found: {0}", organizations);
@@ -108,7 +108,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
 
         Arguments.checkNotNull(organization, "Organization");
 
-        Call<Organization> call = service.orgsPost(organization, null);
+        Call<Organization> call = service.postOrgs(organization, null);
 
         return execute(call);
     }
@@ -120,7 +120,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         Arguments.checkNotNull(organization, "Organization");
 
         Call<Organization> orgCall = service
-                .orgsOrgIDPatch(organization.getId(), organization, null);
+                .patchOrgsID(organization.getId(), organization, null);
 
         return execute(orgCall);
     }
@@ -138,7 +138,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
 
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<Void> call = service.orgsOrgIDDelete(orgID, null);
+        Call<Void> call = service.deleteOrgsID(orgID, null);
         execute(call);
     }
 
@@ -185,7 +185,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
 
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<SecretKeysResponse> call = service.orgsOrgIDSecretsGet(orgID, null);
+        Call<SecretKeysResponse> call = service.getOrgsIDSecrets(orgID, null);
 
         return execute(call);
     }
@@ -204,7 +204,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         Arguments.checkNonEmpty(orgID, "Organization ID");
         Arguments.checkNotNull(secrets, "secrets");
 
-        Call<Void> call = service.orgsOrgIDSecretsPatch(orgID, secrets, null);
+        Call<Void> call = service.patchOrgsIDSecrets(orgID, secrets, null);
         execute(call);
     }
 
@@ -235,7 +235,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         Arguments.checkNonEmpty(orgID, "Organization ID");
         Arguments.checkNotNull(secretKeys, "secretKeys");
 
-        Call<Void> call = service.orgsOrgIDSecretsDeletePost(orgID, secretKeys, null);
+        Call<Void> call = service.deleteOrgsIDSecrets(orgID, secretKeys, null);
         execute(call);
     }
 
@@ -254,7 +254,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
 
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<ResourceMembers> call = service.orgsOrgIDMembersGet(orgID, null);
+        Call<ResourceMembers> call = service.getOrgsIDMembers(orgID, null);
         ResourceMembers resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findOrganizationMembers found: {0}", resourceMembers);
 
@@ -281,7 +281,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(memberID);
 
-        Call<ResourceMember> call = service.orgsOrgIDMembersPost(orgID, user, null);
+        Call<ResourceMember> call = service.postOrgsIDMembers(orgID, user, null);
 
         return execute(call);
     }
@@ -301,7 +301,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<Void> call = service.orgsOrgIDMembersUserIDDelete(memberID, orgID, null);
+        Call<Void> call = service.deleteOrgsIDMembersID(memberID, orgID, null);
         execute(call);
     }
 
@@ -320,7 +320,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
 
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<ResourceOwners> call = service.orgsOrgIDOwnersGet(orgID, null);
+        Call<ResourceOwners> call = service.getOrgsIDOwners(orgID, null);
         ResourceOwners resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findOrganizationOwners found: {0}", resourceMembers);
 
@@ -347,7 +347,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(ownerID);
 
-        Call<ResourceOwner> call = service.orgsOrgIDOwnersPost(orgID, user, null);
+        Call<ResourceOwner> call = service.postOrgsIDOwners(orgID, user, null);
 
         return execute(call);
     }
@@ -366,7 +366,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<Void> call = service.orgsOrgIDOwnersUserIDDelete(ownerID, orgID, null);
+        Call<Void> call = service.deleteOrgsIDOwnersID(ownerID, orgID, null);
         execute(call);
     }
 
@@ -385,7 +385,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
 
         Arguments.checkNonEmpty(orgID, "orgID");
 
-        Call<LabelsResponse> call = service.orgsOrgIDLabelsGet(orgID, null);
+        Call<LabelsResponse> call = service.getOrgsIDLabels(orgID, null);
 
         return execute(call).getLabels();
     }
@@ -410,7 +410,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         LabelMapping labelMapping = new LabelMapping();
         labelMapping.setLabelID(labelID);
 
-        Call<LabelResponse> call = service.orgsOrgIDLabelsPost(orgID, labelMapping, null);
+        Call<LabelResponse> call = service.postOrgsIDLabels(orgID, labelMapping, null);
 
         return execute(call);
     }
@@ -430,7 +430,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(orgID, "orgID");
 
-        Call<Void> call = service.orgsOrgIDLabelsLabelIDDelete(orgID, labelID, null);
+        Call<Void> call = service.deleteOrgsIDLabelsID(orgID, labelID, null);
         execute(call);
     }
 
@@ -472,7 +472,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         Arguments.checkNotNull(findOptions, "findOptions");
 
         Call<OperationLogs> call = service
-                .orgsOrgIDLogsGet(orgID, null, findOptions.getOffset(), findOptions.getLimit());
+                .getOrgsIDLogs(orgID, null, findOptions.getOffset(), findOptions.getLimit());
 
         return execute(call);
     }

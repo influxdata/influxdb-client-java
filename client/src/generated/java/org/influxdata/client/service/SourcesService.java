@@ -20,6 +20,18 @@ import java.util.Map;
 
 public interface SourcesService {
   /**
+   * Delete a source
+   * 
+   * @param sourceID ID of the source (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/sources/{sourceID}")
+  Call<Void> deleteSourcesID(
+    @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
    * Get all sources
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -27,23 +39,20 @@ public interface SourcesService {
    * @return Call&lt;Sources&gt;
    */
   @GET("api/v2/sources")
-  Call<Sources> sourcesGet(
+  Call<Sources> getSources(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("org") String org
   );
 
   /**
-   * Creates a Source
+   * Get a source
    * 
-   * @param source source to create (required)
+   * @param sourceID ID of the source (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Source&gt;
    */
-  @Headers({
-    "Content-Type:application/json"
-  })
-  @POST("api/v2/sources")
-  Call<Source> sourcesPost(
-    @retrofit2.http.Body Source source, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  @GET("api/v2/sources/{sourceID}")
+  Call<Source> getSourcesID(
+    @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -55,32 +64,8 @@ public interface SourcesService {
    * @return Call&lt;Buckets&gt;
    */
   @GET("api/v2/sources/{sourceID}/buckets")
-  Call<Buckets> sourcesSourceIDBucketsGet(
+  Call<Buckets> getSourcesIDBuckets(
     @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("org") String org
-  );
-
-  /**
-   * Delete a source
-   * 
-   * @param sourceID ID of the source (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/sources/{sourceID}")
-  Call<Void> sourcesSourceIDDelete(
-    @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Get a source
-   * 
-   * @param sourceID ID of the source (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Source&gt;
-   */
-  @GET("api/v2/sources/{sourceID}")
-  Call<Source> sourcesSourceIDGet(
-    @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -91,7 +76,7 @@ public interface SourcesService {
    * @return Call&lt;Check&gt;
    */
   @GET("api/v2/sources/{sourceID}/health")
-  Call<Check> sourcesSourceIDHealthGet(
+  Call<Check> getSourcesIDHealth(
     @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -107,8 +92,23 @@ public interface SourcesService {
     "Content-Type:application/json"
   })
   @PATCH("api/v2/sources/{sourceID}")
-  Call<Source> sourcesSourceIDPatch(
+  Call<Source> patchSourcesID(
     @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Body Source source, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * Creates a Source
+   * 
+   * @param source source to create (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Source&gt;
+   */
+  @Headers({
+    "Content-Type:application/json"
+  })
+  @POST("api/v2/sources")
+  Call<Source> postSources(
+    @retrofit2.http.Body Source source, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
 }

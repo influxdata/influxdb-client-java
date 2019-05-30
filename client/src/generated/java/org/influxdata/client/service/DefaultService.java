@@ -23,7 +23,7 @@ public interface DefaultService {
    * @return Call&lt;Routes&gt;
    */
   @GET("api/v2/")
-  Call<Routes> rootGet(
+  Call<Routes> getRoutes(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -35,7 +35,7 @@ public interface DefaultService {
    * @return Call&lt;Void&gt;
    */
   @POST("api/v2/signin")
-  Call<Void> signinPost(
+  Call<Void> postSignin(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Authorization") String authorization
   );
 
@@ -46,7 +46,7 @@ public interface DefaultService {
    * @return Call&lt;Void&gt;
    */
   @POST("api/v2/signout")
-  Call<Void> signoutPost(
+  Call<Void> postSignout(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

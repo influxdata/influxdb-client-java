@@ -23,7 +23,7 @@ public interface HealthService {
    * @return Call&lt;Check&gt;
    */
   @GET("health")
-  Call<Check> healthGet(
+  Call<Check> getHealth(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

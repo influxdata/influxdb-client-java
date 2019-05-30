@@ -61,7 +61,7 @@ final class TemplatesApiImpl extends AbstractRestClient implements TemplatesApi 
 
         Arguments.checkNotNull(templateCreate, "documentCreate");
 
-        Call<Document> call = service.documentsTemplatesPost(templateCreate, null);
+        Call<Document> call = service.postDocumentsTemplates(templateCreate, null);
 
         return execute(call);
     }
@@ -87,7 +87,7 @@ final class TemplatesApiImpl extends AbstractRestClient implements TemplatesApi 
         Arguments.checkNonEmpty(templateID, "templateID");
         Arguments.checkNotNull(template, "template");
 
-        Call<Document> call = service.documentsTemplatesTemplateIDPut(templateID, template, null);
+        Call<Document> call = service.putDocumentsTemplatesID(templateID, template, null);
 
         return execute(call);
     }
@@ -105,7 +105,7 @@ final class TemplatesApiImpl extends AbstractRestClient implements TemplatesApi 
 
         Arguments.checkNonEmpty(templateID, "templateID");
 
-        Call<Void> call = service.documentsTemplatesTemplateIDDelete(templateID, null);
+        Call<Void> call = service.deleteDocumentsTemplatesID(templateID, null);
 
         execute(call);
     }
@@ -125,7 +125,7 @@ final class TemplatesApiImpl extends AbstractRestClient implements TemplatesApi 
 
         Arguments.checkNonEmpty(templateID, "templateID");
 
-        Call<LabelsResponse> call = service.documentsTemplatesTemplateIDLabelsGet(templateID, null);
+        Call<LabelsResponse> call = service.getDocumentsTemplatesIDLabels(templateID, null);
 
         return execute(call).getLabels();
     }
@@ -151,7 +151,7 @@ final class TemplatesApiImpl extends AbstractRestClient implements TemplatesApi 
         LabelMapping mapping = new LabelMapping()
                 .labelID(labelID);
 
-        Call<LabelResponse> call = service.documentsTemplatesTemplateIDLabelsPost(templateID, mapping, null);
+        Call<LabelResponse> call = service.postDocumentsTemplatesIDLabels(templateID, mapping, null);
 
         return execute(call);
     }
@@ -172,7 +172,7 @@ final class TemplatesApiImpl extends AbstractRestClient implements TemplatesApi 
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(templateID, "templateID");
 
-        Call<Void> call = service.documentsTemplatesTemplateIDLabelsLabelIDDelete(templateID, labelID, null);
+        Call<Void> call = service.deleteDocumentsTemplatesIDLabelsID(templateID, labelID, null);
 
         execute(call);
     }
@@ -212,7 +212,7 @@ final class TemplatesApiImpl extends AbstractRestClient implements TemplatesApi 
 
         Arguments.checkNonEmpty(templateID, "templateID");
 
-        Call<Document> call = service.documentsTemplatesTemplateIDGet(templateID, null);
+        Call<Document> call = service.getDocumentsTemplatesID(templateID, null);
 
         return execute(call);
     }
@@ -232,7 +232,7 @@ final class TemplatesApiImpl extends AbstractRestClient implements TemplatesApi 
 
         Arguments.checkNonEmpty(orgName, "orgName");
 
-        Call<Documents> call = service.documentsTemplatesGet(null, orgName, null);
+        Call<Documents> call = service.getDocumentsTemplates(null, orgName, null);
 
         return execute(call).getDocuments();
     }

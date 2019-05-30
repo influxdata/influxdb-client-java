@@ -70,7 +70,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
 
         Arguments.checkNotNull(scraperTargetRequest, "scraperTargetRequest");
 
-        Call<ScraperTargetResponse> call = service.scrapersPost(scraperTargetRequest, null);
+        Call<ScraperTargetResponse> call = service.postScrapers(scraperTargetRequest, null);
 
         return execute(call);
     }
@@ -114,7 +114,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
         Arguments.checkNotNull(scraperTargetRequest, "scraperTargetRequest");
 
         Call<ScraperTargetResponse> call = service
-                .scrapersScraperTargetIDPatch(scraperTargetID, scraperTargetRequest, null);
+                .patchScrapersID(scraperTargetID, scraperTargetRequest, null);
 
         return execute(call);
     }
@@ -132,7 +132,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
 
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
-        Call<Void> call = service.scrapersScraperTargetIDDelete(scraperTargetID, null);
+        Call<Void> call = service.deleteScrapersID(scraperTargetID, null);
         execute(call);
     }
 
@@ -176,7 +176,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
 
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
-        Call<ScraperTargetResponse> call = service.scrapersScraperTargetIDGet(scraperTargetID, null);
+        Call<ScraperTargetResponse> call = service.getScrapersID(scraperTargetID, null);
 
         return execute(call);
     }
@@ -201,7 +201,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
     @Override
     public List<ScraperTargetResponse> findScraperTargetsByOrgId(@Nullable final String orgID) {
 
-        Call<ScraperTargetResponses> call = service.scrapersGet(null, null, null, orgID, null);
+        Call<ScraperTargetResponses> call = service.getScrapers(null, null, null, orgID, null);
 
         ScraperTargetResponses responses = execute(call);
         LOG.log(Level.FINEST, "findScraperTargets found: {0}", responses);
@@ -224,7 +224,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
 
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
-        Call<ResourceMembers> call = service.scrapersScraperTargetIDMembersGet(scraperTargetID, null);
+        Call<ResourceMembers> call = service.getScrapersIDMembers(scraperTargetID, null);
         ResourceMembers resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findScraperTargetMembers found: {0}", resourceMembers);
 
@@ -253,7 +253,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
         user.setId(memberID);
 
         Call<ResourceMember> call = service
-                .scrapersScraperTargetIDMembersPost(scraperTargetID, user, null);
+                .postScrapersIDMembers(scraperTargetID, user, null);
 
         return execute(call);
     }
@@ -273,7 +273,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
-        Call<Void> call = service.scrapersScraperTargetIDMembersUserIDDelete(memberID, scraperTargetID, null);
+        Call<Void> call = service.deleteScrapersIDMembersID(memberID, scraperTargetID, null);
         execute(call);
     }
 
@@ -292,7 +292,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
 
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
-        Call<ResourceOwners> call = service.scrapersScraperTargetIDOwnersGet(scraperTargetID, null);
+        Call<ResourceOwners> call = service.getScrapersIDOwners(scraperTargetID, null);
         ResourceOwners resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findScraperTargetOwners found: {0}", resourceMembers);
 
@@ -320,7 +320,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(ownerID);
 
-        Call<ResourceOwner> call = service.scrapersScraperTargetIDOwnersPost(scraperTargetID, user, null);
+        Call<ResourceOwner> call = service.postScrapersIDOwners(scraperTargetID, user, null);
 
         return execute(call);
     }
@@ -340,7 +340,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
-        Call<Void> call = service.scrapersScraperTargetIDOwnersUserIDDelete(ownerID, scraperTargetID, null);
+        Call<Void> call = service.deleteScrapersIDOwnersID(ownerID, scraperTargetID, null);
         execute(call);
     }
 
@@ -359,7 +359,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
 
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
-        Call<LabelsResponse> call = service.scrapersScraperTargetIDLabelsGet(scraperTargetID, null);
+        Call<LabelsResponse> call = service.getScrapersIDLabels(scraperTargetID, null);
 
         return execute(call).getLabels();
     }
@@ -385,7 +385,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
         LabelMapping labelMapping = new LabelMapping();
         labelMapping.setLabelID(labelID);
 
-        Call<LabelResponse> call = service.scrapersScraperTargetIDLabelsPost(scraperTargetID, labelMapping, null);
+        Call<LabelResponse> call = service.postScrapersIDLabels(scraperTargetID, labelMapping, null);
 
         return execute(call);
     }
@@ -405,7 +405,7 @@ final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperT
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(scraperTargetID, "scraperTargetID");
 
-        Call<Void> call = service.scrapersScraperTargetIDLabelsLabelIDDelete(scraperTargetID, labelID, null);
+        Call<Void> call = service.deleteScrapersIDLabelsID(scraperTargetID, labelID, null);
         execute(call);
     }
 }

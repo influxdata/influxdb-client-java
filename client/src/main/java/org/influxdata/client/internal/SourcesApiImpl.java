@@ -65,7 +65,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Arguments.checkNotNull(source, "Source is required");
 
-        Call<Source> call = service.sourcesPost(source, null);
+        Call<Source> call = service.postSources(source, null);
         return execute(call);
     }
 
@@ -75,7 +75,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Arguments.checkNotNull(source, "Source is required");
 
-        Call<Source> call = service.sourcesSourceIDPatch(source.getId(), source, null);
+        Call<Source> call = service.patchSourcesID(source.getId(), source, null);
         return execute(call);
     }
 
@@ -92,7 +92,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
-        Call<Void> call = service.sourcesSourceIDDelete(sourceID, null);
+        Call<Void> call = service.deleteSourcesID(sourceID, null);
         execute(call);
     }
 
@@ -139,7 +139,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
-        Call<Source> call = service.sourcesSourceIDGet(sourceID, null);
+        Call<Source> call = service.getSourcesID(sourceID, null);
 
         return execute(call);
     }
@@ -147,7 +147,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
     @Nonnull
     @Override
     public List<Source> findSources() {
-        Call<Sources> sourcesCall = service.sourcesGet(null, null);
+        Call<Sources> sourcesCall = service.getSources(null, null);
 
         Sources sources = execute(sourcesCall);
         LOG.log(Level.FINEST, "findSources found: {0}", sources);
@@ -170,7 +170,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
-        Call<Buckets> call = service.sourcesSourceIDBucketsGet(sourceID, null, null);
+        Call<Buckets> call = service.getSourcesIDBuckets(sourceID, null, null);
 
         return execute(call).getBuckets();
     }
@@ -190,6 +190,6 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 
-        return influxDBClient.health(service.sourcesSourceIDHealthGet(sourceID, null));
+        return influxDBClient.health(service.getSourcesIDHealth(sourceID, null));
     }
 }

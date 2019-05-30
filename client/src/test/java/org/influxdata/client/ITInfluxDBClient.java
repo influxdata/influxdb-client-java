@@ -166,7 +166,7 @@ class ITInfluxDBClient extends AbstractITClientTest {
 
         Assertions.assertThat(service).isNotNull();
 
-        Routes routes = service.rootGet(null).execute().body();
+        Routes routes = service.getRoutes(null).execute().body();
 
         Assertions.assertThat(routes).isNotNull();
         Assertions.assertThat(routes.getAuthorizations()).isEqualTo("/api/v2/authorizations");

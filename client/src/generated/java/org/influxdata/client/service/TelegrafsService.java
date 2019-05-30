@@ -27,6 +27,57 @@ import java.util.Map;
 
 public interface TelegrafsService {
   /**
+   * delete a telegraf config
+   * 
+   * @param telegrafID ID of telegraf config (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/telegrafs/{telegrafID}")
+  Call<Void> deleteTelegrafsID(
+    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * delete a label from a telegraf config
+   * 
+   * @param telegrafID ID of the telegraf config (required)
+   * @param labelID the label ID (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/telegrafs/{telegrafID}/labels/{labelID}")
+  Call<Void> deleteTelegrafsIDLabelsID(
+    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * removes a member from a telegraf config
+   * 
+   * @param userID ID of member to remove (required)
+   * @param telegrafID ID of the telegraf (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/telegrafs/{telegrafID}/members/{userID}")
+  Call<Void> deleteTelegrafsIDMembersID(
+    @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * removes an owner from a telegraf config
+   * 
+   * @param userID ID of owner to remove (required)
+   * @param telegrafID ID of the telegraf config (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/telegrafs/{telegrafID}/owners/{userID}")
+  Call<Void> deleteTelegrafsIDOwnersID(
+    @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
    * 
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -34,8 +85,96 @@ public interface TelegrafsService {
    * @return Call&lt;Telegrafs&gt;
    */
   @GET("api/v2/telegrafs")
-  Call<Telegrafs> telegrafsGet(
+  Call<Telegrafs> getTelegrafs(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("orgID") String orgID
+  );
+
+  /**
+   * Retrieve a telegraf config
+   * 
+   * @param telegrafID ID of telegraf config (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @param accept  (optional, default to application/toml)
+   * @return Call&lt;String&gt;
+   */
+  @GET("api/v2/telegrafs/{telegrafID}")
+  Call<String> getTelegrafsID(
+    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept
+  );
+
+  /**
+   * Retrieve a telegraf config
+   * 
+   * @param telegrafID ID of telegraf config (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @param accept  (optional, default to application/toml)
+   * @return Call&lt;ResponseBody&gt;
+   */
+  @GET("api/v2/telegrafs/{telegrafID}")
+  Call<ResponseBody> getTelegrafsIDResponseBody(
+    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept
+  );
+
+  /**
+   * Retrieve a telegraf config
+   * 
+   * @param telegrafID ID of telegraf config (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @param accept  (optional, default to application/toml)
+   * @return Call&lt;String&gt;
+   */
+  @GET("api/v2/telegrafs/{telegrafID}")
+  Call<String> getTelegrafsIDString(
+    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept
+  );
+
+  /**
+   * Retrieve a telegraf config
+   * 
+   * @param telegrafID ID of telegraf config (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @param accept  (optional, default to application/toml)
+   * @return Call&lt;Telegraf&gt;
+   */
+  @GET("api/v2/telegrafs/{telegrafID}")
+  Call<Telegraf> getTelegrafsIDTelegraf(
+    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept
+  );
+
+  /**
+   * list all labels for a telegraf config
+   * 
+   * @param telegrafID ID of the telegraf config (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;LabelsResponse&gt;
+   */
+  @GET("api/v2/telegrafs/{telegrafID}/labels")
+  Call<LabelsResponse> getTelegrafsIDLabels(
+    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * List all users with member privileges for a telegraf config
+   * 
+   * @param telegrafID ID of the telegraf config (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;ResourceMembers&gt;
+   */
+  @GET("api/v2/telegrafs/{telegrafID}/members")
+  Call<ResourceMembers> getTelegrafsIDMembers(
+    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * List all owners of a telegraf config
+   * 
+   * @param telegrafID ID of the telegraf config (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;ResourceOwners&gt;
+   */
+  @GET("api/v2/telegrafs/{telegrafID}/owners")
+  Call<ResourceOwners> getTelegrafsIDOwners(
+    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -49,97 +188,8 @@ public interface TelegrafsService {
     "Content-Type:application/json"
   })
   @POST("api/v2/telegrafs")
-  Call<Telegraf> telegrafsPost(
+  Call<Telegraf> postTelegrafs(
     @retrofit2.http.Body TelegrafRequest telegrafRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * delete a telegraf config
-   * 
-   * @param telegrafID ID of telegraf config (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/telegrafs/{telegrafID}")
-  Call<Void> telegrafsTelegrafIDDelete(
-    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Retrieve a telegraf config
-   * 
-   * @param telegrafID ID of telegraf config (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param accept  (optional, default to application/toml)
-   * @return Call&lt;String&gt;
-   */
-  @GET("api/v2/telegrafs/{telegrafID}")
-  Call<String> telegrafsTelegrafIDGet(
-    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept
-  );
-
-  /**
-   * Retrieve a telegraf config
-   * 
-   * @param telegrafID ID of telegraf config (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param accept  (optional, default to application/toml)
-   * @return Call&lt;ResponseBody&gt;
-   */
-  @GET("api/v2/telegrafs/{telegrafID}")
-  Call<ResponseBody> telegrafsTelegrafIDGetResponseBody(
-    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept
-  );
-
-  /**
-   * Retrieve a telegraf config
-   * 
-   * @param telegrafID ID of telegraf config (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param accept  (optional, default to application/toml)
-   * @return Call&lt;String&gt;
-   */
-  @GET("api/v2/telegrafs/{telegrafID}")
-  Call<String> telegrafsTelegrafIDGetString(
-    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept
-  );
-
-  /**
-   * Retrieve a telegraf config
-   * 
-   * @param telegrafID ID of telegraf config (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param accept  (optional, default to application/toml)
-   * @return Call&lt;Telegraf&gt;
-   */
-  @GET("api/v2/telegrafs/{telegrafID}")
-  Call<Telegraf> telegrafsTelegrafIDGetTelegraf(
-    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept") String accept
-  );
-
-  /**
-   * list all labels for a telegraf config
-   * 
-   * @param telegrafID ID of the telegraf config (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;LabelsResponse&gt;
-   */
-  @GET("api/v2/telegrafs/{telegrafID}/labels")
-  Call<LabelsResponse> telegrafsTelegrafIDLabelsGet(
-    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * delete a label from a telegraf config
-   * 
-   * @param telegrafID ID of the telegraf config (required)
-   * @param labelID the label ID (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/telegrafs/{telegrafID}/labels/{labelID}")
-  Call<Void> telegrafsTelegrafIDLabelsLabelIDDelete(
-    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -154,20 +204,8 @@ public interface TelegrafsService {
     "Content-Type:application/json"
   })
   @POST("api/v2/telegrafs/{telegrafID}/labels")
-  Call<LabelResponse> telegrafsTelegrafIDLabelsPost(
+  Call<LabelResponse> postTelegrafsIDLabels(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * List all users with member privileges for a telegraf config
-   * 
-   * @param telegrafID ID of the telegraf config (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;ResourceMembers&gt;
-   */
-  @GET("api/v2/telegrafs/{telegrafID}/members")
-  Call<ResourceMembers> telegrafsTelegrafIDMembersGet(
-    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -182,33 +220,8 @@ public interface TelegrafsService {
     "Content-Type:application/json"
   })
   @POST("api/v2/telegrafs/{telegrafID}/members")
-  Call<ResourceMember> telegrafsTelegrafIDMembersPost(
+  Call<ResourceMember> postTelegrafsIDMembers(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * removes a member from a telegraf config
-   * 
-   * @param userID ID of member to remove (required)
-   * @param telegrafID ID of the telegraf (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/telegrafs/{telegrafID}/members/{userID}")
-  Call<Void> telegrafsTelegrafIDMembersUserIDDelete(
-    @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * List all owners of a telegraf config
-   * 
-   * @param telegrafID ID of the telegraf config (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;ResourceOwners&gt;
-   */
-  @GET("api/v2/telegrafs/{telegrafID}/owners")
-  Call<ResourceOwners> telegrafsTelegrafIDOwnersGet(
-    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -223,21 +236,8 @@ public interface TelegrafsService {
     "Content-Type:application/json"
   })
   @POST("api/v2/telegrafs/{telegrafID}/owners")
-  Call<ResourceOwner> telegrafsTelegrafIDOwnersPost(
+  Call<ResourceOwner> postTelegrafsIDOwners(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * removes an owner from a telegraf config
-   * 
-   * @param userID ID of owner to remove (required)
-   * @param telegrafID ID of the telegraf config (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/telegrafs/{telegrafID}/owners/{userID}")
-  Call<Void> telegrafsTelegrafIDOwnersUserIDDelete(
-    @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -252,7 +252,7 @@ public interface TelegrafsService {
     "Content-Type:application/json"
   })
   @PUT("api/v2/telegrafs/{telegrafID}")
-  Call<Telegraf> telegrafsTelegrafIDPut(
+  Call<Telegraf> putTelegrafsID(
     @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Body TelegrafRequest telegrafRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

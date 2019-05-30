@@ -58,7 +58,7 @@ final class VariablesApiImpl extends AbstractRestClient implements VariablesApi 
 
         Arguments.checkNotNull(variable, "variable");
 
-        Call<Variable> call = service.variablesPost(variable, null);
+        Call<Variable> call = service.postVariables(variable, null);
 
         return execute(call);
     }
@@ -69,7 +69,7 @@ final class VariablesApiImpl extends AbstractRestClient implements VariablesApi 
 
         Arguments.checkNotNull(variable, "variable");
 
-        Call<Variable> call = service.variablesVariableIDPatch(variable.getId(), variable, null);
+        Call<Variable> call = service.patchVariablesID(variable.getId(), variable, null);
 
         return execute(call);
     }
@@ -87,7 +87,7 @@ final class VariablesApiImpl extends AbstractRestClient implements VariablesApi 
 
         Arguments.checkNonEmpty(variableID, "variableID");
 
-        Call<Void> call = service.variablesVariableIDDelete(variableID, null);
+        Call<Void> call = service.deleteVariablesID(variableID, null);
 
         execute(call);
     }
@@ -124,7 +124,7 @@ final class VariablesApiImpl extends AbstractRestClient implements VariablesApi 
 
         Arguments.checkNonEmpty(variableID, "variableID");
 
-        Call<Variable> call = service.variablesVariableIDGet(variableID, null);
+        Call<Variable> call = service.getVariablesID(variableID, null);
 
         return execute(call);
     }
@@ -144,7 +144,7 @@ final class VariablesApiImpl extends AbstractRestClient implements VariablesApi 
 
         Arguments.checkNonEmpty(orgID, "orgID");
 
-        Call<Variables> call = service.variablesGet(null, null, orgID);
+        Call<Variables> call = service.getVariables(null, null, orgID);
 
         return execute(call).getVariables();
     }
@@ -164,7 +164,7 @@ final class VariablesApiImpl extends AbstractRestClient implements VariablesApi 
 
         Arguments.checkNonEmpty("variableID", variableID);
 
-        Call<LabelsResponse> call = service.variablesVariableIDLabelsGet(variableID, null);
+        Call<LabelsResponse> call = service.getVariablesIDLabels(variableID, null);
 
         return execute(call).getLabels();
     }
@@ -188,7 +188,7 @@ final class VariablesApiImpl extends AbstractRestClient implements VariablesApi 
         Arguments.checkNonEmpty("labelID", labelID);
 
         Call<LabelResponse> call = service
-                .variablesVariableIDLabelsPost(variableID, new LabelMapping().labelID(labelID), null);
+                .postVariablesIDLabels(variableID, new LabelMapping().labelID(labelID), null);
 
         return execute(call).getLabel();
     }
@@ -208,7 +208,7 @@ final class VariablesApiImpl extends AbstractRestClient implements VariablesApi 
         Arguments.checkNonEmpty("variableID", variableID);
         Arguments.checkNonEmpty("labelID", labelID);
 
-        Call<Void> call = service.variablesVariableIDLabelsLabelIDDelete(variableID, labelID, null);
+        Call<Void> call = service.deleteVariablesIDLabelsID(variableID, labelID, null);
         execute(call);
     }
 }

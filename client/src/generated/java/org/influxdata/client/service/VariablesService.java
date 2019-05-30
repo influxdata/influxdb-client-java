@@ -21,34 +21,6 @@ import java.util.Map;
 
 public interface VariablesService {
   /**
-   * get all variables
-   * 
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param org specifies the organization name of the resource (optional)
-   * @param orgID specifies the organization id of the resource (optional)
-   * @return Call&lt;Variables&gt;
-   */
-  @GET("api/v2/variables")
-  Call<Variables> variablesGet(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID
-  );
-
-  /**
-   * create a variable
-   * 
-   * @param variable variable to create (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Variable&gt;
-   */
-  @Headers({
-    "Content-Type:application/json"
-  })
-  @POST("api/v2/variables")
-  Call<Variable> variablesPost(
-    @retrofit2.http.Body Variable variable, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
    * delete a variable
    * 
    * @param variableID id of the variable (required)
@@ -56,31 +28,7 @@ public interface VariablesService {
    * @return Call&lt;Void&gt;
    */
   @DELETE("api/v2/variables/{variableID}")
-  Call<Void> variablesVariableIDDelete(
-    @retrofit2.http.Path("variableID") String variableID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * get a variable
-   * 
-   * @param variableID ID of the variable (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Variable&gt;
-   */
-  @GET("api/v2/variables/{variableID}")
-  Call<Variable> variablesVariableIDGet(
-    @retrofit2.http.Path("variableID") String variableID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * list all labels for a variable
-   * 
-   * @param variableID ID of the variable (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;LabelsResponse&gt;
-   */
-  @GET("api/v2/variables/{variableID}/labels")
-  Call<LabelsResponse> variablesVariableIDLabelsGet(
+  Call<Void> deleteVariablesID(
     @retrofit2.http.Path("variableID") String variableID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -93,24 +41,45 @@ public interface VariablesService {
    * @return Call&lt;Void&gt;
    */
   @DELETE("api/v2/variables/{variableID}/labels/{labelID}")
-  Call<Void> variablesVariableIDLabelsLabelIDDelete(
+  Call<Void> deleteVariablesIDLabelsID(
     @retrofit2.http.Path("variableID") String variableID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
-   * add a label to a variable
+   * get all variables
+   * 
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @param org specifies the organization name of the resource (optional)
+   * @param orgID specifies the organization id of the resource (optional)
+   * @return Call&lt;Variables&gt;
+   */
+  @GET("api/v2/variables")
+  Call<Variables> getVariables(
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID
+  );
+
+  /**
+   * get a variable
    * 
    * @param variableID ID of the variable (required)
-   * @param labelMapping label to add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;LabelResponse&gt;
+   * @return Call&lt;Variable&gt;
    */
-  @Headers({
-    "Content-Type:application/json"
-  })
-  @POST("api/v2/variables/{variableID}/labels")
-  Call<LabelResponse> variablesVariableIDLabelsPost(
-    @retrofit2.http.Path("variableID") String variableID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  @GET("api/v2/variables/{variableID}")
+  Call<Variable> getVariablesID(
+    @retrofit2.http.Path("variableID") String variableID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * list all labels for a variable
+   * 
+   * @param variableID ID of the variable (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;LabelsResponse&gt;
+   */
+  @GET("api/v2/variables/{variableID}/labels")
+  Call<LabelsResponse> getVariablesIDLabels(
+    @retrofit2.http.Path("variableID") String variableID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -125,8 +94,39 @@ public interface VariablesService {
     "Content-Type:application/json"
   })
   @PATCH("api/v2/variables/{variableID}")
-  Call<Variable> variablesVariableIDPatch(
+  Call<Variable> patchVariablesID(
     @retrofit2.http.Path("variableID") String variableID, @retrofit2.http.Body Variable variable, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * create a variable
+   * 
+   * @param variable variable to create (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Variable&gt;
+   */
+  @Headers({
+    "Content-Type:application/json"
+  })
+  @POST("api/v2/variables")
+  Call<Variable> postVariables(
+    @retrofit2.http.Body Variable variable, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * add a label to a variable
+   * 
+   * @param variableID ID of the variable (required)
+   * @param labelMapping label to add (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;LabelResponse&gt;
+   */
+  @Headers({
+    "Content-Type:application/json"
+  })
+  @POST("api/v2/variables/{variableID}/labels")
+  Call<LabelResponse> postVariablesIDLabels(
+    @retrofit2.http.Path("variableID") String variableID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -141,7 +141,7 @@ public interface VariablesService {
     "Content-Type:application/json"
   })
   @PUT("api/v2/variables/{variableID}")
-  Call<Variable> variablesVariableIDPut(
+  Call<Variable> putVariablesID(
     @retrofit2.http.Path("variableID") String variableID, @retrofit2.http.Body Variable variable, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

@@ -88,7 +88,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
 
         Arguments.checkNotNull(authorization, "Authorization is required");
 
-        Call<Authorization> call = service.authorizationsPost(authorization, null);
+        Call<Authorization> call = service.postAuthorizations(authorization, null);
 
         return execute(call);
     }
@@ -105,7 +105,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
 
         Arguments.checkNonEmpty(authorizationID, "authorizationID");
 
-        Call<Authorization> call = service.authorizationsAuthIDGet(authorizationID, null);
+        Call<Authorization> call = service.getAuthorizationsID(authorizationID, null);
 
         return execute(call);
     }
@@ -153,7 +153,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
         Arguments.checkNotNull(authorization, "Authorization is required");
 
         Call<Authorization> authorizationCall = service
-                .authorizationsAuthIDPatch(authorization.getId(), authorization, null);
+                .patchAuthorizationsID(authorization.getId(), authorization, null);
 
         return execute(authorizationCall);
     }
@@ -171,7 +171,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
 
         Arguments.checkNonEmpty(authorizationID, "authorizationID");
 
-        Call<Void> call = service.authorizationsAuthIDDelete(authorizationID, null);
+        Call<Void> call = service.deleteAuthorizationsID(authorizationID, null);
         execute(call);
     }
 
@@ -206,7 +206,7 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
                                                    @Nullable final String userName,
                                                    @Nullable final String orgID) {
 
-        Call<Authorizations> authorizationsCall = service.authorizationsGet(null, userID, userName, orgID, null);
+        Call<Authorizations> authorizationsCall = service.getAuthorizations(null, userID, userName, orgID, null);
 
         Authorizations authorizations = execute(authorizationsCall);
         LOG.log(Level.FINEST, "findAuthorizations found: {0}", authorizations);

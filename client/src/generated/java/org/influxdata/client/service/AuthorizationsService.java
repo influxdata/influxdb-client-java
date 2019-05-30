@@ -26,8 +26,23 @@ public interface AuthorizationsService {
    * @return Call&lt;Void&gt;
    */
   @DELETE("api/v2/authorizations/{authID}")
-  Call<Void> authorizationsAuthIDDelete(
+  Call<Void> deleteAuthorizationsID(
     @retrofit2.http.Path("authID") String authID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * List all authorizations
+   * 
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @param userID filter authorizations belonging to a user id (optional)
+   * @param user filter authorizations belonging to a user name (optional)
+   * @param orgID filter authorizations belonging to a org id (optional)
+   * @param org filter authorizations belonging to a org name (optional)
+   * @return Call&lt;Authorizations&gt;
+   */
+  @GET("api/v2/authorizations")
+  Call<Authorizations> getAuthorizations(
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("userID") String userID, @retrofit2.http.Query("user") String user, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("org") String org
   );
 
   /**
@@ -38,7 +53,7 @@ public interface AuthorizationsService {
    * @return Call&lt;Authorization&gt;
    */
   @GET("api/v2/authorizations/{authID}")
-  Call<Authorization> authorizationsAuthIDGet(
+  Call<Authorization> getAuthorizationsID(
     @retrofit2.http.Path("authID") String authID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -54,23 +69,8 @@ public interface AuthorizationsService {
     "Content-Type:application/json"
   })
   @PATCH("api/v2/authorizations/{authID}")
-  Call<Authorization> authorizationsAuthIDPatch(
+  Call<Authorization> patchAuthorizationsID(
     @retrofit2.http.Path("authID") String authID, @retrofit2.http.Body AuthorizationUpdateRequest authorizationUpdateRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * List all authorizations
-   * 
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param userID filter authorizations belonging to a user id (optional)
-   * @param user filter authorizations belonging to a user name (optional)
-   * @param orgID filter authorizations belonging to a org id (optional)
-   * @param org filter authorizations belonging to a org name (optional)
-   * @return Call&lt;Authorizations&gt;
-   */
-  @GET("api/v2/authorizations")
-  Call<Authorizations> authorizationsGet(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("userID") String userID, @retrofit2.http.Query("user") String user, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("org") String org
   );
 
   /**
@@ -84,7 +84,7 @@ public interface AuthorizationsService {
     "Content-Type:application/json"
   })
   @POST("api/v2/authorizations")
-  Call<Authorization> authorizationsPost(
+  Call<Authorization> postAuthorizations(
     @retrofit2.http.Body Authorization authorization, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

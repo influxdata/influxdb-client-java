@@ -20,18 +20,6 @@ import java.util.Map;
 
 public interface LabelsService {
   /**
-   * Get all labels
-   * 
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param orgID specifies the organization of the resource (optional)
-   * @return Call&lt;LabelsResponse&gt;
-   */
-  @GET("api/v2/labels")
-  Call<LabelsResponse> labelsGet(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("orgID") String orgID
-  );
-
-  /**
    * Delete a label
    * 
    * @param labelID ID of label to delete (required)
@@ -39,8 +27,20 @@ public interface LabelsService {
    * @return Call&lt;Void&gt;
    */
   @DELETE("api/v2/labels/{labelID}")
-  Call<Void> labelsLabelIDDelete(
+  Call<Void> deleteLabelsID(
     @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * Get all labels
+   * 
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @param orgID specifies the organization of the resource (optional)
+   * @return Call&lt;LabelsResponse&gt;
+   */
+  @GET("api/v2/labels")
+  Call<LabelsResponse> getLabels(
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("orgID") String orgID
   );
 
   /**
@@ -51,7 +51,7 @@ public interface LabelsService {
    * @return Call&lt;LabelResponse&gt;
    */
   @GET("api/v2/labels/{labelID}")
-  Call<LabelResponse> labelsLabelIDGet(
+  Call<LabelResponse> getLabelsID(
     @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -67,7 +67,7 @@ public interface LabelsService {
     "Content-Type:application/json"
   })
   @PATCH("api/v2/labels/{labelID}")
-  Call<LabelResponse> labelsLabelIDPatch(
+  Call<LabelResponse> patchLabelsID(
     @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Body LabelUpdate labelUpdate, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -81,7 +81,7 @@ public interface LabelsService {
     "Content-Type:application/json"
   })
   @POST("api/v2/labels")
-  Call<LabelResponse> labelsPost(
+  Call<LabelResponse> postLabels(
     @retrofit2.http.Body LabelCreateRequest labelCreateRequest
   );
 

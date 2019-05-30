@@ -39,7 +39,7 @@ internal class InfluxDBClientKotlinImpl(options: InfluxDBClientOptions) : Abstra
     }
 
     override fun health(): Check {
-        return health(healthService.healthGet(null))
+        return health(healthService.getHealth(null))
     }
 
     override fun getLogLevel(): LogLevel {

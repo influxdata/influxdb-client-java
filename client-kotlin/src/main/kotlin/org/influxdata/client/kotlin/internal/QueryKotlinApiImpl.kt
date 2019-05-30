@@ -117,7 +117,7 @@ internal class QueryKotlinApiImpl(private val service: QueryService) : AbstractQ
 
         val channel = Channel<String>()
 
-        val queryCall = service.queryPostResponseBody(null, "text/csv", "application/json",
+        val queryCall = service.postQueryResponseBody(null,  "application/json",
                 null, orgID, query)
 
         val consumer = BiConsumer { cancellable: Cancellable, line: String ->
@@ -144,7 +144,7 @@ internal class QueryKotlinApiImpl(private val service: QueryService) : AbstractQ
 
         val channel = Channel<T>()
 
-        val queryCall = service.queryPostResponseBody(null, "text/csv", "application/json",
+        val queryCall = service.postQueryResponseBody(null, "application/json",
                 null, orgID, query)
 
         val responseConsumer = object : FluxResponseConsumer {

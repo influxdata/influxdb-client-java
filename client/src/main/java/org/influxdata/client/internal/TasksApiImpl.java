@@ -78,7 +78,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Arguments.checkNonEmpty(taskID, "taskID");
 
-        Call<Task> call = service.tasksTaskIDGet(taskID, null);
+        Call<Task> call = service.getTasksID(taskID, null);
 
         return execute(call);
     }
@@ -126,7 +126,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
                                 @Nullable final String userID,
                                 @Nullable final String orgID) {
 
-        Call<Tasks> call = service.tasksGet(null, afterID, userID, null, orgID, null);
+        Call<Tasks> call = service.getTasks(null, afterID, userID, null, orgID, null);
 
         //TODO https://github.com/influxdata/influxdb/issues/13576
         Tasks tasks = execute(call, InternalServerErrorException.class, new Tasks());
@@ -160,7 +160,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Arguments.checkNotNull(taskCreateRequest, "taskCreateRequest");
 
-        Call<Task> call = service.tasksPost(taskCreateRequest, null);
+        Call<Task> call = service.postTasks(taskCreateRequest, null);
 
         return execute(call);
     }
@@ -260,7 +260,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Arguments.checkNotNull(request, "request");
         Arguments.checkNonEmpty(taskID, "taskID");
 
-        Call<Task> call = service.tasksTaskIDPatch(taskID, request, null);
+        Call<Task> call = service.patchTasksID(taskID, request, null);
 
         return execute(call);
     }
@@ -278,7 +278,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Arguments.checkNonEmpty(taskID, "taskID");
 
-        Call<Void> call = service.tasksTaskIDDelete(taskID, null);
+        Call<Void> call = service.deleteTasksID(taskID, null);
         execute(call);
     }
 
@@ -318,7 +318,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        Call<ResourceMembers> call = service.tasksTaskIDMembersGet(taskID, null);
+        Call<ResourceMembers> call = service.getTasksIDMembers(taskID, null);
 
         ResourceMembers resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findTaskMembers found: {0}", resourceMembers);
@@ -355,7 +355,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(memberID);
 
-        Call<ResourceMember> call = service.tasksTaskIDMembersPost(taskID, user, null);
+        Call<ResourceMember> call = service.postTasksIDMembers(taskID, user, null);
 
         return execute(call);
     }
@@ -375,7 +375,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Arguments.checkNonEmpty(memberID, "Member ID");
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        Call<Void> call = service.tasksTaskIDMembersUserIDDelete(memberID, taskID, null);
+        Call<Void> call = service.deleteTasksIDMembersID(memberID, taskID, null);
         execute(call);
     }
 
@@ -385,7 +385,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        Call<ResourceOwners> call = service.tasksTaskIDOwnersGet(taskID, null);
+        Call<ResourceOwners> call = service.getTasksIDOwners(taskID, null);
 
         ResourceOwners resourceMembers = execute(call);
         LOG.log(Level.FINEST, "findTaskMembers found: {0}", resourceMembers);
@@ -422,7 +422,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();
         user.setId(ownerID);
 
-        Call<ResourceOwner> call = service.tasksTaskIDOwnersPost(taskID, user, null);
+        Call<ResourceOwner> call = service.postTasksIDOwners(taskID, user, null);
 
         return execute(call);
     }
@@ -442,7 +442,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Arguments.checkNonEmpty(ownerID, "Owner ID");
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        Call<Void> call = service.tasksTaskIDOwnersUserIDDelete(ownerID, taskID, null);
+        Call<Void> call = service.deleteTasksIDOwnersID(ownerID, taskID, null);
         execute(call);
     }
 
@@ -488,7 +488,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Arguments.checkNonEmpty(taskID, "Task.ID");
         Arguments.checkNonEmpty(orgID, "Org.ID");
 
-        Call<Runs> runs = service.tasksTaskIDRunsGet(taskID, null, null, limit, afterTime, beforeTime);
+        Call<Runs> runs = service.getTasksIDRuns(taskID, null, null, limit, afterTime, beforeTime);
         Runs execute = execute(runs);
 
         return execute.getRuns();
@@ -510,7 +510,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Arguments.checkNonEmpty(taskID, "Task.ID");
         Arguments.checkNonEmpty(runID, "Run.ID");
 
-        Call<Run> run = service.tasksTaskIDRunsRunIDGet(taskID, runID, null);
+        Call<Run> run = service.getTasksIDRunsID(taskID, runID, null);
 
         return execute(run);
     }
@@ -532,7 +532,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Arguments.checkNonEmpty(taskID, "Task.ID");
         Arguments.checkNonEmpty(runID, "Run.ID");
 
-        Call<Logs> call = service.tasksTaskIDRunsRunIDLogsGet(taskID, runID, null);
+        Call<Logs> call = service.getTasksIDRunsIDLogs(taskID, runID, null);
 
         Logs logs = execute(call);
 
@@ -555,7 +555,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Arguments.checkNonEmpty(taskId, "taskId");
         Arguments.checkNotNull(runManually, "runManually");
 
-        Call<Run> call = service.tasksTaskIDRunsPost(taskId, null, runManually);
+        Call<Run> call = service.postTasksIDRuns(taskId, null, runManually);
 
         return execute(call);
     }
@@ -576,7 +576,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Arguments.checkNonEmpty(taskID, "Task.ID");
         Arguments.checkNonEmpty(runID, "Run.ID");
 
-        Call<Run> run = service.tasksTaskIDRunsRunIDRetryPost(taskID, runID, null);
+        Call<Run> run = service.postTasksIDRunsIDRetry(taskID, runID, null);
 
         return execute(run);
     }
@@ -614,7 +614,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
 
-        Call<Logs> execute = service.tasksTaskIDLogsGet(taskID, null);
+        Call<Logs> execute = service.getTasksIDLogs(taskID, null);
 
         Logs logs = execute(execute);
 
@@ -636,7 +636,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Arguments.checkNonEmpty(taskID, "taskID");
 
-        Call<LabelsResponse> call = service.tasksTaskIDLabelsGet(taskID, null);
+        Call<LabelsResponse> call = service.getTasksIDLabels(taskID, null);
 
         return execute(call).getLabels();
     }
@@ -661,7 +661,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         LabelMapping labelMapping = new LabelMapping();
         labelMapping.setLabelID(labelID);
 
-        Call<LabelResponse> call = service.tasksTaskIDLabelsPost(taskID, labelMapping, null);
+        Call<LabelResponse> call = service.postTasksIDLabels(taskID, labelMapping, null);
 
         return execute(call);
     }
@@ -681,7 +681,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Arguments.checkNonEmpty(labelID, "labelID");
         Arguments.checkNonEmpty(taskID, "taskID");
 
-        Call<Void> call = service.tasksTaskIDLabelsLabelIDDelete(taskID, labelID, null);
+        Call<Void> call = service.deleteTasksIDLabelsID(taskID, labelID, null);
         execute(call);
     }
 
