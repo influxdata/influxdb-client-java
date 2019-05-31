@@ -80,22 +80,6 @@ public interface OrganizationsService {
   );
 
   /**
-   * delete provided secrets
-   * 
-   * @param orgID ID of the organization (required)
-   * @param secretKeys secret key to deleted (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @Headers({
-    "Content-Type:application/json"
-  })
-  @POST("api/v2/orgs/{orgID}/secrets/delete")
-  Call<Void> deleteOrgsIDSecrets(
-    @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body SecretKeys secretKeys, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
    * List all organizations
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -275,6 +259,22 @@ public interface OrganizationsService {
   @POST("api/v2/orgs/{orgID}/owners")
   Call<ResourceOwner> postOrgsIDOwners(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * delete provided secrets
+   * 
+   * @param orgID ID of the organization (required)
+   * @param secretKeys secret key to deleted (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @Headers({
+    "Content-Type:application/json"
+  })
+  @POST("api/v2/orgs/{orgID}/secrets/delete")
+  Call<Void> postOrgsIDSecrets(
+    @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body SecretKeys secretKeys, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
 }

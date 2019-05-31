@@ -3922,7 +3922,7 @@ paths:
                 $ref: "#/components/schemas/Error"
   '/orgs/{orgID}/secrets/delete': # had to make this because swagger wouldn't let me have a request body with a DELETE
     post:
-      operationId: DeleteOrgsIDSecrets
+      operationId: PostOrgsIDSecrets
       tags:
         - Secrets
         - Organizations
@@ -5909,6 +5909,14 @@ components:
           type: string
         description:
           type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
         status:
           description: if inactive the organization is inactive.
           default: active

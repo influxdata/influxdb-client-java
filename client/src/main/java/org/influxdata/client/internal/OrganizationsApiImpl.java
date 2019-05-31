@@ -235,7 +235,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         Arguments.checkNonEmpty(orgID, "Organization ID");
         Arguments.checkNotNull(secretKeys, "secretKeys");
 
-        Call<Void> call = service.deleteOrgsIDSecrets(orgID, secretKeys, null);
+        Call<Void> call = service.postOrgsIDSecrets(orgID, secretKeys, null);
         execute(call);
     }
 

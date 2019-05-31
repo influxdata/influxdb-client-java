@@ -23,6 +23,7 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.time.OffsetDateTime;
 import org.influxdata.client.domain.OrganizationLinks;
 
 /**
@@ -45,6 +46,14 @@ public class Organization {
   public static final String SERIALIZED_NAME_DESCRIPTION = "description";
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
   private String description;
+
+  public static final String SERIALIZED_NAME_CREATED_AT = "createdAt";
+  @SerializedName(SERIALIZED_NAME_CREATED_AT)
+  private OffsetDateTime createdAt;
+
+  public static final String SERIALIZED_NAME_UPDATED_AT = "updatedAt";
+  @SerializedName(SERIALIZED_NAME_UPDATED_AT)
+  private OffsetDateTime updatedAt;
 
   /**
    * if inactive the organization is inactive.
@@ -160,6 +169,24 @@ public class Organization {
     this.description = description;
   }
 
+   /**
+   * Get createdAt
+   * @return createdAt
+  **/
+  @ApiModelProperty(value = "")
+  public OffsetDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+   /**
+   * Get updatedAt
+   * @return updatedAt
+  **/
+  @ApiModelProperty(value = "")
+  public OffsetDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
   public Organization status(StatusEnum status) {
     this.status = status;
     return this;
@@ -192,12 +219,14 @@ public class Organization {
         Objects.equals(this.id, organization.id) &&
         Objects.equals(this.name, organization.name) &&
         Objects.equals(this.description, organization.description) &&
+        Objects.equals(this.createdAt, organization.createdAt) &&
+        Objects.equals(this.updatedAt, organization.updatedAt) &&
         Objects.equals(this.status, organization.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, id, name, description, status);
+    return Objects.hash(links, id, name, description, createdAt, updatedAt, status);
   }
 
 
@@ -209,6 +238,8 @@ public class Organization {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
+    sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
     return sb.toString();

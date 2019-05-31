@@ -21,6 +21,8 @@
  */
 package org.influxdata.client;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +68,8 @@ class ITOrganizationsApi extends AbstractITClientTest {
     @Test
     void createOrganization() {
 
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+
         String orgName = generateName("Constant Pro");
 
         Organization organization = organizationsApi.createOrganization(orgName);
@@ -76,6 +80,8 @@ class ITOrganizationsApi extends AbstractITClientTest {
         Assertions.assertThat(organization.getId()).isNotBlank();
         Assertions.assertThat(organization.getName()).isEqualTo(orgName);
         Assertions.assertThat(organization.getLinks()).isNotNull();
+        Assertions.assertThat(organization.getCreatedAt()).isAfter(now);
+        Assertions.assertThat(organization.getUpdatedAt()).isAfter(now);
         Assertions.assertThat(organization.getLinks().getBuckets()).isEqualTo("/api/v2/buckets?org=" + orgName);
         Assertions.assertThat(organization.getLinks().getDashboards()).isEqualTo("/api/v2/dashboards?org=" + orgName);
         Assertions.assertThat(organization.getLinks().getLogs()).isEqualTo("/api/v2/orgs/" + organization.getId() + "/logs");
@@ -154,13 +160,18 @@ class ITOrganizationsApi extends AbstractITClientTest {
     void updateOrganization() {
 
         Organization createdOrganization = organizationsApi.createOrganization(generateName("Constant Pro"));
-        createdOrganization.setName("Master Pb");
+
+        String updatedName = generateName("Master Pb");
+        createdOrganization.setName(updatedName);
+
+        OffsetDateTime updatedAt = createdOrganization.getUpdatedAt();
 
         Organization updatedOrganization = organizationsApi.updateOrganization(createdOrganization);
 
         Assertions.assertThat(updatedOrganization).isNotNull();
         Assertions.assertThat(updatedOrganization.getId()).isEqualTo(createdOrganization.getId());
-        Assertions.assertThat(updatedOrganization.getName()).isEqualTo("Master Pb");
+        Assertions.assertThat(updatedOrganization.getName()).isEqualTo(updatedName);
+        Assertions.assertThat(updatedOrganization.getUpdatedAt()).isAfter(updatedAt);
 
         Assertions.assertThat(updatedOrganization.getLinks()).isNotNull();
     }
