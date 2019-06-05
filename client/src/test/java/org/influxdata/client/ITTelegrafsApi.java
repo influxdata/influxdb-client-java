@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
+import org.influxdata.LogLevel;
 import org.influxdata.client.domain.Label;
 import org.influxdata.client.domain.Organization;
 import org.influxdata.client.domain.ResourceMember;
@@ -69,7 +70,11 @@ class ITTelegrafsApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/14062
     void createTelegrafConfig() {
+
+        influxDBClient.setLogLevel(LogLevel.BODY);
 
         String name = generateName("TelegrafConfig");
 
@@ -82,7 +87,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
         Assertions.assertThat(telegrafConfig).isNotNull();
         Assertions.assertThat(telegrafConfig.getName()).isEqualTo(name);
         Assertions.assertThat(telegrafConfig.getDescription()).isEqualTo("test-config");
-        Assertions.assertThat(telegrafConfig.getOrganizationID()).isEqualTo(organization.getId());
+        Assertions.assertThat(telegrafConfig.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(telegrafConfig.getAgent()).isNotNull();
         Assertions.assertThat(telegrafConfig.getAgent().getCollectionInterval()).isEqualTo(1_000);
         Assertions.assertThat(telegrafConfig.getPlugins()).hasSize(2);
@@ -206,7 +211,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
         Assertions.assertThat(telegrafConfigByID).isNotNull();
         Assertions.assertThat(telegrafConfigByID.getId()).isEqualTo(telegrafConfig.getId());
         Assertions.assertThat(telegrafConfigByID.getName()).isEqualTo(telegrafConfig.getName());
-        Assertions.assertThat(telegrafConfigByID.getOrganizationID()).isEqualTo(telegrafConfig.getOrganizationID());
+        Assertions.assertThat(telegrafConfigByID.getOrgID()).isEqualTo(telegrafConfig.getOrgID());
         Assertions.assertThat(telegrafConfigByID.getDescription()).isEqualTo(telegrafConfig.getDescription());
         Assertions.assertThat(telegrafConfigByID.getAgent().getCollectionInterval()).isEqualTo(1_000);
         Assertions.assertThat(telegrafConfigByID.getPlugins()).hasSize(2);
@@ -387,6 +392,8 @@ class ITTelegrafsApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/14062
     void cloneTelegrafConfig() {
 
         Telegraf source = telegrafsApi
@@ -405,7 +412,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
         Telegraf cloned = telegrafsApi.cloneTelegraf(name, source.getId());
 
         Assertions.assertThat(cloned.getName()).isEqualTo(name);
-        Assertions.assertThat(cloned.getOrganizationID()).isEqualTo(organization.getId());
+        Assertions.assertThat(cloned.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(cloned.getDescription()).isEqualTo(source.getDescription());
         Assertions.assertThat(cloned.getAgent().getCollectionInterval()).isEqualTo(source.getAgent().getCollectionInterval());
         Assertions.assertThat(cloned.getPlugins()).hasSize(2);

@@ -141,7 +141,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         TelegrafRequest telegrafConfig = new TelegrafRequest();
         telegrafConfig.setName(name);
         telegrafConfig.setDescription(description);
-        telegrafConfig.setOrganizationID(orgID);
+        telegrafConfig.setOrgID(orgID);
         telegrafConfig.setAgent(telegrafAgent);
         telegrafConfig.plugins(plugins);
 
@@ -487,7 +487,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         telegrafRequest.setName(telegraf.getName());
         telegrafRequest.setDescription(telegraf.getDescription());
         telegrafRequest.setAgent(telegraf.getAgent());
-        telegrafRequest.setOrganizationID(telegraf.getOrganizationID());
+        telegrafRequest.setOrgID(telegraf.getOrgID());
         if (telegraf.getPlugins() != null) {
             telegraf.getPlugins().forEach(telegrafPlugin -> {
                 TelegrafRequestPlugin<Object, Object> requestPlugin = new TelegrafRequestPlugin<>();

@@ -59,9 +59,9 @@ public class TelegrafRequest {
   @JsonAdapter(TelegrafRequestPluginsAdapter.class)
   private List<TelegrafRequestPlugin> plugins = new ArrayList<>();
 
-  public static final String SERIALIZED_NAME_ORGANIZATION_I_D = "organizationID";
-  @SerializedName(SERIALIZED_NAME_ORGANIZATION_I_D)
-  private String organizationID;
+  public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
+  @SerializedName(SERIALIZED_NAME_ORG_I_D)
+  private String orgID;
 
   public TelegrafRequest name(String name) {
     this.name = name;
@@ -143,22 +143,22 @@ public class TelegrafRequest {
     this.plugins = plugins;
   }
 
-  public TelegrafRequest organizationID(String organizationID) {
-    this.organizationID = organizationID;
+  public TelegrafRequest orgID(String orgID) {
+    this.orgID = orgID;
     return this;
   }
 
    /**
-   * Get organizationID
-   * @return organizationID
+   * Get orgID
+   * @return orgID
   **/
   @ApiModelProperty(value = "")
-  public String getOrganizationID() {
-    return organizationID;
+  public String getOrgID() {
+    return orgID;
   }
 
-  public void setOrganizationID(String organizationID) {
-    this.organizationID = organizationID;
+  public void setOrgID(String orgID) {
+    this.orgID = orgID;
   }
 
 
@@ -175,12 +175,12 @@ public class TelegrafRequest {
         Objects.equals(this.description, telegrafRequest.description) &&
         Objects.equals(this.agent, telegrafRequest.agent) &&
         Objects.equals(this.plugins, telegrafRequest.plugins) &&
-        Objects.equals(this.organizationID, telegrafRequest.organizationID);
+        Objects.equals(this.orgID, telegrafRequest.orgID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, description, agent, plugins, organizationID);
+    return Objects.hash(name, description, agent, plugins, orgID);
   }
 
 
@@ -192,7 +192,7 @@ public class TelegrafRequest {
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    agent: ").append(toIndentedString(agent)).append("\n");
     sb.append("    plugins: ").append(toIndentedString(plugins)).append("\n");
-    sb.append("    organizationID: ").append(toIndentedString(organizationID)).append("\n");
+    sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
     sb.append("}");
     return sb.toString();
   }
