@@ -42,6 +42,7 @@ import org.influxdata.client.domain.PermissionResource;
 import org.influxdata.client.domain.ResourceMember;
 import org.influxdata.client.domain.ResourceOwner;
 import org.influxdata.client.domain.Run;
+import org.influxdata.client.domain.RunLog;
 import org.influxdata.client.domain.RunManually;
 import org.influxdata.client.domain.Task;
 import org.influxdata.client.domain.User;
@@ -472,10 +473,12 @@ class ITTasksApi extends AbstractITClientTest {
 
         Run firstRun = runs.get(0);
 
-        List<LogEvent> logs = firstRun.getLog();
+        List<RunLog> logs = firstRun.getLog();
         Assertions.assertThat(logs).isNotEmpty();
         Assertions.assertThat(logs.get(0).getMessage()).startsWith("Started task from script");
+        Assertions.assertThat(logs.get(0).getRunID()).isEqualTo(firstRun.getId());
         Assertions.assertThat(logs.get(2).getMessage()).startsWith("Completed successfully");
+        Assertions.assertThat(logs.get(2).getRunID()).isEqualTo(firstRun.getId());
 
         Run runById = tasksApi.getRun(firstRun);
 

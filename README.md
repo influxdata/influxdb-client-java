@@ -122,7 +122,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "org.influxdata:influxdb-client-java:1.0.0-SNAPSHOT"
+    compile "org.influxdata:influxdb-client-java:1.0-SNAPSHOT"
 }
 ```
 
@@ -237,7 +237,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "org.influxdata:influxdb-client-java:1.0.0-SNAPSHOT"
+    compile "org.influxdata:influxdb-client-java:1.0-SNAPSHOT"
 }
 ```
 
@@ -323,7 +323,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "org.influxdata:influxdb-client-flux:1.0.0-SNAPSHOT"
+    compile "org.influxdata:influxdb-client-flux:1.0-SNAPSHOT"
 }
 ``` 
 

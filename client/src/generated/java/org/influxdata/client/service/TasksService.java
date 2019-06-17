@@ -165,7 +165,7 @@ public interface TasksService {
    * @param taskID ID of task to get runs for (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param after returns runs after specified ID (optional)
-   * @param limit the number of runs to return (optional, default to 20)
+   * @param limit the number of runs to return (optional, default to 100)
    * @param afterTime filter runs to those scheduled after this time, RFC3339 (optional)
    * @param beforeTime filter runs to those scheduled before this time, RFC3339 (optional)
    * @return Call&lt;Runs&gt;

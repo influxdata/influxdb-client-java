@@ -26,8 +26,8 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.influxdata.client.domain.LogEvent;
 import org.influxdata.client.domain.RunLinks;
+import org.influxdata.client.domain.RunLog;
 
 /**
  * Run
@@ -105,7 +105,7 @@ public class Run {
 
   public static final String SERIALIZED_NAME_LOG = "log";
   @SerializedName(SERIALIZED_NAME_LOG)
-  private List<LogEvent> log = new ArrayList<>();
+  private List<RunLog> log = new ArrayList<>();
 
   public static final String SERIALIZED_NAME_STARTED_AT = "startedAt";
   @SerializedName(SERIALIZED_NAME_STARTED_AT)
@@ -173,7 +173,7 @@ public class Run {
    * @return log
   **/
   @ApiModelProperty(value = "An array of logs associated with the run.")
-  public List<LogEvent> getLog() {
+  public List<RunLog> getLog() {
     return log;
   }
 
