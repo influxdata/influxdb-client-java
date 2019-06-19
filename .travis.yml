@@ -66,10 +66,10 @@ jobs:
       skip_cleanup: true
 
   - stage: GitHub release
-#    if: tag IS present AND repo = bonitoo-io/influxdb-client-java AND type IN (push)
+    if: tag IS present AND repo = bonitoo-io/influxdb-client-java AND type IN (push)
     jdk: oraclejdk8
     script:
-      - echo "GitHub release"
+      - echo "GitHub Release"
       - OWNER="$(echo "$TRAVIS_REPO_SLUG" | cut -f1 -d/)"
       - REPO="$(echo "$TRAVIS_REPO_SLUG" | cut -f2 -d/)"
       - mvn -B -U -DskipTests clean package
@@ -90,8 +90,7 @@ jobs:
       - export PATH="$HOME/bin:$PATH"
       - tar xvzf ./ghr.tar.gz --strip 1 -C "$HOME/bin"
       - rm ./ghr.tar.gz
-      - ghr -help
-#      - ghr -t "$GITHUB_TOKEN" -u "$OWNER" -r "$REPO" --replace "$TRAVIS_TAG" release/
+      - ghr -t "$GITHUB_TOKEN" -u "$OWNER" -r "$REPO" --replace "$TRAVIS_TAG" release/
 
 after_failure:
   - cat target/surefire-reports/*.txt
