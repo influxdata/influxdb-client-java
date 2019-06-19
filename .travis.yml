@@ -88,7 +88,7 @@ jobs:
       - curl -L https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_386.tar.gz > ghr.tar.gz
       - mkdir -p "$HOME/bin"
       - export PATH="$HOME/bin:$PATH"
-      - tar xvzf ./ghr.tar.gz -C "$PWD/bin"
+      - tar xvzf ./ghr.tar.gz --strip 1 -C "$HOME/bin"
       - rm ./ghr.tar.gz
       - ghr -help
 #      - ghr -t "$GITHUB_TOKEN" -u "$OWNER" -r "$REPO" --replace "$TRAVIS_TAG" release/
