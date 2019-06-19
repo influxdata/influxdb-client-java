@@ -97,17 +97,17 @@ dependencies {
 }
 ```
 
-### Snapshot repository
-The snapshot repository is temporally located [here](https://apitea.com/nexus/content/repositories/bonitoo-snapshot/).
+### Repository
+The repository is temporally located [here](https://apitea.com/nexus/content/repositories/bonitoo-snapshot/).
 
 #### Maven
 ```xml
 <repository>
     <id>bonitoo-snapshot</id>
-    <name>Bonitoo.io snapshot repository</name>
+    <name>Bonitoo.io repository</name>
     <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
     <releases>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </releases>
     <snapshots>
         <enabled>true</enabled>

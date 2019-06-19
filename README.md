@@ -72,18 +72,18 @@ Flux flux = Flux
 
 ## How To Use  
 
-This clients are a work in progress and hosted in Bonitoo.io Snapshot Repository. 
+This clients are a work in progress and hosted in Bonitoo.io Repository. 
 
-If you want to use it with the Maven, you have to add the Bonitoo.io Snapshot Repository to your pom.xml:
+If you want to use it with the Maven, you have to add the Bonitoo.io Repository to your pom.xml:
 
 ```xml
 <repositories>
     <repository>
-        <id>bonitoo-snapshot</id>
-        <name>Bonitoo.io snapshot repository</name>
+        <id>bonitoo-repository</id>
+        <name>Bonitoo.io repository</name>
         <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
         <releases>
-            <enabled>false</enabled>
+            <enabled>true</enabled>
         </releases>
         <snapshots>
             <enabled>true</enabled>
