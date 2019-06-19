@@ -85,11 +85,12 @@ jobs:
       - cp ./spring/target/*.jar release/
       - cp ./flux-dsl/target/*.jar release/
       - echo "Installing ghr"
-      - curl -L https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_386.tar.gz > ghr.zip
+      - curl -L https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_386.tar.gz > ghr.tar.gz
       - mkdir -p "$HOME/bin"
       - export PATH="$HOME/bin:$PATH"
-      - unzip ghr.zip -d "$HOME/bin"
-      - rm ghr.zip
+      - tar xvzf ./ghr.tar.gz -C "$PWD/bin"
+      - rm ./ghr.tar.gz
+      - ghr -help
 #      - ghr -t "$GITHUB_TOKEN" -u "$OWNER" -r "$REPO" --replace "$TRAVIS_TAG" release/
 
 after_failure:
