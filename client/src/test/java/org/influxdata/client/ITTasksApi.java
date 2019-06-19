@@ -802,7 +802,9 @@ class ITTasksApi extends AbstractITClientTest {
         Assertions.assertThat(message).isNotEmpty();
         return throwable -> {
 
-            Assertions.assertThat(((InfluxException) throwable).errorBody().getString("error")).isEqualTo(message);
+            Assertions.assertThat(((InfluxException) throwable).errorBody()
+                    .getJSONObject("error")
+                    .getString("message")).isEqualTo(message);
 
             return true;
         };

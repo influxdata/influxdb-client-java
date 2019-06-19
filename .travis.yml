@@ -65,5 +65,32 @@ jobs:
       script: mvn clean deploy -DskipTests -s scripts/deploy-settings.xml
       skip_cleanup: true
 
+  - stage: GitHub release
+#    if: tag IS present AND repo = bonitoo-io/influxdb-client-java AND type IN (push)
+    jdk: oraclejdk8
+    script:
+      - echo "GitHub release"
+      - OWNER="$(echo "$TRAVIS_REPO_SLUG" | cut -f1 -d/)"
+      - REPO="$(echo "$TRAVIS_REPO_SLUG" | cut -f2 -d/)"
+      - mvn -B -U -DskipTests clean package
+      - mkdir release
+      - cp ./pom.xml release/
+      - cp ./client-core/target/*.jar release/
+      - cp ./client-test/target/*.jar release/
+      - cp ./client-reactive/target/*.jar release/
+      - cp ./client-scala/target/*.jar release/
+      - cp ./client-legacy/target/*.jar release/
+      - cp ./client-kotlin/target/*.jar release/
+      - cp ./client/target/*.jar release/
+      - cp ./spring/target/*.jar release/
+      - cp ./flux-dsl/target/*.jar release/
+      - echo "Installing ghr"
+      - curl -L https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_386.tar.gz > ghr.zip
+      - mkdir -p "$HOME/bin"
+      - export PATH="$HOME/bin:$PATH"
+      - unzip ghr.zip -d "$HOME/bin"
+      - rm ghr.zip
+#      - ghr -t "$GITHUB_TOKEN" -u "$OWNER" -r "$REPO" --replace "$TRAVIS_TAG" release/
+
 after_failure:
   - cat target/surefire-reports/*.txt
