@@ -36,7 +36,7 @@ import org.influxdata.client.write.events.WriteRetriableErrorEvent;
 import org.influxdata.client.write.events.WriteSuccessEvent;
 
 /**
- * Write time-series data intoInfluxDB 2.02.0.
+ * Write time-series data into InfluxDB 2.0.
  * <p>
  * The data are formatted in <a href="https://bit.ly/2QL99fu">Line Protocol</a>.
  * <p>

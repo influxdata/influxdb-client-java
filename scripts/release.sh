@@ -79,7 +79,8 @@ git commit -am "release influxdb-client-${releaseVersion}"
 echo
 prompt_confirm "Do you want push release ${releaseVersion}?" || exit 0
 
-git push origin master
+git tag -a ${releaseVersion} -m "Created tag for release: ${releaseVersion}"
+git push origin ${releaseVersion}
 
 #
 # Update POM version
