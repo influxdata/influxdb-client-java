@@ -27,7 +27,7 @@ import org.influxdata.Arguments;
 import org.influxdata.client.flux.internal.FluxApiImpl;
 
 /**
- * The Factory that creates a instance of a Flux client.
+ * The Factory that creates an instance of a Flux client.
  *
  * @author Jakub Bednar (bednar@github) (31/07/2018 13:11)
  */
@@ -37,7 +37,7 @@ public final class FluxClientFactory {
     }
 
     /**
-     * Create a instance of the Flux client.
+     * Create an instance of the Flux client.
      *
      * @param connectionString the connectionString to connect to InfluxDB.
      * @return client
@@ -54,7 +54,7 @@ public final class FluxClientFactory {
     }
 
     /**
-     * Create a instance of the Flux client.
+     * Create an instance of the Flux client.
      *
      * @param options the connection configuration
      * @return client

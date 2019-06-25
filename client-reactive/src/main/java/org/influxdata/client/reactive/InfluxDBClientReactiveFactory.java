@@ -28,7 +28,7 @@ import org.influxdata.client.InfluxDBClientOptions;
 import org.influxdata.client.reactive.internal.InfluxDBClientReactiveImpl;
 
 /**
- * The Factory that create a instance of a InfluxDB reactive client.
+ * The Factory that create an instance of a InfluxDB reactive client.
  *
  * @author Jakub Bednar (bednar@github) (20/11/2018 07:09)
  */
@@ -38,24 +38,41 @@ public final class InfluxDBClientReactiveFactory {
     }
 
     /**
-     * Create a instance of the InfluxDB 2.0 reactive client.
+     * Create an instance of the InfluxDB 2.0 client that is configured via {@code influx2.properties}.
+     * The {@code influx2.properties} has to be located on classpath.
      *
-     * @param url the url to connect to the InfluxDB
      * @return client
-     * @see InfluxDBClientOptions.Builder#url(String)
      */
     @Nonnull
-    public static InfluxDBClientReactive create(@Nonnull final String url) {
+    public static InfluxDBClientReactive create() {
 
         InfluxDBClientOptions options = InfluxDBClientOptions.builder()
-                .url(url)
+                .loadProperties()
                 .build();
 
         return create(options);
     }
 
     /**
-     * Create a instance of the InfluxDB 2.0 reactive client.
+     * Create an instance of the InfluxDB 2.0 client. The url could be a connection string with various configurations.
+     *
+     * e.g.: "http://localhost:8086?readTimeout=5000&amp;connectTimeout=5000&amp;logLevel=BASIC
+     *
+     * @param connectionString connection string with various configurations.
+     * @return client
+     */
+    @Nonnull
+    public static InfluxDBClientReactive create(@Nonnull final String connectionString) {
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url(connectionString)
+                .build();
+
+        return create(options);
+    }
+
+    /**
+     * Create an instance of the InfluxDB 2.0 reactive client.
      *
      * @param url      the url to connect to the InfluxDB
      * @param username the username to use in the basic auth
@@ -77,7 +94,7 @@ public final class InfluxDBClientReactiveFactory {
     }
 
     /**
-     * Create a instance of the InfluxDB 2.0 reactive client.
+     * Create an instance of the InfluxDB 2.0 reactive client.
      *
      * @param url   the url to connect to the InfluxDB
      * @param token the token to use for the authorization
@@ -96,7 +113,7 @@ public final class InfluxDBClientReactiveFactory {
     }
 
     /**
-     * Create a instance of the InfluxDB 2.0 reactive client.
+     * Create an instance of the InfluxDB 2.0 reactive client.
      *
      * @param options the connection configuration
      * @return client

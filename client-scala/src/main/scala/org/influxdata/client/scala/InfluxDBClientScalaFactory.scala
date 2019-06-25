@@ -28,30 +28,47 @@ import org.influxdata.client.InfluxDBClientOptions
 import org.influxdata.client.scala.internal.InfluxDBClientScalaImpl
 
 /**
- * The Factory that creates a instance of a Flux client.
+ * The Factory that creates an instance of a Flux client.
  * 
  * @author Jakub Bednar (bednar@github) (05/11/2018 10:10)
  */
 object InfluxDBClientScalaFactory {
 
+
   /**
-   * Create a instance of the InfluxDB 2.0 reactive client.
+   * Create an instance of the InfluxDB 2.0 client that is configured via `influx2.properties`.
+   * The `influx2.properties` has to be located on classpath.
    *
-   * @param url the url to connect to the InfluxDB
    * @return client
-   * @see [[InfluxDBClientOptions.Builder]]
    */
-  @Nonnull def create(url: String): InfluxDBClientScala = {
+  @Nonnull def create(): InfluxDBClientScala = {
 
     val options = InfluxDBClientOptions.builder()
-      .url(url)
+      .loadProperties()
       .build()
 
     create(options)
   }
 
   /**
-   * Create a instance of the InfluxDB 2.0 reactive client.
+   * Create an instance of the InfluxDB 2.0 client. The url could be a connection string with various configurations.
+   *
+   * e.g.: "http://localhost:8086?readTimeout=5000&amp;connectTimeout=5000&amp;logLevel=BASIC
+   *
+   * @param connectionString connection string with various configurations.
+   * @return client
+   */
+  @Nonnull def create(connectionString: String): InfluxDBClientScala = {
+
+    val options = InfluxDBClientOptions.builder()
+      .url(connectionString)
+      .build()
+
+    create(options)
+  }
+
+  /**
+   * Create an instance of the InfluxDB 2.0 reactive client.
    *
    * @param url      the url to connect to the InfluxDB
    * @param username the username to use in the basic auth
@@ -70,7 +87,7 @@ object InfluxDBClientScalaFactory {
   }
 
   /**
-   * Create a instance of the InfluxDB 2.0 reactive client.
+   * Create an instance of the InfluxDB 2.0 reactive client.
    *
    * @param url   the url to connect to the InfluxDB
    * @param token the token to use for the authorization
@@ -88,7 +105,7 @@ object InfluxDBClientScalaFactory {
   }
 
   /**
-   * Create a instance of the InfluxDB 2.0 reactive client.
+   * Create an instance of the InfluxDB 2.0 reactive client.
    *
    * @param options          the connection configuration
    * @param bufferSize       size of a buffer for incoming responses. Default 10000.

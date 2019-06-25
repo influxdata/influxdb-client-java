@@ -21,24 +21,16 @@
  */
 package org.influxdata.client.scala
 
-import org.scalatest.{BeforeAndAfter, FunSuite}
+import org.influxdata.test.AbstractTest
 
 /**
- * @author Jakub Bednar (bednar@github) (06/11/2018 09:34)
+ * @author Jakub Bednar (bednar@github) (25/06/2019 11:22)
  */
-abstract class AbstractITQueryScalaApi extends FunSuite with BeforeAndAfter {
+class InfluxDBUtils extends AbstractTest {
 
-  var influxDBUtils: InfluxDBUtils = _
+  def getUrl: String = super.getInfluxDb2Url
 
-  var influxDBClient: InfluxDBClientScala = _
+  override def generateName(prefix: String): String = super.generateName(prefix)
 
-  def setUp() {
-    influxDBUtils = new InfluxDBUtils {}
-
-    influxDBClient = InfluxDBClientScalaFactory.create(influxDBUtils.getUrl)
-  }
-
-  after {
-    influxDBClient.close()
-  }
+  override def getDeclaredField[V](obj: Any, field: String, `type`: Class[_]): V = super.getDeclaredField(obj, field, `type`)
 }

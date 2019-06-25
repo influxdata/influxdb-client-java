@@ -21,7 +21,12 @@
  */
 package org.influxdata.client.scala
 
+import okhttp3.OkHttpClient
+import org.influxdata.LogLevel
+import org.influxdata.client.InfluxDBClientOptions
+import org.influxdata.client.internal.AbstractInfluxDBClient
 import org.scalatest.{FunSuite, Matchers}
+import retrofit2.Retrofit
 
 /**
  * @author Jakub Bednar (bednar@github) (05/11/2018 09:22)
@@ -33,5 +38,27 @@ class InfluxDBClientScalaFactoryTest extends FunSuite with Matchers {
     val client = InfluxDBClientScalaFactory.create("http://localhost:8093")
 
     client should not be null
+  }
+
+  test("loadFromProperties") {
+
+    val utils = new InfluxDBUtils {}
+
+    val client = InfluxDBClientScalaFactory.create()
+    val options = utils.getDeclaredField(client, "options", classOf[AbstractInfluxDBClient]).asInstanceOf[InfluxDBClientOptions]
+
+    options.getUrl should be("http://localhost:9999")
+    options.getOrg should be("my-org")
+    options.getBucket should be("my-bucket")
+    options.getToken should be("my-token".toCharArray)
+    options.getLogLevel should be(LogLevel.BODY)
+    client.getLogLevel should be(LogLevel.BODY)
+
+    val retrofit = utils.getDeclaredField(client, "retrofit", classOf[AbstractInfluxDBClient]).asInstanceOf[Retrofit]
+    val okHttpClient = retrofit.callFactory.asInstanceOf[OkHttpClient]
+
+    okHttpClient.readTimeoutMillis should be(5000)
+    okHttpClient.writeTimeoutMillis should be(10000)
+    okHttpClient.connectTimeoutMillis should be(18000)
   }
 }

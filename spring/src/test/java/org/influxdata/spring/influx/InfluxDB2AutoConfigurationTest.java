@@ -83,11 +83,21 @@ class InfluxDB2AutoConfigurationTest {
     public void influxDBClientWithOkHttpClientBuilderProvider() {
         this.contextRunner
                 .withUserConfiguration(CustomOkHttpClientBuilderProviderConfig.class)
-                .withPropertyValues("spring.influx2.url=http://localhost:8086//", "spring.influx2.token:token")
+                .withPropertyValues("spring.influx2.url=http://localhost:8086/", "spring.influx2.token:token")
                 .run((context) -> {
                     Assertions.assertThat(context.getBeansOfType(InfluxDBClient.class)).hasSize(1);
                     int readTimeout = getReadTimeoutProperty(context);
                     Assertions.assertThat(readTimeout).isEqualTo(40_000);
+                });
+    }
+
+    @Test
+    public void influxDBClientWithReadTimeout() {
+        this.contextRunner.withPropertyValues("spring.influx2.url=http://localhost:8086/", "spring.influx2.readTimeout=13s")
+                .run((context) -> {
+                    Assertions.assertThat(context.getBeansOfType(InfluxDBClient.class)).hasSize(1);
+                    int readTimeout = getReadTimeoutProperty(context);
+                    Assertions.assertThat(readTimeout).isEqualTo(13_000);
                 });
     }
 

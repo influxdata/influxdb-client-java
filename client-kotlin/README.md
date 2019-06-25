@@ -85,23 +85,66 @@ fun main(args: Array<String>) = runBlocking {
 
 ## Advanced Usage
 
+### Client configuration file
+
+A client can be configured via configuration file. The configuration file has to be named as `influx2.properties` and has to be in root of classpath.
+
+The following options are supported:
+
+| Property name             | default   | description |
+| --------------------------|-----------|-------------| 
+| influx2.url               | -         | the url to connect to InfluxDB |
+| influx2.org               | -         | default destination organization for writes and queries |
+| influx2.bucket            | -         | default destination bucket for writes |
+| influx2.token             | -         | the token to use for the authorization |
+| influx2.logLevel          | NONE      | rest client verbosity level |
+| influx2.readTimeout       | 10000 ms  | read timeout |
+| influx2.writeTimeout      | 10000 ms  | write timeout |
+| influx2.connectTimeout    | 10000 ms  | socket timeout |
+
+The `influx2.readTimeout`, `influx2.writeTimeout` and `influx2.connectTimeout` supports `ms`, `s` and `m` as unit. Default is milliseconds.
+
+
+##### Configuration example
+
+```properties
+influx2.url=http://localhost:9999
+influx2.org=my-org
+influx2.bucket=my-bucket
+influx2.token=my-token
+influx2.logLevel=BODY
+influx2.readTimeout=5s
+influx2.writeTimeout=10s
+influx2.connectTimeout=5s
+```
+
+and then:
+
+```kotlin
+val influxDBClient = InfluxDBClientKotlinFactory.create();
+```
+
 ### Client connection string
 
 A client can be constructed using a connection string that can contain the InfluxDBClientOptions parameters encoded into the URL.  
  
-```java
+```kotlin
 val influxDBClient = InfluxDBClientKotlinFactory
             .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
 ```
 The following options are supported:
 
-| Property name | default | description |
-| --------------|-------------|-------------| 
-| readTimeout       | 10000 ms| read timeout |
-| writeTimeout      | 10000 ms| write timeout |
-| connectTimeout    | 10000 ms| socket timeout |
-| logLevel          | NONE | rest client verbosity level |
+| Property name     | default   | description |
+| ------------------|-----------|-------------| 
+| org               | -         | default destination organization for writes and queries |
+| bucket            | -         | default destination bucket for writes |
+| token             | -         | the token to use for the authorization |
+| logLevel          | NONE      | rest client verbosity level |
+| readTimeout       | 10000 ms  | read timeout |
+| writeTimeout      | 10000 ms  | write timeout |
+| connectTimeout    | 10000 ms  | socket timeout |
 
+The `readTimeout`, `writeTimeout` and `connectTimeout` supports `ms`, `s` and `m` as unit. Default is milliseconds.
 
 ### Gzip support
 `InfluxDBClientKotlin` does not enable gzip compress for http request body by default. If you want to enable gzip to reduce transfer data's size, you can call:

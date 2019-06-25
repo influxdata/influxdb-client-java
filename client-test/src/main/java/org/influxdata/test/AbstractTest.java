@@ -21,6 +21,7 @@
  */
 package org.influxdata.test;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -167,5 +168,15 @@ public abstract class AbstractTest {
         } catch (Exception e) {
             Assertions.fail("Unexpected exception", e);
         }
+    }
+
+    protected <V> V getDeclaredField(final Object obj, final String field, final Class type)
+            throws IllegalAccessException, NoSuchFieldException {
+
+        Field declaredField = type.getDeclaredField(field);
+        declaredField.setAccessible(true);
+
+        //noinspection unchecked
+        return (V) declaredField.get(obj);
     }
 }

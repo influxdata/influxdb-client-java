@@ -21,22 +21,52 @@
  */
 package org.influxdata.client.kotlin
 
+import okhttp3.OkHttpClient
+import org.assertj.core.api.Assertions
 import org.assertj.core.api.AssertionsForClassTypes
+import org.influxdata.LogLevel
+import org.influxdata.client.InfluxDBClientOptions
+import org.influxdata.client.internal.AbstractInfluxDBClient
+import org.influxdata.test.AbstractTest
 import org.junit.jupiter.api.Test
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
+import retrofit2.Retrofit
 
 /**
  * @author Jakub Bednar (bednar@github) (30/10/2018 08:32)
  */
 @RunWith(JUnitPlatform::class)
-class InfluxDBClientKotlinFactoryTest {
+class InfluxDBClientKotlinFactoryTest: AbstractTest() {
 
     @Test
     fun connect()
     {
-        val client = InfluxDBClientKotlinFactory.create("http://localhost:8093")
+        val client = InfluxDBClientKotlinFactory.create("http://localhost:9999")
 
         AssertionsForClassTypes.assertThat<InfluxDBClientKotlin>(client).isNotNull
+    }
+
+    @Test
+    @Throws(NoSuchFieldException::class, IllegalAccessException::class)
+    fun loadFromProperties() {
+
+        val influxDBClient = InfluxDBClientKotlinFactory.create()
+
+        val options = getDeclaredField<InfluxDBClientOptions>(influxDBClient, "options", AbstractInfluxDBClient::class.java)
+
+        Assertions.assertThat(options.url).isEqualTo("http://localhost:9999")
+        Assertions.assertThat(options.org).isEqualTo("my-org")
+        Assertions.assertThat(options.bucket).isEqualTo("my-bucket")
+        Assertions.assertThat(options.token).isEqualTo("my-token".toCharArray())
+        AssertionsForClassTypes.assertThat<LogLevel>(options.logLevel).isEqualTo(LogLevel.BASIC)
+        AssertionsForClassTypes.assertThat<LogLevel>(influxDBClient.getLogLevel()).isEqualTo(LogLevel.BASIC)
+
+        val retrofit = getDeclaredField<Retrofit>(influxDBClient, "retrofit", AbstractInfluxDBClient::class.java)
+        val okHttpClient = retrofit.callFactory() as OkHttpClient
+
+        Assertions.assertThat(okHttpClient.readTimeoutMillis()).isEqualTo(5000)
+        Assertions.assertThat(okHttpClient.writeTimeoutMillis()).isEqualTo(60000)
+        Assertions.assertThat(okHttpClient.connectTimeoutMillis()).isEqualTo(5000)
     }
 }

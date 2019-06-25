@@ -21,16 +21,23 @@
  */
 package org.influxdata.client;
 
+import org.influxdata.LogLevel;
+import org.influxdata.client.internal.AbstractInfluxDBClient;
+import org.influxdata.exceptions.InfluxException;
+import org.influxdata.test.AbstractTest;
+
+import okhttp3.OkHttpClient;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import retrofit2.Retrofit;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 10:59)
  */
 @RunWith(JUnitPlatform.class)
-class InfluxDBClientFactoryTest {
+class InfluxDBClientFactoryTest extends AbstractTest {
 
     @Test
     void createInstance() {
@@ -54,5 +61,91 @@ class InfluxDBClientFactoryTest {
         InfluxDBClient client = InfluxDBClientFactory.create("http://localhost:9999", "xyz".toCharArray());
 
         Assertions.assertThat(client).isNotNull();
+    }
+
+    @Test
+    void loadFromConnectionString() throws NoSuchFieldException, IllegalAccessException {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999?" +
+                "readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS&token=my-token&bucket=my-bucket&org=my-org");
+
+        InfluxDBClientOptions options = getDeclaredField(influxDBClient, "options", AbstractInfluxDBClient.class);
+
+        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:9999/");
+        Assertions.assertThat(options.getOrg()).isEqualTo("my-org");
+        Assertions.assertThat(options.getBucket()).isEqualTo("my-bucket");
+        Assertions.assertThat(options.getToken()).isEqualTo("my-token".toCharArray());
+        Assertions.assertThat(options.getLogLevel()).isEqualTo(LogLevel.HEADERS);
+        Assertions.assertThat(influxDBClient.getLogLevel()).isEqualTo(LogLevel.HEADERS);
+
+        Retrofit retrofit = getDeclaredField(influxDBClient, "retrofit", AbstractInfluxDBClient.class);
+        OkHttpClient okHttpClient = (OkHttpClient) retrofit.callFactory();
+
+        Assertions.assertThat(okHttpClient.readTimeoutMillis()).isEqualTo(1_000);
+        Assertions.assertThat(okHttpClient.writeTimeoutMillis()).isEqualTo(3_000);
+        Assertions.assertThat(okHttpClient.connectTimeoutMillis()).isEqualTo(2_000);
+    }
+
+    @Test
+    void loadFromConnectionStringUnits() throws NoSuchFieldException, IllegalAccessException {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999?" +
+                "readTimeout=1ms&writeTimeout=3s&connectTimeout=2m&logLevel=HEADERS&token=my-token&bucket=my-bucket&org=my-org");
+
+        InfluxDBClientOptions options = getDeclaredField(influxDBClient, "options", AbstractInfluxDBClient.class);
+
+        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:9999/");
+        Assertions.assertThat(options.getOrg()).isEqualTo("my-org");
+        Assertions.assertThat(options.getBucket()).isEqualTo("my-bucket");
+        Assertions.assertThat(options.getToken()).isEqualTo("my-token".toCharArray());
+        Assertions.assertThat(options.getLogLevel()).isEqualTo(LogLevel.HEADERS);
+        Assertions.assertThat(influxDBClient.getLogLevel()).isEqualTo(LogLevel.HEADERS);
+
+        Retrofit retrofit = getDeclaredField(influxDBClient, "retrofit", AbstractInfluxDBClient.class);
+        OkHttpClient okHttpClient = (OkHttpClient) retrofit.callFactory();
+
+        Assertions.assertThat(okHttpClient.readTimeoutMillis()).isEqualTo(1);
+        Assertions.assertThat(okHttpClient.writeTimeoutMillis()).isEqualTo(3_000);
+        Assertions.assertThat(okHttpClient.connectTimeoutMillis()).isEqualTo(120_000);
+    }
+
+    @Test
+    void loadFromConnectionNotValidDuration() {
+
+        Assertions.assertThatThrownBy(() -> InfluxDBClientFactory.create("http://localhost:9999?" +
+                "readTimeout=x&writeTimeout=3s&connectTimeout=2m&logLevel=HEADERS&token=my-token&bucket=my-bucket&org=my-org"))
+                .hasMessage("'x' is not a valid duration")
+                .isInstanceOf(InfluxException.class);
+    }
+
+    @Test
+    void loadFromConnectionUnknownUnit() {
+
+        Assertions.assertThatThrownBy(() -> InfluxDBClientFactory.create("http://localhost:9999?" +
+                "readTimeout=1y&writeTimeout=3s&connectTimeout=2m&logLevel=HEADERS&token=my-token&bucket=my-bucket&org=my-org"))
+                .hasMessage("unknown unit for '1y'")
+                .isInstanceOf(InfluxException.class);
+    }
+
+    @Test
+    void loadFromProperties() throws NoSuchFieldException, IllegalAccessException {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create();
+
+        InfluxDBClientOptions options = getDeclaredField(influxDBClient, "options", AbstractInfluxDBClient.class);
+
+        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:9999");
+        Assertions.assertThat(options.getOrg()).isEqualTo("my-org");
+        Assertions.assertThat(options.getBucket()).isEqualTo("my-bucket");
+        Assertions.assertThat(options.getToken()).isEqualTo("my-token".toCharArray());
+        Assertions.assertThat(options.getLogLevel()).isEqualTo(LogLevel.BODY);
+        Assertions.assertThat(influxDBClient.getLogLevel()).isEqualTo(LogLevel.BODY);
+
+        Retrofit retrofit = getDeclaredField(influxDBClient, "retrofit", AbstractInfluxDBClient.class);
+        OkHttpClient okHttpClient = (OkHttpClient) retrofit.callFactory();
+
+        Assertions.assertThat(okHttpClient.readTimeoutMillis()).isEqualTo(5_000);
+        Assertions.assertThat(okHttpClient.writeTimeoutMillis()).isEqualTo(10_000);
+        Assertions.assertThat(okHttpClient.connectTimeoutMillis()).isEqualTo(5_000);
     }
 }

@@ -21,16 +21,23 @@
  */
 package org.influxdata.client.reactive;
 
+import org.influxdata.LogLevel;
+import org.influxdata.client.InfluxDBClientOptions;
+import org.influxdata.client.internal.AbstractInfluxDBClient;
+import org.influxdata.test.AbstractTest;
+
+import okhttp3.OkHttpClient;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import retrofit2.Retrofit;
 
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 07:21)
  */
 @RunWith(JUnitPlatform.class)
-class InfluxDBClientReactiveFactoryTest {
+class InfluxDBClientReactiveFactoryTest extends AbstractTest {
 
     @Test
     void createInstance() {
@@ -54,5 +61,27 @@ class InfluxDBClientReactiveFactoryTest {
         InfluxDBClientReactive client = InfluxDBClientReactiveFactory.create("http://localhost:9999", "xyz".toCharArray());
 
         Assertions.assertThat(client).isNotNull();
+    }
+
+    @Test
+    void loadFromProperties() throws NoSuchFieldException, IllegalAccessException {
+
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create();
+
+        InfluxDBClientOptions options = getDeclaredField(influxDBClient, "options", AbstractInfluxDBClient.class);
+
+        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:9999");
+        Assertions.assertThat(options.getOrg()).isEqualTo("my-org");
+        Assertions.assertThat(options.getBucket()).isEqualTo("my-bucket");
+        Assertions.assertThat(options.getToken()).isEqualTo("my-token".toCharArray());
+        Assertions.assertThat(options.getLogLevel()).isEqualTo(LogLevel.BODY);
+        Assertions.assertThat(influxDBClient.getLogLevel()).isEqualTo(LogLevel.BODY);
+
+        Retrofit retrofit = getDeclaredField(influxDBClient, "retrofit", AbstractInfluxDBClient.class);
+        OkHttpClient okHttpClient = (OkHttpClient) retrofit.callFactory();
+
+        Assertions.assertThat(okHttpClient.readTimeoutMillis()).isEqualTo(5_000);
+        Assertions.assertThat(okHttpClient.writeTimeoutMillis()).isEqualTo(10_000);
+        Assertions.assertThat(okHttpClient.connectTimeoutMillis()).isEqualTo(5_000);
     }
 }
