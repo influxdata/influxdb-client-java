@@ -71,7 +71,7 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
 
         this.options = options;
         this.loggingInterceptor = new HttpLoggingInterceptor();
-        this.loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+        setLogLevel(loggingInterceptor, options.getLogLevel());
         this.authenticateInterceptor = new AuthenticateInterceptor(options);
         this.gzipInterceptor = new GzipInterceptor();
 

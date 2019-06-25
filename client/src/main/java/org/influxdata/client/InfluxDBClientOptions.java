@@ -21,12 +21,22 @@
  */
 package org.influxdata.client;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.influxdata.Arguments;
+import org.influxdata.LogLevel;
+import org.influxdata.exceptions.InfluxException;
 
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 
 /**
@@ -38,6 +48,7 @@ public final class InfluxDBClientOptions {
 
     private final String url;
     private final OkHttpClient.Builder okHttpClient;
+    private final LogLevel logLevel;
 
     private AuthScheme authScheme;
     private char[] token;
@@ -53,6 +64,7 @@ public final class InfluxDBClientOptions {
 
         this.url = builder.url;
         this.okHttpClient = builder.okHttpClient;
+        this.logLevel = builder.logLevel;
         this.authScheme = builder.authScheme;
         this.token = builder.token;
         this.username = builder.username;
@@ -85,6 +97,24 @@ public final class InfluxDBClientOptions {
     @Nonnull
     public String getUrl() {
         return url;
+    }
+
+    /**
+     * @return HTTP client to use for communication with InfluxDB
+     * @see InfluxDBClientOptions.Builder#okHttpClient(OkHttpClient.Builder)
+     */
+    @Nonnull
+    public OkHttpClient.Builder getOkHttpClient() {
+        return okHttpClient;
+    }
+
+    /**
+     * @return The log level for the request and response information.
+     * @see InfluxDBClientOptions.Builder#logLevel(LogLevel)
+     */
+    @Nonnull
+    public LogLevel getLogLevel() {
+        return logLevel;
     }
 
     /**
@@ -143,15 +173,6 @@ public final class InfluxDBClientOptions {
     }
 
     /**
-     * @return HTTP client to use for communication with InfluxDB
-     * @see InfluxDBClientOptions.Builder#okHttpClient(OkHttpClient.Builder)
-     */
-    @Nonnull
-    public OkHttpClient.Builder getOkHttpClient() {
-        return okHttpClient;
-    }
-
-    /**
      * Creates a builder instance.
      *
      * @return a builder
@@ -167,8 +188,10 @@ public final class InfluxDBClientOptions {
     @NotThreadSafe
     public static class Builder {
 
+        private static final Pattern DURATION_PATTERN = Pattern.compile("^(\\d+)([a-zA-Z]{0,2})$");
         private String url;
         private OkHttpClient.Builder okHttpClient;
+        private LogLevel logLevel;
 
         private AuthScheme authScheme;
         private char[] token;
@@ -210,11 +233,27 @@ public final class InfluxDBClientOptions {
         }
 
         /**
+         * Set the log level for the request and response information.
+         *
+         * @param logLevel The log level for the request and response information.
+         * @return {@code this}
+         */
+        @Nonnull
+        public InfluxDBClientOptions.Builder logLevel(@Nonnull final LogLevel logLevel) {
+
+            Arguments.checkNotNull(logLevel, "logLevel");
+
+            this.logLevel = logLevel;
+
+            return this;
+        }
+
+        /**
          * Setup authorization by {@link AuthScheme#SESSION}.
          *
          * @param username the username to use in the basic auth
          * @param password the password to use in the basic auth
-         * @return {@link InfluxDBClientOptions}
+         * @return {@code this}
          */
         @Nonnull
         public InfluxDBClientOptions.Builder authenticate(@Nonnull final String username,
@@ -234,7 +273,7 @@ public final class InfluxDBClientOptions {
          * Setup authorization by {@link AuthScheme#TOKEN}.
          *
          * @param token the token to use for the authorization
-         * @return {@link InfluxDBClientOptions}
+         * @return {@code this}
          */
         @Nonnull
         public InfluxDBClientOptions.Builder authenticateToken(final char[] token) {
@@ -251,7 +290,7 @@ public final class InfluxDBClientOptions {
          * Specify the default destination organization for writes and queries.
          *
          * @param org the default destination organization for writes and queries
-         * @return {@link InfluxDBClientOptions}
+         * @return {@code this}
          */
         @Nonnull
         public InfluxDBClientOptions.Builder org(@Nullable final String org) {
@@ -265,7 +304,7 @@ public final class InfluxDBClientOptions {
          * Specify the default destination bucket for writes.
          *
          * @param bucket default destination bucket for writes
-         * @return {@link InfluxDBClientOptions}
+         * @return {@code this}
          */
         @Nonnull
         public InfluxDBClientOptions.Builder bucket(@Nullable final String bucket) {
@@ -273,6 +312,64 @@ public final class InfluxDBClientOptions {
             this.bucket = bucket;
 
             return this;
+        }
+
+        /**
+         * Configure Builder via connection string.
+         *
+         * @return {@code this}
+         */
+        @Nonnull
+        public InfluxDBClientOptions.Builder connectionString(@Nonnull final String connectionString) {
+
+            Arguments.checkNonEmpty(connectionString, "url");
+
+            HttpUrl parse = HttpUrl.parse(connectionString);
+            if (parse == null) {
+                throw new InfluxException("Unable to parse connection string " + connectionString);
+            }
+
+            String url = parse.scheme() + "://" + parse.host() + ":" + parse.port() + parse.encodedPath();
+
+            String org = parse.queryParameter("org");
+            String bucket = parse.queryParameter("bucket");
+            String token = parse.queryParameter("token");
+            String logLevel = parse.queryParameter("logLevel");
+            String readTimeout = parse.queryParameter("readTimeout");
+            String writeTimeout = parse.queryParameter("writeTimeout");
+            String connectTimeout = parse.queryParameter("connectTimeout");
+
+            return configure(url, org, bucket, token, logLevel, readTimeout, writeTimeout, connectTimeout);
+        }
+
+        /**
+         * Configure Builder via {@code influx2.properties}.
+         *
+         * @return {@code this}
+         */
+        @Nonnull
+        public InfluxDBClientOptions.Builder loadProperties() {
+
+
+            try (InputStream inputStream = this.getClass().getResourceAsStream("/influx2.properties")) {
+
+                Properties properties = new Properties();
+                properties.load(inputStream);
+
+                String url = properties.getProperty("influx2.url");
+                String org = properties.getProperty("influx2.org");
+                String bucket = properties.getProperty("influx2.bucket");
+                String token = properties.getProperty("influx2.token");
+                String logLevel = properties.getProperty("influx2.logLevel");
+                String readTimeout = properties.getProperty("influx2.readTimeout");
+                String writeTimeout = properties.getProperty("influx2.writeTimeout");
+                String connectTimeout = properties.getProperty("influx2.connectTimeout");
+
+                return configure(url, org, bucket, token, logLevel, readTimeout, writeTimeout, connectTimeout);
+
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
         }
 
         /**
@@ -291,7 +388,77 @@ public final class InfluxDBClientOptions {
                 okHttpClient = new OkHttpClient.Builder();
             }
 
+            if (logLevel == null) {
+                logLevel = LogLevel.NONE;
+            }
+
             return new InfluxDBClientOptions(this);
+        }
+
+        @Nonnull
+        private InfluxDBClientOptions.Builder configure(@Nonnull final String url,
+                                                        @Nullable final String org,
+                                                        @Nullable final String bucket,
+                                                        @Nullable final String token,
+                                                        @Nullable final String logLevel,
+                                                        @Nullable final String readTimeout,
+                                                        @Nullable final String writeTimeout,
+                                                        @Nullable final String connectTimeout) {
+
+            url(url);
+            org(org);
+            bucket(bucket);
+
+            if (token != null) {
+                authenticateToken(token.toCharArray());
+            }
+
+            if (logLevel != null) {
+                logLevel(Enum.valueOf(LogLevel.class, logLevel));
+            }
+
+            okHttpClient = new OkHttpClient.Builder();
+            if (readTimeout != null) {
+                okHttpClient.readTimeout(toDuration(readTimeout));
+            }
+
+            if (writeTimeout != null) {
+                okHttpClient.writeTimeout(toDuration(writeTimeout));
+            }
+            if (connectTimeout != null) {
+                okHttpClient.connectTimeout(toDuration(connectTimeout));
+            }
+
+            return this;
+        }
+
+        @Nonnull
+        private Duration toDuration(@Nonnull final String value) {
+
+            Matcher matcher = DURATION_PATTERN.matcher(value);
+            if (!matcher.matches()) {
+                throw new InfluxException("'" + value + "' is not a valid duration");
+            }
+
+            String amount = matcher.group(1);
+            String unit = matcher.group(2);
+
+            ChronoUnit chronoUnit;
+            switch (unit != null && !unit.isEmpty() ? unit.toLowerCase() : "ms") {
+                case "ms":
+                    chronoUnit = ChronoUnit.MILLIS;
+                    break;
+                case "s":
+                    chronoUnit = ChronoUnit.SECONDS;
+                    break;
+                case "m":
+                    chronoUnit = ChronoUnit.MINUTES;
+                    break;
+                default:
+                    throw new InfluxException("unknown unit for '" + value + "'");
+            }
+
+            return Duration.of(Long.valueOf(amount), chronoUnit);
         }
     }
 }

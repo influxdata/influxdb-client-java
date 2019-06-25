@@ -1,4 +1,9 @@
-## 1.0-alpha.1 [unreleased]
+## 1.0.0.M2 [unreleased]
+
+### Features
+1. [#34](https://github.com/bonitoo-io/influxdb-client-java/issues/34): Auto-configure client from configuration file
+
+## 1.0.0.M1
 
 ### Features
 1. [client-java](https://github.com/bonitoo-io/influxdb-client-java/tree/master/client#influxdb-client-java): The reference Java client that allows query, write and InfluxDB 2.0 management
