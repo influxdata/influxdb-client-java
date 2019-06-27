@@ -350,7 +350,6 @@ public final class InfluxDBClientOptions {
         @Nonnull
         public InfluxDBClientOptions.Builder loadProperties() {
 
-
             try (InputStream inputStream = this.getClass().getResourceAsStream("/influx2.properties")) {
 
                 Properties properties = new Properties();

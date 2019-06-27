@@ -13,13 +13,17 @@ The reference Java client that allows query, write and management (bucket, organ
 - [Writing data using](#writes)
     - [Line Protocol](#by-lineprotocol) 
     - [Data Point](#by-data-point) 
-    - [POJO](#by-measurement)
+    - [POJO](#by-pojo)
+    - [Default Tags](#default-tags)
 - [InfluxDB 2.0 Management API](#management-api)
     - sources, buckets
     - tasks
     - authorizations
     - health check
 - [Advanced Usage](#advanced-usage)
+    - [Client configuration file](#client-configuration-file)
+    - [Client connection string](#client-connection-string)
+    - [Gzip support](#gzip-support)
          
 ## Queries
 
@@ -507,6 +511,46 @@ public class WriteLineProtocol {
         influxDBClient.close();
     }
 }
+```
+
+#### Default Tags
+
+Sometimes is useful to store same information in every measurement e.g. `hostname`, `location`, `customer`. 
+The client is able to use static value, system property or env property as a tag value.
+
+The expressions:
+- `California Miner` - static value
+- `${version}` -  system property
+- `${env.hostname}` - environment property
+
+##### Via Configuration file
+
+In a [configuration file](#client-configuration-file) you are able to specify default tags by `influx2.measurement` prefix.
+
+```properties
+influx2.measurement.mine-sensor.tags.id = 132-987-655
+influx2.measurement.mine-sensor.tags.customer = California Miner
+influx2.measurement.mine-sensor.tags.hostname = ${env.hostname}
+influx2.measurement.mine-sensor.tags.sensor-version = ${version}
+```
+
+##### Via API
+
+```java
+WriteOptions writeOptions = WriteOptions.builder()
+    .batchSize(10_000)
+    .flushInterval(500)
+    .addDefaultTag("mine-sensor", "id", "132-987-655")
+    .addDefaultTag("mine-sensor", "customer", "California Miner")
+    .addDefaultTag("mine-sensor", "hostname", "${env.hostname}")
+    .addDefaultTag("mine-sensor", "sensor-version", "${version}")
+    .build();
+```
+
+Both of configurations will produce the Line protocol:
+
+```
+mine-sensor,id=132-987-655,customer="California Miner",hostname=example.com,sensor-version=v1.00 altitude=10
 ```
 
 ### Handle the Events
