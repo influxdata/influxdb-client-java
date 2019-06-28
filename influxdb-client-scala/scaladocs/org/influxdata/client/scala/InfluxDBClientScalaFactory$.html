@@ -155,8 +155,8 @@
                         <a href="InfluxDBClientScala.html" title="The reference Scala client that allows query and write for the InfluxDB 2.0 by Akka Streams.">InfluxDBClientScala</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="object" href="" title="The Factory that creates a instance of a Flux client."></a>
-                        <a href="" title="The Factory that creates a instance of a Flux client.">InfluxDBClientScalaFactory</a>
+                        <a class="object" href="" title="The Factory that creates an instance of a Flux client."></a>
+                        <a href="" title="The Factory that creates an instance of a Flux client.">InfluxDBClientScalaFactory</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="trait" href="QueryScalaApi.html" title="The client that allows perform Flux queries against the InfluxDB /api/v2/query endpoint."></a>
@@ -189,7 +189,7 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>The Factory that creates a instance of a Flux client.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>The Factory that creates an instance of a Flux client.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
@@ -350,7 +350,7 @@
         <span class="name">create</span><span class="params">(<span name="options">options: <span class="extype" name="org.influxdata.client.InfluxDBClientOptions">InfluxDBClientOptions</span></span>, <span name="bufferSize">bufferSize: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">10000</span></span>, <span name="overflowStrategy">overflowStrategy: <span class="extype" name="akka.stream.OverflowStrategy">OverflowStrategy</span> = <span class="symbol">OverflowStrategy.backpressure</span></span>)</span><span class="result">: <a href="InfluxDBClientScala.html" class="extype" name="org.influxdata.client.scala.InfluxDBClientScala">InfluxDBClientScala</a></span>
       </span>
       
-      <p class="shortcomment cmt">Create a instance of the InfluxDB 2.0 reactive client.</p><div class="fullcomment"><div class="comment cmt"><p>Create a instance of the InfluxDB 2.0 reactive client.
+      <p class="shortcomment cmt">Create an instance of the InfluxDB 2.0 reactive client.</p><div class="fullcomment"><div class="comment cmt"><p>Create an instance of the InfluxDB 2.0 reactive client.
 </p></div><dl class="paramcmts block"><dt class="param">options</dt><dd class="cmt"><p>the connection configuration</p></dd><dt class="param">bufferSize</dt><dd class="cmt"><p>size of a buffer for incoming responses. Default 10000.</p></dd><dt class="param">overflowStrategy</dt><dd class="cmt"><p>Strategy that is used when incoming response cannot fit inside the buffer.
                         Default <span class="extype" name="akka.stream.OverflowStrategies.Backpressure">akka.stream.OverflowStrategies.Backpressure</span>.</p></dd><dt>returns</dt><dd class="cmt"><p>client</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@Nonnull</span><span class="args">()</span>
@@ -371,7 +371,7 @@
         <span class="name">create</span><span class="params">(<span name="url">url: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="token">token: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Char">Char</span>]</span>)</span><span class="result">: <a href="InfluxDBClientScala.html" class="extype" name="org.influxdata.client.scala.InfluxDBClientScala">InfluxDBClientScala</a></span>
       </span>
       
-      <p class="shortcomment cmt">Create a instance of the InfluxDB 2.0 reactive client.</p><div class="fullcomment"><div class="comment cmt"><p>Create a instance of the InfluxDB 2.0 reactive client.
+      <p class="shortcomment cmt">Create an instance of the InfluxDB 2.0 reactive client.</p><div class="fullcomment"><div class="comment cmt"><p>Create an instance of the InfluxDB 2.0 reactive client.
 </p></div><dl class="paramcmts block"><dt class="param">url</dt><dd class="cmt"><p>the url to connect to the InfluxDB</p></dd><dt class="param">token</dt><dd class="cmt"><p>the token to use for the authorization</p></dd><dt>returns</dt><dd class="cmt"><p>client</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@Nonnull</span><span class="args">()</span>
               
@@ -391,15 +391,15 @@
         <span class="name">create</span><span class="params">(<span name="url">url: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="password">password: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Char">Char</span>]</span>)</span><span class="result">: <a href="InfluxDBClientScala.html" class="extype" name="org.influxdata.client.scala.InfluxDBClientScala">InfluxDBClientScala</a></span>
       </span>
       
-      <p class="shortcomment cmt">Create a instance of the InfluxDB 2.0 reactive client.</p><div class="fullcomment"><div class="comment cmt"><p>Create a instance of the InfluxDB 2.0 reactive client.
+      <p class="shortcomment cmt">Create an instance of the InfluxDB 2.0 reactive client.</p><div class="fullcomment"><div class="comment cmt"><p>Create an instance of the InfluxDB 2.0 reactive client.
 </p></div><dl class="paramcmts block"><dt class="param">url</dt><dd class="cmt"><p>the url to connect to the InfluxDB</p></dd><dt class="param">username</dt><dd class="cmt"><p>the username to use in the basic auth</p></dd><dt class="param">password</dt><dd class="cmt"><p>the password to use in the basic auth</p></dd><dt>returns</dt><dd class="cmt"><p>client</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@Nonnull</span><span class="args">()</span>
               
         </dd><dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="InfluxDBClientOptions.Builder">InfluxDBClientOptions.Builder</span></p></span></dd></dl></div>
     </li><li name="org.influxdata.client.scala.InfluxDBClientScalaFactory#create" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="create(url:String):org.influxdata.client.scala.InfluxDBClientScala"></a><a id="create(String):InfluxDBClientScala"></a>
+      <a id="create(connectionString:String):org.influxdata.client.scala.InfluxDBClientScala"></a><a id="create(String):InfluxDBClientScala"></a>
       <span class="permalink">
-      <a href="../../../../org/influxdata/client/scala/InfluxDBClientScalaFactory$.html#create(url:String):org.influxdata.client.scala.InfluxDBClientScala" title="Permalink">
+      <a href="../../../../org/influxdata/client/scala/InfluxDBClientScalaFactory$.html#create(connectionString:String):org.influxdata.client.scala.InfluxDBClientScala" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -408,14 +408,35 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">create</span><span class="params">(<span name="url">url: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="InfluxDBClientScala.html" class="extype" name="org.influxdata.client.scala.InfluxDBClientScala">InfluxDBClientScala</a></span>
+        <span class="name">create</span><span class="params">(<span name="connectionString">connectionString: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="InfluxDBClientScala.html" class="extype" name="org.influxdata.client.scala.InfluxDBClientScala">InfluxDBClientScala</a></span>
       </span>
       
-      <p class="shortcomment cmt">Create a instance of the InfluxDB 2.0 reactive client.</p><div class="fullcomment"><div class="comment cmt"><p>Create a instance of the InfluxDB 2.0 reactive client.
-</p></div><dl class="paramcmts block"><dt class="param">url</dt><dd class="cmt"><p>the url to connect to the InfluxDB</p></dd><dt>returns</dt><dd class="cmt"><p>client</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+      <p class="shortcomment cmt">Create an instance of the InfluxDB 2.0 client.</p><div class="fullcomment"><div class="comment cmt"><p>Create an instance of the InfluxDB 2.0 client. The url could be a connection string with various configurations.</p><p>e.g.: &quot;http://localhost:8086?readTimeout=5000&amp;connectTimeout=5000&amp;logLevel=BASIC
+</p></div><dl class="paramcmts block"><dt class="param">connectionString</dt><dd class="cmt"><p>connection string with various configurations.</p></dd><dt>returns</dt><dd class="cmt"><p>client</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@Nonnull</span><span class="args">()</span>
               
-        </dd><dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="InfluxDBClientOptions.Builder">InfluxDBClientOptions.Builder</span></p></span></dd></dl></div>
+        </dd></dl></div>
+    </li><li name="org.influxdata.client.scala.InfluxDBClientScalaFactory#create" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="create():org.influxdata.client.scala.InfluxDBClientScala"></a><a id="create():InfluxDBClientScala"></a>
+      <span class="permalink">
+      <a href="../../../../org/influxdata/client/scala/InfluxDBClientScalaFactory$.html#create():org.influxdata.client.scala.InfluxDBClientScala" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">create</span><span class="params">()</span><span class="result">: <a href="InfluxDBClientScala.html" class="extype" name="org.influxdata.client.scala.InfluxDBClientScala">InfluxDBClientScala</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Create an instance of the InfluxDB 2.0 client that is configured via <code>influx2.properties</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create an instance of the InfluxDB 2.0 client that is configured via <code>influx2.properties</code>.
+The <code>influx2.properties</code> has to be located on classpath.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>client</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Nonnull</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
