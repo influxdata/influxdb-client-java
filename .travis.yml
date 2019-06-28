@@ -23,8 +23,8 @@
 language: java
 
 jdk:
-  - oraclejdk8
-  - oraclejdk11
+  - openjdk8
+  - openjdk11
 
 sudo: required
 
@@ -51,14 +51,14 @@ jobs:
   include:
   - stage: site
     if: branch = master AND repo = bonitoo-io/influxdb-client-java AND type IN (push)
-    jdk: oraclejdk8
+    jdk: openjdk8
     script:
       - ./scripts/influxdb-restart.sh
       - ./scripts/publish-site.sh
 
   - stage: deploy
     if: branch = master AND repo = bonitoo-io/influxdb-client-java AND type IN (push)
-    jdk: oraclejdk8
+    jdk: openjdk8
     script: skip
     deploy:
       provider: script
@@ -67,7 +67,7 @@ jobs:
 
   - stage: GitHub release
     if: tag IS present AND repo = bonitoo-io/influxdb-client-java AND type IN (push)
-    jdk: oraclejdk8
+    jdk: openjdk8
     script:
       - echo "GitHub Release"
       - OWNER="$(echo "$TRAVIS_REPO_SLUG" | cut -f1 -d/)"

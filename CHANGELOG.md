@@ -3,6 +3,9 @@
 ### Features
 1. [#34](https://github.com/bonitoo-io/influxdb-client-java/issues/34): Auto-configure client from configuration file
 
+### CI
+1. [#37](https://github.com/bonitoo-io/influxdb-client-java/issues/37): Switch CI from oraclejdk to openjdk 
+
 ## 1.0.0.M1
 
 ### Features
