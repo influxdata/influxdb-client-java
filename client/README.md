@@ -528,10 +528,10 @@ The expressions:
 In a [configuration file](#client-configuration-file) you are able to specify default tags by `influx2.measurement` prefix.
 
 ```properties
-influx2.measurement.mine-sensor.tags.id = 132-987-655
-influx2.measurement.mine-sensor.tags.customer = California Miner
-influx2.measurement.mine-sensor.tags.hostname = ${env.hostname}
-influx2.measurement.mine-sensor.tags.sensor-version = ${version}
+influx2.tags.id = 132-987-655
+influx2.tags.customer = California Miner
+influx2.tags.hostname = ${env.hostname}
+influx2.tags.sensor-version = ${version}
 ```
 
 ##### Via API
@@ -540,10 +540,10 @@ influx2.measurement.mine-sensor.tags.sensor-version = ${version}
 WriteOptions writeOptions = WriteOptions.builder()
     .batchSize(10_000)
     .flushInterval(500)
-    .addDefaultTag("mine-sensor", "id", "132-987-655")
-    .addDefaultTag("mine-sensor", "customer", "California Miner")
-    .addDefaultTag("mine-sensor", "hostname", "${env.hostname}")
-    .addDefaultTag("mine-sensor", "sensor-version", "${version}")
+    .addDefaultTag("id", "132-987-655")
+    .addDefaultTag("customer", "California Miner")
+    .addDefaultTag("hostname", "${env.hostname}")
+    .addDefaultTag("sensor-version", "${version}")
     .build();
 ```
 

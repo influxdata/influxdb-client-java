@@ -22,10 +22,12 @@
 package org.influxdata.client;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.influxdata.Arguments;
+import org.influxdata.client.write.PointSettings;
 
 import io.reactivex.BackpressureOverflowStrategy;
 import io.reactivex.Scheduler;
@@ -70,6 +72,7 @@ public final class WriteOptions {
     private final int bufferLimit;
     private final Scheduler writeScheduler;
     private final BackpressureOverflowStrategy backpressureStrategy;
+    private final PointSettings pointSettings;
 
     /**
      * @return the number of data point to collect in batch
@@ -134,6 +137,17 @@ public final class WriteOptions {
         return backpressureStrategy;
     }
 
+    /**
+     * Default tags that will be use for writes by Point and POJO.
+     *
+     * @return default tags
+     * @see WriteOptions.Builder#addDefaultTag(String, String)
+     */
+    @Nonnull
+    public PointSettings getPointSettings() {
+        return pointSettings;
+    }
+
     private WriteOptions(@Nonnull final Builder builder) {
 
         Arguments.checkNotNull(builder, "WriteOptions.Builder");
@@ -145,6 +159,7 @@ public final class WriteOptions {
         bufferLimit = builder.bufferLimit;
         writeScheduler = builder.writeScheduler;
         backpressureStrategy = builder.backpressureStrategy;
+        pointSettings = builder.pointSettings;
     }
 
     /**
@@ -170,6 +185,7 @@ public final class WriteOptions {
         private int bufferLimit = DEFAULT_BUFFER_LIMIT;
         private Scheduler writeScheduler = Schedulers.newThread();
         private BackpressureOverflowStrategy backpressureStrategy = BackpressureOverflowStrategy.DROP_OLDEST;
+        private PointSettings pointSettings = new PointSettings();
 
         /**
          * Set the number of data point to collect in batch.
@@ -271,6 +287,31 @@ public final class WriteOptions {
         public Builder backpressureStrategy(@Nonnull final BackpressureOverflowStrategy backpressureStrategy) {
             Arguments.checkNotNull(backpressureStrategy, "Backpressure Overflow Strategy");
             this.backpressureStrategy = backpressureStrategy;
+            return this;
+        }
+
+        /**
+         * Add default tag that will be use for writes by Point and POJO.
+         * <p>
+         * The expressions can be:
+         * <ul>
+         * <li>"California Miner" - static value</li>
+         * <li>"${version}" - system property</li>
+         * <li>"${env.hostname}" - environment property</li>
+         * </ul>
+         *
+         * @param key             the tag name
+         * @param expression      the tag value expression
+         * @return this
+         */
+        @Nonnull
+        public Builder addDefaultTag(@Nonnull final String key,
+                                     @Nullable final String expression) {
+
+            Arguments.checkNotNull(key, "tagName");
+
+            pointSettings.addDefaultTag(key, expression);
+
             return this;
         }
 

@@ -526,4 +526,78 @@ class ITWriteQueryApi extends AbstractITClientTest {
         Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("_field")).isEqualTo("level water_level");
         Assertions.assertThat(query.get(0).getRecords().get(0).getValue()).isEqualTo(1.0D);
     }
+
+    @Test
+    void defaultTagsPoint() {
+
+        System.setProperty("mine-sensor.version", "1.23a");
+        String envKey = (String) System.getenv().keySet().toArray()[5];
+
+        WriteOptions writeOptions = WriteOptions.builder()
+                .addDefaultTag("id", "132-987-655")
+                .addDefaultTag("customer", "California Miner")
+                .addDefaultTag("env-var", "${env." + envKey + "}")
+                .addDefaultTag("sensor-version", "${mine-sensor.version}")
+                .build();
+
+        writeApi = influxDBClient.getWriteApi(writeOptions);
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteSuccessEvent.class, listener);
+
+        Instant time = Instant.now();
+
+        Point point = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 1).time(time, WritePrecision.MS);
+
+        writeApi.writePoint(bucket.getName(), organization.getId(), point);
+        waitToCallback(listener.countDownLatch, 10);
+
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")", organization.getId());
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getMeasurement()).isEqualTo("h2o_feet");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("water_level")).isEqualTo(1L);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("location")).isEqualTo("west");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("id")).isEqualTo("132-987-655");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("customer")).isEqualTo("California Miner");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("sensor-version")).isEqualTo("1.23a");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("env-var")).isEqualTo(System.getenv(envKey));
+    }
+
+    @Test
+    void defaultTagsMeasurement() {
+
+        System.setProperty("mine-sensor.version", "1.23a");
+        String envKey = (String) System.getenv().keySet().toArray()[5];
+
+        WriteOptions writeOptions = WriteOptions.builder()
+                .addDefaultTag("id", "132-987-655")
+                .addDefaultTag("customer", "California Miner")
+                .addDefaultTag("env-var", "${env." + envKey + "}")
+                .addDefaultTag("sensor-version", "${mine-sensor.version}")
+                .build();
+
+        writeApi = influxDBClient.getWriteApi(writeOptions);
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteSuccessEvent.class, listener);
+
+        long millis = Instant.now().toEpochMilli();
+        H2OFeetMeasurement measurement = new H2OFeetMeasurement(
+                "coyote_creek", 2.927, null, millis);
+
+        writeApi.writeMeasurement(bucket.getName(), organization.getId(), WritePrecision.NS, measurement);
+        waitToCallback(listener.countDownLatch, 10);
+
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")", organization.getId());
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getMeasurement()).isEqualTo("h2o");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("water_level")).isEqualTo(2.927);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("location")).isEqualTo("coyote_creek");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("id")).isEqualTo("132-987-655");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("customer")).isEqualTo("California Miner");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("sensor-version")).isEqualTo("1.23a");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("env-var")).isEqualTo(System.getenv(envKey));
+    }
 }

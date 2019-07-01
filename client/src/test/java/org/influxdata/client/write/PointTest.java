@@ -162,4 +162,70 @@ class PointTest {
 
         Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe level=2i");
     }
+
+    @Test
+    void defaultTags() {
+
+        Point point = Point.measurement("h2o")
+                .addTag("location", "europe")
+                .addField("level", 2);
+
+        PointSettings defaults = new PointSettings().addDefaultTag("expensive", "true");
+
+        Assertions.assertThat(point.toLineProtocol(defaults)).isEqualTo("h2o,expensive=true,location=europe level=2i");
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe level=2i");
+    }
+
+    @Test
+    void defaultTagsOverride() {
+
+        Point point = Point.measurement("h2o")
+                .addTag("location", "europe")
+                .addTag("expensive", "")
+                .addField("level", 2);
+
+        PointSettings defaults = new PointSettings().addDefaultTag("expensive", "true");
+
+        Assertions.assertThat(point.toLineProtocol(defaults)).isEqualTo("h2o,expensive=true,location=europe level=2i");
+    }
+
+    @Test
+    void defaultTagsOverrideNull() {
+
+        Point point = Point.measurement("h2o")
+                .addTag("location", "europe")
+                .addTag("expensive", null)
+                .addField("level", 2);
+
+        PointSettings defaults = new PointSettings().addDefaultTag("expensive", "true");
+
+        Assertions.assertThat(point.toLineProtocol(defaults)).isEqualTo("h2o,expensive=true,location=europe level=2i");
+    }
+
+    @Test
+    void defaultTagsNotOverride() {
+
+        Point point = Point.measurement("h2o")
+                .addTag("location", "europe")
+                .addTag("expensive", "false")
+                .addField("level", 2);
+
+        PointSettings defaults = new PointSettings().addDefaultTag("expensive", "true");
+
+        Assertions.assertThat(point.toLineProtocol(defaults)).isEqualTo("h2o,expensive=false,location=europe level=2i");
+    }
+
+    @Test
+    void defaultTagsSorted() {
+
+        Point point = Point.measurement("h2o")
+                .addTag("location", "europe")
+                .addField("level", 2);
+
+        PointSettings defaults = new PointSettings()
+                .addDefaultTag("a-expensive", "true")
+                .addDefaultTag("z-expensive", "false");
+
+        Assertions.assertThat(point.toLineProtocol(defaults)).isEqualTo("h2o,a-expensive=true,location=europe,z-expensive=false level=2i");
+    }
 }
