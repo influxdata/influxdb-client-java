@@ -614,4 +614,43 @@ class ITWriteQueryApi extends AbstractITClientTest {
         Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("sensor-version")).isEqualTo("1.23a");
         Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("env-var")).isEqualTo(System.getenv(envKey));
     }
+
+    @Test
+    void defaultTagsFromConfiguration() throws Exception {
+
+        influxDBClient.close();
+
+        System.setProperty("version", "1.23a");
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .loadProperties()
+                .url(influxDB_URL)
+                .authenticateToken(token.toCharArray())
+                .build();
+
+        influxDBClient = InfluxDBClientFactory.create(options);
+
+        writeApi = influxDBClient.getWriteApi();
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteSuccessEvent.class, listener);
+
+        long millis = Instant.now().toEpochMilli();
+        H2OFeetMeasurement measurement = new H2OFeetMeasurement(
+                "coyote_creek", 2.927, null, millis);
+
+        writeApi.writeMeasurement(bucket.getName(), organization.getId(), WritePrecision.NS, measurement);
+        waitToCallback(listener.countDownLatch, 10);
+
+        queryApi = influxDBClient.getQueryApi();
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")", organization.getId());
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getMeasurement()).isEqualTo("h2o");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("water_level")).isEqualTo(2.927);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("location")).isEqualTo("coyote_creek");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("id")).isEqualTo("132-987-655");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("customer")).isEqualTo("California Miner");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("version")).isEqualTo("1.23a");
+    }
 }

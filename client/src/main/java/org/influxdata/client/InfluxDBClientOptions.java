@@ -47,6 +47,8 @@ import okhttp3.OkHttpClient;
  */
 public final class InfluxDBClientOptions {
 
+    private static final Pattern TAGS_PROPERTY = Pattern.compile("(influx2\\.tags\\.)(.+)");
+
     private final String url;
     private final OkHttpClient.Builder okHttpClient;
     private final LogLevel logLevel;
@@ -404,6 +406,20 @@ public final class InfluxDBClientOptions {
                 String readTimeout = properties.getProperty("influx2.readTimeout");
                 String writeTimeout = properties.getProperty("influx2.writeTimeout");
                 String connectTimeout = properties.getProperty("influx2.connectTimeout");
+
+                //
+                // Default tags
+                //
+                properties.stringPropertyNames().forEach(key -> {
+
+                    Matcher matcher = TAGS_PROPERTY.matcher(key);
+
+                    if (matcher.matches()) {
+                        String tagKey = matcher.group(2);
+                        addDefaultTag(tagKey, properties.getProperty(key).trim());
+
+                    }
+                });
 
                 return configure(url, org, bucket, token, logLevel, readTimeout, writeTimeout, connectTimeout);
 
