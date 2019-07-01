@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.influxdata.Arguments;
+import org.influxdata.client.InfluxDBClientOptions;
 import org.influxdata.client.WriteOptions;
 import org.influxdata.client.domain.WritePrecision;
 import org.influxdata.client.service.WriteService;
@@ -65,6 +66,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
     private static final List<Integer> ABLE_TO_RETRY_ERRORS = Arrays.asList(429, 503);
 
     private final WriteOptions writeOptions;
+    protected final InfluxDBClientOptions options;
 
     private final PublishProcessor<AbstractWriteClient.BatchWriteItem> processor;
     private final PublishProcessor<Flowable<BatchWriteItem>> flushPublisher;
@@ -74,10 +76,14 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
     private final WriteService service;
 
     public AbstractWriteClient(@Nonnull final WriteOptions writeOptions,
+                               @Nonnull final InfluxDBClientOptions options,
                                @Nonnull final Scheduler processorScheduler,
                                @Nonnull final WriteService service) {
 
+        Arguments.checkNotNull(options, "options");
+
         this.writeOptions = writeOptions;
+        this.options = options;
         this.service = service;
 
         this.flushPublisher = PublishProcessor.create();
@@ -281,7 +287,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
         @Override
         public String toLineProtocol() {
 
-            return point.toLineProtocol();
+            return point.toLineProtocol(options.getPointSettings());
         }
     }
 
@@ -304,7 +310,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                 return null;
             }
 
-            return measurementMapper.toPoint(measurement, precision).toLineProtocol();
+            return measurementMapper.toPoint(measurement, precision).toLineProtocol(options.getPointSettings());
         }
     }
 

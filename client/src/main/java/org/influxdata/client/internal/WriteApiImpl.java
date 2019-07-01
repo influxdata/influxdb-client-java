@@ -46,17 +46,11 @@ import io.reactivex.disposables.Disposable;
  */
 final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
 
-    private final InfluxDBClientOptions options;
-
     WriteApiImpl(@Nonnull final WriteOptions writeOptions,
                  @Nonnull final WriteService service,
                  @Nonnull final InfluxDBClientOptions options) {
 
-        super(writeOptions, writeOptions.getWriteScheduler(), service);
-
-        Arguments.checkNotNull(options, "options");
-
-        this.options = options;
+        super(writeOptions, options, writeOptions.getWriteScheduler(), service);
     }
 
     @Override

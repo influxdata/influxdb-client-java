@@ -21,8 +21,11 @@
  */
 package org.influxdata.client;
 
+import java.util.Map;
+
 import org.influxdata.LogLevel;
 import org.influxdata.client.internal.AbstractInfluxDBClient;
+import org.influxdata.client.write.PointSettings;
 import org.influxdata.exceptions.InfluxException;
 import org.influxdata.test.AbstractTest;
 
@@ -147,5 +150,13 @@ class InfluxDBClientFactoryTest extends AbstractTest {
         Assertions.assertThat(okHttpClient.readTimeoutMillis()).isEqualTo(5_000);
         Assertions.assertThat(okHttpClient.writeTimeoutMillis()).isEqualTo(10_000);
         Assertions.assertThat(okHttpClient.connectTimeoutMillis()).isEqualTo(5_000);
+
+        Map<String, String> defaultTags = getDeclaredField(options.getPointSettings(), "defaultTags", PointSettings.class);
+
+        Assertions.assertThat(defaultTags).hasSize(4)
+                .hasEntrySatisfying("id", value -> Assertions.assertThat(value).isEqualTo("132-987-655"))
+                .hasEntrySatisfying("customer", value -> Assertions.assertThat(value).isEqualTo("California Miner"))
+                .hasEntrySatisfying("version", value -> Assertions.assertThat(value).isEqualTo("${version}"))
+                .hasEntrySatisfying("hostname", value -> Assertions.assertThat(value).isEqualTo("${env.hostname}"));
     }
 }

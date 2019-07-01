@@ -26,10 +26,14 @@ import java.text.NumberFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -225,16 +229,24 @@ public final class Point {
      */
     @Nonnull
     public String toLineProtocol() {
+        return toLineProtocol(null);
+    }
+
+    /**
+     * @param pointSettings with the default values
+     * @return Line Protocol
+     */
+    @Nonnull
+    public String toLineProtocol(@Nullable final PointSettings pointSettings) {
 
         StringBuilder sb = new StringBuilder();
 
         escapeKey(sb, name);
-        appendTags(sb);
+        appendTags(sb, pointSettings);
         appendFields(sb);
         appendTime(sb);
 
         return sb.toString();
-
     }
 
     @Nonnull
@@ -246,9 +258,31 @@ public final class Point {
         return this;
     }
 
-    private void appendTags(@Nonnull final StringBuilder sb) {
+    private void appendTags(@Nonnull final StringBuilder sb, @Nullable final PointSettings pointSettings) {
 
-        for (Map.Entry<String, String> tag : this.tags.entrySet()) {
+
+        Set<Map.Entry<String, String>> entries = this.tags.entrySet();
+        if (pointSettings != null) {
+
+            Map<String, String> defaultTags = pointSettings.getDefaultTags();
+            if (!defaultTags.isEmpty()) {
+
+                entries = Stream.of(this.tags, defaultTags)
+                        .map(Map::entrySet)
+                        .flatMap(Collection::stream)
+                        .filter(entry -> entry.getValue() != null)
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> {
+                            if (v1.isEmpty()) {
+                                return v2;
+                            }
+
+                            return v1;
+                        }, TreeMap::new))
+                        .entrySet();
+            }
+        }
+
+        for (Map.Entry<String, String> tag : entries) {
 
             String key = tag.getKey();
             String value = tag.getValue();

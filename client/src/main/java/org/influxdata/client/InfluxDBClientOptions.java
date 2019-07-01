@@ -34,6 +34,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import org.influxdata.Arguments;
 import org.influxdata.LogLevel;
+import org.influxdata.client.write.PointSettings;
 import org.influxdata.exceptions.InfluxException;
 
 import okhttp3.HttpUrl;
@@ -46,6 +47,8 @@ import okhttp3.OkHttpClient;
  */
 public final class InfluxDBClientOptions {
 
+    private static final Pattern TAGS_PROPERTY = Pattern.compile("(influx2\\.tags\\.)(.+)");
+
     private final String url;
     private final OkHttpClient.Builder okHttpClient;
     private final LogLevel logLevel;
@@ -57,6 +60,7 @@ public final class InfluxDBClientOptions {
 
     private String org;
     private String bucket;
+    private final PointSettings pointSettings;
 
     private InfluxDBClientOptions(@Nonnull final InfluxDBClientOptions.Builder builder) {
 
@@ -72,6 +76,7 @@ public final class InfluxDBClientOptions {
 
         this.org = builder.org;
         this.bucket = builder.bucket;
+        this.pointSettings = builder.pointSettings;
     }
 
     /**
@@ -173,6 +178,17 @@ public final class InfluxDBClientOptions {
     }
 
     /**
+     * Default tags that will be use for writes by Point and POJO.
+     *
+     * @return default tags
+     * @see InfluxDBClientOptions.Builder#addDefaultTag(String, String)
+     */
+    @Nonnull
+    public PointSettings getPointSettings() {
+        return pointSettings;
+    }
+
+    /**
      * Creates a builder instance.
      *
      * @return a builder
@@ -200,6 +216,8 @@ public final class InfluxDBClientOptions {
 
         private String org;
         private String bucket;
+
+        private PointSettings pointSettings = new PointSettings();
 
         /**
          * Set the url to connect to InfluxDB.
@@ -315,6 +333,31 @@ public final class InfluxDBClientOptions {
         }
 
         /**
+         * Add default tag that will be use for writes by Point and POJO.
+         * <p>
+         * The expressions can be:
+         * <ul>
+         * <li>"California Miner" - static value</li>
+         * <li>"${version}" - system property</li>
+         * <li>"${env.hostname}" - environment property</li>
+         * </ul>
+         *
+         * @param key        the tag name
+         * @param expression the tag value expression
+         * @return this
+         */
+        @Nonnull
+        public InfluxDBClientOptions.Builder addDefaultTag(@Nonnull final String key,
+                                                           @Nullable final String expression) {
+
+            Arguments.checkNotNull(key, "tagName");
+
+            pointSettings.addDefaultTag(key, expression);
+
+            return this;
+        }
+
+        /**
          * Configure Builder via connection string.
          *
          * @return {@code this}
@@ -350,7 +393,6 @@ public final class InfluxDBClientOptions {
         @Nonnull
         public InfluxDBClientOptions.Builder loadProperties() {
 
-
             try (InputStream inputStream = this.getClass().getResourceAsStream("/influx2.properties")) {
 
                 Properties properties = new Properties();
@@ -364,6 +406,20 @@ public final class InfluxDBClientOptions {
                 String readTimeout = properties.getProperty("influx2.readTimeout");
                 String writeTimeout = properties.getProperty("influx2.writeTimeout");
                 String connectTimeout = properties.getProperty("influx2.connectTimeout");
+
+                //
+                // Default tags
+                //
+                properties.stringPropertyNames().forEach(key -> {
+
+                    Matcher matcher = TAGS_PROPERTY.matcher(key);
+
+                    if (matcher.matches()) {
+                        String tagKey = matcher.group(2);
+                        addDefaultTag(tagKey, properties.getProperty(key).trim());
+
+                    }
+                });
 
                 return configure(url, org, bucket, token, logLevel, readTimeout, writeTimeout, connectTimeout);
 
