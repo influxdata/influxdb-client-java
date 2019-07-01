@@ -25,6 +25,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import org.influxdata.Arguments;
+import org.influxdata.client.InfluxDBClientOptions;
 import org.influxdata.client.WriteOptions;
 import org.influxdata.client.domain.WritePrecision;
 import org.influxdata.client.internal.AbstractWriteClient;
@@ -44,9 +45,10 @@ import org.reactivestreams.Publisher;
 public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteReactiveApi {
 
     WriteReactiveApiImpl(@Nonnull final WriteOptions writeOptions,
-                         @Nonnull final WriteService service) {
+                         @Nonnull final WriteService service,
+                         @Nonnull final InfluxDBClientOptions options) {
 
-        super(writeOptions, writeOptions.getWriteScheduler(), service);
+        super(writeOptions, options, writeOptions.getWriteScheduler(), service);
     }
 
     @Override

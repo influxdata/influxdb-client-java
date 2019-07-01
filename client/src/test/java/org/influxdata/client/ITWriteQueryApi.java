@@ -62,6 +62,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
     private Bucket bucket;
     private Organization organization;
+    private String token;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -90,7 +91,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         Authorization authorization = influxDBClient.getAuthorizationsApi()
                 .createAuthorization(organization, Arrays.asList(readBucket, writeBucket));
 
-        String token = authorization.getToken();
+        token = authorization.getToken();
 
         influxDBClient.close();
         influxDBClient = InfluxDBClientFactory.create(influxDB_URL, token.toCharArray());
@@ -528,19 +529,24 @@ class ITWriteQueryApi extends AbstractITClientTest {
     }
 
     @Test
-    void defaultTagsPoint() {
+    void defaultTagsPoint() throws Exception {
+
+        influxDBClient.close();
 
         System.setProperty("mine-sensor.version", "1.23a");
         String envKey = (String) System.getenv().keySet().toArray()[5];
 
-        WriteOptions writeOptions = WriteOptions.builder()
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder().url(influxDB_URL)
+                .authenticateToken(token.toCharArray())
                 .addDefaultTag("id", "132-987-655")
                 .addDefaultTag("customer", "California Miner")
                 .addDefaultTag("env-var", "${env." + envKey + "}")
                 .addDefaultTag("sensor-version", "${mine-sensor.version}")
                 .build();
 
-        writeApi = influxDBClient.getWriteApi(writeOptions);
+        influxDBClient = InfluxDBClientFactory.create(options);
+
+        writeApi = influxDBClient.getWriteApi();
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
@@ -551,6 +557,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         writeApi.writePoint(bucket.getName(), organization.getId(), point);
         waitToCallback(listener.countDownLatch, 10);
 
+        queryApi = influxDBClient.getQueryApi();
         List<FluxTable> query = queryApi.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
@@ -565,19 +572,25 @@ class ITWriteQueryApi extends AbstractITClientTest {
     }
 
     @Test
-    void defaultTagsMeasurement() {
+    void defaultTagsMeasurement() throws Exception {
+
+        influxDBClient.close();
 
         System.setProperty("mine-sensor.version", "1.23a");
         String envKey = (String) System.getenv().keySet().toArray()[5];
 
-        WriteOptions writeOptions = WriteOptions.builder()
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url(influxDB_URL)
+                .authenticateToken(token.toCharArray())
                 .addDefaultTag("id", "132-987-655")
                 .addDefaultTag("customer", "California Miner")
                 .addDefaultTag("env-var", "${env." + envKey + "}")
                 .addDefaultTag("sensor-version", "${mine-sensor.version}")
                 .build();
 
-        writeApi = influxDBClient.getWriteApi(writeOptions);
+        influxDBClient = InfluxDBClientFactory.create(options);
+
+        writeApi = influxDBClient.getWriteApi();
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
@@ -588,6 +601,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         writeApi.writeMeasurement(bucket.getName(), organization.getId(), WritePrecision.NS, measurement);
         waitToCallback(listener.countDownLatch, 10);
 
+        queryApi = influxDBClient.getQueryApi();
         List<FluxTable> query = queryApi.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);

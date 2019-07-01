@@ -47,7 +47,7 @@ class PointSettingsTest {
 
         Map<String, String> defaultTags = defaults.getDefaultTags();
 
-        Assertions.assertThat(defaultTags).isNull();
+        Assertions.assertThat(defaultTags).isNotNull();
     }
 
     @Test

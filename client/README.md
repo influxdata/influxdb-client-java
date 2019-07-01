@@ -537,12 +537,12 @@ influx2.tags.sensor-version = ${version}
 ##### Via API
 
 ```java
-WriteOptions writeOptions = WriteOptions.builder()
-    .batchSize(10_000)
-    .flushInterval(500)
+InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+    .url(url)
+    .authenticateToken(token)
     .addDefaultTag("id", "132-987-655")
     .addDefaultTag("customer", "California Miner")
-    .addDefaultTag("hostname", "${env.hostname}")
+    .addDefaultTag("hostnamer", "${env.hostname}")
     .addDefaultTag("sensor-version", "${version}")
     .build();
 ```
