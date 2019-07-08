@@ -223,17 +223,17 @@ dependencies {
 }
 ```
 
-### Repository
-The repository is temporally located [here](https://apitea.com/nexus/content/repositories/bonitoo-snapshot/).
+### Snapshot Repository
+The snapshots are deployed into [OSS Snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/).
 
 #### Maven
 ```xml
 <repository>
-    <id>bonitoo-repository</id>
-    <name>Bonitoo.io repository</name>
-    <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
+    <id>oss-snapshot-repository</id>
+    <name>OSS Snapshot repository</name>
+    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     <releases>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
     </releases>
     <snapshots>
         <enabled>true</enabled>
@@ -243,6 +243,6 @@ The repository is temporally located [here](https://apitea.com/nexus/content/rep
 #### Gradle
 ```
 repositories {
-    maven { url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 }
 ```

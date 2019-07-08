@@ -72,33 +72,9 @@ Flux flux = Flux
 
 ## How To Use  
 
-This clients are a work in progress and hosted in Bonitoo.io Repository. 
+This clients are hosted in Maven central Repository. 
 
-If you want to use it with the Maven, you have to add the Bonitoo.io Repository to your pom.xml:
-
-```xml
-<repositories>
-    <repository>
-        <id>bonitoo-repository</id>
-        <name>Bonitoo.io repository</name>
-        <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
-        <releases>
-            <enabled>true</enabled>
-        </releases>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-    </repository>
-</repositories>
-```
-
-or when using Gradle add:
-
-```groovy
-repositories{
-    maven {url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot/"}
-}
-```
+If you want to use it with the Maven, you have to add only the dependency on the artifact.
 
 ### Writes and Queries in InfluxDB 2.0
 
