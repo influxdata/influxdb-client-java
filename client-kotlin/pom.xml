@@ -75,11 +75,20 @@
                 <version>0.9.17</version>
                 <executions>
                     <execution>
+                        <id>dokka-pre-site</id>
                         <phase>pre-site</phase>
                         <goals>
                             <goal>dokka</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>dokka-prepare-package</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>dokka</goal>
+                            <goal>javadoc</goal>
+                            <goal>javadocJar</goal>
+                        </goals>                    </execution>
                 </executions>
                 <configuration>
                     <sourceLinks>
