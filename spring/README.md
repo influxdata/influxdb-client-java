@@ -84,7 +84,7 @@ management.health.influxdb2.enabled=true # Whether to enable InfluxDB 2.0 health
 The latest version for Maven dependency:
 ```xml
 <dependency>
-  <groupId>org.influxdata</groupId>
+  <groupId>com.influxdb</groupId>
   <artifactId>influxdb-spring</artifactId>
   <version>1.0-SNAPSHOT</version>
 </dependency>
@@ -93,7 +93,7 @@ The latest version for Maven dependency:
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "org.influxdata:influxdb-spring:1.0-SNAPSHOT"
+    compile "com.influxdb:influxdb-spring:1.0-SNAPSHOT"
 }
 ```
 

@@ -21,9 +21,9 @@
  */
 package example
 
+import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.runBlocking
-import org.influxdata.client.kotlin.InfluxDBClientKotlinFactory
 
 fun main(args: Array<String>) = runBlocking {
 

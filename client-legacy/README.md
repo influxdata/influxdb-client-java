@@ -155,7 +155,7 @@ Server availability can be checked using the `fluxClient.ping()` endpoint.  Serv
 The latest version for Maven dependency:
 ```xml
 <dependency>
-  <groupId>org.influxdata</groupId>
+  <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-flux</artifactId>
   <version>1.0-SNAPSHOT</version>
 </dependency>
@@ -164,7 +164,7 @@ The latest version for Maven dependency:
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "org.influxdata:influxdb-client-flux:1.0-SNAPSHOT"
+    compile "com.influxdb:influxdb-client-flux:1.0-SNAPSHOT"
 }
 ```
 

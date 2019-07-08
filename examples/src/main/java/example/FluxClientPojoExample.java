@@ -21,9 +21,9 @@
  */
 package example;
 
-import org.influxdata.client.flux.FluxClient;
-import org.influxdata.client.flux.FluxClientFactory;
-import org.influxdata.client.flux.FluxConnectionOptions;
+import com.influxdb.client.flux.FluxClient;
+import com.influxdb.client.flux.FluxClientFactory;
+import com.influxdb.client.flux.FluxConnectionOptions;
 
 @SuppressWarnings("CheckStyle")
 public class FluxClientPojoExample {

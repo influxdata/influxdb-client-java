@@ -32,8 +32,8 @@ package example
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
-import org.influxdata.client.scala.InfluxDBClientScalaFactory
-import org.influxdata.query.FluxRecord
+import com.influxdb.client.scala.InfluxDBClientScalaFactory
+import com.influxdb.query.FluxRecord
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -83,7 +83,7 @@ package example
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
-import org.influxdata.client.scala.InfluxDBClientScalaFactory
+import com.influxdb.client.scala.InfluxDBClientScalaFactory
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -210,10 +210,10 @@ import java.time.temporal.ChronoUnit
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
-import org.influxdata.client.scala.InfluxDBClientScalaFactory
-import org.influxdata.query.dsl.Flux
-import org.influxdata.query.dsl.functions.restriction.Restrictions
-import org.influxdata.query.FluxRecord
+import com.influxdb.client.scala.InfluxDBClientScalaFactory
+import com.influxdb.query.dsl.Flux
+import com.influxdb.query.dsl.functions.restriction.Restrictions
+import com.influxdb.query.FluxRecord
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -262,7 +262,7 @@ object FluxClientScalaExampleDSL {
 The latest version for Maven dependency:
 ```xml
 <dependency>
-  <groupId>org.influxdata</groupId>
+  <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-scala</artifactId>
   <version>1.0-SNAPSHOT</version>
 </dependency>
@@ -271,7 +271,7 @@ The latest version for Maven dependency:
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "org.influxdata:influxdb-client-scala:1.0-SNAPSHOT"
+    compile "com.influxdb:influxdb-client-scala:1.0-SNAPSHOT"
 }
 ```
 

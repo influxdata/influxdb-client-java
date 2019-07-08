@@ -38,11 +38,11 @@ package example;
 
 import java.util.List;
 
-import org.influxdata.client.InfluxDBClient;
-import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.QueryApi;
-import org.influxdata.query.FluxRecord;
-import org.influxdata.query.FluxTable;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
+import com.influxdb.query.FluxRecord;
+import com.influxdb.query.FluxTable;
 
 public class SynchronousQuery {
 
@@ -80,11 +80,11 @@ package example;
 import java.time.Instant;
 import java.util.List;
 
-import org.influxdata.annotations.Column;
-import org.influxdata.annotations.Measurement;
-import org.influxdata.client.InfluxDBClient;
-import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.QueryApi;
+import com.influxdb.annotations.Column;
+import com.influxdb.annotations.Measurement;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
 
 public class SynchronousQuery {
 
@@ -135,9 +135,9 @@ stop receiving more results and notify that all data arrived.
 ```java
 package example;
 
-import org.influxdata.client.InfluxDBClient;
-import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.QueryApi;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
 
 public class AsynchronousQuery {
 
@@ -191,11 +191,11 @@ package example;
 
 import java.time.Instant;
 
-import org.influxdata.annotations.Column;
-import org.influxdata.annotations.Measurement;
-import org.influxdata.client.InfluxDBClient;
-import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.QueryApi;
+import com.influxdb.annotations.Column;
+import com.influxdb.annotations.Measurement;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
 
 public class AsynchronousQuery {
 
@@ -250,9 +250,9 @@ The Raw query allows direct processing original [CSV response](http://bit.ly/flu
 ```java
 package example;
 
-import org.influxdata.client.InfluxDBClient;
-import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.QueryApi;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
 
 public class RawQuery {
 
@@ -283,9 +283,9 @@ The Asynchronous version allows processing line by line:
 ```java
 package example;
 
-import org.influxdata.client.InfluxDBClient;
-import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.QueryApi;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
 
 public class RawQueryAsynchronous {
 
@@ -382,11 +382,11 @@ package example;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-import org.influxdata.annotations.Column;
-import org.influxdata.annotations.Measurement;
-import org.influxdata.client.InfluxDBClient;
-import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.WriteApi;
+import com.influxdb.annotations.Column;
+import com.influxdb.annotations.Measurement;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.WriteApi;
 
 public class WritePOJO {
 
@@ -440,10 +440,10 @@ package example;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-import org.influxdata.client.InfluxDBClient;
-import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.WriteApi;
-import org.influxdata.client.write.Point;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.WriteApi;
+import com.influxdb.client.write.Point;
 
 public class WriteDataPoint {
 
@@ -483,9 +483,9 @@ package example;
 
 import java.time.temporal.ChronoUnit;
 
-import org.influxdata.client.InfluxDBClient;
-import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.WriteApi;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.WriteApi;
 
 public class WriteLineProtocol {
 
@@ -598,7 +598,7 @@ The client has following management API:
 | **/api/v2/scrapers** | Managing ScraperTarget data | [ScraperTargetsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/ScraperTargetsApi.html) |
 | **/api/v2/labels** | Managing resource labels | [LabelsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/LabelsApi.html) |
 | **/api/v2/telegrafs** | Managing telegraf config data | [TelegrafsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/TelegrafsApi.html) |
-| **/api/v2/setup** | Managing onboarding setup | [InfluxDBClient#onBoarding()](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#onBoarding-org.influxdata.client.domain.Onboarding-) |
+| **/api/v2/setup** | Managing onboarding setup | [InfluxDBClient#onBoarding()](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#onBoarding-com.influxdb.client.domain.Onboarding-) |
 | **/ready** | Get the readiness of an instance at startup| [InfluxDBClient#ready()](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#ready--) |
 | **/health** | Get the health of an instance anytime during execution | [InfluxDBClient#health()](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#health--) |
 
@@ -610,13 +610,13 @@ package example;
 
 import java.util.Arrays;
 
-import org.influxdata.client.InfluxDBClient;
-import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.domain.Authorization;
-import org.influxdata.client.domain.Bucket;
-import org.influxdata.client.domain.Permission;
-import org.influxdata.client.domain.PermissionResource;
-import org.influxdata.client.domain.BucketRetentionRules;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.domain.Authorization;
+import com.influxdb.client.domain.Bucket;
+import com.influxdb.client.domain.Permission;
+import com.influxdb.client.domain.PermissionResource;
+import com.influxdb.client.domain.BucketRetentionRules;
 
 public class InfluxDB2ManagementExample {
 
@@ -753,13 +753,13 @@ package example;
 
 import java.util.List;
 
-import org.influxdata.client.InfluxDBClient;
-import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.QueryApi;
-import org.influxdata.query.dsl.Flux;
-import org.influxdata.query.dsl.functions.restriction.Restrictions;
-import org.influxdata.query.FluxRecord;
-import org.influxdata.query.FluxTable;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
+import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.functions.restriction.Restrictions;
+import com.influxdb.query.FluxRecord;
+import com.influxdb.query.FluxTable;
 
 public class SynchronousQuery {
 
@@ -796,7 +796,7 @@ public class SynchronousQuery {
 The latest version for Maven dependency:
 ```xml
 <dependency>
-  <groupId>org.influxdata</groupId>
+  <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-java</artifactId>
   <version>1.0-SNAPSHOT</version>
 </dependency>
@@ -805,7 +805,7 @@ The latest version for Maven dependency:
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "org.influxdata:influxdb-client-java:1.0-SNAPSHOT"
+    compile "com.influxdb:influxdb-client-java:1.0-SNAPSHOT"
 }
 ```
 
