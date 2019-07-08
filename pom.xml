@@ -248,6 +248,13 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${plugin.jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/influxdb/client/domain/**/*</exclude>
+                        <exclude>com/influxdb/client/service/**/*</exclude>
+                        <exclude>com/influxdb/client/JSON.*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
