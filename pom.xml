@@ -46,6 +46,9 @@
     </modules>
 
     <name>The InfluxDB 2.0 JVM Based Clients</name>
+    <description>
+        The reference JVM clients for the InfluxDB 2.0 - currently Java, Reactive, Kotlin and Scala clients are implemented.
+    </description>
 
     <url>https://github.com/bonitoo-io/influxdb-client-java</url>
     <inceptionYear>2018</inceptionYear>

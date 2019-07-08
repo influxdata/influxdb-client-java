@@ -41,6 +41,37 @@
         and management (bucket, organization, users) for the InfluxDB 2.0.
     </description>
 
+    <url>https://github.com/bonitoo-io/influxdb-client-java/tree/master/client</url>
+
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <url>https://raw.githubusercontent.com/bonitoo-io/influxdb-client-java/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Jakub Bednar</name>
+            <email>jakub.bednar@bonitoo.io</email>
+            <organization>Bonitoo</organization>
+            <organizationUrl>https://www.bonitoo.io</organizationUrl>
+        </developer>
+        <developer>
+            <name>Robert Hajek</name>
+            <email>robert.hajek@bonitoo.io</email>
+            <organization>Bonitoo</organization>
+            <organizationUrl>https://www.bonitoo.io</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/bonitoo-io/influxdb-client-java.git</connection>
+        <developerConnection>scm:git:ssh://github.com/bonitoo-io/influxdb-client-java.git</developerConnection>
+        <url>http://github.com/bonitoo-io/influxdb-client-java/tree/master</url>
+    </scm>
+    
     <build>
         <plugins>
             <plugin>
