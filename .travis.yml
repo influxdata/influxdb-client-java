@@ -45,7 +45,7 @@ install: true
 script:
   - ./scripts/influxdb-restart.sh
   - mvn -B -U clean install -Dmaven.javadoc.skip=true
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
 
 jobs:
   include:
