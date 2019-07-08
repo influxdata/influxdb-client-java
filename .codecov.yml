@@ -1,2 +1,3 @@
 ignore:
   - "client/src/generated/java/org/influxdata/client/**/*"
+  - "client/src/generated/java/org/influxdata/client/JSON.java"
