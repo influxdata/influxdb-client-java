@@ -43,7 +43,7 @@ class PointSettingsTest {
     }
 
     @Test
-    void defaultTagsNull() {
+    void defaultTagsEmpty() {
 
         Map<String, String> defaultTags = defaults.getDefaultTags();
 

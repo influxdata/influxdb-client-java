@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 import org.influxdata.Arguments;
 
 /**
- * The setting for store data point: default values, threshold, ....
+ * The setting for store data point: default values, threshold, ...
  *
  * @author Jakub Bednar (bednar@github) (28/06/2019 09:06)
  */

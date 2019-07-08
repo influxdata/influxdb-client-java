@@ -41,13 +41,14 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 
 /**
- * InfluxDBClientOptions are used to configure theInfluxDB 2.0connections.
+ * InfluxDBClientOptions are used to configure theInfluxDB 2.0 connections.
  *
  * @author Jakub Bednar (bednar@github) (05/09/2018 10:22)
  */
 public final class InfluxDBClientOptions {
 
     private static final Pattern TAGS_PROPERTY = Pattern.compile("(influx2\\.tags\\.)(.+)");
+    private static final Pattern DURATION_PATTERN = Pattern.compile("^(\\d+)([a-zA-Z]{0,2})$");
 
     private final String url;
     private final OkHttpClient.Builder okHttpClient;
@@ -204,7 +205,6 @@ public final class InfluxDBClientOptions {
     @NotThreadSafe
     public static class Builder {
 
-        private static final Pattern DURATION_PATTERN = Pattern.compile("^(\\d+)([a-zA-Z]{0,2})$");
         private String url;
         private OkHttpClient.Builder okHttpClient;
         private LogLevel logLevel;
