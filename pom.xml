@@ -175,6 +175,7 @@
                     <consoleOutput>true</consoleOutput>
                     <linkXRef>false</linkXRef>
                     <excludes>**/examples/**</excludes>
+                    <resourceExcludes>**/influx2.properties</resourceExcludes>
                     <sourceDirectories>
                         <sourceDirectory>src/main/java</sourceDirectory>
                     </sourceDirectories>
@@ -345,6 +346,7 @@
                     <consoleOutput>true</consoleOutput>
                     <linkXRef>false</linkXRef>
                     <excludes>**/example/**</excludes>
+                    <resourceExcludes>**/influx2.properties</resourceExcludes>
                     <sourceDirectories>
                         <sourceDirectory>src/main/java</sourceDirectory>
                     </sourceDirectories>
