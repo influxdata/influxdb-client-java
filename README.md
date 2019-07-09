@@ -6,7 +6,7 @@
 [![Build Status](https://travis-ci.org/bonitoo-io/influxdb-client-java.svg?branch=master)](https://travis-ci.org/bonitoo-io/influxdb-client-java)
 [![codecov](https://codecov.io/gh/bonitoo-io/influxdb-client-java/branch/master/graph/badge.svg)](https://codecov.io/gh/bonitoo-io/influxdb-client-java)
 [![License](https://img.shields.io/github/license/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/blob/master/LICENSE)
-[![Snapshot Version](https://img.shields.io/nexus/s/https/apitea.com/nexus/com.influxdb/influxdb-client-java.svg)](https://apitea.com/nexus/content/repositories/bonitoo-snapshot/org/influxdata/)
+[![Maven Version](https://img.shields.io/nexus/s/https/repo1.maven.org/maven2/com.influxdb/influxdb-client-java.svg)](https://repo1.maven.org/maven2/com/influxdb/)
 [![GitHub issues](https://img.shields.io/github/issues-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/pulls)
 
@@ -90,7 +90,7 @@ Download the latest version:
 <dependency>
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-java</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0.M2-SNAPSHOT</version>
 </dependency>
 ```
        
@@ -98,7 +98,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-java:1.0-SNAPSHOT"
+    compile "com.influxdb:influxdb-client-java:1.0.0.M2-SNAPSHOT"
 }
 ```
 
@@ -205,7 +205,7 @@ Download the latest version:
 <dependency>
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-java</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0.M2-SNAPSHOT</version>
 </dependency>
 ```
        
@@ -213,7 +213,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-java:1.0-SNAPSHOT"
+    compile "com.influxdb:influxdb-client-java:1.0.0.M2-SNAPSHOT"
 }
 ```
 
@@ -291,7 +291,7 @@ Download the latest version:
 <dependency>
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-flux</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0.M2-SNAPSHOT</version>
 </dependency>
 ```
        
@@ -299,7 +299,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-flux:1.0-SNAPSHOT"
+    compile "com.influxdb:influxdb-client-flux:1.0.0.M2-SNAPSHOT"
 }
 ``` 
 
