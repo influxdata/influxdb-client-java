@@ -89,12 +89,12 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>bonitoo-repository</id>
-            <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
-            <id>bonitoo-repository</id>
-            <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
         <site>
             <id>gp</id>
@@ -531,7 +531,7 @@
             <name>Bonitoo.io repository</name>
             <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
             <releases>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </releases>
             <snapshots>
                 <enabled>true</enabled>

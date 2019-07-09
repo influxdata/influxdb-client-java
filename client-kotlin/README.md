@@ -229,7 +229,7 @@ The snapshots are deployed into [OSS Snapshot repository](https://oss.sonatype.o
 #### Maven
 ```xml
 <repository>
-    <id>oss-snapshot-repository</id>
+    <id>ossrh</id>
     <name>OSS Snapshot repository</name>
     <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     <releases>

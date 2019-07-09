@@ -155,7 +155,7 @@
             <name>Bonitoo.io repository</name>
             <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
             <releases>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </releases>
             <snapshots>
                 <enabled>true</enabled>

@@ -40,6 +40,11 @@ env:
   matrix:
     - INFLUXDB_VERSION=1.7 INFLUXDB_2_VERSION=nightly
 
+before_install:
+  - |
+    sudo apt-get install -qq libxml2-utils
+    export PROJECT_VERSION=`xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml`
+
 install: true
 
 script:
@@ -56,8 +61,8 @@ jobs:
       - ./scripts/influxdb-restart.sh
       - ./scripts/publish-site.sh
 
-  - stage: deploy
-    if: branch = master AND repo = bonitoo-io/influxdb-client-java AND type IN (push)
+  - stage: Deploy Snapshot
+    if: branch = master AND repo = bonitoo-io/influxdb-client-java AND type IN (push) AND env(PROJECT_VERSION) =~ /(.+)(-SNAPSHOT)/
     jdk: openjdk8
     script: skip
     deploy:
