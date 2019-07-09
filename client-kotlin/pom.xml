@@ -65,6 +65,10 @@
         </developer>
     </developers>
 
+    <properties>
+        <maven.dokka.skip>false</maven.dokka.skip>
+    </properties>
+
     <scm>
         <connection>scm:git:git://github.com/bonitoo-io/influxdb-client-java.git</connection>
         <developerConnection>scm:git:ssh://github.com/bonitoo-io/influxdb-client-java.git</developerConnection>
@@ -122,6 +126,7 @@
                         </goals>                    </execution>
                 </executions>
                 <configuration>
+                    <skip>${maven.dokka.skip}</skip>
                     <sourceLinks>
                         <link>
                             <dir>${project.basedir}</dir>
