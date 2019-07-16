@@ -82,6 +82,11 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
     }
 
     @Test
+    void createWriteBlockingApi() {
+        Assertions.assertThat(influxDBClient.getWriteApiBlocking()).isNotNull();
+    }
+    
+    @Test
     void logLevel() {
 
         // default NONE

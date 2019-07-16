@@ -116,7 +116,8 @@ public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteRe
         Arguments.checkNonEmpty(orgID, "organization");
         Arguments.checkNotNull(points, "points");
 
-        Flowable<BatchWriteDataPoint> stream = points.filter(Objects::nonNull).map(BatchWriteDataPoint::new);
+        Flowable<BatchWriteDataPoint> stream = points.filter(Objects::nonNull)
+                .map(point -> new BatchWriteDataPoint(point, options));
 
         write(bucket, orgID, stream);
     }
@@ -158,7 +159,8 @@ public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteRe
         Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(measurements, "measurements");
 
-        Flowable<BatchWriteData> stream = measurements.map(it -> new BatchWriteDataMeasurement(it, precision));
+        Flowable<BatchWriteData> stream = measurements
+                .map(it -> new BatchWriteDataMeasurement(it, precision, options, measurementMapper));
 
         write(bucket, orgID, precision, stream);
     }
