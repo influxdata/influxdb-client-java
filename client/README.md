@@ -671,7 +671,9 @@ public class InfluxDB2ManagementExample {
 
 ### Writing data using synchronous blocking API
 
-The [WriteApiBlocking](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/WriteApiBlocking.html) provides a synchronous blocking API to writing data using [InfluxDB Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/), Data Point and POJO. It's up to user to handle a server or a http exception.
+The [WriteApiBlocking](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/WriteApiBlocking.html) provides a synchronous blocking API to writing data using [InfluxDB Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/), Data Point and POJO. 
+
+_It's up to user to handle a server or a http exception._
 
 ```java
 package example;
