@@ -695,11 +695,11 @@ public class WriteDataPoint {
 
     public static void main(final String[] args) throws Exception {
 
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
-        try (InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token)) {
-
-            WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
-
+        WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
+        
+        try {
             //
             // Write by LineProtocol
             //
@@ -726,10 +726,12 @@ public class WriteDataPoint {
             temperature.time = Instant.now();
 
             writeApi.writeMeasurement("bucket_name", "org_id", WritePrecision.NS, temperature);
-            
+
         } catch (InfluxException ie) {
             System.out.println("InfluxException: " + ie);
         }
+
+        influxDBClient.close();
     }
 
     @Measurement(name = "temperature")
