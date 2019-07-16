@@ -101,18 +101,21 @@ class ITWriteApiBlocking extends AbstractITClientTest {
         // By LineProtocol
         api.writeRecord(WritePrecision.NS, "h2o,location=coyote_creek water_level=1.0 1");
         api.writeRecord(bucket.getName(), organization.getName(), WritePrecision.NS, "h2o,location=coyote_creek water_level=2.0 2");
+        api.writeRecord(bucket.getName(), organization.getName(), WritePrecision.NS, null);
         api.writeRecords(WritePrecision.NS, Arrays.asList("h2o,location=coyote_creek water_level=3.0 3", "h2o,location=coyote_creek water_level=4.0 4"));
         api.writeRecords(bucket.getName(), organization.getName(), WritePrecision.NS, Arrays.asList("h2o,location=coyote_creek water_level=5.0 5", "h2o,location=coyote_creek water_level=6.0 6"));
 
         // By DataPoint
         api.writePoint(Point.measurement("h2o").addTag("location", "coyote_creek").addField("water_level", 7.0D).time(7L, WritePrecision.NS));
         api.writePoint(bucket.getName(), organization.getName(), Point.measurement("h2o").addTag("location", "coyote_creek").addField("water_level", 8.0D).time(8L, WritePrecision.NS));
+        api.writePoint(bucket.getName(), organization.getName(), null);
         api.writePoints(Arrays.asList(Point.measurement("h2o").addTag("location", "coyote_creek").addField("water_level", 9.0D).time(9L, WritePrecision.NS), Point.measurement("h2o").addTag("location", "coyote_creek").addField("water_level", 10.0D).time(10L, WritePrecision.NS)));
         api.writePoints(bucket.getName(), organization.getName(), Arrays.asList(Point.measurement("h2o").addTag("location", "coyote_creek").addField("water_level", 11.0D).time(11L, WritePrecision.NS), Point.measurement("h2o").addTag("location", "coyote_creek").addField("water_level", 12.0D).time(12L, WritePrecision.NS)));
 
         // By Measurement
         api.writeMeasurement(WritePrecision.NS, new H2OFeetMeasurement("coyote_creek", 13.0D, null, Instant.ofEpochSecond(0, 13)));
         api.writeMeasurement(bucket.getName(), organization.getName(), WritePrecision.NS, new H2OFeetMeasurement("coyote_creek", 14.0D, null, Instant.ofEpochSecond(0, 14)));
+        api.writeMeasurement(bucket.getName(), organization.getName(), WritePrecision.NS, null);
         api.writeMeasurements(WritePrecision.NS, Arrays.asList(new H2OFeetMeasurement("coyote_creek", 15.0D, null, Instant.ofEpochSecond(0, 15)), new H2OFeetMeasurement("coyote_creek", 16.0D, null, Instant.ofEpochSecond(0, 16))));
         api.writeMeasurements(bucket.getName(), organization.getName(), WritePrecision.NS, Arrays.asList(new H2OFeetMeasurement("coyote_creek", 17.0D, null, Instant.ofEpochSecond(0, 17)), new H2OFeetMeasurement("coyote_creek", 18.0D, null, Instant.ofEpochSecond(0, 18))));
 
