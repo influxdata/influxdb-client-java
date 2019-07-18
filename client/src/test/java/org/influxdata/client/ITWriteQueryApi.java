@@ -268,6 +268,39 @@ class ITWriteQueryApi extends AbstractITClientTest {
     }
 
     @Test
+    void writePointsWithoutFields() {
+
+        String bucketName = bucket.getName();
+
+        writeApi = influxDBClient.getWriteApi();
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteSuccessEvent.class, listener);
+
+        Instant time = Instant.now();
+
+        Point point1 = Point.measurement("h2o_feet").addTag("location", "west").time(time, WritePrecision.MS);
+        Point point2 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusMillis(10), WritePrecision.MS);
+
+        writeApi.writePoints(bucketName, organization.getId(), Arrays.asList(point1, point2, point2));
+
+        waitToCallback(listener.countDownLatch, 10);
+
+        List<FluxRecord> fluxRecords = new ArrayList<>();
+
+        CountDownLatch queryCountDown = new CountDownLatch(1);
+        queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId(), (cancellable, fluxRecord) -> {
+            fluxRecords.add(fluxRecord);
+            queryCountDown.countDown();
+
+        });
+
+        waitToCallback(queryCountDown, 10);
+
+        Assertions.assertThat(fluxRecords).hasSize(1);
+        Assertions.assertThat(fluxRecords.get(0).getValue()).isEqualTo(2L);
+    }
+
+    @Test
     void writeMeasurement() {
 
         String bucketName = bucket.getName();
@@ -291,6 +324,34 @@ class ITWriteQueryApi extends AbstractITClientTest {
         Assertions.assertThat(measurements.get(0).description).isNull();
         Assertions.assertThat(measurements.get(0).level).isEqualTo(2.927);
         Assertions.assertThat(measurements.get(0).time).isEqualTo(measurement.time);
+    }
+
+    @Test
+    void writeMeasurementWithoutFields() {
+
+        String bucketName = bucket.getName();
+
+        writeApi = influxDBClient.getWriteApi();
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteSuccessEvent.class, listener);
+
+        long millis = Instant.now().toEpochMilli();
+        H2OFeetMeasurement measurement1 = new H2OFeetMeasurement(
+                "coyote_creek", 2.927, null, millis);
+        H2OFeetMeasurement measurement2 = new H2OFeetMeasurement(
+                "coyote_creek", null, null, millis);
+
+        writeApi.writeMeasurements(bucketName, organization.getId(), WritePrecision.NS, Arrays.asList(measurement1, measurement2));
+
+        waitToCallback(listener.countDownLatch, 10);
+
+        List<H2OFeetMeasurement> measurements = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last() |> rename(columns:{_value: \"water_level\"})", organization.getId(), H2OFeetMeasurement.class);
+
+        Assertions.assertThat(measurements).hasSize(1);
+        Assertions.assertThat(measurements.get(0).location).isEqualTo("coyote_creek");
+        Assertions.assertThat(measurements.get(0).description).isNull();
+        Assertions.assertThat(measurements.get(0).level).isEqualTo(2.927);
+        Assertions.assertThat(measurements.get(0).time).isEqualTo(measurement1.time);
     }
 
     @Test
