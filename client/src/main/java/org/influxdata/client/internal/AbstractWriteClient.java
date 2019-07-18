@@ -274,6 +274,8 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
 
     public static final class BatchWriteDataPoint implements BatchWriteData {
 
+        private static final Logger LOG = Logger.getLogger(BatchWriteDataPoint.class.getName());
+
         private final Point point;
         private final InfluxDBClientOptions options;
 
@@ -284,9 +286,16 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
             this.options = options;
         }
 
-        @Nonnull
+        @Nullable
         @Override
         public String toLineProtocol() {
+
+            if (!point.hasFields()) {
+
+                LOG.warning("The point: " + point + "doesn't contains any fields, skipping");
+
+                return null;
+            }
 
             return point.toLineProtocol(options.getPointSettings());
         }
@@ -317,7 +326,15 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                 return null;
             }
 
-            return measurementMapper.toPoint(measurement, precision).toLineProtocol(options.getPointSettings());
+            Point point = measurementMapper.toPoint(measurement, precision);
+            if (!point.hasFields()) {
+
+                LOG.warning("The measurement: " + measurement + "doesn't contains any fields, skipping");
+
+                return null;
+            }
+
+            return point.toLineProtocol(options.getPointSettings());
         }
     }
 

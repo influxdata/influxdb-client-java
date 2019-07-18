@@ -134,6 +134,48 @@ class ITWriteApiBlocking extends AbstractITClientTest {
     }
 
     @Test
+    void writePointsWithoutFields() {
+
+        WriteApiBlocking api = influxDBClient.getWriteApiBlocking();
+
+        api.writePoints(Arrays.asList(
+                Point.measurement("h2o").addTag("location", "coyote_creek").time(9L, WritePrecision.NS),
+                Point.measurement("h2o").addTag("location", "coyote_creek").addField("water_level", 10.0D).time(10L, WritePrecision.NS)));
+
+        List<FluxTable> query = influxDBClient.getQueryApi().query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
+
+        FluxRecord record = query.get(0).getRecords().get(0);
+        Assertions.assertThat(record.getMeasurement()).isEqualTo("h2o");
+        Assertions.assertThat(record.getValue()).isEqualTo(10D);
+        Assertions.assertThat(record.getField()).isEqualTo("water_level");
+        Assertions.assertThat(record.getTime()).isEqualTo(Instant.ofEpochSecond(0, 10));
+    }
+
+    @Test
+    void writeMeasurementWithoutFields() {
+
+        WriteApiBlocking api = influxDBClient.getWriteApiBlocking();
+
+        api.writeMeasurements(WritePrecision.NS, Arrays.asList(
+                new H2OFeetMeasurement("coyote_creek", null, null, Instant.ofEpochSecond(0, 15)),
+                new H2OFeetMeasurement("coyote_creek", 16.0D, null, Instant.ofEpochSecond(0, 16))));
+
+        List<FluxTable> query = influxDBClient.getQueryApi().query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
+
+        FluxRecord record = query.get(0).getRecords().get(0);
+        Assertions.assertThat(record.getMeasurement()).isEqualTo("h2o");
+        Assertions.assertThat(record.getValue()).isEqualTo(16D);
+        Assertions.assertThat(record.getField()).isEqualTo("water_level");
+        Assertions.assertThat(record.getTime()).isEqualTo(Instant.ofEpochSecond(0, 16));
+    }
+
+    @Test
     void propagateServerException() {
 
         WriteApiBlocking api = influxDBClient.getWriteApiBlocking();
