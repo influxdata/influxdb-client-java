@@ -1,5 +1,11 @@
 ## 1.0.0.M2 [unreleased]
 
+### Breaking Changes
+1. [#40](https://github.com/influxdata/influxdb-client-java/issues/40): The client is hosted in Maven Central repository
+    - Repackaged from `org.influxdata` to `com.influxdb`
+    - Changed _groupId_ from `org.influxdata` to `com.influxdb`
+    - Snapshots are located in the _OSS Snapshot repository_: `https://oss.sonatype.org/content/repositories/snapshots/`
+
 ### Features
 1. [#34](https://github.com/bonitoo-io/influxdb-client-java/issues/34): Auto-configure client from configuration file
 1. [#35](https://github.com/bonitoo-io/influxdb-client-java/issues/35): Possibility to specify default tags
