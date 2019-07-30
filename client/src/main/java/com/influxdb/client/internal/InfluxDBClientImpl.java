@@ -44,6 +44,7 @@ import com.influxdb.client.TemplatesApi;
 import com.influxdb.client.UsersApi;
 import com.influxdb.client.VariablesApi;
 import com.influxdb.client.WriteApi;
+import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.Check;
 import com.influxdb.client.domain.IsOnboarding;
@@ -109,6 +110,12 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
         return new WriteApiImpl(writeOptions, retrofit.create(WriteService.class), options);
+    }
+
+    @Nonnull
+    @Override
+    public WriteApiBlocking getWriteApiBlocking() {
+        return new WriteApiBlockingImpl(retrofit.create(WriteService.class), options);
     }
 
     @Nonnull

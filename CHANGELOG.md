@@ -3,6 +3,10 @@
 ### Features
 1. [#34](https://github.com/bonitoo-io/influxdb-client-java/issues/34): Auto-configure client from configuration file
 1. [#35](https://github.com/bonitoo-io/influxdb-client-java/issues/35): Possibility to specify default tags
+1. [#41](https://github.com/bonitoo-io/influxdb-client-java/issues/41): Synchronous blocking API to Write time-series data into InfluxDB 2.0
+
+### Bugs
+1. [#43](https://github.com/bonitoo-io/influxdb-client-java/issues/43): The data point without field should be ignored
 
 ### CI
 1. [#37](https://github.com/bonitoo-io/influxdb-client-java/issues/37): Switch CI from oraclejdk to openjdk 

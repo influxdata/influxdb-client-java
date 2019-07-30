@@ -24,33 +24,44 @@ package com.influxdb.client.internal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.influxdb.Arguments;
 import com.influxdb.client.InfluxDBClientOptions;
-import com.influxdb.client.WriteApi;
-import com.influxdb.client.WriteOptions;
+import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.internal.AbstractWriteClient.BatchWriteData;
+import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement;
+import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint;
+import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.client.write.Point;
-import com.influxdb.client.write.events.AbstractWriteEvent;
-import com.influxdb.client.write.events.EventListener;
-import com.influxdb.client.write.events.ListenerRegistration;
+import com.influxdb.internal.AbstractRestClient;
 
-import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
+import retrofit2.Call;
 
 /**
- * @author Jakub Bednar (bednar@github) (15/10/2018 09:42)
+ * @author Jakub Bednar (bednar@github) (16/07/2019 06:48)
  */
-final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
+final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiBlocking {
 
-    WriteApiImpl(@Nonnull final WriteOptions writeOptions,
-                 @Nonnull final WriteService service,
-                 @Nonnull final InfluxDBClientOptions options) {
+    private static final Logger LOG = Logger.getLogger(WriteApiBlockingImpl.class.getName());
 
-        super(writeOptions, options, writeOptions.getWriteScheduler(), service);
+    private final WriteService service;
+    private final InfluxDBClientOptions options;
+
+    private final MeasurementMapper measurementMapper = new MeasurementMapper();
+
+    WriteApiBlockingImpl(@Nonnull final WriteService service,
+                         @Nonnull final InfluxDBClientOptions options) {
+
+        this.service = service;
+        this.options = options;
     }
 
     @Override
@@ -68,19 +79,16 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
                             @Nonnull final WritePrecision precision,
                             @Nullable final String record) {
 
-        Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(orgID, "orgID");
-        Arguments.checkNotNull(precision, "WritePrecision is required");
-
         if (record == null) {
             return;
         }
 
-        write(bucket, orgID, precision, Flowable.just(new BatchWriteDataRecord(record)));
+        write(bucket, orgID, precision, new BatchWriteDataRecord(record));
     }
 
     @Override
-    public void writeRecords(@Nonnull final WritePrecision precision, @Nonnull final List<String> records) {
+    public void writeRecords(@Nonnull final WritePrecision precision,
+                             @Nonnull final List<String> records) {
 
         Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
@@ -99,14 +107,11 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
         Arguments.checkNotNull(precision, "WritePrecision is required");
         Arguments.checkNotNull(records, "records");
 
-        Flowable<BatchWriteData> stream = Flowable.fromIterable(records).map(BatchWriteDataRecord::new);
-
-        write(bucket, orgID, precision, stream);
+        write(bucket, orgID, precision, records.stream().map(BatchWriteDataRecord::new));
     }
 
     @Override
     public void writePoint(@Nullable final Point point) {
-
         Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
@@ -114,10 +119,7 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
     }
 
     @Override
-    public void writePoint(@Nonnull final String bucket,
-                           @Nonnull final String orgID,
-                           @Nullable final Point point) {
-
+    public void writePoint(@Nonnull final String bucket, @Nonnull final String orgID, @Nullable final Point point) {
         if (point == null) {
             return;
         }
@@ -127,7 +129,6 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
 
     @Override
     public void writePoints(@Nonnull final List<Point> points) {
-
         Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
@@ -143,10 +144,10 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
         Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(points, "points");
 
-        Flowable<BatchWriteDataPoint> stream = Flowable.fromIterable(points).filter(Objects::nonNull)
-                .map(point -> new BatchWriteDataPoint(point, options));
-
-        write(bucket, orgID, stream);
+        points
+                .stream()
+                .filter(Objects::nonNull)
+                .forEach(point -> write(bucket, orgID, point.getPrecision(), new BatchWriteDataPoint(point, options)));
     }
 
     @Override
@@ -185,33 +186,42 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
                                       @Nonnull final String orgID,
                                       @Nonnull final WritePrecision precision,
                                       @Nonnull final List<M> measurements) {
-
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNotNull(precision, "WritePrecision is required");
         Arguments.checkNotNull(measurements, "records");
 
-        Flowable<BatchWriteData> stream = Flowable
-                .fromIterable(measurements)
-                .map(it -> new BatchWriteDataMeasurement(it, precision, options, measurementMapper));
-
-        write(bucket, orgID, precision, stream);
+        write(bucket, orgID, precision, measurements.stream()
+                .map(it -> new BatchWriteDataMeasurement(it, precision, options, measurementMapper)));
     }
 
-    @Nonnull
-    public <T extends AbstractWriteEvent> ListenerRegistration listenEvents(@Nonnull final Class<T> eventType,
-                                                                            @Nonnull final EventListener<T> listener) {
+    private void write(@Nonnull final String bucket,
+                       @Nonnull final String organization,
+                       @Nonnull final WritePrecision precision,
+                       @Nonnull final BatchWriteData data) {
 
-        Arguments.checkNotNull(eventType, "Type of listener");
-        Arguments.checkNotNull(listener, "Listener");
-
-        Disposable subscribe = super.addEventListener(eventType).subscribe(listener::onEvent);
-
-        return subscribe::dispose;
+        write(bucket, organization, precision, Stream.of(data));
     }
 
-    @Override
-    public void close() {
-        super.close();
+    private void write(@Nonnull final String bucket,
+                       @Nonnull final String organization,
+                       @Nonnull final WritePrecision precision,
+                       @Nonnull final Stream<BatchWriteData> stream) {
+
+        String lineProtocol = stream.map(BatchWriteData::toLineProtocol)
+                .filter(it -> it != null && !it.isEmpty())
+                .collect(Collectors.joining("\n"));
+
+        LOG.log(Level.FINEST,
+                "Writing time-series data into InfluxDB (org={0}, bucket={1}, precision={2})...",
+                new Object[]{organization, bucket, precision});
+
+        Call<Void> voidCall = service.postWrite(organization, bucket, lineProtocol, null,
+                "utf-8", "text/plain", null,
+                "application/json", precision);
+
+        execute(voidCall);
+
+        LOG.log(Level.FINEST, "Written data into InfluxDB: {0}", lineProtocol);
     }
 }

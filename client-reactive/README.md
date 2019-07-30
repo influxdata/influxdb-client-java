@@ -192,7 +192,6 @@ The following example demonstrates how to write measurements every 10 seconds:
 package example;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 import com.influxdb.annotations.Column;
@@ -226,7 +225,7 @@ public class WriteEvery10Seconds {
                     return temperature;
                 });
 
-        writeApi.writeMeasurements("bucket_name", "org_id", ChronoUnit.NANOS, measurements);
+        writeApi.writeMeasurements("bucket_name", "org_id", WritePrecision.NS, measurements);
 
         writeApi.close();
         influxDBClient.close();

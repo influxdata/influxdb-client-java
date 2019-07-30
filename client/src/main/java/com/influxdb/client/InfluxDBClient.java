@@ -60,7 +60,7 @@ public interface InfluxDBClient extends AutoCloseable {
     QueryApi getQueryApi();
 
     /**
-     * Get the Write client.
+     * Get the asynchronous non-blocking Write client.
      *
      * @return the new client instance for the Write API
      */
@@ -68,7 +68,7 @@ public interface InfluxDBClient extends AutoCloseable {
     WriteApi getWriteApi();
 
     /**
-     * Get the Write client.
+     * Get the asynchronous non-blocking Write client.
      *
      * @param writeOptions the writes configuration
      * @return the new client instance for the Write API
@@ -76,6 +76,13 @@ public interface InfluxDBClient extends AutoCloseable {
     @Nonnull
     WriteApi getWriteApi(@Nonnull final WriteOptions writeOptions);
 
+    /**
+     * Get the synchronous blocking Write client.
+     *
+     * @return the new client instance for the Write API
+     */
+    @Nonnull
+    WriteApiBlocking getWriteApiBlocking();
 
     /**
      * Get the {@link Authorization} client.

@@ -72,7 +72,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
     private final PublishProcessor<Flowable<BatchWriteItem>> flushPublisher;
     private final PublishSubject<AbstractWriteEvent> eventPublisher;
 
-    private final MeasurementMapper measurementMapper = new MeasurementMapper();
+    protected final MeasurementMapper measurementMapper = new MeasurementMapper();
     private final WriteService service;
 
     public AbstractWriteClient(@Nonnull final WriteOptions writeOptions,
@@ -257,7 +257,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
         String toLineProtocol();
     }
 
-    public final class BatchWriteDataRecord implements BatchWriteData {
+    public static final class BatchWriteDataRecord implements BatchWriteData {
 
         private final String record;
 
@@ -272,34 +272,50 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
         }
     }
 
-    public final class BatchWriteDataPoint implements BatchWriteData {
+    public static final class BatchWriteDataPoint implements BatchWriteData {
+
+        private static final Logger LOG = Logger.getLogger(BatchWriteDataPoint.class.getName());
 
         private final Point point;
+        private final InfluxDBClientOptions options;
 
-        public BatchWriteDataPoint(@Nonnull final Point point) {
-
-            Arguments.checkNotNull(point, "point");
+        public BatchWriteDataPoint(@Nonnull final Point point,
+                                   @Nonnull final InfluxDBClientOptions options) {
 
             this.point = point;
+            this.options = options;
         }
 
-        @Nonnull
+        @Nullable
         @Override
         public String toLineProtocol() {
+
+            if (!point.hasFields()) {
+
+                LOG.warning("The point: " + point + "doesn't contains any fields, skipping");
+
+                return null;
+            }
 
             return point.toLineProtocol(options.getPointSettings());
         }
     }
 
-    public final class BatchWriteDataMeasurement implements BatchWriteData {
+    public static final class BatchWriteDataMeasurement implements BatchWriteData {
 
         private final Object measurement;
         private final WritePrecision precision;
+        private final InfluxDBClientOptions options;
+        private final MeasurementMapper measurementMapper;
 
         public BatchWriteDataMeasurement(@Nullable final Object measurement,
-                                         @Nonnull final WritePrecision precision) {
+                                         @Nonnull final WritePrecision precision,
+                                         @Nonnull final InfluxDBClientOptions options,
+                                         @Nonnull final MeasurementMapper measurementMapper) {
             this.measurement = measurement;
             this.precision = precision;
+            this.options = options;
+            this.measurementMapper = measurementMapper;
         }
 
         @Nullable
@@ -310,7 +326,15 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                 return null;
             }
 
-            return measurementMapper.toPoint(measurement, precision).toLineProtocol(options.getPointSettings());
+            Point point = measurementMapper.toPoint(measurement, precision);
+            if (!point.hasFields()) {
+
+                LOG.warning("The measurement: " + measurement + "doesn't contains any fields, skipping");
+
+                return null;
+            }
+
+            return point.toLineProtocol(options.getPointSettings());
         }
     }
 

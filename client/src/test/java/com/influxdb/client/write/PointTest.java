@@ -228,4 +228,13 @@ class PointTest {
 
         Assertions.assertThat(point.toLineProtocol(defaults)).isEqualTo("h2o,a-expensive=true,location=europe,z-expensive=false level=2i");
     }
+
+    @Test
+    void hasFields() {
+
+        Assertions.assertThat(Point.measurement("h2o").hasFields()).isFalse();
+        Assertions.assertThat(Point.measurement("h2o").addTag("location", "europe").hasFields()).isFalse();
+        Assertions.assertThat(Point.measurement("h2o").addField("level", 2).hasFields()).isTrue();
+        Assertions.assertThat(Point.measurement("h2o").addTag("location", "europe").addField("level", 3).hasFields()).isTrue();
+    }
 }

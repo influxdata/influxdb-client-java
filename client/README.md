@@ -21,6 +21,7 @@ The reference Java client that allows query, write and management (bucket, organ
     - authorizations
     - health check
 - [Advanced Usage](#advanced-usage)
+    - [Writing data using synchronous blocking API](#writing-data-using-synchronous-blocking-api)
     - [Client configuration file](#client-configuration-file)
     - [Client connection string](#client-connection-string)
     - [Gzip support](#gzip-support)
@@ -319,7 +320,7 @@ public class RawQueryAsynchronous {
 
 ## Writes
 
-For writing data we use [WriteApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/WriteApi.html) that supports:
+For writing data we use [WriteApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/WriteApi.html) that is an asynchronous non-blocking API and supports:
 
 1. writing data using [InfluxDB Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/), Data Point, POJO 
 2. use batching for writes
@@ -370,6 +371,8 @@ writeApi.listenEvents(BackpressureEvent.class, value -> {
 });
 ```
 
+There is also a synchronous blocking version of `WriteApi` - [WriteApiBlocking](#writing-data-using-synchronous-blocking-api).
+
 ### Writing data
 
 #### By POJO
@@ -380,7 +383,6 @@ Write Measurement into specified bucket:
 package example;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
@@ -409,7 +411,7 @@ public class WritePOJO {
             temperature.value = 62D;
             temperature.time = Instant.now();
 
-            writeApi.writeMeasurement("bucket_name", "org_id", ChronoUnit.NANOS, temperature);
+            writeApi.writeMeasurement("bucket_name", "org_id", WritePrecision.NS, temperature);
         }
 
         influxDBClient.close();
@@ -438,7 +440,6 @@ Write Data point into specified bucket:
 package example;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
@@ -464,7 +465,7 @@ public class WriteDataPoint {
             Point point = Point.measurement("temperature")
                     .addTag("location", "west")
                     .addField("value", 55D)
-                    .time(Instant.now().toEpochMilli(), ChronoUnit.NANOS);
+                    .time(Instant.now().toEpochMilli(), WritePrecision.NS);
 
             writeApi.writePoint("bucket_name", "org_id", point);
         }
@@ -486,6 +487,7 @@ import java.time.temporal.ChronoUnit;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteApi;
+import com.influxdb.client.domain.WritePrecision;
 
 public class WriteLineProtocol {
 
@@ -505,7 +507,7 @@ public class WriteLineProtocol {
             //
             String record = "temperature,location=north value=60.0";
             
-            writeApi.writeRecord("bucket_name", "org_id", ChronoUnit.NANOS, record);
+            writeApi.writeRecord("bucket_name", "org_id", WritePrecision.NS, record);
         }
 
         influxDBClient.close();
@@ -666,6 +668,86 @@ public class InfluxDB2ManagementExample {
 ```
 
 ## Advanced Usage
+
+### Writing data using synchronous blocking API
+
+The [WriteApiBlocking](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/WriteApiBlocking.html) provides a synchronous blocking API to writing data using [InfluxDB Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/), Data Point and POJO. 
+
+_It's up to user to handle a server or a http exception._
+
+```java
+package example;
+
+import java.time.Instant;
+
+import org.influxdata.annotations.Column;
+import org.influxdata.annotations.Measurement;
+import org.influxdata.client.InfluxDBClient;
+import org.influxdata.client.InfluxDBClientFactory;
+import org.influxdata.client.WriteApiBlocking;
+import org.influxdata.client.domain.WritePrecision;
+import org.influxdata.client.write.Point;
+import org.influxdata.exceptions.InfluxException;
+
+public class WriteDataPoint {
+
+    private static char[] token = "my_token".toCharArray();
+
+    public static void main(final String[] args) throws Exception {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
+        
+        try {
+            //
+            // Write by LineProtocol
+            //
+            String record = "temperature,location=north value=60.0";
+
+            writeApi.writeRecord("bucket_name", "org_id", WritePrecision.NS, record);
+
+            //
+            // Write by Data Point
+            //
+            Point point = Point.measurement("temperature")
+                    .addTag("location", "west")
+                    .addField("value", 55D)
+                    .time(Instant.now().toEpochMilli(), WritePrecision.NS);
+
+            writeApi.writePoint("bucket_name", "org_id", point);
+
+            //
+            // Write by POJO
+            //
+            Temperature temperature = new Temperature();
+            temperature.location = "south";
+            temperature.value = 62D;
+            temperature.time = Instant.now();
+
+            writeApi.writeMeasurement("bucket_name", "org_id", WritePrecision.NS, temperature);
+
+        } catch (InfluxException ie) {
+            System.out.println("InfluxException: " + ie);
+        }
+
+        influxDBClient.close();
+    }
+
+    @Measurement(name = "temperature")
+    private static class Temperature {
+
+        @Column(tag = true)
+        String location;
+
+        @Column
+        Double value;
+
+        @Column(timestamp = true)
+        Instant time;
+    }
+}
+```
 
 ### Client configuration file
 

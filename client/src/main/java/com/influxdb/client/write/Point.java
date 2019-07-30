@@ -225,6 +225,15 @@ public final class Point {
     }
 
     /**
+     * Has point any fields?
+     *
+     * @return true, if the point contains any fields, false otherwise.
+     */
+    public boolean hasFields() {
+        return !fields.isEmpty();
+    }
+
+    /**
      * @return Line Protocol
      */
     @Nonnull

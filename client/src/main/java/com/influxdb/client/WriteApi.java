@@ -36,7 +36,7 @@ import com.influxdb.client.write.events.WriteRetriableErrorEvent;
 import com.influxdb.client.write.events.WriteSuccessEvent;
 
 /**
- * Write time-series data into InfluxDB 2.0.
+ * The asynchronous non-blocking API to Write time-series data into InfluxDB 2.0.
  * <p>
  * The data are formatted in <a href="https://bit.ly/2QL99fu">Line Protocol</a>.
  * <p>

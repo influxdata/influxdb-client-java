@@ -49,9 +49,13 @@ public class H2OFeetMeasurement {
     }
 
     H2OFeetMeasurement(String location, Double level, String description, @Nullable final Long millis) {
+        this(location, level, description, millis != null ? Instant.ofEpochMilli(millis) : null);
+    }
+
+    H2OFeetMeasurement(String location, Double level, String description, @Nullable final Instant time) {
         this.location = location;
         this.level = level;
         this.description = description;
-        this.time = millis != null ? Instant.ofEpochMilli(millis) : null;
+        this.time = time;
     }
 }

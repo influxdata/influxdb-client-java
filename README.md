@@ -106,7 +106,6 @@ dependencies {
 package example;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import com.influxdb.annotations.Column;
@@ -138,14 +137,14 @@ public class InfluxDB2Example {
             Point point = Point.measurement("temperature")
                     .addTag("location", "west")
                     .addField("value", 55D)
-                    .time(Instant.now().toEpochMilli(), ChronoUnit.NANOS);
+                    .time(Instant.now().toEpochMilli(), WritePrecision.NS);
 
             writeApi.writePoint("bucket_name", "org_id", point);
 
             //
             // Write by LineProtocol
             //
-            writeApi.writeRecord("bucket_name", "org_id", ChronoUnit.NANOS, "temperature,location=north value=60.0");
+            writeApi.writeRecord("bucket_name", "org_id", WritePrecision.NS, "temperature,location=north value=60.0");
 
             //
             // Write by POJO
@@ -155,7 +154,7 @@ public class InfluxDB2Example {
             temperature.value = 62D;
             temperature.time = Instant.now();
 
-            writeApi.writeMeasurement("bucket_name", "org_id", ChronoUnit.NANOS, temperature);
+            writeApi.writeMeasurement("bucket_name", "org_id", WritePrecision.NS, temperature);
         }
 
         //
