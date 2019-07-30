@@ -3,7 +3,7 @@
 > This library is under development and no stable version has been released yet.  
 > The API can change at any moment.
 
-[![KDoc](https://img.shields.io/badge/KDoc-link-brightgreen.svg)](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/com.influxdb.client.kotlin/index.html)
+[![KDoc](https://img.shields.io/badge/KDoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/com.influxdb.client.kotlin/index.html)
 
 The reference Kotlin client that allows query and write for the InfluxDB 2.0 by Kotlin Channel coroutines. 
 
@@ -14,7 +14,7 @@ The reference Kotlin client that allows query and write for the InfluxDB 2.0 by 
    
 ## Queries
 
-The [QueryKotlinApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/com.influxdb.client.kotlin/-query-kotlin-api/index.html) supports asynchronous queries by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html).
+The [QueryKotlinApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/com.influxdb.client.kotlin/-query-kotlin-api/index.html) supports asynchronous queries by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html).
    
 The following example demonstrates querying using the Flux language:
 

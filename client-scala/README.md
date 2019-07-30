@@ -3,7 +3,7 @@
 > This library is under development and no stable version has been released yet.  
 > The API can change at any moment.
 
-[![KDoc](https://img.shields.io/badge/Scaladoc-link-brightgreen.svg)](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-scala/scaladocs/org/influxdata/client/scala/index.html)
+[![KDoc](https://img.shields.io/badge/Scaladoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-scala/scaladocs/org/influxdata/client/scala/index.html)
 
 The reference Scala client that allows query and write for the InfluxDB 2.0 by [Akka Streams](https://doc.akka.io/docs/akka/2.5/stream/).
 
@@ -14,7 +14,7 @@ The reference Scala client that allows query and write for the InfluxDB 2.0 by [
 
 ## Queries
 
-The [QueryScalaApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-scala/scaladocs/org/influxdata/client/scala/QueryScalaApi.html) is based on the [Akka Streams](https://doc.akka.io/docs/akka/2.5/stream/). 
+The [QueryScalaApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-scala/scaladocs/org/influxdata/client/scala/QueryScalaApi.html) is based on the [Akka Streams](https://doc.akka.io/docs/akka/2.5/stream/). 
 The streaming can be configured by:
 
 - `bufferSize` - Size of a buffer for incoming responses. Default 10000. 

@@ -3,7 +3,7 @@
 > This library is under development and no stable version has been released yet.  
 > The API can change at any moment.
 
-[![javadoc](https://img.shields.io/badge/javadoc-link-brightgreen.svg)](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html)
+[![javadoc](https://img.shields.io/badge/javadoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html)
 
 The reference Java client that allows query, write and management (bucket, organization, users) for the InfluxDB 2.0.
 
@@ -28,7 +28,7 @@ The reference Java client that allows query, write and management (bucket, organ
          
 ## Queries
 
-For querying data we use [QueryApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/QueryApi.html) that allow perform synchronous, asynchronous and also use raw query response.
+For querying data we use [QueryApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/QueryApi.html) that allow perform synchronous, asynchronous and also use raw query response.
 
 ### Synchronous query
 
@@ -320,7 +320,7 @@ public class RawQueryAsynchronous {
 
 ## Writes
 
-For writing data we use [WriteApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/WriteApi.html) that is an asynchronous non-blocking API and supports:
+For writing data we use [WriteApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/WriteApi.html) that is an asynchronous non-blocking API and supports:
 
 1. writing data using [InfluxDB Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/), Data Point, POJO 
 2. use batching for writes
@@ -591,18 +591,18 @@ The client has following management API:
 
 | API endpoint | Description | Javadoc |
 | --- | --- | --- |
-| **/api/v2/authorizations** | Managing authorization data | [AuthorizationsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/AuthorizationsApi.html) |
-| **/api/v2/buckets** | Managing bucket data | [BucketsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/BucketsApi.html) |
-| **/api/v2/orgs** | Managing organization data | [OrganizationsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/OrganizationsApi.html) |
-| **/api/v2/users** | Managing user data | [UsersApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/UsersApi.html) |
-| **/api/v2/sources** | Managing sources | [SourcesApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/SourcesApi.html) |
-| **/api/v2/tasks** | Managing one-off and recurring tasks | [TasksApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/TasksApi.html) |
-| **/api/v2/scrapers** | Managing ScraperTarget data | [ScraperTargetsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/ScraperTargetsApi.html) |
-| **/api/v2/labels** | Managing resource labels | [LabelsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/LabelsApi.html) |
-| **/api/v2/telegrafs** | Managing telegraf config data | [TelegrafsApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/TelegrafsApi.html) |
-| **/api/v2/setup** | Managing onboarding setup | [InfluxDBClient#onBoarding()](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#onBoarding-com.influxdb.client.domain.Onboarding-) |
-| **/ready** | Get the readiness of an instance at startup| [InfluxDBClient#ready()](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#ready--) |
-| **/health** | Get the health of an instance anytime during execution | [InfluxDBClient#health()](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#health--) |
+| **/api/v2/authorizations** | Managing authorization data | [AuthorizationsApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/AuthorizationsApi.html) |
+| **/api/v2/buckets** | Managing bucket data | [BucketsApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/BucketsApi.html) |
+| **/api/v2/orgs** | Managing organization data | [OrganizationsApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/OrganizationsApi.html) |
+| **/api/v2/users** | Managing user data | [UsersApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/UsersApi.html) |
+| **/api/v2/sources** | Managing sources | [SourcesApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/SourcesApi.html) |
+| **/api/v2/tasks** | Managing one-off and recurring tasks | [TasksApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/TasksApi.html) |
+| **/api/v2/scrapers** | Managing ScraperTarget data | [ScraperTargetsApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/ScraperTargetsApi.html) |
+| **/api/v2/labels** | Managing resource labels | [LabelsApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/LabelsApi.html) |
+| **/api/v2/telegrafs** | Managing telegraf config data | [TelegrafsApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/TelegrafsApi.html) |
+| **/api/v2/setup** | Managing onboarding setup | [InfluxDBClient#onBoarding()](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#onBoarding-com.influxdb.client.domain.Onboarding-) |
+| **/ready** | Get the readiness of an instance at startup| [InfluxDBClient#ready()](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#ready--) |
+| **/health** | Get the health of an instance anytime during execution | [InfluxDBClient#health()](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/InfluxDBClient.html#health--) |
 
 
 The following example demonstrates how to use a InfluxDB 2.0 Management API. For further information see endpoints Javadoc.
@@ -671,7 +671,7 @@ public class InfluxDB2ManagementExample {
 
 ### Writing data using synchronous blocking API
 
-The [WriteApiBlocking](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/WriteApiBlocking.html) provides a synchronous blocking API to writing data using [InfluxDB Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/), Data Point and POJO. 
+The [WriteApiBlocking](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/WriteApiBlocking.html) provides a synchronous blocking API to writing data using [InfluxDB Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/), Data Point and POJO. 
 
 _It's up to user to handle a server or a http exception._
 

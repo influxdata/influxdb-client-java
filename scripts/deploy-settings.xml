@@ -25,11 +25,6 @@
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd">
     <servers>
         <server>
-            <id>bonitoo-repository</id>
-            <username>${env.BONITOO_SNAPSHOT_USER}</username>
-            <password>${env.BONITOO_SNAPSHOT_PASSWORD}</password>
-        </server>
-        <server>
             <id>ossrh</id>
             <username>${env.SONATYPE_USERNAME}</username>
             <password>${env.SONATYPE_PASSWORD}</password>
