@@ -37,6 +37,11 @@ services:
   - docker
 
 env:
+
+  global:
+    - secure: aCFuNNixYILZZfcOp0jI66om4w8Cbr+qtz1FUOVgbxeipFA93y7KLoXtFajkE1qmbHOdz8SvPcloY5q6HKIOYuqv4/6at+OaTogXELfrR+oKfxf2t5PfB1D+1RxM90+wjsEPGQh+HmFOEnGCnJ8ZUfcx76Afs+mPzbpjzKeNz7w=
+    - secure: dAJK41xM2dN3q3xJMqAOP6uvrOvpjjUzmHr8mYNyepER8Lpms9/GqVUxqJv12wzCBqv1XZk/CXxrv3iBc2XjlxlrzIJGQChTinwDEigv0BMl/Gh0821ja7gwzMEUmg9f79m5tJxIFQ306cWz1gyRDqM3fLzskvM2ayzvynsNc/w=
+
   matrix:
     - INFLUXDB_VERSION=1.7 INFLUXDB_2_VERSION=nightly
 

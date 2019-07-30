@@ -322,8 +322,6 @@ class ITTasksApi extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/11491
     void member() {
 
         UsersApi usersApi = influxDBClient.getUsersApi();
@@ -354,8 +352,6 @@ class ITTasksApi extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/11491
     void owner() {
 
         UsersApi usersApi = influxDBClient.getUsersApi();
