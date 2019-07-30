@@ -44,10 +44,7 @@ env:
     - INFLUXDB_VERSION=1.7 INFLUXDB_2_VERSION=nightly
 
 before_install:
-  - |
-    sudo apt-get install -qq libxml2-utils
-    export PROJECT_VERSION=`xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml`
-    echo "Project version: $PROJECT_VERSION"
+    - sudo apt-get install -qq libxml2-utils
 
 install: true
 
@@ -66,12 +63,12 @@ jobs:
       - ./scripts/publish-site.sh
 
   - stage: Deploy Snapshot
-    if: branch = master AND repo = influxdata/influxdb-client-java AND type IN (push) AND env(PROJECT_VERSION) =~ /(.+)(-SNAPSHOT)/
+    if: branch = master AND repo = influxdata/influxdb-client-java AND type IN (push)
     jdk: openjdk8
     script: skip
     deploy:
       provider: script
-      script: mvn clean deploy -DskipTests -s scripts/deploy-settings.xml
+      script: ./scripts/deploy-snapshot.sh
       skip_cleanup: true
 
   - stage: GitHub release

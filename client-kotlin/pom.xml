@@ -40,12 +40,12 @@
         The reference Kotlin client that allows query and write for the InfluxDB 2.0 by Kotlin Channel coroutines.
     </description>
 
-    <url>https://github.com/bonitoo-io/influxdb-client-java/tree/master/client-kotlin</url>
+    <url>https://github.com/influxdata/influxdb-client-java/tree/master/client-kotlin</url>
 
     <licenses>
         <license>
             <name>The MIT License (MIT)</name>
-            <url>https://raw.githubusercontent.com/bonitoo-io/influxdb-client-java/master/LICENSE</url>
+            <url>https://raw.githubusercontent.com/influxdata/influxdb-client-java/master/LICENSE</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -70,9 +70,9 @@
     </properties>
 
     <scm>
-        <connection>scm:git:git://github.com/bonitoo-io/influxdb-client-java.git</connection>
-        <developerConnection>scm:git:ssh://github.com/bonitoo-io/influxdb-client-java.git</developerConnection>
-        <url>http://github.com/bonitoo-io/influxdb-client-java/tree/master</url>
+        <connection>scm:git:git://github.com/influxdata/influxdb-client-java.git</connection>
+        <developerConnection>scm:git:ssh://github.com/influxdata/influxdb-client-java.git</developerConnection>
+        <url>http://github.com/influxdata/influxdb-client-java/tree/master</url>
     </scm>
 
     <build>
@@ -130,7 +130,7 @@
                     <sourceLinks>
                         <link>
                             <dir>${project.basedir}</dir>
-                            <url>https://github.com/bonitoo-io/influxdb-client-java/tree/master/client-kotlin
+                            <url>https://github.com/influxdata/influxdb-client-java/tree/master/client-kotlin
                             </url>
                             <urlSuffix>#L</urlSuffix>
                         </link>

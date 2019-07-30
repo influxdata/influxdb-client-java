@@ -151,17 +151,17 @@
     </dependencies>
 
     <repositories>
-        <repository>
-            <id>bonitoo-repository</id>
-            <name>Bonitoo.io repository</name>
-            <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
+		<repository>
+			<id>ossrh</id>
+			<name>OSS Snapshot repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
     </repositories>
 
 
