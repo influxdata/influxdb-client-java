@@ -29,16 +29,48 @@
 
     <parent>
         <artifactId>influxdb-client</artifactId>
-        <groupId>org.influxdata</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <groupId>com.influxdb</groupId>
+        <version>1.0.0.M2-SNAPSHOT</version>
     </parent>
 
     <artifactId>influxdb-client-test</artifactId>
     <packaging>jar</packaging>
 
     <name>The InfluxDB Client Test Tools</name>
-    <description>The InfluxDB client's Test Tools - mocking InfluxDB, parsing HTTP responses
+    <description>
+        The InfluxDB client's Test Tools - mocking InfluxDB, parsing HTTP responses
     </description>
+
+    <url>https://github.com/bonitoo-io/influxdb-client-java/tree/master/client-test</url>
+
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <url>https://raw.githubusercontent.com/bonitoo-io/influxdb-client-java/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Jakub Bednar</name>
+            <email>jakub.bednar@bonitoo.io</email>
+            <organization>Bonitoo</organization>
+            <organizationUrl>https://www.bonitoo.io</organizationUrl>
+        </developer>
+        <developer>
+            <name>Robert Hajek</name>
+            <email>robert.hajek@bonitoo.io</email>
+            <organization>Bonitoo</organization>
+            <organizationUrl>https://www.bonitoo.io</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/bonitoo-io/influxdb-client-java.git</connection>
+        <developerConnection>scm:git:ssh://github.com/bonitoo-io/influxdb-client-java.git</developerConnection>
+        <url>http://github.com/bonitoo-io/influxdb-client-java/tree/master</url>
+    </scm>
 
     <build>
         <plugins>
@@ -57,6 +89,13 @@
                     <generateReports>false</generateReports>
                     <skip>true</skip>
                     <skipDeploy>true</skipDeploy>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>

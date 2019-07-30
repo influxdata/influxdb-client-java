@@ -86,7 +86,8 @@ curl -i -X POST http://localhost:9999/api/v2/setup -H 'accept: application/json'
             "username": "my-user",
             "password": "my-password",
             "org": "my-org",
-            "bucket": "my-bucket"
+            "bucket": "my-bucket",
+            "token": "my-token"
         }'
 
 #

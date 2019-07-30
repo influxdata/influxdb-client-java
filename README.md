@@ -6,7 +6,7 @@
 [![Build Status](https://travis-ci.org/bonitoo-io/influxdb-client-java.svg?branch=master)](https://travis-ci.org/bonitoo-io/influxdb-client-java)
 [![codecov](https://codecov.io/gh/bonitoo-io/influxdb-client-java/branch/master/graph/badge.svg)](https://codecov.io/gh/bonitoo-io/influxdb-client-java)
 [![License](https://img.shields.io/github/license/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/blob/master/LICENSE)
-[![Snapshot Version](https://img.shields.io/nexus/s/https/apitea.com/nexus/org.influxdata/influxdb-client-java.svg)](https://apitea.com/nexus/content/repositories/bonitoo-snapshot/org/influxdata/)
+[![Maven Version](https://img.shields.io/nexus/s/https/repo1.maven.org/maven2/com.influxdb/influxdb-client-java.svg)](https://repo1.maven.org/maven2/com/influxdb/)
 [![GitHub issues](https://img.shields.io/github/issues-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/bonitoo-io/influxdb-client-java.svg)](https://github.com/bonitoo-io/influxdb-client-java/pulls)
 
@@ -47,7 +47,7 @@ The Java, Reactive, Kotlin and Scala clients are implemented for the InfluxDB 2.
 | --- | --- | --- |                                      --- |
 | **[java](./client)** | The reference Java client that allows query, write and InfluxDB 2.0 management. |  [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html), [readme](./client#influxdb-client-java/)| 2.0 |
 | **[reactive](./client-reactive)**  | The reference RxJava client for the InfluxDB 2.0 that allows query and write in a reactive way.| [javadoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html), [readme](./client#influxdb-client-java/) |2.0 |
-| **[kotlin](./client-kotlin)** | The reference Kotlin client that allows query and write for the InfluxDB 2.0 by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html). | [KDoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/org.influxdata.client.kotlin/index.html), [readme](./client-kotlin#influxdb-client-kotlin/) | 2.0|
+| **[kotlin](./client-kotlin)** | The reference Kotlin client that allows query and write for the InfluxDB 2.0 by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html). | [KDoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/com.influxdb.client.kotlin/index.html), [readme](./client-kotlin#influxdb-client-kotlin/) | 2.0|
 | **[scala](./client-scala)** | The reference Scala client that allows query and write for the InfluxDB 2.0 by [Akka Streams](https://doc.akka.io/docs/akka/2.5/stream/). | [Scaladoc](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-scala/scaladocs/org/influxdata/client/scala/index.html), [readme](./client-scala#influxdb-client-scala/) | 2.0 |
 
 There is also possibility to use the Flux language over the InfluxDB 1.7+ provided by: 
@@ -72,33 +72,9 @@ Flux flux = Flux
 
 ## How To Use  
 
-This clients are a work in progress and hosted in Bonitoo.io Repository. 
+This clients are hosted in Maven central Repository. 
 
-If you want to use it with the Maven, you have to add the Bonitoo.io Repository to your pom.xml:
-
-```xml
-<repositories>
-    <repository>
-        <id>bonitoo-repository</id>
-        <name>Bonitoo.io repository</name>
-        <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
-        <releases>
-            <enabled>true</enabled>
-        </releases>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-    </repository>
-</repositories>
-```
-
-or when using Gradle add:
-
-```groovy
-repositories{
-    maven {url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot/"}
-}
-```
+If you want to use it with the Maven, you have to add only the dependency on the artifact.
 
 ### Writes and Queries in InfluxDB 2.0
 
@@ -112,9 +88,9 @@ Download the latest version:
 
 ```XML
 <dependency>
-    <groupId>org.influxdata</groupId>
+    <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-java</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0.M2-SNAPSHOT</version>
 </dependency>
 ```
        
@@ -122,7 +98,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "org.influxdata:influxdb-client-java:1.0-SNAPSHOT"
+    compile "com.influxdb:influxdb-client-java:1.0.0.M2-SNAPSHOT"
 }
 ```
 
@@ -132,16 +108,15 @@ package example;
 import java.time.Instant;
 import java.util.List;
 
-import org.influxdata.annotations.Column;
-import org.influxdata.annotations.Measurement;
-import org.influxdata.client.InfluxDBClient;
-import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.QueryApi;
-import org.influxdata.client.WriteApi;
-import org.influxdata.client.domain.WritePrecision;
-import org.influxdata.client.write.Point;
-import org.influxdata.query.FluxRecord;
-import org.influxdata.query.FluxTable;
+import com.influxdb.annotations.Column;
+import com.influxdb.annotations.Measurement;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
+import com.influxdb.client.WriteApi;
+import com.influxdb.client.write.Point;
+import com.influxdb.query.FluxRecord;
+import com.influxdb.query.FluxTable;
 
 public class InfluxDB2Example {
 
@@ -227,9 +202,9 @@ Download the latest version:
 
 ```XML
 <dependency>
-    <groupId>org.influxdata</groupId>
+    <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-java</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0.M2-SNAPSHOT</version>
 </dependency>
 ```
        
@@ -237,7 +212,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "org.influxdata:influxdb-client-java:1.0-SNAPSHOT"
+    compile "com.influxdb:influxdb-client-java:1.0.0.M2-SNAPSHOT"
 }
 ```
 
@@ -246,13 +221,13 @@ package example;
 
 import java.util.Arrays;
 
-import org.influxdata.client.InfluxDBClient;
-import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.domain.Authorization;
-import org.influxdata.client.domain.Bucket;
-import org.influxdata.client.domain.Permission;
-import org.influxdata.client.domain.PermissionResource;
-import org.influxdata.client.domain.BucketRetentionRules;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.domain.Authorization;
+import com.influxdb.client.domain.Bucket;
+import com.influxdb.client.domain.Permission;
+import com.influxdb.client.domain.PermissionResource;
+import com.influxdb.client.domain.BucketRetentionRules;
 
 public class InfluxDB2ManagementExample {
 
@@ -313,9 +288,9 @@ Download the latest version:
 
 ```XML
 <dependency>
-    <groupId>org.influxdata</groupId>
+    <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-flux</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0.M2-SNAPSHOT</version>
 </dependency>
 ```
        
@@ -323,15 +298,15 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "org.influxdata:influxdb-client-flux:1.0-SNAPSHOT"
+    compile "com.influxdb:influxdb-client-flux:1.0.0.M2-SNAPSHOT"
 }
 ``` 
 
 ```java
 package example;
 
-import org.influxdata.client.flux.FluxClient;
-import org.influxdata.client.flux.FluxClientFactory;
+import com.influxdb.client.flux.FluxClient;
+import com.influxdb.client.flux.FluxClientFactory;
 
 public class FluxExample {
 

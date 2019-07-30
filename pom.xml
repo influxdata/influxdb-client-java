@@ -27,9 +27,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.influxdata</groupId>
+    <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0.M2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -46,6 +46,9 @@
     </modules>
 
     <name>The InfluxDB 2.0 JVM Based Clients</name>
+    <description>
+        The reference JVM clients for the InfluxDB 2.0 - currently Java, Reactive, Kotlin and Scala clients are implemented.
+    </description>
 
     <url>https://github.com/bonitoo-io/influxdb-client-java</url>
     <inceptionYear>2018</inceptionYear>
@@ -86,12 +89,12 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>bonitoo-repository</id>
-            <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
-            <id>bonitoo-repository</id>
-            <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
         <site>
             <id>gp</id>
@@ -383,28 +386,28 @@
         <dependencies>
 
             <dependency>
-                <groupId>org.influxdata</groupId>
+                <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-test</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0.M2-SNAPSHOT</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.influxdata</groupId>
+                <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-core</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0.M2-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>org.influxdata</groupId>
+                <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-java</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0.M2-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>org.influxdata</groupId>
+                <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-flux</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0.M2-SNAPSHOT</version>
             </dependency>
 
             <dependency>
@@ -530,7 +533,7 @@
             <name>Bonitoo.io repository</name>
             <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
             <releases>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </releases>
             <snapshots>
                 <enabled>true</enabled>

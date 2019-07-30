@@ -40,11 +40,16 @@ env:
   matrix:
     - INFLUXDB_VERSION=1.7 INFLUXDB_2_VERSION=nightly
 
+before_install:
+  - |
+    sudo apt-get install -qq libxml2-utils
+    export PROJECT_VERSION=`xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml`
+
 install: true
 
 script:
   - ./scripts/influxdb-restart.sh
-  - mvn -B -U clean install -Dmaven.javadoc.skip=true
+  - mvn -B -U clean install -Dmaven.javadoc.skip=true -Dmaven.dokka.skip=true
   - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
 
 jobs:
@@ -56,8 +61,8 @@ jobs:
       - ./scripts/influxdb-restart.sh
       - ./scripts/publish-site.sh
 
-  - stage: deploy
-    if: branch = master AND repo = bonitoo-io/influxdb-client-java AND type IN (push)
+  - stage: Deploy Snapshot
+    if: branch = master AND repo = bonitoo-io/influxdb-client-java AND type IN (push) AND env(PROJECT_VERSION) =~ /(.+)(-SNAPSHOT)/
     jdk: openjdk8
     script: skip
     deploy:

@@ -27,8 +27,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>influxdb-client</artifactId>
-        <groupId>org.influxdata</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <groupId>com.influxdb</groupId>
+        <version>1.0.0.M2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -39,6 +39,37 @@
     <description>
         The Spring Integration for InfluxDB 2.0: actuator for InfluxDB2 micrometer registry, actuator for InfluxDB2 health, InfluxDB2Client auto-configuration.
     </description>
+
+    <url>https://github.com/bonitoo-io/influxdb-client-java/tree/master/spring</url>
+
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <url>https://raw.githubusercontent.com/bonitoo-io/influxdb-client-java/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Jakub Bednar</name>
+            <email>jakub.bednar@bonitoo.io</email>
+            <organization>Bonitoo</organization>
+            <organizationUrl>https://www.bonitoo.io</organizationUrl>
+        </developer>
+        <developer>
+            <name>Robert Hajek</name>
+            <email>robert.hajek@bonitoo.io</email>
+            <organization>Bonitoo</organization>
+            <organizationUrl>https://www.bonitoo.io</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/bonitoo-io/influxdb-client-java.git</connection>
+        <developerConnection>scm:git:ssh://github.com/bonitoo-io/influxdb-client-java.git</developerConnection>
+        <url>http://github.com/bonitoo-io/influxdb-client-java/tree/master</url>
+    </scm>
 
     <properties>
         <micrometer.version>1.2.0-bonitoo-SNAPSHOT</micrometer.version>
@@ -65,7 +96,7 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.influxdata</groupId>
+            <groupId>com.influxdb</groupId>
             <artifactId>influxdb-client-java</artifactId>
         </dependency>
 
@@ -131,7 +162,7 @@
             <name>Bonitoo.io repository</name>
             <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
             <releases>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </releases>
             <snapshots>
                 <enabled>true</enabled>

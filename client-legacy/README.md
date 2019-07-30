@@ -155,30 +155,30 @@ Server availability can be checked using the `fluxClient.ping()` endpoint.  Serv
 The latest version for Maven dependency:
 ```xml
 <dependency>
-  <groupId>org.influxdata</groupId>
+  <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-flux</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0.M2-SNAPSHOT</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "org.influxdata:influxdb-client-flux:1.0-SNAPSHOT"
+    compile "com.influxdb:influxdb-client-flux:1.0.0.M2-SNAPSHOT"
 }
 ```
 
-### Repository
-The repository is temporally located [here](https://apitea.com/nexus/content/repositories/bonitoo-snapshot/).
+### Snapshot Repository
+The snapshots are deployed into [OSS Snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/).
 
 #### Maven
 ```xml
 <repository>
-    <id>bonitoo-repository</id>
-    <name>Bonitoo.io repository</name>
-    <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
+    <id>ossrh</id>
+    <name>OSS Snapshot repository</name>
+    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     <releases>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
     </releases>
     <snapshots>
         <enabled>true</enabled>
@@ -188,6 +188,6 @@ The repository is temporally located [here](https://apitea.com/nexus/content/rep
 #### Gradle
 ```
 repositories {
-    maven { url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 }
 ```

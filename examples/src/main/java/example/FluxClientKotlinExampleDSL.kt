@@ -21,13 +21,13 @@
  */
 package example
 
+import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
+import com.influxdb.query.dsl.Flux
+import com.influxdb.query.dsl.functions.restriction.Restrictions
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.filter
 import kotlinx.coroutines.channels.take
 import kotlinx.coroutines.runBlocking
-import org.influxdata.client.kotlin.InfluxDBClientKotlinFactory
-import org.influxdata.query.dsl.Flux
-import org.influxdata.query.dsl.functions.restriction.Restrictions
 import java.time.temporal.ChronoUnit
 
 fun main(args: Array<String>) = runBlocking {

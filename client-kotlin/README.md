@@ -3,7 +3,7 @@
 > This library is under development and no stable version has been released yet.  
 > The API can change at any moment.
 
-[![KDoc](https://img.shields.io/badge/KDoc-link-brightgreen.svg)](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/org.influxdata.client.kotlin/index.html)
+[![KDoc](https://img.shields.io/badge/KDoc-link-brightgreen.svg)](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/com.influxdb.client.kotlin/index.html)
 
 The reference Kotlin client that allows query and write for the InfluxDB 2.0 by Kotlin Channel coroutines. 
 
@@ -14,7 +14,7 @@ The reference Kotlin client that allows query and write for the InfluxDB 2.0 by 
    
 ## Queries
 
-The [QueryKotlinApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/org.influxdata.client.kotlin/-query-kotlin-api/index.html) supports asynchronous queries by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html).
+The [QueryKotlinApi](https://bonitoo-io.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/com.influxdb.client.kotlin/-query-kotlin-api/index.html) supports asynchronous queries by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html).
    
 The following example demonstrates querying using the Flux language:
 
@@ -25,7 +25,7 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.filter
 import kotlinx.coroutines.channels.take
 import kotlinx.coroutines.runBlocking
-import org.influxdata.client.kotlin.InfluxDBClientKotlinFactory
+import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
 
 private val token = "my_token".toCharArray()
 
@@ -60,7 +60,7 @@ package example
 
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.runBlocking
-import org.influxdata.client.kotlin.InfluxDBClientKotlinFactory
+import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
 
 private val token = "my_token".toCharArray()
 
@@ -174,9 +174,9 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.filter
 import kotlinx.coroutines.channels.take
 import kotlinx.coroutines.runBlocking
-import org.influxdata.client.kotlin.InfluxDBClientKotlinFactory
-import org.influxdata.query.dsl.Flux
-import org.influxdata.query.dsl.functions.restriction.Restrictions
+import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
+import com.influxdb.query.dsl.Flux
+import com.influxdb.query.dsl.functions.restriction.Restrictions
 import java.time.temporal.ChronoUnit
 
 private val token = "my_token".toCharArray()
@@ -210,30 +210,30 @@ fun main(args: Array<String>) = runBlocking {
 The latest version for Maven dependency:
 ```xml
 <dependency>
-  <groupId>org.influxdata</groupId>
+  <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-kotlin</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0.M2-SNAPSHOT</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "org.influxdata:influxdb-client-kotlin:1.0-SNAPSHOT"
+    compile "com.influxdb:influxdb-client-kotlin:1.0.0.M2-SNAPSHOT"
 }
 ```
 
-### Repository
-The repository is temporally located [here](https://apitea.com/nexus/content/repositories/bonitoo-snapshot/).
+### Snapshot Repository
+The snapshots are deployed into [OSS Snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/).
 
 #### Maven
 ```xml
 <repository>
-    <id>bonitoo-repository</id>
-    <name>Bonitoo.io repository</name>
-    <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
+    <id>ossrh</id>
+    <name>OSS Snapshot repository</name>
+    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     <releases>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
     </releases>
     <snapshots>
         <enabled>true</enabled>
@@ -243,6 +243,6 @@ The repository is temporally located [here](https://apitea.com/nexus/content/rep
 #### Gradle
 ```
 repositories {
-    maven { url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 }
 ```

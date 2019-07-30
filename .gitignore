@@ -1,5 +1,5 @@
 # Maven
-target/**
+**/target/**
 .m2/**
 tree.txt
 

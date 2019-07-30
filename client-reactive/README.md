@@ -25,9 +25,9 @@ The following example demonstrates querying using the Flux language:
 ```java
 package example;
 
-import org.influxdata.client.reactive.InfluxDBClientReactive;
-import org.influxdata.client.reactive.InfluxDBClientReactiveFactory;
-import org.influxdata.client.reactive.QueryReactiveApi;
+import com.influxdb.client.reactive.InfluxDBClientReactive;
+import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
+import com.influxdb.client.reactive.QueryReactiveApi;
 
 public class ReactiveQuery {
 
@@ -71,9 +71,9 @@ The Raw query allows direct processing original [CSV response](http://bit.ly/flu
 ```java
 package example;
 
-import org.influxdata.client.reactive.InfluxDBClientReactive;
-import org.influxdata.client.reactive.InfluxDBClientReactiveFactory;
-import org.influxdata.client.reactive.QueryReactiveApi;
+import com.influxdb.client.reactive.InfluxDBClientReactive;
+import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
+import com.influxdb.client.reactive.QueryReactiveApi;
 
 public class ReactiveQueryRaw {
 
@@ -115,11 +115,11 @@ package example;
 
 import java.time.Instant;
 
-import org.influxdata.annotations.Column;
-import org.influxdata.annotations.Measurement;
-import org.influxdata.client.reactive.InfluxDBClientReactive;
-import org.influxdata.client.reactive.InfluxDBClientReactiveFactory;
-import org.influxdata.client.reactive.QueryReactiveApi;
+import com.influxdb.annotations.Column;
+import com.influxdb.annotations.Measurement;
+import com.influxdb.client.reactive.InfluxDBClientReactive;
+import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
+import com.influxdb.client.reactive.QueryReactiveApi;
 
 /**
  * @author Jakub Bednar (bednar@github) (19/02/2019 09:20)
@@ -194,12 +194,11 @@ package example;
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
-import org.influxdata.annotations.Column;
-import org.influxdata.annotations.Measurement;
-import org.influxdata.client.domain.WritePrecision;
-import org.influxdata.client.reactive.InfluxDBClientReactive;
-import org.influxdata.client.reactive.InfluxDBClientReactiveFactory;
-import org.influxdata.client.reactive.WriteReactiveApi;
+import com.influxdb.annotations.Column;
+import com.influxdb.annotations.Measurement;
+import com.influxdb.client.reactive.InfluxDBClientReactive;
+import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
+import com.influxdb.client.reactive.WriteReactiveApi;
 
 import io.reactivex.Flowable;
 
@@ -333,11 +332,11 @@ Server availability can be checked using the `influxDBClient.health()` endpoint.
 ```java
 package example;
 
-import org.influxdata.client.reactive.InfluxDBClientReactive;
-import org.influxdata.client.reactive.InfluxDBClientReactiveFactory;
-import org.influxdata.client.reactive.QueryReactiveApi;
-import org.influxdata.query.dsl.Flux;
-import org.influxdata.query.dsl.functions.restriction.Restrictions;
+import com.influxdb.client.reactive.InfluxDBClientReactive;
+import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
+import com.influxdb.client.reactive.QueryReactiveApi;
+import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.functions.restriction.Restrictions;
 
 public class ReactiveQuery {
 
@@ -375,30 +374,30 @@ public class ReactiveQuery {
 The latest version for Maven dependency:
 ```xml
 <dependency>
-  <groupId>org.influxdata</groupId>
+  <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-reactive</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0.M2-SNAPSHOT</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "org.influxdata:influxdb-client-reactive:1.0-SNAPSHOT"
+    compile "com.influxdb:influxdb-client-reactive:1.0.0.M2-SNAPSHOT"
 }
 ```
 
-### Repository
-The repository is temporally located [here](https://apitea.com/nexus/content/repositories/bonitoo-snapshot/).
+### Snapshot Repository
+The snapshots are deployed into [OSS Snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/).
 
 #### Maven
 ```xml
 <repository>
-    <id>bonitoo-repository</id>
-    <name>Bonitoo.io repository</name>
-    <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
+    <id>ossrh</id>
+    <name>OSS Snapshot repository</name>
+    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     <releases>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
     </releases>
     <snapshots>
         <enabled>true</enabled>
@@ -408,6 +407,6 @@ The repository is temporally located [here](https://apitea.com/nexus/content/rep
 #### Gradle
 ```
 repositories {
-    maven { url "https://apitea.com/nexus/content/repositories/bonitoo-snapshot" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 }
 ```
