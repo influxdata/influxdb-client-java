@@ -1,6 +1,6 @@
-org.influxdata.client
-org.influxdata.client.domain
-org.influxdata.client.internal
-org.influxdata.client.service
-org.influxdata.client.write
-org.influxdata.client.write.events
+com.influxdb.client
+com.influxdb.client.domain
+com.influxdb.client.internal
+com.influxdb.client.service
+com.influxdb.client.write
+com.influxdb.client.write.events

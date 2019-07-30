@@ -20,7 +20,7 @@ under the License.
 <rss version="0.91">
   <channel>
     <title>Spring Integration for InfluxDB 2.0 - Checkstyle report</title>
-    <link>https://github.com/bonitoo-io/influxdb-client-java/influxdb-spring</link>
+    <link>https://github.com/influxdata/influxdb-client-java/tree/master/spring</link>
     <description>Spring Integration for InfluxDB 2.0 - Checkstyle report</description>
     <language>en-us</language>
     <copyright>&#169;2018 - 2019 InfluxData, Inc.</copyright>
@@ -30,9 +30,9 @@ under the License.
              Warnings: 0,
              Infos: 0
       </title>
-            <link>https://github.com/bonitoo-io/influxdb-client-java/influxdb-spring/checkstyle.html</link>
+            <link>https://github.com/influxdata/influxdb-client-java/tree/master/spring/checkstyle.html</link>
       <description>
-        <p>Click <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-spring/checkstyle.html">here</a> for the full Checkstyle report.</p>
+        <p>Click <a href="https://github.com/influxdata/influxdb-client-java/tree/master/spring/checkstyle.html">here</a> for the full Checkstyle report.</p>
 
         <table summary="Files" boder="1">
           <thead>
@@ -46,7 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-spring/checkstyle.html#org.influxdata.spring.influx.InfluxDB2AutoConfiguration.java">org/influxdata/spring/influx/InfluxDB2AutoConfiguration.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/spring/checkstyle.html#com.influxdb.spring.influx.InfluxDB2Properties.java">com/influxdb/spring/influx/InfluxDB2Properties.java</a>
                 </td>
                 <td>
                   0
@@ -60,7 +60,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-spring/checkstyle.html#org.influxdata.spring.influx.InfluxDB2Properties.java">org/influxdata/spring/influx/InfluxDB2Properties.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/spring/checkstyle.html#com.influxdb.spring.health.InfluxDB2HealthIndicatorAutoConfiguration.java">com/influxdb/spring/health/InfluxDB2HealthIndicatorAutoConfiguration.java</a>
                 </td>
                 <td>
                   0
@@ -74,7 +74,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-spring/checkstyle.html#org.influxdata.spring.health.InfluxDB2HealthIndicator.java">org/influxdata/spring/health/InfluxDB2HealthIndicator.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/spring/checkstyle.html#com.influxdb.spring.influx.InfluxDB2AutoConfiguration.java">com/influxdb/spring/influx/InfluxDB2AutoConfiguration.java</a>
                 </td>
                 <td>
                   0
@@ -88,7 +88,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-spring/checkstyle.html#org.influxdata.spring.metrics.Influx2PropertiesConfigAdapter.java">org/influxdata/spring/metrics/Influx2PropertiesConfigAdapter.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/spring/checkstyle.html#com.influxdb.spring.influx.InfluxDB2OkHttpClientBuilderProvider.java">com/influxdb/spring/influx/InfluxDB2OkHttpClientBuilderProvider.java</a>
                 </td>
                 <td>
                   0
@@ -102,7 +102,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-spring/checkstyle.html#org.influxdata.spring.metrics.Influx2MetricsExportAutoConfiguration.java">org/influxdata/spring/metrics/Influx2MetricsExportAutoConfiguration.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/spring/checkstyle.html#com.influxdb.spring.health.InfluxDB2HealthIndicator.java">com/influxdb/spring/health/InfluxDB2HealthIndicator.java</a>
                 </td>
                 <td>
                   0
@@ -116,7 +116,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-spring/checkstyle.html#org.influxdata.spring.health.InfluxDB2HealthIndicatorAutoConfiguration.java">org/influxdata/spring/health/InfluxDB2HealthIndicatorAutoConfiguration.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/spring/checkstyle.html#com.influxdb.spring.metrics.Influx2MetricsExportAutoConfiguration.java">com/influxdb/spring/metrics/Influx2MetricsExportAutoConfiguration.java</a>
                 </td>
                 <td>
                   0
@@ -130,7 +130,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-spring/checkstyle.html#org.influxdata.spring.influx.InfluxDB2OkHttpClientBuilderProvider.java">org/influxdata/spring/influx/InfluxDB2OkHttpClientBuilderProvider.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/spring/checkstyle.html#com.influxdb.spring.metrics.Influx2Properties.java">com/influxdb/spring/metrics/Influx2Properties.java</a>
                 </td>
                 <td>
                   0
@@ -144,7 +144,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-spring/checkstyle.html#org.influxdata.spring.metrics.Influx2Properties.java">org/influxdata/spring/metrics/Influx2Properties.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/spring/checkstyle.html#com.influxdb.spring.metrics.Influx2PropertiesConfigAdapter.java">com/influxdb/spring/metrics/Influx2PropertiesConfigAdapter.java</a>
                 </td>
                 <td>
                   0

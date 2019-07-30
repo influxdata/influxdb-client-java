@@ -1,7 +1,7 @@
-org.influxdata
-org.influxdata.annotations
-org.influxdata.exceptions
-org.influxdata.internal
-org.influxdata.query
-org.influxdata.query.exceptions
-org.influxdata.query.internal
+com.influxdb
+com.influxdb.annotations
+com.influxdb.exceptions
+com.influxdb.internal
+com.influxdb.query
+com.influxdb.query.exceptions
+com.influxdb.query.internal

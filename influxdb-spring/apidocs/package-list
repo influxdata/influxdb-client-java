@@ -1,3 +1,3 @@
-org.influxdata.spring.health
-org.influxdata.spring.influx
-org.influxdata.spring.metrics
+com.influxdb.spring.health
+com.influxdb.spring.influx
+com.influxdb.spring.metrics

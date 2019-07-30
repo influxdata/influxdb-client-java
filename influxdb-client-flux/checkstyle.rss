@@ -20,7 +20,7 @@ under the License.
 <rss version="0.91">
   <channel>
     <title>The InfluxDB 1.7+ Flux Client - Checkstyle report</title>
-    <link>https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-flux</link>
+    <link>https://github.com/influxdata/influxdb-client-java/tree/master/client-legacy</link>
     <description>The InfluxDB 1.7+ Flux Client - Checkstyle report</description>
     <language>en-us</language>
     <copyright>&#169;2018 - 2019 InfluxData, Inc.</copyright>
@@ -30,9 +30,9 @@ under the License.
              Warnings: 0,
              Infos: 0
       </title>
-            <link>https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-flux/checkstyle.html</link>
+            <link>https://github.com/influxdata/influxdb-client-java/tree/master/client-legacy/checkstyle.html</link>
       <description>
-        <p>Click <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-flux/checkstyle.html">here</a> for the full Checkstyle report.</p>
+        <p>Click <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-legacy/checkstyle.html">here</a> for the full Checkstyle report.</p>
 
         <table summary="Files" boder="1">
           <thead>
@@ -46,7 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-flux/checkstyle.html#org.influxdata.client.flux.FluxClientFactory.java">org/influxdata/client/flux/FluxClientFactory.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-legacy/checkstyle.html#com.influxdb.client.flux.internal.FluxService.java">com/influxdb/client/flux/internal/FluxService.java</a>
                 </td>
                 <td>
                   0
@@ -60,7 +60,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-flux/checkstyle.html#org.influxdata.client.flux.FluxConnectionOptions.java">org/influxdata/client/flux/FluxConnectionOptions.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-legacy/checkstyle.html#com.influxdb.client.flux.FluxConnectionOptions.java">com/influxdb/client/flux/FluxConnectionOptions.java</a>
                 </td>
                 <td>
                   0
@@ -74,7 +74,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-flux/checkstyle.html#org.influxdata.client.flux.FluxClient.java">org/influxdata/client/flux/FluxClient.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-legacy/checkstyle.html#com.influxdb.client.flux.internal.FluxApiImpl.java">com/influxdb/client/flux/internal/FluxApiImpl.java</a>
                 </td>
                 <td>
                   0
@@ -88,7 +88,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-flux/checkstyle.html#org.influxdata.client.flux.internal.FluxApiImpl.java">org/influxdata/client/flux/internal/FluxApiImpl.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-legacy/checkstyle.html#com.influxdb.client.flux.FluxClient.java">com/influxdb/client/flux/FluxClient.java</a>
                 </td>
                 <td>
                   0
@@ -102,7 +102,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-flux/checkstyle.html#org.influxdata.client.flux.internal.FluxService.java">org/influxdata/client/flux/internal/FluxService.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-legacy/checkstyle.html#com.influxdb.client.flux.FluxClientFactory.java">com/influxdb/client/flux/FluxClientFactory.java</a>
                 </td>
                 <td>
                   0

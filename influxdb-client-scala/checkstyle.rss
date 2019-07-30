@@ -20,7 +20,7 @@ under the License.
 <rss version="0.91">
   <channel>
     <title>The Scala InfluxDB 2.0 Client - Checkstyle report</title>
-    <link>https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-scala</link>
+    <link>https://github.com/influxdata/influxdb-client-java/tree/master/client-scala</link>
     <description>The Scala InfluxDB 2.0 Client - Checkstyle report</description>
     <language>en-us</language>
     <copyright>&#169;2018 - 2019 InfluxData, Inc.</copyright>
@@ -30,9 +30,9 @@ under the License.
              Warnings: 0,
              Infos: 0
       </title>
-            <link>https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-scala/checkstyle.html</link>
+            <link>https://github.com/influxdata/influxdb-client-java/tree/master/client-scala/checkstyle.html</link>
       <description>
-        <p>Click <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-scala/checkstyle.html">here</a> for the full Checkstyle report.</p>
+        <p>Click <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-scala/checkstyle.html">here</a> for the full Checkstyle report.</p>
 
         <table summary="Files" boder="1">
           <thead>

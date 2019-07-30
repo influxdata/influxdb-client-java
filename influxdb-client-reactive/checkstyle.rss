@@ -20,7 +20,7 @@ under the License.
 <rss version="0.91">
   <channel>
     <title>The RxJava InfluxDB 2.0 Client - Checkstyle report</title>
-    <link>https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-reactive</link>
+    <link>https://github.com/influxdata/influxdb-client-java/tree/master/client-reactive</link>
     <description>The RxJava InfluxDB 2.0 Client - Checkstyle report</description>
     <language>en-us</language>
     <copyright>&#169;2018 - 2019 InfluxData, Inc.</copyright>
@@ -30,9 +30,9 @@ under the License.
              Warnings: 0,
              Infos: 0
       </title>
-            <link>https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-reactive/checkstyle.html</link>
+            <link>https://github.com/influxdata/influxdb-client-java/tree/master/client-reactive/checkstyle.html</link>
       <description>
-        <p>Click <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-reactive/checkstyle.html">here</a> for the full Checkstyle report.</p>
+        <p>Click <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-reactive/checkstyle.html">here</a> for the full Checkstyle report.</p>
 
         <table summary="Files" boder="1">
           <thead>
@@ -46,7 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.WriteReactiveApi.java">org/influxdata/client/reactive/WriteReactiveApi.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-reactive/checkstyle.html#com.influxdb.client.reactive.QueryReactiveApi.java">com/influxdb/client/reactive/QueryReactiveApi.java</a>
                 </td>
                 <td>
                   0
@@ -60,7 +60,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.QueryReactiveApi.java">org/influxdata/client/reactive/QueryReactiveApi.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-reactive/checkstyle.html#com.influxdb.client.reactive.internal.QueryReactiveApiImpl.java">com/influxdb/client/reactive/internal/QueryReactiveApiImpl.java</a>
                 </td>
                 <td>
                   0
@@ -74,7 +74,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.internal.QueryReactiveApiImpl.java">org/influxdata/client/reactive/internal/QueryReactiveApiImpl.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-reactive/checkstyle.html#com.influxdb.client.reactive.internal.WriteReactiveApiImpl.java">com/influxdb/client/reactive/internal/WriteReactiveApiImpl.java</a>
                 </td>
                 <td>
                   0
@@ -88,7 +88,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.internal.InfluxDBClientReactiveImpl.java">org/influxdata/client/reactive/internal/InfluxDBClientReactiveImpl.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-reactive/checkstyle.html#com.influxdb.client.reactive.InfluxDBClientReactive.java">com/influxdb/client/reactive/InfluxDBClientReactive.java</a>
                 </td>
                 <td>
                   0
@@ -102,7 +102,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.InfluxDBClientReactiveFactory.java">org/influxdata/client/reactive/InfluxDBClientReactiveFactory.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-reactive/checkstyle.html#com.influxdb.client.reactive.InfluxDBClientReactiveFactory.java">com/influxdb/client/reactive/InfluxDBClientReactiveFactory.java</a>
                 </td>
                 <td>
                   0
@@ -116,7 +116,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.InfluxDBClientReactive.java">org/influxdata/client/reactive/InfluxDBClientReactive.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-reactive/checkstyle.html#com.influxdb.client.reactive.internal.InfluxDBClientReactiveImpl.java">com/influxdb/client/reactive/internal/InfluxDBClientReactiveImpl.java</a>
                 </td>
                 <td>
                   0
@@ -130,7 +130,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bonitoo-io/influxdb-client-java/influxdb-client-reactive/checkstyle.html#org.influxdata.client.reactive.internal.WriteReactiveApiImpl.java">org/influxdata/client/reactive/internal/WriteReactiveApiImpl.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-reactive/checkstyle.html#com.influxdb.client.reactive.WriteReactiveApi.java">com/influxdb/client/reactive/WriteReactiveApi.java</a>
                 </td>
                 <td>
                   0

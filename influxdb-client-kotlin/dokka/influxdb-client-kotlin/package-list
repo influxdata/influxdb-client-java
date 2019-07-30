@@ -1,4 +1,4 @@
 $dokka.format:html
 $dokka.linkExtension:html
 
-org.influxdata.client.kotlin
+com.influxdb.client.kotlin
