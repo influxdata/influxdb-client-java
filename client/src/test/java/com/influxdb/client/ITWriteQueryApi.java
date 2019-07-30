@@ -357,14 +357,8 @@ class ITWriteQueryApi extends AbstractITClientTest {
     @Test
     void queryDataFromNewOrganization() throws Exception {
 
-        influxDBClient.close();
-
-        influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-user", "my-password".toCharArray());
-        String token = findMyToken();
-        influxDBClient.close();
-
         // Login as operator
-        influxDBClient = InfluxDBClientFactory.create(influxDB_URL, token.toCharArray());
+        influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-token".toCharArray());
 
         String orgName = generateName("new-org");
         Organization organization =

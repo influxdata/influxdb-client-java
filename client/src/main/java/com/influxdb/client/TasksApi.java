@@ -64,11 +64,12 @@ public interface TasksApi {
      *     |&gt; yield(name:"mean")
      * </pre>
      *
-     * @param task the task to create
+     * @param task  the task to create
+     * @param token The token to use for authenticating this task when it executes queries. Required.
      * @return Task created
      */
     @Nonnull
-    Task createTask(@Nonnull final Task task);
+    Task createTask(@Nonnull final Task task, @Nonnull final String token);
 
     /**
      * Create a new task.
@@ -88,13 +89,15 @@ public interface TasksApi {
      * @param flux         the Flux script to run for this task
      * @param cron         a task repetition schedule in the form '* * * * * *'
      * @param organization the organization that owns this Task
+     * @param token        The token to use for authenticating this task when it executes queries. Required.
      * @return Task created
      */
     @Nonnull
     Task createTaskCron(@Nonnull final String name,
                         @Nonnull final String flux,
                         @Nonnull final String cron,
-                        @Nonnull final Organization organization);
+                        @Nonnull final Organization organization,
+                        @Nonnull final String token);
 
     /**
      * Creates a new task with task repetition by cron.
@@ -105,13 +108,15 @@ public interface TasksApi {
      * @param flux  the Flux script to run for this task
      * @param cron  a task repetition schedule in the form '* * * * * *'
      * @param orgID an id of the organization that owns this Task
+     * @param token The token to use for authenticating this task when it executes queries. Required.
      * @return Task created
      */
     @Nonnull
     Task createTaskCron(@Nonnull final String name,
                         @Nonnull final String flux,
                         @Nonnull final String cron,
-                        @Nonnull final String orgID);
+                        @Nonnull final String orgID,
+                        @Nonnull final String token);
 
     /**
      * Creates a new task with task repetition by duration expression ("1h", "30s").
@@ -122,13 +127,15 @@ public interface TasksApi {
      * @param flux         the Flux script to run for this task
      * @param every        a task repetition by duration expression
      * @param organization the organization that owns this Task
+     * @param token        The token to use for authenticating this task when it executes queries. Required.
      * @return Task created
      */
     @Nonnull
     Task createTaskEvery(@Nonnull final String name,
                          @Nonnull final String flux,
                          @Nonnull final String every,
-                         @Nonnull final Organization organization);
+                         @Nonnull final Organization organization,
+                         @Nonnull final String token);
 
     /**
      * Creates a new task with task repetition by duration expression ("1h", "30s").
@@ -139,13 +146,15 @@ public interface TasksApi {
      * @param flux  the Flux script to run for this task
      * @param every a task repetition by duration expression
      * @param orgID an id of the organization that owns this Task
+     * @param token The token to use for authenticating this task when it executes queries. Required.
      * @return Task created
      */
     @Nonnull
     Task createTaskEvery(@Nonnull final String name,
                          @Nonnull final String flux,
                          @Nonnull final String every,
-                         @Nonnull final String orgID);
+                         @Nonnull final String orgID,
+                         @Nonnull final String token);
 
     /**
      * Update a task. This will cancel all queued runs.
@@ -184,19 +193,21 @@ public interface TasksApi {
      * Clone a task.
      *
      * @param taskID ID of task to clone
+     * @param token  The token to use for authenticating this task when it executes queries. Required.
      * @return cloned task
      */
     @Nonnull
-    Task cloneTask(@Nonnull final String taskID);
+    Task cloneTask(@Nonnull final String taskID, @Nonnull final String token);
 
     /**
      * Clone a task.
      *
-     * @param task       task to clone
+     * @param task  task to clone
+     * @param token The token to use for authenticating this task when it executes queries. Required.
      * @return cloned task
      */
     @Nonnull
-    Task cloneTask(@Nonnull final Task task);
+    Task cloneTask(@Nonnull final Task task, @Nonnull final String token);
 
     /**
      * Retrieve an task.
@@ -445,7 +456,7 @@ public interface TasksApi {
     /**
      * Retrieve all logs for a run.
      *
-     * @param run   the run with a taskID and a runID
+     * @param run the run with a taskID and a runID
      * @return the list of all logs for a run
      */
     @Nonnull

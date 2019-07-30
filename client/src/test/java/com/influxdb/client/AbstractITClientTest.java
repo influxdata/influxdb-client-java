@@ -53,16 +53,11 @@ abstract class AbstractITClientTest extends AbstractTest {
         influxDB_URL = getInfluxDb2Url();
         LOG.log(Level.FINEST, "InfluxDB URL: {0}", influxDB_URL);
 
-        influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-user", "my-password".toCharArray());
-
         boolean basic_auth = testInfo.getTags().contains("basic_auth");
-        
         if (!basic_auth) {
-
-            String token = findMyToken();
-
-            influxDBClient.close();
-            influxDBClient = InfluxDBClientFactory.create(influxDB_URL, token.toCharArray());
+            influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-token".toCharArray());
+        } else {
+            influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-user", "my-password".toCharArray());
         }
     }
 
@@ -76,21 +71,6 @@ abstract class AbstractITClientTest extends AbstractTest {
         BucketRetentionRules bucketRetentionRules = new BucketRetentionRules();
         bucketRetentionRules.setEverySeconds(3600);
         return bucketRetentionRules;
-    }
-
-    @Nonnull
-    String findMyToken() {
-        return influxDBClient.getAuthorizationsApi()
-                .findAuthorizations()
-                .stream()
-                .filter(authorization -> authorization.getPermissions().stream()
-                        .map(Permission::getResource)
-                        .anyMatch(resource ->
-                                resource.getType().equals(PermissionResource.TypeEnum.ORGS) &&
-                                        resource.getId() == null &&
-                                        resource.getOrgID() == null))
-                .findFirst()
-                .orElseThrow(IllegalStateException::new).getToken();
     }
 
     @Nonnull
