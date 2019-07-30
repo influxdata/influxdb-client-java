@@ -30,7 +30,7 @@ echo ${TRAVIS_BRANCH}
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-if [ "$TRAVIS_REPO_SLUG" == "bonitoo-io/influxdb-client-java" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then
+if [ "$TRAVIS_REPO_SLUG" == "influxdata/influxdb-client-java" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then
 
     # Generate Site
     cd ${SCRIPT_PATH}/..

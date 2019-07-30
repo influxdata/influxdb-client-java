@@ -37,11 +37,9 @@ services:
   - docker
 
 env:
-
   global:
-    - secure: aCFuNNixYILZZfcOp0jI66om4w8Cbr+qtz1FUOVgbxeipFA93y7KLoXtFajkE1qmbHOdz8SvPcloY5q6HKIOYuqv4/6at+OaTogXELfrR+oKfxf2t5PfB1D+1RxM90+wjsEPGQh+HmFOEnGCnJ8ZUfcx76Afs+mPzbpjzKeNz7w=
-    - secure: dAJK41xM2dN3q3xJMqAOP6uvrOvpjjUzmHr8mYNyepER8Lpms9/GqVUxqJv12wzCBqv1XZk/CXxrv3iBc2XjlxlrzIJGQChTinwDEigv0BMl/Gh0821ja7gwzMEUmg9f79m5tJxIFQ306cWz1gyRDqM3fLzskvM2ayzvynsNc/w=
-
+    - secure: QiB4GebdRaNf46LT2liQ3lVtx0uowYvYuRYJew13Ue5sQSs52Oky1GRa8jbfi6RemBkUiiiccTcURNid3iaBEF0Z3JDYY00FiZ08kbbEogaON0QHIC3AmBE3nzbmGSUFCUQfI6JE+PslF/Ef3BchyjD5rKCeMe8DdQLD/Hz1UFipJ4UuOa05djO4ljs8sp1Gr0t7VAr0Tg6t11dzbYeFc139a/tsDCaCzMqdt5/zl3D+1XLy33JLSLvGs+LG7Ui7knKzM70MoP0mm2PhxnYjnCaJssdU25Fzo4WGc6BWTXhNvldxvA5PfDPqhfv7GCKjVrgkSKdUkLbeJFVrh3Dm9UY8IS5xxOW/UVTnFXG2EjvboTMidNZS1XzVIXC/y5M8w81ISBgGnGQ8HCty0gK3guKNuECSSaslY+5eVS8ZXZZZh1++GRPWNzxS9mcjcfGW0mQ35Sa3l1nWm0vpdzI9gVhJlbr//K90caSE97iPKka9cXbYNhWujE039UO1fLaJe5CRKAmhr9s9hHyzTO8jSyjb7FYB0vYOFcAPsiah9XOxjVvogtA53fxj052R/bXvUFRE78hEhrKhslkerhu2v9mNy8rJsfKkJqgmIslXZgzJyine2oClvdrvTqQJPzqxrcyyw9Zsn6QLJuM/IZFS88HH9qkuXMYQPkp+C8lv8xw=
+    - secure: JfhZOQ28JqQjxOf+PdBkgQCSx+n0aXr+nePPds+5PkacBYtIz94jVPQodXImbYDxuR7V2D97yVFgLD5hQoYpJsB1/xdZHcZqc/f0xCP+oVv662taArbAvFwjnnuof7E2iI9GmAJi/w99T1908IOggfghweeK3OwCbfyErV5lnSbEFY48JKlqFUsC+IPQN7hGq6tut3dtFg9Srxl7jVvn2DNcORx0mcn7Fx4CI8XhGzLcjPF0M0I0EVxLeJBjar9UTrr3js3gI4N3VvXFVLBMSQggpn+zFg4fBQEDVX+Wu4c61bVy4BrKSxxwyRQ7VOkHi2gIBDJmFO85r8JsreovqpF+NVJrJhJQKphF3go9VnOLcsxKN6YJwjjqlD/kt/jhkVi5mqMGtgopeh0J2IaOL08vBGMK3rqFcSAR4JJIp4Gy1sVUcNvlVw+IXQcUyi+UdHD3hnZmO2Xj7rNQunrx2uovqVjtw8VAXXmmT5jjQxR2jFpQ4N9GSi57YR5PxSo6GFVQL++diDsbHmCiO311J3K9HWd8wi8Lx/fFiZe7X4QAnm+tm6opvCHcm/GiGLH9Ww4DMQq/+sIl3HXl2ilYDTsKMfHKPCDXDU9spYD10lNeJMA10Iccd6NR5SlQva278Rzrm3jZe2eVu17VOrA7ASHAJk8DI3ae+w/8UsQQhos=
   matrix:
     - INFLUXDB_VERSION=1.7 INFLUXDB_2_VERSION=nightly
 
@@ -49,6 +47,7 @@ before_install:
   - |
     sudo apt-get install -qq libxml2-utils
     export PROJECT_VERSION=`xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml`
+    echo "Project version: $PROJECT_VERSION"
 
 install: true
 
@@ -60,14 +59,14 @@ script:
 jobs:
   include:
   - stage: site
-    if: branch = master AND repo = bonitoo-io/influxdb-client-java AND type IN (push)
+    if: branch = master AND repo = influxdata/influxdb-client-java AND type IN (push)
     jdk: openjdk8
     script:
       - ./scripts/influxdb-restart.sh
       - ./scripts/publish-site.sh
 
   - stage: Deploy Snapshot
-    if: branch = master AND repo = bonitoo-io/influxdb-client-java AND type IN (push) AND env(PROJECT_VERSION) =~ /(.+)(-SNAPSHOT)/
+    if: branch = master AND repo = influxdata/influxdb-client-java AND type IN (push) AND env(PROJECT_VERSION) =~ /(.+)(-SNAPSHOT)/
     jdk: openjdk8
     script: skip
     deploy:
@@ -76,7 +75,7 @@ jobs:
       skip_cleanup: true
 
   - stage: GitHub release
-    if: tag IS present AND repo = bonitoo-io/influxdb-client-java AND type IN (push)
+    if: tag IS present AND repo = influxdata/influxdb-client-java AND type IN (push)
     jdk: openjdk8
     script:
       - echo "GitHub Release"
