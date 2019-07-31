@@ -1,24 +1,17 @@
 package com.influxdb.client.service;
 
-import retrofit2.Call;
-import retrofit2.http.*;
-
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import okhttp3.MultipartBody;
-
 import com.influxdb.client.domain.ASTResponse;
 import com.influxdb.client.domain.AnalyzeQueryResponse;
-import com.influxdb.client.domain.Error;
 import com.influxdb.client.domain.FluxSuggestion;
 import com.influxdb.client.domain.FluxSuggestions;
 import com.influxdb.client.domain.LanguageRequest;
 import com.influxdb.client.domain.Query;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
 
 public interface QueryService {
   /**
@@ -48,6 +41,7 @@ public interface QueryService {
    * query an influx
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
+   * @param acceptEncoding The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand. (optional, default to identity)
    * @param contentType  (optional)
    * @param org specifies the name of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
    * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
@@ -59,13 +53,14 @@ public interface QueryService {
   })
   @POST("api/v2/query")
   Call<String> postQuery(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Content-Type") String contentType, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Body Query query
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept-Encoding") String acceptEncoding, @retrofit2.http.Header("Content-Type") String contentType, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Body Query query
   );
 
   /**
    * query an influx
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
+   * @param acceptEncoding The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand. (optional, default to identity)
    * @param contentType  (optional)
    * @param org specifies the name of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
    * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
@@ -74,13 +69,14 @@ public interface QueryService {
    */
   @POST("api/v2/query")
   Call<ResponseBody> postQueryResponseBody(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Content-Type") String contentType, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Body Query query
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept-Encoding") String acceptEncoding, @retrofit2.http.Header("Content-Type") String contentType, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Body Query query
   );
 
   /**
    * query an influx
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
+   * @param acceptEncoding The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand. (optional, default to identity)
    * @param contentType  (optional)
    * @param org specifies the name of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
    * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
@@ -89,7 +85,7 @@ public interface QueryService {
    */
   @POST("api/v2/query")
   Call<String> postQueryString(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Content-Type") String contentType, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Body Query query
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept-Encoding") String acceptEncoding, @retrofit2.http.Header("Content-Type") String contentType, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Body Query query
   );
 
   /**

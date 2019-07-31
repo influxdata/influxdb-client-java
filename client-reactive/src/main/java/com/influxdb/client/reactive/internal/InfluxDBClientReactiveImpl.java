@@ -27,7 +27,7 @@ import com.influxdb.Arguments;
 import com.influxdb.LogLevel;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.WriteOptions;
-import com.influxdb.client.domain.Check;
+import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.internal.AbstractInfluxDBClient;
 import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.QueryReactiveApi;
@@ -70,7 +70,7 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient
 
     @Nonnull
     @Override
-    public Single<Check> health() {
+    public Single<HealthCheck> health() {
 
         return Single.fromCallable(() -> health(healthService.getHealth(null)));
     }

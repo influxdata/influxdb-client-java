@@ -22,7 +22,7 @@
 package com.influxdb.client.kotlin
 
 import com.influxdb.LogLevel
-import com.influxdb.client.domain.Check
+import com.influxdb.client.domain.HealthCheck
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.platform.runner.JUnitPlatform
@@ -47,7 +47,7 @@ internal class ITInfluxDBClientKotlin : AbstractITInfluxDBClientKotlin() {
         val health = influxDBClient.health()
 
         Assertions.assertThat(health).isNotNull
-        Assertions.assertThat(health.status).isEqualTo(Check.StatusEnum.PASS)
+        Assertions.assertThat(health.status).isEqualTo(HealthCheck.StatusEnum.PASS)
         Assertions.assertThat(health.message).isEqualTo("ready for queries and writes")
     }
 
@@ -60,7 +60,7 @@ internal class ITInfluxDBClientKotlin : AbstractITInfluxDBClientKotlin() {
         val health = clientNotRunning.health()
 
         Assertions.assertThat(health).isNotNull
-        Assertions.assertThat(health.status).isEqualTo(Check.StatusEnum.FAIL)
+        Assertions.assertThat(health.status).isEqualTo(HealthCheck.StatusEnum.FAIL)
         Assertions.assertThat(health.message).startsWith("Failed to connect to")
 
         clientNotRunning.close()

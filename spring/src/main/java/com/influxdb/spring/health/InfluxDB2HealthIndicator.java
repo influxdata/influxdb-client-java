@@ -22,7 +22,7 @@
 package com.influxdb.spring.health;
 
 import com.influxdb.client.InfluxDBClient;
-import com.influxdb.client.domain.Check;
+import com.influxdb.client.domain.HealthCheck;
 
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
@@ -47,7 +47,7 @@ public class InfluxDB2HealthIndicator extends AbstractHealthIndicator {
 
     @Override
     protected void doHealthCheck(final Health.Builder builder) {
-        Check check = this.influxDBClient.health();
+        HealthCheck check = this.influxDBClient.health();
 
         switch (check.getStatus()) {
             case PASS:

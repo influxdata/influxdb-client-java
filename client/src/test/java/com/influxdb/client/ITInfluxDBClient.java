@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-import com.influxdb.client.domain.Check;
+import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.domain.OnboardingRequest;
 import com.influxdb.client.domain.OnboardingResponse;
 import com.influxdb.client.domain.Ready;
@@ -48,11 +48,11 @@ class ITInfluxDBClient extends AbstractITClientTest {
     @Test
     void health() {
 
-        Check check = influxDBClient.health();
+        HealthCheck check = influxDBClient.health();
 
         Assertions.assertThat(check).isNotNull();
         Assertions.assertThat(check.getName()).isEqualTo("influxdb");
-        Assertions.assertThat(check.getStatus()).isEqualTo(Check.StatusEnum.PASS);
+        Assertions.assertThat(check.getStatus()).isEqualTo(HealthCheck.StatusEnum.PASS);
         Assertions.assertThat(check.getMessage()).isEqualTo("ready for queries and writes");
     }
 
@@ -60,11 +60,11 @@ class ITInfluxDBClient extends AbstractITClientTest {
     void healthNotRunningInstance() throws Exception {
 
         InfluxDBClient clientNotRunning = InfluxDBClientFactory.create("http://localhost:8099");
-        Check check = clientNotRunning.health();
+		HealthCheck check = clientNotRunning.health();
 
         Assertions.assertThat(check).isNotNull();
         Assertions.assertThat(check.getName()).isEqualTo("influxdb");
-        Assertions.assertThat(check.getStatus()).isEqualTo(Check.StatusEnum.FAIL);
+        Assertions.assertThat(check.getStatus()).isEqualTo(HealthCheck.StatusEnum.FAIL);
         Assertions.assertThat(check.getMessage()).startsWith("Failed to connect to");
 
         clientNotRunning.close();

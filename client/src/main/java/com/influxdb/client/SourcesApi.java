@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.influxdb.client.domain.Bucket;
-import com.influxdb.client.domain.Check;
+import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.domain.Source;
 
 /**
@@ -131,7 +131,7 @@ public interface SourcesApi {
      * @return health of source
      */
     @Nonnull
-    Check health(@Nonnull final Source source);
+    HealthCheck health(@Nonnull final Source source);
 
     /**
      * Get a sources health.
@@ -141,5 +141,5 @@ public interface SourcesApi {
      * @return health of source
      */
     @Nonnull
-    Check health(@Nonnull final String sourceID);
+    HealthCheck health(@Nonnull final String sourceID);
 }

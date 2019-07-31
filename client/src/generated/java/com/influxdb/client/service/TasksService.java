@@ -1,19 +1,12 @@
 package com.influxdb.client.service;
 
-import retrofit2.Call;
-import retrofit2.http.*;
-
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import okhttp3.MultipartBody;
+import java.time.OffsetDateTime;
 
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
-import com.influxdb.client.domain.Error;
 import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
 import com.influxdb.client.domain.Logs;
-import java.time.OffsetDateTime;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceMembers;
 import com.influxdb.client.domain.ResourceOwner;
@@ -26,10 +19,12 @@ import com.influxdb.client.domain.TaskCreateRequest;
 import com.influxdb.client.domain.TaskUpdateRequest;
 import com.influxdb.client.domain.Tasks;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import retrofit2.Call;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.PATCH;
+import retrofit2.http.POST;
 
 public interface TasksService {
   /**
@@ -81,6 +76,19 @@ public interface TasksService {
   @DELETE("api/v2/tasks/{taskID}/owners/{userID}")
   Call<Void> deleteTasksIDOwnersID(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * Cancel a single running task
+   * 
+   * @param taskID task ID (required)
+   * @param runID run ID (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/tasks/{taskID}/runs/{runID}")
+  Call<Void> deleteTasksIDRunsID(
+    @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Path("runID") String runID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -306,19 +314,6 @@ public interface TasksService {
    */
   @POST("api/v2/tasks/{taskID}/runs/{runID}/retry")
   Call<Run> postTasksIDRunsIDRetry(
-    @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Path("runID") String runID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Cancel a run
-   * cancels a currently running run.
-   * @param taskID task ID (required)
-   * @param runID run ID (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/tasks/{taskID}/runs/{runID}")
-  Call<Void> tasksTaskIDRunsRunIDDelete(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Path("runID") String runID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

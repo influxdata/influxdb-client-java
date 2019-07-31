@@ -31,7 +31,7 @@ import com.influxdb.Arguments;
 import com.influxdb.client.SourcesApi;
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.Buckets;
-import com.influxdb.client.domain.Check;
+import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.domain.Source;
 import com.influxdb.client.domain.Sources;
 import com.influxdb.client.service.SourcesService;
@@ -177,7 +177,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
     @Nonnull
     @Override
-    public Check health(@Nonnull final Source source) {
+    public HealthCheck health(@Nonnull final Source source) {
 
         Arguments.checkNotNull(source, "Source is required");
 
@@ -186,7 +186,7 @@ final class SourcesApiImpl extends AbstractRestClient implements SourcesApi {
 
     @Nonnull
     @Override
-    public Check health(@Nonnull final String sourceID) {
+    public HealthCheck health(@Nonnull final String sourceID) {
 
         Arguments.checkNonEmpty(sourceID, "sourceID");
 

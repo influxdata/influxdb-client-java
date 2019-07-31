@@ -22,7 +22,7 @@
 package com.influxdb.client.kotlin
 
 import com.influxdb.LogLevel
-import com.influxdb.client.domain.Check
+import com.influxdb.client.domain.HealthCheck
 
 /**
  * The reference Kotlin client that allows query and write for the InfluxDB 2.0 by Kotlin Channel coroutines.
@@ -43,7 +43,7 @@ interface InfluxDBClientKotlin {
      *
      * @return health of an instance
      */
-    fun health(): Check
+    fun health(): HealthCheck
 
     /**
      * Gets the [LogLevel] that is used for logging requests and responses.

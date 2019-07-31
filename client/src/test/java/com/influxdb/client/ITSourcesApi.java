@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import com.influxdb.client.domain.Bucket;
-import com.influxdb.client.domain.Check;
+import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.domain.Source;
 import com.influxdb.exceptions.NotFoundException;
 
@@ -188,10 +188,10 @@ class ITSourcesApi extends AbstractITClientTest {
 
         Source source = sourcesApi.createSource(newSource());
 
-        Check check = sourcesApi.health(source);
+		HealthCheck check = sourcesApi.health(source);
 
         Assertions.assertThat(check).isNotNull();
-        Assertions.assertThat(check.getStatus()).isEqualTo(Check.StatusEnum.PASS);
+        Assertions.assertThat(check.getStatus()).isEqualTo(HealthCheck.StatusEnum.PASS);
     }
 
     @Test
