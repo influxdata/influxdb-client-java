@@ -84,6 +84,19 @@ public interface TasksService {
   );
 
   /**
+   * Cancel a single running task
+   * 
+   * @param taskID task ID (required)
+   * @param runID run ID (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/tasks/{taskID}/runs/{runID}")
+  Call<Void> deleteTasksIDRunsID(
+    @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Path("runID") String runID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
    * List tasks.
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -306,19 +319,6 @@ public interface TasksService {
    */
   @POST("api/v2/tasks/{taskID}/runs/{runID}/retry")
   Call<Run> postTasksIDRunsIDRetry(
-    @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Path("runID") String runID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Cancel a run
-   * cancels a currently running run.
-   * @param taskID task ID (required)
-   * @param runID run ID (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/tasks/{taskID}/runs/{runID}")
-  Call<Void> tasksTaskIDRunsRunIDDelete(
     @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Path("runID") String runID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

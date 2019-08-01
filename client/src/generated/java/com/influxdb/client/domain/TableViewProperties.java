@@ -24,7 +24,6 @@ import com.influxdb.client.domain.DashboardColor;
 import com.influxdb.client.domain.DashboardQuery;
 import com.influxdb.client.domain.DecimalPlaces;
 import com.influxdb.client.domain.RenamableField;
-import com.influxdb.client.domain.ViewProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -36,55 +35,6 @@ import java.util.List;
  */
 
 public class TableViewProperties extends ViewProperties {
-  /**
-   * Gets or Sets shape
-   */
-  @JsonAdapter(ShapeEnum.Adapter.class)
-  public enum ShapeEnum {
-    CHRONOGRAF_V2("chronograf-v2");
-
-    private String value;
-
-    ShapeEnum(String value) {
-      this.value = value;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static ShapeEnum fromValue(String text) {
-      for (ShapeEnum b : ShapeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    public static class Adapter extends TypeAdapter<ShapeEnum> {
-      @Override
-      public void write(final JsonWriter jsonWriter, final ShapeEnum enumeration) throws IOException {
-        jsonWriter.value(enumeration.getValue());
-      }
-
-      @Override
-      public ShapeEnum read(final JsonReader jsonReader) throws IOException {
-        String value = jsonReader.nextString();
-        return ShapeEnum.fromValue(String.valueOf(value));
-      }
-    }
-  }
-
-  public static final String SERIALIZED_NAME_SHAPE = "shape";
-  @SerializedName(SERIALIZED_NAME_SHAPE)
-  private ShapeEnum shape = ShapeEnum.CHRONOGRAF_V2;
-
   /**
    * Gets or Sets type
    */
@@ -134,6 +84,71 @@ public class TableViewProperties extends ViewProperties {
   @SerializedName(SERIALIZED_NAME_TYPE)
   private TypeEnum type = TypeEnum.TABLE;
 
+  public static final String SERIALIZED_NAME_QUERIES = "queries";
+  @SerializedName(SERIALIZED_NAME_QUERIES)
+  private List<DashboardQuery> queries = new ArrayList<>();
+
+  public static final String SERIALIZED_NAME_COLORS = "colors";
+  @SerializedName(SERIALIZED_NAME_COLORS)
+  private List<DashboardColor> colors = new ArrayList<>();
+
+  /**
+   * Gets or Sets shape
+   */
+  @JsonAdapter(ShapeEnum.Adapter.class)
+  public enum ShapeEnum {
+    CHRONOGRAF_V2("chronograf-v2");
+
+    private String value;
+
+    ShapeEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static ShapeEnum fromValue(String text) {
+      for (ShapeEnum b : ShapeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<ShapeEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final ShapeEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public ShapeEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return ShapeEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+
+  public static final String SERIALIZED_NAME_SHAPE = "shape";
+  @SerializedName(SERIALIZED_NAME_SHAPE)
+  private ShapeEnum shape = ShapeEnum.CHRONOGRAF_V2;
+
+  public static final String SERIALIZED_NAME_NOTE = "note";
+  @SerializedName(SERIALIZED_NAME_NOTE)
+  private String note;
+
+  public static final String SERIALIZED_NAME_SHOW_NOTE_WHEN_EMPTY = "showNoteWhenEmpty";
+  @SerializedName(SERIALIZED_NAME_SHOW_NOTE_WHEN_EMPTY)
+  private Boolean showNoteWhenEmpty;
+
   public static final String SERIALIZED_NAME_TABLE_OPTIONS = "tableOptions";
   @SerializedName(SERIALIZED_NAME_TABLE_OPTIONS)
   private Object tableOptions = null;
@@ -151,21 +166,103 @@ public class TableViewProperties extends ViewProperties {
   private DecimalPlaces decimalPlaces = null;
 
    /**
+   * Get type
+   * @return type
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public TypeEnum getType() {
+    return type;
+  }
+
+  public TableViewProperties queries(List<DashboardQuery> queries) {
+    this.queries = queries;
+    return this;
+  }
+
+  public TableViewProperties addQueriesItem(DashboardQuery queriesItem) {
+    this.queries.add(queriesItem);
+    return this;
+  }
+
+   /**
+   * Get queries
+   * @return queries
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public List<DashboardQuery> getQueries() {
+    return queries;
+  }
+
+  public void setQueries(List<DashboardQuery> queries) {
+    this.queries = queries;
+  }
+
+  public TableViewProperties colors(List<DashboardColor> colors) {
+    this.colors = colors;
+    return this;
+  }
+
+  public TableViewProperties addColorsItem(DashboardColor colorsItem) {
+    this.colors.add(colorsItem);
+    return this;
+  }
+
+   /**
+   * Colors define color encoding of data into a visualization
+   * @return colors
+  **/
+  @ApiModelProperty(required = true, value = "Colors define color encoding of data into a visualization")
+  public List<DashboardColor> getColors() {
+    return colors;
+  }
+
+  public void setColors(List<DashboardColor> colors) {
+    this.colors = colors;
+  }
+
+   /**
    * Get shape
    * @return shape
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public ShapeEnum getShape() {
     return shape;
   }
 
+  public TableViewProperties note(String note) {
+    this.note = note;
+    return this;
+  }
+
    /**
-   * Get type
-   * @return type
+   * Get note
+   * @return note
   **/
-  @ApiModelProperty(value = "")
-  public TypeEnum getType() {
-    return type;
+  @ApiModelProperty(required = true, value = "")
+  public String getNote() {
+    return note;
+  }
+
+  public void setNote(String note) {
+    this.note = note;
+  }
+
+  public TableViewProperties showNoteWhenEmpty(Boolean showNoteWhenEmpty) {
+    this.showNoteWhenEmpty = showNoteWhenEmpty;
+    return this;
+  }
+
+   /**
+   * if true, will display note when empty
+   * @return showNoteWhenEmpty
+  **/
+  @ApiModelProperty(required = true, value = "if true, will display note when empty")
+  public Boolean getShowNoteWhenEmpty() {
+    return showNoteWhenEmpty;
+  }
+
+  public void setShowNoteWhenEmpty(Boolean showNoteWhenEmpty) {
+    this.showNoteWhenEmpty = showNoteWhenEmpty;
   }
 
   public TableViewProperties tableOptions(Object tableOptions) {
@@ -177,7 +274,7 @@ public class TableViewProperties extends ViewProperties {
    * Get tableOptions
    * @return tableOptions
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public Object getTableOptions() {
     return tableOptions;
   }
@@ -192,9 +289,6 @@ public class TableViewProperties extends ViewProperties {
   }
 
   public TableViewProperties addFieldOptionsItem(RenamableField fieldOptionsItem) {
-    if (this.fieldOptions == null) {
-      this.fieldOptions = new ArrayList<>();
-    }
     this.fieldOptions.add(fieldOptionsItem);
     return this;
   }
@@ -203,7 +297,7 @@ public class TableViewProperties extends ViewProperties {
    * fieldOptions represent the fields retrieved by the query with customization options
    * @return fieldOptions
   **/
-  @ApiModelProperty(value = "fieldOptions represent the fields retrieved by the query with customization options")
+  @ApiModelProperty(required = true, value = "fieldOptions represent the fields retrieved by the query with customization options")
   public List<RenamableField> getFieldOptions() {
     return fieldOptions;
   }
@@ -221,7 +315,7 @@ public class TableViewProperties extends ViewProperties {
    * timeFormat describes the display format for time values according to moment.js date formatting
    * @return timeFormat
   **/
-  @ApiModelProperty(value = "timeFormat describes the display format for time values according to moment.js date formatting")
+  @ApiModelProperty(required = true, value = "timeFormat describes the display format for time values according to moment.js date formatting")
   public String getTimeFormat() {
     return timeFormat;
   }
@@ -239,7 +333,7 @@ public class TableViewProperties extends ViewProperties {
    * Get decimalPlaces
    * @return decimalPlaces
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public DecimalPlaces getDecimalPlaces() {
     return decimalPlaces;
   }
@@ -258,8 +352,12 @@ public class TableViewProperties extends ViewProperties {
       return false;
     }
     TableViewProperties tableViewProperties = (TableViewProperties) o;
-    return Objects.equals(this.shape, tableViewProperties.shape) &&
-        Objects.equals(this.type, tableViewProperties.type) &&
+    return Objects.equals(this.type, tableViewProperties.type) &&
+        Objects.equals(this.queries, tableViewProperties.queries) &&
+        Objects.equals(this.colors, tableViewProperties.colors) &&
+        Objects.equals(this.shape, tableViewProperties.shape) &&
+        Objects.equals(this.note, tableViewProperties.note) &&
+        Objects.equals(this.showNoteWhenEmpty, tableViewProperties.showNoteWhenEmpty) &&
         Objects.equals(this.tableOptions, tableViewProperties.tableOptions) &&
         Objects.equals(this.fieldOptions, tableViewProperties.fieldOptions) &&
         Objects.equals(this.timeFormat, tableViewProperties.timeFormat) &&
@@ -269,7 +367,7 @@ public class TableViewProperties extends ViewProperties {
 
   @Override
   public int hashCode() {
-    return Objects.hash(shape, type, tableOptions, fieldOptions, timeFormat, decimalPlaces, super.hashCode());
+    return Objects.hash(type, queries, colors, shape, note, showNoteWhenEmpty, tableOptions, fieldOptions, timeFormat, decimalPlaces, super.hashCode());
   }
 
 
@@ -278,8 +376,12 @@ public class TableViewProperties extends ViewProperties {
     StringBuilder sb = new StringBuilder();
     sb.append("class TableViewProperties {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    queries: ").append(toIndentedString(queries)).append("\n");
+    sb.append("    colors: ").append(toIndentedString(colors)).append("\n");
+    sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
+    sb.append("    note: ").append(toIndentedString(note)).append("\n");
+    sb.append("    showNoteWhenEmpty: ").append(toIndentedString(showNoteWhenEmpty)).append("\n");
     sb.append("    tableOptions: ").append(toIndentedString(tableOptions)).append("\n");
     sb.append("    fieldOptions: ").append(toIndentedString(fieldOptions)).append("\n");
     sb.append("    timeFormat: ").append(toIndentedString(timeFormat)).append("\n");

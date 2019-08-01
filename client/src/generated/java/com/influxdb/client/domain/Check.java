@@ -15,16 +15,15 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
-import com.google.gson.TypeAdapter;
-import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-import com.influxdb.client.domain.Check;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.io.IOException;
-import java.util.ArrayList;
+import com.influxdb.client.domain.CheckBaseTags;
+import com.influxdb.client.domain.CheckStatusLevel;
+import com.influxdb.client.domain.DashboardQuery;
+import com.influxdb.client.domain.DeadmanCheck;
+import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.TaskStatusType;
+import com.influxdb.client.domain.Threshold;
+import com.influxdb.client.domain.ThresholdCheck;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
@@ -32,149 +31,6 @@ import java.util.List;
  */
 
 public class Check {
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private String name;
-
-  public static final String SERIALIZED_NAME_MESSAGE = "message";
-  @SerializedName(SERIALIZED_NAME_MESSAGE)
-  private String message;
-
-  public static final String SERIALIZED_NAME_CHECKS = "checks";
-  @SerializedName(SERIALIZED_NAME_CHECKS)
-  private List<Check> checks = new ArrayList<>();
-
-  /**
-   * Gets or Sets status
-   */
-  @JsonAdapter(StatusEnum.Adapter.class)
-  public enum StatusEnum {
-    PASS("pass"),
-    
-    FAIL("fail");
-
-    private String value;
-
-    StatusEnum(String value) {
-      this.value = value;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static StatusEnum fromValue(String text) {
-      for (StatusEnum b : StatusEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    public static class Adapter extends TypeAdapter<StatusEnum> {
-      @Override
-      public void write(final JsonWriter jsonWriter, final StatusEnum enumeration) throws IOException {
-        jsonWriter.value(enumeration.getValue());
-      }
-
-      @Override
-      public StatusEnum read(final JsonReader jsonReader) throws IOException {
-        String value = jsonReader.nextString();
-        return StatusEnum.fromValue(String.valueOf(value));
-      }
-    }
-  }
-
-  public static final String SERIALIZED_NAME_STATUS = "status";
-  @SerializedName(SERIALIZED_NAME_STATUS)
-  private StatusEnum status;
-
-  public Check name(String name) {
-    this.name = name;
-    return this;
-  }
-
-   /**
-   * Get name
-   * @return name
-  **/
-  @ApiModelProperty(required = true, value = "")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public Check message(String message) {
-    this.message = message;
-    return this;
-  }
-
-   /**
-   * Get message
-   * @return message
-  **/
-  @ApiModelProperty(value = "")
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
-
-  public Check checks(List<Check> checks) {
-    this.checks = checks;
-    return this;
-  }
-
-  public Check addChecksItem(Check checksItem) {
-    if (this.checks == null) {
-      this.checks = new ArrayList<>();
-    }
-    this.checks.add(checksItem);
-    return this;
-  }
-
-   /**
-   * Get checks
-   * @return checks
-  **/
-  @ApiModelProperty(value = "")
-  public List<Check> getChecks() {
-    return checks;
-  }
-
-  public void setChecks(List<Check> checks) {
-    this.checks = checks;
-  }
-
-  public Check status(StatusEnum status) {
-    this.status = status;
-    return this;
-  }
-
-   /**
-   * Get status
-   * @return status
-  **/
-  @ApiModelProperty(required = true, value = "")
-  public StatusEnum getStatus() {
-    return status;
-  }
-
-  public void setStatus(StatusEnum status) {
-    this.status = status;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -184,16 +40,12 @@ public class Check {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Check check = (Check) o;
-    return Objects.equals(this.name, check.name) &&
-        Objects.equals(this.message, check.message) &&
-        Objects.equals(this.checks, check.checks) &&
-        Objects.equals(this.status, check.status);
+    return true;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, message, checks, status);
+    return Objects.hash();
   }
 
 
@@ -201,10 +53,6 @@ public class Check {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Check {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    message: ").append(toIndentedString(message)).append("\n");
-    sb.append("    checks: ").append(toIndentedString(checks)).append("\n");
-    sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -20,6 +20,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.influxdb.client.domain.TaskStatusType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -29,56 +30,9 @@ import java.io.IOException;
  */
 
 public class TaskUpdateRequest {
-  /**
-   * Starting state of the task. &#39;inactive&#39; tasks are not run until they are updated to &#39;active&#39;
-   */
-  @JsonAdapter(StatusEnum.Adapter.class)
-  public enum StatusEnum {
-    ACTIVE("active"),
-    
-    INACTIVE("inactive");
-
-    private String value;
-
-    StatusEnum(String value) {
-      this.value = value;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static StatusEnum fromValue(String text) {
-      for (StatusEnum b : StatusEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    public static class Adapter extends TypeAdapter<StatusEnum> {
-      @Override
-      public void write(final JsonWriter jsonWriter, final StatusEnum enumeration) throws IOException {
-        jsonWriter.value(enumeration.getValue());
-      }
-
-      @Override
-      public StatusEnum read(final JsonReader jsonReader) throws IOException {
-        String value = jsonReader.nextString();
-        return StatusEnum.fromValue(String.valueOf(value));
-      }
-    }
-  }
-
   public static final String SERIALIZED_NAME_STATUS = "status";
   @SerializedName(SERIALIZED_NAME_STATUS)
-  private StatusEnum status = StatusEnum.ACTIVE;
+  private TaskStatusType status = null;
 
   public static final String SERIALIZED_NAME_FLUX = "flux";
   @SerializedName(SERIALIZED_NAME_FLUX)
@@ -108,21 +62,21 @@ public class TaskUpdateRequest {
   @SerializedName(SERIALIZED_NAME_TOKEN)
   private String token;
 
-  public TaskUpdateRequest status(StatusEnum status) {
+  public TaskUpdateRequest status(TaskStatusType status) {
     this.status = status;
     return this;
   }
 
    /**
-   * Starting state of the task. &#39;inactive&#39; tasks are not run until they are updated to &#39;active&#39;
+   * Get status
    * @return status
   **/
-  @ApiModelProperty(value = "Starting state of the task. 'inactive' tasks are not run until they are updated to 'active'")
-  public StatusEnum getStatus() {
+  @ApiModelProperty(value = "")
+  public TaskStatusType getStatus() {
     return status;
   }
 
-  public void setStatus(StatusEnum status) {
+  public void setStatus(TaskStatusType status) {
     this.status = status;
   }
 

@@ -47,6 +47,7 @@ import com.influxdb.client.domain.RunManually;
 import com.influxdb.client.domain.Runs;
 import com.influxdb.client.domain.Task;
 import com.influxdb.client.domain.TaskCreateRequest;
+import com.influxdb.client.domain.TaskStatusType;
 import com.influxdb.client.domain.TaskUpdateRequest;
 import com.influxdb.client.domain.Tasks;
 import com.influxdb.client.domain.User;
@@ -150,7 +151,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         request.setToken(token);
 
         if (task.getStatus() != null) {
-            request.setStatus(TaskCreateRequest.StatusEnum.fromValue(task.getStatus().getValue()));
+            request.setStatus(TaskStatusType.fromValue(task.getStatus().getValue()));
         }
 
         return createTask(request);
@@ -252,7 +253,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Arguments.checkDurationNotRequired(task.getEvery(), "Task.every");
 
         TaskUpdateRequest taskUpdateRequest = new TaskUpdateRequest();
-        taskUpdateRequest.setStatus(TaskUpdateRequest.StatusEnum.fromValue(task.getStatus().getValue()));
+        taskUpdateRequest.setStatus(TaskStatusType.fromValue(task.getStatus().getValue()));
         taskUpdateRequest.setFlux(task.getFlux());
         taskUpdateRequest.setName(task.getName());
         taskUpdateRequest.setEvery(task.getEvery());
@@ -315,7 +316,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         cloned.setName(task.getName());
         cloned.setOrgID(task.getOrgID());
         cloned.setFlux(task.getFlux());
-        cloned.setStatus(Task.StatusEnum.ACTIVE);
+        cloned.setStatus(TaskStatusType.ACTIVE);
 
         Task created = createTask(cloned, token);
 
@@ -607,7 +608,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Arguments.checkNonEmpty(taskID, "Task.ID");
         Arguments.checkNonEmpty(runID, "Run.ID");
 
-        Call<Void> run = service.tasksTaskIDRunsRunIDDelete(taskID, runID, null);
+        Call<Void> run = service.deleteTasksIDRunsID(taskID, runID, null);
         execute(run);
     }
 
@@ -712,7 +713,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         Task task = new Task();
         task.setName(name);
         task.setOrgID(orgID);
-        task.setStatus(Task.StatusEnum.ACTIVE);
+        task.setStatus(TaskStatusType.ACTIVE);
         task.setFlux(flux);
 
         String repetition = "";

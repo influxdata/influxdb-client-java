@@ -29,8 +29,8 @@ import javax.annotation.Nonnull;
 import com.influxdb.Arguments;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.JSON;
-import com.influxdb.client.domain.Check;
 import com.influxdb.client.domain.Dialect;
+import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.service.HealthService;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.internal.AbstractRestClient;
@@ -112,16 +112,16 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
     }
 
     @Nonnull
-    protected Check health(final Call<Check> healthCall) {
+    protected HealthCheck health(final Call<HealthCheck> healthCall) {
 
         Arguments.checkNotNull(healthCall, "health call");
 
         try {
             return execute(healthCall);
         } catch (InfluxException e) {
-            Check health = new Check();
+            HealthCheck health = new HealthCheck();
             health.setName("influxdb");
-            health.setStatus(Check.StatusEnum.FAIL);
+            health.setStatus(HealthCheck.StatusEnum.FAIL);
             health.setMessage(e.getMessage());
 
             return health;

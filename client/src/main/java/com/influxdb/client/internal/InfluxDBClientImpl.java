@@ -46,7 +46,7 @@ import com.influxdb.client.VariablesApi;
 import com.influxdb.client.WriteApi;
 import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.WriteOptions;
-import com.influxdb.client.domain.Check;
+import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.domain.IsOnboarding;
 import com.influxdb.client.domain.OnboardingRequest;
 import com.influxdb.client.domain.OnboardingResponse;
@@ -201,7 +201,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
 
     @Nonnull
     @Override
-    public Check health() {
+    public HealthCheck health() {
 
         return health(healthService.getHealth(null));
     }

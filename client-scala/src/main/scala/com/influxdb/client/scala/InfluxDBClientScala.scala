@@ -22,7 +22,7 @@
 package com.influxdb.client.scala
 
 import com.influxdb.LogLevel
-import com.influxdb.client.domain.Check
+import com.influxdb.client.domain.HealthCheck
 import javax.annotation.Nonnull
 
 /**
@@ -44,7 +44,7 @@ trait InfluxDBClientScala {
    *
    * @return health of an instance
    */
-  @Nonnull def health: Check
+  @Nonnull def health: HealthCheck
 
   /**
    * Gets the [[LogLevel]] that is used for logging requests and responses.

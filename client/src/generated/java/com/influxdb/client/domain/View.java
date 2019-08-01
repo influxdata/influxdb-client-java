@@ -29,6 +29,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.ViewLinks;
+import com.influxdb.client.domain.ViewProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -56,7 +57,7 @@ public class View {
   public static final String SERIALIZED_NAME_PROPERTIES = "properties";
   @SerializedName(SERIALIZED_NAME_PROPERTIES)
   @JsonAdapter(ViewPropertiesAdapter.class)
-  private Object properties = null;
+  private ViewProperties properties = null;
 
   public View links(ViewLinks links) {
     this.links = links;
@@ -94,7 +95,7 @@ public class View {
    * Get name
    * @return name
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getName() {
     return name;
   }
@@ -103,7 +104,7 @@ public class View {
     this.name = name;
   }
 
-  public View properties(Object properties) {
+  public View properties(ViewProperties properties) {
     this.properties = properties;
     return this;
   }
@@ -112,12 +113,12 @@ public class View {
    * Get properties
    * @return properties
   **/
-  @ApiModelProperty(value = "")
-  public Object getProperties() {
+  @ApiModelProperty(required = true, value = "")
+  public ViewProperties getProperties() {
     return properties;
   }
 
-  public void setProperties(Object properties) {
+  public void setProperties(ViewProperties properties) {
     this.properties = properties;
   }
 
@@ -174,7 +175,7 @@ public class View {
     @Override
     public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
 
-      List<String> discriminator = Arrays.asList("shape", "type");
+      List<String> discriminator = Arrays.asList("type", "shape");
 
       JsonObject jsonObject = json.getAsJsonObject();
 
@@ -191,32 +192,35 @@ public class View {
 
     private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
 
-      if (Arrays.equals(new String[]{ "chronograf-v2", "line-plus-single-stat" }, types)) {
+      if (Arrays.equals(new String[]{ "line-plus-single-stat", "chronograf-v2" }, types)) {
         return context.deserialize(json, LinePlusSingleStatProperties.class);
       }
-      if (Arrays.equals(new String[]{ "chronograf-v2", "xy" }, types)) {
+      if (Arrays.equals(new String[]{ "xy", "chronograf-v2" }, types)) {
         return context.deserialize(json, XYViewProperties.class);
       }
-      if (Arrays.equals(new String[]{ "chronograf-v2", "single-stat" }, types)) {
+      if (Arrays.equals(new String[]{ "single-stat", "chronograf-v2" }, types)) {
         return context.deserialize(json, SingleStatViewProperties.class);
       }
-      if (Arrays.equals(new String[]{ "chronograf-v2", "histogram" }, types)) {
+      if (Arrays.equals(new String[]{ "histogram", "chronograf-v2" }, types)) {
         return context.deserialize(json, HistogramViewProperties.class);
       }
-      if (Arrays.equals(new String[]{ "chronograf-v2", "gauge" }, types)) {
+      if (Arrays.equals(new String[]{ "gauge", "chronograf-v2" }, types)) {
         return context.deserialize(json, GaugeViewProperties.class);
       }
-      if (Arrays.equals(new String[]{ "chronograf-v2", "table" }, types)) {
+      if (Arrays.equals(new String[]{ "table", "chronograf-v2" }, types)) {
         return context.deserialize(json, TableViewProperties.class);
       }
-      if (Arrays.equals(new String[]{ "chronograf-v2", "markdown" }, types)) {
+      if (Arrays.equals(new String[]{ "markdown", "chronograf-v2" }, types)) {
         return context.deserialize(json, MarkdownViewProperties.class);
       }
-      if (Arrays.equals(new String[]{ "chronograf-v2", "log-viewer" }, types)) {
-        return context.deserialize(json, LogViewProperties.class);
+      if (Arrays.equals(new String[]{ "check", "chronograf-v2" }, types)) {
+        return context.deserialize(json, CheckViewProperties.class);
       }
-      if (Arrays.equals(new String[]{ "chronograf-v2", "empty" }, types)) {
-        return context.deserialize(json, EmptyViewProperties.class);
+      if (Arrays.equals(new String[]{ "scatter", "chronograf-v2" }, types)) {
+        return context.deserialize(json, ScatterViewProperties.class);
+      }
+      if (Arrays.equals(new String[]{ "heatmap", "chronograf-v2" }, types)) {
+        return context.deserialize(json, HeatmapViewProperties.class);
       }
 
       return context.deserialize(json, Object.class);

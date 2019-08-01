@@ -34,6 +34,10 @@ public class User {
   @SerializedName(SERIALIZED_NAME_ID)
   private String id;
 
+  public static final String SERIALIZED_NAME_OAUTH_I_D = "oauthID";
+  @SerializedName(SERIALIZED_NAME_OAUTH_I_D)
+  private String oauthID;
+
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name;
@@ -102,6 +106,24 @@ public class User {
     return id;
   }
 
+  public User oauthID(String oauthID) {
+    this.oauthID = oauthID;
+    return this;
+  }
+
+   /**
+   * Get oauthID
+   * @return oauthID
+  **/
+  @ApiModelProperty(value = "")
+  public String getOauthID() {
+    return oauthID;
+  }
+
+  public void setOauthID(String oauthID) {
+    this.oauthID = oauthID;
+  }
+
   public User name(String name) {
     this.name = name;
     return this;
@@ -167,6 +189,7 @@ public class User {
     }
     User user = (User) o;
     return Objects.equals(this.id, user.id) &&
+        Objects.equals(this.oauthID, user.oauthID) &&
         Objects.equals(this.name, user.name) &&
         Objects.equals(this.status, user.status) &&
         Objects.equals(this.links, user.links);
@@ -174,7 +197,7 @@ public class User {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, status, links);
+    return Objects.hash(id, oauthID, name, status, links);
   }
 
 
@@ -183,6 +206,7 @@ public class User {
     StringBuilder sb = new StringBuilder();
     sb.append("class User {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    oauthID: ").append(toIndentedString(oauthID)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");

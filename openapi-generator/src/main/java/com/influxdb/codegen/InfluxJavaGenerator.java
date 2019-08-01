@@ -434,7 +434,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                                     }
                                 }
 
-                                String[] keys = getDiscriminatorKeys(refSchema);
+                                String[] keys = getDiscriminatorKeys(schema, refSchema);
 
                                 String[] discriminator = new String[]{};
                                 String[] discriminatorValue = new String[]{};
@@ -653,9 +653,12 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         return schemas;
     }
 
-    private String[] getDiscriminatorKeys(final Schema refSchema) {
+    private String[] getDiscriminatorKeys(final Schema schema, final Schema refSchema) {
         List<String> keys = new ArrayList<>();
 
+        if (refSchema.getProperties() == null) {
+        	keys.add(schema.getDiscriminator().getPropertyName());
+		} else {
         refSchema.getProperties().forEach((BiConsumer<String, Schema>) (property, propertySchema) -> {
 
             if (keys.isEmpty()) {
@@ -664,7 +667,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
             } else if (propertySchema.getEnum() != null && propertySchema.getEnum().size() == 1) {
                 keys.add(property);
             }
-        });
+        });                        }
 
         return keys.toArray(new String[0]);
     }

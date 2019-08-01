@@ -20,70 +20,30 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.influxdb.client.domain.CheckBase;
+import com.influxdb.client.domain.CheckBaseTags;
+import com.influxdb.client.domain.DashboardQuery;
+import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.TaskStatusType;
+import com.influxdb.client.domain.Threshold;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * EmptyViewProperties
+ * ThresholdCheck
  */
 
-public class EmptyViewProperties {
-  /**
-   * Gets or Sets shape
-   */
-  @JsonAdapter(ShapeEnum.Adapter.class)
-  public enum ShapeEnum {
-    CHRONOGRAF_V2("chronograf-v2");
-
-    private String value;
-
-    ShapeEnum(String value) {
-      this.value = value;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static ShapeEnum fromValue(String text) {
-      for (ShapeEnum b : ShapeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    public static class Adapter extends TypeAdapter<ShapeEnum> {
-      @Override
-      public void write(final JsonWriter jsonWriter, final ShapeEnum enumeration) throws IOException {
-        jsonWriter.value(enumeration.getValue());
-      }
-
-      @Override
-      public ShapeEnum read(final JsonReader jsonReader) throws IOException {
-        String value = jsonReader.nextString();
-        return ShapeEnum.fromValue(String.valueOf(value));
-      }
-    }
-  }
-
-  public static final String SERIALIZED_NAME_SHAPE = "shape";
-  @SerializedName(SERIALIZED_NAME_SHAPE)
-  private ShapeEnum shape = ShapeEnum.CHRONOGRAF_V2;
-
+public class ThresholdCheck extends Check {
   /**
    * Gets or Sets type
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
-    EMPTY("empty");
+    THRESHOLD("threshold");
 
     private String value;
 
@@ -125,16 +85,11 @@ public class EmptyViewProperties {
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = TypeEnum.EMPTY;
+  private TypeEnum type = TypeEnum.THRESHOLD;
 
-   /**
-   * Get shape
-   * @return shape
-  **/
-  @ApiModelProperty(value = "")
-  public ShapeEnum getShape() {
-    return shape;
-  }
+  public static final String SERIALIZED_NAME_THRESHOLDS = "thresholds";
+  @SerializedName(SERIALIZED_NAME_THRESHOLDS)
+  private List<Threshold> thresholds = new ArrayList<>();
 
    /**
    * Get type
@@ -143,6 +98,32 @@ public class EmptyViewProperties {
   @ApiModelProperty(value = "")
   public TypeEnum getType() {
     return type;
+  }
+
+  public ThresholdCheck thresholds(List<Threshold> thresholds) {
+    this.thresholds = thresholds;
+    return this;
+  }
+
+  public ThresholdCheck addThresholdsItem(Threshold thresholdsItem) {
+    if (this.thresholds == null) {
+      this.thresholds = new ArrayList<>();
+    }
+    this.thresholds.add(thresholdsItem);
+    return this;
+  }
+
+   /**
+   * Get thresholds
+   * @return thresholds
+  **/
+  @ApiModelProperty(value = "")
+  public List<Threshold> getThresholds() {
+    return thresholds;
+  }
+
+  public void setThresholds(List<Threshold> thresholds) {
+    this.thresholds = thresholds;
   }
 
 
@@ -154,23 +135,25 @@ public class EmptyViewProperties {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    EmptyViewProperties emptyViewProperties = (EmptyViewProperties) o;
-    return Objects.equals(this.shape, emptyViewProperties.shape) &&
-        Objects.equals(this.type, emptyViewProperties.type);
+    ThresholdCheck thresholdCheck = (ThresholdCheck) o;
+    return Objects.equals(this.type, thresholdCheck.type) &&
+        Objects.equals(this.thresholds, thresholdCheck.thresholds) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(shape, type);
+    return Objects.hash(type, thresholds, super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class EmptyViewProperties {\n");
-    sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
+    sb.append("class ThresholdCheck {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    thresholds: ").append(toIndentedString(thresholds)).append("\n");
     sb.append("}");
     return sb.toString();
   }

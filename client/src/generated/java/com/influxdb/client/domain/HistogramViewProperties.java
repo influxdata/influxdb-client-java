@@ -22,7 +22,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.DashboardColor;
 import com.influxdb.client.domain.DashboardQuery;
-import com.influxdb.client.domain.ViewProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -34,55 +33,6 @@ import java.util.List;
  */
 
 public class HistogramViewProperties extends ViewProperties {
-  /**
-   * Gets or Sets shape
-   */
-  @JsonAdapter(ShapeEnum.Adapter.class)
-  public enum ShapeEnum {
-    CHRONOGRAF_V2("chronograf-v2");
-
-    private String value;
-
-    ShapeEnum(String value) {
-      this.value = value;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static ShapeEnum fromValue(String text) {
-      for (ShapeEnum b : ShapeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    public static class Adapter extends TypeAdapter<ShapeEnum> {
-      @Override
-      public void write(final JsonWriter jsonWriter, final ShapeEnum enumeration) throws IOException {
-        jsonWriter.value(enumeration.getValue());
-      }
-
-      @Override
-      public ShapeEnum read(final JsonReader jsonReader) throws IOException {
-        String value = jsonReader.nextString();
-        return ShapeEnum.fromValue(String.valueOf(value));
-      }
-    }
-  }
-
-  public static final String SERIALIZED_NAME_SHAPE = "shape";
-  @SerializedName(SERIALIZED_NAME_SHAPE)
-  private ShapeEnum shape = ShapeEnum.CHRONOGRAF_V2;
-
   /**
    * Gets or Sets type
    */
@@ -132,6 +82,71 @@ public class HistogramViewProperties extends ViewProperties {
   @SerializedName(SERIALIZED_NAME_TYPE)
   private TypeEnum type = TypeEnum.HISTOGRAM;
 
+  public static final String SERIALIZED_NAME_QUERIES = "queries";
+  @SerializedName(SERIALIZED_NAME_QUERIES)
+  private List<DashboardQuery> queries = new ArrayList<>();
+
+  public static final String SERIALIZED_NAME_COLORS = "colors";
+  @SerializedName(SERIALIZED_NAME_COLORS)
+  private List<DashboardColor> colors = new ArrayList<>();
+
+  /**
+   * Gets or Sets shape
+   */
+  @JsonAdapter(ShapeEnum.Adapter.class)
+  public enum ShapeEnum {
+    CHRONOGRAF_V2("chronograf-v2");
+
+    private String value;
+
+    ShapeEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static ShapeEnum fromValue(String text) {
+      for (ShapeEnum b : ShapeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<ShapeEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final ShapeEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public ShapeEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return ShapeEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+
+  public static final String SERIALIZED_NAME_SHAPE = "shape";
+  @SerializedName(SERIALIZED_NAME_SHAPE)
+  private ShapeEnum shape = ShapeEnum.CHRONOGRAF_V2;
+
+  public static final String SERIALIZED_NAME_NOTE = "note";
+  @SerializedName(SERIALIZED_NAME_NOTE)
+  private String note;
+
+  public static final String SERIALIZED_NAME_SHOW_NOTE_WHEN_EMPTY = "showNoteWhenEmpty";
+  @SerializedName(SERIALIZED_NAME_SHOW_NOTE_WHEN_EMPTY)
+  private Boolean showNoteWhenEmpty;
+
   public static final String SERIALIZED_NAME_X_COLUMN = "xColumn";
   @SerializedName(SERIALIZED_NAME_X_COLUMN)
   private String xColumn;
@@ -148,30 +163,159 @@ public class HistogramViewProperties extends ViewProperties {
   @SerializedName(SERIALIZED_NAME_X_AXIS_LABEL)
   private String xAxisLabel;
 
+  /**
+   * Gets or Sets position
+   */
+  @JsonAdapter(PositionEnum.Adapter.class)
+  public enum PositionEnum {
+    OVERLAID("overlaid"),
+    
+    STACKED("stacked");
+
+    private String value;
+
+    PositionEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static PositionEnum fromValue(String text) {
+      for (PositionEnum b : PositionEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<PositionEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final PositionEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public PositionEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return PositionEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+
   public static final String SERIALIZED_NAME_POSITION = "position";
   @SerializedName(SERIALIZED_NAME_POSITION)
-  private String position;
+  private PositionEnum position;
 
   public static final String SERIALIZED_NAME_BIN_COUNT = "binCount";
   @SerializedName(SERIALIZED_NAME_BIN_COUNT)
   private Integer binCount;
 
    /**
+   * Get type
+   * @return type
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public TypeEnum getType() {
+    return type;
+  }
+
+  public HistogramViewProperties queries(List<DashboardQuery> queries) {
+    this.queries = queries;
+    return this;
+  }
+
+  public HistogramViewProperties addQueriesItem(DashboardQuery queriesItem) {
+    this.queries.add(queriesItem);
+    return this;
+  }
+
+   /**
+   * Get queries
+   * @return queries
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public List<DashboardQuery> getQueries() {
+    return queries;
+  }
+
+  public void setQueries(List<DashboardQuery> queries) {
+    this.queries = queries;
+  }
+
+  public HistogramViewProperties colors(List<DashboardColor> colors) {
+    this.colors = colors;
+    return this;
+  }
+
+  public HistogramViewProperties addColorsItem(DashboardColor colorsItem) {
+    this.colors.add(colorsItem);
+    return this;
+  }
+
+   /**
+   * Colors define color encoding of data into a visualization
+   * @return colors
+  **/
+  @ApiModelProperty(required = true, value = "Colors define color encoding of data into a visualization")
+  public List<DashboardColor> getColors() {
+    return colors;
+  }
+
+  public void setColors(List<DashboardColor> colors) {
+    this.colors = colors;
+  }
+
+   /**
    * Get shape
    * @return shape
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public ShapeEnum getShape() {
     return shape;
   }
 
+  public HistogramViewProperties note(String note) {
+    this.note = note;
+    return this;
+  }
+
    /**
-   * Get type
-   * @return type
+   * Get note
+   * @return note
   **/
-  @ApiModelProperty(value = "")
-  public TypeEnum getType() {
-    return type;
+  @ApiModelProperty(required = true, value = "")
+  public String getNote() {
+    return note;
+  }
+
+  public void setNote(String note) {
+    this.note = note;
+  }
+
+  public HistogramViewProperties showNoteWhenEmpty(Boolean showNoteWhenEmpty) {
+    this.showNoteWhenEmpty = showNoteWhenEmpty;
+    return this;
+  }
+
+   /**
+   * if true, will display note when empty
+   * @return showNoteWhenEmpty
+  **/
+  @ApiModelProperty(required = true, value = "if true, will display note when empty")
+  public Boolean getShowNoteWhenEmpty() {
+    return showNoteWhenEmpty;
+  }
+
+  public void setShowNoteWhenEmpty(Boolean showNoteWhenEmpty) {
+    this.showNoteWhenEmpty = showNoteWhenEmpty;
   }
 
   public HistogramViewProperties xColumn(String xColumn) {
@@ -183,7 +327,7 @@ public class HistogramViewProperties extends ViewProperties {
    * Get xColumn
    * @return xColumn
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getXColumn() {
     return xColumn;
   }
@@ -198,9 +342,6 @@ public class HistogramViewProperties extends ViewProperties {
   }
 
   public HistogramViewProperties addFillColumnsItem(String fillColumnsItem) {
-    if (this.fillColumns == null) {
-      this.fillColumns = new ArrayList<>();
-    }
     this.fillColumns.add(fillColumnsItem);
     return this;
   }
@@ -209,7 +350,7 @@ public class HistogramViewProperties extends ViewProperties {
    * Get fillColumns
    * @return fillColumns
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public List<String> getFillColumns() {
     return fillColumns;
   }
@@ -224,9 +365,6 @@ public class HistogramViewProperties extends ViewProperties {
   }
 
   public HistogramViewProperties addXDomainItem(Float xDomainItem) {
-    if (this.xDomain == null) {
-      this.xDomain = new ArrayList<>();
-    }
     this.xDomain.add(xDomainItem);
     return this;
   }
@@ -235,7 +373,7 @@ public class HistogramViewProperties extends ViewProperties {
    * Get xDomain
    * @return xDomain
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public List<Float> getXDomain() {
     return xDomain;
   }
@@ -253,7 +391,7 @@ public class HistogramViewProperties extends ViewProperties {
    * Get xAxisLabel
    * @return xAxisLabel
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getXAxisLabel() {
     return xAxisLabel;
   }
@@ -262,7 +400,7 @@ public class HistogramViewProperties extends ViewProperties {
     this.xAxisLabel = xAxisLabel;
   }
 
-  public HistogramViewProperties position(String position) {
+  public HistogramViewProperties position(PositionEnum position) {
     this.position = position;
     return this;
   }
@@ -271,12 +409,12 @@ public class HistogramViewProperties extends ViewProperties {
    * Get position
    * @return position
   **/
-  @ApiModelProperty(value = "")
-  public String getPosition() {
+  @ApiModelProperty(required = true, value = "")
+  public PositionEnum getPosition() {
     return position;
   }
 
-  public void setPosition(String position) {
+  public void setPosition(PositionEnum position) {
     this.position = position;
   }
 
@@ -289,7 +427,7 @@ public class HistogramViewProperties extends ViewProperties {
    * Get binCount
    * @return binCount
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public Integer getBinCount() {
     return binCount;
   }
@@ -308,8 +446,12 @@ public class HistogramViewProperties extends ViewProperties {
       return false;
     }
     HistogramViewProperties histogramViewProperties = (HistogramViewProperties) o;
-    return Objects.equals(this.shape, histogramViewProperties.shape) &&
-        Objects.equals(this.type, histogramViewProperties.type) &&
+    return Objects.equals(this.type, histogramViewProperties.type) &&
+        Objects.equals(this.queries, histogramViewProperties.queries) &&
+        Objects.equals(this.colors, histogramViewProperties.colors) &&
+        Objects.equals(this.shape, histogramViewProperties.shape) &&
+        Objects.equals(this.note, histogramViewProperties.note) &&
+        Objects.equals(this.showNoteWhenEmpty, histogramViewProperties.showNoteWhenEmpty) &&
         Objects.equals(this.xColumn, histogramViewProperties.xColumn) &&
         Objects.equals(this.fillColumns, histogramViewProperties.fillColumns) &&
         Objects.equals(this.xDomain, histogramViewProperties.xDomain) &&
@@ -321,7 +463,7 @@ public class HistogramViewProperties extends ViewProperties {
 
   @Override
   public int hashCode() {
-    return Objects.hash(shape, type, xColumn, fillColumns, xDomain, xAxisLabel, position, binCount, super.hashCode());
+    return Objects.hash(type, queries, colors, shape, note, showNoteWhenEmpty, xColumn, fillColumns, xDomain, xAxisLabel, position, binCount, super.hashCode());
   }
 
 
@@ -330,8 +472,12 @@ public class HistogramViewProperties extends ViewProperties {
     StringBuilder sb = new StringBuilder();
     sb.append("class HistogramViewProperties {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    queries: ").append(toIndentedString(queries)).append("\n");
+    sb.append("    colors: ").append(toIndentedString(colors)).append("\n");
+    sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
+    sb.append("    note: ").append(toIndentedString(note)).append("\n");
+    sb.append("    showNoteWhenEmpty: ").append(toIndentedString(showNoteWhenEmpty)).append("\n");
     sb.append("    xColumn: ").append(toIndentedString(xColumn)).append("\n");
     sb.append("    fillColumns: ").append(toIndentedString(fillColumns)).append("\n");
     sb.append("    xDomain: ").append(toIndentedString(xDomain)).append("\n");

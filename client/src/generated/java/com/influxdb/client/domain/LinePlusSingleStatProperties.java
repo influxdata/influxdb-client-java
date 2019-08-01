@@ -25,10 +25,10 @@ import com.influxdb.client.domain.DashboardColor;
 import com.influxdb.client.domain.DashboardQuery;
 import com.influxdb.client.domain.DecimalPlaces;
 import com.influxdb.client.domain.Legend;
-import com.influxdb.client.domain.ViewProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,9 +36,62 @@ import java.util.List;
  */
 
 public class LinePlusSingleStatProperties extends ViewProperties {
-  public static final String SERIALIZED_NAME_AXES = "axes";
-  @SerializedName(SERIALIZED_NAME_AXES)
-  private Axes axes = null;
+  /**
+   * Gets or Sets type
+   */
+  @JsonAdapter(TypeEnum.Adapter.class)
+  public enum TypeEnum {
+    LINE_PLUS_SINGLE_STAT("line-plus-single-stat");
+
+    private String value;
+
+    TypeEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static TypeEnum fromValue(String text) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<TypeEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final TypeEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public TypeEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return TypeEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+
+  public static final String SERIALIZED_NAME_TYPE = "type";
+  @SerializedName(SERIALIZED_NAME_TYPE)
+  private TypeEnum type = TypeEnum.LINE_PLUS_SINGLE_STAT;
+
+  public static final String SERIALIZED_NAME_QUERIES = "queries";
+  @SerializedName(SERIALIZED_NAME_QUERIES)
+  private List<DashboardQuery> queries = new ArrayList<>();
+
+  public static final String SERIALIZED_NAME_COLORS = "colors";
+  @SerializedName(SERIALIZED_NAME_COLORS)
+  private List<DashboardColor> colors = new ArrayList<>();
 
   /**
    * Gets or Sets shape
@@ -89,58 +142,33 @@ public class LinePlusSingleStatProperties extends ViewProperties {
   @SerializedName(SERIALIZED_NAME_SHAPE)
   private ShapeEnum shape = ShapeEnum.CHRONOGRAF_V2;
 
-  /**
-   * Gets or Sets type
-   */
-  @JsonAdapter(TypeEnum.Adapter.class)
-  public enum TypeEnum {
-    LINE_PLUS_SINGLE_STAT("line-plus-single-stat");
+  public static final String SERIALIZED_NAME_NOTE = "note";
+  @SerializedName(SERIALIZED_NAME_NOTE)
+  private String note;
 
-    private String value;
+  public static final String SERIALIZED_NAME_SHOW_NOTE_WHEN_EMPTY = "showNoteWhenEmpty";
+  @SerializedName(SERIALIZED_NAME_SHOW_NOTE_WHEN_EMPTY)
+  private Boolean showNoteWhenEmpty;
 
-    TypeEnum(String value) {
-      this.value = value;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static TypeEnum fromValue(String text) {
-      for (TypeEnum b : TypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    public static class Adapter extends TypeAdapter<TypeEnum> {
-      @Override
-      public void write(final JsonWriter jsonWriter, final TypeEnum enumeration) throws IOException {
-        jsonWriter.value(enumeration.getValue());
-      }
-
-      @Override
-      public TypeEnum read(final JsonReader jsonReader) throws IOException {
-        String value = jsonReader.nextString();
-        return TypeEnum.fromValue(String.valueOf(value));
-      }
-    }
-  }
-
-  public static final String SERIALIZED_NAME_TYPE = "type";
-  @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = TypeEnum.LINE_PLUS_SINGLE_STAT;
+  public static final String SERIALIZED_NAME_AXES = "axes";
+  @SerializedName(SERIALIZED_NAME_AXES)
+  private Axes axes = null;
 
   public static final String SERIALIZED_NAME_LEGEND = "legend";
   @SerializedName(SERIALIZED_NAME_LEGEND)
   private Legend legend = null;
+
+  public static final String SERIALIZED_NAME_X_COLUMN = "xColumn";
+  @SerializedName(SERIALIZED_NAME_X_COLUMN)
+  private String xColumn;
+
+  public static final String SERIALIZED_NAME_Y_COLUMN = "yColumn";
+  @SerializedName(SERIALIZED_NAME_Y_COLUMN)
+  private String yColumn;
+
+  public static final String SERIALIZED_NAME_SHADE_BELOW = "shadeBelow";
+  @SerializedName(SERIALIZED_NAME_SHADE_BELOW)
+  private Boolean shadeBelow;
 
   public static final String SERIALIZED_NAME_PREFIX = "prefix";
   @SerializedName(SERIALIZED_NAME_PREFIX)
@@ -154,6 +182,106 @@ public class LinePlusSingleStatProperties extends ViewProperties {
   @SerializedName(SERIALIZED_NAME_DECIMAL_PLACES)
   private DecimalPlaces decimalPlaces = null;
 
+   /**
+   * Get type
+   * @return type
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public TypeEnum getType() {
+    return type;
+  }
+
+  public LinePlusSingleStatProperties queries(List<DashboardQuery> queries) {
+    this.queries = queries;
+    return this;
+  }
+
+  public LinePlusSingleStatProperties addQueriesItem(DashboardQuery queriesItem) {
+    this.queries.add(queriesItem);
+    return this;
+  }
+
+   /**
+   * Get queries
+   * @return queries
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public List<DashboardQuery> getQueries() {
+    return queries;
+  }
+
+  public void setQueries(List<DashboardQuery> queries) {
+    this.queries = queries;
+  }
+
+  public LinePlusSingleStatProperties colors(List<DashboardColor> colors) {
+    this.colors = colors;
+    return this;
+  }
+
+  public LinePlusSingleStatProperties addColorsItem(DashboardColor colorsItem) {
+    this.colors.add(colorsItem);
+    return this;
+  }
+
+   /**
+   * Colors define color encoding of data into a visualization
+   * @return colors
+  **/
+  @ApiModelProperty(required = true, value = "Colors define color encoding of data into a visualization")
+  public List<DashboardColor> getColors() {
+    return colors;
+  }
+
+  public void setColors(List<DashboardColor> colors) {
+    this.colors = colors;
+  }
+
+   /**
+   * Get shape
+   * @return shape
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public ShapeEnum getShape() {
+    return shape;
+  }
+
+  public LinePlusSingleStatProperties note(String note) {
+    this.note = note;
+    return this;
+  }
+
+   /**
+   * Get note
+   * @return note
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public String getNote() {
+    return note;
+  }
+
+  public void setNote(String note) {
+    this.note = note;
+  }
+
+  public LinePlusSingleStatProperties showNoteWhenEmpty(Boolean showNoteWhenEmpty) {
+    this.showNoteWhenEmpty = showNoteWhenEmpty;
+    return this;
+  }
+
+   /**
+   * if true, will display note when empty
+   * @return showNoteWhenEmpty
+  **/
+  @ApiModelProperty(required = true, value = "if true, will display note when empty")
+  public Boolean getShowNoteWhenEmpty() {
+    return showNoteWhenEmpty;
+  }
+
+  public void setShowNoteWhenEmpty(Boolean showNoteWhenEmpty) {
+    this.showNoteWhenEmpty = showNoteWhenEmpty;
+  }
+
   public LinePlusSingleStatProperties axes(Axes axes) {
     this.axes = axes;
     return this;
@@ -163,31 +291,13 @@ public class LinePlusSingleStatProperties extends ViewProperties {
    * Get axes
    * @return axes
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public Axes getAxes() {
     return axes;
   }
 
   public void setAxes(Axes axes) {
     this.axes = axes;
-  }
-
-   /**
-   * Get shape
-   * @return shape
-  **/
-  @ApiModelProperty(value = "")
-  public ShapeEnum getShape() {
-    return shape;
-  }
-
-   /**
-   * Get type
-   * @return type
-  **/
-  @ApiModelProperty(value = "")
-  public TypeEnum getType() {
-    return type;
   }
 
   public LinePlusSingleStatProperties legend(Legend legend) {
@@ -199,13 +309,67 @@ public class LinePlusSingleStatProperties extends ViewProperties {
    * Get legend
    * @return legend
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public Legend getLegend() {
     return legend;
   }
 
   public void setLegend(Legend legend) {
     this.legend = legend;
+  }
+
+  public LinePlusSingleStatProperties xColumn(String xColumn) {
+    this.xColumn = xColumn;
+    return this;
+  }
+
+   /**
+   * Get xColumn
+   * @return xColumn
+  **/
+  @ApiModelProperty(value = "")
+  public String getXColumn() {
+    return xColumn;
+  }
+
+  public void setXColumn(String xColumn) {
+    this.xColumn = xColumn;
+  }
+
+  public LinePlusSingleStatProperties yColumn(String yColumn) {
+    this.yColumn = yColumn;
+    return this;
+  }
+
+   /**
+   * Get yColumn
+   * @return yColumn
+  **/
+  @ApiModelProperty(value = "")
+  public String getYColumn() {
+    return yColumn;
+  }
+
+  public void setYColumn(String yColumn) {
+    this.yColumn = yColumn;
+  }
+
+  public LinePlusSingleStatProperties shadeBelow(Boolean shadeBelow) {
+    this.shadeBelow = shadeBelow;
+    return this;
+  }
+
+   /**
+   * Get shadeBelow
+   * @return shadeBelow
+  **/
+  @ApiModelProperty(value = "")
+  public Boolean getShadeBelow() {
+    return shadeBelow;
+  }
+
+  public void setShadeBelow(Boolean shadeBelow) {
+    this.shadeBelow = shadeBelow;
   }
 
   public LinePlusSingleStatProperties prefix(String prefix) {
@@ -217,7 +381,7 @@ public class LinePlusSingleStatProperties extends ViewProperties {
    * Get prefix
    * @return prefix
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getPrefix() {
     return prefix;
   }
@@ -235,7 +399,7 @@ public class LinePlusSingleStatProperties extends ViewProperties {
    * Get suffix
    * @return suffix
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getSuffix() {
     return suffix;
   }
@@ -253,7 +417,7 @@ public class LinePlusSingleStatProperties extends ViewProperties {
    * Get decimalPlaces
    * @return decimalPlaces
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public DecimalPlaces getDecimalPlaces() {
     return decimalPlaces;
   }
@@ -272,10 +436,17 @@ public class LinePlusSingleStatProperties extends ViewProperties {
       return false;
     }
     LinePlusSingleStatProperties linePlusSingleStatProperties = (LinePlusSingleStatProperties) o;
-    return Objects.equals(this.axes, linePlusSingleStatProperties.axes) &&
+    return Objects.equals(this.type, linePlusSingleStatProperties.type) &&
+        Objects.equals(this.queries, linePlusSingleStatProperties.queries) &&
+        Objects.equals(this.colors, linePlusSingleStatProperties.colors) &&
         Objects.equals(this.shape, linePlusSingleStatProperties.shape) &&
-        Objects.equals(this.type, linePlusSingleStatProperties.type) &&
+        Objects.equals(this.note, linePlusSingleStatProperties.note) &&
+        Objects.equals(this.showNoteWhenEmpty, linePlusSingleStatProperties.showNoteWhenEmpty) &&
+        Objects.equals(this.axes, linePlusSingleStatProperties.axes) &&
         Objects.equals(this.legend, linePlusSingleStatProperties.legend) &&
+        Objects.equals(this.xColumn, linePlusSingleStatProperties.xColumn) &&
+        Objects.equals(this.yColumn, linePlusSingleStatProperties.yColumn) &&
+        Objects.equals(this.shadeBelow, linePlusSingleStatProperties.shadeBelow) &&
         Objects.equals(this.prefix, linePlusSingleStatProperties.prefix) &&
         Objects.equals(this.suffix, linePlusSingleStatProperties.suffix) &&
         Objects.equals(this.decimalPlaces, linePlusSingleStatProperties.decimalPlaces) &&
@@ -284,7 +455,7 @@ public class LinePlusSingleStatProperties extends ViewProperties {
 
   @Override
   public int hashCode() {
-    return Objects.hash(axes, shape, type, legend, prefix, suffix, decimalPlaces, super.hashCode());
+    return Objects.hash(type, queries, colors, shape, note, showNoteWhenEmpty, axes, legend, xColumn, yColumn, shadeBelow, prefix, suffix, decimalPlaces, super.hashCode());
   }
 
 
@@ -293,10 +464,17 @@ public class LinePlusSingleStatProperties extends ViewProperties {
     StringBuilder sb = new StringBuilder();
     sb.append("class LinePlusSingleStatProperties {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    axes: ").append(toIndentedString(axes)).append("\n");
-    sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    queries: ").append(toIndentedString(queries)).append("\n");
+    sb.append("    colors: ").append(toIndentedString(colors)).append("\n");
+    sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
+    sb.append("    note: ").append(toIndentedString(note)).append("\n");
+    sb.append("    showNoteWhenEmpty: ").append(toIndentedString(showNoteWhenEmpty)).append("\n");
+    sb.append("    axes: ").append(toIndentedString(axes)).append("\n");
     sb.append("    legend: ").append(toIndentedString(legend)).append("\n");
+    sb.append("    xColumn: ").append(toIndentedString(xColumn)).append("\n");
+    sb.append("    yColumn: ").append(toIndentedString(yColumn)).append("\n");
+    sb.append("    shadeBelow: ").append(toIndentedString(shadeBelow)).append("\n");
     sb.append("    prefix: ").append(toIndentedString(prefix)).append("\n");
     sb.append("    suffix: ").append(toIndentedString(suffix)).append("\n");
     sb.append("    decimalPlaces: ").append(toIndentedString(decimalPlaces)).append("\n");

@@ -25,52 +25,30 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * QueryConfigRange
+ * BuilderConfigAggregateWindow
  */
 
-public class QueryConfigRange {
-  public static final String SERIALIZED_NAME_LOWER = "lower";
-  @SerializedName(SERIALIZED_NAME_LOWER)
-  private String lower;
+public class BuilderConfigAggregateWindow {
+  public static final String SERIALIZED_NAME_PERIOD = "period";
+  @SerializedName(SERIALIZED_NAME_PERIOD)
+  private String period;
 
-  public static final String SERIALIZED_NAME_UPPER = "upper";
-  @SerializedName(SERIALIZED_NAME_UPPER)
-  private String upper;
-
-  public QueryConfigRange lower(String lower) {
-    this.lower = lower;
+  public BuilderConfigAggregateWindow period(String period) {
+    this.period = period;
     return this;
   }
 
    /**
-   * Get lower
-   * @return lower
+   * Get period
+   * @return period
   **/
-  @ApiModelProperty(required = true, value = "")
-  public String getLower() {
-    return lower;
+  @ApiModelProperty(value = "")
+  public String getPeriod() {
+    return period;
   }
 
-  public void setLower(String lower) {
-    this.lower = lower;
-  }
-
-  public QueryConfigRange upper(String upper) {
-    this.upper = upper;
-    return this;
-  }
-
-   /**
-   * Get upper
-   * @return upper
-  **/
-  @ApiModelProperty(required = true, value = "")
-  public String getUpper() {
-    return upper;
-  }
-
-  public void setUpper(String upper) {
-    this.upper = upper;
+  public void setPeriod(String period) {
+    this.period = period;
   }
 
 
@@ -82,23 +60,21 @@ public class QueryConfigRange {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    QueryConfigRange queryConfigRange = (QueryConfigRange) o;
-    return Objects.equals(this.lower, queryConfigRange.lower) &&
-        Objects.equals(this.upper, queryConfigRange.upper);
+    BuilderConfigAggregateWindow builderConfigAggregateWindow = (BuilderConfigAggregateWindow) o;
+    return Objects.equals(this.period, builderConfigAggregateWindow.period);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(lower, upper);
+    return Objects.hash(period);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class QueryConfigRange {\n");
-    sb.append("    lower: ").append(toIndentedString(lower)).append("\n");
-    sb.append("    upper: ").append(toIndentedString(upper)).append("\n");
+    sb.append("class BuilderConfigAggregateWindow {\n");
+    sb.append("    period: ").append(toIndentedString(period)).append("\n");
     sb.append("}");
     return sb.toString();
   }

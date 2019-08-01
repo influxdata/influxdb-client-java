@@ -7,8 +7,8 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.MultipartBody;
 
-import com.influxdb.client.domain.Check;
 import com.influxdb.client.domain.Error;
+import com.influxdb.client.domain.HealthCheck;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,10 +20,10 @@ public interface HealthService {
    * Get the health of an instance anytime during execution. Allow us to check if the instance is still healthy.
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Check&gt;
+   * @return Call&lt;HealthCheck&gt;
    */
   @GET("health")
-  Call<Check> getHealth(
+  Call<HealthCheck> getHealth(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

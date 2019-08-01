@@ -27,9 +27,9 @@ import javax.annotation.Nullable;
 import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.Bucket;
-import com.influxdb.client.domain.Check;
 import com.influxdb.client.domain.Dashboard;
 import com.influxdb.client.domain.Document;
+import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.OnboardingRequest;
 import com.influxdb.client.domain.OnboardingResponse;
@@ -198,7 +198,7 @@ public interface InfluxDBClient extends AutoCloseable {
      * @return health of an instance
      */
     @Nonnull
-    Check health();
+    HealthCheck health();
 
     /**
      * The readiness of the InfluxDB 2.0.

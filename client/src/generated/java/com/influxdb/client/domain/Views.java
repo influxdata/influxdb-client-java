@@ -20,6 +20,8 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.influxdb.client.domain.View;
+import com.influxdb.client.domain.ViewLinks;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -27,57 +29,60 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * QueryConfigGroupBy
+ * Views
  */
 
-public class QueryConfigGroupBy {
-  public static final String SERIALIZED_NAME_TIME = "time";
-  @SerializedName(SERIALIZED_NAME_TIME)
-  private String time;
+public class Views {
+  public static final String SERIALIZED_NAME_LINKS = "links";
+  @SerializedName(SERIALIZED_NAME_LINKS)
+  private ViewLinks links = null;
 
-  public static final String SERIALIZED_NAME_TAGS = "tags";
-  @SerializedName(SERIALIZED_NAME_TAGS)
-  private List<String> tags = new ArrayList<>();
+  public static final String SERIALIZED_NAME_VIEWS = "views";
+  @SerializedName(SERIALIZED_NAME_VIEWS)
+  private List<View> views = new ArrayList<>();
 
-  public QueryConfigGroupBy time(String time) {
-    this.time = time;
+  public Views links(ViewLinks links) {
+    this.links = links;
     return this;
   }
 
    /**
-   * Get time
-   * @return time
+   * Get links
+   * @return links
   **/
-  @ApiModelProperty(required = true, value = "")
-  public String getTime() {
-    return time;
+  @ApiModelProperty(value = "")
+  public ViewLinks getLinks() {
+    return links;
   }
 
-  public void setTime(String time) {
-    this.time = time;
+  public void setLinks(ViewLinks links) {
+    this.links = links;
   }
 
-  public QueryConfigGroupBy tags(List<String> tags) {
-    this.tags = tags;
+  public Views views(List<View> views) {
+    this.views = views;
     return this;
   }
 
-  public QueryConfigGroupBy addTagsItem(String tagsItem) {
-    this.tags.add(tagsItem);
+  public Views addViewsItem(View viewsItem) {
+    if (this.views == null) {
+      this.views = new ArrayList<>();
+    }
+    this.views.add(viewsItem);
     return this;
   }
 
    /**
-   * Get tags
-   * @return tags
+   * Get views
+   * @return views
   **/
-  @ApiModelProperty(required = true, value = "")
-  public List<String> getTags() {
-    return tags;
+  @ApiModelProperty(value = "")
+  public List<View> getViews() {
+    return views;
   }
 
-  public void setTags(List<String> tags) {
-    this.tags = tags;
+  public void setViews(List<View> views) {
+    this.views = views;
   }
 
 
@@ -89,23 +94,23 @@ public class QueryConfigGroupBy {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    QueryConfigGroupBy queryConfigGroupBy = (QueryConfigGroupBy) o;
-    return Objects.equals(this.time, queryConfigGroupBy.time) &&
-        Objects.equals(this.tags, queryConfigGroupBy.tags);
+    Views views = (Views) o;
+    return Objects.equals(this.links, views.links) &&
+        Objects.equals(this.views, views.views);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(time, tags);
+    return Objects.hash(links, views);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class QueryConfigGroupBy {\n");
-    sb.append("    time: ").append(toIndentedString(time)).append("\n");
-    sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
+    sb.append("class Views {\n");
+    sb.append("    links: ").append(toIndentedString(links)).append("\n");
+    sb.append("    views: ").append(toIndentedString(views)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -25,42 +25,37 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * Type and value and optional name of a setting.
+ * CheckBaseTags
  */
-@ApiModel(description = "Type and value and optional name of a setting.")
 
-public class LogViewerColumnSettings {
-  public static final String SERIALIZED_NAME_TYPE = "type";
-  @SerializedName(SERIALIZED_NAME_TYPE)
-  private String type;
+public class CheckBaseTags {
+  public static final String SERIALIZED_NAME_KEY = "key";
+  @SerializedName(SERIALIZED_NAME_KEY)
+  private String key;
 
   public static final String SERIALIZED_NAME_VALUE = "value";
   @SerializedName(SERIALIZED_NAME_VALUE)
   private String value;
 
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private String name;
-
-  public LogViewerColumnSettings type(String type) {
-    this.type = type;
+  public CheckBaseTags key(String key) {
+    this.key = key;
     return this;
   }
 
    /**
-   * Get type
-   * @return type
+   * Get key
+   * @return key
   **/
-  @ApiModelProperty(required = true, value = "")
-  public String getType() {
-    return type;
+  @ApiModelProperty(value = "")
+  public String getKey() {
+    return key;
   }
 
-  public void setType(String type) {
-    this.type = type;
+  public void setKey(String key) {
+    this.key = key;
   }
 
-  public LogViewerColumnSettings value(String value) {
+  public CheckBaseTags value(String value) {
     this.value = value;
     return this;
   }
@@ -69,31 +64,13 @@ public class LogViewerColumnSettings {
    * Get value
    * @return value
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public String getValue() {
     return value;
   }
 
   public void setValue(String value) {
     this.value = value;
-  }
-
-  public LogViewerColumnSettings name(String name) {
-    this.name = name;
-    return this;
-  }
-
-   /**
-   * Get name
-   * @return name
-  **/
-  @ApiModelProperty(value = "")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
 
@@ -105,25 +82,23 @@ public class LogViewerColumnSettings {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    LogViewerColumnSettings logViewerColumnSettings = (LogViewerColumnSettings) o;
-    return Objects.equals(this.type, logViewerColumnSettings.type) &&
-        Objects.equals(this.value, logViewerColumnSettings.value) &&
-        Objects.equals(this.name, logViewerColumnSettings.name);
+    CheckBaseTags checkBaseTags = (CheckBaseTags) o;
+    return Objects.equals(this.key, checkBaseTags.key) &&
+        Objects.equals(this.value, checkBaseTags.value);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, value, name);
+    return Objects.hash(key, value);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class LogViewerColumnSettings {\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("class CheckBaseTags {\n");
+    sb.append("    key: ").append(toIndentedString(key)).append("\n");
     sb.append("    value: ").append(toIndentedString(value)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("}");
     return sb.toString();
   }

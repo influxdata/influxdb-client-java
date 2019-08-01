@@ -28,56 +28,7 @@ import java.io.IOException;
  * MarkdownViewProperties
  */
 
-public class MarkdownViewProperties {
-  /**
-   * Gets or Sets shape
-   */
-  @JsonAdapter(ShapeEnum.Adapter.class)
-  public enum ShapeEnum {
-    CHRONOGRAF_V2("chronograf-v2");
-
-    private String value;
-
-    ShapeEnum(String value) {
-      this.value = value;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static ShapeEnum fromValue(String text) {
-      for (ShapeEnum b : ShapeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    public static class Adapter extends TypeAdapter<ShapeEnum> {
-      @Override
-      public void write(final JsonWriter jsonWriter, final ShapeEnum enumeration) throws IOException {
-        jsonWriter.value(enumeration.getValue());
-      }
-
-      @Override
-      public ShapeEnum read(final JsonReader jsonReader) throws IOException {
-        String value = jsonReader.nextString();
-        return ShapeEnum.fromValue(String.valueOf(value));
-      }
-    }
-  }
-
-  public static final String SERIALIZED_NAME_SHAPE = "shape";
-  @SerializedName(SERIALIZED_NAME_SHAPE)
-  private ShapeEnum shape = ShapeEnum.CHRONOGRAF_V2;
-
+public class MarkdownViewProperties extends ViewProperties {
   /**
    * Gets or Sets type
    */
@@ -127,26 +78,75 @@ public class MarkdownViewProperties {
   @SerializedName(SERIALIZED_NAME_TYPE)
   private TypeEnum type = TypeEnum.MARKDOWN;
 
+  /**
+   * Gets or Sets shape
+   */
+  @JsonAdapter(ShapeEnum.Adapter.class)
+  public enum ShapeEnum {
+    CHRONOGRAF_V2("chronograf-v2");
+
+    private String value;
+
+    ShapeEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static ShapeEnum fromValue(String text) {
+      for (ShapeEnum b : ShapeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<ShapeEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final ShapeEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public ShapeEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return ShapeEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+
+  public static final String SERIALIZED_NAME_SHAPE = "shape";
+  @SerializedName(SERIALIZED_NAME_SHAPE)
+  private ShapeEnum shape = ShapeEnum.CHRONOGRAF_V2;
+
   public static final String SERIALIZED_NAME_NOTE = "note";
   @SerializedName(SERIALIZED_NAME_NOTE)
   private String note;
 
    /**
-   * Get shape
-   * @return shape
-  **/
-  @ApiModelProperty(value = "")
-  public ShapeEnum getShape() {
-    return shape;
-  }
-
-   /**
    * Get type
    * @return type
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public TypeEnum getType() {
     return type;
+  }
+
+   /**
+   * Get shape
+   * @return shape
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public ShapeEnum getShape() {
+    return shape;
   }
 
   public MarkdownViewProperties note(String note) {
@@ -158,7 +158,7 @@ public class MarkdownViewProperties {
    * Get note
    * @return note
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getNote() {
     return note;
   }
@@ -177,14 +177,15 @@ public class MarkdownViewProperties {
       return false;
     }
     MarkdownViewProperties markdownViewProperties = (MarkdownViewProperties) o;
-    return Objects.equals(this.shape, markdownViewProperties.shape) &&
-        Objects.equals(this.type, markdownViewProperties.type) &&
-        Objects.equals(this.note, markdownViewProperties.note);
+    return Objects.equals(this.type, markdownViewProperties.type) &&
+        Objects.equals(this.shape, markdownViewProperties.shape) &&
+        Objects.equals(this.note, markdownViewProperties.note) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(shape, type, note);
+    return Objects.hash(type, shape, note, super.hashCode());
   }
 
 
@@ -192,8 +193,9 @@ public class MarkdownViewProperties {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class MarkdownViewProperties {\n");
-    sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
     sb.append("    note: ").append(toIndentedString(note)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -8,8 +8,8 @@ import okhttp3.ResponseBody;
 import okhttp3.MultipartBody;
 
 import com.influxdb.client.domain.Buckets;
-import com.influxdb.client.domain.Check;
 import com.influxdb.client.domain.Error;
+import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.domain.Source;
 import com.influxdb.client.domain.Sources;
 
@@ -73,10 +73,10 @@ public interface SourcesService {
    * 
    * @param sourceID ID of the source (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Check&gt;
+   * @return Call&lt;HealthCheck&gt;
    */
   @GET("api/v2/sources/{sourceID}/health")
-  Call<Check> getSourcesIDHealth(
+  Call<HealthCheck> getSourcesIDHealth(
     @retrofit2.http.Path("sourceID") String sourceID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

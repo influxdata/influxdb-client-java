@@ -24,7 +24,7 @@ package com.influxdb.client.scala.internal
 import akka.stream.OverflowStrategy
 import com.influxdb.LogLevel
 import com.influxdb.client.InfluxDBClientOptions
-import com.influxdb.client.domain.Check
+import com.influxdb.client.domain.HealthCheck
 import com.influxdb.client.internal.AbstractInfluxDBClient
 import com.influxdb.client.scala.{InfluxDBClientScala, QueryScalaApi}
 import com.influxdb.client.service.QueryService
@@ -48,7 +48,7 @@ class InfluxDBClientScalaImpl(@Nonnull options: InfluxDBClientOptions,
    *
    * @return health of an instance
    */
-  override def health: Check = health(healthService.getHealth(null))
+  override def health: HealthCheck = health(healthService.getHealth(null))
 
   /**
    * Gets the [[LogLevel]] that is used for logging requests and responses.

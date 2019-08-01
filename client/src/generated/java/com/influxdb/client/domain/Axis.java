@@ -20,6 +20,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.influxdb.client.domain.AxisScale;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -34,7 +35,7 @@ import java.util.List;
 public class Axis {
   public static final String SERIALIZED_NAME_BOUNDS = "bounds";
   @SerializedName(SERIALIZED_NAME_BOUNDS)
-  private List<Long> bounds = new ArrayList<>();
+  private List<String> bounds = new ArrayList<>();
 
   public static final String SERIALIZED_NAME_LABEL = "label";
   @SerializedName(SERIALIZED_NAME_LABEL)
@@ -48,20 +49,69 @@ public class Axis {
   @SerializedName(SERIALIZED_NAME_SUFFIX)
   private String suffix;
 
+  /**
+   * Base represents the radix for formatting axis values.
+   */
+  @JsonAdapter(BaseEnum.Adapter.class)
+  public enum BaseEnum {
+    EMPTY(""),
+    
+    _2("2"),
+    
+    _10("10");
+
+    private String value;
+
+    BaseEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static BaseEnum fromValue(String text) {
+      for (BaseEnum b : BaseEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<BaseEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final BaseEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public BaseEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return BaseEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+
   public static final String SERIALIZED_NAME_BASE = "base";
   @SerializedName(SERIALIZED_NAME_BASE)
-  private String base;
+  private BaseEnum base;
 
   public static final String SERIALIZED_NAME_SCALE = "scale";
   @SerializedName(SERIALIZED_NAME_SCALE)
-  private String scale;
+  private AxisScale scale = null;
 
-  public Axis bounds(List<Long> bounds) {
+  public Axis bounds(List<String> bounds) {
     this.bounds = bounds;
     return this;
   }
 
-  public Axis addBoundsItem(Long boundsItem) {
+  public Axis addBoundsItem(String boundsItem) {
     if (this.bounds == null) {
       this.bounds = new ArrayList<>();
     }
@@ -74,11 +124,11 @@ public class Axis {
    * @return bounds
   **/
   @ApiModelProperty(value = "The extents of an axis in the form [lower, upper]. Clients determine whether bounds are to be inclusive or exclusive of their limits")
-  public List<Long> getBounds() {
+  public List<String> getBounds() {
     return bounds;
   }
 
-  public void setBounds(List<Long> bounds) {
+  public void setBounds(List<String> bounds) {
     this.bounds = bounds;
   }
 
@@ -136,7 +186,7 @@ public class Axis {
     this.suffix = suffix;
   }
 
-  public Axis base(String base) {
+  public Axis base(BaseEnum base) {
     this.base = base;
     return this;
   }
@@ -146,29 +196,29 @@ public class Axis {
    * @return base
   **/
   @ApiModelProperty(value = "Base represents the radix for formatting axis values.")
-  public String getBase() {
+  public BaseEnum getBase() {
     return base;
   }
 
-  public void setBase(String base) {
+  public void setBase(BaseEnum base) {
     this.base = base;
   }
 
-  public Axis scale(String scale) {
+  public Axis scale(AxisScale scale) {
     this.scale = scale;
     return this;
   }
 
    /**
-   * Scale is the axis formatting scale. Supported: \&quot;log\&quot;, \&quot;linear\&quot;
+   * Get scale
    * @return scale
   **/
-  @ApiModelProperty(value = "Scale is the axis formatting scale. Supported: \"log\", \"linear\"")
-  public String getScale() {
+  @ApiModelProperty(value = "")
+  public AxisScale getScale() {
     return scale;
   }
 
-  public void setScale(String scale) {
+  public void setScale(AxisScale scale) {
     this.scale = scale;
   }
 

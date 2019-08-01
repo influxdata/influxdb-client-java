@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import com.influxdb.LogLevel;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.WriteOptions;
-import com.influxdb.client.domain.Check;
+import com.influxdb.client.domain.HealthCheck;
 
 import io.reactivex.Single;
 
@@ -68,7 +68,7 @@ public interface InfluxDBClientReactive extends AutoCloseable {
      * @return health of an instance
      */
     @Nonnull
-    Single<Check> health();
+    Single<HealthCheck> health();
 
     /**
      * @return the {@link LogLevel} that is used for logging requests and responses
