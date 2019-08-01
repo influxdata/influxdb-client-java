@@ -57,10 +57,6 @@ public class NotificationEndpointBase {
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
   private String description;
 
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private String name;
-
   /**
    * The status of the endpoint.
    */
@@ -206,24 +202,6 @@ public class NotificationEndpointBase {
     this.description = description;
   }
 
-  public NotificationEndpointBase name(String name) {
-    this.name = name;
-    return this;
-  }
-
-   /**
-   * Get name
-   * @return name
-  **/
-  @ApiModelProperty(value = "")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public NotificationEndpointBase status(StatusEnum status) {
     this.status = status;
     return this;
@@ -284,14 +262,13 @@ public class NotificationEndpointBase {
         Objects.equals(this.createdAt, notificationEndpointBase.createdAt) &&
         Objects.equals(this.updatedAt, notificationEndpointBase.updatedAt) &&
         Objects.equals(this.description, notificationEndpointBase.description) &&
-        Objects.equals(this.name, notificationEndpointBase.name) &&
         Objects.equals(this.status, notificationEndpointBase.status) &&
         Objects.equals(this.labels, notificationEndpointBase.labels);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, orgID, userID, createdAt, updatedAt, description, name, status, labels);
+    return Objects.hash(id, orgID, userID, createdAt, updatedAt, description, status, labels);
   }
 
 
@@ -305,7 +282,6 @@ public class NotificationEndpointBase {
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
     sb.append("}");

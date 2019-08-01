@@ -6141,6 +6141,7 @@ components:
                 - documents
                 - notificationRules
                 - notificationEndpoints
+                - checks
             id:
               type: string
               nullable: true
@@ -8909,7 +8910,7 @@ components:
           type: string
         labels:
           $ref: "#/components/schemas/Labels"
-      required: [name, type, orgID, query]
+      required: [name, orgID, query]
     ThresholdCheck:
       allOf:
         - $ref: "#/components/schemas/CheckBase"
@@ -9153,8 +9154,6 @@ components:
           readOnly: true
         description:
           description: An optional description of the notification endpoint
-          type: string
-        name:
           type: string
         status:
           description: The status of the endpoint.
