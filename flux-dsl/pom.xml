@@ -30,7 +30,7 @@
     <parent>
         <artifactId>influxdb-client</artifactId>
         <groupId>com.influxdb</groupId>
-        <version>1.0.0.M2-SNAPSHOT</version>
+        <version>1.0.0.M3-SNAPSHOT</version>
     </parent>
 
     <artifactId>flux-dsl</artifactId>

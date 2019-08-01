@@ -30,7 +30,7 @@
     <parent>
         <groupId>com.influxdb</groupId>
         <artifactId>influxdb-client</artifactId>
-        <version>1.0.0.M2-SNAPSHOT</version>
+        <version>1.0.0.M3-SNAPSHOT</version>
     </parent>
 
     <artifactId>influxdb-client-flux</artifactId>

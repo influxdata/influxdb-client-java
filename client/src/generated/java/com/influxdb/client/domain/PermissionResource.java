@@ -60,7 +60,13 @@ public class PermissionResource {
     
     VIEWS("views"),
     
-    DOCUMENTS("documents");
+    DOCUMENTS("documents"),
+    
+    NOTIFICATIONRULES("notificationRules"),
+    
+    NOTIFICATIONENDPOINTS("notificationEndpoints"),
+    
+    CHECKS("checks");
 
     private String value;
 
