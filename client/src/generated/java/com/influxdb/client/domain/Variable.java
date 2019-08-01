@@ -34,6 +34,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +75,14 @@ public class Variable {
   @SerializedName(SERIALIZED_NAME_ARGUMENTS)
   @JsonAdapter(VariableArgumentsAdapter.class)
   private Object arguments = null;
+
+  public static final String SERIALIZED_NAME_CREATED_AT = "createdAt";
+  @SerializedName(SERIALIZED_NAME_CREATED_AT)
+  private OffsetDateTime createdAt;
+
+  public static final String SERIALIZED_NAME_UPDATED_AT = "updatedAt";
+  @SerializedName(SERIALIZED_NAME_UPDATED_AT)
+  private OffsetDateTime updatedAt;
 
   public Variable links(VariableLinks links) {
     this.links = links;
@@ -226,6 +235,42 @@ public class Variable {
     this.arguments = arguments;
   }
 
+  public Variable createdAt(OffsetDateTime createdAt) {
+    this.createdAt = createdAt;
+    return this;
+  }
+
+   /**
+   * Get createdAt
+   * @return createdAt
+  **/
+  @ApiModelProperty(value = "")
+  public OffsetDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(OffsetDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Variable updatedAt(OffsetDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+    return this;
+  }
+
+   /**
+   * Get updatedAt
+   * @return updatedAt
+  **/
+  @ApiModelProperty(value = "")
+  public OffsetDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(OffsetDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -243,12 +288,14 @@ public class Variable {
         Objects.equals(this.description, variable.description) &&
         Objects.equals(this.selected, variable.selected) &&
         Objects.equals(this.labels, variable.labels) &&
-        Objects.equals(this.arguments, variable.arguments);
+        Objects.equals(this.arguments, variable.arguments) &&
+        Objects.equals(this.createdAt, variable.createdAt) &&
+        Objects.equals(this.updatedAt, variable.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, id, orgID, name, description, selected, labels, arguments);
+    return Objects.hash(links, id, orgID, name, description, selected, labels, arguments, createdAt, updatedAt);
   }
 
 
@@ -264,6 +311,8 @@ public class Variable {
     sb.append("    selected: ").append(toIndentedString(selected)).append("\n");
     sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
     sb.append("    arguments: ").append(toIndentedString(arguments)).append("\n");
+    sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
+    sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");
     return sb.toString();
   }

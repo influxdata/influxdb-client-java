@@ -25,60 +25,15 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * Type and value and optional name of a setting.
+ * BuilderFunctionsType
  */
-@ApiModel(description = "Type and value and optional name of a setting.")
 
-public class LogViewerColumnSettings {
-  public static final String SERIALIZED_NAME_TYPE = "type";
-  @SerializedName(SERIALIZED_NAME_TYPE)
-  private String type;
-
-  public static final String SERIALIZED_NAME_VALUE = "value";
-  @SerializedName(SERIALIZED_NAME_VALUE)
-  private String value;
-
+public class BuilderFunctionsType {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name;
 
-  public LogViewerColumnSettings type(String type) {
-    this.type = type;
-    return this;
-  }
-
-   /**
-   * Get type
-   * @return type
-  **/
-  @ApiModelProperty(required = true, value = "")
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public LogViewerColumnSettings value(String value) {
-    this.value = value;
-    return this;
-  }
-
-   /**
-   * Get value
-   * @return value
-  **/
-  @ApiModelProperty(required = true, value = "")
-  public String getValue() {
-    return value;
-  }
-
-  public void setValue(String value) {
-    this.value = value;
-  }
-
-  public LogViewerColumnSettings name(String name) {
+  public BuilderFunctionsType name(String name) {
     this.name = name;
     return this;
   }
@@ -105,24 +60,20 @@ public class LogViewerColumnSettings {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    LogViewerColumnSettings logViewerColumnSettings = (LogViewerColumnSettings) o;
-    return Objects.equals(this.type, logViewerColumnSettings.type) &&
-        Objects.equals(this.value, logViewerColumnSettings.value) &&
-        Objects.equals(this.name, logViewerColumnSettings.name);
+    BuilderFunctionsType builderFunctionsType = (BuilderFunctionsType) o;
+    return Objects.equals(this.name, builderFunctionsType.name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, value, name);
+    return Objects.hash(name);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class LogViewerColumnSettings {\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    value: ").append(toIndentedString(value)).append("\n");
+    sb.append("class BuilderFunctionsType {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("}");
     return sb.toString();

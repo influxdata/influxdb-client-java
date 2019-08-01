@@ -43,7 +43,13 @@ public class DashboardColor {
     
     MAX("max"),
     
-    THRESHOLD("threshold");
+    THRESHOLD("threshold"),
+    
+    SCALE("scale"),
+    
+    TEXT("text"),
+    
+    BACKGROUND("background");
 
     private String value;
 
@@ -97,7 +103,7 @@ public class DashboardColor {
 
   public static final String SERIALIZED_NAME_VALUE = "value";
   @SerializedName(SERIALIZED_NAME_VALUE)
-  private String value;
+  private Float value;
 
   public DashboardColor id(String id) {
     this.id = id;
@@ -108,7 +114,7 @@ public class DashboardColor {
    * ID is the unique id of the view color
    * @return id
   **/
-  @ApiModelProperty(value = "ID is the unique id of the view color")
+  @ApiModelProperty(required = true, value = "ID is the unique id of the view color")
   public String getId() {
     return id;
   }
@@ -126,7 +132,7 @@ public class DashboardColor {
    * Type is how the color is used.
    * @return type
   **/
-  @ApiModelProperty(value = "Type is how the color is used.")
+  @ApiModelProperty(required = true, value = "Type is how the color is used.")
   public TypeEnum getType() {
     return type;
   }
@@ -144,7 +150,7 @@ public class DashboardColor {
    * Hex is the hex number of the color
    * @return hex
   **/
-  @ApiModelProperty(value = "Hex is the hex number of the color")
+  @ApiModelProperty(required = true, value = "Hex is the hex number of the color")
   public String getHex() {
     return hex;
   }
@@ -162,7 +168,7 @@ public class DashboardColor {
    * Name is the user-facing name of the hex color
    * @return name
   **/
-  @ApiModelProperty(value = "Name is the user-facing name of the hex color")
+  @ApiModelProperty(required = true, value = "Name is the user-facing name of the hex color")
   public String getName() {
     return name;
   }
@@ -171,7 +177,7 @@ public class DashboardColor {
     this.name = name;
   }
 
-  public DashboardColor value(String value) {
+  public DashboardColor value(Float value) {
     this.value = value;
     return this;
   }
@@ -180,12 +186,12 @@ public class DashboardColor {
    * Value is the data value mapped to this color
    * @return value
   **/
-  @ApiModelProperty(value = "Value is the data value mapped to this color")
-  public String getValue() {
+  @ApiModelProperty(required = true, value = "Value is the data value mapped to this color")
+  public Float getValue() {
     return value;
   }
 
-  public void setValue(String value) {
+  public void setValue(Float value) {
     this.value = value;
   }
 

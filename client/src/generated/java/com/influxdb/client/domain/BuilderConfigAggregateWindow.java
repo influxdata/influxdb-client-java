@@ -20,58 +20,35 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.influxdb.client.domain.CheckStatusLevel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * ThresholdBase
+ * BuilderConfigAggregateWindow
  */
 
-public class ThresholdBase {
-  public static final String SERIALIZED_NAME_LEVEL = "level";
-  @SerializedName(SERIALIZED_NAME_LEVEL)
-  private CheckStatusLevel level = null;
+public class BuilderConfigAggregateWindow {
+  public static final String SERIALIZED_NAME_PERIOD = "period";
+  @SerializedName(SERIALIZED_NAME_PERIOD)
+  private String period;
 
-  public static final String SERIALIZED_NAME_ALL_VALUES = "allValues";
-  @SerializedName(SERIALIZED_NAME_ALL_VALUES)
-  private Boolean allValues;
-
-  public ThresholdBase level(CheckStatusLevel level) {
-    this.level = level;
+  public BuilderConfigAggregateWindow period(String period) {
+    this.period = period;
     return this;
   }
 
    /**
-   * Get level
-   * @return level
+   * Get period
+   * @return period
   **/
   @ApiModelProperty(value = "")
-  public CheckStatusLevel getLevel() {
-    return level;
+  public String getPeriod() {
+    return period;
   }
 
-  public void setLevel(CheckStatusLevel level) {
-    this.level = level;
-  }
-
-  public ThresholdBase allValues(Boolean allValues) {
-    this.allValues = allValues;
-    return this;
-  }
-
-   /**
-   * if true, only alert if all values meet threshold
-   * @return allValues
-  **/
-  @ApiModelProperty(value = "if true, only alert if all values meet threshold")
-  public Boolean getAllValues() {
-    return allValues;
-  }
-
-  public void setAllValues(Boolean allValues) {
-    this.allValues = allValues;
+  public void setPeriod(String period) {
+    this.period = period;
   }
 
 
@@ -83,23 +60,21 @@ public class ThresholdBase {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ThresholdBase thresholdBase = (ThresholdBase) o;
-    return Objects.equals(this.level, thresholdBase.level) &&
-        Objects.equals(this.allValues, thresholdBase.allValues);
+    BuilderConfigAggregateWindow builderConfigAggregateWindow = (BuilderConfigAggregateWindow) o;
+    return Objects.equals(this.period, builderConfigAggregateWindow.period);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(level, allValues);
+    return Objects.hash(period);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ThresholdBase {\n");
-    sb.append("    level: ").append(toIndentedString(level)).append("\n");
-    sb.append("    allValues: ").append(toIndentedString(allValues)).append("\n");
+    sb.append("class BuilderConfigAggregateWindow {\n");
+    sb.append("    period: ").append(toIndentedString(period)).append("\n");
     sb.append("}");
     return sb.toString();
   }

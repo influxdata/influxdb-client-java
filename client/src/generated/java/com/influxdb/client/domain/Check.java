@@ -14,6 +14,17 @@
 package com.influxdb.client.domain;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.influxdb.client.domain.CheckBaseTags;
+import com.influxdb.client.domain.CheckStatusLevel;
+import com.influxdb.client.domain.DashboardQuery;
+import com.influxdb.client.domain.DeadmanCheck;
+import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.TaskStatusType;
+import com.influxdb.client.domain.Threshold;
+import com.influxdb.client.domain.ThresholdCheck;
+import java.time.OffsetDateTime;
+import java.util.List;
 
 /**
  * Check

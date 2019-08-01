@@ -42,32 +42,14 @@ import java.util.List;
  */
 
 public class NotificationEndpoints {
-  public static final String SERIALIZED_NAME_LINKS = "links";
-  @SerializedName(SERIALIZED_NAME_LINKS)
-  private Links links = null;
-
   public static final String SERIALIZED_NAME_NOTIFICATION_ENDPOINTS = "notificationEndpoints";
   @SerializedName(SERIALIZED_NAME_NOTIFICATION_ENDPOINTS)
   @JsonAdapter(NotificationEndpointsNotificationEndpointsAdapter.class)
   private List<NotificationEndpoint> notificationEndpoints = new ArrayList<>();
 
-  public NotificationEndpoints links(Links links) {
-    this.links = links;
-    return this;
-  }
-
-   /**
-   * Get links
-   * @return links
-  **/
-  @ApiModelProperty(value = "")
-  public Links getLinks() {
-    return links;
-  }
-
-  public void setLinks(Links links) {
-    this.links = links;
-  }
+  public static final String SERIALIZED_NAME_LINKS = "links";
+  @SerializedName(SERIALIZED_NAME_LINKS)
+  private Links links = null;
 
   public NotificationEndpoints notificationEndpoints(List<NotificationEndpoint> notificationEndpoints) {
     this.notificationEndpoints = notificationEndpoints;
@@ -95,6 +77,24 @@ public class NotificationEndpoints {
     this.notificationEndpoints = notificationEndpoints;
   }
 
+  public NotificationEndpoints links(Links links) {
+    this.links = links;
+    return this;
+  }
+
+   /**
+   * Get links
+   * @return links
+  **/
+  @ApiModelProperty(value = "")
+  public Links getLinks() {
+    return links;
+  }
+
+  public void setLinks(Links links) {
+    this.links = links;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -105,13 +105,13 @@ public class NotificationEndpoints {
       return false;
     }
     NotificationEndpoints notificationEndpoints = (NotificationEndpoints) o;
-    return Objects.equals(this.links, notificationEndpoints.links) &&
-        Objects.equals(this.notificationEndpoints, notificationEndpoints.notificationEndpoints);
+    return Objects.equals(this.notificationEndpoints, notificationEndpoints.notificationEndpoints) &&
+        Objects.equals(this.links, notificationEndpoints.links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, notificationEndpoints);
+    return Objects.hash(notificationEndpoints, links);
   }
 
 
@@ -119,8 +119,8 @@ public class NotificationEndpoints {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class NotificationEndpoints {\n");
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("    notificationEndpoints: ").append(toIndentedString(notificationEndpoints)).append("\n");
+    sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("}");
     return sb.toString();
   }

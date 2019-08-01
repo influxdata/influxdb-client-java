@@ -23,54 +23,64 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * QueryConfigRange
+ * BuilderTagsType
  */
 
-public class QueryConfigRange {
-  public static final String SERIALIZED_NAME_LOWER = "lower";
-  @SerializedName(SERIALIZED_NAME_LOWER)
-  private String lower;
+public class BuilderTagsType {
+  public static final String SERIALIZED_NAME_KEY = "key";
+  @SerializedName(SERIALIZED_NAME_KEY)
+  private String key;
 
-  public static final String SERIALIZED_NAME_UPPER = "upper";
-  @SerializedName(SERIALIZED_NAME_UPPER)
-  private String upper;
+  public static final String SERIALIZED_NAME_VALUES = "values";
+  @SerializedName(SERIALIZED_NAME_VALUES)
+  private List<String> values = new ArrayList<>();
 
-  public QueryConfigRange lower(String lower) {
-    this.lower = lower;
+  public BuilderTagsType key(String key) {
+    this.key = key;
     return this;
   }
 
    /**
-   * Get lower
-   * @return lower
+   * Get key
+   * @return key
   **/
-  @ApiModelProperty(required = true, value = "")
-  public String getLower() {
-    return lower;
+  @ApiModelProperty(value = "")
+  public String getKey() {
+    return key;
   }
 
-  public void setLower(String lower) {
-    this.lower = lower;
+  public void setKey(String key) {
+    this.key = key;
   }
 
-  public QueryConfigRange upper(String upper) {
-    this.upper = upper;
+  public BuilderTagsType values(List<String> values) {
+    this.values = values;
+    return this;
+  }
+
+  public BuilderTagsType addValuesItem(String valuesItem) {
+    if (this.values == null) {
+      this.values = new ArrayList<>();
+    }
+    this.values.add(valuesItem);
     return this;
   }
 
    /**
-   * Get upper
-   * @return upper
+   * Get values
+   * @return values
   **/
-  @ApiModelProperty(required = true, value = "")
-  public String getUpper() {
-    return upper;
+  @ApiModelProperty(value = "")
+  public List<String> getValues() {
+    return values;
   }
 
-  public void setUpper(String upper) {
-    this.upper = upper;
+  public void setValues(List<String> values) {
+    this.values = values;
   }
 
 
@@ -82,23 +92,23 @@ public class QueryConfigRange {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    QueryConfigRange queryConfigRange = (QueryConfigRange) o;
-    return Objects.equals(this.lower, queryConfigRange.lower) &&
-        Objects.equals(this.upper, queryConfigRange.upper);
+    BuilderTagsType builderTagsType = (BuilderTagsType) o;
+    return Objects.equals(this.key, builderTagsType.key) &&
+        Objects.equals(this.values, builderTagsType.values);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(lower, upper);
+    return Objects.hash(key, values);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class QueryConfigRange {\n");
-    sb.append("    lower: ").append(toIndentedString(lower)).append("\n");
-    sb.append("    upper: ").append(toIndentedString(upper)).append("\n");
+    sb.append("class BuilderTagsType {\n");
+    sb.append("    key: ").append(toIndentedString(key)).append("\n");
+    sb.append("    values: ").append(toIndentedString(values)).append("\n");
     sb.append("}");
     return sb.toString();
   }

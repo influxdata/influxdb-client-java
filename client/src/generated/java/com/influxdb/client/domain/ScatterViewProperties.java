@@ -20,25 +20,25 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.influxdb.client.domain.DashboardColor;
 import com.influxdb.client.domain.DashboardQuery;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * HistogramViewProperties
+ * ScatterViewProperties
  */
 
-public class HistogramViewProperties extends ViewProperties {
+public class ScatterViewProperties extends ViewProperties {
   /**
    * Gets or Sets type
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
-    HISTOGRAM("histogram");
+    SCATTER("scatter");
 
     private String value;
 
@@ -80,7 +80,7 @@ public class HistogramViewProperties extends ViewProperties {
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = TypeEnum.HISTOGRAM;
+  private TypeEnum type = TypeEnum.SCATTER;
 
   public static final String SERIALIZED_NAME_QUERIES = "queries";
   @SerializedName(SERIALIZED_NAME_QUERIES)
@@ -88,7 +88,7 @@ public class HistogramViewProperties extends ViewProperties {
 
   public static final String SERIALIZED_NAME_COLORS = "colors";
   @SerializedName(SERIALIZED_NAME_COLORS)
-  private List<DashboardColor> colors = new ArrayList<>();
+  private List<String> colors = new ArrayList<>();
 
   /**
    * Gets or Sets shape
@@ -151,72 +151,49 @@ public class HistogramViewProperties extends ViewProperties {
   @SerializedName(SERIALIZED_NAME_X_COLUMN)
   private String xColumn;
 
+  public static final String SERIALIZED_NAME_Y_COLUMN = "yColumn";
+  @SerializedName(SERIALIZED_NAME_Y_COLUMN)
+  private String yColumn;
+
   public static final String SERIALIZED_NAME_FILL_COLUMNS = "fillColumns";
   @SerializedName(SERIALIZED_NAME_FILL_COLUMNS)
   private List<String> fillColumns = new ArrayList<>();
 
+  public static final String SERIALIZED_NAME_SYMBOL_COLUMNS = "symbolColumns";
+  @SerializedName(SERIALIZED_NAME_SYMBOL_COLUMNS)
+  private List<String> symbolColumns = new ArrayList<>();
+
   public static final String SERIALIZED_NAME_X_DOMAIN = "xDomain";
   @SerializedName(SERIALIZED_NAME_X_DOMAIN)
-  private List<Float> xDomain = new ArrayList<>();
+  private List<BigDecimal> xDomain = new ArrayList<>();
+
+  public static final String SERIALIZED_NAME_Y_DOMAIN = "yDomain";
+  @SerializedName(SERIALIZED_NAME_Y_DOMAIN)
+  private List<BigDecimal> yDomain = new ArrayList<>();
 
   public static final String SERIALIZED_NAME_X_AXIS_LABEL = "xAxisLabel";
   @SerializedName(SERIALIZED_NAME_X_AXIS_LABEL)
   private String xAxisLabel;
 
-  /**
-   * Gets or Sets position
-   */
-  @JsonAdapter(PositionEnum.Adapter.class)
-  public enum PositionEnum {
-    OVERLAID("overlaid"),
-    
-    STACKED("stacked");
+  public static final String SERIALIZED_NAME_Y_AXIS_LABEL = "yAxisLabel";
+  @SerializedName(SERIALIZED_NAME_Y_AXIS_LABEL)
+  private String yAxisLabel;
 
-    private String value;
+  public static final String SERIALIZED_NAME_X_PREFIX = "xPrefix";
+  @SerializedName(SERIALIZED_NAME_X_PREFIX)
+  private String xPrefix;
 
-    PositionEnum(String value) {
-      this.value = value;
-    }
+  public static final String SERIALIZED_NAME_X_SUFFIX = "xSuffix";
+  @SerializedName(SERIALIZED_NAME_X_SUFFIX)
+  private String xSuffix;
 
-    public String getValue() {
-      return value;
-    }
+  public static final String SERIALIZED_NAME_Y_PREFIX = "yPrefix";
+  @SerializedName(SERIALIZED_NAME_Y_PREFIX)
+  private String yPrefix;
 
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static PositionEnum fromValue(String text) {
-      for (PositionEnum b : PositionEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    public static class Adapter extends TypeAdapter<PositionEnum> {
-      @Override
-      public void write(final JsonWriter jsonWriter, final PositionEnum enumeration) throws IOException {
-        jsonWriter.value(enumeration.getValue());
-      }
-
-      @Override
-      public PositionEnum read(final JsonReader jsonReader) throws IOException {
-        String value = jsonReader.nextString();
-        return PositionEnum.fromValue(String.valueOf(value));
-      }
-    }
-  }
-
-  public static final String SERIALIZED_NAME_POSITION = "position";
-  @SerializedName(SERIALIZED_NAME_POSITION)
-  private PositionEnum position;
-
-  public static final String SERIALIZED_NAME_BIN_COUNT = "binCount";
-  @SerializedName(SERIALIZED_NAME_BIN_COUNT)
-  private Integer binCount;
+  public static final String SERIALIZED_NAME_Y_SUFFIX = "ySuffix";
+  @SerializedName(SERIALIZED_NAME_Y_SUFFIX)
+  private String ySuffix;
 
    /**
    * Get type
@@ -227,12 +204,12 @@ public class HistogramViewProperties extends ViewProperties {
     return type;
   }
 
-  public HistogramViewProperties queries(List<DashboardQuery> queries) {
+  public ScatterViewProperties queries(List<DashboardQuery> queries) {
     this.queries = queries;
     return this;
   }
 
-  public HistogramViewProperties addQueriesItem(DashboardQuery queriesItem) {
+  public ScatterViewProperties addQueriesItem(DashboardQuery queriesItem) {
     this.queries.add(queriesItem);
     return this;
   }
@@ -250,12 +227,12 @@ public class HistogramViewProperties extends ViewProperties {
     this.queries = queries;
   }
 
-  public HistogramViewProperties colors(List<DashboardColor> colors) {
+  public ScatterViewProperties colors(List<String> colors) {
     this.colors = colors;
     return this;
   }
 
-  public HistogramViewProperties addColorsItem(DashboardColor colorsItem) {
+  public ScatterViewProperties addColorsItem(String colorsItem) {
     this.colors.add(colorsItem);
     return this;
   }
@@ -265,11 +242,11 @@ public class HistogramViewProperties extends ViewProperties {
    * @return colors
   **/
   @ApiModelProperty(required = true, value = "Colors define color encoding of data into a visualization")
-  public List<DashboardColor> getColors() {
+  public List<String> getColors() {
     return colors;
   }
 
-  public void setColors(List<DashboardColor> colors) {
+  public void setColors(List<String> colors) {
     this.colors = colors;
   }
 
@@ -282,7 +259,7 @@ public class HistogramViewProperties extends ViewProperties {
     return shape;
   }
 
-  public HistogramViewProperties note(String note) {
+  public ScatterViewProperties note(String note) {
     this.note = note;
     return this;
   }
@@ -300,7 +277,7 @@ public class HistogramViewProperties extends ViewProperties {
     this.note = note;
   }
 
-  public HistogramViewProperties showNoteWhenEmpty(Boolean showNoteWhenEmpty) {
+  public ScatterViewProperties showNoteWhenEmpty(Boolean showNoteWhenEmpty) {
     this.showNoteWhenEmpty = showNoteWhenEmpty;
     return this;
   }
@@ -318,7 +295,7 @@ public class HistogramViewProperties extends ViewProperties {
     this.showNoteWhenEmpty = showNoteWhenEmpty;
   }
 
-  public HistogramViewProperties xColumn(String xColumn) {
+  public ScatterViewProperties xColumn(String xColumn) {
     this.xColumn = xColumn;
     return this;
   }
@@ -336,12 +313,30 @@ public class HistogramViewProperties extends ViewProperties {
     this.xColumn = xColumn;
   }
 
-  public HistogramViewProperties fillColumns(List<String> fillColumns) {
+  public ScatterViewProperties yColumn(String yColumn) {
+    this.yColumn = yColumn;
+    return this;
+  }
+
+   /**
+   * Get yColumn
+   * @return yColumn
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public String getYColumn() {
+    return yColumn;
+  }
+
+  public void setYColumn(String yColumn) {
+    this.yColumn = yColumn;
+  }
+
+  public ScatterViewProperties fillColumns(List<String> fillColumns) {
     this.fillColumns = fillColumns;
     return this;
   }
 
-  public HistogramViewProperties addFillColumnsItem(String fillColumnsItem) {
+  public ScatterViewProperties addFillColumnsItem(String fillColumnsItem) {
     this.fillColumns.add(fillColumnsItem);
     return this;
   }
@@ -359,12 +354,35 @@ public class HistogramViewProperties extends ViewProperties {
     this.fillColumns = fillColumns;
   }
 
-  public HistogramViewProperties xDomain(List<Float> xDomain) {
+  public ScatterViewProperties symbolColumns(List<String> symbolColumns) {
+    this.symbolColumns = symbolColumns;
+    return this;
+  }
+
+  public ScatterViewProperties addSymbolColumnsItem(String symbolColumnsItem) {
+    this.symbolColumns.add(symbolColumnsItem);
+    return this;
+  }
+
+   /**
+   * Get symbolColumns
+   * @return symbolColumns
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public List<String> getSymbolColumns() {
+    return symbolColumns;
+  }
+
+  public void setSymbolColumns(List<String> symbolColumns) {
+    this.symbolColumns = symbolColumns;
+  }
+
+  public ScatterViewProperties xDomain(List<BigDecimal> xDomain) {
     this.xDomain = xDomain;
     return this;
   }
 
-  public HistogramViewProperties addXDomainItem(Float xDomainItem) {
+  public ScatterViewProperties addXDomainItem(BigDecimal xDomainItem) {
     this.xDomain.add(xDomainItem);
     return this;
   }
@@ -374,15 +392,38 @@ public class HistogramViewProperties extends ViewProperties {
    * @return xDomain
   **/
   @ApiModelProperty(required = true, value = "")
-  public List<Float> getXDomain() {
+  public List<BigDecimal> getXDomain() {
     return xDomain;
   }
 
-  public void setXDomain(List<Float> xDomain) {
+  public void setXDomain(List<BigDecimal> xDomain) {
     this.xDomain = xDomain;
   }
 
-  public HistogramViewProperties xAxisLabel(String xAxisLabel) {
+  public ScatterViewProperties yDomain(List<BigDecimal> yDomain) {
+    this.yDomain = yDomain;
+    return this;
+  }
+
+  public ScatterViewProperties addYDomainItem(BigDecimal yDomainItem) {
+    this.yDomain.add(yDomainItem);
+    return this;
+  }
+
+   /**
+   * Get yDomain
+   * @return yDomain
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public List<BigDecimal> getYDomain() {
+    return yDomain;
+  }
+
+  public void setYDomain(List<BigDecimal> yDomain) {
+    this.yDomain = yDomain;
+  }
+
+  public ScatterViewProperties xAxisLabel(String xAxisLabel) {
     this.xAxisLabel = xAxisLabel;
     return this;
   }
@@ -400,40 +441,94 @@ public class HistogramViewProperties extends ViewProperties {
     this.xAxisLabel = xAxisLabel;
   }
 
-  public HistogramViewProperties position(PositionEnum position) {
-    this.position = position;
+  public ScatterViewProperties yAxisLabel(String yAxisLabel) {
+    this.yAxisLabel = yAxisLabel;
     return this;
   }
 
    /**
-   * Get position
-   * @return position
+   * Get yAxisLabel
+   * @return yAxisLabel
   **/
   @ApiModelProperty(required = true, value = "")
-  public PositionEnum getPosition() {
-    return position;
+  public String getYAxisLabel() {
+    return yAxisLabel;
   }
 
-  public void setPosition(PositionEnum position) {
-    this.position = position;
+  public void setYAxisLabel(String yAxisLabel) {
+    this.yAxisLabel = yAxisLabel;
   }
 
-  public HistogramViewProperties binCount(Integer binCount) {
-    this.binCount = binCount;
+  public ScatterViewProperties xPrefix(String xPrefix) {
+    this.xPrefix = xPrefix;
     return this;
   }
 
    /**
-   * Get binCount
-   * @return binCount
+   * Get xPrefix
+   * @return xPrefix
   **/
   @ApiModelProperty(required = true, value = "")
-  public Integer getBinCount() {
-    return binCount;
+  public String getXPrefix() {
+    return xPrefix;
   }
 
-  public void setBinCount(Integer binCount) {
-    this.binCount = binCount;
+  public void setXPrefix(String xPrefix) {
+    this.xPrefix = xPrefix;
+  }
+
+  public ScatterViewProperties xSuffix(String xSuffix) {
+    this.xSuffix = xSuffix;
+    return this;
+  }
+
+   /**
+   * Get xSuffix
+   * @return xSuffix
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public String getXSuffix() {
+    return xSuffix;
+  }
+
+  public void setXSuffix(String xSuffix) {
+    this.xSuffix = xSuffix;
+  }
+
+  public ScatterViewProperties yPrefix(String yPrefix) {
+    this.yPrefix = yPrefix;
+    return this;
+  }
+
+   /**
+   * Get yPrefix
+   * @return yPrefix
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public String getYPrefix() {
+    return yPrefix;
+  }
+
+  public void setYPrefix(String yPrefix) {
+    this.yPrefix = yPrefix;
+  }
+
+  public ScatterViewProperties ySuffix(String ySuffix) {
+    this.ySuffix = ySuffix;
+    return this;
+  }
+
+   /**
+   * Get ySuffix
+   * @return ySuffix
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public String getYSuffix() {
+    return ySuffix;
+  }
+
+  public void setYSuffix(String ySuffix) {
+    this.ySuffix = ySuffix;
   }
 
 
@@ -445,32 +540,38 @@ public class HistogramViewProperties extends ViewProperties {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    HistogramViewProperties histogramViewProperties = (HistogramViewProperties) o;
-    return Objects.equals(this.type, histogramViewProperties.type) &&
-        Objects.equals(this.queries, histogramViewProperties.queries) &&
-        Objects.equals(this.colors, histogramViewProperties.colors) &&
-        Objects.equals(this.shape, histogramViewProperties.shape) &&
-        Objects.equals(this.note, histogramViewProperties.note) &&
-        Objects.equals(this.showNoteWhenEmpty, histogramViewProperties.showNoteWhenEmpty) &&
-        Objects.equals(this.xColumn, histogramViewProperties.xColumn) &&
-        Objects.equals(this.fillColumns, histogramViewProperties.fillColumns) &&
-        Objects.equals(this.xDomain, histogramViewProperties.xDomain) &&
-        Objects.equals(this.xAxisLabel, histogramViewProperties.xAxisLabel) &&
-        Objects.equals(this.position, histogramViewProperties.position) &&
-        Objects.equals(this.binCount, histogramViewProperties.binCount) &&
+    ScatterViewProperties scatterViewProperties = (ScatterViewProperties) o;
+    return Objects.equals(this.type, scatterViewProperties.type) &&
+        Objects.equals(this.queries, scatterViewProperties.queries) &&
+        Objects.equals(this.colors, scatterViewProperties.colors) &&
+        Objects.equals(this.shape, scatterViewProperties.shape) &&
+        Objects.equals(this.note, scatterViewProperties.note) &&
+        Objects.equals(this.showNoteWhenEmpty, scatterViewProperties.showNoteWhenEmpty) &&
+        Objects.equals(this.xColumn, scatterViewProperties.xColumn) &&
+        Objects.equals(this.yColumn, scatterViewProperties.yColumn) &&
+        Objects.equals(this.fillColumns, scatterViewProperties.fillColumns) &&
+        Objects.equals(this.symbolColumns, scatterViewProperties.symbolColumns) &&
+        Objects.equals(this.xDomain, scatterViewProperties.xDomain) &&
+        Objects.equals(this.yDomain, scatterViewProperties.yDomain) &&
+        Objects.equals(this.xAxisLabel, scatterViewProperties.xAxisLabel) &&
+        Objects.equals(this.yAxisLabel, scatterViewProperties.yAxisLabel) &&
+        Objects.equals(this.xPrefix, scatterViewProperties.xPrefix) &&
+        Objects.equals(this.xSuffix, scatterViewProperties.xSuffix) &&
+        Objects.equals(this.yPrefix, scatterViewProperties.yPrefix) &&
+        Objects.equals(this.ySuffix, scatterViewProperties.ySuffix) &&
         super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, queries, colors, shape, note, showNoteWhenEmpty, xColumn, fillColumns, xDomain, xAxisLabel, position, binCount, super.hashCode());
+    return Objects.hash(type, queries, colors, shape, note, showNoteWhenEmpty, xColumn, yColumn, fillColumns, symbolColumns, xDomain, yDomain, xAxisLabel, yAxisLabel, xPrefix, xSuffix, yPrefix, ySuffix, super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class HistogramViewProperties {\n");
+    sb.append("class ScatterViewProperties {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    queries: ").append(toIndentedString(queries)).append("\n");
@@ -479,11 +580,17 @@ public class HistogramViewProperties extends ViewProperties {
     sb.append("    note: ").append(toIndentedString(note)).append("\n");
     sb.append("    showNoteWhenEmpty: ").append(toIndentedString(showNoteWhenEmpty)).append("\n");
     sb.append("    xColumn: ").append(toIndentedString(xColumn)).append("\n");
+    sb.append("    yColumn: ").append(toIndentedString(yColumn)).append("\n");
     sb.append("    fillColumns: ").append(toIndentedString(fillColumns)).append("\n");
+    sb.append("    symbolColumns: ").append(toIndentedString(symbolColumns)).append("\n");
     sb.append("    xDomain: ").append(toIndentedString(xDomain)).append("\n");
+    sb.append("    yDomain: ").append(toIndentedString(yDomain)).append("\n");
     sb.append("    xAxisLabel: ").append(toIndentedString(xAxisLabel)).append("\n");
-    sb.append("    position: ").append(toIndentedString(position)).append("\n");
-    sb.append("    binCount: ").append(toIndentedString(binCount)).append("\n");
+    sb.append("    yAxisLabel: ").append(toIndentedString(yAxisLabel)).append("\n");
+    sb.append("    xPrefix: ").append(toIndentedString(xPrefix)).append("\n");
+    sb.append("    xSuffix: ").append(toIndentedString(xSuffix)).append("\n");
+    sb.append("    yPrefix: ").append(toIndentedString(yPrefix)).append("\n");
+    sb.append("    ySuffix: ").append(toIndentedString(ySuffix)).append("\n");
     sb.append("}");
     return sb.toString();
   }

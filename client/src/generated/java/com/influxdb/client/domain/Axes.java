@@ -39,10 +39,6 @@ public class Axes {
   @SerializedName(SERIALIZED_NAME_Y)
   private Axis y = null;
 
-  public static final String SERIALIZED_NAME_Y2 = "y2";
-  @SerializedName(SERIALIZED_NAME_Y2)
-  private Axis y2 = null;
-
   public Axes x(Axis x) {
     this.x = x;
     return this;
@@ -52,7 +48,7 @@ public class Axes {
    * Get x
    * @return x
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public Axis getX() {
     return x;
   }
@@ -70,31 +66,13 @@ public class Axes {
    * Get y
    * @return y
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public Axis getY() {
     return y;
   }
 
   public void setY(Axis y) {
     this.y = y;
-  }
-
-  public Axes y2(Axis y2) {
-    this.y2 = y2;
-    return this;
-  }
-
-   /**
-   * Get y2
-   * @return y2
-  **/
-  @ApiModelProperty(value = "")
-  public Axis getY2() {
-    return y2;
-  }
-
-  public void setY2(Axis y2) {
-    this.y2 = y2;
   }
 
 
@@ -108,13 +86,12 @@ public class Axes {
     }
     Axes axes = (Axes) o;
     return Objects.equals(this.x, axes.x) &&
-        Objects.equals(this.y, axes.y) &&
-        Objects.equals(this.y2, axes.y2);
+        Objects.equals(this.y, axes.y);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(x, y, y2);
+    return Objects.hash(x, y);
   }
 
 
@@ -124,7 +101,6 @@ public class Axes {
     sb.append("class Axes {\n");
     sb.append("    x: ").append(toIndentedString(x)).append("\n");
     sb.append("    y: ").append(toIndentedString(y)).append("\n");
-    sb.append("    y2: ").append(toIndentedString(y2)).append("\n");
     sb.append("}");
     return sb.toString();
   }

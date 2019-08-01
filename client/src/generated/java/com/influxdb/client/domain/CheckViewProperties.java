@@ -15,26 +15,38 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.influxdb.client.domain.Check;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * MarkdownViewProperties
+ * CheckViewProperties
  */
 
-public class MarkdownViewProperties extends ViewProperties {
+public class CheckViewProperties extends ViewProperties {
   /**
    * Gets or Sets type
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
-    MARKDOWN("markdown");
+    CHECK("check");
 
     private String value;
 
@@ -76,7 +88,7 @@ public class MarkdownViewProperties extends ViewProperties {
 
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type = TypeEnum.MARKDOWN;
+  private TypeEnum type = TypeEnum.CHECK;
 
   /**
    * Gets or Sets shape
@@ -127,9 +139,14 @@ public class MarkdownViewProperties extends ViewProperties {
   @SerializedName(SERIALIZED_NAME_SHAPE)
   private ShapeEnum shape = ShapeEnum.CHRONOGRAF_V2;
 
-  public static final String SERIALIZED_NAME_NOTE = "note";
-  @SerializedName(SERIALIZED_NAME_NOTE)
-  private String note;
+  public static final String SERIALIZED_NAME_CHECK_I_D = "checkID";
+  @SerializedName(SERIALIZED_NAME_CHECK_I_D)
+  private String checkID;
+
+  public static final String SERIALIZED_NAME_CHECK = "check";
+  @SerializedName(SERIALIZED_NAME_CHECK)
+  @JsonAdapter(CheckViewPropertiesCheckAdapter.class)
+  private Check check = null;
 
    /**
    * Get type
@@ -149,22 +166,40 @@ public class MarkdownViewProperties extends ViewProperties {
     return shape;
   }
 
-  public MarkdownViewProperties note(String note) {
-    this.note = note;
+  public CheckViewProperties checkID(String checkID) {
+    this.checkID = checkID;
     return this;
   }
 
    /**
-   * Get note
-   * @return note
+   * Get checkID
+   * @return checkID
   **/
   @ApiModelProperty(required = true, value = "")
-  public String getNote() {
-    return note;
+  public String getCheckID() {
+    return checkID;
   }
 
-  public void setNote(String note) {
-    this.note = note;
+  public void setCheckID(String checkID) {
+    this.checkID = checkID;
+  }
+
+  public CheckViewProperties check(Check check) {
+    this.check = check;
+    return this;
+  }
+
+   /**
+   * Get check
+   * @return check
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public Check getCheck() {
+    return check;
+  }
+
+  public void setCheck(Check check) {
+    this.check = check;
   }
 
 
@@ -176,27 +211,29 @@ public class MarkdownViewProperties extends ViewProperties {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    MarkdownViewProperties markdownViewProperties = (MarkdownViewProperties) o;
-    return Objects.equals(this.type, markdownViewProperties.type) &&
-        Objects.equals(this.shape, markdownViewProperties.shape) &&
-        Objects.equals(this.note, markdownViewProperties.note) &&
+    CheckViewProperties checkViewProperties = (CheckViewProperties) o;
+    return Objects.equals(this.type, checkViewProperties.type) &&
+        Objects.equals(this.shape, checkViewProperties.shape) &&
+        Objects.equals(this.checkID, checkViewProperties.checkID) &&
+        Objects.equals(this.check, checkViewProperties.check) &&
         super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, shape, note, super.hashCode());
+    return Objects.hash(type, shape, checkID, check, super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class MarkdownViewProperties {\n");
+    sb.append("class CheckViewProperties {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
-    sb.append("    note: ").append(toIndentedString(note)).append("\n");
+    sb.append("    checkID: ").append(toIndentedString(checkID)).append("\n");
+    sb.append("    check: ").append(toIndentedString(check)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -212,5 +249,40 @@ public class MarkdownViewProperties extends ViewProperties {
     return o.toString().replace("\n", "\n    ");
   }
 
+  public class CheckViewPropertiesCheckAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+
+    public CheckViewPropertiesCheckAdapter() {
+    }
+
+    @Override
+    public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+
+      List<String> discriminator = Arrays.asList("type");
+
+      JsonObject jsonObject = json.getAsJsonObject();
+
+      String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
+
+      return deserialize(types, jsonObject, context);
+    }
+
+    @Override
+    public JsonElement serialize(Object object, Type typeOfSrc, JsonSerializationContext context) {
+
+      return context.serialize(object);
+    }
+
+    private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
+
+      if (Arrays.equals(new String[]{ "deadman" }, types)) {
+        return context.deserialize(json, DeadmanCheck.class);
+      }
+      if (Arrays.equals(new String[]{ "threshold" }, types)) {
+        return context.deserialize(json, ThresholdCheck.class);
+      }
+
+      return context.deserialize(json, Object.class);
+    }
+  }
 }
 

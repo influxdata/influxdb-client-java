@@ -1,12 +1,19 @@
 package com.influxdb.client.service;
 
-import java.time.OffsetDateTime;
+import retrofit2.Call;
+import retrofit2.http.*;
+
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okhttp3.MultipartBody;
 
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
+import com.influxdb.client.domain.Error;
 import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
 import com.influxdb.client.domain.Logs;
+import java.time.OffsetDateTime;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceMembers;
 import com.influxdb.client.domain.ResourceOwner;
@@ -19,12 +26,10 @@ import com.influxdb.client.domain.TaskCreateRequest;
 import com.influxdb.client.domain.TaskUpdateRequest;
 import com.influxdb.client.domain.Tasks;
 
-import retrofit2.Call;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.Headers;
-import retrofit2.http.PATCH;
-import retrofit2.http.POST;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public interface TasksService {
   /**

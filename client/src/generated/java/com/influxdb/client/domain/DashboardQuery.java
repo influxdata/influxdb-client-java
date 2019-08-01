@@ -20,8 +20,8 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.influxdb.client.domain.DashboardQueryRange;
-import com.influxdb.client.domain.QueryConfig;
+import com.influxdb.client.domain.BuilderConfig;
+import com.influxdb.client.domain.QueryEditMode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -31,114 +31,92 @@ import java.io.IOException;
  */
 
 public class DashboardQuery {
-  public static final String SERIALIZED_NAME_LABEL = "label";
-  @SerializedName(SERIALIZED_NAME_LABEL)
-  private String label;
+  public static final String SERIALIZED_NAME_TEXT = "text";
+  @SerializedName(SERIALIZED_NAME_TEXT)
+  private String text;
 
-  public static final String SERIALIZED_NAME_RANGE = "range";
-  @SerializedName(SERIALIZED_NAME_RANGE)
-  private DashboardQueryRange range = null;
+  public static final String SERIALIZED_NAME_EDIT_MODE = "editMode";
+  @SerializedName(SERIALIZED_NAME_EDIT_MODE)
+  private QueryEditMode editMode = null;
 
-  public static final String SERIALIZED_NAME_QUERY = "query";
-  @SerializedName(SERIALIZED_NAME_QUERY)
-  private String query;
+  public static final String SERIALIZED_NAME_NAME = "name";
+  @SerializedName(SERIALIZED_NAME_NAME)
+  private String name;
 
-  public static final String SERIALIZED_NAME_SOURCE = "source";
-  @SerializedName(SERIALIZED_NAME_SOURCE)
-  private String source;
+  public static final String SERIALIZED_NAME_BUILDER_CONFIG = "builderConfig";
+  @SerializedName(SERIALIZED_NAME_BUILDER_CONFIG)
+  private BuilderConfig builderConfig = null;
 
-  public static final String SERIALIZED_NAME_QUERY_CONFIG = "queryConfig";
-  @SerializedName(SERIALIZED_NAME_QUERY_CONFIG)
-  private QueryConfig queryConfig = null;
-
-  public DashboardQuery label(String label) {
-    this.label = label;
+  public DashboardQuery text(String text) {
+    this.text = text;
     return this;
   }
 
    /**
-   * Optional Y-axis user-facing label
-   * @return label
+   * The text of the flux query
+   * @return text
   **/
-  @ApiModelProperty(value = "Optional Y-axis user-facing label")
-  public String getLabel() {
-    return label;
+  @ApiModelProperty(value = "The text of the flux query")
+  public String getText() {
+    return text;
   }
 
-  public void setLabel(String label) {
-    this.label = label;
+  public void setText(String text) {
+    this.text = text;
   }
 
-  public DashboardQuery range(DashboardQueryRange range) {
-    this.range = range;
+  public DashboardQuery editMode(QueryEditMode editMode) {
+    this.editMode = editMode;
     return this;
   }
 
    /**
-   * Get range
-   * @return range
+   * Get editMode
+   * @return editMode
   **/
   @ApiModelProperty(value = "")
-  public DashboardQueryRange getRange() {
-    return range;
+  public QueryEditMode getEditMode() {
+    return editMode;
   }
 
-  public void setRange(DashboardQueryRange range) {
-    this.range = range;
+  public void setEditMode(QueryEditMode editMode) {
+    this.editMode = editMode;
   }
 
-  public DashboardQuery query(String query) {
-    this.query = query;
+  public DashboardQuery name(String name) {
+    this.name = name;
     return this;
   }
 
    /**
-   * Get query
-   * @return query
-  **/
-  @ApiModelProperty(required = true, value = "")
-  public String getQuery() {
-    return query;
-  }
-
-  public void setQuery(String query) {
-    this.query = query;
-  }
-
-  public DashboardQuery source(String source) {
-    this.source = source;
-    return this;
-  }
-
-   /**
-   * Optional URI for data source for this query
-   * @return source
-  **/
-  @ApiModelProperty(value = "Optional URI for data source for this query")
-  public String getSource() {
-    return source;
-  }
-
-  public void setSource(String source) {
-    this.source = source;
-  }
-
-  public DashboardQuery queryConfig(QueryConfig queryConfig) {
-    this.queryConfig = queryConfig;
-    return this;
-  }
-
-   /**
-   * Get queryConfig
-   * @return queryConfig
+   * Get name
+   * @return name
   **/
   @ApiModelProperty(value = "")
-  public QueryConfig getQueryConfig() {
-    return queryConfig;
+  public String getName() {
+    return name;
   }
 
-  public void setQueryConfig(QueryConfig queryConfig) {
-    this.queryConfig = queryConfig;
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public DashboardQuery builderConfig(BuilderConfig builderConfig) {
+    this.builderConfig = builderConfig;
+    return this;
+  }
+
+   /**
+   * Get builderConfig
+   * @return builderConfig
+  **/
+  @ApiModelProperty(value = "")
+  public BuilderConfig getBuilderConfig() {
+    return builderConfig;
+  }
+
+  public void setBuilderConfig(BuilderConfig builderConfig) {
+    this.builderConfig = builderConfig;
   }
 
 
@@ -151,16 +129,15 @@ public class DashboardQuery {
       return false;
     }
     DashboardQuery dashboardQuery = (DashboardQuery) o;
-    return Objects.equals(this.label, dashboardQuery.label) &&
-        Objects.equals(this.range, dashboardQuery.range) &&
-        Objects.equals(this.query, dashboardQuery.query) &&
-        Objects.equals(this.source, dashboardQuery.source) &&
-        Objects.equals(this.queryConfig, dashboardQuery.queryConfig);
+    return Objects.equals(this.text, dashboardQuery.text) &&
+        Objects.equals(this.editMode, dashboardQuery.editMode) &&
+        Objects.equals(this.name, dashboardQuery.name) &&
+        Objects.equals(this.builderConfig, dashboardQuery.builderConfig);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(label, range, query, source, queryConfig);
+    return Objects.hash(text, editMode, name, builderConfig);
   }
 
 
@@ -168,11 +145,10 @@ public class DashboardQuery {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DashboardQuery {\n");
-    sb.append("    label: ").append(toIndentedString(label)).append("\n");
-    sb.append("    range: ").append(toIndentedString(range)).append("\n");
-    sb.append("    query: ").append(toIndentedString(query)).append("\n");
-    sb.append("    source: ").append(toIndentedString(source)).append("\n");
-    sb.append("    queryConfig: ").append(toIndentedString(queryConfig)).append("\n");
+    sb.append("    text: ").append(toIndentedString(text)).append("\n");
+    sb.append("    editMode: ").append(toIndentedString(editMode)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    builderConfig: ").append(toIndentedString(builderConfig)).append("\n");
     sb.append("}");
     return sb.toString();
   }
