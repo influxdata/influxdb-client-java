@@ -48,7 +48,7 @@
 </span>24 <span style=''>import akka.stream.OverflowStrategy
 </span>25 <span style=''>import com.influxdb.LogLevel
 </span>26 <span style=''>import com.influxdb.client.InfluxDBClientOptions
-</span>27 <span style=''>import com.influxdb.client.domain.Check
+</span>27 <span style=''>import com.influxdb.client.domain.HealthCheck
 </span>28 <span style=''>import com.influxdb.client.internal.AbstractInfluxDBClient
 </span>29 <span style=''>import com.influxdb.client.scala.{InfluxDBClientScala, QueryScalaApi}
 </span>30 <span style=''>import com.influxdb.client.service.QueryService
@@ -72,7 +72,7 @@
 </span>48 <span style=''>   *
 </span>49 <span style=''>   * @return health of an instance
 </span>50 <span style=''>   */
-</span>51 <span style=''>  override def health: Check = health(healthService.getHealth(null))
+</span>51 <span style=''>  override def health: HealthCheck = health(healthService.getHealth(null))
 </span>52 <span style=''>
 </span>53 <span style=''>  /**
 </span>54 <span style=''>   * Gets the [[LogLevel]] that is used for logging requests and responses.
@@ -140,9 +140,9 @@
           20
         </td>
         <td>
-          2066
+          2072
           -
-          2066
+          2072
         </td>
         <td>
           Select
@@ -161,9 +161,9 @@
           22
         </td>
         <td>
-          2004
+          2010
           -
-          2004
+          2010
         </td>
         <td>
           Apply
@@ -182,9 +182,9 @@
           19
         </td>
         <td>
-          2041
+          2047
           -
-          2041
+          2047
         </td>
         <td>
           Apply
@@ -203,9 +203,9 @@
           21
         </td>
         <td>
-          2078
+          2084
           -
-          2078
+          2084
         </td>
         <td>
           Select
@@ -224,9 +224,9 @@
           23
         </td>
         <td>
-          2246
+          2258
           -
-          2246
+          2258
         </td>
         <td>
           Apply
@@ -245,9 +245,9 @@
           24
         </td>
         <td>
-          2222
+          2234
           -
-          2222
+          2234
         </td>
         <td>
           Apply
@@ -266,9 +266,9 @@
           26
         </td>
         <td>
-          2476
+          2488
           -
-          2476
+          2488
         </td>
         <td>
           Apply
@@ -287,9 +287,9 @@
           25
         </td>
         <td>
-          2477
+          2489
           -
-          2477
+          2489
         </td>
         <td>
           Select
@@ -308,9 +308,9 @@
           28
         </td>
         <td>
-          2802
+          2814
           -
-          2802
+          2814
         </td>
         <td>
           Apply
@@ -329,9 +329,9 @@
           27
         </td>
         <td>
-          2803
+          2815
           -
-          2803
+          2815
         </td>
         <td>
           Select
@@ -350,9 +350,9 @@
           29
         </td>
         <td>
-          3164
+          3176
           -
-          3164
+          3176
         </td>
         <td>
           Apply
@@ -371,9 +371,9 @@
           30
         </td>
         <td>
-          3424
+          3436
           -
-          3424
+          3436
         </td>
         <td>
           Apply
@@ -392,9 +392,9 @@
           31
         </td>
         <td>
-          3621
+          3633
           -
-          3621
+          3633
         </td>
         <td>
           Apply
