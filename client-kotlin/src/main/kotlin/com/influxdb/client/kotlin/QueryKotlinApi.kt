@@ -38,67 +38,67 @@ interface QueryKotlinApi {
      * Executes the Flux query against the InfluxDB and asynchronously stream [FluxRecord]s to [Channel].
      *
      * @param query the flux query to execute
-     * @param orgID specifies the source organization
+     * @param org specifies the source organization
      * @return the stream of [FluxRecord]s
      */
-    fun query(query: String, orgID: String): Channel<FluxRecord>
+    fun query(query: String, org: String): Channel<FluxRecord>
 
     /**
      * Executes the Flux query against the InfluxDB and asynchronously stream [FluxRecord]s to [Channel].
      *
      * @param query the flux query to execute
-     * @param orgID specifies the source organization
+     * @param org specifies the source organization
      * @return the stream of [FluxRecord]s
      */
-    fun query(query: Query, orgID: String): Channel<FluxRecord>
+    fun query(query: Query, org: String): Channel<FluxRecord>
 
     /**
      * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [Channel].
      *
      * @param query the flux query to execute
-     * @param orgID specifies the source organization
+     * @param org specifies the source organization
      * @param <M> the type of the measurement (POJO)
      * @return the stream of measurements
      */
-    fun <M> query(query: String, orgID: String, measurementType: Class<M>): Channel<M>
+    fun <M> query(query: String, org: String, measurementType: Class<M>): Channel<M>
 
     /**
      * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [Channel].
      *
      * @param query the flux query to execute
-     * @param orgID specifies the source organization
+     * @param org specifies the source organization
      * @param <M> the type of the measurement (POJO)
      * @return the stream of measurements
      */
-    fun <M> query(query: Query, orgID: String, measurementType: Class<M>): Channel<M>
+    fun <M> query(query: Query, org: String, measurementType: Class<M>): Channel<M>
 
     /**
      * Executes the Flux query against the InfluxDB and asynchronously stream response to [Channel].
      *
      * @param query the flux query to execute
-     * @param orgID specifies the source organization
+     * @param org specifies the source organization
      * @return the response stream
      */
-    fun queryRaw(query: String, orgID: String): Channel<String>
+    fun queryRaw(query: String, org: String): Channel<String>
 
     /**
      * Executes the Flux query against the InfluxDB and asynchronously stream response to [Channel].
      *
      * @param query the flux query to execute
-     * @param orgID  specifies the source organization
+     * @param org  specifies the source organization
      * @param dialect    Dialect is an object defining the options to use when encoding the response.
      *                  [See dialect SPEC](http://bit.ly/flux-dialect).
      * @return the response stream
      */
-    fun queryRaw(query: String, dialect: Dialect, orgID: String): Channel<String>
+    fun queryRaw(query: String, dialect: Dialect, org: String): Channel<String>
 
 
     /**
      * Executes the Flux query against the InfluxDB and asynchronously stream response to [Channel].
      *
      * @param query the flux query to execute
-     * @param orgID specifies the source organization
+     * @param org specifies the source organization
      * @return the response stream
      */
-    fun queryRaw(query: Query, orgID: String): Channel<String>
+    fun queryRaw(query: Query, org: String): Channel<String>
 }
