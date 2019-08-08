@@ -81,7 +81,7 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
       .single(query)
       .map(_ => service
         .postQueryResponseBody(null, "application/json",
-          null, null, org, query))
+          null, org, null, query))
       .flatMapConcat(queryCall => {
         Source.queue[FluxRecord](bufferSize, overflowStrategy)
           .mapMaterializedValue(queue => {
@@ -191,7 +191,7 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
       .single(query)
       .map(it => service
         .postQueryResponseBody(null, "application/json",
-          null, null, org, query))
+          null, org, null, query))
       .flatMapConcat(queryCall => {
         Source.queue[String](bufferSize, overflowStrategy)
           .mapMaterializedValue(queue => {

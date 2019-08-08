@@ -50,8 +50,8 @@ public interface QueryService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param acceptEncoding The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand. (optional, default to identity)
    * @param contentType  (optional)
-   * @param org specifies the name of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
-   * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
+   * @param org specifies the name of the organization executing the query; take either the ID or Name interchangeably; if both orgID and org are specified, org takes precedence. (optional)
+   * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, org takes precedence. (optional)
    * @param query flux query or specification to execute (optional)
    * @return Call&lt;String&gt;
    */
@@ -69,8 +69,8 @@ public interface QueryService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param acceptEncoding The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand. (optional, default to identity)
    * @param contentType  (optional)
-   * @param org specifies the name of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
-   * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
+   * @param org specifies the name of the organization executing the query; take either the ID or Name interchangeably; if both orgID and org are specified, org takes precedence. (optional)
+   * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, org takes precedence. (optional)
    * @param query flux query or specification to execute (optional)
    * @return Call&lt;ResponseBody&gt;
    */
@@ -85,8 +85,8 @@ public interface QueryService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param acceptEncoding The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand. (optional, default to identity)
    * @param contentType  (optional)
-   * @param org specifies the name of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
-   * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, orgID takes precedence. (optional)
+   * @param org specifies the name of the organization executing the query; take either the ID or Name interchangeably; if both orgID and org are specified, org takes precedence. (optional)
+   * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, org takes precedence. (optional)
    * @param query flux query or specification to execute (optional)
    * @return Call&lt;String&gt;
    */

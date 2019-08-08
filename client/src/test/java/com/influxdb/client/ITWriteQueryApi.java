@@ -144,6 +144,42 @@ class ITWriteQueryApi extends AbstractITClientTest {
         Assertions.assertThat(query.get(0).getRecords().get(0).getTime()).isEqualTo(Instant.ofEpochSecond(0,1));
     }
 
+    @Test
+    void writeAndQueryByOrgName() {
+
+        String bucketName = bucket.getName();
+
+        writeApi = influxDBClient.getWriteApi();
+
+        String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
+
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteSuccessEvent.class, listener);
+
+        LOG.log(Level.FINEST, "Write Event Listener count down: {0}. Before write.", countDownLatch);
+
+        writeApi.writeRecord(bucketName, organization.getName(), WritePrecision.NS, record);
+
+        waitToCallback(listener.countDownLatch, 10);
+
+        LOG.log(Level.FINEST, "Write Event Listener count down: {0}. After write.", countDownLatch);
+        LOG.log(Level.FINEST, "Listener values: {0} errors: {1}", new Object[]{listener.values, listener.errors});
+
+        Assertions.assertThat(listener.getValue()).isNotNull();
+        Assertions.assertThat(listener.getValue().getBucket()).isEqualTo(bucket.getName());
+        Assertions.assertThat(listener.getValue().getOrganization()).isEqualTo(organization.getName());
+        Assertions.assertThat(listener.getValue().getLineProtocol()).isEqualTo(record);
+
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getName());
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getMeasurement()).isEqualTo("h2o_feet");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValue()).isEqualTo(1.0D);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getField()).isEqualTo("level water_level");
+        Assertions.assertThat(query.get(0).getRecords().get(0).getTime()).isEqualTo(Instant.ofEpochSecond(0,1));
+    }
+
     /**
      * Test WriteEventLister.onEvent invocation on write error.
      */

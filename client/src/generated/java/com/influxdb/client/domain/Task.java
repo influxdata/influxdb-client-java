@@ -39,6 +39,10 @@ public class Task {
   @SerializedName(SERIALIZED_NAME_ID)
   private String id;
 
+  public static final String SERIALIZED_NAME_TYPE = "type";
+  @SerializedName(SERIALIZED_NAME_TYPE)
+  private String type;
+
   public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
   private String orgID;
@@ -106,6 +110,24 @@ public class Task {
   @ApiModelProperty(required = true, value = "")
   public String getId() {
     return id;
+  }
+
+  public Task type(String type) {
+    this.type = type;
+    return this;
+  }
+
+   /**
+   * The type of task, this can be used for filtering tasks on list actions.
+   * @return type
+  **/
+  @ApiModelProperty(value = "The type of task, this can be used for filtering tasks on list actions.")
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 
   public Task orgID(String orgID) {
@@ -370,6 +392,7 @@ public class Task {
     }
     Task task = (Task) o;
     return Objects.equals(this.id, task.id) &&
+        Objects.equals(this.type, task.type) &&
         Objects.equals(this.orgID, task.orgID) &&
         Objects.equals(this.org, task.org) &&
         Objects.equals(this.name, task.name) &&
@@ -389,7 +412,7 @@ public class Task {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, orgID, org, name, description, status, labels, authorizationID, flux, every, cron, offset, latestCompleted, createdAt, updatedAt, links);
+    return Objects.hash(id, type, orgID, org, name, description, status, labels, authorizationID, flux, every, cron, offset, latestCompleted, createdAt, updatedAt, links);
   }
 
 
@@ -398,6 +421,7 @@ public class Task {
     StringBuilder sb = new StringBuilder();
     sb.append("class Task {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
     sb.append("    org: ").append(toIndentedString(org)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");

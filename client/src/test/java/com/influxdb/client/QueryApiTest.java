@@ -61,7 +61,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Query
         mockServer.enqueue(createResponse(""));
@@ -70,7 +70,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // String Measurement
         mockServer.enqueue(createResponse(""));
@@ -79,7 +79,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Query Measurement
         mockServer.enqueue(createResponse(""));
@@ -88,7 +88,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // String OnNext
         mockServer.enqueue(createResponse(""));
@@ -99,7 +99,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Query OnNext
         mockServer.enqueue(createResponse(""));
@@ -110,7 +110,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // String OnNext Measurement
         mockServer.enqueue(createResponse(""));
@@ -121,7 +121,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Query OnNext Measurement
         mockServer.enqueue(createResponse(""));
@@ -132,7 +132,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // String OnNext, OnError
         mockServer.enqueue(createResponse(""));
@@ -145,7 +145,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
 
         // Query OnNext, OnError
@@ -159,7 +159,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // String OnNext, OnError Measurement
         mockServer.enqueue(createResponse(""));
@@ -172,7 +172,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Query OnNext, OnError Measurement
         mockServer.enqueue(createResponse(""));
@@ -185,7 +185,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // String OnNext, OnError, OnComplete
         mockServer.enqueue(createResponse(""));
@@ -200,7 +200,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
 
         // Query OnNext, OnError, OnComplete
@@ -216,7 +216,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // String OnNext, OnError Measurement, OnComplete
         mockServer.enqueue(createResponse(""));
@@ -231,7 +231,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Query OnNext, OnError Measurement, OnComplete
         mockServer.enqueue(createResponse(""));
@@ -246,7 +246,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456"); // Query OnNext, OnError Measurement, OnComplete
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456"); // Query OnNext, OnError Measurement, OnComplete
 
         // Raw string
         mockServer.enqueue(createResponse(""));
@@ -255,7 +255,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw string + dialect
         mockServer.enqueue(createResponse(""));
@@ -264,7 +264,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw Query
         mockServer.enqueue(createResponse(""));
@@ -273,7 +273,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw String OnResponse
         mockServer.enqueue(createResponse(""));
@@ -284,7 +284,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw String + Dialect OnResponse
         mockServer.enqueue(createResponse(""));
@@ -295,7 +295,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw Query OnResponse
         mockServer.enqueue(createResponse(""));
@@ -306,7 +306,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw String OnResponse, OnError
         mockServer.enqueue(createResponse(""));
@@ -319,7 +319,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw String + Dialect OnResponse, OnError
         mockServer.enqueue(createResponse(""));
@@ -332,7 +332,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw Query OnResponse, OnError
         mockServer.enqueue(createResponse(""));
@@ -345,7 +345,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw String OnResponse, OnError, OnComplete
         mockServer.enqueue(createResponse(""));
@@ -360,7 +360,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw String + Dialect OnResponse, OnError, OnComplete
         mockServer.enqueue(createResponse(""));
@@ -375,7 +375,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw Query OnResponse, OnError, OnComplete
         mockServer.enqueue(createResponse(""));
@@ -390,7 +390,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
-        Assertions.assertThat(request.getRequestUrl().queryParameter("orgID")).isEqualTo("123456");
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
 
     }
