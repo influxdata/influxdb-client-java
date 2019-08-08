@@ -58,38 +58,38 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
-    public Flowable<FluxRecord> query(@Nonnull final String query, @Nonnull final String orgID) {
+    public Flowable<FluxRecord> query(@Nonnull final String query, @Nonnull final String org) {
 
         Arguments.checkNonEmpty(query, "Flux query");
-        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNonEmpty(org, "org");
 
-        return query(Flowable.just(query), orgID);
+        return query(Flowable.just(query), org);
     }
 
     @Override
     public <M> Flowable<M> query(@Nonnull final String query,
-                                 @Nonnull final String orgID,
+                                 @Nonnull final String org,
                                  @Nonnull final Class<M> measurementType) {
 
         Arguments.checkNonEmpty(query, "Flux query");
         Arguments.checkNotNull(measurementType, "Measurement type");
-        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNonEmpty(org, "org");
 
-        return query(Flowable.just(query), orgID, measurementType);
+        return query(Flowable.just(query), org, measurementType);
     }
 
     @Nonnull
     @Override
     public Flowable<FluxRecord> query(@Nonnull final Publisher<String> queryStream,
-                                      @Nonnull final String orgID) {
+                                      @Nonnull final String org) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
-        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNonEmpty(org, "org");
 
         return Flowable
                 .fromPublisher(queryStream)
                 .map(it -> service.postQueryResponseBody(null, "application/json",
-                        null, null, orgID, new Query().query(it).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT)))
+                        null, org, null, new Query().query(it).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT)))
                 .flatMap(queryCall -> {
 
                     Observable<FluxRecord> observable = Observable.create(subscriber -> {
@@ -126,62 +126,62 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
     @Nonnull
     @Override
     public <M> Flowable<M> query(@Nonnull final Publisher<String> queryStream,
-                                 @Nonnull final String orgID,
+                                 @Nonnull final String org,
                                  @Nonnull final Class<M> measurementType) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
         Arguments.checkNotNull(measurementType, "Measurement type");
-        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNonEmpty(org, "org");
 
-        return query(queryStream, orgID).map(fluxRecord -> resultMapper.toPOJO(fluxRecord, measurementType));
+        return query(queryStream, org).map(fluxRecord -> resultMapper.toPOJO(fluxRecord, measurementType));
     }
 
     @Nonnull
     @Override
-    public Flowable<String> queryRaw(@Nonnull final String query, @Nonnull final String orgID) {
+    public Flowable<String> queryRaw(@Nonnull final String query, @Nonnull final String org) {
 
         Arguments.checkNonEmpty(query, "Flux query");
-        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNonEmpty(org, "org");
 
-        return queryRaw(Flowable.just(query), orgID);
+        return queryRaw(Flowable.just(query), org);
     }
 
     @Nonnull
     @Override
     public Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream,
-                                     @Nonnull final String orgID) {
+                                     @Nonnull final String org) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
-        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNonEmpty(org, "org");
 
-        return queryRaw(queryStream, AbstractInfluxDBClient.DEFAULT_DIALECT, orgID);
+        return queryRaw(queryStream, AbstractInfluxDBClient.DEFAULT_DIALECT, org);
     }
 
     @Nonnull
     @Override
     public Flowable<String> queryRaw(@Nonnull final String query,
                                      @Nullable final Dialect dialect,
-                                     @Nonnull final String orgID) {
+                                     @Nonnull final String org) {
 
         Arguments.checkNonEmpty(query, "Flux query");
-        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNonEmpty(org, "org");
 
-        return queryRaw(Flowable.just(query), dialect, orgID);
+        return queryRaw(Flowable.just(query), dialect, org);
     }
 
     @Nonnull
     @Override
     public Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream,
                                      @Nullable final Dialect dialect,
-                                     @Nonnull final String orgID) {
+                                     @Nonnull final String org) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
-        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNonEmpty(org, "org");
 
         return Flowable
                 .fromPublisher(queryStream)
                 .map(it -> service.postQueryResponseBody(null, "application/json",
-                        null, null, orgID, new Query().query(it).dialect(dialect)))
+                        null, org, null, new Query().query(it).dialect(dialect)))
                 .flatMap(queryCall -> {
 
                     Observable<String> observable = Observable.create(subscriber -> {

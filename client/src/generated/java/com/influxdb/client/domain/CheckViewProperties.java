@@ -29,6 +29,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Check;
+import com.influxdb.client.domain.DashboardQuery;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -148,6 +149,14 @@ public class CheckViewProperties extends ViewProperties {
   @JsonAdapter(CheckViewPropertiesCheckAdapter.class)
   private Check check = null;
 
+  public static final String SERIALIZED_NAME_QUERIES = "queries";
+  @SerializedName(SERIALIZED_NAME_QUERIES)
+  private List<DashboardQuery> queries = new ArrayList<>();
+
+  public static final String SERIALIZED_NAME_COLORS = "colors";
+  @SerializedName(SERIALIZED_NAME_COLORS)
+  private List<String> colors = new ArrayList<>();
+
    /**
    * Get type
    * @return type
@@ -193,13 +202,59 @@ public class CheckViewProperties extends ViewProperties {
    * Get check
    * @return check
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public Check getCheck() {
     return check;
   }
 
   public void setCheck(Check check) {
     this.check = check;
+  }
+
+  public CheckViewProperties queries(List<DashboardQuery> queries) {
+    this.queries = queries;
+    return this;
+  }
+
+  public CheckViewProperties addQueriesItem(DashboardQuery queriesItem) {
+    this.queries.add(queriesItem);
+    return this;
+  }
+
+   /**
+   * Get queries
+   * @return queries
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public List<DashboardQuery> getQueries() {
+    return queries;
+  }
+
+  public void setQueries(List<DashboardQuery> queries) {
+    this.queries = queries;
+  }
+
+  public CheckViewProperties colors(List<String> colors) {
+    this.colors = colors;
+    return this;
+  }
+
+  public CheckViewProperties addColorsItem(String colorsItem) {
+    this.colors.add(colorsItem);
+    return this;
+  }
+
+   /**
+   * Colors define color encoding of data into a visualization
+   * @return colors
+  **/
+  @ApiModelProperty(required = true, value = "Colors define color encoding of data into a visualization")
+  public List<String> getColors() {
+    return colors;
+  }
+
+  public void setColors(List<String> colors) {
+    this.colors = colors;
   }
 
 
@@ -216,12 +271,14 @@ public class CheckViewProperties extends ViewProperties {
         Objects.equals(this.shape, checkViewProperties.shape) &&
         Objects.equals(this.checkID, checkViewProperties.checkID) &&
         Objects.equals(this.check, checkViewProperties.check) &&
+        Objects.equals(this.queries, checkViewProperties.queries) &&
+        Objects.equals(this.colors, checkViewProperties.colors) &&
         super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, shape, checkID, check, super.hashCode());
+    return Objects.hash(type, shape, checkID, check, queries, colors, super.hashCode());
   }
 
 
@@ -234,6 +291,8 @@ public class CheckViewProperties extends ViewProperties {
     sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
     sb.append("    checkID: ").append(toIndentedString(checkID)).append("\n");
     sb.append("    check: ").append(toIndentedString(check)).append("\n");
+    sb.append("    queries: ").append(toIndentedString(queries)).append("\n");
+    sb.append("    colors: ").append(toIndentedString(colors)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -57,31 +57,31 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
    * @param query the flux query to execute
    * @return the stream of [[FluxRecord]]s
    */
-  override def query(@Nonnull query: String, @Nonnull orgID: String): Source[FluxRecord, NotUsed] = {
+  override def query(@Nonnull query: String, @Nonnull org: String): Source[FluxRecord, NotUsed] = {
 
     Arguments.checkNonEmpty(query, "query")
-    Arguments.checkNonEmpty(orgID, "orgID")
+    Arguments.checkNonEmpty(org, "org")
 
-    this.query(new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT), orgID)
+    this.query(new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT), org)
   }
 
   /**
-    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
-    *
-    * @param query the flux query to execute
-    * @param orgID specifies the source organization
-    * @return the stream of [[FluxRecord]]s
-    */
-  override def query(query: Query, orgID: String): Source[FluxRecord, NotUsed] = {
+   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
+   *
+   * @param query the flux query to execute
+   * @param org   specifies the source organization
+   * @return the stream of [[FluxRecord]]s
+   */
+  override def query(query: Query, org: String): Source[FluxRecord, NotUsed] = {
 
     Arguments.checkNotNull(query, "query")
-    Arguments.checkNonEmpty(orgID, "orgID")
+    Arguments.checkNonEmpty(org, "org")
 
     Source
       .single(query)
       .map(_ => service
         .postQueryResponseBody(null, "application/json",
-        null, null, orgID, query))
+          null, org, null, query))
       .flatMapConcat(queryCall => {
         Source.queue[FluxRecord](bufferSize, overflowStrategy)
           .mapMaterializedValue(queue => {
@@ -103,7 +103,7 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
               }
             }
 
-            val onError = asJavaConsumer[Throwable](t =>  queue.fail(t))
+            val onError = asJavaConsumer[Throwable](t => queue.fail(t))
 
             this.query(queryCall, consumer, onError, () => queue.complete, true)
           })
@@ -118,31 +118,31 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
    * @tparam M the type of the measurement (POJO)
    * @return the stream of measurements
    */
-  override def query[M](@Nonnull query: String, @Nonnull orgID: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed] = {
+  override def query[M](@Nonnull query: String, @Nonnull org: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed] = {
 
     Arguments.checkNonEmpty(query, "query")
-    Arguments.checkNonEmpty(orgID, "orgID")
+    Arguments.checkNonEmpty(org, "org")
     Arguments.checkNotNull(measurementType, "measurementType")
 
-    this.query(query, orgID).map(t => resultMapper.toPOJO(t, measurementType))
+    this.query(query, org).map(t => resultMapper.toPOJO(t, measurementType))
   }
 
   /**
-    * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
-    *
-    * @param query           the flux query to execute
-    * @param orgID           specifies the source organization
-    * @param measurementType the measurement (POJO)
-    * @tparam M the type of the measurement (POJO)
-    * @return the stream of measurements
-    */
-  override def query[M](query: Query, orgID: String, measurementType: Class[M]): Source[M, NotUsed] = {
+   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+   *
+   * @param query           the flux query to execute
+   * @param org             specifies the source organization
+   * @param measurementType the measurement (POJO)
+   * @tparam M the type of the measurement (POJO)
+   * @return the stream of measurements
+   */
+  override def query[M](query: Query, org: String, measurementType: Class[M]): Source[M, NotUsed] = {
 
     Arguments.checkNotNull(query, "query")
-    Arguments.checkNonEmpty(orgID, "orgID")
+    Arguments.checkNonEmpty(org, "org")
     Arguments.checkNotNull(measurementType, "measurementType")
 
-    this.query(query, orgID).map(t => resultMapper.toPOJO(t, measurementType))
+    this.query(query, org).map(t => resultMapper.toPOJO(t, measurementType))
   }
 
   /**
@@ -151,12 +151,12 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
    * @param query the flux query to execute
    * @return the response stream
    */
-  override def queryRaw(@Nonnull query: String, @Nonnull orgID: String): Source[String, NotUsed] = {
+  override def queryRaw(@Nonnull query: String, @Nonnull org: String): Source[String, NotUsed] = {
 
     Arguments.checkNonEmpty(query, "query")
-    Arguments.checkNonEmpty(orgID, "orgID")
+    Arguments.checkNonEmpty(org, "org")
 
-    queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, orgID)
+    queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, org)
   }
 
   /**
@@ -167,31 +167,31 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
    *                [[http://bit.ly/flux-dialect See dialect SPEC]].
    * @return the response stream
    */
-  override def queryRaw(query: String, dialect: Dialect, orgID: String): Source[String, NotUsed] = {
+  override def queryRaw(query: String, dialect: Dialect, org: String): Source[String, NotUsed] = {
 
     Arguments.checkNonEmpty(query, "query")
-    Arguments.checkNonEmpty(orgID, "orgID")
+    Arguments.checkNonEmpty(org, "org")
 
-    this.queryRaw(new Query().query(query).dialect(dialect), orgID)
+    this.queryRaw(new Query().query(query).dialect(dialect), org)
   }
 
   /**
-    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
-    *
-    * @param query the flux query to execute
-    * @param orgID specifies the source organization
-    * @return the response stream
-    */
-  override def queryRaw(query: Query, orgID: String): Source[String, NotUsed] = {
+   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+   *
+   * @param query the flux query to execute
+   * @param org   specifies the source organization
+   * @return the response stream
+   */
+  override def queryRaw(query: Query, org: String): Source[String, NotUsed] = {
 
     Arguments.checkNotNull(query, "query")
-    Arguments.checkNonEmpty(orgID, "orgID")
+    Arguments.checkNonEmpty(org, "org")
 
     Source
       .single(query)
       .map(it => service
         .postQueryResponseBody(null, "application/json",
-          null, null, orgID, query))
+          null, org, null, query))
       .flatMapConcat(queryCall => {
         Source.queue[String](bufferSize, overflowStrategy)
           .mapMaterializedValue(queue => {
@@ -208,7 +208,7 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
               }
             }
 
-            val onError = asJavaConsumer[Throwable](t =>  queue.fail(t))
+            val onError = asJavaConsumer[Throwable](t => queue.fail(t))
 
             this.queryRaw(queryCall, onResponse, onError, () => queue.complete, true)
           })

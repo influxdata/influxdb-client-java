@@ -42,18 +42,18 @@ import java.util.function.Consumer
  */
 internal class QueryKotlinApiImpl(private val service: QueryService) : AbstractQueryApi(), QueryKotlinApi {
 
-    override fun query(query: String, orgID: String): Channel<FluxRecord> {
+    override fun query(query: String, org: String): Channel<FluxRecord> {
 
         Arguments.checkNonEmpty(query, "query")
-        Arguments.checkNonEmpty(orgID, "orgID")
+        Arguments.checkNonEmpty(org, "org")
 
-        return query(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(query), orgID)
+        return query(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(query), org)
     }
 
-    override fun query(query: Query, orgID: String): Channel<FluxRecord> {
+    override fun query(query: Query, org: String): Channel<FluxRecord> {
 
         Arguments.checkNotNull(query, "query")
-        Arguments.checkNonEmpty(orgID, "orgID")
+        Arguments.checkNonEmpty(org, "org")
 
         val consumer = BiConsumer { channel: Channel<FluxRecord>, record: FluxRecord ->
             runBlocking {
@@ -61,13 +61,13 @@ internal class QueryKotlinApiImpl(private val service: QueryService) : AbstractQ
             }
         }
 
-        return query(query, orgID, consumer)
+        return query(query, org, consumer)
     }
 
-    override fun <M> query(query: String, orgID: String, measurementType: Class<M>): Channel<M> {
+    override fun <M> query(query: String, org: String, measurementType: Class<M>): Channel<M> {
 
         Arguments.checkNonEmpty(query, "query")
-        Arguments.checkNonEmpty(orgID, "orgID")
+        Arguments.checkNonEmpty(org, "org")
         Arguments.checkNotNull(measurementType, "measurementType")
 
         val consumer = BiConsumer { channel: Channel<M>, record: FluxRecord ->
@@ -76,13 +76,13 @@ internal class QueryKotlinApiImpl(private val service: QueryService) : AbstractQ
             }
         }
 
-        return query(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(query), orgID, consumer)
+        return query(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(query), org, consumer)
     }
 
-    override fun <M> query(query: Query, orgID: String, measurementType: Class<M>): Channel<M> {
+    override fun <M> query(query: Query, org: String, measurementType: Class<M>): Channel<M> {
 
         Arguments.checkNotNull(query, "query")
-        Arguments.checkNonEmpty(orgID, "orgID")
+        Arguments.checkNonEmpty(org, "org")
         Arguments.checkNotNull(measurementType, "measurementType")
 
         val consumer = BiConsumer { channel: Channel<M>, record: FluxRecord ->
@@ -91,34 +91,34 @@ internal class QueryKotlinApiImpl(private val service: QueryService) : AbstractQ
             }
         }
 
-        return query(query, orgID, consumer)
+        return query(query, org, consumer)
     }
 
-    override fun queryRaw(query: String, orgID: String): Channel<String> {
+    override fun queryRaw(query: String, org: String): Channel<String> {
 
         Arguments.checkNonEmpty(query, "query")
-        Arguments.checkNonEmpty(orgID, "orgID")
+        Arguments.checkNonEmpty(org, "org")
 
-        return queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, orgID)
+        return queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, org)
     }
 
-    override fun queryRaw(query: String, dialect: Dialect, orgID: String): Channel<String> {
+    override fun queryRaw(query: String, dialect: Dialect, org: String): Channel<String> {
 
         Arguments.checkNonEmpty(query, "query")
-        Arguments.checkNonEmpty(orgID, "orgID")
+        Arguments.checkNonEmpty(org, "org")
 
-        return queryRaw(Query().dialect(dialect).query(query), orgID)
+        return queryRaw(Query().dialect(dialect).query(query), org)
     }
 
-    override fun queryRaw(query: Query, orgID: String): Channel<String> {
+    override fun queryRaw(query: Query, org: String): Channel<String> {
 
         Arguments.checkNotNull(query, "query")
-        Arguments.checkNonEmpty(orgID, "orgID")
+        Arguments.checkNonEmpty(org, "org")
 
         val channel = Channel<String>()
 
         val queryCall = service.postQueryResponseBody(null,  "application/json",
-                null, null, orgID, query)
+                null, org, null, query)
 
         val consumer = BiConsumer { cancellable: Cancellable, line: String ->
 
@@ -137,15 +137,15 @@ internal class QueryKotlinApiImpl(private val service: QueryService) : AbstractQ
 
     }
 
-    private fun <T> query(query: Query, orgID: String, consumer: BiConsumer<Channel<T>, FluxRecord>): Channel<T> {
+    private fun <T> query(query: Query, org: String, consumer: BiConsumer<Channel<T>, FluxRecord>): Channel<T> {
 
         Arguments.checkNotNull(query, "query")
-        Arguments.checkNonEmpty(orgID, "orgID")
+        Arguments.checkNonEmpty(org, "org")
 
         val channel = Channel<T>()
 
         val queryCall = service.postQueryResponseBody(null, "application/json",
-                null, null, orgID, query)
+                null, org, null, query)
 
         val responseConsumer = object : FluxResponseConsumer {
 

@@ -38,50 +38,50 @@ trait QueryScalaApi {
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
    *
    * @param query the flux query to execute
-   * @param orgID specifies the source organization
+   * @param org specifies the source organization
    * @return the stream of [[FluxRecord]]s
    */
-  @Nonnull def query(@Nonnull query: String, @Nonnull orgID: String): Source[FluxRecord, NotUsed]
+  @Nonnull def query(@Nonnull query: String, @Nonnull org: String): Source[FluxRecord, NotUsed]
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
    *
    * @param query the flux query to execute
-   * @param orgID specifies the source organization
+   * @param org specifies the source organization
    * @return the stream of [[FluxRecord]]s
    */
-  @Nonnull def query(@Nonnull query: Query, @Nonnull orgID: String): Source[FluxRecord, NotUsed]
+  @Nonnull def query(@Nonnull query: Query, @Nonnull org: String): Source[FluxRecord, NotUsed]
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
    *
    * @param query           the flux query to execute
-   * @param orgID           specifies the source organization
+   * @param org           specifies the source organization
    * @param measurementType the measurement (POJO)
    * @tparam M the type of the measurement (POJO)
    * @return the stream of measurements
    */
-  @Nonnull def query[M](@Nonnull query: String, @Nonnull orgID: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed]
+  @Nonnull def query[M](@Nonnull query: String, @Nonnull org: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed]
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
    *
    * @param query           the flux query to execute
-   * @param orgID           specifies the source organization
+   * @param org           specifies the source organization
    * @param measurementType the measurement (POJO)
    * @tparam M the type of the measurement (POJO)
    * @return the stream of measurements
    */
-  @Nonnull def query[M](@Nonnull query: Query, @Nonnull orgID: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed]
+  @Nonnull def query[M](@Nonnull query: Query, @Nonnull org: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed]
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
    *
    * @param query the flux query to execute
-   * @param orgID specifies the source organization
+   * @param org specifies the source organization
    * @return the response stream
    */
-  @Nonnull def queryRaw(@Nonnull query: String, @Nonnull orgID: String): Source[String, NotUsed]
+  @Nonnull def queryRaw(@Nonnull query: String, @Nonnull org: String): Source[String, NotUsed]
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
@@ -89,17 +89,17 @@ trait QueryScalaApi {
    * @param query   the flux query to execute
    * @param dialect Dialect is an object defining the options to use when encoding the response.
    *                [[http://bit.ly/flux-dialect See dialect SPEC]].
-   * @param orgID   specifies the source organization
+   * @param org   specifies the source organization
    * @return the response stream
    */
-  @Nonnull def queryRaw(@Nonnull query: String, @Nonnull dialect: Dialect, @Nonnull orgID: String): Source[String, NotUsed]
+  @Nonnull def queryRaw(@Nonnull query: String, @Nonnull dialect: Dialect, @Nonnull org: String): Source[String, NotUsed]
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
    *
    * @param query   the flux query to execute
-   * @param orgID   specifies the source organization
+   * @param org   specifies the source organization
    * @return the response stream
    */
-  @Nonnull def queryRaw(@Nonnull query: Query, @Nonnull orgID: String): Source[String, NotUsed]
+  @Nonnull def queryRaw(@Nonnull query: Query, @Nonnull org: String): Source[String, NotUsed]
 }

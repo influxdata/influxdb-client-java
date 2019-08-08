@@ -425,7 +425,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                     .fromCallable(() -> service
                             .postWrite(organization, bucket, content, null,
                             "utf-8", "text/plain", null,
-                            "application/json", precision))
+                            "application/json", null, precision))
                     .map(Call::execute);
 
             return requestSource
@@ -504,7 +504,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                 String retryAfter = ((HttpException) throwable).response().headers().get("Retry-After");
                 if (retryAfter != null) {
 
-                    retryInterval = TimeUnit.MILLISECONDS.convert(Integer.valueOf(retryAfter), TimeUnit.SECONDS);
+                    retryInterval = TimeUnit.MILLISECONDS.convert(Integer.parseInt(retryAfter), TimeUnit.SECONDS);
                 } else {
 
                     retryInterval = writeOptions.getRetryInterval();
