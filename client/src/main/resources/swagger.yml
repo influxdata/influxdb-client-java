@@ -9184,8 +9184,6 @@ components:
         description:
           description: An optional description of the notification endpoint
           type: string
-        name:
-          type: string
         status:
           description: The status of the endpoint.
           default: active
