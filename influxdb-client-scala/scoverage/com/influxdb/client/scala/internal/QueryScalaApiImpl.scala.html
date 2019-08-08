@@ -81,31 +81,31 @@
 </span>57 <span style=''>   * @param query the flux query to execute
 </span>58 <span style=''>   * @return the stream of [[FluxRecord]]s
 </span>59 <span style=''>   */
-</span>60 <span style=''>  override def query(@Nonnull query: String, @Nonnull orgID: String): Source[FluxRecord, NotUsed] = {
+</span>60 <span style=''>  override def query(@Nonnull query: String, @Nonnull org: String): Source[FluxRecord, NotUsed] = {
 </span>61 <span style=''>
 </span>62 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
-</span>63 <span style=''>    Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)
+</span>63 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
 </span>64 <span style=''>
-</span>65 <span style=''>    this.query(new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT), orgID)
+</span>65 <span style=''>    this.query(new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT), org)
 </span>66 <span style=''>  }
 </span>67 <span style=''>
 </span>68 <span style=''>  /**
-</span>69 <span style=''>    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
-</span>70 <span style=''>    *
-</span>71 <span style=''>    * @param query the flux query to execute
-</span>72 <span style=''>    * @param orgID specifies the source organization
-</span>73 <span style=''>    * @return the stream of [[FluxRecord]]s
-</span>74 <span style=''>    */
-</span>75 <span style=''>  override def query(query: Query, orgID: String): Source[FluxRecord, NotUsed] = {
+</span>69 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
+</span>70 <span style=''>   *
+</span>71 <span style=''>   * @param query the flux query to execute
+</span>72 <span style=''>   * @param org   specifies the source organization
+</span>73 <span style=''>   * @return the stream of [[FluxRecord]]s
+</span>74 <span style=''>   */
+</span>75 <span style=''>  override def query(query: Query, org: String): Source[FluxRecord, NotUsed] = {
 </span>76 <span style=''>
 </span>77 <span style=''>    Arguments.checkNotNull(query, &quot;query&quot;)
-</span>78 <span style=''>    Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)
+</span>78 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
 </span>79 <span style=''>
 </span>80 <span style=''>    Source
 </span>81 <span style=''>      .single(query)
 </span>82 <span style=''>      .map(_ =&gt; service
 </span>83 <span style=''>        .postQueryResponseBody(null, &quot;application/json&quot;,
-</span>84 <span style=''>        null, null, orgID, query))
+</span>84 <span style=''>          null, org, null, query))
 </span>85 <span style=''>      .flatMapConcat(queryCall =&gt; {
 </span>86 <span style=''>        Source.queue[FluxRecord](bufferSize, overflowStrategy)
 </span>87 <span style=''>          .mapMaterializedValue(queue =&gt; {
@@ -127,7 +127,7 @@
 </span>103 <span style=''>              }
 </span>104 <span style=''>            }
 </span>105 <span style=''>
-</span>106 <span style=''>            val onError = asJavaConsumer[Throwable](t =&gt;  queue.fail(t))
+</span>106 <span style=''>            val onError = asJavaConsumer[Throwable](t =&gt; queue.fail(t))
 </span>107 <span style=''>
 </span>108 <span style=''>            this.query(queryCall, consumer, onError, () =&gt; queue.complete, true)
 </span>109 <span style=''>          })
@@ -142,31 +142,31 @@
 </span>118 <span style=''>   * @tparam M the type of the measurement (POJO)
 </span>119 <span style=''>   * @return the stream of measurements
 </span>120 <span style=''>   */
-</span>121 <span style=''>  override def query[M](@Nonnull query: String, @Nonnull orgID: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed] = {
+</span>121 <span style=''>  override def query[M](@Nonnull query: String, @Nonnull org: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed] = {
 </span>122 <span style=''>
 </span>123 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
-</span>124 <span style=''>    Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)
+</span>124 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
 </span>125 <span style=''>    Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)
 </span>126 <span style=''>
-</span>127 <span style=''>    this.query(query, orgID).map(t =&gt; resultMapper.toPOJO(t, measurementType))
+</span>127 <span style=''>    this.query(query, org).map(t =&gt; resultMapper.toPOJO(t, measurementType))
 </span>128 <span style=''>  }
 </span>129 <span style=''>
 </span>130 <span style=''>  /**
-</span>131 <span style=''>    * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
-</span>132 <span style=''>    *
-</span>133 <span style=''>    * @param query           the flux query to execute
-</span>134 <span style=''>    * @param orgID           specifies the source organization
-</span>135 <span style=''>    * @param measurementType the measurement (POJO)
-</span>136 <span style=''>    * @tparam M the type of the measurement (POJO)
-</span>137 <span style=''>    * @return the stream of measurements
-</span>138 <span style=''>    */
-</span>139 <span style=''>  override def query[M](query: Query, orgID: String, measurementType: Class[M]): Source[M, NotUsed] = {
+</span>131 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+</span>132 <span style=''>   *
+</span>133 <span style=''>   * @param query           the flux query to execute
+</span>134 <span style=''>   * @param org             specifies the source organization
+</span>135 <span style=''>   * @param measurementType the measurement (POJO)
+</span>136 <span style=''>   * @tparam M the type of the measurement (POJO)
+</span>137 <span style=''>   * @return the stream of measurements
+</span>138 <span style=''>   */
+</span>139 <span style=''>  override def query[M](query: Query, org: String, measurementType: Class[M]): Source[M, NotUsed] = {
 </span>140 <span style=''>
 </span>141 <span style=''>    Arguments.checkNotNull(query, &quot;query&quot;)
-</span>142 <span style=''>    Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)
+</span>142 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
 </span>143 <span style=''>    Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)
 </span>144 <span style=''>
-</span>145 <span style=''>    this.query(query, orgID).map(t =&gt; resultMapper.toPOJO(t, measurementType))
+</span>145 <span style=''>    this.query(query, org).map(t =&gt; resultMapper.toPOJO(t, measurementType))
 </span>146 <span style=''>  }
 </span>147 <span style=''>
 </span>148 <span style=''>  /**
@@ -175,12 +175,12 @@
 </span>151 <span style=''>   * @param query the flux query to execute
 </span>152 <span style=''>   * @return the response stream
 </span>153 <span style=''>   */
-</span>154 <span style=''>  override def queryRaw(@Nonnull query: String, @Nonnull orgID: String): Source[String, NotUsed] = {
+</span>154 <span style=''>  override def queryRaw(@Nonnull query: String, @Nonnull org: String): Source[String, NotUsed] = {
 </span>155 <span style=''>
 </span>156 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
-</span>157 <span style=''>    Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)
+</span>157 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
 </span>158 <span style=''>
-</span>159 <span style=''>    queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, orgID)
+</span>159 <span style=''>    queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, org)
 </span>160 <span style=''>  }
 </span>161 <span style=''>
 </span>162 <span style=''>  /**
@@ -191,31 +191,31 @@
 </span>167 <span style=''>   *                [[http://bit.ly/flux-dialect See dialect SPEC]].
 </span>168 <span style=''>   * @return the response stream
 </span>169 <span style=''>   */
-</span>170 <span style=''>  override def queryRaw(query: String, dialect: Dialect, orgID: String): Source[String, NotUsed] = {
+</span>170 <span style=''>  override def queryRaw(query: String, dialect: Dialect, org: String): Source[String, NotUsed] = {
 </span>171 <span style=''>
 </span>172 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
-</span>173 <span style=''>    Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)
+</span>173 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
 </span>174 <span style=''>
-</span>175 <span style=''>    this.queryRaw(new Query().query(query).dialect(dialect), orgID)
+</span>175 <span style=''>    this.queryRaw(new Query().query(query).dialect(dialect), org)
 </span>176 <span style=''>  }
 </span>177 <span style=''>
 </span>178 <span style=''>  /**
-</span>179 <span style=''>    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
-</span>180 <span style=''>    *
-</span>181 <span style=''>    * @param query the flux query to execute
-</span>182 <span style=''>    * @param orgID specifies the source organization
-</span>183 <span style=''>    * @return the response stream
-</span>184 <span style=''>    */
-</span>185 <span style=''>  override def queryRaw(query: Query, orgID: String): Source[String, NotUsed] = {
+</span>179 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>180 <span style=''>   *
+</span>181 <span style=''>   * @param query the flux query to execute
+</span>182 <span style=''>   * @param org   specifies the source organization
+</span>183 <span style=''>   * @return the response stream
+</span>184 <span style=''>   */
+</span>185 <span style=''>  override def queryRaw(query: Query, org: String): Source[String, NotUsed] = {
 </span>186 <span style=''>
 </span>187 <span style=''>    Arguments.checkNotNull(query, &quot;query&quot;)
-</span>188 <span style=''>    Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)
+</span>188 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
 </span>189 <span style=''>
 </span>190 <span style=''>    Source
 </span>191 <span style=''>      .single(query)
 </span>192 <span style=''>      .map(it =&gt; service
 </span>193 <span style=''>        .postQueryResponseBody(null, &quot;application/json&quot;,
-</span>194 <span style=''>          null, null, orgID, query))
+</span>194 <span style=''>          null, org, null, query))
 </span>195 <span style=''>      .flatMapConcat(queryCall =&gt; {
 </span>196 <span style=''>        Source.queue[String](bufferSize, overflowStrategy)
 </span>197 <span style=''>          .mapMaterializedValue(queue =&gt; {
@@ -232,7 +232,7 @@
 </span>208 <span style=''>              }
 </span>209 <span style=''>            }
 </span>210 <span style=''>
-</span>211 <span style=''>            val onError = asJavaConsumer[Throwable](t =&gt;  queue.fail(t))
+</span>211 <span style=''>            val onError = asJavaConsumer[Throwable](t =&gt; queue.fail(t))
 </span>212 <span style=''>
 </span>213 <span style=''>            this.queryRaw(queryCall, onResponse, onError, () =&gt; queue.complete, true)
 </span>214 <span style=''>          })
@@ -384,9 +384,9 @@
           38
         </td>
         <td>
-          2526
+          2524
           -
-          2526
+          2524
         </td>
         <td>
           Apply
@@ -405,9 +405,9 @@
           39
         </td>
         <td>
-          2570
+          2568
           -
-          2570
+          2568
         </td>
         <td>
           Apply
@@ -416,7 +416,7 @@
           com.influxdb.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)
+          com.influxdb.Arguments.checkNonEmpty(org, &quot;org&quot;)
         </td>
       </tr><tr>
         <td>
@@ -426,9 +426,9 @@
           41
         </td>
         <td>
-          2635
+          2629
           -
-          2635
+          2629
         </td>
         <td>
           Apply
@@ -447,9 +447,9 @@
           40
         </td>
         <td>
-          2659
+          2653
           -
-          2659
+          2653
         </td>
         <td>
           Select
@@ -468,9 +468,9 @@
           42
         </td>
         <td>
-          2602
+          2596
           -
-          2602
+          2596
         </td>
         <td>
           Apply
@@ -479,7 +479,7 @@
           com.influxdb.client.scala.internal.QueryScalaApiImpl.query
         </td>
         <td style="background: #F0ADAD">
-          this.query(new com.influxdb.client.domain.Query().query(query).dialect(com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT), orgID)
+          this.query(new com.influxdb.client.domain.Query().query(query).dialect(com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT), org)
         </td>
       </tr><tr>
         <td>
@@ -489,9 +489,9 @@
           43
         </td>
         <td>
-          3068
+          3052
           -
-          3068
+          3052
         </td>
         <td>
           Apply
@@ -510,9 +510,9 @@
           44
         </td>
         <td>
-          3112
+          3096
           -
-          3112
+          3096
         </td>
         <td>
           Apply
@@ -521,7 +521,7 @@
           com.influxdb.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)
+          com.influxdb.Arguments.checkNonEmpty(org, &quot;org&quot;)
         </td>
       </tr><tr>
         <td>
@@ -531,9 +531,9 @@
           45
         </td>
         <td>
-          3216
+          3196
           -
-          3216
+          3196
         </td>
         <td>
           Apply
@@ -542,7 +542,7 @@
           com.influxdb.client.service.QueryService.postQueryResponseBody
         </td>
         <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, null, orgID, query)
+          QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, org, null, query)
         </td>
       </tr><tr>
         <td>
@@ -552,9 +552,9 @@
           63
         </td>
         <td>
-          3298
+          3278
           -
-          3298
+          3278
         </td>
         <td>
           Apply
@@ -563,7 +563,7 @@
           akka.stream.scaladsl.FlowOps.flatMapConcat
         </td>
         <td style="background: #F0ADAD">
-          akka.stream.scaladsl.Source.single[com.influxdb.client.domain.Query](query).map[retrofit2.Call[okhttp3.ResponseBody]](((x$1: com.influxdb.client.domain.Query) =&gt; QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, null, orgID, query))).flatMapConcat[com.influxdb.query.FluxRecord, Unit](((queryCall: retrofit2.Call[okhttp3.ResponseBody]) =&gt; akka.stream.scaladsl.Source.queue[com.influxdb.query.FluxRecord](QueryScalaApiImpl.this.bufferSize, QueryScalaApiImpl.this.overflowStrategy).mapMaterializedValue[Unit](((queue: akka.stream.scaladsl.SourceQueueWithComplete[com.influxdb.query.FluxRecord]) =&gt; {
+          akka.stream.scaladsl.Source.single[com.influxdb.client.domain.Query](query).map[retrofit2.Call[okhttp3.ResponseBody]](((x$1: com.influxdb.client.domain.Query) =&gt; QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, org, null, query))).flatMapConcat[com.influxdb.query.FluxRecord, Unit](((queryCall: retrofit2.Call[okhttp3.ResponseBody]) =&gt; akka.stream.scaladsl.Source.queue[com.influxdb.query.FluxRecord](QueryScalaApiImpl.this.bufferSize, QueryScalaApiImpl.this.overflowStrategy).mapMaterializedValue[Unit](((queue: akka.stream.scaladsl.SourceQueueWithComplete[com.influxdb.query.FluxRecord]) =&gt; {
   val eventualDone: scala.concurrent.Future[akka.Done] = queue.watchCompletion();
   val consumer: com.influxdb.query.internal.FluxCsvParser.FluxResponseConsumer = {
     final class $anon extends Object with com.influxdb.query.internal.FluxCsvParser.FluxResponseConsumer {
@@ -594,9 +594,9 @@
           47
         </td>
         <td>
-          3359
+          3339
           -
-          3359
+          3339
         </td>
         <td>
           Select
@@ -615,9 +615,9 @@
           46
         </td>
         <td>
-          3347
+          3327
           -
-          3347
+          3327
         </td>
         <td>
           Select
@@ -636,9 +636,9 @@
           62
         </td>
         <td>
-          3408
+          3388
           -
-          3408
+          3388
         </td>
         <td>
           Apply
@@ -678,9 +678,9 @@
           48
         </td>
         <td>
-          3473
+          3453
           -
-          3473
+          3453
         </td>
         <td>
           Apply
@@ -699,9 +699,9 @@
           56
         </td>
         <td>
-          3503
+          3483
           -
-          3503
+          3483
         </td>
         <td>
           Apply
@@ -720,9 +720,9 @@
           49
         </td>
         <td>
-          3677
+          3657
           -
-          3677
+          3657
         </td>
         <td>
           Literal
@@ -741,9 +741,9 @@
           50
         </td>
         <td>
-          3863
+          3843
           -
-          3863
+          3843
         </td>
         <td>
           Select
@@ -762,9 +762,9 @@
           52
         </td>
         <td>
-          3914
+          3894
           -
-          3914
+          3894
         </td>
         <td>
           Block
@@ -783,9 +783,9 @@
           51
         </td>
         <td>
-          3914
+          3894
           -
-          3914
+          3894
         </td>
         <td>
           Apply
@@ -804,9 +804,9 @@
           53
         </td>
         <td>
-          3971
+          3951
           -
-          3971
+          3951
         </td>
         <td>
           Apply
@@ -825,9 +825,9 @@
           55
         </td>
         <td>
-          3971
+          3951
           -
-          3971
+          3951
         </td>
         <td>
           Block
@@ -849,9 +849,9 @@
           54
         </td>
         <td>
-          3971
+          3951
           -
-          3971
+          3951
         </td>
         <td>
           Literal
@@ -870,9 +870,9 @@
           58
         </td>
         <td>
-          4080
+          4060
           -
-          4080
+          4060
         </td>
         <td>
           Apply
@@ -891,9 +891,9 @@
           57
         </td>
         <td>
-          4097
+          4076
           -
-          4097
+          4076
         </td>
         <td>
           Apply
@@ -912,9 +912,9 @@
           59
         </td>
         <td>
-          4168
+          4147
           -
-          4168
+          4147
         </td>
         <td>
           Apply
@@ -933,9 +933,9 @@
           61
         </td>
         <td>
-          4125
+          4104
           -
-          4125
+          4104
         </td>
         <td>
           Apply
@@ -954,9 +954,9 @@
           60
         </td>
         <td>
-          4178
+          4157
           -
-          4178
+          4157
         </td>
         <td>
           ApplyImplicitView
@@ -975,9 +975,9 @@
           64
         </td>
         <td>
-          4687
+          4664
           -
-          4687
+          4664
         </td>
         <td>
           Apply
@@ -996,9 +996,9 @@
           65
         </td>
         <td>
-          4731
+          4708
           -
-          4731
+          4708
         </td>
         <td>
           Apply
@@ -1007,7 +1007,7 @@
           com.influxdb.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)
+          com.influxdb.Arguments.checkNonEmpty(org, &quot;org&quot;)
         </td>
       </tr><tr>
         <td>
@@ -1017,9 +1017,9 @@
           66
         </td>
         <td>
-          4774
+          4747
           -
-          4774
+          4747
         </td>
         <td>
           Apply
@@ -1038,9 +1038,9 @@
           68
         </td>
         <td>
-          4844
+          4815
           -
-          4844
+          4815
         </td>
         <td>
           Apply
@@ -1049,7 +1049,7 @@
           akka.stream.scaladsl.FlowOps.map
         </td>
         <td style="background: #F0ADAD">
-          this.query(query, orgID).map[M](((t: com.influxdb.query.FluxRecord) =&gt; QueryScalaApiImpl.this.resultMapper.toPOJO[M](t, measurementType)))
+          this.query(query, org).map[M](((t: com.influxdb.query.FluxRecord) =&gt; QueryScalaApiImpl.this.resultMapper.toPOJO[M](t, measurementType)))
         </td>
       </tr><tr>
         <td>
@@ -1059,9 +1059,9 @@
           67
         </td>
         <td>
-          4869
+          4840
           -
-          4869
+          4840
         </td>
         <td>
           Apply
@@ -1080,9 +1080,9 @@
           69
         </td>
         <td>
-          5413
+          5374
           -
-          5413
+          5374
         </td>
         <td>
           Apply
@@ -1101,9 +1101,9 @@
           70
         </td>
         <td>
-          5457
+          5418
           -
-          5457
+          5418
         </td>
         <td>
           Apply
@@ -1112,7 +1112,7 @@
           com.influxdb.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)
+          com.influxdb.Arguments.checkNonEmpty(org, &quot;org&quot;)
         </td>
       </tr><tr>
         <td>
@@ -1122,9 +1122,9 @@
           71
         </td>
         <td>
-          5500
+          5457
           -
-          5500
+          5457
         </td>
         <td>
           Apply
@@ -1143,9 +1143,9 @@
           73
         </td>
         <td>
-          5570
+          5525
           -
-          5570
+          5525
         </td>
         <td>
           Apply
@@ -1154,7 +1154,7 @@
           akka.stream.scaladsl.FlowOps.map
         </td>
         <td style="background: #F0ADAD">
-          this.query(query, orgID).map[M](((t: com.influxdb.query.FluxRecord) =&gt; QueryScalaApiImpl.this.resultMapper.toPOJO[M](t, measurementType)))
+          this.query(query, org).map[M](((t: com.influxdb.query.FluxRecord) =&gt; QueryScalaApiImpl.this.resultMapper.toPOJO[M](t, measurementType)))
         </td>
       </tr><tr>
         <td>
@@ -1164,9 +1164,9 @@
           72
         </td>
         <td>
-          5595
+          5550
           -
-          5595
+          5550
         </td>
         <td>
           Apply
@@ -1185,9 +1185,9 @@
           74
         </td>
         <td>
-          5945
+          5898
           -
-          5945
+          5898
         </td>
         <td>
           Apply
@@ -1206,9 +1206,9 @@
           75
         </td>
         <td>
-          5989
+          5942
           -
-          5989
+          5942
         </td>
         <td>
           Apply
@@ -1217,7 +1217,7 @@
           com.influxdb.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)
+          com.influxdb.Arguments.checkNonEmpty(org, &quot;org&quot;)
         </td>
       </tr><tr>
         <td>
@@ -1227,9 +1227,9 @@
           77
         </td>
         <td>
-          6019
+          5968
           -
-          6019
+          5968
         </td>
         <td>
           Apply
@@ -1238,7 +1238,7 @@
           com.influxdb.client.scala.internal.QueryScalaApiImpl.queryRaw
         </td>
         <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.queryRaw(query, com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT, orgID)
+          QueryScalaApiImpl.this.queryRaw(query, com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT, org)
         </td>
       </tr><tr>
         <td>
@@ -1248,9 +1248,9 @@
           76
         </td>
         <td>
-          6050
+          5999
           -
-          6050
+          5999
         </td>
         <td>
           Select
@@ -1269,9 +1269,9 @@
           78
         </td>
         <td>
-          6570
+          6515
           -
-          6570
+          6515
         </td>
         <td>
           Apply
@@ -1290,9 +1290,9 @@
           79
         </td>
         <td>
-          6614
+          6559
           -
-          6614
+          6559
         </td>
         <td>
           Apply
@@ -1301,7 +1301,7 @@
           com.influxdb.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)
+          com.influxdb.Arguments.checkNonEmpty(org, &quot;org&quot;)
         </td>
       </tr><tr>
         <td>
@@ -1311,9 +1311,9 @@
           80
         </td>
         <td>
-          6682
+          6623
           -
-          6682
+          6623
         </td>
         <td>
           Apply
@@ -1332,9 +1332,9 @@
           81
         </td>
         <td>
-          6649
+          6590
           -
-          6649
+          6590
         </td>
         <td>
           Apply
@@ -1343,7 +1343,7 @@
           com.influxdb.client.scala.internal.QueryScalaApiImpl.queryRaw
         </td>
         <td style="background: #F0ADAD">
-          this.queryRaw(new com.influxdb.client.domain.Query().query(query).dialect(dialect), orgID)
+          this.queryRaw(new com.influxdb.client.domain.Query().query(query).dialect(dialect), org)
         </td>
       </tr><tr>
         <td>
@@ -1353,9 +1353,9 @@
           82
         </td>
         <td>
-          7066
+          6997
           -
-          7066
+          6997
         </td>
         <td>
           Apply
@@ -1374,9 +1374,9 @@
           83
         </td>
         <td>
-          7110
+          7041
           -
-          7110
+          7041
         </td>
         <td>
           Apply
@@ -1385,7 +1385,7 @@
           com.influxdb.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(orgID, &quot;orgID&quot;)
+          com.influxdb.Arguments.checkNonEmpty(org, &quot;org&quot;)
         </td>
       </tr><tr>
         <td>
@@ -1395,9 +1395,9 @@
           84
         </td>
         <td>
-          7215
+          7142
           -
-          7215
+          7142
         </td>
         <td>
           Apply
@@ -1406,7 +1406,7 @@
           com.influxdb.client.service.QueryService.postQueryResponseBody
         </td>
         <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, null, orgID, query)
+          QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, org, null, query)
         </td>
       </tr><tr>
         <td>
@@ -1416,9 +1416,9 @@
           101
         </td>
         <td>
-          7299
+          7224
           -
-          7299
+          7224
         </td>
         <td>
           Apply
@@ -1427,7 +1427,7 @@
           akka.stream.scaladsl.FlowOps.flatMapConcat
         </td>
         <td style="background: #F0ADAD">
-          akka.stream.scaladsl.Source.single[com.influxdb.client.domain.Query](query).map[retrofit2.Call[okhttp3.ResponseBody]](((it: com.influxdb.client.domain.Query) =&gt; QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, null, orgID, query))).flatMapConcat[String, Unit](((queryCall: retrofit2.Call[okhttp3.ResponseBody]) =&gt; akka.stream.scaladsl.Source.queue[String](QueryScalaApiImpl.this.bufferSize, QueryScalaApiImpl.this.overflowStrategy).mapMaterializedValue[Unit](((queue: akka.stream.scaladsl.SourceQueueWithComplete[String]) =&gt; {
+          akka.stream.scaladsl.Source.single[com.influxdb.client.domain.Query](query).map[retrofit2.Call[okhttp3.ResponseBody]](((it: com.influxdb.client.domain.Query) =&gt; QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, org, null, query))).flatMapConcat[String, Unit](((queryCall: retrofit2.Call[okhttp3.ResponseBody]) =&gt; akka.stream.scaladsl.Source.queue[String](QueryScalaApiImpl.this.bufferSize, QueryScalaApiImpl.this.overflowStrategy).mapMaterializedValue[Unit](((queue: akka.stream.scaladsl.SourceQueueWithComplete[String]) =&gt; {
   val eventualDone: scala.concurrent.Future[akka.Done] = queue.watchCompletion();
   val onResponse: java.util.function.BiConsumer[com.influxdb.Cancellable,String] = {
     final class $anon extends Object with java.util.function.BiConsumer[com.influxdb.Cancellable,String] {
@@ -1457,9 +1457,9 @@
           86
         </td>
         <td>
-          7356
+          7281
           -
-          7356
+          7281
         </td>
         <td>
           Select
@@ -1478,9 +1478,9 @@
           85
         </td>
         <td>
-          7344
+          7269
           -
-          7344
+          7269
         </td>
         <td>
           Select
@@ -1499,9 +1499,9 @@
           100
         </td>
         <td>
-          7405
+          7330
           -
-          7405
+          7330
         </td>
         <td>
           Apply
@@ -1540,9 +1540,9 @@
           87
         </td>
         <td>
-          7470
+          7395
           -
-          7470
+          7395
         </td>
         <td>
           Apply
@@ -1561,9 +1561,9 @@
           94
         </td>
         <td>
-          7503
+          7428
           -
-          7503
+          7428
         </td>
         <td>
           Apply
@@ -1582,9 +1582,9 @@
           88
         </td>
         <td>
-          7658
+          7583
           -
-          7658
+          7583
         </td>
         <td>
           Select
@@ -1603,9 +1603,9 @@
           89
         </td>
         <td>
-          7709
+          7634
           -
-          7709
+          7634
         </td>
         <td>
           Apply
@@ -1624,9 +1624,9 @@
           90
         </td>
         <td>
-          7709
+          7634
           -
-          7709
+          7634
         </td>
         <td>
           Block
@@ -1645,9 +1645,9 @@
           92
         </td>
         <td>
-          7766
+          7691
           -
-          7766
+          7691
         </td>
         <td>
           Literal
@@ -1666,9 +1666,9 @@
           91
         </td>
         <td>
-          7766
+          7691
           -
-          7766
+          7691
         </td>
         <td>
           Apply
@@ -1687,9 +1687,9 @@
           93
         </td>
         <td>
-          7766
+          7691
           -
-          7766
+          7691
         </td>
         <td>
           Block
@@ -1711,9 +1711,9 @@
           95
         </td>
         <td>
-          7890
+          7814
           -
-          7890
+          7814
         </td>
         <td>
           Apply
@@ -1732,9 +1732,9 @@
           96
         </td>
         <td>
-          7873
+          7798
           -
-          7873
+          7798
         </td>
         <td>
           Apply
@@ -1753,9 +1753,9 @@
           98
         </td>
         <td>
-          7976
+          7900
           -
-          7976
+          7900
         </td>
         <td>
           ApplyImplicitView
@@ -1774,9 +1774,9 @@
           97
         </td>
         <td>
-          7966
+          7890
           -
-          7966
+          7890
         </td>
         <td>
           Apply
@@ -1795,9 +1795,9 @@
           99
         </td>
         <td>
-          7921
+          7845
           -
-          7921
+          7845
         </td>
         <td>
           Apply
