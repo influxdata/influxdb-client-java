@@ -72,14 +72,14 @@ public interface WriteApiBlocking {
      * </p>
      *
      * @param bucket    specifies the destination bucket for writes
-     * @param orgID     specifies the destination organization for writes
+     * @param org       specifies the destination organization for writes
      * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
      * @param record    specifies the record in InfluxDB Line Protocol.
      *                  The {@code record} is considered as one batch unit.
      * @throws InfluxException if a problem occurred during write time-series data into InfluxDB
      */
     void writeRecord(@Nonnull final String bucket,
-                     @Nonnull final String orgID,
+                     @Nonnull final String org,
                      @Nonnull final WritePrecision precision,
                      @Nullable final String record) throws InfluxException;
 
@@ -114,13 +114,13 @@ public interface WriteApiBlocking {
      * </p>
      *
      * @param bucket    specifies the destination bucket for writes
-     * @param orgID     specifies the destination organization for writes
+     * @param org       specifies the destination organization for writes
      * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
      * @param records   specifies the records in InfluxDB Line Protocol
      * @throws InfluxException if a problem occurred during write time-series data into InfluxDB
      */
     void writeRecords(@Nonnull final String bucket,
-                      @Nonnull final String orgID,
+                      @Nonnull final String org,
                       @Nonnull final WritePrecision precision,
                       @Nonnull final List<String> records) throws InfluxException;
 
@@ -153,12 +153,12 @@ public interface WriteApiBlocking {
      * </p>
      *
      * @param bucket specifies the destination bucket for writes
-     * @param orgID  specifies the destination organization for writes
+     * @param org    specifies the destination organization for writes
      * @param point  specifies the Data point to write into bucket
      * @throws InfluxException if a problem occurred during write time-series data into InfluxDB
      */
     void writePoint(@Nonnull final String bucket,
-                    @Nonnull final String orgID,
+                    @Nonnull final String org,
                     @Nullable final Point point) throws InfluxException;
 
     /**
@@ -191,12 +191,12 @@ public interface WriteApiBlocking {
      * </p>
      *
      * @param bucket specifies the destination bucket ID for writes
-     * @param orgID  specifies the destination organization ID for writes
+     * @param org    specifies the destination organization ID for writes
      * @param points specifies the Data points to write into bucket
      * @throws InfluxException if a problem occurred during write time-series data into InfluxDB
      */
     void writePoints(@Nonnull final String bucket,
-                     @Nonnull final String orgID,
+                     @Nonnull final String org,
                      @Nonnull final List<Point> points) throws InfluxException;
 
     /**
@@ -231,14 +231,14 @@ public interface WriteApiBlocking {
      * </p>
      *
      * @param bucket      specifies the destination bucket for writes
-     * @param orgID       specifies the destination organization for writes
+     * @param org         specifies the destination organization for writes
      * @param precision   specifies the precision for the unix timestamps within the body line-protocol (optional)
      * @param <M>         measurement type
      * @param measurement specifies the Measurement to write into bucket
      * @throws InfluxException if a problem occurred during write time-series data into InfluxDB
      */
     <M> void writeMeasurement(@Nonnull final String bucket,
-                              @Nonnull final String orgID,
+                              @Nonnull final String org,
                               @Nonnull final WritePrecision precision,
                               @Nullable final M measurement) throws InfluxException;
 
@@ -274,14 +274,14 @@ public interface WriteApiBlocking {
      * </p>
      *
      * @param bucket       specifies the destination bucket for writes
-     * @param orgID        specifies the destination organization for writes
+     * @param org          specifies the destination organization for writes
      * @param precision    specifies the precision for the unix timestamps within the body line-protocol (optional)
      * @param <M>          measurement type
      * @param measurements specifies the Measurements to write into bucket
      * @throws InfluxException if a problem occurred during write time-series data into InfluxDB
      */
     <M> void writeMeasurements(@Nonnull final String bucket,
-                               @Nonnull final String orgID,
+                               @Nonnull final String org,
                                @Nonnull final WritePrecision precision,
                                @Nonnull final List<M> measurements) throws InfluxException;
 }

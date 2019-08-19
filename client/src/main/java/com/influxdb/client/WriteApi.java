@@ -40,7 +40,6 @@ import com.influxdb.client.write.events.WriteSuccessEvent;
  * <p>
  * The data are formatted in <a href="https://bit.ly/2QL99fu">Line Protocol</a>.
  * <p>
- * //TODO support orgID and orgName (+ query)
  *
  * @author Jakub Bednar (bednar@github) (20/09/2018 10:58)
  */
@@ -50,8 +49,8 @@ public interface WriteApi extends AutoCloseable {
      * Write Line Protocol record into specified bucket.
      *
      * <p>
-     *     The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
-     *     and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
+     * The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
+     * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
      * </p>
      *
      * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
@@ -65,13 +64,13 @@ public interface WriteApi extends AutoCloseable {
      * Write Line Protocol record into specified bucket.
      *
      * @param bucket    specifies the destination bucket for writes
-     * @param orgID     specifies the destination organization for writes
+     * @param org       specifies the destination organization for writes
      * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
      * @param record    specifies the record in InfluxDB Line Protocol.
      *                  The {@code record} is considered as one batch unit.
      */
     void writeRecord(@Nonnull final String bucket,
-                     @Nonnull final String orgID,
+                     @Nonnull final String org,
                      @Nonnull final WritePrecision precision,
                      @Nullable final String record);
 
@@ -79,8 +78,8 @@ public interface WriteApi extends AutoCloseable {
      * Write Line Protocol records into specified bucket.
      *
      * <p>
-     *     The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
-     *     and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
+     * The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
+     * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
      * </p>
      *
      * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
@@ -93,12 +92,12 @@ public interface WriteApi extends AutoCloseable {
      * Write Line Protocol records into specified bucket.
      *
      * @param bucket    specifies the destination bucket for writes
-     * @param orgID     specifies the destination organization for writes
+     * @param org       specifies the destination organization for writes
      * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
      * @param records   specifies the records in InfluxDB Line Protocol
      */
     void writeRecords(@Nonnull final String bucket,
-                      @Nonnull final String orgID,
+                      @Nonnull final String org,
                       @Nonnull final WritePrecision precision,
                       @Nonnull final List<String> records);
 
@@ -106,11 +105,11 @@ public interface WriteApi extends AutoCloseable {
      * Write Data point into specified bucket.
      *
      * <p>
-     *     The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
-     *     and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
+     * The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
+     * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
      * </p>
      *
-     * @param point  specifies the Data point to write into bucket
+     * @param point specifies the Data point to write into bucket
      */
     void writePoint(@Nullable final Point point);
 
@@ -118,19 +117,19 @@ public interface WriteApi extends AutoCloseable {
      * Write Data point into specified bucket.
      *
      * @param bucket specifies the destination bucket for writes
-     * @param orgID  specifies the destination organization for writes
+     * @param org    specifies the destination organization for writes
      * @param point  specifies the Data point to write into bucket
      */
     void writePoint(@Nonnull final String bucket,
-                    @Nonnull final String orgID,
+                    @Nonnull final String org,
                     @Nullable final Point point);
 
     /**
      * Write Data points into specified bucket.
      *
      * <p>
-     *     The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
-     *     and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
+     * The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
+     * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
      * </p>
      *
      * @param points specifies the Data points to write into bucket
@@ -142,19 +141,19 @@ public interface WriteApi extends AutoCloseable {
      * Write Data points into specified bucket.
      *
      * @param bucket specifies the destination bucket ID for writes
-     * @param orgID  specifies the destination organization ID for writes
+     * @param org    specifies the destination organization ID for writes
      * @param points specifies the Data points to write into bucket
      */
     void writePoints(@Nonnull final String bucket,
-                     @Nonnull final String orgID,
+                     @Nonnull final String org,
                      @Nonnull final List<Point> points);
 
     /**
      * Write Measurement into specified bucket.
      *
      * <p>
-     *     The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
-     *     and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
+     * The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
+     * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
      * </p>
      *
      * @param precision   specifies the precision for the unix timestamps within the body line-protocol (optional)
@@ -168,13 +167,13 @@ public interface WriteApi extends AutoCloseable {
      * Write Measurement into specified bucket.
      *
      * @param bucket      specifies the destination bucket for writes
-     * @param orgID       specifies the destination organization for writes
+     * @param org         specifies the destination organization for writes
      * @param precision   specifies the precision for the unix timestamps within the body line-protocol (optional)
      * @param <M>         measurement type
      * @param measurement specifies the Measurement to write into bucket
      */
     <M> void writeMeasurement(@Nonnull final String bucket,
-                              @Nonnull final String orgID,
+                              @Nonnull final String org,
                               @Nonnull final WritePrecision precision,
                               @Nullable final M measurement);
 
@@ -182,8 +181,8 @@ public interface WriteApi extends AutoCloseable {
      * Write Measurements into specified bucket.
      *
      * <p>
-     *     The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
-     *     and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
+     * The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
+     * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
      * </p>
      *
      * @param precision    specifies the precision for the unix timestamps within the body line-protocol (optional)
@@ -197,13 +196,13 @@ public interface WriteApi extends AutoCloseable {
      * Write Measurements into specified bucket.
      *
      * @param bucket       specifies the destination bucket for writes
-     * @param orgID        specifies the destination organization for writes
+     * @param org          specifies the destination organization for writes
      * @param precision    specifies the precision for the unix timestamps within the body line-protocol (optional)
      * @param <M>          measurement type
      * @param measurements specifies the Measurements to write into bucket
      */
     <M> void writeMeasurements(@Nonnull final String bucket,
-                               @Nonnull final String orgID,
+                               @Nonnull final String org,
                                @Nonnull final WritePrecision precision,
                                @Nonnull final List<M> measurements);
 

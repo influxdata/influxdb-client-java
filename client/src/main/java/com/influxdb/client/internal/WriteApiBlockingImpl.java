@@ -75,7 +75,7 @@ final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiB
 
     @Override
     public void writeRecord(@Nonnull final String bucket,
-                            @Nonnull final String orgID,
+                            @Nonnull final String org,
                             @Nonnull final WritePrecision precision,
                             @Nullable final String record) {
 
@@ -83,7 +83,7 @@ final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiB
             return;
         }
 
-        write(bucket, orgID, precision, new BatchWriteDataRecord(record));
+        write(bucket, org, precision, new BatchWriteDataRecord(record));
     }
 
     @Override
@@ -98,16 +98,16 @@ final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiB
 
     @Override
     public void writeRecords(@Nonnull final String bucket,
-                             @Nonnull final String orgID,
+                             @Nonnull final String org,
                              @Nonnull final WritePrecision precision,
                              @Nonnull final List<String> records) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNonEmpty(org, "org");
         Arguments.checkNotNull(precision, "WritePrecision is required");
         Arguments.checkNotNull(records, "records");
 
-        write(bucket, orgID, precision, records.stream().map(BatchWriteDataRecord::new));
+        write(bucket, org, precision, records.stream().map(BatchWriteDataRecord::new));
     }
 
     @Override
@@ -119,12 +119,12 @@ final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiB
     }
 
     @Override
-    public void writePoint(@Nonnull final String bucket, @Nonnull final String orgID, @Nullable final Point point) {
+    public void writePoint(@Nonnull final String bucket, @Nonnull final String org, @Nullable final Point point) {
         if (point == null) {
             return;
         }
 
-        writePoints(bucket, orgID, Collections.singletonList(point));
+        writePoints(bucket, org, Collections.singletonList(point));
     }
 
     @Override
@@ -137,17 +137,17 @@ final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiB
 
     @Override
     public void writePoints(@Nonnull final String bucket,
-                            @Nonnull final String orgID,
+                            @Nonnull final String org,
                             @Nonnull final List<Point> points) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNonEmpty(org, "org");
         Arguments.checkNotNull(points, "points");
 
         points
                 .stream()
                 .filter(Objects::nonNull)
-                .forEach(point -> write(bucket, orgID, point.getPrecision(), new BatchWriteDataPoint(point, options)));
+                .forEach(point -> write(bucket, org, point.getPrecision(), new BatchWriteDataPoint(point, options)));
     }
 
     @Override
@@ -161,7 +161,7 @@ final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiB
 
     @Override
     public <M> void writeMeasurement(@Nonnull final String bucket,
-                                     @Nonnull final String orgID,
+                                     @Nonnull final String org,
                                      @Nonnull final WritePrecision precision,
                                      @Nullable final M measurement) {
 
@@ -169,7 +169,7 @@ final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiB
             return;
         }
 
-        writeMeasurements(bucket, orgID, precision, Collections.singletonList(measurement));
+        writeMeasurements(bucket, org, precision, Collections.singletonList(measurement));
     }
 
     @Override
@@ -183,15 +183,15 @@ final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiB
 
     @Override
     public <M> void writeMeasurements(@Nonnull final String bucket,
-                                      @Nonnull final String orgID,
+                                      @Nonnull final String org,
                                       @Nonnull final WritePrecision precision,
                                       @Nonnull final List<M> measurements) {
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNonEmpty(org, "org");
         Arguments.checkNotNull(precision, "WritePrecision is required");
         Arguments.checkNotNull(measurements, "records");
 
-        write(bucket, orgID, precision, measurements.stream()
+        write(bucket, org, precision, measurements.stream()
                 .map(it -> new BatchWriteDataMeasurement(it, precision, options, measurementMapper)));
     }
 
