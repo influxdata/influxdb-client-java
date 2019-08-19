@@ -244,7 +244,7 @@ public interface InfluxDBClient extends AutoCloseable {
     /**
      * Enable Gzip compress for http request body.
      * <p>
-     * Currently only the "Write" endpoint supports the Gzip compression.
+     * Currently only the "Write" and "Query" endpoints supports the Gzip compression.
      *
      * @return the {@link InfluxDBClient} instance to be able to use it in a fluent manner.
      */

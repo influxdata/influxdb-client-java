@@ -64,7 +64,7 @@ trait InfluxDBClientScala {
   /**
    * Enable Gzip compress for http request body.
    *
-   * Currently only the "Write" endpoint supports the Gzip compression.
+   * Currently only the "Write" and "Query" endpoints supports the Gzip compression.
    *
    * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
    */
