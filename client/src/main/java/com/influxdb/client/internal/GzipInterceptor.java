@@ -40,26 +40,55 @@ import okio.Okio;
  */
 public class GzipInterceptor implements Interceptor {
 
-    private static final Pattern PATTERN = Pattern.compile(".*/write", Pattern.CASE_INSENSITIVE);
+    private static final Pattern CONTENT_PATTERN = Pattern.compile(".*/write", Pattern.CASE_INSENSITIVE);
+    private static final Pattern ACCEPT_PATTERN = Pattern.compile(".*/query", Pattern.CASE_INSENSITIVE);
 
     private AtomicBoolean enabled = new AtomicBoolean(false);
 
+    @Nonnull
     @Override
     public Response intercept(@Nonnull final Chain chain) throws IOException {
-        if (!enabled.get()) {
-            return chain.proceed(chain.request());
-        }
 
         Request request = chain.request();
         RequestBody body = request.body();
-        if (body == null || request.header("Content-Encoding") != null || !supportGzip(request)) {
-            return chain.proceed(request);
+
+        Request enhancedRequest;
+        if (!enabled.get()) {
+            //
+            // Disabled
+            //
+            Request.Builder builder = request.newBuilder();
+            builder = addHeader(request, builder, "Accept-Encoding", "identity");
+            enhancedRequest = builder.build();
+        } else if (CONTENT_PATTERN.matcher(request.url().encodedPath()).matches()) {
+            //
+            // GZIP content
+            //
+            Request.Builder builder = request.newBuilder();
+            if (body == null || request.header("Content-Encoding") != null) {
+                enhancedRequest = builder.build();
+            } else {
+                builder = addHeader(request, builder, "Content-Encoding", "gzip");
+                builder = addHeader(request, builder, "Accept-Encoding", "identity");
+                enhancedRequest = builder.method(request.method(), gzip(body)).build();
+            }
+        } else if (ACCEPT_PATTERN.matcher(request.url().encodedPath()).matches()) {
+            //
+            // GZIP response
+            //
+            // The okhttp3.internal.http.BridgeInterceptor add gzip accept
+            //
+            enhancedRequest = request;
+        } else {
+            //
+            // DISABLED
+            //
+            Request.Builder builder = request.newBuilder();
+            builder = addHeader(request, builder, "Accept-Encoding", "identity");
+            enhancedRequest = builder.build();
         }
 
-        Request compressedRequest = request.newBuilder().header("Content-Encoding", "gzip")
-                .method(request.method(), gzip(body)).build();
-
-        return chain.proceed(compressedRequest);
+        return chain.proceed(enhancedRequest);
     }
 
     public void enableGzip() {
@@ -74,11 +103,22 @@ public class GzipInterceptor implements Interceptor {
         enabled.set(false);
     }
 
-    private boolean supportGzip(@Nonnull final Request request) {
-        return PATTERN.matcher(request.url().encodedPath()).matches();
+    @Nonnull
+    private Request.Builder addHeader(@Nonnull final Request request,
+                                      @Nonnull final Request.Builder builder,
+                                      @Nonnull final String headerName,
+                                      @Nonnull final String headerValue) {
+
+        // do not override specified headers
+        if (request.header(headerName) != null) {
+            return builder;
+        }
+
+        return builder.header(headerName, headerValue);
     }
 
-    private RequestBody gzip(final RequestBody body) {
+    @Nonnull
+    private RequestBody gzip(@Nonnull final RequestBody body) {
         return new RequestBody() {
             @Override
             public MediaType contentType() {

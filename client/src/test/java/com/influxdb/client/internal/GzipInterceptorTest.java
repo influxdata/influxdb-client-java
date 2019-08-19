@@ -67,8 +67,15 @@ class GzipInterceptorTest extends AbstractMockServerTest {
 
         RecordedRequest recordedRequest = newCall("/api/v2/users");
         Assertions.assertThat(recordedRequest.getHeader("Content-Encoding")).isNull();
+        Assertions.assertThat(recordedRequest.getHeader("Accept-Encoding")).doesNotContain("gzip");
+
         recordedRequest = newCall("/api/v2/write");
         Assertions.assertThat(recordedRequest.getHeader("Content-Encoding")).isNull();
+        Assertions.assertThat(recordedRequest.getHeader("Accept-Encoding")).doesNotContain("gzip");
+
+        recordedRequest = newCall("/api/v2/query");
+        Assertions.assertThat(recordedRequest.getHeader("Content-Encoding")).isNull();
+        Assertions.assertThat(recordedRequest.getHeader("Accept-Encoding")).doesNotContain("gzip");
     }
 
     @Test
@@ -78,9 +85,15 @@ class GzipInterceptorTest extends AbstractMockServerTest {
 
         RecordedRequest recordedRequest = newCall("/api/v2/users");
         Assertions.assertThat(recordedRequest.getHeader("Content-Encoding")).isNull();
+        Assertions.assertThat(recordedRequest.getHeader("Accept-Encoding")).doesNotContain("gzip");
 
         recordedRequest = newCall("/api/v2/write");
         Assertions.assertThat(recordedRequest.getHeader("Content-Encoding")).isEqualTo("gzip");
+        Assertions.assertThat(recordedRequest.getHeader("Accept-Encoding")).doesNotContain("gzip");
+
+        recordedRequest = newCall("/api/v2/query");
+        Assertions.assertThat(recordedRequest.getHeader("Content-Encoding")).isNull();
+        Assertions.assertThat(recordedRequest.getHeader("Accept-Encoding")).isEqualTo("gzip");
     }
 
     @Nonnull
