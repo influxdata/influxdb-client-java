@@ -147,7 +147,7 @@ The following options are supported:
 The `readTimeout`, `writeTimeout` and `connectTimeout` supports `ms`, `s` and `m` as unit. Default is milliseconds.
 
 ### Gzip support
-`InfluxDBClientKotlin` does not enable gzip compress for http body by default. If you want to enable gzip to reduce transfer data's size, you can call:
+`InfluxDBClientKotlin` does not enable gzip compress for http requests by default. If you want to enable gzip to reduce transfer data's size, you can call:
 
 ```java
 influxDBClient.enableGzip();

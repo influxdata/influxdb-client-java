@@ -62,7 +62,7 @@ trait InfluxDBClientScala {
   @Nonnull def setLogLevel(@Nonnull logLevel: LogLevel): InfluxDBClientScala
 
   /**
-   * Enable Gzip compress for http request body.
+   * Enable Gzip compress for http requests.
    *
    * Currently only the "Write" and "Query" endpoints supports the Gzip compression.
    *

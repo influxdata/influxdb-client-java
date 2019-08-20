@@ -86,7 +86,7 @@ public interface InfluxDBClientReactive extends AutoCloseable {
     InfluxDBClientReactive setLogLevel(@Nonnull final LogLevel logLevel);
 
     /**
-     * Enable Gzip compress for http request body.
+     * Enable Gzip compress for http requests.
      *
      * Currently only the "Write" and "Query" endpoints supports the Gzip compression.
      *
