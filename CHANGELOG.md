@@ -6,6 +6,9 @@
 ### Bugs
 1. [#48](https://github.com/influxdata/influxdb-client-java/issues/48): The org parameter takes either the ID or Name interchangeably
 
+### API
+1. [#46](https://github.com/influxdata/influxdb-client-java/issues/46): Updated swagger to latest version
+
 ## 1.0.0.M2 [2019-08-01]
 
 ### Breaking Changes

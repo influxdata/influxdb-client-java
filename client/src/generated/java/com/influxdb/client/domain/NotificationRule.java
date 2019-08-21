@@ -15,6 +15,7 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
+import com.influxdb.client.domain.HTTPNotificationRule;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.PagerDutyNotificationRule;
 import com.influxdb.client.domain.SMTPNotificationRule;

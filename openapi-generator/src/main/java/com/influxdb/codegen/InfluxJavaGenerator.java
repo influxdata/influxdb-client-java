@@ -23,6 +23,7 @@ package com.influxdb.codegen;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.collect.Lists;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -365,7 +367,8 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
     public CodegenModel fromModel(final String name, final Schema model, final Map<String, Schema> allDefinitions) {
 
         CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
-
+        codegenModel.setDiscriminator(null);
+        
         if (model.getProperties() != null) {
 
 
@@ -430,7 +433,22 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                                     refSchemaName = ModelUtils.getSimpleRef(oneOf.get$ref());
                                     refSchema = allDefinitions.get(refSchemaName);
                                     if (refSchema instanceof ComposedSchema) {
-                                        refSchema = ((ComposedSchema) refSchema).getAllOf().stream().filter(it -> it instanceof ObjectSchema).findFirst().get();
+                                        List<Schema> schemaList = ((ComposedSchema) refSchema).getAllOf().stream()
+                                                .map(it -> getObjectSchemas(it, allDefinitions))
+                                                .flatMap(Collection::stream)
+                                                .filter(it -> it instanceof ObjectSchema).collect(Collectors.toList());
+                                        refSchema = schemaList
+                                                .stream()
+                                                .filter(it -> {
+                                                    for (Schema ps : (Collection<Schema>) it.getProperties().values()) {
+                                                        if (ps.getEnum() != null && ps.getEnum().size() == 1) {
+                                                            return true;
+                                                        }
+                                                    }
+                                                    return false;
+                                                })
+                                                .findFirst()
+                                                .orElse(schemaList.get(0));
                                     }
                                 }
 
@@ -629,6 +647,22 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         return (CodegenModel) models.get("model");
     }
 
+    private List<Schema> getObjectSchemas(final Schema schema, final Map<String, Schema> allDefinitions) {
+        if (schema instanceof ObjectSchema) {
+            return Lists.newArrayList(schema);
+        } else if (schema instanceof ComposedSchema) {
+            List<Schema> allOf = ((ComposedSchema) schema).getAllOf();
+            if (allOf != null) {
+                return allOf.stream().map(it -> getObjectSchemas(it, allDefinitions))
+                        .flatMap(Collection::stream)
+                        .collect(Collectors.toList());
+            }
+        } else if (schema.get$ref() != null) {
+            return Lists.newArrayList(allDefinitions.get(ModelUtils.getSimpleRef(schema.get$ref())));
+        }
+        return Lists.newArrayList();
+    }
+
     private List<Schema> getOneOf(final Schema schema, final Map<String, Schema> allDefinitions) {
 
         List<Schema> schemas = new ArrayList<>();
@@ -657,17 +691,18 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         List<String> keys = new ArrayList<>();
 
         if (refSchema.getProperties() == null) {
-        	keys.add(schema.getDiscriminator().getPropertyName());
-		} else {
-        refSchema.getProperties().forEach((BiConsumer<String, Schema>) (property, propertySchema) -> {
+            keys.add(schema.getDiscriminator().getPropertyName());
+        } else {
+            refSchema.getProperties().forEach((BiConsumer<String, Schema>) (property, propertySchema) -> {
 
-            if (keys.isEmpty()) {
-                keys.add(property);
+                if (keys.isEmpty()) {
+                    keys.add(property);
 
-            } else if (propertySchema.getEnum() != null && propertySchema.getEnum().size() == 1) {
-                keys.add(property);
-            }
-        });                        }
+                } else if (propertySchema.getEnum() != null && propertySchema.getEnum().size() == 1) {
+                    keys.add(property);
+                }
+            });
+        }
 
         return keys.toArray(new String[0]);
     }

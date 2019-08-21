@@ -20,29 +20,78 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.influxdb.client.domain.Label;
-import com.influxdb.client.domain.NotificationEndpointBase;
-import com.influxdb.client.domain.NotificationEndpointType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.time.OffsetDateTime;
-import java.util.List;
 
 /**
- * PagerDutyNotificationEndpoint
+ * HTTPNotificationRuleBase
  */
 
-public class PagerDutyNotificationEndpoint extends NotificationEndpoint {
+public class HTTPNotificationRuleBase extends HTTPNotificationRule {
+  /**
+   * Gets or Sets type
+   */
+  @JsonAdapter(TypeEnum.Adapter.class)
+  public enum TypeEnum {
+    HTTP("http");
+
+    private String value;
+
+    TypeEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static TypeEnum fromValue(String text) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<TypeEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final TypeEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public TypeEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return TypeEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+
+  public static final String SERIALIZED_NAME_TYPE = "type";
+  @SerializedName(SERIALIZED_NAME_TYPE)
+  private TypeEnum type = TypeEnum.HTTP;
+
   public static final String SERIALIZED_NAME_URL = "url";
   @SerializedName(SERIALIZED_NAME_URL)
   private String url;
 
-  public static final String SERIALIZED_NAME_ROUTING_KEY = "routingKey";
-  @SerializedName(SERIALIZED_NAME_ROUTING_KEY)
-  private String routingKey;
+   /**
+   * Get type
+   * @return type
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public TypeEnum getType() {
+    return type;
+  }
 
-  public PagerDutyNotificationEndpoint url(String url) {
+  public HTTPNotificationRuleBase url(String url) {
     this.url = url;
     return this;
   }
@@ -60,24 +109,6 @@ public class PagerDutyNotificationEndpoint extends NotificationEndpoint {
     this.url = url;
   }
 
-  public PagerDutyNotificationEndpoint routingKey(String routingKey) {
-    this.routingKey = routingKey;
-    return this;
-  }
-
-   /**
-   * Get routingKey
-   * @return routingKey
-  **/
-  @ApiModelProperty(required = true, value = "")
-  public String getRoutingKey() {
-    return routingKey;
-  }
-
-  public void setRoutingKey(String routingKey) {
-    this.routingKey = routingKey;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -87,25 +118,25 @@ public class PagerDutyNotificationEndpoint extends NotificationEndpoint {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    PagerDutyNotificationEndpoint pagerDutyNotificationEndpoint = (PagerDutyNotificationEndpoint) o;
-    return Objects.equals(this.url, pagerDutyNotificationEndpoint.url) &&
-        Objects.equals(this.routingKey, pagerDutyNotificationEndpoint.routingKey) &&
+    HTTPNotificationRuleBase htTPNotificationRuleBase = (HTTPNotificationRuleBase) o;
+    return Objects.equals(this.type, htTPNotificationRuleBase.type) &&
+        Objects.equals(this.url, htTPNotificationRuleBase.url) &&
         super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(url, routingKey, super.hashCode());
+    return Objects.hash(type, url, super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class PagerDutyNotificationEndpoint {\n");
+    sb.append("class HTTPNotificationRuleBase {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    url: ").append(toIndentedString(url)).append("\n");
-    sb.append("    routingKey: ").append(toIndentedString(routingKey)).append("\n");
     sb.append("}");
     return sb.toString();
   }

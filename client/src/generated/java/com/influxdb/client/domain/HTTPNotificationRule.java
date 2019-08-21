@@ -15,9 +15,9 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
+import com.influxdb.client.domain.HTTPNotificationRuleBase;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationRuleBase;
-import com.influxdb.client.domain.PagerDutyNotificationRuleBase;
 import com.influxdb.client.domain.StatusRule;
 import com.influxdb.client.domain.TagRule;
 import com.influxdb.client.domain.TaskStatusType;
@@ -25,10 +25,10 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
- * PagerDutyNotificationRule
+ * HTTPNotificationRule
  */
 
-public class PagerDutyNotificationRule extends NotificationRule {
+public class HTTPNotificationRule extends NotificationRule {
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -50,7 +50,7 @@ public class PagerDutyNotificationRule extends NotificationRule {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class PagerDutyNotificationRule {\n");
+    sb.append("class HTTPNotificationRule {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("}");
     return sb.toString();

@@ -35,7 +35,7 @@ import java.util.List;
  * NotificationRuleBase
  */
 
-public class NotificationRuleBase {
+public class NotificationRuleBase extends SlackNotificationRule {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private String id;
@@ -48,9 +48,9 @@ public class NotificationRuleBase {
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
   private String orgID;
 
-  public static final String SERIALIZED_NAME_AUTHORIZATION_I_D = "authorizationID";
-  @SerializedName(SERIALIZED_NAME_AUTHORIZATION_I_D)
-  private String authorizationID;
+  public static final String SERIALIZED_NAME_OWNER_I_D = "ownerID";
+  @SerializedName(SERIALIZED_NAME_OWNER_I_D)
+  private String ownerID;
 
   public static final String SERIALIZED_NAME_CREATED_AT = "createdAt";
   @SerializedName(SERIALIZED_NAME_CREATED_AT)
@@ -139,7 +139,7 @@ public class NotificationRuleBase {
    * the ID of the organization that owns this notification rule.
    * @return orgID
   **/
-  @ApiModelProperty(value = "the ID of the organization that owns this notification rule.")
+  @ApiModelProperty(required = true, value = "the ID of the organization that owns this notification rule.")
   public String getOrgID() {
     return orgID;
   }
@@ -149,12 +149,12 @@ public class NotificationRuleBase {
   }
 
    /**
-   * The ID of the authorization used to create this notification rule.
-   * @return authorizationID
+   * The ID of creator used to create this notification rule.
+   * @return ownerID
   **/
-  @ApiModelProperty(value = "The ID of the authorization used to create this notification rule.")
-  public String getAuthorizationID() {
-    return authorizationID;
+  @ApiModelProperty(value = "The ID of creator used to create this notification rule.")
+  public String getOwnerID() {
+    return ownerID;
   }
 
    /**
@@ -440,7 +440,7 @@ public class NotificationRuleBase {
     return Objects.equals(this.id, notificationRuleBase.id) &&
         Objects.equals(this.notifyEndpointID, notificationRuleBase.notifyEndpointID) &&
         Objects.equals(this.orgID, notificationRuleBase.orgID) &&
-        Objects.equals(this.authorizationID, notificationRuleBase.authorizationID) &&
+        Objects.equals(this.ownerID, notificationRuleBase.ownerID) &&
         Objects.equals(this.createdAt, notificationRuleBase.createdAt) &&
         Objects.equals(this.updatedAt, notificationRuleBase.updatedAt) &&
         Objects.equals(this.status, notificationRuleBase.status) &&
@@ -455,12 +455,13 @@ public class NotificationRuleBase {
         Objects.equals(this.tagRules, notificationRuleBase.tagRules) &&
         Objects.equals(this.description, notificationRuleBase.description) &&
         Objects.equals(this.statusRules, notificationRuleBase.statusRules) &&
-        Objects.equals(this.labels, notificationRuleBase.labels);
+        Objects.equals(this.labels, notificationRuleBase.labels) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, notifyEndpointID, orgID, authorizationID, createdAt, updatedAt, status, name, sleepUntil, every, offset, cron, runbookLink, limitEvery, limit, tagRules, description, statusRules, labels);
+    return Objects.hash(id, notifyEndpointID, orgID, ownerID, createdAt, updatedAt, status, name, sleepUntil, every, offset, cron, runbookLink, limitEvery, limit, tagRules, description, statusRules, labels, super.hashCode());
   }
 
 
@@ -468,10 +469,11 @@ public class NotificationRuleBase {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class NotificationRuleBase {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    notifyEndpointID: ").append(toIndentedString(notifyEndpointID)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
-    sb.append("    authorizationID: ").append(toIndentedString(authorizationID)).append("\n");
+    sb.append("    ownerID: ").append(toIndentedString(ownerID)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");

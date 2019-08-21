@@ -54,10 +54,6 @@ public class TaskCreateRequest {
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
   private String description;
 
-  public static final String SERIALIZED_NAME_TOKEN = "token";
-  @SerializedName(SERIALIZED_NAME_TOKEN)
-  private String token;
-
   public TaskCreateRequest type(String type) {
     this.type = type;
     return this;
@@ -166,24 +162,6 @@ public class TaskCreateRequest {
     this.description = description;
   }
 
-  public TaskCreateRequest token(String token) {
-    this.token = token;
-    return this;
-  }
-
-   /**
-   * The token to use for authenticating this task when it executes queries.
-   * @return token
-  **/
-  @ApiModelProperty(required = true, value = "The token to use for authenticating this task when it executes queries.")
-  public String getToken() {
-    return token;
-  }
-
-  public void setToken(String token) {
-    this.token = token;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -199,13 +177,12 @@ public class TaskCreateRequest {
         Objects.equals(this.org, taskCreateRequest.org) &&
         Objects.equals(this.status, taskCreateRequest.status) &&
         Objects.equals(this.flux, taskCreateRequest.flux) &&
-        Objects.equals(this.description, taskCreateRequest.description) &&
-        Objects.equals(this.token, taskCreateRequest.token);
+        Objects.equals(this.description, taskCreateRequest.description);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, orgID, org, status, flux, description, token);
+    return Objects.hash(type, orgID, org, status, flux, description);
   }
 
 
@@ -219,7 +196,6 @@ public class TaskCreateRequest {
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    flux: ").append(toIndentedString(flux)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    token: ").append(toIndentedString(token)).append("\n");
     sb.append("}");
     return sb.toString();
   }

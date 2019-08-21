@@ -100,6 +100,7 @@ public interface TasksService {
    * List tasks.
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
+   * @param name only returns tasks with the specified name (optional)
    * @param after returns tasks after specified ID (optional)
    * @param user filter tasks to a specific user ID (optional)
    * @param org filter tasks to a specific organization name (optional)
@@ -109,7 +110,7 @@ public interface TasksService {
    */
   @GET("api/v2/tasks")
   Call<Tasks> getTasks(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("after") String after, @retrofit2.http.Query("user") String user, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("limit") Integer limit
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("name") String name, @retrofit2.http.Query("after") String after, @retrofit2.http.Query("user") String user, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("limit") Integer limit
   );
 
   /**

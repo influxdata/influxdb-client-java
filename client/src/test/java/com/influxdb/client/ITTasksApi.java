@@ -107,7 +107,7 @@ class ITTasksApi extends AbstractITClientTest {
         task.setStatus(TaskStatusType.ACTIVE);
         task.setDescription("Task description");
 
-        task = tasksApi.createTask(task, "my-token");
+        task = tasksApi.createTask(task);
 
         Assertions.assertThat(task).isNotNull();
         Assertions.assertThat(task.getId()).isNotBlank();
@@ -137,7 +137,7 @@ class ITTasksApi extends AbstractITClientTest {
         task.setFlux(flux);
         task.setStatus(TaskStatusType.ACTIVE);
 
-        task = tasksApi.createTask(task, "my-token");
+        task = tasksApi.createTask(task);
 
         Assertions.assertThat(task).isNotNull();
         Assertions.assertThat(task.getOffset()).isEqualTo("30m");
@@ -148,7 +148,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1h", organization, "my-token");
+        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1h", organization);
 
         Assertions.assertThat(task).isNotNull();
         Assertions.assertThat(task.getId()).isNotBlank();
@@ -165,7 +165,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = tasksApi.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", organization, "my-token");
+        Task task = tasksApi.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", organization);
 
         Assertions.assertThat(task).isNotNull();
         Assertions.assertThat(task.getId()).isNotBlank();
@@ -190,7 +190,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = tasksApi.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", organization.getId(), "my-token");
+        Task task = tasksApi.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", organization.getId());
 
         Task taskByID = tasksApi.findTaskByID(task.getId());
         LOG.info("TaskByID: " + taskByID);
@@ -221,7 +221,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         int size = tasksApi.findTasks().size();
 
-        Task everyTask = tasksApi.createTaskEvery(generateName("it task"), TASK_FLUX, "2h", organization.getId(), "my-token");
+        Task everyTask = tasksApi.createTaskEvery(generateName("it task"), TASK_FLUX, "2h", organization.getId());
         Assertions.assertThat(everyTask).isNotNull();
 
         List<Task> tasks = tasksApi.findTasks();
@@ -236,7 +236,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         User taskUser = influxDBClient.getUsersApi().createUser(generateName("TaskUser"));
 
-        tasksApi.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization, "my-token");
+        tasksApi.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization);
 
         List<Task> tasks = tasksApi.findTasksByUser(taskUser);
         Assertions.assertThat(tasks).hasSize(1);
@@ -254,7 +254,7 @@ class ITTasksApi extends AbstractITClientTest {
         influxDBClient = InfluxDBClientFactory.create(influxDB_URL, authorization.getToken().toCharArray());
         tasksApi = influxDBClient.getTasksApi();
 
-        tasksApi.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", taskOrganization, "my-token");
+        tasksApi.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", taskOrganization);
 
         List<Task> tasks = tasksApi.findTasksByOrganization(taskOrganization);
         Assertions.assertThat(tasks).hasSize(1);
@@ -267,8 +267,8 @@ class ITTasksApi extends AbstractITClientTest {
     //TODO https://github.com/influxdata/influxdb/issues/13577
     void findTasksAfterSpecifiedID() {
 
-        Task task1 = tasksApi.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization, "my-token");
-        Task task2 = tasksApi.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization, "my-token");
+        Task task1 = tasksApi.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization);
+        Task task2 = tasksApi.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization);
 
         List<Task> tasks = tasksApi.findTasks(task1.getId(), null, null);
 
@@ -279,7 +279,7 @@ class ITTasksApi extends AbstractITClientTest {
     @Test
     void deleteTask() {
 
-        Task createdTask = tasksApi.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization, "my-token");
+        Task createdTask = tasksApi.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization);
         Assertions.assertThat(createdTask).isNotNull();
 
         Task foundTask = tasksApi.findTaskByID(createdTask.getId());
@@ -297,7 +297,7 @@ class ITTasksApi extends AbstractITClientTest {
     void updateTask() {
 
         String taskName = generateName("it task");
-        Task cronTask = tasksApi.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", organization, "my-token");
+        Task cronTask = tasksApi.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", organization);
 
         String flux = "option task = {\n"
                 + "    name: \"" + taskName + "\",\n"
@@ -328,7 +328,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         UsersApi usersApi = influxDBClient.getUsersApi();
 
-        Task task = tasksApi.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", organization, "my-token");
+        Task task = tasksApi.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", organization);
 
         List<ResourceMember> members = tasksApi.getMembers(task);
         Assertions.assertThat(members).hasSize(0);
@@ -358,7 +358,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         UsersApi usersApi = influxDBClient.getUsersApi();
 
-        Task task = tasksApi.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", organization, "my-token");
+        Task task = tasksApi.createTaskCron(generateName("task"), TASK_FLUX, "0 2 * * *", organization);
 
         List<ResourceOwner> owners = tasksApi.getOwners(task);
         Assertions.assertThat(owners).hasSize(1);
@@ -388,7 +388,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1s", organization, "my-token");
+        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
 
@@ -426,7 +426,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1s", organization, "my-token");
+        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
 
@@ -443,7 +443,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1s", organization, "my-token");
+        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
 
@@ -461,7 +461,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1s", organization, "my-token");
+        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
 
@@ -493,7 +493,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "5s", organization, "my-token");
+        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "5s", organization);
 
         Assertions.assertThatThrownBy(() -> tasksApi.getRun(task.getId(), "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
@@ -503,7 +503,7 @@ class ITTasksApi extends AbstractITClientTest {
     @Test
     void runTaskManually() {
 
-        Task task = tasksApi.createTaskEvery(generateName("it task"), TASK_FLUX, "1s", organization, "my-token");
+        Task task = tasksApi.createTaskEvery(generateName("it task"), TASK_FLUX, "1s", organization);
 
         Run run = tasksApi.runManually(task);
 
@@ -524,7 +524,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1s", organization, "my-token");
+        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
 
@@ -545,7 +545,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "5s", organization, "my-token");
+        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "5s", organization);
 
         Assertions.assertThatThrownBy(() -> tasksApi.retryRun(task.getId(), "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
@@ -557,7 +557,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "3s", organization, "my-token");
+        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "3s", organization);
 
         Thread.sleep(6_000);
 
@@ -589,7 +589,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1s", organization, "my-token");
+        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
 
@@ -609,7 +609,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "5s", organization, "my-token");
+        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "5s", organization);
 
         Assertions.assertThatThrownBy(() -> tasksApi.getRunLogs(task.getId(), "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
@@ -621,7 +621,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         String taskName = generateName("it task");
 
-        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1s", organization, "my-token");
+        Task task = tasksApi.createTaskEvery(taskName, TASK_FLUX, "1s", organization);
 
         Thread.sleep(5_000);
 
@@ -647,7 +647,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         LabelsApi labelsApi = influxDBClient.getLabelsApi();
 
-        Task task = tasksApi.createTaskEvery(generateName("it task"), TASK_FLUX, "1s", organization, "my-token");
+        Task task = tasksApi.createTaskEvery(generateName("it task"), TASK_FLUX, "1s", organization);
 
         Map<String, String> properties = new HashMap<>();
         properties.put("color", "green");
@@ -684,7 +684,7 @@ class ITTasksApi extends AbstractITClientTest {
     @Test
     void cloneTask() {
 
-        Task source = tasksApi.createTaskEvery(generateName("it task"), TASK_FLUX, "1s", organization, "my-token");
+        Task source = tasksApi.createTaskEvery(generateName("it task"), TASK_FLUX, "1s", organization);
 
         Map<String, String> properties = new HashMap<>();
         properties.put("color", "green");
@@ -694,7 +694,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         tasksApi.addLabel(label, source);
 
-        Task cloned = tasksApi.cloneTask(source.getId(), "my-token");
+        Task cloned = tasksApi.cloneTask(source.getId());
 
         Assertions.assertThat(cloned.getName()).isEqualTo(source.getName());
         Assertions.assertThat(cloned.getOrgID()).isEqualTo(organization.getId());
@@ -710,7 +710,7 @@ class ITTasksApi extends AbstractITClientTest {
 
     @Test
     void cloneTaskNotFound() {
-        Assertions.assertThatThrownBy(() -> tasksApi.cloneTask("020f755c3c082000", "my-token"))
+        Assertions.assertThatThrownBy(() -> tasksApi.cloneTask("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("failed to find task");
     }

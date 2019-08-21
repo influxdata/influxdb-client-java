@@ -22,6 +22,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationEndpointBase;
+import com.influxdb.client.domain.NotificationEndpointType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -33,62 +34,48 @@ import java.util.List;
  */
 
 public class SlackNotificationEndpoint extends NotificationEndpoint {
-  /**
-   * Gets or Sets name
-   */
-  @JsonAdapter(NameEnum.Adapter.class)
-  public enum NameEnum {
-    SLACK("slack");
+  public static final String SERIALIZED_NAME_URL = "url";
+  @SerializedName(SERIALIZED_NAME_URL)
+  private String url;
 
-    private String value;
+  public static final String SERIALIZED_NAME_TOKEN = "token";
+  @SerializedName(SERIALIZED_NAME_TOKEN)
+  private String token;
 
-    NameEnum(String value) {
-      this.value = value;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static NameEnum fromValue(String text) {
-      for (NameEnum b : NameEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    public static class Adapter extends TypeAdapter<NameEnum> {
-      @Override
-      public void write(final JsonWriter jsonWriter, final NameEnum enumeration) throws IOException {
-        jsonWriter.value(enumeration.getValue());
-      }
-
-      @Override
-      public NameEnum read(final JsonReader jsonReader) throws IOException {
-        String value = jsonReader.nextString();
-        return NameEnum.fromValue(String.valueOf(value));
-      }
-    }
+  public SlackNotificationEndpoint url(String url) {
+    this.url = url;
+    return this;
   }
 
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private NameEnum name = NameEnum.SLACK;
+   /**
+   * Get url
+   * @return url
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+  public SlackNotificationEndpoint token(String token) {
+    this.token = token;
+    return this;
+  }
 
    /**
-   * Get name
-   * @return name
+   * Get token
+   * @return token
   **/
-  @ApiModelProperty(value = "")
-  public NameEnum getName() {
-    return name;
+  @ApiModelProperty(required = true, value = "")
+  public String getToken() {
+    return token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
   }
 
 
@@ -101,13 +88,14 @@ public class SlackNotificationEndpoint extends NotificationEndpoint {
       return false;
     }
     SlackNotificationEndpoint slackNotificationEndpoint = (SlackNotificationEndpoint) o;
-    return Objects.equals(this.name, slackNotificationEndpoint.name) &&
+    return Objects.equals(this.url, slackNotificationEndpoint.url) &&
+        Objects.equals(this.token, slackNotificationEndpoint.token) &&
         super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, super.hashCode());
+    return Objects.hash(url, token, super.hashCode());
   }
 
 
@@ -116,7 +104,8 @@ public class SlackNotificationEndpoint extends NotificationEndpoint {
     StringBuilder sb = new StringBuilder();
     sb.append("class SlackNotificationEndpoint {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    url: ").append(toIndentedString(url)).append("\n");
+    sb.append("    token: ").append(toIndentedString(token)).append("\n");
     sb.append("}");
     return sb.toString();
   }

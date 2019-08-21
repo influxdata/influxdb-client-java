@@ -176,6 +176,9 @@ public class NotificationRules {
       if (Arrays.equals(new String[]{ "pagerduty" }, types)) {
         return context.deserialize(json, PagerDutyNotificationRule.class);
       }
+      if (Arrays.equals(new String[]{ "http" }, types)) {
+        return context.deserialize(json, HTTPNotificationRule.class);
+      }
 
       return context.deserialize(json, Object.class);
     }

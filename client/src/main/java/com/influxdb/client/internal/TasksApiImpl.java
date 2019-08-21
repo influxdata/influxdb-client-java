@@ -127,7 +127,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
                                 @Nullable final String userID,
                                 @Nullable final String orgID) {
 
-        Call<Tasks> call = service.getTasks(null, afterID, userID, null, orgID, null);
+        Call<Tasks> call = service.getTasks(null, null, afterID, userID, null, orgID, null);
 
         //TODO https://github.com/influxdata/influxdb/issues/13576
         Tasks tasks = execute(call, InternalServerErrorException.class, new Tasks());
@@ -138,17 +138,15 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
     @Nonnull
     @Override
-    public Task createTask(@Nonnull final Task task, @Nonnull final String token) {
+    public Task createTask(@Nonnull final Task task) {
 
         Arguments.checkNotNull(task, "task");
-        Arguments.checkNonEmpty(token, "token");
 
         TaskCreateRequest request = new TaskCreateRequest();
         request.setFlux(task.getFlux());
         request.setOrgID(task.getOrgID());
         request.setOrg(task.getOrg());
         request.setDescription(task.getDescription());
-        request.setToken(token);
 
         if (task.getStatus() != null) {
             request.setStatus(TaskStatusType.fromValue(task.getStatus().getValue()));
@@ -173,18 +171,16 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
     public Task createTaskCron(@Nonnull final String name,
                                @Nonnull final String flux,
                                @Nonnull final String cron,
-                               @Nonnull final Organization organization,
-                               @Nonnull final String token) {
+                               @Nonnull final Organization organization) {
 
         Arguments.checkNonEmpty(name, "name of the task");
         Arguments.checkNonEmpty(flux, "Flux script to run");
         Arguments.checkNonEmpty(cron, "cron expression");
         Arguments.checkNotNull(organization, "organization");
-        Arguments.checkNonEmpty(token, "token");
 
         Task task = createTask(name, flux, null, cron, organization.getId());
 
-        return createTask(task, token);
+        return createTask(task);
     }
 
     @Nonnull
@@ -192,18 +188,16 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
     public Task createTaskCron(@Nonnull final String name,
                                @Nonnull final String flux,
                                @Nonnull final String cron,
-                               @Nonnull final String orgID,
-                               @Nonnull final String token) {
+                               @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(name, "name of the task");
         Arguments.checkNonEmpty(flux, "Flux script to run");
         Arguments.checkNonEmpty(cron, "cron expression");
         Arguments.checkNonEmpty(orgID, "Organization ID");
-        Arguments.checkNonEmpty(token, "token");
 
         Task task = createTask(name, flux, null, cron, orgID);
 
-        return createTask(task, token);
+        return createTask(task);
     }
 
     @Nonnull
@@ -211,18 +205,16 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
     public Task createTaskEvery(@Nonnull final String name,
                                 @Nonnull final String flux,
                                 @Nonnull final String every,
-                                @Nonnull final Organization organization,
-                                @Nonnull final String token) {
+                                @Nonnull final Organization organization) {
 
         Arguments.checkNonEmpty(name, "name of the task");
         Arguments.checkNonEmpty(flux, "Flux script to run");
         Arguments.checkNonEmpty(every, "every");
         Arguments.checkNotNull(organization, "organization");
-        Arguments.checkNonEmpty(token, "token");
 
         Task task = createTask(name, flux, every, null, organization.getId());
 
-        return createTask(task, token);
+        return createTask(task);
     }
 
     @Nonnull
@@ -230,18 +222,16 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
     public Task createTaskEvery(@Nonnull final String name,
                                 @Nonnull final String flux,
                                 @Nonnull final String every,
-                                @Nonnull final String orgID,
-                                @Nonnull final String token) {
+                                @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(name, "name of the task");
         Arguments.checkNonEmpty(flux, "Flux script to run");
         Arguments.checkNonEmpty(every, "every expression");
         Arguments.checkNonEmpty(orgID, "Organization ID");
-        Arguments.checkNonEmpty(token, "token");
 
         Task task = createTask(name, flux, every, null, orgID);
 
-        return createTask(task, token);
+        return createTask(task);
     }
 
 
@@ -295,22 +285,20 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
     @Nonnull
     @Override
-    public Task cloneTask(@Nonnull final String taskID, @Nonnull final String token) {
+    public Task cloneTask(@Nonnull final String taskID) {
 
         Arguments.checkNonEmpty(taskID, "taskID");
-        Arguments.checkNonEmpty(token, "token");
 
         Task task = findTaskByID(taskID);
 
-        return cloneTask(task, token);
+        return cloneTask(task);
     }
 
     @Nonnull
     @Override
-    public Task cloneTask(@Nonnull final Task task, @Nonnull final String token) {
+    public Task cloneTask(@Nonnull final Task task) {
 
         Arguments.checkNotNull(task, "task");
-        Arguments.checkNonEmpty(token, "token");
 
         Task cloned = new Task();
         cloned.setName(task.getName());
@@ -318,7 +306,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         cloned.setFlux(task.getFlux());
         cloned.setStatus(TaskStatusType.ACTIVE);
 
-        Task created = createTask(cloned, token);
+        Task created = createTask(cloned);
 
         getLabels(task).forEach(label -> addLabel(label, created));
 

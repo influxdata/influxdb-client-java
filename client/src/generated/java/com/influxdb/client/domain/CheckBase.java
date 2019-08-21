@@ -48,9 +48,9 @@ public class CheckBase {
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
   private String orgID;
 
-  public static final String SERIALIZED_NAME_AUTHORIZATION_I_D = "authorizationID";
-  @SerializedName(SERIALIZED_NAME_AUTHORIZATION_I_D)
-  private String authorizationID;
+  public static final String SERIALIZED_NAME_OWNER_I_D = "ownerID";
+  @SerializedName(SERIALIZED_NAME_OWNER_I_D)
+  private String ownerID;
 
   public static final String SERIALIZED_NAME_CREATED_AT = "createdAt";
   @SerializedName(SERIALIZED_NAME_CREATED_AT)
@@ -142,12 +142,12 @@ public class CheckBase {
   }
 
    /**
-   * The ID of the authorization used to create this check.
-   * @return authorizationID
+   * The ID of creator used to create this check.
+   * @return ownerID
   **/
-  @ApiModelProperty(value = "The ID of the authorization used to create this check.")
-  public String getAuthorizationID() {
-    return authorizationID;
+  @ApiModelProperty(value = "The ID of creator used to create this check.")
+  public String getOwnerID() {
+    return ownerID;
   }
 
    /**
@@ -359,7 +359,7 @@ public class CheckBase {
     return Objects.equals(this.id, checkBase.id) &&
         Objects.equals(this.name, checkBase.name) &&
         Objects.equals(this.orgID, checkBase.orgID) &&
-        Objects.equals(this.authorizationID, checkBase.authorizationID) &&
+        Objects.equals(this.ownerID, checkBase.ownerID) &&
         Objects.equals(this.createdAt, checkBase.createdAt) &&
         Objects.equals(this.updatedAt, checkBase.updatedAt) &&
         Objects.equals(this.query, checkBase.query) &&
@@ -375,7 +375,7 @@ public class CheckBase {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, orgID, authorizationID, createdAt, updatedAt, query, status, every, offset, cron, tags, description, statusMessageTemplate, labels);
+    return Objects.hash(id, name, orgID, ownerID, createdAt, updatedAt, query, status, every, offset, cron, tags, description, statusMessageTemplate, labels);
   }
 
 
@@ -386,7 +386,7 @@ public class CheckBase {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
-    sb.append("    authorizationID: ").append(toIndentedString(authorizationID)).append("\n");
+    sb.append("    ownerID: ").append(toIndentedString(ownerID)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");

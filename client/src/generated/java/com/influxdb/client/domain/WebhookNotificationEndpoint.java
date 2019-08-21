@@ -22,6 +22,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationEndpointBase;
+import com.influxdb.client.domain.NotificationEndpointType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -33,16 +34,36 @@ import java.util.List;
  */
 
 public class WebhookNotificationEndpoint extends NotificationEndpoint {
+  public static final String SERIALIZED_NAME_URL = "url";
+  @SerializedName(SERIALIZED_NAME_URL)
+  private String url;
+
+  public static final String SERIALIZED_NAME_USERNAME = "username";
+  @SerializedName(SERIALIZED_NAME_USERNAME)
+  private String username;
+
+  public static final String SERIALIZED_NAME_PASSWORD = "password";
+  @SerializedName(SERIALIZED_NAME_PASSWORD)
+  private String password;
+
+  public static final String SERIALIZED_NAME_TOKEN = "token";
+  @SerializedName(SERIALIZED_NAME_TOKEN)
+  private String token;
+
   /**
-   * Gets or Sets name
+   * Gets or Sets method
    */
-  @JsonAdapter(NameEnum.Adapter.class)
-  public enum NameEnum {
-    WEBHOOK("webhook");
+  @JsonAdapter(MethodEnum.Adapter.class)
+  public enum MethodEnum {
+    POST("POST"),
+    
+    GET("GET"),
+    
+    PUT("PUT");
 
     private String value;
 
-    NameEnum(String value) {
+    MethodEnum(String value) {
       this.value = value;
     }
 
@@ -55,8 +76,8 @@ public class WebhookNotificationEndpoint extends NotificationEndpoint {
       return String.valueOf(value);
     }
 
-    public static NameEnum fromValue(String text) {
-      for (NameEnum b : NameEnum.values()) {
+    public static MethodEnum fromValue(String text) {
+      for (MethodEnum b : MethodEnum.values()) {
         if (String.valueOf(b.value).equals(text)) {
           return b;
         }
@@ -64,31 +85,205 @@ public class WebhookNotificationEndpoint extends NotificationEndpoint {
       return null;
     }
 
-    public static class Adapter extends TypeAdapter<NameEnum> {
+    public static class Adapter extends TypeAdapter<MethodEnum> {
       @Override
-      public void write(final JsonWriter jsonWriter, final NameEnum enumeration) throws IOException {
+      public void write(final JsonWriter jsonWriter, final MethodEnum enumeration) throws IOException {
         jsonWriter.value(enumeration.getValue());
       }
 
       @Override
-      public NameEnum read(final JsonReader jsonReader) throws IOException {
+      public MethodEnum read(final JsonReader jsonReader) throws IOException {
         String value = jsonReader.nextString();
-        return NameEnum.fromValue(String.valueOf(value));
+        return MethodEnum.fromValue(String.valueOf(value));
       }
     }
   }
 
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private NameEnum name = NameEnum.WEBHOOK;
+  public static final String SERIALIZED_NAME_METHOD = "method";
+  @SerializedName(SERIALIZED_NAME_METHOD)
+  private MethodEnum method;
+
+  /**
+   * Gets or Sets authmethod
+   */
+  @JsonAdapter(AuthmethodEnum.Adapter.class)
+  public enum AuthmethodEnum {
+    NONE("none"),
+    
+    BASIC("basic"),
+    
+    BEARER("bearer");
+
+    private String value;
+
+    AuthmethodEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static AuthmethodEnum fromValue(String text) {
+      for (AuthmethodEnum b : AuthmethodEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<AuthmethodEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final AuthmethodEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public AuthmethodEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return AuthmethodEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+
+  public static final String SERIALIZED_NAME_AUTHMETHOD = "authmethod";
+  @SerializedName(SERIALIZED_NAME_AUTHMETHOD)
+  private AuthmethodEnum authmethod;
+
+  public static final String SERIALIZED_NAME_CONTENT_TEMPLATE = "contentTemplate";
+  @SerializedName(SERIALIZED_NAME_CONTENT_TEMPLATE)
+  private String contentTemplate;
+
+  public WebhookNotificationEndpoint url(String url) {
+    this.url = url;
+    return this;
+  }
 
    /**
-   * Get name
-   * @return name
+   * Get url
+   * @return url
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+  public WebhookNotificationEndpoint username(String username) {
+    this.username = username;
+    return this;
+  }
+
+   /**
+   * Get username
+   * @return username
   **/
   @ApiModelProperty(value = "")
-  public NameEnum getName() {
-    return name;
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public WebhookNotificationEndpoint password(String password) {
+    this.password = password;
+    return this;
+  }
+
+   /**
+   * Get password
+   * @return password
+  **/
+  @ApiModelProperty(value = "")
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public WebhookNotificationEndpoint token(String token) {
+    this.token = token;
+    return this;
+  }
+
+   /**
+   * Get token
+   * @return token
+  **/
+  @ApiModelProperty(value = "")
+  public String getToken() {
+    return token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
+  }
+
+  public WebhookNotificationEndpoint method(MethodEnum method) {
+    this.method = method;
+    return this;
+  }
+
+   /**
+   * Get method
+   * @return method
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public MethodEnum getMethod() {
+    return method;
+  }
+
+  public void setMethod(MethodEnum method) {
+    this.method = method;
+  }
+
+  public WebhookNotificationEndpoint authmethod(AuthmethodEnum authmethod) {
+    this.authmethod = authmethod;
+    return this;
+  }
+
+   /**
+   * Get authmethod
+   * @return authmethod
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public AuthmethodEnum getAuthmethod() {
+    return authmethod;
+  }
+
+  public void setAuthmethod(AuthmethodEnum authmethod) {
+    this.authmethod = authmethod;
+  }
+
+  public WebhookNotificationEndpoint contentTemplate(String contentTemplate) {
+    this.contentTemplate = contentTemplate;
+    return this;
+  }
+
+   /**
+   * Get contentTemplate
+   * @return contentTemplate
+  **/
+  @ApiModelProperty(value = "")
+  public String getContentTemplate() {
+    return contentTemplate;
+  }
+
+  public void setContentTemplate(String contentTemplate) {
+    this.contentTemplate = contentTemplate;
   }
 
 
@@ -101,13 +296,19 @@ public class WebhookNotificationEndpoint extends NotificationEndpoint {
       return false;
     }
     WebhookNotificationEndpoint webhookNotificationEndpoint = (WebhookNotificationEndpoint) o;
-    return Objects.equals(this.name, webhookNotificationEndpoint.name) &&
+    return Objects.equals(this.url, webhookNotificationEndpoint.url) &&
+        Objects.equals(this.username, webhookNotificationEndpoint.username) &&
+        Objects.equals(this.password, webhookNotificationEndpoint.password) &&
+        Objects.equals(this.token, webhookNotificationEndpoint.token) &&
+        Objects.equals(this.method, webhookNotificationEndpoint.method) &&
+        Objects.equals(this.authmethod, webhookNotificationEndpoint.authmethod) &&
+        Objects.equals(this.contentTemplate, webhookNotificationEndpoint.contentTemplate) &&
         super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, super.hashCode());
+    return Objects.hash(url, username, password, token, method, authmethod, contentTemplate, super.hashCode());
   }
 
 
@@ -116,7 +317,13 @@ public class WebhookNotificationEndpoint extends NotificationEndpoint {
     StringBuilder sb = new StringBuilder();
     sb.append("class WebhookNotificationEndpoint {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    url: ").append(toIndentedString(url)).append("\n");
+    sb.append("    username: ").append(toIndentedString(username)).append("\n");
+    sb.append("    password: ").append(toIndentedString(password)).append("\n");
+    sb.append("    token: ").append(toIndentedString(token)).append("\n");
+    sb.append("    method: ").append(toIndentedString(method)).append("\n");
+    sb.append("    authmethod: ").append(toIndentedString(authmethod)).append("\n");
+    sb.append("    contentTemplate: ").append(toIndentedString(contentTemplate)).append("\n");
     sb.append("}");
     return sb.toString();
   }

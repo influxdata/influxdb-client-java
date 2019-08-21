@@ -58,10 +58,6 @@ public class TaskUpdateRequest {
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
   private String description;
 
-  public static final String SERIALIZED_NAME_TOKEN = "token";
-  @SerializedName(SERIALIZED_NAME_TOKEN)
-  private String token;
-
   public TaskUpdateRequest status(TaskStatusType status) {
     this.status = status;
     return this;
@@ -188,24 +184,6 @@ public class TaskUpdateRequest {
     this.description = description;
   }
 
-  public TaskUpdateRequest token(String token) {
-    this.token = token;
-    return this;
-  }
-
-   /**
-   * Override the existing token associated with the task.
-   * @return token
-  **/
-  @ApiModelProperty(value = "Override the existing token associated with the task.")
-  public String getToken() {
-    return token;
-  }
-
-  public void setToken(String token) {
-    this.token = token;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -222,13 +200,12 @@ public class TaskUpdateRequest {
         Objects.equals(this.every, taskUpdateRequest.every) &&
         Objects.equals(this.cron, taskUpdateRequest.cron) &&
         Objects.equals(this.offset, taskUpdateRequest.offset) &&
-        Objects.equals(this.description, taskUpdateRequest.description) &&
-        Objects.equals(this.token, taskUpdateRequest.token);
+        Objects.equals(this.description, taskUpdateRequest.description);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(status, flux, name, every, cron, offset, description, token);
+    return Objects.hash(status, flux, name, every, cron, offset, description);
   }
 
 
@@ -243,7 +220,6 @@ public class TaskUpdateRequest {
     sb.append("    cron: ").append(toIndentedString(cron)).append("\n");
     sb.append("    offset: ").append(toIndentedString(offset)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    token: ").append(toIndentedString(token)).append("\n");
     sb.append("}");
     return sb.toString();
   }

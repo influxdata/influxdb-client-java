@@ -21,6 +21,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.NotificationEndpointType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -56,6 +57,10 @@ public class NotificationEndpointBase {
   public static final String SERIALIZED_NAME_DESCRIPTION = "description";
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
   private String description;
+
+  public static final String SERIALIZED_NAME_NAME = "name";
+  @SerializedName(SERIALIZED_NAME_NAME)
+  private String name;
 
   /**
    * The status of the endpoint.
@@ -111,6 +116,10 @@ public class NotificationEndpointBase {
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)
   private List<Label> labels = new ArrayList<>();
+
+  public static final String SERIALIZED_NAME_TYPE = "type";
+  @SerializedName(SERIALIZED_NAME_TYPE)
+  private NotificationEndpointType type = null;
 
   public NotificationEndpointBase id(String id) {
     this.id = id;
@@ -202,6 +211,24 @@ public class NotificationEndpointBase {
     this.description = description;
   }
 
+  public NotificationEndpointBase name(String name) {
+    this.name = name;
+    return this;
+  }
+
+   /**
+   * Get name
+   * @return name
+  **/
+  @ApiModelProperty(value = "")
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
   public NotificationEndpointBase status(StatusEnum status) {
     this.status = status;
     return this;
@@ -246,6 +273,24 @@ public class NotificationEndpointBase {
     this.labels = labels;
   }
 
+  public NotificationEndpointBase type(NotificationEndpointType type) {
+    this.type = type;
+    return this;
+  }
+
+   /**
+   * Get type
+   * @return type
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public NotificationEndpointType getType() {
+    return type;
+  }
+
+  public void setType(NotificationEndpointType type) {
+    this.type = type;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -262,13 +307,15 @@ public class NotificationEndpointBase {
         Objects.equals(this.createdAt, notificationEndpointBase.createdAt) &&
         Objects.equals(this.updatedAt, notificationEndpointBase.updatedAt) &&
         Objects.equals(this.description, notificationEndpointBase.description) &&
+        Objects.equals(this.name, notificationEndpointBase.name) &&
         Objects.equals(this.status, notificationEndpointBase.status) &&
-        Objects.equals(this.labels, notificationEndpointBase.labels);
+        Objects.equals(this.labels, notificationEndpointBase.labels) &&
+        Objects.equals(this.type, notificationEndpointBase.type);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, orgID, userID, createdAt, updatedAt, description, status, labels);
+    return Objects.hash(id, orgID, userID, createdAt, updatedAt, description, name, status, labels, type);
   }
 
 
@@ -282,8 +329,10 @@ public class NotificationEndpointBase {
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("}");
     return sb.toString();
   }

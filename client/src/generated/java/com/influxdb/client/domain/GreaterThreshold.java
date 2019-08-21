@@ -20,29 +20,27 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.influxdb.client.domain.Label;
-import com.influxdb.client.domain.NotificationEndpointBase;
+import com.influxdb.client.domain.CheckStatusLevel;
+import com.influxdb.client.domain.ThresholdBase;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.time.OffsetDateTime;
-import java.util.List;
 
 /**
- * SMTPNotificationEndpoint
+ * GreaterThreshold
  */
 
-public class SMTPNotificationEndpoint extends NotificationEndpoint {
+public class GreaterThreshold extends Threshold {
   /**
-   * Gets or Sets name
+   * Gets or Sets type
    */
-  @JsonAdapter(NameEnum.Adapter.class)
-  public enum NameEnum {
-    SMTP("smtp");
+  @JsonAdapter(TypeEnum.Adapter.class)
+  public enum TypeEnum {
+    GREATER("greater");
 
     private String value;
 
-    NameEnum(String value) {
+    TypeEnum(String value) {
       this.value = value;
     }
 
@@ -55,8 +53,8 @@ public class SMTPNotificationEndpoint extends NotificationEndpoint {
       return String.valueOf(value);
     }
 
-    public static NameEnum fromValue(String text) {
-      for (NameEnum b : NameEnum.values()) {
+    public static TypeEnum fromValue(String text) {
+      for (TypeEnum b : TypeEnum.values()) {
         if (String.valueOf(b.value).equals(text)) {
           return b;
         }
@@ -64,31 +62,53 @@ public class SMTPNotificationEndpoint extends NotificationEndpoint {
       return null;
     }
 
-    public static class Adapter extends TypeAdapter<NameEnum> {
+    public static class Adapter extends TypeAdapter<TypeEnum> {
       @Override
-      public void write(final JsonWriter jsonWriter, final NameEnum enumeration) throws IOException {
+      public void write(final JsonWriter jsonWriter, final TypeEnum enumeration) throws IOException {
         jsonWriter.value(enumeration.getValue());
       }
 
       @Override
-      public NameEnum read(final JsonReader jsonReader) throws IOException {
+      public TypeEnum read(final JsonReader jsonReader) throws IOException {
         String value = jsonReader.nextString();
-        return NameEnum.fromValue(String.valueOf(value));
+        return TypeEnum.fromValue(String.valueOf(value));
       }
     }
   }
 
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private NameEnum name = NameEnum.SMTP;
+  public static final String SERIALIZED_NAME_TYPE = "type";
+  @SerializedName(SERIALIZED_NAME_TYPE)
+  private TypeEnum type = TypeEnum.GREATER;
+
+  public static final String SERIALIZED_NAME_VALUE = "value";
+  @SerializedName(SERIALIZED_NAME_VALUE)
+  private Float value;
 
    /**
-   * Get name
-   * @return name
+   * Get type
+   * @return type
   **/
-  @ApiModelProperty(value = "")
-  public NameEnum getName() {
-    return name;
+  @ApiModelProperty(required = true, value = "")
+  public TypeEnum getType() {
+    return type;
+  }
+
+  public GreaterThreshold value(Float value) {
+    this.value = value;
+    return this;
+  }
+
+   /**
+   * Get value
+   * @return value
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public Float getValue() {
+    return value;
+  }
+
+  public void setValue(Float value) {
+    this.value = value;
   }
 
 
@@ -100,23 +120,25 @@ public class SMTPNotificationEndpoint extends NotificationEndpoint {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SMTPNotificationEndpoint smTPNotificationEndpoint = (SMTPNotificationEndpoint) o;
-    return Objects.equals(this.name, smTPNotificationEndpoint.name) &&
+    GreaterThreshold greaterThreshold = (GreaterThreshold) o;
+    return Objects.equals(this.type, greaterThreshold.type) &&
+        Objects.equals(this.value, greaterThreshold.value) &&
         super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, super.hashCode());
+    return Objects.hash(type, value, super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class SMTPNotificationEndpoint {\n");
+    sb.append("class GreaterThreshold {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    value: ").append(toIndentedString(value)).append("\n");
     sb.append("}");
     return sb.toString();
   }

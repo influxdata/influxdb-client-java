@@ -38,6 +38,10 @@ public class DocumentMeta {
   @SerializedName(SERIALIZED_NAME_TYPE)
   private String type;
 
+  public static final String SERIALIZED_NAME_TEMPLATE_I_D = "templateID";
+  @SerializedName(SERIALIZED_NAME_TEMPLATE_I_D)
+  private String templateID;
+
   public static final String SERIALIZED_NAME_DESCRIPTION = "description";
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
   private String description;
@@ -88,6 +92,24 @@ public class DocumentMeta {
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public DocumentMeta templateID(String templateID) {
+    this.templateID = templateID;
+    return this;
+  }
+
+   /**
+   * Get templateID
+   * @return templateID
+  **/
+  @ApiModelProperty(value = "")
+  public String getTemplateID() {
+    return templateID;
+  }
+
+  public void setTemplateID(String templateID) {
+    this.templateID = templateID;
   }
 
   public DocumentMeta description(String description) {
@@ -156,6 +178,7 @@ public class DocumentMeta {
     DocumentMeta documentMeta = (DocumentMeta) o;
     return Objects.equals(this.name, documentMeta.name) &&
         Objects.equals(this.type, documentMeta.type) &&
+        Objects.equals(this.templateID, documentMeta.templateID) &&
         Objects.equals(this.description, documentMeta.description) &&
         Objects.equals(this.version, documentMeta.version) &&
         Objects.equals(this.createdAt, documentMeta.createdAt) &&
@@ -164,7 +187,7 @@ public class DocumentMeta {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, type, description, version, createdAt, updatedAt);
+    return Objects.hash(name, type, templateID, description, version, createdAt, updatedAt);
   }
 
 
@@ -174,6 +197,7 @@ public class DocumentMeta {
     sb.append("class DocumentMeta {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    templateID: ").append(toIndentedString(templateID)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
