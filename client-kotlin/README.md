@@ -1,8 +1,5 @@
 # influxdb-client-kotlin
 
-> This library is under development and no stable version has been released yet.  
-> The API can change at any moment.
-
 [![KDoc](https://img.shields.io/badge/KDoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/com.influxdb.client.kotlin/index.html)
 
 The reference Kotlin client that allows query and write for the InfluxDB 2.0 by Kotlin Channel coroutines. 

@@ -1,8 +1,5 @@
 # influxdb-client-java
 
-> This library is under development and no stable version has been released yet.  
-> The API can change at any moment.
-
 [![Build Status](https://travis-ci.org/influxdata/influxdb-client-java.svg?branch=master)](https://travis-ci.org/influxdata/influxdb-client-java)
 [![codecov](https://codecov.io/gh/influxdata/influxdb-client-java/branch/master/graph/badge.svg)](https://codecov.io/gh/influxdata/influxdb-client-java)
 [![License](https://img.shields.io/github/license/influxdata/influxdb-client-java.svg)](https://github.com/influxdata/influxdb-client-java/blob/master/LICENSE)

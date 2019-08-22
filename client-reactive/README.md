@@ -1,8 +1,5 @@
 # influxdb-client-reactive
 
-> This library is under development and no stable version has been released yet.  
-> The API can change at any moment.
-
 [![javadoc](https://img.shields.io/badge/javadoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/index.html)
 
 The reference Java client that allows query and write for the InfluxDB 2.0 by a reactive way.

@@ -1,8 +1,5 @@
 # influxdb-client-scala
 
-> This library is under development and no stable version has been released yet.  
-> The API can change at any moment.
-
 [![KDoc](https://img.shields.io/badge/Scaladoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-scala/scaladocs/org/influxdata/client/scala/index.html)
 
 The reference Scala client that allows query and write for the InfluxDB 2.0 by [Akka Streams](https://doc.akka.io/docs/akka/2.5/stream/).

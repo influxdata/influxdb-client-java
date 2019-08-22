@@ -1,8 +1,5 @@
 # influxdb-client-flux
 
-> This library is under development and no stable version has been released yet.  
-> The API can change at any moment.
-
 [![javadoc](https://img.shields.io/badge/javadoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-flux/apidocs/index.html)
 
 The client that allow perform Flux Query against the InfluxDB 1.7+.
