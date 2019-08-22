@@ -1,4 +1,4 @@
-## 1.0.0.M3 [unreleased]
+## 1.0.0 [unreleased]
 
 ### Features
 1. [#50](https://github.com/influxdata/influxdb-client-java/issues/50): Added support for gzip compression of query response

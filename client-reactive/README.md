@@ -376,14 +376,14 @@ The latest version for Maven dependency:
 <dependency>
   <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-reactive</artifactId>
-  <version>1.0.0.M3-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-reactive:1.0.0.M3-SNAPSHOT"
+    compile "com.influxdb:influxdb-client-reactive:1.0.0-SNAPSHOT"
 }
 ```
 
