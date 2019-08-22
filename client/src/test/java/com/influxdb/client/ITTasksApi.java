@@ -584,6 +584,11 @@ class ITTasksApi extends AbstractITClientTest {
 
         List<LogEvent> logs = tasksApi.getLogs(task);
         Assertions.assertThat(logs).isNotEmpty();
+
+        //
+        // The completed task are on the end of the list
+        //
+        logs = logs.subList(logs.size() - 3, logs.size());
         Assertions.assertThat(logs.get(0).getMessage())
                 .withFailMessage("LogEvents: %s", logs)
                 .startsWith("Started task from script:");
