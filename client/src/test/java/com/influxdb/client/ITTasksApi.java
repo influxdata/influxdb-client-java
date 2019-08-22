@@ -64,7 +64,7 @@ import org.junit.runner.RunWith;
 class ITTasksApi extends AbstractITClientTest {
 
     private static final Logger LOG = Logger.getLogger(ITTasksApi.class.getName());
-    private static final String TASK_FLUX = "from(bucket:\"my-bucket\") |> range(start: 0) |> last()";
+    private static final String TASK_FLUX = "from(bucket:\"my-bucket\") |> range(start: -1m) |> last()";
 
     private Organization organization;
 
@@ -124,7 +124,7 @@ class ITTasksApi extends AbstractITClientTest {
     void createTaskWithOffset() {
 
         String taskName = generateName("it task");
-        
+
         String flux = "option task = {\n"
                 + "    name: \"" + taskName + "\",\n"
                 + "    every: 1h,\n"
@@ -395,20 +395,28 @@ class ITTasksApi extends AbstractITClientTest {
         List<Run> runs = tasksApi.getRuns(task);
         Assertions.assertThat(runs).isNotEmpty();
 
-        Run run = runs.get(0);
+        Run run = runs.stream().filter(it -> it.getStatus().equals(Run.StatusEnum.SUCCESS))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError(String.format("The runs: <%s> doesn't have a success run", runs)));
 
-        Assertions.assertThat(run.getId()).isNotBlank();
-        Assertions.assertThat(run.getTaskID()).isEqualTo(task.getId());
-        Assertions.assertThat(run.getStatus()).isEqualTo(Run.StatusEnum.SUCCESS);
-        Assertions.assertThat(run.getScheduledFor()).isBefore(OffsetDateTime.now());
-        Assertions.assertThat(run.getStartedAt()).isBefore(OffsetDateTime.now());
-        Assertions.assertThat(run.getFinishedAt()).isBefore(OffsetDateTime.now());
-        Assertions.assertThat(run.getRequestedAt()).isNull();
-        Assertions.assertThat(run.getLinks()).isNotNull();
-        Assertions.assertThat(run.getLinks().getLogs()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId() + "/logs");
-        Assertions.assertThat(run.getLinks().getRetry()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId() + "/retry");
-        Assertions.assertThat(run.getLinks().getSelf()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId());
-        Assertions.assertThat(run.getLinks().getTask()).isEqualTo("/api/v2/tasks/" + task.getId());
+        String failMessage = String.format("Runs: <%s>, first run: <%s>", runs, run);
+
+        Assertions.assertThat(run.getId()).withFailMessage(failMessage).isNotBlank();
+        Assertions.assertThat(run.getTaskID()).withFailMessage(failMessage).isEqualTo(task.getId());
+        Assertions.assertThat(run.getStatus()).withFailMessage(failMessage).isEqualTo(Run.StatusEnum.SUCCESS);
+        Assertions.assertThat(run.getScheduledFor()).withFailMessage(failMessage).isBefore(OffsetDateTime.now());
+        Assertions.assertThat(run.getStartedAt()).withFailMessage(failMessage).isBefore(OffsetDateTime.now());
+        Assertions.assertThat(run.getFinishedAt()).withFailMessage(failMessage).isBefore(OffsetDateTime.now());
+        Assertions.assertThat(run.getRequestedAt()).withFailMessage(failMessage).isNull();
+        Assertions.assertThat(run.getLinks()).withFailMessage(failMessage).isNotNull();
+        Assertions.assertThat(run.getLinks().getLogs()).withFailMessage(failMessage)
+                .isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId() + "/logs");
+        Assertions.assertThat(run.getLinks().getRetry()).withFailMessage(failMessage)
+                .isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId() + "/retry");
+        Assertions.assertThat(run.getLinks().getSelf()).withFailMessage(failMessage)
+                .isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId());
+        Assertions.assertThat(run.getLinks().getTask()).withFailMessage(failMessage)
+                .isEqualTo("/api/v2/tasks/" + task.getId());
     }
 
     @Test
@@ -434,7 +442,7 @@ class ITTasksApi extends AbstractITClientTest {
         // TODO https://github.com/influxdata/influxdb/issues/13577
         // Assertions.assertThat(runs).hasSize(0);
 
-        runs = tasksApi.getRuns(task, now,null, null);
+        runs = tasksApi.getRuns(task, now, null, null);
         Assertions.assertThat(runs).isNotEmpty();
     }
 
@@ -468,14 +476,27 @@ class ITTasksApi extends AbstractITClientTest {
         List<Run> runs = tasksApi.getRuns(task);
         Assertions.assertThat(runs).isNotEmpty();
 
-        Run firstRun = runs.get(0);
+        Run firstRun = runs.stream().filter(it -> it.getStatus().equals(Run.StatusEnum.SUCCESS))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError(String.format("The runs: <%s> doesn't have a success run", runs)));
 
         List<RunLog> logs = firstRun.getLog();
         Assertions.assertThat(logs).isNotEmpty();
-        Assertions.assertThat(logs.get(0).getMessage()).startsWith("Started task from script");
-        Assertions.assertThat(logs.get(0).getRunID()).isEqualTo(firstRun.getId());
-        Assertions.assertThat(logs.get(2).getMessage()).startsWith("Completed successfully");
-        Assertions.assertThat(logs.get(2).getRunID()).isEqualTo(firstRun.getId());
+        Assertions.assertThat(logs.size())
+                .withFailMessage("Run logs: <%s>", logs)
+                .isEqualTo(3);
+        Assertions.assertThat(logs.get(0).getMessage())
+                .withFailMessage("Run logs: <%s>", logs)
+                .startsWith("Started task from script");
+        Assertions.assertThat(logs.get(0).getRunID())
+                .withFailMessage("Run logs: <%s>", logs)
+                .isEqualTo(firstRun.getId());
+        Assertions.assertThat(logs.get(2).getMessage())
+                .withFailMessage("Run logs: <%s>", logs)
+                .startsWith("Completed successfully");
+        Assertions.assertThat(logs.get(2).getRunID())
+                .withFailMessage("Run logs: <%s>", logs)
+                .isEqualTo(firstRun.getId());
 
         Run runById = tasksApi.getRun(firstRun);
 
@@ -570,7 +591,7 @@ class ITTasksApi extends AbstractITClientTest {
         Assertions.assertThat(logs.get(1).getMessage())
                 .withFailMessage("LogEvents: %s", logs)
                 .contains("total_duration");
-        
+
         Assertions.assertThat(logs.get(2).getMessage())
                 .withFailMessage("LogEvents: %s", logs)
                 .contains("Completed successfully");
@@ -603,8 +624,6 @@ class ITTasksApi extends AbstractITClientTest {
     }
 
     @Test
-//    @Disabled
-    // TODO https://github.com/influxdata/influxdb/issues/13576
     void runLogsNotExist() {
 
         String taskName = generateName("it task");
