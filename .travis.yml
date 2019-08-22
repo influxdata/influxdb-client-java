@@ -57,7 +57,7 @@ script:
 jobs:
   include:
   - stage: site
-    if: branch = master AND repo = influxdata/influxdb-client-java AND type IN (push)
+    if: (tag =~ ^v) AND branch = master AND repo = influxdata/influxdb-client-java AND type IN (push)
     jdk: openjdk8
     script:
       - ./scripts/influxdb-restart.sh
