@@ -40,7 +40,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:52)
  */
 @RunWith(JUnitPlatform.class)
-class ITLabelsApiTest extends AbstractITClientTest {
+class ITLabelsApi extends AbstractITClientTest {
 
     private LabelsApi labelsApi;
     private Organization organization;

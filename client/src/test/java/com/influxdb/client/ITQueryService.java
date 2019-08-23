@@ -142,7 +142,7 @@ class ITQueryService extends AbstractITClientTest {
         FluxSuggestions suggestions = queryService.getQuerySuggestions(null).execute().body();
 
         Assertions.assertThat(suggestions).isNotNull();
-        Assertions.assertThat(suggestions.getFuncs().size()).isGreaterThan(140);
+        Assertions.assertThat(suggestions.getFuncs().size()).isGreaterThan(100);
 
         FluxSuggestion pivot = suggestions.getFuncs().stream().filter(fluxSuggestionsFuncs -> fluxSuggestionsFuncs.getName().equals("pivot")).findFirst().get();
         Assertions.assertThat(pivot).isNotNull();
