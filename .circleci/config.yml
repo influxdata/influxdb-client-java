@@ -97,7 +97,7 @@ commands:
             cp -r client-scala/target/*.jar artifacts/
             cp -r spring/target/*.jar artifacts/
             cp -r flux-dsl/target/*.jar artifacts/
-      - store_test_results:
+      - store_artifacts:
           path: artifacts
 
 jobs:
