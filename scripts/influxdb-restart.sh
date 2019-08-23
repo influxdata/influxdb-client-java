@@ -36,6 +36,15 @@ INFLUXDB_V2_IMAGE=${DOCKER_REGISTRY}influx:${INFLUXDB_V2_VERSION}
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
+docker kill influxdb || true
+docker rm influxdb || true
+docker kill influxdb_v2 || true
+docker rm influxdb_v2 || true
+docker kill influxdb_v2_onboarding || true
+docker rm influxdb_v2_onboarding || true
+docker network rm influx_network || true
+docker network create -d bridge influx_network --subnet 192.168.0.0/24 --gateway 192.168.0.1
+
 echo
 echo "Restarting InfluxDB [${INFLUXDB_IMAGE}] ..."
 echo
@@ -44,12 +53,11 @@ echo
 # InfluxDB
 #
 
-docker kill influxdb || true
-docker rm influxdb || true
 docker pull ${INFLUXDB_IMAGE} || true
 docker run \
        --detach \
        --name influxdb \
+       --network influx_network \
        --publish 8086:8086 \
        --publish 8089:8089/udp \
        --volume ${SCRIPT_PATH}/influxdb.conf:/etc/influxdb/influxdb.conf \
@@ -65,13 +73,11 @@ echo
 echo "Restarting InfluxDB 2.0 [${INFLUXDB_V2_IMAGE}] ... "
 echo
 
-docker kill influxdb_v2 || true
-docker rm influxdb_v2 || true
 docker pull ${INFLUXDB_V2_IMAGE} || true
 docker run \
        --detach \
        --name influxdb_v2 \
-       --link=influxdb \
+       --network influx_network \
        --publish 9999:9999 \
        ${INFLUXDB_V2_IMAGE}
 
@@ -97,14 +103,10 @@ echo
 echo "Restarting InfluxDB 2.0 for onboarding test... "
 echo
 
-docker kill influxdb_v2_onboarding || true
-docker rm influxdb_v2_onboarding || true
 docker run \
        --detach \
-       --name influxdb_v2_onboarding\
+       --name influxdb_v2_onboarding \
+       --network influx_network \
        --publish 9990:9999 \
        ${INFLUXDB_V2_IMAGE}
-
-
-
 
