@@ -55,7 +55,7 @@ import org.reactivestreams.Publisher;
  * @author Jakub Bednar (bednar@github) (22/11/2018 06:59)
  */
 @RunWith(JUnitPlatform.class)
-class ITWriteQueryReactiveApiTest extends AbstractITInfluxDBClientTest {
+class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
 
     private WriteReactiveApi writeClient;
     private QueryReactiveApi queryClient;

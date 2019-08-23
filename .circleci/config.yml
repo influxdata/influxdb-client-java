@@ -1,0 +1,140 @@
+#
+# The MIT License
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
+
+version: 2.1
+
+commands:
+  prepare:
+    description: "Prepare environment to tests"
+    steps:
+      - checkout
+      - run:
+          name: "Start InfluxDB service"
+          command: ./scripts/influxdb-restart.sh
+  client-test:
+    description: "Run tests"
+    parameters:
+      maven-container:
+        type: string
+        default: "3-jdk-8-slim"
+    steps:
+      - restore_cache:
+          name: Restoring Maven Cache
+          key: &cache-key maven-cache-{{ .Branch }}-<< parameters.maven-container >>-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
+      - run:
+          name: "Running tests"
+          command: |
+            docker run -it --rm \
+                   --volume ${PWD}:/usr/src/mymaven \
+                   --volume ~/.m2:/root/.m2 \
+                   --workdir /usr/src/mymaven \
+                   --network influx_network \
+                   --env INFLUXDB_IP=192.168.0.2 \
+                   --env INFLUXDB_2_IP=192.168.0.3 \
+                   --env INFLUXDB_2_ONBOARDING_IP=192.168.0.4 \
+                   --env INFLUXDB_2_ONBOARDING_PORT=9999 \
+                   maven:<< parameters.maven-container >> mvn -B -U clean install -Dmaven.javadoc.skip=true -Dmaven.dokka.skip=true
+      - save_cache:
+          name: Saving Maven Cache
+          key: *cache-key
+          paths:
+            - ~/.m2
+          when: always
+  storing-test-results:
+    steps:
+      - run:
+          name: "Copying test results"
+          command: |
+            mkdir test-results
+            mkdir test-results/client-core
+            cp -r client-core/target/*/TEST-*.xml test-results/client-core
+            mkdir test-results/client
+            cp -r client/target/*/TEST-*.xml test-results/client
+            mkdir test-results/client-legacy
+            cp -r client-legacy/target/*/TEST-*.xml test-results/client-legacy
+            mkdir test-results/client-reactive
+            cp -r client-reactive/target/*/TEST-*.xml test-results/client-reactive
+            mkdir test-results/client-kotlin
+            cp -r client-kotlin/target/*/TEST-*.xml test-results/client-kotlin
+            mkdir test-results/client-scala
+            cp -r client-scala/target/*/TEST-*.xml test-results/client-scala
+            mkdir test-results/spring
+            cp -r spring/target/*/TEST-*.xml test-results/spring
+            mkdir test-results/flux-dsl
+            cp -r flux-dsl/target/*/TEST-*.xml test-results/flux-dsl
+      - store_test_results:
+          path: test-results
+  storing-artifacts:
+    steps:
+      - run:
+          name: "Copying artifacts"
+          command: |
+            mkdir artifacts
+            cp -r client-core/target/*.jar artifacts/
+            cp -r client/target/*.jar artifacts/
+            cp -r client-legacy/target/*.jar artifacts/
+            cp -r client-reactive/target/*.jar artifacts/
+            cp -r client-kotlin/target/*.jar artifacts/
+            cp -r client-scala/target/*.jar artifacts/
+            cp -r spring/target/*.jar artifacts/
+            cp -r flux-dsl/target/*.jar artifacts/
+      - store_artifacts:
+          path: artifacts
+
+jobs:
+  tests-jdk-8:
+    machine: true
+    steps:
+      - prepare
+      - client-test:
+          maven-container: "3-jdk-8-slim"
+      - storing-test-results
+      - storing-artifacts
+
+  tests-jdk-11:
+    machine: true
+    steps:
+      - prepare
+      - client-test:
+          maven-container: "3-jdk-11-slim"
+      - storing-test-results
+      - storing-artifacts
+
+  deploy-snapshot:
+    machine: true
+    steps:
+      - checkout
+      - run: echo "TODO deploy to snapshot repository"
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - tests-jdk-8
+      - tests-jdk-11
+      - deploy-snapshot:
+          requires:
+            - tests-jdk-8
+            - tests-jdk-11
+          filters:
+            branches:
+              only: master

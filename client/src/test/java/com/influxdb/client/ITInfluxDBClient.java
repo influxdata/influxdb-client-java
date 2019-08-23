@@ -106,7 +106,9 @@ class ITInfluxDBClient extends AbstractITClientTest {
     @Test
     void onboarding() throws Exception {
 
-        String url = "http://" + influxDB_IP + ":9990";
+        String url = String.format("http://%s:%s",
+                System.getenv().getOrDefault("INFLUXDB_2_ONBOARDING_IP", "127.0.0.1"),
+                System.getenv().getOrDefault("INFLUXDB_2_ONBOARDING_PORT", "9990"));
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create(url);
 
