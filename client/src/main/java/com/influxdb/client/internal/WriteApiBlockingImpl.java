@@ -217,7 +217,7 @@ final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiB
                 new Object[]{organization, bucket, precision});
 
         Call<Void> voidCall = service.postWrite(organization, bucket, lineProtocol, null,
-                "utf-8", "text/plain", null,
+                "identity", "text/plain; charset=utf-8", null,
                 "application/json", null, precision);
 
         execute(voidCall);

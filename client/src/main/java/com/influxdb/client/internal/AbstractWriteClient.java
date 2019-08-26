@@ -424,7 +424,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
             Maybe<Response<Void>> requestSource = Maybe
                     .fromCallable(() -> service
                             .postWrite(organization, bucket, content, null,
-                            "utf-8", "text/plain", null,
+                            "identity", "text/plain; charset=utf-8", null,
                             "application/json", null, precision))
                     .map(Call::execute);
 
