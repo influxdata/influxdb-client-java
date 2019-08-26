@@ -252,7 +252,10 @@ public final class Point {
 
         escapeKey(sb, name);
         appendTags(sb, pointSettings);
-        appendFields(sb);
+        boolean appendedFields = appendFields(sb);
+        if (!appendedFields) {
+            return "";
+        }
         appendTime(sb);
 
         return sb.toString();
@@ -308,11 +311,12 @@ public final class Point {
         sb.append(' ');
     }
 
-    private void appendFields(@Nonnull final StringBuilder sb) {
+    private boolean appendFields(@Nonnull final StringBuilder sb) {
 
+        boolean appended = false;
         for (Map.Entry<String, Object> field : this.fields.entrySet()) {
             Object value = field.getValue();
-            if (value == null) {
+            if (isNotDefined(value)) {
                 continue;
             }
             escapeKey(sb, field.getKey());
@@ -333,6 +337,8 @@ public final class Point {
             }
 
             sb.append(',');
+
+            appended = true;
         }
 
         // efficiently chop off the trailing comma
@@ -340,6 +346,8 @@ public final class Point {
         if (sb.charAt(lengthMinusOne) == ',') {
             sb.setLength(lengthMinusOne);
         }
+
+        return appended;
     }
 
     private void appendTime(@Nonnull final StringBuilder sb) {
@@ -374,5 +382,11 @@ public final class Point {
                     sb.append(value.charAt(i));
             }
         }
+    }
+
+    private boolean isNotDefined(final Object value) {
+        return value == null
+                || (value instanceof Double && !Double.isFinite((Double) value))
+                || (value instanceof Float && !Float.isFinite((Float) value));
     }
 }

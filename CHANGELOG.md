@@ -1,3 +1,8 @@
+## 1.1.0 [unreleased]
+
+### Bugs
+1. [#53](https://github.com/influxdata/influxdb-client-java/issues/53): Drop NaN and infinity values from fields when writing to InfluxDB
+
 ## 1.0.0 [unreleased]
 
 ### Features
