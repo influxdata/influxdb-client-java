@@ -37,10 +37,10 @@ services:
   - docker
 
 env:
-  global:
-    - secure: fGffN0F/ElfKXlnYtSPK6mih+IDrhoW6C0JGwyub8M6LhPxwZxSYjSCNaUneNA6CjnYCR6IuI9BS1WgjmLrpI0rSzvq5EOM0una5OjSXoZBE39X3kh4r5nKJxrwdvy0z0hrPfw0jRMZxBJIpY9Os2rkC9B7dJ60/DKE2h3YVXpkpYwpi/k4Bv2sHpf4CjJ+W8IhsZABytUPaYjiP3JoT4nAxYr5vCbwaeQEFP4/+OD3KQGFKgoqvbvzqE8dTHNiNaqLK9chhAcZWc605W1XsUByeYaqoWT5uONdMl4XHTQEU5sZjWKA194Gkjz6OUG02lXW8Kod0FbVEFtXxdg08idgmQQww20D4ak6BUs7PKG2PXUa6MQn5c+JOhhYRfoWZWoCeIaIyJaTxKybsnNviIUeDc9cxW8K9h5FfREdwakSn/XlvBygeCwq8rpB/GN43Yx5ixN2yh5TjTuIrliPWHdEHj7cYz3WEQ8/ktQLcyUGwmyDgx+oUfUnZjmFMqrFYyOZraxTjk79I5Dt0zM+I62Zy04rab/utkfTvTE5ibPZUMxxWA8VrgKNTMDaLI5bv7qxuKOdidhY3RxX8IJYBqj8Xs86dhsOZQlmbVscR/YanjnIhcUJ1zpstkBQqnokxCZ5hoTgcsr4mZySC+8VuVKpaQxb8at3BiCl8oq/3GM8=
-    - secure: pWtbpWb08qbcMx6hi8SQ5c8d+TQyVRaEeNWLmHLLfG9Lv4t7a+x1T1MlVVsy1uqaxEExaFqrPKHa9X3Pm8Q1hHEQViS9jdSwaIA3UvTmLUuN7fqY5oDvRQmjmx86Kyv6zr9jIWJ2U8URU/oY2QvBjwwiagb+9Z8dlhn4bYzFhflgX50upWzWuN7Kyw5Mkt5x6VTDgPbfTu8wCoJrnXpgBALVCbb5OushLJ1i7WxQo4983J/CE17YMtVoA8lBAIR4vzvXU3kb/LHz1W4QeNehUwvuJiUGKItUWDY5FEiec4jMQPnJQTOEaMvZXQeXRe7O4IyunJMvER8zTtWiAtPbdj7I9cDtExk8YL/wq6AL/gM47kS0Lc2bSD1Vv1LabzogUP59IP38+29hZaI4nbYnfIYqmMWon/th566f6hMweqEgt+FYe7IrhFK0fI5UK30n86FUGNdSb6VgwoIOOammhUexRaDaQ4y2S3JrJsGkH0/Ki17EMinNR1nYuQ89J6nARQA1d81wh7W8MgxkZzCnEvXKG1Uy05Bgz9USgen9/9Cmu8h4KSY8NxIT1UY6Re/pM4S6RcN4JCJeQFrRcM5EG+kMlHqDPXJuQw+NIat8MT1qKE22np9teSA6lIIpSBrxnw2zY+Rwno9WTHjFelYQSbCdLa00n57XtT0vP9SMFNU=
-    - secure: oMYpnRhevOb+oTdkidBhGsYemtwlmidCIdE9GfNG2IrCgrU5sQLfswj4cST8Ow+3c6LsIDesipztACop4LnukRHE6eHFvNlBC23uL5mq6/bjdD9wctWkUVr3LqrUQ1PZDJRBzdVjnH6uF8S8aEGfkXD95dQ3CJfY22MWN8jOtddRhwLpIuaJ41zYgwJLV6EvPOnu/KFqFHgMRMz/g5w7hVnAgY9Y8/cFgtPlqAF1dQYHqA7EUSa8V1RUmq/jmzadGE2nfAj25os7qPg+OO4E/j9rF66eumWMMUioIZpRhicWvRT9nV+RpdyJWCKmddXAJSNLgPS9R4ZUqwu4z0gakdr4uJHSou0JucY55+GOAI7CfsBlV3sK9zsiASB3NLZys7PvcgDW11hVgzONPjO2zGVhmzMN5t4NZ7WKEefgRJHADD5NCxzVaiElNyRWhQ5FeiiRWYKNLKGKudRUW4+qIfYOhZz03WUtqqZD7YWaYJdpQZAo0lECYb3o7h5vK01w21/RqFXvYDfIZvrbHyhSiLWcRSERsMA84GKhNsBEKbAJDxNq09VbDL80QmL6B0ey3PSb7ayw8iS5uMAYRDBfWQekUrTPoFeKMRP2PYyYV9NUB+sCLfkJAQh2EnpdVo4tg4Zw7YW93NLb6LJHg3j5O/EvBKyaL/suEJF+64mzKTU=
+#  global:
+#    - secure: fGffN0F/ElfKXlnYtSPK6mih+IDrhoW6C0JGwyub8M6LhPxwZxSYjSCNaUneNA6CjnYCR6IuI9BS1WgjmLrpI0rSzvq5EOM0una5OjSXoZBE39X3kh4r5nKJxrwdvy0z0hrPfw0jRMZxBJIpY9Os2rkC9B7dJ60/DKE2h3YVXpkpYwpi/k4Bv2sHpf4CjJ+W8IhsZABytUPaYjiP3JoT4nAxYr5vCbwaeQEFP4/+OD3KQGFKgoqvbvzqE8dTHNiNaqLK9chhAcZWc605W1XsUByeYaqoWT5uONdMl4XHTQEU5sZjWKA194Gkjz6OUG02lXW8Kod0FbVEFtXxdg08idgmQQww20D4ak6BUs7PKG2PXUa6MQn5c+JOhhYRfoWZWoCeIaIyJaTxKybsnNviIUeDc9cxW8K9h5FfREdwakSn/XlvBygeCwq8rpB/GN43Yx5ixN2yh5TjTuIrliPWHdEHj7cYz3WEQ8/ktQLcyUGwmyDgx+oUfUnZjmFMqrFYyOZraxTjk79I5Dt0zM+I62Zy04rab/utkfTvTE5ibPZUMxxWA8VrgKNTMDaLI5bv7qxuKOdidhY3RxX8IJYBqj8Xs86dhsOZQlmbVscR/YanjnIhcUJ1zpstkBQqnokxCZ5hoTgcsr4mZySC+8VuVKpaQxb8at3BiCl8oq/3GM8=
+#    - secure: pWtbpWb08qbcMx6hi8SQ5c8d+TQyVRaEeNWLmHLLfG9Lv4t7a+x1T1MlVVsy1uqaxEExaFqrPKHa9X3Pm8Q1hHEQViS9jdSwaIA3UvTmLUuN7fqY5oDvRQmjmx86Kyv6zr9jIWJ2U8URU/oY2QvBjwwiagb+9Z8dlhn4bYzFhflgX50upWzWuN7Kyw5Mkt5x6VTDgPbfTu8wCoJrnXpgBALVCbb5OushLJ1i7WxQo4983J/CE17YMtVoA8lBAIR4vzvXU3kb/LHz1W4QeNehUwvuJiUGKItUWDY5FEiec4jMQPnJQTOEaMvZXQeXRe7O4IyunJMvER8zTtWiAtPbdj7I9cDtExk8YL/wq6AL/gM47kS0Lc2bSD1Vv1LabzogUP59IP38+29hZaI4nbYnfIYqmMWon/th566f6hMweqEgt+FYe7IrhFK0fI5UK30n86FUGNdSb6VgwoIOOammhUexRaDaQ4y2S3JrJsGkH0/Ki17EMinNR1nYuQ89J6nARQA1d81wh7W8MgxkZzCnEvXKG1Uy05Bgz9USgen9/9Cmu8h4KSY8NxIT1UY6Re/pM4S6RcN4JCJeQFrRcM5EG+kMlHqDPXJuQw+NIat8MT1qKE22np9teSA6lIIpSBrxnw2zY+Rwno9WTHjFelYQSbCdLa00n57XtT0vP9SMFNU=
+#    - secure: oMYpnRhevOb+oTdkidBhGsYemtwlmidCIdE9GfNG2IrCgrU5sQLfswj4cST8Ow+3c6LsIDesipztACop4LnukRHE6eHFvNlBC23uL5mq6/bjdD9wctWkUVr3LqrUQ1PZDJRBzdVjnH6uF8S8aEGfkXD95dQ3CJfY22MWN8jOtddRhwLpIuaJ41zYgwJLV6EvPOnu/KFqFHgMRMz/g5w7hVnAgY9Y8/cFgtPlqAF1dQYHqA7EUSa8V1RUmq/jmzadGE2nfAj25os7qPg+OO4E/j9rF66eumWMMUioIZpRhicWvRT9nV+RpdyJWCKmddXAJSNLgPS9R4ZUqwu4z0gakdr4uJHSou0JucY55+GOAI7CfsBlV3sK9zsiASB3NLZys7PvcgDW11hVgzONPjO2zGVhmzMN5t4NZ7WKEefgRJHADD5NCxzVaiElNyRWhQ5FeiiRWYKNLKGKudRUW4+qIfYOhZz03WUtqqZD7YWaYJdpQZAo0lECYb3o7h5vK01w21/RqFXvYDfIZvrbHyhSiLWcRSERsMA84GKhNsBEKbAJDxNq09VbDL80QmL6B0ey3PSb7ayw8iS5uMAYRDBfWQekUrTPoFeKMRP2PYyYV9NUB+sCLfkJAQh2EnpdVo4tg4Zw7YW93NLb6LJHg3j5O/EvBKyaL/suEJF+64mzKTU=
   matrix:
     - INFLUXDB_VERSION=1.7 INFLUXDB_2_VERSION=nightly
 
@@ -52,7 +52,7 @@ install: true
 script:
   - ./scripts/influxdb-restart.sh
   - mvn -B -U clean install -Dmaven.javadoc.skip=true -Dmaven.dokka.skip=true
-  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+#  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
 
 jobs:
   include:
@@ -63,14 +63,14 @@ jobs:
       - ./scripts/influxdb-restart.sh
       - ./scripts/publish-site.sh
 
-  - stage: Deploy Snapshot
-    if: branch = master AND repo = influxdata/influxdb-client-java AND type IN (push)
-    jdk: openjdk8
-    script: skip
-    deploy:
-      provider: script
-      script: ./scripts/deploy-snapshot.sh
-      skip_cleanup: true
+#  - stage: Deploy Snapshot
+#    if: branch = master AND repo = influxdata/influxdb-client-java AND type IN (push)
+#    jdk: openjdk8
+#    script: skip
+#    deploy:
+#      provider: script
+#      script: ./scripts/deploy-snapshot.sh
+#      skip_cleanup: true
 
 after_failure:
   - cat target/surefire-reports/*.txt
