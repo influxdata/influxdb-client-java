@@ -1,6 +1,6 @@
 # influxdb-client-java
 
-[![Build Status](https://travis-ci.org/influxdata/influxdb-client-java.svg?branch=master)](https://travis-ci.org/influxdata/influxdb-client-java)
+[![CircleCI](https://circleci.com/gh/influxdata/influxdb-client-java.svg?style=svg)](https://circleci.com/gh/influxdata/influxdb-client-java)
 [![codecov](https://codecov.io/gh/influxdata/influxdb-client-java/branch/master/graph/badge.svg)](https://codecov.io/gh/influxdata/influxdb-client-java)
 [![License](https://img.shields.io/github/license/influxdata/influxdb-client-java.svg)](https://github.com/influxdata/influxdb-client-java/blob/master/LICENSE)
 [![Maven Version](https://img.shields.io/nexus/s/https/repo1.maven.org/maven2/com.influxdb/influxdb-client-java.svg)](https://repo1.maven.org/maven2/com/influxdb/)
