@@ -98,7 +98,7 @@ class PointTest {
                 .addField("integer", 7)
                 .addField("integerObject", Integer.valueOf("8"))
                 .addField("boolean", false)
-                .addField("booleanObject", Boolean.valueOf("true"))
+                .addField("booleanObject", Boolean.parseBoolean("true"))
                 .addField("string", "string value");
 
         String expected = "h2o,location=europe bigDecimal=33.45,boolean=false,booleanObject=true,double=2.0,doubleObject=5.0,"
@@ -227,6 +227,35 @@ class PointTest {
                 .addDefaultTag("z-expensive", "false");
 
         Assertions.assertThat(point.toLineProtocol(defaults)).isEqualTo("h2o,a-expensive=true,location=europe,z-expensive=false level=2i");
+    }
+
+    @Test
+    public void infinityValues() {
+        Point point = Point.measurement("h2o")
+                .addTag("location", "europe")
+                .addField("double-infinity-positive", Double.POSITIVE_INFINITY)
+                .addField("double-infinity-negative", Double.NEGATIVE_INFINITY)
+                .addField("double-nan", Double.NaN)
+                .addField("flout-infinity-positive", Float.POSITIVE_INFINITY)
+                .addField("flout-infinity-negative", Float.NEGATIVE_INFINITY)
+                .addField("flout-nan", Float.NaN)
+                .addField("level", 2);
+
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe level=2i");
+    }
+
+    @Test
+    public void onlyInfinityValues() {
+        Point point = Point.measurement("h2o")
+                .addTag("location", "europe")
+                .addField("double-infinity-positive", Double.POSITIVE_INFINITY)
+                .addField("double-infinity-negative", Double.NEGATIVE_INFINITY)
+                .addField("double-nan", Double.NaN)
+                .addField("flout-infinity-positive", Float.POSITIVE_INFINITY)
+                .addField("flout-infinity-negative", Float.NEGATIVE_INFINITY)
+                .addField("flout-nan", Float.NaN);
+
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("");
     }
 
     @Test

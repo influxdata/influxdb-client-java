@@ -5,6 +5,7 @@
 
 ### Bugs
 1. [#48](https://github.com/influxdata/influxdb-client-java/issues/48): The org parameter takes either the ID or Name interchangeably
+1. [#53](https://github.com/influxdata/influxdb-client-java/issues/53): Drop NaN and infinity values from fields when writing to InfluxDB
 
 ### API
 1. [#46](https://github.com/influxdata/influxdb-client-java/issues/46): Updated swagger to latest version

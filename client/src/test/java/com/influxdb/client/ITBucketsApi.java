@@ -208,14 +208,12 @@ class ITBucketsApi extends AbstractITClientTest {
     @Test
     void findBucketsByOrganization() {
 
-        Assertions.assertThat(bucketsApi.findBucketsByOrg(organization)).hasSize(0);
-
-        bucketsApi.createBucket(generateName("robot sensor"), organization);
-
         Organization organization2 = organizationsApi.createOrganization(generateName("Second"));
+        Assertions.assertThat(bucketsApi.findBucketsByOrg(organization2)).hasSize(2);
+        
         bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization2);
 
-        Assertions.assertThat(bucketsApi.findBucketsByOrg(organization)).hasSize(1);
+        Assertions.assertThat(bucketsApi.findBucketsByOrg(organization2)).hasSize(3);
     }
 
     @Test
