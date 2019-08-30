@@ -70,8 +70,8 @@
     </properties>
 
     <scm>
-        <connection>scm:git:git://github.com/influxdata/influxdb-client-java.git</connection>
-        <developerConnection>scm:git:ssh://github.com/influxdata/influxdb-client-java.git</developerConnection>
+        <connection>scm:git:git@github.com:influxdata/influxdb-client-java.git</connection>
+        <developerConnection>scm:git:git@github.com:influxdata/influxdb-client-java.git</developerConnection>
         <url>http://github.com/influxdata/influxdb-client-java/tree/master</url>
     </scm>
 
