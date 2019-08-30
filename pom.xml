@@ -96,10 +96,6 @@
             <id>ossrh</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
-        <site>
-            <id>gp</id>
-            <url>https://influxdata.github.io/influxdb-client-java/</url>
-        </site>
     </distributionManagement>
 
     <properties>
