@@ -68,24 +68,25 @@ commands:
     steps:
       - run:
           name: "Copying test results"
+          when: always
           command: |
             mkdir test-results
             mkdir test-results/client-core
-            cp -r client-core/target/*/TEST-*.xml test-results/client-core
+            cp -r client-core/target/*/TEST-*.xml test-results/client-core || true
             mkdir test-results/client
-            cp -r client/target/*/TEST-*.xml test-results/client
+            cp -r client/target/*/TEST-*.xml test-results/client || true
             mkdir test-results/client-legacy
-            cp -r client-legacy/target/*/TEST-*.xml test-results/client-legacy
+            cp -r client-legacy/target/*/TEST-*.xml test-results/client-legacy || true
             mkdir test-results/client-reactive
-            cp -r client-reactive/target/*/TEST-*.xml test-results/client-reactive
+            cp -r client-reactive/target/*/TEST-*.xml test-results/client-reactive || true
             mkdir test-results/client-kotlin
-            cp -r client-kotlin/target/*/TEST-*.xml test-results/client-kotlin
+            cp -r client-kotlin/target/*/TEST-*.xml test-results/client-kotlin || true
             mkdir test-results/client-scala
-            cp -r client-scala/target/*/TEST-*.xml test-results/client-scala
+            cp -r client-scala/target/*/TEST-*.xml test-results/client-scala || true
             mkdir test-results/spring
-            cp -r spring/target/*/TEST-*.xml test-results/spring
+            cp -r spring/target/*/TEST-*.xml test-results/spring || true
             mkdir test-results/flux-dsl
-            cp -r flux-dsl/target/*/TEST-*.xml test-results/flux-dsl
+            cp -r flux-dsl/target/*/TEST-*.xml test-results/flux-dsl || true
       - store_test_results:
           path: test-results
   storing-artifacts:
