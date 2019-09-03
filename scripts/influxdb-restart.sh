@@ -45,6 +45,9 @@ docker rm influxdb_v2_onboarding || true
 docker network rm influx_network || true
 docker network create -d bridge influx_network --subnet 192.168.0.0/24 --gateway 192.168.0.1
 
+echo "Wait 5s to start Docker network"
+sleep 5
+
 echo
 echo "Restarting InfluxDB [${INFLUXDB_IMAGE}] ..."
 echo
