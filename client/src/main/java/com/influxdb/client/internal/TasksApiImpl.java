@@ -465,29 +465,26 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Arguments.checkNotNull(task, "task");
 
-        return getRuns(task.getId(), task.getOrgID(), afterTime, beforeTime, limit);
+        return getRuns(task.getId(), afterTime, beforeTime, limit);
     }
 
     @Nonnull
     @Override
-    public List<Run> getRuns(@Nonnull final String taskID, @Nonnull final String orgID) {
+    public List<Run> getRuns(@Nonnull final String taskID) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
-        Arguments.checkNonEmpty(orgID, "Org.ID");
 
-        return getRuns(taskID, orgID, null, null, null);
+        return getRuns(taskID, null, null, null);
     }
 
     @Nonnull
     @Override
     public List<Run> getRuns(@Nonnull final String taskID,
-                             @Nonnull final String orgID,
                              @Nullable final OffsetDateTime afterTime,
                              @Nullable final OffsetDateTime beforeTime,
                              @Nullable final Integer limit) {
 
         Arguments.checkNonEmpty(taskID, "Task.ID");
-        Arguments.checkNonEmpty(orgID, "Org.ID");
 
         Call<Runs> runs = service.getTasksIDRuns(taskID, null, null, limit, afterTime, beforeTime);
         Runs execute = execute(runs);

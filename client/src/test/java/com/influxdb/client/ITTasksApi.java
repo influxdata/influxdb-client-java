@@ -422,7 +422,7 @@ class ITTasksApi extends AbstractITClientTest {
     @Test
     void runsNotExist() {
 
-        Assertions.assertThatThrownBy(() -> tasksApi.getRuns("020f755c3c082000", organization.getId()))
+        Assertions.assertThatThrownBy(() -> tasksApi.getRuns("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("failed to find runs");
     }

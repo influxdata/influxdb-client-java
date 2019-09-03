@@ -400,17 +400,16 @@ public interface TasksApi {
      * Retrieve list of run records for a task.
      *
      * @param taskID ID of task to get runs for
-     * @param orgID  ID of organization
+     *
      * @return the list of run records for a task
      */
     @Nonnull
-    List<Run> getRuns(@Nonnull final String taskID, final String orgID);
+    List<Run> getRuns(@Nonnull final String taskID);
 
     /**
      * Retrieve list of run records for a task.
      *
      * @param taskID     ID of task to get runs for
-     * @param orgID      ID of organization
      * @param afterTime  filter runs to those scheduled after this time
      * @param beforeTime filter runs to those scheduled before this time
      * @param limit      the number of runs to return. Default value: 20.
@@ -418,7 +417,6 @@ public interface TasksApi {
      */
     @Nonnull
     List<Run> getRuns(@Nonnull final String taskID,
-                      @Nonnull final String orgID,
                       @Nullable final OffsetDateTime afterTime,
                       @Nullable final OffsetDateTime beforeTime,
                       @Nullable final Integer limit);
