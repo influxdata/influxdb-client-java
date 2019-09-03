@@ -87,10 +87,13 @@ docker run \
 echo "Wait 5s to start InfluxDB 2.0"
 sleep 5
 
+docker ps
+docker network ls
+
 echo
 echo "Post onBoarding request, to setup initial user (my-user@my-password), org (my-org) and bucketSetup (my-bucket)"
 echo
-curl -i -X POST http://0.0.0.0:9999/api/v2/setup -H 'accept: application/json' \
+curl -i -X POST http://localhost:9999/api/v2/setup -H 'accept: application/json' \
     -d '{
             "username": "my-user",
             "password": "my-password",
