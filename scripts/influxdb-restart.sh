@@ -45,8 +45,8 @@ docker rm influxdb_v2_onboarding || true
 docker network rm influx_network || true
 docker network create -d bridge influx_network --subnet 192.168.0.0/24 --gateway 192.168.0.1
 
-echo "Wait 5s to start Docker network"
-sleep 5
+#echo "Wait 5s to start Docker network"
+#sleep 5
 
 echo
 echo "Restarting InfluxDB [${INFLUXDB_IMAGE}] ..."
@@ -90,7 +90,7 @@ sleep 5
 echo
 echo "Post onBoarding request, to setup initial user (my-user@my-password), org (my-org) and bucketSetup (my-bucket)"
 echo
-curl -i -X POST http://localhost:9999/api/v2/setup -H 'accept: application/json' \
+curl -i -X POST http://0.0.0.0:9999/api/v2/setup -H 'accept: application/json' \
     -d '{
             "username": "my-user",
             "password": "my-password",
