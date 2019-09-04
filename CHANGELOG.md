@@ -1,5 +1,8 @@
 ## 1.1.0 [unreleased]
 
+### Bugs
+1. [#57](https://github.com/influxdata/influxdb-client-java/pull/57): LabelsApi: orgID parameter has to be pass as second argument
+
 ## 1.0.0 [2019-08-30]
 
 ### Features
