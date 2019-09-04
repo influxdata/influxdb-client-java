@@ -49,7 +49,7 @@ class ITFluxClient extends AbstractITFluxClient {
     private static final Logger LOG = Logger.getLogger(ITFluxClient.class.getName());
 
     private static final String FROM_FLUX_DATABASE = String
-            .format("from(bucket:\"%s\")", DATABASE_NAME);
+            .format("from(bucket:\"%s\") |> range(start: 0)", DATABASE_NAME);
 
     @BeforeEach
     void prepareDate() {
@@ -147,7 +147,6 @@ class ITFluxClient extends AbstractITFluxClient {
     void query() {
 
         String flux = FROM_FLUX_DATABASE + "\n"
-                + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
                 + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n"
                 + "\t|> sum()";
 
@@ -160,7 +159,6 @@ class ITFluxClient extends AbstractITFluxClient {
     void queryWithTime() {
 
         String flux = FROM_FLUX_DATABASE + "\n"
-                + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
                 + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))";
 
         List<FluxTable> fluxTables = fluxClient.query(flux);
@@ -184,8 +182,8 @@ class ITFluxClient extends AbstractITFluxClient {
 
         Assertions.assertThatThrownBy(() -> fluxClient.query("from(bucket:\"telegraf\")"))
                 .isInstanceOf(InfluxException.class)
-                .hasMessageStartingWith("failed to plan query:")
-                .hasMessageEndingWith("results from \"telegraf\" must be bounded");
+                .hasMessageStartingWith("error in building plan while starting program:")
+                .hasMessageEndingWith("try bounding 'from' with a call to 'range'");
     }
 
     @Test
@@ -195,7 +193,6 @@ class ITFluxClient extends AbstractITFluxClient {
         List<FluxRecord> records = new ArrayList<>();
 
         String flux = FROM_FLUX_DATABASE + "\n"
-                + "\t|> range(start: 1970-01-01T00:00:00.000000000Z)\n"
                 + "\t|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n"
                 + "\t|> sum()";
 
