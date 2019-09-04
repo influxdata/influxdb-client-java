@@ -45,9 +45,6 @@ docker rm influxdb_v2_onboarding || true
 docker network rm influx_network || true
 docker network create -d bridge influx_network --subnet 192.168.0.0/24 --gateway 192.168.0.1
 
-echo "Wait 5s to start Docker network"
-sleep 5
-
 echo
 echo "Restarting InfluxDB [${INFLUXDB_IMAGE}] ..."
 echo
@@ -66,8 +63,8 @@ docker run \
        --volume ${SCRIPT_PATH}/influxdb.conf:/etc/influxdb/influxdb.conf \
        ${INFLUXDB_IMAGE}
 
-echo "Wait 5s to start InfluxDB"
-sleep 5
+echo "Wait to start InfluxDB"
+wget -S --spider --tries=20 --retry-connrefused --waitretry=5 http://localhost:8086/ping
 
 #
 # InfluxDB 2.0
@@ -84,8 +81,8 @@ docker run \
        --publish 9999:9999 \
        ${INFLUXDB_V2_IMAGE}
 
-echo "Wait 5s to start InfluxDB 2.0"
-sleep 5
+echo "Wait to start InfluxDB 2.0"
+wget -S --spider --tries=20 --retry-connrefused --waitretry=5 http://localhost:9999/metrics
 
 echo
 echo "Post onBoarding request, to setup initial user (my-user@my-password), org (my-org) and bucketSetup (my-bucket)"
