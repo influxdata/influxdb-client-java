@@ -198,7 +198,7 @@ final class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
     @Override
     public List<Label> findLabelsByOrgId(@Nullable final String orgID) {
 
-        Call<LabelsResponse> sourcesCall = service.getLabels(orgID, null);
+        Call<LabelsResponse> sourcesCall = service.getLabels(null, orgID);
 
         LabelsResponse labels = execute(sourcesCall);
         LOG.log(Level.FINEST, "findLabels found: {0}", labels);
