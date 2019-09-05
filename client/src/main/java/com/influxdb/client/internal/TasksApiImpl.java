@@ -129,8 +129,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
 
         Call<Tasks> call = service.getTasks(null, null, afterID, userID, null, orgID, null);
 
-        //TODO https://github.com/influxdata/influxdb/issues/13576
-        Tasks tasks = execute(call, InternalServerErrorException.class, new Tasks());
+        Tasks tasks = execute(call);
         LOG.log(Level.FINEST, "findTasks found: {0}", tasks);
 
         return tasks.getTasks();

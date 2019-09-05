@@ -91,8 +91,6 @@ class ITTasksApi extends AbstractITClientTest {
     @Test
     void createTask() {
 
-        //TODO API cron, every in Flux
-
         String taskName = generateName("it task");
 
         String flux = "option task = {\n"
@@ -181,8 +179,7 @@ class ITTasksApi extends AbstractITClientTest {
         Assertions.assertThat(task.getLinks().getOwners()).isEqualTo("/api/v2/tasks/" + task.getId() + "/owners");
         Assertions.assertThat(task.getLinks().getRuns()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs");
         Assertions.assertThat(task.getLinks().getSelf()).isEqualTo("/api/v2/tasks/" + task.getId());
-        //TODO missing get labels
-        // Assertions.assertThat(task.getLinks().getLabels()).isEqualTo("/api/v2/tasks/" + task.getId() + "/labels");
+        Assertions.assertThat(task.getLinks().getLabels()).isEqualTo("/api/v2/tasks/" + task.getId() + "/labels");
     }
 
     @Test
@@ -215,8 +212,6 @@ class ITTasksApi extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    // TODO https://github.com/influxdata/influxdb/issues/13576
     void findTasks() {
 
         int size = tasksApi.findTasks().size();
@@ -457,8 +452,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         List<Run> runs = tasksApi.getRuns(task, null, null, 1);
 
-        //TODO https://github.com/influxdata/influxdb/issues/13575
-        // Assertions.assertThat(runs).hasSize(1);
+        Assertions.assertThat(runs).hasSize(1);
 
         runs = tasksApi.getRuns(task, null, null, null);
         Assertions.assertThat(runs.size()).isGreaterThan(1);

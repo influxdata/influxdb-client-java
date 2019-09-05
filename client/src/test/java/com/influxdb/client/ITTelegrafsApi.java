@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
-import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.ResourceMember;
@@ -70,11 +69,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/14062
     void createTelegrafConfig() {
-
-        influxDBClient.setLogLevel(LogLevel.BODY);
 
         String name = generateName("TelegrafConfig");
 
@@ -392,8 +387,6 @@ class ITTelegrafsApi extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/14062
     void cloneTelegrafConfig() {
 
         Telegraf source = telegrafsApi
