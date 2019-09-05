@@ -88,7 +88,11 @@ public class DeadmanCheck extends Check {
 
   public static final String SERIALIZED_NAME_TIME_SINCE = "timeSince";
   @SerializedName(SERIALIZED_NAME_TIME_SINCE)
-  private Integer timeSince;
+  private String timeSince;
+
+  public static final String SERIALIZED_NAME_STALE_TIME = "staleTime";
+  @SerializedName(SERIALIZED_NAME_STALE_TIME)
+  private String staleTime;
 
   public static final String SERIALIZED_NAME_REPORT_ZERO = "reportZero";
   @SerializedName(SERIALIZED_NAME_REPORT_ZERO)
@@ -107,22 +111,40 @@ public class DeadmanCheck extends Check {
     return type;
   }
 
-  public DeadmanCheck timeSince(Integer timeSince) {
+  public DeadmanCheck timeSince(String timeSince) {
     this.timeSince = timeSince;
     return this;
   }
 
    /**
-   * seconds before deadman triggers
+   * string duration before deadman triggers
    * @return timeSince
   **/
-  @ApiModelProperty(value = "seconds before deadman triggers")
-  public Integer getTimeSince() {
+  @ApiModelProperty(value = "string duration before deadman triggers")
+  public String getTimeSince() {
     return timeSince;
   }
 
-  public void setTimeSince(Integer timeSince) {
+  public void setTimeSince(String timeSince) {
     this.timeSince = timeSince;
+  }
+
+  public DeadmanCheck staleTime(String staleTime) {
+    this.staleTime = staleTime;
+    return this;
+  }
+
+   /**
+   * string duration for time that a series is considered stale and should not trigger deadman
+   * @return staleTime
+  **/
+  @ApiModelProperty(value = "string duration for time that a series is considered stale and should not trigger deadman")
+  public String getStaleTime() {
+    return staleTime;
+  }
+
+  public void setStaleTime(String staleTime) {
+    this.staleTime = staleTime;
   }
 
   public DeadmanCheck reportZero(Boolean reportZero) {
@@ -173,6 +195,7 @@ public class DeadmanCheck extends Check {
     DeadmanCheck deadmanCheck = (DeadmanCheck) o;
     return Objects.equals(this.type, deadmanCheck.type) &&
         Objects.equals(this.timeSince, deadmanCheck.timeSince) &&
+        Objects.equals(this.staleTime, deadmanCheck.staleTime) &&
         Objects.equals(this.reportZero, deadmanCheck.reportZero) &&
         Objects.equals(this.level, deadmanCheck.level) &&
         super.equals(o);
@@ -180,7 +203,7 @@ public class DeadmanCheck extends Check {
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, timeSince, reportZero, level, super.hashCode());
+    return Objects.hash(type, timeSince, staleTime, reportZero, level, super.hashCode());
   }
 
 
@@ -191,6 +214,7 @@ public class DeadmanCheck extends Check {
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    timeSince: ").append(toIndentedString(timeSince)).append("\n");
+    sb.append("    staleTime: ").append(toIndentedString(staleTime)).append("\n");
     sb.append("    reportZero: ").append(toIndentedString(reportZero)).append("\n");
     sb.append("    level: ").append(toIndentedString(level)).append("\n");
     sb.append("}");
