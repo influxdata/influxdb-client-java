@@ -20,7 +20,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.influxdb.client.domain.LevelRule;
+import com.influxdb.client.domain.RuleStatusLevel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -32,11 +32,11 @@ import java.io.IOException;
 public class StatusRule {
   public static final String SERIALIZED_NAME_CURRENT_LEVEL = "currentLevel";
   @SerializedName(SERIALIZED_NAME_CURRENT_LEVEL)
-  private LevelRule currentLevel = null;
+  private RuleStatusLevel currentLevel = null;
 
   public static final String SERIALIZED_NAME_PREVIOUS_LEVEL = "previousLevel";
   @SerializedName(SERIALIZED_NAME_PREVIOUS_LEVEL)
-  private LevelRule previousLevel = null;
+  private RuleStatusLevel previousLevel = null;
 
   public static final String SERIALIZED_NAME_COUNT = "count";
   @SerializedName(SERIALIZED_NAME_COUNT)
@@ -46,7 +46,7 @@ public class StatusRule {
   @SerializedName(SERIALIZED_NAME_PERIOD)
   private String period;
 
-  public StatusRule currentLevel(LevelRule currentLevel) {
+  public StatusRule currentLevel(RuleStatusLevel currentLevel) {
     this.currentLevel = currentLevel;
     return this;
   }
@@ -56,15 +56,15 @@ public class StatusRule {
    * @return currentLevel
   **/
   @ApiModelProperty(value = "")
-  public LevelRule getCurrentLevel() {
+  public RuleStatusLevel getCurrentLevel() {
     return currentLevel;
   }
 
-  public void setCurrentLevel(LevelRule currentLevel) {
+  public void setCurrentLevel(RuleStatusLevel currentLevel) {
     this.currentLevel = currentLevel;
   }
 
-  public StatusRule previousLevel(LevelRule previousLevel) {
+  public StatusRule previousLevel(RuleStatusLevel previousLevel) {
     this.previousLevel = previousLevel;
     return this;
   }
@@ -74,11 +74,11 @@ public class StatusRule {
    * @return previousLevel
   **/
   @ApiModelProperty(value = "")
-  public LevelRule getPreviousLevel() {
+  public RuleStatusLevel getPreviousLevel() {
     return previousLevel;
   }
 
-  public void setPreviousLevel(LevelRule previousLevel) {
+  public void setPreviousLevel(RuleStatusLevel previousLevel) {
     this.previousLevel = previousLevel;
   }
 

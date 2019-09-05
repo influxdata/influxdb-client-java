@@ -3,7 +3,7 @@
 [![CircleCI](https://circleci.com/gh/influxdata/influxdb-client-java.svg?style=svg)](https://circleci.com/gh/influxdata/influxdb-client-java)
 [![codecov](https://codecov.io/gh/influxdata/influxdb-client-java/branch/master/graph/badge.svg)](https://codecov.io/gh/influxdata/influxdb-client-java)
 [![License](https://img.shields.io/github/license/influxdata/influxdb-client-java.svg)](https://github.com/influxdata/influxdb-client-java/blob/master/LICENSE)
-[![Maven Version](https://img.shields.io/nexus/s/https/repo1.maven.org/maven2/com.influxdb/influxdb-client-java.svg)](https://repo1.maven.org/maven2/com/influxdb/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.influxdb/influxdb-client)](https://repo1.maven.org/maven2/com/influxdb/)
 [![GitHub issues](https://img.shields.io/github/issues-raw/influxdata/influxdb-client-java.svg)](https://github.com/influxdata/influxdb-client-java/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/influxdata/influxdb-client-java.svg)](https://github.com/influxdata/influxdb-client-java/pulls)
 

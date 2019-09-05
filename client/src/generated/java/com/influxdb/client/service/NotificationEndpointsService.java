@@ -8,9 +8,12 @@ import okhttp3.ResponseBody;
 import okhttp3.MultipartBody;
 
 import com.influxdb.client.domain.Error;
+import com.influxdb.client.domain.LabelMapping;
+import com.influxdb.client.domain.LabelResponse;
+import com.influxdb.client.domain.LabelsResponse;
 import com.influxdb.client.domain.NotificationEndpoint;
+import com.influxdb.client.domain.NotificationEndpointUpdate;
 import com.influxdb.client.domain.NotificationEndpoints;
-import com.influxdb.client.domain.NotificationRule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,13 +25,13 @@ public interface NotificationEndpointsService {
    * Add new notification endpoint
    * 
    * @param notificationEndpoint notificationEndpoint to create (required)
-   * @return Call&lt;NotificationRule&gt;
+   * @return Call&lt;NotificationEndpoint&gt;
    */
   @Headers({
     "Content-Type:application/json"
   })
   @POST("api/v2/notificationEndpoints")
-  Call<NotificationRule> createNotificationEndpoint(
+  Call<NotificationEndpoint> createNotificationEndpoint(
     @retrofit2.http.Body NotificationEndpoint notificationEndpoint
   );
 
@@ -42,6 +45,19 @@ public interface NotificationEndpointsService {
   @DELETE("api/v2/notificationEndpoints/{endpointID}")
   Call<Void> deleteNotificationEndpointsID(
     @retrofit2.http.Path("endpointID") String endpointID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * delete label from a notification endpoint
+   * 
+   * @param endpointID ID of the notification endpoint (required)
+   * @param labelID the label id to delete (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/notificationEndpoints/{endpointID}/labels/{labelID}")
+  Call<Void> deleteNotificationEndpointsIDLabelsID(
+    @retrofit2.http.Path("endpointID") String endpointID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -70,10 +86,22 @@ public interface NotificationEndpointsService {
   );
 
   /**
+   * list all labels for a notification endpoint
+   * 
+   * @param endpointID ID of the notification endpoint (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;LabelsResponse&gt;
+   */
+  @GET("api/v2/notificationEndpoints/{endpointID}/labels")
+  Call<LabelsResponse> getNotificationEndpointsIDLabels(
+    @retrofit2.http.Path("endpointID") String endpointID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
    * Update a notification endpoint
    * 
    * @param endpointID ID of notification endpoint (required)
-   * @param notificationEndpoint check update to apply (required)
+   * @param notificationEndpointUpdate check update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;NotificationEndpoint&gt;
    */
@@ -82,6 +110,38 @@ public interface NotificationEndpointsService {
   })
   @PATCH("api/v2/notificationEndpoints/{endpointID}")
   Call<NotificationEndpoint> patchNotificationEndpointsID(
+    @retrofit2.http.Path("endpointID") String endpointID, @retrofit2.http.Body NotificationEndpointUpdate notificationEndpointUpdate, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * add a label to a notification endpoint
+   * 
+   * @param endpointID ID of the notification endpoint (required)
+   * @param labelMapping label to add (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;LabelResponse&gt;
+   */
+  @Headers({
+    "Content-Type:application/json"
+  })
+  @POST("api/v2/notificationEndpoints/{endpointID}/labels")
+  Call<LabelResponse> postNotificationEndpointIDLabels(
+    @retrofit2.http.Path("endpointID") String endpointID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * Update a notification endpoint
+   * 
+   * @param endpointID ID of notification endpoint (required)
+   * @param notificationEndpoint a new notification endpoint to replace the existing endpoint with (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;NotificationEndpoint&gt;
+   */
+  @Headers({
+    "Content-Type:application/json"
+  })
+  @PUT("api/v2/notificationEndpoints/{endpointID}")
+  Call<NotificationEndpoint> putNotificationEndpointsID(
     @retrofit2.http.Path("endpointID") String endpointID, @retrofit2.http.Body NotificationEndpoint notificationEndpoint, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 

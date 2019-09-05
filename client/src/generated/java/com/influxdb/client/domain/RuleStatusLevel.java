@@ -15,6 +15,7 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
+import io.swagger.annotations.ApiModel;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
@@ -24,20 +25,26 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 /**
- * Gets or Sets NotificationEndpointType
+ * the state to record if check matches a criteria
  */
-@JsonAdapter(NotificationEndpointType.Adapter.class)
-public enum NotificationEndpointType {
+@JsonAdapter(RuleStatusLevel.Adapter.class)
+public enum RuleStatusLevel {
   
-  SLACK("slack"),
+  UNKNOWN("UNKNOWN"),
   
-  PAGERDUTY("pagerduty"),
+  OK("OK"),
   
-  HTTP("http");
+  INFO("INFO"),
+  
+  CRIT("CRIT"),
+  
+  WARN("WARN"),
+  
+  ANY("ANY");
 
   private String value;
 
-  NotificationEndpointType(String value) {
+  RuleStatusLevel(String value) {
     this.value = value;
   }
 
@@ -50,8 +57,8 @@ public enum NotificationEndpointType {
     return String.valueOf(value);
   }
 
-  public static NotificationEndpointType fromValue(String text) {
-    for (NotificationEndpointType b : NotificationEndpointType.values()) {
+  public static RuleStatusLevel fromValue(String text) {
+    for (RuleStatusLevel b : RuleStatusLevel.values()) {
       if (String.valueOf(b.value).equals(text)) {
         return b;
       }
@@ -59,16 +66,16 @@ public enum NotificationEndpointType {
     return null;
   }
 
-  public static class Adapter extends TypeAdapter<NotificationEndpointType> {
+  public static class Adapter extends TypeAdapter<RuleStatusLevel> {
     @Override
-    public void write(final JsonWriter jsonWriter, final NotificationEndpointType enumeration) throws IOException {
+    public void write(final JsonWriter jsonWriter, final RuleStatusLevel enumeration) throws IOException {
       jsonWriter.value(enumeration.getValue());
     }
 
     @Override
-    public NotificationEndpointType read(final JsonReader jsonReader) throws IOException {
+    public RuleStatusLevel read(final JsonReader jsonReader) throws IOException {
       String value = jsonReader.nextString();
-      return NotificationEndpointType.fromValue(String.valueOf(value));
+      return RuleStatusLevel.fromValue(String.valueOf(value));
     }
   }
 }

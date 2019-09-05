@@ -40,9 +40,9 @@ public class NotificationRuleBase extends SlackNotificationRule {
   @SerializedName(SERIALIZED_NAME_ID)
   private String id;
 
-  public static final String SERIALIZED_NAME_NOTIFY_ENDPOINT_I_D = "notifyEndpointID";
-  @SerializedName(SERIALIZED_NAME_NOTIFY_ENDPOINT_I_D)
-  private String notifyEndpointID;
+  public static final String SERIALIZED_NAME_ENDPOINT_I_D = "endpointID";
+  @SerializedName(SERIALIZED_NAME_ENDPOINT_I_D)
+  private String endpointID;
 
   public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
@@ -122,12 +122,12 @@ public class NotificationRuleBase extends SlackNotificationRule {
   }
 
    /**
-   * Get notifyEndpointID
-   * @return notifyEndpointID
+   * Get endpointID
+   * @return endpointID
   **/
   @ApiModelProperty(value = "")
-  public String getNotifyEndpointID() {
-    return notifyEndpointID;
+  public String getEndpointID() {
+    return endpointID;
   }
 
   public NotificationRuleBase orgID(String orgID) {
@@ -438,7 +438,7 @@ public class NotificationRuleBase extends SlackNotificationRule {
     }
     NotificationRuleBase notificationRuleBase = (NotificationRuleBase) o;
     return Objects.equals(this.id, notificationRuleBase.id) &&
-        Objects.equals(this.notifyEndpointID, notificationRuleBase.notifyEndpointID) &&
+        Objects.equals(this.endpointID, notificationRuleBase.endpointID) &&
         Objects.equals(this.orgID, notificationRuleBase.orgID) &&
         Objects.equals(this.ownerID, notificationRuleBase.ownerID) &&
         Objects.equals(this.createdAt, notificationRuleBase.createdAt) &&
@@ -461,7 +461,7 @@ public class NotificationRuleBase extends SlackNotificationRule {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, notifyEndpointID, orgID, ownerID, createdAt, updatedAt, status, name, sleepUntil, every, offset, cron, runbookLink, limitEvery, limit, tagRules, description, statusRules, labels, super.hashCode());
+    return Objects.hash(id, endpointID, orgID, ownerID, createdAt, updatedAt, status, name, sleepUntil, every, offset, cron, runbookLink, limitEvery, limit, tagRules, description, statusRules, labels, super.hashCode());
   }
 
 
@@ -471,7 +471,7 @@ public class NotificationRuleBase extends SlackNotificationRule {
     sb.append("class NotificationRuleBase {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    notifyEndpointID: ").append(toIndentedString(notifyEndpointID)).append("\n");
+    sb.append("    endpointID: ").append(toIndentedString(endpointID)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
     sb.append("    ownerID: ").append(toIndentedString(ownerID)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");

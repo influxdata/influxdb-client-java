@@ -173,8 +173,8 @@ public class NotificationEndpoints {
       if (Arrays.equals(new String[]{ "PagerDutyNotificationEndpoint" }, types)) {
         return context.deserialize(json, PagerDutyNotificationEndpoint.class);
       }
-      if (Arrays.equals(new String[]{ "WebhookNotificationEndpoint" }, types)) {
-        return context.deserialize(json, WebhookNotificationEndpoint.class);
+      if (Arrays.equals(new String[]{ "HTTPNotificationEndpoint" }, types)) {
+        return context.deserialize(json, HTTPNotificationEndpoint.class);
       }
 
       return context.deserialize(json, Object.class);
