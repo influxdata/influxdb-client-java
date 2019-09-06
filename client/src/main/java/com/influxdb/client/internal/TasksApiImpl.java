@@ -52,7 +52,6 @@ import com.influxdb.client.domain.TaskUpdateRequest;
 import com.influxdb.client.domain.Tasks;
 import com.influxdb.client.domain.User;
 import com.influxdb.client.service.TasksService;
-import com.influxdb.exceptions.InternalServerErrorException;
 import com.influxdb.internal.AbstractRestClient;
 
 import retrofit2.Call;
