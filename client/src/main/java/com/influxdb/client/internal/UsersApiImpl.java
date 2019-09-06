@@ -35,7 +35,6 @@ import com.influxdb.client.domain.PasswordResetBody;
 import com.influxdb.client.domain.User;
 import com.influxdb.client.domain.Users;
 import com.influxdb.client.service.UsersService;
-import com.influxdb.exceptions.UnauthorizedException;
 import com.influxdb.internal.AbstractRestClient;
 
 import okhttp3.Credentials;
@@ -166,9 +165,6 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
         Arguments.checkNonEmpty(userID, "userID");
 
         User user = findUserByID(userID);
-        if (user == null) {
-            throw new IllegalStateException("NotFound User with ID: " + userID);
-        }
 
         return cloneUser(clonedName, user);
     }
@@ -210,7 +206,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
 
         Call<Void> call = service.putMePassword(passwordResetBody, null, credentials);
 
-        execute(call, UnauthorizedException.class);
+        execute(call);
     }
 
     @Nonnull

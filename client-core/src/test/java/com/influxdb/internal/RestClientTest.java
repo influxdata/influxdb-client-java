@@ -225,25 +225,6 @@ class RestClientTest extends AbstractMockServerTest {
                 .hasMessageStartingWith("Failed to connect to");
     }
 
-    @Test
-    void restCallNullError() {
-
-        mockServer.enqueue(createErrorResponse("flower not found"));
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(serverURL)
-                .client(okHttpClient)
-                .build();
-
-        ServerAPI serverAPI = retrofit.create(ServerAPI.class);
-        Call<ResponseBody> call = serverAPI.findFlowerByID("Camellias");
-
-        ResponseBody response = restClient.execute(call, "flower not found");
-        Assertions.assertThat(response).isNull();
-    }
-
     private void errorResponse(final int code) {
         okhttp3.Response.Builder builder = new okhttp3.Response.Builder() //
                 .code(code)

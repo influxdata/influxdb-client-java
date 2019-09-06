@@ -378,8 +378,6 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         return addOwner(owner.getId(), telegraf.getId());
     }
 
-    //TODO add to all API the methods with ResourceOwner, ResourceMember parameter
-
     @Nonnull
     @Override
     public ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String telegrafID) {

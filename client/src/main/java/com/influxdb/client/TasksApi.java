@@ -494,7 +494,6 @@ public interface TasksApi {
      * @param runID  ID of run
      * @return the executed run
      */
-    //TODO Notnull - look to all Nullable
     @Nonnull
     Run retryRun(@Nonnull final String taskID, @Nonnull final String runID);
 

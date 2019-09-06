@@ -27,7 +27,6 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.influxdb.Arguments;
 import com.influxdb.LogLevel;
@@ -63,7 +62,7 @@ public abstract class AbstractRestClient {
     private static final MediaType CONTENT_TYPE_JSON = MediaType.parse("application/json");
 
     @Nonnull
-    protected RequestBody createBody(@Nonnull final String content) {
+    RequestBody createBody(@Nonnull final String content) {
 
         Arguments.checkNonEmpty(content, "content");
 
@@ -71,33 +70,6 @@ public abstract class AbstractRestClient {
     }
 
     protected <T> T execute(@Nonnull final Call<T> call) throws InfluxException {
-        return execute(call, (String) null);
-    }
-
-    //
-    // TODO null catch can be only used for "search" not for getByID
-    //
-    protected <T> T execute(@Nonnull final Call<T> call, @Nullable final String nullError) throws InfluxException {
-        return execute(call, nullError, null, null);
-    }
-
-    protected <T, E extends InfluxException> T execute(@Nonnull final Call<T> call,
-                                                       @Nullable final Class<E> nullType) throws InfluxException {
-        return execute(call, nullType, null);
-    }
-
-    protected <T, E extends InfluxException> T execute(@Nonnull final Call<T> call,
-                                                       @Nullable final Class<E> nullType,
-                                                       @Nullable final T defaultValue) throws InfluxException {
-
-        return execute(call, null, nullType, defaultValue);
-    }
-
-    private <T, E extends InfluxException> T execute(@Nonnull final Call<T> call,
-                                                     @Nullable final String nullError,
-                                                     @Nullable final Class<E> nullType,
-                                                     @Nullable final T defaultValue) throws InfluxException {
-
         Arguments.checkNotNull(call, "call");
 
         try {
@@ -106,25 +78,7 @@ public abstract class AbstractRestClient {
                 return response.body();
             } else {
 
-                InfluxException ie = responseToError(response);
-
-                //
-                // The error message signal not found on the server => return null
-                //
-                boolean nullByMessage = nullError != null && (nullError.equals(ie.getMessage())
-                        ||
-                        //TODO set user password -> https://github.com/influxdata/influxdb/issues/11590
-                        (ie.errorBody().has("error") && ie.errorBody().getString("error").equals(nullError)));
-                boolean nullByType = nullType != null && nullType.isAssignableFrom(ie.getClass());
-
-                if (nullByMessage || nullByType) {
-
-                    LOG.log(Level.FINEST, "Error is considered as null response.", ie);
-
-                    return defaultValue;
-                }
-
-                throw ie;
+                throw responseToError(response);
             }
         } catch (IOException e) {
             throw new InfluxException(e);
@@ -173,8 +127,8 @@ public abstract class AbstractRestClient {
         }
     }
 
-    protected void catchOrPropagateException(@Nonnull final Exception exception,
-                                             @Nonnull final Consumer<? super Throwable> onError) {
+    void catchOrPropagateException(@Nonnull final Exception exception,
+                                   @Nonnull final Consumer<? super Throwable> onError) {
 
         Arguments.checkNotNull(exception, "exception");
         Arguments.checkNotNull(onError, "onError");
@@ -187,13 +141,6 @@ public abstract class AbstractRestClient {
         } else {
             onError.accept(exception);
         }
-    }
-
-    protected boolean isCloseException(@Nonnull final Exception exception) {
-
-        Arguments.checkNotNull(exception, "exception");
-
-        return exception instanceof EOFException;
     }
 
     protected void setLogLevel(@Nonnull final HttpLoggingInterceptor interceptor, @Nonnull final LogLevel logLevel) {
@@ -210,5 +157,12 @@ public abstract class AbstractRestClient {
         Arguments.checkNotNull(interceptor, "HttpLogging interceptor");
 
         return LogLevel.valueOf(interceptor.getLevel().name());
+    }
+
+    private boolean isCloseException(@Nonnull final Exception exception) {
+
+        Arguments.checkNotNull(exception, "exception");
+
+        return exception instanceof EOFException;
     }
 }
