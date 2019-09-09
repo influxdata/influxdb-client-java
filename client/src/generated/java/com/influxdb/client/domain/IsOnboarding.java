@@ -39,10 +39,10 @@ public class IsOnboarding {
   }
 
    /**
-   * true means that the influxdb instance has NOT had initial setup; false means that the database has been setup.
+   * True means that the influxdb instance has NOT had initial setup; false means that the database has been setup.
    * @return allowed
   **/
-  @ApiModelProperty(value = "true means that the influxdb instance has NOT had initial setup; false means that the database has been setup.")
+  @ApiModelProperty(value = "True means that the influxdb instance has NOT had initial setup; false means that the database has been setup.")
   public Boolean getAllowed() {
     return allowed;
   }

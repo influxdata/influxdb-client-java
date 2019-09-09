@@ -28,7 +28,7 @@ import java.io.IOException;
  * SlackNotificationRuleBase
  */
 
-public class SlackNotificationRuleBase extends SlackNotificationRule {
+public class SlackNotificationRuleBase extends NotificationRule {
   /**
    * Gets or Sets type
    */

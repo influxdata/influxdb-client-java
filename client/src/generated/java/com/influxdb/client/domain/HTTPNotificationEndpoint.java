@@ -22,12 +22,15 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationEndpointBase;
+import com.influxdb.client.domain.NotificationEndpointBaseLinks;
 import com.influxdb.client.domain.NotificationEndpointType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * HTTPNotificationEndpoint
@@ -160,6 +163,10 @@ public class HTTPNotificationEndpoint extends NotificationEndpoint {
   @SerializedName(SERIALIZED_NAME_CONTENT_TEMPLATE)
   private String contentTemplate;
 
+  public static final String SERIALIZED_NAME_HEADERS = "headers";
+  @SerializedName(SERIALIZED_NAME_HEADERS)
+  private Map<String, String> headers = new HashMap<>();
+
   public HTTPNotificationEndpoint url(String url) {
     this.url = url;
     return this;
@@ -286,6 +293,32 @@ public class HTTPNotificationEndpoint extends NotificationEndpoint {
     this.contentTemplate = contentTemplate;
   }
 
+  public HTTPNotificationEndpoint headers(Map<String, String> headers) {
+    this.headers = headers;
+    return this;
+  }
+
+  public HTTPNotificationEndpoint putHeadersItem(String key, String headersItem) {
+    if (this.headers == null) {
+      this.headers = new HashMap<>();
+    }
+    this.headers.put(key, headersItem);
+    return this;
+  }
+
+   /**
+   * Customized headers.
+   * @return headers
+  **/
+  @ApiModelProperty(value = "Customized headers.")
+  public Map<String, String> getHeaders() {
+    return headers;
+  }
+
+  public void setHeaders(Map<String, String> headers) {
+    this.headers = headers;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -303,12 +336,13 @@ public class HTTPNotificationEndpoint extends NotificationEndpoint {
         Objects.equals(this.method, htTPNotificationEndpoint.method) &&
         Objects.equals(this.authMethod, htTPNotificationEndpoint.authMethod) &&
         Objects.equals(this.contentTemplate, htTPNotificationEndpoint.contentTemplate) &&
+        Objects.equals(this.headers, htTPNotificationEndpoint.headers) &&
         super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(url, username, password, token, method, authMethod, contentTemplate, super.hashCode());
+    return Objects.hash(url, username, password, token, method, authMethod, contentTemplate, headers, super.hashCode());
   }
 
 
@@ -324,6 +358,7 @@ public class HTTPNotificationEndpoint extends NotificationEndpoint {
     sb.append("    method: ").append(toIndentedString(method)).append("\n");
     sb.append("    authMethod: ").append(toIndentedString(authMethod)).append("\n");
     sb.append("    contentTemplate: ").append(toIndentedString(contentTemplate)).append("\n");
+    sb.append("    headers: ").append(toIndentedString(headers)).append("\n");
     sb.append("}");
     return sb.toString();
   }

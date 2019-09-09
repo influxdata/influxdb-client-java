@@ -37,9 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * represents indexing into an array
+ * Represents indexing into an array
  */
-@ApiModel(description = "represents indexing into an array")
+@ApiModel(description = "Represents indexing into an array")
 
 public class IndexExpression extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -62,10 +62,10 @@ public class IndexExpression extends Expression {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

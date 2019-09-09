@@ -22,7 +22,7 @@ public interface SourcesService {
   /**
    * Delete a source
    * 
-   * @param sourceID ID of the source (required)
+   * @param sourceID The source ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -35,7 +35,7 @@ public interface SourcesService {
    * Get all sources
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param org specifies the organization of the resource (optional)
+   * @param org The organization name. (optional)
    * @return Call&lt;Sources&gt;
    */
   @GET("api/v2/sources")
@@ -46,7 +46,7 @@ public interface SourcesService {
   /**
    * Get a source
    * 
-   * @param sourceID ID of the source (required)
+   * @param sourceID The source ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Source&gt;
    */
@@ -56,11 +56,11 @@ public interface SourcesService {
   );
 
   /**
-   * Get a sources buckets (will return dbrps in the form of buckets if it is a v1 source)
+   * Get buckets in a source
    * 
-   * @param sourceID ID of the source (required)
+   * @param sourceID The source ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param org specifies the organization of the resource (optional)
+   * @param org The organization name. (optional)
    * @return Call&lt;Buckets&gt;
    */
   @GET("api/v2/sources/{sourceID}/buckets")
@@ -69,9 +69,9 @@ public interface SourcesService {
   );
 
   /**
-   * Get a sources health
+   * Get the health of a source
    * 
-   * @param sourceID ID of the source (required)
+   * @param sourceID The source ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;HealthCheck&gt;
    */
@@ -81,10 +81,10 @@ public interface SourcesService {
   );
 
   /**
-   * Updates a Source
+   * Update a Source
    * 
-   * @param sourceID ID of the source (required)
-   * @param source source update (required)
+   * @param sourceID The source ID. (required)
+   * @param source Source update (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Source&gt;
    */
@@ -97,9 +97,9 @@ public interface SourcesService {
   );
 
   /**
-   * Creates a Source
+   * Creates a source
    * 
-   * @param source source to create (required)
+   * @param source Source to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Source&gt;
    */

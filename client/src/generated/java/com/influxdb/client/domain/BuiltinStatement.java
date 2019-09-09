@@ -26,9 +26,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * declares a builtin identifier and its type
+ * Declares a builtin identifier and its type
  */
-@ApiModel(description = "declares a builtin identifier and its type")
+@ApiModel(description = "Declares a builtin identifier and its type")
 
 public class BuiltinStatement extends Statement {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -45,10 +45,10 @@ public class BuiltinStatement extends Statement {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

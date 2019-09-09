@@ -21,7 +21,7 @@ public interface AuthorizationsService {
   /**
    * Delete a authorization
    * 
-   * @param authID ID of authorization to delete (required)
+   * @param authID The ID of the authorization to delete. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -34,10 +34,10 @@ public interface AuthorizationsService {
    * List all authorizations
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param userID filter authorizations belonging to a user id (optional)
-   * @param user filter authorizations belonging to a user name (optional)
-   * @param orgID filter authorizations belonging to a org id (optional)
-   * @param org filter authorizations belonging to a org name (optional)
+   * @param userID Only show authorizations that belong to a user ID. (optional)
+   * @param user Only show authorizations that belong to a user name. (optional)
+   * @param orgID Only show authorizations that belong to an organization ID. (optional)
+   * @param org Only show authorizations that belong to a organization name. (optional)
    * @return Call&lt;Authorizations&gt;
    */
   @GET("api/v2/authorizations")
@@ -48,7 +48,7 @@ public interface AuthorizationsService {
   /**
    * Retrieve an authorization
    * 
-   * @param authID ID of authorization to get (required)
+   * @param authID The ID of the authorization to get. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Authorization&gt;
    */
@@ -58,10 +58,10 @@ public interface AuthorizationsService {
   );
 
   /**
-   * update authorization to be active or inactive. requests using an inactive authorization will be rejected.
+   * Update an authorization to be active or inactive
    * 
-   * @param authID ID of authorization to update (required)
-   * @param authorizationUpdateRequest authorization to update to apply (required)
+   * @param authID The ID of the authorization to update. (required)
+   * @param authorizationUpdateRequest Authorization to update (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Authorization&gt;
    */
@@ -76,7 +76,7 @@ public interface AuthorizationsService {
   /**
    * Create an authorization
    * 
-   * @param authorization authorization to create (required)
+   * @param authorization Authorization to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Authorization&gt;
    */

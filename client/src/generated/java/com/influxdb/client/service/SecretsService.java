@@ -20,7 +20,7 @@ public interface SecretsService {
   /**
    * List all secret keys for an organization
    * 
-   * @param orgID ID of the organization (required)
+   * @param orgID The organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;SecretKeysResponse&gt;
    */
@@ -30,10 +30,10 @@ public interface SecretsService {
   );
 
   /**
-   * Apply patch to the provided secrets
+   * Update secrets in an organization
    * 
-   * @param orgID ID of the organization (required)
-   * @param requestBody secret key value pairs to update/add (required)
+   * @param orgID The organization ID. (required)
+   * @param requestBody Secret key value pairs to update/add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -46,10 +46,10 @@ public interface SecretsService {
   );
 
   /**
-   * delete provided secrets
+   * Delete secrets from an organization
    * 
-   * @param orgID ID of the organization (required)
-   * @param secretKeys secret key to deleted (required)
+   * @param orgID The organization ID. (required)
+   * @param secretKeys Secret key to delete (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */

@@ -25,9 +25,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * a placeholder for statements for which no correct statement nodes can be created
+ * A placeholder for statements for which no correct statement nodes can be created
  */
-@ApiModel(description = "a placeholder for statements for which no correct statement nodes can be created")
+@ApiModel(description = "A placeholder for statements for which no correct statement nodes can be created")
 
 public class BadStatement extends Statement {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -44,10 +44,10 @@ public class BadStatement extends Statement {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }
@@ -62,10 +62,10 @@ public class BadStatement extends Statement {
   }
 
    /**
-   * raw source text
+   * Raw source text
    * @return text
   **/
-  @ApiModelProperty(value = "raw source text")
+  @ApiModelProperty(value = "Raw source text")
   public String getText() {
     return text;
   }

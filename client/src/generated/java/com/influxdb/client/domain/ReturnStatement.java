@@ -37,9 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * defines an expression to return
+ * Defines an expression to return
  */
-@ApiModel(description = "defines an expression to return")
+@ApiModel(description = "Defines an expression to return")
 
 public class ReturnStatement extends Statement {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -57,10 +57,10 @@ public class ReturnStatement extends Statement {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

@@ -38,9 +38,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * represents accessing a property of an object
+ * Represents accessing a property of an object
  */
-@ApiModel(description = "represents accessing a property of an object")
+@ApiModel(description = "Represents accessing a property of an object")
 
 public class MemberExpression extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -63,10 +63,10 @@ public class MemberExpression extends Expression {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

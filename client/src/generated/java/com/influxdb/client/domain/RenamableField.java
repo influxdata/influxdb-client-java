@@ -25,9 +25,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * Describes a field that can be renamed and made visible or invisible
+ * Describes a field that can be renamed and made visible or invisible.
  */
-@ApiModel(description = "Describes a field that can be renamed and made visible or invisible")
+@ApiModel(description = "Describes a field that can be renamed and made visible or invisible.")
 
 public class RenamableField {
   public static final String SERIALIZED_NAME_INTERNAL_NAME = "internalName";
@@ -43,10 +43,10 @@ public class RenamableField {
   private Boolean visible;
 
    /**
-   * This is the calculated name of a field
+   * The calculated name of a field.
    * @return internalName
   **/
-  @ApiModelProperty(value = "This is the calculated name of a field")
+  @ApiModelProperty(value = "The calculated name of a field.")
   public String getInternalName() {
     return internalName;
   }
@@ -57,10 +57,10 @@ public class RenamableField {
   }
 
    /**
-   * This is the name that a field is renamed to by the user
+   * The name that a field is renamed to by the user.
    * @return displayName
   **/
-  @ApiModelProperty(value = "This is the name that a field is renamed to by the user")
+  @ApiModelProperty(value = "The name that a field is renamed to by the user.")
   public String getDisplayName() {
     return displayName;
   }
@@ -75,10 +75,10 @@ public class RenamableField {
   }
 
    /**
-   * Indicates whether this field should be visible on the table
+   * Indicates whether this field should be visible on the table.
    * @return visible
   **/
-  @ApiModelProperty(value = "Indicates whether this field should be visible on the table")
+  @ApiModelProperty(value = "Indicates whether this field should be visible on the table.")
   public Boolean getVisible() {
     return visible;
   }

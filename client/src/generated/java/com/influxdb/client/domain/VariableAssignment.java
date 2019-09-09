@@ -38,9 +38,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * represents the declaration of a variable
+ * Represents the declaration of a variable
  */
-@ApiModel(description = "represents the declaration of a variable")
+@ApiModel(description = "Represents the declaration of a variable")
 
 public class VariableAssignment extends Statement {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -62,10 +62,10 @@ public class VariableAssignment extends Statement {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

@@ -62,10 +62,10 @@ public class ThresholdBase {
   }
 
    /**
-   * if true, only alert if all values meet threshold
+   * If true, only alert if all values meet threshold.
    * @return allValues
   **/
-  @ApiModelProperty(value = "if true, only alert if all values meet threshold")
+  @ApiModelProperty(value = "If true, only alert if all values meet threshold.")
   public Boolean getAllValues() {
     return allValues;
   }

@@ -22,6 +22,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationEndpointBase;
+import com.influxdb.client.domain.NotificationEndpointBaseLinks;
 import com.influxdb.client.domain.NotificationEndpointType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,30 +35,30 @@ import java.util.List;
  */
 
 public class PagerDutyNotificationEndpoint extends NotificationEndpoint {
-  public static final String SERIALIZED_NAME_URL = "url";
-  @SerializedName(SERIALIZED_NAME_URL)
-  private String url;
+  public static final String SERIALIZED_NAME_CLIENT_U_R_L = "clientURL";
+  @SerializedName(SERIALIZED_NAME_CLIENT_U_R_L)
+  private String clientURL;
 
   public static final String SERIALIZED_NAME_ROUTING_KEY = "routingKey";
   @SerializedName(SERIALIZED_NAME_ROUTING_KEY)
   private String routingKey;
 
-  public PagerDutyNotificationEndpoint url(String url) {
-    this.url = url;
+  public PagerDutyNotificationEndpoint clientURL(String clientURL) {
+    this.clientURL = clientURL;
     return this;
   }
 
    /**
-   * Get url
-   * @return url
+   * Get clientURL
+   * @return clientURL
   **/
   @ApiModelProperty(required = true, value = "")
-  public String getUrl() {
-    return url;
+  public String getClientURL() {
+    return clientURL;
   }
 
-  public void setUrl(String url) {
-    this.url = url;
+  public void setClientURL(String clientURL) {
+    this.clientURL = clientURL;
   }
 
   public PagerDutyNotificationEndpoint routingKey(String routingKey) {
@@ -88,14 +89,14 @@ public class PagerDutyNotificationEndpoint extends NotificationEndpoint {
       return false;
     }
     PagerDutyNotificationEndpoint pagerDutyNotificationEndpoint = (PagerDutyNotificationEndpoint) o;
-    return Objects.equals(this.url, pagerDutyNotificationEndpoint.url) &&
+    return Objects.equals(this.clientURL, pagerDutyNotificationEndpoint.clientURL) &&
         Objects.equals(this.routingKey, pagerDutyNotificationEndpoint.routingKey) &&
         super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(url, routingKey, super.hashCode());
+    return Objects.hash(clientURL, routingKey, super.hashCode());
   }
 
 
@@ -104,7 +105,7 @@ public class PagerDutyNotificationEndpoint extends NotificationEndpoint {
     StringBuilder sb = new StringBuilder();
     sb.append("class PagerDutyNotificationEndpoint {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    url: ").append(toIndentedString(url)).append("\n");
+    sb.append("    clientURL: ").append(toIndentedString(clientURL)).append("\n");
     sb.append("    routingKey: ").append(toIndentedString(routingKey)).append("\n");
     sb.append("}");
     return sb.toString();

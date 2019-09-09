@@ -17,10 +17,10 @@ import java.util.Map;
 
 public interface ViewsService {
   /**
-   * Retrieve the view for a cell in a dashboard
+   * Retrieve the view for a cell
    * 
-   * @param dashboardID ID of dashboard (required)
-   * @param cellID ID of cell (required)
+   * @param dashboardID The dashboard ID. (required)
+   * @param cellID The cell ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;View&gt;
    */
@@ -32,9 +32,9 @@ public interface ViewsService {
   /**
    * Update the view for a cell
    * 
-   * @param dashboardID ID of dashboard to update (required)
-   * @param cellID ID of cell to update (required)
-   * @param view updates the view for a cell (required)
+   * @param dashboardID The ID of the dashboard to update. (required)
+   * @param cellID The ID of the cell to update. (required)
+   * @param view  (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;View&gt;
    */

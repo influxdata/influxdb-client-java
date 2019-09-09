@@ -26,9 +26,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
- * represents floating point numbers according to the double representations defined by the IEEE-754-1985
+ * Represents floating point numbers according to the double representations defined by the IEEE-754-1985
  */
-@ApiModel(description = "represents floating point numbers according to the double representations defined by the IEEE-754-1985")
+@ApiModel(description = "Represents floating point numbers according to the double representations defined by the IEEE-754-1985")
 
 public class FloatLiteral extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -45,10 +45,10 @@ public class FloatLiteral extends Expression {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

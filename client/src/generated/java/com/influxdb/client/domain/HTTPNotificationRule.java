@@ -18,6 +18,7 @@ import java.util.Arrays;
 import com.influxdb.client.domain.HTTPNotificationRuleBase;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationRuleBase;
+import com.influxdb.client.domain.NotificationRuleBaseLinks;
 import com.influxdb.client.domain.StatusRule;
 import com.influxdb.client.domain.TagRule;
 import com.influxdb.client.domain.TaskStatusType;
@@ -28,7 +29,7 @@ import java.util.List;
  * HTTPNotificationRule
  */
 
-public class HTTPNotificationRule extends NotificationRule {
+public class HTTPNotificationRule extends HTTPNotificationRuleBase {
 
   @Override
   public boolean equals(java.lang.Object o) {

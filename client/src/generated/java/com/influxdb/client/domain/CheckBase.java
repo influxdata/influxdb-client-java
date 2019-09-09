@@ -20,6 +20,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.influxdb.client.domain.CheckBaseLinks;
 import com.influxdb.client.domain.CheckBaseTags;
 import com.influxdb.client.domain.DashboardQuery;
 import com.influxdb.client.domain.Label;
@@ -76,10 +77,6 @@ public class CheckBase {
   @SerializedName(SERIALIZED_NAME_OFFSET)
   private String offset;
 
-  public static final String SERIALIZED_NAME_CRON = "cron";
-  @SerializedName(SERIALIZED_NAME_CRON)
-  private String cron;
-
   public static final String SERIALIZED_NAME_TAGS = "tags";
   @SerializedName(SERIALIZED_NAME_TAGS)
   private List<CheckBaseTags> tags = new ArrayList<>();
@@ -95,6 +92,10 @@ public class CheckBase {
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)
   private List<Label> labels = new ArrayList<>();
+
+  public static final String SERIALIZED_NAME_LINKS = "links";
+  @SerializedName(SERIALIZED_NAME_LINKS)
+  private CheckBaseLinks links = null;
 
    /**
    * Get id
@@ -129,10 +130,10 @@ public class CheckBase {
   }
 
    /**
-   * the ID of the organization that owns this check.
+   * The ID of the organization that owns this check.
    * @return orgID
   **/
-  @ApiModelProperty(required = true, value = "the ID of the organization that owns this check.")
+  @ApiModelProperty(required = true, value = "The ID of the organization that owns this check.")
   public String getOrgID() {
     return orgID;
   }
@@ -210,10 +211,10 @@ public class CheckBase {
   }
 
    /**
-   * Check repetition interval
+   * Check repetition interval.
    * @return every
   **/
-  @ApiModelProperty(value = "Check repetition interval")
+  @ApiModelProperty(value = "Check repetition interval.")
   public String getEvery() {
     return every;
   }
@@ -240,24 +241,6 @@ public class CheckBase {
     this.offset = offset;
   }
 
-  public CheckBase cron(String cron) {
-    this.cron = cron;
-    return this;
-  }
-
-   /**
-   * Check repetition interval in the form &#39;* * * * * *&#39;;
-   * @return cron
-  **/
-  @ApiModelProperty(value = "Check repetition interval in the form '* * * * * *';")
-  public String getCron() {
-    return cron;
-  }
-
-  public void setCron(String cron) {
-    this.cron = cron;
-  }
-
   public CheckBase tags(List<CheckBaseTags> tags) {
     this.tags = tags;
     return this;
@@ -272,10 +255,10 @@ public class CheckBase {
   }
 
    /**
-   * tags to write to each status
+   * List of tags to write to each status.
    * @return tags
   **/
-  @ApiModelProperty(value = "tags to write to each status")
+  @ApiModelProperty(value = "List of tags to write to each status.")
   public List<CheckBaseTags> getTags() {
     return tags;
   }
@@ -290,10 +273,10 @@ public class CheckBase {
   }
 
    /**
-   * An optional description of the check
+   * An optional description of the check.
    * @return description
   **/
-  @ApiModelProperty(value = "An optional description of the check")
+  @ApiModelProperty(value = "An optional description of the check.")
   public String getDescription() {
     return description;
   }
@@ -308,10 +291,10 @@ public class CheckBase {
   }
 
    /**
-   * template that is used to generate and write a status message
+   * The template used to generate and write a status message.
    * @return statusMessageTemplate
   **/
-  @ApiModelProperty(value = "template that is used to generate and write a status message")
+  @ApiModelProperty(value = "The template used to generate and write a status message.")
   public String getStatusMessageTemplate() {
     return statusMessageTemplate;
   }
@@ -346,6 +329,24 @@ public class CheckBase {
     this.labels = labels;
   }
 
+  public CheckBase links(CheckBaseLinks links) {
+    this.links = links;
+    return this;
+  }
+
+   /**
+   * Get links
+   * @return links
+  **/
+  @ApiModelProperty(value = "")
+  public CheckBaseLinks getLinks() {
+    return links;
+  }
+
+  public void setLinks(CheckBaseLinks links) {
+    this.links = links;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -366,16 +367,16 @@ public class CheckBase {
         Objects.equals(this.status, checkBase.status) &&
         Objects.equals(this.every, checkBase.every) &&
         Objects.equals(this.offset, checkBase.offset) &&
-        Objects.equals(this.cron, checkBase.cron) &&
         Objects.equals(this.tags, checkBase.tags) &&
         Objects.equals(this.description, checkBase.description) &&
         Objects.equals(this.statusMessageTemplate, checkBase.statusMessageTemplate) &&
-        Objects.equals(this.labels, checkBase.labels);
+        Objects.equals(this.labels, checkBase.labels) &&
+        Objects.equals(this.links, checkBase.links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, orgID, ownerID, createdAt, updatedAt, query, status, every, offset, cron, tags, description, statusMessageTemplate, labels);
+    return Objects.hash(id, name, orgID, ownerID, createdAt, updatedAt, query, status, every, offset, tags, description, statusMessageTemplate, labels, links);
   }
 
 
@@ -393,11 +394,11 @@ public class CheckBase {
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    every: ").append(toIndentedString(every)).append("\n");
     sb.append("    offset: ").append(toIndentedString(offset)).append("\n");
-    sb.append("    cron: ").append(toIndentedString(cron)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    statusMessageTemplate: ").append(toIndentedString(statusMessageTemplate)).append("\n");
     sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
+    sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("}");
     return sb.toString();
   }

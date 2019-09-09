@@ -37,9 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * used to create and directly specify the elements of an array object
+ * Used to create and directly specify the elements of an array object
  */
-@ApiModel(description = "used to create and directly specify the elements of an array object")
+@ApiModel(description = "Used to create and directly specify the elements of an array object")
 
 public class ArrayExpression extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -57,10 +57,10 @@ public class ArrayExpression extends Expression {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }
@@ -83,10 +83,10 @@ public class ArrayExpression extends Expression {
   }
 
    /**
-   * elements of the array
+   * Elements of the array
    * @return elements
   **/
-  @ApiModelProperty(value = "elements of the array")
+  @ApiModelProperty(value = "Elements of the array")
   public List<Expression> getElements() {
     return elements;
   }

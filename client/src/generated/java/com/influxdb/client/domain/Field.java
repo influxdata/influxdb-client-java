@@ -37,7 +37,7 @@ public class Field {
   private String value;
 
   /**
-   * type describes the field type. func is a function; field is a field reference
+   * &#x60;type&#x60; describes the field type. &#x60;func&#x60; is a function. &#x60;field&#x60; is a field reference.
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
@@ -127,10 +127,10 @@ public class Field {
   }
 
    /**
-   * type describes the field type. func is a function; field is a field reference
+   * &#x60;type&#x60; describes the field type. &#x60;func&#x60; is a function. &#x60;field&#x60; is a field reference.
    * @return type
   **/
-  @ApiModelProperty(value = "type describes the field type. func is a function; field is a field reference")
+  @ApiModelProperty(value = "`type` describes the field type. `func` is a function. `field` is a field reference.")
   public TypeEnum getType() {
     return type;
   }

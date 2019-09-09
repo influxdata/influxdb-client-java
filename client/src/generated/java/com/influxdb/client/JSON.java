@@ -16,6 +16,7 @@ package com.influxdb.client;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.internal.bind.util.ISO8601Utils;
 import com.google.gson.stream.JsonReader;
@@ -49,6 +50,58 @@ public class JSON {
 
     public static GsonBuilder createGson() {
         GsonFireBuilder fireBuilder = new GsonFireBuilder()
+          .registerTypeSelector(Check.class, new TypeSelector() {
+            @Override
+            public Class getClassForElement(JsonElement readElement) {
+                Map classByDiscriminatorValue = new HashMap();
+                classByDiscriminatorValue.put("deadman".toUpperCase(Locale.ROOT), DeadmanCheck.class);
+                classByDiscriminatorValue.put("threshold".toUpperCase(Locale.ROOT), ThresholdCheck.class);
+                classByDiscriminatorValue.put("Check".toUpperCase(Locale.ROOT), Check.class);
+                return getClassByDiscriminator(
+                            classByDiscriminatorValue,
+                            getDiscriminatorValue(readElement, "type"));
+            }
+          })
+          .registerTypeSelector(NotificationEndpoint.class, new TypeSelector() {
+            @Override
+            public Class getClassForElement(JsonElement readElement) {
+                Map classByDiscriminatorValue = new HashMap();
+                classByDiscriminatorValue.put("slack".toUpperCase(Locale.ROOT), SlackNotificationEndpoint.class);
+                classByDiscriminatorValue.put("pagerduty".toUpperCase(Locale.ROOT), PagerDutyNotificationEndpoint.class);
+                classByDiscriminatorValue.put("http".toUpperCase(Locale.ROOT), HTTPNotificationEndpoint.class);
+                classByDiscriminatorValue.put("NotificationEndpoint".toUpperCase(Locale.ROOT), NotificationEndpoint.class);
+                return getClassByDiscriminator(
+                            classByDiscriminatorValue,
+                            getDiscriminatorValue(readElement, "type"));
+            }
+          })
+          .registerTypeSelector(NotificationRule.class, new TypeSelector() {
+            @Override
+            public Class getClassForElement(JsonElement readElement) {
+                Map classByDiscriminatorValue = new HashMap();
+                classByDiscriminatorValue.put("slack".toUpperCase(Locale.ROOT), SlackNotificationRule.class);
+                classByDiscriminatorValue.put("smtp".toUpperCase(Locale.ROOT), SMTPNotificationRule.class);
+                classByDiscriminatorValue.put("pagerduty".toUpperCase(Locale.ROOT), PagerDutyNotificationRule.class);
+                classByDiscriminatorValue.put("http".toUpperCase(Locale.ROOT), HTTPNotificationRule.class);
+                classByDiscriminatorValue.put("NotificationRule".toUpperCase(Locale.ROOT), NotificationRule.class);
+                return getClassByDiscriminator(
+                            classByDiscriminatorValue,
+                            getDiscriminatorValue(readElement, "type"));
+            }
+          })
+          .registerTypeSelector(Threshold.class, new TypeSelector() {
+            @Override
+            public Class getClassForElement(JsonElement readElement) {
+                Map classByDiscriminatorValue = new HashMap();
+                classByDiscriminatorValue.put("greater".toUpperCase(Locale.ROOT), GreaterThreshold.class);
+                classByDiscriminatorValue.put("lesser".toUpperCase(Locale.ROOT), LesserThreshold.class);
+                classByDiscriminatorValue.put("range".toUpperCase(Locale.ROOT), RangeThreshold.class);
+                classByDiscriminatorValue.put("Threshold".toUpperCase(Locale.ROOT), Threshold.class);
+                return getClassByDiscriminator(
+                            classByDiscriminatorValue,
+                            getDiscriminatorValue(readElement, "type"));
+            }
+          })
         
         ;
         return fireBuilder.createGsonBuilder();
@@ -76,6 +129,12 @@ public class JSON {
             .registerTypeAdapter(java.sql.Date.class, sqlDateTypeAdapter)
             .registerTypeAdapter(OffsetDateTime.class, offsetDateTimeTypeAdapter)
             .registerTypeAdapter(LocalDate.class, localDateTypeAdapter)
+            .registerTypeAdapter(NotificationEndpoint.class, (JsonSerializer<NotificationEndpoint>)
+                (src, type, context) -> context.serialize(src, src.getClass()))
+            .registerTypeAdapter(NotificationRule.class, (JsonSerializer<NotificationRule>)
+                (src, type, context) -> context.serialize(src, src.getClass()))
+            .registerTypeAdapter(Check.class, (JsonSerializer<Check>)
+                (src, type, context) -> context.serialize(src, src.getClass()))
             .create();
     }
 

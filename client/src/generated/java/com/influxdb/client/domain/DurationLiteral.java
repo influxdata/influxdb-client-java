@@ -28,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * represents the elapsed time between two instants as an int64 nanosecond count with syntax of golang&#39;s time.Duration
+ * Represents the elapsed time between two instants as an int64 nanosecond count with syntax of golang&#39;s time.Duration
  */
-@ApiModel(description = "represents the elapsed time between two instants as an int64 nanosecond count with syntax of golang's time.Duration")
+@ApiModel(description = "Represents the elapsed time between two instants as an int64 nanosecond count with syntax of golang's time.Duration")
 
 public class DurationLiteral extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -47,10 +47,10 @@ public class DurationLiteral extends Expression {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }
@@ -73,10 +73,10 @@ public class DurationLiteral extends Expression {
   }
 
    /**
-   * duration values
+   * Duration values
    * @return values
   **/
-  @ApiModelProperty(value = "duration values")
+  @ApiModelProperty(value = "Duration values")
   public List<Duration> getValues() {
     return values;
   }

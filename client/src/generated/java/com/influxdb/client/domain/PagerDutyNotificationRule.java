@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Arrays;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationRuleBase;
+import com.influxdb.client.domain.NotificationRuleBaseLinks;
 import com.influxdb.client.domain.PagerDutyNotificationRuleBase;
 import com.influxdb.client.domain.StatusRule;
 import com.influxdb.client.domain.TagRule;
@@ -28,7 +29,7 @@ import java.util.List;
  * PagerDutyNotificationRule
  */
 
-public class PagerDutyNotificationRule extends NotificationRule {
+public class PagerDutyNotificationRule extends PagerDutyNotificationRuleBase {
 
   @Override
   public boolean equals(java.lang.Object o) {

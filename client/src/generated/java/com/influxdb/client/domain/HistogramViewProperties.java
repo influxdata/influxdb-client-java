@@ -306,10 +306,10 @@ public class HistogramViewProperties extends ViewProperties {
   }
 
    /**
-   * if true, will display note when empty
+   * If true, will display note when empty
    * @return showNoteWhenEmpty
   **/
-  @ApiModelProperty(required = true, value = "if true, will display note when empty")
+  @ApiModelProperty(required = true, value = "If true, will display note when empty")
   public Boolean getShowNoteWhenEmpty() {
     return showNoteWhenEmpty;
   }

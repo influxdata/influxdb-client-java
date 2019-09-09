@@ -34,7 +34,7 @@ public interface DashboardsService {
   /**
    * Delete a dashboard
    * 
-   * @param dashboardID ID of dashboard to update (required)
+   * @param dashboardID The ID of the dashboard to update. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -46,8 +46,8 @@ public interface DashboardsService {
   /**
    * Delete a dashboard cell
    * 
-   * @param dashboardID ID of dashboard to delte (required)
-   * @param cellID ID of cell to delete (required)
+   * @param dashboardID The ID of the dashboard to delete. (required)
+   * @param cellID The ID of the cell to delete. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -57,10 +57,10 @@ public interface DashboardsService {
   );
 
   /**
-   * delete a label from a dashboard
+   * Delete a label from a dashboard
    * 
-   * @param dashboardID ID of the dashboard (required)
-   * @param labelID the label id to delete (required)
+   * @param dashboardID The dashboard ID. (required)
+   * @param labelID The ID of the label to delete. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -70,10 +70,10 @@ public interface DashboardsService {
   );
 
   /**
-   * removes a member from an dashboard
+   * Remove a member from a dashboard
    * 
-   * @param userID ID of member to remove (required)
-   * @param dashboardID ID of the dashboard (required)
+   * @param userID The ID of the member to remove. (required)
+   * @param dashboardID The dashboard ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -83,10 +83,10 @@ public interface DashboardsService {
   );
 
   /**
-   * removes an owner from a dashboard
+   * Remove an owner from a dashboard
    * 
-   * @param userID ID of owner to remove (required)
-   * @param dashboardID ID of the dashboard (required)
+   * @param userID The ID of the owner to remove. (required)
+   * @param dashboardID The dashboard ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -99,11 +99,11 @@ public interface DashboardsService {
    * Get all dashboards
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param owner specifies the owner id to return resources for (optional)
-   * @param sortBy specifies the owner id to return resources for (optional)
-   * @param id ID list of dashboards to return. If both this and owner are specified, only ids is used. (optional, default to new ArrayList&lt;&gt;())
-   * @param orgID specifies the organization id of the resource (optional)
-   * @param org specifies the organization name of the resource (optional)
+   * @param owner The owner ID. (optional)
+   * @param sortBy The column to sort by. (optional)
+   * @param id List of dashboard IDs to return. If both &#x60;id and &#x60;owner&#x60; are specified, only &#x60;id&#x60; is used. (optional, default to new ArrayList&lt;&gt;())
+   * @param orgID The organization ID. (optional)
+   * @param org The organization name. (optional)
    * @return Call&lt;Dashboards&gt;
    */
   @GET("api/v2/dashboards")
@@ -112,9 +112,9 @@ public interface DashboardsService {
   );
 
   /**
-   * Get a single Dashboard
+   * Get a Dashboard
    * 
-   * @param dashboardID ID of dashboard to update (required)
+   * @param dashboardID The ID of the dashboard to update. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Dashboard&gt;
    */
@@ -124,10 +124,10 @@ public interface DashboardsService {
   );
 
   /**
-   * Retrieve the view for a cell in a dashboard
+   * Retrieve the view for a cell
    * 
-   * @param dashboardID ID of dashboard (required)
-   * @param cellID ID of cell (required)
+   * @param dashboardID The dashboard ID. (required)
+   * @param cellID The cell ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;View&gt;
    */
@@ -139,7 +139,7 @@ public interface DashboardsService {
   /**
    * list all labels for a dashboard
    * 
-   * @param dashboardID ID of the dashboard (required)
+   * @param dashboardID The dashboard ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
@@ -151,7 +151,7 @@ public interface DashboardsService {
   /**
    * Retrieve operation logs for a dashboard
    * 
-   * @param dashboardID ID of the dashboard (required)
+   * @param dashboardID The dashboard ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param offset  (optional)
    * @param limit  (optional, default to 20)
@@ -165,7 +165,7 @@ public interface DashboardsService {
   /**
    * List all dashboard members
    * 
-   * @param dashboardID ID of the dashboard (required)
+   * @param dashboardID The dashboard ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
@@ -177,7 +177,7 @@ public interface DashboardsService {
   /**
    * List all dashboard owners
    * 
-   * @param dashboardID ID of the dashboard (required)
+   * @param dashboardID The dashboard ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
@@ -187,10 +187,10 @@ public interface DashboardsService {
   );
 
   /**
-   * Update a single dashboard
+   * Update a dashboard
    * 
-   * @param dashboardID ID of dashboard to update (required)
-   * @param dashboard patching of a dashboard (required)
+   * @param dashboardID The ID of the dashboard to update. (required)
+   * @param dashboard Patching of a dashboard (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Dashboard&gt;
    */
@@ -203,11 +203,11 @@ public interface DashboardsService {
   );
 
   /**
-   * Update the non positional information related to a cell (because updates to a single cells positional data could cause grid conflicts)
-   * 
-   * @param dashboardID ID of dashboard to update (required)
-   * @param cellID ID of cell to update (required)
-   * @param cellUpdate updates the non positional information related to a cell (required)
+   * Update the non-positional information related to a cell
+   * Updates the non positional information related to a cell. Updates to a single cell&#39;s positional data could cause grid conflicts.
+   * @param dashboardID The ID of the dashboard to update. (required)
+   * @param cellID The ID of the cell to update. (required)
+   * @param cellUpdate  (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Cell&gt;
    */
@@ -222,9 +222,9 @@ public interface DashboardsService {
   /**
    * Update the view for a cell
    * 
-   * @param dashboardID ID of dashboard to update (required)
-   * @param cellID ID of cell to update (required)
-   * @param view updates the view for a cell (required)
+   * @param dashboardID The ID of the dashboard to update. (required)
+   * @param cellID The ID of the cell to update. (required)
+   * @param view  (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;View&gt;
    */
@@ -239,7 +239,7 @@ public interface DashboardsService {
   /**
    * Create a dashboard
    * 
-   * @param createDashboardRequest dashboard to create (required)
+   * @param createDashboardRequest Dashboard to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Dashboard&gt;
    */
@@ -254,8 +254,8 @@ public interface DashboardsService {
   /**
    * Create a dashboard cell
    * 
-   * @param dashboardID ID of dashboard to update (required)
-   * @param createCell cell that will be added (required)
+   * @param dashboardID The ID of the dashboard to update. (required)
+   * @param createCell Cell that will be added (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Cell&gt;
    */
@@ -268,10 +268,10 @@ public interface DashboardsService {
   );
 
   /**
-   * add a label to a dashboard
+   * Add a label to a dashboard
    * 
-   * @param dashboardID ID of the dashboard (required)
-   * @param labelMapping label to add (required)
+   * @param dashboardID The dashboard ID. (required)
+   * @param labelMapping Label to add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelResponse&gt;
    */
@@ -284,10 +284,10 @@ public interface DashboardsService {
   );
 
   /**
-   * Add dashboard member
+   * Add a member to a dashboard
    * 
-   * @param dashboardID ID of the dashboard (required)
-   * @param addResourceMemberRequestBody user to add as member (required)
+   * @param dashboardID The dashboard ID. (required)
+   * @param addResourceMemberRequestBody User to add as member (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMember&gt;
    */
@@ -300,10 +300,10 @@ public interface DashboardsService {
   );
 
   /**
-   * Add dashboard owner
+   * Add an owner to a dashboard
    * 
-   * @param dashboardID ID of the dashboard (required)
-   * @param addResourceMemberRequestBody user to add as owner (required)
+   * @param dashboardID The dashboard ID. (required)
+   * @param addResourceMemberRequestBody User to add as owner (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwner&gt;
    */
@@ -316,10 +316,10 @@ public interface DashboardsService {
   );
 
   /**
-   * Replace a dashboards cells
-   * 
-   * @param dashboardID ID of dashboard to update (required)
-   * @param cell batch replaces all of a dashboards cells (this is used primarily to update the positional information of all of the cells) (required)
+   * Replace cells in a dashboard
+   * Replaces all cells in a dashboard. This is used primarily to update the positional information of all cells.
+   * @param dashboardID The ID of the dashboard to update. (required)
+   * @param cell  (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Dashboard&gt;
    */

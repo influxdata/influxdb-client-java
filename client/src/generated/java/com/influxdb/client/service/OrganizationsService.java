@@ -31,7 +31,7 @@ public interface OrganizationsService {
   /**
    * Delete an organization
    * 
-   * @param orgID ID of organization to delete (required)
+   * @param orgID The ID of the organization to delete. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -41,10 +41,10 @@ public interface OrganizationsService {
   );
 
   /**
-   * delete a label from an organization
+   * Delete a label from an organization
    * 
-   * @param orgID ID of the organization (required)
-   * @param labelID the label id (required)
+   * @param orgID The organization ID. (required)
+   * @param labelID The label ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -54,10 +54,10 @@ public interface OrganizationsService {
   );
 
   /**
-   * removes a member from an organization
+   * Remove a member from an organization
    * 
-   * @param userID ID of member to remove (required)
-   * @param orgID ID of the organization (required)
+   * @param userID The ID of the member to remove. (required)
+   * @param orgID The organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -67,10 +67,10 @@ public interface OrganizationsService {
   );
 
   /**
-   * removes an owner from an organization
+   * Remove an owner from an organization
    * 
-   * @param userID ID of owner to remove (required)
-   * @param orgID ID of the organization (required)
+   * @param userID The ID of the owner to remove. (required)
+   * @param orgID The organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -83,8 +83,8 @@ public interface OrganizationsService {
    * List all organizations
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param org filter organizations to a specific organization name (optional)
-   * @param orgID filter organizations to a specific organization ID (optional)
+   * @param org Filter organizations to a specific organization name. (optional)
+   * @param orgID Filter organizations to a specific organization ID. (optional)
    * @return Call&lt;Organizations&gt;
    */
   @GET("api/v2/orgs")
@@ -95,7 +95,7 @@ public interface OrganizationsService {
   /**
    * Retrieve an organization
    * 
-   * @param orgID ID of organization to get (required)
+   * @param orgID The ID of the organization to get. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Organization&gt;
    */
@@ -105,9 +105,9 @@ public interface OrganizationsService {
   );
 
   /**
-   * list all labels for a organization
+   * List all labels for a organization
    * 
-   * @param orgID ID of the organization (required)
+   * @param orgID The organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
@@ -119,7 +119,7 @@ public interface OrganizationsService {
   /**
    * Retrieve operation logs for an organization
    * 
-   * @param orgID ID of the organization (required)
+   * @param orgID The organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param offset  (optional)
    * @param limit  (optional, default to 20)
@@ -133,7 +133,7 @@ public interface OrganizationsService {
   /**
    * List all members of an organization
    * 
-   * @param orgID ID of the organization (required)
+   * @param orgID The organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
@@ -145,7 +145,7 @@ public interface OrganizationsService {
   /**
    * List all owners of an organization
    * 
-   * @param orgID ID of the organization (required)
+   * @param orgID The organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
@@ -157,7 +157,7 @@ public interface OrganizationsService {
   /**
    * List all secret keys for an organization
    * 
-   * @param orgID ID of the organization (required)
+   * @param orgID The organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;SecretKeysResponse&gt;
    */
@@ -169,8 +169,8 @@ public interface OrganizationsService {
   /**
    * Update an organization
    * 
-   * @param orgID ID of organization to get (required)
-   * @param organization organization update to apply (required)
+   * @param orgID The ID of the organization to get. (required)
+   * @param organization Organization update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Organization&gt;
    */
@@ -183,10 +183,10 @@ public interface OrganizationsService {
   );
 
   /**
-   * Apply patch to the provided secrets
+   * Update secrets in an organization
    * 
-   * @param orgID ID of the organization (required)
-   * @param requestBody secret key value pairs to update/add (required)
+   * @param orgID The organization ID. (required)
+   * @param requestBody Secret key value pairs to update/add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -201,7 +201,7 @@ public interface OrganizationsService {
   /**
    * Create an organization
    * 
-   * @param organization organization to create (required)
+   * @param organization Organization to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Organization&gt;
    */
@@ -214,10 +214,10 @@ public interface OrganizationsService {
   );
 
   /**
-   * add a label to an organization
+   * Add a label to an organization
    * 
-   * @param orgID ID of the organization (required)
-   * @param labelMapping label to add (required)
+   * @param orgID The organization ID. (required)
+   * @param labelMapping Label to add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelResponse&gt;
    */
@@ -230,10 +230,10 @@ public interface OrganizationsService {
   );
 
   /**
-   * Add organization member
+   * Add a member to an organization
    * 
-   * @param orgID ID of the organization (required)
-   * @param addResourceMemberRequestBody user to add as member (required)
+   * @param orgID The organization ID. (required)
+   * @param addResourceMemberRequestBody User to add as member (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMember&gt;
    */
@@ -246,10 +246,10 @@ public interface OrganizationsService {
   );
 
   /**
-   * Add organization owner
+   * Add an owner to an organization
    * 
-   * @param orgID ID of the organization (required)
-   * @param addResourceMemberRequestBody user to add as owner (required)
+   * @param orgID The organization ID. (required)
+   * @param addResourceMemberRequestBody User to add as owner (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwner&gt;
    */
@@ -262,10 +262,10 @@ public interface OrganizationsService {
   );
 
   /**
-   * delete provided secrets
+   * Delete secrets from an organization
    * 
-   * @param orgID ID of the organization (required)
-   * @param secretKeys secret key to deleted (required)
+   * @param orgID The organization ID. (required)
+   * @param secretKeys Secret key to delete (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */

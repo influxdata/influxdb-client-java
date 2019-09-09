@@ -21,6 +21,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.NotificationRuleBaseLinks;
 import com.influxdb.client.domain.StatusRule;
 import com.influxdb.client.domain.TagRule;
 import com.influxdb.client.domain.TaskStatusType;
@@ -35,7 +36,7 @@ import java.util.List;
  * NotificationRuleBase
  */
 
-public class NotificationRuleBase extends SlackNotificationRule {
+public class NotificationRuleBase {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private String id;
@@ -80,10 +81,6 @@ public class NotificationRuleBase extends SlackNotificationRule {
   @SerializedName(SERIALIZED_NAME_OFFSET)
   private String offset;
 
-  public static final String SERIALIZED_NAME_CRON = "cron";
-  @SerializedName(SERIALIZED_NAME_CRON)
-  private String cron;
-
   public static final String SERIALIZED_NAME_RUNBOOK_LINK = "runbookLink";
   @SerializedName(SERIALIZED_NAME_RUNBOOK_LINK)
   private String runbookLink;
@@ -112,6 +109,10 @@ public class NotificationRuleBase extends SlackNotificationRule {
   @SerializedName(SERIALIZED_NAME_LABELS)
   private List<Label> labels = new ArrayList<>();
 
+  public static final String SERIALIZED_NAME_LINKS = "links";
+  @SerializedName(SERIALIZED_NAME_LINKS)
+  private NotificationRuleBaseLinks links = null;
+
    /**
    * Get id
    * @return id
@@ -121,13 +122,22 @@ public class NotificationRuleBase extends SlackNotificationRule {
     return id;
   }
 
+  public NotificationRuleBase endpointID(String endpointID) {
+    this.endpointID = endpointID;
+    return this;
+  }
+
    /**
    * Get endpointID
    * @return endpointID
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getEndpointID() {
     return endpointID;
+  }
+
+  public void setEndpointID(String endpointID) {
+    this.endpointID = endpointID;
   }
 
   public NotificationRuleBase orgID(String orgID) {
@@ -136,10 +146,10 @@ public class NotificationRuleBase extends SlackNotificationRule {
   }
 
    /**
-   * the ID of the organization that owns this notification rule.
+   * The ID of the organization that owns this notification rule.
    * @return orgID
   **/
-  @ApiModelProperty(required = true, value = "the ID of the organization that owns this notification rule.")
+  @ApiModelProperty(required = true, value = "The ID of the organization that owns this notification rule.")
   public String getOrgID() {
     return orgID;
   }
@@ -199,10 +209,10 @@ public class NotificationRuleBase extends SlackNotificationRule {
   }
 
    /**
-   * human-readable name describing the notification rule
+   * Human-readable name describing the notification rule.
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "human-readable name describing the notification rule")
+  @ApiModelProperty(required = true, value = "Human-readable name describing the notification rule.")
   public String getName() {
     return name;
   }
@@ -235,10 +245,10 @@ public class NotificationRuleBase extends SlackNotificationRule {
   }
 
    /**
-   * notification repetition interval
+   * The notification repetition interval.
    * @return every
   **/
-  @ApiModelProperty(value = "notification repetition interval")
+  @ApiModelProperty(value = "The notification repetition interval.")
   public String getEvery() {
     return every;
   }
@@ -265,24 +275,6 @@ public class NotificationRuleBase extends SlackNotificationRule {
     this.offset = offset;
   }
 
-  public NotificationRuleBase cron(String cron) {
-    this.cron = cron;
-    return this;
-  }
-
-   /**
-   * notification repetition interval in the form &#39;* * * * * *&#39;;
-   * @return cron
-  **/
-  @ApiModelProperty(value = "notification repetition interval in the form '* * * * * *';")
-  public String getCron() {
-    return cron;
-  }
-
-  public void setCron(String cron) {
-    this.cron = cron;
-  }
-
   public NotificationRuleBase runbookLink(String runbookLink) {
     this.runbookLink = runbookLink;
     return this;
@@ -307,10 +299,10 @@ public class NotificationRuleBase extends SlackNotificationRule {
   }
 
    /**
-   * don&#39;t notify me more than &lt;limit&gt; times every &lt;limitEvery&gt; seconds. If set, limit cannot be empty.
+   * Don&#39;t notify me more than &lt;limit&gt; times every &lt;limitEvery&gt; seconds. If set, limit cannot be empty.
    * @return limitEvery
   **/
-  @ApiModelProperty(value = "don't notify me more than <limit> times every <limitEvery> seconds. If set, limit cannot be empty.")
+  @ApiModelProperty(value = "Don't notify me more than <limit> times every <limitEvery> seconds. If set, limit cannot be empty.")
   public Integer getLimitEvery() {
     return limitEvery;
   }
@@ -325,10 +317,10 @@ public class NotificationRuleBase extends SlackNotificationRule {
   }
 
    /**
-   * don&#39;t notify me more than &lt;limit&gt; times every &lt;limitEvery&gt; seconds. If set, limitEvery cannot be empty.
+   * Don&#39;t notify me more than &lt;limit&gt; times every &lt;limitEvery&gt; seconds. If set, limitEvery cannot be empty.
    * @return limit
   **/
-  @ApiModelProperty(value = "don't notify me more than <limit> times every <limitEvery> seconds. If set, limitEvery cannot be empty.")
+  @ApiModelProperty(value = "Don't notify me more than <limit> times every <limitEvery> seconds. If set, limitEvery cannot be empty.")
   public Integer getLimit() {
     return limit;
   }
@@ -348,10 +340,10 @@ public class NotificationRuleBase extends SlackNotificationRule {
   }
 
    /**
-   * list of tag rules the notification rule attempts to match
+   * List of tag rules the notification rule attempts to match.
    * @return tagRules
   **/
-  @ApiModelProperty(required = true, value = "list of tag rules the notification rule attempts to match")
+  @ApiModelProperty(required = true, value = "List of tag rules the notification rule attempts to match.")
   public List<TagRule> getTagRules() {
     return tagRules;
   }
@@ -366,10 +358,10 @@ public class NotificationRuleBase extends SlackNotificationRule {
   }
 
    /**
-   * An optional description of the notification rule
+   * An optional description of the notification rule.
    * @return description
   **/
-  @ApiModelProperty(value = "An optional description of the notification rule")
+  @ApiModelProperty(value = "An optional description of the notification rule.")
   public String getDescription() {
     return description;
   }
@@ -389,10 +381,10 @@ public class NotificationRuleBase extends SlackNotificationRule {
   }
 
    /**
-   * list of status rules the notification rule attempts to match
+   * List of status rules the notification rule attempts to match.
    * @return statusRules
   **/
-  @ApiModelProperty(required = true, value = "list of status rules the notification rule attempts to match")
+  @ApiModelProperty(required = true, value = "List of status rules the notification rule attempts to match.")
   public List<StatusRule> getStatusRules() {
     return statusRules;
   }
@@ -427,6 +419,24 @@ public class NotificationRuleBase extends SlackNotificationRule {
     this.labels = labels;
   }
 
+  public NotificationRuleBase links(NotificationRuleBaseLinks links) {
+    this.links = links;
+    return this;
+  }
+
+   /**
+   * Get links
+   * @return links
+  **/
+  @ApiModelProperty(value = "")
+  public NotificationRuleBaseLinks getLinks() {
+    return links;
+  }
+
+  public void setLinks(NotificationRuleBaseLinks links) {
+    this.links = links;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -448,7 +458,6 @@ public class NotificationRuleBase extends SlackNotificationRule {
         Objects.equals(this.sleepUntil, notificationRuleBase.sleepUntil) &&
         Objects.equals(this.every, notificationRuleBase.every) &&
         Objects.equals(this.offset, notificationRuleBase.offset) &&
-        Objects.equals(this.cron, notificationRuleBase.cron) &&
         Objects.equals(this.runbookLink, notificationRuleBase.runbookLink) &&
         Objects.equals(this.limitEvery, notificationRuleBase.limitEvery) &&
         Objects.equals(this.limit, notificationRuleBase.limit) &&
@@ -456,12 +465,12 @@ public class NotificationRuleBase extends SlackNotificationRule {
         Objects.equals(this.description, notificationRuleBase.description) &&
         Objects.equals(this.statusRules, notificationRuleBase.statusRules) &&
         Objects.equals(this.labels, notificationRuleBase.labels) &&
-        super.equals(o);
+        Objects.equals(this.links, notificationRuleBase.links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, endpointID, orgID, ownerID, createdAt, updatedAt, status, name, sleepUntil, every, offset, cron, runbookLink, limitEvery, limit, tagRules, description, statusRules, labels, super.hashCode());
+    return Objects.hash(id, endpointID, orgID, ownerID, createdAt, updatedAt, status, name, sleepUntil, every, offset, runbookLink, limitEvery, limit, tagRules, description, statusRules, labels, links);
   }
 
 
@@ -469,7 +478,6 @@ public class NotificationRuleBase extends SlackNotificationRule {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class NotificationRuleBase {\n");
-    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    endpointID: ").append(toIndentedString(endpointID)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
@@ -481,7 +489,6 @@ public class NotificationRuleBase extends SlackNotificationRule {
     sb.append("    sleepUntil: ").append(toIndentedString(sleepUntil)).append("\n");
     sb.append("    every: ").append(toIndentedString(every)).append("\n");
     sb.append("    offset: ").append(toIndentedString(offset)).append("\n");
-    sb.append("    cron: ").append(toIndentedString(cron)).append("\n");
     sb.append("    runbookLink: ").append(toIndentedString(runbookLink)).append("\n");
     sb.append("    limitEvery: ").append(toIndentedString(limitEvery)).append("\n");
     sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
@@ -489,6 +496,7 @@ public class NotificationRuleBase extends SlackNotificationRule {
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    statusRules: ").append(toIndentedString(statusRules)).append("\n");
     sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
+    sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -17,7 +17,7 @@ import java.util.Map;
 
 public interface HealthService {
   /**
-   * Get the health of an instance anytime during execution. Allow us to check if the instance is still healthy.
+   * Get the health of an instance
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;HealthCheck&gt;

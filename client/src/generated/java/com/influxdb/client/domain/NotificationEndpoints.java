@@ -144,7 +144,7 @@ public class NotificationEndpoints {
     @Override
     public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
 
-      List<String> discriminator = Arrays.asList("id");
+      List<String> discriminator = Arrays.asList("type");
 
       List<Object> results = new ArrayList<>();
 
@@ -167,13 +167,13 @@ public class NotificationEndpoints {
 
     private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
 
-      if (Arrays.equals(new String[]{ "SlackNotificationEndpoint" }, types)) {
+      if (Arrays.equals(new String[]{ "slack" }, types)) {
         return context.deserialize(json, SlackNotificationEndpoint.class);
       }
-      if (Arrays.equals(new String[]{ "PagerDutyNotificationEndpoint" }, types)) {
+      if (Arrays.equals(new String[]{ "pagerduty" }, types)) {
         return context.deserialize(json, PagerDutyNotificationEndpoint.class);
       }
-      if (Arrays.equals(new String[]{ "HTTPNotificationEndpoint" }, types)) {
+      if (Arrays.equals(new String[]{ "http" }, types)) {
         return context.deserialize(json, HTTPNotificationEndpoint.class);
       }
 

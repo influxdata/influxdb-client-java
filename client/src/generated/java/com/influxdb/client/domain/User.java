@@ -43,7 +43,7 @@ public class User {
   private String name;
 
   /**
-   * if inactive the user is inactive.
+   * If inactive the user is inactive.
    */
   @JsonAdapter(StatusEnum.Adapter.class)
   public enum StatusEnum {
@@ -148,10 +148,10 @@ public class User {
   }
 
    /**
-   * if inactive the user is inactive.
+   * If inactive the user is inactive.
    * @return status
   **/
-  @ApiModelProperty(value = "if inactive the user is inactive.")
+  @ApiModelProperty(value = "If inactive the user is inactive.")
   public StatusEnum getStatus() {
     return status;
   }

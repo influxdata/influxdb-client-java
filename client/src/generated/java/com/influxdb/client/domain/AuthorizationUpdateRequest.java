@@ -30,7 +30,7 @@ import java.io.IOException;
 
 public class AuthorizationUpdateRequest {
   /**
-   * if inactive the token is inactive and requests using the token will be rejected.
+   * If inactive the token is inactive and requests using the token will be rejected.
    */
   @JsonAdapter(StatusEnum.Adapter.class)
   public enum StatusEnum {
@@ -90,10 +90,10 @@ public class AuthorizationUpdateRequest {
   }
 
    /**
-   * if inactive the token is inactive and requests using the token will be rejected.
+   * If inactive the token is inactive and requests using the token will be rejected.
    * @return status
   **/
-  @ApiModelProperty(value = "if inactive the token is inactive and requests using the token will be rejected.")
+  @ApiModelProperty(value = "If inactive the token is inactive and requests using the token will be rejected.")
   public StatusEnum getStatus() {
     return status;
   }

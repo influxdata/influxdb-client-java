@@ -43,6 +43,57 @@ public class Bucket {
   @SerializedName(SERIALIZED_NAME_ID)
   private String id;
 
+  /**
+   * Gets or Sets type
+   */
+  @JsonAdapter(TypeEnum.Adapter.class)
+  public enum TypeEnum {
+    USER("user"),
+    
+    SYSTEM("system");
+
+    private String value;
+
+    TypeEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static TypeEnum fromValue(String text) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<TypeEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final TypeEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public TypeEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return TypeEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+
+  public static final String SERIALIZED_NAME_TYPE = "type";
+  @SerializedName(SERIALIZED_NAME_TYPE)
+  private TypeEnum type = TypeEnum.USER;
+
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name;
@@ -100,6 +151,15 @@ public class Bucket {
   @ApiModelProperty(value = "")
   public String getId() {
     return id;
+  }
+
+   /**
+   * Get type
+   * @return type
+  **/
+  @ApiModelProperty(value = "")
+  public TypeEnum getType() {
+    return type;
   }
 
   public Bucket name(String name) {
@@ -203,10 +263,10 @@ public class Bucket {
   }
 
    /**
-   * rules to expire or retain data.  No rules means data never expires.
+   * Rules to expire or retain data.  No rules means data never expires.
    * @return retentionRules
   **/
-  @ApiModelProperty(required = true, value = "rules to expire or retain data.  No rules means data never expires.")
+  @ApiModelProperty(required = true, value = "Rules to expire or retain data.  No rules means data never expires.")
   public List<BucketRetentionRules> getRetentionRules() {
     return retentionRules;
   }
@@ -253,6 +313,7 @@ public class Bucket {
     Bucket bucket = (Bucket) o;
     return Objects.equals(this.links, bucket.links) &&
         Objects.equals(this.id, bucket.id) &&
+        Objects.equals(this.type, bucket.type) &&
         Objects.equals(this.name, bucket.name) &&
         Objects.equals(this.description, bucket.description) &&
         Objects.equals(this.orgID, bucket.orgID) &&
@@ -265,7 +326,7 @@ public class Bucket {
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, id, name, description, orgID, rp, createdAt, updatedAt, retentionRules, labels);
+    return Objects.hash(links, id, type, name, description, orgID, rp, createdAt, updatedAt, retentionRules, labels);
   }
 
 
@@ -275,6 +336,7 @@ public class Bucket {
     sb.append("class Bucket {\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");

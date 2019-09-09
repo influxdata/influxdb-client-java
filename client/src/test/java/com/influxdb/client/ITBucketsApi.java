@@ -89,6 +89,7 @@ class ITBucketsApi extends AbstractITClientTest {
         Assertions.assertThat(bucket.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(bucket.getCreatedAt()).isAfter(now);
         Assertions.assertThat(bucket.getUpdatedAt()).isAfter(now);
+        Assertions.assertThat(bucket.getType()).isEqualTo(Bucket.TypeEnum.USER);
         Assertions.assertThat(bucket.getRetentionRules()).hasSize(1);
         Assertions.assertThat(bucket.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600L);
         Assertions.assertThat(bucket.getRetentionRules().get(0).getType()).isEqualTo(BucketRetentionRules.TypeEnum.EXPIRE);

@@ -25,9 +25,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * a pair consisting of length of time and the unit of time measured. It is the atomic unit from which all duration literals are composed.
+ * A pair consisting of length of time and the unit of time measured. It is the atomic unit from which all duration literals are composed.
  */
-@ApiModel(description = "a pair consisting of length of time and the unit of time measured. It is the atomic unit from which all duration literals are composed.")
+@ApiModel(description = "A pair consisting of length of time and the unit of time measured. It is the atomic unit from which all duration literals are composed.")
 
 public class Duration {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -48,10 +48,10 @@ public class Duration {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

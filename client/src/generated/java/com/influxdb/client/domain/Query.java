@@ -27,9 +27,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * query influx with specified return formatting.
+ * Query influx with specific return formatting.
  */
-@ApiModel(description = "query influx with specified return formatting.")
+@ApiModel(description = "Query influx with specific return formatting.")
 
 public class Query {
   public static final String SERIALIZED_NAME_EXTERN = "extern";
@@ -41,7 +41,7 @@ public class Query {
   private String query;
 
   /**
-   * type of query
+   * The type of query.
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
@@ -131,10 +131,10 @@ public class Query {
   }
 
    /**
-   * query script to execute.
+   * Query script to execute.
    * @return query
   **/
-  @ApiModelProperty(required = true, value = "query script to execute.")
+  @ApiModelProperty(required = true, value = "Query script to execute.")
   public String getQuery() {
     return query;
   }
@@ -149,10 +149,10 @@ public class Query {
   }
 
    /**
-   * type of query
+   * The type of query.
    * @return type
   **/
-  @ApiModelProperty(value = "type of query")
+  @ApiModelProperty(value = "The type of query.")
   public TypeEnum getType() {
     return type;
   }
@@ -167,10 +167,10 @@ public class Query {
   }
 
    /**
-   * required for influxql type queries
+   * Required for &#x60;influxql&#x60; type queries.
    * @return db
   **/
-  @ApiModelProperty(value = "required for influxql type queries")
+  @ApiModelProperty(value = "Required for `influxql` type queries.")
   public String getDb() {
     return db;
   }
@@ -185,10 +185,10 @@ public class Query {
   }
 
    /**
-   * required for influxql type queries
+   * Required for &#x60;influxql&#x60; type queries.
    * @return rp
   **/
-  @ApiModelProperty(value = "required for influxql type queries")
+  @ApiModelProperty(value = "Required for `influxql` type queries.")
   public String getRp() {
     return rp;
   }
@@ -203,10 +203,10 @@ public class Query {
   }
 
    /**
-   * required for influxql type queries
+   * Required for &#x60;influxql&#x60; type queries.
    * @return cluster
   **/
-  @ApiModelProperty(value = "required for influxql type queries")
+  @ApiModelProperty(value = "Required for `influxql` type queries.")
   public String getCluster() {
     return cluster;
   }

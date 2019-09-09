@@ -28,7 +28,7 @@ import java.io.IOException;
  * HTTPNotificationRuleBase
  */
 
-public class HTTPNotificationRuleBase extends HTTPNotificationRule {
+public class HTTPNotificationRuleBase extends NotificationRule {
   /**
    * Gets or Sets type
    */
@@ -100,7 +100,7 @@ public class HTTPNotificationRuleBase extends HTTPNotificationRule {
    * Get url
    * @return url
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public String getUrl() {
     return url;
   }

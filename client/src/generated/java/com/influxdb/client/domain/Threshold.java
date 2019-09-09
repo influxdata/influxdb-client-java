@@ -24,7 +24,7 @@ import com.influxdb.client.domain.RangeThreshold;
  * Threshold
  */
 
-public class Threshold {
+public class Threshold extends ThresholdBase {
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -34,12 +34,12 @@ public class Threshold {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    return true;
+    return super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash();
+    return Objects.hash(super.hashCode());
   }
 
 
@@ -47,6 +47,7 @@ public class Threshold {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Threshold {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("}");
     return sb.toString();
   }

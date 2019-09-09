@@ -37,9 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * may consist of an expression that does not return a value and is executed solely for its side-effects
+ * May consist of an expression that does not return a value and is executed solely for its side-effects
  */
-@ApiModel(description = "may consist of an expression that does not return a value and is executed solely for its side-effects")
+@ApiModel(description = "May consist of an expression that does not return a value and is executed solely for its side-effects")
 
 public class ExpressionStatement extends Statement {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -57,10 +57,10 @@ public class ExpressionStatement extends Statement {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

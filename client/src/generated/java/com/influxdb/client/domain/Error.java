@@ -30,7 +30,7 @@ import java.io.IOException;
 
 public class Error {
   /**
-   * code is the machine-readable error code.
+   * Code is the machine-readable error code.
    */
   @JsonAdapter(CodeEnum.Adapter.class)
   public enum CodeEnum {
@@ -102,48 +102,22 @@ public class Error {
   @SerializedName(SERIALIZED_NAME_MESSAGE)
   private String message;
 
-  public static final String SERIALIZED_NAME_OP = "op";
-  @SerializedName(SERIALIZED_NAME_OP)
-  private String op;
-
-  public static final String SERIALIZED_NAME_ERR = "err";
-  @SerializedName(SERIALIZED_NAME_ERR)
-  private String err;
-
    /**
-   * code is the machine-readable error code.
+   * Code is the machine-readable error code.
    * @return code
   **/
-  @ApiModelProperty(required = true, value = "code is the machine-readable error code.")
+  @ApiModelProperty(required = true, value = "Code is the machine-readable error code.")
   public CodeEnum getCode() {
     return code;
   }
 
    /**
-   * message is a human-readable message.
+   * Message is a human-readable message.
    * @return message
   **/
-  @ApiModelProperty(required = true, value = "message is a human-readable message.")
+  @ApiModelProperty(required = true, value = "Message is a human-readable message.")
   public String getMessage() {
     return message;
-  }
-
-   /**
-   * op describes the logical code operation during error. Useful for debugging.
-   * @return op
-  **/
-  @ApiModelProperty(value = "op describes the logical code operation during error. Useful for debugging.")
-  public String getOp() {
-    return op;
-  }
-
-   /**
-   * err is a stack of errors that occurred during processing of the request. Useful for debugging.
-   * @return err
-  **/
-  @ApiModelProperty(value = "err is a stack of errors that occurred during processing of the request. Useful for debugging.")
-  public String getErr() {
-    return err;
   }
 
 
@@ -157,14 +131,12 @@ public class Error {
     }
     Error error = (Error) o;
     return Objects.equals(this.code, error.code) &&
-        Objects.equals(this.message, error.message) &&
-        Objects.equals(this.op, error.op) &&
-        Objects.equals(this.err, error.err);
+        Objects.equals(this.message, error.message);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, message, op, err);
+    return Objects.hash(code, message);
   }
 
 
@@ -174,8 +146,6 @@ public class Error {
     sb.append("class Error {\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
-    sb.append("    op: ").append(toIndentedString(op)).append("\n");
-    sb.append("    err: ").append(toIndentedString(err)).append("\n");
     sb.append("}");
     return sb.toString();
   }

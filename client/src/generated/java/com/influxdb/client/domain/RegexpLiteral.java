@@ -25,9 +25,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * expressions begin and end with &#x60;/&#x60; and are regular expressions with syntax accepted by RE2
+ * Expressions begin and end with &#x60;/&#x60; and are regular expressions with syntax accepted by RE2
  */
-@ApiModel(description = "expressions begin and end with `/` and are regular expressions with syntax accepted by RE2")
+@ApiModel(description = "Expressions begin and end with `/` and are regular expressions with syntax accepted by RE2")
 
 public class RegexpLiteral extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -44,10 +44,10 @@ public class RegexpLiteral extends Expression {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

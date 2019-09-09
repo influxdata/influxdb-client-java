@@ -25,7 +25,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 /**
- * the state to record if check matches a criteria
+ * The state to record if check matches a criteria.
  */
 @JsonAdapter(RuleStatusLevel.Adapter.class)
 public enum RuleStatusLevel {

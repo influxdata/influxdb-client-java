@@ -23,9 +23,9 @@ import java.util.Map;
 
 public interface TemplatesService {
   /**
-   * delete a template document
+   * Delete a template
    * 
-   * @param templateID ID of template (required)
+   * @param templateID The template ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -35,10 +35,10 @@ public interface TemplatesService {
   );
 
   /**
-   * delete a label from a template
+   * Delete a label from a template
    * 
-   * @param templateID ID of template (required)
-   * @param labelID the label ID (required)
+   * @param templateID The template ID. (required)
+   * @param labelID The label ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -51,8 +51,8 @@ public interface TemplatesService {
    * 
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param org specifies the name of the organization of the template (optional)
-   * @param orgID specifies the organization id of the template (optional)
+   * @param org Specifies the name of the organization of the template. (optional)
+   * @param orgID Specifies the organization ID of the template. (optional)
    * @return Call&lt;Documents&gt;
    */
   @GET("api/v2/documents/templates")
@@ -63,7 +63,7 @@ public interface TemplatesService {
   /**
    * 
    * 
-   * @param templateID ID of template (required)
+   * @param templateID The template ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Document&gt;
    */
@@ -73,9 +73,9 @@ public interface TemplatesService {
   );
 
   /**
-   * list all labels for a template
+   * List all labels for a template
    * 
-   * @param templateID ID of template (required)
+   * @param templateID The template ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
@@ -87,7 +87,7 @@ public interface TemplatesService {
   /**
    * Create a template
    * 
-   * @param documentCreate template that will be created (required)
+   * @param documentCreate Template that will be created (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Document&gt;
    */
@@ -100,10 +100,10 @@ public interface TemplatesService {
   );
 
   /**
-   * add a label to a template
+   * Add a label to a template
    * 
-   * @param templateID ID of template (required)
-   * @param labelMapping label to add (required)
+   * @param templateID The template ID. (required)
+   * @param labelMapping Label to add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelResponse&gt;
    */
@@ -118,8 +118,8 @@ public interface TemplatesService {
   /**
    * 
    * 
-   * @param templateID ID of template (required)
-   * @param documentUpdate template that will be updated (required)
+   * @param templateID The template ID. (required)
+   * @param documentUpdate Template that will be updated (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Document&gt;
    */

@@ -25,9 +25,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * represents an instant in time with nanosecond precision using the syntax of golang&#39;s RFC3339 Nanosecond variant
+ * Represents an instant in time with nanosecond precision using the syntax of golang&#39;s RFC3339 Nanosecond variant
  */
-@ApiModel(description = "represents an instant in time with nanosecond precision using the syntax of golang's RFC3339 Nanosecond variant")
+@ApiModel(description = "Represents an instant in time with nanosecond precision using the syntax of golang's RFC3339 Nanosecond variant")
 
 public class DateTimeLiteral extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -44,10 +44,10 @@ public class DateTimeLiteral extends Expression {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

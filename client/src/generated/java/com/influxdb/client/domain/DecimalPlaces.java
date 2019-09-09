@@ -25,9 +25,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * indicates whether decimal places should be enforced, and how many digits it should show.
+ * Indicates whether decimal places should be enforced, and how many digits it should show.
  */
-@ApiModel(description = "indicates whether decimal places should be enforced, and how many digits it should show.")
+@ApiModel(description = "Indicates whether decimal places should be enforced, and how many digits it should show.")
 
 public class DecimalPlaces {
   public static final String SERIALIZED_NAME_IS_ENFORCED = "isEnforced";

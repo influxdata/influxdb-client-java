@@ -25,9 +25,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * a valid Flux identifier
+ * A valid Flux identifier
  */
-@ApiModel(description = "a valid Flux identifier")
+@ApiModel(description = "A valid Flux identifier")
 
 public class Identifier extends PropertyKey {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -44,10 +44,10 @@ public class Identifier extends PropertyKey {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

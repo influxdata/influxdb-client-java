@@ -36,9 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * a single variable declaration
+ * A single variable declaration
  */
-@ApiModel(description = "a single variable declaration")
+@ApiModel(description = "A single variable declaration")
 
 public class OptionStatement extends Statement {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -56,10 +56,10 @@ public class OptionStatement extends Statement {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

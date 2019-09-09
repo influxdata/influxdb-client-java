@@ -62,10 +62,10 @@ public class ScraperTargetResponse extends ScraperTargetRequest {
   }
 
    /**
-   * name of the organization
+   * The organization name.
    * @return org
   **/
-  @ApiModelProperty(value = "name of the organization")
+  @ApiModelProperty(value = "The organization name.")
   public String getOrg() {
     return org;
   }
@@ -80,10 +80,10 @@ public class ScraperTargetResponse extends ScraperTargetRequest {
   }
 
    /**
-   * name of the bucket
+   * The bucket name.
    * @return bucket
   **/
-  @ApiModelProperty(value = "name of the bucket")
+  @ApiModelProperty(value = "The bucket name.")
   public String getBucket() {
     return bucket;
   }

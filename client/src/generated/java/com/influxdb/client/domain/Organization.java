@@ -56,7 +56,7 @@ public class Organization {
   private OffsetDateTime updatedAt;
 
   /**
-   * if inactive the organization is inactive.
+   * If inactive the organization is inactive.
    */
   @JsonAdapter(StatusEnum.Adapter.class)
   public enum StatusEnum {
@@ -193,10 +193,10 @@ public class Organization {
   }
 
    /**
-   * if inactive the organization is inactive.
+   * If inactive the organization is inactive.
    * @return status
   **/
-  @ApiModelProperty(value = "if inactive the organization is inactive.")
+  @ApiModelProperty(value = "If inactive the organization is inactive.")
   public StatusEnum getStatus() {
     return status;
   }

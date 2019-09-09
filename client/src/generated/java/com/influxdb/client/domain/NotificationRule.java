@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Arrays;
 import com.influxdb.client.domain.HTTPNotificationRule;
 import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.NotificationRuleBaseLinks;
 import com.influxdb.client.domain.PagerDutyNotificationRule;
 import com.influxdb.client.domain.SMTPNotificationRule;
 import com.influxdb.client.domain.SlackNotificationRule;
@@ -30,7 +31,7 @@ import java.util.List;
  * NotificationRule
  */
 
-public class NotificationRule {
+public class NotificationRule extends NotificationRuleBase {
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -40,12 +41,12 @@ public class NotificationRule {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    return true;
+    return super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash();
+    return Objects.hash(super.hashCode());
   }
 
 
@@ -53,6 +54,7 @@ public class NotificationRule {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class NotificationRule {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -37,9 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * represents the rule conditions that collectively evaluate to either true or false
+ * Represents the rule conditions that collectively evaluate to either true or false
  */
-@ApiModel(description = "represents the rule conditions that collectively evaluate to either true or false")
+@ApiModel(description = "Represents the rule conditions that collectively evaluate to either true or false")
 
 public class LogicalExpression extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -66,10 +66,10 @@ public class LogicalExpression extends Expression {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

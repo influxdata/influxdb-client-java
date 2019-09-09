@@ -97,11 +97,11 @@ public class BucketRetentionRules {
   }
 
    /**
-   * duration in seconds for how long data will be kept in the database.
+   * Duration in seconds for how long data will be kept in the database.
    * minimum: 1
    * @return everySeconds
   **/
-  @ApiModelProperty(example = "86400", required = true, value = "duration in seconds for how long data will be kept in the database.")
+  @ApiModelProperty(example = "86400", required = true, value = "Duration in seconds for how long data will be kept in the database.")
   public Integer getEverySeconds() {
     return everySeconds;
   }

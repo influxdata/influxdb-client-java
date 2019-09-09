@@ -22,9 +22,9 @@ import java.util.Map;
 
 public interface NotificationEndpointsService {
   /**
-   * Add new notification endpoint
+   * Add a notification endpoint
    * 
-   * @param notificationEndpoint notificationEndpoint to create (required)
+   * @param notificationEndpoint Notification endpoint to create (required)
    * @return Call&lt;NotificationEndpoint&gt;
    */
   @Headers({
@@ -38,7 +38,7 @@ public interface NotificationEndpointsService {
   /**
    * Delete a notification endpoint
    * 
-   * @param endpointID ID of notification endpoint (required)
+   * @param endpointID The notification endpoint ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -48,10 +48,10 @@ public interface NotificationEndpointsService {
   );
 
   /**
-   * delete label from a notification endpoint
+   * Delete a label from a notification endpoint
    * 
-   * @param endpointID ID of the notification endpoint (required)
-   * @param labelID the label id to delete (required)
+   * @param endpointID The notification endpoint ID. (required)
+   * @param labelID The ID of the label to delete. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -63,20 +63,21 @@ public interface NotificationEndpointsService {
   /**
    * Get all notification endpoints
    * 
-   * @param orgID only show notification endpoints belonging to specified organization (required)
+   * @param orgID Only show notification endpoints that belong to specific organization ID. (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
    * @param offset  (optional)
    * @param limit  (optional, default to 20)
    * @return Call&lt;NotificationEndpoints&gt;
    */
   @GET("api/v2/notificationEndpoints")
   Call<NotificationEndpoints> getNotificationEndpoints(
-    @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
+    @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
   );
 
   /**
    * Get a notification endpoint
    * 
-   * @param endpointID ID of notification endpoint (required)
+   * @param endpointID The notification endpoint ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;NotificationEndpoint&gt;
    */
@@ -86,9 +87,9 @@ public interface NotificationEndpointsService {
   );
 
   /**
-   * list all labels for a notification endpoint
+   * List all labels for a notification endpoint
    * 
-   * @param endpointID ID of the notification endpoint (required)
+   * @param endpointID The notification endpoint ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
@@ -100,8 +101,8 @@ public interface NotificationEndpointsService {
   /**
    * Update a notification endpoint
    * 
-   * @param endpointID ID of notification endpoint (required)
-   * @param notificationEndpointUpdate check update to apply (required)
+   * @param endpointID The notification endpoint ID. (required)
+   * @param notificationEndpointUpdate Check update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;NotificationEndpoint&gt;
    */
@@ -114,10 +115,10 @@ public interface NotificationEndpointsService {
   );
 
   /**
-   * add a label to a notification endpoint
+   * Add a label to a notification endpoint
    * 
-   * @param endpointID ID of the notification endpoint (required)
-   * @param labelMapping label to add (required)
+   * @param endpointID The notification endpoint ID. (required)
+   * @param labelMapping Label to add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelResponse&gt;
    */
@@ -132,8 +133,8 @@ public interface NotificationEndpointsService {
   /**
    * Update a notification endpoint
    * 
-   * @param endpointID ID of notification endpoint (required)
-   * @param notificationEndpoint a new notification endpoint to replace the existing endpoint with (required)
+   * @param endpointID The notification endpoint ID. (required)
+   * @param notificationEndpoint A new notification endpoint to replace the existing endpoint with (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;NotificationEndpoint&gt;
    */

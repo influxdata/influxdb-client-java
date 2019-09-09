@@ -94,10 +94,10 @@ public class DocumentCreate {
   }
 
    /**
-   * must specify one of orgID and org
+   * The organization Name. Specify either &#x60;orgID&#x60; or &#x60;org&#x60;.
    * @return org
   **/
-  @ApiModelProperty(value = "must specify one of orgID and org")
+  @ApiModelProperty(value = "The organization Name. Specify either `orgID` or `org`.")
   public String getOrg() {
     return org;
   }
@@ -112,10 +112,10 @@ public class DocumentCreate {
   }
 
    /**
-   * must specify one of orgID and org
+   * The organization Name. Specify either &#x60;orgID&#x60; or &#x60;org&#x60;.
    * @return orgID
   **/
-  @ApiModelProperty(value = "must specify one of orgID and org")
+  @ApiModelProperty(value = "The organization Name. Specify either `orgID` or `org`.")
   public String getOrgID() {
     return orgID;
   }
@@ -138,10 +138,10 @@ public class DocumentCreate {
   }
 
    /**
-   * this is an array of label IDs that will be added as labels to the document
+   * An array of label IDs to be added as labels to the document.
    * @return labels
   **/
-  @ApiModelProperty(value = "this is an array of label IDs that will be added as labels to the document")
+  @ApiModelProperty(value = "An array of label IDs to be added as labels to the document.")
   public List<String> getLabels() {
     return labels;
   }
