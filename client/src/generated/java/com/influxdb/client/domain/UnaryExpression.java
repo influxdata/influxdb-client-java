@@ -206,6 +206,9 @@ public class UnaryExpression extends Expression {
       if (Arrays.equals(new String[]{ "ObjectExpression" }, types)) {
         return context.deserialize(json, ObjectExpression.class);
       }
+      if (Arrays.equals(new String[]{ "ParenExpression" }, types)) {
+        return context.deserialize(json, ParenExpression.class);
+      }
       if (Arrays.equals(new String[]{ "PipeExpression" }, types)) {
         return context.deserialize(json, PipeExpression.class);
       }

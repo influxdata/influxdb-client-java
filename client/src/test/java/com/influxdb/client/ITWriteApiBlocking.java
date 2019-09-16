@@ -181,7 +181,7 @@ class ITWriteApiBlocking extends AbstractITClientTest {
         WriteApiBlocking api = influxDBClient.getWriteApiBlocking();
 
         Assertions.assertThatThrownBy(() -> api.writeRecord(WritePrecision.NS, "h2o,location=coyote_creek"))
-                .hasMessageStartingWith("unable to parse points: unable to parse 'h2o,location=coyote_creek': missing fields")
+                .hasMessageStartingWith("unable to parse 'h2o,location=coyote_creek': missing fields")
                 .isInstanceOf(BadRequestException.class);
     }
 

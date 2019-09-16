@@ -37,21 +37,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * may consist of an expression that does not return a value and is executed solely for its side-effects
+ * represents an expression wrapped in parenthesis
  */
-@ApiModel(description = "may consist of an expression that does not return a value and is executed solely for its side-effects")
+@ApiModel(description = "represents an expression wrapped in parenthesis")
 
-public class ExpressionStatement extends Statement {
+public class ParenExpression extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
   private String type;
 
   public static final String SERIALIZED_NAME_EXPRESSION = "expression";
   @SerializedName(SERIALIZED_NAME_EXPRESSION)
-  @JsonAdapter(ExpressionStatementExpressionAdapter.class)
+  @JsonAdapter(ParenExpressionExpressionAdapter.class)
   private Expression expression = null;
 
-  public ExpressionStatement type(String type) {
+  public ParenExpression type(String type) {
     this.type = type;
     return this;
   }
@@ -69,7 +69,7 @@ public class ExpressionStatement extends Statement {
     this.type = type;
   }
 
-  public ExpressionStatement expression(Expression expression) {
+  public ParenExpression expression(Expression expression) {
     this.expression = expression;
     return this;
   }
@@ -96,9 +96,9 @@ public class ExpressionStatement extends Statement {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ExpressionStatement expressionStatement = (ExpressionStatement) o;
-    return Objects.equals(this.type, expressionStatement.type) &&
-        Objects.equals(this.expression, expressionStatement.expression) &&
+    ParenExpression parenExpression = (ParenExpression) o;
+    return Objects.equals(this.type, parenExpression.type) &&
+        Objects.equals(this.expression, parenExpression.expression) &&
         super.equals(o);
   }
 
@@ -111,7 +111,7 @@ public class ExpressionStatement extends Statement {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ExpressionStatement {\n");
+    sb.append("class ParenExpression {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    expression: ").append(toIndentedString(expression)).append("\n");
@@ -130,9 +130,9 @@ public class ExpressionStatement extends Statement {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class ExpressionStatementExpressionAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public class ParenExpressionExpressionAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
-    public ExpressionStatementExpressionAdapter() {
+    public ParenExpressionExpressionAdapter() {
     }
 
     @Override

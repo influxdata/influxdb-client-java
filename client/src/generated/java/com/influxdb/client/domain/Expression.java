@@ -33,6 +33,7 @@ import com.influxdb.client.domain.LogicalExpression;
 import com.influxdb.client.domain.MemberExpression;
 import com.influxdb.client.domain.Node;
 import com.influxdb.client.domain.ObjectExpression;
+import com.influxdb.client.domain.ParenExpression;
 import com.influxdb.client.domain.PipeExpression;
 import com.influxdb.client.domain.PipeLiteral;
 import com.influxdb.client.domain.Property;

@@ -212,6 +212,12 @@ final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiB
                 .filter(it -> it != null && !it.isEmpty())
                 .collect(Collectors.joining("\n"));
 
+        if (lineProtocol.isEmpty()) {
+
+            LOG.warning("The writes: " + stream + " doesn't contains any Line Protocol, skipping");
+            return;
+        }
+
         LOG.log(Level.FINEST,
                 "Writing time-series data into InfluxDB (org={0}, bucket={1}, precision={2})...",
                 new Object[]{organization, bucket, precision});
