@@ -1,5 +1,8 @@
 ## 1.1.0 [unreleased]
 
+### Improvements
+1. [#60](https://github.com/influxdata/influxdb-client-java/pull/60): Writes performance optimized
+
 ### API
 1. [#58](https://github.com/influxdata/influxdb-client-java/pull/58): Updated swagger to latest version
 

@@ -120,32 +120,27 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                 // Create Write Point = bucket, org, ... + data
                 //
                 .concatMapSingle(grouped -> grouped
-
-                        //
-                        // Create Line Protocol
-                        //
-                        .reduce("", (lineProtocol, batchWrite) -> {
-
-                            String data = null;
+                        .map(it -> {
                             try {
-                                data = batchWrite.data.toLineProtocol();
+                                String lineProtocol = it.data.toLineProtocol();
+                                if (lineProtocol == null) {
+                                    return "";
+                                }
+                                return lineProtocol;
                             } catch (Exception e) {
                                 publish(new WriteErrorEvent(e));
+                                return "";
                             }
-
-                            if (data == null || data.isEmpty()) {
-                                return lineProtocol;
-                            }
-
-                            if (lineProtocol.isEmpty()) {
-                                return data;
-                            }
-                            return String.join("\n", lineProtocol, data);
                         })
-                        //
-                        // "Group" with bucket, org, ...
-                        //
-                        .map(records -> new BatchWriteItem(grouped.getKey(), new BatchWriteDataRecord(records))))
+                        .filter(it -> it != null && !it.isEmpty())
+                        .collect(StringBuilder::new, (sb, x) -> {
+                            if (sb.length() > 0) {
+                                sb.append("\n");
+                            }
+                            sb.append(x);
+                        })
+                        .map(StringBuilder::toString)
+                        .map(it -> new BatchWriteItem(grouped.getKey(), new BatchWriteDataRecord(it))))
                 //
                 // Jitter interval
                 //
@@ -424,8 +419,8 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
             Maybe<Response<Void>> requestSource = Maybe
                     .fromCallable(() -> service
                             .postWrite(organization, bucket, content, null,
-                            "identity", "text/plain; charset=utf-8", null,
-                            "application/json", null, precision))
+                                    "identity", "text/plain; charset=utf-8", null,
+                                    "application/json", null, precision))
                     .map(Call::execute);
 
             return requestSource
