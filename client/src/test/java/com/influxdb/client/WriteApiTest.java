@@ -387,6 +387,42 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
     }
 
     @Test
+    void flushByCount() {
+
+        mockServer.enqueue(createResponse("{}"));
+        mockServer.enqueue(createResponse("{}"));
+        mockServer.enqueue(createResponse("{}"));
+        mockServer.enqueue(createResponse("{}"));
+        mockServer.enqueue(createResponse("{}"));
+        mockServer.enqueue(createResponse("{}"));
+        mockServer.enqueue(createResponse("{}"));
+        mockServer.enqueue(createResponse("{}"));
+        mockServer.enqueue(createResponse("{}"));
+        mockServer.enqueue(createResponse("{}"));
+
+        WriteOptions writeOptions = WriteOptions.builder()
+                .bufferLimit(100_000)
+                .batchSize(10_000)
+                .flushInterval(100_000_000)
+                .build();
+
+        writeApi = influxDBClient.getWriteApi(writeOptions);
+
+        WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteSuccessEvent.class, listener);
+
+        for (int i = 0; i < 100_000; i++) {
+
+            writeApi.writeRecord("my-bucket", "my-org", WritePrecision.S,
+                    String.format("sensor_1569839027289,id=1120 temperature=1569839028399 %s", i));
+        }
+
+        listener.awaitCount(10);
+
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(10);
+    }
+
+    @Test
     void flushByDuration() {
 
         mockServer.enqueue(createResponse("{}"));
