@@ -265,4 +265,10 @@ public interface InfluxDBClient extends AutoCloseable {
      * @return true if gzip is enabled.
      */
     boolean isGzipEnabled();
+
+    /**
+     * Shutdown and close the client.
+     */
+    @Override
+    void close();
 }

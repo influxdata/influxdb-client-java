@@ -2,6 +2,7 @@
 
 ### Improvements
 1. [#60](https://github.com/influxdata/influxdb-client-java/pull/60): Writes performance optimized
+1. [#61](https://github.com/influxdata/influxdb-client-java/pull/61): Use Try-With-Resources without catching clause
 
 ### API
 1. [#58](https://github.com/influxdata/influxdb-client-java/pull/58): Updated swagger to latest version

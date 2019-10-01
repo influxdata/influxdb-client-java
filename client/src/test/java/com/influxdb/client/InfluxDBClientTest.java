@@ -165,4 +165,11 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
 
         Assertions.assertThat(operationLogs.getLogs()).hasSize(1);
     }
+
+    @Test
+    public void autoClosable() {
+        try (InfluxDBClient client = InfluxDBClientFactory.create(mockServer.url("/").url().toString())){
+            Assertions.assertThat(client).isNotNull();
+        }
+    }
 }

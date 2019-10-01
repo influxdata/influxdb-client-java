@@ -23,13 +23,14 @@ package com.influxdb.client.kotlin
 
 import com.influxdb.LogLevel
 import com.influxdb.client.domain.HealthCheck
+import java.io.Closeable
 
 /**
  * The reference Kotlin client that allows query and write for the InfluxDB 2.0 by Kotlin Channel coroutines.
  * 
  * @author Jakub Bednar (bednar@github) (07/02/2019 13:11)
  */
-interface InfluxDBClientKotlin {
+interface InfluxDBClientKotlin : Closeable {
 
     /**
      * Get the Query client.
@@ -86,5 +87,5 @@ interface InfluxDBClientKotlin {
     /**
      * Shutdown and close the client.
      */
-    fun close()
+    override fun close()
 }

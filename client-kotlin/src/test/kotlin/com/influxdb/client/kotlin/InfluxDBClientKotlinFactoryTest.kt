@@ -37,14 +37,13 @@ import retrofit2.Retrofit
  * @author Jakub Bednar (bednar@github) (30/10/2018 08:32)
  */
 @RunWith(JUnitPlatform::class)
-class InfluxDBClientKotlinFactoryTest: AbstractTest() {
+class InfluxDBClientKotlinFactoryTest : AbstractTest() {
 
     @Test
-    fun connect()
-    {
+    fun connect() {
         val client = InfluxDBClientKotlinFactory.create("http://localhost:9999")
 
-        AssertionsForClassTypes.assertThat<InfluxDBClientKotlin>(client).isNotNull
+        AssertionsForClassTypes.assertThat(client).isNotNull
     }
 
     @Test
@@ -59,8 +58,8 @@ class InfluxDBClientKotlinFactoryTest: AbstractTest() {
         Assertions.assertThat(options.org).isEqualTo("my-org")
         Assertions.assertThat(options.bucket).isEqualTo("my-bucket")
         Assertions.assertThat(options.token).isEqualTo("my-token".toCharArray())
-        AssertionsForClassTypes.assertThat<LogLevel>(options.logLevel).isEqualTo(LogLevel.BASIC)
-        AssertionsForClassTypes.assertThat<LogLevel>(influxDBClient.getLogLevel()).isEqualTo(LogLevel.BASIC)
+        AssertionsForClassTypes.assertThat(options.logLevel).isEqualTo(LogLevel.BASIC)
+        AssertionsForClassTypes.assertThat(influxDBClient.getLogLevel()).isEqualTo(LogLevel.BASIC)
 
         val retrofit = getDeclaredField<Retrofit>(influxDBClient, "retrofit", AbstractInfluxDBClient::class.java)
         val okHttpClient = retrofit.callFactory() as OkHttpClient
@@ -68,5 +67,13 @@ class InfluxDBClientKotlinFactoryTest: AbstractTest() {
         Assertions.assertThat(okHttpClient.readTimeoutMillis()).isEqualTo(5000)
         Assertions.assertThat(okHttpClient.writeTimeoutMillis()).isEqualTo(60000)
         Assertions.assertThat(okHttpClient.connectTimeoutMillis()).isEqualTo(5000)
+    }
+
+    @Test
+    fun autoClosable() {
+        val client = InfluxDBClientKotlinFactory.create()
+        client.use {
+            Assertions.assertThat(it).isNotNull
+        }
     }
 }
