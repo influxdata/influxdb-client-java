@@ -84,4 +84,11 @@ class InfluxDBClientReactiveFactoryTest extends AbstractTest {
         Assertions.assertThat(okHttpClient.writeTimeoutMillis()).isEqualTo(10_000);
         Assertions.assertThat(okHttpClient.connectTimeoutMillis()).isEqualTo(5_000);
     }
+
+    @Test
+    public void autoClosable() {
+        try (InfluxDBClientReactive client = InfluxDBClientReactiveFactory.create("http://localhost:9999")){
+            Assertions.assertThat(client).isNotNull();
+        } 
+    }
 }
