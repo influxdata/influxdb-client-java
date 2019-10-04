@@ -17,7 +17,6 @@ The `FluxClientFactory` creates an instance of a `FluxClient` client that can be
 // client creation
 FluxConnectionOptions options = FluxConnectionOptions.builder()
     .url("http://localhost:8086/")
-    .okHttpClient
     .build();
 
 FluxClient fluxClient = FluxClientFactory.create(options);
@@ -49,7 +48,7 @@ The library supports both synchronous and asynchronous queries.
 A simple synchronous example:
 
 ```java
-String query = "from(bucket:\"telegraf\") |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_user\") |> sum()";
+String query = "from(bucket:\"telegraf\") |> range(start: -1d) |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_user\") |> sum()";
 
 //simple synchronous query
 List<FluxTable> tables = fluxClient.flux(query);
@@ -68,13 +67,13 @@ easily&mdash;see [Custom operator](../flux-dsl/README.md#custom-operator).
 An example of using the `Flux` query builder:
 
 ```java
-Flux.from("telegraf")
+Flux.from("telegraf")  
+        .range(-1L, ChronoUnit.DAYS)
         .filter(
             Restrictions.and(
                 Restrictions.measurement().equal("cpu"),
                 Restrictions.field().equal("usage_system"))
         )
-        .range(-1L, ChronoUnit.DAYS)
         .sample(5, 1); 
 ```
 
@@ -91,9 +90,9 @@ to use the [flux-client-rxjava](../flux-client-rxjava) extension.
 An asynchronous query example:   
 
 ```java
-    String fluxQuery = "from(bucket: \"telegraf\")\n" +
-        " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))" +
+    String fluxQuery = "from(bucket: \"telegraf\")\n" +   
         " |> range(start: -1d)" +
+        " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))" +
         " |> sample(n: 5, pos: 1)";
 
      fluxClient.query(

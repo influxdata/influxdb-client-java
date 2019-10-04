@@ -21,37 +21,37 @@
  */
 package example;
 
-import com.influxdb.client.flux.FluxClient;
-import com.influxdb.client.flux.FluxClientFactory;
+import java.util.List;
 
-@SuppressWarnings("CheckStyle")
-public class FluxRawExample {
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
+import com.influxdb.query.FluxRecord;
+import com.influxdb.query.FluxTable;
+
+public class SynchronousQuery {
+
+    private static char[] token = "my-token".toCharArray();
 
     public static void main(final String[] args) {
 
-        FluxClient fluxClient = FluxClientFactory.create(
-            "http://localhost:8086/");
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
-        String fluxQuery = "from(bucket: \"telegraf\")\n"
-            + " |> range(start: -1d)"
-            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))"
-            + " |> sample(n: 5, pos: 1)";
+        String flux = "from(bucket:\"my-bucket\") |> range(start: 0)";
 
-        fluxClient.queryRaw(
-            fluxQuery, (cancellable, line) -> {
-                // process the flux query result record
-                System.out.println(line);
+        QueryApi queryApi = influxDBClient.getQueryApi();
 
-            }, error -> {
-                // error handling while processing result
-                error.printStackTrace();
+        //
+        // Query data
+        //
+        List<FluxTable> tables = queryApi.query(flux, "my-org");
+        for (FluxTable fluxTable : tables) {
+            List<FluxRecord> records = fluxTable.getRecords();
+            for (FluxRecord fluxRecord : records) {
+                System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
+            }
+        }
 
-            }, () -> {
-                // on complete
-                System.out.println("Query completed");
-            });
-
-        fluxClient.close();
-
+        influxDBClient.close();
     }
 }

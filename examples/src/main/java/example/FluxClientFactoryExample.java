@@ -37,8 +37,8 @@ public class FluxClientFactoryExample {
         FluxClient fluxClient = FluxClientFactory.create(options);
 
         String fluxQuery = "from(bucket: \"telegraf\")\n"
-            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
             + " |> range(start: -1d)"
+            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))"
             + " |> sample(n: 5, pos: 1)";
 
         fluxClient.query(

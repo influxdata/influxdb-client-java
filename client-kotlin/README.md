@@ -18,24 +18,23 @@ The following example demonstrates querying using the Flux language:
 ```kotlin
 package example
 
+import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.filter
 import kotlinx.coroutines.channels.take
 import kotlinx.coroutines.runBlocking
-import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
-
-private val token = "my_token".toCharArray()
 
 fun main(args: Array<String>) = runBlocking {
 
-    val influxDBClient = InfluxDBClientKotlinFactory.create("http://localhost:9999", token)
+    val influxDBClient = InfluxDBClientKotlinFactory
+            .create("http://localhost:9999", "my-token".toCharArray())
 
-    val fluxQuery = ("from(bucket: \"telegraf\")\n"
-            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
-            + " |> range(start: -1d)")
+    val fluxQuery = ("from(bucket: \"my-bucket\")\n"
+            + " |> range(start: -1d)"
+            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))")
 
     //Result is returned as a stream
-    val results = influxDBClient.getQueryKotlinApi().query(fluxQuery, "org_id")
+    val results = influxDBClient.getQueryKotlinApi().query(fluxQuery, "my-org")
 
     //Example of additional result stream processing on client side
     results
@@ -55,25 +54,24 @@ It is possible to parse a result line-by-line using the `queryRaw` method:
 ```kotlin
 package example
 
+import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.runBlocking
-import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
-
-private val token = "my_token".toCharArray()
 
 fun main(args: Array<String>) = runBlocking {
 
-    val influxDBClient = InfluxDBClientKotlinFactory.create("http://localhost:9999", token)
+    val influxDBClient = InfluxDBClientKotlinFactory
+            .create("http://localhost:9999", "my-token".toCharArray())
 
-    val fluxQuery = ("from(bucket: \"telegraf\")\n"
-            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
+    val fluxQuery = ("from(bucket: \"my-bucket\")\n"
             + " |> range(start: -5m)"
+            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))"
             + " |> sample(n: 5, pos: 1)")
 
-    // Result is returned as a stream
-    val results = influxDBClient.getQueryKotlinApi().queryRaw(fluxQuery, "{header: false}", "org_id")
+    //Result is returned as a stream
+    val results = influxDBClient.getQueryKotlinApi().queryRaw(fluxQuery, "my-org")
 
-    // Print results
+    //print results
     results.consumeEach { println("Line: $it") }
 
     influxDBClient.close()
@@ -127,7 +125,7 @@ A client can be constructed using a connection string that can contain the Influ
  
 ```kotlin
 val influxDBClient = InfluxDBClientKotlinFactory
-            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
+            .create("http://localhost:9999?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
 ```
 The following options are supported:
 
@@ -167,24 +165,23 @@ Server availability can be checked using the `influxDBClient.health()` endpoint.
 ```kotlin
 package example
 
+import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
+import com.influxdb.query.dsl.Flux
+import com.influxdb.query.dsl.functions.restriction.Restrictions
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.filter
 import kotlinx.coroutines.channels.take
 import kotlinx.coroutines.runBlocking
-import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
-import com.influxdb.query.dsl.Flux
-import com.influxdb.query.dsl.functions.restriction.Restrictions
 import java.time.temporal.ChronoUnit
-
-private val token = "my_token".toCharArray()
 
 fun main(args: Array<String>) = runBlocking {
 
-    val influxDBClient = InfluxDBClientKotlinFactory.create("http://localhost:9999", token)
+    val influxDBClient = InfluxDBClientKotlinFactory
+            .create("http://localhost:9999", "my-token".toCharArray())
 
-    val mem = Flux.from("telegraf")
-            .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
+    val mem = Flux.from("my-bucket")
             .range(-30L, ChronoUnit.MINUTES)
+            .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
 
     //Result is returned as a stream
     val results = influxDBClient.getQueryKotlinApi().query(mem.toString(), "my-org")

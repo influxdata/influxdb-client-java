@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,27 +19,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package example
+package example;
 
-import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.runBlocking
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
 
-fun main(args: Array<String>) = runBlocking {
+public class RawQueryAsynchronous {
 
-    val fluxClient = InfluxDBClientKotlinFactory
-            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC")
+    private static char[] token = "my-token".toCharArray();
 
-    val fluxQuery = ("from(bucket: \"telegraf\")\n"
-            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
-            + " |> range(start: -5m)"
-            + " |> sample(n: 5, pos: 1)")
+    public static void main(final String[] args) throws Exception {
 
-    //Result is returned as a stream
-    val results = fluxClient.getQueryKotlinApi().queryRaw(fluxQuery, "my-org")
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
-    //print results
-    results.consumeEach { println("Line: $it") }
+        //
+        // Query data
+        //
+        String flux = "from(bucket:\"my-bucket\") |> range(start: 0)";
 
-    fluxClient.close()
+        QueryApi queryApi = influxDBClient.getQueryApi();
+
+        queryApi.queryRaw(flux, "my-org", (cancellable, line) -> {
+
+            //
+            // The callback to consume a line of CSV response
+            //
+            // cancelable - object has the cancel method to stop asynchronous query
+            //
+            System.out.println("Response: " + line);
+        });
+
+        Thread.sleep(5_000);
+
+        influxDBClient.close();
+    }
 }

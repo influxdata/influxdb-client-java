@@ -21,37 +21,38 @@
  */
 package example;
 
-import com.influxdb.client.flux.FluxClient;
-import com.influxdb.client.flux.FluxClientFactory;
+import com.influxdb.client.reactive.InfluxDBClientReactive;
+import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
+import com.influxdb.client.reactive.QueryReactiveApi;
 
-@SuppressWarnings("CheckStyle")
-public class FluxRawExample {
+public class InfluxDB2ReactiveExampleRaw {
+
+    private static char[] token = "my-token".toCharArray();
 
     public static void main(final String[] args) {
 
-        FluxClient fluxClient = FluxClientFactory.create(
-            "http://localhost:8086/");
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token);
 
-        String fluxQuery = "from(bucket: \"telegraf\")\n"
-            + " |> range(start: -1d)"
-            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))"
-            + " |> sample(n: 5, pos: 1)";
+        //
+        // Query data
+        //
+        String flux = "from(bucket:\"my-bucket\") |> range(start: 0)";
 
-        fluxClient.queryRaw(
-            fluxQuery, (cancellable, line) -> {
-                // process the flux query result record
-                System.out.println(line);
+        QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
-            }, error -> {
-                // error handling while processing result
-                error.printStackTrace();
+        queryApi
+                .queryRaw(flux, "my-org")
+                //
+                // Take first 10 records
+                //
+                .take(10)
+                .subscribe(line -> {
+                    //
+                    // The callback to consume a line of CSV response
+                    //
+                    System.out.println("Response: " + line);
+                });
 
-            }, () -> {
-                // on complete
-                System.out.println("Query completed");
-            });
-
-        fluxClient.close();
-
+        influxDBClient.close();
     }
 }

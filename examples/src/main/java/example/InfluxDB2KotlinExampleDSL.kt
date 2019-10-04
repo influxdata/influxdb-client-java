@@ -32,15 +32,15 @@ import java.time.temporal.ChronoUnit
 
 fun main(args: Array<String>) = runBlocking {
 
-    val fluxClient = InfluxDBClientKotlinFactory
-            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC")
+    val influxDBClient = InfluxDBClientKotlinFactory
+            .create("http://localhost:9999", "my-token".toCharArray())
 
-    val mem = Flux.from("telegraf")
-            .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
+    val mem = Flux.from("my-bucket")
             .range(-30L, ChronoUnit.MINUTES)
+            .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
 
     //Result is returned as a stream
-    val results = fluxClient.getQueryKotlinApi().query(mem.toString(), "my-org")
+    val results = influxDBClient.getQueryKotlinApi().query(mem.toString(), "my-org")
 
     //Example of additional result stream processing on client side
     results
@@ -51,5 +51,5 @@ fun main(args: Array<String>) = runBlocking {
             //print results
             .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
 
-    fluxClient.close()
+    influxDBClient.close()
 }
