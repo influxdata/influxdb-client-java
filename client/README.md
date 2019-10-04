@@ -44,20 +44,20 @@ import com.influxdb.query.FluxTable;
 
 public class SynchronousQuery {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
-        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+        String flux = "from(bucket:\"my-bucket\") |> range(start: 0)";
 
         QueryApi queryApi = influxDBClient.getQueryApi();
 
         //
         // Query data
         //
-        List<FluxTable> tables = queryApi.query(flux, "org_id");
+        List<FluxTable> tables = queryApi.query(flux, "my-org");
         for (FluxTable fluxTable : tables) {
             List<FluxRecord> records = fluxTable.getRecords();
             for (FluxRecord fluxRecord : records) {
@@ -84,9 +84,9 @@ import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.QueryApi;
 
-public class SynchronousQuery {
+public class SynchronousQueryPojo {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
     public static void main(final String[] args) throws Exception {
 
@@ -95,14 +95,14 @@ public class SynchronousQuery {
         //
         // Query data
         //
-        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+        String flux = "from(bucket:\"my-bucket\") |> range(start: 0) |> filter(fn: (r) => r._measurement == \"temperature\")";
 
         QueryApi queryApi = influxDBClient.getQueryApi();
 
         //
         // Map to POJO
         //
-        List<Temperature> temperatures = queryApi.query(flux, "org_id", Temperature.class);
+        List<Temperature> temperatures = queryApi.query(flux, "my-org", Temperature.class);
         for (Temperature temperature : temperatures) {
             System.out.println(temperature.location + ": " + temperature.value + " at " + temperature.time);
         }
@@ -111,7 +111,7 @@ public class SynchronousQuery {
     }
 
     @Measurement(name = "temperature")
-    private static class Temperature {
+    public static class Temperature {
 
         @Column(tag = true)
         String location;
@@ -139,20 +139,20 @@ import com.influxdb.client.QueryApi;
 
 public class AsynchronousQuery {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) throws InterruptedException {
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
         //
         // Query data
         //
-        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+        String flux = "from(bucket:\"my-bucket\") |> range(start: 0)";
 
         QueryApi queryApi = influxDBClient.getQueryApi();
 
-        queryApi.query(flux, "org_id", (cancellable, fluxRecord) -> {
+        queryApi.query(flux, "my-org", (cancellable, fluxRecord) -> {
 
             //
             // The callback to consume a FluxRecord.
@@ -160,22 +160,24 @@ public class AsynchronousQuery {
             // cancelable - object has the cancel method to stop asynchronous query
             //
             System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
-            
+
         }, throwable -> {
-            
+
             //
             // The callback to consume any error notification.
             //
             System.out.println("Error occurred: " + throwable.getMessage());
-            
+
         }, () -> {
-            
+
             //
             // The callback to consume a notification about successfully end of stream.
             //
             System.out.println("Query completed");
-            
+
         });
+
+        Thread.sleep(5_000);
 
         influxDBClient.close();
     }
@@ -195,26 +197,26 @@ import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.QueryApi;
 
-public class AsynchronousQuery {
+public class AsynchronousQueryPojo {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) throws InterruptedException {
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
         //
         // Query data
         //
-        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+        String flux = "from(bucket:\"my-bucket\") |> range(start: 0) |> filter(fn: (r) => r._measurement == \"temperature\")";
 
         QueryApi queryApi = influxDBClient.getQueryApi();
 
         //
         // Map to POJO
         //
-        queryApi.query(flux, "org_id", Temperature.class, (cancellable, temperature) -> {
-            
+        queryApi.query(flux, "my-org", Temperature.class, (cancellable, temperature) -> {
+
             //
             // The callback to consume a FluxRecord mapped to POJO.
             //
@@ -223,11 +225,13 @@ public class AsynchronousQuery {
             System.out.println(temperature.location + ": " + temperature.value + " at " + temperature.time);
         });
 
+        Thread.sleep(5_000);
+
         influxDBClient.close();
     }
 
     @Measurement(name = "temperature")
-    private static class Temperature {
+    public static class Temperature {
 
         @Column(tag = true)
         String location;
@@ -254,20 +258,20 @@ import com.influxdb.client.QueryApi;
 
 public class RawQuery {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
         //
         // Query data
         //
-        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+        String flux = "from(bucket:\"my-bucket\") |> range(start: 0)";
 
         QueryApi queryApi = influxDBClient.getQueryApi();
 
-        String csv = queryApi.queryRaw(flux, "org_id");
+        String csv = queryApi.queryRaw(flux, "my-org");
 
         System.out.println("CSV response: " + csv);
 
@@ -287,7 +291,7 @@ import com.influxdb.client.QueryApi;
 
 public class RawQueryAsynchronous {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
     public static void main(final String[] args) throws Exception {
 
@@ -296,11 +300,11 @@ public class RawQueryAsynchronous {
         //
         // Query data
         //
-        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+        String flux = "from(bucket:\"my-bucket\") |> range(start: 0)";
 
         QueryApi queryApi = influxDBClient.getQueryApi();
 
-        queryApi.queryRaw(flux, "org_id", (cancellable, line) -> {
+        queryApi.queryRaw(flux, "my-org", (cancellable, line) -> {
 
             //
             // The callback to consume a line of CSV response
@@ -309,6 +313,8 @@ public class RawQueryAsynchronous {
             //
             System.out.println("Response: " + line);
         });
+
+        Thread.sleep(5_000);
 
         influxDBClient.close();
     }
@@ -386,10 +392,11 @@ import com.influxdb.annotations.Measurement;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteApi;
+import com.influxdb.client.domain.WritePrecision;
 
-public class WritePOJO {
+public class WritePojo {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
     public static void main(final String[] args) throws Exception {
 
@@ -408,7 +415,7 @@ public class WritePOJO {
             temperature.value = 62D;
             temperature.time = Instant.now();
 
-            writeApi.writeMeasurement("bucket_name", "org_id", WritePrecision.NS, temperature);
+            writeApi.writeMeasurement("my-bucket", "my-org", WritePrecision.NS, temperature);
         }
 
         influxDBClient.close();
@@ -441,13 +448,14 @@ import java.time.Instant;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteApi;
+import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 
 public class WriteDataPoint {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
@@ -464,7 +472,7 @@ public class WriteDataPoint {
                     .addField("value", 55D)
                     .time(Instant.now().toEpochMilli(), WritePrecision.NS);
 
-            writeApi.writePoint("bucket_name", "org_id", point);
+            writeApi.writePoint("my-bucket", "my-org", point);
         }
 
         influxDBClient.close();
@@ -479,8 +487,6 @@ Write Line Protocol record into specified bucket:
 ```java
 package example;
 
-import java.time.temporal.ChronoUnit;
-
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteApi;
@@ -488,9 +494,9 @@ import com.influxdb.client.domain.WritePrecision;
 
 public class WriteLineProtocol {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
@@ -503,8 +509,8 @@ public class WriteLineProtocol {
             // Write by LineProtocol
             //
             String record = "temperature,location=north value=60.0";
-            
-            writeApi.writeRecord("bucket_name", "org_id", WritePrecision.NS, record);
+
+            writeApi.writeRecord("my-bucket", "my-org", WritePrecision.NS, record);
         }
 
         influxDBClient.close();
@@ -619,26 +625,26 @@ import com.influxdb.client.domain.BucketRetentionRules;
 
 public class InfluxDB2ManagementExample {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
         //
         // Create bucket "iot_bucket" with data retention set to 3,600 seconds
         //
-        RetentionRule retention = new RetentionRule();
-        retention.setEverySeconds(3600L);
+        BucketRetentionRules retention = new BucketRetentionRules();
+        retention.setEverySeconds(3600);
 
-        Bucket bucket = influxDBClient.getBucketsApi().createBucket("iot_bucket", retention, "org_id");
+        Bucket bucket = influxDBClient.getBucketsApi().createBucket("iot-bucket", retention, "12bdc4164c2e8141");
 
         //
         // Create access token to "iot_bucket"
         //
         PermissionResource resource = new PermissionResource();
         resource.setId(bucket.getId());
-        resource.setOrgID("org_id");
+        resource.setOrgID("12bdc4164c2e8141");
         resource.setType(PermissionResource.TypeEnum.BUCKETS);
 
         // Read permission
@@ -652,12 +658,13 @@ public class InfluxDB2ManagementExample {
         write.setAction(Permission.ActionEnum.WRITE);
 
         Authorization authorization = influxDBClient.getAuthorizationsApi()
-                .createAuthorization("org_id", Arrays.asList(read, write));
+                .createAuthorization("12bdc4164c2e8141", Arrays.asList(read, write));
 
         //
         // Created token that can be use for writes to "iot_bucket"
         //
         String token = authorization.getToken();
+        System.out.println("Token: " + token);
 
         influxDBClient.close();
     }
@@ -677,32 +684,32 @@ package example;
 
 import java.time.Instant;
 
-import org.influxdata.annotations.Column;
-import org.influxdata.annotations.Measurement;
-import org.influxdata.client.InfluxDBClient;
-import org.influxdata.client.InfluxDBClientFactory;
-import org.influxdata.client.WriteApiBlocking;
-import org.influxdata.client.domain.WritePrecision;
-import org.influxdata.client.write.Point;
-import org.influxdata.exceptions.InfluxException;
+import com.influxdb.annotations.Column;
+import com.influxdb.annotations.Measurement;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.WriteApiBlocking;
+import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.write.Point;
+import com.influxdb.exceptions.InfluxException;
 
-public class WriteDataPoint {
+public class WriteDataBlocking {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
         WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
-        
+
         try {
             //
             // Write by LineProtocol
             //
             String record = "temperature,location=north value=60.0";
 
-            writeApi.writeRecord("bucket_name", "org_id", WritePrecision.NS, record);
+            writeApi.writeRecord("my-bucket", "my-org", WritePrecision.NS, record);
 
             //
             // Write by Data Point
@@ -712,7 +719,7 @@ public class WriteDataPoint {
                     .addField("value", 55D)
                     .time(Instant.now().toEpochMilli(), WritePrecision.NS);
 
-            writeApi.writePoint("bucket_name", "org_id", point);
+            writeApi.writePoint("my-bucket", "my-org", point);
 
             //
             // Write by POJO
@@ -722,7 +729,7 @@ public class WriteDataPoint {
             temperature.value = 62D;
             temperature.time = Instant.now();
 
-            writeApi.writeMeasurement("bucket_name", "org_id", WritePrecision.NS, temperature);
+            writeApi.writeMeasurement("my-bucket", "my-org", WritePrecision.NS, temperature);
 
         } catch (InfluxException ie) {
             System.out.println("InfluxException: " + ie);
@@ -791,7 +798,7 @@ A client can be constructed using a connection string that can contain the Influ
  
 ```java
 InfluxDBClient influxDBClient = InfluxDBClientFactory
-            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
+            .create("http://localhost:9999?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
 ```
 The following options are supported:
 
@@ -830,26 +837,28 @@ Server availability can be checked using the `influxDBClient.health()` endpoint.
 ```java
 package example;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.QueryApi;
-import com.influxdb.query.dsl.Flux;
-import com.influxdb.query.dsl.functions.restriction.Restrictions;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
+import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.functions.restriction.Restrictions;
 
-public class SynchronousQuery {
+public class SynchronousQueryDSL {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
-        Flux flux = Flux.from("temperature-sensors")
-                .filter(Restrictions.and(Restrictions.field().equal("pressure")))
+        Flux flux = Flux.from("my-bucket")
+                .range(-30L, ChronoUnit.MINUTES)
+                .filter(Restrictions.and(Restrictions.measurement().equal("cpu")))
                 .limit(10);
 
         QueryApi queryApi = influxDBClient.getQueryApi();
@@ -857,7 +866,7 @@ public class SynchronousQuery {
         //
         // Query data
         //
-        List<FluxTable> tables = queryApi.query(flux.toString(), "org_id");
+        List<FluxTable> tables = queryApi.query(flux.toString(), "my-org");
         for (FluxTable fluxTable : tables) {
             List<FluxRecord> records = fluxTable.getRecords();
             for (FluxRecord fluxRecord : records) {

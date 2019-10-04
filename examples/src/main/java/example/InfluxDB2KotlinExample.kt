@@ -1,4 +1,4 @@
-/*
+/**
  * The MIT License
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,39 +19,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package example;
+package example
 
-import com.influxdb.client.flux.FluxClient;
-import com.influxdb.client.flux.FluxClientFactory;
+import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.channels.filter
+import kotlinx.coroutines.channels.take
+import kotlinx.coroutines.runBlocking
 
-@SuppressWarnings("CheckStyle")
-public class FluxRawExample {
+fun main(args: Array<String>) = runBlocking {
 
-    public static void main(final String[] args) {
+    val influxDBClient = InfluxDBClientKotlinFactory
+            .create("http://localhost:9999", "my-token".toCharArray())
 
-        FluxClient fluxClient = FluxClientFactory.create(
-            "http://localhost:8086/");
-
-        String fluxQuery = "from(bucket: \"telegraf\")\n"
+    val fluxQuery = ("from(bucket: \"my-bucket\")\n"
             + " |> range(start: -1d)"
-            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))"
-            + " |> sample(n: 5, pos: 1)";
+            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))")
 
-        fluxClient.queryRaw(
-            fluxQuery, (cancellable, line) -> {
-                // process the flux query result record
-                System.out.println(line);
+    //Result is returned as a stream
+    val results = influxDBClient.getQueryKotlinApi().query(fluxQuery, "my-org")
 
-            }, error -> {
-                // error handling while processing result
-                error.printStackTrace();
+    //Example of additional result stream processing on client side
+    results
+            //filter on client side using `filter` built-in operator
+            .filter { "cpu0" == it.getValueByKey("cpu") }
+            //take first 20 records
+            .take(20)
+            //print results
+            .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
 
-            }, () -> {
-                // on complete
-                System.out.println("Query completed");
-            });
-
-        fluxClient.close();
-
-    }
+    influxDBClient.close()
 }

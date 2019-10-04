@@ -26,27 +26,27 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
-public class ReactiveQuery {
+public class InfluxDB2ReactiveExample {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
         InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token);
 
         //
         // Query data
         //
-        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+        String flux = "from(bucket:\"my-bucket\") |> range(start: 0)";
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
         queryApi
-                .query(flux, "org_id")
+                .query(flux, "my-org")
                 //
-                // Filter records by field name
+                // Filter records by measurement name
                 //
-                .filter(it -> "pressure".equals(it.getField()))
+                .filter(it -> "temperature".equals(it.getMeasurement()))
                 //
                 // Take first 10 records
                 //
@@ -72,23 +72,23 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
-public class ReactiveQueryRaw {
+public class InfluxDB2ReactiveExampleRaw {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
         InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token);
 
         //
         // Query data
         //
-        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+        String flux = "from(bucket:\"my-bucket\") |> range(start: 0)";
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
         queryApi
-                .queryRaw(flux, "org_id")
+                .queryRaw(flux, "my-org")
                 //
                 // Take first 10 records
                 //
@@ -118,26 +118,24 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
-/**
- * @author Jakub Bednar (bednar@github) (19/02/2019 09:20)
- */
-public class ReactiveQueryPojo {
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-    private static char[] token = "my_token".toCharArray();
+public class InfluxDB2ReactiveExamplePojo {
 
-    public static void main(final String[] args) throws Exception {
+    private static char[] token = "my-token".toCharArray();
+
+    public static void main(final String[] args) {
 
         InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token);
-
         //
         // Query data
         //
-        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
+        String flux = "from(bucket:\"my-bucket\") |> range(start: 0) |> filter(fn: (r) => r._measurement == \"temperature\")";
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
         queryApi
-                .query(flux, "org_id", Temperature.class)
+                .query(flux, "my-org", Temperature.class)
                 //
                 // Take first 10 records
                 //
@@ -153,7 +151,7 @@ public class ReactiveQueryPojo {
     }
 
     @Measurement(name = "temperature")
-    private static class Temperature {
+    public static class Temperature {
 
         @Column(tag = true)
         String location;
@@ -189,21 +187,24 @@ The following example demonstrates how to write measurements every 10 seconds:
 package example;
 
 import java.time.Instant;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
+import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
+import com.influxdb.client.reactive.QueryReactiveApi;
 import com.influxdb.client.reactive.WriteReactiveApi;
 
 import io.reactivex.Flowable;
 
-public class WriteEvery10Seconds {
+public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) throws InterruptedException {
 
         InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token);
 
@@ -222,10 +223,22 @@ public class WriteEvery10Seconds {
                     return temperature;
                 });
 
-        writeApi.writeMeasurements("bucket_name", "org_id", WritePrecision.NS, measurements);
+        writeApi.writeMeasurements("my-bucket", "my-org", WritePrecision.NS, measurements);
+
+        Thread.sleep(30_000);
 
         writeApi.close();
         influxDBClient.close();
+    }
+
+    private static Double getValue() {
+        Random r = new Random();
+
+        return -20 + 70 * r.nextDouble();
+    }
+
+    private static String getLocation() {
+        return "Prague";
     }
 
     @Measurement(name = "temperature")
@@ -289,7 +302,7 @@ A client can be constructed using a connection string that can contain the Influ
  
 ```java
 InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory
-            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
+            .create("http://localhost:9999?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
 ```
 The following options are supported:
 
@@ -329,31 +342,33 @@ Server availability can be checked using the `influxDBClient.health()` endpoint.
 ```java
 package example;
 
+import java.time.temporal.ChronoUnit;
+
 import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 import com.influxdb.query.dsl.Flux;
 import com.influxdb.query.dsl.functions.restriction.Restrictions;
 
-public class ReactiveQuery {
+public class InfluxDB2ReactiveExampleDSL {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
         InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token);
-
+        
         //
         // Query data
         //
-        Flux flux = Flux.from("temperature-sensors")
-                .filter(Restrictions.and(Restrictions.field().equal("pressure")))
-                .limit(10);
+        Flux flux = Flux.from("my-bucket")
+                .range(-30L, ChronoUnit.MINUTES)
+                .filter(Restrictions.and(Restrictions.measurement().equal("temperature")));
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
         queryApi
-                .query(flux.toString(), "org_id")
+                .query(flux.toString(), "my-org")
                 .subscribe(fluxRecord -> {
                     //
                     // The callback to consume a FluxRecord.

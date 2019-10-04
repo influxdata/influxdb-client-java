@@ -35,23 +35,22 @@ import com.influxdb.query.FluxRecord
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-object FluxQuery {
+object InfluxDB2ScalaExample {
 
   implicit val system: ActorSystem = ActorSystem("it-tests")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
-  
-  private val token = "my_token".toCharArray
 
   def main(args: Array[String]): Unit = {
 
-    val influxDBClient = InfluxDBClientScalaFactory.create("http://localhost:9999", token)
+    val influxDBClient = InfluxDBClientScalaFactory
+      .create("http://localhost:9999", "my-token".toCharArray)
 
-    val fluxQuery = ("from(bucket: \"telegraf\")\n"
-      + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
-      + " |> range(start: -1d)")
+    val fluxQuery = ("from(bucket: \"my-bucket\")\n"
+      + " |> range(start: -1d)"
+      + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))")
 
     //Result is returned as a stream
-    val results = influxDBClient.getQueryScalaApi().query(fluxQuery, "org_id")
+    val results = influxDBClient.getQueryScalaApi().query(fluxQuery, "my-org")
 
     //Example of additional result stream processing on client side
     val sink = results
@@ -61,7 +60,7 @@ object FluxQuery {
       .take(20)
       //print results
       .runWith(Sink.foreach[FluxRecord](it => println(s"Measurement: ${it.getMeasurement}, value: ${it.getValue}")
-    ))
+      ))
 
     // wait to finish
     Await.result(sink, Duration.Inf)
@@ -85,24 +84,22 @@ import com.influxdb.client.scala.InfluxDBClientScalaFactory
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-object FluxQueryRaw {
+object InfluxDB2ScalaExampleRaw {
 
   implicit val system: ActorSystem = ActorSystem("it-tests")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
-  
-  private val token = "my_token".toCharArray
 
   def main(args: Array[String]): Unit = {
-    
-    val influxDBClient = InfluxDBClientScalaFactory.create("http://localhost:9999", token)
+    val influxDBClient = InfluxDBClientScalaFactory
+      .create("http://localhost:9999", "my-token".toCharArray)
 
-    val fluxQuery = ("from(bucket: \"telegraf\")\n"
-      + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
+    val fluxQuery = ("from(bucket: \"my-bucket\")\n"
       + " |> range(start: -5m)"
+      + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))"
       + " |> sample(n: 5, pos: 1)")
 
     //Result is returned as a stream
-    val sink = influxDBClient.getQueryScalaApi().queryRaw(fluxQuery, "{header: false}", "org_id")
+    val sink = influxDBClient.getQueryScalaApi().queryRaw(fluxQuery, "my-org")
       //print results
       .runWith(Sink.foreach[String](it => println(s"Line: $it")))
 
@@ -162,7 +159,7 @@ A client can be constructed using a connection string that can contain the Influ
  
 ```scala
 val influxDBClient = InfluxDBClientScalaFactory
-            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
+            .create("http://localhost:9999?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
 ```
 The following options are supported:
 
@@ -208,30 +205,26 @@ import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
 import com.influxdb.client.scala.InfluxDBClientScalaFactory
+import com.influxdb.query.FluxRecord
 import com.influxdb.query.dsl.Flux
 import com.influxdb.query.dsl.functions.restriction.Restrictions
-import com.influxdb.query.FluxRecord
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-/**
- * @author Jakub Bednar (bednar@github) (08/11/2018 10:29)
- */
-object FluxClientScalaExampleDSL {
+object InfluxDB2ScalaExampleDSL {
 
   implicit val system: ActorSystem = ActorSystem("it-tests")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
-  
-  private val token = "my_token".toCharArray
 
   def main(args: Array[String]) {
 
-    val influxDBClient = InfluxDBClientScalaFactory.create("http://localhost:9999", token)
+    val influxDBClient = InfluxDBClientScalaFactory
+      .create("http://localhost:9999", "my-token".toCharArray)
 
-    val mem = Flux.from("telegraf")
-      .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
+    val mem = Flux.from("my-bucket")
       .range(-30L, ChronoUnit.MINUTES)
+      .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
 
     //Result is returned as a stream
     val results = influxDBClient.getQueryScalaApi().query(mem.toString(), "my-org")

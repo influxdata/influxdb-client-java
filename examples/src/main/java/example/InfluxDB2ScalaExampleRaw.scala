@@ -21,32 +21,37 @@
  */
 package example
 
-import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.channels.filter
-import kotlinx.coroutines.channels.take
-import kotlinx.coroutines.runBlocking
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import akka.stream.scaladsl.Sink
+import com.influxdb.client.scala.InfluxDBClientScalaFactory
 
-fun main(args: Array<String>) = runBlocking {
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
-    val fluxClient = InfluxDBClientKotlinFactory
-            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC")
+object InfluxDB2ScalaExampleRaw {
 
-    val fluxQuery = ("from(bucket: \"telegraf\")\n"
-            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))"
-            + " |> range(start: -1d)")
+  implicit val system: ActorSystem = ActorSystem("it-tests")
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
+
+  def main(args: Array[String]): Unit = {
+    val influxDBClient = InfluxDBClientScalaFactory
+      .create("http://localhost:9999", "my-token".toCharArray)
+
+    val fluxQuery = ("from(bucket: \"my-bucket\")\n"
+      + " |> range(start: -5m)"
+      + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))"
+      + " |> sample(n: 5, pos: 1)")
 
     //Result is returned as a stream
-    val results = fluxClient.getQueryKotlinApi().query(fluxQuery, "my-org")
+    val sink = influxDBClient.getQueryScalaApi().queryRaw(fluxQuery, "my-org")
+      //print results
+      .runWith(Sink.foreach[String](it => println(s"Line: $it")))
 
-    //Example of additional result stream processing on client side
-    results
-            //filter on client side using `filter` built-in operator
-            .filter { "cpu0" == it.getValueByKey("cpu") }
-            //take first 20 records
-            .take(20)
-            //print results
-            .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
+    // wait to finish
+    Await.result(sink, Duration.Inf)
 
-    fluxClient.close()
+    influxDBClient.close()
+    system.terminate()
+  }
 }

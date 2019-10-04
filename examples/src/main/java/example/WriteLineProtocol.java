@@ -21,37 +21,32 @@
  */
 package example;
 
-import com.influxdb.client.flux.FluxClient;
-import com.influxdb.client.flux.FluxClientFactory;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.WriteApi;
+import com.influxdb.client.domain.WritePrecision;
 
-@SuppressWarnings("CheckStyle")
-public class FluxRawExample {
+public class WriteLineProtocol {
+
+    private static char[] token = "my-token".toCharArray();
 
     public static void main(final String[] args) {
 
-        FluxClient fluxClient = FluxClientFactory.create(
-            "http://localhost:8086/");
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
-        String fluxQuery = "from(bucket: \"telegraf\")\n"
-            + " |> range(start: -1d)"
-            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))"
-            + " |> sample(n: 5, pos: 1)";
+        //
+        // Write data
+        //
+        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
 
-        fluxClient.queryRaw(
-            fluxQuery, (cancellable, line) -> {
-                // process the flux query result record
-                System.out.println(line);
+            //
+            // Write by LineProtocol
+            //
+            String record = "temperature,location=north value=60.0";
 
-            }, error -> {
-                // error handling while processing result
-                error.printStackTrace();
+            writeApi.writeRecord("my-bucket", "my-org", WritePrecision.NS, record);
+        }
 
-            }, () -> {
-                // on complete
-                System.out.println("Query completed");
-            });
-
-        fluxClient.close();
-
+        influxDBClient.close();
     }
 }

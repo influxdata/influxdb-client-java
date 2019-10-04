@@ -111,15 +111,16 @@ import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.QueryApi;
 import com.influxdb.client.WriteApi;
+import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 
 public class InfluxDB2Example {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
@@ -136,12 +137,12 @@ public class InfluxDB2Example {
                     .addField("value", 55D)
                     .time(Instant.now().toEpochMilli(), WritePrecision.NS);
 
-            writeApi.writePoint("bucket_name", "org_id", point);
+            writeApi.writePoint("my-bucket", "my-org", point);
 
             //
             // Write by LineProtocol
             //
-            writeApi.writeRecord("bucket_name", "org_id", WritePrecision.NS, "temperature,location=north value=60.0");
+            writeApi.writeRecord("my-bucket", "my-org", WritePrecision.NS, "temperature,location=north value=60.0");
 
             //
             // Write by POJO
@@ -151,17 +152,17 @@ public class InfluxDB2Example {
             temperature.value = 62D;
             temperature.time = Instant.now();
 
-            writeApi.writeMeasurement("bucket_name", "org_id", WritePrecision.NS, temperature);
+            writeApi.writeMeasurement("my-bucket", "my-org", WritePrecision.NS, temperature);
         }
 
         //
         // Query data
         //
-        String flux = "from(bucket:\"temperature-sensors\") |> range(start: 0)";
-        
+        String flux = "from(bucket:\"my-bucket\") |> range(start: 0)";
+
         QueryApi queryApi = influxDBClient.getQueryApi();
-        
-        List<FluxTable> tables = queryApi.query(flux, "org_id");
+
+        List<FluxTable> tables = queryApi.query(flux, "my-org");
         for (FluxTable fluxTable : tables) {
             List<FluxRecord> records = fluxTable.getRecords();
             for (FluxRecord fluxRecord : records) {
@@ -185,7 +186,7 @@ public class InfluxDB2Example {
         Instant time;
     }
 }
-```
+```    
 
 ### Use Management API to create a new Bucket in InfluxDB 2.0  
 
@@ -228,26 +229,26 @@ import com.influxdb.client.domain.BucketRetentionRules;
 
 public class InfluxDB2ManagementExample {
 
-    private static char[] token = "my_token".toCharArray();
+    private static char[] token = "my-token".toCharArray();
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
 
         //
         // Create bucket "iot_bucket" with data retention set to 3,600 seconds
         //
-        RetentionRule retention = new RetentionRule();
-        retention.setEverySeconds(3600L);
+        BucketRetentionRules retention = new BucketRetentionRules();
+        retention.setEverySeconds(3600);
 
-        Bucket bucket = influxDBClient.getBucketsApi().createBucket("iot_bucket", retention, "org_id");
+        Bucket bucket = influxDBClient.getBucketsApi().createBucket("iot-bucket", retention, "12bdc4164c2e8141");
 
         //
         // Create access token to "iot_bucket"
         //
         PermissionResource resource = new PermissionResource();
         resource.setId(bucket.getId());
-        resource.setOrgID("org_id");
+        resource.setOrgID("12bdc4164c2e8141");
         resource.setType(PermissionResource.TypeEnum.BUCKETS);
 
         // Read permission
@@ -261,12 +262,13 @@ public class InfluxDB2ManagementExample {
         write.setAction(Permission.ActionEnum.WRITE);
 
         Authorization authorization = influxDBClient.getAuthorizationsApi()
-                .createAuthorization("org_id", Arrays.asList(read, write));
+                .createAuthorization("12bdc4164c2e8141", Arrays.asList(read, write));
 
         //
         // Created token that can be use for writes to "iot_bucket"
         //
         String token = authorization.getToken();
+        System.out.println("Token: " + token);
 
         influxDBClient.close();
     }
@@ -302,60 +304,62 @@ dependencies {
 ```java
 package example;
 
+import java.util.List;
+
 import com.influxdb.client.flux.FluxClient;
 import com.influxdb.client.flux.FluxClientFactory;
+import com.influxdb.query.FluxRecord;
+import com.influxdb.query.FluxTable;
 
 public class FluxExample {
 
-  public static void main(String[] args) {
+    public static void main(String[] args) {
 
-    FluxClient fluxClient = FluxClientFactory.create(
-        "http://localhost:8086/");
-    
-    //
-    // Flux
-    //
-    String flux = "from(bucket: \"telegraf\")\n" +
-        " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" AND r[\"_field\"] == \"usage_system\"))" +
-        " |> range(start: -1d)" +
-        " |> sample(n: 5, pos: 1)";
-    
-    //
-    // Synchronous query
-    //
-    List<FluxTable> tables = fluxClient.query(flux);
-    
-    for (FluxTable fluxTable : tables) {
-        List<FluxRecord> records = fluxTable.getRecords();
-        for (FluxRecord fluxRecord : records) {
-            System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
+        FluxClient fluxClient = FluxClientFactory.create("http://localhost:8086/");
+
+        //
+        // Flux
+        //
+        String flux = "from(bucket: \"telegraf\")\n" +
+                " |> range(start: -1d)" +
+                " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))" +
+                " |> sample(n: 5, pos: 1)";
+
+        //
+        // Synchronous query
+        //
+        List<FluxTable> tables = fluxClient.query(flux);
+
+        for (FluxTable fluxTable : tables) {
+            List<FluxRecord> records = fluxTable.getRecords();
+            for (FluxRecord fluxRecord : records) {
+                System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
+            }
         }
-    }
-    
-    //
-    // Asynchronous query
-    //
-    fluxClient.query(flux, (cancellable, record) -> {
-        
-        // process the flux query result record
-        System.out.println(record.getTime() + ": " + record.getValue());
-    
-    }, error -> {
-       
-        // error handling while processing result
-        System.out.println("Error occurred: "+ error.getMessage());
-    
-    }, () -> {
-        
-        // on complete
-        System.out.println("Query completed");
-    });
-    
-    fluxClient.close();
-  }
-}
 
-```
+        //
+        // Asynchronous query
+        //
+        fluxClient.query(flux, (cancellable, record) -> {
+
+            // process the flux query result record
+            System.out.println(record.getTime() + ": " + record.getValue());
+
+        }, error -> {
+
+            // error handling while processing result
+            System.out.println("Error occurred: "+ error.getMessage());
+
+        }, () -> {
+
+            // on complete
+            System.out.println("Query completed");
+        });
+
+        fluxClient.close();
+    }
+}
+```     
 
 ## Build Requirements
 

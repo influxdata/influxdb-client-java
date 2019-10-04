@@ -21,32 +21,36 @@
  */
 package example;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import com.influxdb.client.flux.FluxClient;
-import com.influxdb.client.flux.FluxClientFactory;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
+import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.functions.restriction.Restrictions;
 
-public class FluxExample {
+public class SynchronousQueryDSL {
 
-    public static void main(String[] args) {
+    private static char[] token = "my-token".toCharArray();
 
-        FluxClient fluxClient = FluxClientFactory.create("http://localhost:8086/");
+    public static void main(final String[] args) {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        Flux flux = Flux.from("my-bucket")
+                .range(-30L, ChronoUnit.MINUTES)
+                .filter(Restrictions.and(Restrictions.measurement().equal("cpu")))
+                .limit(10);
+
+        QueryApi queryApi = influxDBClient.getQueryApi();
 
         //
-        // Flux
+        // Query data
         //
-        String flux = "from(bucket: \"telegraf\")\n" +
-                " |> range(start: -1d)" +
-                " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))" +
-                " |> sample(n: 5, pos: 1)";
-
-        //
-        // Synchronous query
-        //
-        List<FluxTable> tables = fluxClient.query(flux);
-
+        List<FluxTable> tables = queryApi.query(flux.toString(), "my-org");
         for (FluxTable fluxTable : tables) {
             List<FluxRecord> records = fluxTable.getRecords();
             for (FluxRecord fluxRecord : records) {
@@ -54,25 +58,6 @@ public class FluxExample {
             }
         }
 
-        //
-        // Asynchronous query
-        //
-        fluxClient.query(flux, (cancellable, record) -> {
-
-            // process the flux query result record
-            System.out.println(record.getTime() + ": " + record.getValue());
-
-        }, error -> {
-
-            // error handling while processing result
-            System.out.println("Error occurred: "+ error.getMessage());
-
-        }, () -> {
-
-            // on complete
-            System.out.println("Query completed");
-        });
-
-        fluxClient.close();
+        influxDBClient.close();
     }
 }
