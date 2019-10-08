@@ -57,7 +57,7 @@ commands:
                    --env INFLUXDB_2_IP=192.168.0.3 \
                    --env INFLUXDB_2_ONBOARDING_IP=192.168.0.4 \
                    --env INFLUXDB_2_ONBOARDING_PORT=9999 \
-                   maven:<< parameters.maven-container >> mvn -B -U clean install -Dmaven.javadoc.skip=true -Dmaven.dokka.skip=true
+                   maven:<< parameters.maven-container >> mvn -B -U clean install -Dmaven.javadoc.skip=true -Dmaven.dokka.skip=true -Dbuild.env=CI
       - save_cache:
           name: Saving Maven Cache
           key: *cache-key

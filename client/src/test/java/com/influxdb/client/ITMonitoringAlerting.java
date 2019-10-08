@@ -48,6 +48,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
@@ -75,7 +77,7 @@ class ITMonitoringAlerting extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
+    @DisabledIfSystemProperty(named = "build.env", matches = "ci")
     public void createMonitoringAndAlerting() throws InterruptedException {
 
         Organization org = findMyOrg();
