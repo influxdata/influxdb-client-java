@@ -15,12 +15,21 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.CheckBase;
+import com.influxdb.client.domain.CheckBaseLinks;
 import com.influxdb.client.domain.CheckBaseTags;
 import com.influxdb.client.domain.DashboardQuery;
 import com.influxdb.client.domain.Label;
@@ -29,6 +38,7 @@ import com.influxdb.client.domain.Threshold;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +99,7 @@ public class ThresholdCheck extends Check {
 
   public static final String SERIALIZED_NAME_THRESHOLDS = "thresholds";
   @SerializedName(SERIALIZED_NAME_THRESHOLDS)
+  @JsonAdapter(ThresholdCheckThresholdsAdapter.class)
   private List<Threshold> thresholds = new ArrayList<>();
 
    /**
@@ -169,5 +180,49 @@ public class ThresholdCheck extends Check {
     return o.toString().replace("\n", "\n    ");
   }
 
+  public class ThresholdCheckThresholdsAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+
+    public ThresholdCheckThresholdsAdapter() {
+    }
+
+    @Override
+    public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+
+      List<String> discriminator = Arrays.asList("type");
+
+      List<Object> results = new ArrayList<>();
+
+      for (JsonElement arrayItem: json.getAsJsonArray()){
+        JsonObject jsonObject = arrayItem.getAsJsonObject();
+
+        String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
+
+        results.add(deserialize(types, jsonObject, context));
+      }
+
+      return results;
+    }
+
+    @Override
+    public JsonElement serialize(Object object, Type typeOfSrc, JsonSerializationContext context) {
+
+      return context.serialize(object);
+    }
+
+    private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
+
+      if (Arrays.equals(new String[]{ "greater" }, types)) {
+        return context.deserialize(json, GreaterThreshold.class);
+      }
+      if (Arrays.equals(new String[]{ "lesser" }, types)) {
+        return context.deserialize(json, LesserThreshold.class);
+      }
+      if (Arrays.equals(new String[]{ "range" }, types)) {
+        return context.deserialize(json, RangeThreshold.class);
+      }
+
+      return context.deserialize(json, Object.class);
+    }
+  }
 }
 

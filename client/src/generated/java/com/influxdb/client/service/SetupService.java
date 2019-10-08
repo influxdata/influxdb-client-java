@@ -18,8 +18,8 @@ import java.util.Map;
 
 public interface SetupService {
   /**
-   * check if database has default user, org, bucket created, returns true if not.
-   * 
+   * Check if database has default user, org, bucket
+   * Returns &#x60;true&#x60; if no default user, organization, or bucket has been created.
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;IsOnboarding&gt;
    */
@@ -29,9 +29,9 @@ public interface SetupService {
   );
 
   /**
-   * post onboarding request, to setup initial user, org and bucket
-   * 
-   * @param onboardingRequest source to create (required)
+   * Set up initial user, org and bucket
+   * Post an onboarding request to set up initial user, org and bucket.
+   * @param onboardingRequest Source to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;OnboardingResponse&gt;
    */

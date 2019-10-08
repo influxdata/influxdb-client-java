@@ -53,10 +53,10 @@ public class DashboardQuery {
   }
 
    /**
-   * The text of the flux query
+   * The text of the Flux query.
    * @return text
   **/
-  @ApiModelProperty(value = "The text of the flux query")
+  @ApiModelProperty(value = "The text of the Flux query.")
   public String getText() {
     return text;
   }

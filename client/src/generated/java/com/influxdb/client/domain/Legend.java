@@ -31,7 +31,7 @@ import java.io.IOException;
 
 public class Legend {
   /**
-   * type is the style of the legend
+   * The style of the legend.
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
@@ -135,10 +135,10 @@ public class Legend {
   private OrientationEnum orientation;
 
    /**
-   * type is the style of the legend
+   * The style of the legend.
    * @return type
   **/
-  @ApiModelProperty(value = "type is the style of the legend")
+  @ApiModelProperty(value = "The style of the legend.")
   public TypeEnum getType() {
     return type;
   }

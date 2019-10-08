@@ -25,9 +25,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * flux query to be analyzed.
+ * Flux query to be analyzed.
  */
-@ApiModel(description = "flux query to be analyzed.")
+@ApiModel(description = "Flux query to be analyzed.")
 
 public class LanguageRequest {
   public static final String SERIALIZED_NAME_QUERY = "query";
@@ -40,10 +40,10 @@ public class LanguageRequest {
   }
 
    /**
-   * flux query script to be analyzed
+   * Flux query script to be analyzed
    * @return query
   **/
-  @ApiModelProperty(required = true, value = "flux query script to be analyzed")
+  @ApiModelProperty(required = true, value = "Flux query script to be analyzed")
   public String getQuery() {
     return query;
   }

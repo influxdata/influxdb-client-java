@@ -38,9 +38,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * the value associated with a key
+ * The value associated with a key
  */
-@ApiModel(description = "the value associated with a key")
+@ApiModel(description = "The value associated with a key")
 
 public class Property {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -63,10 +63,10 @@ public class Property {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

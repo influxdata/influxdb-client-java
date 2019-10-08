@@ -39,9 +39,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * represents a source from a single file
+ * Represents a source from a single file
  */
-@ApiModel(description = "represents a source from a single file")
+@ApiModel(description = "Represents a source from a single file")
 
 public class File {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -71,10 +71,10 @@ public class File {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }
@@ -89,10 +89,10 @@ public class File {
   }
 
    /**
-   * name of the file
+   * The name of the file.
    * @return name
   **/
-  @ApiModelProperty(value = "name of the file")
+  @ApiModelProperty(value = "The name of the file.")
   public String getName() {
     return name;
   }
@@ -133,10 +133,10 @@ public class File {
   }
 
    /**
-   * a list of package imports
+   * A list of package imports
    * @return imports
   **/
-  @ApiModelProperty(value = "a list of package imports")
+  @ApiModelProperty(value = "A list of package imports")
   public List<ImportDeclaration> getImports() {
     return imports;
   }
@@ -159,10 +159,10 @@ public class File {
   }
 
    /**
-   * list of Flux statements
+   * List of Flux statements
    * @return body
   **/
-  @ApiModelProperty(value = "list of Flux statements")
+  @ApiModelProperty(value = "List of Flux statements")
   public List<Statement> getBody() {
     return body;
   }

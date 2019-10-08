@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Arrays;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationRuleBase;
+import com.influxdb.client.domain.NotificationRuleBaseLinks;
 import com.influxdb.client.domain.SMTPNotificationRuleBase;
 import com.influxdb.client.domain.StatusRule;
 import com.influxdb.client.domain.TagRule;
@@ -28,7 +29,7 @@ import java.util.List;
  * SMTPNotificationRule
  */
 
-public class SMTPNotificationRule extends NotificationRule {
+public class SMTPNotificationRule extends SMTPNotificationRuleBase {
 
   @Override
   public boolean equals(java.lang.Object o) {

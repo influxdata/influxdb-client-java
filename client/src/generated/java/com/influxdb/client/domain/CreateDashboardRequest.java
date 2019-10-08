@@ -47,10 +47,10 @@ public class CreateDashboardRequest {
   }
 
    /**
-   * id of the organization that owns the dashboard
+   * The ID of the organization that owns the dashboard.
    * @return orgID
   **/
-  @ApiModelProperty(required = true, value = "id of the organization that owns the dashboard")
+  @ApiModelProperty(required = true, value = "The ID of the organization that owns the dashboard.")
   public String getOrgID() {
     return orgID;
   }
@@ -65,10 +65,10 @@ public class CreateDashboardRequest {
   }
 
    /**
-   * user-facing name of the dashboard
+   * The user-facing name of the dashboard.
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "user-facing name of the dashboard")
+  @ApiModelProperty(required = true, value = "The user-facing name of the dashboard.")
   public String getName() {
     return name;
   }
@@ -83,10 +83,10 @@ public class CreateDashboardRequest {
   }
 
    /**
-   * user-facing description of the dashboard
+   * The user-facing description of the dashboard.
    * @return description
   **/
-  @ApiModelProperty(value = "user-facing description of the dashboard")
+  @ApiModelProperty(value = "The user-facing description of the dashboard.")
   public String getDescription() {
     return description;
   }

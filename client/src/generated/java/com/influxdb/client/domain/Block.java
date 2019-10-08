@@ -37,9 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * a set of statements
+ * A set of statements
  */
-@ApiModel(description = "a set of statements")
+@ApiModel(description = "A set of statements")
 
 public class Block extends Node {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -57,10 +57,10 @@ public class Block extends Node {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }
@@ -83,10 +83,10 @@ public class Block extends Node {
   }
 
    /**
-   * block body
+   * Block body
    * @return body
   **/
-  @ApiModelProperty(value = "block body")
+  @ApiModelProperty(value = "Block body")
   public List<Statement> getBody() {
     return body;
   }

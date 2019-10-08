@@ -23,8 +23,8 @@ public interface CellsService {
   /**
    * Delete a dashboard cell
    * 
-   * @param dashboardID ID of dashboard to delte (required)
-   * @param cellID ID of cell to delete (required)
+   * @param dashboardID The ID of the dashboard to delete. (required)
+   * @param cellID The ID of the cell to delete. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -34,10 +34,10 @@ public interface CellsService {
   );
 
   /**
-   * Retrieve the view for a cell in a dashboard
+   * Retrieve the view for a cell
    * 
-   * @param dashboardID ID of dashboard (required)
-   * @param cellID ID of cell (required)
+   * @param dashboardID The dashboard ID. (required)
+   * @param cellID The cell ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;View&gt;
    */
@@ -47,11 +47,11 @@ public interface CellsService {
   );
 
   /**
-   * Update the non positional information related to a cell (because updates to a single cells positional data could cause grid conflicts)
-   * 
-   * @param dashboardID ID of dashboard to update (required)
-   * @param cellID ID of cell to update (required)
-   * @param cellUpdate updates the non positional information related to a cell (required)
+   * Update the non-positional information related to a cell
+   * Updates the non positional information related to a cell. Updates to a single cell&#39;s positional data could cause grid conflicts.
+   * @param dashboardID The ID of the dashboard to update. (required)
+   * @param cellID The ID of the cell to update. (required)
+   * @param cellUpdate  (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Cell&gt;
    */
@@ -66,9 +66,9 @@ public interface CellsService {
   /**
    * Update the view for a cell
    * 
-   * @param dashboardID ID of dashboard to update (required)
-   * @param cellID ID of cell to update (required)
-   * @param view updates the view for a cell (required)
+   * @param dashboardID The ID of the dashboard to update. (required)
+   * @param cellID The ID of the cell to update. (required)
+   * @param view  (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;View&gt;
    */
@@ -83,8 +83,8 @@ public interface CellsService {
   /**
    * Create a dashboard cell
    * 
-   * @param dashboardID ID of dashboard to update (required)
-   * @param createCell cell that will be added (required)
+   * @param dashboardID The ID of the dashboard to update. (required)
+   * @param createCell Cell that will be added (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Cell&gt;
    */
@@ -97,10 +97,10 @@ public interface CellsService {
   );
 
   /**
-   * Replace a dashboards cells
-   * 
-   * @param dashboardID ID of dashboard to update (required)
-   * @param cell batch replaces all of a dashboards cells (this is used primarily to update the positional information of all of the cells) (required)
+   * Replace cells in a dashboard
+   * Replaces all cells in a dashboard. This is used primarily to update the positional information of all cells.
+   * @param dashboardID The ID of the dashboard to update. (required)
+   * @param cell  (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Dashboard&gt;
    */

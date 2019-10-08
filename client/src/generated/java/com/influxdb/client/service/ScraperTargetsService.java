@@ -28,9 +28,9 @@ import java.util.Map;
 
 public interface ScraperTargetsService {
   /**
-   * delete a scraper target
+   * Delete a scraper target
    * 
-   * @param scraperTargetID id of the scraper target (required)
+   * @param scraperTargetID The scraper target ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -40,10 +40,10 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * delete a label from a scraper target
+   * Delete a label from a scraper target
    * 
-   * @param scraperTargetID ID of the scraper target (required)
-   * @param labelID ID of the label (required)
+   * @param scraperTargetID The scraper target ID. (required)
+   * @param labelID The label ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -53,10 +53,10 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * removes a member from a scraper target
+   * Remove a member from a scraper target
    * 
-   * @param userID ID of member to remove (required)
-   * @param scraperTargetID ID of the scraper target (required)
+   * @param userID The ID of member to remove. (required)
+   * @param scraperTargetID The scraper target ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -66,10 +66,10 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * removes an owner from a scraper target
+   * Remove an owner from a scraper target
    * 
-   * @param userID ID of owner to remove (required)
-   * @param scraperTargetID ID of the scraper target (required)
+   * @param userID The ID of owner to remove. (required)
+   * @param scraperTargetID The scraper target ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -79,13 +79,13 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * get all scraper targets
+   * Get all scraper targets
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param name specifies the name of the scraper target. (optional)
-   * @param id ID list of scraper targets to return. If both this and owner are specified, only ids is used. (optional, default to new ArrayList&lt;&gt;())
-   * @param orgID specifies the organization id of the scraper target (optional)
-   * @param org specifies the organization name of the scraper target (optional)
+   * @param name Specifies the name of the scraper target. (optional)
+   * @param id List of scraper target IDs to return. If both &#x60;id&#x60; and &#x60;owner&#x60; are specified, only &#x60;id&#x60; is used. (optional, default to new ArrayList&lt;&gt;())
+   * @param orgID Specifies the organization ID of the scraper target. (optional)
+   * @param org Specifies the organization name of the scraper target. (optional)
    * @return Call&lt;ScraperTargetResponses&gt;
    */
   @GET("api/v2/scrapers")
@@ -94,9 +94,9 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * get a scraper target by id
+   * Get a scraper target by ID
    * 
-   * @param scraperTargetID id of the scraper target (required)
+   * @param scraperTargetID The scraper target ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ScraperTargetResponse&gt;
    */
@@ -106,9 +106,9 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * list all labels for a scraper targets
+   * List all labels for a scraper target
    * 
-   * @param scraperTargetID ID of the scraper target (required)
+   * @param scraperTargetID The scraper target ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
@@ -120,7 +120,7 @@ public interface ScraperTargetsService {
   /**
    * List all users with member privileges for a scraper target
    * 
-   * @param scraperTargetID ID of the scraper target (required)
+   * @param scraperTargetID The scraper target ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
@@ -132,7 +132,7 @@ public interface ScraperTargetsService {
   /**
    * List all owners of a scraper target
    * 
-   * @param scraperTargetID ID of the scraper target (required)
+   * @param scraperTargetID The scraper target ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
@@ -142,10 +142,10 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * update a scraper target
+   * Update a scraper target
    * 
-   * @param scraperTargetID id of the scraper target (required)
-   * @param scraperTargetRequest scraper target update to apply (required)
+   * @param scraperTargetID The scraper target ID. (required)
+   * @param scraperTargetRequest Scraper target update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ScraperTargetResponse&gt;
    */
@@ -158,11 +158,11 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * update a label from a scraper target
+   * Update a label on a scraper target
    * 
-   * @param scraperTargetID ID of the scraper target (required)
-   * @param labelID ID of the label (required)
-   * @param label label update to apply (required)
+   * @param scraperTargetID The scraper target ID. (required)
+   * @param labelID The label ID. (required)
+   * @param label Label update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -175,9 +175,9 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * create a scraper target
+   * Create a scraper target
    * 
-   * @param scraperTargetRequest scraper target to create (required)
+   * @param scraperTargetRequest Scraper target to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ScraperTargetResponse&gt;
    */
@@ -190,10 +190,10 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * add a label to a scraper target
+   * Add a label to a scraper target
    * 
-   * @param scraperTargetID ID of the scraper target (required)
-   * @param labelMapping label to add (required)
+   * @param scraperTargetID The scraper target ID. (required)
+   * @param labelMapping Label to add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelResponse&gt;
    */
@@ -206,10 +206,10 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * Add scraper target member
+   * Add a member to a scraper target
    * 
-   * @param scraperTargetID ID of the scraper target (required)
-   * @param addResourceMemberRequestBody user to add as member (required)
+   * @param scraperTargetID The scraper target ID. (required)
+   * @param addResourceMemberRequestBody User to add as member (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMember&gt;
    */
@@ -222,10 +222,10 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * Add scraper target owner
+   * Add an owner to a scraper target
    * 
-   * @param scraperTargetID ID of the scraper target (required)
-   * @param addResourceMemberRequestBody user to add as owner (required)
+   * @param scraperTargetID The scraper target ID. (required)
+   * @param addResourceMemberRequestBody User to add as owner (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwner&gt;
    */

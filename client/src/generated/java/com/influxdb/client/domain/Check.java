@@ -15,6 +15,7 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
+import com.influxdb.client.domain.CheckBaseLinks;
 import com.influxdb.client.domain.CheckBaseTags;
 import com.influxdb.client.domain.CheckStatusLevel;
 import com.influxdb.client.domain.DashboardQuery;
@@ -30,7 +31,7 @@ import java.util.List;
  * Check
  */
 
-public class Check {
+public class Check extends CheckBase {
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -40,12 +41,12 @@ public class Check {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    return true;
+    return super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash();
+    return Objects.hash(super.hashCode());
   }
 
 
@@ -53,6 +54,7 @@ public class Check {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Check {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -17,17 +17,19 @@ import java.util.Objects;
 import java.util.Arrays;
 import com.influxdb.client.domain.HTTPNotificationEndpoint;
 import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.NotificationEndpointBaseLinks;
 import com.influxdb.client.domain.NotificationEndpointType;
 import com.influxdb.client.domain.PagerDutyNotificationEndpoint;
 import com.influxdb.client.domain.SlackNotificationEndpoint;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * NotificationEndpoint
  */
 
-public class NotificationEndpoint {
+public class NotificationEndpoint extends NotificationEndpointBase {
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -37,12 +39,12 @@ public class NotificationEndpoint {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    return true;
+    return super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash();
+    return Objects.hash(super.hashCode());
   }
 
 
@@ -50,6 +52,7 @@ public class NotificationEndpoint {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class NotificationEndpoint {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("}");
     return sb.toString();
   }

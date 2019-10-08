@@ -1,5 +1,8 @@
 ## 1.1.0 [unreleased]
 
+### Features
+1. [#59](https://github.com/influxdata/influxdb-client-java/issues/59): Added support for Monitoring & Alerting
+
 ### Improvements
 1. [#60](https://github.com/influxdata/influxdb-client-java/pull/60): Writes performance optimized
 1. [#61](https://github.com/influxdata/influxdb-client-java/pull/61): Use Try-With-Resources without catching clause

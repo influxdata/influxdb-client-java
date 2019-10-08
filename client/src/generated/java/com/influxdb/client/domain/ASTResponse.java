@@ -26,9 +26,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * contains the AST for the supplied Flux query
+ * Contains the AST for the supplied Flux query
  */
-@ApiModel(description = "contains the AST for the supplied Flux query")
+@ApiModel(description = "Contains the AST for the supplied Flux query")
 
 public class ASTResponse {
   public static final String SERIALIZED_NAME_AST = "ast";

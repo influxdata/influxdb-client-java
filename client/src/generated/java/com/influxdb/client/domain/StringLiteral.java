@@ -25,9 +25,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * expressions begin and end with double quote marks
+ * Expressions begin and end with double quote marks
  */
-@ApiModel(description = "expressions begin and end with double quote marks")
+@ApiModel(description = "Expressions begin and end with double quote marks")
 
 public class StringLiteral extends PropertyKey {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -44,10 +44,10 @@ public class StringLiteral extends PropertyKey {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

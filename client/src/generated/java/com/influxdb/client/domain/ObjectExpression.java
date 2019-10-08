@@ -28,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * allows the declaration of an anonymous object within a declaration
+ * Allows the declaration of an anonymous object within a declaration
  */
-@ApiModel(description = "allows the declaration of an anonymous object within a declaration")
+@ApiModel(description = "Allows the declaration of an anonymous object within a declaration")
 
 public class ObjectExpression extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -47,10 +47,10 @@ public class ObjectExpression extends Expression {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }
@@ -73,10 +73,10 @@ public class ObjectExpression extends Expression {
   }
 
    /**
-   * object properties
+   * Object properties
    * @return properties
   **/
-  @ApiModelProperty(value = "object properties")
+  @ApiModelProperty(value = "Object properties")
   public List<Property> getProperties() {
     return properties;
   }

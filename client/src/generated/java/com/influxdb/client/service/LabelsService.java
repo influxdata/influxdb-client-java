@@ -22,7 +22,7 @@ public interface LabelsService {
   /**
    * Delete a label
    * 
-   * @param labelID ID of label to delete (required)
+   * @param labelID The ID of the label to delete. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -35,7 +35,7 @@ public interface LabelsService {
    * Get all labels
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param orgID specifies the organization of the resource (optional)
+   * @param orgID The organization ID. (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
   @GET("api/v2/labels")
@@ -46,7 +46,7 @@ public interface LabelsService {
   /**
    * Get a label
    * 
-   * @param labelID ID of label to update (required)
+   * @param labelID The ID of the label to update. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelResponse&gt;
    */
@@ -56,10 +56,10 @@ public interface LabelsService {
   );
 
   /**
-   * Update a single label
+   * Update a label
    * 
-   * @param labelID ID of label to update (required)
-   * @param labelUpdate label update (required)
+   * @param labelID The ID of the label to update. (required)
+   * @param labelUpdate Label update (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelResponse&gt;
    */
@@ -74,7 +74,7 @@ public interface LabelsService {
   /**
    * Create a label
    * 
-   * @param labelCreateRequest label to create (required)
+   * @param labelCreateRequest Label to create (required)
    * @return Call&lt;LabelResponse&gt;
    */
   @Headers({

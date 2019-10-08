@@ -30,10 +30,13 @@ import com.influxdb.Arguments;
 import com.influxdb.LogLevel;
 import com.influxdb.client.AuthorizationsApi;
 import com.influxdb.client.BucketsApi;
+import com.influxdb.client.ChecksApi;
 import com.influxdb.client.DashboardsApi;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.LabelsApi;
+import com.influxdb.client.NotificationEndpointsApi;
+import com.influxdb.client.NotificationRulesApi;
 import com.influxdb.client.OrganizationsApi;
 import com.influxdb.client.QueryApi;
 import com.influxdb.client.ScraperTargetsApi;
@@ -53,8 +56,11 @@ import com.influxdb.client.domain.OnboardingResponse;
 import com.influxdb.client.domain.Ready;
 import com.influxdb.client.service.AuthorizationsService;
 import com.influxdb.client.service.BucketsService;
+import com.influxdb.client.service.ChecksService;
 import com.influxdb.client.service.DashboardsService;
 import com.influxdb.client.service.LabelsService;
+import com.influxdb.client.service.NotificationEndpointsService;
+import com.influxdb.client.service.NotificationRulesService;
 import com.influxdb.client.service.OrganizationsService;
 import com.influxdb.client.service.QueryService;
 import com.influxdb.client.service.ReadyService;
@@ -188,6 +194,24 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Override
     public DashboardsApi getDashboardsApi() {
         return new DashboardsApiImpl(retrofit.create(DashboardsService.class));
+    }
+
+    @Nonnull
+    @Override
+    public ChecksApi getChecksApi() {
+        return new ChecksApiImpl(retrofit.create(ChecksService.class));
+    }
+
+    @Nonnull
+    @Override
+    public NotificationEndpointsApi getNotificationEndpointsApi() {
+        return new NotificationEndpointsApiImpl(retrofit.create(NotificationEndpointsService.class));
+    }
+
+    @Nonnull
+    @Override
+    public NotificationRulesApi getNotificationRulesApi() {
+        return new NotificationRulesApiImpl(retrofit.create(NotificationRulesService.class));
     }
 
     @Nonnull

@@ -8,6 +8,7 @@ import okhttp3.ResponseBody;
 import okhttp3.MultipartBody;
 
 import com.influxdb.client.domain.Check;
+import com.influxdb.client.domain.CheckPatch;
 import com.influxdb.client.domain.Checks;
 import com.influxdb.client.domain.Error;
 import com.influxdb.client.domain.FluxResponse;
@@ -24,7 +25,7 @@ public interface ChecksService {
   /**
    * Add new check
    * 
-   * @param check check to create (required)
+   * @param check Check to create (required)
    * @return Call&lt;Check&gt;
    */
   @Headers({
@@ -38,7 +39,7 @@ public interface ChecksService {
   /**
    * Delete a check
    * 
-   * @param checkID ID of check (required)
+   * @param checkID The check ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -48,10 +49,10 @@ public interface ChecksService {
   );
 
   /**
-   * delete label from a check
+   * Delete label from a check
    * 
-   * @param checkID ID of the check (required)
-   * @param labelID the label id to delete (required)
+   * @param checkID The check ID. (required)
+   * @param labelID The ID of the label to delete. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -63,20 +64,21 @@ public interface ChecksService {
   /**
    * Get all checks
    * 
-   * @param orgID only show checks belonging to specified organization (required)
+   * @param orgID Only show checks that belong to a specific organization ID. (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
    * @param offset  (optional)
    * @param limit  (optional, default to 20)
    * @return Call&lt;Checks&gt;
    */
   @GET("api/v2/checks")
   Call<Checks> getChecks(
-    @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
+    @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
   );
 
   /**
    * Get a check
    * 
-   * @param checkID ID of check (required)
+   * @param checkID The check ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Check&gt;
    */
@@ -86,9 +88,9 @@ public interface ChecksService {
   );
 
   /**
-   * list all labels for a check
+   * List all labels for a check
    * 
-   * @param checkID ID of the check (required)
+   * @param checkID The check ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
@@ -98,9 +100,9 @@ public interface ChecksService {
   );
 
   /**
-   * Get an check query
+   * Get a check query
    * 
-   * @param checkID ID of check (required)
+   * @param checkID The check ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;FluxResponse&gt;
    */
@@ -112,8 +114,8 @@ public interface ChecksService {
   /**
    * Update a check
    * 
-   * @param checkID ID of check (required)
-   * @param check check update to apply (required)
+   * @param checkID The check ID. (required)
+   * @param checkPatch Check update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Check&gt;
    */
@@ -122,14 +124,14 @@ public interface ChecksService {
   })
   @PATCH("api/v2/checks/{checkID}")
   Call<Check> patchChecksID(
-    @retrofit2.http.Path("checkID") String checkID, @retrofit2.http.Body Check check, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Path("checkID") String checkID, @retrofit2.http.Body CheckPatch checkPatch, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
-   * add a label to a check
+   * Add a label to a check
    * 
-   * @param checkID ID of the check (required)
-   * @param labelMapping label to add (required)
+   * @param checkID The check ID. (required)
+   * @param labelMapping Label to add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelResponse&gt;
    */
@@ -139,6 +141,22 @@ public interface ChecksService {
   @POST("api/v2/checks/{checkID}/labels")
   Call<LabelResponse> postChecksIDLabels(
     @retrofit2.http.Path("checkID") String checkID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
+   * Update a check
+   * 
+   * @param checkID The check ID. (required)
+   * @param check Check update to apply (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Check&gt;
+   */
+  @Headers({
+    "Content-Type:application/json"
+  })
+  @PUT("api/v2/checks/{checkID}")
+  Call<Check> putChecksID(
+    @retrofit2.http.Path("checkID") String checkID, @retrofit2.http.Body Check check, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
 }

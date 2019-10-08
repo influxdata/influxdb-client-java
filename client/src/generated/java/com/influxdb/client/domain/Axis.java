@@ -28,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A description of a particular axis for a visualization
+ * The description of a particular axis for a visualization.
  */
-@ApiModel(description = "A description of a particular axis for a visualization")
+@ApiModel(description = "The description of a particular axis for a visualization.")
 
 public class Axis {
   public static final String SERIALIZED_NAME_BOUNDS = "bounds";
@@ -138,10 +138,10 @@ public class Axis {
   }
 
    /**
-   * label is a description of this Axis
+   * Label is a description of this Axis
    * @return label
   **/
-  @ApiModelProperty(value = "label is a description of this Axis")
+  @ApiModelProperty(value = "Label is a description of this Axis")
   public String getLabel() {
     return label;
   }

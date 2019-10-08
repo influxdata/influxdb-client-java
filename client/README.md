@@ -19,6 +19,7 @@ The reference Java client that allows query, write and management (bucket, organ
     - health check
 - [Advanced Usage](#advanced-usage)
     - [Writing data using synchronous blocking API](#writing-data-using-synchronous-blocking-api)
+    - [Monitoring & Alerting](#monitoring--alerting)
     - [Client configuration file](#client-configuration-file)
     - [Client connection string](#client-connection-string)
     - [Gzip support](#gzip-support)
@@ -751,6 +752,52 @@ public class WriteDataBlocking {
         Instant time;
     }
 }
+```
+
+### Monitoring & Alerting
+
+The example below show how to create a check for monitoring a stock price. A Slack notification is created if the price is lesser than `35`.
+
+##### Create Threshold Check
+
+The Check set status to `Critical` if the `current` value for a `stock` measurement is lesser than `35`.
+
+```java   
+Organization org = ...;
+
+String query = "from(bucket: \"my-bucket\") "
+        + "|> range(start: v.timeRangeStart, stop: v.timeRangeStop)  "
+        + "|> filter(fn: (r) => r._measurement == \"stock\")  "
+        + "|> filter(fn: (r) => r.company == \"zyz\")  "
+        + "|> aggregateWindow(every: 5s, fn: mean)  "
+        + "|> yield(name: \"mean\")";
+
+LesserThreshold threshold = new LesserThreshold();
+threshold.setLevel(CheckStatusLevel.CRIT);
+threshold.setValue(35F);
+
+String message = "The Stock price for XYZ is on: ${ r._level } level!";
+
+influxDBClient
+    .getChecksApi()
+    .createThresholdCheck("XYZ Stock value", query, "current", "5s", message, threshold, org.getId());
+```   
+
+##### Create Slack Notification endpoint
+
+```java
+String url = "https://hooks.slack.com/services/x/y/z";   
+
+SlackNotificationEndpoint endpoint = influxDBClient
+    .getNotificationEndpointsApi()
+    .createSlackEndpoint("Slack Endpoint", url, org.getId());
+```
+
+##### Create Notification Rule
+```java   
+influxDBClient
+    .getNotificationRulesApi()
+    .createSlackRule("Critical status to Slack", "10s", "${ r._message }", RuleStatusLevel.CRIT, endpoint, org.getId());
 ```
 
 ### Client configuration file

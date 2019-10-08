@@ -172,10 +172,10 @@ public class Cell {
   }
 
    /**
-   * The reference to a view from the views API
+   * The reference to a view from the views API.
    * @return viewID
   **/
-  @ApiModelProperty(value = "The reference to a view from the views API")
+  @ApiModelProperty(value = "The reference to a view from the views API.")
   public String getViewID() {
     return viewID;
   }

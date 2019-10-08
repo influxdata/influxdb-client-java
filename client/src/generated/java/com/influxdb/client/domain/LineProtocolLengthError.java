@@ -30,7 +30,7 @@ import java.io.IOException;
 
 public class LineProtocolLengthError {
   /**
-   * code is the machine-readable error code.
+   * Code is the machine-readable error code.
    */
   @JsonAdapter(CodeEnum.Adapter.class)
   public enum CodeEnum {
@@ -87,28 +87,28 @@ public class LineProtocolLengthError {
   private Integer maxLength;
 
    /**
-   * code is the machine-readable error code.
+   * Code is the machine-readable error code.
    * @return code
   **/
-  @ApiModelProperty(required = true, value = "code is the machine-readable error code.")
+  @ApiModelProperty(required = true, value = "Code is the machine-readable error code.")
   public CodeEnum getCode() {
     return code;
   }
 
    /**
-   * message is a human-readable message.
+   * Message is a human-readable message.
    * @return message
   **/
-  @ApiModelProperty(required = true, value = "message is a human-readable message.")
+  @ApiModelProperty(required = true, value = "Message is a human-readable message.")
   public String getMessage() {
     return message;
   }
 
    /**
-   * max length in bytes for a body of line-protocol.
+   * Max length in bytes for a body of line-protocol.
    * @return maxLength
   **/
-  @ApiModelProperty(required = true, value = "max length in bytes for a body of line-protocol.")
+  @ApiModelProperty(required = true, value = "Max length in bytes for a body of line-protocol.")
   public Integer getMaxLength() {
     return maxLength;
   }

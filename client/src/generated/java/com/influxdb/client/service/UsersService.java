@@ -25,10 +25,10 @@ import java.util.Map;
 
 public interface UsersService {
   /**
-   * removes a member from an bucket
+   * Remove a member from a bucket
    * 
-   * @param userID ID of member to remove (required)
-   * @param bucketID ID of the bucket (required)
+   * @param userID The ID of the member to remove. (required)
+   * @param bucketID The bucket ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -38,10 +38,10 @@ public interface UsersService {
   );
 
   /**
-   * removes an owner from a bucket
+   * Remove an owner from a bucket
    * 
-   * @param userID ID of owner to remove (required)
-   * @param bucketID ID of the bucket (required)
+   * @param userID The ID of the owner to remove. (required)
+   * @param bucketID The bucket ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -51,10 +51,10 @@ public interface UsersService {
   );
 
   /**
-   * removes a member from an dashboard
+   * Remove a member from a dashboard
    * 
-   * @param userID ID of member to remove (required)
-   * @param dashboardID ID of the dashboard (required)
+   * @param userID The ID of the member to remove. (required)
+   * @param dashboardID The dashboard ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -64,10 +64,10 @@ public interface UsersService {
   );
 
   /**
-   * removes an owner from a dashboard
+   * Remove an owner from a dashboard
    * 
-   * @param userID ID of owner to remove (required)
-   * @param dashboardID ID of the dashboard (required)
+   * @param userID The ID of the owner to remove. (required)
+   * @param dashboardID The dashboard ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -77,10 +77,10 @@ public interface UsersService {
   );
 
   /**
-   * removes a member from an organization
+   * Remove a member from an organization
    * 
-   * @param userID ID of member to remove (required)
-   * @param orgID ID of the organization (required)
+   * @param userID The ID of the member to remove. (required)
+   * @param orgID The organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -90,10 +90,10 @@ public interface UsersService {
   );
 
   /**
-   * removes an owner from an organization
+   * Remove an owner from an organization
    * 
-   * @param userID ID of owner to remove (required)
-   * @param orgID ID of the organization (required)
+   * @param userID The ID of the owner to remove. (required)
+   * @param orgID The organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -103,10 +103,10 @@ public interface UsersService {
   );
 
   /**
-   * removes a member from a scraper target
+   * Remove a member from a scraper target
    * 
-   * @param userID ID of member to remove (required)
-   * @param scraperTargetID ID of the scraper target (required)
+   * @param userID The ID of member to remove. (required)
+   * @param scraperTargetID The scraper target ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -116,10 +116,10 @@ public interface UsersService {
   );
 
   /**
-   * removes an owner from a scraper target
+   * Remove an owner from a scraper target
    * 
-   * @param userID ID of owner to remove (required)
-   * @param scraperTargetID ID of the scraper target (required)
+   * @param userID The ID of owner to remove. (required)
+   * @param scraperTargetID The scraper target ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -129,10 +129,10 @@ public interface UsersService {
   );
 
   /**
-   * removes a member from an task
+   * Remove a member from a task
    * 
-   * @param userID ID of member to remove (required)
-   * @param taskID ID of the task (required)
+   * @param userID The ID of the member to remove. (required)
+   * @param taskID The task ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -142,10 +142,10 @@ public interface UsersService {
   );
 
   /**
-   * removes an owner from an task
+   * Remove an owner from a task
    * 
-   * @param userID ID of owner to remove (required)
-   * @param taskID ID of the task (required)
+   * @param userID The ID of the owner to remove. (required)
+   * @param taskID The task ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -155,10 +155,10 @@ public interface UsersService {
   );
 
   /**
-   * removes a member from a telegraf config
+   * Remove a member from a Telegraf config
    * 
-   * @param userID ID of member to remove (required)
-   * @param telegrafID ID of the telegraf (required)
+   * @param userID The ID of the member to remove. (required)
+   * @param telegrafID The Telegraf config ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -168,10 +168,10 @@ public interface UsersService {
   );
 
   /**
-   * removes an owner from a telegraf config
+   * Remove an owner from a Telegraf config
    * 
-   * @param userID ID of owner to remove (required)
-   * @param telegrafID ID of the telegraf config (required)
+   * @param userID The ID of the owner to remove. (required)
+   * @param telegrafID The Telegraf config ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -181,9 +181,9 @@ public interface UsersService {
   );
 
   /**
-   * deletes a user
+   * Delete a user
    * 
-   * @param userID ID of user to delete (required)
+   * @param userID The ID of the user to delete. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -195,7 +195,7 @@ public interface UsersService {
   /**
    * List all users with member privileges for a bucket
    * 
-   * @param bucketID ID of the bucket (required)
+   * @param bucketID The bucket ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
@@ -207,7 +207,7 @@ public interface UsersService {
   /**
    * List all owners of a bucket
    * 
-   * @param bucketID ID of the bucket (required)
+   * @param bucketID The bucket ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
@@ -219,7 +219,7 @@ public interface UsersService {
   /**
    * List all dashboard members
    * 
-   * @param dashboardID ID of the dashboard (required)
+   * @param dashboardID The dashboard ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
@@ -231,7 +231,7 @@ public interface UsersService {
   /**
    * List all dashboard owners
    * 
-   * @param dashboardID ID of the dashboard (required)
+   * @param dashboardID The dashboard ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
@@ -241,7 +241,7 @@ public interface UsersService {
   );
 
   /**
-   * Returns currently authenticated user
+   * Return the current authenticated user
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;User&gt;
@@ -254,7 +254,7 @@ public interface UsersService {
   /**
    * List all members of an organization
    * 
-   * @param orgID ID of the organization (required)
+   * @param orgID The organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
@@ -266,7 +266,7 @@ public interface UsersService {
   /**
    * List all owners of an organization
    * 
-   * @param orgID ID of the organization (required)
+   * @param orgID The organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
@@ -278,7 +278,7 @@ public interface UsersService {
   /**
    * List all users with member privileges for a scraper target
    * 
-   * @param scraperTargetID ID of the scraper target (required)
+   * @param scraperTargetID The scraper target ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
@@ -290,7 +290,7 @@ public interface UsersService {
   /**
    * List all owners of a scraper target
    * 
-   * @param scraperTargetID ID of the scraper target (required)
+   * @param scraperTargetID The scraper target ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
@@ -302,7 +302,7 @@ public interface UsersService {
   /**
    * List all task members
    * 
-   * @param taskID ID of the task (required)
+   * @param taskID The task ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
@@ -312,9 +312,9 @@ public interface UsersService {
   );
 
   /**
-   * List all task owners
+   * List all owners of a task
    * 
-   * @param taskID ID of the task (required)
+   * @param taskID The task ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
@@ -324,9 +324,9 @@ public interface UsersService {
   );
 
   /**
-   * List all users with member privileges for a telegraf config
+   * List all users with member privileges for a Telegraf config
    * 
-   * @param telegrafID ID of the telegraf config (required)
+   * @param telegrafID The Telegraf config ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
@@ -336,9 +336,9 @@ public interface UsersService {
   );
 
   /**
-   * List all owners of a telegraf config
+   * List all owners of a Telegraf config
    * 
-   * @param telegrafID ID of the telegraf config (required)
+   * @param telegrafID The Telegraf config ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
@@ -361,7 +361,7 @@ public interface UsersService {
   /**
    * Retrieve a user
    * 
-   * @param userID ID of user to get (required)
+   * @param userID The user ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;User&gt;
    */
@@ -373,7 +373,7 @@ public interface UsersService {
   /**
    * Retrieve operation logs for a user
    * 
-   * @param userID ID of the user (required)
+   * @param userID The user ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param offset  (optional)
    * @param limit  (optional, default to 20)
@@ -387,8 +387,8 @@ public interface UsersService {
   /**
    * Update a user
    * 
-   * @param userID ID of user to update (required)
-   * @param user user update to apply (required)
+   * @param userID The ID of the user to update. (required)
+   * @param user User update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;User&gt;
    */
@@ -401,10 +401,10 @@ public interface UsersService {
   );
 
   /**
-   * Add bucket member
+   * Add a member to a bucket
    * 
-   * @param bucketID ID of the bucket (required)
-   * @param addResourceMemberRequestBody user to add as member (required)
+   * @param bucketID The bucket ID. (required)
+   * @param addResourceMemberRequestBody User to add as member (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMember&gt;
    */
@@ -417,10 +417,10 @@ public interface UsersService {
   );
 
   /**
-   * Add bucket owner
+   * Add an owner to a bucket
    * 
-   * @param bucketID ID of the bucket (required)
-   * @param addResourceMemberRequestBody user to add as owner (required)
+   * @param bucketID The bucket ID. (required)
+   * @param addResourceMemberRequestBody User to add as owner (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwner&gt;
    */
@@ -433,10 +433,10 @@ public interface UsersService {
   );
 
   /**
-   * Add dashboard member
+   * Add a member to a dashboard
    * 
-   * @param dashboardID ID of the dashboard (required)
-   * @param addResourceMemberRequestBody user to add as member (required)
+   * @param dashboardID The dashboard ID. (required)
+   * @param addResourceMemberRequestBody User to add as member (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMember&gt;
    */
@@ -449,10 +449,10 @@ public interface UsersService {
   );
 
   /**
-   * Add dashboard owner
+   * Add an owner to a dashboard
    * 
-   * @param dashboardID ID of the dashboard (required)
-   * @param addResourceMemberRequestBody user to add as owner (required)
+   * @param dashboardID The dashboard ID. (required)
+   * @param addResourceMemberRequestBody User to add as owner (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwner&gt;
    */
@@ -465,10 +465,10 @@ public interface UsersService {
   );
 
   /**
-   * Add organization member
+   * Add a member to an organization
    * 
-   * @param orgID ID of the organization (required)
-   * @param addResourceMemberRequestBody user to add as member (required)
+   * @param orgID The organization ID. (required)
+   * @param addResourceMemberRequestBody User to add as member (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMember&gt;
    */
@@ -481,10 +481,10 @@ public interface UsersService {
   );
 
   /**
-   * Add organization owner
+   * Add an owner to an organization
    * 
-   * @param orgID ID of the organization (required)
-   * @param addResourceMemberRequestBody user to add as owner (required)
+   * @param orgID The organization ID. (required)
+   * @param addResourceMemberRequestBody User to add as owner (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwner&gt;
    */
@@ -497,10 +497,10 @@ public interface UsersService {
   );
 
   /**
-   * Add scraper target member
+   * Add a member to a scraper target
    * 
-   * @param scraperTargetID ID of the scraper target (required)
-   * @param addResourceMemberRequestBody user to add as member (required)
+   * @param scraperTargetID The scraper target ID. (required)
+   * @param addResourceMemberRequestBody User to add as member (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMember&gt;
    */
@@ -513,10 +513,10 @@ public interface UsersService {
   );
 
   /**
-   * Add scraper target owner
+   * Add an owner to a scraper target
    * 
-   * @param scraperTargetID ID of the scraper target (required)
-   * @param addResourceMemberRequestBody user to add as owner (required)
+   * @param scraperTargetID The scraper target ID. (required)
+   * @param addResourceMemberRequestBody User to add as owner (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwner&gt;
    */
@@ -529,10 +529,10 @@ public interface UsersService {
   );
 
   /**
-   * Add task member
+   * Add a member to a task
    * 
-   * @param taskID ID of the task (required)
-   * @param addResourceMemberRequestBody user to add as member (required)
+   * @param taskID The task ID. (required)
+   * @param addResourceMemberRequestBody User to add as member (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMember&gt;
    */
@@ -545,10 +545,10 @@ public interface UsersService {
   );
 
   /**
-   * Add task owner
+   * Add an owner to a task
    * 
-   * @param taskID ID of the task (required)
-   * @param addResourceMemberRequestBody user to add as owner (required)
+   * @param taskID The task ID. (required)
+   * @param addResourceMemberRequestBody User to add as owner (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwner&gt;
    */
@@ -561,10 +561,10 @@ public interface UsersService {
   );
 
   /**
-   * Add telegraf config member
+   * Add a member to a Telegraf config
    * 
-   * @param telegrafID ID of the telegraf config (required)
-   * @param addResourceMemberRequestBody user to add as member (required)
+   * @param telegrafID The Telegraf config ID. (required)
+   * @param addResourceMemberRequestBody User to add as member (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMember&gt;
    */
@@ -577,10 +577,10 @@ public interface UsersService {
   );
 
   /**
-   * Add telegraf config owner
+   * Add an owner to a Telegraf config
    * 
-   * @param telegrafID ID of the telegraf config (required)
-   * @param addResourceMemberRequestBody user to add as owner (required)
+   * @param telegrafID The Telegraf config ID. (required)
+   * @param addResourceMemberRequestBody User to add as owner (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwner&gt;
    */
@@ -595,7 +595,7 @@ public interface UsersService {
   /**
    * Create a user
    * 
-   * @param user user to create (required)
+   * @param user User to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;User&gt;
    */
@@ -608,9 +608,9 @@ public interface UsersService {
   );
 
   /**
-   * Update password
+   * Update a password
    * 
-   * @param passwordResetBody new password (required)
+   * @param passwordResetBody New password (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param authorization An auth credential for the Basic scheme (optional)
    * @return Call&lt;Void&gt;
@@ -624,10 +624,10 @@ public interface UsersService {
   );
 
   /**
-   * Update password
+   * Update a password
    * 
-   * @param userID ID of the user (required)
-   * @param passwordResetBody new password (required)
+   * @param userID The user ID. (required)
+   * @param passwordResetBody New password (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param authorization An auth credential for the Basic scheme (optional)
    * @return Call&lt;Void&gt;

@@ -30,7 +30,7 @@ import java.io.IOException;
 
 public class LineProtocolError {
   /**
-   * code is the machine-readable error code.
+   * Code is the machine-readable error code.
    */
   @JsonAdapter(CodeEnum.Adapter.class)
   public enum CodeEnum {
@@ -105,46 +105,46 @@ public class LineProtocolError {
   private Integer line;
 
    /**
-   * code is the machine-readable error code.
+   * Code is the machine-readable error code.
    * @return code
   **/
-  @ApiModelProperty(required = true, value = "code is the machine-readable error code.")
+  @ApiModelProperty(required = true, value = "Code is the machine-readable error code.")
   public CodeEnum getCode() {
     return code;
   }
 
    /**
-   * message is a human-readable message.
+   * Message is a human-readable message.
    * @return message
   **/
-  @ApiModelProperty(required = true, value = "message is a human-readable message.")
+  @ApiModelProperty(required = true, value = "Message is a human-readable message.")
   public String getMessage() {
     return message;
   }
 
    /**
-   * op describes the logical code operation during error. Useful for debugging.
+   * Op describes the logical code operation during error. Useful for debugging.
    * @return op
   **/
-  @ApiModelProperty(required = true, value = "op describes the logical code operation during error. Useful for debugging.")
+  @ApiModelProperty(required = true, value = "Op describes the logical code operation during error. Useful for debugging.")
   public String getOp() {
     return op;
   }
 
    /**
-   * err is a stack of errors that occurred during processing of the request. Useful for debugging.
+   * Err is a stack of errors that occurred during processing of the request. Useful for debugging.
    * @return err
   **/
-  @ApiModelProperty(required = true, value = "err is a stack of errors that occurred during processing of the request. Useful for debugging.")
+  @ApiModelProperty(required = true, value = "Err is a stack of errors that occurred during processing of the request. Useful for debugging.")
   public String getErr() {
     return err;
   }
 
    /**
-   * first line within sent body containing malformed data
+   * First line within sent body containing malformed data
    * @return line
   **/
-  @ApiModelProperty(value = "first line within sent body containing malformed data")
+  @ApiModelProperty(value = "First line within sent body containing malformed data")
   public Integer getLine() {
     return line;
   }

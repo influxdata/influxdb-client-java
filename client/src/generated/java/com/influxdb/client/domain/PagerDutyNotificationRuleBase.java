@@ -28,7 +28,7 @@ import java.io.IOException;
  * PagerDutyNotificationRuleBase
  */
 
-public class PagerDutyNotificationRuleBase extends PagerDutyNotificationRule {
+public class PagerDutyNotificationRuleBase extends NotificationRule {
   /**
    * Gets or Sets type
    */

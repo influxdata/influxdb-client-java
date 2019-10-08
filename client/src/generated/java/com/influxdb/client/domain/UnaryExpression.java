@@ -37,9 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * uses operators to act on a single operand in an expression
+ * Uses operators to act on a single operand in an expression
  */
-@ApiModel(description = "uses operators to act on a single operand in an expression")
+@ApiModel(description = "Uses operators to act on a single operand in an expression")
 
 public class UnaryExpression extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -61,10 +61,10 @@ public class UnaryExpression extends Expression {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

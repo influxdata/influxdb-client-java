@@ -37,9 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * selects one of two expressions, &#x60;Alternate&#x60; or &#x60;Consequent&#x60;, depending on a third boolean expression, &#x60;Test&#x60;
+ * Selects one of two expressions, &#x60;Alternate&#x60; or &#x60;Consequent&#x60;, depending on a third boolean expression, &#x60;Test&#x60;
  */
-@ApiModel(description = "selects one of two expressions, `Alternate` or `Consequent`, depending on a third boolean expression, `Test`")
+@ApiModel(description = "Selects one of two expressions, `Alternate` or `Consequent`, depending on a third boolean expression, `Test`")
 
 public class ConditionalExpression extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -67,10 +67,10 @@ public class ConditionalExpression extends Expression {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

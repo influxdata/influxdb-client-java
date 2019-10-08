@@ -25,9 +25,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * represents integer numbers
+ * Represents integer numbers
  */
-@ApiModel(description = "represents integer numbers")
+@ApiModel(description = "Represents integer numbers")
 
 public class IntegerLiteral extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -44,10 +44,10 @@ public class IntegerLiteral extends Expression {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

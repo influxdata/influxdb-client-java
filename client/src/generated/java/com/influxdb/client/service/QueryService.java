@@ -35,7 +35,7 @@ public interface QueryService {
   /**
    * 
    * 
-   * @param name name of branching suggestion (required)
+   * @param name The name of the branching suggestion. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;FluxSuggestion&gt;
    */
@@ -45,14 +45,14 @@ public interface QueryService {
   );
 
   /**
-   * query an influx
+   * Query InfluxDB
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param acceptEncoding The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand. (optional, default to identity)
    * @param contentType  (optional)
-   * @param org specifies the name of the organization executing the query; take either the ID or Name interchangeably; if both orgID and org are specified, org takes precedence. (optional)
-   * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, org takes precedence. (optional)
-   * @param query flux query or specification to execute (optional)
+   * @param org Specifies the name of the organization executing the query. Takes either the ID or Name interchangeably. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
+   * @param orgID Specifies the ID of the organization executing the query. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
+   * @param query Flux query or specification to execute (optional)
    * @return Call&lt;String&gt;
    */
   @Headers({
@@ -64,14 +64,14 @@ public interface QueryService {
   );
 
   /**
-   * query an influx
+   * Query InfluxDB
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param acceptEncoding The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand. (optional, default to identity)
    * @param contentType  (optional)
-   * @param org specifies the name of the organization executing the query; take either the ID or Name interchangeably; if both orgID and org are specified, org takes precedence. (optional)
-   * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, org takes precedence. (optional)
-   * @param query flux query or specification to execute (optional)
+   * @param org Specifies the name of the organization executing the query. Takes either the ID or Name interchangeably. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
+   * @param orgID Specifies the ID of the organization executing the query. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
+   * @param query Flux query or specification to execute (optional)
    * @return Call&lt;ResponseBody&gt;
    */
   @POST("api/v2/query")
@@ -80,14 +80,14 @@ public interface QueryService {
   );
 
   /**
-   * query an influx
+   * Query InfluxDB
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param acceptEncoding The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand. (optional, default to identity)
    * @param contentType  (optional)
-   * @param org specifies the name of the organization executing the query; take either the ID or Name interchangeably; if both orgID and org are specified, org takes precedence. (optional)
-   * @param orgID specifies the ID of the organization executing the query; if both orgID and org are specified, org takes precedence. (optional)
-   * @param query flux query or specification to execute (optional)
+   * @param org Specifies the name of the organization executing the query. Takes either the ID or Name interchangeably. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
+   * @param orgID Specifies the ID of the organization executing the query. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
+   * @param query Flux query or specification to execute (optional)
    * @return Call&lt;String&gt;
    */
   @POST("api/v2/query")
@@ -96,11 +96,11 @@ public interface QueryService {
   );
 
   /**
-   * analyze an influxql or flux query
+   * Analyze an InfluxQL or Flux query
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param contentType  (optional)
-   * @param query flux or influxql query to analyze (optional)
+   * @param query Flux or InfluxQL query to analyze (optional)
    * @return Call&lt;AnalyzeQueryResponse&gt;
    */
   @Headers({
@@ -113,10 +113,10 @@ public interface QueryService {
 
   /**
    * 
-   * analyzes flux query and generates a query specification.
+   * Analyzes flux query and generates a query specification.
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param contentType  (optional)
-   * @param languageRequest analyzed flux query to generate abstract syntax tree. (optional)
+   * @param languageRequest Analyzed Flux query to generate abstract syntax tree. (optional)
    * @return Call&lt;ASTResponse&gt;
    */
   @Headers({

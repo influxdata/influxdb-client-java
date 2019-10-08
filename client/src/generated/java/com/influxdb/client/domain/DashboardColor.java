@@ -25,9 +25,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * Color defines an encoding of data value into color space
+ * Defines an encoding of data value into color space.
  */
-@ApiModel(description = "Color defines an encoding of data value into color space")
+@ApiModel(description = "Defines an encoding of data value into color space.")
 
 public class DashboardColor {
   public static final String SERIALIZED_NAME_ID = "id";
@@ -111,10 +111,10 @@ public class DashboardColor {
   }
 
    /**
-   * ID is the unique id of the view color
+   * The unique ID of the view color.
    * @return id
   **/
-  @ApiModelProperty(required = true, value = "ID is the unique id of the view color")
+  @ApiModelProperty(required = true, value = "The unique ID of the view color.")
   public String getId() {
     return id;
   }
@@ -147,10 +147,10 @@ public class DashboardColor {
   }
 
    /**
-   * Hex is the hex number of the color
+   * The hex number of the color
    * @return hex
   **/
-  @ApiModelProperty(required = true, value = "Hex is the hex number of the color")
+  @ApiModelProperty(required = true, value = "The hex number of the color")
   public String getHex() {
     return hex;
   }
@@ -165,10 +165,10 @@ public class DashboardColor {
   }
 
    /**
-   * Name is the user-facing name of the hex color
+   * The user-facing name of the hex color.
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "Name is the user-facing name of the hex color")
+  @ApiModelProperty(required = true, value = "The user-facing name of the hex color.")
   public String getName() {
     return name;
   }
@@ -183,10 +183,10 @@ public class DashboardColor {
   }
 
    /**
-   * Value is the data value mapped to this color
+   * The data value mapped to this color.
    * @return value
   **/
-  @ApiModelProperty(required = true, value = "Value is the data value mapped to this color")
+  @ApiModelProperty(required = true, value = "The data value mapped to this color.")
   public Float getValue() {
     return value;
   }

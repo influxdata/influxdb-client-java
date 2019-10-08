@@ -38,9 +38,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * object property assignment
+ * Object property assignment
  */
-@ApiModel(description = "object property assignment")
+@ApiModel(description = "Object property assignment")
 
 public class MemberAssignment extends Statement {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -62,10 +62,10 @@ public class MemberAssignment extends Statement {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

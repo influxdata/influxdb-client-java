@@ -47,7 +47,7 @@ install: true
 
 script:
   - ./scripts/influxdb-restart.sh
-  - mvn -B -U clean install -Dmaven.javadoc.skip=true -Dmaven.dokka.skip=true
+  - mvn -B -U clean install -Dmaven.javadoc.skip=true -Dmaven.dokka.skip=true -Dbuild.env=CI
 
 after_failure:
   - cat target/surefire-reports/*.txt

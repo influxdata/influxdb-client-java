@@ -150,10 +150,10 @@ public class PermissionResource {
   }
 
    /**
-   * if id is set that is a permission for a specific resource. if it is not set it is a permission for all resources of that resource type.
+   * If ID is set that is a permission for a specific resource. if it is not set it is a permission for all resources of that resource type.
    * @return id
   **/
-  @ApiModelProperty(value = "if id is set that is a permission for a specific resource. if it is not set it is a permission for all resources of that resource type.")
+  @ApiModelProperty(value = "If ID is set that is a permission for a specific resource. if it is not set it is a permission for all resources of that resource type.")
   public String getId() {
     return id;
   }
@@ -168,10 +168,10 @@ public class PermissionResource {
   }
 
    /**
-   * optional name of the resource if the resource has a name field.
+   * Optional name of the resource if the resource has a name field.
    * @return name
   **/
-  @ApiModelProperty(value = "optional name of the resource if the resource has a name field.")
+  @ApiModelProperty(value = "Optional name of the resource if the resource has a name field.")
   public String getName() {
     return name;
   }
@@ -186,10 +186,10 @@ public class PermissionResource {
   }
 
    /**
-   * if orgID is set that is a permission for all resources owned my that org. if it is not set it is a permission for all resources of that resource type.
+   * If orgID is set that is a permission for all resources owned my that org. if it is not set it is a permission for all resources of that resource type.
    * @return orgID
   **/
-  @ApiModelProperty(value = "if orgID is set that is a permission for all resources owned my that org. if it is not set it is a permission for all resources of that resource type.")
+  @ApiModelProperty(value = "If orgID is set that is a permission for all resources owned my that org. if it is not set it is a permission for all resources of that resource type.")
   public String getOrgID() {
     return orgID;
   }
@@ -204,10 +204,10 @@ public class PermissionResource {
   }
 
    /**
-   * optional name of the organization of the organization with orgID.
+   * Optional name of the organization of the organization with orgID.
    * @return org
   **/
-  @ApiModelProperty(value = "optional name of the organization of the organization with orgID.")
+  @ApiModelProperty(value = "Optional name of the organization of the organization with orgID.")
   public String getOrg() {
     return org;
   }

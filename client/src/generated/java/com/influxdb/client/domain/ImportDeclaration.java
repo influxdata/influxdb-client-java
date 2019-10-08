@@ -27,9 +27,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * declares a package import
+ * Declares a package import
  */
-@ApiModel(description = "declares a package import")
+@ApiModel(description = "Declares a package import")
 
 public class ImportDeclaration {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -50,10 +50,10 @@ public class ImportDeclaration {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

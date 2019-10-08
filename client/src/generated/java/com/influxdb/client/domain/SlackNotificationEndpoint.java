@@ -22,6 +22,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationEndpointBase;
+import com.influxdb.client.domain.NotificationEndpointBaseLinks;
 import com.influxdb.client.domain.NotificationEndpointType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -48,10 +49,10 @@ public class SlackNotificationEndpoint extends NotificationEndpoint {
   }
 
    /**
-   * Get url
+   * Specifies the URL of the Slack endpoint. Specify either &#x60;URL&#x60; or &#x60;Token&#x60;.
    * @return url
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "Specifies the URL of the Slack endpoint. Specify either `URL` or `Token`.")
   public String getUrl() {
     return url;
   }
@@ -66,10 +67,10 @@ public class SlackNotificationEndpoint extends NotificationEndpoint {
   }
 
    /**
-   * Get token
+   * Specifies the API token string. Specify either &#x60;URL&#x60; or &#x60;Token&#x60;.
    * @return token
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "Specifies the API token string. Specify either `URL` or `Token`.")
   public String getToken() {
     return token;
   }

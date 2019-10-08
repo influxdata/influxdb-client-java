@@ -28,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * represents a complete package source tree
+ * Represents a complete package source tree.
  */
-@ApiModel(description = "represents a complete package source tree")
+@ApiModel(description = "Represents a complete package source tree.")
 
 public class ModelPackage {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -55,10 +55,10 @@ public class ModelPackage {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }
@@ -73,10 +73,10 @@ public class ModelPackage {
   }
 
    /**
-   * package import path
+   * Package import path
    * @return path
   **/
-  @ApiModelProperty(value = "package import path")
+  @ApiModelProperty(value = "Package import path")
   public String getPath() {
     return path;
   }
@@ -91,10 +91,10 @@ public class ModelPackage {
   }
 
    /**
-   * package name
+   * Package name
    * @return _package
   **/
-  @ApiModelProperty(value = "package name")
+  @ApiModelProperty(value = "Package name")
   public String getPackage() {
     return _package;
   }
@@ -117,10 +117,10 @@ public class ModelPackage {
   }
 
    /**
-   * package files
+   * Package files
    * @return files
   **/
-  @ApiModelProperty(value = "package files")
+  @ApiModelProperty(value = "Package files")
   public List<File> getFiles() {
     return files;
   }

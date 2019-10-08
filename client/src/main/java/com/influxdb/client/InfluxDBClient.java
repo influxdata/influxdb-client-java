@@ -27,10 +27,13 @@ import javax.annotation.Nullable;
 import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.Bucket;
+import com.influxdb.client.domain.Check;
 import com.influxdb.client.domain.Dashboard;
 import com.influxdb.client.domain.Document;
 import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.NotificationEndpoint;
+import com.influxdb.client.domain.NotificationRules;
 import com.influxdb.client.domain.OnboardingRequest;
 import com.influxdb.client.domain.OnboardingResponse;
 import com.influxdb.client.domain.Organization;
@@ -181,8 +184,32 @@ public interface InfluxDBClient extends AutoCloseable {
     DashboardsApi getDashboardsApi();
 
     /**
-     * Create an implementation of the API endpoints defined by the {@code service} interface.
+     * Get the {@link Check} client.
      *
+     * @return the new client instance for Checks API
+     */
+    @Nonnull
+    ChecksApi getChecksApi();
+
+    /**
+     * Get the {@link NotificationEndpoint} client.
+     *
+     * @return the new client instance for NotificationEndpoint API
+     */
+    @Nonnull
+    NotificationEndpointsApi getNotificationEndpointsApi();
+
+    /**
+     * Get the {@link NotificationRules} client.
+     *
+     * @return the new client instance for NotificationRules API
+     */
+    @Nonnull
+    NotificationRulesApi getNotificationRulesApi();
+
+    /**
+     * Create an implementation of the API endpoints defined by the {@code service} interface.
+     * <p>
      * The endpoints are defined in {@link com.influxdb.client.service}.
      *
      * @param service service to instantiate

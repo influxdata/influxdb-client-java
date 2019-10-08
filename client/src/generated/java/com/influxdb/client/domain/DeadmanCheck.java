@@ -21,6 +21,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.CheckBase;
+import com.influxdb.client.domain.CheckBaseLinks;
 import com.influxdb.client.domain.CheckBaseTags;
 import com.influxdb.client.domain.CheckStatusLevel;
 import com.influxdb.client.domain.DashboardQuery;
@@ -117,10 +118,10 @@ public class DeadmanCheck extends Check {
   }
 
    /**
-   * string duration before deadman triggers
+   * String duration before deadman triggers.
    * @return timeSince
   **/
-  @ApiModelProperty(value = "string duration before deadman triggers")
+  @ApiModelProperty(value = "String duration before deadman triggers.")
   public String getTimeSince() {
     return timeSince;
   }
@@ -135,10 +136,10 @@ public class DeadmanCheck extends Check {
   }
 
    /**
-   * string duration for time that a series is considered stale and should not trigger deadman
+   * String duration for time that a series is considered stale and should not trigger deadman.
    * @return staleTime
   **/
-  @ApiModelProperty(value = "string duration for time that a series is considered stale and should not trigger deadman")
+  @ApiModelProperty(value = "String duration for time that a series is considered stale and should not trigger deadman.")
   public String getStaleTime() {
     return staleTime;
   }
@@ -153,10 +154,10 @@ public class DeadmanCheck extends Check {
   }
 
    /**
-   * if only zero values reported since time, trigger alert
+   * If only zero values reported since time, trigger an alert
    * @return reportZero
   **/
-  @ApiModelProperty(value = "if only zero values reported since time, trigger alert")
+  @ApiModelProperty(value = "If only zero values reported since time, trigger an alert")
   public Boolean getReportZero() {
     return reportZero;
   }

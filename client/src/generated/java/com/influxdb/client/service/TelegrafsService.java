@@ -27,9 +27,9 @@ import java.util.Map;
 
 public interface TelegrafsService {
   /**
-   * delete a telegraf config
+   * Delete a Telegraf config
    * 
-   * @param telegrafID ID of telegraf config (required)
+   * @param telegrafID The Telegraf config ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -39,10 +39,10 @@ public interface TelegrafsService {
   );
 
   /**
-   * delete a label from a telegraf config
+   * Delete a label from a Telegraf config
    * 
-   * @param telegrafID ID of the telegraf config (required)
-   * @param labelID the label ID (required)
+   * @param telegrafID The Telegraf config ID. (required)
+   * @param labelID The label ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -52,10 +52,10 @@ public interface TelegrafsService {
   );
 
   /**
-   * removes a member from a telegraf config
+   * Remove a member from a Telegraf config
    * 
-   * @param userID ID of member to remove (required)
-   * @param telegrafID ID of the telegraf (required)
+   * @param userID The ID of the member to remove. (required)
+   * @param telegrafID The Telegraf config ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -65,10 +65,10 @@ public interface TelegrafsService {
   );
 
   /**
-   * removes an owner from a telegraf config
+   * Remove an owner from a Telegraf config
    * 
-   * @param userID ID of owner to remove (required)
-   * @param telegrafID ID of the telegraf config (required)
+   * @param userID The ID of the owner to remove. (required)
+   * @param telegrafID The Telegraf config ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -81,7 +81,7 @@ public interface TelegrafsService {
    * 
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param orgID specifies the organization of the resource (optional)
+   * @param orgID The organization ID the Telegraf config belongs to. (optional)
    * @return Call&lt;Telegrafs&gt;
    */
   @GET("api/v2/telegrafs")
@@ -90,9 +90,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * Retrieve a telegraf config
+   * Retrieve a Telegraf config
    * 
-   * @param telegrafID ID of telegraf config (required)
+   * @param telegrafID The Telegraf config ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param accept  (optional, default to application/toml)
    * @return Call&lt;String&gt;
@@ -103,9 +103,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * Retrieve a telegraf config
+   * Retrieve a Telegraf config
    * 
-   * @param telegrafID ID of telegraf config (required)
+   * @param telegrafID The Telegraf config ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param accept  (optional, default to application/toml)
    * @return Call&lt;ResponseBody&gt;
@@ -116,9 +116,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * Retrieve a telegraf config
+   * Retrieve a Telegraf config
    * 
-   * @param telegrafID ID of telegraf config (required)
+   * @param telegrafID The Telegraf config ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param accept  (optional, default to application/toml)
    * @return Call&lt;String&gt;
@@ -129,9 +129,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * Retrieve a telegraf config
+   * Retrieve a Telegraf config
    * 
-   * @param telegrafID ID of telegraf config (required)
+   * @param telegrafID The Telegraf config ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param accept  (optional, default to application/toml)
    * @return Call&lt;Telegraf&gt;
@@ -142,9 +142,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * list all labels for a telegraf config
+   * List all labels for a Telegraf config
    * 
-   * @param telegrafID ID of the telegraf config (required)
+   * @param telegrafID The Telegraf config ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
@@ -154,9 +154,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * List all users with member privileges for a telegraf config
+   * List all users with member privileges for a Telegraf config
    * 
-   * @param telegrafID ID of the telegraf config (required)
+   * @param telegrafID The Telegraf config ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
@@ -166,9 +166,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * List all owners of a telegraf config
+   * List all owners of a Telegraf config
    * 
-   * @param telegrafID ID of the telegraf config (required)
+   * @param telegrafID The Telegraf config ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
@@ -178,9 +178,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * Create a telegraf config
+   * Create a Telegraf config
    * 
-   * @param telegrafRequest telegraf config to create (required)
+   * @param telegrafRequest Telegraf config to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Telegraf&gt;
    */
@@ -193,10 +193,10 @@ public interface TelegrafsService {
   );
 
   /**
-   * add a label to a telegraf config
+   * Add a label to a Telegraf config
    * 
-   * @param telegrafID ID of the telegraf config (required)
-   * @param labelMapping label to add (required)
+   * @param telegrafID The Telegraf config ID. (required)
+   * @param labelMapping Label to add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelResponse&gt;
    */
@@ -209,10 +209,10 @@ public interface TelegrafsService {
   );
 
   /**
-   * Add telegraf config member
+   * Add a member to a Telegraf config
    * 
-   * @param telegrafID ID of the telegraf config (required)
-   * @param addResourceMemberRequestBody user to add as member (required)
+   * @param telegrafID The Telegraf config ID. (required)
+   * @param addResourceMemberRequestBody User to add as member (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMember&gt;
    */
@@ -225,10 +225,10 @@ public interface TelegrafsService {
   );
 
   /**
-   * Add telegraf config owner
+   * Add an owner to a Telegraf config
    * 
-   * @param telegrafID ID of the telegraf config (required)
-   * @param addResourceMemberRequestBody user to add as owner (required)
+   * @param telegrafID The Telegraf config ID. (required)
+   * @param addResourceMemberRequestBody User to add as owner (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwner&gt;
    */
@@ -241,10 +241,10 @@ public interface TelegrafsService {
   );
 
   /**
-   * Update a telegraf config
+   * Update a Telegraf config
    * 
-   * @param telegrafID ID of telegraf config (required)
-   * @param telegrafRequest telegraf config update to apply (required)
+   * @param telegrafID The Telegraf config ID. (required)
+   * @param telegrafRequest Telegraf config update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Telegraf&gt;
    */

@@ -29,7 +29,7 @@ public interface BucketsService {
   /**
    * Delete a bucket
    * 
-   * @param bucketID ID of bucket to delete (required)
+   * @param bucketID The ID of the bucket to delete. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -41,8 +41,8 @@ public interface BucketsService {
   /**
    * delete a label from a bucket
    * 
-   * @param bucketID ID of the bucket (required)
-   * @param labelID the label id to delete (required)
+   * @param bucketID The bucket ID. (required)
+   * @param labelID The ID of the label to delete. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -52,10 +52,10 @@ public interface BucketsService {
   );
 
   /**
-   * removes a member from an bucket
+   * Remove a member from a bucket
    * 
-   * @param userID ID of member to remove (required)
-   * @param bucketID ID of the bucket (required)
+   * @param userID The ID of the member to remove. (required)
+   * @param bucketID The bucket ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -65,10 +65,10 @@ public interface BucketsService {
   );
 
   /**
-   * removes an owner from a bucket
+   * Remove an owner from a bucket
    * 
-   * @param userID ID of owner to remove (required)
-   * @param bucketID ID of the bucket (required)
+   * @param userID The ID of the owner to remove. (required)
+   * @param bucketID The bucket ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -83,9 +83,9 @@ public interface BucketsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param offset  (optional)
    * @param limit  (optional, default to 20)
-   * @param org specifies the organization name of the resource (optional)
-   * @param orgID specifies the organization id of the resource (optional)
-   * @param name only returns buckets with the specified name (optional)
+   * @param org The organization name. (optional)
+   * @param orgID The organization ID. (optional)
+   * @param name Only returns buckets with a specific name. (optional)
    * @return Call&lt;Buckets&gt;
    */
   @GET("api/v2/buckets")
@@ -96,7 +96,7 @@ public interface BucketsService {
   /**
    * Retrieve a bucket
    * 
-   * @param bucketID ID of bucket to get (required)
+   * @param bucketID The bucket ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Bucket&gt;
    */
@@ -106,9 +106,9 @@ public interface BucketsService {
   );
 
   /**
-   * list all labels for a bucket
+   * List all labels for a bucket
    * 
-   * @param bucketID ID of the bucket (required)
+   * @param bucketID The bucket ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
@@ -120,7 +120,7 @@ public interface BucketsService {
   /**
    * Retrieve operation logs for a bucket
    * 
-   * @param bucketID ID of the bucket (required)
+   * @param bucketID The bucket ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param offset  (optional)
    * @param limit  (optional, default to 20)
@@ -134,7 +134,7 @@ public interface BucketsService {
   /**
    * List all users with member privileges for a bucket
    * 
-   * @param bucketID ID of the bucket (required)
+   * @param bucketID The bucket ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
@@ -146,7 +146,7 @@ public interface BucketsService {
   /**
    * List all owners of a bucket
    * 
-   * @param bucketID ID of the bucket (required)
+   * @param bucketID The bucket ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
@@ -156,11 +156,11 @@ public interface BucketsService {
   );
 
   /**
-   * Get a sources buckets (will return dbrps in the form of buckets if it is a v1 source)
+   * Get buckets in a source
    * 
-   * @param sourceID ID of the source (required)
+   * @param sourceID The source ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param org specifies the organization of the resource (optional)
+   * @param org The organization name. (optional)
    * @return Call&lt;Buckets&gt;
    */
   @GET("api/v2/sources/{sourceID}/buckets")
@@ -171,8 +171,8 @@ public interface BucketsService {
   /**
    * Update a bucket
    * 
-   * @param bucketID ID of bucket to update (required)
-   * @param bucket bucket update to apply (required)
+   * @param bucketID The bucket ID. (required)
+   * @param bucket Bucket update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Bucket&gt;
    */
@@ -187,7 +187,7 @@ public interface BucketsService {
   /**
    * Create a bucket
    * 
-   * @param bucket bucket to create (required)
+   * @param bucket Bucket to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Bucket&gt;
    */
@@ -200,10 +200,10 @@ public interface BucketsService {
   );
 
   /**
-   * add a label to a bucket
+   * Add a label to a bucket
    * 
-   * @param bucketID ID of the bucket (required)
-   * @param labelMapping label to add (required)
+   * @param bucketID The bucket ID. (required)
+   * @param labelMapping Label to add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelResponse&gt;
    */
@@ -216,10 +216,10 @@ public interface BucketsService {
   );
 
   /**
-   * Add bucket member
+   * Add a member to a bucket
    * 
-   * @param bucketID ID of the bucket (required)
-   * @param addResourceMemberRequestBody user to add as member (required)
+   * @param bucketID The bucket ID. (required)
+   * @param addResourceMemberRequestBody User to add as member (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMember&gt;
    */
@@ -232,10 +232,10 @@ public interface BucketsService {
   );
 
   /**
-   * Add bucket owner
+   * Add an owner to a bucket
    * 
-   * @param bucketID ID of the bucket (required)
-   * @param addResourceMemberRequestBody user to add as owner (required)
+   * @param bucketID The bucket ID. (required)
+   * @param addResourceMemberRequestBody User to add as owner (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwner&gt;
    */

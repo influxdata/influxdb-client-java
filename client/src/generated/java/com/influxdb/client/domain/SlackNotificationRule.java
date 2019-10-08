@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Arrays;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationRuleBase;
+import com.influxdb.client.domain.NotificationRuleBaseLinks;
 import com.influxdb.client.domain.SlackNotificationRuleBase;
 import com.influxdb.client.domain.StatusRule;
 import com.influxdb.client.domain.TagRule;
@@ -28,7 +29,7 @@ import java.util.List;
  * SlackNotificationRule
  */
 
-public class SlackNotificationRule extends NotificationRule {
+public class SlackNotificationRule extends SlackNotificationRuleBase {
 
   @Override
   public boolean equals(java.lang.Object o) {

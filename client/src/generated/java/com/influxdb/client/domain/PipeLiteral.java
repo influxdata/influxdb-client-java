@@ -25,9 +25,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * represents a specialized literal value, indicating the left hand value of a pipe expression
+ * Represents a specialized literal value, indicating the left hand value of a pipe expression
  */
-@ApiModel(description = "represents a specialized literal value, indicating the left hand value of a pipe expression")
+@ApiModel(description = "Represents a specialized literal value, indicating the left hand value of a pipe expression")
 
 public class PipeLiteral extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -40,10 +40,10 @@ public class PipeLiteral extends Expression {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

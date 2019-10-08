@@ -26,9 +26,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * declares a Flux test case
+ * Declares a Flux test case
  */
-@ApiModel(description = "declares a Flux test case")
+@ApiModel(description = "Declares a Flux test case")
 
 public class TestStatement extends Statement {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -45,10 +45,10 @@ public class TestStatement extends Statement {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }

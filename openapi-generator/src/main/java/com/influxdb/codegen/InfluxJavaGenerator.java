@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
@@ -39,6 +40,9 @@ import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.ComposedSchema;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.Discriminator;
+import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
@@ -186,7 +190,10 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                 for (String interfaceModelName : pluginModel.interfaces) {
 
                     CodegenModel interfaceModel = getModel((HashMap) models.get(interfaceModelName));
-                    interfaceModel.setParent(pluginModel.classname);
+                    if (!interfaceModel.name.contains("NotificationRule")) {
+
+                        interfaceModel.setParent(pluginModel.classname);
+                    }
                 }
 
                 pluginModel.interfaces.clear();
@@ -200,6 +207,9 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                 pluginModel.setParent("Expression");
             }
         }
+
+        additionalProperties.put("x-polymorphic-request-bodies", Arrays
+                .asList("NotificationEndpoint", "NotificationRule", "Check"));
 
         return allModels;
     }
@@ -270,7 +280,12 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                                 throw new IllegalStateException();
                         }
 
-                        Schema responseSchema = apiOperation.getResponses().get("200").getContent().get(produce.get("mediaType")).getSchema();
+                        Content content = apiOperation.getResponses().get("200").getContent();
+                        MediaType mediaType = content.get(produce.get("mediaType"));
+                        if (mediaType == null) {
+                            return "";
+                        }
+                        Schema responseSchema = mediaType.getSchema();
 
                         if (responseSchema.get$ref() != null) {
 
@@ -287,6 +302,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                         }
 
                     })
+                    .filter(it -> !it.isEmpty())
                     .distinct()
                     .collect(Collectors.toList());
 
@@ -367,12 +383,18 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
     public CodegenModel fromModel(final String name, final Schema model, final Map<String, Schema> allDefinitions) {
 
         CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
-        codegenModel.setDiscriminator(null);
-        
-        if (model.getProperties() != null) {
 
-
-            Map properties = model.getProperties();
+        Map properties = model.getProperties();
+        if (properties == null && model instanceof ComposedSchema) {
+            if (((ComposedSchema) model).getAllOf() != null) {
+                properties = ((ComposedSchema) model).getAllOf().stream()
+                        .filter(allOf -> allOf instanceof ObjectSchema)
+                        .map((Function<Schema, Map>) Schema::getProperties)
+                        .findFirst()
+                        .orElse(null);
+            }
+        }
+        if (properties != null) {
 
             properties
                     .forEach((BiConsumer<String, Schema>) (property, propertySchema) -> {
@@ -410,79 +432,99 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                             }
                         }
 
-                        if (schema instanceof ComposedSchema) {
+                        final Discriminator apiDiscriminator = schema.getDiscriminator();
 
-                            CodegenProperty codegenProperty = getCodegenProperty(codegenModel, property);
+                        CodegenProperty codegenProperty = getCodegenProperty(codegenModel, property);
+                        if (codegenProperty != null) {
                             String adapterName = name + codegenProperty.nameInCamelCase + "Adapter";
+                            TypeAdapter typeAdapter = new TypeAdapter();
+                            typeAdapter.classname = adapterName;
 
                             Map<String, TypeAdapter> adapters = (HashMap<String, TypeAdapter>) codegenModel.vendorExtensions
                                     .getOrDefault("x-type-adapters", new HashMap<String, TypeAdapter>());
 
-                            TypeAdapter typeAdapter = new TypeAdapter();
-                            typeAdapter.classname = adapterName;
+                            if (apiDiscriminator != null) {
 
-                            for (Schema oneOf : getOneOf(schema, allDefinitions)) {
+                                apiDiscriminator.getMapping().forEach((mappingKey, refSchemaName) ->
+                                {
+                                    typeAdapter.isArray = propertySchema instanceof ArraySchema;
+                                    typeAdapter.discriminator = Stream.of(apiDiscriminator.getPropertyName())
+                                            .map(v -> "\"" + v + "\"")
+                                            .collect(Collectors.joining(", "));
+                                    TypeAdapterItem typeAdapterItem = new TypeAdapterItem();
+                                    typeAdapterItem.discriminatorValue = Stream.of(mappingKey).map(v -> "\"" + v + "\"").collect(Collectors.joining(", "));
+                                    typeAdapterItem.classname = ModelUtils.getSimpleRef(refSchemaName);
+                                    typeAdapter.items.add(typeAdapterItem);
+                                });
+                            }
 
-                                String refSchemaName;
-                                Schema refSchema;
 
-                                if (oneOf.get$ref() == null) {
-                                    refSchema = oneOf;
-                                    refSchemaName = oneOf.getName();
-                                } else {
-                                    refSchemaName = ModelUtils.getSimpleRef(oneOf.get$ref());
-                                    refSchema = allDefinitions.get(refSchemaName);
-                                    if (refSchema instanceof ComposedSchema) {
-                                        List<Schema> schemaList = ((ComposedSchema) refSchema).getAllOf().stream()
-                                                .map(it -> getObjectSchemas(it, allDefinitions))
-                                                .flatMap(Collection::stream)
-                                                .filter(it -> it instanceof ObjectSchema).collect(Collectors.toList());
-                                        refSchema = schemaList
-                                                .stream()
-                                                .filter(it -> {
-                                                    for (Schema ps : (Collection<Schema>) it.getProperties().values()) {
-                                                        if (ps.getEnum() != null && ps.getEnum().size() == 1) {
-                                                            return true;
-                                                        }
-                                                    }
-                                                    return false;
-                                                })
-                                                .findFirst()
-                                                .orElse(schemaList.get(0));
-                                    }
-                                }
+                            if (apiDiscriminator == null && schema instanceof ComposedSchema) {
 
-                                String[] keys = getDiscriminatorKeys(schema, refSchema);
 
-                                String[] discriminator = new String[]{};
-                                String[] discriminatorValue = new String[]{};
+                                for (Schema oneOf : getOneOf(schema, allDefinitions)) {
 
-                                for (String key : keys) {
-                                    Schema keyScheme = (Schema) refSchema.getProperties().get(key);
-                                    if (keyScheme.get$ref() != null) {
-                                        keyScheme = allDefinitions.get(ModelUtils.getSimpleRef(keyScheme.get$ref()));
-                                    }
+                                    String refSchemaName;
+                                    Schema refSchema;
 
-                                    if (!(keyScheme instanceof StringSchema)) {
-                                        continue;
+                                    if (oneOf.get$ref() == null) {
+                                        refSchema = oneOf;
+                                        refSchemaName = oneOf.getName();
                                     } else {
-
-                                        if (((StringSchema) keyScheme).getEnum() != null) {
-                                            discriminatorValue = ArrayUtils.add(discriminatorValue, ((StringSchema) keyScheme).getEnum().get(0));
-                                        } else {
-                                            discriminatorValue = ArrayUtils.add(discriminatorValue, refSchemaName);
+                                        refSchemaName = ModelUtils.getSimpleRef(oneOf.get$ref());
+                                        refSchema = allDefinitions.get(refSchemaName);
+                                        if (refSchema instanceof ComposedSchema) {
+                                            List<Schema> schemaList = ((ComposedSchema) refSchema).getAllOf().stream()
+                                                    .map(it -> getObjectSchemas(it, allDefinitions))
+                                                    .flatMap(Collection::stream)
+                                                    .filter(it -> it instanceof ObjectSchema).collect(Collectors.toList());
+                                            refSchema = schemaList
+                                                    .stream()
+                                                    .filter(it -> {
+                                                        for (Schema ps : (Collection<Schema>) it.getProperties().values()) {
+                                                            if (ps.getEnum() != null && ps.getEnum().size() == 1) {
+                                                                return true;
+                                                            }
+                                                        }
+                                                        return false;
+                                                    })
+                                                    .findFirst()
+                                                    .orElse(schemaList.get(0));
                                         }
                                     }
 
-                                    discriminator = ArrayUtils.add(discriminator, key);
-                                }
+                                    String[] keys = getDiscriminatorKeys(schema, refSchema);
 
-                                typeAdapter.isArray = propertySchema instanceof ArraySchema;
-                                typeAdapter.discriminator = Stream.of(discriminator).map(v -> "\"" + v + "\"").collect(Collectors.joining(", "));
-                                TypeAdapterItem typeAdapterItem = new TypeAdapterItem();
-                                typeAdapterItem.discriminatorValue = Stream.of(discriminatorValue).map(v -> "\"" + v + "\"").collect(Collectors.joining(", "));
-                                typeAdapterItem.classname = refSchemaName;
-                                typeAdapter.items.add(typeAdapterItem);
+                                    String[] discriminator = new String[]{};
+                                    String[] discriminatorValue = new String[]{};
+
+                                    for (String key : keys) {
+                                        Schema keyScheme = (Schema) refSchema.getProperties().get(key);
+                                        if (keyScheme.get$ref() != null) {
+                                            keyScheme = allDefinitions.get(ModelUtils.getSimpleRef(keyScheme.get$ref()));
+                                        }
+
+                                        if (!(keyScheme instanceof StringSchema)) {
+                                            continue;
+                                        } else {
+
+                                            if (((StringSchema) keyScheme).getEnum() != null) {
+                                                discriminatorValue = ArrayUtils.add(discriminatorValue, ((StringSchema) keyScheme).getEnum().get(0));
+                                            } else {
+                                                discriminatorValue = ArrayUtils.add(discriminatorValue, refSchemaName);
+                                            }
+                                        }
+
+                                        discriminator = ArrayUtils.add(discriminator, key);
+                                    }
+
+                                    typeAdapter.isArray = propertySchema instanceof ArraySchema;
+                                    typeAdapter.discriminator = Stream.of(discriminator).map(v -> "\"" + v + "\"").collect(Collectors.joining(", "));
+                                    TypeAdapterItem typeAdapterItem = new TypeAdapterItem();
+                                    typeAdapterItem.discriminatorValue = Stream.of(discriminatorValue).map(v -> "\"" + v + "\"").collect(Collectors.joining(", "));
+                                    typeAdapterItem.classname = refSchemaName;
+                                    typeAdapter.items.add(typeAdapterItem);
+                                }
                             }
 
                             if (!typeAdapter.items.isEmpty()) {
@@ -588,6 +630,22 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
             //
             codegenModel.vendorExtensions.put("x-has-generic-type", Boolean.TRUE);
             codegenModel.vendorExtensions.put("x-generic-type", "<T, C>");
+        }
+
+        // use generic precedents
+        if (codegenModel.getParent() != null && codegenModel.getParent().endsWith("Base")) {
+            codegenModel.setParent(StringUtils.substringBefore(codegenModel.getParent(), "Base"));
+            codegenModel.setParentSchema(StringUtils.substringBefore(codegenModel.getParent(), "Base"));
+        }
+
+        if (allDefinitions.containsKey(name + "Base")) {
+            codegenModel.setParent(name + "Base");
+            codegenModel.setParentSchema(name + "Base");
+        }
+
+        if (codegenModel.name.endsWith("NotificationRuleBase") && !codegenModel.name.equals("NotificationRuleBase")) {
+            codegenModel.setParent("NotificationRule");
+            codegenModel.setParentSchema("NotificationRule");
         }
 
         return codegenModel;

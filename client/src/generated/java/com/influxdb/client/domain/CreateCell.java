@@ -149,10 +149,10 @@ public class CreateCell {
   }
 
    /**
-   * makes a copy of the provided view
+   * Makes a copy of the provided view.
    * @return usingView
   **/
-  @ApiModelProperty(value = "makes a copy of the provided view")
+  @ApiModelProperty(value = "Makes a copy of the provided view.")
   public String getUsingView() {
     return usingView;
   }

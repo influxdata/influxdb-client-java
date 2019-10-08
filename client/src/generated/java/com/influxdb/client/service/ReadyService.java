@@ -17,7 +17,7 @@ import java.util.Map;
 
 public interface ReadyService {
   /**
-   * Get the readiness of a instance at startup. Allow us to confirm the instance is prepared to accept requests.
+   * Get the readiness of an instance at startup
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Ready&gt;

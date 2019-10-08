@@ -35,7 +35,7 @@ public interface TasksService {
   /**
    * Delete a task
    * Deletes a task and all associated records
-   * @param taskID ID of task to delete (required)
+   * @param taskID The ID of the task to delete. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -45,10 +45,10 @@ public interface TasksService {
   );
 
   /**
-   * delete a label from a task
+   * Delete a label from a task
    * 
-   * @param taskID ID of the task (required)
-   * @param labelID the label id (required)
+   * @param taskID The task ID. (required)
+   * @param labelID The label ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -58,10 +58,10 @@ public interface TasksService {
   );
 
   /**
-   * removes a member from an task
+   * Remove a member from a task
    * 
-   * @param userID ID of member to remove (required)
-   * @param taskID ID of the task (required)
+   * @param userID The ID of the member to remove. (required)
+   * @param taskID The task ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -71,10 +71,10 @@ public interface TasksService {
   );
 
   /**
-   * removes an owner from an task
+   * Remove an owner from a task
    * 
-   * @param userID ID of owner to remove (required)
-   * @param taskID ID of the task (required)
+   * @param userID The ID of the owner to remove. (required)
+   * @param taskID The task ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -84,10 +84,10 @@ public interface TasksService {
   );
 
   /**
-   * Cancel a single running task
+   * Cancel a running task
    * 
-   * @param taskID task ID (required)
-   * @param runID run ID (required)
+   * @param taskID The task ID. (required)
+   * @param runID The run ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -97,15 +97,15 @@ public interface TasksService {
   );
 
   /**
-   * List tasks.
+   * List all tasks
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param name only returns tasks with the specified name (optional)
-   * @param after returns tasks after specified ID (optional)
-   * @param user filter tasks to a specific user ID (optional)
-   * @param org filter tasks to a specific organization name (optional)
-   * @param orgID filter tasks to a specific organization ID (optional)
-   * @param limit the number of tasks to return (optional, default to 100)
+   * @param name Returns task with a specific name. (optional)
+   * @param after Return tasks after a specified ID. (optional)
+   * @param user Filter tasks to a specific user ID. (optional)
+   * @param org Filter tasks to a specific organization name. (optional)
+   * @param orgID Filter tasks to a specific organization ID. (optional)
+   * @param limit The number of tasks to return (optional, default to 100)
    * @return Call&lt;Tasks&gt;
    */
   @GET("api/v2/tasks")
@@ -114,9 +114,9 @@ public interface TasksService {
   );
 
   /**
-   * Retrieve an task
+   * Retrieve a task
    * 
-   * @param taskID ID of task to get (required)
+   * @param taskID The task ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Task&gt;
    */
@@ -126,9 +126,9 @@ public interface TasksService {
   );
 
   /**
-   * list all labels for a task
+   * List all labels for a task
    * 
-   * @param taskID ID of the task (required)
+   * @param taskID The task ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
@@ -140,7 +140,7 @@ public interface TasksService {
   /**
    * Retrieve all logs for a task
    * 
-   * @param taskID ID of task to get logs for (required)
+   * @param taskID The task ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Logs&gt;
    */
@@ -152,7 +152,7 @@ public interface TasksService {
   /**
    * List all task members
    * 
-   * @param taskID ID of the task (required)
+   * @param taskID The task ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMembers&gt;
    */
@@ -162,9 +162,9 @@ public interface TasksService {
   );
 
   /**
-   * List all task owners
+   * List all owners of a task
    * 
-   * @param taskID ID of the task (required)
+   * @param taskID The task ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
@@ -174,14 +174,14 @@ public interface TasksService {
   );
 
   /**
-   * Retrieve list of run records for a task
+   * List runs for a task
    * 
-   * @param taskID ID of task to get runs for (required)
+   * @param taskID The ID of the task to get runs for. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param after returns runs after specified ID (optional)
-   * @param limit the number of runs to return (optional, default to 100)
-   * @param afterTime filter runs to those scheduled after this time, RFC3339 (optional)
-   * @param beforeTime filter runs to those scheduled before this time, RFC3339 (optional)
+   * @param after Returns runs after a specific ID. (optional)
+   * @param limit The number of runs to return (optional, default to 100)
+   * @param afterTime Filter runs to those scheduled after this time, RFC3339 (optional)
+   * @param beforeTime Filter runs to those scheduled before this time, RFC3339 (optional)
    * @return Call&lt;Runs&gt;
    */
   @GET("api/v2/tasks/{taskID}/runs")
@@ -190,10 +190,10 @@ public interface TasksService {
   );
 
   /**
-   * Retrieve a single run record for a task
+   * Retrieve a single run for a task
    * 
-   * @param taskID task ID (required)
-   * @param runID run ID (required)
+   * @param taskID The task ID. (required)
+   * @param runID The run ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Run&gt;
    */
@@ -218,8 +218,8 @@ public interface TasksService {
   /**
    * Update a task
    * Update a task. This will cancel all queued runs.
-   * @param taskID ID of task to get (required)
-   * @param taskUpdateRequest task update to apply (required)
+   * @param taskID The task ID. (required)
+   * @param taskUpdateRequest Task update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Task&gt;
    */
@@ -234,7 +234,7 @@ public interface TasksService {
   /**
    * Create a new task
    * 
-   * @param taskCreateRequest task to create (required)
+   * @param taskCreateRequest Task to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Task&gt;
    */
@@ -247,10 +247,10 @@ public interface TasksService {
   );
 
   /**
-   * add a label to a task
+   * Add a label to a task
    * 
-   * @param taskID ID of the task (required)
-   * @param labelMapping label to add (required)
+   * @param taskID The task ID. (required)
+   * @param labelMapping Label to add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelResponse&gt;
    */
@@ -263,10 +263,10 @@ public interface TasksService {
   );
 
   /**
-   * Add task member
+   * Add a member to a task
    * 
-   * @param taskID ID of the task (required)
-   * @param addResourceMemberRequestBody user to add as member (required)
+   * @param taskID The task ID. (required)
+   * @param addResourceMemberRequestBody User to add as member (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceMember&gt;
    */
@@ -279,10 +279,10 @@ public interface TasksService {
   );
 
   /**
-   * Add task owner
+   * Add an owner to a task
    * 
-   * @param taskID ID of the task (required)
-   * @param addResourceMemberRequestBody user to add as owner (required)
+   * @param taskID The task ID. (required)
+   * @param addResourceMemberRequestBody User to add as owner (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwner&gt;
    */
@@ -295,7 +295,7 @@ public interface TasksService {
   );
 
   /**
-   * manually start a run of the task now overriding the current schedule.
+   * Manually start a task run, overriding the current schedule
    * 
    * @param taskID  (required)
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -313,8 +313,8 @@ public interface TasksService {
   /**
    * Retry a task run
    * 
-   * @param taskID task ID (required)
-   * @param runID run ID (required)
+   * @param taskID The task ID. (required)
+   * @param runID The run ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Run&gt;
    */

@@ -27,9 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * dialect are options to change the default CSV output format; https://www.w3.org/TR/2015/REC-tabular-metadata-20151217/#dialect-descriptions
+ * Dialect are options to change the default CSV output format; https://www.w3.org/TR/2015/REC-tabular-metadata-20151217/#dialect-descriptions
  */
-@ApiModel(description = "dialect are options to change the default CSV output format; https://www.w3.org/TR/2015/REC-tabular-metadata-20151217/#dialect-descriptions")
+@ApiModel(description = "Dialect are options to change the default CSV output format; https://www.w3.org/TR/2015/REC-tabular-metadata-20151217/#dialect-descriptions")
 
 public class Dialect {
   public static final String SERIALIZED_NAME_HEADER = "header";
@@ -98,7 +98,7 @@ public class Dialect {
   private String commentPrefix = "#";
 
   /**
-   * format of timestamps
+   * Format of timestamps
    */
   @JsonAdapter(DateTimeFormatEnum.Adapter.class)
   public enum DateTimeFormatEnum {
@@ -154,10 +154,10 @@ public class Dialect {
   }
 
    /**
-   * if true, the results will contain a header row
+   * If true, the results will contain a header row
    * @return header
   **/
-  @ApiModelProperty(value = "if true, the results will contain a header row")
+  @ApiModelProperty(value = "If true, the results will contain a header row")
   public Boolean getHeader() {
     return header;
   }
@@ -172,10 +172,10 @@ public class Dialect {
   }
 
    /**
-   * separator between cells; the default is ,
+   * Separator between cells; the default is ,
    * @return delimiter
   **/
-  @ApiModelProperty(value = "separator between cells; the default is ,")
+  @ApiModelProperty(value = "Separator between cells; the default is ,")
   public String getDelimiter() {
     return delimiter;
   }
@@ -198,10 +198,10 @@ public class Dialect {
   }
 
    /**
-   * https://www.w3.org/TR/2015/REC-tabular-data-model-20151217/#columns
+   * Https://www.w3.org/TR/2015/REC-tabular-data-model-20151217/#columns
    * @return annotations
   **/
-  @ApiModelProperty(value = "https://www.w3.org/TR/2015/REC-tabular-data-model-20151217/#columns")
+  @ApiModelProperty(value = "Https://www.w3.org/TR/2015/REC-tabular-data-model-20151217/#columns")
   public List<AnnotationsEnum> getAnnotations() {
     return annotations;
   }
@@ -216,10 +216,10 @@ public class Dialect {
   }
 
    /**
-   * character prefixed to comment strings
+   * Character prefixed to comment strings
    * @return commentPrefix
   **/
-  @ApiModelProperty(value = "character prefixed to comment strings")
+  @ApiModelProperty(value = "Character prefixed to comment strings")
   public String getCommentPrefix() {
     return commentPrefix;
   }
@@ -234,10 +234,10 @@ public class Dialect {
   }
 
    /**
-   * format of timestamps
+   * Format of timestamps
    * @return dateTimeFormat
   **/
-  @ApiModelProperty(value = "format of timestamps")
+  @ApiModelProperty(value = "Format of timestamps")
   public DateTimeFormatEnum getDateTimeFormat() {
     return dateTimeFormat;
   }

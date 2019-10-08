@@ -34,7 +34,7 @@ public class ScraperTargetRequest {
   private String name;
 
   /**
-   * type of the metrics to be parsed
+   * The type of the metrics to be parsed.
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
@@ -100,10 +100,10 @@ public class ScraperTargetRequest {
   }
 
    /**
-   * name of the scraper target
+   * The name of the scraper target.
    * @return name
   **/
-  @ApiModelProperty(value = "name of the scraper target")
+  @ApiModelProperty(value = "The name of the scraper target.")
   public String getName() {
     return name;
   }
@@ -113,10 +113,10 @@ public class ScraperTargetRequest {
   }
 
    /**
-   * type of the metrics to be parsed
+   * The type of the metrics to be parsed.
    * @return type
   **/
-  @ApiModelProperty(value = "type of the metrics to be parsed")
+  @ApiModelProperty(value = "The type of the metrics to be parsed.")
   public TypeEnum getType() {
     return type;
   }
@@ -127,10 +127,10 @@ public class ScraperTargetRequest {
   }
 
    /**
-   * url of the metrics endpoint
+   * The URL of the metrics endpoint.
    * @return url
   **/
-  @ApiModelProperty(example = "http://localhost:9090/metrics", value = "url of the metrics endpoint")
+  @ApiModelProperty(example = "http://localhost:9090/metrics", value = "The URL of the metrics endpoint.")
   public String getUrl() {
     return url;
   }
@@ -145,10 +145,10 @@ public class ScraperTargetRequest {
   }
 
    /**
-   * id of the organization
+   * The organization ID.
    * @return orgID
   **/
-  @ApiModelProperty(value = "id of the organization")
+  @ApiModelProperty(value = "The organization ID.")
   public String getOrgID() {
     return orgID;
   }
@@ -163,10 +163,10 @@ public class ScraperTargetRequest {
   }
 
    /**
-   * id of the bucket to be written
+   * The ID of the bucket to write to.
    * @return bucketID
   **/
-  @ApiModelProperty(value = "id of the bucket to be written")
+  @ApiModelProperty(value = "The ID of the bucket to write to.")
   public String getBucketID() {
     return bucketID;
   }

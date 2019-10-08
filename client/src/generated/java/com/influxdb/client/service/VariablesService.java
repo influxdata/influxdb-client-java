@@ -21,9 +21,9 @@ import java.util.Map;
 
 public interface VariablesService {
   /**
-   * delete a variable
+   * Delete a variable
    * 
-   * @param variableID id of the variable (required)
+   * @param variableID The variable ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -33,10 +33,10 @@ public interface VariablesService {
   );
 
   /**
-   * delete a label from a variable
+   * Delete a label from a variable
    * 
-   * @param variableID ID of the variable (required)
-   * @param labelID the label id to delete (required)
+   * @param variableID The variable ID. (required)
+   * @param labelID The label ID to delete. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -46,11 +46,11 @@ public interface VariablesService {
   );
 
   /**
-   * get all variables
+   * Get all variables
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param org specifies the organization name of the resource (optional)
-   * @param orgID specifies the organization id of the resource (optional)
+   * @param org The organization name. (optional)
+   * @param orgID The organization ID. (optional)
    * @return Call&lt;Variables&gt;
    */
   @GET("api/v2/variables")
@@ -59,9 +59,9 @@ public interface VariablesService {
   );
 
   /**
-   * get a variable
+   * Get a variable
    * 
-   * @param variableID ID of the variable (required)
+   * @param variableID The variable ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Variable&gt;
    */
@@ -71,9 +71,9 @@ public interface VariablesService {
   );
 
   /**
-   * list all labels for a variable
+   * List all labels for a variable
    * 
-   * @param variableID ID of the variable (required)
+   * @param variableID The variable ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelsResponse&gt;
    */
@@ -83,10 +83,10 @@ public interface VariablesService {
   );
 
   /**
-   * update a variable
+   * Update a variable
    * 
-   * @param variableID id of the variable (required)
-   * @param variable variable update to apply (required)
+   * @param variableID The variable ID. (required)
+   * @param variable Variable update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Variable&gt;
    */
@@ -99,9 +99,9 @@ public interface VariablesService {
   );
 
   /**
-   * create a variable
+   * Create a variable
    * 
-   * @param variable variable to create (required)
+   * @param variable Variable to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Variable&gt;
    */
@@ -114,10 +114,10 @@ public interface VariablesService {
   );
 
   /**
-   * add a label to a variable
+   * Add a label to a variable
    * 
-   * @param variableID ID of the variable (required)
-   * @param labelMapping label to add (required)
+   * @param variableID The variable ID. (required)
+   * @param labelMapping Label to add (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;LabelResponse&gt;
    */
@@ -130,10 +130,10 @@ public interface VariablesService {
   );
 
   /**
-   * replace a variable
+   * Replace a variable
    * 
-   * @param variableID id of the variable (required)
-   * @param variable variable to replace (required)
+   * @param variableID The variable ID. (required)
+   * @param variable Variable to replace (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Variable&gt;
    */

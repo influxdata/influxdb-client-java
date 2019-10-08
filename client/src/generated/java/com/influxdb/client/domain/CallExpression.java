@@ -37,9 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * represents a function call
+ * Represents a function call
  */
-@ApiModel(description = "represents a function call")
+@ApiModel(description = "Represents a function call")
 
 public class CallExpression extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -62,10 +62,10 @@ public class CallExpression extends Expression {
   }
 
    /**
-   * type of AST node
+   * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "type of AST node")
+  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }
@@ -106,10 +106,10 @@ public class CallExpression extends Expression {
   }
 
    /**
-   * function arguments
+   * Function arguments
    * @return arguments
   **/
-  @ApiModelProperty(value = "function arguments")
+  @ApiModelProperty(value = "Function arguments")
   public List<Expression> getArguments() {
     return arguments;
   }

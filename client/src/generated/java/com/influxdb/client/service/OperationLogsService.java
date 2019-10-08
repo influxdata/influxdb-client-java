@@ -19,7 +19,7 @@ public interface OperationLogsService {
   /**
    * Retrieve operation logs for a bucket
    * 
-   * @param bucketID ID of the bucket (required)
+   * @param bucketID The bucket ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param offset  (optional)
    * @param limit  (optional, default to 20)
@@ -33,7 +33,7 @@ public interface OperationLogsService {
   /**
    * Retrieve operation logs for a dashboard
    * 
-   * @param dashboardID ID of the dashboard (required)
+   * @param dashboardID The dashboard ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param offset  (optional)
    * @param limit  (optional, default to 20)
@@ -47,7 +47,7 @@ public interface OperationLogsService {
   /**
    * Retrieve operation logs for an organization
    * 
-   * @param orgID ID of the organization (required)
+   * @param orgID The organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param offset  (optional)
    * @param limit  (optional, default to 20)
@@ -61,7 +61,7 @@ public interface OperationLogsService {
   /**
    * Retrieve operation logs for a user
    * 
-   * @param userID ID of the user (required)
+   * @param userID The user ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param offset  (optional)
    * @param limit  (optional, default to 20)

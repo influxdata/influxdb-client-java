@@ -28,7 +28,7 @@ import java.io.IOException;
  * SMTPNotificationRuleBase
  */
 
-public class SMTPNotificationRuleBase extends SMTPNotificationRule {
+public class SMTPNotificationRuleBase extends NotificationRule {
   /**
    * Gets or Sets type
    */
