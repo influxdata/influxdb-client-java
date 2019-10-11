@@ -1,4 +1,4 @@
-## 1.1.0 [unreleased]
+## 1.1.0 [2019-10-11]
 
 ### Features
 1. [#59](https://github.com/influxdata/influxdb-client-java/issues/59): Added support for Monitoring & Alerting
