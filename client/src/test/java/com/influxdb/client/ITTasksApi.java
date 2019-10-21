@@ -21,6 +21,7 @@
  */
 package com.influxdb.client;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
@@ -400,7 +401,9 @@ class ITTasksApi extends AbstractITClientTest {
         Assertions.assertThat(run.getScheduledFor()).withFailMessage(failMessage).isBefore(OffsetDateTime.now());
         Assertions.assertThat(run.getStartedAt()).withFailMessage(failMessage).isBefore(OffsetDateTime.now());
         Assertions.assertThat(run.getFinishedAt()).withFailMessage(failMessage).isBefore(OffsetDateTime.now());
-        Assertions.assertThat(run.getRequestedAt()).withFailMessage(failMessage).isNull();
+        Assertions.assertThat(run.getRequestedAt())
+                .isEqualTo(OffsetDateTime
+                        .of(LocalDateTime.of(1, 1, 1, 0, 0), ZoneOffset.UTC));
         Assertions.assertThat(run.getLinks()).withFailMessage(failMessage).isNotNull();
         Assertions.assertThat(run.getLinks().getLogs()).withFailMessage(failMessage)
                 .isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId() + "/logs");
