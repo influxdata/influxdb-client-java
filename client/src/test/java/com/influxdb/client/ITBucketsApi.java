@@ -165,6 +165,8 @@ class ITBucketsApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/14900
     void findBuckets() {
 
         int size = bucketsApi.findBuckets().size();

@@ -70,7 +70,7 @@ class ITTasksApi extends AbstractITClientTest {
     private TasksApi tasksApi;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
 
         organization = findMyOrg();
 
@@ -84,7 +84,11 @@ class ITTasksApi extends AbstractITClientTest {
 
         tasksApi = influxDBClient.getTasksApi();
 
-        tasksApi.findTasks().forEach(task -> tasksApi.deleteTask(task));
+        tasksApi.findTasks().stream().filter(task -> task.getName().endsWith("-IT")).forEach(tasksApi::deleteTask);
+
+        OrganizationsApi organizationsApi = influxDBClient.getOrganizationsApi();
+        organizationsApi.findOrganizations().stream().filter(org -> org.getName().endsWith("-IT"))
+                .forEach(organizationsApi::deleteOrganization);
     }
 
     @Test
@@ -225,7 +229,7 @@ class ITTasksApi extends AbstractITClientTest {
 
     @Test
     @Disabled
-    //TODO set user password -> https://github.com/influxdata/influxdb/issues/11590
+        //TODO set user password -> https://github.com/influxdata/influxdb/issues/11590
     void findTasksByUserID() {
 
         User taskUser = influxDBClient.getUsersApi().createUser(generateName("TaskUser"));
@@ -238,7 +242,7 @@ class ITTasksApi extends AbstractITClientTest {
 
     @Test
     @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/11491
+        //TODO https://github.com/influxdata/influxdb/issues/11491
     void findTasksByOrganizationID() throws Exception {
 
         Organization taskOrganization = influxDBClient.getOrganizationsApi().createOrganization(generateName("TaskOrg"));
@@ -258,7 +262,7 @@ class ITTasksApi extends AbstractITClientTest {
 
     @Test
     @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/13577
+        //TODO https://github.com/influxdata/influxdb/issues/13577
     void findTasksAfterSpecifiedID() {
 
         Task task1 = tasksApi.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization);
@@ -401,9 +405,7 @@ class ITTasksApi extends AbstractITClientTest {
         Assertions.assertThat(run.getScheduledFor()).withFailMessage(failMessage).isBefore(OffsetDateTime.now());
         Assertions.assertThat(run.getStartedAt()).withFailMessage(failMessage).isBefore(OffsetDateTime.now());
         Assertions.assertThat(run.getFinishedAt()).withFailMessage(failMessage).isBefore(OffsetDateTime.now());
-        Assertions.assertThat(run.getRequestedAt())
-                .isEqualTo(OffsetDateTime
-                        .of(LocalDateTime.of(1, 1, 1, 0, 0), ZoneOffset.UTC));
+        Assertions.assertThat(run.getRequestedAt()).isNull();
         Assertions.assertThat(run.getLinks()).withFailMessage(failMessage).isNotNull();
         Assertions.assertThat(run.getLinks().getLogs()).withFailMessage(failMessage)
                 .isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId() + "/logs");

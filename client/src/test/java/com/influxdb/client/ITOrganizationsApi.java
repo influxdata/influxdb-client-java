@@ -64,6 +64,9 @@ class ITOrganizationsApi extends AbstractITClientTest {
 
         organizationsApi = influxDBClient.getOrganizationsApi();
         usersApi = influxDBClient.getUsersApi();
+
+        organizationsApi.findOrganizations().stream().filter(org -> org.getName().endsWith("-IT"))
+                .forEach(organizationsApi::deleteOrganization);
     }
 
     @Test
