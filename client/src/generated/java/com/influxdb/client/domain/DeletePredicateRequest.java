@@ -23,6 +23,7 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.time.OffsetDateTime;
 
 /**
  * the delete predicate request
@@ -32,17 +33,17 @@ import java.io.IOException;
 public class DeletePredicateRequest {
   public static final String SERIALIZED_NAME_START = "start";
   @SerializedName(SERIALIZED_NAME_START)
-  private String start;
+  private OffsetDateTime start;
 
   public static final String SERIALIZED_NAME_STOP = "stop";
   @SerializedName(SERIALIZED_NAME_STOP)
-  private String stop;
+  private OffsetDateTime stop;
 
   public static final String SERIALIZED_NAME_PREDICATE = "predicate";
   @SerializedName(SERIALIZED_NAME_PREDICATE)
   private String predicate;
 
-  public DeletePredicateRequest start(String start) {
+  public DeletePredicateRequest start(OffsetDateTime start) {
     this.start = start;
     return this;
   }
@@ -52,15 +53,15 @@ public class DeletePredicateRequest {
    * @return start
   **/
   @ApiModelProperty(required = true, value = "RFC3339Nano.")
-  public String getStart() {
+  public OffsetDateTime getStart() {
     return start;
   }
 
-  public void setStart(String start) {
+  public void setStart(OffsetDateTime start) {
     this.start = start;
   }
 
-  public DeletePredicateRequest stop(String stop) {
+  public DeletePredicateRequest stop(OffsetDateTime stop) {
     this.stop = stop;
     return this;
   }
@@ -70,11 +71,11 @@ public class DeletePredicateRequest {
    * @return stop
   **/
   @ApiModelProperty(required = true, value = "RFC3339Nano.")
-  public String getStop() {
+  public OffsetDateTime getStop() {
     return stop;
   }
 
-  public void setStop(String stop) {
+  public void setStop(OffsetDateTime stop) {
     this.stop = stop;
   }
 
