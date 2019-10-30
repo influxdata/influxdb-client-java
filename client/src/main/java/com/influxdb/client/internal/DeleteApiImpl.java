@@ -1,4 +1,6 @@
 /*
+ * The MIT License
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -41,7 +43,7 @@ public class DeleteApiImpl extends AbstractRestClient implements DeleteApi {
 
     private final DeleteService service;
 
-    DeleteApiImpl(DeleteService service) {
+    DeleteApiImpl(@Nonnull final DeleteService service) {
 
         Arguments.checkNotNull(service, "service");
 
@@ -49,11 +51,11 @@ public class DeleteApiImpl extends AbstractRestClient implements DeleteApi {
     }
 
     @Override
-    public void delete(@Nonnull OffsetDateTime start,
-                       @Nonnull OffsetDateTime stop,
-                       @Nonnull String predicate,
-                       @Nonnull String bucket,
-                       @Nonnull String organization) {
+    public void delete(final @Nonnull OffsetDateTime start,
+                       final @Nonnull OffsetDateTime stop,
+                       final @Nonnull String predicate,
+                       final @Nonnull String bucket,
+                       final @Nonnull String organization) {
 
         Arguments.checkNotNull(start, "Start is required");
         Arguments.checkNotNull(stop, "Stop is required");
@@ -70,9 +72,9 @@ public class DeleteApiImpl extends AbstractRestClient implements DeleteApi {
     }
 
     @Override
-    public void delete(@Nonnull DeletePredicateRequest predicate,
-                       @Nonnull String bucket,
-                       @Nonnull String organization) {
+    public void delete(final @Nonnull DeletePredicateRequest predicate,
+                       final @Nonnull String bucket,
+                       final @Nonnull String organization) {
 
         Arguments.checkNotNull(predicate, "Predicate is required");
         Arguments.checkNotNull(bucket, "Bucket is required");
