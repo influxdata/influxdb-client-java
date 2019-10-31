@@ -21,16 +21,17 @@
  */
 package com.influxdb.client.internal;
 
-import javax.annotation.Nonnull;
 import java.time.OffsetDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 
 import com.influxdb.Arguments;
 import com.influxdb.client.DeleteApi;
 import com.influxdb.client.domain.DeletePredicateRequest;
 import com.influxdb.client.service.DefaultService;
 import com.influxdb.internal.AbstractRestClient;
+
 import retrofit2.Call;
 
 /**
@@ -59,8 +60,8 @@ public class DeleteApiImpl extends AbstractRestClient implements DeleteApi {
         Arguments.checkNotNull(start, "Start is required");
         Arguments.checkNotNull(stop, "Stop is required");
         Arguments.checkNotNull(predicate, "Predicate is required");
-        Arguments.checkNotNull(bucket, "Bucket is required");
-        Arguments.checkNotNull(organization, "Organization is required");
+        Arguments.checkNonEmpty(bucket, "Bucket is required");
+        Arguments.checkNonEmpty(organization, "Organization is required");
 
         DeletePredicateRequest request = new DeletePredicateRequest();
         request.setStart(start);
@@ -76,8 +77,8 @@ public class DeleteApiImpl extends AbstractRestClient implements DeleteApi {
                        final @Nonnull String organization) {
 
         Arguments.checkNotNull(predicate, "Predicate is required");
-        Arguments.checkNotNull(bucket, "Bucket is required");
-        Arguments.checkNotNull(organization, "Organization is required");
+        Arguments.checkNonEmpty(bucket, "Bucket is required");
+        Arguments.checkNonEmpty(organization, "Organization is required");
 
         LOG.log(Level.FINEST,
                 "Deleting time-series data from InfluxDB (org={0}, bucket={1})...",
