@@ -24,7 +24,9 @@ package com.influxdb.client;
 import java.time.OffsetDateTime;
 import javax.annotation.Nonnull;
 
+import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.DeletePredicateRequest;
+import com.influxdb.client.domain.Organization;
 
 /**
  * API to Delete time-series data from InfluxDB 2.0.
@@ -40,22 +42,37 @@ public interface DeleteApi {
      * @param stop time
      * @param predicate sql where like delete statement.
      * @param bucket The bucket from which data will be deleted.
-     * @param organization The organization name of the above bucket.
+     * @param org The organization name of the above bucket.
+     */
+    void delete(@Nonnull final OffsetDateTime start,
+                @Nonnull final OffsetDateTime stop,
+                @Nonnull final String predicate,
+                @Nonnull final Bucket bucket,
+                @Nonnull final Organization org);
+
+    /**
+     * Delete Time series data from InfluxDB.
+     *
+     * @param start time
+     * @param stop time
+     * @param predicate sql where like delete statement.
+     * @param bucket The bucket from which data will be deleted.
+     * @param org The organization name of the above bucket.
      */
     void delete(@Nonnull final OffsetDateTime start,
                 @Nonnull final OffsetDateTime stop,
                 @Nonnull final String predicate,
                 @Nonnull final String bucket,
-                @Nonnull final String organization);
+                @Nonnull final String org);
 
     /**
      * Delete Time series data from InfluxDB.
      *
      * @param predicate delete request.
      * @param bucket The bucket from which data will be deleted.
-     * @param organization The organization name of the above bucket.
+     * @param org The organization name of the above bucket.
      */
     void delete(@Nonnull final DeletePredicateRequest predicate,
                 @Nonnull final String bucket,
-                @Nonnull final String organization);
+                @Nonnull final String org);
 }

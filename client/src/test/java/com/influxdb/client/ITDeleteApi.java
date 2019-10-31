@@ -36,6 +36,7 @@ import com.influxdb.client.domain.PermissionResource;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxTable;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -124,7 +125,7 @@ class ITDeleteApi extends AbstractITClientTest {
         OffsetDateTime start = OffsetDateTime.ofInstant(Instant.ofEpochSecond(0, 1), ZoneId.of("UTC"));
         OffsetDateTime stop = OffsetDateTime.ofInstant(Instant.ofEpochSecond(0, 12), ZoneId.of("UTC"));
 
-        deleteApi.delete(start, stop, "", bucket.getName(), organization.getName());
+        deleteApi.delete(start, stop, "", bucket, organization);
 
         List<FluxTable> query2 = influxDBClient.getQueryApi().query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 

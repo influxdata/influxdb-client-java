@@ -28,7 +28,9 @@ import javax.annotation.Nonnull;
 
 import com.influxdb.Arguments;
 import com.influxdb.client.DeleteApi;
+import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.DeletePredicateRequest;
+import com.influxdb.client.domain.Organization;
 import com.influxdb.client.service.DefaultService;
 import com.influxdb.internal.AbstractRestClient;
 
@@ -54,42 +56,58 @@ public class DeleteApiImpl extends AbstractRestClient implements DeleteApi {
     public void delete(final @Nonnull OffsetDateTime start,
                        final @Nonnull OffsetDateTime stop,
                        final @Nonnull String predicate,
+                       final @Nonnull Bucket bucket,
+                       final @Nonnull Organization org) {
+
+        Arguments.checkNotNull(start, "Start is required");
+        Arguments.checkNotNull(stop, "Stop is required");
+        Arguments.checkNotNull(predicate, "Predicate is required");
+        Arguments.checkNotNull(bucket, "Bucket is required");
+        Arguments.checkNotNull(org, "Organization is required");
+
+        delete(start, stop, predicate, bucket.getId(), org.getId());
+    }
+
+    @Override
+    public void delete(final @Nonnull OffsetDateTime start,
+                       final @Nonnull OffsetDateTime stop,
+                       final @Nonnull String predicate,
                        final @Nonnull String bucket,
-                       final @Nonnull String organization) {
+                       final @Nonnull String org) {
 
         Arguments.checkNotNull(start, "Start is required");
         Arguments.checkNotNull(stop, "Stop is required");
         Arguments.checkNotNull(predicate, "Predicate is required");
         Arguments.checkNonEmpty(bucket, "Bucket is required");
-        Arguments.checkNonEmpty(organization, "Organization is required");
+        Arguments.checkNonEmpty(org, "Organization is required");
 
         DeletePredicateRequest request = new DeletePredicateRequest();
         request.setStart(start);
         request.setStop(stop);
         request.setPredicate(predicate);
 
-        delete(request, bucket, organization);
+        delete(request, bucket, org);
     }
 
     @Override
     public void delete(final @Nonnull DeletePredicateRequest predicate,
                        final @Nonnull String bucket,
-                       final @Nonnull String organization) {
+                       final @Nonnull String org) {
 
         Arguments.checkNotNull(predicate, "Predicate is required");
         Arguments.checkNonEmpty(bucket, "Bucket is required");
-        Arguments.checkNonEmpty(organization, "Organization is required");
+        Arguments.checkNonEmpty(org, "Organization is required");
 
         LOG.log(Level.FINEST,
                 "Deleting time-series data from InfluxDB (org={0}, bucket={1})...",
-                new Object[]{organization, bucket});
+                new Object[]{org, bucket});
 
-        Call<Void> call = service.deletePost(predicate, null, organization, bucket,
+        Call<Void> call = service.deletePost(predicate, null, org, bucket,
                 null, null);
 
         execute(call);
 
         LOG.log(Level.FINEST, "Data was deleted from InfluxDB: (org={0}, bucket={1})",
-                new Object[]{organization, bucket});
+                new Object[]{org, bucket});
     }
 }
