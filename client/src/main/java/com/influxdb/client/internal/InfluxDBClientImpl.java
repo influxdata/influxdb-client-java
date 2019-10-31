@@ -21,10 +21,10 @@
  */
 package com.influxdb.client.internal;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.influxdb.Arguments;
 import com.influxdb.LogLevel;
@@ -59,7 +59,7 @@ import com.influxdb.client.service.AuthorizationsService;
 import com.influxdb.client.service.BucketsService;
 import com.influxdb.client.service.ChecksService;
 import com.influxdb.client.service.DashboardsService;
-import com.influxdb.client.service.DeleteService;
+import com.influxdb.client.service.DefaultService;
 import com.influxdb.client.service.LabelsService;
 import com.influxdb.client.service.NotificationEndpointsService;
 import com.influxdb.client.service.NotificationRulesService;
@@ -77,7 +77,6 @@ import com.influxdb.client.service.VariablesService;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.UnprocessableEntityException;
-
 import retrofit2.Call;
 
 /**
@@ -219,7 +218,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Nonnull
     @Override
     public DeleteApi getDeleteApi() {
-        return new DeleteApiImpl(retrofit.create(DeleteService.class));
+        return new DeleteApiImpl(retrofit.create(DefaultService.class));
     }
 
     @Nonnull

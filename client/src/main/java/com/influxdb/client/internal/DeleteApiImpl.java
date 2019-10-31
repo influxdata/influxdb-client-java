@@ -21,17 +21,16 @@
  */
 package com.influxdb.client.internal;
 
+import javax.annotation.Nonnull;
 import java.time.OffsetDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 
 import com.influxdb.Arguments;
 import com.influxdb.client.DeleteApi;
 import com.influxdb.client.domain.DeletePredicateRequest;
-import com.influxdb.client.service.DeleteService;
+import com.influxdb.client.service.DefaultService;
 import com.influxdb.internal.AbstractRestClient;
-
 import retrofit2.Call;
 
 /**
@@ -41,9 +40,9 @@ public class DeleteApiImpl extends AbstractRestClient implements DeleteApi {
 
     private static final Logger LOG = Logger.getLogger(DeleteApiImpl.class.getName());
 
-    private final DeleteService service;
+    private final DefaultService service;
 
-    DeleteApiImpl(@Nonnull final DeleteService service) {
+    DeleteApiImpl(@Nonnull final DefaultService service) {
 
         Arguments.checkNotNull(service, "service");
 

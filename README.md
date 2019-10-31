@@ -361,69 +361,6 @@ public class FluxExample {
 }
 ```     
 
-### Delete data from InfluxDB 2.0
-
-The following example demonstrates how to delete data from InfluxDB 2.0.
-
-#### Installation
-
-Download the latest version:
-
-##### Maven dependency:
-
-```XML
-<dependency>
-    <groupId>com.influxdb</groupId>
-    <artifactId>influxdb-client-flux</artifactId>
-    <version>1.2.0</version>
-</dependency>
-```
-       
-##### Or when using Gradle:
-
-```groovy
-dependencies {
-    compile "com.influxdb:influxdb-client-flux:1.2.0"
-}
-``` 
-
-```java
-package example;
-
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
-
-import com.influxdb.client.DeleteApi;
-import com.influxdb.client.InfluxDBClient;
-import com.influxdb.client.InfluxDBClientFactory;
-import com.influxdb.exceptions.InfluxException;
-
-public class DeleteData {
-
-    private static char[] token = "my-token".toCharArray();
-
-    public static void main(final String[] args) {
-
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
-
-        DeleteApi deleteApi = influxDBClient.getDeleteApi();
-
-        try {
-
-            OffsetDateTime start = OffsetDateTime.now().minus(1, ChronoUnit.HOURS);
-            OffsetDateTime stop = OffsetDateTime.now();
-
-            deleteApi.delete(start, stop, "", "my-bucket", "my-org");
-
-        } catch (InfluxException ie) {
-            System.out.println("InfluxException: " + ie);
-        }
-
-        influxDBClient.close();
-    }
-}
-```
-
 ## Build Requirements
 
 * Java 1.8+ (tested with jdk8)

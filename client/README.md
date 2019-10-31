@@ -20,6 +20,7 @@ The reference Java client that allows query, write and management (bucket, organ
 - [Advanced Usage](#advanced-usage)
     - [Writing data using synchronous blocking API](#writing-data-using-synchronous-blocking-api)
     - [Monitoring & Alerting](#monitoring--alerting)
+    - [Delete data](#delete-data)
     - [Client configuration file](#client-configuration-file)
     - [Client connection string](#client-connection-string)
     - [Gzip support](#gzip-support)
@@ -798,6 +799,47 @@ SlackNotificationEndpoint endpoint = influxDBClient
 influxDBClient
     .getNotificationRulesApi()
     .createSlackRule("Critical status to Slack", "10s", "${ r._message }", RuleStatusLevel.CRIT, endpoint, org.getId());
+```
+
+### Delete data
+
+The following example demonstrates how to delete data from InfluxDB 2.0.
+
+```java
+package example;
+
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
+
+import com.influxdb.client.DeleteApi;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.exceptions.InfluxException;
+
+public class DeleteData {
+
+    private static char[] token = "my-token".toCharArray();
+
+    public static void main(final String[] args) {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+
+        DeleteApi deleteApi = influxDBClient.getDeleteApi();
+
+        try {
+
+            OffsetDateTime start = OffsetDateTime.now().minus(1, ChronoUnit.HOURS);
+            OffsetDateTime stop = OffsetDateTime.now();
+
+            deleteApi.delete(start, stop, "", "my-bucket", "my-org");
+
+        } catch (InfluxException ie) {
+            System.out.println("InfluxException: " + ie);
+        }
+
+        influxDBClient.close();
+    }
+}
 ```
 
 ### Client configuration file
