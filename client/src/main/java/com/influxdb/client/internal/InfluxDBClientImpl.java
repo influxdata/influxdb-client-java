@@ -32,6 +32,7 @@ import com.influxdb.client.AuthorizationsApi;
 import com.influxdb.client.BucketsApi;
 import com.influxdb.client.ChecksApi;
 import com.influxdb.client.DashboardsApi;
+import com.influxdb.client.DeleteApi;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.LabelsApi;
@@ -58,6 +59,7 @@ import com.influxdb.client.service.AuthorizationsService;
 import com.influxdb.client.service.BucketsService;
 import com.influxdb.client.service.ChecksService;
 import com.influxdb.client.service.DashboardsService;
+import com.influxdb.client.service.DefaultService;
 import com.influxdb.client.service.LabelsService;
 import com.influxdb.client.service.NotificationEndpointsService;
 import com.influxdb.client.service.NotificationRulesService;
@@ -212,6 +214,12 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Override
     public NotificationRulesApi getNotificationRulesApi() {
         return new NotificationRulesApiImpl(retrofit.create(NotificationRulesService.class));
+    }
+
+    @Nonnull
+    @Override
+    public DeleteApi getDeleteApi() {
+        return new DeleteApiImpl(retrofit.create(DefaultService.class));
     }
 
     @Nonnull

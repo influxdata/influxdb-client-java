@@ -208,6 +208,14 @@ public interface InfluxDBClient extends AutoCloseable {
     NotificationRulesApi getNotificationRulesApi();
 
     /**
+     * Get the Delete client.
+     *
+     * @return the new client instance for the Delete API
+     */
+    @Nonnull
+    DeleteApi getDeleteApi();
+
+    /**
      * Create an implementation of the API endpoints defined by the {@code service} interface.
      * <p>
      * The endpoints are defined in {@link com.influxdb.client.service}.
