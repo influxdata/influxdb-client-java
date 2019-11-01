@@ -42,7 +42,7 @@ public interface DeleteApi {
      * @param stop time
      * @param predicate sql where like delete statement.
      * @param bucket The bucket from which data will be deleted.
-     * @param org The organization name of the above bucket.
+     * @param org The organization of the above bucket.
      */
     void delete(@Nonnull final OffsetDateTime start,
                 @Nonnull final OffsetDateTime stop,
@@ -57,7 +57,7 @@ public interface DeleteApi {
      * @param stop time
      * @param predicate sql where like delete statement.
      * @param bucket The bucket from which data will be deleted.
-     * @param org The organization name of the above bucket.
+     * @param org The organization of the above bucket.
      */
     void delete(@Nonnull final OffsetDateTime start,
                 @Nonnull final OffsetDateTime stop,
@@ -70,7 +70,7 @@ public interface DeleteApi {
      *
      * @param predicate delete request.
      * @param bucket The bucket from which data will be deleted.
-     * @param org The organization name of the above bucket.
+     * @param org The organization of the above bucket.
      */
     void delete(@Nonnull final DeletePredicateRequest predicate,
                 @Nonnull final String bucket,

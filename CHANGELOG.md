@@ -2,6 +2,8 @@
 
 ### API
 1. [#65](https://github.com/influxdata/influxdb-client-java/pull/65): Updated swagger to latest version
+
+### Features
 1. [#66](https://github.com/influxdata/influxdb-client-java/pull/66): Added DeleteApi
 
 ## 1.1.0 [2019-10-11]
