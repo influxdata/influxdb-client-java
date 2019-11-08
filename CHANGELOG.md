@@ -1,10 +1,12 @@
-## 1.2.0 [2019-11-08]
+## 1.3.0 [unreleased]
 
-### API
-1. [#65](https://github.com/influxdata/influxdb-client-java/pull/65): Updated swagger to latest version
+## 1.2.0 [2019-11-08]
 
 ### Features
 1. [#66](https://github.com/influxdata/influxdb-client-java/pull/66): Added DeleteApi
+
+### API
+1. [#65](https://github.com/influxdata/influxdb-client-java/pull/65): Updated swagger to latest version
 
 ## 1.1.0 [2019-10-11]
 
