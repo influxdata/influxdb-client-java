@@ -119,9 +119,9 @@ public class BucketRetentionRules {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    BucketRetentionRules bucketRetentionRules = (BucketRetentionRules) o;
-    return Objects.equals(this.type, bucketRetentionRules.type) &&
-        Objects.equals(this.everySeconds, bucketRetentionRules.everySeconds);
+    BucketRetentionRules postBucketRequestRetentionRules = (BucketRetentionRules) o;
+    return Objects.equals(this.type, postBucketRequestRetentionRules.type) &&
+        Objects.equals(this.everySeconds, postBucketRequestRetentionRules.everySeconds);
   }
 
   @Override

@@ -15,14 +15,6 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -33,7 +25,6 @@ import com.influxdb.client.domain.DashboardQuery;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,7 +137,6 @@ public class CheckViewProperties extends ViewProperties {
 
   public static final String SERIALIZED_NAME_CHECK = "check";
   @SerializedName(SERIALIZED_NAME_CHECK)
-  @JsonAdapter(CheckViewPropertiesCheckAdapter.class)
   private Check check = null;
 
   public static final String SERIALIZED_NAME_QUERIES = "queries";
@@ -308,40 +298,5 @@ public class CheckViewProperties extends ViewProperties {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class CheckViewPropertiesCheckAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
-
-    public CheckViewPropertiesCheckAdapter() {
-    }
-
-    @Override
-    public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
-
-      List<String> discriminator = Arrays.asList("type");
-
-      JsonObject jsonObject = json.getAsJsonObject();
-
-      String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
-
-      return deserialize(types, jsonObject, context);
-    }
-
-    @Override
-    public JsonElement serialize(Object object, Type typeOfSrc, JsonSerializationContext context) {
-
-      return context.serialize(object);
-    }
-
-    private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
-
-      if (Arrays.equals(new String[]{ "deadman" }, types)) {
-        return context.deserialize(json, DeadmanCheck.class);
-      }
-      if (Arrays.equals(new String[]{ "threshold" }, types)) {
-        return context.deserialize(json, ThresholdCheck.class);
-      }
-
-      return context.deserialize(json, Object.class);
-    }
-  }
 }
 

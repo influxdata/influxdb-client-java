@@ -31,7 +31,7 @@ import java.util.Map;
  * MapVariableProperties
  */
 
-public class MapVariableProperties {
+public class MapVariableProperties extends VariableProperties {
   /**
    * Gets or Sets type
    */
@@ -131,12 +131,13 @@ public class MapVariableProperties {
     }
     MapVariableProperties mapVariableProperties = (MapVariableProperties) o;
     return Objects.equals(this.type, mapVariableProperties.type) &&
-        Objects.equals(this.values, mapVariableProperties.values);
+        Objects.equals(this.values, mapVariableProperties.values) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, values);
+    return Objects.hash(type, values, super.hashCode());
   }
 
 
@@ -144,6 +145,7 @@ public class MapVariableProperties {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class MapVariableProperties {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    values: ").append(toIndentedString(values)).append("\n");
     sb.append("}");

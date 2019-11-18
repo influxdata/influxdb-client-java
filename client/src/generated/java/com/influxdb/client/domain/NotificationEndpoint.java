@@ -15,15 +15,7 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
-import com.influxdb.client.domain.HTTPNotificationEndpoint;
-import com.influxdb.client.domain.Label;
-import com.influxdb.client.domain.NotificationEndpointBaseLinks;
-import com.influxdb.client.domain.NotificationEndpointType;
-import com.influxdb.client.domain.PagerDutyNotificationEndpoint;
-import com.influxdb.client.domain.SlackNotificationEndpoint;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Map;
+import com.influxdb.client.domain.NotificationEndpointDiscrimator;
 
 /**
  * NotificationEndpoint

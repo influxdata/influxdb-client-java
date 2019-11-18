@@ -8,6 +8,7 @@ import okhttp3.ResponseBody;
 import okhttp3.MultipartBody;
 
 import com.influxdb.client.domain.Check;
+import com.influxdb.client.domain.CheckDiscriminator;
 import com.influxdb.client.domain.CheckPatch;
 import com.influxdb.client.domain.Checks;
 import com.influxdb.client.domain.Error;
@@ -15,6 +16,7 @@ import com.influxdb.client.domain.FluxResponse;
 import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
+import com.influxdb.client.domain.PostCheck;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +27,7 @@ public interface ChecksService {
   /**
    * Add new check
    * 
-   * @param check Check to create (required)
+   * @param postCheck Check to create (required)
    * @return Call&lt;Check&gt;
    */
   @Headers({
@@ -33,7 +35,7 @@ public interface ChecksService {
   })
   @POST("api/v2/checks")
   Call<Check> createCheck(
-    @retrofit2.http.Body Check check
+    @retrofit2.http.Body PostCheck postCheck
   );
 
   /**

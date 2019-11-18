@@ -15,13 +15,13 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
-import com.influxdb.client.domain.CheckDiscriminator;
+import com.influxdb.client.domain.NotificationRuleDiscriminator;
 
 /**
- * Check
+ * PostNotificationRule
  */
 
-public class Check extends CheckBase {
+public class PostNotificationRule extends NotificationRuleDiscriminator {
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -43,7 +43,7 @@ public class Check extends CheckBase {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Check {\n");
+    sb.append("class PostNotificationRule {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("}");
     return sb.toString();

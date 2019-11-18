@@ -36,7 +36,7 @@ import java.util.List;
  * CheckBase
  */
 
-public class CheckBase {
+public class CheckBase extends CheckDiscriminator {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private String id;
@@ -371,12 +371,13 @@ public class CheckBase {
         Objects.equals(this.description, checkBase.description) &&
         Objects.equals(this.statusMessageTemplate, checkBase.statusMessageTemplate) &&
         Objects.equals(this.labels, checkBase.labels) &&
-        Objects.equals(this.links, checkBase.links);
+        Objects.equals(this.links, checkBase.links) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, orgID, ownerID, createdAt, updatedAt, query, status, every, offset, tags, description, statusMessageTemplate, labels, links);
+    return Objects.hash(id, name, orgID, ownerID, createdAt, updatedAt, query, status, every, offset, tags, description, statusMessageTemplate, labels, links, super.hashCode());
   }
 
 
@@ -384,6 +385,7 @@ public class CheckBase {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CheckBase {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");

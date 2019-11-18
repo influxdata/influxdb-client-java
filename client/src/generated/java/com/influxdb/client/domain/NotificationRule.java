@@ -15,17 +15,7 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
-import com.influxdb.client.domain.HTTPNotificationRule;
-import com.influxdb.client.domain.Label;
-import com.influxdb.client.domain.NotificationRuleBaseLinks;
-import com.influxdb.client.domain.PagerDutyNotificationRule;
-import com.influxdb.client.domain.SMTPNotificationRule;
-import com.influxdb.client.domain.SlackNotificationRule;
-import com.influxdb.client.domain.StatusRule;
-import com.influxdb.client.domain.TagRule;
-import com.influxdb.client.domain.TaskStatusType;
-import java.time.OffsetDateTime;
-import java.util.List;
+import com.influxdb.client.domain.NotificationRuleDiscriminator;
 
 /**
  * NotificationRule

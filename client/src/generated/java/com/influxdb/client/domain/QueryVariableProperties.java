@@ -29,7 +29,7 @@ import java.io.IOException;
  * QueryVariableProperties
  */
 
-public class QueryVariableProperties {
+public class QueryVariableProperties extends VariableProperties {
   /**
    * Gets or Sets type
    */
@@ -121,12 +121,13 @@ public class QueryVariableProperties {
     }
     QueryVariableProperties queryVariableProperties = (QueryVariableProperties) o;
     return Objects.equals(this.type, queryVariableProperties.type) &&
-        Objects.equals(this.values, queryVariableProperties.values);
+        Objects.equals(this.values, queryVariableProperties.values) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, values);
+    return Objects.hash(type, values, super.hashCode());
   }
 
 
@@ -134,6 +135,7 @@ public class QueryVariableProperties {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class QueryVariableProperties {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    values: ").append(toIndentedString(values)).append("\n");
     sb.append("}");

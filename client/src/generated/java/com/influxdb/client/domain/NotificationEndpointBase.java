@@ -34,7 +34,7 @@ import java.util.List;
  * NotificationEndpointBase
  */
 
-public class NotificationEndpointBase {
+public class NotificationEndpointBase extends NotificationEndpointDiscrimator {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private String id;
@@ -334,12 +334,13 @@ public class NotificationEndpointBase {
         Objects.equals(this.status, notificationEndpointBase.status) &&
         Objects.equals(this.labels, notificationEndpointBase.labels) &&
         Objects.equals(this.links, notificationEndpointBase.links) &&
-        Objects.equals(this.type, notificationEndpointBase.type);
+        Objects.equals(this.type, notificationEndpointBase.type) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, orgID, userID, createdAt, updatedAt, description, name, status, labels, links, type);
+    return Objects.hash(id, orgID, userID, createdAt, updatedAt, description, name, status, labels, links, type, super.hashCode());
   }
 
 
@@ -347,6 +348,7 @@ public class NotificationEndpointBase {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class NotificationEndpointBase {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
     sb.append("    userID: ").append(toIndentedString(userID)).append("\n");
