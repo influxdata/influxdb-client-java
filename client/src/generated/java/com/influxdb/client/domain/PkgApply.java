@@ -20,69 +20,58 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.influxdb.client.domain.Check;
-import com.influxdb.client.domain.Links;
+import com.influxdb.client.domain.Pkg;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Checks
+ * PkgApply
  */
 
-public class Checks {
-  public static final String SERIALIZED_NAME_CHECKS = "checks";
-  @SerializedName(SERIALIZED_NAME_CHECKS)
-  private List<Check> checks = new ArrayList<>();
+public class PkgApply {
+  public static final String SERIALIZED_NAME_APPLY = "apply";
+  @SerializedName(SERIALIZED_NAME_APPLY)
+  private Boolean apply;
 
-  public static final String SERIALIZED_NAME_LINKS = "links";
-  @SerializedName(SERIALIZED_NAME_LINKS)
-  private Links links = null;
+  public static final String SERIALIZED_NAME_PACKAGE = "package";
+  @SerializedName(SERIALIZED_NAME_PACKAGE)
+  private Pkg _package = null;
 
-  public Checks checks(List<Check> checks) {
-    this.checks = checks;
-    return this;
-  }
-
-  public Checks addChecksItem(Check checksItem) {
-    if (this.checks == null) {
-      this.checks = new ArrayList<>();
-    }
-    this.checks.add(checksItem);
+  public PkgApply apply(Boolean apply) {
+    this.apply = apply;
     return this;
   }
 
    /**
-   * Get checks
-   * @return checks
+   * Get apply
+   * @return apply
   **/
   @ApiModelProperty(value = "")
-  public List<Check> getChecks() {
-    return checks;
+  public Boolean getApply() {
+    return apply;
   }
 
-  public void setChecks(List<Check> checks) {
-    this.checks = checks;
+  public void setApply(Boolean apply) {
+    this.apply = apply;
   }
 
-  public Checks links(Links links) {
-    this.links = links;
+  public PkgApply _package(Pkg _package) {
+    this._package = _package;
     return this;
   }
 
    /**
-   * Get links
-   * @return links
+   * Get _package
+   * @return _package
   **/
   @ApiModelProperty(value = "")
-  public Links getLinks() {
-    return links;
+  public Pkg getPackage() {
+    return _package;
   }
 
-  public void setLinks(Links links) {
-    this.links = links;
+  public void setPackage(Pkg _package) {
+    this._package = _package;
   }
 
 
@@ -94,23 +83,23 @@ public class Checks {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Checks checks = (Checks) o;
-    return Objects.equals(this.checks, checks.checks) &&
-        Objects.equals(this.links, checks.links);
+    PkgApply pkgApply = (PkgApply) o;
+    return Objects.equals(this.apply, pkgApply.apply) &&
+        Objects.equals(this._package, pkgApply._package);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(checks, links);
+    return Objects.hash(apply, _package);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Checks {\n");
-    sb.append("    checks: ").append(toIndentedString(checks)).append("\n");
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
+    sb.append("class PkgApply {\n");
+    sb.append("    apply: ").append(toIndentedString(apply)).append("\n");
+    sb.append("    _package: ").append(toIndentedString(_package)).append("\n");
     sb.append("}");
     return sb.toString();
   }

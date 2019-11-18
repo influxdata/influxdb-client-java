@@ -12,8 +12,10 @@ import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
 import com.influxdb.client.domain.NotificationRule;
+import com.influxdb.client.domain.NotificationRuleDiscriminator;
 import com.influxdb.client.domain.NotificationRuleUpdate;
 import com.influxdb.client.domain.NotificationRules;
+import com.influxdb.client.domain.PostNotificationRule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +26,7 @@ public interface NotificationRulesService {
   /**
    * Add a notification rule
    * 
-   * @param notificationRule Notification rule to create (required)
+   * @param postNotificationRule Notification rule to create (required)
    * @return Call&lt;NotificationRule&gt;
    */
   @Headers({
@@ -32,7 +34,7 @@ public interface NotificationRulesService {
   })
   @POST("api/v2/notificationRules")
   Call<NotificationRule> createNotificationRule(
-    @retrofit2.http.Body NotificationRule notificationRule
+    @retrofit2.http.Body PostNotificationRule postNotificationRule
   );
 
   /**

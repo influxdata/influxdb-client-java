@@ -88,7 +88,7 @@ public class DeletePredicateRequest {
    * sql where like delete statement
    * @return predicate
   **/
-  @ApiModelProperty(example = "tag1=\"value1\" and (tag2=\"value2\" and tag3=\"value3\")", value = "sql where like delete statement")
+  @ApiModelProperty(example = "tag1=\"value1\" and (tag2=\"value2\" and tag3!=\"value3\")", value = "sql where like delete statement")
   public String getPredicate() {
     return predicate;
   }

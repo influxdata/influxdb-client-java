@@ -15,6 +15,7 @@ import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
 import com.influxdb.client.domain.OperationLogs;
+import com.influxdb.client.domain.PostBucketRequest;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceMembers;
 import com.influxdb.client.domain.ResourceOwner;
@@ -187,7 +188,7 @@ public interface BucketsService {
   /**
    * Create a bucket
    * 
-   * @param bucket Bucket to create (required)
+   * @param postBucketRequest Bucket to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Bucket&gt;
    */
@@ -196,7 +197,7 @@ public interface BucketsService {
   })
   @POST("api/v2/buckets")
   Call<Bucket> postBuckets(
-    @retrofit2.http.Body Bucket bucket, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Body PostBucketRequest postBucketRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**

@@ -36,7 +36,7 @@ import java.util.List;
  * NotificationRuleBase
  */
 
-public class NotificationRuleBase {
+public class NotificationRuleBase extends PostNotificationRule {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private String id;
@@ -465,12 +465,13 @@ public class NotificationRuleBase {
         Objects.equals(this.description, notificationRuleBase.description) &&
         Objects.equals(this.statusRules, notificationRuleBase.statusRules) &&
         Objects.equals(this.labels, notificationRuleBase.labels) &&
-        Objects.equals(this.links, notificationRuleBase.links);
+        Objects.equals(this.links, notificationRuleBase.links) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, endpointID, orgID, ownerID, createdAt, updatedAt, status, name, sleepUntil, every, offset, runbookLink, limitEvery, limit, tagRules, description, statusRules, labels, links);
+    return Objects.hash(id, endpointID, orgID, ownerID, createdAt, updatedAt, status, name, sleepUntil, every, offset, runbookLink, limitEvery, limit, tagRules, description, statusRules, labels, links, super.hashCode());
   }
 
 
@@ -478,6 +479,7 @@ public class NotificationRuleBase {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class NotificationRuleBase {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    endpointID: ").append(toIndentedString(endpointID)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");

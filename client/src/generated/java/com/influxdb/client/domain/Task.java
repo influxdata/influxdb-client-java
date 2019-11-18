@@ -91,6 +91,63 @@ public class Task {
   @SerializedName(SERIALIZED_NAME_LATEST_COMPLETED)
   private OffsetDateTime latestCompleted;
 
+  /**
+   * Gets or Sets lastRunStatus
+   */
+  @JsonAdapter(LastRunStatusEnum.Adapter.class)
+  public enum LastRunStatusEnum {
+    FAILED("failed"),
+    
+    SUCCESS("success"),
+    
+    CANCELED("canceled");
+
+    private String value;
+
+    LastRunStatusEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static LastRunStatusEnum fromValue(String text) {
+      for (LastRunStatusEnum b : LastRunStatusEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<LastRunStatusEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final LastRunStatusEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public LastRunStatusEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return LastRunStatusEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+
+  public static final String SERIALIZED_NAME_LAST_RUN_STATUS = "lastRunStatus";
+  @SerializedName(SERIALIZED_NAME_LAST_RUN_STATUS)
+  private LastRunStatusEnum lastRunStatus;
+
+  public static final String SERIALIZED_NAME_LAST_RUN_ERROR = "lastRunError";
+  @SerializedName(SERIALIZED_NAME_LAST_RUN_ERROR)
+  private String lastRunError;
+
   public static final String SERIALIZED_NAME_CREATED_AT = "createdAt";
   @SerializedName(SERIALIZED_NAME_CREATED_AT)
   private OffsetDateTime createdAt;
@@ -346,6 +403,24 @@ public class Task {
   }
 
    /**
+   * Get lastRunStatus
+   * @return lastRunStatus
+  **/
+  @ApiModelProperty(value = "")
+  public LastRunStatusEnum getLastRunStatus() {
+    return lastRunStatus;
+  }
+
+   /**
+   * Get lastRunError
+   * @return lastRunError
+  **/
+  @ApiModelProperty(value = "")
+  public String getLastRunError() {
+    return lastRunError;
+  }
+
+   /**
    * Get createdAt
    * @return createdAt
   **/
@@ -405,6 +480,8 @@ public class Task {
         Objects.equals(this.cron, task.cron) &&
         Objects.equals(this.offset, task.offset) &&
         Objects.equals(this.latestCompleted, task.latestCompleted) &&
+        Objects.equals(this.lastRunStatus, task.lastRunStatus) &&
+        Objects.equals(this.lastRunError, task.lastRunError) &&
         Objects.equals(this.createdAt, task.createdAt) &&
         Objects.equals(this.updatedAt, task.updatedAt) &&
         Objects.equals(this.links, task.links);
@@ -412,7 +489,7 @@ public class Task {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, type, orgID, org, name, description, status, labels, authorizationID, flux, every, cron, offset, latestCompleted, createdAt, updatedAt, links);
+    return Objects.hash(id, type, orgID, org, name, description, status, labels, authorizationID, flux, every, cron, offset, latestCompleted, lastRunStatus, lastRunError, createdAt, updatedAt, links);
   }
 
 
@@ -434,6 +511,8 @@ public class Task {
     sb.append("    cron: ").append(toIndentedString(cron)).append("\n");
     sb.append("    offset: ").append(toIndentedString(offset)).append("\n");
     sb.append("    latestCompleted: ").append(toIndentedString(latestCompleted)).append("\n");
+    sb.append("    lastRunStatus: ").append(toIndentedString(lastRunStatus)).append("\n");
+    sb.append("    lastRunError: ").append(toIndentedString(lastRunError)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");

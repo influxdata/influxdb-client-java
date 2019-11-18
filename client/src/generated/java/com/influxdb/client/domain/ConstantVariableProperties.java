@@ -30,7 +30,7 @@ import java.util.List;
  * ConstantVariableProperties
  */
 
-public class ConstantVariableProperties {
+public class ConstantVariableProperties extends VariableProperties {
   /**
    * Gets or Sets type
    */
@@ -130,12 +130,13 @@ public class ConstantVariableProperties {
     }
     ConstantVariableProperties constantVariableProperties = (ConstantVariableProperties) o;
     return Objects.equals(this.type, constantVariableProperties.type) &&
-        Objects.equals(this.values, constantVariableProperties.values);
+        Objects.equals(this.values, constantVariableProperties.values) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, values);
+    return Objects.hash(type, values, super.hashCode());
   }
 
 
@@ -143,6 +144,7 @@ public class ConstantVariableProperties {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ConstantVariableProperties {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    values: ").append(toIndentedString(values)).append("\n");
     sb.append("}");

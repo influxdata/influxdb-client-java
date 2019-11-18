@@ -33,6 +33,7 @@ import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.OperationLog;
 import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.Organization;
+import com.influxdb.client.domain.PostBucketRequest;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceOwner;
 import com.influxdb.client.domain.User;
@@ -67,9 +68,9 @@ public interface BucketsApi {
     /**
      * Creates a new bucket and sets {@link Bucket#getId()} with the new identifier.
      *
-     * @param name          name of the bucket
+     * @param name                 name of the bucket
      * @param bucketRetentionRules bucket retention period
-     * @param organization  owner of bucket
+     * @param organization         owner of bucket
      * @return Bucket created
      */
     @Nonnull
@@ -91,15 +92,24 @@ public interface BucketsApi {
     /**
      * Creates a new bucket and sets {@link Bucket#getId()} with the new identifier.
      *
-     * @param name          name of the bucket
+     * @param name                 name of the bucket
      * @param bucketRetentionRules bucket retention period
-     * @param orgID         owner of bucket
+     * @param orgID                owner of bucket
      * @return Bucket created
      */
     @Nonnull
     Bucket createBucket(@Nonnull final String name,
                         @Nullable final BucketRetentionRules bucketRetentionRules,
                         @Nonnull final String orgID);
+
+    /**
+     * Create a bucket.
+     *
+     * @param bucket Bucket to create
+     * @return Bucket created
+     */
+    @Nonnull
+    Bucket createBucket(@Nonnull final PostBucketRequest bucket);
 
     /**
      * Update a bucket name and retention.

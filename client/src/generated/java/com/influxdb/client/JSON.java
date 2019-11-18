@@ -50,32 +50,32 @@ public class JSON {
 
     public static GsonBuilder createGson() {
         GsonFireBuilder fireBuilder = new GsonFireBuilder()
-          .registerTypeSelector(Check.class, new TypeSelector() {
+          .registerTypeSelector(CheckDiscriminator.class, new TypeSelector() {
             @Override
             public Class getClassForElement(JsonElement readElement) {
                 Map classByDiscriminatorValue = new HashMap();
                 classByDiscriminatorValue.put("deadman".toUpperCase(Locale.ROOT), DeadmanCheck.class);
                 classByDiscriminatorValue.put("threshold".toUpperCase(Locale.ROOT), ThresholdCheck.class);
-                classByDiscriminatorValue.put("Check".toUpperCase(Locale.ROOT), Check.class);
+                classByDiscriminatorValue.put("CheckDiscriminator".toUpperCase(Locale.ROOT), CheckDiscriminator.class);
                 return getClassByDiscriminator(
                             classByDiscriminatorValue,
                             getDiscriminatorValue(readElement, "type"));
             }
           })
-          .registerTypeSelector(NotificationEndpoint.class, new TypeSelector() {
+          .registerTypeSelector(NotificationEndpointDiscrimator.class, new TypeSelector() {
             @Override
             public Class getClassForElement(JsonElement readElement) {
                 Map classByDiscriminatorValue = new HashMap();
                 classByDiscriminatorValue.put("slack".toUpperCase(Locale.ROOT), SlackNotificationEndpoint.class);
                 classByDiscriminatorValue.put("pagerduty".toUpperCase(Locale.ROOT), PagerDutyNotificationEndpoint.class);
                 classByDiscriminatorValue.put("http".toUpperCase(Locale.ROOT), HTTPNotificationEndpoint.class);
-                classByDiscriminatorValue.put("NotificationEndpoint".toUpperCase(Locale.ROOT), NotificationEndpoint.class);
+                classByDiscriminatorValue.put("NotificationEndpointDiscrimator".toUpperCase(Locale.ROOT), NotificationEndpointDiscrimator.class);
                 return getClassByDiscriminator(
                             classByDiscriminatorValue,
                             getDiscriminatorValue(readElement, "type"));
             }
           })
-          .registerTypeSelector(NotificationRule.class, new TypeSelector() {
+          .registerTypeSelector(NotificationRuleDiscriminator.class, new TypeSelector() {
             @Override
             public Class getClassForElement(JsonElement readElement) {
                 Map classByDiscriminatorValue = new HashMap();
@@ -83,7 +83,7 @@ public class JSON {
                 classByDiscriminatorValue.put("smtp".toUpperCase(Locale.ROOT), SMTPNotificationRule.class);
                 classByDiscriminatorValue.put("pagerduty".toUpperCase(Locale.ROOT), PagerDutyNotificationRule.class);
                 classByDiscriminatorValue.put("http".toUpperCase(Locale.ROOT), HTTPNotificationRule.class);
-                classByDiscriminatorValue.put("NotificationRule".toUpperCase(Locale.ROOT), NotificationRule.class);
+                classByDiscriminatorValue.put("NotificationRuleDiscriminator".toUpperCase(Locale.ROOT), NotificationRuleDiscriminator.class);
                 return getClassByDiscriminator(
                             classByDiscriminatorValue,
                             getDiscriminatorValue(readElement, "type"));
@@ -129,11 +129,11 @@ public class JSON {
             .registerTypeAdapter(java.sql.Date.class, sqlDateTypeAdapter)
             .registerTypeAdapter(OffsetDateTime.class, offsetDateTimeTypeAdapter)
             .registerTypeAdapter(LocalDate.class, localDateTypeAdapter)
-            .registerTypeAdapter(NotificationEndpoint.class, (JsonSerializer<NotificationEndpoint>)
+            .registerTypeAdapter(PostNotificationEndpoint.class, (JsonSerializer<PostNotificationEndpoint>)
                 (src, type, context) -> context.serialize(src, src.getClass()))
-            .registerTypeAdapter(NotificationRule.class, (JsonSerializer<NotificationRule>)
+            .registerTypeAdapter(PostNotificationRule.class, (JsonSerializer<PostNotificationRule>)
                 (src, type, context) -> context.serialize(src, src.getClass()))
-            .registerTypeAdapter(Check.class, (JsonSerializer<Check>)
+            .registerTypeAdapter(PostCheck.class, (JsonSerializer<PostCheck>)
                 (src, type, context) -> context.serialize(src, src.getClass()))
             .create();
     }

@@ -30,6 +30,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.VariableLinks;
+import com.influxdb.client.domain.VariableProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -74,7 +75,7 @@ public class Variable {
   public static final String SERIALIZED_NAME_ARGUMENTS = "arguments";
   @SerializedName(SERIALIZED_NAME_ARGUMENTS)
   @JsonAdapter(VariableArgumentsAdapter.class)
-  private Object arguments = null;
+  private VariableProperties arguments = null;
 
   public static final String SERIALIZED_NAME_CREATED_AT = "createdAt";
   @SerializedName(SERIALIZED_NAME_CREATED_AT)
@@ -217,7 +218,7 @@ public class Variable {
     this.labels = labels;
   }
 
-  public Variable arguments(Object arguments) {
+  public Variable arguments(VariableProperties arguments) {
     this.arguments = arguments;
     return this;
   }
@@ -227,11 +228,11 @@ public class Variable {
    * @return arguments
   **/
   @ApiModelProperty(required = true, value = "")
-  public Object getArguments() {
+  public VariableProperties getArguments() {
     return arguments;
   }
 
-  public void setArguments(Object arguments) {
+  public void setArguments(VariableProperties arguments) {
     this.arguments = arguments;
   }
 

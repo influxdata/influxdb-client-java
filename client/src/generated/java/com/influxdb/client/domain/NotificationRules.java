@@ -15,14 +15,6 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -33,7 +25,6 @@ import com.influxdb.client.domain.NotificationRule;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +35,6 @@ import java.util.List;
 public class NotificationRules {
   public static final String SERIALIZED_NAME_NOTIFICATION_RULES = "notificationRules";
   @SerializedName(SERIALIZED_NAME_NOTIFICATION_RULES)
-  @JsonAdapter(NotificationRulesNotificationRulesAdapter.class)
   private List<NotificationRule> notificationRules = new ArrayList<>();
 
   public static final String SERIALIZED_NAME_LINKS = "links";
@@ -136,52 +126,5 @@ public class NotificationRules {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class NotificationRulesNotificationRulesAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
-
-    public NotificationRulesNotificationRulesAdapter() {
-    }
-
-    @Override
-    public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
-
-      List<String> discriminator = Arrays.asList("type");
-
-      List<Object> results = new ArrayList<>();
-
-      for (JsonElement arrayItem: json.getAsJsonArray()){
-        JsonObject jsonObject = arrayItem.getAsJsonObject();
-
-        String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
-
-        results.add(deserialize(types, jsonObject, context));
-      }
-
-      return results;
-    }
-
-    @Override
-    public JsonElement serialize(Object object, Type typeOfSrc, JsonSerializationContext context) {
-
-      return context.serialize(object);
-    }
-
-    private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
-
-      if (Arrays.equals(new String[]{ "slack" }, types)) {
-        return context.deserialize(json, SlackNotificationRule.class);
-      }
-      if (Arrays.equals(new String[]{ "smtp" }, types)) {
-        return context.deserialize(json, SMTPNotificationRule.class);
-      }
-      if (Arrays.equals(new String[]{ "pagerduty" }, types)) {
-        return context.deserialize(json, PagerDutyNotificationRule.class);
-      }
-      if (Arrays.equals(new String[]{ "http" }, types)) {
-        return context.deserialize(json, HTTPNotificationRule.class);
-      }
-
-      return context.deserialize(json, Object.class);
-    }
-  }
 }
 

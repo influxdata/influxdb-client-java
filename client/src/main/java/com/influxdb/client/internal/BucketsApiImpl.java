@@ -41,6 +41,7 @@ import com.influxdb.client.domain.LabelsResponse;
 import com.influxdb.client.domain.OperationLog;
 import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.Organization;
+import com.influxdb.client.domain.PostBucketRequest;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceMembers;
 import com.influxdb.client.domain.ResourceOwner;
@@ -169,6 +170,23 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
     @Nonnull
     @Override
     public Bucket createBucket(@Nonnull final Bucket bucket) {
+
+        Arguments.checkNotNull(bucket, "Bucket is required");
+        Arguments.checkNonEmpty(bucket.getName(), "Bucket name");
+
+        PostBucketRequest postBucket = new PostBucketRequest()
+                .name(bucket.getName())
+                .orgID(bucket.getOrgID())
+                .description(bucket.getDescription())
+                .rp(bucket.getRp())
+                .retentionRules(bucket.getRetentionRules());
+
+        return createBucket(postBucket);
+    }
+
+    @Nonnull
+    @Override
+    public Bucket createBucket(@Nonnull final PostBucketRequest bucket) {
 
         Arguments.checkNotNull(bucket, "Bucket is required");
         Arguments.checkNonEmpty(bucket.getName(), "Bucket name");

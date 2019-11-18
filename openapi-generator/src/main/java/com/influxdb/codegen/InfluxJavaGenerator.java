@@ -190,7 +190,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                 for (String interfaceModelName : pluginModel.interfaces) {
 
                     CodegenModel interfaceModel = getModel((HashMap) models.get(interfaceModelName));
-                    if (!interfaceModel.name.contains("NotificationRule")) {
+                    if (!interfaceModel.name.contains("NotificationRule") && !pluginModel.classname.endsWith("Discrimator")) {
 
                         interfaceModel.setParent(pluginModel.classname);
                     }
@@ -206,10 +206,31 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
 
                 pluginModel.setParent("Expression");
             }
+
+            if (modelName.equals("DeadmanCheck") || modelName.equals("ThresholdCheck")) {
+                pluginModel.setParent("Check");
+                pluginModel.setParentSchema("Check");
+            }
+
+            if (modelName.equals("SlackNotificationEndpoint") || modelName.equals("PagerDutyNotificationEndpoint")
+                    || modelName.equals("HTTPNotificationEndpoint")) {
+                pluginModel.setParent("NotificationEndpoint");
+                pluginModel.setParentSchema("NotificationEndpoint");
+            }
+
+            if (modelName.equals("NotificationEndpointDiscrimator")) {
+                pluginModel.setParent("PostNotificationEndpoint");
+                pluginModel.setParentSchema("PostNotificationEndpoint");
+            }
+
+            if (modelName.equals("NotificationRuleBase")) {
+                pluginModel.setParent("PostNotificationRule");
+                pluginModel.setParentSchema("PostNotificationRule");
+            }
         }
 
         additionalProperties.put("x-polymorphic-request-bodies", Arrays
-                .asList("NotificationEndpoint", "NotificationRule", "Check"));
+                .asList("PostNotificationEndpoint", "PostNotificationRule", "PostCheck"));
 
         return allModels;
     }
@@ -648,6 +669,21 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
             codegenModel.setParentSchema("NotificationRule");
         }
 
+        if (codegenModel.name.equals("CheckBase")) {
+            codegenModel.setParent("CheckDiscriminator");
+            codegenModel.setParentSchema("CheckDiscriminator");
+        }
+
+        if (codegenModel.name.equals("NotificationEndpointBase")) {
+            codegenModel.setParent("NotificationEndpointDiscrimator");
+            codegenModel.setParentSchema("NotificationEndpointDiscrimator");
+        }
+
+        if (codegenModel.name.equals("PostCheck") || codegenModel.name.equals("PostNotificationEndpoint")) {
+            codegenModel.setParent(null);
+            codegenModel.setParentSchema(null);
+        }
+
         return codegenModel;
     }
 
@@ -662,6 +698,15 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         // Rename "Api" to "Service"
         //
         return camelize(name) + "Service";
+    }
+
+    @Override
+    public String toModelName(final String name) {
+        String modelName = super.toModelName(name);
+        if ("PostBucketRequestRetentionRules".equals(modelName)) {
+            return "BucketRetentionRules";
+        }
+        return modelName;
     }
 
     @Override

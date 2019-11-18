@@ -12,8 +12,10 @@ import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
 import com.influxdb.client.domain.NotificationEndpoint;
+import com.influxdb.client.domain.NotificationEndpointDiscrimator;
 import com.influxdb.client.domain.NotificationEndpointUpdate;
 import com.influxdb.client.domain.NotificationEndpoints;
+import com.influxdb.client.domain.PostNotificationEndpoint;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +26,7 @@ public interface NotificationEndpointsService {
   /**
    * Add a notification endpoint
    * 
-   * @param notificationEndpoint Notification endpoint to create (required)
+   * @param postNotificationEndpoint Notification endpoint to create (required)
    * @return Call&lt;NotificationEndpoint&gt;
    */
   @Headers({
@@ -32,7 +34,7 @@ public interface NotificationEndpointsService {
   })
   @POST("api/v2/notificationEndpoints")
   Call<NotificationEndpoint> createNotificationEndpoint(
-    @retrofit2.http.Body NotificationEndpoint notificationEndpoint
+    @retrofit2.http.Body PostNotificationEndpoint postNotificationEndpoint
   );
 
   /**

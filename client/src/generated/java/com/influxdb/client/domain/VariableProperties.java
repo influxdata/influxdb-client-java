@@ -15,13 +15,17 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
-import com.influxdb.client.domain.CheckDiscriminator;
+import com.influxdb.client.domain.ConstantVariableProperties;
+import com.influxdb.client.domain.MapVariableProperties;
+import com.influxdb.client.domain.QueryVariableProperties;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Check
+ * VariableProperties
  */
 
-public class Check extends CheckBase {
+public class VariableProperties {
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -31,20 +35,19 @@ public class Check extends CheckBase {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    return super.equals(o);
+    return true;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode());
+    return Objects.hash();
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Check {\n");
-    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("class VariableProperties {\n");
     sb.append("}");
     return sb.toString();
   }

@@ -15,13 +15,23 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
-import com.influxdb.client.domain.CheckDiscriminator;
+import com.influxdb.client.domain.CheckBaseLinks;
+import com.influxdb.client.domain.CheckBaseTags;
+import com.influxdb.client.domain.CheckStatusLevel;
+import com.influxdb.client.domain.DashboardQuery;
+import com.influxdb.client.domain.DeadmanCheck;
+import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.TaskStatusType;
+import com.influxdb.client.domain.Threshold;
+import com.influxdb.client.domain.ThresholdCheck;
+import java.time.OffsetDateTime;
+import java.util.List;
 
 /**
- * Check
+ * CheckDiscriminator
  */
 
-public class Check extends CheckBase {
+public class CheckDiscriminator extends PostCheck {
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -43,7 +53,7 @@ public class Check extends CheckBase {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Check {\n");
+    sb.append("class CheckDiscriminator {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("}");
     return sb.toString();

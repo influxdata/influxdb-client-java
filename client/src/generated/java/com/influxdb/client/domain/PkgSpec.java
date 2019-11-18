@@ -20,8 +20,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.influxdb.client.domain.Check;
-import com.influxdb.client.domain.Links;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -29,60 +27,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Checks
+ * PkgSpec
  */
 
-public class Checks {
-  public static final String SERIALIZED_NAME_CHECKS = "checks";
-  @SerializedName(SERIALIZED_NAME_CHECKS)
-  private List<Check> checks = new ArrayList<>();
+public class PkgSpec {
+  public static final String SERIALIZED_NAME_RESOURCES = "resources";
+  @SerializedName(SERIALIZED_NAME_RESOURCES)
+  private List<Object> resources = new ArrayList<>();
 
-  public static final String SERIALIZED_NAME_LINKS = "links";
-  @SerializedName(SERIALIZED_NAME_LINKS)
-  private Links links = null;
-
-  public Checks checks(List<Check> checks) {
-    this.checks = checks;
+  public PkgSpec resources(List<Object> resources) {
+    this.resources = resources;
     return this;
   }
 
-  public Checks addChecksItem(Check checksItem) {
-    if (this.checks == null) {
-      this.checks = new ArrayList<>();
+  public PkgSpec addResourcesItem(Object resourcesItem) {
+    if (this.resources == null) {
+      this.resources = new ArrayList<>();
     }
-    this.checks.add(checksItem);
+    this.resources.add(resourcesItem);
     return this;
   }
 
    /**
-   * Get checks
-   * @return checks
+   * Get resources
+   * @return resources
   **/
   @ApiModelProperty(value = "")
-  public List<Check> getChecks() {
-    return checks;
+  public List<Object> getResources() {
+    return resources;
   }
 
-  public void setChecks(List<Check> checks) {
-    this.checks = checks;
-  }
-
-  public Checks links(Links links) {
-    this.links = links;
-    return this;
-  }
-
-   /**
-   * Get links
-   * @return links
-  **/
-  @ApiModelProperty(value = "")
-  public Links getLinks() {
-    return links;
-  }
-
-  public void setLinks(Links links) {
-    this.links = links;
+  public void setResources(List<Object> resources) {
+    this.resources = resources;
   }
 
 
@@ -94,23 +70,21 @@ public class Checks {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Checks checks = (Checks) o;
-    return Objects.equals(this.checks, checks.checks) &&
-        Objects.equals(this.links, checks.links);
+    PkgSpec pkgSpec = (PkgSpec) o;
+    return Objects.equals(this.resources, pkgSpec.resources);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(checks, links);
+    return Objects.hash(resources);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Checks {\n");
-    sb.append("    checks: ").append(toIndentedString(checks)).append("\n");
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
+    sb.append("class PkgSpec {\n");
+    sb.append("    resources: ").append(toIndentedString(resources)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -26,6 +26,7 @@ import com.influxdb.client.domain.Permission;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,14 @@ import java.util.List;
  */
 
 public class Authorization extends AuthorizationUpdateRequest {
+  public static final String SERIALIZED_NAME_CREATED_AT = "createdAt";
+  @SerializedName(SERIALIZED_NAME_CREATED_AT)
+  private OffsetDateTime createdAt;
+
+  public static final String SERIALIZED_NAME_UPDATED_AT = "updatedAt";
+  @SerializedName(SERIALIZED_NAME_UPDATED_AT)
+  private OffsetDateTime updatedAt;
+
   public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
   private String orgID;
@@ -65,6 +74,24 @@ public class Authorization extends AuthorizationUpdateRequest {
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
   private AuthorizationLinks links = null;
+
+   /**
+   * Get createdAt
+   * @return createdAt
+  **/
+  @ApiModelProperty(value = "")
+  public OffsetDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+   /**
+   * Get updatedAt
+   * @return updatedAt
+  **/
+  @ApiModelProperty(value = "")
+  public OffsetDateTime getUpdatedAt() {
+    return updatedAt;
+  }
 
   public Authorization orgID(String orgID) {
     this.orgID = orgID;
@@ -183,7 +210,9 @@ public class Authorization extends AuthorizationUpdateRequest {
       return false;
     }
     Authorization authorization = (Authorization) o;
-    return Objects.equals(this.orgID, authorization.orgID) &&
+    return Objects.equals(this.createdAt, authorization.createdAt) &&
+        Objects.equals(this.updatedAt, authorization.updatedAt) &&
+        Objects.equals(this.orgID, authorization.orgID) &&
         Objects.equals(this.permissions, authorization.permissions) &&
         Objects.equals(this.id, authorization.id) &&
         Objects.equals(this.token, authorization.token) &&
@@ -196,7 +225,7 @@ public class Authorization extends AuthorizationUpdateRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(orgID, permissions, id, token, userID, user, org, links, super.hashCode());
+    return Objects.hash(createdAt, updatedAt, orgID, permissions, id, token, userID, user, org, links, super.hashCode());
   }
 
 
@@ -205,6 +234,8 @@ public class Authorization extends AuthorizationUpdateRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class Authorization {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
+    sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
     sb.append("    permissions: ").append(toIndentedString(permissions)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
