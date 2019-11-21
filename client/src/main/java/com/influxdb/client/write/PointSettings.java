@@ -37,10 +37,12 @@ import com.influxdb.Arguments;
  *
  * @author Jakub Bednar (bednar@github) (28/06/2019 09:06)
  */
+@SuppressWarnings("RegExpRedundantEscape")
 public final class PointSettings {
 
-    private static final Pattern ENV_PROPERTY = Pattern.compile("(\\$\\{env\\.)(.+)(})");
-    private static final Pattern SYSTEM_PROPERTY = Pattern.compile("(\\$\\{)(.+)(})");
+    // Android compiler compatibility
+    private static final Pattern ENV_PROPERTY = Pattern.compile("(\\$\\{env\\.)(.+)\\}");
+    private static final Pattern SYSTEM_PROPERTY = Pattern.compile("(\\$\\{)(.+)(\\})");
 
     private final Map<String, String> defaultTags = new TreeMap<>();
 
