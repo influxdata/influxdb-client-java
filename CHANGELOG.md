@@ -3,6 +3,9 @@
 ### API
 1. [#68](https://github.com/influxdata/influxdb-client-java/pull/68): Updated swagger to latest version
 
+### Bugs
+1. [#69](https://github.com/influxdata/influxdb-client-java/issues/69): Fixed android compatibility
+
 ## 1.2.0 [2019-11-08]
 
 ### Features
