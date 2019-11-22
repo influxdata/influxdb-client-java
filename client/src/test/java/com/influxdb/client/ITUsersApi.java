@@ -146,7 +146,7 @@ class ITUsersApi extends AbstractITClientTest {
     }
 
     @Test
-    void meNotAuthenticated() throws Exception {
+    void meNotAuthenticated() {
 
         influxDBClient.close();
 
@@ -157,6 +157,7 @@ class ITUsersApi extends AbstractITClientTest {
 
     @Test
     @Tag("basic_auth")
+    @Disabled("TODO not implemented set password https://github.com/influxdata/influxdb/pull/15981")
     void updateMePassword() {
 
         usersApi.meUpdatePassword("my-password", "my-password");
@@ -164,6 +165,7 @@ class ITUsersApi extends AbstractITClientTest {
 
     @Test
     @Tag("basic_auth")
+    @Disabled("TODO not implemented set password https://github.com/influxdata/influxdb/pull/15981")
     void updateMePasswordWrongPassword() {
 
         Assertions.assertThatThrownBy(() -> usersApi.meUpdatePassword("my-password-wrong", "my-password-new"))
@@ -173,6 +175,7 @@ class ITUsersApi extends AbstractITClientTest {
 
     @Test
     @Tag("basic_auth")
+    @Disabled("TODO not implemented set password https://github.com/influxdata/influxdb/pull/15981")
     void updatePassword() {
 
         User user = usersApi.me();
@@ -208,6 +211,7 @@ class ITUsersApi extends AbstractITClientTest {
 
     @Test
     @Tag("basic_auth")
+    @Disabled("TODO not implemented set password https://github.com/influxdata/influxdb/pull/15981")
     void updatePasswordById() {
 
         User user = usersApi.me();
