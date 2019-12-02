@@ -141,7 +141,7 @@ public class PlatformExample {
             Point point = Point.measurement("temperature")
                     .addTag("location", "west")
                     .addField("value", 55D)
-                    .time(Instant.now().toEpochMilli(), WritePrecision.NS);
+                    .time(Instant.now().toEpochMilli(), WritePrecision.MS);
             writeApi.writePoint("temperature-sensors", medicalGMBH.getId(), point);
 
             //

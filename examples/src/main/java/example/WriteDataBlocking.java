@@ -56,7 +56,7 @@ public class WriteDataBlocking {
             Point point = Point.measurement("temperature")
                     .addTag("location", "west")
                     .addField("value", 55D)
-                    .time(Instant.now().toEpochMilli(), WritePrecision.NS);
+                    .time(Instant.now().toEpochMilli(), WritePrecision.MS);
 
             writeApi.writePoint("my-bucket", "my-org", point);
 
