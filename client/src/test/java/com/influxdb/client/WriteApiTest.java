@@ -31,7 +31,6 @@ import javax.annotation.Nonnull;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractInfluxDBClientTest;
 import com.influxdb.client.write.Point;
-import com.influxdb.client.write.events.BackpressureEvent;
 import com.influxdb.client.write.events.WriteErrorEvent;
 import com.influxdb.client.write.events.WriteRetriableErrorEvent;
 import com.influxdb.client.write.events.WriteSuccessEvent;
@@ -41,8 +40,6 @@ import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.RequestEntityTooLargeException;
 import com.influxdb.exceptions.UnauthorizedException;
 
-import io.reactivex.Flowable;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.schedulers.TestScheduler;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -51,7 +48,6 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -189,6 +185,8 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         writeApi.writeMeasurement("b1", "org1", WritePrecision.S, 15);
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(0);
+
+       listener.awaitCount(1);
 
         Assertions.assertThat(listener.values).hasSize(1);
         Assertions.assertThat(listener.getValue()).isNotNull();
@@ -576,31 +574,6 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         Assertions.assertThat(listener.getValue().getThrowable())
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("no token was sent and they are required");
-    }
-
-    @Test
-    //TODO
-    @Disabled
-    void eventBackpressureEvent() {
-
-        mockServer.enqueue(new MockResponse().setBodyDelay(1, TimeUnit.SECONDS));
-
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().writeScheduler(new TestScheduler()).bufferLimit(100).build());
-
-        WriteEventListener<BackpressureEvent> listener = new WriteEventListener<>();
-        writeApi.listenEvents(BackpressureEvent.class, listener);
-
-        Flowable
-                .range(0, 5000)
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(index -> {
-                    String record = String.format("h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 %s", index);
-                    writeApi.writeRecord("b_" + index, "org1", WritePrecision.NS, record);
-                });
-
-
-        BackpressureEvent backpressureEvent = listener.awaitCount(1).getValue();
-        Assertions.assertThat(backpressureEvent).isNotNull();
     }
 
     @Test
