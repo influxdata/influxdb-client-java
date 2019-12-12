@@ -110,10 +110,10 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         PublishProcessor<Flowable<BatchWriteItem>> tempBoundary = PublishProcessor.create();
 
         processor
-                .onBackpressureBuffer(
-                        writeOptions.getBufferLimit(),
-                        () -> publish(new BackpressureEvent()),
-                        writeOptions.getBackpressureStrategy())
+//                .onBackpressureBuffer(
+//                        writeOptions.getBufferLimit(),
+//                        () -> publish(new BackpressureEvent()),
+//                        writeOptions.getBackpressureStrategy())
 //                .observeOn(processorScheduler)
                 //
                 // Batching
