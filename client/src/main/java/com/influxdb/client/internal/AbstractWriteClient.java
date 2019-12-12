@@ -38,6 +38,7 @@ import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.client.write.Point;
 import com.influxdb.client.write.events.AbstractWriteEvent;
+import com.influxdb.client.write.events.BackpressureEvent;
 import com.influxdb.client.write.events.WriteErrorEvent;
 import com.influxdb.client.write.events.WriteRetriableErrorEvent;
 import com.influxdb.client.write.events.WriteSuccessEvent;
@@ -109,10 +110,10 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         PublishProcessor<Flowable<BatchWriteItem>> tempBoundary = PublishProcessor.create();
 
         processor
-//                .onBackpressureBuffer(
-//                        writeOptions.getBufferLimit(),
-//                        () -> publish(new BackpressureEvent()),
-//                        writeOptions.getBackpressureStrategy())
+                .onBackpressureBuffer(
+                        writeOptions.getBufferLimit(),
+                        () -> publish(new BackpressureEvent()),
+                        writeOptions.getBackpressureStrategy())
 //                .observeOn(processorScheduler)
                 //
                 // Batching
