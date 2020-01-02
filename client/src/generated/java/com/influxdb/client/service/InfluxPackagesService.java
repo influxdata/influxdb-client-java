@@ -20,7 +20,7 @@ import java.util.Map;
 
 public interface InfluxPackagesService {
   /**
-   * Apply or dry run an influx package
+   * Apply or dry-run an Influx package
    * 
    * @param pkgApply  (required)
    * @return Call&lt;PkgSummary&gt;
@@ -36,7 +36,7 @@ public interface InfluxPackagesService {
   /**
    * Create a new Influx package
    * 
-   * @param pkgCreate Influx package to create (optional)
+   * @param pkgCreate Influx package to create. (optional)
    * @return Call&lt;Pkg&gt;
    */
   @Headers({

@@ -74,12 +74,13 @@ final class NotificationEndpointsApiImpl extends AbstractRestClient implements N
     @Nonnull
     @Override
     public SlackNotificationEndpoint createSlackEndpoint(@Nonnull final String name,
-                                                         @Nullable final String url,
+                                                         @Nonnull final String url,
                                                          @Nullable final String token,
                                                          @Nonnull final String orgID) {
 
         Arguments.checkNonEmpty(name, "name");
         Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNotNull(url, "url");
 
         SlackNotificationEndpoint endpoint = new SlackNotificationEndpoint();
         endpoint.setType(NotificationEndpointType.SLACK);

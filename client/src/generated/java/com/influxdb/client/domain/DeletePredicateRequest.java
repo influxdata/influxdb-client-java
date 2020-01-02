@@ -26,9 +26,9 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 
 /**
- * the delete predicate request
+ * The delete predicate request.
  */
-@ApiModel(description = "the delete predicate request")
+@ApiModel(description = "The delete predicate request.")
 
 public class DeletePredicateRequest {
   public static final String SERIALIZED_NAME_START = "start";
@@ -49,10 +49,10 @@ public class DeletePredicateRequest {
   }
 
    /**
-   * RFC3339Nano.
+   * RFC3339Nano
    * @return start
   **/
-  @ApiModelProperty(required = true, value = "RFC3339Nano.")
+  @ApiModelProperty(required = true, value = "RFC3339Nano")
   public OffsetDateTime getStart() {
     return start;
   }
@@ -67,10 +67,10 @@ public class DeletePredicateRequest {
   }
 
    /**
-   * RFC3339Nano.
+   * RFC3339Nano
    * @return stop
   **/
-  @ApiModelProperty(required = true, value = "RFC3339Nano.")
+  @ApiModelProperty(required = true, value = "RFC3339Nano")
   public OffsetDateTime getStop() {
     return stop;
   }
@@ -85,10 +85,10 @@ public class DeletePredicateRequest {
   }
 
    /**
-   * sql where like delete statement
+   * InfluxQL-like delete statement
    * @return predicate
   **/
-  @ApiModelProperty(example = "tag1=\"value1\" and (tag2=\"value2\" and tag3!=\"value3\")", value = "sql where like delete statement")
+  @ApiModelProperty(example = "tag1=\"value1\" and (tag2=\"value2\" and tag3!=\"value3\")", value = "InfluxQL-like delete statement")
   public String getPredicate() {
     return predicate;
   }

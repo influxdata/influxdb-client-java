@@ -18,14 +18,14 @@ import java.util.Map;
 
 public interface DefaultService {
   /**
-   * delete Time series data from InfluxDB
+   * Delete time series data from InfluxDB
    * 
-   * @param deletePredicateRequest predicate delete request (required)
+   * @param deletePredicateRequest Predicate delete request (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param org specifies the destination organization for writes (optional)
-   * @param bucket specifies the destination bucket for writes (optional)
-   * @param orgID specifies the organization ID of the resource (optional)
-   * @param bucketID specifies the destination bucket ID for writes (optional)
+   * @param org Specifies the organization to delete data from. (optional)
+   * @param bucket Specifies the bucket to delete data from. (optional)
+   * @param orgID Specifies the organization ID of the resource. (optional)
+   * @param bucketID Specifies the bucket ID to delete data from. (optional)
    * @return Call&lt;Void&gt;
    */
   @Headers({

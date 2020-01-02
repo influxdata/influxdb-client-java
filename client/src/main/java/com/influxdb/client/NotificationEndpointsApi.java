@@ -56,7 +56,7 @@ public interface NotificationEndpointsApi {
                                                   @Nonnull final String orgID);
 
     /**
-     * Add new Slack notification endpoint. The {@code url} or {@code token} should be defined.
+     * Add new Slack notification endpoint. The {@code url} should be defined.
      *
      * @param name  Endpoint name
      * @param url   Slack WebHook URL
@@ -66,7 +66,7 @@ public interface NotificationEndpointsApi {
      */
     @Nonnull
     SlackNotificationEndpoint createSlackEndpoint(@Nonnull final String name,
-                                                  @Nullable final String url,
+                                                  @Nonnull final String url,
                                                   @Nullable final String token,
                                                   @Nonnull final String orgID);
 
