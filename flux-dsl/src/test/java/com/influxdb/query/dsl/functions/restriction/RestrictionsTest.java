@@ -55,4 +55,12 @@ class RestrictionsTest {
 
         Assertions.assertThat(restrictions.toString()).isEqualTo("r[\"_value\"] >= 10");
     }
+
+    @Test
+    void exists() {
+
+        Restrictions restrictions = Restrictions.value().exists();
+
+        Assertions.assertThat(restrictions.toString()).isEqualTo("exists r[\"_value\"]");
+    }
 }

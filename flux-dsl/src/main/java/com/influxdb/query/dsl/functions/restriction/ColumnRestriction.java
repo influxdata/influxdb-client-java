@@ -120,6 +120,28 @@ public final class ColumnRestriction {
         return new OperatorRestrictions(fieldName, value, operator);
     }
 
+    /**
+     * Check if an record contains a key or if that key’s value is null
+     * @return restriction
+     */
+    @Nonnull
+    public Restrictions exists() {
+        return new ExistsRestrictions(fieldName);
+    }
+
+    private final class ExistsRestrictions extends Restrictions {
+        private final String fieldName;
+
+        public ExistsRestrictions(@Nonnull final String fieldName) {
+            this.fieldName = fieldName;
+        }
+
+        @Override
+        public String toString() {
+            return "exists r[\"" + fieldName + "\"]";
+        }
+    }
+
     private final class OperatorRestrictions extends Restrictions {
         private final String fieldName;
         private final Object fieldValue;

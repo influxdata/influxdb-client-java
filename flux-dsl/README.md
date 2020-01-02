@@ -203,6 +203,7 @@ Supported Record restrictions:
 - `less`
 - `greater`
 - `greater`
+- `exists`
 - `lessOrEqual`
 - `greaterOrEqual`
 - `custom` - the custom restriction by `Restrictions.value().custom(15L, "=~")`
@@ -211,6 +212,7 @@ Supported Record restrictions:
 Restrictions restrictions = Restrictions.and(
     Restrictions.measurement().equal("mem"),
     Restrictions.field().equal("usage_system"),
+    Restrictions.value().exists(),
     Restrictions.tag("service").equal("app-server")
 );
 
