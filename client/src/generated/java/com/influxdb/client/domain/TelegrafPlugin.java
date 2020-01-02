@@ -23,20 +23,27 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * TelegrafPluginOutputFileConfigFiles
+ * TelegrafPlugin
  */
 
-public class TelegrafPluginOutputFileConfigFiles {
+public class TelegrafPlugin {
   /**
    * Gets or Sets type
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
-    STDOUT("stdout"),
+    INPUTS("inputs"),
     
-    PATH("path");
+    OUTPUTS("outputs"),
+    
+    AGGREGATORS("aggregators"),
+    
+    PROCESSORS("processors");
 
     private String value;
 
@@ -80,11 +87,19 @@ public class TelegrafPluginOutputFileConfigFiles {
   @SerializedName(SERIALIZED_NAME_TYPE)
   private TypeEnum type;
 
-  public static final String SERIALIZED_NAME_PATH = "path";
-  @SerializedName(SERIALIZED_NAME_PATH)
-  private String path;
+  public static final String SERIALIZED_NAME_NAME = "name";
+  @SerializedName(SERIALIZED_NAME_NAME)
+  private String name;
 
-  public TelegrafPluginOutputFileConfigFiles type(TypeEnum type) {
+  public static final String SERIALIZED_NAME_DESCRIPTION = "description";
+  @SerializedName(SERIALIZED_NAME_DESCRIPTION)
+  private String description;
+
+  public static final String SERIALIZED_NAME_CONFIG = "config";
+  @SerializedName(SERIALIZED_NAME_CONFIG)
+  private Map<String, Object> config = new HashMap<>();
+
+  public TelegrafPlugin type(TypeEnum type) {
     this.type = type;
     return this;
   }
@@ -102,22 +117,66 @@ public class TelegrafPluginOutputFileConfigFiles {
     this.type = type;
   }
 
-  public TelegrafPluginOutputFileConfigFiles path(String path) {
-    this.path = path;
+  public TelegrafPlugin name(String name) {
+    this.name = name;
     return this;
   }
 
    /**
-   * Get path
-   * @return path
+   * Get name
+   * @return name
   **/
   @ApiModelProperty(value = "")
-  public String getPath() {
-    return path;
+  public String getName() {
+    return name;
   }
 
-  public void setPath(String path) {
-    this.path = path;
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public TelegrafPlugin description(String description) {
+    this.description = description;
+    return this;
+  }
+
+   /**
+   * Get description
+   * @return description
+  **/
+  @ApiModelProperty(value = "")
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public TelegrafPlugin config(Map<String, Object> config) {
+    this.config = config;
+    return this;
+  }
+
+  public TelegrafPlugin putConfigItem(String key, Object configItem) {
+    if (this.config == null) {
+      this.config = new HashMap<>();
+    }
+    this.config.put(key, configItem);
+    return this;
+  }
+
+   /**
+   * Get config
+   * @return config
+  **/
+  @ApiModelProperty(value = "")
+  public Map<String, Object> getConfig() {
+    return config;
+  }
+
+  public void setConfig(Map<String, Object> config) {
+    this.config = config;
   }
 
 
@@ -129,23 +188,27 @@ public class TelegrafPluginOutputFileConfigFiles {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    TelegrafPluginOutputFileConfigFiles telegrafPluginOutputFileConfigFiles = (TelegrafPluginOutputFileConfigFiles) o;
-    return Objects.equals(this.type, telegrafPluginOutputFileConfigFiles.type) &&
-        Objects.equals(this.path, telegrafPluginOutputFileConfigFiles.path);
+    TelegrafPlugin telegrafPlugin = (TelegrafPlugin) o;
+    return Objects.equals(this.type, telegrafPlugin.type) &&
+        Objects.equals(this.name, telegrafPlugin.name) &&
+        Objects.equals(this.description, telegrafPlugin.description) &&
+        Objects.equals(this.config, telegrafPlugin.config);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, path);
+    return Objects.hash(type, name, description, config);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class TelegrafPluginOutputFileConfigFiles {\n");
+    sb.append("class TelegrafPlugin {\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    path: ").append(toIndentedString(path)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    config: ").append(toIndentedString(config)).append("\n");
     sb.append("}");
     return sb.toString();
   }

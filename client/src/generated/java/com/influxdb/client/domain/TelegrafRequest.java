@@ -15,27 +15,15 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.influxdb.client.domain.TelegrafRequestAgent;
-import com.influxdb.client.domain.TelegrafRequestPlugin;
+import com.influxdb.client.domain.TelegrafRequestMetadata;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * TelegrafRequest
@@ -50,14 +38,13 @@ public class TelegrafRequest {
   @SerializedName(SERIALIZED_NAME_DESCRIPTION)
   private String description;
 
-  public static final String SERIALIZED_NAME_AGENT = "agent";
-  @SerializedName(SERIALIZED_NAME_AGENT)
-  private TelegrafRequestAgent agent = null;
+  public static final String SERIALIZED_NAME_METADATA = "metadata";
+  @SerializedName(SERIALIZED_NAME_METADATA)
+  private TelegrafRequestMetadata metadata = null;
 
-  public static final String SERIALIZED_NAME_PLUGINS = "plugins";
-  @SerializedName(SERIALIZED_NAME_PLUGINS)
-  @JsonAdapter(TelegrafRequestPluginsAdapter.class)
-  private List<TelegrafRequestPlugin> plugins = new ArrayList<>();
+  public static final String SERIALIZED_NAME_CONFIG = "config";
+  @SerializedName(SERIALIZED_NAME_CONFIG)
+  private String config;
 
   public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
@@ -99,48 +86,40 @@ public class TelegrafRequest {
     this.description = description;
   }
 
-  public TelegrafRequest agent(TelegrafRequestAgent agent) {
-    this.agent = agent;
+  public TelegrafRequest metadata(TelegrafRequestMetadata metadata) {
+    this.metadata = metadata;
     return this;
   }
 
    /**
-   * Get agent
-   * @return agent
+   * Get metadata
+   * @return metadata
   **/
   @ApiModelProperty(value = "")
-  public TelegrafRequestAgent getAgent() {
-    return agent;
+  public TelegrafRequestMetadata getMetadata() {
+    return metadata;
   }
 
-  public void setAgent(TelegrafRequestAgent agent) {
-    this.agent = agent;
+  public void setMetadata(TelegrafRequestMetadata metadata) {
+    this.metadata = metadata;
   }
 
-  public TelegrafRequest plugins(List<TelegrafRequestPlugin> plugins) {
-    this.plugins = plugins;
-    return this;
-  }
-
-  public TelegrafRequest addPluginsItem(TelegrafRequestPlugin pluginsItem) {
-    if (this.plugins == null) {
-      this.plugins = new ArrayList<>();
-    }
-    this.plugins.add(pluginsItem);
+  public TelegrafRequest config(String config) {
+    this.config = config;
     return this;
   }
 
    /**
-   * Get plugins
-   * @return plugins
+   * Get config
+   * @return config
   **/
   @ApiModelProperty(value = "")
-  public List<TelegrafRequestPlugin> getPlugins() {
-    return plugins;
+  public String getConfig() {
+    return config;
   }
 
-  public void setPlugins(List<TelegrafRequestPlugin> plugins) {
-    this.plugins = plugins;
+  public void setConfig(String config) {
+    this.config = config;
   }
 
   public TelegrafRequest orgID(String orgID) {
@@ -173,14 +152,14 @@ public class TelegrafRequest {
     TelegrafRequest telegrafRequest = (TelegrafRequest) o;
     return Objects.equals(this.name, telegrafRequest.name) &&
         Objects.equals(this.description, telegrafRequest.description) &&
-        Objects.equals(this.agent, telegrafRequest.agent) &&
-        Objects.equals(this.plugins, telegrafRequest.plugins) &&
+        Objects.equals(this.metadata, telegrafRequest.metadata) &&
+        Objects.equals(this.config, telegrafRequest.config) &&
         Objects.equals(this.orgID, telegrafRequest.orgID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, description, agent, plugins, orgID);
+    return Objects.hash(name, description, metadata, config, orgID);
   }
 
 
@@ -190,8 +169,8 @@ public class TelegrafRequest {
     sb.append("class TelegrafRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    agent: ").append(toIndentedString(agent)).append("\n");
-    sb.append("    plugins: ").append(toIndentedString(plugins)).append("\n");
+    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
+    sb.append("    config: ").append(toIndentedString(config)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -208,79 +187,5 @@ public class TelegrafRequest {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class TelegrafRequestPluginsAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
-
-    public TelegrafRequestPluginsAdapter() {
-    }
-
-    @Override
-    public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
-
-      List<String> discriminator = Arrays.asList("name", "type");
-
-      List<Object> results = new ArrayList<>();
-
-      for (JsonElement arrayItem: json.getAsJsonArray()){
-        JsonObject jsonObject = arrayItem.getAsJsonObject();
-
-        String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
-
-        results.add(deserialize(types, jsonObject, context));
-      }
-
-      return results;
-    }
-
-    @Override
-    public JsonElement serialize(Object object, Type typeOfSrc, JsonSerializationContext context) {
-
-      return context.serialize(object);
-    }
-
-    private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
-
-      if (Arrays.equals(new String[]{ "cpu", "input" }, types)) {
-        return context.deserialize(json, TelegrafPluginInputCpu.class);
-      }
-      if (Arrays.equals(new String[]{ "disk", "input" }, types)) {
-        return context.deserialize(json, TelegrafPluginInputDisk.class);
-      }
-      if (Arrays.equals(new String[]{ "diskio", "input" }, types)) {
-        return context.deserialize(json, TelegrafPluginInputDiskio.class);
-      }
-      if (Arrays.equals(new String[]{ "docker", "input" }, types)) {
-        return context.deserialize(json, TelegrafPluginInputDocker.class);
-      }
-      if (Arrays.equals(new String[]{ "file", "input" }, types)) {
-        return context.deserialize(json, TelegrafPluginInputFile.class);
-      }
-      if (Arrays.equals(new String[]{ "kubernetes", "input" }, types)) {
-        return context.deserialize(json, TelegrafPluginInputKubernetes.class);
-      }
-      if (Arrays.equals(new String[]{ "logparser", "input" }, types)) {
-        return context.deserialize(json, TelegrafPluginInputLogParser.class);
-      }
-      if (Arrays.equals(new String[]{ "procstat", "input" }, types)) {
-        return context.deserialize(json, TelegrafPluginInputProcstat.class);
-      }
-      if (Arrays.equals(new String[]{ "prometheus", "input" }, types)) {
-        return context.deserialize(json, TelegrafPluginInputPrometheus.class);
-      }
-      if (Arrays.equals(new String[]{ "redis", "input" }, types)) {
-        return context.deserialize(json, TelegrafPluginInputRedis.class);
-      }
-      if (Arrays.equals(new String[]{ "syslog", "input" }, types)) {
-        return context.deserialize(json, TelegrafPluginInputSyslog.class);
-      }
-      if (Arrays.equals(new String[]{ "file", "output" }, types)) {
-        return context.deserialize(json, TelegrafPluginOutputFile.class);
-      }
-      if (Arrays.equals(new String[]{ "influxdb_v2", "output" }, types)) {
-        return context.deserialize(json, TelegrafPluginOutputInfluxDBV2.class);
-      }
-
-      return context.deserialize(json, Object.class);
-    }
-  }
 }
 

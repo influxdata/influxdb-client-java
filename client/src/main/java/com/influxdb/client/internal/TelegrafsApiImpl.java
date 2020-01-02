@@ -21,10 +21,15 @@
  */
 package com.influxdb.client.internal;
 
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -41,9 +46,9 @@ import com.influxdb.client.domain.ResourceMembers;
 import com.influxdb.client.domain.ResourceOwner;
 import com.influxdb.client.domain.ResourceOwners;
 import com.influxdb.client.domain.Telegraf;
+import com.influxdb.client.domain.TelegrafPlugin;
 import com.influxdb.client.domain.TelegrafRequest;
-import com.influxdb.client.domain.TelegrafRequestAgent;
-import com.influxdb.client.domain.TelegrafRequestPlugin;
+import com.influxdb.client.domain.TelegrafRequestMetadata;
 import com.influxdb.client.domain.Telegrafs;
 import com.influxdb.client.domain.User;
 import com.influxdb.client.service.TelegrafsService;
@@ -69,6 +74,116 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
     @Nonnull
     @Override
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final Organization org,
+                                   @Nonnull final Collection<TelegrafPlugin> plugins) {
+
+        Arguments.checkNotNull(org, "org");
+
+        return createTelegraf(name, description, org, createAgentConfiguration(), plugins);
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final Organization org,
+                                   @Nonnull final Map<String, Object> agentConfiguration,
+                                   @Nonnull final Collection<TelegrafPlugin> plugins) {
+
+        Arguments.checkNotNull(org, "org");
+
+        return createTelegraf(name, description, org.getId(), agentConfiguration, plugins);
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final String orgID,
+                                   @Nonnull final Collection<TelegrafPlugin> plugins) {
+
+        return createTelegraf(name, description, orgID, createAgentConfiguration(), plugins);
+    }
+
+    @Override
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final String orgID,
+                                   @Nonnull final Map<String, Object> agentConfiguration,
+                                   @Nonnull final Collection<TelegrafPlugin> plugins) {
+
+        Arguments.checkNonEmpty(name, "name");
+        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNotNull(agentConfiguration, "agentConfiguration");
+        Arguments.checkNotNull(plugins, "plugins");
+
+        StringBuilder config = new StringBuilder();
+
+        // append agent configuration
+        config.append("[agent]").append("\n");
+        agentConfiguration.forEach((key, value) -> appendConfiguration(config, key, value));
+
+        config.append("\n");
+
+        // append plugins configuration
+        for (TelegrafPlugin plugin : plugins) {
+            if (plugin.getDescription() != null) {
+                config.append("#").append(plugin.getDescription()).append("\n");
+            }
+            config.append("[[").append(plugin.getType()).append(".").append(plugin.getName()).append("]]").append("\n");
+            plugin.getConfig().forEach((key, value) -> appendConfiguration(config, key, value));
+        }
+
+        TelegrafRequest telegrafRequest = new TelegrafRequest()
+                .name(name)
+                .description(description)
+                .orgID(orgID)
+                .config(config.toString());
+
+        return createTelegraf(telegrafRequest);
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final String orgID,
+                                   @Nonnull final String config,
+                                   @Nullable final TelegrafRequestMetadata metadata) {
+
+        Arguments.checkNonEmpty(name, "name");
+        Arguments.checkNonEmpty(orgID, "orgID");
+        Arguments.checkNonEmpty(config, "config");
+
+        TelegrafRequest telegrafRequest = new TelegrafRequest()
+                .name(name)
+                .description(description)
+                .orgID(orgID)
+                .config(config)
+                .metadata(metadata);
+
+        return createTelegraf(telegrafRequest);
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final Organization org,
+                                   @Nonnull final String config,
+                                   @Nullable final TelegrafRequestMetadata metadata) {
+
+        Arguments.checkNonEmpty(name, "name");
+        Arguments.checkNotNull(org, "org");
+        Arguments.checkNonEmpty(config, "config");
+
+        return createTelegraf(name, description, org.getId(), config, metadata);
+    }
+
+    @Nonnull
+    @Override
     public Telegraf createTelegraf(@Nonnull final TelegrafRequest telegrafRequest) {
 
         Arguments.checkNotNull(telegrafRequest, "telegrafRequest");
@@ -78,74 +193,19 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         return execute(call);
     }
 
-    @Nonnull
     @Override
-    public Telegraf createTelegraf(@Nonnull final String name,
-                                   @Nullable final String description,
-                                   @Nonnull final String orgID,
-                                   @Nonnull final Integer collectionInterval,
-                                   @Nonnull final TelegrafRequestPlugin... plugins) {
-
-        Arguments.checkNonEmpty(name, "TelegrafConfig.name");
-        Arguments.checkNonEmpty(orgID, "TelegrafConfig.orgID");
-        Arguments.checkPositiveNumber(collectionInterval, "TelegrafConfig.collectionInterval");
-
-        return createTelegraf(name, description, orgID, collectionInterval, Arrays.asList(plugins));
-    }
-
     @Nonnull
-    @Override
-    public Telegraf createTelegraf(@Nonnull final String name,
-                                   @Nullable final String description,
-                                   @Nonnull final Organization org,
-                                   @Nonnull final Integer collectionInterval,
-                                   @Nonnull final TelegrafRequestPlugin... plugins) {
-
-        Arguments.checkNonEmpty(name, "TelegrafConfig.name");
-        Arguments.checkNotNull(org, "TelegrafConfig.org");
-        Arguments.checkPositiveNumber(collectionInterval, "TelegrafConfig.collectionInterval");
-
-        return createTelegraf(name, description, org.getId(), collectionInterval, plugins);
-    }
-
-    @Nonnull
-    @Override
-    public Telegraf createTelegraf(@Nonnull final String name,
-                                   @Nullable final String description,
-                                   @Nonnull final Organization org,
-                                   @Nonnull final Integer collectionInterval,
-                                   @Nonnull final List<TelegrafRequestPlugin> plugins) {
-
-        Arguments.checkNonEmpty(name, "TelegrafConfig.name");
-        Arguments.checkNotNull(org, "TelegrafConfig.org");
-        Arguments.checkPositiveNumber(collectionInterval, "TelegrafConfig.collectionInterval");
-
-        return createTelegraf(name, description, org.getId(), collectionInterval, plugins);
-    }
-
-    @Nonnull
-    @Override
-    public Telegraf createTelegraf(@Nonnull final String name,
-                                   @Nullable final String description,
-                                   @Nonnull final String orgID,
-                                   @Nonnull final Integer collectionInterval,
-                                   @Nonnull final List<TelegrafRequestPlugin> plugins) {
-
-        Arguments.checkNonEmpty(name, "TelegrafConfig.name");
-        Arguments.checkNonEmpty(orgID, "TelegrafConfig.orgID");
-        Arguments.checkPositiveNumber(collectionInterval, "TelegrafConfig.collectionInterval");
-
-        TelegrafRequestAgent telegrafAgent = new TelegrafRequestAgent();
-        telegrafAgent.setCollectionInterval(collectionInterval);
-
-        TelegrafRequest telegrafConfig = new TelegrafRequest();
-        telegrafConfig.setName(name);
-        telegrafConfig.setDescription(description);
-        telegrafConfig.setOrgID(orgID);
-        telegrafConfig.setAgent(telegrafAgent);
-        telegrafConfig.plugins(plugins);
-
-        return createTelegraf(telegrafConfig);
+    public HashMap<String, Object> createAgentConfiguration() {
+        HashMap<String, Object> agent = new LinkedHashMap<>();
+        agent.put("interval", "10s");
+        agent.put("round_interval", true);
+        agent.put("metric_batch_size", 1000);
+        agent.put("metric_buffer_limit", 10000);
+        agent.put("collection_jitter", "0s");
+        agent.put("flush_jitter", "0s");
+        agent.put("precision", "");
+        agent.put("omit_hostname", false);
+        return agent;
     }
 
     @Nonnull
@@ -484,19 +544,37 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         TelegrafRequest telegrafRequest = new TelegrafRequest();
         telegrafRequest.setName(telegraf.getName());
         telegrafRequest.setDescription(telegraf.getDescription());
-        telegrafRequest.setAgent(telegraf.getAgent());
+        telegrafRequest.setConfig(telegraf.getConfig());
+        telegrafRequest.setMetadata(telegraf.getMetadata());
         telegrafRequest.setOrgID(telegraf.getOrgID());
-        if (telegraf.getPlugins() != null) {
-            telegraf.getPlugins().forEach(telegrafPlugin -> {
-                TelegrafRequestPlugin<Object, Object> requestPlugin = new TelegrafRequestPlugin<>();
-                requestPlugin.setType(telegrafPlugin.getType());
-                requestPlugin.setName(telegrafPlugin.getName());
-                requestPlugin.setConfig(telegrafPlugin.getConfig());
-
-                telegrafRequest.addPluginsItem(requestPlugin);
-            });
-        }
 
         return telegrafRequest;
+    }
+
+    private void appendConfiguration(@Nonnull final StringBuilder config,
+                                     @Nonnull final String key,
+                                     @Nullable final Object value) {
+        if (value != null) {
+            config.append("  ").append(key).append(" = ");
+            if (value instanceof Collection) {
+                Stream<String> values = ((Collection<Object>) value).stream()
+                        .map(it -> {
+                            if (it instanceof  String) {
+                                return "\"" + it.toString() + "\"";
+                            }
+                            return it.toString();
+                        });
+                config.append("[");
+                config.append(values.collect(Collectors.joining(", ")));
+                config.append("]");
+            } else if (value instanceof String) {
+                config.append('"');
+                config.append(value.toString());
+                config.append('"');
+            } else {
+                config.append(value.toString());
+            }
+            config.append("\n");
+        }
     }
 }

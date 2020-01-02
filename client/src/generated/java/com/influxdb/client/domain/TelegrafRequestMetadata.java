@@ -27,38 +27,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TelegrafPluginInputFileConfig
+ * TelegrafRequestMetadata
  */
 
-public class TelegrafPluginInputFileConfig {
-  public static final String SERIALIZED_NAME_FILES = "files";
-  @SerializedName(SERIALIZED_NAME_FILES)
-  private List<String> files = new ArrayList<>();
+public class TelegrafRequestMetadata {
+  public static final String SERIALIZED_NAME_BUCKETS = "buckets";
+  @SerializedName(SERIALIZED_NAME_BUCKETS)
+  private List<String> buckets = new ArrayList<>();
 
-  public TelegrafPluginInputFileConfig files(List<String> files) {
-    this.files = files;
+  public TelegrafRequestMetadata buckets(List<String> buckets) {
+    this.buckets = buckets;
     return this;
   }
 
-  public TelegrafPluginInputFileConfig addFilesItem(String filesItem) {
-    if (this.files == null) {
-      this.files = new ArrayList<>();
+  public TelegrafRequestMetadata addBucketsItem(String bucketsItem) {
+    if (this.buckets == null) {
+      this.buckets = new ArrayList<>();
     }
-    this.files.add(filesItem);
+    this.buckets.add(bucketsItem);
     return this;
   }
 
    /**
-   * Get files
-   * @return files
+   * Get buckets
+   * @return buckets
   **/
   @ApiModelProperty(value = "")
-  public List<String> getFiles() {
-    return files;
+  public List<String> getBuckets() {
+    return buckets;
   }
 
-  public void setFiles(List<String> files) {
-    this.files = files;
+  public void setBuckets(List<String> buckets) {
+    this.buckets = buckets;
   }
 
 
@@ -70,21 +70,21 @@ public class TelegrafPluginInputFileConfig {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    TelegrafPluginInputFileConfig telegrafPluginInputFileConfig = (TelegrafPluginInputFileConfig) o;
-    return Objects.equals(this.files, telegrafPluginInputFileConfig.files);
+    TelegrafRequestMetadata telegrafRequestMetadata = (TelegrafRequestMetadata) o;
+    return Objects.equals(this.buckets, telegrafRequestMetadata.buckets);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(files);
+    return Objects.hash(buckets);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class TelegrafPluginInputFileConfig {\n");
-    sb.append("    files: ").append(toIndentedString(files)).append("\n");
+    sb.append("class TelegrafRequestMetadata {\n");
+    sb.append("    buckets: ").append(toIndentedString(buckets)).append("\n");
     sb.append("}");
     return sb.toString();
   }
