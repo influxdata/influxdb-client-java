@@ -44,6 +44,7 @@ import com.influxdb.client.domain.Threshold;
 import com.influxdb.client.domain.ThresholdCheck;
 import com.influxdb.client.service.ChecksService;
 import com.influxdb.internal.AbstractRestClient;
+
 import retrofit2.Call;
 
 /**
