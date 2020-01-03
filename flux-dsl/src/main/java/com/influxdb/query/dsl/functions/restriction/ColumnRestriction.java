@@ -121,7 +121,8 @@ public final class ColumnRestriction {
     }
 
     /**
-     * Check if an record contains a key or if that key’s value is null
+     * Check if an record contains a key or if that key’s value is null.
+     *
      * @return restriction
      */
     @Nonnull
