@@ -40,6 +40,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -69,7 +70,7 @@ class ITMonitoringAlerting extends AbstractITClientTest {
 
     @Test
     //TODO fix CI
-//    @Disabled
+    @Disabled
     public void createMonitoringAndAlerting() throws InterruptedException {
 
         Organization org = findMyOrg();
