@@ -154,15 +154,20 @@ class ITNotificationEndpointsApi extends AbstractITClientTest {
     }
 
     @Test
-    public void createSlackTokenOrUrlShouldBeDefined() {
+    public void slackUrlShouldBeDefined() {
 
-        notificationEndpointsApi
-                .createSlackEndpoint(generateName("slack"), null, "token", orgID);
+        SlackNotificationEndpoint endpoint = new SlackNotificationEndpoint();
+        endpoint.setType(NotificationEndpointType.SLACK);
+        endpoint.orgID(orgID);
+        endpoint.token("my-token");
+        endpoint.setName(generateName("slack"));
+        endpoint.setDescription("my production slack channel");
+        endpoint.setStatus(NotificationEndpointBase.StatusEnum.ACTIVE);
 
         Assertions.assertThatThrownBy(() -> notificationEndpointsApi
-                .createSlackEndpoint(generateName("slack"), null, null, orgID))
+                .createEndpoint(endpoint))
                 .isInstanceOf(BadRequestException.class)
-                .hasMessage("slack endpoint URL and token are empty");
+                .hasMessage("slack endpoint URL must be provided");
     }
 
     @Test
@@ -333,7 +338,7 @@ class ITNotificationEndpointsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> notificationEndpointsApi.updateEndpoint("020f755c3c082000", update))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("notification endpoint not found");
+                .hasMessage("notification endpoint not found for key \"020f755c3c082000\"");
     }
 
     @Test
@@ -348,7 +353,7 @@ class ITNotificationEndpointsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> notificationEndpointsApi.findNotificationEndpointByID(found.getId()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("notification endpoint not found");
+                .hasMessage("notification endpoint not found for key \"" + found.getId() + "\"");
     }
 
     @Test
@@ -356,7 +361,7 @@ class ITNotificationEndpointsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> notificationEndpointsApi.deleteNotificationEndpoint("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("notification endpoint not found");
+                .hasMessage("notification endpoint not found for key \"020f755c3c082000\"");
     }
 
     @Test
@@ -375,7 +380,7 @@ class ITNotificationEndpointsApi extends AbstractITClientTest {
     public void findNotificationEndpointByIDNotFound() {
         Assertions.assertThatThrownBy(() -> notificationEndpointsApi.findNotificationEndpointByID("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("notification endpoint not found");
+                .hasMessage("notification endpoint not found for key \"020f755c3c082000\"");
     }
 
     @Test
@@ -510,27 +515,27 @@ class ITNotificationEndpointsApi extends AbstractITClientTest {
         Assertions.assertThatThrownBy(() -> notificationEndpointsApi
                 .cloneSlackEndpoint("not-found-cloned", "token", "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("notification endpoint not found");
+                .hasMessage("notification endpoint not found for key \"020f755c3c082000\"");
 
         Assertions.assertThatThrownBy(() -> notificationEndpointsApi
                 .clonePagerDutyEndpoint("not-found-cloned", "token", "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("notification endpoint not found");
+                .hasMessage("notification endpoint not found for key \"020f755c3c082000\"");
 
         Assertions.assertThatThrownBy(() -> notificationEndpointsApi
                 .cloneHTTPEndpoint("not-found-cloned", "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("notification endpoint not found");
+                .hasMessage("notification endpoint not found for key \"020f755c3c082000\"");
 
         Assertions.assertThatThrownBy(() -> notificationEndpointsApi
                 .cloneHTTPEndpointBearer("not-found-cloned", "token", "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("notification endpoint not found");
+                .hasMessage("notification endpoint not found for key \"020f755c3c082000\"");
 
         Assertions.assertThatThrownBy(() -> notificationEndpointsApi
                 .cloneHTTPEndpointBasicAuth("not-found-cloned", "username", "password", "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("notification endpoint not found");
+                .hasMessage("notification endpoint not found for key \"020f755c3c082000\"");
     }
 
     @Test

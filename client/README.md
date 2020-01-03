@@ -771,6 +771,7 @@ String query = "from(bucket: \"my-bucket\") "
         + "|> filter(fn: (r) => r._measurement == \"stock\")  "
         + "|> filter(fn: (r) => r.company == \"zyz\")  "
         + "|> aggregateWindow(every: 5s, fn: mean)  "
+        + "|> filter(fn: (r) => r._field == \"current\")  "
         + "|> yield(name: \"mean\")";
 
 LesserThreshold threshold = new LesserThreshold();
@@ -781,7 +782,7 @@ String message = "The Stock price for XYZ is on: ${ r._level } level!";
 
 influxDBClient
     .getChecksApi()
-    .createThresholdCheck("XYZ Stock value", query, "current", "5s", message, threshold, org.getId());
+    .createThresholdCheck("XYZ Stock value", query, "5s", message, threshold, org.getId());
 ```   
 
 ##### Create Slack Notification endpoint

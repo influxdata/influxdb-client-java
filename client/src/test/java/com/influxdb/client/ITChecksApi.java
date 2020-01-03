@@ -43,9 +43,9 @@ import com.influxdb.client.domain.TaskStatusType;
 import com.influxdb.client.domain.Threshold;
 import com.influxdb.client.domain.ThresholdCheck;
 import com.influxdb.exceptions.NotFoundException;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -87,8 +87,7 @@ class ITChecksApi extends AbstractITClientTest {
 
         List<Threshold> thresholds = Arrays.asList(greater, lesser, range);
         ThresholdCheck threshold = checksApi.createThresholdCheck(generateName("th-check"),
-                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> yield()",
-                "usage_user",
+                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 thresholds,
@@ -127,10 +126,7 @@ class ITChecksApi extends AbstractITClientTest {
         Assertions.assertThat(threshold.getCreatedAt()).isAfter(now);
         Assertions.assertThat(threshold.getUpdatedAt()).isAfter(now);
         Assertions.assertThat(threshold.getQuery()).isNotNull();
-        Assertions.assertThat(threshold.getQuery().getText()).isEqualTo("from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> yield()");
-        Assertions.assertThat(threshold.getQuery().getBuilderConfig().getTags().get(0).getKey()).isEqualTo("_field");
-        Assertions.assertThat(threshold.getQuery().getBuilderConfig().getTags().get(0).getValues()).hasSize(1);
-        Assertions.assertThat(threshold.getQuery().getBuilderConfig().getTags().get(0).getValues().get(0)).isEqualTo("usage_user");
+        Assertions.assertThat(threshold.getQuery().getText()).isEqualTo("from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()");
         Assertions.assertThat(threshold.getStatus()).isEqualTo(TaskStatusType.ACTIVE);
         Assertions.assertThat(threshold.getEvery()).isEqualTo("1h");
         Assertions.assertThat(threshold.getOffset()).isBlank();
@@ -155,8 +151,7 @@ class ITChecksApi extends AbstractITClientTest {
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
 
         DeadmanCheck deadman = checksApi.createDeadmanCheck(generateName("deadman-check"),
-                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> yield()",
-                "usage_user",
+                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
                 "15m",
                 "90s",
                 "10m",
@@ -176,10 +171,7 @@ class ITChecksApi extends AbstractITClientTest {
         Assertions.assertThat(deadman.getCreatedAt()).isAfter(now);
         Assertions.assertThat(deadman.getUpdatedAt()).isAfter(now);
         Assertions.assertThat(deadman.getQuery()).isNotNull();
-        Assertions.assertThat(deadman.getQuery().getText()).isEqualTo("from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> yield()");
-        Assertions.assertThat(deadman.getQuery().getBuilderConfig().getTags().get(0).getKey()).isEqualTo("_field");
-        Assertions.assertThat(deadman.getQuery().getBuilderConfig().getTags().get(0).getValues()).hasSize(1);
-        Assertions.assertThat(deadman.getQuery().getBuilderConfig().getTags().get(0).getValues().get(0)).isEqualTo("usage_user");
+        Assertions.assertThat(deadman.getQuery().getText()).isEqualTo("from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()");
         Assertions.assertThat(deadman.getStatus()).isEqualTo(TaskStatusType.ACTIVE);
         Assertions.assertThat(deadman.getEvery()).isEqualTo("15m");
         Assertions.assertThat(deadman.getOffset()).isBlank();
@@ -205,8 +197,7 @@ class ITChecksApi extends AbstractITClientTest {
         greater.value(80F).level(CheckStatusLevel.CRIT).allValues(true);
 
         ThresholdCheck check = checksApi.createThresholdCheck(generateName("th-check"),
-                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> yield()",
-                "usage_user",
+                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 Collections.singletonList(greater),
@@ -233,7 +224,7 @@ class ITChecksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> checksApi.updateCheck("020f755c3c082000", update))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("check not found");
+                .hasMessage("check not found for key \"020f755c3c082000\"");
     }
 
     @Test
@@ -243,8 +234,7 @@ class ITChecksApi extends AbstractITClientTest {
         greater.value(80F).level(CheckStatusLevel.CRIT).allValues(true);
 
         Check created = checksApi.createThresholdCheck(generateName("th-check"),
-                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> yield()",
-                "usage_user",
+                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 Collections.singletonList(greater),
@@ -256,7 +246,7 @@ class ITChecksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> checksApi.findCheckByID(found.getId()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("check not found");
+                .hasMessage("check not found for key \"" + found.getId() + "\"");
     }
 
     @Test
@@ -264,7 +254,7 @@ class ITChecksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> checksApi.deleteCheck("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("check not found");
+                .hasMessage("check not found for key \"020f755c3c082000\"");
     }
 
     @Test
@@ -274,8 +264,7 @@ class ITChecksApi extends AbstractITClientTest {
         greater.value(80F).level(CheckStatusLevel.CRIT).allValues(true);
 
         Check check = checksApi.createThresholdCheck(generateName("th-check"),
-                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> yield()",
-                "usage_user",
+                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 Collections.singletonList(greater),
@@ -290,7 +279,7 @@ class ITChecksApi extends AbstractITClientTest {
     public void findCheckByIDNotFound() {
         Assertions.assertThatThrownBy(() -> checksApi.findCheckByID("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("check not found");
+                .hasMessage("check not found for key \"020f755c3c082000\"");
     }
 
     @Test
@@ -302,8 +291,7 @@ class ITChecksApi extends AbstractITClientTest {
         greater.value(80F).level(CheckStatusLevel.CRIT).allValues(true);
 
         Check check = checksApi.createThresholdCheck(generateName("th-check"),
-                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> yield()",
-                "usage_user",
+                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 Collections.singletonList(greater),
@@ -342,8 +330,7 @@ class ITChecksApi extends AbstractITClientTest {
         greater.value(80F).level(CheckStatusLevel.CRIT).allValues(true);
 
         Check check = checksApi.createThresholdCheck(generateName("th-check"),
-                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> yield()",
-                "usage_user",
+                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 Collections.singletonList(greater),
@@ -360,8 +347,7 @@ class ITChecksApi extends AbstractITClientTest {
         greater.value(80F).level(CheckStatusLevel.CRIT).allValues(true);
 
         Check check = checksApi.createThresholdCheck(generateName("th-check"),
-                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> yield()",
-                "usage_user",
+                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 Collections.singletonList(greater),
@@ -379,8 +365,7 @@ class ITChecksApi extends AbstractITClientTest {
         int size = checksApi.findChecks(orgID).size();
 
         checksApi.createThresholdCheck(generateName("th-check"),
-                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> yield()",
-                "usage_user",
+                "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 Collections.singletonList(greater),
@@ -391,6 +376,7 @@ class ITChecksApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
     void findChecksPaging() {
 
         GreaterThreshold greater = new GreaterThreshold();
@@ -399,8 +385,7 @@ class ITChecksApi extends AbstractITClientTest {
         IntStream
                 .range(0, 20 - checksApi.findChecks(orgID).size())
                 .forEach(value -> checksApi.createThresholdCheck(generateName("th-check"),
-                        "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> yield()",
-                        "usage_user",
+                        "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
                         "1h",
                         "Check: ${ r._check_name } is: ${ r._level }",
                         Collections.singletonList(greater),

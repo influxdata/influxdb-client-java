@@ -197,7 +197,7 @@ class ITVariablesApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> variablesApi.findVariableByID("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("variable not found");
+                .hasMessage("variable not found for key \"020f755c3c082000\"");
     }
 
     @Test

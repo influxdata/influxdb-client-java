@@ -21,7 +21,6 @@
  */
 package com.influxdb.client;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
@@ -48,7 +47,6 @@ import com.influxdb.client.domain.Task;
 import com.influxdb.client.domain.TaskStatusType;
 import com.influxdb.client.domain.User;
 import com.influxdb.exceptions.NotFoundException;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -481,17 +479,17 @@ class ITTasksApi extends AbstractITClientTest {
         Assertions.assertThat(logs).isNotEmpty();
         Assertions.assertThat(logs.size())
                 .withFailMessage("Run logs: <%s>", logs)
-                .isEqualTo(3);
+                .isEqualTo(2);
         Assertions.assertThat(logs.get(0).getMessage())
                 .withFailMessage("Run logs: <%s>", logs)
                 .startsWith("Started task from script");
         Assertions.assertThat(logs.get(0).getRunID())
                 .withFailMessage("Run logs: <%s>", logs)
                 .isEqualTo(firstRun.getId());
-        Assertions.assertThat(logs.get(2).getMessage())
+        Assertions.assertThat(logs.get(1).getMessage())
                 .withFailMessage("Run logs: <%s>", logs)
-                .startsWith("Completed successfully");
-        Assertions.assertThat(logs.get(2).getRunID())
+                .startsWith("Completed(success)");
+        Assertions.assertThat(logs.get(1).getRunID())
                 .withFailMessage("Run logs: <%s>", logs)
                 .isEqualTo(firstRun.getId());
 
@@ -585,18 +583,14 @@ class ITTasksApi extends AbstractITClientTest {
         //
         // The completed task are on the end of the list
         //
-        logs = logs.subList(logs.size() - 3, logs.size());
+        logs = logs.subList(logs.size() - 2, logs.size());
         Assertions.assertThat(logs.get(0).getMessage())
                 .withFailMessage("LogEvents: %s", logs)
                 .startsWith("Started task from script:");
 
         Assertions.assertThat(logs.get(1).getMessage())
                 .withFailMessage("LogEvents: %s", logs)
-                .contains("total_duration");
-
-        Assertions.assertThat(logs.get(2).getMessage())
-                .withFailMessage("LogEvents: %s", logs)
-                .contains("Completed successfully");
+                .contains("Completed(success)");
     }
 
     @Test
@@ -622,7 +616,7 @@ class ITTasksApi extends AbstractITClientTest {
         List<LogEvent> logs = tasksApi.getRunLogs(runs.get(0));
 
         Assertions.assertThat(logs).isNotEmpty();
-        Assertions.assertThat(logs.get(logs.size() - 1).getMessage()).endsWith("Completed successfully");
+        Assertions.assertThat(logs.get(logs.size() - 1).getMessage()).endsWith("Completed(success)");
     }
 
     @Test
@@ -658,7 +652,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> tasksApi.cancelRun("020f755c3c082000", "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("failed to cancel run: task not found");
+                .hasMessage("failed to cancel run: run not found");
     }
 
     @Test

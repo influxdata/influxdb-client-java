@@ -33,7 +33,6 @@ import com.influxdb.client.domain.RuleStatusLevel;
 import com.influxdb.client.domain.SlackNotificationEndpoint;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
-
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
@@ -90,6 +89,7 @@ class ITMonitoringAlerting extends AbstractITClientTest {
                 + "|> filter(fn: (r) => r._measurement == \"stock\")  "
                 + "|> filter(fn: (r) => r.company == \"zyz\")  "
                 + "|> aggregateWindow(every: 5s, fn: mean)  "
+                + "|> filter(fn: (r) => r._field == \"current\")  "
                 + "|> yield(name: \"mean\")";
 
         LesserThreshold threshold = new LesserThreshold();
@@ -98,7 +98,7 @@ class ITMonitoringAlerting extends AbstractITClientTest {
 
         String message = "The Stock price for XYZ is on: ${ r._level } level!";
 
-        checksApi.createThresholdCheck(generateName("XYZ Stock value"), query, "current", "5s", message, threshold, org.getId());
+        checksApi.createThresholdCheck(generateName("XYZ Stock value"), query, "5s", message, threshold, org.getId());
 
         //
         // Create Slack Notification endpoint

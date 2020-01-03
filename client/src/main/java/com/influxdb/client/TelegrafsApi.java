@@ -21,7 +21,10 @@
  */
 package com.influxdb.client;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -31,8 +34,9 @@ import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceOwner;
 import com.influxdb.client.domain.Telegraf;
+import com.influxdb.client.domain.TelegrafPlugin;
 import com.influxdb.client.domain.TelegrafRequest;
-import com.influxdb.client.domain.TelegrafRequestPlugin;
+import com.influxdb.client.domain.TelegrafRequestMetadata;
 import com.influxdb.client.domain.User;
 
 /**
@@ -42,26 +46,128 @@ import com.influxdb.client.domain.User;
  * <p>
  * The following example shows how to create a Telegraf configuration with an output plugin and an input cpu plugin.
  * <pre>
- * TelegrafPlugin output = new TelegrafPlugin();
- * output.setName("influxdb_v2");
- * output.setType(TelegrafPluginType.OUTPUT);
- * output.setComment("Output to Influx 2.0");
- * output.getConfig().put("organization", "my-org");
- * output.getConfig().put("bucket", "my-bucket");
- * output.getConfig().put("urls", new String[]{"http://127.0.0.1:9999"});
- * output.getConfig().put("token", "$INFLUX_TOKEN");
+ * TelegrafPlugin output = new TelegrafPlugin()
+ *                 .type(TelegrafPlugin.TypeEnum.OUTPUTS)
+ *                 .name("influxdb_v2")
+ *                 .description("my instance")
+ *                 .putConfigItem("organization", "my-org")
+ *                 .putConfigItem("bucket", "my-bucket")
+ *                 .putConfigItem("token", "$INFLUX_TOKEN")
+ *                 .putConfigItem("urls", Collections.singletonList("http://127.0.0.1:9999"));
  *
- * TelegrafPlugin cpu = new TelegrafPlugin();
- * cpu.setName("cpu");
- * cpu.setType(TelegrafPluginType.INPUT);
+ * TelegrafPlugin cpu = new TelegrafPlugin()
+ *                 .type(TelegrafPlugin.TypeEnum.INPUTS)
+ *                 .name("cpu")
+ *                 .putConfigItem("percpu", true)
+ *                 .putConfigItem("totalcpu", true)
+ *                 .putConfigItem("collect_cpu_time", false)
+ *                 .putConfigItem("report_active", false)
+ *                 .putConfigItem("avoid_null", null);
  *
  * Telegraf telegrafConfig = telegrafsApi
- *      .createTelegraf("Telegraf config", "test-config", organization, 1_000, output, cpu);
+ *      .createTelegraf("Telegraf config", "test-config", organization, Arrays.asList(output, cpu));
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (28/02/2019 08:38)
  */
 public interface TelegrafsApi {
+
+    /**
+     * Create a telegraf config.
+     *
+     * @param name        Telegraf Configuration Name
+     * @param description Telegraf Configuration Description
+     * @param org         The organization that owns this config
+     * @param plugins     The telegraf plugins config
+     * @return Telegraf config created
+     */
+    @Nonnull
+    Telegraf createTelegraf(@Nonnull final String name,
+                            @Nullable final String description,
+                            @Nonnull final Organization org,
+                            @Nonnull final Collection<TelegrafPlugin> plugins);
+
+    /**
+     * Create a telegraf config.
+     *
+     * @param name               Telegraf Configuration Name
+     * @param description        Telegraf Configuration Description
+     * @param org                The organization that owns this config
+     * @param agentConfiguration The telegraf agent config
+     * @param plugins            The telegraf plugins config
+     * @return Telegraf config created
+     */
+    @Nonnull
+    Telegraf createTelegraf(@Nonnull final String name,
+                            @Nullable final String description,
+                            @Nonnull final Organization org,
+                            @Nonnull final Map<String, Object> agentConfiguration,
+                            @Nonnull final Collection<TelegrafPlugin> plugins);
+
+    /**
+     * Create a telegraf config.
+     *
+     * @param name        Telegraf Configuration Name
+     * @param description Telegraf Configuration Description
+     * @param orgID       The organization that owns this config
+     * @param plugins     The telegraf plugins config
+     * @return Telegraf config created
+     */
+    @Nonnull
+    Telegraf createTelegraf(@Nonnull final String name,
+                            @Nullable final String description,
+                            @Nonnull final String orgID,
+                            @Nonnull final Collection<TelegrafPlugin> plugins);
+
+    /**
+     * Create a telegraf config.
+     *
+     * @param name               Telegraf Configuration Name
+     * @param description        Telegraf Configuration Description
+     * @param orgID              The organization that owns this config
+     * @param agentConfiguration The telegraf agent config
+     * @param plugins            The telegraf plugins config
+     * @return Telegraf config created
+     */
+    Telegraf createTelegraf(@Nonnull final String name,
+                            @Nullable final String description,
+                            @Nonnull final String orgID,
+                            @Nonnull final Map<String, Object> agentConfiguration,
+                            @Nonnull final Collection<TelegrafPlugin> plugins);
+
+    /**
+     * Create a telegraf config.
+     *
+     * @param name        Telegraf Configuration Name
+     * @param description Telegraf Configuration Description
+     * @param orgID       The ID of the organization that owns this config
+     * @param config      ConfigTOML contains the raw toml config
+     * @param metadata    Metadata for the config
+     * @return Telegraf config created
+     */
+    @Nonnull
+    Telegraf createTelegraf(@Nonnull final String name,
+                            @Nullable final String description,
+                            @Nonnull final String orgID,
+                            @Nonnull final String config,
+                            @Nullable final TelegrafRequestMetadata metadata);
+
+    /**
+     * Create a telegraf config.
+     *
+     * @param name        Telegraf Configuration Name
+     * @param description Telegraf Configuration Description
+     * @param org         The organization that owns this config
+     * @param config      ConfigTOML contains the raw toml config
+     * @param metadata    Metadata for the config
+     * @return Telegraf config created
+     */
+    @Nonnull
+    Telegraf createTelegraf(@Nonnull final String name,
+                            @Nullable final String description,
+                            @Nonnull final Organization org,
+                            @Nonnull final String config,
+                            @Nullable final TelegrafRequestMetadata metadata);
 
     /**
      * Create a telegraf config.
@@ -73,72 +179,23 @@ public interface TelegrafsApi {
     Telegraf createTelegraf(@Nonnull final TelegrafRequest telegrafRequest);
 
     /**
-     * Create a telegraf config.
+     * Created default Telegraf Agent configuration.
      *
-     * @param name               Telegraf Configuration Name
-     * @param description        Telegraf Configuration Description
-     * @param orgID              The ID of the organization that owns this config
-     * @param collectionInterval Default data collection interval for all inputs in milliseconds
-     * @param plugins            The telegraf plugins config
-     * @return Telegraf config created
+     * <pre>
+     * [agent]
+     *   interval = "10s"
+     *   round_interval = true
+     *   metric_batch_size = 1000
+     *   metric_buffer_limit = 10000
+     *   collection_jitter = "0s"
+     *   flush_jitter = "0s"
+     *   precision = ""
+     *   omit_hostname = false
+     * </pre>
+     * @return default configuration
      */
     @Nonnull
-    Telegraf createTelegraf(@Nonnull final String name,
-                            @Nullable final String description,
-                            @Nonnull final String orgID,
-                            @Nonnull final Integer collectionInterval,
-                            @Nonnull final TelegrafRequestPlugin... plugins);
-
-    /**
-     * Create a telegraf config.
-     *
-     * @param name               Telegraf Configuration Name
-     * @param description        Telegraf Configuration Description
-     * @param org                The organization that owns this config
-     * @param collectionInterval Default data collection interval for all inputs in milliseconds
-     * @param plugins            The telegraf plugins config
-     * @return Telegraf config created
-     */
-    @Nonnull
-    Telegraf createTelegraf(@Nonnull final String name,
-                            @Nullable final String description,
-                            @Nonnull final Organization org,
-                            @Nonnull final Integer collectionInterval,
-                            @Nonnull final TelegrafRequestPlugin... plugins);
-
-    /**
-     * Create a telegraf config.
-     *
-     * @param name               Telegraf Configuration Name
-     * @param description        Telegraf Configuration Description
-     * @param orgID              The ID of the organization that owns this config
-     * @param collectionInterval Default data collection interval for all inputs in milliseconds
-     * @param plugins            The telegraf plugins config
-     * @return Telegraf config created
-     */
-    @Nonnull
-    Telegraf createTelegraf(@Nonnull final String name,
-                            @Nullable final String description,
-                            @Nonnull final String orgID,
-                            @Nonnull final Integer collectionInterval,
-                            @Nonnull final List<TelegrafRequestPlugin> plugins);
-
-    /**
-     * Create a telegraf config.
-     *
-     * @param name               Telegraf Configuration Name
-     * @param description        Telegraf Configuration Description
-     * @param org                The organization that owns this config
-     * @param collectionInterval Default data collection interval for all inputs in milliseconds
-     * @param plugins            The telegraf plugins config
-     * @return Telegraf config created
-     */
-    @Nonnull
-    Telegraf createTelegraf(@Nonnull final String name,
-                            @Nullable final String description,
-                            @Nonnull final Organization org,
-                            @Nonnull final Integer collectionInterval,
-                            @Nonnull final List<TelegrafRequestPlugin> plugins);
+    HashMap<String, Object> createAgentConfiguration();
 
     /**
      * Update a telegraf config.
@@ -408,4 +465,6 @@ public interface TelegrafsApi {
      * @param labelID    ID of label to delete
      */
     void deleteLabel(@Nonnull final String labelID, @Nonnull final String telegrafID);
+
+
 }

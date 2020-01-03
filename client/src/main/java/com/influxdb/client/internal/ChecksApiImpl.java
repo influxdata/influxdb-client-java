@@ -28,8 +28,6 @@ import javax.annotation.Nonnull;
 import com.influxdb.Arguments;
 import com.influxdb.client.ChecksApi;
 import com.influxdb.client.FindOptions;
-import com.influxdb.client.domain.BuilderConfig;
-import com.influxdb.client.domain.BuilderTagsType;
 import com.influxdb.client.domain.Check;
 import com.influxdb.client.domain.CheckPatch;
 import com.influxdb.client.domain.CheckStatusLevel;
@@ -66,7 +64,6 @@ final class ChecksApiImpl extends AbstractRestClient implements ChecksApi {
     @Override
     public ThresholdCheck createThresholdCheck(@Nonnull final String name,
                                                @Nonnull final String query,
-                                               @Nonnull final String field,
                                                @Nonnull final String every,
                                                @Nonnull final String messageTemplate,
                                                @Nonnull final Threshold threshold,
@@ -76,14 +73,13 @@ final class ChecksApiImpl extends AbstractRestClient implements ChecksApi {
 
         List<Threshold> thresholds = Collections.singletonList(threshold);
 
-        return createThresholdCheck(name, query, field, every, messageTemplate, thresholds, orgID);
+        return createThresholdCheck(name, query, every, messageTemplate, thresholds, orgID);
     }
 
     @Nonnull
     @Override
     public ThresholdCheck createThresholdCheck(@Nonnull final String name,
                                                @Nonnull final String query,
-                                               @Nonnull final String field,
                                                @Nonnull final String every,
                                                @Nonnull final String messageTemplate,
                                                @Nonnull final List<Threshold> thresholds,
@@ -91,7 +87,6 @@ final class ChecksApiImpl extends AbstractRestClient implements ChecksApi {
 
         Arguments.checkNonEmpty(name, "name");
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(field, "field");
         Arguments.checkDuration(every, "every");
         Arguments.checkNonEmpty(messageTemplate, "messageTemplate");
         Arguments.checkNotNull(thresholds, "thresholds");
@@ -103,7 +98,7 @@ final class ChecksApiImpl extends AbstractRestClient implements ChecksApi {
                 .name(name)
                 .orgID(orgID)
                 .every(every)
-                .query(createDashboardQuery(query, field))
+                .query(createDashboardQuery(query))
                 .statusMessageTemplate(messageTemplate)
                 .status(TaskStatusType.ACTIVE);
 
@@ -114,7 +109,6 @@ final class ChecksApiImpl extends AbstractRestClient implements ChecksApi {
     @Override
     public DeadmanCheck createDeadmanCheck(@Nonnull final String name,
                                            @Nonnull final String query,
-                                           @Nonnull final String field,
                                            @Nonnull final String every,
                                            @Nonnull final String timeSince,
                                            @Nonnull final String staleTime,
@@ -124,7 +118,6 @@ final class ChecksApiImpl extends AbstractRestClient implements ChecksApi {
 
         Arguments.checkNonEmpty(name, "name");
         Arguments.checkNonEmpty(query, "query");
-        Arguments.checkNonEmpty(field, "field");
         Arguments.checkDuration(every, "every");
         Arguments.checkDuration(timeSince, "timeSince");
         Arguments.checkDuration(staleTime, "staleTime");
@@ -140,7 +133,7 @@ final class ChecksApiImpl extends AbstractRestClient implements ChecksApi {
                 .name(name)
                 .every(every)
                 .orgID(orgID)
-                .query(createDashboardQuery(query, field))
+                .query(createDashboardQuery(query))
                 .statusMessageTemplate(messageTemplate)
                 .status(TaskStatusType.ACTIVE);
 
@@ -296,12 +289,9 @@ final class ChecksApiImpl extends AbstractRestClient implements ChecksApi {
     }
 
     @Nonnull
-    private DashboardQuery createDashboardQuery(@Nonnull final String query, @Nonnull final String field) {
+    private DashboardQuery createDashboardQuery(@Nonnull final String query) {
         return new DashboardQuery()
                 .editMode(QueryEditMode.ADVANCED)
-                .text(query)
-                .builderConfig(new BuilderConfig()
-                        .addTagsItem(new BuilderTagsType().key("_field").addValuesItem(field))
-                );
+                .text(query);
     }
 }

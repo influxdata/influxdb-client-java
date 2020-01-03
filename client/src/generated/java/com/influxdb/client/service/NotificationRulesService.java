@@ -70,7 +70,7 @@ public interface NotificationRulesService {
    * @param offset  (optional)
    * @param limit  (optional, default to 20)
    * @param checkID Only show notifications that belong to the specific check ID. (optional)
-   * @param tag Only show notification rules that match a tag pair. Uses &#x60;AND&#x60; to specify multiple tags. (optional)
+   * @param tag Only return notification rules that \&quot;would match\&quot; statuses which contain the tag key value pairs provided. (optional)
    * @return Call&lt;NotificationRules&gt;
    */
   @GET("api/v2/notificationRules")

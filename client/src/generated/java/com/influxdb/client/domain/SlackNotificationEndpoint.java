@@ -52,7 +52,7 @@ public class SlackNotificationEndpoint extends NotificationEndpoint {
    * Specifies the URL of the Slack endpoint. Specify either &#x60;URL&#x60; or &#x60;Token&#x60;.
    * @return url
   **/
-  @ApiModelProperty(value = "Specifies the URL of the Slack endpoint. Specify either `URL` or `Token`.")
+  @ApiModelProperty(required = true, value = "Specifies the URL of the Slack endpoint. Specify either `URL` or `Token`.")
   public String getUrl() {
     return url;
   }

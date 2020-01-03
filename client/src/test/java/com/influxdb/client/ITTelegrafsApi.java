@@ -33,17 +33,13 @@ import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceOwner;
 import com.influxdb.client.domain.Telegraf;
-import com.influxdb.client.domain.TelegrafPluginInputCpu;
-import com.influxdb.client.domain.TelegrafPluginInputKernel;
-import com.influxdb.client.domain.TelegrafPluginOutputInfluxDBV2;
-import com.influxdb.client.domain.TelegrafPluginOutputInfluxDBV2Config;
-import com.influxdb.client.domain.TelegrafRequestPlugin;
+import com.influxdb.client.domain.TelegrafPlugin;
 import com.influxdb.client.domain.User;
 import com.influxdb.exceptions.NotFoundException;
 
+import com.moandjiezana.toml.Toml;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -73,107 +69,102 @@ class ITTelegrafsApi extends AbstractITClientTest {
 
         String name = generateName("TelegrafConfig");
 
-        TelegrafRequestPlugin output = newOutputPlugin();
-        TelegrafRequestPlugin cpu = newCpuPlugin();
+        TelegrafPlugin output = newOutputPlugin();
+        TelegrafPlugin cpu = newCpuPlugin();
 
         Telegraf telegrafConfig = telegrafsApi
-                .createTelegraf(name, "test-config", organization, 1_000, output, cpu);
+                .createTelegraf(name, "test-config", organization, Arrays.asList(cpu, output));
 
         Assertions.assertThat(telegrafConfig).isNotNull();
         Assertions.assertThat(telegrafConfig.getName()).isEqualTo(name);
         Assertions.assertThat(telegrafConfig.getDescription()).isEqualTo("test-config");
         Assertions.assertThat(telegrafConfig.getOrgID()).isEqualTo(organization.getId());
-        Assertions.assertThat(telegrafConfig.getAgent()).isNotNull();
-        Assertions.assertThat(telegrafConfig.getAgent().getCollectionInterval()).isEqualTo(1_000);
-        Assertions.assertThat(telegrafConfig.getPlugins()).hasSize(2);
 
-        TelegrafPluginOutputInfluxDBV2 outputResult = (TelegrafPluginOutputInfluxDBV2) telegrafConfig.getPlugins().get(0);
-        Assertions.assertThat(outputResult.getName()).isEqualTo(TelegrafPluginOutputInfluxDBV2.NameEnum.INFLUXDB_V2);
-        Assertions.assertThat(outputResult.getComment()).isEqualTo("Output to Influx 2.0");
-        Assertions.assertThat(outputResult.getType()).isEqualTo(TelegrafRequestPlugin.TypeEnum.OUTPUT);
-        
-        TelegrafPluginInputCpu cpuResult = (TelegrafPluginInputCpu) telegrafConfig.getPlugins().get(1);
-        Assertions.assertThat(cpuResult.getName()).isEqualTo(TelegrafPluginInputCpu.NameEnum.CPU);
-        Assertions.assertThat(cpuResult.getType()).isEqualTo(TelegrafRequestPlugin.TypeEnum.INPUT);
+        Assertions.assertThat(telegrafConfig.getMetadata()).isNotNull();
+        Assertions.assertThat(telegrafConfig.getMetadata().getBuckets()).isNotNull();
+        Assertions.assertThat(telegrafConfig.getMetadata().getBuckets()).hasSize(1);
 
-        Assertions.assertThat(telegrafConfig.getLinks().getSelf()).isEqualTo("/api/v2/telegrafs/" + telegrafConfig.getId());
-        Assertions.assertThat(telegrafConfig.getLinks().getLabels()).isEqualTo("/api/v2/telegrafs/" + telegrafConfig.getId() + "/labels");
-        Assertions.assertThat(telegrafConfig.getLinks().getMembers()).isEqualTo("/api/v2/telegrafs/" + telegrafConfig.getId() + "/members");
-        Assertions.assertThat(telegrafConfig.getLinks().getOwners()).isEqualTo("/api/v2/telegrafs/" + telegrafConfig.getId() + "/owners");
+        Toml toml = new Toml().read(telegrafConfig.getConfig());
+
+        Toml agent = toml.getTable("agent");
+        Assertions.assertThat(agent).isNotNull();
+        Assertions.assertThat(agent.getString("interval")).isEqualTo("10s");
+        Assertions.assertThat(agent.getBoolean("round_interval")).isTrue();
+        Assertions.assertThat(agent.getLong("metric_batch_size")).isEqualTo(1000);
+        Assertions.assertThat(agent.getLong("metric_buffer_limit")).isEqualTo(10000);
+        Assertions.assertThat(agent.getString("collection_jitter")).isEqualTo("0s");
+        Assertions.assertThat(agent.getString("flush_jitter")).isEqualTo("0s");
+        Assertions.assertThat(agent.getString("precision")).isEqualTo("");
+        Assertions.assertThat(agent.getBoolean("omit_hostname")).isFalse();
+
+        List<HashMap<String, Object>> outputs = toml.getList("outputs.influxdb_v2");
+        Assertions.assertThat(outputs).hasSize(1);
+        Assertions.assertThat(outputs.get(0)).hasEntrySatisfying("bucket", value -> Assertions.assertThat(value).isEqualTo("my-bucket"));
+        Assertions.assertThat(outputs.get(0)).hasEntrySatisfying("organization", value -> Assertions.assertThat(value).isEqualTo("my-org"));
+        Assertions.assertThat(outputs.get(0)).hasEntrySatisfying("token", value -> Assertions.assertThat(value).isEqualTo("$INFLUX_TOKEN"));
+        Assertions.assertThat(outputs.get(0)).hasEntrySatisfying("urls", value -> Assertions.assertThat(value).isEqualTo(Arrays.asList("http://127.0.0.1:9999")));
+
+        List<HashMap<String, Object>> inputs = toml.getList("inputs.cpu");
+        Assertions.assertThat(inputs).hasSize(1);
+        Assertions.assertThat(inputs.get(0)).hasEntrySatisfying("totalcpu", value -> Assertions.assertThat(value).isEqualTo(true));
+        Assertions.assertThat(inputs.get(0)).hasEntrySatisfying("collect_cpu_time", value -> Assertions.assertThat(value).isEqualTo(false));
+        Assertions.assertThat(inputs.get(0)).hasEntrySatisfying("report_active", value -> Assertions.assertThat(value).isEqualTo(false));
+        Assertions.assertThat(inputs.get(0)).hasEntrySatisfying("percpu", value -> Assertions.assertThat(value).isEqualTo(true));
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/12672
     void createTelegrafWithCustomPlugin() {
 
         String name = generateName("TelegrafConfig");
 
-        TelegrafRequestPlugin output = newOutputPlugin();
-
-        TelegrafRequestPlugin<String, Map<String, String>> custom = new TelegrafRequestPlugin<>();
-        custom.setName("ping-plugin");
-        custom.setType(TelegrafRequestPlugin.TypeEnum.INPUT);
-
-        HashMap<String, String> config = new HashMap<>();
-        config.put("bin", "/sbin/ping");
-        config.put("count", "10");
-        config.put("host", "8.8.8.8");
-        custom.setConfig(config);
+        TelegrafPlugin custom = new TelegrafPlugin().type(TelegrafPlugin.TypeEnum.INPUTS).name("custom")
+                .putConfigItem("bin", "/sbin/ping")
+                .putConfigItem("count", 10)
+                .putConfigItem("host", "8.8.8.8");
 
         Telegraf telegrafConfig = telegrafsApi
-                .createTelegraf(name, "test-config", organization, 1_000, output, custom);
+                .createTelegraf(name, "test-config", organization.getId(), Collections.singletonList(custom));
 
-        Assertions.assertThat(telegrafConfig.getPlugins()).hasSize(2);
-        TelegrafRequestPlugin telegrafPlugin = telegrafConfig.getPlugins().get(1);
-        Assertions.assertThat(telegrafPlugin.getName()).isEqualTo("ping-plugin");
-        Assertions.assertThat(telegrafPlugin.getType()).isEqualTo(TelegrafRequestPlugin.TypeEnum.INPUT);
+        Toml toml = new Toml().read(telegrafConfig.getConfig());
 
-        Map<String, String> configResponse = (Map<String, String>) telegrafPlugin.getConfig();
-        Assertions.assertThat(configResponse)
+        List<HashMap<String, Object>> inputs = toml.getList("inputs.custom");
+        Assertions.assertThat(inputs.get(0))
                 .hasEntrySatisfying("bin", value -> Assertions.assertThat(value).isEqualTo("/sbin/ping"))
-                .hasEntrySatisfying("count", value -> Assertions.assertThat(value).isEqualTo("10"))
+                .hasEntrySatisfying("count", value -> Assertions.assertThat(value).isEqualTo(10L))
                 .hasEntrySatisfying("host", value -> Assertions.assertThat(value).isEqualTo("8.8.8.8"));
     }
 
     @Test
     void pluginWithoutConfiguration() {
 
-        String name = generateName("TelegrafConfig");
-
-        TelegrafRequestPlugin output = newOutputPlugin();
-        TelegrafRequestPlugin kernel = newKernelPlugin();
-
         Telegraf telegrafConfig = telegrafsApi
-                .createTelegraf(name, "test-config", organization, 1_000, output, kernel);
+                .createTelegraf(generateName("tc"), "test-config", organization, Arrays.asList(newOutputPlugin(), newKernelPlugin()));
 
-        Assertions.assertThat(telegrafConfig.getPlugins()).hasSize(2);
+        Toml toml = new Toml().read(telegrafConfig.getConfig());
+        Assertions.assertThat(toml.contains("inputs.kernel")).isTrue();
     }
 
     @Test
     void updateTelegrafConfig() {
 
         Telegraf telegrafConfig = telegrafsApi
-                .createTelegraf(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+                .createTelegraf(generateName("tc"), "test-config", organization, Arrays.asList(newOutputPlugin(), newKernelPlugin()));
 
+        Assertions.assertThat(telegrafConfig.getConfig()).isNotEqualTo("my-updated-config");
         telegrafConfig.setDescription("updated");
-        telegrafConfig.getAgent().setCollectionInterval(500);
-        telegrafConfig.getPlugins().remove(0);
+        telegrafConfig.setConfig("my-updated-config");
 
         telegrafConfig = telegrafsApi.updateTelegraf(telegrafConfig);
 
         Assertions.assertThat(telegrafConfig.getDescription()).isEqualTo("updated");
-        Assertions.assertThat(telegrafConfig.getAgent().getCollectionInterval()).isEqualTo(500);
-        Assertions.assertThat(telegrafConfig.getPlugins()).hasSize(1);
+        Assertions.assertThat(telegrafConfig.getConfig()).isEqualTo("my-updated-config");
     }
 
     @Test
     void deleteTelegrafConfig() {
 
-        List<TelegrafRequestPlugin> plugins = Arrays.asList(newOutputPlugin(), newCpuPlugin());
-
         Telegraf createdConfig = telegrafsApi
-                .createTelegraf(generateName("tc"), "test-config", organization, 1_000, plugins);
+                .createTelegraf(generateName("tc"), "test-config", organization, Arrays.asList(newOutputPlugin(), newCpuPlugin()));
         Assertions.assertThat(createdConfig).isNotNull();
 
         Telegraf foundTelegrafConfig = telegrafsApi.findTelegrafByID(createdConfig.getId());
@@ -199,7 +190,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
     void findTelegrafConfigByID() {
 
         Telegraf telegrafConfig = telegrafsApi
-                .createTelegraf(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+                .createTelegraf(generateName("tc"), "test-config", organization, Arrays.asList(newOutputPlugin(), newCpuPlugin()));
 
         Telegraf telegrafConfigByID = telegrafsApi.findTelegrafByID(telegrafConfig.getId());
 
@@ -208,8 +199,8 @@ class ITTelegrafsApi extends AbstractITClientTest {
         Assertions.assertThat(telegrafConfigByID.getName()).isEqualTo(telegrafConfig.getName());
         Assertions.assertThat(telegrafConfigByID.getOrgID()).isEqualTo(telegrafConfig.getOrgID());
         Assertions.assertThat(telegrafConfigByID.getDescription()).isEqualTo(telegrafConfig.getDescription());
-        Assertions.assertThat(telegrafConfigByID.getAgent().getCollectionInterval()).isEqualTo(1_000);
-        Assertions.assertThat(telegrafConfigByID.getPlugins()).hasSize(2);
+        Assertions.assertThat(telegrafConfigByID.getConfig()).isEqualTo(telegrafConfig.getConfig());
+        Assertions.assertThat(telegrafConfigByID.getMetadata().getBuckets()).isEqualTo(telegrafConfig.getMetadata().getBuckets());
     }
 
     @Test
@@ -231,7 +222,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
         Assertions.assertThat(telegrafConfigs).hasSize(0);
 
         telegrafsApi
-                .createTelegraf(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+                .createTelegraf(generateName("tc"), "test-config", organization, Arrays.asList(newOutputPlugin(), newCpuPlugin()));
 
         telegrafConfigs = telegrafsApi.findTelegrafsByOrg(organization);
 
@@ -246,7 +237,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
         int size = telegrafsApi.findTelegrafs().size();
 
         telegrafsApi
-                .createTelegraf(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+                .createTelegraf(generateName("tc"), "test-config", organization, Arrays.asList(newOutputPlugin(), newCpuPlugin()));
 
         List<Telegraf> telegrafConfigs = telegrafsApi.findTelegrafs();
         Assertions.assertThat(telegrafConfigs).hasSize(size + 1);
@@ -256,7 +247,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
     void getTOML() {
 
         Telegraf telegrafConfig = telegrafsApi
-                .createTelegraf(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+                .createTelegraf(generateName("tc"), "test-config", organization, Arrays.asList(newOutputPlugin(), newCpuPlugin()));
 
         String toml = telegrafsApi.getTOML(telegrafConfig);
 
@@ -278,7 +269,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
     void member() {
 
         Telegraf telegrafConfig = telegrafsApi
-                .createTelegraf(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+                .createTelegraf(generateName("tc"), "test-config", organization, Arrays.asList(newOutputPlugin(), newCpuPlugin()));
 
         List<ResourceMember> members = telegrafsApi.getMembers(telegrafConfig);
         Assertions.assertThat(members).hasSize(0);
@@ -307,7 +298,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
     void owner() {
 
         Telegraf telegrafConfig = telegrafsApi
-                .createTelegraf(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+                .createTelegraf(generateName("tc"), "test-config", organization, Arrays.asList(newOutputPlugin(), newCpuPlugin()));
 
         List<ResourceOwner> owners = telegrafsApi.getOwners(telegrafConfig);
         Assertions.assertThat(owners).hasSize(1);
@@ -339,7 +330,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
         LabelsApi labelsApi = influxDBClient.getLabelsApi();
 
         Telegraf telegrafConfig = telegrafsApi
-                .createTelegraf(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+                .createTelegraf(generateName("tc"), "test-config", organization, Arrays.asList(newOutputPlugin(), newCpuPlugin()));
 
         Map<String, String> properties = new HashMap<>();
         properties.put("color", "green");
@@ -371,7 +362,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
     void labelAddNotExists() {
 
         Telegraf telegrafConfig = telegrafsApi
-                .createTelegraf(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+                .createTelegraf(generateName("tc"), "test-config", organization, Arrays.asList(newOutputPlugin(), newCpuPlugin()));
 
         Assertions.assertThatThrownBy(() -> telegrafsApi.addLabel("020f755c3c082000", telegrafConfig.getId()))
                 .isInstanceOf(NotFoundException.class);
@@ -381,7 +372,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
     void labelDeleteNotExists() {
 
         Telegraf telegrafConfig = telegrafsApi
-                .createTelegraf(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
+                .createTelegraf(generateName("tc"), "test-config", organization, Arrays.asList(newOutputPlugin(), newCpuPlugin()));
 
         telegrafsApi.deleteLabel("020f755c3c082000", telegrafConfig.getId());
     }
@@ -390,8 +381,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
     void cloneTelegrafConfig() {
 
         Telegraf source = telegrafsApi
-                .createTelegraf(generateName("tc"), "test-config", organization, 1_000, newCpuPlugin(), newOutputPlugin());
-
+                .createTelegraf(generateName("tc"), "test-config", organization, Arrays.asList(newOutputPlugin(), newCpuPlugin()));
         String name = generateName("cloned");
 
         Map<String, String> properties = new HashMap<>();
@@ -407,10 +397,8 @@ class ITTelegrafsApi extends AbstractITClientTest {
         Assertions.assertThat(cloned.getName()).isEqualTo(name);
         Assertions.assertThat(cloned.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(cloned.getDescription()).isEqualTo(source.getDescription());
-        Assertions.assertThat(cloned.getAgent().getCollectionInterval()).isEqualTo(source.getAgent().getCollectionInterval());
-        Assertions.assertThat(cloned.getPlugins()).hasSize(2);
-        Assertions.assertThat(cloned.getPlugins().get(0).getName()).isEqualTo(TelegrafPluginInputCpu.NameEnum.CPU);
-        Assertions.assertThat(cloned.getPlugins().get(1).getName()).isEqualTo(TelegrafPluginOutputInfluxDBV2.NameEnum.INFLUXDB_V2);
+        Assertions.assertThat(cloned.getConfig()).isEqualTo(source.getConfig());
+        Assertions.assertThat(cloned.getMetadata().getBuckets()).isEqualTo(source.getMetadata().getBuckets());
 
         List<Label> labels = telegrafsApi.getLabels(cloned);
         Assertions.assertThat(labels).hasSize(1);
@@ -425,33 +413,32 @@ class ITTelegrafsApi extends AbstractITClientTest {
     }
 
     @Nonnull
-    private TelegrafRequestPlugin newCpuPlugin() {
-
-        TelegrafPluginInputCpu cpu = new TelegrafPluginInputCpu();
-
-        return cpu;
+    private TelegrafPlugin newCpuPlugin() {
+        return new TelegrafPlugin()
+                .type(TelegrafPlugin.TypeEnum.INPUTS)
+                .name("cpu")
+                .putConfigItem("percpu", true)
+                .putConfigItem("totalcpu", true)
+                .putConfigItem("collect_cpu_time", false)
+                .putConfigItem("report_active", false)
+                .putConfigItem("avoid_null", null);
     }
 
     @Nonnull
-    private TelegrafRequestPlugin newKernelPlugin() {
-
-        TelegrafPluginInputKernel kernel = new TelegrafPluginInputKernel();
-
-        return kernel;
+    private TelegrafPlugin newKernelPlugin() {
+        return new TelegrafPlugin().type(TelegrafPlugin.TypeEnum.INPUTS).name("kernel");
     }
 
     @Nonnull
-    private TelegrafRequestPlugin newOutputPlugin() {
+    private TelegrafPlugin newOutputPlugin() {
 
-        TelegrafPluginOutputInfluxDBV2 output = new TelegrafPluginOutputInfluxDBV2();
-        output.setComment("Output to Influx 2.0");
-        output.setConfig(new TelegrafPluginOutputInfluxDBV2Config());
-        output.getConfig().setOrganization("my-org");
-        output.getConfig().setBucket("my-bucket");
-        output.getConfig().setUrls(Collections.singletonList("http://127.0.0.1:9999"));
-        output.getConfig().setToken("$INFLUX_TOKEN");
-
-        return output;
+        return new TelegrafPlugin()
+                .type(TelegrafPlugin.TypeEnum.OUTPUTS)
+                .name("influxdb_v2")
+                .description("my instance")
+                .putConfigItem("organization", "my-org")
+                .putConfigItem("bucket", "my-bucket")
+                .putConfigItem("token", "$INFLUX_TOKEN")
+                .putConfigItem("urls", Collections.singletonList("http://127.0.0.1:9999"));
     }
-
 }
