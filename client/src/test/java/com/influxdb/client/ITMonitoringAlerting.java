@@ -33,7 +33,6 @@ import com.influxdb.client.domain.RuleStatusLevel;
 import com.influxdb.client.domain.SlackNotificationEndpoint;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
-
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
@@ -41,7 +40,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -71,7 +69,7 @@ class ITMonitoringAlerting extends AbstractITClientTest {
 
     @Test
     //TODO fix CI
-    @Disabled
+//    @Disabled
     public void createMonitoringAndAlerting() throws InterruptedException {
 
         Organization org = findMyOrg();
@@ -90,6 +88,7 @@ class ITMonitoringAlerting extends AbstractITClientTest {
                 + "|> filter(fn: (r) => r._measurement == \"stock\")  "
                 + "|> filter(fn: (r) => r.company == \"zyz\")  "
                 + "|> aggregateWindow(every: 5s, fn: mean)  "
+                + "|> filter(fn: (r) => r._field == \"current\")  "
                 + "|> yield(name: \"mean\")";
 
         LesserThreshold threshold = new LesserThreshold();

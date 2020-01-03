@@ -46,7 +46,6 @@ import com.influxdb.client.domain.Threshold;
 import com.influxdb.client.domain.ThresholdCheck;
 import com.influxdb.client.service.ChecksService;
 import com.influxdb.internal.AbstractRestClient;
-
 import retrofit2.Call;
 
 /**
@@ -302,6 +301,7 @@ final class ChecksApiImpl extends AbstractRestClient implements ChecksApi {
                 .text(query)
                 .builderConfig(new BuilderConfig()
                         .addTagsItem(new BuilderTagsType().key("_field").addValuesItem(field))
-                );
+                )
+                ;
     }
 }
