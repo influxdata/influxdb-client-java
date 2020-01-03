@@ -65,6 +65,7 @@ class FilterFluxTest {
         Restrictions restriction = Restrictions.and(
                 Restrictions.measurement().equal("mem"),
                 Restrictions.field().equal("usage_system"),
+                Restrictions.value().exists(),
                 Restrictions.tag("service").equal("app-server")
         );
 
@@ -74,7 +75,7 @@ class FilterFluxTest {
                 .range(-4L, ChronoUnit.HOURS)
                 .count();
 
-        String expected = "from(bucket:\"telegraf\") |> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"usage_system\" and r[\"service\"] == \"app-server\")) |> "
+        String expected = "from(bucket:\"telegraf\") |> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"usage_system\" and exists r[\"_value\"] and r[\"service\"] == \"app-server\")) |> "
                 + "range(start:-4h) |> count()";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
