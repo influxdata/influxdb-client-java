@@ -127,9 +127,6 @@ class ITChecksApi extends AbstractITClientTest {
         Assertions.assertThat(threshold.getUpdatedAt()).isAfter(now);
         Assertions.assertThat(threshold.getQuery()).isNotNull();
         Assertions.assertThat(threshold.getQuery().getText()).isEqualTo("from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()");
-        Assertions.assertThat(threshold.getQuery().getBuilderConfig().getTags().get(0).getKey()).isEqualTo("_field");
-        Assertions.assertThat(threshold.getQuery().getBuilderConfig().getTags().get(0).getValues()).hasSize(1);
-        Assertions.assertThat(threshold.getQuery().getBuilderConfig().getTags().get(0).getValues().get(0)).isEqualTo("usage_user");
         Assertions.assertThat(threshold.getStatus()).isEqualTo(TaskStatusType.ACTIVE);
         Assertions.assertThat(threshold.getEvery()).isEqualTo("1h");
         Assertions.assertThat(threshold.getOffset()).isBlank();
@@ -175,9 +172,6 @@ class ITChecksApi extends AbstractITClientTest {
         Assertions.assertThat(deadman.getUpdatedAt()).isAfter(now);
         Assertions.assertThat(deadman.getQuery()).isNotNull();
         Assertions.assertThat(deadman.getQuery().getText()).isEqualTo("from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()");
-        Assertions.assertThat(deadman.getQuery().getBuilderConfig().getTags().get(0).getKey()).isEqualTo("_field");
-        Assertions.assertThat(deadman.getQuery().getBuilderConfig().getTags().get(0).getValues()).hasSize(1);
-        Assertions.assertThat(deadman.getQuery().getBuilderConfig().getTags().get(0).getValues().get(0)).isEqualTo("usage_user");
         Assertions.assertThat(deadman.getStatus()).isEqualTo(TaskStatusType.ACTIVE);
         Assertions.assertThat(deadman.getEvery()).isEqualTo("15m");
         Assertions.assertThat(deadman.getOffset()).isBlank();
