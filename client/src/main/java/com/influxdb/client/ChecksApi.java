@@ -46,7 +46,6 @@ public interface ChecksApi {
      *
      * @param name            the check name
      * @param query           The text of the flux query
-     * @param field           The field name uses for check
      * @param every           Check repetition interval
      * @param messageTemplate template that is used to generate and write a status message
      * @param threshold      condition for that specific status
@@ -56,7 +55,6 @@ public interface ChecksApi {
     @Nonnull
     ThresholdCheck createThresholdCheck(@Nonnull final String name,
                                         @Nonnull final String query,
-                                        @Nonnull final String field,
                                         @Nonnull final String every,
                                         @Nonnull final String messageTemplate,
                                         @Nonnull final Threshold threshold,
@@ -67,7 +65,6 @@ public interface ChecksApi {
      *
      * @param name            the check name
      * @param query           The text of the flux query
-     * @param field           The field name uses for check
      * @param every           Check repetition interval
      * @param messageTemplate template that is used to generate and write a status message
      * @param thresholds      conditions for that specific status
@@ -77,7 +74,6 @@ public interface ChecksApi {
     @Nonnull
     ThresholdCheck createThresholdCheck(@Nonnull final String name,
                                         @Nonnull final String query,
-                                        @Nonnull final String field,
                                         @Nonnull final String every,
                                         @Nonnull final String messageTemplate,
                                         @Nonnull final List<Threshold> thresholds,
@@ -89,7 +85,6 @@ public interface ChecksApi {
      *
      * @param name            the check name
      * @param query           The text of the flux query
-     * @param field           The field name uses for check
      * @param every           Check repetition interval
      * @param timeSince       string duration before deadman triggers
      * @param staleTime       string duration for time that a series is considered stale and should not trigger deadman
@@ -101,7 +96,6 @@ public interface ChecksApi {
     @Nonnull
     DeadmanCheck createDeadmanCheck(@Nonnull final String name,
                                     @Nonnull final String query,
-                                    @Nonnull final String field,
                                     @Nonnull final String every,
                                     @Nonnull final String timeSince,
                                     @Nonnull final String staleTime,

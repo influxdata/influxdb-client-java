@@ -88,7 +88,6 @@ class ITChecksApi extends AbstractITClientTest {
         List<Threshold> thresholds = Arrays.asList(greater, lesser, range);
         ThresholdCheck threshold = checksApi.createThresholdCheck(generateName("th-check"),
                 "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
-                "usage_user",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 thresholds,
@@ -156,7 +155,6 @@ class ITChecksApi extends AbstractITClientTest {
 
         DeadmanCheck deadman = checksApi.createDeadmanCheck(generateName("deadman-check"),
                 "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
-                "usage_user",
                 "15m",
                 "90s",
                 "10m",
@@ -206,7 +204,6 @@ class ITChecksApi extends AbstractITClientTest {
 
         ThresholdCheck check = checksApi.createThresholdCheck(generateName("th-check"),
                 "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
-                "usage_user",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 Collections.singletonList(greater),
@@ -244,7 +241,6 @@ class ITChecksApi extends AbstractITClientTest {
 
         Check created = checksApi.createThresholdCheck(generateName("th-check"),
                 "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
-                "usage_user",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 Collections.singletonList(greater),
@@ -275,7 +271,6 @@ class ITChecksApi extends AbstractITClientTest {
 
         Check check = checksApi.createThresholdCheck(generateName("th-check"),
                 "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
-                "usage_user",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 Collections.singletonList(greater),
@@ -303,7 +298,6 @@ class ITChecksApi extends AbstractITClientTest {
 
         Check check = checksApi.createThresholdCheck(generateName("th-check"),
                 "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
-                "usage_user",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 Collections.singletonList(greater),
@@ -343,7 +337,6 @@ class ITChecksApi extends AbstractITClientTest {
 
         Check check = checksApi.createThresholdCheck(generateName("th-check"),
                 "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
-                "usage_user",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 Collections.singletonList(greater),
@@ -361,7 +354,6 @@ class ITChecksApi extends AbstractITClientTest {
 
         Check check = checksApi.createThresholdCheck(generateName("th-check"),
                 "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
-                "usage_user",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 Collections.singletonList(greater),
@@ -380,7 +372,6 @@ class ITChecksApi extends AbstractITClientTest {
 
         checksApi.createThresholdCheck(generateName("th-check"),
                 "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
-                "usage_user",
                 "1h",
                 "Check: ${ r._check_name } is: ${ r._level }",
                 Collections.singletonList(greater),
@@ -401,7 +392,6 @@ class ITChecksApi extends AbstractITClientTest {
                 .range(0, 20 - checksApi.findChecks(orgID).size())
                 .forEach(value -> checksApi.createThresholdCheck(generateName("th-check"),
                         "from(bucket: \"foo\") |> range(start: -1d, stop: now()) |> aggregateWindow(every: 1m, fn: mean) |> filter(fn: (r) => r._field == \"usage_user\") |> yield()",
-                        "usage_user",
                         "1h",
                         "Check: ${ r._check_name } is: ${ r._level }",
                         Collections.singletonList(greater),
