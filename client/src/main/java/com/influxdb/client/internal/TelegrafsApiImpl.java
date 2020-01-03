@@ -53,7 +53,6 @@ import com.influxdb.client.domain.Telegrafs;
 import com.influxdb.client.domain.User;
 import com.influxdb.client.service.TelegrafsService;
 import com.influxdb.internal.AbstractRestClient;
-
 import retrofit2.Call;
 
 /**
@@ -195,6 +194,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
     @Override
     @Nonnull
+    @SuppressWarnings("MagicNumber")
     public HashMap<String, Object> createAgentConfiguration() {
         HashMap<String, Object> agent = new LinkedHashMap<>();
         agent.put("interval", "10s");

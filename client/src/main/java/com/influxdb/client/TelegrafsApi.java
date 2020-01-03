@@ -179,7 +179,7 @@ public interface TelegrafsApi {
     Telegraf createTelegraf(@Nonnull final TelegrafRequest telegrafRequest);
 
     /**
-     * Created default Telegraf Agent configuration:
+     * Created default Telegraf Agent configuration.
      *
      * <pre>
      * [agent]
