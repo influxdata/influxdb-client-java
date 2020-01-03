@@ -1,5 +1,8 @@
 ## 1.4.0 [unreleased]
 
+### Features
+1. [#76](https://github.com/influxdata/influxdb-client-java/pull/76): Added exists operator to Flux restrictions
+
 ### API
 1. [#77](https://github.com/influxdata/influxdb-client-java/pull/77): Updated swagger to latest version
 
