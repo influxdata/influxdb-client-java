@@ -26,10 +26,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * NotificationEndpointDiscrimator
+ * NotificationEndpointDiscriminator
  */
 
-public class NotificationEndpointDiscrimator extends PostNotificationEndpoint {
+public class NotificationEndpointDiscriminator extends PostNotificationEndpoint {
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -51,7 +51,7 @@ public class NotificationEndpointDiscrimator extends PostNotificationEndpoint {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class NotificationEndpointDiscrimator {\n");
+    sb.append("class NotificationEndpointDiscriminator {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("}");
     return sb.toString();

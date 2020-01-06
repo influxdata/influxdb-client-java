@@ -34,7 +34,7 @@ import java.util.List;
  * NotificationEndpointBase
  */
 
-public class NotificationEndpointBase extends NotificationEndpointDiscrimator {
+public class NotificationEndpointBase extends NotificationEndpointDiscriminator {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private String id;

@@ -62,14 +62,14 @@ public class JSON {
                             getDiscriminatorValue(readElement, "type"));
             }
           })
-          .registerTypeSelector(NotificationEndpointDiscrimator.class, new TypeSelector() {
+          .registerTypeSelector(NotificationEndpointDiscriminator.class, new TypeSelector() {
             @Override
             public Class getClassForElement(JsonElement readElement) {
                 Map classByDiscriminatorValue = new HashMap();
                 classByDiscriminatorValue.put("slack".toUpperCase(Locale.ROOT), SlackNotificationEndpoint.class);
                 classByDiscriminatorValue.put("pagerduty".toUpperCase(Locale.ROOT), PagerDutyNotificationEndpoint.class);
                 classByDiscriminatorValue.put("http".toUpperCase(Locale.ROOT), HTTPNotificationEndpoint.class);
-                classByDiscriminatorValue.put("NotificationEndpointDiscrimator".toUpperCase(Locale.ROOT), NotificationEndpointDiscrimator.class);
+                classByDiscriminatorValue.put("NotificationEndpointDiscriminator".toUpperCase(Locale.ROOT), NotificationEndpointDiscriminator.class);
                 return getClassByDiscriminator(
                             classByDiscriminatorValue,
                             getDiscriminatorValue(readElement, "type"));

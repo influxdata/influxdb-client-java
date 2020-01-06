@@ -12,7 +12,7 @@ import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
 import com.influxdb.client.domain.NotificationEndpoint;
-import com.influxdb.client.domain.NotificationEndpointDiscrimator;
+import com.influxdb.client.domain.NotificationEndpointDiscriminator;
 import com.influxdb.client.domain.NotificationEndpointUpdate;
 import com.influxdb.client.domain.NotificationEndpoints;
 import com.influxdb.client.domain.PostNotificationEndpoint;

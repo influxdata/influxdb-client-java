@@ -15,7 +15,7 @@ package com.influxdb.client.domain;
 
 import java.util.Objects;
 import java.util.Arrays;
-import com.influxdb.client.domain.NotificationEndpointDiscrimator;
+import com.influxdb.client.domain.NotificationEndpointDiscriminator;
 
 /**
  * PostNotificationEndpoint

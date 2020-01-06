@@ -161,7 +161,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                 for (String interfaceModelName : pluginModel.interfaces) {
 
                     CodegenModel interfaceModel = getModel((HashMap) models.get(interfaceModelName));
-                    if (!interfaceModel.name.contains("NotificationRule") && !pluginModel.classname.endsWith("Discrimator")) {
+                    if (!interfaceModel.name.contains("NotificationRule") && !pluginModel.classname.endsWith("NotificationEndpointDiscriminator")) {
 
                         interfaceModel.setParent(pluginModel.classname);
                     }
@@ -189,7 +189,7 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
                 pluginModel.setParentSchema("NotificationEndpoint");
             }
 
-            if (modelName.equals("NotificationEndpointDiscrimator")) {
+            if (modelName.equals("NotificationEndpointDiscriminator")) {
                 pluginModel.setParent("PostNotificationEndpoint");
                 pluginModel.setParentSchema("PostNotificationEndpoint");
             }
@@ -565,8 +565,8 @@ public class InfluxJavaGenerator extends JavaClientCodegen implements CodegenCon
         }
 
         if (codegenModel.name.equals("NotificationEndpointBase")) {
-            codegenModel.setParent("NotificationEndpointDiscrimator");
-            codegenModel.setParentSchema("NotificationEndpointDiscrimator");
+            codegenModel.setParent("NotificationEndpointDiscriminator");
+            codegenModel.setParentSchema("NotificationEndpointDiscriminator");
         }
 
         if (codegenModel.name.equals("PostCheck") || codegenModel.name.equals("PostNotificationEndpoint")) {

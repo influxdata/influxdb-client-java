@@ -9728,7 +9728,7 @@ components:
           enum:
             - active
             - inactive
-    NotificationEndpointDiscrimator:
+    NotificationEndpointDiscriminator:
       oneOf:
         - $ref: "#/components/schemas/SlackNotificationEndpoint"
         - $ref: "#/components/schemas/PagerDutyNotificationEndpoint"
@@ -9741,10 +9741,10 @@ components:
           http: "#/components/schemas/HTTPNotificationEndpoint"
     NotificationEndpoint:
       allOf:
-        - $ref: "#/components/schemas/NotificationEndpointDiscrimator"
+        - $ref: "#/components/schemas/NotificationEndpointDiscriminator"
     PostNotificationEndpoint:
       allOf:
-        - $ref: "#/components/schemas/NotificationEndpointDiscrimator"
+        - $ref: "#/components/schemas/NotificationEndpointDiscriminator"
     NotificationEndpoints:
       properties:
         notificationEndpoints:
