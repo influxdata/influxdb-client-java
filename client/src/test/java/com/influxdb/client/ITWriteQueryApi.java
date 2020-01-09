@@ -65,7 +65,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
     private String token;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
 
         organization = findMyOrg();
 
@@ -99,7 +99,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() {
 
         if (writeApi != null) {
             writeApi.close();
@@ -391,7 +391,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
     }
 
     @Test
-    void queryDataFromNewOrganization() throws Exception {
+    void queryDataFromNewOrganization() {
 
         // Login as operator
         influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-token".toCharArray());
@@ -620,7 +620,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
     }
 
     @Test
-    void defaultTagsPoint() throws Exception {
+    void defaultTagsPoint() {
 
         influxDBClient.close();
 
@@ -663,7 +663,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
     }
 
     @Test
-    void defaultTagsMeasurement() throws Exception {
+    void defaultTagsMeasurement() {
 
         influxDBClient.close();
 
@@ -707,7 +707,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
     }
 
     @Test
-    void defaultTagsFromConfiguration() throws Exception {
+    void defaultTagsFromConfiguration() {
 
         influxDBClient.close();
 
@@ -781,5 +781,25 @@ class ITWriteQueryApi extends AbstractITClientTest {
         Assertions.assertThat(query.get(0).getRecords().get(0).getValue()).isEqualTo(1.0D);
         Assertions.assertThat(query.get(0).getRecords().get(0).getField()).isEqualTo("level water_level");
         Assertions.assertThat(query.get(0).getRecords().get(0).getTime()).isEqualTo(Instant.ofEpochSecond(0,1));
+    }
+
+    @Test
+    public void simpleWriteAndDisposing() {
+
+        InfluxDBClient client = InfluxDBClientFactory.create(influxDB_URL, token.toCharArray());
+
+        WriteApi writeApi = client.getWriteApi();
+
+        writeApi.writeRecord(bucket.getName(), organization.getId(), WritePrecision.NS, "temperature,location=north value=60.0 1");
+        writeApi.close();
+        
+        client.close();
+
+        List<FluxTable> query = queryApi.query(
+                "from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValue()).isEqualTo(60.0);
     }
 }
