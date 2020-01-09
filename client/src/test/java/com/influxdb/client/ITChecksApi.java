@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Check;
 import com.influxdb.client.domain.CheckPatch;
 import com.influxdb.client.domain.CheckStatusLevel;
@@ -54,6 +55,8 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (18/09/2019 08:30)
  */
 @RunWith(JUnitPlatform.class)
+//TODO https://github.com/influxdata/influxdb/issues/16462
+@Disabled
 class ITChecksApi extends AbstractITClientTest {
 
     private ChecksApi checksApi;
@@ -64,11 +67,18 @@ class ITChecksApi extends AbstractITClientTest {
         checksApi = influxDBClient.getChecksApi();
         orgID = findMyOrg().getId();
 
-        checksApi.findChecks(orgID, new FindOptions())
-                .getChecks()
-                .stream()
-                .filter(check -> check.getName().endsWith("-IT"))
-                .forEach(check -> checksApi.deleteCheck(check));
+        influxDBClient.setLogLevel(LogLevel.BODY);
+        Checks checks = null;
+        try {
+            checks = checksApi.findChecks(orgID, new FindOptions());
+            checks
+                    .getChecks()
+                    .stream()
+                    .filter(check -> check.getName().endsWith("-IT"))
+                    .forEach(check -> checksApi.deleteCheck(check));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -376,7 +386,6 @@ class ITChecksApi extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
     void findChecksPaging() {
 
         GreaterThreshold greater = new GreaterThreshold();
