@@ -121,6 +121,16 @@ jobs:
 
   tests-jdk-11:
     machine: true
+    parameters:
+      influxdb-repository:
+        type: string
+        default: "influxdb"
+      influxdb-version:
+        type: string
+        default: "2.0.0-beta"
+    environment:
+      INFLUXDB_V2_REPOSITORY: << parameters.influxdb-repository >>
+      INFLUXDB_V2_VERSION: << parameters.influxdb-version >>
     steps:
       - prepare
       - client-test:
@@ -183,12 +193,19 @@ workflows:
   version: 2
   build:
     jobs:
-      - tests-jdk-8
-      - tests-jdk-11
+      - tests-jdk-8:
+          name: jdk-8-beta
+      - tests-jdk-11:
+          name: jdk-11-beta
+      - tests-jdk-11:
+          name: jdk-11-nightly
+          influxdb-repository: "influx"
+          influxdb-version: "nightly"
       - deploy-snapshot:
           requires:
-            - tests-jdk-8
-            - tests-jdk-11
+            - jdk-8-beta
+            - jdk-11-beta
+            - jdk-11-nightly
           filters:
             branches:
               only: master
