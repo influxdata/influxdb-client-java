@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Check;
 import com.influxdb.client.domain.CheckPatch;
 import com.influxdb.client.domain.CheckStatusLevel;
@@ -44,6 +43,7 @@ import com.influxdb.client.domain.TaskStatusType;
 import com.influxdb.client.domain.Threshold;
 import com.influxdb.client.domain.ThresholdCheck;
 import com.influxdb.exceptions.NotFoundException;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -67,18 +67,11 @@ class ITChecksApi extends AbstractITClientTest {
         checksApi = influxDBClient.getChecksApi();
         orgID = findMyOrg().getId();
 
-        influxDBClient.setLogLevel(LogLevel.BODY);
-        Checks checks = null;
-        try {
-            checks = checksApi.findChecks(orgID, new FindOptions());
-            checks
-                    .getChecks()
-                    .stream()
-                    .filter(check -> check.getName().endsWith("-IT"))
-                    .forEach(check -> checksApi.deleteCheck(check));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        checksApi.findChecks(orgID, new FindOptions())
+                .getChecks()
+                .stream()
+                .filter(check -> check.getName().endsWith("-IT"))
+                .forEach(check -> checksApi.deleteCheck(check));
     }
 
     @Test
