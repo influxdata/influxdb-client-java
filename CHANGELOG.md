@@ -1,4 +1,4 @@
-## 1.4.0 [unreleased]
+## 1.4.0 [2020-01-17]
 
 ### Features
 1. [#76](https://github.com/influxdata/influxdb-client-java/pull/76): Added exists operator to Flux restrictions
