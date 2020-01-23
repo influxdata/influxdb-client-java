@@ -123,14 +123,18 @@ public final class FluxColumn implements Serializable {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         final FluxColumn that = (FluxColumn) o;
-        return index == that.index &&
-            group == that.group &&
-            Objects.equals(label, that.label) &&
-            Objects.equals(dataType, that.dataType) &&
-            Objects.equals(defaultValue, that.defaultValue);
+        return index == that.index
+            && group == that.group
+            && Objects.equals(label, that.label)
+            && Objects.equals(dataType, that.dataType)
+            && Objects.equals(defaultValue, that.defaultValue);
     }
 
     @Override
