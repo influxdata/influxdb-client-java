@@ -21,6 +21,8 @@
  */
 package com.influxdb.query;
 
+import java.io.Serializable;
+import java.util.Objects;
 import java.util.StringJoiner;
 import javax.annotation.Nonnull;
 
@@ -40,7 +42,7 @@ import javax.annotation.Nonnull;
  * <li>"duration" to {@link java.time.Duration}</li>
  * </ul>
  */
-public final class FluxColumn {
+public final class FluxColumn implements Serializable {
 
     /**
      * Column index in record.
@@ -117,5 +119,22 @@ public final class FluxColumn {
                 .add("group=" + group)
                 .add("defaultValue='" + defaultValue + "'")
                 .toString();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final FluxColumn that = (FluxColumn) o;
+        return index == that.index &&
+            group == that.group &&
+            Objects.equals(label, that.label) &&
+            Objects.equals(dataType, that.dataType) &&
+            Objects.equals(defaultValue, that.defaultValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(index, label, dataType, group, defaultValue);
     }
 }

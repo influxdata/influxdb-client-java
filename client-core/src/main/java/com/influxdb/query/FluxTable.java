@@ -21,6 +21,7 @@
  */
 package com.influxdb.query;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
@@ -32,7 +33,7 @@ import javax.annotation.Nonnull;
  *
  * <a href="http://bit.ly/flux-spec#table">Specification</a>.
  */
-public final class FluxTable {
+public final class FluxTable implements Serializable {
 
     /**
      * Table column's labels and types.
