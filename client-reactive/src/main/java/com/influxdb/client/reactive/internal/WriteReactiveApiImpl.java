@@ -21,6 +21,7 @@
  */
 package com.influxdb.client.reactive.internal;
 
+import java.util.Collection;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
@@ -46,9 +47,9 @@ public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteRe
 
     WriteReactiveApiImpl(@Nonnull final WriteOptions writeOptions,
                          @Nonnull final WriteService service,
-                         @Nonnull final InfluxDBClientOptions options) {
+                         @Nonnull final InfluxDBClientOptions options, final Collection<AutoCloseable> autoCloseables) {
 
-        super(writeOptions, options, writeOptions.getWriteScheduler(), service);
+        super(writeOptions, options, writeOptions.getWriteScheduler(), service, autoCloseables);
     }
 
     @Override

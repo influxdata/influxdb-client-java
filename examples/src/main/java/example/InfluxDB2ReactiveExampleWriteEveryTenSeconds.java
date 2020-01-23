@@ -30,7 +30,6 @@ import com.influxdb.annotations.Measurement;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
-import com.influxdb.client.reactive.QueryReactiveApi;
 import com.influxdb.client.reactive.WriteReactiveApi;
 
 import io.reactivex.Flowable;
@@ -62,7 +61,6 @@ public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
 
         Thread.sleep(30_000);
 
-        writeApi.close();
         influxDBClient.close();
     }
 

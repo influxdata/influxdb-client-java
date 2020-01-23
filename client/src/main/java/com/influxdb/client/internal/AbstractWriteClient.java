@@ -22,6 +22,7 @@
 package com.influxdb.client.internal;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -60,10 +61,12 @@ import retrofit2.Response;
 /**
  * @author Jakub Bednar (bednar@github) (21/11/2018 09:26)
  */
-public abstract class AbstractWriteClient extends AbstractRestClient {
+public abstract class AbstractWriteClient extends AbstractRestClient implements AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(AbstractWriteClient.class.getName());
     private static final List<Integer> ABLE_TO_RETRY_ERRORS = Arrays.asList(429, 503);
+    private static final String CLOSED_EXCEPTION = "WriteApi is closed. "
+            + "Data should be written before calling InfluxDBClient.close or WriteApi.close.";
 
     private final WriteOptions writeOptions;
     protected final InfluxDBClientOptions options;
@@ -74,17 +77,20 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
 
     protected final MeasurementMapper measurementMapper = new MeasurementMapper();
     private final WriteService service;
+    private final Collection<AutoCloseable> autoCloseables;
 
     public AbstractWriteClient(@Nonnull final WriteOptions writeOptions,
                                @Nonnull final InfluxDBClientOptions options,
                                @Nonnull final Scheduler processorScheduler,
-                               @Nonnull final WriteService service) {
+                               @Nonnull final WriteService service,
+                               @Nonnull final Collection<AutoCloseable> autoCloseables) {
 
         Arguments.checkNotNull(options, "options");
 
         this.writeOptions = writeOptions;
         this.options = options;
         this.service = service;
+        this.autoCloseables = autoCloseables;
 
         this.flushPublisher = PublishProcessor.create();
         this.eventPublisher = PublishSubject.create();
@@ -157,6 +163,8 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
                 }, throwable -> new WriteErrorEvent(toInfluxException(throwable)));
 
         boundary.subscribe(tempBoundary);
+
+        autoCloseables.add(this);
     }
 
     @Nonnull
@@ -175,6 +183,8 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
 
         LOG.log(Level.INFO, "Flushing any cached BatchWrites before shutdown.");
 
+        autoCloseables.remove(this);
+
         processor.onComplete();
         eventPublisher.onComplete();
         flushPublisher.onComplete();
@@ -183,6 +193,10 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
     public void write(@Nonnull final String bucket,
                       @Nonnull final String organization,
                       @Nonnull final Flowable<BatchWriteDataPoint> stream) {
+
+        if (processor.hasComplete()) {
+            throw new InfluxException(CLOSED_EXCEPTION);
+        }
 
         stream.subscribe(
                 dataPoint -> write(bucket, organization, dataPoint.point.getPrecision(), Flowable.just(dataPoint)),
@@ -199,6 +213,10 @@ public abstract class AbstractWriteClient extends AbstractRestClient {
         Arguments.checkNotNull(stream, "data to write");
 
         BatchWriteOptions batchWriteOptions = new BatchWriteOptions(bucket, organization, precision);
+
+        if (processor.hasComplete()) {
+            throw new InfluxException(CLOSED_EXCEPTION);
+        }
 
         Flowable.fromPublisher(stream)
                 .map(it -> new BatchWriteItem(batchWriteOptions, it))

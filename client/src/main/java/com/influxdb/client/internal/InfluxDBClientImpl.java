@@ -117,7 +117,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
-        return new WriteApiImpl(writeOptions, retrofit.create(WriteService.class), options);
+        return new WriteApiImpl(writeOptions, retrofit.create(WriteService.class), options, autoCloseables);
     }
 
     @Nonnull

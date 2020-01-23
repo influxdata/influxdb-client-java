@@ -21,6 +21,7 @@
  */
 package com.influxdb.client.internal;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -48,9 +49,9 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
 
     WriteApiImpl(@Nonnull final WriteOptions writeOptions,
                  @Nonnull final WriteService service,
-                 @Nonnull final InfluxDBClientOptions options) {
+                 @Nonnull final InfluxDBClientOptions options, final Collection<AutoCloseable> autoCloseables) {
 
-        super(writeOptions, options, writeOptions.getWriteScheduler(), service);
+        super(writeOptions, options, writeOptions.getWriteScheduler(), service, autoCloseables);
     }
 
     @Override

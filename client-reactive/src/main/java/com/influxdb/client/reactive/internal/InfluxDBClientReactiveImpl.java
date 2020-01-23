@@ -65,7 +65,7 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
-        return new WriteReactiveApiImpl(writeOptions, retrofit.create(WriteService.class), options);
+        return new WriteReactiveApiImpl(writeOptions, retrofit.create(WriteService.class), options, autoCloseables);
     }
 
     @Nonnull

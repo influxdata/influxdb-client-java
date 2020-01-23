@@ -808,6 +808,36 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("my-top-bucket");
     }
 
+    @Test
+    public void callingClose() {
+        
+        writeApi = influxDBClient.getWriteApi();
+        writeApi.close();
+        writeApi.close();
+
+        influxDBClient.close();
+        influxDBClient.close();
+        writeApi.close();
+    }
+
+    @Test
+    public void writeToClosedClient() {
+        
+        WriteApi writeApiSelfClose = influxDBClient.getWriteApi();
+        writeApiSelfClose.close();
+
+        Assertions.assertThatThrownBy(() -> writeApiSelfClose.writeRecord("b1", "org1", WritePrecision.NS,"h2o_feet water_level=1.0 1"))
+                .isInstanceOf(InfluxException.class)
+                .hasMessage("WriteApi is closed. Data should be written before calling InfluxDBClient.close or WriteApi.close.");
+
+        WriteApi writeApiClientClose = influxDBClient.getWriteApi();
+        influxDBClient.close();
+
+        Assertions.assertThatThrownBy(() -> writeApiClientClose.writePoint("b1", "org1", Point.measurement("h2o").addField("level", 1)))
+                .isInstanceOf(InfluxException.class)
+                .hasMessage("WriteApi is closed. Data should be written before calling InfluxDBClient.close or WriteApi.close.");
+    }
+
     @Nonnull
     private String getRequestBody(@Nonnull final MockWebServer server) {
 

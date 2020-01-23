@@ -791,8 +791,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         WriteApi writeApi = client.getWriteApi();
 
         writeApi.writeRecord(bucket.getName(), organization.getId(), WritePrecision.NS, "temperature,location=north value=60.0 1");
-        writeApi.close();
-        
+
         client.close();
 
         List<FluxTable> query = queryApi.query(
