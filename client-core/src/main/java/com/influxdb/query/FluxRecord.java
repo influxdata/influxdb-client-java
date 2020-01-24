@@ -21,9 +21,11 @@
  */
 package com.influxdb.query;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.StringJoiner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,7 +38,7 @@ import com.influxdb.Arguments;
  *
  * <a href="http://bit.ly/flux-spec#record">Specification</a>.
  */
-public final class FluxRecord {
+public final class FluxRecord implements Serializable {
 
     /**
      * The Index of the table that the record belongs.
@@ -153,5 +155,24 @@ public final class FluxRecord {
                 .add("table=" + table)
                 .add("values=" + values.size())
                 .toString();
+    }
+
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final FluxRecord that = (FluxRecord) o;
+        return Objects.equals(table, that.table)
+            && Objects.equals(values, that.values);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(table, values);
     }
 }
