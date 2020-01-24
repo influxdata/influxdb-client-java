@@ -162,7 +162,9 @@ public abstract class AbstractTest {
         Response response;
         try {
             response = okHttpClient.newCall(request).execute();
-            Assertions.assertThat(response.isSuccessful()).isTrue();
+            Assertions.assertThat(response.isSuccessful())
+                    .withFailMessage("Failed response <%s>.", response)
+                    .isTrue();
 
             Thread.sleep(DEFAULT_INFLUXDB_SLEEP);
         } catch (Exception e) {

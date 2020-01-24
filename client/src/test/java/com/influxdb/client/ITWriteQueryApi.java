@@ -503,7 +503,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
-        Thread.sleep(500);
+        Thread.sleep(600);
 
         query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
