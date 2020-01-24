@@ -1,5 +1,8 @@
 ## 1.5.0 [unreleased]
 
+### Features
+1. [#33](https://github.com/influxdata/influxdb-client-java/issues/33): InfluxDBClient.close also dispose a created writeApi
+
 ## 1.4.0 [2020-01-17]
 
 ### Features

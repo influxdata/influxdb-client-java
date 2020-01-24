@@ -54,7 +54,7 @@ class ITWriteApiBlocking extends AbstractITClientTest {
     private String token;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
 
         organization = findMyOrg();
 
@@ -200,7 +200,7 @@ class ITWriteApiBlocking extends AbstractITClientTest {
     }
 
     @Test
-    void defaultTags() throws Exception {
+    void defaultTags() {
 
         influxDBClient.close();
 

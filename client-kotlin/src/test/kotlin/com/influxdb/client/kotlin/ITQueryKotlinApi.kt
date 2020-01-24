@@ -110,7 +110,6 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         val writeApi = client.writeApi
         writeApi.writeRecord(bucket.name, organization.id, WritePrecision.NS, records)
-        writeApi.close()
 
         client.close()
 

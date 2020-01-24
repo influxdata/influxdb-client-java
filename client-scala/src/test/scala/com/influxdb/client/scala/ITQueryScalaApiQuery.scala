@@ -99,7 +99,6 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
     val writeApi = client.getWriteApi
     writeApi.writeRecord(bucket.getName, organization.getId, WritePrecision.NS, records)
-    writeApi.close()
 
     client.close()
 

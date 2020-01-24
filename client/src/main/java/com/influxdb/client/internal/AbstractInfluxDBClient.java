@@ -22,6 +22,9 @@
 package com.influxdb.client.internal;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -49,7 +52,7 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
 
     private static final Logger LOG = Logger.getLogger(AbstractInfluxDBClient.class.getName());
 
-    public static final Dialect DEFAULT_DIALECT =  new Dialect().header(true)
+    public static final Dialect DEFAULT_DIALECT = new Dialect().header(true)
             .delimiter(",")
             .commentPrefix("#")
             .addAnnotationsItem(Dialect.AnnotationsEnum.DATATYPE)
@@ -64,6 +67,7 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
     protected final GzipInterceptor gzipInterceptor;
     private final AuthenticateInterceptor authenticateInterceptor;
     private final OkHttpClient okHttpClient;
+    protected final Collection<AutoCloseable> autoCloseables = new CopyOnWriteArrayList<>();
 
     public AbstractInfluxDBClient(@Nonnull final InfluxDBClientOptions options) {
 
@@ -94,6 +98,15 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
     }
 
     public void close() {
+
+        autoCloseables.stream().filter(Objects::nonNull).forEach(resource -> {
+            try {
+                resource.close();
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, String.format("Exception was thrown while closing: %s", resource), e);
+            }
+        });
+        autoCloseables.clear();
 
         //
         // signout

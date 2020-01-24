@@ -227,7 +227,6 @@ public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
 
         Thread.sleep(30_000);
 
-        writeApi.close();
         influxDBClient.close();
     }
 
