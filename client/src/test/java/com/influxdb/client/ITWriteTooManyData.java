@@ -51,7 +51,7 @@ class ITWriteTooManyData extends AbstractITWrite {
 
     private static final int WRITER_COUNT = 4;
     private static final int BATCH_SIZE = 50_000;
-    private static final int SECONDS_COUNT = 10;
+    private static final int SECONDS_COUNT = 15;
 
     @Test
     public void backpressureAndBufferConsistency() throws InterruptedException {
@@ -102,7 +102,6 @@ class ITWriteTooManyData extends AbstractITWrite {
                 .collect(Collectors.toList());
 
         Assertions.assertThat(success).isNotEmpty();
-        Assertions.assertThat(success.size()).isGreaterThan(1);
         Assertions.assertThat(success)
                 .allMatch(
                         event -> {

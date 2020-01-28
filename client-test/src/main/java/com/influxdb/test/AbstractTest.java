@@ -163,7 +163,7 @@ public abstract class AbstractTest {
         try {
             response = okHttpClient.newCall(request).execute();
             Assertions.assertThat(response.isSuccessful())
-                    .withFailMessage("Failed response <%s>.", response)
+                    .withFailMessage("Failed response <%s>. Body: <%s>", response, response.body())
                     .isTrue();
 
             Thread.sleep(DEFAULT_INFLUXDB_SLEEP);
