@@ -102,7 +102,7 @@ class ITWriteTooManyData extends AbstractITWrite {
                 .collect(Collectors.toList());
 
         Assertions.assertThat(success).isNotEmpty();
-        Assertions.assertThat(success.size()).isGreaterThan(10);
+        Assertions.assertThat(success.size()).isGreaterThan(1);
         Assertions.assertThat(success)
                 .allMatch(
                         event -> {
