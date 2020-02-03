@@ -25,11 +25,6 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
-import com.influxdb.client.domain.Authorization;
-import com.influxdb.client.domain.Bucket;
-import com.influxdb.client.domain.Organization;
-import com.influxdb.client.domain.Permission;
-import com.influxdb.client.domain.PermissionResource;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.exceptions.BadRequestException;
@@ -38,7 +33,6 @@ import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -47,51 +41,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (16/07/2019 07:13)
  */
 @RunWith(JUnitPlatform.class)
-class ITWriteApiBlocking extends AbstractITClientTest {
-
-    private Bucket bucket;
-    private Organization organization;
-    private String token;
-
-    @BeforeEach
-    void setUp() {
-
-        organization = findMyOrg();
-
-        bucket = influxDBClient.getBucketsApi()
-                .createBucket(generateName("h2o"), retentionRule(), organization);
-
-        PermissionResource resource = new PermissionResource();
-        resource.setId(bucket.getId());
-        resource.setOrgID(organization.getId());
-        resource.setType(PermissionResource.TypeEnum.BUCKETS);
-
-        //
-        // Add Permissions to read and write to the Bucket
-        //
-        Permission readBucket = new Permission();
-        readBucket.setResource(resource);
-        readBucket.setAction(Permission.ActionEnum.READ);
-
-        Permission writeBucket = new Permission();
-        writeBucket.setResource(resource);
-        writeBucket.setAction(Permission.ActionEnum.WRITE);
-
-        Authorization authorization = influxDBClient.getAuthorizationsApi()
-                .createAuthorization(organization, Arrays.asList(readBucket, writeBucket));
-
-        token = authorization.getToken();
-
-        influxDBClient.close();
-
-        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
-                .url(influxDB_URL)
-                .authenticateToken(token.toCharArray())
-                .org(organization.getId())
-                .bucket(bucket.getName())
-                .build();
-        influxDBClient = InfluxDBClientFactory.create(options);
-    }
+class ITWriteApiBlocking extends AbstractITWrite {
 
     @Test
     void write() {

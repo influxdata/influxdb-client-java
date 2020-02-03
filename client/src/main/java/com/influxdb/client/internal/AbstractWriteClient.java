@@ -26,6 +26,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -38,6 +40,7 @@ import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.client.write.Point;
 import com.influxdb.client.write.events.AbstractWriteEvent;
+import com.influxdb.client.write.events.BackpressureEvent;
 import com.influxdb.client.write.events.WriteErrorEvent;
 import com.influxdb.client.write.events.WriteRetriableErrorEvent;
 import com.influxdb.client.write.events.WriteSuccessEvent;
@@ -67,6 +70,8 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
     private static final List<Integer> ABLE_TO_RETRY_ERRORS = Arrays.asList(429, 503);
     private static final String CLOSED_EXCEPTION = "WriteApi is closed. "
             + "Data should be written before calling InfluxDBClient.close or WriteApi.close.";
+    private static final int DEFAULT_WAIT = 30_000;
+    private static final int DEFAULT_SLEEP = 25;
 
     private final WriteOptions writeOptions;
     protected final InfluxDBClientOptions options;
@@ -78,6 +83,9 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
     protected final MeasurementMapper measurementMapper = new MeasurementMapper();
     private final WriteService service;
     private final Collection<AutoCloseable> autoCloseables;
+    private final PublishProcessor<Object> tempBoundary;
+
+    private AtomicBoolean finished = new AtomicBoolean(false);
 
     public AbstractWriteClient(@Nonnull final WriteOptions writeOptions,
                                @Nonnull final InfluxDBClientOptions options,
@@ -94,30 +102,41 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
 
         this.flushPublisher = PublishProcessor.create();
         this.eventPublisher = PublishSubject.create();
+        this.tempBoundary = PublishProcessor.create();
         this.processor = PublishProcessor.create();
-
-
-        Flowable<Flowable<BatchWriteItem>> boundary = processor
-                .window(writeOptions.getFlushInterval(),
-                        TimeUnit.MILLISECONDS,
-                        processorScheduler,
-                        writeOptions.getBatchSize(),
-                        true)
-
-                .mergeWith(flushPublisher);
 
         PublishProcessor<Flowable<BatchWriteItem>> tempBoundary = PublishProcessor.create();
 
         processor
-//                .onBackpressureBuffer(
-//                        writeOptions.getBufferLimit(),
-//                        () -> publish(new BackpressureEvent()),
-//                        writeOptions.getBackpressureStrategy())
-//                .observeOn(processorScheduler)
+                //
+                // Enable Backpressure
+                //
+                .onBackpressureBuffer(
+                        writeOptions.getBufferLimit(),
+                        () -> publish(new BackpressureEvent()),
+                        writeOptions.getBackpressureStrategy())
                 //
                 // Batching
                 //
-                .window(tempBoundary)
+                .publish(connectedSource -> {
+
+                    return connectedSource
+                            .window(() -> tempBoundary)
+                            .mergeWith(Flowable.defer(() -> {
+                                connectedSource
+                                        // Buffering
+                                        .window(writeOptions.getFlushInterval(),
+                                                TimeUnit.MILLISECONDS,
+                                                processorScheduler,
+                                                writeOptions.getBatchSize(),
+                                                true)
+                                        // Flushing
+                                        .mergeWith(flushPublisher)
+                                        // Generate window
+                                        .subscribe(tempBoundary);
+                                return Flowable.empty();
+                            }));
+                })
                 //
                 // Group by key - same bucket, same org
                 //
@@ -155,14 +174,13 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                 // To WritePoints "request creator"
                 //
                 .concatMapMaybe(new ToWritePointsMaybe(processorScheduler))
+                .doFinally(() -> finished.set(true))
                 .subscribe(responseNotification -> {
 
                     if (responseNotification.isOnError()) {
                         publish(new WriteErrorEvent(toInfluxException(responseNotification.getError())));
                     }
                 }, throwable -> new WriteErrorEvent(toInfluxException(throwable)));
-
-        boundary.subscribe(tempBoundary);
 
         autoCloseables.add(this);
     }
@@ -186,8 +204,12 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         autoCloseables.remove(this);
 
         processor.onComplete();
-        eventPublisher.onComplete();
+
         flushPublisher.onComplete();
+        tempBoundary.onComplete();
+        eventPublisher.onComplete();
+
+        waitToCondition(() -> finished.get(), DEFAULT_WAIT);
     }
 
     public void write(@Nonnull final String bucket,
@@ -412,6 +434,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         }
     }
 
+    @SuppressWarnings("rawtypes")
     private final class ToWritePointsMaybe implements Function<BatchWriteItem, Maybe<Notification<Response>>> {
 
         private final Scheduler retryScheduler;
@@ -552,5 +575,20 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         }
 
         return new InfluxException(throwable);
+    }
+
+    static void waitToCondition(final Supplier<Boolean> condition, final int millis) {
+        long start = System.currentTimeMillis();
+        while (!condition.get()) {
+            try {
+                Thread.sleep(DEFAULT_SLEEP);
+            } catch (InterruptedException e) {
+                LOG.log(Level.SEVERE, "Interrupted during wait to dispose.", e);
+            }
+            if ((System.currentTimeMillis() - start) > millis) {
+                LOG.severe("The WriteApi can't be gracefully dispose! - " + millis + "ms elapsed.");
+                break;
+            }
+        }
     }
 }
