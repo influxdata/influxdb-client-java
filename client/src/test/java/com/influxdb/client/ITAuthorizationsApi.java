@@ -38,6 +38,7 @@ import com.influxdb.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -308,6 +309,8 @@ class ITAuthorizationsApi extends AbstractITClientTest {
     }
 
     @Test
+    //TODO https://github.com/influxdata/influxdb/issues/16833
+    @Disabled
     void deleteAuthorization() {
 
         Authorization createdAuthorization = authorizationsApi.createAuthorization(organization, newPermissions());
