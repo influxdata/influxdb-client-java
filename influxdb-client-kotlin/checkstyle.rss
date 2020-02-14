@@ -23,7 +23,7 @@ under the License.
     <link>https://github.com/influxdata/influxdb-client-java/tree/master/client-kotlin</link>
     <description>The Kotlin InfluxDB 2.0 Client - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2018 - 2019 InfluxData, Inc.</copyright>
+    <copyright>&#169;2018 - 2020 InfluxData, Inc.</copyright>
     <item>
       <title>File: 0,
              Errors: 0,
