@@ -83,7 +83,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>${plugin.plugin.version}</version>
+                <version>${plugin.site.version}</version>
                 <configuration>
                     <generateReports>false</generateReports>
                     <skip>true</skip>

@@ -24,41 +24,37 @@
 
 set -e
 
-echo ${TRAVIS_REPO_SLUG}
-echo ${TRAVIS_PULL_REQUEST}
-echo ${TRAVIS_BRANCH}
-
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-if [ "$TRAVIS_REPO_SLUG" == "influxdata/influxdb-client-java" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then
+# Generate Site
+cd "${SCRIPT_PATH}"/..
+mvn clean site site:stage -DskipTests
+# Copy Kotlin doc
+cp -R "${SCRIPT_PATH}"/../client-kotlin/target/dokka/ "${SCRIPT_PATH}"/../target/staging/influxdb-client-kotlin/dokka/
 
-    # Generate Site
-    cd ${SCRIPT_PATH}/..
-    mvn clean site site:stage -DskipTests
-    # Copy Kotlin doc
-    cp -R ${SCRIPT_PATH}/../client-kotlin/target/dokka/ ${SCRIPT_PATH}/../target/staging/influxdb-client-kotlin/dokka/
-    cp -R ${SCRIPT_PATH}/../target/staging ${HOME}/site
+# Copy site
+rm -rf "${HOME}"/site/*
+cp -R "${SCRIPT_PATH}"/../target/staging/ "${HOME}"/site
 
-    # Clone GitHub pages
-    cd ${HOME}
-    git config --global user.email "travis@travis-ci.org"
-    git config --global user.name "travis-ci"
+# Clone GitHub pages
+echo "Clone: gh-pages"
+cd "${HOME}"
+rm -rf "${HOME}"/gh-pages
+git clone --branch=gh-pages https://github.com/influxdata/influxdb-client-java "${HOME}"/gh-pages
 
-    echo "Clone: ${GITHUB_TOKEN} ${TRAVIS_REPO_SLUG} ${HOME}/gh-pages"
+echo "Copy site"
+# Push Site
+rm -rf "${HOME}"/gh-pages/*
+cd "${HOME}"/gh-pages
+ls
+cp -Rf "${HOME}"/site/* ./
+ls
 
-    rm -rf ${HOME}/gh-pages
-    git clone --quiet --branch=gh-pages https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG} ${HOME}/gh-pages > /dev/null
+echo "Copy CircleCI"
+cp -R "${SCRIPT_PATH}"/../.circleci/ "${HOME}"/gh-pages/
 
-    # Push Site
-    rm -rf ${HOME}/gh-pages/*
-    cd ${HOME}/gh-pages
-    ls
-    cp -Rf ${HOME}/site/* ./
-    ls
-    git add -f .
-    git commit -m "Pushed the latest Maven site to GitHub pages"
-    git push -fq origin gh-pages > /dev/null
 
-else
-    echo "Skip publishing site..."
-fi
+echo "Commit"
+git add -f .
+git commit -m "Pushed the latest Maven site to GitHub pages"
+git push -fq origin gh-pages > /dev/null

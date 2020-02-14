@@ -4,8 +4,10 @@
 [![codecov](https://codecov.io/gh/influxdata/influxdb-client-java/branch/master/graph/badge.svg)](https://codecov.io/gh/influxdata/influxdb-client-java)
 [![License](https://img.shields.io/github/license/influxdata/influxdb-client-java.svg)](https://github.com/influxdata/influxdb-client-java/blob/master/LICENSE)
 [![Maven Central](https://img.shields.io/maven-central/v/com.influxdb/influxdb-client)](https://repo1.maven.org/maven2/com/influxdb/)
+[![Maven Site](https://img.shields.io/badge/maven-site-blue)](https://influxdata.github.io/influxdb-client-java/)
 [![GitHub issues](https://img.shields.io/github/issues-raw/influxdata/influxdb-client-java.svg)](https://github.com/influxdata/influxdb-client-java/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/influxdata/influxdb-client-java.svg)](https://github.com/influxdata/influxdb-client-java/pulls)
+[![Slack Status](https://img.shields.io/badge/slack-join_chat-white.svg?logo=slack&style=social)](https://www.influxdata.com/slack)
 
 This repository contains the reference JVM clients for the InfluxDB 2.0. Currently, Java, Reactive, Kotlin and Scala clients are implemented.
 
