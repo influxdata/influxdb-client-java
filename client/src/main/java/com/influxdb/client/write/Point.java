@@ -22,16 +22,14 @@
 package com.influxdb.client.write;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.NumberFormat;
-import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
@@ -50,6 +48,11 @@ import com.influxdb.client.domain.WritePrecision;
 @NotThreadSafe
 public final class Point {
 
+    static final BigInteger NANOS_PER_SECOND = BigInteger.valueOf(1000_000_000L);
+    static final BigInteger MICRO_PER_NANOS = BigInteger.valueOf(1000L);
+    static final BigInteger MILLIS_PER_NANOS = BigInteger.valueOf(1000000L);
+    static final BigInteger SECONDS_PER_NANOS = BigInteger.valueOf(1000000000L);
+
     private static final WritePrecision DEFAULT_WRITE_PRECISION = WritePrecision.NS;
 
     private static final int MAX_FRACTION_DIGITS = 340;
@@ -66,7 +69,7 @@ public final class Point {
     private String name;
     private final Map<String, String> tags = new TreeMap<>();
     private final Map<String, Object> fields = new TreeMap<>();
-    private Long time;
+    private Number time;
     private WritePrecision precision = DEFAULT_WRITE_PRECISION;
 
     /**
@@ -176,28 +179,49 @@ public final class Point {
             return time((Long) null, precision);
         }
 
-        long longTime;
+        BigInteger convertedTime;
 
-        Duration plus = Duration.ofNanos(time.getNano()).plus(time.getEpochSecond(), ChronoUnit.SECONDS);
+        BigInteger nanos = BigInteger.valueOf(time.getEpochSecond())
+                .multiply(NANOS_PER_SECOND)
+                .add(BigInteger.valueOf(time.getNano()));
+
         switch (precision) {
 
             case NS:
-                longTime = TimeUnit.NANOSECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);
+                convertedTime = nanos;
                 break;
             case US:
-                longTime = TimeUnit.MICROSECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);
+                convertedTime = nanos.divide(MICRO_PER_NANOS);
                 break;
             case MS:
-                longTime = TimeUnit.MILLISECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);
+                convertedTime = nanos.divide(MILLIS_PER_NANOS);
                 break;
             case S:
-                longTime = TimeUnit.SECONDS.convert(plus.toNanos(), TimeUnit.NANOSECONDS);
+                convertedTime = nanos.divide(SECONDS_PER_NANOS);
                 break;
             default:
                 throw new IllegalStateException("Unsupported precision: " + precision);
         }
 
-        return time(longTime, precision);
+        return time(convertedTime, precision);
+    }
+
+    /**
+     * Updates the timestamp for the point.
+     *
+     * @param time      the timestamp
+     * @param precision the timestamp precision
+     * @return this
+     */
+    @Nonnull
+    public Point time(@Nullable final Number time, @Nonnull final WritePrecision precision) {
+
+        Arguments.checkNotNull(precision, "precision");
+
+        this.time = time;
+        this.precision = precision;
+
+        return this;
     }
 
     /**
@@ -210,10 +234,7 @@ public final class Point {
     @Nonnull
     public Point time(@Nullable final Long time, @Nonnull final WritePrecision precision) {
 
-        this.time = time;
-        this.precision = precision;
-
-        return this;
+        return time((Number) time, precision);
     }
 
     /**
@@ -356,7 +377,15 @@ public final class Point {
             return;
         }
 
-        sb.append(" ").append(this.time);
+        sb.append(" ");
+
+        if (this.time instanceof BigDecimal) {
+            sb.append(((BigDecimal) this.time).toBigInteger());
+        } else if (this.time instanceof BigInteger) {
+            sb.append(this.time);
+        } else {
+            sb.append(this.time.longValue());
+        }
     }
 
     private void escapeKey(@Nonnull final StringBuilder sb, @Nonnull final String key) {
