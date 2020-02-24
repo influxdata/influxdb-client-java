@@ -51,8 +51,6 @@ class MeasurementMapperTest {
     @Test
     void precision() {
 
-        Instant.parse("1970-01-01T00:00:10.999999999Z");
-
         Pojo pojo = new Pojo();
         pojo.tag = "value";
         pojo.value = 15;
@@ -90,6 +88,17 @@ class MeasurementMapperTest {
 
         Point point = mapper.toPoint(pojo, WritePrecision.NS);
         Assertions.assertThat(point.toLineProtocol()).isEqualTo("pojo,tag=value value=\"to-string\"");
+    }
+
+    @Test
+    void instantOver2226() {
+
+        Pojo pojo = new Pojo();
+        pojo.tag = "value";
+        pojo.value = 15;
+        pojo.timestamp = Instant.parse("3353-06-22T10:26:03.800123456Z");
+
+        Assertions.assertThat(mapper.toPoint(pojo, WritePrecision.NS).toLineProtocol()).isEqualTo("pojo,tag=value value=\"15\" 43658216763800123456");
     }
 
     @Measurement(name = "pojo")
