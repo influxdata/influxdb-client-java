@@ -475,6 +475,33 @@ Flux flux = Flux
     .range(Instant.now().minus(4, ChronoUnit.HOURS),
            Instant.now().minus(15, ChronoUnit.MINUTES)
     );
+```        
+
+### reduce
+Reduce aggregates records in each table according to the reducer `fn`. 
+The output for each table will be the group key of the table, plus columns corresponding to each field in the reducer object [[doc](http://bit.ly/flux-spec#reduce)].
+
+If the reducer record contains a column with the same name as a group key column, 
+then the group key column's value is overwritten, and the outgoing group key is changed. 
+However, if two reduced tables write to the same destination group key, then the function will error.
+
+- `fn` - Function to apply to each record with a reducer object of type 'a. [(r: record, accumulator: 'a) -> 'a]
+- `identity` - an initial value to use when creating a reducer ['a]
+
+```java
+Flux flux = Flux
+    .from("telegraf")
+    .range(-12L, ChronoUnit.HOURS)
+    .reduce("{ sum: r._value + accumulator.sum }", "{sum: 0.0}");    
+``` 
+
+```java
+Flux flux = Flux
+    .from("telegraf")
+    .range(-12L, ChronoUnit.HOURS)
+    .reduce()
+        .withFunction("{sum: r._value + accumulator.sum,\ncount: accumulator.count + 1.0}")
+        .withIdentity("{sum: 0.0, count: 0.0}");
 ```
 
 ### rename

@@ -56,6 +56,7 @@ import com.influxdb.query.dsl.functions.MinFlux;
 import com.influxdb.query.dsl.functions.PercentileFlux;
 import com.influxdb.query.dsl.functions.PivotFlux;
 import com.influxdb.query.dsl.functions.RangeFlux;
+import com.influxdb.query.dsl.functions.ReduceFlux;
 import com.influxdb.query.dsl.functions.RenameFlux;
 import com.influxdb.query.dsl.functions.SampleFlux;
 import com.influxdb.query.dsl.functions.SetFlux;
@@ -1302,6 +1303,32 @@ public abstract class Flux {
         Arguments.checkNotNull(unit, "ChronoUnit is required");
 
         return new RangeFlux(this).withStart(start, unit).withStop(stop, unit);
+    }
+
+    /**
+     * Reduce aggregates records in each table according to the reducer.
+     *
+     * <h3>The parameters had to be defined by:</h3>
+     * <ul>
+     * <li>{@link ReduceFlux#withFunction(String)} </li>
+     * <li>{@link ReduceFlux#withIdentity(String)}</li>
+     * </ul>
+     *
+     * @return {@link ReduceFlux}
+     */
+    public final ReduceFlux reduce() {
+        return new ReduceFlux(this);
+    }
+
+    /**
+     * Reduce aggregates records in each table according to the reducer.
+     *
+     * @param function Function to apply to each record. Example: "{sum: r._value + accumulator.sum}".
+     * @param identity An initial value to use when creating a reducer. Example: "{sum: 0.0}".
+     * @return {@link ReduceFlux}
+     */
+    public final ReduceFlux reduce(@Nonnull final String function, @Nonnull final String identity) {
+        return new ReduceFlux(this).withFunction(function).withIdentity(identity);
     }
 
     /**
