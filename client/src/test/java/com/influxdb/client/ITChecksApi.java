@@ -46,7 +46,6 @@ import com.influxdb.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -55,8 +54,6 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (18/09/2019 08:30)
  */
 @RunWith(JUnitPlatform.class)
-//TODO https://github.com/influxdata/influxdb/issues/16462
-@Disabled
 class ITChecksApi extends AbstractITClientTest {
 
     private ChecksApi checksApi;
