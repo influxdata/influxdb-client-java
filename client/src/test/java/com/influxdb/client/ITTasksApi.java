@@ -47,6 +47,7 @@ import com.influxdb.client.domain.Task;
 import com.influxdb.client.domain.TaskStatusType;
 import com.influxdb.client.domain.User;
 import com.influxdb.exceptions.NotFoundException;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -648,6 +649,8 @@ class ITTasksApi extends AbstractITClientTest {
     }
 
     @Test
+    //TODO uncomment after beta
+    @Disabled
     void cancelRunTaskNotExist() {
 
         Assertions.assertThatThrownBy(() -> tasksApi.cancelRun("020f755c3c082000", "020f755c3c082000"))
