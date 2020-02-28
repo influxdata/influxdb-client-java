@@ -32,6 +32,7 @@ import java.util.Map;
 
 import com.influxdb.query.FluxColumn;
 import com.influxdb.query.FluxRecord;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -54,9 +55,6 @@ class FluxStructureSerializationTest {
 
         Object copy = new ObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
 
-        System.out.println("source = " + source);
-        System.out.println("copy = " + copy);
-
         Assertions.assertEquals(source.hashCode(), copy.hashCode());
         Assertions.assertEquals(source, copy);
     }
@@ -74,9 +72,6 @@ class FluxStructureSerializationTest {
         new ObjectOutputStream(out).writeObject(source);
 
         FluxRecord copy = (FluxRecord) new ObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
-
-        System.out.println("source = " + source);
-        System.out.println("copy = " + copy);
 
         Assertions.assertEquals(source.getValues(), copy.getValues());
         Assertions.assertEquals(source.hashCode(), copy.hashCode());

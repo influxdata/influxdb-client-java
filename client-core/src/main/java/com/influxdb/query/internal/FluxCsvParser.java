@@ -122,6 +122,7 @@ public class FluxCsvParser {
 
         try (CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT)) {
             int tableIndex = 0;
+            int tableId = -1;
             boolean startNewTable = false;
             FluxTable table = null;
             for (CSVRecord csvRecord : parser) {
@@ -165,6 +166,7 @@ public class FluxCsvParser {
                     table = new FluxTable();
                     consumer.accept(tableIndex, cancellable, table);
                     tableIndex++;
+                    tableId = -1;
 
                 } else if (table == null) {
                     String message = "Unable to parse CSV response. FluxTable definition was not found.";
@@ -189,15 +191,19 @@ public class FluxCsvParser {
                         continue;
                     }
 
-                    int currentIndex = Integer.parseInt(csvRecord.get(1 + 1));
+                    int currentId = Integer.parseInt(csvRecord.get(1 + 1));
+                    if (tableId == -1) {
+                        tableId = currentId;
+                    }
 
-                    if (currentIndex > (tableIndex - 1)) {
+                    if (tableId != currentId) {
                         //create new table with previous column headers settings
                         List<FluxColumn> fluxColumns = table.getColumns();
                         table = new FluxTable();
                         table.getColumns().addAll(fluxColumns);
                         consumer.accept(tableIndex, cancellable, table);
                         tableIndex++;
+                        tableId = currentId;
                     }
 
                     FluxRecord fluxRecord = parseRecord(tableIndex - 1, table, csvRecord);
