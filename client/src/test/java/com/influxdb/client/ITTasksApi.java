@@ -649,13 +649,11 @@ class ITTasksApi extends AbstractITClientTest {
     }
 
     @Test
-    //TODO uncomment after beta
-    @Disabled
     void cancelRunTaskNotExist() {
 
         Assertions.assertThatThrownBy(() -> tasksApi.cancelRun("020f755c3c082000", "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("failed to cancel run: run not found");
+                .hasMessage("failed to cancel run: task not found");
     }
 
     @Test
