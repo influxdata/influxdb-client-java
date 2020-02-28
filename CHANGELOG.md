@@ -5,7 +5,7 @@
 1. [#83](https://github.com/influxdata/influxdb-client-java/issues/83): Add reduce operator to FluxDSL
 
 ### Bugs
-1. [#88](https://github.com/influxdata/influxdb-client-java/pull/88): Correctly parse CSV where multiple results include multiple tables
+1. [#90](https://github.com/influxdata/influxdb-client-java/pull/90): Correctly parse CSV where multiple results include multiple tables
 
 ## 1.5.0 [2020-02-14]
 
