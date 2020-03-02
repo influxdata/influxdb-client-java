@@ -811,6 +811,22 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
                 .hasMessage("WriteApi is closed. Data should be written before calling InfluxDBClient.close or WriteApi.close.");
     }
 
+    @Test
+    void userAgent() throws InterruptedException {
+
+        mockServer.enqueue(createResponse("{}"));
+
+        writeApi = influxDBClient.getWriteApi();
+
+        writeApi.writeRecord("b1", "org1", WritePrecision.NS, "h2o,location=coyote_creek level\\ description=\"below 3 feet\",water_level=2.927 1440046800000000");
+
+        RecordedRequest recordedRequest = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        String userAgent = recordedRequest.getHeader("User-Agent");
+
+        Assertions.assertThat(userAgent).startsWith("influxdb-client-java/1.");
+    }
+
     @Nonnull
     private String getRequestBody(@Nonnull final MockWebServer server) {
 

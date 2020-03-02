@@ -38,6 +38,7 @@ import com.influxdb.client.flux.FluxClient;
 import com.influxdb.client.flux.FluxConnectionOptions;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.internal.AbstractQueryApi;
+import com.influxdb.internal.UserAgentInterceptor;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 import com.influxdb.query.internal.FluxCsvParser.FluxResponseConsumer;
@@ -76,6 +77,7 @@ public class FluxApiImpl extends AbstractQueryApi implements FluxClient {
         }
 
         this.okHttpClient = options.getOkHttpClient()
+                .addInterceptor(new UserAgentInterceptor())
                 .addInterceptor(this.loggingInterceptor)
                 .build();
 
