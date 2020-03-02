@@ -37,6 +37,7 @@ import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.service.HealthService;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.internal.UserAgentInterceptor;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -80,6 +81,7 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
         this.gzipInterceptor = new GzipInterceptor();
 
         this.okHttpClient = options.getOkHttpClient()
+                .addInterceptor(new UserAgentInterceptor())
                 .addInterceptor(this.loggingInterceptor)
                 .addInterceptor(this.authenticateInterceptor)
                 .addInterceptor(this.gzipInterceptor)
