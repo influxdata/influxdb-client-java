@@ -52,30 +52,35 @@ public class FluxResultMapper {
         try {
             T pojo = clazz.newInstance();
 
-            Field[] fields = clazz.getDeclaredFields();
+            Class<?> currentClazz = clazz;
+            while (currentClazz != null) {
 
-            for (Field field : fields) {
-                Column anno = field.getAnnotation(Column.class);
-                String columnName = field.getName();
-                if (anno != null && !anno.name().isEmpty()) {
-                    columnName = anno.name();
+                Field[] fields = currentClazz.getDeclaredFields();
+                for (Field field : fields) {
+                    Column anno = field.getAnnotation(Column.class);
+                    String columnName = field.getName();
+                    if (anno != null && !anno.name().isEmpty()) {
+                        columnName = anno.name();
+                    }
+
+                    Map<String, Object> recordValues = record.getValues();
+
+                    String col = null;
+
+                    if (recordValues.containsKey(columnName)) {
+                        col = columnName;
+                    } else if (recordValues.containsKey("_" + columnName)) {
+                        col = "_" + columnName;
+                    }
+
+                    if (col != null) {
+                        Object value = record.getValueByKey(col);
+
+                        setFieldValue(pojo, field, value);
+                    }
                 }
 
-                Map<String, Object> recordValues = record.getValues();
-
-                String col = null;
-
-                if (recordValues.containsKey(columnName)) {
-                    col = columnName;
-                } else if (recordValues.containsKey("_" + columnName)) {
-                    col = "_" + columnName;
-                }
-
-                if (col != null) {
-                    Object value = record.getValueByKey(col);
-
-                    setFieldValue(pojo, field, value);
-                }
+                currentClazz = currentClazz.getSuperclass();
             }
             return pojo;
         } catch (Exception e) {

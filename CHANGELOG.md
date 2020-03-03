@@ -7,6 +7,8 @@
 
 ### Bugs
 1. [#90](https://github.com/influxdata/influxdb-client-java/pull/90): Correctly parse CSV where multiple results include multiple tables
+1. [#89](https://github.com/influxdata/influxdb-client-java/issues/89): @Column supports super class inheritance
+
 
 ## 1.5.0 [2020-02-14]
 
