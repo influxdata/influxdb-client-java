@@ -73,6 +73,17 @@ class FluxResultMapperTest {
                 .hasMessageEndingWith("The correct type is 'java.lang.Boolean' (current field value: 'true').");
     }
 
+    @Test
+    public void pojoInheritance() {
+        FluxRecord record = new FluxRecord(0);
+        record.getValues().put("baseValue", 10);
+        record.getValues().put("superValue", 20);
+
+        BaseBean bean = mapper.toPOJO(record, BaseBean.class);
+        Assertions.assertThat(bean.baseValue).isEqualByComparingTo(new BigDecimal(10));
+        Assertions.assertThat(bean.superValue).isEqualByComparingTo(new BigDecimal(20));
+    }
+
     public static class BigDecimalBean
     {
         @Column(name = "value1")
@@ -86,5 +97,15 @@ class FluxResultMapperTest {
 
         @Column(name = "value4")
         BigDecimal value4;
+    }
+
+    public static class SuperBean {
+        @Column(name = "superValue")
+        BigDecimal superValue;
+    }
+
+    public static class BaseBean extends SuperBean {
+        @Column(name = "baseValue")
+        BigDecimal baseValue;
     }
 }
