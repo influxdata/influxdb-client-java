@@ -51,6 +51,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (13/09/2018 10:49)
  */
 @RunWith(JUnitPlatform.class)
+@Disabled("https://github.com/influxdata/influxdb/issues/17244")
 class ITBucketsApi extends AbstractITClientTest {
 
     private Organization organization;
