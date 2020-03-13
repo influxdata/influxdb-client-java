@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 - 2020 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 161,
+      <title>File: 163,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -1488,6 +1488,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.ReduceFlux.java">com/influxdb/query/dsl/functions/ReduceFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.WriteApiBlocking.java">com/influxdb/client/WriteApiBlocking.java</a>
                 </td>
                 <td>
@@ -2287,6 +2301,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.BucketsApi.java">com/influxdb/client/BucketsApi.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.internal.UserAgentInterceptor.java">com/influxdb/internal/UserAgentInterceptor.java</a>
                 </td>
                 <td>
                   0

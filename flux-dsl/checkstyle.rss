@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 - 2020 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 51,
+      <title>File: 52,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -187,6 +187,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.DerivativeFlux.java">com/influxdb/query/dsl/functions/DerivativeFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.ReduceFlux.java">com/influxdb/query/dsl/functions/ReduceFlux.java</a>
                 </td>
                 <td>
                   0
