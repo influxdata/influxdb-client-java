@@ -56,5 +56,5 @@ cp -R "${SCRIPT_PATH}"/../.circleci/ "${HOME}"/gh-pages/
 
 echo "Commit"
 git add -f .
-git commit -m "Pushed the latest Maven site to GitHub pages"
+git commit -m "Pushed the latest Maven site to GitHub pages [skip CI]"
 git push -fq origin gh-pages > /dev/null
