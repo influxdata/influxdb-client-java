@@ -67,6 +67,7 @@ class ITTemplatesApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled("https://github.com/influxdata/influxdb/issues/17245")
     void create() {
 
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
@@ -252,6 +253,7 @@ class ITTemplatesApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled("https://github.com/influxdata/influxdb/issues/17245")
     void labels() {
 
         LabelsApi labelsApi = influxDBClient.getLabelsApi();
