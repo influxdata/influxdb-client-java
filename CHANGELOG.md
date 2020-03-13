@@ -1,4 +1,4 @@
-## 1.6.0 [unreleased]
+## 1.6.0 [2020-03-13]
 
 ### Features
 1. [#85](https://github.com/influxdata/influxdb-client-java/issues/85): Time field in Point supports BigInteger and BigDecimal
