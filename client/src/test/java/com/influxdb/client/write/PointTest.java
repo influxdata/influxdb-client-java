@@ -24,6 +24,7 @@ package com.influxdb.client.write;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
+import java.util.HashMap;
 
 import com.influxdb.client.domain.WritePrecision;
 
@@ -342,5 +343,37 @@ class PointTest {
         Assertions.assertThat(Point.measurement("h2o").addTag("location", "europe").hasFields()).isFalse();
         Assertions.assertThat(Point.measurement("h2o").addField("level", 2).hasFields()).isTrue();
         Assertions.assertThat(Point.measurement("h2o").addTag("location", "europe").addField("level", 3).hasFields()).isTrue();
+    }
+
+    @Test
+    void addTags() {
+
+        HashMap<String, String> tags = new HashMap<>();
+        tags.put("type", "production");
+        tags.put("location", "europe");
+        tags.put("expensive", "");
+
+        Point point = Point.measurement("h2o")
+                .addField("level", 2)
+                .addTags(tags);
+
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe,type=production level=2i");
+    }
+
+    @Test
+    void addFields() {
+
+        HashMap<String, Object> fields = new HashMap<>();
+        fields.put("level", 2);
+        fields.put("accepted", true);
+        fields.put("power", 2.56);
+        fields.put("clean", null);
+
+        Point point = Point
+                .measurement("h2o")
+                .addTag("location", "europe")
+                .addFields(fields);
+
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe accepted=true,level=2i,power=2.56");
     }
 }

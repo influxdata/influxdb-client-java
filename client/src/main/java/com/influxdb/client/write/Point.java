@@ -90,7 +90,7 @@ public final class Point {
     }
 
     /**
-     * Adds or replaces a tag value for a point.
+     * Adds or replaces a tag value for this point.
      *
      * @param key   the tag name
      * @param value the tag value
@@ -102,6 +102,22 @@ public final class Point {
         Arguments.checkNotNull(key, "tagName");
 
         tags.put(key, value);
+
+        return this;
+    }
+
+    /**
+     * Adds or replaces tags for this point.
+     *
+     * @param tagsToAdd the Map of tags to add
+     * @return this
+     */
+    @Nonnull
+    public Point addTags(@Nonnull final Map<String, String> tagsToAdd) {
+
+        Arguments.checkNotNull(tagsToAdd, "tagsToAdd");
+
+        tagsToAdd.forEach(this::addTag);
 
         return this;
     }
@@ -163,6 +179,22 @@ public final class Point {
     @Nonnull
     public Point addField(@Nonnull final String field, @Nullable final String value) {
         return putField(field, value);
+    }
+
+    /**
+     * Adds or replaces fields for this point.
+     *
+     * @param fieldsToAdd the Map of fields to add
+     * @return this
+     */
+    @Nonnull
+    public Point addFields(@Nonnull final Map<String, Object> fieldsToAdd) {
+
+        Arguments.checkNotNull(fieldsToAdd, "fieldsToAdd");
+
+        fieldsToAdd.forEach(this::putField);
+
+        return this;
     }
 
     /**

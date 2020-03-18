@@ -78,12 +78,9 @@ class ITQueryService extends AbstractITClientTest {
 
         Assertions.assertThat(analyze).isNotNull();
 
-        //TODO https://github.com/influxdata/influxdb/issues/13218
-        // Assertions.assertThat(analyze.getErrors()).hasSize(1);
-        // Assertions.assertThat(analyze.getErrors().get(0).getLine()).isEqualTo(2);
-        // Assertions.assertThat(analyze.getErrors().get(0).getColumn()).isEqualTo(25);
-        // Assertions.assertThat(analyze.getErrors().get(0).getCharacter()).isEqualTo(45);
-        // Assertions.assertThat(analyze.getErrors().get(0).getMessage()).isEqualTo("");
+         Assertions.assertThat(analyze.getErrors()).isNotEmpty();
+         Assertions.assertThat(analyze.getErrors().get(0).getMessage())
+                 .isEqualTo("expected an operator between two expressions");
     }
 
     @Test

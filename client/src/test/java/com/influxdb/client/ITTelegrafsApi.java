@@ -40,6 +40,7 @@ import com.influxdb.exceptions.NotFoundException;
 import com.moandjiezana.toml.Toml;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -368,13 +369,17 @@ class ITTelegrafsApi extends AbstractITClientTest {
                 .isInstanceOf(NotFoundException.class);
     }
 
+    //TODO wait to v2.0.0-beta.7
+    @Disabled
     @Test
     void labelDeleteNotExists() {
 
         Telegraf telegrafConfig = telegrafsApi
                 .createTelegraf(generateName("tc"), "test-config", organization, Arrays.asList(newOutputPlugin(), newCpuPlugin()));
 
-        telegrafsApi.deleteLabel("020f755c3c082000", telegrafConfig.getId());
+        Assertions.assertThatThrownBy(() -> telegrafsApi.deleteLabel("020f755c3c082000", telegrafConfig.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("label not found");
     }
 
     @Test

@@ -1,5 +1,8 @@
 ## 1.7.0 [unreleased]
 
+### Features
+1. [#93](https://github.com/influxdata/influxdb-client-java/issues/93): Add addTags and addFields helper functions to Point
+
 ## 1.6.0 [2020-03-13]
 
 ### Features

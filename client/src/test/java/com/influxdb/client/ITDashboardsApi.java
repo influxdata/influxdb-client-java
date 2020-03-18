@@ -46,6 +46,7 @@ import com.influxdb.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -275,12 +276,16 @@ class ITDashboardsApi extends AbstractITClientTest {
                 .isInstanceOf(NotFoundException.class);
     }
 
+    //TODO wait to v2.0.0-beta.7
+    @Disabled
     @Test
     void labelDeleteNotExists() {
 
         Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
 
-        dashboardsApi.deleteLabel("020f755c3c082000", dashboard.getId());
+        Assertions.assertThatThrownBy(() -> dashboardsApi.deleteLabel("020f755c3c082000", dashboard.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("label not found");
     }
 
     @Test
