@@ -260,8 +260,6 @@ class ITTasksApi extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-        //TODO https://github.com/influxdata/influxdb/issues/13577
     void findTasksAfterSpecifiedID() {
 
         Task task1 = tasksApi.createTaskCron(generateName("it task"), TASK_FLUX, "0 2 * * *", organization);
@@ -762,13 +760,16 @@ class ITTasksApi extends AbstractITClientTest {
         createUsers.setAction(Permission.ActionEnum.WRITE);
         createUsers.setResource(userResource);
 
-
         PermissionResource labelResource = new PermissionResource();
         labelResource.setType(PermissionResource.TypeEnum.LABELS);
 
         Permission createLabels = new Permission();
         createLabels.setAction(Permission.ActionEnum.WRITE);
         createLabels.setResource(labelResource);
+
+        Permission readLabels = new Permission();
+        readLabels.setAction(Permission.ActionEnum.READ);
+        readLabels.setResource(labelResource);
 
         PermissionResource authResource = new PermissionResource();
         authResource.setType(PermissionResource.TypeEnum.AUTHORIZATIONS);
@@ -803,6 +804,7 @@ class ITTasksApi extends AbstractITClientTest {
         permissions.add(readBucket);
         permissions.add(writeBucket);
         permissions.add(createLabels);
+        permissions.add(readLabels);
 
         return influxDBClient.getAuthorizationsApi().createAuthorization(organization, permissions);
     }

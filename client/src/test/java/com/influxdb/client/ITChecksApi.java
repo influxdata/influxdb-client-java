@@ -46,6 +46,7 @@ import com.influxdb.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -341,6 +342,8 @@ class ITChecksApi extends AbstractITClientTest {
     }
 
     @Test
+    //TODO wait to v2.0.0-beta.7
+    @Disabled
     void labelDeleteNotExists() {
 
         GreaterThreshold greater = new GreaterThreshold();
@@ -353,7 +356,9 @@ class ITChecksApi extends AbstractITClientTest {
                 Collections.singletonList(greater),
                 orgID);
 
-        checksApi.deleteLabel("020f755c3c082000", check.getId());
+        Assertions.assertThatThrownBy(() -> checksApi.deleteLabel("020f755c3c082000", check.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("label not found");
     }
 
     @Test

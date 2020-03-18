@@ -52,6 +52,7 @@ import com.influxdb.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -449,6 +450,8 @@ class ITNotificationRulesApi extends AbstractITClientTest {
                 .isInstanceOf(NotFoundException.class);
     }
 
+    //TODO wait to v2.0.0-beta.7
+    @Disabled
     @Test
     void labelDeleteNotExists() {
 
@@ -462,6 +465,8 @@ class ITNotificationRulesApi extends AbstractITClientTest {
                 "10s",
                 "my-template", RuleStatusLevel.CRIT, tagRules, endpoint, orgID);
 
-        notificationRulesApi.deleteLabel("020f755c3c082000", rule.getId());
+        Assertions.assertThatThrownBy(() ->notificationRulesApi.deleteLabel("020f755c3c082000", rule.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("label not found");
     }
 }
