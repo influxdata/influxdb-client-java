@@ -22,6 +22,7 @@
 package com.influxdb.client;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.influxdb.Arguments;
 import com.influxdb.client.domain.OnboardingRequest;
@@ -56,7 +57,7 @@ public final class InfluxDBClientFactory {
 
     /**
      * Create an instance of the InfluxDB 2.0 client. The url could be a connection string with various configurations.
-     *
+     * <p>
      * e.g.: "http://localhost:8086?readTimeout=5000&amp;connectTimeout=5000&amp;logLevel=BASIC
      *
      * @param connectionString connection string with various configurations.
@@ -97,17 +98,55 @@ public final class InfluxDBClientFactory {
     /**
      * Create an instance of the InfluxDB 2.0 client.
      *
-     * @param url      the url to connect to the InfluxDB
-     * @param token    the token to use for the authorization
+     * @param url   the url to connect to the InfluxDB
+     * @param token the token to use for the authorization
      * @return client
      * @see InfluxDBClientOptions.Builder#url(String)
      */
     @Nonnull
     public static InfluxDBClient create(@Nonnull final String url, @Nonnull final char[] token) {
 
+        return create(url, token, null, null);
+    }
+
+    /**
+     * Create an instance of the InfluxDB 2.0 client.
+     *
+     * @param url   the url to connect to the InfluxDB
+     * @param token the token to use for the authorization
+     * @param org   the name of an organization
+     * @return client
+     * @see InfluxDBClientOptions.Builder#url(String)
+     */
+    @Nonnull
+    public static InfluxDBClient create(@Nonnull final String url,
+                                        @Nonnull final char[] token,
+                                        @Nonnull final String org) {
+
+        return create(url, token, org, null);
+    }
+
+    /**
+     * Create an instance of the InfluxDB 2.0 client.
+     *
+     * @param url    the url to connect to the InfluxDB
+     * @param token  the token to use for the authorization
+     * @param org    the name of an organization
+     * @param bucket the name of a bucket
+     * @return client
+     * @see InfluxDBClientOptions.Builder#url(String)
+     */
+    @Nonnull
+    public static InfluxDBClient create(@Nonnull final String url,
+                                        @Nonnull final char[] token,
+                                        @Nullable final String org,
+                                        @Nullable final String bucket) {
+
         InfluxDBClientOptions options = InfluxDBClientOptions.builder()
                 .url(url)
                 .authenticateToken(token)
+                .org(org)
+                .bucket(bucket)
                 .build();
 
         return create(options);

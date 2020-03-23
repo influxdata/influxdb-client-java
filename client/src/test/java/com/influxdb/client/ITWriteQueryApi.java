@@ -801,4 +801,26 @@ class ITWriteQueryApi extends AbstractITClientTest {
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords().get(0).getValue()).isEqualTo(60.0);
     }
+
+    @Test
+    public void defaultOrgBucket() {
+
+        InfluxDBClient client = InfluxDBClientFactory.create(influxDB_URL, token.toCharArray(), organization.getId(), bucket.getName());
+
+        WriteApi writeApi = client.getWriteApi();
+
+        writeApi.writeRecord(WritePrecision.NS, "temperature,location=north value=60.0 1");
+        writeApi.close();
+
+        queryApi = client.getQueryApi();
+
+        List<FluxTable> query = queryApi.query(
+                "from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()");
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValue()).isEqualTo(60.0);
+
+        client.close();
+    }
 }

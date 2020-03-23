@@ -57,7 +57,7 @@ class ITInfluxDBClient extends AbstractITClientTest {
     }
 
     @Test
-    void healthNotRunningInstance() throws Exception {
+    void healthNotRunningInstance() {
 
         InfluxDBClient clientNotRunning = InfluxDBClientFactory.create("http://localhost:8099");
 		HealthCheck check = clientNotRunning.health();
@@ -85,7 +85,7 @@ class ITInfluxDBClient extends AbstractITClientTest {
     }
 
     @Test
-    void readyNotRunningInstance() throws Exception {
+    void readyNotRunningInstance() {
 
         InfluxDBClient clientNotRunning = InfluxDBClientFactory.create("http://localhost:8099");
 
@@ -104,7 +104,7 @@ class ITInfluxDBClient extends AbstractITClientTest {
     }
 
     @Test
-    void onboarding() throws Exception {
+    void onboarding() {
 
         String url = String.format("http://%s:%s",
                 System.getenv().getOrDefault("INFLUXDB_2_ONBOARDING_IP", "127.0.0.1"),
