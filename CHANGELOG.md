@@ -2,6 +2,7 @@
 
 ### Features
 1. [#93](https://github.com/influxdata/influxdb-client-java/issues/93): Add addTags and addFields helper functions to Point
+1. [#97](https://github.com/influxdata/influxdb-client-java/pull/97): Add the ability to specify the org and the bucket when creating the client
 
 ## 1.6.0 [2020-03-13]
 
