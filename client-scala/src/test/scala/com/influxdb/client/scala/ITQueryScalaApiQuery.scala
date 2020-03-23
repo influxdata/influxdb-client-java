@@ -30,6 +30,7 @@ import akka.stream.testkit.scaladsl.TestSink
 import com.influxdb.annotations.Column
 import com.influxdb.client.InfluxDBClientFactory
 import com.influxdb.client.domain._
+import com.influxdb.client.internal.AbstractInfluxDBClient
 import com.influxdb.exceptions.InfluxException
 import com.influxdb.query.FluxRecord
 import org.scalatest.Matchers
@@ -136,14 +137,108 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\" and r[\"host\"] == \"A\"))" +
       "|> sum()"
 
-    val source = queryScalaApi.query(flux).runWith(TestSink.probe[FluxRecord])
+    // String
+    {
+      val source = queryScalaApi.query(flux).runWith(TestSink.probe[FluxRecord])
 
-    val record1 = source.requestNext()
+      val record1 = source.requestNext()
 
-    record1.getMeasurement should be("mem")
-    record1.getValue should be(21)
+      record1.getMeasurement should be("mem")
+      record1.getValue should be(21)
 
-    source.expectComplete()
+      source.expectComplete()
+    }
+
+    // Query
+    {
+      val source = queryScalaApi.query(new Query().query(flux).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT)).runWith(TestSink.probe[FluxRecord])
+
+      val record1 = source.requestNext()
+
+      record1.getMeasurement should be("mem")
+      record1.getValue should be(21)
+
+      source.expectComplete()
+    }
+
+    // String Measurement
+    {
+      val source = queryScalaApi.query(flux, classOf[Mem]).runWith(TestSink.probe[Mem])
+
+      val mem = source.requestNext()
+      mem.free should be(21L)
+
+      source.expectComplete()
+    }
+
+    // Query Measurement
+    {
+      val source = queryScalaApi.query(new Query().query(flux).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT), classOf[Mem]).runWith(TestSink.probe[Mem])
+
+      val mem = source.requestNext()
+      mem.free should be(21L)
+
+      source.expectComplete()
+    }
+
+    // String raw
+    {
+      val source = queryScalaApi.queryRaw(flux).runWith(TestSink.probe[String])
+
+      var line = source.requestNext()
+      line should be("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
+
+      line = source.requestNext()
+      line should be("#group,false,false,true,true,true,true,true,true,false")
+
+      line = source.requestNext()
+      line should be("#default,_result,,,,,,,,")
+
+      line = source.requestNext()
+      line should be(",result,table,_start,_stop,_field,_measurement,host,region,_value")
+
+      line = source.requestNext()
+      line should endWith(",free,mem,A,west,21")
+
+      line = source.requestNext()
+      line shouldBe empty
+
+      source.expectComplete()
+    }
+
+    // String raw - dialect
+    {
+      val dialect = new Dialect()
+        .header( false)
+
+      val source = queryScalaApi.queryRaw(flux, dialect).runWith(TestSink.probe[String])
+
+      var line = source.requestNext()
+
+      line should endWith(",free,mem,A,west,21")
+
+      line = source.requestNext()
+      line shouldBe empty
+
+      source.expectComplete()
+    }
+
+    // Query raw
+    {
+      val dialect = new Dialect()
+        .header( false)
+
+      val source = queryScalaApi.queryRaw(new Query().query(flux).dialect(dialect)).runWith(TestSink.probe[String])
+
+      var line = source.requestNext()
+
+      line should endWith(",free,mem,A,west,21")
+
+      line = source.requestNext()
+      line shouldBe empty
+
+      source.expectComplete()
+    }
   }
 
   test("Simple query FluxRecords order") {

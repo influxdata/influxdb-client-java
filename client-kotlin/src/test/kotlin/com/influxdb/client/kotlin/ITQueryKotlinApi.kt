@@ -37,7 +37,9 @@ import com.influxdb.client.domain.Dialect
 import com.influxdb.client.domain.Organization
 import com.influxdb.client.domain.Permission
 import com.influxdb.client.domain.PermissionResource
+import com.influxdb.client.domain.Query
 import com.influxdb.client.domain.WritePrecision
+import com.influxdb.client.internal.AbstractInfluxDBClient
 import kotlinx.coroutines.channels.map
 import kotlinx.coroutines.channels.toList
 import kotlinx.coroutines.runBlocking
@@ -145,10 +147,79 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
                 "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n\t" +
                 "|> sum()"
 
-        val records = queryKotlinApi.query(flux)
+        // String
+        run {
+            val records = queryKotlinApi.query(flux)
 
-        val tables = records.toList()
-        assert(tables).hasSize(2)
+            val tables = records.toList()
+            assert(tables).hasSize(2)
+        }
+
+        // Query
+        run {
+            val records = queryKotlinApi.query(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(flux))
+
+            val tables = records.toList()
+            assert(tables).hasSize(2)
+        }
+
+        // String Measurement
+        run {
+            val records = queryKotlinApi.query(flux, Mem::class.java)
+
+            val memory = records.toList()
+            assert(memory).hasSize(2)
+        }
+
+        // Query Measurement
+        run {
+            val records = queryKotlinApi.query(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(flux), Mem::class.java)
+
+            val memory = records.toList()
+            assert(memory).hasSize(2)
+        }
+
+        // String Raw
+        run {
+            val lines = queryKotlinApi.queryRaw(flux).toList()
+
+            assert(lines).hasSize(7)
+            assert(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
+            assert(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
+            assert(lines[2]).isEqualTo("#default,_result,,,,,,,,")
+            assert(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
+            assert(lines[4]).endsWith(",free,mem,A,west,21")
+            assert(lines[5]).endsWith(",free,mem,B,west,42")
+            assert(lines[6]).isEmpty()
+        }
+
+        // String Raw Dialect
+        run {
+            val lines = queryKotlinApi.queryRaw(flux, AbstractInfluxDBClient.DEFAULT_DIALECT).toList()
+
+            assert(lines).hasSize(7)
+            assert(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
+            assert(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
+            assert(lines[2]).isEqualTo("#default,_result,,,,,,,,")
+            assert(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
+            assert(lines[4]).endsWith(",free,mem,A,west,21")
+            assert(lines[5]).endsWith(",free,mem,B,west,42")
+            assert(lines[6]).isEmpty()
+        }
+
+        // Query Raw
+        run {
+            val lines = queryKotlinApi.queryRaw(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(flux)).toList()
+
+            assert(lines).hasSize(7)
+            assert(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
+            assert(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
+            assert(lines[2]).isEqualTo("#default,_result,,,,,,,,")
+            assert(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
+            assert(lines[4]).endsWith(",free,mem,A,west,21")
+            assert(lines[5]).endsWith(",free,mem,B,west,42")
+            assert(lines[6]).isEmpty()
+        }
     }
 
     @Test
