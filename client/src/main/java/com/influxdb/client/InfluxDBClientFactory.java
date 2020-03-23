@@ -106,7 +106,7 @@ public final class InfluxDBClientFactory {
     @Nonnull
     public static InfluxDBClient create(@Nonnull final String url, @Nonnull final char[] token) {
 
-        return create(url, token, null, null);
+        return create(url, token, null);
     }
 
     /**
@@ -121,7 +121,7 @@ public final class InfluxDBClientFactory {
     @Nonnull
     public static InfluxDBClient create(@Nonnull final String url,
                                         @Nonnull final char[] token,
-                                        @Nonnull final String org) {
+                                        @Nullable final String org) {
 
         return create(url, token, org, null);
     }
