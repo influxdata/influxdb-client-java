@@ -37,6 +37,16 @@ trait QueryScalaApi {
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
    *
+   * <p>[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. </p>
+   *
+   * @param query the flux query to execute
+   * @return the stream of [[FluxRecord]]s
+   */
+  @Nonnull def query(@Nonnull query: String): Source[FluxRecord, NotUsed]
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
+   *
    * @param query the flux query to execute
    * @param org specifies the source organization
    * @return the stream of [[FluxRecord]]s
@@ -46,11 +56,33 @@ trait QueryScalaApi {
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
    *
+   * <p>[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. </p>
+   *
+   * @param query the flux query to execute
+   * @return the stream of [[FluxRecord]]s
+   */
+  @Nonnull def query(@Nonnull query: Query): Source[FluxRecord, NotUsed]
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
+   *
    * @param query the flux query to execute
    * @param org specifies the source organization
    * @return the stream of [[FluxRecord]]s
    */
   @Nonnull def query(@Nonnull query: Query, @Nonnull org: String): Source[FluxRecord, NotUsed]
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+   *
+   * <p>[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. </p>
+   *
+   * @param query           the flux query to execute
+   * @param measurementType the measurement (POJO)
+   * @tparam M the type of the measurement (POJO)
+   * @return the stream of measurements
+   */
+  @Nonnull def query[M](@Nonnull query: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed]
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
@@ -66,6 +98,18 @@ trait QueryScalaApi {
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
    *
+   * <p>[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. </p>
+   *
+   * @param query           the flux query to execute
+   * @param measurementType the measurement (POJO)
+   * @tparam M the type of the measurement (POJO)
+   * @return the stream of measurements
+   */
+  @Nonnull def query[M](@Nonnull query: Query, @Nonnull measurementType: Class[M]): Source[M, NotUsed]
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+   *
    * @param query           the flux query to execute
    * @param org           specifies the source organization
    * @param measurementType the measurement (POJO)
@@ -73,6 +117,16 @@ trait QueryScalaApi {
    * @return the stream of measurements
    */
   @Nonnull def query[M](@Nonnull query: Query, @Nonnull org: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed]
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+   *
+   * <p>[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. </p>
+   *
+   * @param query the flux query to execute
+   * @return the response stream
+   */
+  @Nonnull def queryRaw(@Nonnull query: String): Source[String, NotUsed]
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
@@ -86,6 +140,18 @@ trait QueryScalaApi {
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
    *
+   * <p>[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. </p>
+   *
+   * @param query   the flux query to execute
+   * @param dialect Dialect is an object defining the options to use when encoding the response.
+   *                [[http://bit.ly/flux-dialect See dialect SPEC]].
+   * @return the response stream
+   */
+  @Nonnull def queryRaw(@Nonnull query: String, @Nonnull dialect: Dialect): Source[String, NotUsed]
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+   *
    * @param query   the flux query to execute
    * @param dialect Dialect is an object defining the options to use when encoding the response.
    *                [[http://bit.ly/flux-dialect See dialect SPEC]].
@@ -93,6 +159,16 @@ trait QueryScalaApi {
    * @return the response stream
    */
   @Nonnull def queryRaw(@Nonnull query: String, @Nonnull dialect: Dialect, @Nonnull org: String): Source[String, NotUsed]
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+   *
+   * <p>[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. </p>
+   *
+   * @param query   the flux query to execute
+   * @return the response stream
+   */
+  @Nonnull def queryRaw(@Nonnull query: Query): Source[String, NotUsed]
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].

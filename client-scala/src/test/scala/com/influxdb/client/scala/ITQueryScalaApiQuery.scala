@@ -47,6 +47,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
   var organization: Organization = _
   var queryScalaApi: QueryScalaApi = _
   var fluxPrefix: String = _
+  var token: String = _
 
   before {
 
@@ -86,7 +87,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
     val authorization = client.getAuthorizationsApi
       .createAuthorization(organization, List(readBucket, writeBucket).asJava)
 
-    val token = authorization.getToken
+    token = authorization.getToken
 
     val records = Seq("mem,host=A,region=west free=10i 10000000000",
       "mem,host=A,region=west free=11i 20000000000",
@@ -115,6 +116,27 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       "|> sum()"
 
     val source = queryScalaApi.query(flux, organization.getId).runWith(TestSink.probe[FluxRecord])
+
+    val record1 = source.requestNext()
+
+    record1.getMeasurement should be("mem")
+    record1.getValue should be(21)
+
+    source.expectComplete()
+  }
+
+  test("Default Org Bucket") {
+
+    influxDBClient.close()
+    influxDBClient = InfluxDBClientScalaFactory.create(influxDBUtils.getUrl, token.toCharArray, "my-org")
+    queryScalaApi = influxDBClient.getQueryScalaApi()
+
+    val flux = fluxPrefix +
+      "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
+      "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\" and r[\"host\"] == \"A\"))" +
+      "|> sum()"
+
+    val source = queryScalaApi.query(flux).runWith(TestSink.probe[FluxRecord])
 
     val record1 = source.requestNext()
 

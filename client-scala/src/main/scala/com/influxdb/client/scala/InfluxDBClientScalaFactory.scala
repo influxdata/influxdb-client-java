@@ -96,9 +96,40 @@ object InfluxDBClientScalaFactory {
    */
   @Nonnull def create(url: String, token: Array[Char]): InfluxDBClientScala = {
 
+    create(url, token, null)
+  }
+
+  /**
+   * Create an instance of the InfluxDB 2.0 reactive client.
+   *
+   * @param url   the url to connect to the InfluxDB
+   * @param token the token to use for the authorization
+   * @param org      the name of an organization
+   * @return client
+   * @see [[InfluxDBClientOptions.Builder]]
+   */
+  @Nonnull def create(url: String, token: Array[Char], org: String): InfluxDBClientScala = {
+
+    create(url, token, org, null)
+  }
+
+  /**
+   * Create an instance of the InfluxDB 2.0 reactive client.
+   *
+   * @param url   the url to connect to the InfluxDB
+   * @param token the token to use for the authorization
+   * @param org      the name of an organization
+   * @param bucket   the name of a bucket
+   * @return client
+   * @see [[InfluxDBClientOptions.Builder]]
+   */
+  @Nonnull def create(url: String, token: Array[Char], org: String, bucket: String): InfluxDBClientScala = {
+
     val options = InfluxDBClientOptions.builder()
       .url(url)
       .authenticateToken(token)
+      .org(org)
+      .bucket(bucket)
       .build()
 
     create(options)
