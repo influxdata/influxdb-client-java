@@ -42,14 +42,14 @@ object InfluxDB2ScalaExampleDSL {
   def main(args: Array[String]) {
 
     val influxDBClient = InfluxDBClientScalaFactory
-      .create("http://localhost:9999", "my-token".toCharArray)
+      .create("http://localhost:9999", "my-token".toCharArray, "my-org")
 
     val mem = Flux.from("my-bucket")
       .range(-30L, ChronoUnit.MINUTES)
       .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
 
     //Result is returned as a stream
-    val results = influxDBClient.getQueryScalaApi().query(mem.toString(), "my-org")
+    val results = influxDBClient.getQueryScalaApi().query(mem.toString())
 
     //Example of additional result stream processing on client side
     val sink = results

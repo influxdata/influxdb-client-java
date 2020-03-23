@@ -32,10 +32,12 @@ import com.influxdb.client.write.Point;
 public class WriteDataPoint {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
+    private static String bucket = "my-bucket";
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org, bucket);
 
         //
         // Write data
@@ -50,7 +52,7 @@ public class WriteDataPoint {
                     .addField("value", 55D)
                     .time(Instant.now().toEpochMilli(), WritePrecision.MS);
 
-            writeApi.writePoint("my-bucket", "my-org", point);
+            writeApi.writePoint(point);
         }
 
         influxDBClient.close();

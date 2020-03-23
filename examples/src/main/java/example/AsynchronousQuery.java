@@ -28,10 +28,11 @@ import com.influxdb.client.QueryApi;
 public class AsynchronousQuery {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
 
     public static void main(final String[] args) throws InterruptedException {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
         //
         // Query data
         //
@@ -39,7 +40,7 @@ public class AsynchronousQuery {
 
         QueryApi queryApi = influxDBClient.getQueryApi();
 
-        queryApi.query(flux, "my-org", (cancellable, fluxRecord) -> {
+        queryApi.query(flux, (cancellable, fluxRecord) -> {
 
             //
             // The callback to consume a FluxRecord.

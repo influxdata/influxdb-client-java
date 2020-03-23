@@ -28,10 +28,11 @@ import com.influxdb.client.QueryApi;
 public class RawQueryAsynchronous {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
 
     public static void main(final String[] args) throws Exception {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
 
         //
         // Query data
@@ -40,7 +41,7 @@ public class RawQueryAsynchronous {
 
         QueryApi queryApi = influxDBClient.getQueryApi();
 
-        queryApi.queryRaw(flux, "my-org", (cancellable, line) -> {
+        queryApi.queryRaw(flux, (cancellable, line) -> {
 
             //
             // The callback to consume a line of CSV response

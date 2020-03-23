@@ -32,10 +32,11 @@ import com.influxdb.client.QueryApi;
 public class AsynchronousQueryPojo {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
 
     public static void main(final String[] args) throws InterruptedException {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
 
         //
         // Query data
@@ -47,7 +48,7 @@ public class AsynchronousQueryPojo {
         //
         // Map to POJO
         //
-        queryApi.query(flux, "my-org", Temperature.class, (cancellable, temperature) -> {
+        queryApi.query(flux, Temperature.class, (cancellable, temperature) -> {
 
             //
             // The callback to consume a FluxRecord mapped to POJO.

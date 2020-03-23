@@ -32,10 +32,11 @@ import com.influxdb.query.FluxTable;
 public class SynchronousQuery {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
 
         String flux = "from(bucket:\"my-bucket\") |> range(start: 0)";
 
@@ -44,7 +45,7 @@ public class SynchronousQuery {
         //
         // Query data
         //
-        List<FluxTable> tables = queryApi.query(flux, "my-org");
+        List<FluxTable> tables = queryApi.query(flux);
         for (FluxTable fluxTable : tables) {
             List<FluxRecord> records = fluxTable.getRecords();
             for (FluxRecord fluxRecord : records) {

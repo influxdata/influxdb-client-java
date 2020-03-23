@@ -28,7 +28,7 @@ import kotlinx.coroutines.runBlocking
 fun main(args: Array<String>) = runBlocking {
 
     val influxDBClient = InfluxDBClientKotlinFactory
-            .create("http://localhost:9999", "my-token".toCharArray())
+            .create("http://localhost:9999", "my-token".toCharArray(), "my-org")
 
     val fluxQuery = ("from(bucket: \"my-bucket\")\n"
             + " |> range(start: -5m)"
@@ -36,7 +36,7 @@ fun main(args: Array<String>) = runBlocking {
             + " |> sample(n: 5, pos: 1)")
 
     //Result is returned as a stream
-    val results = influxDBClient.getQueryKotlinApi().queryRaw(fluxQuery, "my-org")
+    val results = influxDBClient.getQueryKotlinApi().queryRaw(fluxQuery)
 
     //print results
     results.consumeEach { println("Line: $it") }

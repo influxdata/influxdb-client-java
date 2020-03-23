@@ -28,10 +28,11 @@ import com.influxdb.client.QueryApi;
 public class RawQuery {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
 
         //
         // Query data
@@ -40,7 +41,7 @@ public class RawQuery {
 
         QueryApi queryApi = influxDBClient.getQueryApi();
 
-        String csv = queryApi.queryRaw(flux, "my-org");
+        String csv = queryApi.queryRaw(flux);
 
         System.out.println("CSV response: " + csv);
 

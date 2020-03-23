@@ -33,10 +33,11 @@ import com.influxdb.client.QueryApi;
 public class SynchronousQueryPojo {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
 
         //
         // Query data
@@ -48,7 +49,7 @@ public class SynchronousQueryPojo {
         //
         // Map to POJO
         //
-        List<Temperature> temperatures = queryApi.query(flux, "my-org", Temperature.class);
+        List<Temperature> temperatures = queryApi.query(flux, Temperature.class);
         for (Temperature temperature : temperatures) {
             System.out.println(temperature.location + ": " + temperature.value + " at " + temperature.time);
         }

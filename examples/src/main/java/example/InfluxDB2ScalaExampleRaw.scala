@@ -36,7 +36,7 @@ object InfluxDB2ScalaExampleRaw {
 
   def main(args: Array[String]): Unit = {
     val influxDBClient = InfluxDBClientScalaFactory
-      .create("http://localhost:9999", "my-token".toCharArray)
+      .create("http://localhost:9999", "my-token".toCharArray, "my-org")
 
     val fluxQuery = ("from(bucket: \"my-bucket\")\n"
       + " |> range(start: -5m)"
@@ -44,7 +44,7 @@ object InfluxDB2ScalaExampleRaw {
       + " |> sample(n: 5, pos: 1)")
 
     //Result is returned as a stream
-    val sink = influxDBClient.getQueryScalaApi().queryRaw(fluxQuery, "my-org")
+    val sink = influxDBClient.getQueryScalaApi().queryRaw(fluxQuery)
       //print results
       .runWith(Sink.foreach[String](it => println(s"Line: $it")))
 

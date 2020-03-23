@@ -33,10 +33,12 @@ import com.influxdb.client.domain.WritePrecision;
 public class WritePojo {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
+    private static String bucket = "my-bucket";
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org, bucket);
 
         //
         // Write data
@@ -51,7 +53,7 @@ public class WritePojo {
             temperature.value = 62D;
             temperature.time = Instant.now();
 
-            writeApi.writeMeasurement("my-bucket", "my-org", WritePrecision.NS, temperature);
+            writeApi.writeMeasurement(WritePrecision.NS, temperature);
         }
 
         influxDBClient.close();
