@@ -50,7 +50,7 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient
     @Nonnull
     @Override
     public QueryReactiveApi getQueryReactiveApi() {
-        return new QueryReactiveApiImpl(retrofit.create(QueryService.class));
+        return new QueryReactiveApiImpl(retrofit.create(QueryService.class), options);
     }
 
     @Nonnull
