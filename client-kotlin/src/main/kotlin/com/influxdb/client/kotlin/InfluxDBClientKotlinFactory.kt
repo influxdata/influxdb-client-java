@@ -27,7 +27,7 @@ import com.influxdb.client.kotlin.internal.InfluxDBClientKotlinImpl
 
 /**
  * The Factory that creates an instance of a Flux client.
- * 
+ *
  * @author Jakub Bednar (bednar@github) (30/10/2018 08:19)
  */
 class InfluxDBClientKotlinFactory {
@@ -97,9 +97,40 @@ class InfluxDBClientKotlinFactory {
          */
         fun create(url: String, token: CharArray): InfluxDBClientKotlin {
 
+            return create(url, token, null, null)
+        }
+
+        /**
+         * Create an instance of the InfluxDB 2.0 reactive client.
+         *
+         * @param url   the url to connect to the InfluxDB
+         * @param token the token to use for the authorization
+         * @param org    the name of an organization
+         * @return client
+         * @see InfluxDBClientOptions.Builder.url
+         */
+        fun create(url: String, token: CharArray, org: String?): InfluxDBClientKotlin {
+
+            return create(url, token, org, null)
+        }
+
+        /**
+         * Create an instance of the InfluxDB 2.0 reactive client.
+         *
+         * @param url   the url to connect to the InfluxDB
+         * @param token the token to use for the authorization
+         * @param org    the name of an organization
+         * @param bucket the name of a bucket
+         * @return client
+         * @see InfluxDBClientOptions.Builder.url
+         */
+        fun create(url: String, token: CharArray, org: String?, bucket: String?): InfluxDBClientKotlin {
+
             val options = InfluxDBClientOptions.builder()
                     .url(url)
                     .authenticateToken(token)
+                    .org(org)
+                    .bucket(bucket)
                     .build()
 
             return create(options)

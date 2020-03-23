@@ -56,6 +56,7 @@ import java.util.*
 internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
     private lateinit var bucket: Bucket
+    private lateinit var token: String
     private lateinit var organization: Organization
     private lateinit var queryKotlinApi: QueryKotlinApi
 
@@ -97,7 +98,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
         val authorization = client.authorizationsApi
                 .createAuthorization(organization, Arrays.asList(readBucket, writeBucket))
 
-        val token = authorization.token
+        token = authorization.token
 
         val records = arrayOf("mem,host=A,region=west free=10i 10000000000",
                 "mem,host=A,region=west free=11i 20000000000",
@@ -127,6 +128,24 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
                 "|> sum()"
 
         val records = queryKotlinApi.query(flux, organization.id)
+
+        val tables = records.toList()
+        assert(tables).hasSize(2)
+    }
+
+    @Test
+    fun `Default Org Bucket`(): Unit = runBlocking {
+
+        influxDBClient.close()
+        influxDBClient = InfluxDBClientKotlinFactory.create(influxDb2Url, token.toCharArray(), "my-org", "my-bucket")
+        queryKotlinApi = influxDBClient.getQueryKotlinApi()
+
+        val flux = "from(bucket:\"${bucket.name}\")\n\t" +
+                "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
+                "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n\t" +
+                "|> sum()"
+
+        val records = queryKotlinApi.query(flux)
 
         val tables = records.toList()
         assert(tables).hasSize(2)

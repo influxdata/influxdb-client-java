@@ -35,7 +35,7 @@ import com.influxdb.client.service.QueryService
 internal class InfluxDBClientKotlinImpl(options: InfluxDBClientOptions) : AbstractInfluxDBClient(options), InfluxDBClientKotlin {
 
     override fun getQueryKotlinApi(): QueryKotlinApi {
-        return QueryKotlinApiImpl(retrofit.create<QueryService>(QueryService::class.java))
+        return QueryKotlinApiImpl(retrofit.create<QueryService>(QueryService::class.java), options)
     }
 
     override fun health(): HealthCheck {
