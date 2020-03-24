@@ -26,6 +26,7 @@ import java.util.function.BiConsumer
 import akka.NotUsed
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.Source
+import com.influxdb.client.InfluxDBClientOptions
 import com.influxdb.client.domain.{Dialect, Query}
 import com.influxdb.client.internal.AbstractInfluxDBClient
 import com.influxdb.client.scala.QueryScalaApi
@@ -42,6 +43,7 @@ import scala.compat.java8.FunctionConverters.asJavaConsumer
  * @author Jakub Bednar (bednar@github) (06/11/2018 08:19)
  */
 class QueryScalaApiImpl(@Nonnull service: QueryService,
+                        @Nonnull options: InfluxDBClientOptions,
                         @Nonnull val bufferSize: Int,
                         @Nonnull val overflowStrategy: OverflowStrategy)
 
@@ -50,6 +52,21 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
 
   Arguments.checkNotNull(overflowStrategy, "overflowStrategy")
   Arguments.checkNotNull(bufferSize, "bufferSize")
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
+   *
+   * <p>[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. </p>
+   *
+   * @param query the flux query to execute
+   * @return the stream of [[FluxRecord]]s
+   */
+  override def query(query: String): Source[FluxRecord, NotUsed] = {
+
+    Arguments.checkNotNull(options.getOrg, "InfluxDBClientOptions.getOrg")
+
+    this.query(query, options.getOrg)
+  }
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
@@ -63,6 +80,22 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
     Arguments.checkNonEmpty(org, "org")
 
     this.query(new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT), org)
+  }
+
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
+   *
+   * <p>[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. </p>
+   *
+   * @param query the flux query to execute
+   * @return the stream of [[FluxRecord]]s
+   */
+  override def query(query: Query): Source[FluxRecord, NotUsed] = {
+
+    Arguments.checkNotNull(options.getOrg, "InfluxDBClientOptions.getOrg")
+
+    this.query(query, options.getOrg)
   }
 
   /**
@@ -113,6 +146,23 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
    *
+   * <p>[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. </p>
+   *
+   * @param query           the flux query to execute
+   * @param measurementType the measurement (POJO)
+   * @tparam M the type of the measurement (POJO)
+   * @return the stream of measurements
+   */
+  override def query[M](query: String, measurementType: Class[M]): Source[M, NotUsed] = {
+
+    Arguments.checkNotNull(options.getOrg, "InfluxDBClientOptions.getOrg")
+
+    this.query(query, options.getOrg, measurementType)
+  }
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+   *
    * @param query           the flux query to execute
    * @param measurementType the measurement (POJO)
    * @tparam M the type of the measurement (POJO)
@@ -125,6 +175,23 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
     Arguments.checkNotNull(measurementType, "measurementType")
 
     this.query(query, org).map(t => resultMapper.toPOJO(t, measurementType))
+  }
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+   *
+   * <p>[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. </p>
+   *
+   * @param query           the flux query to execute
+   * @param measurementType the measurement (POJO)
+   * @tparam M the type of the measurement (POJO)
+   * @return the stream of measurements
+   */
+  override def query[M](query: Query, measurementType: Class[M]): Source[M, NotUsed] = {
+
+    Arguments.checkNotNull(options.getOrg, "InfluxDBClientOptions.getOrg")
+
+    this.query(query, options.getOrg, measurementType)
   }
 
   /**
@@ -148,6 +215,21 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
    *
+   * <p>[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. </p>
+   *
+   * @param query the flux query to execute
+   * @return the response stream
+   */
+  override def queryRaw(query: String): Source[String, NotUsed] = {
+
+    Arguments.checkNotNull(options.getOrg, "InfluxDBClientOptions.getOrg")
+
+    this.queryRaw(query, options.getOrg)
+  }
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+   *
    * @param query the flux query to execute
    * @return the response stream
    */
@@ -156,7 +238,24 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
     Arguments.checkNonEmpty(query, "query")
     Arguments.checkNonEmpty(org, "org")
 
-    queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, org)
+    this.queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, org)
+  }
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+   *
+   * <p>[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. </p>
+   *
+   * @param query   the flux query to execute
+   * @param dialect Dialect is an object defining the options to use when encoding the response.
+   *                [[http://bit.ly/flux-dialect See dialect SPEC]].
+   * @return the response stream
+   */
+  override def queryRaw(query: String, dialect: Dialect): Source[String, NotUsed] = {
+
+    Arguments.checkNotNull(options.getOrg, "InfluxDBClientOptions.getOrg")
+
+    this.queryRaw(query, dialect, options.getOrg)
   }
 
   /**
@@ -173,6 +272,21 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
     Arguments.checkNonEmpty(org, "org")
 
     this.queryRaw(new Query().query(query).dialect(dialect), org)
+  }
+
+  /**
+   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+   *
+   * <p>[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. </p>
+   *
+   * @param query the flux query to execute
+   * @return the response stream
+   */
+  override def queryRaw(query: Query): Source[String, NotUsed] = {
+
+    Arguments.checkNotNull(options.getOrg, "InfluxDBClientOptions.getOrg")
+
+    this.queryRaw(query, options.getOrg)
   }
 
   /**

@@ -38,10 +38,12 @@ import com.influxdb.query.FluxTable;
 public class InfluxDB2Example {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
+    private static String bucket = "my-bucket";
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org, bucket);
 
         //
         // Write data
@@ -56,12 +58,12 @@ public class InfluxDB2Example {
                     .addField("value", 55D)
                     .time(Instant.now().toEpochMilli(), WritePrecision.MS);
 
-            writeApi.writePoint("my-bucket", "my-org", point);
+            writeApi.writePoint(point);
 
             //
             // Write by LineProtocol
             //
-            writeApi.writeRecord("my-bucket", "my-org", WritePrecision.NS, "temperature,location=north value=60.0");
+            writeApi.writeRecord(WritePrecision.NS, "temperature,location=north value=60.0");
 
             //
             // Write by POJO
@@ -71,7 +73,7 @@ public class InfluxDB2Example {
             temperature.value = 62D;
             temperature.time = Instant.now();
 
-            writeApi.writeMeasurement("my-bucket", "my-org", WritePrecision.NS, temperature);
+            writeApi.writeMeasurement( WritePrecision.NS, temperature);
         }
 
         //
@@ -81,7 +83,7 @@ public class InfluxDB2Example {
 
         QueryApi queryApi = influxDBClient.getQueryApi();
 
-        List<FluxTable> tables = queryApi.query(flux, "my-org");
+        List<FluxTable> tables = queryApi.query(flux);
         for (FluxTable fluxTable : tables) {
             List<FluxRecord> records = fluxTable.getRecords();
             for (FluxRecord fluxRecord : records) {

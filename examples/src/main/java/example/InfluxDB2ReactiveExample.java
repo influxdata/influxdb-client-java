@@ -28,10 +28,11 @@ import com.influxdb.client.reactive.QueryReactiveApi;
 public class InfluxDB2ReactiveExample {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
 
     public static void main(final String[] args) {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org);
 
         //
         // Query data
@@ -41,7 +42,7 @@ public class InfluxDB2ReactiveExample {
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
         queryApi
-                .query(flux, "my-org")
+                .query(flux)
                 //
                 // Filter records by measurement name
                 //

@@ -43,14 +43,14 @@ object InfluxDB2ScalaExample {
   def main(args: Array[String]): Unit = {
 
     val influxDBClient = InfluxDBClientScalaFactory
-      .create("http://localhost:9999", "my-token".toCharArray)
+      .create("http://localhost:9999", "my-token".toCharArray, "my-org")
 
     val fluxQuery = ("from(bucket: \"my-bucket\")\n"
       + " |> range(start: -1d)"
       + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))")
 
     //Result is returned as a stream
-    val results = influxDBClient.getQueryScalaApi().query(fluxQuery, "my-org")
+    val results = influxDBClient.getQueryScalaApi().query(fluxQuery)
 
     //Example of additional result stream processing on client side
     val sink = results
@@ -91,7 +91,7 @@ object InfluxDB2ScalaExampleRaw {
 
   def main(args: Array[String]): Unit = {
     val influxDBClient = InfluxDBClientScalaFactory
-      .create("http://localhost:9999", "my-token".toCharArray)
+      .create("http://localhost:9999", "my-token".toCharArray, "my-org")
 
     val fluxQuery = ("from(bucket: \"my-bucket\")\n"
       + " |> range(start: -5m)"
@@ -99,7 +99,7 @@ object InfluxDB2ScalaExampleRaw {
       + " |> sample(n: 5, pos: 1)")
 
     //Result is returned as a stream
-    val sink = influxDBClient.getQueryScalaApi().queryRaw(fluxQuery, "my-org")
+    val sink = influxDBClient.getQueryScalaApi().queryRaw(fluxQuery)
       //print results
       .runWith(Sink.foreach[String](it => println(s"Line: $it")))
 
@@ -220,14 +220,14 @@ object InfluxDB2ScalaExampleDSL {
   def main(args: Array[String]) {
 
     val influxDBClient = InfluxDBClientScalaFactory
-      .create("http://localhost:9999", "my-token".toCharArray)
+      .create("http://localhost:9999", "my-token".toCharArray, "my-org")
 
     val mem = Flux.from("my-bucket")
       .range(-30L, ChronoUnit.MINUTES)
       .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
 
     //Result is returned as a stream
-    val results = influxDBClient.getQueryScalaApi().query(mem.toString(), "my-org")
+    val results = influxDBClient.getQueryScalaApi().query(mem.toString())
 
     //Example of additional result stream processing on client side
     val sink = results

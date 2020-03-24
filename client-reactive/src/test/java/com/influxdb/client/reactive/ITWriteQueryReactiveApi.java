@@ -37,6 +37,7 @@ import com.influxdb.client.domain.Permission;
 import com.influxdb.client.domain.PermissionResource;
 import com.influxdb.client.domain.User;
 import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.internal.AbstractInfluxDBClient;
 import com.influxdb.client.write.Point;
 import com.influxdb.client.write.events.WriteSuccessEvent;
 import com.influxdb.query.FluxRecord;
@@ -61,6 +62,7 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
     private QueryReactiveApi queryClient;
 
     private Bucket bucket;
+    private String token;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -99,7 +101,7 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         Authorization authorization = client.getAuthorizationsApi()
                 .createAuthorization(organization, Arrays.asList(readBucket, writeBucket));
 
-        String token = authorization.getToken();
+        token = authorization.getToken();
 
         client.close();
 
@@ -399,6 +401,68 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
                     return true;
                 })
                 .assertValueAt(2, "");
+    }
+
+    @Test
+    public void defaultOrgBucket() {
+
+        InfluxDBClientReactive client = InfluxDBClientReactiveFactory.create(influxDB_URL, token.toCharArray(), organization.getId(), bucket.getName());
+
+        WriteReactiveApi writeApi = client.getWriteReactiveApi();
+
+        writeApi.writeRecord(WritePrecision.NS, Maybe.just("h2o,location=north water_level=60.0 1"));
+        writeApi.close();
+
+        QueryReactiveApi queryApi = client.getQueryReactiveApi();
+
+        String query = "from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()";
+        // String
+        {
+            Flowable<FluxRecord> result = queryApi.query(query);
+
+            result.test().assertValueCount(1).assertValue(fluxRecord -> {
+
+                Assertions.assertThat(fluxRecord.getValue()).isEqualTo(60.0);
+
+                return true;
+            });
+        }
+
+        // Publisher
+        {
+            Flowable<FluxRecord> result = queryApi.query(Flowable.just(query));
+
+            result.test().assertValueCount(1).assertValue(fluxRecord -> {
+
+                Assertions.assertThat(fluxRecord.getValue()).isEqualTo(60.0);
+
+                return true;
+            });
+        }
+
+        // Measurement
+        {
+            Flowable<H2O> result = queryApi.query(query, H2O.class);
+
+            result.test().assertValueCount(1);
+        }
+
+        // Raw
+        {
+            Flowable<String> result = queryApi.queryRaw(query);
+            result.test().assertValueCount(6);
+
+            result = queryApi.queryRaw(Flowable.just(query));
+            result.test().assertValueCount(6);
+
+            result = queryApi.queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT);
+            result.test().assertValueCount(6);
+
+            result = queryApi.queryRaw(Flowable.just(query), AbstractInfluxDBClient.DEFAULT_DIALECT);
+            result.test().assertValueCount(6);
+        }
+
+        client.close();
     }
 
     @Measurement(name = "h2o")

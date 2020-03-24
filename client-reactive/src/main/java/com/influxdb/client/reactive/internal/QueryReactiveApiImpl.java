@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 
 import com.influxdb.Arguments;
 import com.influxdb.Cancellable;
+import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.domain.Dialect;
 import com.influxdb.client.domain.Query;
 import com.influxdb.client.internal.AbstractInfluxDBClient;
@@ -48,12 +49,24 @@ import org.reactivestreams.Publisher;
 final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReactiveApi {
 
     private final QueryService service;
+    private final InfluxDBClientOptions options;
 
-    QueryReactiveApiImpl(@Nonnull final QueryService service) {
+    QueryReactiveApiImpl(@Nonnull final QueryService service, @Nonnull final InfluxDBClientOptions options) {
 
         Arguments.checkNotNull(service, "InfluxDBReactiveService");
+        Arguments.checkNotNull(options, "options");
 
         this.service = service;
+        this.options = options;
+    }
+
+    @Nonnull
+    @Override
+    public Flowable<FluxRecord> query(@Nonnull final String query) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return query(query, options.getOrg());
     }
 
     @Nonnull
@@ -67,6 +80,14 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
     }
 
     @Override
+    public <M> Flowable<M> query(@Nonnull final String query, @Nonnull final Class<M> measurementType) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return query(query, options.getOrg(), measurementType);
+    }
+
+    @Override
     public <M> Flowable<M> query(@Nonnull final String query,
                                  @Nonnull final String org,
                                  @Nonnull final Class<M> measurementType) {
@@ -76,6 +97,15 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
         Arguments.checkNonEmpty(org, "org");
 
         return query(Flowable.just(query), org, measurementType);
+    }
+
+    @Nonnull
+    @Override
+    public Flowable<FluxRecord> query(@Nonnull final Publisher<String> queryStream) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return query(queryStream, options.getOrg());
     }
 
     @Nonnull
@@ -126,6 +156,16 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
     @Nonnull
     @Override
     public <M> Flowable<M> query(@Nonnull final Publisher<String> queryStream,
+                                 @Nonnull final Class<M> measurementType) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return query(queryStream, options.getOrg(), measurementType);
+    }
+
+    @Nonnull
+    @Override
+    public <M> Flowable<M> query(@Nonnull final Publisher<String> queryStream,
                                  @Nonnull final String org,
                                  @Nonnull final Class<M> measurementType) {
 
@@ -138,12 +178,30 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
+    public Flowable<String> queryRaw(@Nonnull final String query) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return queryRaw(query, options.getOrg());
+    }
+
+    @Nonnull
+    @Override
     public Flowable<String> queryRaw(@Nonnull final String query, @Nonnull final String org) {
 
         Arguments.checkNonEmpty(query, "Flux query");
         Arguments.checkNonEmpty(org, "org");
 
         return queryRaw(Flowable.just(query), org);
+    }
+
+    @Nonnull
+    @Override
+    public Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return queryRaw(queryStream, options.getOrg());
     }
 
     @Nonnull
@@ -159,6 +217,15 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
+    public Flowable<String> queryRaw(@Nonnull final String query, @Nullable final Dialect dialect) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return queryRaw(query, dialect, options.getOrg());
+    }
+
+    @Nonnull
+    @Override
     public Flowable<String> queryRaw(@Nonnull final String query,
                                      @Nullable final Dialect dialect,
                                      @Nonnull final String org) {
@@ -167,6 +234,15 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
         Arguments.checkNonEmpty(org, "org");
 
         return queryRaw(Flowable.just(query), dialect, org);
+    }
+
+    @Nonnull
+    @Override
+    public Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream, @Nullable final Dialect dialect) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return queryRaw(queryStream, dialect, options.getOrg());
     }
 
     @Nonnull

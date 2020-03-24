@@ -23,6 +23,7 @@ package com.influxdb.client.kotlin.internal
 
 import com.influxdb.Arguments
 import com.influxdb.Cancellable
+import com.influxdb.client.InfluxDBClientOptions
 import com.influxdb.client.domain.Dialect
 import com.influxdb.client.domain.Query
 import com.influxdb.client.internal.AbstractInfluxDBClient
@@ -40,7 +41,14 @@ import java.util.function.Consumer
 /**
  * @author Jakub Bednar (bednar@github) (30/10/2018 08:51)
  */
-internal class QueryKotlinApiImpl(private val service: QueryService) : AbstractQueryApi(), QueryKotlinApi {
+internal class QueryKotlinApiImpl(private val service: QueryService, private val options: InfluxDBClientOptions) : AbstractQueryApi(), QueryKotlinApi {
+
+    override fun query(query: String): Channel<FluxRecord> {
+
+        Arguments.checkNotNull(options.org, "InfluxDBClientOptions.getOrg")
+
+        return query(query, options.org!!)
+    }
 
     override fun query(query: String, org: String): Channel<FluxRecord> {
 
@@ -48,6 +56,13 @@ internal class QueryKotlinApiImpl(private val service: QueryService) : AbstractQ
         Arguments.checkNonEmpty(org, "org")
 
         return query(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(query), org)
+    }
+
+    override fun query(query: Query): Channel<FluxRecord> {
+
+        Arguments.checkNotNull(options.org, "InfluxDBClientOptions.getOrg")
+
+        return query(query, options.org!!)
     }
 
     override fun query(query: Query, org: String): Channel<FluxRecord> {
@@ -62,6 +77,13 @@ internal class QueryKotlinApiImpl(private val service: QueryService) : AbstractQ
         }
 
         return query(query, org, consumer)
+    }
+
+    override fun <M> query(query: String, measurementType: Class<M>): Channel<M> {
+
+        Arguments.checkNotNull(options.org, "InfluxDBClientOptions.getOrg")
+
+        return query(query, options.org!!, measurementType)
     }
 
     override fun <M> query(query: String, org: String, measurementType: Class<M>): Channel<M> {
@@ -79,6 +101,13 @@ internal class QueryKotlinApiImpl(private val service: QueryService) : AbstractQ
         return query(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(query), org, consumer)
     }
 
+    override fun <M> query(query: Query, measurementType: Class<M>): Channel<M> {
+
+        Arguments.checkNotNull(options.org, "InfluxDBClientOptions.getOrg")
+
+        return query(query, options.org!!, measurementType);
+    }
+
     override fun <M> query(query: Query, org: String, measurementType: Class<M>): Channel<M> {
 
         Arguments.checkNotNull(query, "query")
@@ -94,6 +123,13 @@ internal class QueryKotlinApiImpl(private val service: QueryService) : AbstractQ
         return query(query, org, consumer)
     }
 
+    override fun queryRaw(query: String): Channel<String> {
+
+        Arguments.checkNotNull(options.org, "InfluxDBClientOptions.getOrg")
+
+        return queryRaw(query, options.org!!)
+    }
+
     override fun queryRaw(query: String, org: String): Channel<String> {
 
         Arguments.checkNonEmpty(query, "query")
@@ -102,12 +138,26 @@ internal class QueryKotlinApiImpl(private val service: QueryService) : AbstractQ
         return queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, org)
     }
 
+    override fun queryRaw(query: String, dialect: Dialect): Channel<String> {
+
+        Arguments.checkNotNull(options.org, "InfluxDBClientOptions.getOrg")
+
+        return queryRaw(query, dialect, options.org!!)
+    }
+
     override fun queryRaw(query: String, dialect: Dialect, org: String): Channel<String> {
 
         Arguments.checkNonEmpty(query, "query")
         Arguments.checkNonEmpty(org, "org")
 
         return queryRaw(Query().dialect(dialect).query(query), org)
+    }
+
+    override fun queryRaw(query: Query): Channel<String> {
+
+        Arguments.checkNotNull(options.org, "InfluxDBClientOptions.getOrg")
+
+        return queryRaw(query, options.org!!)
     }
 
     override fun queryRaw(query: Query, org: String): Channel<String> {

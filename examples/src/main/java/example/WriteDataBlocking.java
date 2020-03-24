@@ -35,10 +35,12 @@ import com.influxdb.exceptions.InfluxException;
 public class WriteDataBlocking {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
+    private static String bucket = "my-bucket";
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org, bucket);
 
         WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
 
@@ -48,7 +50,7 @@ public class WriteDataBlocking {
             //
             String record = "temperature,location=north value=60.0";
 
-            writeApi.writeRecord("my-bucket", "my-org", WritePrecision.NS, record);
+            writeApi.writeRecord(WritePrecision.NS, record);
 
             //
             // Write by Data Point
@@ -58,7 +60,7 @@ public class WriteDataBlocking {
                     .addField("value", 55D)
                     .time(Instant.now().toEpochMilli(), WritePrecision.MS);
 
-            writeApi.writePoint("my-bucket", "my-org", point);
+            writeApi.writePoint(point);
 
             //
             // Write by POJO
@@ -68,7 +70,7 @@ public class WriteDataBlocking {
             temperature.value = 62D;
             temperature.time = Instant.now();
 
-            writeApi.writeMeasurement("my-bucket", "my-org", WritePrecision.NS, temperature);
+            writeApi.writeMeasurement(WritePrecision.NS, temperature);
 
         } catch (InfluxException ie) {
             System.out.println("InfluxException: " + ie);

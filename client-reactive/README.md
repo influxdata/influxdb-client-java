@@ -29,10 +29,11 @@ import com.influxdb.client.reactive.QueryReactiveApi;
 public class InfluxDB2ReactiveExample {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
 
     public static void main(final String[] args) {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org);
 
         //
         // Query data
@@ -42,7 +43,7 @@ public class InfluxDB2ReactiveExample {
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
         queryApi
-                .query(flux, "my-org")
+                .query(flux)
                 //
                 // Filter records by measurement name
                 //
@@ -75,10 +76,11 @@ import com.influxdb.client.reactive.QueryReactiveApi;
 public class InfluxDB2ReactiveExampleRaw {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
 
     public static void main(final String[] args) {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org);
 
         //
         // Query data
@@ -88,7 +90,7 @@ public class InfluxDB2ReactiveExampleRaw {
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
         queryApi
-                .queryRaw(flux, "my-org")
+                .queryRaw(flux)
                 //
                 // Take first 10 records
                 //
@@ -118,15 +120,14 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-
 public class InfluxDB2ReactiveExamplePojo {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
 
     public static void main(final String[] args) {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org);
         //
         // Query data
         //
@@ -135,7 +136,7 @@ public class InfluxDB2ReactiveExamplePojo {
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
         queryApi
-                .query(flux, "my-org", Temperature.class)
+                .query(flux, Temperature.class)
                 //
                 // Take first 10 records
                 //
@@ -195,7 +196,6 @@ import com.influxdb.annotations.Measurement;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
-import com.influxdb.client.reactive.QueryReactiveApi;
 import com.influxdb.client.reactive.WriteReactiveApi;
 
 import io.reactivex.Flowable;
@@ -203,10 +203,12 @@ import io.reactivex.Flowable;
 public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
+    private static String bucket = "my-bucket";
 
     public static void main(final String[] args) throws InterruptedException {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org, bucket);
 
         //
         // Write data
@@ -223,7 +225,7 @@ public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
                     return temperature;
                 });
 
-        writeApi.writeMeasurements("my-bucket", "my-org", WritePrecision.NS, measurements);
+        writeApi.writeMeasurements(WritePrecision.NS, measurements);
 
         Thread.sleep(30_000);
 
@@ -352,10 +354,11 @@ import com.influxdb.query.dsl.functions.restriction.Restrictions;
 public class InfluxDB2ReactiveExampleDSL {
 
     private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
 
     public static void main(final String[] args) {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org);
         
         //
         // Query data
@@ -367,7 +370,7 @@ public class InfluxDB2ReactiveExampleDSL {
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
         queryApi
-                .query(flux.toString(), "my-org")
+                .query(flux.toString())
                 .subscribe(fluxRecord -> {
                     //
                     // The callback to consume a FluxRecord.

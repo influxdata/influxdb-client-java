@@ -27,14 +27,14 @@ import kotlinx.coroutines.runBlocking
 fun main(args: Array<String>) = runBlocking {
 
     val influxDBClient = InfluxDBClientKotlinFactory
-            .create("http://localhost:9999", "my-token".toCharArray())
+            .create("http://localhost:9999", "my-token".toCharArray(), "my-org")
 
     val fluxQuery = ("from(bucket: \"my-bucket\")\n"
             + " |> range(start: -1d)"
             + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))")
 
     //Result is returned as a stream
-    val results = influxDBClient.getQueryKotlinApi().query(fluxQuery, "my-org")
+    val results = influxDBClient.getQueryKotlinApi().query(fluxQuery)
 
     //Example of additional result stream processing on client side
     results
@@ -61,7 +61,7 @@ import kotlinx.coroutines.runBlocking
 fun main(args: Array<String>) = runBlocking {
 
     val influxDBClient = InfluxDBClientKotlinFactory
-            .create("http://localhost:9999", "my-token".toCharArray())
+            .create("http://localhost:9999", "my-token".toCharArray(), "my-org")
 
     val fluxQuery = ("from(bucket: \"my-bucket\")\n"
             + " |> range(start: -5m)"
@@ -69,7 +69,7 @@ fun main(args: Array<String>) = runBlocking {
             + " |> sample(n: 5, pos: 1)")
 
     //Result is returned as a stream
-    val results = influxDBClient.getQueryKotlinApi().queryRaw(fluxQuery, "my-org")
+    val results = influxDBClient.getQueryKotlinApi().queryRaw(fluxQuery)
 
     //print results
     results.consumeEach { println("Line: $it") }
@@ -177,14 +177,14 @@ import java.time.temporal.ChronoUnit
 fun main(args: Array<String>) = runBlocking {
 
     val influxDBClient = InfluxDBClientKotlinFactory
-            .create("http://localhost:9999", "my-token".toCharArray())
+            .create("http://localhost:9999", "my-token".toCharArray(), "my-org")
 
     val mem = Flux.from("my-bucket")
             .range(-30L, ChronoUnit.MINUTES)
             .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
 
     //Result is returned as a stream
-    val results = influxDBClient.getQueryKotlinApi().query(mem.toString(), "my-org")
+    val results = influxDBClient.getQueryKotlinApi().query(mem.toString())
 
     //Example of additional result stream processing on client side
     results

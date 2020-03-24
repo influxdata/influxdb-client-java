@@ -41,7 +41,7 @@ class InfluxDBClientScalaImpl(@Nonnull options: InfluxDBClientOptions,
    *
    * @return the new client instance for the Query API
    */
-  override def getQueryScalaApi(): QueryScalaApi = new QueryScalaApiImpl(retrofit.create(classOf[QueryService]), bufferSize, overflowStrategy)
+  override def getQueryScalaApi(): QueryScalaApi = new QueryScalaApiImpl(retrofit.create(classOf[QueryService]), options, bufferSize, overflowStrategy)
 
   /**
    * Get the health of an instance.
