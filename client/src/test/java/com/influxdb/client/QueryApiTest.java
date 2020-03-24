@@ -45,8 +45,9 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         after();
 
+        String url = startMockServer();
         InfluxDBClientOptions options = InfluxDBClientOptions.builder()
-                .url(startMockServer())
+                .url(url)
                 .org("123456")
                 .build();
 
@@ -60,6 +61,19 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
         queryApi.query("from(bucket: \"telegraf\")");
 
         RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
+
+        influxDBClient = InfluxDBClientFactory.create(url, "my-token".toCharArray(), "123456");
+
+        queryApi = influxDBClient.getQueryApi();
+
+        // String
+        mockServer.enqueue(createResponse(""));
+
+        queryApi.query("from(bucket: \"telegraf\")");
+
+        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
