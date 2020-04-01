@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 
+import com.influxdb.annotations.Column;
+import com.influxdb.annotations.Measurement;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractInfluxDBClientTest;
 import com.influxdb.client.write.Point;
@@ -161,6 +163,34 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("b1");
         // precision
         Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
+    }
+
+    @Test
+    void writeMeasurementInheritance() throws InterruptedException {
+
+        mockServer.enqueue(new MockResponse());
+
+        writeApi = influxDBClient.getWriteApi();
+
+        Metric measurement = new Visitor();
+        //noinspection CastCanBeRemovedNarrowingVariableType
+        ((Visitor) measurement).count = 99;
+        measurement.source = "metric-source";
+
+        // response
+        writeApi.writeMeasurement("b1", "org1", WritePrecision.S, measurement);
+
+        RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+
+        // value
+        Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("visitor,source=metric-source count=99i");
+
+        // organization
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("org1");
+        // bucket
+        Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("b1");
+        // precision
+        Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("s");
     }
 
     @Test
@@ -841,6 +871,18 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         Assertions.assertThat(recordedRequest).isNotNull();
 
         return recordedRequest.getBody().readUtf8();
+    }
+
+    public abstract class Metric {
+        @Column(name = "source", tag = true)
+        private String source;
+    }
+
+
+    @Measurement(name = "visitor")
+    public class Visitor extends Metric {
+        @Column(name = "count")
+        private long count;
     }
 
 }
