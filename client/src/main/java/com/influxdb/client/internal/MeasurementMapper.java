@@ -129,15 +129,20 @@ class MeasurementMapper {
                 influxColumnAndFieldMap = initialMap;
             }
 
-            for (Field field : measurementType.getDeclaredFields()) {
-                Column colAnnotation = field.getAnnotation(Column.class);
-                if (colAnnotation != null) {
-                    String name = colAnnotation.name();
-                    if (name.isEmpty()) {
-                        name = field.getName();
+            Class<?> currentMeasurementType = measurementType;
+            while (currentMeasurementType != null) {
+                for (Field field : currentMeasurementType.getDeclaredFields()) {
+                    Column colAnnotation = field.getAnnotation(Column.class);
+                    if (colAnnotation != null) {
+                        String name = colAnnotation.name();
+                        if (name.isEmpty()) {
+                            name = field.getName();
+                        }
+                        influxColumnAndFieldMap.put(name, field);
                     }
-                    influxColumnAndFieldMap.put(name, field);
                 }
+
+                currentMeasurementType = currentMeasurementType.getSuperclass();
             }
         }
     }
