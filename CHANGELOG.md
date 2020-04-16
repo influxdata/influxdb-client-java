@@ -4,7 +4,10 @@
 1. [#93](https://github.com/influxdata/influxdb-client-java/issues/93): Add addTags and addFields helper functions to Point
 1. [#97](https://github.com/influxdata/influxdb-client-java/pull/97): Add the ability to specify the org and the bucket when creating the client
 
-### Bugs
+### Documentation
+1. [#103](https://github.com/influxdata/influxdb-client-java/pull/103): Clarify how to use a client with InfluxDB 1.8
+
+### Bug Fixes
 1. [#98](https://github.com/influxdata/influxdb-client-java/issues/98): @Column supports super class inheritance for write measurements
 
 ## 1.6.0 [2020-03-13]
@@ -14,7 +17,7 @@
 1. [#83](https://github.com/influxdata/influxdb-client-java/issues/83): Add reduce operator to FluxDSL
 1. [#91](https://github.com/influxdata/influxdb-client-java/pull/91): Set User-Agent to influxdb-client-java/VERSION for all requests
 
-### Bugs
+### Bug Fixes
 1. [#90](https://github.com/influxdata/influxdb-client-java/pull/90): Correctly parse CSV where multiple results include multiple tables
 1. [#89](https://github.com/influxdata/influxdb-client-java/issues/89): @Column supports super class inheritance
 
@@ -25,7 +28,7 @@
 1. [#33](https://github.com/influxdata/influxdb-client-java/issues/33): InfluxDBClient.close also dispose a created writeApi
 1. [#80](https://github.com/influxdata/influxdb-client-java/issues/80): FluxRecord, FluxColumn, FluxTable are serializable
 
-### Bugs
+### Bug Fixes
 1. [#82](https://github.com/influxdata/influxdb-client-java/pull/82): Apply backpressure strategy when a buffer overflow
 
 ## 1.4.0 [2020-01-17]
@@ -41,7 +44,7 @@
 ### API
 1. [#68](https://github.com/influxdata/influxdb-client-java/pull/68): Updated swagger to latest version
 
-### Bugs
+### Bug Fixes
 1. [#69](https://github.com/influxdata/influxdb-client-java/issues/69): Fixed android compatibility
 
 ## 1.2.0 [2019-11-08]
@@ -64,7 +67,7 @@
 ### API
 1. [#58](https://github.com/influxdata/influxdb-client-java/pull/58): Updated swagger to latest version
 
-### Bugs
+### Bug Fixes
 1. [#57](https://github.com/influxdata/influxdb-client-java/pull/57): LabelsApi: orgID parameter has to be pass as second argument
 
 ## 1.0.0 [2019-08-30]
@@ -72,7 +75,7 @@
 ### Features
 1. [#50](https://github.com/influxdata/influxdb-client-java/issues/50): Added support for gzip compression of query response
 
-### Bugs
+### Bug Fixes
 1. [#48](https://github.com/influxdata/influxdb-client-java/issues/48): The org parameter takes either the ID or Name interchangeably
 1. [#53](https://github.com/influxdata/influxdb-client-java/issues/53): Drop NaN and infinity values from fields when writing to InfluxDB
 
@@ -92,7 +95,7 @@
 1. [#35](https://github.com/influxdata/influxdb-client-java/issues/35): Possibility to specify default tags
 1. [#41](https://github.com/influxdata/influxdb-client-java/issues/41): Synchronous blocking API to Write time-series data into InfluxDB 2.0
 
-### Bugs
+### Bug Fixes
 1. [#43](https://github.com/influxdata/influxdb-client-java/issues/43): The data point without field should be ignored
 
 ### CI

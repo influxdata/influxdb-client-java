@@ -159,4 +159,24 @@ class InfluxDBClientFactoryTest extends AbstractTest {
                 .hasEntrySatisfying("version", value -> Assertions.assertThat(value).isEqualTo("${version}"))
                 .hasEntrySatisfying("hostname", value -> Assertions.assertThat(value).isEqualTo("${env.hostname}"));
     }
+
+    @Test
+    void v1Configuration() throws NoSuchFieldException, IllegalAccessException {
+        InfluxDBClient client = InfluxDBClientFactory.createV1("http://localhost:8086", "my-username", "my-password".toCharArray(), "database", "week");
+
+        InfluxDBClientOptions options = getDeclaredField(client, "options", AbstractInfluxDBClient.class);
+
+        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:8086");
+        Assertions.assertThat(options.getOrg()).isEqualTo("-");
+        Assertions.assertThat(options.getBucket()).isEqualTo("database/week");
+        Assertions.assertThat(options.getToken()).isEqualTo("my-username:my-password".toCharArray());
+
+        client = InfluxDBClientFactory.createV1("http://localhost:8086", null, null, "database", null);
+
+        options = getDeclaredField(client, "options", AbstractInfluxDBClient.class);
+        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:8086");
+        Assertions.assertThat(options.getOrg()).isEqualTo("-");
+        Assertions.assertThat(options.getBucket()).isEqualTo("database/");
+        Assertions.assertThat(options.getToken()).isEqualTo(":".toCharArray());
+    }
 }
