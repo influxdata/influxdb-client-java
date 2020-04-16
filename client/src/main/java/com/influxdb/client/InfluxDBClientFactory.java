@@ -153,6 +153,37 @@ public final class InfluxDBClientFactory {
     }
 
     /**
+     * Create a instance of the InfluxDB 2.0 client to connect into InfluxDB 1.8.
+     *
+     * @param url             the url to connect to the InfluxDB 1.8
+     * @param username        authorization username
+     * @param password        authorization password
+     * @param database        database name
+     * @param retentionPolicy retention policy
+     * @return client
+     */
+    @Nonnull
+    public static InfluxDBClient createV1(@Nonnull final String url,
+                                          @Nullable final String username,
+                                          final char[] password,
+                                          @Nonnull final String database,
+                                          @Nullable final String retentionPolicy) {
+
+        Arguments.checkNonEmpty(database, "database");
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url(url)
+                .org("-")
+                .authenticateToken(String.format("%s:%s",
+                        username == null ? "" : username,
+                        password == null ? "" : String.valueOf(password)).toCharArray())
+                .bucket(String.format("%s/%s", database, retentionPolicy == null ? "" : retentionPolicy))
+                .build();
+
+        return create(options);
+    }
+
+    /**
      * Create an instance of the InfluxDB 2.0 client.
      *
      * @param options the connection configuration

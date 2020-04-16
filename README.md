@@ -11,7 +11,7 @@
 
 This repository contains the reference JVM clients for the InfluxDB 2.0. Currently, Java, Reactive, Kotlin and Scala clients are implemented.
 
-#### Note: Use this client library with InfluxDB 2.x and InfluxDB 1.8+. For connecting to InfluxDB 1.7 or earlier instances, use the [influxdb-java](https://github.com/influxdata/influxdb-java) client library.
+#### Note: Use this client library with InfluxDB 2.x and InfluxDB 1.8+ ([see details](#influxdb-18-api-compatibility)). For connecting to InfluxDB 1.7 or earlier instances, use the [influxdb-java](https://github.com/influxdata/influxdb-java) client library.
 
 - [Features](#features)
 - [Documentation](#documentation)
@@ -280,6 +280,20 @@ public class InfluxDB2ManagementExample {
     }
 }
 ``` 
+
+### InfluxDB 1.8 API compatibility
+
+[InfluxDB 1.8.0 introduced forward compatibility APIs](https://docs.influxdata.com/influxdb/latest/tools/api/#influxdb-2-0-api-compatibility-endpoints) for InfluxDB 2.0. This allow you to easily move from InfluxDB 1.x to InfluxDB 2.0 Cloud or open source.
+
+The following forward compatible APIs are available:
+
+| API | Endpoint | Description |
+|:----------|:----------|:----------|
+| [QueryApi.java](client/src/main/java/com/influxdb/client/QueryApi.java) | [/api/v2/query](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-query-http-endpoint) | Query data in InfluxDB 1.8.0+ using the InfluxDB 2.0 API and [Flux](https://docs.influxdata.com/flux/latest/) _(endpoint should be enabled by [`flux-enabled` option](https://docs.influxdata.com/influxdb/latest/administration/config/#flux-enabled-false))_  |
+| [WriteApi.java](client/src/main/java/com/influxdb/client/WriteApi.java) | [/api/v2/write](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-write-http-endpoint) | Write data to InfluxDB 1.8.0+ using the InfluxDB 2.0 API |
+| [health()](client/src/main/java/com/influxdb/client/InfluxDBClient.java#L236) | [/health](https://docs.influxdata.com/influxdb/latest/tools/api/#health-http-endpoint) | Check the health of your InfluxDB instance |    
+
+For detail info see [InfluxDB 1.8 example](examples/src/main/java/example/InfluxDB18Example.java).
 
 ### Flux queries in InfluxDB 1.7+
 
