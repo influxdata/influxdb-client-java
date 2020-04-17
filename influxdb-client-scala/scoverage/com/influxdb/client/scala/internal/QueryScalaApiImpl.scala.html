@@ -50,195 +50,309 @@
 </span>26 <span style=''>import akka.NotUsed
 </span>27 <span style=''>import akka.stream.OverflowStrategy
 </span>28 <span style=''>import akka.stream.scaladsl.Source
-</span>29 <span style=''>import com.influxdb.client.domain.{Dialect, Query}
-</span>30 <span style=''>import com.influxdb.client.internal.AbstractInfluxDBClient
-</span>31 <span style=''>import com.influxdb.client.scala.QueryScalaApi
-</span>32 <span style=''>import com.influxdb.client.service.QueryService
-</span>33 <span style=''>import com.influxdb.internal.AbstractQueryApi
-</span>34 <span style=''>import com.influxdb.query.internal.FluxCsvParser
-</span>35 <span style=''>import com.influxdb.query.{FluxRecord, FluxTable}
-</span>36 <span style=''>import com.influxdb.{Arguments, Cancellable}
-</span>37 <span style=''>import javax.annotation.Nonnull
-</span>38 <span style=''>
-</span>39 <span style=''>import scala.compat.java8.FunctionConverters.asJavaConsumer
-</span>40 <span style=''>
-</span>41 <span style=''>/**
-</span>42 <span style=''> * @author Jakub Bednar (bednar@github) (06/11/2018 08:19)
-</span>43 <span style=''> */
-</span>44 <span style=''>class QueryScalaApiImpl(@Nonnull service: QueryService,
-</span>45 <span style=''>                        @Nonnull val bufferSize: Int,
-</span>46 <span style=''>                        @Nonnull val overflowStrategy: OverflowStrategy)
-</span>47 <span style=''>
-</span>48 <span style=''>  extends AbstractQueryApi()
-</span>49 <span style=''>    with QueryScalaApi {
-</span>50 <span style=''>
-</span>51 <span style=''>  Arguments.checkNotNull(overflowStrategy, &quot;overflowStrategy&quot;)
-</span>52 <span style=''>  Arguments.checkNotNull(bufferSize, &quot;bufferSize&quot;)
-</span>53 <span style=''>
-</span>54 <span style=''>  /**
-</span>55 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
-</span>56 <span style=''>   *
-</span>57 <span style=''>   * @param query the flux query to execute
-</span>58 <span style=''>   * @return the stream of [[FluxRecord]]s
-</span>59 <span style=''>   */
-</span>60 <span style=''>  override def query(@Nonnull query: String, @Nonnull org: String): Source[FluxRecord, NotUsed] = {
-</span>61 <span style=''>
-</span>62 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
-</span>63 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
-</span>64 <span style=''>
-</span>65 <span style=''>    this.query(new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT), org)
-</span>66 <span style=''>  }
+</span>29 <span style=''>import com.influxdb.client.InfluxDBClientOptions
+</span>30 <span style=''>import com.influxdb.client.domain.{Dialect, Query}
+</span>31 <span style=''>import com.influxdb.client.internal.AbstractInfluxDBClient
+</span>32 <span style=''>import com.influxdb.client.scala.QueryScalaApi
+</span>33 <span style=''>import com.influxdb.client.service.QueryService
+</span>34 <span style=''>import com.influxdb.internal.AbstractQueryApi
+</span>35 <span style=''>import com.influxdb.query.internal.FluxCsvParser
+</span>36 <span style=''>import com.influxdb.query.{FluxRecord, FluxTable}
+</span>37 <span style=''>import com.influxdb.{Arguments, Cancellable}
+</span>38 <span style=''>import javax.annotation.Nonnull
+</span>39 <span style=''>
+</span>40 <span style=''>import scala.compat.java8.FunctionConverters.asJavaConsumer
+</span>41 <span style=''>
+</span>42 <span style=''>/**
+</span>43 <span style=''> * @author Jakub Bednar (bednar@github) (06/11/2018 08:19)
+</span>44 <span style=''> */
+</span>45 <span style=''>class QueryScalaApiImpl(@Nonnull service: QueryService,
+</span>46 <span style=''>                        @Nonnull options: InfluxDBClientOptions,
+</span>47 <span style=''>                        @Nonnull val bufferSize: Int,
+</span>48 <span style=''>                        @Nonnull val overflowStrategy: OverflowStrategy)
+</span>49 <span style=''>
+</span>50 <span style=''>  extends AbstractQueryApi()
+</span>51 <span style=''>    with QueryScalaApi {
+</span>52 <span style=''>
+</span>53 <span style=''>  Arguments.checkNotNull(overflowStrategy, &quot;overflowStrategy&quot;)
+</span>54 <span style=''>  Arguments.checkNotNull(bufferSize, &quot;bufferSize&quot;)
+</span>55 <span style=''>
+</span>56 <span style=''>  /**
+</span>57 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
+</span>58 <span style=''>   *
+</span>59 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
+</span>60 <span style=''>   *
+</span>61 <span style=''>   * @param query the flux query to execute
+</span>62 <span style=''>   * @return the stream of [[FluxRecord]]s
+</span>63 <span style=''>   */
+</span>64 <span style=''>  override def query(query: String): Source[FluxRecord, NotUsed] = {
+</span>65 <span style=''>
+</span>66 <span style=''>    Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)
 </span>67 <span style=''>
-</span>68 <span style=''>  /**
-</span>69 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
-</span>70 <span style=''>   *
-</span>71 <span style=''>   * @param query the flux query to execute
-</span>72 <span style=''>   * @param org   specifies the source organization
-</span>73 <span style=''>   * @return the stream of [[FluxRecord]]s
-</span>74 <span style=''>   */
-</span>75 <span style=''>  override def query(query: Query, org: String): Source[FluxRecord, NotUsed] = {
-</span>76 <span style=''>
-</span>77 <span style=''>    Arguments.checkNotNull(query, &quot;query&quot;)
-</span>78 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
-</span>79 <span style=''>
-</span>80 <span style=''>    Source
-</span>81 <span style=''>      .single(query)
-</span>82 <span style=''>      .map(_ =&gt; service
-</span>83 <span style=''>        .postQueryResponseBody(null, &quot;application/json&quot;,
-</span>84 <span style=''>          null, org, null, query))
-</span>85 <span style=''>      .flatMapConcat(queryCall =&gt; {
-</span>86 <span style=''>        Source.queue[FluxRecord](bufferSize, overflowStrategy)
-</span>87 <span style=''>          .mapMaterializedValue(queue =&gt; {
-</span>88 <span style=''>
-</span>89 <span style=''>            val eventualDone = queue.watchCompletion()
-</span>90 <span style=''>            val consumer = new FluxCsvParser.FluxResponseConsumer() {
-</span>91 <span style=''>
-</span>92 <span style=''>              override
-</span>93 <span style=''>              def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull table: FluxTable): Unit = {
-</span>94 <span style=''>              }
+</span>68 <span style=''>    this.query(query, options.getOrg)
+</span>69 <span style=''>  }
+</span>70 <span style=''>
+</span>71 <span style=''>  /**
+</span>72 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
+</span>73 <span style=''>   *
+</span>74 <span style=''>   * @param query the flux query to execute
+</span>75 <span style=''>   * @return the stream of [[FluxRecord]]s
+</span>76 <span style=''>   */
+</span>77 <span style=''>  override def query(@Nonnull query: String, @Nonnull org: String): Source[FluxRecord, NotUsed] = {
+</span>78 <span style=''>
+</span>79 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
+</span>80 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
+</span>81 <span style=''>
+</span>82 <span style=''>    this.query(new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT), org)
+</span>83 <span style=''>  }
+</span>84 <span style=''>
+</span>85 <span style=''>
+</span>86 <span style=''>  /**
+</span>87 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
+</span>88 <span style=''>   *
+</span>89 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
+</span>90 <span style=''>   *
+</span>91 <span style=''>   * @param query the flux query to execute
+</span>92 <span style=''>   * @return the stream of [[FluxRecord]]s
+</span>93 <span style=''>   */
+</span>94 <span style=''>  override def query(query: Query): Source[FluxRecord, NotUsed] = {
 </span>95 <span style=''>
-</span>96 <span style=''>              override
-</span>97 <span style=''>              def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull record: FluxRecord): Unit = {
-</span>98 <span style=''>                if (eventualDone.isCompleted) {
-</span>99 <span style=''>                  cancellable.cancel()
-</span>100 <span style=''>                } else {
-</span>101 <span style=''>                  queue.offer(record)
-</span>102 <span style=''>                }
-</span>103 <span style=''>              }
-</span>104 <span style=''>            }
-</span>105 <span style=''>
-</span>106 <span style=''>            val onError = asJavaConsumer[Throwable](t =&gt; queue.fail(t))
-</span>107 <span style=''>
-</span>108 <span style=''>            this.query(queryCall, consumer, onError, () =&gt; queue.complete, true)
-</span>109 <span style=''>          })
-</span>110 <span style=''>      })
-</span>111 <span style=''>  }
+</span>96 <span style=''>    Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)
+</span>97 <span style=''>
+</span>98 <span style=''>    this.query(query, options.getOrg)
+</span>99 <span style=''>  }
+</span>100 <span style=''>
+</span>101 <span style=''>  /**
+</span>102 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
+</span>103 <span style=''>   *
+</span>104 <span style=''>   * @param query the flux query to execute
+</span>105 <span style=''>   * @param org   specifies the source organization
+</span>106 <span style=''>   * @return the stream of [[FluxRecord]]s
+</span>107 <span style=''>   */
+</span>108 <span style=''>  override def query(query: Query, org: String): Source[FluxRecord, NotUsed] = {
+</span>109 <span style=''>
+</span>110 <span style=''>    Arguments.checkNotNull(query, &quot;query&quot;)
+</span>111 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
 </span>112 <span style=''>
-</span>113 <span style=''>  /**
-</span>114 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
-</span>115 <span style=''>   *
-</span>116 <span style=''>   * @param query           the flux query to execute
-</span>117 <span style=''>   * @param measurementType the measurement (POJO)
-</span>118 <span style=''>   * @tparam M the type of the measurement (POJO)
-</span>119 <span style=''>   * @return the stream of measurements
-</span>120 <span style=''>   */
-</span>121 <span style=''>  override def query[M](@Nonnull query: String, @Nonnull org: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed] = {
-</span>122 <span style=''>
-</span>123 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
-</span>124 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
-</span>125 <span style=''>    Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)
-</span>126 <span style=''>
-</span>127 <span style=''>    this.query(query, org).map(t =&gt; resultMapper.toPOJO(t, measurementType))
-</span>128 <span style=''>  }
-</span>129 <span style=''>
-</span>130 <span style=''>  /**
-</span>131 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
-</span>132 <span style=''>   *
-</span>133 <span style=''>   * @param query           the flux query to execute
-</span>134 <span style=''>   * @param org             specifies the source organization
-</span>135 <span style=''>   * @param measurementType the measurement (POJO)
-</span>136 <span style=''>   * @tparam M the type of the measurement (POJO)
-</span>137 <span style=''>   * @return the stream of measurements
-</span>138 <span style=''>   */
-</span>139 <span style=''>  override def query[M](query: Query, org: String, measurementType: Class[M]): Source[M, NotUsed] = {
+</span>113 <span style=''>    Source
+</span>114 <span style=''>      .single(query)
+</span>115 <span style=''>      .map(_ =&gt; service
+</span>116 <span style=''>        .postQueryResponseBody(null, &quot;application/json&quot;,
+</span>117 <span style=''>          null, org, null, query))
+</span>118 <span style=''>      .flatMapConcat(queryCall =&gt; {
+</span>119 <span style=''>        Source.queue[FluxRecord](bufferSize, overflowStrategy)
+</span>120 <span style=''>          .mapMaterializedValue(queue =&gt; {
+</span>121 <span style=''>
+</span>122 <span style=''>            val eventualDone = queue.watchCompletion()
+</span>123 <span style=''>            val consumer = new FluxCsvParser.FluxResponseConsumer() {
+</span>124 <span style=''>
+</span>125 <span style=''>              override
+</span>126 <span style=''>              def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull table: FluxTable): Unit = {
+</span>127 <span style=''>              }
+</span>128 <span style=''>
+</span>129 <span style=''>              override
+</span>130 <span style=''>              def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull record: FluxRecord): Unit = {
+</span>131 <span style=''>                if (eventualDone.isCompleted) {
+</span>132 <span style=''>                  cancellable.cancel()
+</span>133 <span style=''>                } else {
+</span>134 <span style=''>                  queue.offer(record)
+</span>135 <span style=''>                }
+</span>136 <span style=''>              }
+</span>137 <span style=''>            }
+</span>138 <span style=''>
+</span>139 <span style=''>            val onError = asJavaConsumer[Throwable](t =&gt; queue.fail(t))
 </span>140 <span style=''>
-</span>141 <span style=''>    Arguments.checkNotNull(query, &quot;query&quot;)
-</span>142 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
-</span>143 <span style=''>    Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)
-</span>144 <span style=''>
-</span>145 <span style=''>    this.query(query, org).map(t =&gt; resultMapper.toPOJO(t, measurementType))
-</span>146 <span style=''>  }
-</span>147 <span style=''>
-</span>148 <span style=''>  /**
-</span>149 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>141 <span style=''>            this.query(queryCall, consumer, onError, () =&gt; queue.complete, true)
+</span>142 <span style=''>          })
+</span>143 <span style=''>      })
+</span>144 <span style=''>  }
+</span>145 <span style=''>
+</span>146 <span style=''>  /**
+</span>147 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+</span>148 <span style=''>   *
+</span>149 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
 </span>150 <span style=''>   *
-</span>151 <span style=''>   * @param query the flux query to execute
-</span>152 <span style=''>   * @return the response stream
-</span>153 <span style=''>   */
-</span>154 <span style=''>  override def queryRaw(@Nonnull query: String, @Nonnull org: String): Source[String, NotUsed] = {
-</span>155 <span style=''>
-</span>156 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
-</span>157 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
-</span>158 <span style=''>
-</span>159 <span style=''>    queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, org)
-</span>160 <span style=''>  }
-</span>161 <span style=''>
-</span>162 <span style=''>  /**
-</span>163 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
-</span>164 <span style=''>   *
-</span>165 <span style=''>   * @param query   the flux query to execute
-</span>166 <span style=''>   * @param dialect Dialect is an object defining the options to use when encoding the response.
-</span>167 <span style=''>   *                [[http://bit.ly/flux-dialect See dialect SPEC]].
-</span>168 <span style=''>   * @return the response stream
-</span>169 <span style=''>   */
-</span>170 <span style=''>  override def queryRaw(query: String, dialect: Dialect, org: String): Source[String, NotUsed] = {
-</span>171 <span style=''>
-</span>172 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
-</span>173 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
-</span>174 <span style=''>
-</span>175 <span style=''>    this.queryRaw(new Query().query(query).dialect(dialect), org)
-</span>176 <span style=''>  }
-</span>177 <span style=''>
-</span>178 <span style=''>  /**
-</span>179 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
-</span>180 <span style=''>   *
-</span>181 <span style=''>   * @param query the flux query to execute
-</span>182 <span style=''>   * @param org   specifies the source organization
-</span>183 <span style=''>   * @return the response stream
-</span>184 <span style=''>   */
-</span>185 <span style=''>  override def queryRaw(query: Query, org: String): Source[String, NotUsed] = {
-</span>186 <span style=''>
-</span>187 <span style=''>    Arguments.checkNotNull(query, &quot;query&quot;)
-</span>188 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
-</span>189 <span style=''>
-</span>190 <span style=''>    Source
-</span>191 <span style=''>      .single(query)
-</span>192 <span style=''>      .map(it =&gt; service
-</span>193 <span style=''>        .postQueryResponseBody(null, &quot;application/json&quot;,
-</span>194 <span style=''>          null, org, null, query))
-</span>195 <span style=''>      .flatMapConcat(queryCall =&gt; {
-</span>196 <span style=''>        Source.queue[String](bufferSize, overflowStrategy)
-</span>197 <span style=''>          .mapMaterializedValue(queue =&gt; {
-</span>198 <span style=''>
-</span>199 <span style=''>            val eventualDone = queue.watchCompletion()
-</span>200 <span style=''>
-</span>201 <span style=''>            val onResponse = new BiConsumer[Cancellable, String] {
-</span>202 <span style=''>              override def accept(cancellable: Cancellable, line: String): Unit = {
-</span>203 <span style=''>                if (eventualDone.isCompleted) {
-</span>204 <span style=''>                  cancellable.cancel()
-</span>205 <span style=''>                } else {
-</span>206 <span style=''>                  queue.offer(line)
-</span>207 <span style=''>                }
-</span>208 <span style=''>              }
-</span>209 <span style=''>            }
-</span>210 <span style=''>
-</span>211 <span style=''>            val onError = asJavaConsumer[Throwable](t =&gt; queue.fail(t))
-</span>212 <span style=''>
-</span>213 <span style=''>            this.queryRaw(queryCall, onResponse, onError, () =&gt; queue.complete, true)
-</span>214 <span style=''>          })
-</span>215 <span style=''>      })
-</span>216 <span style=''>  }
-</span>217 <span style=''>}
+</span>151 <span style=''>   * @param query           the flux query to execute
+</span>152 <span style=''>   * @param measurementType the measurement (POJO)
+</span>153 <span style=''>   * @tparam M the type of the measurement (POJO)
+</span>154 <span style=''>   * @return the stream of measurements
+</span>155 <span style=''>   */
+</span>156 <span style=''>  override def query[M](query: String, measurementType: Class[M]): Source[M, NotUsed] = {
+</span>157 <span style=''>
+</span>158 <span style=''>    Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)
+</span>159 <span style=''>
+</span>160 <span style=''>    this.query(query, options.getOrg, measurementType)
+</span>161 <span style=''>  }
+</span>162 <span style=''>
+</span>163 <span style=''>  /**
+</span>164 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+</span>165 <span style=''>   *
+</span>166 <span style=''>   * @param query           the flux query to execute
+</span>167 <span style=''>   * @param measurementType the measurement (POJO)
+</span>168 <span style=''>   * @tparam M the type of the measurement (POJO)
+</span>169 <span style=''>   * @return the stream of measurements
+</span>170 <span style=''>   */
+</span>171 <span style=''>  override def query[M](@Nonnull query: String, @Nonnull org: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed] = {
+</span>172 <span style=''>
+</span>173 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
+</span>174 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
+</span>175 <span style=''>    Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)
+</span>176 <span style=''>
+</span>177 <span style=''>    this.query(query, org).map(t =&gt; resultMapper.toPOJO(t, measurementType))
+</span>178 <span style=''>  }
+</span>179 <span style=''>
+</span>180 <span style=''>  /**
+</span>181 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+</span>182 <span style=''>   *
+</span>183 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
+</span>184 <span style=''>   *
+</span>185 <span style=''>   * @param query           the flux query to execute
+</span>186 <span style=''>   * @param measurementType the measurement (POJO)
+</span>187 <span style=''>   * @tparam M the type of the measurement (POJO)
+</span>188 <span style=''>   * @return the stream of measurements
+</span>189 <span style=''>   */
+</span>190 <span style=''>  override def query[M](query: Query, measurementType: Class[M]): Source[M, NotUsed] = {
+</span>191 <span style=''>
+</span>192 <span style=''>    Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)
+</span>193 <span style=''>
+</span>194 <span style=''>    this.query(query, options.getOrg, measurementType)
+</span>195 <span style=''>  }
+</span>196 <span style=''>
+</span>197 <span style=''>  /**
+</span>198 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+</span>199 <span style=''>   *
+</span>200 <span style=''>   * @param query           the flux query to execute
+</span>201 <span style=''>   * @param org             specifies the source organization
+</span>202 <span style=''>   * @param measurementType the measurement (POJO)
+</span>203 <span style=''>   * @tparam M the type of the measurement (POJO)
+</span>204 <span style=''>   * @return the stream of measurements
+</span>205 <span style=''>   */
+</span>206 <span style=''>  override def query[M](query: Query, org: String, measurementType: Class[M]): Source[M, NotUsed] = {
+</span>207 <span style=''>
+</span>208 <span style=''>    Arguments.checkNotNull(query, &quot;query&quot;)
+</span>209 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
+</span>210 <span style=''>    Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)
+</span>211 <span style=''>
+</span>212 <span style=''>    this.query(query, org).map(t =&gt; resultMapper.toPOJO(t, measurementType))
+</span>213 <span style=''>  }
+</span>214 <span style=''>
+</span>215 <span style=''>  /**
+</span>216 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>217 <span style=''>   *
+</span>218 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
+</span>219 <span style=''>   *
+</span>220 <span style=''>   * @param query the flux query to execute
+</span>221 <span style=''>   * @return the response stream
+</span>222 <span style=''>   */
+</span>223 <span style=''>  override def queryRaw(query: String): Source[String, NotUsed] = {
+</span>224 <span style=''>
+</span>225 <span style=''>    Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)
+</span>226 <span style=''>
+</span>227 <span style=''>    this.queryRaw(query, options.getOrg)
+</span>228 <span style=''>  }
+</span>229 <span style=''>
+</span>230 <span style=''>  /**
+</span>231 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>232 <span style=''>   *
+</span>233 <span style=''>   * @param query the flux query to execute
+</span>234 <span style=''>   * @return the response stream
+</span>235 <span style=''>   */
+</span>236 <span style=''>  override def queryRaw(@Nonnull query: String, @Nonnull org: String): Source[String, NotUsed] = {
+</span>237 <span style=''>
+</span>238 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
+</span>239 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
+</span>240 <span style=''>
+</span>241 <span style=''>    this.queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, org)
+</span>242 <span style=''>  }
+</span>243 <span style=''>
+</span>244 <span style=''>  /**
+</span>245 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>246 <span style=''>   *
+</span>247 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
+</span>248 <span style=''>   *
+</span>249 <span style=''>   * @param query   the flux query to execute
+</span>250 <span style=''>   * @param dialect Dialect is an object defining the options to use when encoding the response.
+</span>251 <span style=''>   *                [[http://bit.ly/flux-dialect See dialect SPEC]].
+</span>252 <span style=''>   * @return the response stream
+</span>253 <span style=''>   */
+</span>254 <span style=''>  override def queryRaw(query: String, dialect: Dialect): Source[String, NotUsed] = {
+</span>255 <span style=''>
+</span>256 <span style=''>    Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)
+</span>257 <span style=''>
+</span>258 <span style=''>    this.queryRaw(query, dialect, options.getOrg)
+</span>259 <span style=''>  }
+</span>260 <span style=''>
+</span>261 <span style=''>  /**
+</span>262 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>263 <span style=''>   *
+</span>264 <span style=''>   * @param query   the flux query to execute
+</span>265 <span style=''>   * @param dialect Dialect is an object defining the options to use when encoding the response.
+</span>266 <span style=''>   *                [[http://bit.ly/flux-dialect See dialect SPEC]].
+</span>267 <span style=''>   * @return the response stream
+</span>268 <span style=''>   */
+</span>269 <span style=''>  override def queryRaw(query: String, dialect: Dialect, org: String): Source[String, NotUsed] = {
+</span>270 <span style=''>
+</span>271 <span style=''>    Arguments.checkNonEmpty(query, &quot;query&quot;)
+</span>272 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
+</span>273 <span style=''>
+</span>274 <span style=''>    this.queryRaw(new Query().query(query).dialect(dialect), org)
+</span>275 <span style=''>  }
+</span>276 <span style=''>
+</span>277 <span style=''>  /**
+</span>278 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>279 <span style=''>   *
+</span>280 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
+</span>281 <span style=''>   *
+</span>282 <span style=''>   * @param query the flux query to execute
+</span>283 <span style=''>   * @return the response stream
+</span>284 <span style=''>   */
+</span>285 <span style=''>  override def queryRaw(query: Query): Source[String, NotUsed] = {
+</span>286 <span style=''>
+</span>287 <span style=''>    Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)
+</span>288 <span style=''>
+</span>289 <span style=''>    this.queryRaw(query, options.getOrg)
+</span>290 <span style=''>  }
+</span>291 <span style=''>
+</span>292 <span style=''>  /**
+</span>293 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>294 <span style=''>   *
+</span>295 <span style=''>   * @param query the flux query to execute
+</span>296 <span style=''>   * @param org   specifies the source organization
+</span>297 <span style=''>   * @return the response stream
+</span>298 <span style=''>   */
+</span>299 <span style=''>  override def queryRaw(query: Query, org: String): Source[String, NotUsed] = {
+</span>300 <span style=''>
+</span>301 <span style=''>    Arguments.checkNotNull(query, &quot;query&quot;)
+</span>302 <span style=''>    Arguments.checkNonEmpty(org, &quot;org&quot;)
+</span>303 <span style=''>
+</span>304 <span style=''>    Source
+</span>305 <span style=''>      .single(query)
+</span>306 <span style=''>      .map(it =&gt; service
+</span>307 <span style=''>        .postQueryResponseBody(null, &quot;application/json&quot;,
+</span>308 <span style=''>          null, org, null, query))
+</span>309 <span style=''>      .flatMapConcat(queryCall =&gt; {
+</span>310 <span style=''>        Source.queue[String](bufferSize, overflowStrategy)
+</span>311 <span style=''>          .mapMaterializedValue(queue =&gt; {
+</span>312 <span style=''>
+</span>313 <span style=''>            val eventualDone = queue.watchCompletion()
+</span>314 <span style=''>
+</span>315 <span style=''>            val onResponse = new BiConsumer[Cancellable, String] {
+</span>316 <span style=''>              override def accept(cancellable: Cancellable, line: String): Unit = {
+</span>317 <span style=''>                if (eventualDone.isCompleted) {
+</span>318 <span style=''>                  cancellable.cancel()
+</span>319 <span style=''>                } else {
+</span>320 <span style=''>                  queue.offer(line)
+</span>321 <span style=''>                }
+</span>322 <span style=''>              }
+</span>323 <span style=''>            }
+</span>324 <span style=''>
+</span>325 <span style=''>            val onError = asJavaConsumer[Throwable](t =&gt; queue.fail(t))
+</span>326 <span style=''>
+</span>327 <span style=''>            this.queryRaw(queryCall, onResponse, onError, () =&gt; queue.complete, true)
+</span>328 <span style=''>          })
+</span>329 <span style=''>      })
+</span>330 <span style=''>  }
+</span>331 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -252,15 +366,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          51
+          53
         </td>
         <td>
-          32
+          35
         </td>
         <td>
-          2095
+          2209
           -
-          2095
+          2209
         </td>
         <td>
           Select
@@ -273,15 +387,15 @@
         </td>
       </tr><tr>
         <td>
-          51
+          53
         </td>
         <td>
-          34
+          37
         </td>
         <td>
-          2094
+          2208
           -
-          2094
+          2208
         </td>
         <td>
           Apply
@@ -294,15 +408,15 @@
         </td>
       </tr><tr>
         <td>
-          51
+          53
         </td>
         <td>
-          33
+          36
         </td>
         <td>
-          2113
+          2227
           -
-          2113
+          2227
         </td>
         <td>
           Literal
@@ -315,15 +429,15 @@
         </td>
       </tr><tr>
         <td>
-          52
+          54
         </td>
         <td>
-          35
+          38
         </td>
         <td>
-          2158
+          2272
           -
-          2158
+          2272
         </td>
         <td>
           Select
@@ -336,15 +450,15 @@
         </td>
       </tr><tr>
         <td>
-          52
+          54
         </td>
         <td>
-          37
+          40
         </td>
         <td>
-          2157
+          2271
           -
-          2157
+          2271
         </td>
         <td>
           Apply
@@ -357,15 +471,15 @@
         </td>
       </tr><tr>
         <td>
-          52
+          54
         </td>
         <td>
-          36
+          39
         </td>
         <td>
-          2170
+          2284
           -
-          2170
+          2284
         </td>
         <td>
           Literal
@@ -378,15 +492,120 @@
         </td>
       </tr><tr>
         <td>
-          62
+          66
         </td>
         <td>
-          38
+          41
         </td>
         <td>
-          2524
+          2725
           -
-          2524
+          2725
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.getOrg
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          43
+        </td>
+        <td>
+          2716
+          -
+          2716
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          42
+        </td>
+        <td>
+          2733
+          -
+          2733
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;InfluxDBClientOptions.getOrg&quot;
+        </td>
+      </tr><tr>
+        <td>
+          68
+        </td>
+        <td>
+          44
+        </td>
+        <td>
+          2796
+          -
+          2796
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.getOrg
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          68
+        </td>
+        <td>
+          45
+        </td>
+        <td>
+          2780
+          -
+          2780
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.QueryScalaApiImpl.query
+        </td>
+        <td style="background: #F0ADAD">
+          this.query(query, QueryScalaApiImpl.this.options.getOrg())
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          46
+        </td>
+        <td>
+          3148
+          -
+          3148
         </td>
         <td>
           Apply
@@ -399,15 +618,15 @@
         </td>
       </tr><tr>
         <td>
-          63
+          80
         </td>
         <td>
-          39
+          47
         </td>
         <td>
-          2568
+          3192
           -
-          2568
+          3192
         </td>
         <td>
           Apply
@@ -420,57 +639,15 @@
         </td>
       </tr><tr>
         <td>
-          65
+          82
         </td>
         <td>
-          41
+          50
         </td>
         <td>
-          2629
+          3220
           -
-          2629
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.client.domain.Query.dialect
-        </td>
-        <td style="background: #F0ADAD">
-          new com.influxdb.client.domain.Query().query(query).dialect(com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT)
-        </td>
-      </tr><tr>
-        <td>
-          65
-        </td>
-        <td>
-          40
-        </td>
-        <td>
-          2653
-          -
-          2653
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT
-        </td>
-        <td style="background: #F0ADAD">
-          com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT
-        </td>
-      </tr><tr>
-        <td>
-          65
-        </td>
-        <td>
-          42
-        </td>
-        <td>
-          2596
-          -
-          2596
+          3220
         </td>
         <td>
           Apply
@@ -483,15 +660,162 @@
         </td>
       </tr><tr>
         <td>
-          77
+          82
         </td>
         <td>
-          43
+          49
         </td>
         <td>
-          3052
+          3253
           -
-          3052
+          3253
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.domain.Query.dialect
+        </td>
+        <td style="background: #F0ADAD">
+          new com.influxdb.client.domain.Query().query(query).dialect(com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT)
+        </td>
+      </tr><tr>
+        <td>
+          82
+        </td>
+        <td>
+          48
+        </td>
+        <td>
+          3277
+          -
+          3277
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT
+        </td>
+      </tr><tr>
+        <td>
+          96
+        </td>
+        <td>
+          53
+        </td>
+        <td>
+          3722
+          -
+          3722
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          96
+        </td>
+        <td>
+          52
+        </td>
+        <td>
+          3739
+          -
+          3739
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;InfluxDBClientOptions.getOrg&quot;
+        </td>
+      </tr><tr>
+        <td>
+          96
+        </td>
+        <td>
+          51
+        </td>
+        <td>
+          3731
+          -
+          3731
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.getOrg
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          98
+        </td>
+        <td>
+          55
+        </td>
+        <td>
+          3786
+          -
+          3786
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.QueryScalaApiImpl.query
+        </td>
+        <td style="background: #F0ADAD">
+          this.query(query, QueryScalaApiImpl.this.options.getOrg())
+        </td>
+      </tr><tr>
+        <td>
+          98
+        </td>
+        <td>
+          54
+        </td>
+        <td>
+          3802
+          -
+          3802
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.getOrg
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          110
+        </td>
+        <td>
+          56
+        </td>
+        <td>
+          4186
+          -
+          4186
         </td>
         <td>
           Apply
@@ -504,15 +828,15 @@
         </td>
       </tr><tr>
         <td>
-          78
+          111
         </td>
         <td>
-          44
+          57
         </td>
         <td>
-          3096
+          4230
           -
-          3096
+          4230
         </td>
         <td>
           Apply
@@ -525,15 +849,15 @@
         </td>
       </tr><tr>
         <td>
-          83
+          116
         </td>
         <td>
-          45
+          58
         </td>
         <td>
-          3196
+          4330
           -
-          3196
+          4330
         </td>
         <td>
           Apply
@@ -546,15 +870,15 @@
         </td>
       </tr><tr>
         <td>
-          85
+          118
         </td>
         <td>
-          63
+          76
         </td>
         <td>
-          3278
+          4412
           -
-          3278
+          4412
         </td>
         <td>
           Apply
@@ -588,36 +912,15 @@
         </td>
       </tr><tr>
         <td>
-          86
+          119
         </td>
         <td>
-          47
+          59
         </td>
         <td>
-          3339
+          4461
           -
-          3339
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          com.influxdb.client.scala.internal.QueryScalaApiImpl.overflowStrategy
-        </td>
-        <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.overflowStrategy
-        </td>
-      </tr><tr>
-        <td>
-          86
-        </td>
-        <td>
-          46
-        </td>
-        <td>
-          3327
-          -
-          3327
+          4461
         </td>
         <td>
           Select
@@ -630,15 +933,36 @@
         </td>
       </tr><tr>
         <td>
-          87
+          119
         </td>
         <td>
-          62
+          60
         </td>
         <td>
-          3388
+          4473
           -
-          3388
+          4473
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.QueryScalaApiImpl.overflowStrategy
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.overflowStrategy
+        </td>
+      </tr><tr>
+        <td>
+          120
+        </td>
+        <td>
+          75
+        </td>
+        <td>
+          4522
+          -
+          4522
         </td>
         <td>
           Apply
@@ -672,15 +996,15 @@
         </td>
       </tr><tr>
         <td>
-          89
+          122
         </td>
         <td>
-          48
+          61
         </td>
         <td>
-          3453
+          4587
           -
-          3453
+          4587
         </td>
         <td>
           Apply
@@ -693,15 +1017,15 @@
         </td>
       </tr><tr>
         <td>
-          90
+          123
         </td>
         <td>
-          56
+          69
         </td>
         <td>
-          3483
+          4617
           -
-          3483
+          4617
         </td>
         <td>
           Apply
@@ -714,15 +1038,15 @@
         </td>
       </tr><tr>
         <td>
-          93
+          126
         </td>
         <td>
-          49
+          62
         </td>
         <td>
-          3657
+          4791
           -
-          3657
+          4791
         </td>
         <td>
           Literal
@@ -735,15 +1059,15 @@
         </td>
       </tr><tr>
         <td>
-          98
+          131
         </td>
         <td>
-          50
+          63
         </td>
         <td>
-          3843
+          4977
           -
-          3843
+          4977
         </td>
         <td>
           Select
@@ -756,15 +1080,15 @@
         </td>
       </tr><tr>
         <td>
-          99
+          132
         </td>
         <td>
-          52
+          65
         </td>
         <td>
-          3894
+          5028
           -
-          3894
+          5028
         </td>
         <td>
           Block
@@ -777,15 +1101,15 @@
         </td>
       </tr><tr>
         <td>
-          99
+          132
         </td>
         <td>
-          51
+          64
         </td>
         <td>
-          3894
+          5028
           -
-          3894
+          5028
         </td>
         <td>
           Apply
@@ -798,36 +1122,15 @@
         </td>
       </tr><tr>
         <td>
-          101
+          134
         </td>
         <td>
-          53
+          68
         </td>
         <td>
-          3951
+          5085
           -
-          3951
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          akka.stream.scaladsl.SourceQueue.offer
-        </td>
-        <td style="background: #F0ADAD">
-          queue.offer(record)
-        </td>
-      </tr><tr>
-        <td>
-          101
-        </td>
-        <td>
-          55
-        </td>
-        <td>
-          3951
-          -
-          3951
+          5085
         </td>
         <td>
           Block
@@ -843,15 +1146,15 @@
         </td>
       </tr><tr>
         <td>
-          101
+          134
         </td>
         <td>
-          54
+          67
         </td>
         <td>
-          3951
+          5085
           -
-          3951
+          5085
         </td>
         <td>
           Literal
@@ -864,15 +1167,36 @@
         </td>
       </tr><tr>
         <td>
-          106
+          134
         </td>
         <td>
-          58
+          66
         </td>
         <td>
-          4060
+          5085
           -
-          4060
+          5085
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.SourceQueue.offer
+        </td>
+        <td style="background: #F0ADAD">
+          queue.offer(record)
+        </td>
+      </tr><tr>
+        <td>
+          139
+        </td>
+        <td>
+          71
+        </td>
+        <td>
+          5194
+          -
+          5194
         </td>
         <td>
           Apply
@@ -885,15 +1209,15 @@
         </td>
       </tr><tr>
         <td>
-          106
+          139
         </td>
         <td>
-          57
+          70
         </td>
         <td>
-          4076
+          5210
           -
-          4076
+          5210
         </td>
         <td>
           Apply
@@ -906,36 +1230,15 @@
         </td>
       </tr><tr>
         <td>
-          108
+          141
         </td>
         <td>
-          59
+          74
         </td>
         <td>
-          4147
+          5238
           -
-          4147
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          akka.stream.scaladsl.SourceQueueWithComplete.complete
-        </td>
-        <td style="background: #F0ADAD">
-          queue.complete()
-        </td>
-      </tr><tr>
-        <td>
-          108
-        </td>
-        <td>
-          61
-        </td>
-        <td>
-          4104
-          -
-          4104
+          5238
         </td>
         <td>
           Apply
@@ -948,15 +1251,15 @@
         </td>
       </tr><tr>
         <td>
-          108
+          141
         </td>
         <td>
-          60
+          73
         </td>
         <td>
-          4157
+          5291
           -
-          4157
+          5291
         </td>
         <td>
           ApplyImplicitView
@@ -969,15 +1272,141 @@
         </td>
       </tr><tr>
         <td>
-          123
+          141
         </td>
         <td>
-          64
+          72
         </td>
         <td>
-          4664
+          5281
           -
-          4664
+          5281
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.SourceQueueWithComplete.complete
+        </td>
+        <td style="background: #F0ADAD">
+          queue.complete()
+        </td>
+      </tr><tr>
+        <td>
+          158
+        </td>
+        <td>
+          77
+        </td>
+        <td>
+          5876
+          -
+          5876
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.getOrg
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          158
+        </td>
+        <td>
+          79
+        </td>
+        <td>
+          5867
+          -
+          5867
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          158
+        </td>
+        <td>
+          78
+        </td>
+        <td>
+          5884
+          -
+          5884
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;InfluxDBClientOptions.getOrg&quot;
+        </td>
+      </tr><tr>
+        <td>
+          160
+        </td>
+        <td>
+          80
+        </td>
+        <td>
+          5947
+          -
+          5947
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.getOrg
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          160
+        </td>
+        <td>
+          81
+        </td>
+        <td>
+          5931
+          -
+          5931
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.QueryScalaApiImpl.query
+        </td>
+        <td style="background: #F0ADAD">
+          this.query[M](query, QueryScalaApiImpl.this.options.getOrg(), measurementType)
+        </td>
+      </tr><tr>
+        <td>
+          173
+        </td>
+        <td>
+          82
+        </td>
+        <td>
+          6451
+          -
+          6451
         </td>
         <td>
           Apply
@@ -990,15 +1419,15 @@
         </td>
       </tr><tr>
         <td>
-          124
+          174
         </td>
         <td>
-          65
+          83
         </td>
         <td>
-          4708
+          6495
           -
-          4708
+          6495
         </td>
         <td>
           Apply
@@ -1011,15 +1440,15 @@
         </td>
       </tr><tr>
         <td>
-          125
+          175
         </td>
         <td>
-          66
+          84
         </td>
         <td>
-          4747
+          6534
           -
-          4747
+          6534
         </td>
         <td>
           Apply
@@ -1032,15 +1461,15 @@
         </td>
       </tr><tr>
         <td>
-          127
+          177
         </td>
         <td>
-          68
+          86
         </td>
         <td>
-          4815
+          6602
           -
-          4815
+          6602
         </td>
         <td>
           Apply
@@ -1053,15 +1482,15 @@
         </td>
       </tr><tr>
         <td>
-          127
+          177
         </td>
         <td>
-          67
+          85
         </td>
         <td>
-          4840
+          6627
           -
-          4840
+          6627
         </td>
         <td>
           Apply
@@ -1074,15 +1503,120 @@
         </td>
       </tr><tr>
         <td>
-          141
+          192
         </td>
         <td>
-          69
+          89
         </td>
         <td>
-          5374
+          7196
           -
-          5374
+          7196
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          192
+        </td>
+        <td>
+          88
+        </td>
+        <td>
+          7213
+          -
+          7213
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;InfluxDBClientOptions.getOrg&quot;
+        </td>
+      </tr><tr>
+        <td>
+          192
+        </td>
+        <td>
+          87
+        </td>
+        <td>
+          7205
+          -
+          7205
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.getOrg
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          194
+        </td>
+        <td>
+          91
+        </td>
+        <td>
+          7260
+          -
+          7260
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.QueryScalaApiImpl.query
+        </td>
+        <td style="background: #F0ADAD">
+          this.query[M](query, QueryScalaApiImpl.this.options.getOrg(), measurementType)
+        </td>
+      </tr><tr>
+        <td>
+          194
+        </td>
+        <td>
+          90
+        </td>
+        <td>
+          7276
+          -
+          7276
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.getOrg
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          208
+        </td>
+        <td>
+          92
+        </td>
+        <td>
+          7813
+          -
+          7813
         </td>
         <td>
           Apply
@@ -1095,15 +1629,15 @@
         </td>
       </tr><tr>
         <td>
-          142
+          209
         </td>
         <td>
-          70
+          93
         </td>
         <td>
-          5418
+          7857
           -
-          5418
+          7857
         </td>
         <td>
           Apply
@@ -1116,15 +1650,15 @@
         </td>
       </tr><tr>
         <td>
-          143
+          210
         </td>
         <td>
-          71
+          94
         </td>
         <td>
-          5457
+          7896
           -
-          5457
+          7896
         </td>
         <td>
           Apply
@@ -1137,36 +1671,15 @@
         </td>
       </tr><tr>
         <td>
-          145
+          212
         </td>
         <td>
-          73
+          95
         </td>
         <td>
-          5525
+          7989
           -
-          5525
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          akka.stream.scaladsl.FlowOps.map
-        </td>
-        <td style="background: #F0ADAD">
-          this.query(query, org).map[M](((t: com.influxdb.query.FluxRecord) =&gt; QueryScalaApiImpl.this.resultMapper.toPOJO[M](t, measurementType)))
-        </td>
-      </tr><tr>
-        <td>
-          145
-        </td>
-        <td>
-          72
-        </td>
-        <td>
-          5550
-          -
-          5550
+          7989
         </td>
         <td>
           Apply
@@ -1179,15 +1692,141 @@
         </td>
       </tr><tr>
         <td>
-          156
+          212
         </td>
         <td>
-          74
+          96
         </td>
         <td>
-          5898
+          7964
           -
-          5898
+          7964
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.FlowOps.map
+        </td>
+        <td style="background: #F0ADAD">
+          this.query(query, org).map[M](((t: com.influxdb.query.FluxRecord) =&gt; QueryScalaApiImpl.this.resultMapper.toPOJO[M](t, measurementType)))
+        </td>
+      </tr><tr>
+        <td>
+          225
+        </td>
+        <td>
+          98
+        </td>
+        <td>
+          8432
+          -
+          8432
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;InfluxDBClientOptions.getOrg&quot;
+        </td>
+      </tr><tr>
+        <td>
+          225
+        </td>
+        <td>
+          97
+        </td>
+        <td>
+          8424
+          -
+          8424
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.getOrg
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          225
+        </td>
+        <td>
+          99
+        </td>
+        <td>
+          8415
+          -
+          8415
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          227
+        </td>
+        <td>
+          101
+        </td>
+        <td>
+          8482
+          -
+          8482
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.QueryScalaApiImpl.queryRaw
+        </td>
+        <td style="background: #F0ADAD">
+          this.queryRaw(query, QueryScalaApiImpl.this.options.getOrg())
+        </td>
+      </tr><tr>
+        <td>
+          227
+        </td>
+        <td>
+          100
+        </td>
+        <td>
+          8498
+          -
+          8498
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.getOrg
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          238
+        </td>
+        <td>
+          102
+        </td>
+        <td>
+          8832
+          -
+          8832
         </td>
         <td>
           Apply
@@ -1200,15 +1839,15 @@
         </td>
       </tr><tr>
         <td>
-          157
+          239
         </td>
         <td>
-          75
+          103
         </td>
         <td>
-          5942
+          8876
           -
-          5942
+          8876
         </td>
         <td>
           Apply
@@ -1221,36 +1860,15 @@
         </td>
       </tr><tr>
         <td>
-          159
+          241
         </td>
         <td>
-          77
+          104
         </td>
         <td>
-          5968
+          8938
           -
-          5968
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.client.scala.internal.QueryScalaApiImpl.queryRaw
-        </td>
-        <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.queryRaw(query, com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT, org)
-        </td>
-      </tr><tr>
-        <td>
-          159
-        </td>
-        <td>
-          76
-        </td>
-        <td>
-          5999
-          -
-          5999
+          8938
         </td>
         <td>
           Select
@@ -1263,15 +1881,141 @@
         </td>
       </tr><tr>
         <td>
-          172
+          241
         </td>
         <td>
-          78
+          105
         </td>
         <td>
-          6515
+          8907
           -
-          6515
+          8907
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.QueryScalaApiImpl.queryRaw
+        </td>
+        <td style="background: #F0ADAD">
+          this.queryRaw(query, com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT, org)
+        </td>
+      </tr><tr>
+        <td>
+          256
+        </td>
+        <td>
+          107
+        </td>
+        <td>
+          9567
+          -
+          9567
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;InfluxDBClientOptions.getOrg&quot;
+        </td>
+      </tr><tr>
+        <td>
+          256
+        </td>
+        <td>
+          106
+        </td>
+        <td>
+          9559
+          -
+          9559
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.getOrg
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          256
+        </td>
+        <td>
+          108
+        </td>
+        <td>
+          9550
+          -
+          9550
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          258
+        </td>
+        <td>
+          110
+        </td>
+        <td>
+          9617
+          -
+          9617
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.QueryScalaApiImpl.queryRaw
+        </td>
+        <td style="background: #F0ADAD">
+          this.queryRaw(query, dialect, QueryScalaApiImpl.this.options.getOrg())
+        </td>
+      </tr><tr>
+        <td>
+          258
+        </td>
+        <td>
+          109
+        </td>
+        <td>
+          9642
+          -
+          9642
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.getOrg
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          271
+        </td>
+        <td>
+          111
+        </td>
+        <td>
+          10144
+          -
+          10144
         </td>
         <td>
           Apply
@@ -1284,15 +2028,15 @@
         </td>
       </tr><tr>
         <td>
-          173
+          272
         </td>
         <td>
-          79
+          112
         </td>
         <td>
-          6559
+          10188
           -
-          6559
+          10188
         </td>
         <td>
           Apply
@@ -1305,15 +2049,15 @@
         </td>
       </tr><tr>
         <td>
-          175
+          274
         </td>
         <td>
-          80
+          113
         </td>
         <td>
-          6623
+          10252
           -
-          6623
+          10252
         </td>
         <td>
           Apply
@@ -1326,15 +2070,15 @@
         </td>
       </tr><tr>
         <td>
-          175
+          274
         </td>
         <td>
-          81
+          114
         </td>
         <td>
-          6590
+          10219
           -
-          6590
+          10219
         </td>
         <td>
           Apply
@@ -1347,15 +2091,120 @@
         </td>
       </tr><tr>
         <td>
-          187
+          287
         </td>
         <td>
-          82
+          116
         </td>
         <td>
-          6997
+          10688
           -
-          6997
+          10688
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;InfluxDBClientOptions.getOrg&quot;
+        </td>
+      </tr><tr>
+        <td>
+          287
+        </td>
+        <td>
+          115
+        </td>
+        <td>
+          10680
+          -
+          10680
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.getOrg
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          287
+        </td>
+        <td>
+          117
+        </td>
+        <td>
+          10671
+          -
+          10671
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          289
+        </td>
+        <td>
+          119
+        </td>
+        <td>
+          10738
+          -
+          10738
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.QueryScalaApiImpl.queryRaw
+        </td>
+        <td style="background: #F0ADAD">
+          this.queryRaw(query, QueryScalaApiImpl.this.options.getOrg())
+        </td>
+      </tr><tr>
+        <td>
+          289
+        </td>
+        <td>
+          118
+        </td>
+        <td>
+          10754
+          -
+          10754
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.getOrg
+        </td>
+        <td style="background: #F0ADAD">
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          301
+        </td>
+        <td>
+          120
+        </td>
+        <td>
+          11120
+          -
+          11120
         </td>
         <td>
           Apply
@@ -1368,15 +2217,15 @@
         </td>
       </tr><tr>
         <td>
-          188
+          302
         </td>
         <td>
-          83
+          121
         </td>
         <td>
-          7041
+          11164
           -
-          7041
+          11164
         </td>
         <td>
           Apply
@@ -1389,15 +2238,15 @@
         </td>
       </tr><tr>
         <td>
-          193
+          307
         </td>
         <td>
-          84
+          122
         </td>
         <td>
-          7142
+          11265
           -
-          7142
+          11265
         </td>
         <td>
           Apply
@@ -1410,15 +2259,15 @@
         </td>
       </tr><tr>
         <td>
-          195
+          309
         </td>
         <td>
-          101
+          139
         </td>
         <td>
-          7224
+          11347
           -
-          7224
+          11347
         </td>
         <td>
           Apply
@@ -1451,15 +2300,15 @@
         </td>
       </tr><tr>
         <td>
-          196
+          310
         </td>
         <td>
-          86
+          124
         </td>
         <td>
-          7281
+          11404
           -
-          7281
+          11404
         </td>
         <td>
           Select
@@ -1472,15 +2321,15 @@
         </td>
       </tr><tr>
         <td>
-          196
+          310
         </td>
         <td>
-          85
+          123
         </td>
         <td>
-          7269
+          11392
           -
-          7269
+          11392
         </td>
         <td>
           Select
@@ -1493,15 +2342,15 @@
         </td>
       </tr><tr>
         <td>
-          197
+          311
         </td>
         <td>
-          100
+          138
         </td>
         <td>
-          7330
+          11453
           -
-          7330
+          11453
         </td>
         <td>
           Apply
@@ -1534,15 +2383,15 @@
         </td>
       </tr><tr>
         <td>
-          199
+          313
         </td>
         <td>
-          87
+          125
         </td>
         <td>
-          7395
+          11518
           -
-          7395
+          11518
         </td>
         <td>
           Apply
@@ -1555,15 +2404,15 @@
         </td>
       </tr><tr>
         <td>
-          201
+          315
         </td>
         <td>
-          94
+          132
         </td>
         <td>
-          7428
+          11551
           -
-          7428
+          11551
         </td>
         <td>
           Apply
@@ -1576,15 +2425,15 @@
         </td>
       </tr><tr>
         <td>
-          203
+          317
         </td>
         <td>
-          88
+          126
         </td>
         <td>
-          7583
+          11706
           -
-          7583
+          11706
         </td>
         <td>
           Select
@@ -1597,36 +2446,15 @@
         </td>
       </tr><tr>
         <td>
-          204
+          318
         </td>
         <td>
-          89
+          128
         </td>
         <td>
-          7634
+          11757
           -
-          7634
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.Cancellable.cancel
-        </td>
-        <td style="background: #F0ADAD">
-          cancellable.cancel()
-        </td>
-      </tr><tr>
-        <td>
-          204
-        </td>
-        <td>
-          90
-        </td>
-        <td>
-          7634
-          -
-          7634
+          11757
         </td>
         <td>
           Block
@@ -1639,57 +2467,36 @@
         </td>
       </tr><tr>
         <td>
-          206
+          318
         </td>
         <td>
-          92
+          127
         </td>
         <td>
-          7691
+          11757
           -
-          7691
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          206
-        </td>
-        <td>
-          91
-        </td>
-        <td>
-          7691
-          -
-          7691
+          11757
         </td>
         <td>
           Apply
         </td>
         <td>
-          akka.stream.scaladsl.SourceQueue.offer
+          com.influxdb.Cancellable.cancel
         </td>
         <td style="background: #F0ADAD">
-          queue.offer(line)
+          cancellable.cancel()
         </td>
       </tr><tr>
         <td>
-          206
+          320
         </td>
         <td>
-          93
+          131
         </td>
         <td>
-          7691
+          11814
           -
-          7691
+          11814
         </td>
         <td>
           Block
@@ -1705,36 +2512,57 @@
         </td>
       </tr><tr>
         <td>
-          211
+          320
         </td>
         <td>
-          95
+          130
         </td>
         <td>
-          7814
+          11814
           -
-          7814
+          11814
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          320
+        </td>
+        <td>
+          129
+        </td>
+        <td>
+          11814
+          -
+          11814
         </td>
         <td>
           Apply
         </td>
         <td>
-          akka.stream.scaladsl.SourceQueueWithComplete.fail
+          akka.stream.scaladsl.SourceQueue.offer
         </td>
         <td style="background: #F0ADAD">
-          queue.fail(t)
+          queue.offer(line)
         </td>
       </tr><tr>
         <td>
-          211
+          325
         </td>
         <td>
-          96
+          134
         </td>
         <td>
-          7798
+          11921
           -
-          7798
+          11921
         </td>
         <td>
           Apply
@@ -1747,15 +2575,57 @@
         </td>
       </tr><tr>
         <td>
-          213
+          325
         </td>
         <td>
-          98
+          133
         </td>
         <td>
-          7900
+          11937
           -
-          7900
+          11937
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.SourceQueueWithComplete.fail
+        </td>
+        <td style="background: #F0ADAD">
+          queue.fail(t)
+        </td>
+      </tr><tr>
+        <td>
+          327
+        </td>
+        <td>
+          137
+        </td>
+        <td>
+          11968
+          -
+          11968
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.internal.AbstractQueryApi.queryRaw
+        </td>
+        <td style="background: #F0ADAD">
+          this.queryRaw(queryCall, onResponse, onError, (() =&gt; queue.complete()), scala.Predef.boolean2Boolean(true))
+        </td>
+      </tr><tr>
+        <td>
+          327
+        </td>
+        <td>
+          136
+        </td>
+        <td>
+          12023
+          -
+          12023
         </td>
         <td>
           ApplyImplicitView
@@ -1768,15 +2638,15 @@
         </td>
       </tr><tr>
         <td>
-          213
+          327
         </td>
         <td>
-          97
+          135
         </td>
         <td>
-          7890
+          12013
           -
-          7890
+          12013
         </td>
         <td>
           Apply
@@ -1786,27 +2656,6 @@
         </td>
         <td style="background: #F0ADAD">
           queue.complete()
-        </td>
-      </tr><tr>
-        <td>
-          213
-        </td>
-        <td>
-          99
-        </td>
-        <td>
-          7845
-          -
-          7845
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.internal.AbstractQueryApi.queryRaw
-        </td>
-        <td style="background: #F0ADAD">
-          this.queryRaw(queryCall, onResponse, onError, (() =&gt; queue.complete()), scala.Predef.boolean2Boolean(true))
         </td>
       </tr>
     </table>

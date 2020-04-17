@@ -65,7 +65,7 @@
 </span>41 <span style=''>   *
 </span>42 <span style=''>   * @return the new client instance for the Query API
 </span>43 <span style=''>   */
-</span>44 <span style=''>  override def getQueryScalaApi(): QueryScalaApi = new QueryScalaApiImpl(retrofit.create(classOf[QueryService]), bufferSize, overflowStrategy)
+</span>44 <span style=''>  override def getQueryScalaApi(): QueryScalaApi = new QueryScalaApiImpl(retrofit.create(classOf[QueryService]), options, bufferSize, overflowStrategy)
 </span>45 <span style=''>
 </span>46 <span style=''>  /**
 </span>47 <span style=''>   * Get the health of an instance.
@@ -137,12 +137,12 @@
           44
         </td>
         <td>
-          20
+          23
         </td>
         <td>
-          2072
+          2081
           -
-          2072
+          2081
         </td>
         <td>
           Select
@@ -161,6 +161,27 @@
           22
         </td>
         <td>
+          2072
+          -
+          2072
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.InfluxDBClientScalaImpl.options
+        </td>
+        <td style="background: #F0ADAD">
+          InfluxDBClientScalaImpl.this.options
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          25
+        </td>
+        <td>
           2010
           -
           2010
@@ -172,14 +193,14 @@
           com.influxdb.client.scala.internal.QueryScalaApiImpl.&lt;init&gt;
         </td>
         <td style="background: #F0ADAD">
-          new QueryScalaApiImpl(InfluxDBClientScalaImpl.this.retrofit.create[com.influxdb.client.service.QueryService](classOf[com.influxdb.client.service.QueryService]), InfluxDBClientScalaImpl.this.bufferSize, InfluxDBClientScalaImpl.this.overflowStrategy)
+          new QueryScalaApiImpl(InfluxDBClientScalaImpl.this.retrofit.create[com.influxdb.client.service.QueryService](classOf[com.influxdb.client.service.QueryService]), InfluxDBClientScalaImpl.this.options, InfluxDBClientScalaImpl.this.bufferSize, InfluxDBClientScalaImpl.this.overflowStrategy)
         </td>
       </tr><tr>
         <td>
           44
         </td>
         <td>
-          19
+          21
         </td>
         <td>
           2047
@@ -200,12 +221,12 @@
           44
         </td>
         <td>
-          21
+          24
         </td>
         <td>
-          2084
+          2093
           -
-          2084
+          2093
         </td>
         <td>
           Select
@@ -221,12 +242,12 @@
           51
         </td>
         <td>
-          23
+          26
         </td>
         <td>
-          2258
+          2267
           -
-          2258
+          2267
         </td>
         <td>
           Apply
@@ -242,12 +263,12 @@
           51
         </td>
         <td>
-          24
+          27
         </td>
         <td>
-          2234
+          2243
           -
-          2234
+          2243
         </td>
         <td>
           Apply
@@ -263,12 +284,12 @@
           58
         </td>
         <td>
-          26
+          29
         </td>
         <td>
-          2488
+          2497
           -
-          2488
+          2497
         </td>
         <td>
           Apply
@@ -284,12 +305,12 @@
           58
         </td>
         <td>
-          25
+          28
         </td>
         <td>
-          2489
+          2498
           -
-          2489
+          2498
         </td>
         <td>
           Select
@@ -305,12 +326,12 @@
           67
         </td>
         <td>
-          28
+          31
         </td>
         <td>
-          2814
+          2823
           -
-          2814
+          2823
         </td>
         <td>
           Apply
@@ -326,12 +347,12 @@
           67
         </td>
         <td>
-          27
+          30
         </td>
         <td>
-          2815
+          2824
           -
-          2815
+          2824
         </td>
         <td>
           Select
@@ -347,12 +368,12 @@
           79
         </td>
         <td>
-          29
+          32
         </td>
         <td>
-          3185
+          3194
           -
-          3185
+          3194
         </td>
         <td>
           Apply
@@ -368,12 +389,12 @@
           89
         </td>
         <td>
-          30
+          33
         </td>
         <td>
-          3445
+          3454
           -
-          3445
+          3454
         </td>
         <td>
           Apply
@@ -389,12 +410,12 @@
           98
         </td>
         <td>
-          31
+          34
         </td>
         <td>
-          3642
+          3651
           -
-          3642
+          3651
         </td>
         <td>
           Apply

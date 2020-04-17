@@ -120,33 +120,64 @@
 </span>96 <span style=''>   */
 </span>97 <span style=''>  @Nonnull def create(url: String, token: Array[Char]): InfluxDBClientScala = {
 </span>98 <span style=''>
-</span>99 <span style=''>    val options = InfluxDBClientOptions.builder()
-</span>100 <span style=''>      .url(url)
-</span>101 <span style=''>      .authenticateToken(token)
-</span>102 <span style=''>      .build()
-</span>103 <span style=''>
-</span>104 <span style=''>    create(options)
-</span>105 <span style=''>  }
-</span>106 <span style=''>
-</span>107 <span style=''>  /**
-</span>108 <span style=''>   * Create an instance of the InfluxDB 2.0 reactive client.
-</span>109 <span style=''>   *
-</span>110 <span style=''>   * @param options          the connection configuration
-</span>111 <span style=''>   * @param bufferSize       size of a buffer for incoming responses. Default 10000.
-</span>112 <span style=''>   * @param overflowStrategy Strategy that is used when incoming response cannot fit inside the buffer.
-</span>113 <span style=''>   *                         Default [[akka.stream.OverflowStrategies.Backpressure]].
-</span>114 <span style=''>   * @see [[akka.stream.scaladsl.Source#queue(int, akka.stream.OverflowStrategy)]]
-</span>115 <span style=''>   * @return client
-</span>116 <span style=''>   */
-</span>117 <span style=''>  @Nonnull def create(@Nonnull options: InfluxDBClientOptions,
-</span>118 <span style=''>                      @Nonnull bufferSize: Int = 10000,
-</span>119 <span style=''>                      @Nonnull overflowStrategy: OverflowStrategy = OverflowStrategy.backpressure): InfluxDBClientScala = {
-</span>120 <span style=''>
-</span>121 <span style=''>    Arguments.checkNotNull(options, &quot;InfluxDBClientOptions&quot;)
-</span>122 <span style=''>
-</span>123 <span style=''>    new InfluxDBClientScalaImpl(options, bufferSize, overflowStrategy)
-</span>124 <span style=''>  }
-</span>125 <span style=''>}
+</span>99 <span style=''>    create(url, token, null)
+</span>100 <span style=''>  }
+</span>101 <span style=''>
+</span>102 <span style=''>  /**
+</span>103 <span style=''>   * Create an instance of the InfluxDB 2.0 reactive client.
+</span>104 <span style=''>   *
+</span>105 <span style=''>   * @param url   the url to connect to the InfluxDB
+</span>106 <span style=''>   * @param token the token to use for the authorization
+</span>107 <span style=''>   * @param org      the name of an organization
+</span>108 <span style=''>   * @return client
+</span>109 <span style=''>   * @see [[InfluxDBClientOptions.Builder]]
+</span>110 <span style=''>   */
+</span>111 <span style=''>  @Nonnull def create(url: String, token: Array[Char], org: String): InfluxDBClientScala = {
+</span>112 <span style=''>
+</span>113 <span style=''>    create(url, token, org, null)
+</span>114 <span style=''>  }
+</span>115 <span style=''>
+</span>116 <span style=''>  /**
+</span>117 <span style=''>   * Create an instance of the InfluxDB 2.0 reactive client.
+</span>118 <span style=''>   *
+</span>119 <span style=''>   * @param url   the url to connect to the InfluxDB
+</span>120 <span style=''>   * @param token the token to use for the authorization
+</span>121 <span style=''>   * @param org      the name of an organization
+</span>122 <span style=''>   * @param bucket   the name of a bucket
+</span>123 <span style=''>   * @return client
+</span>124 <span style=''>   * @see [[InfluxDBClientOptions.Builder]]
+</span>125 <span style=''>   */
+</span>126 <span style=''>  @Nonnull def create(url: String, token: Array[Char], org: String, bucket: String): InfluxDBClientScala = {
+</span>127 <span style=''>
+</span>128 <span style=''>    val options = InfluxDBClientOptions.builder()
+</span>129 <span style=''>      .url(url)
+</span>130 <span style=''>      .authenticateToken(token)
+</span>131 <span style=''>      .org(org)
+</span>132 <span style=''>      .bucket(bucket)
+</span>133 <span style=''>      .build()
+</span>134 <span style=''>
+</span>135 <span style=''>    create(options)
+</span>136 <span style=''>  }
+</span>137 <span style=''>
+</span>138 <span style=''>  /**
+</span>139 <span style=''>   * Create an instance of the InfluxDB 2.0 reactive client.
+</span>140 <span style=''>   *
+</span>141 <span style=''>   * @param options          the connection configuration
+</span>142 <span style=''>   * @param bufferSize       size of a buffer for incoming responses. Default 10000.
+</span>143 <span style=''>   * @param overflowStrategy Strategy that is used when incoming response cannot fit inside the buffer.
+</span>144 <span style=''>   *                         Default [[akka.stream.OverflowStrategies.Backpressure]].
+</span>145 <span style=''>   * @see [[akka.stream.scaladsl.Source#queue(int, akka.stream.OverflowStrategy)]]
+</span>146 <span style=''>   * @return client
+</span>147 <span style=''>   */
+</span>148 <span style=''>  @Nonnull def create(@Nonnull options: InfluxDBClientOptions,
+</span>149 <span style=''>                      @Nonnull bufferSize: Int = 10000,
+</span>150 <span style=''>                      @Nonnull overflowStrategy: OverflowStrategy = OverflowStrategy.backpressure): InfluxDBClientScala = {
+</span>151 <span style=''>
+</span>152 <span style=''>    Arguments.checkNotNull(options, &quot;InfluxDBClientOptions&quot;)
+</span>153 <span style=''>
+</span>154 <span style=''>    new InfluxDBClientScalaImpl(options, bufferSize, overflowStrategy)
+</span>155 <span style=''>  }
+</span>156 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -412,57 +443,15 @@
         </td>
       </tr><tr>
         <td>
-          102
+          99
         </td>
         <td>
           13
         </td>
         <td>
-          3410
+          3310
           -
-          3410
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.client.InfluxDBClientOptions.Builder.build
-        </td>
-        <td style="background: #F0ADAD">
-          com.influxdb.client.InfluxDBClientOptions.builder().url(url).authenticateToken(token).build()
-        </td>
-      </tr><tr>
-        <td>
-          104
-        </td>
-        <td>
-          14
-        </td>
-        <td>
-          3418
-          -
-          3418
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          com.influxdb.client.scala.InfluxDBClientScalaFactory.create$default$2
-        </td>
-        <td style="background: #F0ADAD">
-          InfluxDBClientScalaFactory.this.create$default$2
-        </td>
-      </tr><tr>
-        <td>
-          104
-        </td>
-        <td>
-          16
-        </td>
-        <td>
-          3424
-          -
-          3424
+          3310
         </td>
         <td>
           Apply
@@ -471,19 +460,61 @@
           com.influxdb.client.scala.InfluxDBClientScalaFactory.create
         </td>
         <td style="background: #F0ADAD">
-          InfluxDBClientScalaFactory.this.create(options, InfluxDBClientScalaFactory.this.create$default$2, InfluxDBClientScalaFactory.this.create$default$3)
+          InfluxDBClientScalaFactory.this.create(url, token, null)
         </td>
       </tr><tr>
         <td>
-          104
+          113
+        </td>
+        <td>
+          14
+        </td>
+        <td>
+          3739
+          -
+          3739
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.InfluxDBClientScalaFactory.create
+        </td>
+        <td style="background: #F0ADAD">
+          InfluxDBClientScalaFactory.this.create(url, token, org, null)
+        </td>
+      </tr><tr>
+        <td>
+          133
         </td>
         <td>
           15
         </td>
         <td>
-          3418
+          4369
           -
-          3418
+          4369
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.InfluxDBClientOptions.Builder.build
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.client.InfluxDBClientOptions.builder().url(url).authenticateToken(token).org(org).bucket(bucket).build()
+        </td>
+      </tr><tr>
+        <td>
+          135
+        </td>
+        <td>
+          17
+        </td>
+        <td>
+          4377
+          -
+          4377
         </td>
         <td>
           Select
@@ -496,15 +527,57 @@
         </td>
       </tr><tr>
         <td>
-          121
+          135
         </td>
         <td>
-          17
+          16
         </td>
         <td>
-          4223
+          4377
           -
-          4223
+          4377
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          com.influxdb.client.scala.InfluxDBClientScalaFactory.create$default$2
+        </td>
+        <td style="background: #F0ADAD">
+          InfluxDBClientScalaFactory.this.create$default$2
+        </td>
+      </tr><tr>
+        <td>
+          135
+        </td>
+        <td>
+          18
+        </td>
+        <td>
+          4383
+          -
+          4383
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.InfluxDBClientScalaFactory.create
+        </td>
+        <td style="background: #F0ADAD">
+          InfluxDBClientScalaFactory.this.create(options, InfluxDBClientScalaFactory.this.create$default$2, InfluxDBClientScalaFactory.this.create$default$3)
+        </td>
+      </tr><tr>
+        <td>
+          152
+        </td>
+        <td>
+          19
+        </td>
+        <td>
+          5182
+          -
+          5182
         </td>
         <td>
           Apply
@@ -517,15 +590,15 @@
         </td>
       </tr><tr>
         <td>
-          123
+          154
         </td>
         <td>
-          18
+          20
         </td>
         <td>
-          4263
+          5222
           -
-          4263
+          5222
         </td>
         <td>
           Apply
