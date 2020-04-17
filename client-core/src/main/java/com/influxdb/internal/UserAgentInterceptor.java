@@ -37,7 +37,7 @@ public class UserAgentInterceptor implements Interceptor {
 
     public UserAgentInterceptor() {
         Package mainPackage = UserAgentInterceptor.class.getPackage();
-        String version = mainPackage.getImplementationVersion();
+        String version = null != mainPackage ? mainPackage.getImplementationVersion() : null;
 
         userAgent = "influxdb-client-java/" + (version != null ? version : "unknown");
     }
