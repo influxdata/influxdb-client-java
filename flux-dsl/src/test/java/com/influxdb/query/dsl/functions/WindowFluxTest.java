@@ -62,18 +62,18 @@ class WindowFluxTest {
     }
 
     @Test
-    void windowEveryPeriodStartChronoUnit() {
+    void windowEveryPeriodOffsetChronoUnit() {
 
         Flux flux = Flux
                 .from("telegraf")
                 .window(15L, ChronoUnit.HALF_DAYS, 20L, ChronoUnit.SECONDS, -50L, ChronoUnit.DAYS);
 
         Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> window(every: 180h, period: 20s, start: -50d)");
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> window(every: 180h, period: 20s, offset: -50d)");
     }
 
     @Test
-    void windowEveryPeriodStartInstant() {
+    void windowEveryPeriodOffsetInstant() {
 
         Flux flux = Flux
                 .from("telegraf")
@@ -85,7 +85,7 @@ class WindowFluxTest {
     }
 
     @Test
-    void windowEveryPeriodStartString() {
+    void windowEveryPeriodOffsetString() {
 
         Flux flux = Flux
                 .from("telegraf")
@@ -99,7 +99,7 @@ class WindowFluxTest {
     }
 
     @Test
-    void windowEveryPeriodStartChronoUnitColumns() {
+    void windowEveryPeriodOffsetChronoUnitColumns() {
 
         Flux flux = Flux
                 .from("telegraf")
@@ -109,7 +109,7 @@ class WindowFluxTest {
                         "time", "superStart", "totalEnd");
 
         String expected = "from(bucket:\"telegraf\") |> "
-                + "window(every: 15m, period: 20s, start: -50d, timeColumn: \"time\", "
+                + "window(every: 15m, period: 20s, offset: -50d, timeColumn: \"time\", "
                 + "startColumn: \"superStart\", stopColumn: \"totalEnd\")";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
@@ -140,17 +140,17 @@ class WindowFluxTest {
                 .window()
                 .withPropertyNamed("every")
                 .withPropertyNamed("period")
-                .withPropertyNamed("start")
+                .withPropertyNamed("offset")
                 .withPropertyNamed("round");
 
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("every", new TimeInterval(15L, ChronoUnit.MINUTES));
         parameters.put("period", new TimeInterval(20L, ChronoUnit.SECONDS));
-        parameters.put("start", new TimeInterval(-50L, ChronoUnit.DAYS));
+        parameters.put("offset", new TimeInterval(-50L, ChronoUnit.DAYS));
         parameters.put("round", new TimeInterval(1L, ChronoUnit.HOURS));
 
         String expected = "from(bucket:\"telegraf\") |> "
-                + "window(every: 15m, period: 20s, start: -50d, round: 1h)";
+                + "window(every: 15m, period: 20s, offset: -50d, round: 1h)";
 
         Assertions.assertThat(flux.toString(parameters)).isEqualToIgnoringWhitespace(expected);
     }
