@@ -1,5 +1,9 @@
 ## 1.8.0 [unreleased]
 
+### Bug Fixes
+
+1. [#108](https://github.com/influxdata/influxdb-client-java/pull/108): Fixed naming for Window function arguments - FluxDSL
+
 ## 1.7.0 [2020-04-17]
 
 ### Features
