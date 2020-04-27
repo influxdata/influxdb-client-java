@@ -145,21 +145,21 @@ public final class WindowFlux extends AbstractParametrizedFlux {
         Arguments.checkNotNull(offset, "Offset is required");
         Arguments.checkNotNull(offsetUnit, "Offset ChronoUnit is required");
 
-        this.withPropertyValue("start", offset, offsetUnit);
+        this.withPropertyValue("offset", offset, offsetUnit);
 
         return this;
     }
 
     /**
-     * @param start The offset duration relative to the location offset.
+     * @param offset The offset duration relative to the location offset.
      * @return this
      */
     @Nonnull
-    public WindowFlux withOffset(@Nonnull final Instant start) {
+    public WindowFlux withOffset(@Nonnull final Instant offset) {
 
-        Arguments.checkNotNull(start, "Offset is required");
+        Arguments.checkNotNull(offset, "Offset is required");
 
-        this.withPropertyValue("offset", start);
+        this.withPropertyValue("offset", offset);
 
         return this;
     }
