@@ -4,6 +4,9 @@
 
 1. [#108](https://github.com/influxdata/influxdb-client-java/pull/108): Fixed naming for Window function arguments - FluxDSL
 
+### Features
+1. [#110](https://github.com/influxdata/influxdb-client-java/pull/110): Added support "inf" in Duration
+
 ## 1.7.0 [2020-04-17]
 
 ### Features
