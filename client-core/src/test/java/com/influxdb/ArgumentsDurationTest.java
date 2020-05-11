@@ -42,6 +42,8 @@ class ArgumentsDurationTest {
         Arguments.checkDuration("5w", "duration");
         Arguments.checkDuration("1mo5d", "duration");
         Arguments.checkDuration("-1mo5d", "duration");
+        Arguments.checkDuration("inf", "duration");
+        Arguments.checkDuration("-inf", "duration");
     }
 
     @Test
