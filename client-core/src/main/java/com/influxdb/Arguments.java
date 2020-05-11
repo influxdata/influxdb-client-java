@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
  */
 public final class Arguments {
 
-    private static final Pattern DURATION_PATTERN = Pattern.compile("([-+]?)([0-9]+(\\.[0-9]*)?[a-z]+)+|inf",
+    private static final Pattern DURATION_PATTERN = Pattern.compile("([-+]?)([0-9]+(\\.[0-9]*)?[a-z]+)+|inf|-inf",
             Pattern.CASE_INSENSITIVE);
 
     private static final String DURATION_MESSAGE = "Expecting a duration string for %s. But got: %s";
