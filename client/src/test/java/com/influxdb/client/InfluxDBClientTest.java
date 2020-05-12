@@ -24,6 +24,7 @@ package com.influxdb.client;
 import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.OperationLogs;
+import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractInfluxDBClientTest;
 
 import okhttp3.mockwebserver.MockResponse;
@@ -183,8 +184,33 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
 
     @Test
     public void autoClosable() {
-        try (InfluxDBClient client = InfluxDBClientFactory.create(mockServer.url("/").url().toString())){
+        try (InfluxDBClient client = InfluxDBClientFactory.create(mockServer.url("/").url().toString())) {
             Assertions.assertThat(client).isNotNull();
         }
+    }
+
+    @Test
+    public void testTrailingSlashInUrl() throws InterruptedException {
+        mockServer.enqueue(new MockResponse());
+        mockServer.enqueue(new MockResponse());
+
+        String path = mockServer.url("/").toString();
+        InfluxDBClient influxDBClient = InfluxDBClientFactory
+                .create(path, "my-token".toCharArray());
+
+        influxDBClient.getWriteApiBlocking().writeRecord("my-bucket", "my-org", WritePrecision.NS, "record,tag=a value=1");
+
+        RecordedRequest request = mockServer.takeRequest();
+        Assertions.assertThat(request.getRequestUrl().toString()).isEqualTo(path + "api/v2/write?org=my-org&bucket=my-bucket&precision=ns");
+        influxDBClient.close();
+
+        influxDBClient = InfluxDBClientFactory
+                .create(path.substring(0, path.length() - 1), "my-token".toCharArray());
+
+        influxDBClient.getWriteApiBlocking().writeRecord("my-bucket", "my-org", WritePrecision.NS, "record,tag=a value=1");
+
+        request = mockServer.takeRequest();
+        Assertions.assertThat(request.getRequestUrl().toString()).isEqualTo(path + "api/v2/write?org=my-org&bucket=my-bucket&precision=ns");
+        influxDBClient.close();
     }
 }

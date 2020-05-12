@@ -220,6 +220,8 @@ class ITUsersApi extends AbstractITClientTest {
         usersApi.updateUserPassword(user.getId(), "my-password", "my-password");
     }
 
+    //TODO https://github.com/influxdata/influxdb/issues/18048
+    @Disabled
     @Test
     void findUserLogs() {
 
@@ -243,6 +245,8 @@ class ITUsersApi extends AbstractITClientTest {
         Assertions.assertThat(userLogs).isEmpty();
     }
 
+    //TODO https://github.com/influxdata/influxdb/issues/18048
+    @Disabled
     @Test
     void findUserLogsPaging() {
 
