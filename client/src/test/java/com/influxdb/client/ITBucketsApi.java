@@ -51,7 +51,6 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (13/09/2018 10:49)
  */
 @RunWith(JUnitPlatform.class)
-@Disabled("https://github.com/influxdata/influxdb/issues/17244")
 class ITBucketsApi extends AbstractITClientTest {
 
     private Organization organization;
@@ -219,7 +218,7 @@ class ITBucketsApi extends AbstractITClientTest {
 
         Organization organization2 = organizationsApi.createOrganization(generateName("Second"));
         Assertions.assertThat(bucketsApi.findBucketsByOrg(organization2)).hasSize(2);
-        
+
         bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization2);
 
         Assertions.assertThat(bucketsApi.findBucketsByOrg(organization2)).hasSize(3);
@@ -291,6 +290,7 @@ class ITBucketsApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled("https://github.com/influxdata/influxdb/issues/17244")
     void owner() {
 
         Organization organization = organizationsApi.createOrganization(generateName("Constant Pro"));
@@ -368,9 +368,13 @@ class ITBucketsApi extends AbstractITClientTest {
 
         Bucket bucket = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);
 
-        bucketsApi.deleteLabel("020f755c3c082000", bucket.getId());
+        Assertions.assertThatThrownBy(() -> bucketsApi.deleteLabel("020f755c3c082000", bucket.getId()))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("label not found");
     }
 
+    //TODO https://github.com/influxdata/influxdb/issues/18048
+    @Disabled
     @Test
     void findBucketLogs() {
 
@@ -382,6 +386,8 @@ class ITBucketsApi extends AbstractITClientTest {
         Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Bucket Created");
     }
 
+    //TODO https://github.com/influxdata/influxdb/issues/18048
+    @Disabled
     @Test
     void findBucketLogsPaging() {
 

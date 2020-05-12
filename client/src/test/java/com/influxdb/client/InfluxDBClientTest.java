@@ -190,7 +190,7 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
     }
 
     @Test
-    public void testTrailingSlashInUrl() throws InterruptedException {
+    public void trailingSlashInUrl() throws InterruptedException {
         mockServer.enqueue(new MockResponse());
         mockServer.enqueue(new MockResponse());
 
