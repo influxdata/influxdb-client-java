@@ -63,8 +63,42 @@ Flux flux = Flux
 Flux flux = Flux.from("telegraf")
     .expression("map(fn: (r) => r._value * r._value)")
     .expression("sum()");
-```
+```   
 
+### aggregateWindow
+Applies an aggregate or selector function (any function with a column parameter) to fixed windows of time [[doc](http://bit.ly/flux-spec#aggregateWindow)].
+- `every` - The duration of windows. [duration]
+- `fn` - The aggregate function used in the operation. [function] 
+- `column` - The column on which to operate. Defaults to `_value`. [string]
+- `timeSrc` - The time column from which time is copied for the aggregate record. Defaults to `_stop`. [string]
+- `timeDst` - The “time destination” column to which time is copied for the aggregate record. Defaults to `_time`. [string]
+- `createEmpty` - For windows without data, this will create an empty window and fill it with a `null` aggregate value. Defaults to `true`. [boolean]
+
+```java
+Flux flux = Flux
+    .from("telegraf")
+    .aggregateWindow(10L, ChronoUnit.SECONDS, "mean");
+```                                                   
+
+```java  
+Flux flux = Flux
+    .from("telegraf")
+        .aggregateWindow()
+            .withEvery("10s")
+            .withAggregateFunction("sum")
+            .withColumn("_value")
+            .withTimeSrc("_stop")
+            .withTimeDst("_time")
+            .withCreateEmpty(true);
+```                                
+
+```java 
+Flux flux = Flux
+    .from("telegraf")
+        .aggregateWindow()
+            .withEvery(5L, ChronoUnit.MINUTES)
+            .withFunction("tables |> quantile(q: 0.99, column:column)");
+```
 ### count
 Counts the number of results [[doc](http://bit.ly/flux-spec#count)].
 - `useStartTime` - Use the start time as the timestamp of the resulting aggregate. [boolean]
