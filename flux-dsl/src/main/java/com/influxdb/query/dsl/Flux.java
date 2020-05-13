@@ -84,7 +84,6 @@ import com.influxdb.query.dsl.functions.restriction.Restrictions;
  * <a href="http://bit.ly/flux-spec#basic-syntax">Flux</a> - Data Scripting Language.
  * <br>
  * <a href="http://bit.ly/flux-spec">Flux Specification</a>
- * <p>
  *
  * <h3>The functions:</h3>
  * <ul>

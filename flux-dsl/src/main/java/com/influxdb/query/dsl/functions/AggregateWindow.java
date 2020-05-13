@@ -66,7 +66,7 @@ import com.influxdb.query.dsl.Flux;
  *     .from("telegraf")
  *     .aggregateWindow()
  *         .withEvery(5L, ChronoUnit.MINUTES)
- *         .withFunction("tables |> quantile(q: 0.99, column:column)");
+ *         .withFunction("tables |&gt; quantile(q: 0.99, column:column)");
  * </pre>
  *
  * @author Jakub Bednar (13/05/2020 08:41)
