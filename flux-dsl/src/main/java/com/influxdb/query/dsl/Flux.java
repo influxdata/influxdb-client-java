@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 
 import com.influxdb.Arguments;
 import com.influxdb.query.dsl.functions.AbstractParametrizedFlux;
+import com.influxdb.query.dsl.functions.AggregateWindow;
 import com.influxdb.query.dsl.functions.CountFlux;
 import com.influxdb.query.dsl.functions.CovarianceFlux;
 import com.influxdb.query.dsl.functions.CumulativeSumFlux;
@@ -84,12 +85,11 @@ import com.influxdb.query.dsl.functions.restriction.Restrictions;
  * <br>
  * <a href="http://bit.ly/flux-spec">Flux Specification</a>
  * <p>
- * TODO integration tests.
  *
  * <h3>The functions:</h3>
  * <ul>
+ * <li>{@link AggregateWindow}</li>
  * <li>{@link FromFlux}</li>
- * <li>!TODO Buckets</li>
  * <li>{@link CountFlux}</li>
  * <li>{@link CovarianceFlux}</li>
  * <li>{@link CumulativeSumFlux}</li>
@@ -101,15 +101,11 @@ import com.influxdb.query.dsl.functions.restriction.Restrictions;
  * <li>{@link FilterFlux}</li>
  * <li>{@link FirstFlux}</li>
  * <li>{@link GroupFlux}</li>
- * <li>!TODO - histogram</li>
- * <li>!TODO - histogramQuantile</li>
  * <li>{@link IntegralFlux}</li>
  * <li>{@link JoinFlux}</li>
  * <li>{@link KeepFlux}</li>
  * <li>{@link LastFlux}</li>
  * <li>{@link LimitFlux}</li>
- * <li>!TODO - LinearBuckets</li>
- * <li>TODO - LogrithmicBuckets</li>
  * <li>{@link MapFlux}</li>
  * <li>{@link MaxFlux}</li>
  * <li>{@link MeanFlux}</li>
@@ -124,8 +120,6 @@ import com.influxdb.query.dsl.functions.restriction.Restrictions;
  * <li>{@link SkewFlux}</li>
  * <li>{@link SortFlux}</li>
  * <li>{@link SpreadFlux}</li>
- * <li>!TODO stateTracking - Not defined in documentation or SPEC</li>
- * <li>!TODO InfluxFieldsAsColsC</li>
  * <li>{@link StddevFlux}</li>
  * <li>{@link SumFlux}</li>
  * <li>{@link ToFlux}</li>
@@ -139,8 +133,6 @@ import com.influxdb.query.dsl.functions.restriction.Restrictions;
  * <li>{@link WindowFlux}</li>
  * <li>{@link YieldFlux}</li>
  * <li>{@link ExpressionFlux}</li>
- * <li>TODO - toKafka, toHttp</li>
- * <li>TODO - SHOW DATABASES</li>
  * </ul>
  *
  * @author Jakub Bednar (bednar@github) (22/06/2018 10:16)
@@ -195,6 +187,58 @@ public abstract class Flux {
         return new FromFlux()
                 .withPropertyValueEscaped("bucket", bucket)
                 .withPropertyValue("hosts", hosts);
+    }
+
+    /**
+     * Applies an aggregate or selector function to fixed windows of time.
+     *
+     * <h3>The parameters had to be defined by:</h3>
+     * <ul>
+     * <li>{@link AggregateWindow#withEvery(Long, ChronoUnit)}</li>
+     * <li>{@link AggregateWindow#withEvery(String)}</li>
+     * <li>{@link AggregateWindow#withFunction(String, Object)}</li>
+     * <li>{@link AggregateWindow#withAggregateFunction(String)}</li>
+     * <li>{@link AggregateWindow#withColumn(String)}</li>
+     * <li>{@link AggregateWindow#withTimeSrc(String)}</li>
+     * <li>{@link AggregateWindow#withTimeDst(String)}</li>
+     * <li>{@link AggregateWindow#withCreateEmpty(boolean)}</li>
+     * </ul>
+     *
+     * @return {@link AggregateWindow}
+     */
+    public final AggregateWindow aggregateWindow() {
+        return new AggregateWindow(this);
+    }
+
+    /**
+     * Applies an aggregate or selector function to fixed windows of time.
+     *
+     * <h3>The parameters had to be defined by:</h3>
+     * <ul>
+     * <li>{@link AggregateWindow#withEvery(Long, ChronoUnit)}</li>
+     * <li>{@link AggregateWindow#withEvery(String)}</li>
+     * <li>{@link AggregateWindow#withFunction(String, Object)}</li>
+     * <li>{@link AggregateWindow#withAggregateFunction(String)}</li>
+     * <li>{@link AggregateWindow#withColumn(String)}</li>
+     * <li>{@link AggregateWindow#withTimeSrc(String)}</li>
+     * <li>{@link AggregateWindow#withTimeDst(String)}</li>
+     * <li>{@link AggregateWindow#withCreateEmpty(boolean)}</li>
+     * </ul>
+     *
+     * @param every         The duration of windows.
+     * @param everyUnit     a {@code ChronoUnit} determining how to interpret the {@code every}.
+     * @param namedFunction specifies the named aggregate operation to perform.
+     * @return {@link AggregateWindow}
+     */
+    @Nonnull
+    public final AggregateWindow aggregateWindow(@Nonnull final Long every,
+                                                 @Nonnull final ChronoUnit everyUnit,
+                                                 @Nonnull final String namedFunction) {
+
+        Arguments.checkNotNull(every, "Every is required");
+        Arguments.checkNotNull(everyUnit, "Every ChronoUnit is required");
+
+        return new AggregateWindow(this).withEvery(every, everyUnit).withAggregateFunction(namedFunction);
     }
 
     /**

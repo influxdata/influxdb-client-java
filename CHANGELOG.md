@@ -3,6 +3,7 @@
 ### Features
 
 1. [#110](https://github.com/influxdata/influxdb-client-java/pull/110): Added support "inf" in Duration
+1. [#111](https://github.com/influxdata/influxdb-client-java/pull/111): Add aggregateWindow operator to FluxDSL
 
 ### Bug Fixes
 
