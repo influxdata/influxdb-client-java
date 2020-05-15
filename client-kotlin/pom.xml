@@ -150,7 +150,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <configuration>
-                    <rulesUri>file://${project.basedir}/../maven-version-rules.xml</rulesUri>
+                    <rulesUri>file://${project.basedir}/../scripts/maven-version-rules.xml</rulesUri>
                 </configuration>
             </plugin>
 
