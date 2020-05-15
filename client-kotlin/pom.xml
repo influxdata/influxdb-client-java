@@ -85,6 +85,7 @@
                 <version>${kotlin.version}</version>
                 <configuration>
                     <nowarn>true</nowarn>
+                    <jvmTarget>1.8</jvmTarget>
                 </configuration>
                 <executions>
                     <execution>
@@ -145,6 +146,14 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <configuration>
+                    <rulesUri>file://${project.basedir}/../scripts/maven-version-rules.xml</rulesUri>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -174,7 +183,7 @@
         <dependency>
             <groupId>com.willowtreeapps.assertk</groupId>
             <artifactId>assertk-jvm</artifactId>
-            <version>0.12</version>
+            <version>0.22</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>

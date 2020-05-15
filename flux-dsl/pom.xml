@@ -78,6 +78,13 @@
                     <header>../scripts/license_header.txt</header>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <configuration>
+                    <rulesUri>file://${project.basedir}/../scripts/maven-version-rules.xml</rulesUri>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
