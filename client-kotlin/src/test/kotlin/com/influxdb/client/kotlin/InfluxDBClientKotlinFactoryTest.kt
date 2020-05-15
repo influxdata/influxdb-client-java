@@ -64,9 +64,9 @@ class InfluxDBClientKotlinFactoryTest : AbstractTest() {
         val retrofit = getDeclaredField<Retrofit>(influxDBClient, "retrofit", AbstractInfluxDBClient::class.java)
         val okHttpClient = retrofit.callFactory() as OkHttpClient
 
-        Assertions.assertThat(okHttpClient.readTimeoutMillis()).isEqualTo(5000)
-        Assertions.assertThat(okHttpClient.writeTimeoutMillis()).isEqualTo(60000)
-        Assertions.assertThat(okHttpClient.connectTimeoutMillis()).isEqualTo(5000)
+        Assertions.assertThat(okHttpClient.readTimeoutMillis).isEqualTo(5000)
+        Assertions.assertThat(okHttpClient.writeTimeoutMillis).isEqualTo(60000)
+        Assertions.assertThat(okHttpClient.connectTimeoutMillis).isEqualTo(5000)
     }
 
     @Test

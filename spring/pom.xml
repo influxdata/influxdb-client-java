@@ -73,8 +73,8 @@
 
     <properties>
         <micrometer.version>1.2.0-bonitoo-SNAPSHOT</micrometer.version>
-        <spring-boot.version>2.1.4.RELEASE</spring-boot.version>
-        <spring.version>5.1.6.RELEASE</spring.version>
+        <spring-boot.version>2.2.7.RELEASE</spring-boot.version>
+        <spring.version>5.2.6.RELEASE</spring.version>
         <mockito.version>2.25.1</mockito.version>
     </properties>
 
@@ -87,6 +87,14 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
                     <header>../scripts/license_header.txt</header>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <configuration>
+                    <rulesUri>file://${project.basedir}/../maven-version-rules.xml</rulesUri>
                 </configuration>
             </plugin>
 

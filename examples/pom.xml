@@ -46,6 +46,7 @@
                 <version>${kotlin.version}</version>
                 <configuration>
                     <nowarn>true</nowarn>
+                    <jvmTarget>1.8</jvmTarget>
                 </configuration>
                 <executions>
                     <execution>
@@ -95,6 +96,14 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <configuration>
+                    <rulesUri>file://${project.basedir}/../maven-version-rules.xml</rulesUri>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -102,13 +111,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.2.0</version>
+            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.8.1</version>
+            <version>3.10</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

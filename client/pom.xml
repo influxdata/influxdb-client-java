@@ -131,6 +131,13 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <configuration>
+                    <rulesUri>file://${project.basedir}/../maven-version-rules.xml</rulesUri>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

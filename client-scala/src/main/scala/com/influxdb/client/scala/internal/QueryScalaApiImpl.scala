@@ -138,7 +138,7 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
 
             val onError = asJavaConsumer[Throwable](t => queue.fail(t))
 
-            this.query(queryCall, consumer, onError, () => queue.complete, true)
+            this.query(queryCall, consumer, onError, new Runnable() { def run(): Unit = queue.complete() }, true)
           })
       })
   }

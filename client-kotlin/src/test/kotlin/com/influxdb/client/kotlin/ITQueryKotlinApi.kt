@@ -21,12 +21,13 @@
  */
 package com.influxdb.client.kotlin
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.endsWith
 import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
+import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isTrue
 import com.influxdb.annotations.Column
@@ -132,7 +133,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
         val records = queryKotlinApi.query(flux, organization.id)
 
         val tables = records.toList()
-        assert(tables).hasSize(2)
+        assertThat(tables).hasSize(2)
     }
 
     @Test
@@ -152,7 +153,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
             val records = queryKotlinApi.query(flux)
 
             val tables = records.toList()
-            assert(tables).hasSize(2)
+            assertThat(tables).hasSize(2)
         }
 
         // Query
@@ -160,7 +161,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
             val records = queryKotlinApi.query(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(flux))
 
             val tables = records.toList()
-            assert(tables).hasSize(2)
+            assertThat(tables).hasSize(2)
         }
 
         // String Measurement
@@ -168,7 +169,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
             val records = queryKotlinApi.query(flux, Mem::class.java)
 
             val memory = records.toList()
-            assert(memory).hasSize(2)
+            assertThat(memory).hasSize(2)
         }
 
         // Query Measurement
@@ -176,49 +177,49 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
             val records = queryKotlinApi.query(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(flux), Mem::class.java)
 
             val memory = records.toList()
-            assert(memory).hasSize(2)
+            assertThat(memory).hasSize(2)
         }
 
         // String Raw
         run {
             val lines = queryKotlinApi.queryRaw(flux).toList()
 
-            assert(lines).hasSize(7)
-            assert(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
-            assert(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
-            assert(lines[2]).isEqualTo("#default,_result,,,,,,,,")
-            assert(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
-            assert(lines[4]).endsWith(",free,mem,A,west,21")
-            assert(lines[5]).endsWith(",free,mem,B,west,42")
-            assert(lines[6]).isEmpty()
+            assertThat(lines).hasSize(7)
+            assertThat(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
+            assertThat(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
+            assertThat(lines[2]).isEqualTo("#default,_result,,,,,,,,")
+            assertThat(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
+            assertThat(lines[4]).endsWith(",free,mem,A,west,21")
+            assertThat(lines[5]).endsWith(",free,mem,B,west,42")
+            assertThat(lines[6]).isEmpty()
         }
 
         // String Raw Dialect
         run {
             val lines = queryKotlinApi.queryRaw(flux, AbstractInfluxDBClient.DEFAULT_DIALECT).toList()
 
-            assert(lines).hasSize(7)
-            assert(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
-            assert(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
-            assert(lines[2]).isEqualTo("#default,_result,,,,,,,,")
-            assert(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
-            assert(lines[4]).endsWith(",free,mem,A,west,21")
-            assert(lines[5]).endsWith(",free,mem,B,west,42")
-            assert(lines[6]).isEmpty()
+            assertThat(lines).hasSize(7)
+            assertThat(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
+            assertThat(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
+            assertThat(lines[2]).isEqualTo("#default,_result,,,,,,,,")
+            assertThat(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
+            assertThat(lines[4]).endsWith(",free,mem,A,west,21")
+            assertThat(lines[5]).endsWith(",free,mem,B,west,42")
+            assertThat(lines[6]).isEmpty()
         }
 
         // Query Raw
         run {
             val lines = queryKotlinApi.queryRaw(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(flux)).toList()
 
-            assert(lines).hasSize(7)
-            assert(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
-            assert(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
-            assert(lines[2]).isEqualTo("#default,_result,,,,,,,,")
-            assert(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
-            assert(lines[4]).endsWith(",free,mem,A,west,21")
-            assert(lines[5]).endsWith(",free,mem,B,west,42")
-            assert(lines[6]).isEmpty()
+            assertThat(lines).hasSize(7)
+            assertThat(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
+            assertThat(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
+            assertThat(lines[2]).isEqualTo("#default,_result,,,,,,,,")
+            assertThat(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
+            assertThat(lines[4]).endsWith(",free,mem,A,west,21")
+            assertThat(lines[5]).endsWith(",free,mem,B,west,42")
+            assertThat(lines[6]).isEmpty()
         }
     }
 
@@ -234,8 +235,8 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         val values = records.map { it.value }.toList()
 
-        assert(values).hasSize(2)
-        assert(values).containsExactly(10L, 11L)
+        assertThat(values).hasSize(2)
+        assertThat(values).containsExactly(10L, 11L)
     }
 
     @Test
@@ -248,17 +249,17 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
         val query = queryKotlinApi.query(flux, organization.id, Mem::class.java)
         val memory = query.toList()
 
-        assert(memory).hasSize(2)
+        assertThat(memory).hasSize(2)
 
-        assert(memory[0].host).isEqualTo("A")
-        assert(memory[0].region).isEqualTo("west")
-        assert(memory[0].free).isEqualTo(10L)
-        assert(memory[0].time).isEqualTo(Instant.ofEpochSecond(10))
+        assertThat(memory[0].host).isEqualTo("A")
+        assertThat(memory[0].region).isEqualTo("west")
+        assertThat(memory[0].free).isEqualTo(10L)
+        assertThat(memory[0].time).isEqualTo(Instant.ofEpochSecond(10))
 
-        assert(memory[1].host).isEqualTo("A")
-        assert(memory[1].region).isEqualTo("west")
-        assert(memory[1].free).isEqualTo(11L)
-        assert(memory[1].time).isEqualTo(Instant.ofEpochSecond(20))
+        assertThat(memory[1].host).isEqualTo("A")
+        assertThat(memory[1].region).isEqualTo("west")
+        assertThat(memory[1].free).isEqualTo(11L)
+        assertThat(memory[1].time).isEqualTo(Instant.ofEpochSecond(20))
     }
 
     @Test
@@ -271,11 +272,12 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         val channel = clientNotRunning.getQueryKotlinApi().query(flux, organization.id)
 
-        assert { runBlocking { channel.toList() } }
-                .thrownError { isInstanceOf(ConnectException::class.java) }
+        assertThat {
+            runBlocking { channel.toList() }
+        }.isFailure().isInstanceOf(ConnectException::class.java)
 
-        assert(channel.isClosedForReceive).isTrue()
-        assert(channel.isClosedForSend).isTrue()
+        assertThat(channel.isClosedForReceive).isTrue()
+        assertThat(channel.isClosedForSend).isTrue()
 
         clientNotRunning.close()
     }
@@ -289,13 +291,13 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
                 "|> sum()"
 
         val lines = queryKotlinApi.queryRaw(flux, organization.id).toList()
-        assert(lines).hasSize(6)
-        assert(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
-        assert(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
-        assert(lines[2]).isEqualTo("#default,_result,,,,,,,,")
-        assert(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
-        assert(lines[4]).endsWith(",free,mem,A,west,21")
-        assert(lines[5]).isEmpty()
+        assertThat(lines).hasSize(6)
+        assertThat(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
+        assertThat(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
+        assertThat(lines[2]).isEqualTo("#default,_result,,,,,,,,")
+        assertThat(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
+        assertThat(lines[4]).endsWith(",free,mem,A,west,21")
+        assertThat(lines[5]).isEmpty()
     }
 
     @Test
@@ -310,9 +312,9 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         val lines = queryKotlinApi.queryRaw(flux, dialect, organization.id).toList()
 
-        assert(lines).hasSize(2)
-        assert(lines[0]).endsWith(",free,mem,A,west,21")
-        assert(lines[1]).isEmpty()
+        assertThat(lines).hasSize(2)
+        assertThat(lines[0]).endsWith(",free,mem,A,west,21")
+        assertThat(lines[1]).isEmpty()
     }
 
     class Mem {
