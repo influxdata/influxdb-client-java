@@ -22,7 +22,6 @@
 package example
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
 import com.influxdb.client.scala.InfluxDBClientScalaFactory
 
@@ -32,7 +31,6 @@ import scala.concurrent.duration.Duration
 object InfluxDB2ScalaExampleRaw {
 
   implicit val system: ActorSystem = ActorSystem("it-tests")
-  implicit val materializer: ActorMaterializer = ActorMaterializer()
 
   def main(args: Array[String]): Unit = {
     val influxDBClient = InfluxDBClientScalaFactory

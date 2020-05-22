@@ -24,7 +24,6 @@ package example
 import java.time.temporal.ChronoUnit
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
 import com.influxdb.client.scala.InfluxDBClientScalaFactory
 import com.influxdb.query.FluxRecord
@@ -37,7 +36,6 @@ import scala.concurrent.duration.Duration
 object InfluxDB2ScalaExampleDSL {
 
   implicit val system: ActorSystem = ActorSystem("it-tests")
-  implicit val materializer: ActorMaterializer = ActorMaterializer()
 
   def main(args: Array[String]) {
 

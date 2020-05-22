@@ -25,7 +25,6 @@ import java.net.ConnectException
 import java.time.Instant
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
 import akka.stream.testkit.scaladsl.TestSink
 import com.influxdb.annotations.Column
 import com.influxdb.client.InfluxDBClientFactory
@@ -43,7 +42,6 @@ import scala.collection.JavaConverters._
 class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
   implicit val system: ActorSystem = ActorSystem("it-tests")
-  implicit val materializer: ActorMaterializer = ActorMaterializer()
 
   var organization: Organization = _
   var queryScalaApi: QueryScalaApi = _
