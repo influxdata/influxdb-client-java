@@ -1,5 +1,9 @@
 ## 1.9.0 [unreleased]
 
+### Bug Fixes
+
+1. [#115](https://github.com/influxdata/influxdb-client-java/pull/115): The closing message of the `WriteApi` has `Fine` log level
+
 ### Dependencies
 
 1. [#112](https://github.com/influxdata/influxdb-client-java/pull/112): Update dependencies: akka: 2.6.5, assertj-core: 3.16.1, 
