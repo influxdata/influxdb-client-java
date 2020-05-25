@@ -199,7 +199,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
 
     public void close() {
 
-        LOG.log(Level.INFO, "Flushing any cached BatchWrites before shutdown.");
+        LOG.log(Level.FINE, "Flushing any cached BatchWrites before shutdown.");
 
         autoCloseables.remove(this);
 
