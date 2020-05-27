@@ -20,8 +20,8 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.influxdb.client.domain.InvitesLinks;
-import com.influxdb.client.domain.User;
+import com.influxdb.client.domain.DBRP;
+import com.influxdb.client.domain.Links;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -29,19 +29,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Users
+ * DBRPs
  */
 
-public class Users {
+public class DBRPs {
+  public static final String SERIALIZED_NAME_NOTIFICATION_ENDPOINTS = "notificationEndpoints";
+  @SerializedName(SERIALIZED_NAME_NOTIFICATION_ENDPOINTS)
+  private List<DBRP> notificationEndpoints = new ArrayList<>();
+
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
-  private InvitesLinks links = null;
+  private Links links = null;
 
-  public static final String SERIALIZED_NAME_USERS = "users";
-  @SerializedName(SERIALIZED_NAME_USERS)
-  private List<User> users = new ArrayList<>();
+  public DBRPs notificationEndpoints(List<DBRP> notificationEndpoints) {
+    this.notificationEndpoints = notificationEndpoints;
+    return this;
+  }
 
-  public Users links(InvitesLinks links) {
+  public DBRPs addNotificationEndpointsItem(DBRP notificationEndpointsItem) {
+    if (this.notificationEndpoints == null) {
+      this.notificationEndpoints = new ArrayList<>();
+    }
+    this.notificationEndpoints.add(notificationEndpointsItem);
+    return this;
+  }
+
+   /**
+   * Get notificationEndpoints
+   * @return notificationEndpoints
+  **/
+  @ApiModelProperty(value = "")
+  public List<DBRP> getNotificationEndpoints() {
+    return notificationEndpoints;
+  }
+
+  public void setNotificationEndpoints(List<DBRP> notificationEndpoints) {
+    this.notificationEndpoints = notificationEndpoints;
+  }
+
+  public DBRPs links(Links links) {
     this.links = links;
     return this;
   }
@@ -51,38 +77,12 @@ public class Users {
    * @return links
   **/
   @ApiModelProperty(value = "")
-  public InvitesLinks getLinks() {
+  public Links getLinks() {
     return links;
   }
 
-  public void setLinks(InvitesLinks links) {
+  public void setLinks(Links links) {
     this.links = links;
-  }
-
-  public Users users(List<User> users) {
-    this.users = users;
-    return this;
-  }
-
-  public Users addUsersItem(User usersItem) {
-    if (this.users == null) {
-      this.users = new ArrayList<>();
-    }
-    this.users.add(usersItem);
-    return this;
-  }
-
-   /**
-   * Get users
-   * @return users
-  **/
-  @ApiModelProperty(value = "")
-  public List<User> getUsers() {
-    return users;
-  }
-
-  public void setUsers(List<User> users) {
-    this.users = users;
   }
 
 
@@ -94,23 +94,23 @@ public class Users {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Users users = (Users) o;
-    return Objects.equals(this.links, users.links) &&
-        Objects.equals(this.users, users.users);
+    DBRPs dbRPs = (DBRPs) o;
+    return Objects.equals(this.notificationEndpoints, dbRPs.notificationEndpoints) &&
+        Objects.equals(this.links, dbRPs.links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, users);
+    return Objects.hash(notificationEndpoints, links);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Users {\n");
+    sb.append("class DBRPs {\n");
+    sb.append("    notificationEndpoints: ").append(toIndentedString(notificationEndpoints)).append("\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
-    sb.append("    users: ").append(toIndentedString(users)).append("\n");
     sb.append("}");
     return sb.toString();
   }

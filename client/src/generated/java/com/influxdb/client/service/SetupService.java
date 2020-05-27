@@ -7,6 +7,7 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.MultipartBody;
 
+import com.influxdb.client.domain.Error;
 import com.influxdb.client.domain.IsOnboarding;
 import com.influxdb.client.domain.OnboardingRequest;
 import com.influxdb.client.domain.OnboardingResponse;

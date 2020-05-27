@@ -20,8 +20,8 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.influxdb.client.domain.InvitesLinks;
 import com.influxdb.client.domain.ResourceMember;
-import com.influxdb.client.domain.UsersLinks;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -35,13 +35,13 @@ import java.util.List;
 public class ResourceMembers {
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
-  private UsersLinks links = null;
+  private InvitesLinks links = null;
 
   public static final String SERIALIZED_NAME_USERS = "users";
   @SerializedName(SERIALIZED_NAME_USERS)
   private List<ResourceMember> users = new ArrayList<>();
 
-  public ResourceMembers links(UsersLinks links) {
+  public ResourceMembers links(InvitesLinks links) {
     this.links = links;
     return this;
   }
@@ -51,11 +51,11 @@ public class ResourceMembers {
    * @return links
   **/
   @ApiModelProperty(value = "")
-  public UsersLinks getLinks() {
+  public InvitesLinks getLinks() {
     return links;
   }
 
-  public void setLinks(UsersLinks links) {
+  public void setLinks(InvitesLinks links) {
     this.links = links;
   }
 

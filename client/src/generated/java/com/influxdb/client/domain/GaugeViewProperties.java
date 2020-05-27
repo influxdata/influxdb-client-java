@@ -153,9 +153,17 @@ public class GaugeViewProperties extends ViewProperties {
   @SerializedName(SERIALIZED_NAME_PREFIX)
   private String prefix;
 
+  public static final String SERIALIZED_NAME_TICK_PREFIX = "tickPrefix";
+  @SerializedName(SERIALIZED_NAME_TICK_PREFIX)
+  private String tickPrefix;
+
   public static final String SERIALIZED_NAME_SUFFIX = "suffix";
   @SerializedName(SERIALIZED_NAME_SUFFIX)
   private String suffix;
+
+  public static final String SERIALIZED_NAME_TICK_SUFFIX = "tickSuffix";
+  @SerializedName(SERIALIZED_NAME_TICK_SUFFIX)
+  private String tickSuffix;
 
   public static final String SERIALIZED_NAME_LEGEND = "legend";
   @SerializedName(SERIALIZED_NAME_LEGEND)
@@ -283,6 +291,24 @@ public class GaugeViewProperties extends ViewProperties {
     this.prefix = prefix;
   }
 
+  public GaugeViewProperties tickPrefix(String tickPrefix) {
+    this.tickPrefix = tickPrefix;
+    return this;
+  }
+
+   /**
+   * Get tickPrefix
+   * @return tickPrefix
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public String getTickPrefix() {
+    return tickPrefix;
+  }
+
+  public void setTickPrefix(String tickPrefix) {
+    this.tickPrefix = tickPrefix;
+  }
+
   public GaugeViewProperties suffix(String suffix) {
     this.suffix = suffix;
     return this;
@@ -299,6 +325,24 @@ public class GaugeViewProperties extends ViewProperties {
 
   public void setSuffix(String suffix) {
     this.suffix = suffix;
+  }
+
+  public GaugeViewProperties tickSuffix(String tickSuffix) {
+    this.tickSuffix = tickSuffix;
+    return this;
+  }
+
+   /**
+   * Get tickSuffix
+   * @return tickSuffix
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public String getTickSuffix() {
+    return tickSuffix;
+  }
+
+  public void setTickSuffix(String tickSuffix) {
+    this.tickSuffix = tickSuffix;
   }
 
   public GaugeViewProperties legend(Legend legend) {
@@ -354,7 +398,9 @@ public class GaugeViewProperties extends ViewProperties {
         Objects.equals(this.note, gaugeViewProperties.note) &&
         Objects.equals(this.showNoteWhenEmpty, gaugeViewProperties.showNoteWhenEmpty) &&
         Objects.equals(this.prefix, gaugeViewProperties.prefix) &&
+        Objects.equals(this.tickPrefix, gaugeViewProperties.tickPrefix) &&
         Objects.equals(this.suffix, gaugeViewProperties.suffix) &&
+        Objects.equals(this.tickSuffix, gaugeViewProperties.tickSuffix) &&
         Objects.equals(this.legend, gaugeViewProperties.legend) &&
         Objects.equals(this.decimalPlaces, gaugeViewProperties.decimalPlaces) &&
         super.equals(o);
@@ -362,7 +408,7 @@ public class GaugeViewProperties extends ViewProperties {
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, queries, colors, shape, note, showNoteWhenEmpty, prefix, suffix, legend, decimalPlaces, super.hashCode());
+    return Objects.hash(type, queries, colors, shape, note, showNoteWhenEmpty, prefix, tickPrefix, suffix, tickSuffix, legend, decimalPlaces, super.hashCode());
   }
 
 
@@ -378,7 +424,9 @@ public class GaugeViewProperties extends ViewProperties {
     sb.append("    note: ").append(toIndentedString(note)).append("\n");
     sb.append("    showNoteWhenEmpty: ").append(toIndentedString(showNoteWhenEmpty)).append("\n");
     sb.append("    prefix: ").append(toIndentedString(prefix)).append("\n");
+    sb.append("    tickPrefix: ").append(toIndentedString(tickPrefix)).append("\n");
     sb.append("    suffix: ").append(toIndentedString(suffix)).append("\n");
+    sb.append("    tickSuffix: ").append(toIndentedString(tickSuffix)).append("\n");
     sb.append("    legend: ").append(toIndentedString(legend)).append("\n");
     sb.append("    decimalPlaces: ").append(toIndentedString(decimalPlaces)).append("\n");
     sb.append("}");

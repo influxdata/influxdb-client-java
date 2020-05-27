@@ -33,6 +33,10 @@ import java.util.List;
  */
 
 public class HeatmapViewProperties extends ViewProperties {
+  public static final String SERIALIZED_NAME_TIME_FORMAT = "timeFormat";
+  @SerializedName(SERIALIZED_NAME_TIME_FORMAT)
+  private String timeFormat;
+
   /**
    * Gets or Sets type
    */
@@ -190,6 +194,24 @@ public class HeatmapViewProperties extends ViewProperties {
   public static final String SERIALIZED_NAME_BIN_SIZE = "binSize";
   @SerializedName(SERIALIZED_NAME_BIN_SIZE)
   private BigDecimal binSize;
+
+  public HeatmapViewProperties timeFormat(String timeFormat) {
+    this.timeFormat = timeFormat;
+    return this;
+  }
+
+   /**
+   * Get timeFormat
+   * @return timeFormat
+  **/
+  @ApiModelProperty(value = "")
+  public String getTimeFormat() {
+    return timeFormat;
+  }
+
+  public void setTimeFormat(String timeFormat) {
+    this.timeFormat = timeFormat;
+  }
 
    /**
    * Get type
@@ -509,7 +531,8 @@ public class HeatmapViewProperties extends ViewProperties {
       return false;
     }
     HeatmapViewProperties heatmapViewProperties = (HeatmapViewProperties) o;
-    return Objects.equals(this.type, heatmapViewProperties.type) &&
+    return Objects.equals(this.timeFormat, heatmapViewProperties.timeFormat) &&
+        Objects.equals(this.type, heatmapViewProperties.type) &&
         Objects.equals(this.queries, heatmapViewProperties.queries) &&
         Objects.equals(this.colors, heatmapViewProperties.colors) &&
         Objects.equals(this.shape, heatmapViewProperties.shape) &&
@@ -531,7 +554,7 @@ public class HeatmapViewProperties extends ViewProperties {
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, queries, colors, shape, note, showNoteWhenEmpty, xColumn, yColumn, xDomain, yDomain, xAxisLabel, yAxisLabel, xPrefix, xSuffix, yPrefix, ySuffix, binSize, super.hashCode());
+    return Objects.hash(timeFormat, type, queries, colors, shape, note, showNoteWhenEmpty, xColumn, yColumn, xDomain, yDomain, xAxisLabel, yAxisLabel, xPrefix, xSuffix, yPrefix, ySuffix, binSize, super.hashCode());
   }
 
 
@@ -540,6 +563,7 @@ public class HeatmapViewProperties extends ViewProperties {
     StringBuilder sb = new StringBuilder();
     sb.append("class HeatmapViewProperties {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    timeFormat: ").append(toIndentedString(timeFormat)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    queries: ").append(toIndentedString(queries)).append("\n");
     sb.append("    colors: ").append(toIndentedString(colors)).append("\n");

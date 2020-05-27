@@ -116,11 +116,12 @@ public interface DashboardsService {
    * 
    * @param dashboardID The ID of the dashboard to update. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
+   * @param include Includes the cell view properties in the response if set to &#x60;properties&#x60; (optional)
    * @return Call&lt;Dashboard&gt;
    */
   @GET("api/v2/dashboards/{dashboardID}")
   Call<Dashboard> getDashboardsID(
-    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("include") String include
   );
 
   /**

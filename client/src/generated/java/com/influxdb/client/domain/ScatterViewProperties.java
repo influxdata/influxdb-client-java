@@ -33,6 +33,10 @@ import java.util.List;
  */
 
 public class ScatterViewProperties extends ViewProperties {
+  public static final String SERIALIZED_NAME_TIME_FORMAT = "timeFormat";
+  @SerializedName(SERIALIZED_NAME_TIME_FORMAT)
+  private String timeFormat;
+
   /**
    * Gets or Sets type
    */
@@ -194,6 +198,24 @@ public class ScatterViewProperties extends ViewProperties {
   public static final String SERIALIZED_NAME_Y_SUFFIX = "ySuffix";
   @SerializedName(SERIALIZED_NAME_Y_SUFFIX)
   private String ySuffix;
+
+  public ScatterViewProperties timeFormat(String timeFormat) {
+    this.timeFormat = timeFormat;
+    return this;
+  }
+
+   /**
+   * Get timeFormat
+   * @return timeFormat
+  **/
+  @ApiModelProperty(value = "")
+  public String getTimeFormat() {
+    return timeFormat;
+  }
+
+  public void setTimeFormat(String timeFormat) {
+    this.timeFormat = timeFormat;
+  }
 
    /**
    * Get type
@@ -541,7 +563,8 @@ public class ScatterViewProperties extends ViewProperties {
       return false;
     }
     ScatterViewProperties scatterViewProperties = (ScatterViewProperties) o;
-    return Objects.equals(this.type, scatterViewProperties.type) &&
+    return Objects.equals(this.timeFormat, scatterViewProperties.timeFormat) &&
+        Objects.equals(this.type, scatterViewProperties.type) &&
         Objects.equals(this.queries, scatterViewProperties.queries) &&
         Objects.equals(this.colors, scatterViewProperties.colors) &&
         Objects.equals(this.shape, scatterViewProperties.shape) &&
@@ -564,7 +587,7 @@ public class ScatterViewProperties extends ViewProperties {
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, queries, colors, shape, note, showNoteWhenEmpty, xColumn, yColumn, fillColumns, symbolColumns, xDomain, yDomain, xAxisLabel, yAxisLabel, xPrefix, xSuffix, yPrefix, ySuffix, super.hashCode());
+    return Objects.hash(timeFormat, type, queries, colors, shape, note, showNoteWhenEmpty, xColumn, yColumn, fillColumns, symbolColumns, xDomain, yDomain, xAxisLabel, yAxisLabel, xPrefix, xSuffix, yPrefix, ySuffix, super.hashCode());
   }
 
 
@@ -573,6 +596,7 @@ public class ScatterViewProperties extends ViewProperties {
     StringBuilder sb = new StringBuilder();
     sb.append("class ScatterViewProperties {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    timeFormat: ").append(toIndentedString(timeFormat)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    queries: ").append(toIndentedString(queries)).append("\n");
     sb.append("    colors: ").append(toIndentedString(colors)).append("\n");

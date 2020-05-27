@@ -126,7 +126,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
                                 @Nullable final String userID,
                                 @Nullable final String orgID) {
 
-        Call<Tasks> call = service.getTasks(null, null, afterID, userID, null, orgID, null);
+        Call<Tasks> call = service.getTasks(null, null, afterID, userID, null, orgID, null, null);
 
         Tasks tasks = execute(call);
         LOG.log(Level.FINEST, "findTasks found: {0}", tasks);

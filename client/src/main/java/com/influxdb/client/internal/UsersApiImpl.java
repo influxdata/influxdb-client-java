@@ -264,7 +264,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
         String credentials = Credentials.basic(userName, oldPassword);
 
         PasswordResetBody resetBody = new PasswordResetBody().password(newPassword);
-        Call<Void> call = service.putUsersIDPassword(userID, resetBody, null, credentials);
+        Call<Void> call = service.postUsersIDPassword(userID, resetBody, null, credentials);
 
         execute(call);
     }

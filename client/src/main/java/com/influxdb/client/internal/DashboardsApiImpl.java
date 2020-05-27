@@ -125,7 +125,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
 
         Arguments.checkNotNull(dashboardID, "dashboardID");
 
-        Call<Dashboard> call = service.getDashboardsID(dashboardID, null);
+        Call<Dashboard> call = service.getDashboardsID(dashboardID, null, null);
 
         return execute(call);
     }

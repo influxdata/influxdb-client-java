@@ -141,7 +141,7 @@ public class OptionStatement extends Statement {
 
       JsonObject jsonObject = json.getAsJsonObject();
 
-      String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
+      String[] types = discriminator.stream().map(jsonObject::get).filter(Objects::nonNull).map(JsonElement::getAsString).toArray(String[]::new);
 
       return deserialize(types, jsonObject, context);
     }
