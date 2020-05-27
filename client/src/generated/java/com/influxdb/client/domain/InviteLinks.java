@@ -25,15 +25,15 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * UsersLinks
+ * InviteLinks
  */
 
-public class UsersLinks {
+public class InviteLinks {
   public static final String SERIALIZED_NAME_SELF = "self";
   @SerializedName(SERIALIZED_NAME_SELF)
   private String self;
 
-  public UsersLinks self(String self) {
+  public InviteLinks self(String self) {
     this.self = self;
     return this;
   }
@@ -60,8 +60,8 @@ public class UsersLinks {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    UsersLinks usersLinks = (UsersLinks) o;
-    return Objects.equals(this.self, usersLinks.self);
+    InviteLinks inviteLinks = (InviteLinks) o;
+    return Objects.equals(this.self, inviteLinks.self);
   }
 
   @Override
@@ -73,7 +73,7 @@ public class UsersLinks {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class UsersLinks {\n");
+    sb.append("class InviteLinks {\n");
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
     sb.append("}");
     return sb.toString();

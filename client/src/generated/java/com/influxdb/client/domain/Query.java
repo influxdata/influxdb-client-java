@@ -27,9 +27,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * Query influx with specific return formatting.
+ * Query influx using the Flux language
  */
-@ApiModel(description = "Query influx with specific return formatting.")
+@ApiModel(description = "Query influx using the Flux language")
 
 public class Query {
   public static final String SERIALIZED_NAME_EXTERN = "extern";

@@ -1,8 +1,12 @@
 ## 1.9.0 [unreleased]
 
+### API
+
+1. [#117](https://github.com/influxdata/influxdb-client-java/pull/117): Update swagger to latest version
+
 ### Bug Fixes
 
-1. [#115](https://github.com/influxdata/influxdb-client-java/pull/115): The closing message of the `WriteApi` has `Fine` log level
+1. [#116](https://github.com/influxdata/influxdb-client-java/pull/116): The closing message of the `WriteApi` has `Fine` log level
 
 ### Dependencies
 

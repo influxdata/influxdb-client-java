@@ -20,8 +20,8 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.influxdb.client.domain.CloudUser;
 import com.influxdb.client.domain.InvitesLinks;
-import com.influxdb.client.domain.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -29,19 +29,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Users
+ * CloudUsers
  */
 
-public class Users {
+public class CloudUsers {
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
   private InvitesLinks links = null;
 
   public static final String SERIALIZED_NAME_USERS = "users";
   @SerializedName(SERIALIZED_NAME_USERS)
-  private List<User> users = new ArrayList<>();
+  private List<CloudUser> users = new ArrayList<>();
 
-  public Users links(InvitesLinks links) {
+  public CloudUsers links(InvitesLinks links) {
     this.links = links;
     return this;
   }
@@ -59,12 +59,12 @@ public class Users {
     this.links = links;
   }
 
-  public Users users(List<User> users) {
+  public CloudUsers users(List<CloudUser> users) {
     this.users = users;
     return this;
   }
 
-  public Users addUsersItem(User usersItem) {
+  public CloudUsers addUsersItem(CloudUser usersItem) {
     if (this.users == null) {
       this.users = new ArrayList<>();
     }
@@ -77,11 +77,11 @@ public class Users {
    * @return users
   **/
   @ApiModelProperty(value = "")
-  public List<User> getUsers() {
+  public List<CloudUser> getUsers() {
     return users;
   }
 
-  public void setUsers(List<User> users) {
+  public void setUsers(List<CloudUser> users) {
     this.users = users;
   }
 
@@ -94,9 +94,9 @@ public class Users {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Users users = (Users) o;
-    return Objects.equals(this.links, users.links) &&
-        Objects.equals(this.users, users.users);
+    CloudUsers cloudUsers = (CloudUsers) o;
+    return Objects.equals(this.links, cloudUsers.links) &&
+        Objects.equals(this.users, cloudUsers.users);
   }
 
   @Override
@@ -108,7 +108,7 @@ public class Users {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Users {\n");
+    sb.append("class CloudUsers {\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("    users: ").append(toIndentedString(users)).append("\n");
     sb.append("}");

@@ -207,11 +207,11 @@ public class PkgChart {
     @Override
     public Object deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
 
-      List<String> discriminator = Arrays.asList("type", "shape");
+      List<String> discriminator = Arrays.asList("timeFormat", "type", "shape");
 
       JsonObject jsonObject = json.getAsJsonObject();
 
-      String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
+      String[] types = discriminator.stream().map(jsonObject::get).filter(Objects::nonNull).map(JsonElement::getAsString).toArray(String[]::new);
 
       return deserialize(types, jsonObject, context);
     }
@@ -224,10 +224,10 @@ public class PkgChart {
 
     private Object deserialize(final String[] types, final JsonElement json, final JsonDeserializationContext context) {
 
-      if (Arrays.equals(new String[]{ "line-plus-single-stat", "chronograf-v2" }, types)) {
+      if (Arrays.equals(new String[]{ "LinePlusSingleStatProperties", "line-plus-single-stat", "chronograf-v2" }, types)) {
         return context.deserialize(json, LinePlusSingleStatProperties.class);
       }
-      if (Arrays.equals(new String[]{ "xy", "chronograf-v2" }, types)) {
+      if (Arrays.equals(new String[]{ "XYViewProperties", "xy", "chronograf-v2" }, types)) {
         return context.deserialize(json, XYViewProperties.class);
       }
       if (Arrays.equals(new String[]{ "single-stat", "chronograf-v2" }, types)) {
@@ -248,10 +248,10 @@ public class PkgChart {
       if (Arrays.equals(new String[]{ "check", "chronograf-v2" }, types)) {
         return context.deserialize(json, CheckViewProperties.class);
       }
-      if (Arrays.equals(new String[]{ "scatter", "chronograf-v2" }, types)) {
+      if (Arrays.equals(new String[]{ "ScatterViewProperties", "scatter", "chronograf-v2" }, types)) {
         return context.deserialize(json, ScatterViewProperties.class);
       }
-      if (Arrays.equals(new String[]{ "heatmap", "chronograf-v2" }, types)) {
+      if (Arrays.equals(new String[]{ "HeatmapViewProperties", "heatmap", "chronograf-v2" }, types)) {
         return context.deserialize(json, HeatmapViewProperties.class);
       }
 

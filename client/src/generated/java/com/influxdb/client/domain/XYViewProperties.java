@@ -36,6 +36,10 @@ import java.util.List;
  */
 
 public class XYViewProperties extends ViewProperties {
+  public static final String SERIALIZED_NAME_TIME_FORMAT = "timeFormat";
+  @SerializedName(SERIALIZED_NAME_TIME_FORMAT)
+  private String timeFormat;
+
   /**
    * Gets or Sets type
    */
@@ -170,9 +174,78 @@ public class XYViewProperties extends ViewProperties {
   @SerializedName(SERIALIZED_NAME_SHADE_BELOW)
   private Boolean shadeBelow;
 
+  /**
+   * Gets or Sets position
+   */
+  @JsonAdapter(PositionEnum.Adapter.class)
+  public enum PositionEnum {
+    OVERLAID("overlaid"),
+    
+    STACKED("stacked");
+
+    private String value;
+
+    PositionEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static PositionEnum fromValue(String text) {
+      for (PositionEnum b : PositionEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<PositionEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final PositionEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public PositionEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return PositionEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+
+  public static final String SERIALIZED_NAME_POSITION = "position";
+  @SerializedName(SERIALIZED_NAME_POSITION)
+  private PositionEnum position;
+
   public static final String SERIALIZED_NAME_GEOM = "geom";
   @SerializedName(SERIALIZED_NAME_GEOM)
   private XYGeom geom = null;
+
+  public XYViewProperties timeFormat(String timeFormat) {
+    this.timeFormat = timeFormat;
+    return this;
+  }
+
+   /**
+   * Get timeFormat
+   * @return timeFormat
+  **/
+  @ApiModelProperty(value = "")
+  public String getTimeFormat() {
+    return timeFormat;
+  }
+
+  public void setTimeFormat(String timeFormat) {
+    this.timeFormat = timeFormat;
+  }
 
    /**
    * Get type
@@ -364,6 +437,24 @@ public class XYViewProperties extends ViewProperties {
     this.shadeBelow = shadeBelow;
   }
 
+  public XYViewProperties position(PositionEnum position) {
+    this.position = position;
+    return this;
+  }
+
+   /**
+   * Get position
+   * @return position
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public PositionEnum getPosition() {
+    return position;
+  }
+
+  public void setPosition(PositionEnum position) {
+    this.position = position;
+  }
+
   public XYViewProperties geom(XYGeom geom) {
     this.geom = geom;
     return this;
@@ -392,7 +483,8 @@ public class XYViewProperties extends ViewProperties {
       return false;
     }
     XYViewProperties xyViewProperties = (XYViewProperties) o;
-    return Objects.equals(this.type, xyViewProperties.type) &&
+    return Objects.equals(this.timeFormat, xyViewProperties.timeFormat) &&
+        Objects.equals(this.type, xyViewProperties.type) &&
         Objects.equals(this.queries, xyViewProperties.queries) &&
         Objects.equals(this.colors, xyViewProperties.colors) &&
         Objects.equals(this.shape, xyViewProperties.shape) &&
@@ -403,13 +495,14 @@ public class XYViewProperties extends ViewProperties {
         Objects.equals(this.xColumn, xyViewProperties.xColumn) &&
         Objects.equals(this.yColumn, xyViewProperties.yColumn) &&
         Objects.equals(this.shadeBelow, xyViewProperties.shadeBelow) &&
+        Objects.equals(this.position, xyViewProperties.position) &&
         Objects.equals(this.geom, xyViewProperties.geom) &&
         super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, queries, colors, shape, note, showNoteWhenEmpty, axes, legend, xColumn, yColumn, shadeBelow, geom, super.hashCode());
+    return Objects.hash(timeFormat, type, queries, colors, shape, note, showNoteWhenEmpty, axes, legend, xColumn, yColumn, shadeBelow, position, geom, super.hashCode());
   }
 
 
@@ -418,6 +511,7 @@ public class XYViewProperties extends ViewProperties {
     StringBuilder sb = new StringBuilder();
     sb.append("class XYViewProperties {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    timeFormat: ").append(toIndentedString(timeFormat)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    queries: ").append(toIndentedString(queries)).append("\n");
     sb.append("    colors: ").append(toIndentedString(colors)).append("\n");
@@ -429,6 +523,7 @@ public class XYViewProperties extends ViewProperties {
     sb.append("    xColumn: ").append(toIndentedString(xColumn)).append("\n");
     sb.append("    yColumn: ").append(toIndentedString(yColumn)).append("\n");
     sb.append("    shadeBelow: ").append(toIndentedString(shadeBelow)).append("\n");
+    sb.append("    position: ").append(toIndentedString(position)).append("\n");
     sb.append("    geom: ").append(toIndentedString(geom)).append("\n");
     sb.append("}");
     return sb.toString();

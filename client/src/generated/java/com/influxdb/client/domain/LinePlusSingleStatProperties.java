@@ -36,6 +36,10 @@ import java.util.List;
  */
 
 public class LinePlusSingleStatProperties extends ViewProperties {
+  public static final String SERIALIZED_NAME_TIME_FORMAT = "timeFormat";
+  @SerializedName(SERIALIZED_NAME_TIME_FORMAT)
+  private String timeFormat;
+
   /**
    * Gets or Sets type
    */
@@ -170,6 +174,57 @@ public class LinePlusSingleStatProperties extends ViewProperties {
   @SerializedName(SERIALIZED_NAME_SHADE_BELOW)
   private Boolean shadeBelow;
 
+  /**
+   * Gets or Sets position
+   */
+  @JsonAdapter(PositionEnum.Adapter.class)
+  public enum PositionEnum {
+    OVERLAID("overlaid"),
+    
+    STACKED("stacked");
+
+    private String value;
+
+    PositionEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static PositionEnum fromValue(String text) {
+      for (PositionEnum b : PositionEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<PositionEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final PositionEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public PositionEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return PositionEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+
+  public static final String SERIALIZED_NAME_POSITION = "position";
+  @SerializedName(SERIALIZED_NAME_POSITION)
+  private PositionEnum position;
+
   public static final String SERIALIZED_NAME_PREFIX = "prefix";
   @SerializedName(SERIALIZED_NAME_PREFIX)
   private String prefix;
@@ -181,6 +236,24 @@ public class LinePlusSingleStatProperties extends ViewProperties {
   public static final String SERIALIZED_NAME_DECIMAL_PLACES = "decimalPlaces";
   @SerializedName(SERIALIZED_NAME_DECIMAL_PLACES)
   private DecimalPlaces decimalPlaces = null;
+
+  public LinePlusSingleStatProperties timeFormat(String timeFormat) {
+    this.timeFormat = timeFormat;
+    return this;
+  }
+
+   /**
+   * Get timeFormat
+   * @return timeFormat
+  **/
+  @ApiModelProperty(value = "")
+  public String getTimeFormat() {
+    return timeFormat;
+  }
+
+  public void setTimeFormat(String timeFormat) {
+    this.timeFormat = timeFormat;
+  }
 
    /**
    * Get type
@@ -372,6 +445,24 @@ public class LinePlusSingleStatProperties extends ViewProperties {
     this.shadeBelow = shadeBelow;
   }
 
+  public LinePlusSingleStatProperties position(PositionEnum position) {
+    this.position = position;
+    return this;
+  }
+
+   /**
+   * Get position
+   * @return position
+  **/
+  @ApiModelProperty(required = true, value = "")
+  public PositionEnum getPosition() {
+    return position;
+  }
+
+  public void setPosition(PositionEnum position) {
+    this.position = position;
+  }
+
   public LinePlusSingleStatProperties prefix(String prefix) {
     this.prefix = prefix;
     return this;
@@ -436,7 +527,8 @@ public class LinePlusSingleStatProperties extends ViewProperties {
       return false;
     }
     LinePlusSingleStatProperties linePlusSingleStatProperties = (LinePlusSingleStatProperties) o;
-    return Objects.equals(this.type, linePlusSingleStatProperties.type) &&
+    return Objects.equals(this.timeFormat, linePlusSingleStatProperties.timeFormat) &&
+        Objects.equals(this.type, linePlusSingleStatProperties.type) &&
         Objects.equals(this.queries, linePlusSingleStatProperties.queries) &&
         Objects.equals(this.colors, linePlusSingleStatProperties.colors) &&
         Objects.equals(this.shape, linePlusSingleStatProperties.shape) &&
@@ -447,6 +539,7 @@ public class LinePlusSingleStatProperties extends ViewProperties {
         Objects.equals(this.xColumn, linePlusSingleStatProperties.xColumn) &&
         Objects.equals(this.yColumn, linePlusSingleStatProperties.yColumn) &&
         Objects.equals(this.shadeBelow, linePlusSingleStatProperties.shadeBelow) &&
+        Objects.equals(this.position, linePlusSingleStatProperties.position) &&
         Objects.equals(this.prefix, linePlusSingleStatProperties.prefix) &&
         Objects.equals(this.suffix, linePlusSingleStatProperties.suffix) &&
         Objects.equals(this.decimalPlaces, linePlusSingleStatProperties.decimalPlaces) &&
@@ -455,7 +548,7 @@ public class LinePlusSingleStatProperties extends ViewProperties {
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, queries, colors, shape, note, showNoteWhenEmpty, axes, legend, xColumn, yColumn, shadeBelow, prefix, suffix, decimalPlaces, super.hashCode());
+    return Objects.hash(timeFormat, type, queries, colors, shape, note, showNoteWhenEmpty, axes, legend, xColumn, yColumn, shadeBelow, position, prefix, suffix, decimalPlaces, super.hashCode());
   }
 
 
@@ -464,6 +557,7 @@ public class LinePlusSingleStatProperties extends ViewProperties {
     StringBuilder sb = new StringBuilder();
     sb.append("class LinePlusSingleStatProperties {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    timeFormat: ").append(toIndentedString(timeFormat)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    queries: ").append(toIndentedString(queries)).append("\n");
     sb.append("    colors: ").append(toIndentedString(colors)).append("\n");
@@ -475,6 +569,7 @@ public class LinePlusSingleStatProperties extends ViewProperties {
     sb.append("    xColumn: ").append(toIndentedString(xColumn)).append("\n");
     sb.append("    yColumn: ").append(toIndentedString(yColumn)).append("\n");
     sb.append("    shadeBelow: ").append(toIndentedString(shadeBelow)).append("\n");
+    sb.append("    position: ").append(toIndentedString(position)).append("\n");
     sb.append("    prefix: ").append(toIndentedString(prefix)).append("\n");
     sb.append("    suffix: ").append(toIndentedString(suffix)).append("\n");
     sb.append("    decimalPlaces: ").append(toIndentedString(decimalPlaces)).append("\n");

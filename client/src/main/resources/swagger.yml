@@ -12,17 +12,17 @@ paths:
       security:
         - BasicAuth: []
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       responses:
-        '204':
+        "204":
           description: Successfully authenticated
-        '401':
+        "401":
           description: Unauthorized access
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-        '403':
+        "403":
           description: user account is disabled
           content:
             application/json:
@@ -39,11 +39,11 @@ paths:
       operationId: PostSignout
       summary: Expire the current session
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       responses:
-        '204':
+        "204":
           description: Session successfully expired
-        '401':
+        "401":
           description: Unauthorized access
           content:
             application/json:
@@ -60,7 +60,7 @@ paths:
       operationId: GetRoutes
       summary: Map of all top level routes available
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       responses:
         default:
           description: All routes
@@ -76,9 +76,9 @@ paths:
       summary: Check if database has default user, org, bucket
       description: Returns `true` if no default user, organization, or bucket has been created.
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       responses:
-        '200':
+        "200":
           description:
             allowed true or false
           content:
@@ -92,7 +92,7 @@ paths:
       summary: Set up initial user, org and bucket
       description: Post an onboarding request to set up initial user, org and bucket.
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       requestBody:
         description: Source to create
         required: true
@@ -101,19 +101,25 @@ paths:
             schema:
               $ref: "#/components/schemas/OnboardingRequest"
       responses:
-        '201':
+        "201":
           description: Created default user, bucket, org
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/OnboardingResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /documents/templates:
     get:
       operationId: GetDocumentsTemplates
       tags:
         - Templates
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
           - in: query
             name: org
             description: Specifies the name of the organization of the template.
@@ -125,7 +131,7 @@ paths:
             schema:
               type: string
       responses:
-        '200':
+        "200":
           description: A list of template documents
           content:
             application/json:
@@ -143,7 +149,7 @@ paths:
         - Templates
       summary: Create a template
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       requestBody:
         description: Template that will be created
         required: true
@@ -152,7 +158,7 @@ paths:
             schema:
               $ref: "#/components/schemas/DocumentCreate"
       responses:
-        '201':
+        "201":
           description: Template created
           content:
             application/json:
@@ -164,13 +170,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/documents/templates/{templateID}':
+  "/documents/templates/{templateID}":
     get:
       operationId: GetDocumentsTemplatesID
       tags:
         - Templates
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: templateID
           schema:
@@ -178,7 +184,7 @@ paths:
           required: true
           description: The template ID.
       responses:
-        '200':
+        "200":
           description: The template requested
           content:
             application/json:
@@ -195,7 +201,7 @@ paths:
       tags:
         - Templates
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: templateID
           schema:
@@ -210,7 +216,7 @@ paths:
             schema:
               $ref: "#/components/schemas/DocumentUpdate"
       responses:
-        '200':
+        "200":
           description: The newly updated template
           content:
             application/json:
@@ -228,7 +234,7 @@ paths:
         - Templates
       summary: Delete a template
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: templateID
           schema:
@@ -236,7 +242,7 @@ paths:
           required: true
           description: The template ID.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
         default:
           description: Unexpected error
@@ -244,14 +250,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/documents/templates/{templateID}/labels':
+  "/documents/templates/{templateID}/labels":
     get:
       operationId: GetDocumentsTemplatesIDLabels
       tags:
         - Templates
       summary: List all labels for a template
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: templateID
           schema:
@@ -259,7 +265,7 @@ paths:
           required: true
           description: The template ID.
       responses:
-        '200':
+        "200":
           description: A list of all labels for a template
           content:
             application/json:
@@ -277,7 +283,7 @@ paths:
         - Templates
       summary: Add a label to a template
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: templateID
           schema:
@@ -292,7 +298,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '201':
+        "201":
           description: The label added to the template
           content:
             application/json:
@@ -304,14 +310,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/documents/templates/{templateID}/labels/{labelID}':
+  "/documents/templates/{templateID}/labels/{labelID}":
     delete:
       operationId: DeleteDocumentsTemplatesIDLabelsID
       tags:
         - Templates
       summary: Delete a label from a template
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: templateID
           schema:
@@ -325,10 +331,225 @@ paths:
           required: true
           description: The label ID.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Template not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /dbrps:
+    get:
+      operationId: GetDPRPs
+      tags:
+        - DBRPs
+      summary: List all database retention policy mappings
+      parameters:
+        - $ref: "#/components/parameters/TraceSpan"
+        - in: query
+          name: orgID
+          required: true
+          description: Specifies the organization ID to filter on
+          schema:
+            type: string
+        - in: query
+          name: id
+          description: Specifies the mapping ID to filter on
+          schema:
+            type: string
+        - in: query
+          name: bucketID
+          description: Specifies the bucket ID to filter on
+          schema:
+            type: string
+        - in: query
+          name: default
+          description: Specifies filtering on default
+          schema:
+            type: boolean
+        - in: query
+          name: db
+          description: Specifies the database to filter on
+          schema:
+            type: string
+        - in: query
+          name: rp
+          description: Specifies the retention policy to filter on
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of all database retention policy mappings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DBRPs"
+        "400":
+          description: if any of the parameter passed is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      operationId: PostDBRP
+      tags:
+        - DBRPs
+      summary: Add a database retention policy mapping
+      parameters:
+        - $ref: "#/components/parameters/TraceSpan"
+      requestBody:
+        description: The database retention policy mapping to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DBRP"
+      responses:
+        "201":
+          description: Database retention policy mapping created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DBRP"
+        "400":
+          description: if any of the IDs in the mapping is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/dprps/{dbrpID}":
+    get:
+      operationId: GetDBRPsID
+      tags:
+        - DBRPs
+      summary: Retrieve a database retention policy mapping
+      parameters:
+        - $ref: "#/components/parameters/TraceSpan"
+        - in: query
+          name: orgID
+          required: true
+          description: Specifies the organization ID of the mapping
+          schema:
+            type: string
+        - in: path
+          name: dbrpID
+          schema:
+            type: string
+          required: true
+          description: The database retention policy mapping ID
+      responses:
+        "200":
+          description: The database retention policy requested
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DBRP"
+        "400":
+          description: if any of the IDs passed is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: PatchDBRPID
+      tags:
+        - DBRPs
+      summary: Update a database retention policy mapping
+      requestBody:
+        description: Database retention policy update to apply
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DBRPUpdate"
+      parameters:
+        - $ref: "#/components/parameters/TraceSpan"
+        - in: query
+          name: orgID
+          required: true
+          description: Specifies the organization ID of the mapping
+          schema:
+            type: string
+        - in: path
+          name: dbrpID
+          schema:
+            type: string
+          required: true
+          description: The database retention policy mapping.
+      responses:
+        "200":
+          description: An updated mapping
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DBRP"
+        "404":
+          description: The mapping was not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "400":
+          description: if any of the IDs passed is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      operationId: DeleteDBRPID
+      tags:
+        - DBRPs
+      summary: Delete a database retention policy
+      parameters:
+        - $ref: "#/components/parameters/TraceSpan"
+        - in: query
+          name: orgID
+          required: true
+          description: Specifies the organization ID of the mapping
+          schema:
+            type: string
+        - in: path
+          name: dbrpID
+          schema:
+            type: string
+          required: true
+          description: The database retention policy mapping
+      responses:
+        "204":
+          description: Delete has been accepted
+        "400":
+          description: if any of the IDs passed is invalid
           content:
             application/json:
               schema:
@@ -345,14 +566,14 @@ paths:
       tags:
         - Telegrafs
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
           - in: query
             name: orgID
             description: The organization ID the Telegraf config belongs to.
             schema:
               type: string
       responses:
-        '200':
+        "200":
           description: A list of Telegraf configs
           content:
             application/json:
@@ -370,7 +591,7 @@ paths:
         - Telegrafs
       summary: Create a Telegraf config
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
       requestBody:
         description: Telegraf config to create
         required: true
@@ -379,7 +600,7 @@ paths:
             schema:
               $ref: "#/components/schemas/TelegrafRequest"
       responses:
-        '201':
+        "201":
           description: Telegraf config created
           content:
             application/json:
@@ -391,14 +612,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/telegrafs/{telegrafID}':
+  "/telegrafs/{telegrafID}":
     get:
       operationId: GetTelegrafsID
       tags:
         - Telegrafs
       summary: Retrieve a Telegraf config
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: telegrafID
           schema:
@@ -416,7 +637,7 @@ paths:
               - application/json
               - application/octet-stream
       responses:
-        '200':
+        "200":
           description: Telegraf config details
           content:
             application/toml:
@@ -442,7 +663,7 @@ paths:
         - Telegrafs
       summary: Update a Telegraf config
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: telegrafID
           schema:
@@ -457,7 +678,7 @@ paths:
             schema:
               $ref: "#/components/schemas/TelegrafRequest"
       responses:
-        '200':
+        "200":
           description: An updated Telegraf config
           content:
             application/json:
@@ -475,7 +696,7 @@ paths:
         - Telegrafs
       summary: Delete a Telegraf config
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: telegrafID
           schema:
@@ -483,7 +704,7 @@ paths:
           required: true
           description: The Telegraf config ID.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
         default:
           description: Unexpected error
@@ -491,14 +712,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/telegrafs/{telegrafID}/labels':
+  "/telegrafs/{telegrafID}/labels":
     get:
       operationId: GetTelegrafsIDLabels
       tags:
         - Telegrafs
       summary: List all labels for a Telegraf config
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: telegrafID
           schema:
@@ -506,7 +727,7 @@ paths:
           required: true
           description: The Telegraf config ID.
       responses:
-        '200':
+        "200":
           description: A list of all labels for a Telegraf config
           content:
             application/json:
@@ -524,7 +745,7 @@ paths:
         - Telegrafs
       summary: Add a label to a Telegraf config
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: telegrafID
           schema:
@@ -539,7 +760,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '201':
+        "201":
           description: The label added to the Telegraf config
           content:
             application/json:
@@ -551,14 +772,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/telegrafs/{telegrafID}/labels/{labelID}':
+  "/telegrafs/{telegrafID}/labels/{labelID}":
     delete:
       operationId: DeleteTelegrafsIDLabelsID
       tags:
         - Telegrafs
       summary: Delete a label from a Telegraf config
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: telegrafID
           schema:
@@ -572,9 +793,9 @@ paths:
           required: true
           description: The label ID.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Telegraf config not found
           content:
             application/json:
@@ -586,7 +807,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/telegrafs/{telegrafID}/members':
+  "/telegrafs/{telegrafID}/members":
     get:
       operationId: GetTelegrafsIDMembers
       tags:
@@ -594,7 +815,7 @@ paths:
         - Telegrafs
       summary: List all users with member privileges for a Telegraf config
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: telegrafID
           schema:
@@ -602,7 +823,7 @@ paths:
           required: true
           description: The Telegraf config ID.
       responses:
-        '200':
+        "200":
           description: A list of Telegraf config members
           content:
             application/json:
@@ -621,7 +842,7 @@ paths:
         - Telegrafs
       summary: Add a member to a Telegraf config
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: telegrafID
           schema:
@@ -636,7 +857,7 @@ paths:
             schema:
               $ref: "#/components/schemas/AddResourceMemberRequestBody"
       responses:
-        '201':
+        "201":
           description: Member added to Telegraf config
           content:
             application/json:
@@ -648,7 +869,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/telegrafs/{telegrafID}/members/{userID}':
+  "/telegrafs/{telegrafID}/members/{userID}":
     delete:
       operationId: DeleteTelegrafsIDMembersID
       tags:
@@ -656,7 +877,7 @@ paths:
         - Telegrafs
       summary: Remove a member from a Telegraf config
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -670,7 +891,7 @@ paths:
           required: true
           description: The Telegraf config ID.
       responses:
-        '204':
+        "204":
           description: Member removed
         default:
           description: Unexpected error
@@ -678,7 +899,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/telegrafs/{telegrafID}/owners':
+  "/telegrafs/{telegrafID}/owners":
     get:
       operationId: GetTelegrafsIDOwners
       tags:
@@ -686,7 +907,7 @@ paths:
         - Telegrafs
       summary: List all owners of a Telegraf config
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: telegrafID
           schema:
@@ -694,7 +915,7 @@ paths:
           required: true
           description: The Telegraf config ID.
       responses:
-        '200':
+        "200":
           description: A list of Telegraf config owners
           content:
             application/json:
@@ -713,7 +934,7 @@ paths:
         - Telegrafs
       summary: Add an owner to a Telegraf config
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: telegrafID
           schema:
@@ -728,7 +949,7 @@ paths:
             schema:
               $ref: "#/components/schemas/AddResourceMemberRequestBody"
       responses:
-        '201':
+        "201":
           description: Telegraf config owner added
           content:
             application/json:
@@ -740,7 +961,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/telegrafs/{telegrafID}/owners/{userID}':
+  "/telegrafs/{telegrafID}/owners/{userID}":
     delete:
       operationId: DeleteTelegrafsIDOwnersID
       tags:
@@ -748,7 +969,7 @@ paths:
         - Telegrafs
       summary: Remove an owner from a Telegraf config
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -762,7 +983,7 @@ paths:
           required: true
           description: The Telegraf config ID.
       responses:
-        '204':
+        "204":
           description: Owner removed
         default:
           description: Unexpected error
@@ -777,7 +998,7 @@ paths:
         - ScraperTargets
       summary: Get all scraper targets
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
           - in: query
             name: name
             description: Specifies the name of the scraper target.
@@ -801,7 +1022,7 @@ paths:
             schema:
               type: string
       responses:
-        '200':
+        "200":
           description: All scraper targets
           content:
             application/json:
@@ -813,7 +1034,7 @@ paths:
       tags:
         - ScraperTargets
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       requestBody:
         description: Scraper target to create
         required: true
@@ -822,7 +1043,7 @@ paths:
             schema:
               $ref: "#/components/schemas/ScraperTargetRequest"
       responses:
-        '201':
+        "201":
           description: Scraper target created
           content:
             application/json:
@@ -834,14 +1055,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/scrapers/{scraperTargetID}':
+  "/scrapers/{scraperTargetID}":
     get:
       operationId: GetScrapersID
       tags:
         - ScraperTargets
       summary: Get a scraper target by ID
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: scraperTargetID
           required: true
@@ -849,7 +1070,7 @@ paths:
             type: string
           description: The scraper target ID.
       responses:
-        '200':
+        "200":
           description: Scraper target updated
           content:
             application/json:
@@ -867,7 +1088,7 @@ paths:
         - ScraperTargets
       summary: Delete a scraper target
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: scraperTargetID
           required: true
@@ -875,7 +1096,7 @@ paths:
             type: string
           description: The scraper target ID.
       responses:
-        '204':
+        "204":
           description: Scraper target deleted
         default:
           description: Internal server error
@@ -889,7 +1110,7 @@ paths:
       tags:
         - ScraperTargets
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: scraperTargetID
           required: true
@@ -904,7 +1125,7 @@ paths:
             schema:
               $ref: "#/components/schemas/ScraperTargetRequest"
       responses:
-        '200':
+        "200":
           description: Scraper target updated
           content:
             application/json:
@@ -916,14 +1137,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/scrapers/{scraperTargetID}/labels':
+  "/scrapers/{scraperTargetID}/labels":
     get:
       operationId: GetScrapersIDLabels
       tags:
         - ScraperTargets
       summary: List all labels for a scraper target
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: scraperTargetID
           schema:
@@ -931,7 +1152,7 @@ paths:
           required: true
           description: The scraper target ID.
       responses:
-        '200':
+        "200":
           description: A list of all labels for a scraper target
           content:
             application/json:
@@ -949,7 +1170,7 @@ paths:
         - ScraperTargets
       summary: Add a label to a scraper target
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: scraperTargetID
           schema:
@@ -964,7 +1185,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '201':
+        "201":
           description: The newly added label
           content:
             application/json:
@@ -976,14 +1197,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/scrapers/{scraperTargetID}/labels/{labelID}':
+  "/scrapers/{scraperTargetID}/labels/{labelID}":
     delete:
       operationId: DeleteScrapersIDLabelsID
       tags:
         - ScraperTargets
       summary: Delete a label from a scraper target
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: scraperTargetID
           schema:
@@ -997,9 +1218,9 @@ paths:
           required: true
           description: The label ID.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Scraper target not found
           content:
             application/json:
@@ -1017,7 +1238,7 @@ paths:
         - ScraperTargets
       summary: Update a label on a scraper target
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: scraperTargetID
           schema:
@@ -1038,9 +1259,9 @@ paths:
             schema:
               $ref: "#/components/schemas/Label"
       responses:
-        '200':
+        "200":
           description: Updated successfully
-        '404':
+        "404":
           description: Scraper target not found
           content:
             application/json:
@@ -1052,7 +1273,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/scrapers/{scraperTargetID}/members':
+  "/scrapers/{scraperTargetID}/members":
     get:
       operationId: GetScrapersIDMembers
       tags:
@@ -1060,7 +1281,7 @@ paths:
         - ScraperTargets
       summary: List all users with member privileges for a scraper target
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: scraperTargetID
           schema:
@@ -1068,7 +1289,7 @@ paths:
           required: true
           description: The scraper target ID.
       responses:
-        '200':
+        "200":
           description: A list of scraper target members
           content:
             application/json:
@@ -1087,7 +1308,7 @@ paths:
         - ScraperTargets
       summary: Add a member to a scraper target
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: scraperTargetID
           schema:
@@ -1102,7 +1323,7 @@ paths:
             schema:
               $ref: "#/components/schemas/AddResourceMemberRequestBody"
       responses:
-        '201':
+        "201":
           description: Member added to scraper targets
           content:
             application/json:
@@ -1114,7 +1335,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/scrapers/{scraperTargetID}/members/{userID}':
+  "/scrapers/{scraperTargetID}/members/{userID}":
     delete:
       operationId: DeleteScrapersIDMembersID
       tags:
@@ -1122,7 +1343,7 @@ paths:
         - ScraperTargets
       summary: Remove a member from a scraper target
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -1136,7 +1357,7 @@ paths:
           required: true
           description: The scraper target ID.
       responses:
-        '204':
+        "204":
           description: Member removed
         default:
           description: Unexpected error
@@ -1144,7 +1365,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/scrapers/{scraperTargetID}/owners':
+  "/scrapers/{scraperTargetID}/owners":
     get:
       operationId: GetScrapersIDOwners
       tags:
@@ -1152,7 +1373,7 @@ paths:
         - ScraperTargets
       summary: List all owners of a scraper target
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: scraperTargetID
           schema:
@@ -1160,7 +1381,7 @@ paths:
           required: true
           description: The scraper target ID.
       responses:
-        '200':
+        "200":
           description: A list of scraper target owners
           content:
             application/json:
@@ -1179,7 +1400,7 @@ paths:
         - ScraperTargets
       summary: Add an owner to a scraper target
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: scraperTargetID
           schema:
@@ -1194,7 +1415,7 @@ paths:
             schema:
               $ref: "#/components/schemas/AddResourceMemberRequestBody"
       responses:
-        '201':
+        "201":
           description: Scraper target owner added
           content:
             application/json:
@@ -1206,7 +1427,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/scrapers/{scraperTargetID}/owners/{userID}':
+  "/scrapers/{scraperTargetID}/owners/{userID}":
     delete:
       operationId: DeleteScrapersIDOwnersID
       tags:
@@ -1214,7 +1435,7 @@ paths:
         - ScraperTargets
       summary: Remove an owner from a scraper target
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -1228,7 +1449,7 @@ paths:
           required: true
           description: The scraper target ID.
       responses:
-        '204':
+        "204":
           description: Owner removed
         default:
           description: Unexpected error
@@ -1243,7 +1464,7 @@ paths:
         - Variables
       summary: Get all variables
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: query
           name: org
           description: The organization name.
@@ -1255,13 +1476,13 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: All variables for an organization
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Variables"
-        '400':
+        "400":
           description: Invalid request
           content:
             application/json:
@@ -1279,7 +1500,7 @@ paths:
       tags:
         - Variables
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       requestBody:
         description: Variable to create
         required: true
@@ -1288,7 +1509,7 @@ paths:
             schema:
               $ref: "#/components/schemas/Variable"
       responses:
-        '201':
+        "201":
           description: Variable created
           content:
             application/json:
@@ -1300,14 +1521,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/variables/{variableID}':
+  "/variables/{variableID}":
     get:
       operationId: GetVariablesID
       tags:
         - Variables
       summary: Get a variable
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: variableID
           required: true
@@ -1315,13 +1536,13 @@ paths:
             type: string
           description: The variable ID.
       responses:
-        '200':
+        "200":
           description: Variable found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Variable"
-        '404':
+        "404":
           description: Variable not found
           content:
             application/json:
@@ -1339,7 +1560,7 @@ paths:
         - Variables
       summary: Delete a variable
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: variableID
           required: true
@@ -1347,7 +1568,7 @@ paths:
             type: string
           description: The variable ID.
       responses:
-        '204':
+        "204":
           description: Variable deleted
         default:
           description: Internal server error
@@ -1361,7 +1582,7 @@ paths:
       tags:
         - Variables
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: variableID
           required: true
@@ -1376,7 +1597,7 @@ paths:
             schema:
               $ref: "#/components/schemas/Variable"
       responses:
-        '200':
+        "200":
           description: Variable updated
           content:
             application/json:
@@ -1394,7 +1615,7 @@ paths:
       tags:
         - Variables
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: variableID
           required: true
@@ -1409,7 +1630,7 @@ paths:
             schema:
               $ref: "#/components/schemas/Variable"
       responses:
-        '200':
+        "200":
           description: Variable updated
           content:
             application/json:
@@ -1421,14 +1642,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/variables/{variableID}/labels':
+  "/variables/{variableID}/labels":
     get:
       operationId: GetVariablesIDLabels
       tags:
         - Variables
       summary: List all labels for a variable
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: variableID
           schema:
@@ -1436,7 +1657,7 @@ paths:
           required: true
           description: The variable ID.
       responses:
-        '200':
+        "200":
           description: A list of all labels for a variable
           content:
             application/json:
@@ -1454,7 +1675,7 @@ paths:
         - Variables
       summary: Add a label to a variable
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: variableID
           schema:
@@ -1469,7 +1690,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '201':
+        "201":
           description: The newly added label
           content:
             application/json:
@@ -1481,14 +1702,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/variables/{variableID}/labels/{labelID}':
+  "/variables/{variableID}/labels/{labelID}":
     delete:
       operationId: DeleteVariablesIDLabelsID
       tags:
         - Variables
       summary: Delete a label from a variable
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: variableID
           schema:
@@ -1502,9 +1723,9 @@ paths:
           required: true
           description: The label ID to delete.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Variable not found
           content:
             application/json:
@@ -1530,7 +1751,7 @@ paths:
             schema:
               type: string
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: header
           name: Content-Encoding
           description: When present, its value indicates to the database that compression is applied to the line-protocol body.
@@ -1592,33 +1813,33 @@ paths:
           schema:
             $ref: "#/components/schemas/WritePrecision"
       responses:
-        '204':
+        "204":
           description: Write data is correctly formatted and accepted for writing to the bucket.
-        '400':
+        "400":
           description: Line protocol poorly formed and no points were written.  Response can be used to determine the first malformed line in the body line-protocol. All data in body was rejected and not written.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/LineProtocolError"
-        '401':
+        "401":
           description: Token does not have sufficient permissions to write to this organization and bucket or the organization and bucket do not exist.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-        '403':
+        "403":
           description: No token was sent and they are required.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-        '413':
+        "413":
           description: Write has been rejected because the payload is too large. Error message returns max size supported. All data in body was rejected and not written.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/LineProtocolLengthError"
-        '429':
+        "429":
           description: Token is temporarily over quota. The Retry-After header describes when to try the write again.
           headers:
             Retry-After:
@@ -1626,7 +1847,7 @@ paths:
               schema:
                 type: integer
                 format: int32
-        '503':
+        "503":
           description: Server is temporarily unavailable to accept writes.  The Retry-After header describes when to try the write again.
           headers:
             Retry-After:
@@ -1651,7 +1872,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/DeletePredicateRequest"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: query
           name: org
           description: Specifies the organization to delete data from.
@@ -1676,21 +1897,21 @@ paths:
             type: string
             description: Only points from this bucket ID are deleted.
       responses:
-        '204':
+        "204":
           description: delete has been accepted
-        '400':
+        "400":
           description: invalid request.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-        '404':
+        "404":
           description: the bucket or organization is not found.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-        '403':
+        "403":
           description: no token was sent or does not have sufficient permissions.
           content:
             application/json:
@@ -1711,9 +1932,9 @@ paths:
         - Ready
       summary: Get the readiness of an instance at startup
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       responses:
-        '200':
+        "200":
           description: The instance is ready
           content:
             application/json:
@@ -1734,15 +1955,15 @@ paths:
         - Health
       summary: Get the health of an instance
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       responses:
-        '200':
+        "200":
           description: The instance is healthy
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthCheck"
-        '503':
+        "503":
           description: The instance is unhealthy
           content:
             application/json:
@@ -1761,7 +1982,7 @@ paths:
         - Sources
       summary: Creates a source
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
       requestBody:
           description: Source to create
           required: true
@@ -1770,7 +1991,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Source"
       responses:
-        '201':
+        "201":
           description: Created Source
           content:
             application/json:
@@ -1788,14 +2009,14 @@ paths:
         - Sources
       summary: Get all sources
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
           - in: query
             name: org
             description: The organization name.
             schema:
               type: string
       responses:
-        '200':
+        "200":
           description: All sources
           content:
             application/json:
@@ -1814,7 +2035,7 @@ paths:
         - Sources
       summary: Delete a source
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: sourceID
           schema:
@@ -1822,9 +2043,9 @@ paths:
           required: true
           description: The source ID.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: View not found
           content:
             application/json:
@@ -1842,7 +2063,7 @@ paths:
         - Sources
       summary: Update a Source
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
           - in: path
             name: sourceID
             schema:
@@ -1857,13 +2078,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/Source"
       responses:
-        '200':
+        "200":
           description: Created Source
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Source"
-        '404':
+        "404":
           description: Source not found
           content:
             application/json:
@@ -1881,7 +2102,7 @@ paths:
         - Sources
       summary: Get a source
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
           - in: path
             name: sourceID
             schema:
@@ -1889,13 +2110,13 @@ paths:
             required: true
             description: The source ID.
       responses:
-        '200':
+        "200":
           description: A source
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Source"
-        '404':
+        "404":
           description: Source not found
           content:
             application/json:
@@ -1914,7 +2135,7 @@ paths:
         - Sources
       summary: Get the health of a source
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
           - in: path
             name: sourceID
             schema:
@@ -1922,13 +2143,13 @@ paths:
             required: true
             description: The source ID.
       responses:
-        '200':
+        "200":
           description: The source is healthy
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthCheck"
-        '503':
+        "503":
           description: The source is not healthy
           content:
             application/json:
@@ -1948,7 +2169,7 @@ paths:
         - Buckets
       summary: Get buckets in a source
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
           - in: path
             name: sourceID
             schema:
@@ -1961,13 +2182,13 @@ paths:
             schema:
               type: string
       responses:
-        '200':
+        "200":
           description: A source
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Buckets"
-        '404':
+        "404":
           description: Source not found
           content:
             application/json:
@@ -1993,7 +2214,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/LabelCreateRequest"
       responses:
-        '201':
+        "201":
           description: Added label
           content:
             application/json:
@@ -2011,14 +2232,14 @@ paths:
         - Labels
       summary: Get all labels
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
           - in: query
             name: orgID
             description: The organization ID.
             schema:
               type: string
       responses:
-        '200':
+        "200":
           description: All labels
           content:
             application/json:
@@ -2037,7 +2258,7 @@ paths:
         - Labels
       summary: Get a label
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: labelID
           schema:
@@ -2045,7 +2266,7 @@ paths:
           required: true
           description: The ID of the label to update.
       responses:
-        '200':
+        "200":
           description: A label
           content:
             application/json:
@@ -2070,7 +2291,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/LabelUpdate"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: labelID
           schema:
@@ -2078,13 +2299,13 @@ paths:
           required: true
           description: The ID of the label to update.
       responses:
-        '200':
+        "200":
           description: Updated label
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/LabelResponse"
-        '404':
+        "404":
           description: Label not found
           content:
             application/json:
@@ -2102,7 +2323,7 @@ paths:
         - Labels
       summary: Delete a label
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: labelID
           schema:
@@ -2110,9 +2331,9 @@ paths:
           required: true
           description: The ID of the label to delete.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Label not found
           content:
             application/json:
@@ -2131,7 +2352,7 @@ paths:
         - Dashboards
       summary: Create a dashboard
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
       requestBody:
           description: Dashboard to create
           required: true
@@ -2140,7 +2361,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/CreateDashboardRequest"
       responses:
-        '201':
+        "201":
           description: Added dashboard
           content:
             application/json:
@@ -2158,7 +2379,7 @@ paths:
         - Dashboards
       summary: Get all dashboards
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
           - in: query
             name: owner
             description: The owner ID.
@@ -2191,7 +2412,7 @@ paths:
             schema:
               type: string
       responses:
-        '200':
+        "200":
           description: All dashboards
           content:
             application/json:
@@ -2203,28 +2424,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/dashboards/{dashboardID}':
+  "/dashboards/{dashboardID}":
     get:
       operationId: GetDashboardsID
       tags:
         - Dashboards
       summary: Get a Dashboard
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
-          - in: path
-            name: dashboardID
-            schema:
-              type: string
-            required: true
-            description: The ID of the dashboard to update.
+        - $ref: "#/components/parameters/TraceSpan"
+        - in: path
+          name: dashboardID
+          schema:
+            type: string
+          required: true
+          description: The ID of the dashboard to update.
+        - in: query
+          name: include
+          required: false
+          schema:
+            type: string
+            enum:
+              - properties
+          description: Includes the cell view properties in the response if set to `properties`
       responses:
-          '200':
+          "200":
             description: Get a single dashboard
             content:
               application/json:
                 schema:
                   $ref: "#/components/schemas/Dashboard"
-          '404':
+          "404":
             description: Dashboard not found
             content:
               application/json:
@@ -2249,7 +2478,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Dashboard"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2257,13 +2486,13 @@ paths:
           required: true
           description: The ID of the dashboard to update.
       responses:
-        '200':
+        "200":
           description: Updated dashboard
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Dashboard"
-        '404':
+        "404":
           description: Dashboard not found
           content:
             application/json:
@@ -2281,7 +2510,7 @@ paths:
         - Dashboards
       summary: Delete a dashboard
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2289,9 +2518,9 @@ paths:
           required: true
           description: The ID of the dashboard to update.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Dashboard not found
           content:
             application/json:
@@ -2303,7 +2532,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/dashboards/{dashboardID}/cells':
+  "/dashboards/{dashboardID}/cells":
     put:
       operationId: PutDashboardsIDCells
       tags:
@@ -2318,7 +2547,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Cells"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2326,13 +2555,13 @@ paths:
           required: true
           description: The ID of the dashboard to update.
       responses:
-        '200':
+        "201":
           description: Replaced dashboard cells
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Dashboard"
-        '404':
+        "404":
           description: Dashboard not found
           content:
             application/json:
@@ -2358,7 +2587,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/CreateCell"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2366,13 +2595,13 @@ paths:
           required: true
           description: The ID of the dashboard to update.
       responses:
-        '201':
+        "201":
           description: Cell successfully added
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Cell"
-        '404':
+        "404":
           description: Dashboard not found
           content:
             application/json:
@@ -2384,7 +2613,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/dashboards/{dashboardID}/cells/{cellID}':
+  "/dashboards/{dashboardID}/cells/{cellID}":
     patch:
       operationId: PatchDashboardsIDCellsID
       tags:
@@ -2399,7 +2628,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/CellUpdate"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2413,13 +2642,13 @@ paths:
           required: true
           description: The ID of the cell to update.
       responses:
-        '200':
+        "200":
           description: Updated dashboard cell
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Cell"
-        '404':
+        "404":
           description: Cell or dashboard not found
           content:
             application/json:
@@ -2438,7 +2667,7 @@ paths:
         - Dashboards
       summary: Delete a dashboard cell
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2452,9 +2681,9 @@ paths:
           required: true
           description: The ID of the cell to delete.
       responses:
-        '204':
+        "204":
           description: Cell successfully deleted
-        '404':
+        "404":
           description: Cell or dashboard not found
           content:
             application/json:
@@ -2466,7 +2695,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/dashboards/{dashboardID}/cells/{cellID}/view':
+  "/dashboards/{dashboardID}/cells/{cellID}/view":
     get:
       operationId: GetDashboardsIDCellsIDView
       tags:
@@ -2475,7 +2704,7 @@ paths:
         - Views
       summary: Retrieve the view for a cell
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2489,13 +2718,13 @@ paths:
           required: true
           description: The cell ID.
       responses:
-        '200':
+        "200":
           description: A dashboard cells view
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/View"
-        '404':
+        "404":
           description: Cell or dashboard not found
           content:
             application/json:
@@ -2521,7 +2750,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/View"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2535,13 +2764,13 @@ paths:
           required: true
           description: The ID of the cell to update.
       responses:
-        '200':
+        "200":
           description: Updated cell view
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/View"
-        '404':
+        "404":
           description: Cell or dashboard not found
           content:
             application/json:
@@ -2553,14 +2782,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/dashboards/{dashboardID}/labels':
+  "/dashboards/{dashboardID}/labels":
     get:
       operationId: GetDashboardsIDLabels
       tags:
         - Dashboards
       summary: list all labels for a dashboard
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2568,7 +2797,7 @@ paths:
           required: true
           description: The dashboard ID.
       responses:
-        '200':
+        "200":
           description: A list of all labels for a dashboard
           content:
             application/json:
@@ -2586,7 +2815,7 @@ paths:
         - Dashboards
       summary: Add a label to a dashboard
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2601,7 +2830,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '201':
+        "201":
           description: The label added to the dashboard
           content:
             application/json:
@@ -2613,14 +2842,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/dashboards/{dashboardID}/labels/{labelID}':
+  "/dashboards/{dashboardID}/labels/{labelID}":
     delete:
       operationId: DeleteDashboardsIDLabelsID
       tags:
         - Dashboards
       summary: Delete a label from a dashboard
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2634,9 +2863,9 @@ paths:
           required: true
           description: The ID of the label to delete.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Dashboard not found
           content:
             application/json:
@@ -2648,7 +2877,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/dashboards/{dashboardID}/members':
+  "/dashboards/{dashboardID}/members":
     get:
       operationId: GetDashboardsIDMembers
       tags:
@@ -2656,7 +2885,7 @@ paths:
         - Dashboards
       summary: List all dashboard members
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2664,7 +2893,7 @@ paths:
           required: true
           description: The dashboard ID.
       responses:
-        '200':
+        "200":
           description: A list of users who have member privileges for a dashboard
           content:
             application/json:
@@ -2683,7 +2912,7 @@ paths:
         - Dashboards
       summary: Add a member to a dashboard
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2698,7 +2927,7 @@ paths:
             schema:
               $ref: "#/components/schemas/AddResourceMemberRequestBody"
       responses:
-        '201':
+        "201":
           description: Added to dashboard members
           content:
             application/json:
@@ -2710,7 +2939,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/dashboards/{dashboardID}/members/{userID}':
+  "/dashboards/{dashboardID}/members/{userID}":
     delete:
       operationId: DeleteDashboardsIDMembersID
       tags:
@@ -2718,7 +2947,7 @@ paths:
         - Dashboards
       summary: Remove a member from a dashboard
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -2732,7 +2961,7 @@ paths:
           required: true
           description: The dashboard ID.
       responses:
-        '204':
+        "204":
           description: Member removed
         default:
           description: Unexpected error
@@ -2740,7 +2969,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/dashboards/{dashboardID}/owners':
+  "/dashboards/{dashboardID}/owners":
     get:
       operationId: GetDashboardsIDOwners
       tags:
@@ -2748,7 +2977,7 @@ paths:
         - Dashboards
       summary: List all dashboard owners
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2756,7 +2985,7 @@ paths:
           required: true
           description: The dashboard ID.
       responses:
-        '200':
+        "200":
           description: A list of users who have owner privileges for a dashboard
           content:
             application/json:
@@ -2775,7 +3004,7 @@ paths:
         - Dashboards
       summary: Add an owner to a dashboard
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: dashboardID
           schema:
@@ -2790,7 +3019,7 @@ paths:
             schema:
               $ref: "#/components/schemas/AddResourceMemberRequestBody"
       responses:
-        '201':
+        "201":
           description: Added to dashboard owners
           content:
             application/json:
@@ -2802,7 +3031,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/dashboards/{dashboardID}/owners/{userID}':
+  "/dashboards/{dashboardID}/owners/{userID}":
     delete:
       operationId: DeleteDashboardsIDOwnersID
       tags:
@@ -2810,7 +3039,7 @@ paths:
         - Dashboards
       summary: Remove an owner from a dashboard
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -2824,7 +3053,7 @@ paths:
           required: true
           description: The dashboard ID.
       responses:
-        '204':
+        "204":
           description: Owner removed
         default:
           description: Unexpected error
@@ -2832,7 +3061,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/dashboards/{dashboardID}/logs':
+  "/dashboards/{dashboardID}/logs":
     get:
       operationId: GetDashboardsIDLogs
       tags:
@@ -2840,9 +3069,9 @@ paths:
         - OperationLogs
       summary: Retrieve operation logs for a dashboard
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - $ref: '#/components/parameters/Offset'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/TraceSpan"
+        - $ref: "#/components/parameters/Offset"
+        - $ref: "#/components/parameters/Limit"
         - in: path
           name: dashboardID
           required: true
@@ -2850,7 +3079,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Operation logs for the dashboard
           content:
             application/json:
@@ -2869,7 +3098,7 @@ paths:
       tags:
         - Query
       parameters:
-      - $ref: '#/components/parameters/TraceSpan'
+      - $ref: "#/components/parameters/TraceSpan"
       - in: header
         name: Content-Type
         schema:
@@ -2883,7 +3112,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LanguageRequest"
       responses:
-        '200':
+        "200":
           description: Abstract syntax tree of flux query.
           content:
             application/json:
@@ -2901,9 +3130,9 @@ paths:
       tags:
         - Query
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       responses:
-        '200':
+        "200":
           description: Suggestions for next functions in call chain
           content:
             application/json:
@@ -2915,13 +3144,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/query/suggestions/{name}':
+  "/query/suggestions/{name}":
     get:
       operationId: GetQuerySuggestionsName
       tags:
         - Query
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: name
           schema:
@@ -2929,7 +3158,7 @@ paths:
           required: true
           description: The name of the branching suggestion.
       responses:
-        '200':
+        "200":
           description: Suggestions for next functions in call chain
           content:
             application/json:
@@ -2948,7 +3177,7 @@ paths:
         - Authorizations
       summary: List all authorizations
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: query
           name: userID
           schema:
@@ -2970,7 +3199,7 @@ paths:
             type: string
           description: Only show authorizations that belong to a organization name.
       responses:
-        '200':
+        "200":
           description: A list of authorizations
           content:
             application/json:
@@ -2988,7 +3217,7 @@ paths:
         - Authorizations
       summary: Create an authorization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       requestBody:
         description: Authorization to create
         required: true
@@ -2997,13 +3226,13 @@ paths:
             schema:
               $ref: "#/components/schemas/Authorization"
       responses:
-        '201':
+        "201":
           description: Authorization created
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Authorization"
-        '400':
+        "400":
           description: Invalid request
           content:
             application/json:
@@ -3022,7 +3251,7 @@ paths:
         - Authorizations
       summary: Retrieve an authorization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: authID
           schema:
@@ -3030,7 +3259,7 @@ paths:
           required: true
           description: The ID of the authorization to get.
       responses:
-        '200':
+        "200":
           description: Authorization details
           content:
             application/json:
@@ -3055,7 +3284,7 @@ paths:
             schema:
               $ref: "#/components/schemas/AuthorizationUpdateRequest"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: authID
           schema:
@@ -3063,7 +3292,7 @@ paths:
           required: true
           description: The ID of the authorization to update.
       responses:
-        '200':
+        "200":
           description: The active or inactie authorization
           content:
             application/json:
@@ -3081,7 +3310,7 @@ paths:
         - Authorizations
       summary: Delete a authorization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: authID
           schema:
@@ -3089,7 +3318,7 @@ paths:
           required: true
           description: The ID of the authorization to delete.
       responses:
-        '204':
+        "204":
           description: Authorization deleted
         default:
           description: Unexpected error
@@ -3104,7 +3333,7 @@ paths:
         - Query
       summary: Analyze an InfluxQL or Flux query
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: header
           name: Content-Type
           schema:
@@ -3118,7 +3347,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Query"
       responses:
-          '200':
+          "200":
             description: Query analyze results. Errors will be empty if the query is valid.
             content:
               application/json:
@@ -3146,7 +3375,7 @@ paths:
         - Query
       summary: Query InfluxDB
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: header
           name: Accept-Encoding
           description: The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand.
@@ -3184,7 +3413,7 @@ paths:
               schema:
                 type: string
       responses:
-          '200':
+          "200":
             description: Query results
             headers:
               Content-Encoding:
@@ -3209,7 +3438,7 @@ paths:
                 schema:
                   type: string
                   format: binary
-          '429':
+          "429":
             description: Token is temporarily over quota. The Retry-After header describes when to try the read again.
             headers:
               Retry-After:
@@ -3230,7 +3459,7 @@ paths:
         - Buckets
       summary: List all buckets
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
           - $ref: "#/components/parameters/Offset"
           - $ref: "#/components/parameters/Limit"
           - in: query
@@ -3249,7 +3478,7 @@ paths:
             schema:
               type: string
       responses:
-        '200':
+        "200":
           description: A list of buckets
           content:
             application/json:
@@ -3267,7 +3496,7 @@ paths:
         - Buckets
       summary: Create a bucket
       parameters:
-          - $ref: '#/components/parameters/TraceSpan'
+          - $ref: "#/components/parameters/TraceSpan"
       requestBody:
         description: Bucket to create
         required: true
@@ -3276,26 +3505,32 @@ paths:
             schema:
               $ref: "#/components/schemas/PostBucketRequest"
       responses:
-        '201':
+        "201":
           description: Bucket created
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Bucket"
+        422:
+          description: Request body failed validation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/buckets/{bucketID}':
+  "/buckets/{bucketID}":
     get:
       operationId: GetBucketsID
       tags:
         - Buckets
       summary: Retrieve a bucket
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: bucketID
           schema:
@@ -3303,7 +3538,7 @@ paths:
           required: true
           description: The bucket ID.
       responses:
-        '200':
+        "200":
           description: Bucket details
           content:
             application/json:
@@ -3328,7 +3563,7 @@ paths:
             schema:
               $ref: "#/components/schemas/Bucket"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: bucketID
           schema:
@@ -3336,7 +3571,7 @@ paths:
           required: true
           description: The bucket ID.
       responses:
-        '200':
+        "200":
           description: An updated bucket
           content:
             application/json:
@@ -3354,7 +3589,7 @@ paths:
         - Buckets
       summary: Delete a bucket
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: bucketID
           schema:
@@ -3362,9 +3597,9 @@ paths:
           required: true
           description: The ID of the bucket to delete.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Bucket not found
           content:
             application/json:
@@ -3376,14 +3611,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/buckets/{bucketID}/labels':
+  "/buckets/{bucketID}/labels":
     get:
       operationId: GetBucketsIDLabels
       tags:
         - Buckets
       summary: List all labels for a bucket
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: bucketID
           schema:
@@ -3391,7 +3626,7 @@ paths:
           required: true
           description: The bucket ID.
       responses:
-        '200':
+        "200":
           description: A list of all labels for a bucket
           content:
             application/json:
@@ -3409,7 +3644,7 @@ paths:
         - Buckets
       summary: Add a label to a bucket
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: bucketID
           schema:
@@ -3424,7 +3659,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '201':
+        "201":
           description: The newly added label
           content:
             application/json:
@@ -3436,14 +3671,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/buckets/{bucketID}/labels/{labelID}':
+  "/buckets/{bucketID}/labels/{labelID}":
     delete:
       operationId: DeleteBucketsIDLabelsID
       tags:
         - Buckets
       summary: delete a label from a bucket
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: bucketID
           schema:
@@ -3457,9 +3692,9 @@ paths:
           required: true
           description: The ID of the label to delete.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Bucket not found
           content:
             application/json:
@@ -3471,7 +3706,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/buckets/{bucketID}/members':
+  "/buckets/{bucketID}/members":
     get:
       operationId: GetBucketsIDMembers
       tags:
@@ -3479,7 +3714,7 @@ paths:
         - Buckets
       summary: List all users with member privileges for a bucket
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: bucketID
           schema:
@@ -3487,7 +3722,7 @@ paths:
           required: true
           description: The bucket ID.
       responses:
-        '200':
+        "200":
           description: A list of bucket members
           content:
             application/json:
@@ -3506,7 +3741,7 @@ paths:
         - Buckets
       summary: Add a member to a bucket
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: bucketID
           schema:
@@ -3521,7 +3756,7 @@ paths:
             schema:
               $ref: "#/components/schemas/AddResourceMemberRequestBody"
       responses:
-        '201':
+        "201":
           description: Member added to bucket
           content:
             application/json:
@@ -3533,7 +3768,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/buckets/{bucketID}/members/{userID}':
+  "/buckets/{bucketID}/members/{userID}":
     delete:
       operationId: DeleteBucketsIDMembersID
       tags:
@@ -3541,7 +3776,7 @@ paths:
         - Buckets
       summary: Remove a member from a bucket
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -3555,7 +3790,7 @@ paths:
           required: true
           description: The bucket ID.
       responses:
-        '204':
+        "204":
           description: Member removed
         default:
           description: Unexpected error
@@ -3563,7 +3798,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/buckets/{bucketID}/owners':
+  "/buckets/{bucketID}/owners":
     get:
       operationId: GetBucketsIDOwners
       tags:
@@ -3571,7 +3806,7 @@ paths:
         - Buckets
       summary: List all owners of a bucket
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: bucketID
           schema:
@@ -3579,7 +3814,7 @@ paths:
           required: true
           description: The bucket ID.
       responses:
-        '200':
+        "200":
           description: A list of bucket owners
           content:
             application/json:
@@ -3598,7 +3833,7 @@ paths:
         - Buckets
       summary: Add an owner to a bucket
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: bucketID
           schema:
@@ -3613,7 +3848,7 @@ paths:
             schema:
               $ref: "#/components/schemas/AddResourceMemberRequestBody"
       responses:
-        '201':
+        "201":
           description: Bucket owner added
           content:
             application/json:
@@ -3625,7 +3860,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/buckets/{bucketID}/owners/{userID}':
+  "/buckets/{bucketID}/owners/{userID}":
     delete:
       operationId: DeleteBucketsIDOwnersID
       tags:
@@ -3633,7 +3868,7 @@ paths:
         - Buckets
       summary: Remove an owner from a bucket
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -3647,7 +3882,7 @@ paths:
           required: true
           description: The bucket ID.
       responses:
-        '204':
+        "204":
           description: Owner removed
         default:
           description: Unexpected error
@@ -3655,7 +3890,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/buckets/{bucketID}/logs':
+  "/buckets/{bucketID}/logs":
     get:
       operationId: GetBucketsIDLogs
       tags:
@@ -3663,9 +3898,9 @@ paths:
         - OperationLogs
       summary: Retrieve operation logs for a bucket
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - $ref: '#/components/parameters/Offset'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/TraceSpan"
+        - $ref: "#/components/parameters/Offset"
+        - $ref: "#/components/parameters/Limit"
         - in: path
           name: bucketID
           required: true
@@ -3673,7 +3908,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Operation logs for the bucket
           content:
             application/json:
@@ -3692,7 +3927,7 @@ paths:
         - Organizations
       summary: List all organizations
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: query
           name: org
           schema:
@@ -3703,8 +3938,13 @@ paths:
           schema:
             type: string
           description: Filter organizations to a specific organization ID.
+        - in: query
+          name: userID
+          schema:
+            type: string
+          description: Filter organizations to a specific user ID.
       responses:
-        '200':
+        "200":
           description: A list of organizations
           content:
             application/json:
@@ -3722,7 +3962,7 @@ paths:
         - Organizations
       summary: Create an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       requestBody:
         description: Organization to create
         required: true
@@ -3731,7 +3971,7 @@ paths:
             schema:
               $ref: "#/components/schemas/Organization"
       responses:
-        '201':
+        "201":
           description: Organization created
           content:
             application/json:
@@ -3743,14 +3983,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/orgs/{orgID}':
+  "/orgs/{orgID}":
     get:
       operationId: GetOrgsID
       tags:
         - Organizations
       summary: Retrieve an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: orgID
           schema:
@@ -3758,7 +3998,7 @@ paths:
           required: true
           description: The ID of the organization to get.
       responses:
-        '200':
+        "200":
           description: Organization details
           content:
             application/json:
@@ -3783,7 +4023,7 @@ paths:
             schema:
               $ref: "#/components/schemas/Organization"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: orgID
           schema:
@@ -3791,7 +4031,7 @@ paths:
           required: true
           description: The ID of the organization to get.
       responses:
-        '200':
+        "200":
           description: Organization updated
           content:
             application/json:
@@ -3809,7 +4049,7 @@ paths:
         - Organizations
       summary: Delete an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: orgID
           schema:
@@ -3817,9 +4057,9 @@ paths:
           required: true
           description: The ID of the organization to delete.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Organization not found
           content:
             application/json:
@@ -3831,14 +4071,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/orgs/{orgID}/labels':
+  "/orgs/{orgID}/labels":
     get:
       operationId: GetOrgsIDLabels
       tags:
         - Organizations
       summary: List all labels for a organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: orgID
           schema:
@@ -3846,7 +4086,7 @@ paths:
           required: true
           description: The organization ID.
       responses:
-        '200':
+        "200":
           description: A list of all labels for an organization
           content:
             application/json:
@@ -3864,7 +4104,7 @@ paths:
         - Organizations
       summary: Add a label to an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: orgID
           schema:
@@ -3879,7 +4119,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '201':
+        "201":
           description: Returns the created label
           content:
             application/json:
@@ -3891,14 +4131,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/orgs/{orgID}/labels/{labelID}':
+  "/orgs/{orgID}/labels/{labelID}":
     delete:
       operationId: DeleteOrgsIDLabelsID
       tags:
         - Organizations
       summary: Delete a label from an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: orgID
           schema:
@@ -3912,9 +4152,9 @@ paths:
           required: true
           description: The label ID.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Organization not found
           content:
             application/json:
@@ -3926,7 +4166,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/orgs/{orgID}/secrets':
+  "/orgs/{orgID}/secrets":
     get:
       operationId: GetOrgsIDSecrets
       tags:
@@ -3934,7 +4174,7 @@ paths:
         - Organizations
       summary: List all secret keys for an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: orgID
           schema:
@@ -3942,7 +4182,7 @@ paths:
           required: true
           description: The organization ID.
       responses:
-        '200':
+        "200":
           description: A list of all secret keys
           content:
             application/json:
@@ -3961,7 +4201,7 @@ paths:
         - Organizations
       summary: Update secrets in an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: orgID
           schema:
@@ -3976,7 +4216,7 @@ paths:
             schema:
               $ref: "#/components/schemas/Secrets"
       responses:
-        '204':
+        "204":
           description: Keys successfully patched
         default:
           description: Unexpected error
@@ -3984,7 +4224,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/orgs/{orgID}/secrets/delete': # had to make this because swagger wouldn't let me have a request body with a DELETE
+  "/orgs/{orgID}/secrets/delete": # had to make this because swagger wouldn't let me have a request body with a DELETE
     post:
       operationId: PostOrgsIDSecrets
       tags:
@@ -3992,7 +4232,7 @@ paths:
         - Organizations
       summary: Delete secrets from an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: orgID
           schema:
@@ -4007,7 +4247,7 @@ paths:
             schema:
               $ref: "#/components/schemas/SecretKeys"
       responses:
-        '204':
+        "204":
           description: Keys successfully patched
         default:
           description: Unexpected error
@@ -4015,7 +4255,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/orgs/{orgID}/members':
+  "/orgs/{orgID}/members":
     get:
       operationId: GetOrgsIDMembers
       tags:
@@ -4023,7 +4263,7 @@ paths:
         - Organizations
       summary: List all members of an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: orgID
           schema:
@@ -4031,13 +4271,13 @@ paths:
           required: true
           description: The organization ID.
       responses:
-        '200':
+        "200":
           description: A list of organization members
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ResourceMembers"
-        '404':
+        "404":
           description: Organization not found
           content:
             application/json:
@@ -4056,7 +4296,7 @@ paths:
         - Organizations
       summary: Add a member to an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: orgID
           schema:
@@ -4071,7 +4311,7 @@ paths:
             schema:
               $ref: "#/components/schemas/AddResourceMemberRequestBody"
       responses:
-        '201':
+        "201":
           description: Added to organization created
           content:
             application/json:
@@ -4083,7 +4323,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/orgs/{orgID}/members/{userID}':
+  "/orgs/{orgID}/members/{userID}":
     delete:
       operationId: DeleteOrgsIDMembersID
       tags:
@@ -4091,7 +4331,7 @@ paths:
         - Organizations
       summary: Remove a member from an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -4105,7 +4345,7 @@ paths:
           required: true
           description: The organization ID.
       responses:
-        '204':
+        "204":
           description: Member removed
         default:
           description: Unexpected error
@@ -4113,7 +4353,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/orgs/{orgID}/owners':
+  "/orgs/{orgID}/owners":
     get:
       operationId: GetOrgsIDOwners
       tags:
@@ -4121,7 +4361,7 @@ paths:
         - Organizations
       summary: List all owners of an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: orgID
           schema:
@@ -4129,13 +4369,13 @@ paths:
           required: true
           description: The organization ID.
       responses:
-        '200':
+        "200":
           description: A list of organization owners
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ResourceOwners"
-        '404':
+        "404":
           description: Organization not found
           content:
             application/json:
@@ -4154,7 +4394,7 @@ paths:
         - Organizations
       summary: Add an owner to an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: orgID
           schema:
@@ -4169,7 +4409,7 @@ paths:
             schema:
               $ref: "#/components/schemas/AddResourceMemberRequestBody"
       responses:
-        '201':
+        "201":
           description: Organization owner added
           content:
             application/json:
@@ -4181,7 +4421,162 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/orgs/{orgID}/owners/{userID}':
+  "/orgs/{orgID}/invites":
+    post:
+      operationId: PostOrgsIDInvites
+      tags:
+        - Invites
+        - Organizations
+      summary: Creates an invite to an organization
+      parameters:
+        - $ref: "#/components/parameters/TraceSpan"
+        - in: path
+          name: orgID
+          schema:
+            type: string
+          required: true
+          description: The organization ID.
+      requestBody:
+        description: Invite to be sent
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Invite"
+      responses:
+        "201":
+          description: Invite sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invite"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/orgs/{orgID}/invites/{inviteID}":
+    delete:
+      operationId: DeleteOrgsIDInviteID
+      tags:
+        - Invites
+        - Organizations
+      summary: Remove an invite to an organization
+      parameters:
+        - $ref: "#/components/parameters/TraceSpan"
+        - in: path
+          name: inviteID
+          schema:
+            type: string
+          required: true
+          description: The ID of the invite to remove.
+        - in: path
+          name: orgID
+          schema:
+            type: string
+          required: true
+          description: The organization ID.
+      responses:
+        "204":
+          description: Invite removed
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/orgs/{orgID}/invites/{inviteID}/resend":
+    post:
+      operationId: DeleteOrgsIDInviteID
+      tags:
+        - Invites
+        - Organizations
+      summary: Resends an invite
+      parameters:
+        - $ref: "#/components/parameters/TraceSpan"
+        - in: path
+          name: inviteID
+          schema:
+            type: string
+          required: true
+          description: The ID of the invite to resend.
+        - in: path
+          name: orgID
+          schema:
+            type: string
+          required: true
+          description: The organization ID.
+      responses:
+        "200":
+          description: Invite resent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invite"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/orgs/{orgID}/users":
+    get:
+      operationId: GetCloudUsers
+      tags:
+        - CloudUsers
+      parameters:
+        - $ref: "#/components/parameters/TraceSpan"
+        - in: path
+          name: orgID
+          description: Specifies the organization ID of the CloudUser.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of cloud users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CloudUsers"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/orgs/{orgID}/users/{userID}":
+    delete:
+      operationId: DeleteOrgsIDCloudUserID
+      tags:
+        - CloudUsers
+        - Organizations
+      summary: Deletes a cloud user
+      parameters:
+        - $ref: "#/components/parameters/TraceSpan"
+        - in: path
+          name: userID
+          schema:
+            type: string
+          required: true
+          description: The ID of the user to remove.
+        - in: path
+          name: orgID
+          schema:
+            type: string
+          required: true
+          description: The organization ID.
+      responses:
+        "204":
+          description: User removed
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/orgs/{orgID}/owners/{userID}":
     delete:
       operationId: DeleteOrgsIDOwnersID
       tags:
@@ -4189,7 +4584,7 @@ paths:
         - Organizations
       summary: Remove an owner from an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -4203,7 +4598,7 @@ paths:
           required: true
           description: The organization ID.
       responses:
-        '204':
+        "204":
           description: Owner removed
         default:
           description: Unexpected error
@@ -4211,7 +4606,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/orgs/{orgID}/logs':
+  "/orgs/{orgID}/logs":
     get:
       operationId: GetOrgsIDLogs
       tags:
@@ -4219,9 +4614,9 @@ paths:
         - OperationLogs
       summary: Retrieve operation logs for an organization
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - $ref: '#/components/parameters/Offset'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/TraceSpan"
+        - $ref: "#/components/parameters/Offset"
+        - $ref: "#/components/parameters/Limit"
         - in: path
           name: orgID
           required: true
@@ -4229,7 +4624,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Operation logs for the organization
           content:
             application/json:
@@ -4255,7 +4650,7 @@ paths:
             schema:
               $ref: "#/components/schemas/PkgCreate"
       responses:
-        '200':
+        "200":
           description: Influx package created
           content:
             application/json:
@@ -4283,7 +4678,7 @@ paths:
             schema:
               $ref: "#/components/schemas/PkgApply"
       responses:
-        '200':
+        "200":
           description: >
             Influx package dry-run successful, no new resources created.
             The provided diff and summary will not have IDs for resources
@@ -4292,7 +4687,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PkgSummary"
-        '201':
+        "201":
           description: >
             Influx package applied successfully. Newly created resources created
             available in summary. The diff compares the state of the world before
@@ -4315,7 +4710,7 @@ paths:
         - Tasks
       summary: List all tasks
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: query
           name: name
           description: Returns task with a specific name.
@@ -4342,6 +4737,14 @@ paths:
             type: string
           description: Filter tasks to a specific organization ID.
         - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - active
+              - inactive
+          description: Filter tasks by a status--"inactive" or "active".
+        - in: query
           name: limit
           schema:
             type: integer
@@ -4350,7 +4753,7 @@ paths:
             default: 100
           description: The number of tasks to return
       responses:
-        '200':
+        "200":
           description: A list of tasks
           content:
             application/json:
@@ -4368,7 +4771,7 @@ paths:
         - Tasks
       summary: Create a new task
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       requestBody:
         description: Task to create
         required: true
@@ -4377,7 +4780,7 @@ paths:
             schema:
               $ref: "#/components/schemas/TaskCreateRequest"
       responses:
-        '201':
+        "201":
           description: Task created
           content:
             application/json:
@@ -4389,14 +4792,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/tasks/{taskID}':
+  "/tasks/{taskID}":
     get:
       operationId: GetTasksID
       tags:
         - Tasks
       summary: Retrieve a task
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4404,7 +4807,7 @@ paths:
           required: true
           description: The task ID.
       responses:
-        '200':
+        "200":
           description: Task details
           content:
             application/json:
@@ -4430,7 +4833,7 @@ paths:
             schema:
               $ref: "#/components/schemas/TaskUpdateRequest"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4438,7 +4841,7 @@ paths:
           required: true
           description: The task ID.
       responses:
-        '200':
+        "200":
           description: Task updated
           content:
             application/json:
@@ -4457,7 +4860,7 @@ paths:
       summary: Delete a task
       description: Deletes a task and all associated records
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4465,7 +4868,7 @@ paths:
           required: true
           description: The ID of the task to delete.
       responses:
-        '204':
+        "204":
           description: Task deleted
         default:
           description: Unexpected error
@@ -4473,14 +4876,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/tasks/{taskID}/runs':
+  "/tasks/{taskID}/runs":
     get:
       operationId: GetTasksIDRuns
       tags:
         - Tasks
       summary: List runs for a task
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4513,7 +4916,7 @@ paths:
             format: date-time
           description: Filter runs to those scheduled before this time, RFC3339
       responses:
-        '200':
+        "200":
           description: A list of task runs
           content:
             application/json:
@@ -4531,7 +4934,7 @@ paths:
         - Tasks
       summary: Manually start a task run, overriding the current schedule
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4543,7 +4946,7 @@ paths:
             schema:
               $ref: "#/components/schemas/RunManually"
       responses:
-        '201':
+        "201":
           description: Run scheduled to start
           content:
             application/json:
@@ -4555,14 +4958,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/tasks/{taskID}/runs/{runID}':
+  "/tasks/{taskID}/runs/{runID}":
     get:
       operationId: GetTasksIDRunsID
       tags:
         - Tasks
       summary: Retrieve a single run for a task
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4576,7 +4979,7 @@ paths:
           required: true
           description: The run ID.
       responses:
-        '200':
+        "200":
           description: The run record
           content:
             application/json:
@@ -4594,7 +4997,7 @@ paths:
         - Tasks
       summary: Cancel a running task
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4608,7 +5011,7 @@ paths:
           required: true
           description: The run ID.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
         default:
           description: Unexpected error
@@ -4616,14 +5019,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/tasks/{taskID}/runs/{runID}/retry':
+  "/tasks/{taskID}/runs/{runID}/retry":
     post:
       operationId: PostTasksIDRunsIDRetry
       tags:
         - Tasks
       summary: Retry a task run
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4637,7 +5040,7 @@ paths:
           required: true
           description: The run ID.
       responses:
-        '200':
+        "200":
           description: Run that has been queued
           content:
             application/json:
@@ -4649,14 +5052,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/tasks/{taskID}/logs':
+  "/tasks/{taskID}/logs":
     get:
       operationId: GetTasksIDLogs
       tags:
         - Tasks
       summary: Retrieve all logs for a task
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4664,7 +5067,7 @@ paths:
           required: true
           description: The task ID.
       responses:
-        '200':
+        "200":
           description: All logs for a task
           content:
             application/json:
@@ -4676,14 +5079,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/tasks/{taskID}/runs/{runID}/logs':
+  "/tasks/{taskID}/runs/{runID}/logs":
     get:
       operationId: GetTasksIDRunsIDLogs
       tags:
         - Tasks
       summary: Retrieve all logs for a run
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4697,7 +5100,7 @@ paths:
           required: true
           description: ID of run to get logs for.
       responses:
-        '200':
+        "200":
           description: All logs for a run
           content:
             application/json:
@@ -4709,14 +5112,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/tasks/{taskID}/labels':
+  "/tasks/{taskID}/labels":
     get:
       operationId: GetTasksIDLabels
       tags:
         - Tasks
       summary: List all labels for a task
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4724,7 +5127,7 @@ paths:
           required: true
           description: The task ID.
       responses:
-        '200':
+        "200":
           description: A list of all labels for a task
           content:
             application/json:
@@ -4742,7 +5145,7 @@ paths:
         - Tasks
       summary: Add a label to a task
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4757,7 +5160,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '200':
+        "201":
           description: A list of all labels for a task
           content:
             application/json:
@@ -4769,14 +5172,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/tasks/{taskID}/labels/{labelID}':
+  "/tasks/{taskID}/labels/{labelID}":
     delete:
       operationId: DeleteTasksIDLabelsID
       tags:
         - Tasks
       summary: Delete a label from a task
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4790,9 +5193,9 @@ paths:
           required: true
           description: The label ID.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Task not found
           content:
             application/json:
@@ -4811,9 +5214,9 @@ paths:
         - Users
       summary: Return the current authenticated user
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       responses:
-        '200':
+        "200":
           description: Currently authenticated user
           content:
             application/json:
@@ -4834,7 +5237,7 @@ paths:
       security:
         - BasicAuth: []
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       requestBody:
         description: New password
         required: true
@@ -4843,7 +5246,7 @@ paths:
             schema:
               $ref: "#/components/schemas/PasswordResetBody"
       responses:
-        '204':
+        "204":
           description: Password successfully updated
         default:
           description: Unsuccessful authentication
@@ -4851,7 +5254,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/tasks/{taskID}/members':
+  "/tasks/{taskID}/members":
     get:
       operationId: GetTasksIDMembers
       tags:
@@ -4859,7 +5262,7 @@ paths:
         - Tasks
       summary: List all task members
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4867,7 +5270,7 @@ paths:
           required: true
           description: The task ID.
       responses:
-        '200':
+        "200":
           description: A list of users who have member privileges for a task
           content:
             application/json:
@@ -4886,7 +5289,7 @@ paths:
         - Tasks
       summary: Add a member to a task
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4901,7 +5304,7 @@ paths:
             schema:
               $ref: "#/components/schemas/AddResourceMemberRequestBody"
       responses:
-        '201':
+        "201":
           description: Added to task members
           content:
             application/json:
@@ -4913,7 +5316,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/tasks/{taskID}/members/{userID}':
+  "/tasks/{taskID}/members/{userID}":
     delete:
       operationId: DeleteTasksIDMembersID
       tags:
@@ -4921,7 +5324,7 @@ paths:
         - Tasks
       summary: Remove a member from a task
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -4935,7 +5338,7 @@ paths:
           required: true
           description: The task ID.
       responses:
-        '204':
+        "204":
           description: Member removed
         default:
           description: Unexpected error
@@ -4943,7 +5346,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/tasks/{taskID}/owners':
+  "/tasks/{taskID}/owners":
     get:
       operationId: GetTasksIDOwners
       tags:
@@ -4951,7 +5354,7 @@ paths:
         - Tasks
       summary: List all owners of a task
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4959,7 +5362,7 @@ paths:
           required: true
           description: The task ID.
       responses:
-        '200':
+        "200":
           description: A list of users who have owner privileges for a task
           content:
             application/json:
@@ -4978,7 +5381,7 @@ paths:
         - Tasks
       summary: Add an owner to a task
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: taskID
           schema:
@@ -4993,7 +5396,7 @@ paths:
             schema:
               $ref: "#/components/schemas/AddResourceMemberRequestBody"
       responses:
-        '201':
+        "201":
           description: Added to task owners
           content:
             application/json:
@@ -5005,7 +5408,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/tasks/{taskID}/owners/{userID}':
+  "/tasks/{taskID}/owners/{userID}":
     delete:
       operationId: DeleteTasksIDOwnersID
       tags:
@@ -5013,7 +5416,7 @@ paths:
         - Tasks
       summary: Remove an owner from a task
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -5027,7 +5430,7 @@ paths:
           required: true
           description: The task ID.
       responses:
-        '204':
+        "204":
           description: Owner removed
         default:
           description: Unexpected error
@@ -5042,9 +5445,9 @@ paths:
         - Users
       summary: List all users
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       responses:
-        '200':
+        "200":
           description: A list of users
           content:
             application/json:
@@ -5062,7 +5465,7 @@ paths:
         - Users
       summary: Create a user
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
       requestBody:
         description: User to create
         required: true
@@ -5071,7 +5474,7 @@ paths:
             schema:
               $ref: "#/components/schemas/User"
       responses:
-        '201':
+        "201":
           description: User created
           content:
             application/json:
@@ -5083,14 +5486,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/users/{userID}':
+  "/users/{userID}":
     get:
       operationId: GetUsersID
       tags:
         - Users
       summary: Retrieve a user
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -5098,7 +5501,7 @@ paths:
           required: true
           description: The user ID.
       responses:
-        '200':
+        "200":
           description: User details
           content:
             application/json:
@@ -5123,7 +5526,7 @@ paths:
             schema:
               $ref: "#/components/schemas/User"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -5131,7 +5534,7 @@ paths:
           required: true
           description: The ID of the user to update.
       responses:
-        '200':
+        "200":
           description: User updated
           content:
             application/json:
@@ -5149,7 +5552,7 @@ paths:
         - Users
       summary: Delete a user
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -5157,7 +5560,7 @@ paths:
           required: true
           description: The ID of the user to delete.
       responses:
-        '204':
+        "204":
           description: User deleted
         default:
           description: Unexpected error
@@ -5165,16 +5568,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/users/{userID}/password':
-    put:
-      operationId: PutUsersIDPassword
+  "/users/{userID}/password":
+    post:
+      operationId: PostUsersIDPassword
       tags:
         - Users
       summary: Update a password
       security:
         - BasicAuth: []
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: userID
           schema:
@@ -5189,7 +5592,7 @@ paths:
             schema:
               $ref: "#/components/schemas/PasswordResetBody"
       responses:
-        '204':
+        "204":
           description: Password successfully updated
         default:
           description: Unsuccessful authentication
@@ -5197,7 +5600,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/users/{userID}/logs':
+  "/users/{userID}/logs":
     get:
       operationId: GetUsersIDLogs
       tags:
@@ -5205,9 +5608,9 @@ paths:
         - OperationLogs
       summary: Retrieve operation logs for a user
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - $ref: '#/components/parameters/Offset'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/TraceSpan"
+        - $ref: "#/components/parameters/Offset"
+        - $ref: "#/components/parameters/Limit"
         - in: path
           name: userID
           required: true
@@ -5215,7 +5618,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Operation logs for the user
           content:
             application/json:
@@ -5234,9 +5637,9 @@ paths:
           - Checks
       summary: Get all checks
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - $ref: '#/components/parameters/Offset'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/TraceSpan"
+        - $ref: "#/components/parameters/Offset"
+        - $ref: "#/components/parameters/Limit"
         - in: query
           name: orgID
           required: true
@@ -5244,7 +5647,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: A list of checks
           content:
             application/json:
@@ -5269,7 +5672,7 @@ paths:
             schema:
                 $ref: "#/components/schemas/PostCheck"
       responses:
-        '201':
+        "201":
           description: Check created
           content:
             application/json:
@@ -5281,14 +5684,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/checks/{checkID}':
+  "/checks/{checkID}":
     get:
       operationId: GetChecksID
       tags:
         - Checks
       summary: Get a check
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: checkID
           schema:
@@ -5296,7 +5699,7 @@ paths:
           required: true
           description: The check ID.
       responses:
-        '200':
+        "200":
           description: The check requested
           content:
             application/json:
@@ -5321,7 +5724,7 @@ paths:
             schema:
               $ref: "#/components/schemas/Check"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: checkID
           schema:
@@ -5329,13 +5732,13 @@ paths:
           required: true
           description: The check ID.
       responses:
-        '200':
+        "200":
           description: An updated check
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Check"
-        '404':
+        "404":
           description: The check was not found
           content:
             application/json:
@@ -5360,7 +5763,7 @@ paths:
             schema:
                 $ref: "#/components/schemas/CheckPatch"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: checkID
           schema:
@@ -5368,13 +5771,13 @@ paths:
           required: true
           description: The check ID.
       responses:
-        '200':
+        "200":
           description: An updated check
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Check"
-        '404':
+        "404":
           description: The check was not found
           content:
             application/json:
@@ -5392,7 +5795,7 @@ paths:
         - Checks
       summary: Delete a check
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: checkID
           schema:
@@ -5400,9 +5803,9 @@ paths:
           required: true
           description: The check ID.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: The check was not found
           content:
             application/json:
@@ -5414,14 +5817,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/checks/{checkID}/labels':
+  "/checks/{checkID}/labels":
     get:
       operationId: GetChecksIDLabels
       tags:
         - Checks
       summary: List all labels for a check
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: checkID
           schema:
@@ -5429,7 +5832,7 @@ paths:
           required: true
           description: The check ID.
       responses:
-        '200':
+        "200":
           description: A list of all labels for a check
           content:
             application/json:
@@ -5447,7 +5850,7 @@ paths:
         - Checks
       summary: Add a label to a check
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: checkID
           schema:
@@ -5462,7 +5865,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '201':
+        "201":
           description: The label was added to the check
           content:
             application/json:
@@ -5474,14 +5877,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/checks/{checkID}/labels/{labelID}':
+  "/checks/{checkID}/labels/{labelID}":
     delete:
       operationId: DeleteChecksIDLabelsID
       tags:
         - Checks
       summary: Delete label from a check
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: checkID
           schema:
@@ -5495,9 +5898,9 @@ paths:
           required: true
           description: The ID of the label to delete.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Check or label not found
           content:
             application/json:
@@ -5516,9 +5919,9 @@ paths:
           - NotificationRules
       summary: Get all notification rules
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - $ref: '#/components/parameters/Offset'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/TraceSpan"
+        - $ref: "#/components/parameters/Offset"
+        - $ref: "#/components/parameters/Limit"
         - in: query
           name: orgID
           required: true
@@ -5538,7 +5941,7 @@ paths:
             pattern: ^[a-zA-Z0-9_]+:[a-zA-Z0-9_]+$
             example: env:prod
       responses:
-        '200':
+        "200":
           description: A list of notification rules
           content:
             application/json:
@@ -5563,7 +5966,7 @@ paths:
             schema:
               $ref: "#/components/schemas/PostNotificationRule"
       responses:
-        '201':
+        "201":
           description: Notification rule created
           content:
             application/json:
@@ -5575,14 +5978,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/checks/{checkID}/query':
+  "/checks/{checkID}/query":
     get:
       operationId: GetChecksIDQuery
       tags:
         - Checks
       summary: Get a check query
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: checkID
           schema:
@@ -5590,19 +5993,19 @@ paths:
           required: true
           description: The check ID.
       responses:
-        '200':
+        "200":
           description: The check query requested
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FluxResponse"
-        '400':
+        "400":
           description: Invalid request
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-        '404':
+        "404":
           description: Check not found
           content:
             application/json:
@@ -5614,14 +6017,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/notificationRules/{ruleID}':
+  "/notificationRules/{ruleID}":
     get:
       operationId: GetNotificationRulesID
       tags:
         - NotificationRules
       summary: Get a notification rule
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: ruleID
           schema:
@@ -5629,7 +6032,7 @@ paths:
           required: true
           description: The notification rule ID.
       responses:
-        '200':
+        "200":
           description: The notification rule requested
           content:
             application/json:
@@ -5654,7 +6057,7 @@ paths:
             schema:
               $ref: "#/components/schemas/NotificationRule"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: ruleID
           schema:
@@ -5662,13 +6065,13 @@ paths:
           required: true
           description: The notification rule ID.
       responses:
-        '200':
+        "200":
           description: An updated notification rule
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/NotificationRule"
-        '404':
+        "404":
           description: The notification rule was not found
           content:
             application/json:
@@ -5693,7 +6096,7 @@ paths:
             schema:
               $ref: "#/components/schemas/NotificationRuleUpdate"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: ruleID
           schema:
@@ -5701,13 +6104,13 @@ paths:
           required: true
           description: The notification rule ID.
       responses:
-        '200':
+        "200":
           description: An updated notification rule
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/NotificationRule"
-        '404':
+        "404":
           description: The notification rule was not found
           content:
             application/json:
@@ -5725,7 +6128,7 @@ paths:
         - NotificationRules
       summary: Delete a notification rule
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: ruleID
           schema:
@@ -5733,9 +6136,9 @@ paths:
           required: true
           description: The notification rule ID.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: The check was not found
           content:
             application/json:
@@ -5747,14 +6150,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/notificationRules/{ruleID}/labels':
+  "/notificationRules/{ruleID}/labels":
     get:
       operationId: GetNotificationRulesIDLabels
       tags:
         - NotificationRules
       summary: List all labels for a notification rule
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: ruleID
           schema:
@@ -5762,7 +6165,7 @@ paths:
           required: true
           description: The notification rule ID.
       responses:
-        '200':
+        "200":
           description: A list of all labels for a notification rule
           content:
             application/json:
@@ -5780,7 +6183,7 @@ paths:
         - NotificationRules
       summary: Add a label to a notification rule
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: ruleID
           schema:
@@ -5795,7 +6198,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '201':
+        "201":
           description: The label was added to the notification rule
           content:
             application/json:
@@ -5807,14 +6210,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/notificationRules/{ruleID}/labels/{labelID}':
+  "/notificationRules/{ruleID}/labels/{labelID}":
     delete:
       operationId: DeleteNotificationRulesIDLabelsID
       tags:
         - NotificationRules
       summary: Delete label from a notification rule
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: ruleID
           schema:
@@ -5828,9 +6231,9 @@ paths:
           required: true
           description: The ID of the label to delete.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Rule or label not found
           content:
             application/json:
@@ -5842,14 +6245,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/notificationRules/{ruleID}/query':
+  "/notificationRules/{ruleID}/query":
     get:
       operationId: GetNotificationRulesIDQuery
       tags:
         - Rules
       summary: Get a notification rule query
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: ruleID
           schema:
@@ -5857,19 +6260,19 @@ paths:
           required: true
           description: The notification rule ID.
       responses:
-        '200':
+        "200":
           description: The notification rule query requested
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FluxResponse"
-        '400':
+        "400":
           description: Invalid request
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-        '404':
+        "404":
           description: Notification rule not found
           content:
             application/json:
@@ -5888,9 +6291,9 @@ paths:
           - NotificationEndpoints
       summary: Get all notification endpoints
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
-        - $ref: '#/components/parameters/Offset'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/TraceSpan"
+        - $ref: "#/components/parameters/Offset"
+        - $ref: "#/components/parameters/Limit"
         - in: query
           name: orgID
           required: true
@@ -5898,7 +6301,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: A list of notification endpoints
           content:
             application/json:
@@ -5923,7 +6326,7 @@ paths:
             schema:
               $ref: "#/components/schemas/PostNotificationEndpoint"
       responses:
-        '201':
+        "201":
           description: Notification endpoint created
           content:
             application/json:
@@ -5935,14 +6338,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/notificationEndpoints/{endpointID}':
+  "/notificationEndpoints/{endpointID}":
     get:
       operationId: GetNotificationEndpointsID
       tags:
         - NotificationEndpoints
       summary: Get a notification endpoint
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: endpointID
           schema:
@@ -5950,7 +6353,7 @@ paths:
           required: true
           description: The notification endpoint ID.
       responses:
-        '200':
+        "200":
           description: The notification endpoint requested
           content:
             application/json:
@@ -5975,7 +6378,7 @@ paths:
             schema:
               $ref: "#/components/schemas/NotificationEndpoint"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: endpointID
           schema:
@@ -5983,13 +6386,13 @@ paths:
           required: true
           description: The notification endpoint ID.
       responses:
-        '200':
+        "200":
           description: An updated notification endpoint
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/NotificationEndpoint"
-        '404':
+        "404":
           description: The notification endpoint was not found
           content:
             application/json:
@@ -6014,7 +6417,7 @@ paths:
             schema:
               $ref: "#/components/schemas/NotificationEndpointUpdate"
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: endpointID
           schema:
@@ -6022,13 +6425,13 @@ paths:
           required: true
           description: The notification endpoint ID.
       responses:
-        '200':
+        "200":
           description: An updated notification endpoint
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/NotificationEndpoint"
-        '404':
+        "404":
           description: The notification endpoint was not found
           content:
             application/json:
@@ -6046,7 +6449,7 @@ paths:
         - NotificationEndpoints
       summary: Delete a notification endpoint
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: endpointID
           schema:
@@ -6054,9 +6457,9 @@ paths:
           required: true
           description: The notification endpoint ID.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: The endpoint was not found
           content:
             application/json:
@@ -6068,14 +6471,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/notificationEndpoints/{endpointID}/labels':
+  "/notificationEndpoints/{endpointID}/labels":
     get:
       operationId: GetNotificationEndpointsIDLabels
       tags:
         - NotificationEndpoints
       summary: List all labels for a notification endpoint
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: endpointID
           schema:
@@ -6083,7 +6486,7 @@ paths:
           required: true
           description: The notification endpoint ID.
       responses:
-        '200':
+        "200":
           description: A list of all labels for a notification endpoint
           content:
             application/json:
@@ -6101,7 +6504,7 @@ paths:
         - NotificationEndpoints
       summary: Add a label to a notification endpoint
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: endpointID
           schema:
@@ -6116,7 +6519,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LabelMapping"
       responses:
-        '201':
+        "201":
           description: The label was added to the notification endpoint
           content:
             application/json:
@@ -6128,14 +6531,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  '/notificationEndpoints/{endpointID}/labels/{labelID}':
+  "/notificationEndpoints/{endpointID}/labels/{labelID}":
     delete:
       operationId: DeleteNotificationEndpointsIDLabelsID
       tags:
         - NotificationEndpoints
       summary: Delete a label from a notification endpoint
       parameters:
-        - $ref: '#/components/parameters/TraceSpan'
+        - $ref: "#/components/parameters/TraceSpan"
         - in: path
           name: endpointID
           schema:
@@ -6149,9 +6552,9 @@ paths:
           required: true
           description: The ID of the label to delete.
       responses:
-        '204':
+        "204":
           description: Delete has been accepted
-        '404':
+        "404":
           description: Endpoint or label not found
           content:
             application/json:
@@ -6199,8 +6602,8 @@ components:
       name: Zap-Trace-Span
       description: OpenTracing span context
       example:
-        trace_id: '1'
-        span_id: '1'
+        trace_id: "1"
+        span_id: "1"
         baggage:
           key: value
       required: false
@@ -6217,7 +6620,7 @@ components:
           description: Flux query script to be analyzed
           type: string
     Query:
-      description: Query influx with specific return formatting.
+      description: Query influx using the Flux language
       type: object
       required:
         - query
@@ -6747,6 +7150,7 @@ components:
                 - notificationRules
                 - notificationEndpoints
                 - checks
+                - dbrp
             id:
               type: string
               nullable: true
@@ -7515,6 +7919,85 @@ components:
     TaskStatusType:
       type: string
       enum: [active, inactive]
+    Invite:
+      properties:
+        id:
+          description: the idpe id of the invite
+          readOnly: true
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+            - member
+            - owner
+        expiresAt:
+          format: date-time
+          type: string
+        links:
+          type: object
+          readOnly: true
+          example:
+            self: "/api/v2/invites/1"
+          properties:
+            self:
+              type: string
+              format: uri
+      required: [id, email, role]
+    Invites:
+      type: object
+      properties:
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: uri
+        invites:
+          type: array
+          items:
+            $ref: "#/components/schemas/Invite"
+    CloudUser:
+      properties:
+        id:
+          description: the idpe id of the user
+          readOnly: true
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+            - member
+            - owner
+        links:
+          type: object
+          readOnly: true
+          example:
+            self: "/api/v2/cloud_users/1"
+          properties:
+            self:
+              type: string
+              format: uri
+      required: [id, email, role]
+    CloudUsers:
+      type: object
+      properties:
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: uri
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/CloudUser"
     User:
       properties:
         id:
@@ -7798,7 +8281,7 @@ components:
           description: Args are the arguments to the function
           type: array
           items:
-            $ref: '#/components/schemas/Field'
+            $ref: "#/components/schemas/Field"
     BuilderConfig:
       type: object
       properties:
@@ -7809,11 +8292,11 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/BuilderTagsType'
+            $ref: "#/components/schemas/BuilderTagsType"
         functions:
           type: array
           items:
-            $ref: '#/components/schemas/BuilderFunctionsType'
+            $ref: "#/components/schemas/BuilderFunctionsType"
         aggregateWindow:
           type: object
           properties:
@@ -7840,14 +8323,14 @@ components:
           type: string
           description: The text of the Flux query.
         editMode:
-          $ref: '#/components/schemas/QueryEditMode'
+          $ref: "#/components/schemas/QueryEditMode"
         name:
           type: string
         builderConfig:
-          $ref: '#/components/schemas/BuilderConfig'
+          $ref: "#/components/schemas/BuilderConfig"
     QueryEditMode:
       type: string
-      enum: ['builder', 'advanced']
+      enum: ["builder", "advanced"]
     Axis:
       type: object
       description: The description of a particular axis for a visualization.
@@ -7873,13 +8356,13 @@ components:
         base:
           description: Base represents the radix for formatting axis values.
           type: string
-          enum: ['', '2', '10']
+          enum: ["", "2", "10"]
         scale:
-          $ref: '#/components/schemas/AxisScale'
+          $ref: "#/components/schemas/AxisScale"
     AxisScale:
       description: 'Scale is the axis formatting scale. Supported: "log", "linear"'
       type: string
-      enum: ['log', 'linear']
+      enum: ["log", "linear"]
     DashboardColor:
       type: object
       description: Defines an encoding of data value into color space.
@@ -7936,7 +8419,10 @@ components:
         - legend
         - note
         - showNoteWhenEmpty
+        - position
       properties:
+        timeFormat:
+          type: string
         type:
           type: string
           enum: [xy]
@@ -7951,24 +8437,27 @@ components:
             $ref: "#/components/schemas/DashboardColor"
         shape:
           type: string
-          enum: ['chronograf-v2']
+          enum: ["chronograf-v2"]
         note:
           type: string
         showNoteWhenEmpty:
           description: If true, will display note when empty
           type: boolean
         axes:
-          $ref: '#/components/schemas/Axes'
+          $ref: "#/components/schemas/Axes"
         legend:
-          $ref: '#/components/schemas/Legend'
+          $ref: "#/components/schemas/Legend"
         xColumn:
           type: string
         yColumn:
           type: string
         shadeBelow:
           type: boolean
+        position:
+          type: string
+          enum: [overlaid, stacked]
         geom:
-          $ref: '#/components/schemas/XYGeom'
+          $ref: "#/components/schemas/XYGeom"
     XYGeom:
       type: string
       enum: [line, step, stacked, bar, monotoneX]
@@ -7986,7 +8475,10 @@ components:
         - prefix
         - suffix
         - decimalPlaces
+        - position
       properties:
+        timeFormat:
+          type: string
         type:
           type: string
           enum: [line-plus-single-stat]
@@ -8001,28 +8493,31 @@ components:
             $ref: "#/components/schemas/DashboardColor"
         shape:
           type: string
-          enum: ['chronograf-v2']
+          enum: ["chronograf-v2"]
         note:
           type: string
         showNoteWhenEmpty:
           description: If true, will display note when empty
           type: boolean
         axes:
-          $ref: '#/components/schemas/Axes'
+          $ref: "#/components/schemas/Axes"
         legend:
-          $ref: '#/components/schemas/Legend'
+          $ref: "#/components/schemas/Legend"
         xColumn:
           type: string
         yColumn:
           type: string
         shadeBelow:
           type: boolean
+        position:
+          type: string
+          enum: [overlaid, stacked]
         prefix:
           type: string
         suffix:
           type: string
         decimalPlaces:
-          $ref: '#/components/schemas/DecimalPlaces'
+          $ref: "#/components/schemas/DecimalPlaces"
     ScatterViewProperties:
       type: object
       required:
@@ -8045,6 +8540,8 @@ components:
         - xSuffix
         - ySuffix
       properties:
+        timeFormat:
+          type: string
         type:
           type: string
           enum: [scatter]
@@ -8059,7 +8556,7 @@ components:
             type: string
         shape:
           type: string
-          enum: ['chronograf-v2']
+          enum: ["chronograf-v2"]
         note:
           type: string
         showNoteWhenEmpty:
@@ -8120,6 +8617,8 @@ components:
         - ySuffix
         - binSize
       properties:
+        timeFormat:
+          type: string
         type:
           type: string
           enum: [heatmap]
@@ -8134,7 +8633,7 @@ components:
             type: string
         shape:
           type: string
-          enum: ['chronograf-v2']
+          enum: ["chronograf-v2"]
         note:
           type: string
         showNoteWhenEmpty:
@@ -8178,7 +8677,9 @@ components:
         - note
         - showNoteWhenEmpty
         - prefix
+        - tickPrefix
         - suffix
+        - tickSuffix
         - legend
         - decimalPlaces
       properties:
@@ -8196,7 +8697,7 @@ components:
             $ref: "#/components/schemas/DashboardColor"
         shape:
           type: string
-          enum: ['chronograf-v2']
+          enum: ["chronograf-v2"]
         note:
           type: string
         showNoteWhenEmpty:
@@ -8204,10 +8705,14 @@ components:
           type: boolean
         prefix:
           type: string
+        tickPrefix:
+          type: string
         suffix:
           type: string
+        tickSuffix:
+          type: string
         legend:
-          $ref: '#/components/schemas/Legend'
+          $ref: "#/components/schemas/Legend"
         decimalPlaces:
           $ref: "#/components/schemas/DecimalPlaces"
     HistogramViewProperties:
@@ -8240,7 +8745,7 @@ components:
             $ref: "#/components/schemas/DashboardColor"
         shape:
           type: string
-          enum: ['chronograf-v2']
+          enum: ["chronograf-v2"]
         note:
           type: string
         showNoteWhenEmpty:
@@ -8267,16 +8772,20 @@ components:
     GaugeViewProperties:
       type: object
       required:
-        - type
-        - queries
-        - colors
-        - shape
-        - note
-        - showNoteWhenEmpty
-        - prefix
-        - suffix
-        - legend
-        - decimalPlaces
+        [
+          type,
+          queries,
+          colors,
+          shape,
+          note,
+          showNoteWhenEmpty,
+          prefix,
+          tickPrefix,
+          suffix,
+          tickSuffix,
+          legend,
+          decimalPlaces,
+        ]
       properties:
         type:
           type: string
@@ -8292,7 +8801,7 @@ components:
             $ref: "#/components/schemas/DashboardColor"
         shape:
           type: string
-          enum: ['chronograf-v2']
+          enum: ["chronograf-v2"]
         note:
           type: string
         showNoteWhenEmpty:
@@ -8300,10 +8809,14 @@ components:
           type: boolean
         prefix:
           type: string
+        tickPrefix:
+          type: string
         suffix:
           type: string
+        tickSuffix:
+          type: string
         legend:
-          $ref: '#/components/schemas/Legend'
+          $ref: "#/components/schemas/Legend"
         decimalPlaces:
           $ref: "#/components/schemas/DecimalPlaces"
     TableViewProperties:
@@ -8334,7 +8847,7 @@ components:
             $ref: "#/components/schemas/DashboardColor"
         shape:
           type: string
-          enum: ['chronograf-v2']
+          enum: ["chronograf-v2"]
         note:
           type: string
         showNoteWhenEmpty:
@@ -8367,14 +8880,14 @@ components:
             customization options
           type: array
           items:
-            $ref: '#/components/schemas/RenamableField'
+            $ref: "#/components/schemas/RenamableField"
         timeFormat:
           description: >-
             timeFormat describes the display format for time values according to
             moment.js date formatting
           type: string
         decimalPlaces:
-          $ref: '#/components/schemas/DecimalPlaces'
+          $ref: "#/components/schemas/DecimalPlaces"
     MarkdownViewProperties:
       type: object
       required:
@@ -8387,7 +8900,7 @@ components:
           enum: [markdown]
         shape:
           type: string
-          enum: ['chronograf-v2']
+          enum: ["chronograf-v2"]
         note:
           type: string
     CheckViewProperties:
@@ -8404,11 +8917,11 @@ components:
           enum: [check]
         shape:
           type: string
-          enum: ['chronograf-v2']
+          enum: ["chronograf-v2"]
         checkID:
           type: string
         check:
-          $ref: '#/components/schemas/Check'
+          $ref: "#/components/schemas/Check"
         queries:
           type: array
           items:
@@ -8421,12 +8934,12 @@ components:
     Axes:
       description: The viewport for a View's visualizations
       type: object
-      required: ['x', 'y']
+      required: ["x", "y"]
       properties:
         x:
-          $ref: '#/components/schemas/Axis'
+          $ref: "#/components/schemas/Axis"
         "y": # Quoted to prevent YAML parser from interpreting y as shorthand for true.
-          $ref: '#/components/schemas/Axis'
+          $ref: "#/components/schemas/Axis"
     Legend:
       description: Legend define encoding of data into a view's legend
       type: object
@@ -8534,7 +9047,7 @@ components:
       type: object
       example:
         variables:
-        - id: '1221432'
+        - id: "1221432"
           name: ":ok:"
           selected:
           - hello
@@ -8546,7 +9059,7 @@ components:
             - hi
             - yo
             - oy
-        - id: '1221432'
+        - id: "1221432"
           name: ":ok:"
           selected:
           - c
@@ -8556,7 +9069,7 @@ components:
               a: fdjaklfdjkldsfjlkjdsa
               b: dfaksjfkljekfajekdljfas
               c: fdjksajfdkfeawfeea
-        - id: '1221432'
+        - id: "1221432"
           name: ":ok:"
           selected:
           - host
@@ -8604,7 +9117,7 @@ components:
         name:
           type: string
         properties:
-          $ref: '#/components/schemas/ViewProperties'
+          $ref: "#/components/schemas/ViewProperties"
     Views:
       type: object
       properties:
@@ -9179,6 +9692,10 @@ components:
           enum:
             - pass
             - fail
+        version:
+          type: string
+        commit:
+          type: string
     Labels:
       type: array
       items:
@@ -9847,10 +10364,10 @@ components:
               type: string
             method:
               type: string
-              enum: ['POST', 'GET', 'PUT']
+              enum: ["POST", "GET", "PUT"]
             authMethod:
               type: string
-              enum: ['none', 'basic', 'bearer']
+              enum: ["none", "basic", "bearer"]
             contentTemplate:
               type: string
             headers:
@@ -9860,7 +10377,55 @@ components:
                 type: string
     NotificationEndpointType:
       type: string
-      enum: ['slack', 'pagerduty', 'http']
+      enum: ["slack", "pagerduty", "http"]
+    DBRP:
+      required:
+        - orgID
+        - bucketID
+        - database
+        - retention_policy
+      properties:
+        id:
+          type: string
+          description: the mapping identifier
+          readOnly: true
+        orgID:
+          type: string
+          description: the organization ID that owns this mapping.
+        bucketID:
+          type: string
+          description: the bucket ID used as target for the translation.
+        database:
+          type: string
+          description: InfluxDB v1 database
+        retention_policy:
+          type: string
+          description: InfluxDB v1 retention policy
+        default:
+          type: boolean
+          description: Specify if this mapping represents the default retention policy for the database specificed.
+        links:
+          $ref: "#/components/schemas/Links"
+    DBRPs:
+      properties:
+        notificationEndpoints:
+          type: array
+          items:
+            $ref: "#/components/schemas/DBRP"
+        links:
+          $ref: "#/components/schemas/Links"
+    DBRPUpdate:
+      properties:
+        database:
+          type: string
+          description: InfluxDB v1 database
+        retention_policy:
+          type: string
+          description: InfluxDB v1 retention policy
+        default:
+          type: boolean
+        links:
+          $ref: "#/components/schemas/Links"
   securitySchemes:
     BasicAuth:
       type: http

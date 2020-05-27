@@ -95,6 +95,14 @@ public class HealthCheck {
   @SerializedName(SERIALIZED_NAME_STATUS)
   private StatusEnum status;
 
+  public static final String SERIALIZED_NAME_VERSION = "version";
+  @SerializedName(SERIALIZED_NAME_VERSION)
+  private String version;
+
+  public static final String SERIALIZED_NAME_COMMIT = "commit";
+  @SerializedName(SERIALIZED_NAME_COMMIT)
+  private String commit;
+
   public HealthCheck name(String name) {
     this.name = name;
     return this;
@@ -175,6 +183,42 @@ public class HealthCheck {
     this.status = status;
   }
 
+  public HealthCheck version(String version) {
+    this.version = version;
+    return this;
+  }
+
+   /**
+   * Get version
+   * @return version
+  **/
+  @ApiModelProperty(value = "")
+  public String getVersion() {
+    return version;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
+  }
+
+  public HealthCheck commit(String commit) {
+    this.commit = commit;
+    return this;
+  }
+
+   /**
+   * Get commit
+   * @return commit
+  **/
+  @ApiModelProperty(value = "")
+  public String getCommit() {
+    return commit;
+  }
+
+  public void setCommit(String commit) {
+    this.commit = commit;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -188,12 +232,14 @@ public class HealthCheck {
     return Objects.equals(this.name, healthCheck.name) &&
         Objects.equals(this.message, healthCheck.message) &&
         Objects.equals(this.checks, healthCheck.checks) &&
-        Objects.equals(this.status, healthCheck.status);
+        Objects.equals(this.status, healthCheck.status) &&
+        Objects.equals(this.version, healthCheck.version) &&
+        Objects.equals(this.commit, healthCheck.commit);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, message, checks, status);
+    return Objects.hash(name, message, checks, status, version, commit);
   }
 
 
@@ -205,6 +251,8 @@ public class HealthCheck {
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("    checks: ").append(toIndentedString(checks)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    commit: ").append(toIndentedString(commit)).append("\n");
     sb.append("}");
     return sb.toString();
   }

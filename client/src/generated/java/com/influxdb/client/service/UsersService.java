@@ -610,6 +610,23 @@ public interface UsersService {
   /**
    * Update a password
    * 
+   * @param userID The user ID. (required)
+   * @param passwordResetBody New password (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @param authorization An auth credential for the Basic scheme (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @Headers({
+    "Content-Type:application/json"
+  })
+  @POST("api/v2/users/{userID}/password")
+  Call<Void> postUsersIDPassword(
+    @retrofit2.http.Path("userID") String userID, @retrofit2.http.Body PasswordResetBody passwordResetBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Authorization") String authorization
+  );
+
+  /**
+   * Update a password
+   * 
    * @param passwordResetBody New password (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param authorization An auth credential for the Basic scheme (optional)
@@ -621,23 +638,6 @@ public interface UsersService {
   @PUT("api/v2/me/password")
   Call<Void> putMePassword(
     @retrofit2.http.Body PasswordResetBody passwordResetBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Authorization") String authorization
-  );
-
-  /**
-   * Update a password
-   * 
-   * @param userID The user ID. (required)
-   * @param passwordResetBody New password (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param authorization An auth credential for the Basic scheme (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @Headers({
-    "Content-Type:application/json"
-  })
-  @PUT("api/v2/users/{userID}/password")
-  Call<Void> putUsersIDPassword(
-    @retrofit2.http.Path("userID") String userID, @retrofit2.http.Body PasswordResetBody passwordResetBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Authorization") String authorization
   );
 
 }

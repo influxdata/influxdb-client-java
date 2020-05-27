@@ -66,7 +66,9 @@ public class PermissionResource {
     
     NOTIFICATIONENDPOINTS("notificationEndpoints"),
     
-    CHECKS("checks");
+    CHECKS("checks"),
+    
+    DBRP("dbrp");
 
     private String value;
 

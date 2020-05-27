@@ -20,8 +20,8 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.influxdb.client.domain.Invite;
 import com.influxdb.client.domain.InvitesLinks;
-import com.influxdb.client.domain.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -29,19 +29,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Users
+ * Invites
  */
 
-public class Users {
+public class Invites {
   public static final String SERIALIZED_NAME_LINKS = "links";
   @SerializedName(SERIALIZED_NAME_LINKS)
   private InvitesLinks links = null;
 
-  public static final String SERIALIZED_NAME_USERS = "users";
-  @SerializedName(SERIALIZED_NAME_USERS)
-  private List<User> users = new ArrayList<>();
+  public static final String SERIALIZED_NAME_INVITES = "invites";
+  @SerializedName(SERIALIZED_NAME_INVITES)
+  private List<Invite> invites = new ArrayList<>();
 
-  public Users links(InvitesLinks links) {
+  public Invites links(InvitesLinks links) {
     this.links = links;
     return this;
   }
@@ -59,30 +59,30 @@ public class Users {
     this.links = links;
   }
 
-  public Users users(List<User> users) {
-    this.users = users;
+  public Invites invites(List<Invite> invites) {
+    this.invites = invites;
     return this;
   }
 
-  public Users addUsersItem(User usersItem) {
-    if (this.users == null) {
-      this.users = new ArrayList<>();
+  public Invites addInvitesItem(Invite invitesItem) {
+    if (this.invites == null) {
+      this.invites = new ArrayList<>();
     }
-    this.users.add(usersItem);
+    this.invites.add(invitesItem);
     return this;
   }
 
    /**
-   * Get users
-   * @return users
+   * Get invites
+   * @return invites
   **/
   @ApiModelProperty(value = "")
-  public List<User> getUsers() {
-    return users;
+  public List<Invite> getInvites() {
+    return invites;
   }
 
-  public void setUsers(List<User> users) {
-    this.users = users;
+  public void setInvites(List<Invite> invites) {
+    this.invites = invites;
   }
 
 
@@ -94,23 +94,23 @@ public class Users {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Users users = (Users) o;
-    return Objects.equals(this.links, users.links) &&
-        Objects.equals(this.users, users.users);
+    Invites invites = (Invites) o;
+    return Objects.equals(this.links, invites.links) &&
+        Objects.equals(this.invites, invites.invites);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(links, users);
+    return Objects.hash(links, invites);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Users {\n");
+    sb.append("class Invites {\n");
     sb.append("    links: ").append(toIndentedString(links)).append("\n");
-    sb.append("    users: ").append(toIndentedString(users)).append("\n");
+    sb.append("    invites: ").append(toIndentedString(invites)).append("\n");
     sb.append("}");
     return sb.toString();
   }
