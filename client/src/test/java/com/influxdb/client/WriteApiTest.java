@@ -87,7 +87,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         writeApi.writePoint("b1", "org1", Point.measurement("h2o").addTag("location", "europe").addField("level", 2));
 
-        RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        RecordedRequest request = takeRequest();
 
         // value
         Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("h2o,location=europe level=2i");
@@ -125,13 +125,13 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         writeApi.writePoints("b1", "org1", Arrays.asList(point1, point2));
 
-        RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        RecordedRequest request = takeRequest();
 
         // request 1
         Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("h2o,location=europe level=1i 1");
         Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("ms");
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("h2o,location=europe level=2i 2");
         Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("s");
@@ -152,7 +152,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         // response
         writeApi.writeMeasurement("b1", "org1", WritePrecision.NS, measurement);
 
-        RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        RecordedRequest request = takeRequest();
 
         // value
         Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("h2o,location=coyote_creek level\\ description=\"below 3 feet\",water_level=2.927 1440046800000000");
@@ -180,7 +180,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         // response
         writeApi.writeMeasurement("b1", "org1", WritePrecision.S, measurement);
 
-        RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        RecordedRequest request = takeRequest();
 
         // value
         Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("visitor,source=metric-source count=99i");
@@ -242,13 +242,13 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         writeApi.writeMeasurements("b1", "org1", WritePrecision.NS, Arrays.asList(measurement1, measurement2));
 
 
-        RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        RecordedRequest request = takeRequest();
 
         // request 1
         Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("h2o,location=coyote_creek level\\ description=\"below 3 feet\",water_level=2.927 1440046800000000");
         Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getBody().readUtf8()).isEqualTo("h2o,location=coyote_creek level\\ description=\"below 2 feet\",water_level=1.927 1440049800000000");
         Assertions.assertThat(request.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
@@ -266,7 +266,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         writeApi.writeRecord("b1", "org1", WritePrecision.NS,
                 "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
 
-        RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        RecordedRequest request = takeRequest();
 
         // organization
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("org1");
@@ -315,24 +315,24 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         String record4 = "h2o_feet,location=coyote_creek level\\ description=\"feet 4\",water_level=4.0 4";
         writeApi.writeRecord("b1", "org1", WritePrecision.S, record4);
 
-        RecordedRequest request1 = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        RecordedRequest request1 = takeRequest();
         Assertions.assertThat(request1.getRequestUrl().queryParameter("precision")).isEqualTo("ns");
 
-        RecordedRequest request2 = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        RecordedRequest request2 = takeRequest();
         Assertions.assertThat(request2.getRequestUrl().queryParameter("precision")).isEqualTo("us");
 
-        RecordedRequest request3 = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        RecordedRequest request3 = takeRequest();
         Assertions.assertThat(request3.getRequestUrl().queryParameter("precision")).isEqualTo("ms");
 
-        RecordedRequest request4 = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        RecordedRequest request4 = takeRequest();
         Assertions.assertThat(request4.getRequestUrl().queryParameter("precision")).isEqualTo("s");
     }
 
     @Test
     void batching() {
 
-        mockServer.enqueue(createResponse(""));
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
+        enqueuedResponse();
 
         writeApi = influxDBClient.getWriteApi(WriteOptions.builder().flushInterval(10_000).batchSize(2).build());
 
@@ -750,7 +750,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
                 .addField("level", 1)
                 .time(1L, WritePrecision.MS)));
 
-        RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        RecordedRequest request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
         Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("my-top-bucket");
@@ -763,7 +763,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
                 .addField("level", 1)
                 .time(1L, WritePrecision.MS));
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
         Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("my-top-bucket");
@@ -773,7 +773,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         writeApi.writeRecord(WritePrecision.NS, "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
         Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("my-top-bucket");
@@ -783,7 +783,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         writeApi.writeRecords(WritePrecision.NS, Collections.singletonList("h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1"));
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
         Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("my-top-bucket");
@@ -794,7 +794,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         writeApi.writeMeasurement(WritePrecision.NS, new H2OFeetMeasurement(
                 "coyote_creek", 2.927, "below 3 feet", 1440046800L));
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
         Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("my-top-bucket");
@@ -805,7 +805,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         writeApi.writeMeasurements(WritePrecision.NS, Collections.singletonList(new H2OFeetMeasurement(
                 "coyote_creek", 2.927, "below 3 feet", 1440046800L)));
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
         Assertions.assertThat(request.getRequestUrl().queryParameter("bucket")).isEqualTo("my-top-bucket");
@@ -850,7 +850,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         writeApi.writeRecord("b1", "org1", WritePrecision.NS, "h2o,location=coyote_creek level\\ description=\"below 3 feet\",water_level=2.927 1440046800000000");
 
-        RecordedRequest recordedRequest = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        RecordedRequest recordedRequest = takeRequest();
 
         String userAgent = recordedRequest.getHeader("User-Agent");
 

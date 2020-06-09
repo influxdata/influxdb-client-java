@@ -22,16 +22,19 @@
 package com.influxdb.test;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.jupiter.api.AfterEach;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/10/2018 08:36)
  */
+@SuppressWarnings("MagicNumber")
 public abstract class AbstractMockServerTest extends AbstractTest {
 
     private static final int INTERNAL_SERVER_ERROR = 500;
@@ -109,5 +112,13 @@ public abstract class AbstractMockServerTest extends AbstractTest {
         }
 
         return mockResponse.setBody(body);
+    }
+
+    protected void enqueuedResponse() {
+        mockServer.enqueue(createResponse(""));
+    }
+
+    protected RecordedRequest takeRequest() throws InterruptedException {
+        return mockServer.takeRequest(10L, TimeUnit.SECONDS);
     }
 }

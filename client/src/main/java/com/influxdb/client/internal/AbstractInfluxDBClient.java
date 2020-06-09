@@ -70,9 +70,10 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
     private final OkHttpClient okHttpClient;
     protected final Collection<AutoCloseable> autoCloseables = new CopyOnWriteArrayList<>();
 
-    public AbstractInfluxDBClient(@Nonnull final InfluxDBClientOptions options) {
+    public AbstractInfluxDBClient(@Nonnull final InfluxDBClientOptions options, @Nonnull final String clientType) {
 
         Arguments.checkNotNull(options, "InfluxDBClientOptions");
+        Arguments.checkNonEmpty(clientType, "clientType");
 
         this.options = options;
         this.loggingInterceptor = new HttpLoggingInterceptor();
@@ -81,7 +82,7 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
         this.gzipInterceptor = new GzipInterceptor();
 
         this.okHttpClient = options.getOkHttpClient()
-                .addInterceptor(new UserAgentInterceptor())
+                .addInterceptor(new UserAgentInterceptor(clientType))
                 .addInterceptor(this.loggingInterceptor)
                 .addInterceptor(this.authenticateInterceptor)
                 .addInterceptor(this.gzipInterceptor)

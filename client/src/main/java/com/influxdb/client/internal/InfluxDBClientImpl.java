@@ -93,7 +93,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
 
     public InfluxDBClientImpl(@Nonnull final InfluxDBClientOptions options) {
 
-        super(options);
+        super(options, "java");
 
         setupService = retrofit.create(SetupService.class);
         readyService = retrofit.create(ReadyService.class);

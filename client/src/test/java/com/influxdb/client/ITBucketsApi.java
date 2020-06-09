@@ -364,6 +364,7 @@ class ITBucketsApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled("TODO https://github.com/influxdata/influxdb/issues/18409")
     void labelDeleteNotExists() {
 
         Bucket bucket = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);

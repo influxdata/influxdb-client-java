@@ -24,6 +24,8 @@ package com.influxdb.internal;
 import java.io.IOException;
 import javax.annotation.Nonnull;
 
+import com.influxdb.Arguments;
+
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -35,11 +37,17 @@ public class UserAgentInterceptor implements Interceptor {
 
     private final String userAgent;
 
-    public UserAgentInterceptor() {
+    /**
+     * @param clientType type of client - java, scala, kotlin
+     */
+    public UserAgentInterceptor(final String clientType) {
+
+        Arguments.checkNonEmpty(clientType, "clientType");
+
         Package mainPackage = UserAgentInterceptor.class.getPackage();
         String version = null != mainPackage ? mainPackage.getImplementationVersion() : null;
 
-        userAgent = "influxdb-client-java/" + (version != null ? version : "unknown");
+        userAgent = String.format("influxdb-client-%s/%s", clientType, version != null ? version : "unknown");
     }
 
     @Nonnull

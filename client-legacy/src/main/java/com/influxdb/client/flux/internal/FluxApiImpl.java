@@ -77,7 +77,7 @@ public class FluxApiImpl extends AbstractQueryApi implements FluxClient {
         }
 
         this.okHttpClient = options.getOkHttpClient()
-                .addInterceptor(new UserAgentInterceptor())
+                .addInterceptor(new UserAgentInterceptor("java"))
                 .addInterceptor(this.loggingInterceptor)
                 .build();
 

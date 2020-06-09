@@ -41,6 +41,7 @@ import com.influxdb.client.service.QueryService;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -134,6 +135,8 @@ class ITQueryService extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+        //TODO wait for new beta
     void suggestions() throws IOException {
 
         FluxSuggestions suggestions = queryService.getQuerySuggestions(null).execute().body();
@@ -148,7 +151,7 @@ class ITQueryService extends AbstractITClientTest {
                 .hasSize(4)
                 .hasEntrySatisfying("columnKey", value -> Assertions.assertThat(value).isEqualTo("array"))
                 .hasEntrySatisfying("rowKey", value -> Assertions.assertThat(value).isEqualTo("array"))
-                .hasEntrySatisfying("tables", value -> Assertions.assertThat(value).isEqualTo("object"))
+                .hasEntrySatisfying("tables", value -> Assertions.assertThat(value).isEqualTo("array"))
                 .hasEntrySatisfying("valueColumn", value -> Assertions.assertThat(value).isEqualTo("string"));
 
         FluxSuggestion suggestion = queryService.getQuerySuggestionsName("range", null).execute().body();
@@ -159,7 +162,7 @@ class ITQueryService extends AbstractITClientTest {
                 .hasEntrySatisfying("startColumn", value -> Assertions.assertThat(value).isEqualTo("string"))
                 .hasEntrySatisfying("stop", value -> Assertions.assertThat(value).isEqualTo("invalid"))
                 .hasEntrySatisfying("stopColumn", value -> Assertions.assertThat(value).isEqualTo("string"))
-                .hasEntrySatisfying("tables", value -> Assertions.assertThat(value).isEqualTo("object"))
+                .hasEntrySatisfying("tables", value -> Assertions.assertThat(value).isEqualTo("array"))
                 .hasEntrySatisfying("timeColumn", value -> Assertions.assertThat(value).isEqualTo("string"));
 
     }

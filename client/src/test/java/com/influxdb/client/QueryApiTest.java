@@ -56,11 +56,11 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
         QueryApi queryApi = influxDBClient.getQueryApi();
 
         // String
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query("from(bucket: \"telegraf\")");
 
-        RecordedRequest request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        RecordedRequest request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
@@ -69,87 +69,87 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
         queryApi = influxDBClient.getQueryApi();
 
         // String
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query("from(bucket: \"telegraf\")");
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Query
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query(new Query().query("from(bucket: \"telegraf\")"));
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // String Measurement
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query("from(bucket: \"telegraf\")", H2OFeetMeasurement.class);
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Query Measurement
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query(new Query().query("from(bucket: \"telegraf\")"), H2OFeetMeasurement.class);
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // String OnNext
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query("from(bucket: \"telegraf\")", (cancellable, fluxRecord) -> {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Query OnNext
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query(new Query().query("from(bucket: \"telegraf\")"), (cancellable, fluxRecord) -> {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // String OnNext Measurement
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query("from(bucket: \"telegraf\")", H2OFeetMeasurement.class, (cancellable, fluxRecord) -> {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Query OnNext Measurement
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query(new Query().query("from(bucket: \"telegraf\")"), H2OFeetMeasurement.class, (cancellable, fluxRecord) -> {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // String OnNext, OnError
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query("from(bucket: \"telegraf\")", (cancellable, fluxRecord) -> {
 
@@ -157,13 +157,13 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
 
         // Query OnNext, OnError
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query(new Query().query("from(bucket: \"telegraf\")"), (cancellable, fluxRecord) -> {
 
@@ -171,12 +171,12 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // String OnNext, OnError Measurement
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query("from(bucket: \"telegraf\")", H2OFeetMeasurement.class, (cancellable, fluxRecord) -> {
 
@@ -184,12 +184,12 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Query OnNext, OnError Measurement
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query(new Query().query("from(bucket: \"telegraf\")"), H2OFeetMeasurement.class, (cancellable, fluxRecord) -> {
 
@@ -197,12 +197,12 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // String OnNext, OnError, OnComplete
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query("from(bucket: \"telegraf\")", (cancellable, fluxRecord) -> {
 
@@ -212,13 +212,13 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
 
         // Query OnNext, OnError, OnComplete
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query(new Query().query("from(bucket: \"telegraf\")"), (cancellable, fluxRecord) -> {
 
@@ -228,12 +228,12 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // String OnNext, OnError Measurement, OnComplete
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query("from(bucket: \"telegraf\")", H2OFeetMeasurement.class, (cancellable, fluxRecord) -> {
 
@@ -243,12 +243,12 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Query OnNext, OnError Measurement, OnComplete
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.query(new Query().query("from(bucket: \"telegraf\")"), H2OFeetMeasurement.class, (cancellable, fluxRecord) -> {
 
@@ -258,72 +258,72 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456"); // Query OnNext, OnError Measurement, OnComplete
 
         // Raw string
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.queryRaw("from(bucket: \"telegraf\")");
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw string + dialect
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.queryRaw("from(bucket: \"telegraf\")", new Dialect());
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw Query
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.queryRaw(new Query().query("from(bucket: \"telegraf\")"));
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw String OnResponse
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.queryRaw("from(bucket: \"telegraf\")", (cancellable, s) -> {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw String + Dialect OnResponse
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.queryRaw("from(bucket: \"telegraf\")", new Dialect(), (cancellable, s) -> {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw Query OnResponse
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.queryRaw(new Query().query("from(bucket: \"telegraf\")"), (cancellable, s) -> {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw String OnResponse, OnError
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.queryRaw("from(bucket: \"telegraf\")", (cancellable, s) -> {
 
@@ -331,12 +331,12 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw String + Dialect OnResponse, OnError
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.queryRaw("from(bucket: \"telegraf\")", new Dialect(), (cancellable, s) -> {
 
@@ -344,12 +344,12 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw Query OnResponse, OnError
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.queryRaw(new Query().query("from(bucket: \"telegraf\")"), (cancellable, s) -> {
 
@@ -357,12 +357,12 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw String OnResponse, OnError, OnComplete
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.queryRaw("from(bucket: \"telegraf\")", (cancellable, s) -> {
 
@@ -372,12 +372,12 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw String + Dialect OnResponse, OnError, OnComplete
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.queryRaw("from(bucket: \"telegraf\")", new Dialect(), (cancellable, s) -> {
 
@@ -387,12 +387,12 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // Raw Query OnResponse, OnError, OnComplete
-        mockServer.enqueue(createResponse(""));
+        enqueuedResponse();
 
         queryApi.queryRaw(new Query().query("from(bucket: \"telegraf\")"), (cancellable, s) -> {
 
@@ -402,7 +402,7 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         });
 
-        request = mockServer.takeRequest(10L, TimeUnit.SECONDS);
+        request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 

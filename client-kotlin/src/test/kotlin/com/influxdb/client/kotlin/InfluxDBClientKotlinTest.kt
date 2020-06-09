@@ -19,27 +19,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.influxdb.client.scala
+package com.influxdb.client.kotlin
 
 import com.influxdb.test.AbstractMockServerTest
-import okhttp3.mockwebserver.RecordedRequest
+import org.assertj.core.api.Assertions
+import org.junit.jupiter.api.Test
+import org.junit.platform.runner.JUnitPlatform
+import org.junit.runner.RunWith
+import java.util.concurrent.TimeUnit
 
 /**
- * @author Jakub Bednar (bednar@github) (25/06/2019 11:22)
+ * @author Jakub Bednar (09/06/2020 07:11)
  */
-class InfluxDBUtils extends AbstractMockServerTest {
+@RunWith(JUnitPlatform::class)
+class InfluxDBClientKotlinTest : AbstractMockServerTest() {
 
-  def getUrl: String = super.getInfluxDb2Url
+    @Test
+    fun userAgent() {
+        val client = InfluxDBClientKotlinFactory.create(startMockServer())
 
-  def serverStart: String = super.startMockServer
+        enqueuedResponse()
 
-  def serverStop(): Unit = super.after()
+        val queryKotlinApi = client.getQueryKotlinApi()
+        val flux = "from(bucket:\"my-bucket\")\n\t" +
+                "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
+                "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\"))\n\t" +
+                "|> sum()"
 
-  def serverMockResponse(): Unit = super.enqueuedResponse()
+        queryKotlinApi.query(flux, "my-org")
 
-  def serverTakeRequest(): RecordedRequest = super.takeRequest()
+        val request = mockServer.takeRequest(10L, TimeUnit.SECONDS)
 
-  override def generateName(prefix: String): String = super.generateName(prefix)
-
-  override def getDeclaredField[V](obj: Any, field: String, `type`: Class[_]): V = super.getDeclaredField(obj, field, `type`)
+        Assertions.assertThat(request?.getHeader("User-Agent")).startsWith("influxdb-client-kotlin/")
+    }
 }

@@ -46,6 +46,7 @@ import com.influxdb.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -276,6 +277,7 @@ class ITDashboardsApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled("TODO https://github.com/influxdata/influxdb/issues/18409")
     void labelDeleteNotExists() {
 
         Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());

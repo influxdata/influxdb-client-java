@@ -69,7 +69,8 @@ class ITUsersApi extends AbstractITClientTest {
         Assertions.assertThat(user).isNotNull();
         Assertions.assertThat(user.getId()).isNotBlank();
         Assertions.assertThat(user.getName()).isEqualTo(userName);
-        Assertions.assertThat(user.getLinks().getLogs()).isEqualTo("/api/v2/users/" + user.getId() + "/logs");
+        // TODO https://github.com/influxdata/influxdb/issues/18389
+//        Assertions.assertThat(user.getLinks().getLogs()).isEqualTo("/api/v2/users/" + user.getId() + "/logs");
         Assertions.assertThat(user.getLinks().getSelf()).isEqualTo("/api/v2/users/" + user.getId());
     }
 
@@ -239,6 +240,8 @@ class ITUsersApi extends AbstractITClientTest {
         Assertions.assertThat(userLogs.get(userLogs.size() - 1).getUserID()).isEqualTo(user.getId());
     }
 
+    //TODO https://github.com/influxdata/influxdb/issues/18389
+    @Disabled
     @Test
     void findUserLogsNotFound() {
         List<OperationLog> userLogs = usersApi.findUserLogs("020f755c3c082000");

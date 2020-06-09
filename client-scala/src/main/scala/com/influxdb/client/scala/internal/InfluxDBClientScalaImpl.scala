@@ -35,7 +35,7 @@ import javax.annotation.Nonnull
  */
 class InfluxDBClientScalaImpl(@Nonnull options: InfluxDBClientOptions,
                               @Nonnull val bufferSize: Int,
-                              @Nonnull val overflowStrategy: OverflowStrategy) extends AbstractInfluxDBClient(options) with InfluxDBClientScala {
+                              @Nonnull val overflowStrategy: OverflowStrategy) extends AbstractInfluxDBClient(options, "scala") with InfluxDBClientScala {
   /**
    * Get the Query client.
    *
