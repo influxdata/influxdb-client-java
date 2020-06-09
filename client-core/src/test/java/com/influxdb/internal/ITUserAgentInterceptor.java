@@ -48,7 +48,7 @@ class ITUserAgentInterceptor extends AbstractMockServerTest {
     void setUp() {
 
         client = new OkHttpClient.Builder()
-                .addInterceptor(new UserAgentInterceptor())
+                .addInterceptor(new UserAgentInterceptor("java"))
                 .build();
 
         url = startMockServer();

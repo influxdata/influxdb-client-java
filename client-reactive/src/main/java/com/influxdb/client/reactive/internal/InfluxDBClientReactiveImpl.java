@@ -44,7 +44,7 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient
         implements InfluxDBClientReactive {
 
     public InfluxDBClientReactiveImpl(@Nonnull final InfluxDBClientOptions options) {
-        super(options);
+        super(options, "java");
     }
 
     @Nonnull

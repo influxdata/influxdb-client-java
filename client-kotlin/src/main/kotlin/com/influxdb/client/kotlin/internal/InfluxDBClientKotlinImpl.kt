@@ -32,7 +32,7 @@ import com.influxdb.client.service.QueryService
 /**
  * @author Jakub Bednar (bednar@github) (07/02/2019 13:21)
  */
-internal class InfluxDBClientKotlinImpl(options: InfluxDBClientOptions) : AbstractInfluxDBClient(options), InfluxDBClientKotlin {
+internal class InfluxDBClientKotlinImpl(options: InfluxDBClientOptions) : AbstractInfluxDBClient(options, "kotlin"), InfluxDBClientKotlin {
 
     override fun getQueryKotlinApi(): QueryKotlinApi {
         return QueryKotlinApiImpl(retrofit.create<QueryService>(QueryService::class.java), options)

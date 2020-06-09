@@ -23,7 +23,7 @@ package com.influxdb.client.scala
 
 import com.influxdb.LogLevel
 import com.influxdb.client.domain.HealthCheck
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 
 /**
  * @author Jakub Bednar (bednar@github) (06/11/2018 09:52)

@@ -21,25 +21,47 @@
  */
 package com.influxdb.client.scala
 
-import org.scalatest.BeforeAndAfter
+import akka.actor.ActorSystem
+import akka.stream.testkit.scaladsl.TestSink
+import com.influxdb.query.FluxRecord
 import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.BeforeAndAfter
 
 /**
- * @author Jakub Bednar (bednar@github) (06/11/2018 09:34)
+ * @author Jakub Bednar (09/06/2020 07:19)
  */
-abstract class AbstractITQueryScalaApi extends AnyFunSuite with BeforeAndAfter {
+class InfluxDBClientScalaTest extends AnyFunSuite with Matchers with BeforeAndAfter{
 
-  var influxDBUtils: InfluxDBUtils = _
+  implicit val system: ActorSystem = ActorSystem("unit-tests")
+  
+  var utils: InfluxDBUtils = _
 
-  var influxDBClient: InfluxDBClientScala = _
-
-  def setUp() {
-    influxDBUtils = new InfluxDBUtils {}
-
-    influxDBClient = InfluxDBClientScalaFactory.create(influxDBUtils.getUrl)
+  before {
+    utils = new InfluxDBUtils {}
   }
 
   after {
-    influxDBClient.close()
+    utils.serverStop()
+  }
+
+  test("userAgent") {
+
+    val url = utils.serverStart
+    utils.serverMockResponse()
+
+    val client = InfluxDBClientScalaFactory.create(url)
+
+    val queryScalaApi = client.getQueryScalaApi()
+    val flux = "from(bucket:\"my-bucket\")\n\t" +
+      "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
+      "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\" and r[\"host\"] == \"A\"))" +
+      "|> sum()"
+
+    val source = queryScalaApi.query(flux, "my-org").runWith(TestSink.probe[FluxRecord])
+    source.expectSubscriptionAndComplete()
+
+    val request = utils.serverTakeRequest()
+    request.getHeader("User-Agent") should startWith("influxdb-client-scala/")
   }
 }

@@ -25,13 +25,14 @@ import com.influxdb.LogLevel
 import com.influxdb.client.InfluxDBClientOptions
 import com.influxdb.client.internal.AbstractInfluxDBClient
 import okhttp3.OkHttpClient
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 import retrofit2.Retrofit
 
 /**
  * @author Jakub Bednar (bednar@github) (05/11/2018 09:22)
  */
-class InfluxDBClientScalaFactoryTest extends FunSuite with Matchers {
+class InfluxDBClientScalaFactoryTest extends AnyFunSuite with Matchers {
 
   test("connect") {
 

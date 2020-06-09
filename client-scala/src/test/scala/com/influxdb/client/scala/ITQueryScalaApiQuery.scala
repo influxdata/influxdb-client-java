@@ -32,9 +32,9 @@ import com.influxdb.client.domain._
 import com.influxdb.client.internal.AbstractInfluxDBClient
 import com.influxdb.exceptions.InfluxException
 import com.influxdb.query.FluxRecord
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 /**
  * @author Jakub Bednar (bednar@github) (07/11/2018 10:00)
