@@ -148,7 +148,7 @@ public class InfluxDB2Example {
             //
             // Write by LineProtocol
             //
-            writeApi.writeRecord(WritePrecision.NS, "temperature,location=north value=60.0");
+            writeApi.writeRecord(WritePrecision.MS, "temperature,location=north value=60.0");
 
             //
             // Write by POJO
@@ -158,7 +158,7 @@ public class InfluxDB2Example {
             temperature.value = 62D;
             temperature.time = Instant.now();
 
-            writeApi.writeMeasurement(WritePrecision.NS, temperature);
+            writeApi.writeMeasurement(WritePrecision.MS, temperature);
         }
 
         //
