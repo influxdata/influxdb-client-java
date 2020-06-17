@@ -5,6 +5,7 @@
 
 ### API
 1. [#117](https://github.com/influxdata/influxdb-client-java/pull/117): Update swagger to latest version
+1. [#122](https://github.com/influxdata/influxdb-client-java/pull/122): Removed log system from Bucket, Dashboard, Organization, Task and Users API - [influxdb#18459](https://github.com/influxdata/influxdb/pull/18459)
 
 ### Bug Fixes
 1. [#116](https://github.com/influxdata/influxdb-client-java/pull/116): The closing message of the `WriteApi` has `Fine` log level

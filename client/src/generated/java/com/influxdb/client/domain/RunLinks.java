@@ -37,10 +37,6 @@ public class RunLinks {
   @SerializedName(SERIALIZED_NAME_TASK)
   private String task;
 
-  public static final String SERIALIZED_NAME_LOGS = "logs";
-  @SerializedName(SERIALIZED_NAME_LOGS)
-  private String logs;
-
   public static final String SERIALIZED_NAME_RETRY = "retry";
   @SerializedName(SERIALIZED_NAME_RETRY)
   private String retry;
@@ -81,24 +77,6 @@ public class RunLinks {
     this.task = task;
   }
 
-  public RunLinks logs(String logs) {
-    this.logs = logs;
-    return this;
-  }
-
-   /**
-   * Get logs
-   * @return logs
-  **/
-  @ApiModelProperty(value = "")
-  public String getLogs() {
-    return logs;
-  }
-
-  public void setLogs(String logs) {
-    this.logs = logs;
-  }
-
   public RunLinks retry(String retry) {
     this.retry = retry;
     return this;
@@ -129,13 +107,12 @@ public class RunLinks {
     RunLinks runLinks = (RunLinks) o;
     return Objects.equals(this.self, runLinks.self) &&
         Objects.equals(this.task, runLinks.task) &&
-        Objects.equals(this.logs, runLinks.logs) &&
         Objects.equals(this.retry, runLinks.retry);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self, task, logs, retry);
+    return Objects.hash(self, task, retry);
   }
 
 
@@ -145,7 +122,6 @@ public class RunLinks {
     sb.append("class RunLinks {\n");
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
     sb.append("    task: ").append(toIndentedString(task)).append("\n");
-    sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
     sb.append("    retry: ").append(toIndentedString(retry)).append("\n");
     sb.append("}");
     return sb.toString();

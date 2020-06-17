@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 import com.influxdb.client.domain.Cell;
 import com.influxdb.client.domain.CellUpdate;
@@ -35,8 +34,6 @@ import com.influxdb.client.domain.CreateCell;
 import com.influxdb.client.domain.Dashboard;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.MarkdownViewProperties;
-import com.influxdb.client.domain.OperationLog;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceOwner;
@@ -91,7 +88,6 @@ class ITDashboardsApi extends AbstractITClientTest {
         Assertions.assertThat(dashboard.getLinks().getMembers()).isEqualTo("/api/v2/dashboards/" + dashboard.getId() + "/members");
         Assertions.assertThat(dashboard.getLinks().getOwners()).isEqualTo("/api/v2/dashboards/" + dashboard.getId() + "/owners");
         Assertions.assertThat(dashboard.getLinks().getCells()).isEqualTo("/api/v2/dashboards/" + dashboard.getId() + "/cells");
-        Assertions.assertThat(dashboard.getLinks().getLogs()).isEqualTo("/api/v2/dashboards/" + dashboard.getId() + "/logs");
         Assertions.assertThat(dashboard.getLinks().getLabels()).isEqualTo("/api/v2/dashboards/" + dashboard.getId() + "/labels");
         Assertions.assertThat(dashboard.getLinks().getOrg()).isEqualTo("/api/v2/orgs/" + organization.getId());
     }
@@ -285,104 +281,6 @@ class ITDashboardsApi extends AbstractITClientTest {
         Assertions.assertThatThrownBy(() -> dashboardsApi.deleteLabel("020f755c3c082000", dashboard.getId()))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("label not found");
-    }
-
-    @Test
-    void findLogs() {
-
-        Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
-
-        List<OperationLog> userLogs = dashboardsApi.findDashboardLogs(dashboard);
-        Assertions.assertThat(userLogs).isNotEmpty();
-        Assertions.assertThat(userLogs.get(0).getDescription()).isEqualTo("Dashboard Created");
-    }
-
-    @Test
-    void findLogsNotFound() {
-        List<OperationLog> userLogs = dashboardsApi.findDashboardLogs("020f755c3c082000");
-        Assertions.assertThat(userLogs).isEmpty();
-    }
-
-    @Test
-    void findLogsPaging() {
-
-        Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());
-
-        IntStream
-                .range(0, 19)
-                .forEach(value -> {
-
-                    dashboard.setName(value + "_" + dashboard.getName());
-                    dashboardsApi.updateDashboard(dashboard);
-                });
-
-        List<OperationLog> logs = dashboardsApi.findDashboardLogs(dashboard);
-
-        Assertions.assertThat(logs).hasSize(20);
-        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Dashboard Created");
-        Assertions.assertThat(logs.get(19).getDescription()).isEqualTo("Dashboard Updated");
-
-        FindOptions findOptions = new FindOptions();
-        findOptions.setLimit(5);
-        findOptions.setOffset(0);
-
-        OperationLogs entries = dashboardsApi.findDashboardLogs(dashboard, findOptions);
-
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Dashboard Created");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Dashboard Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = dashboardsApi.findDashboardLogs(dashboard, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Dashboard Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = dashboardsApi.findDashboardLogs(dashboard, findOptions);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Dashboard Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = dashboardsApi.findDashboardLogs(dashboard, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Dashboard Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = dashboardsApi.findDashboardLogs(dashboard, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(0);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        // order
-        findOptions = new FindOptions();
-        findOptions.setDescending(false);
-
-        entries = dashboardsApi.findDashboardLogs(dashboard, findOptions);
-
-        Assertions.assertThat(entries.getLogs()).hasSize(20);
-        Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("Dashboard Updated");
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Dashboard Created");
     }
 
     @Test

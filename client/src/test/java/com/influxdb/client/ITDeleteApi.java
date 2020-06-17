@@ -125,6 +125,7 @@ class ITDeleteApi extends AbstractITClientTest {
         OffsetDateTime start = OffsetDateTime.ofInstant(Instant.ofEpochSecond(0, 1), ZoneId.of("UTC"));
         OffsetDateTime stop = OffsetDateTime.ofInstant(Instant.ofEpochSecond(0, 12), ZoneId.of("UTC"));
 
+        influxDBClient.setLogLevel(LogLevel.BODY);
         deleteApi.delete(start, stop, "", bucket, organization);
 
         List<FluxTable> query2 = influxDBClient.getQueryApi().query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());

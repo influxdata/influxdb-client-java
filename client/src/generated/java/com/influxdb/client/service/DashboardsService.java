@@ -18,7 +18,6 @@ import com.influxdb.client.domain.Error;
 import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceMembers;
 import com.influxdb.client.domain.ResourceOwner;
@@ -147,20 +146,6 @@ public interface DashboardsService {
   @GET("api/v2/dashboards/{dashboardID}/labels")
   Call<LabelsResponse> getDashboardsIDLabels(
     @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Retrieve operation logs for a dashboard
-   * 
-   * @param dashboardID The dashboard ID. (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param offset  (optional)
-   * @param limit  (optional, default to 20)
-   * @return Call&lt;OperationLogs&gt;
-   */
-  @GET("api/v2/dashboards/{dashboardID}/logs")
-  Call<OperationLogs> getDashboardsIDLogs(
-    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
   );
 
   /**

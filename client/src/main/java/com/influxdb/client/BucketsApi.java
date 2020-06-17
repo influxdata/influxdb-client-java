@@ -30,8 +30,6 @@ import com.influxdb.client.domain.BucketRetentionRules;
 import com.influxdb.client.domain.Buckets;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.LabelResponse;
-import com.influxdb.client.domain.OperationLog;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.PostBucketRequest;
 import com.influxdb.client.domain.ResourceMember;
@@ -314,44 +312,6 @@ public interface BucketsApi {
      * @param ownerID  the ID of a owner
      */
     void deleteOwner(@Nonnull final String ownerID, @Nonnull final String bucketID);
-
-    /**
-     * Retrieve a bucket's logs.
-     *
-     * @param bucket for retrieve logs
-     * @return logs
-     */
-    @Nonnull
-    List<OperationLog> findBucketLogs(@Nonnull final Bucket bucket);
-
-    /**
-     * Retrieve a bucket's logs.
-     *
-     * @param bucket      for retrieve logs
-     * @param findOptions the find options
-     * @return logs
-     */
-    @Nonnull
-    OperationLogs findBucketLogs(@Nonnull final Bucket bucket, @Nonnull final FindOptions findOptions);
-
-    /**
-     * Retrieve a bucket's logs.
-     *
-     * @param bucketID id of a bucket
-     * @return logs
-     */
-    @Nonnull
-    List<OperationLog> findBucketLogs(@Nonnull final String bucketID);
-
-    /**
-     * Retrieve a bucket's logs.
-     *
-     * @param bucketID    id of a bucket
-     * @param findOptions the find options
-     * @return logs
-     */
-    @Nonnull
-    OperationLogs findBucketLogs(@Nonnull final String bucketID, @Nonnull final FindOptions findOptions);
 
     /**
      * List all labels of a bucket.

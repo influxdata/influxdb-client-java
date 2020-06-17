@@ -404,8 +404,6 @@ class ITTasksApi extends AbstractITClientTest {
         Assertions.assertThat(run.getFinishedAt()).withFailMessage(failMessage).isBefore(OffsetDateTime.now());
         Assertions.assertThat(run.getRequestedAt()).isNull();
         Assertions.assertThat(run.getLinks()).withFailMessage(failMessage).isNotNull();
-        Assertions.assertThat(run.getLinks().getLogs()).withFailMessage(failMessage)
-                .isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId() + "/logs");
         Assertions.assertThat(run.getLinks().getRetry()).withFailMessage(failMessage)
                 .isEqualTo("/api/v2/tasks/" + task.getId() + "/runs/" + run.getId() + "/retry");
         Assertions.assertThat(run.getLinks().getSelf()).withFailMessage(failMessage)

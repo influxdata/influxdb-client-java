@@ -32,8 +32,6 @@ import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.BucketRetentionRules;
 import com.influxdb.client.domain.Buckets;
 import com.influxdb.client.domain.Label;
-import com.influxdb.client.domain.OperationLog;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceOwner;
@@ -98,7 +96,6 @@ class ITBucketsApi extends AbstractITClientTest {
         Assertions.assertThat(bucket.getLinks().getMembers()).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/members");
         Assertions.assertThat(bucket.getLinks().getOwners()).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/owners");
         Assertions.assertThat(bucket.getLinks().getLabels()).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/labels");
-        Assertions.assertThat(bucket.getLinks().getLogs()).isEqualTo("/api/v2/buckets/" + bucket.getId() + "/logs");
         Assertions.assertThat(bucket.getLinks().getWrite()).isEqualTo("/api/v2/write?org=" + organization.getId() + "&bucket=" + bucket.getId());
     }
 
@@ -372,120 +369,6 @@ class ITBucketsApi extends AbstractITClientTest {
         Assertions.assertThatThrownBy(() -> bucketsApi.deleteLabel("020f755c3c082000", bucket.getId()))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("label not found");
-    }
-
-    //TODO https://github.com/influxdata/influxdb/issues/18048
-    @Disabled
-    @Test
-    void findBucketLogs() {
-
-        Bucket bucket = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);
-
-        List<OperationLog> logs = bucketsApi.findBucketLogs(bucket);
-
-        Assertions.assertThat(logs).hasSize(1);
-        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Bucket Created");
-    }
-
-    //TODO https://github.com/influxdata/influxdb/issues/18048
-    @Disabled
-    @Test
-    void findBucketLogsPaging() {
-
-        Bucket bucket = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);
-
-        IntStream
-                .range(0, 19)
-                .forEach(value -> {
-
-                    bucket.setName(value + "_" + bucket.getName());
-                    bucketsApi.updateBucket(bucket);
-                });
-
-        List<OperationLog> logs = bucketsApi.findBucketLogs(bucket);
-
-        Assertions.assertThat(logs).hasSize(20);
-        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Bucket Created");
-        Assertions.assertThat(logs.get(19).getDescription()).isEqualTo("Bucket Updated");
-
-        FindOptions findOptions = new FindOptions();
-        findOptions.setLimit(5);
-        findOptions.setOffset(0);
-
-        OperationLogs entries = bucketsApi.findBucketLogs(bucket, findOptions);
-
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Created");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = bucketsApi.findBucketLogs(bucket, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = bucketsApi.findBucketLogs(bucket, findOptions);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = bucketsApi.findBucketLogs(bucket, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Bucket Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = bucketsApi.findBucketLogs(bucket, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(0);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        // order
-        findOptions = new FindOptions();
-        findOptions.setDescending(false);
-
-        entries = bucketsApi.findBucketLogs(bucket, findOptions);
-
-        Assertions.assertThat(entries.getLogs()).hasSize(20);
-        Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("Bucket Updated");
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Bucket Created");
-    }
-
-    @Test
-    void findBucketLogsNotFound() {
-
-        List<OperationLog> bucketLogs = bucketsApi.findBucketLogs("020f755c3c082000");
-
-        Assertions.assertThat(bucketLogs).isEmpty();
-    }
-
-    @Test
-    void findBucketLogsFindOptionsNotFound() {
-
-        OperationLogs entries = bucketsApi.findBucketLogs("020f755c3c082000", new FindOptions());
-
-        Assertions.assertThat(entries).isNotNull();
-        Assertions.assertThat(entries.getLogs()).isEmpty();
     }
 
     @Test

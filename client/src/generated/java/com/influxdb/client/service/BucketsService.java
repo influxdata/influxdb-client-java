@@ -14,7 +14,6 @@ import com.influxdb.client.domain.Error;
 import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.PostBucketRequest;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceMembers;
@@ -116,20 +115,6 @@ public interface BucketsService {
   @GET("api/v2/buckets/{bucketID}/labels")
   Call<LabelsResponse> getBucketsIDLabels(
     @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Retrieve operation logs for a bucket
-   * 
-   * @param bucketID The bucket ID. (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param offset  (optional)
-   * @param limit  (optional, default to 20)
-   * @return Call&lt;OperationLogs&gt;
-   */
-  @GET("api/v2/buckets/{bucketID}/logs")
-  Call<OperationLogs> getBucketsIDLogs(
-    @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
   );
 
   /**

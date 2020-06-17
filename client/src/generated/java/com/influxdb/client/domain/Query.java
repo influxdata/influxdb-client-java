@@ -25,6 +25,7 @@ import com.influxdb.client.domain.File;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.time.OffsetDateTime;
 
 /**
  * Query influx using the Flux language
@@ -41,13 +42,11 @@ public class Query {
   private String query;
 
   /**
-   * The type of query.
+   * The type of query. Must be \&quot;flux\&quot;.
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
-    FLUX("flux"),
-    
-    INFLUXQL("influxql");
+    FLUX("flux");
 
     private String value;
 
@@ -91,21 +90,13 @@ public class Query {
   @SerializedName(SERIALIZED_NAME_TYPE)
   private TypeEnum type = TypeEnum.FLUX;
 
-  public static final String SERIALIZED_NAME_DB = "db";
-  @SerializedName(SERIALIZED_NAME_DB)
-  private String db;
-
-  public static final String SERIALIZED_NAME_RP = "rp";
-  @SerializedName(SERIALIZED_NAME_RP)
-  private String rp;
-
-  public static final String SERIALIZED_NAME_CLUSTER = "cluster";
-  @SerializedName(SERIALIZED_NAME_CLUSTER)
-  private String cluster;
-
   public static final String SERIALIZED_NAME_DIALECT = "dialect";
   @SerializedName(SERIALIZED_NAME_DIALECT)
   private Dialect dialect = null;
+
+  public static final String SERIALIZED_NAME_NOW = "now";
+  @SerializedName(SERIALIZED_NAME_NOW)
+  private OffsetDateTime now;
 
   public Query extern(File extern) {
     this.extern = extern;
@@ -143,76 +134,13 @@ public class Query {
     this.query = query;
   }
 
-  public Query type(TypeEnum type) {
-    this.type = type;
-    return this;
-  }
-
    /**
-   * The type of query.
+   * The type of query. Must be \&quot;flux\&quot;.
    * @return type
   **/
-  @ApiModelProperty(value = "The type of query.")
+  @ApiModelProperty(value = "The type of query. Must be \"flux\".")
   public TypeEnum getType() {
     return type;
-  }
-
-  public void setType(TypeEnum type) {
-    this.type = type;
-  }
-
-  public Query db(String db) {
-    this.db = db;
-    return this;
-  }
-
-   /**
-   * Required for &#x60;influxql&#x60; type queries.
-   * @return db
-  **/
-  @ApiModelProperty(value = "Required for `influxql` type queries.")
-  public String getDb() {
-    return db;
-  }
-
-  public void setDb(String db) {
-    this.db = db;
-  }
-
-  public Query rp(String rp) {
-    this.rp = rp;
-    return this;
-  }
-
-   /**
-   * Required for &#x60;influxql&#x60; type queries.
-   * @return rp
-  **/
-  @ApiModelProperty(value = "Required for `influxql` type queries.")
-  public String getRp() {
-    return rp;
-  }
-
-  public void setRp(String rp) {
-    this.rp = rp;
-  }
-
-  public Query cluster(String cluster) {
-    this.cluster = cluster;
-    return this;
-  }
-
-   /**
-   * Required for &#x60;influxql&#x60; type queries.
-   * @return cluster
-  **/
-  @ApiModelProperty(value = "Required for `influxql` type queries.")
-  public String getCluster() {
-    return cluster;
-  }
-
-  public void setCluster(String cluster) {
-    this.cluster = cluster;
   }
 
   public Query dialect(Dialect dialect) {
@@ -233,6 +161,24 @@ public class Query {
     this.dialect = dialect;
   }
 
+  public Query now(OffsetDateTime now) {
+    this.now = now;
+    return this;
+  }
+
+   /**
+   * Specifies the time that should be reported as \&quot;now\&quot; in the query. Default is the server&#39;s now time.
+   * @return now
+  **/
+  @ApiModelProperty(value = "Specifies the time that should be reported as \"now\" in the query. Default is the server's now time.")
+  public OffsetDateTime getNow() {
+    return now;
+  }
+
+  public void setNow(OffsetDateTime now) {
+    this.now = now;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -246,15 +192,13 @@ public class Query {
     return Objects.equals(this.extern, query.extern) &&
         Objects.equals(this.query, query.query) &&
         Objects.equals(this.type, query.type) &&
-        Objects.equals(this.db, query.db) &&
-        Objects.equals(this.rp, query.rp) &&
-        Objects.equals(this.cluster, query.cluster) &&
-        Objects.equals(this.dialect, query.dialect);
+        Objects.equals(this.dialect, query.dialect) &&
+        Objects.equals(this.now, query.now);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(extern, query, type, db, rp, cluster, dialect);
+    return Objects.hash(extern, query, type, dialect, now);
   }
 
 
@@ -265,10 +209,8 @@ public class Query {
     sb.append("    extern: ").append(toIndentedString(extern)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    db: ").append(toIndentedString(db)).append("\n");
-    sb.append("    rp: ").append(toIndentedString(rp)).append("\n");
-    sb.append("    cluster: ").append(toIndentedString(cluster)).append("\n");
     sb.append("    dialect: ").append(toIndentedString(dialect)).append("\n");
+    sb.append("    now: ").append(toIndentedString(now)).append("\n");
     sb.append("}");
     return sb.toString();
   }

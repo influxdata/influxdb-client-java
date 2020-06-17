@@ -21,13 +21,9 @@
  */
 package com.influxdb.client;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 
-import com.influxdb.client.domain.OperationLog;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.User;
 import com.influxdb.exceptions.ForbiddenException;
 import com.influxdb.exceptions.NotFoundException;
@@ -219,117 +215,6 @@ class ITUsersApi extends AbstractITClientTest {
         Assertions.assertThat(user).isNotNull();
 
         usersApi.updateUserPassword(user.getId(), "my-password", "my-password");
-    }
-
-    //TODO https://github.com/influxdata/influxdb/issues/18048
-    @Disabled
-    @Test
-    void findUserLogs() {
-
-        OffsetDateTime now = OffsetDateTime.now();
-
-        User user = usersApi.me();
-        Assertions.assertThat(user).isNotNull();
-
-        usersApi.updateUser(user);
-
-        List<OperationLog> userLogs = usersApi.findUserLogs(user);
-        Assertions.assertThat(userLogs).isNotEmpty();
-        Assertions.assertThat(userLogs.get(userLogs.size() - 1).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(userLogs.get(userLogs.size() - 1).getTime()).isAfter(now);
-        Assertions.assertThat(userLogs.get(userLogs.size() - 1).getUserID()).isEqualTo(user.getId());
-    }
-
-    //TODO https://github.com/influxdata/influxdb/issues/18389
-    @Disabled
-    @Test
-    void findUserLogsNotFound() {
-        List<OperationLog> userLogs = usersApi.findUserLogs("020f755c3c082000");
-        Assertions.assertThat(userLogs).isEmpty();
-    }
-
-    //TODO https://github.com/influxdata/influxdb/issues/18048
-    @Disabled
-    @Test
-    void findUserLogsPaging() {
-
-        User user = usersApi.createUser(generateName("Thomas Boot"));
-
-        IntStream
-                .range(0, 19)
-                .forEach(value -> {
-
-                    user.setName(value + "_" + user.getName());
-                    usersApi.updateUser(user);
-                });
-
-        List<OperationLog> logs = usersApi.findUserLogs(user);
-
-        Assertions.assertThat(logs).hasSize(20);
-        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("User Created");
-        Assertions.assertThat(logs.get(19).getDescription()).isEqualTo("User Updated");
-
-        FindOptions findOptions = new FindOptions();
-        findOptions.setLimit(5);
-        findOptions.setOffset(0);
-
-        OperationLogs entries = usersApi.findUserLogs(user, findOptions);
-
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Created");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("User Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = usersApi.findUserLogs(user, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("User Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = usersApi.findUserLogs(user, findOptions);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("User Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = usersApi.findUserLogs(user, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("User Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = usersApi.findUserLogs(user, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(0);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        // order
-        findOptions = new FindOptions();
-        findOptions.setDescending(false);
-
-        entries = usersApi.findUserLogs(user, findOptions);
-
-        Assertions.assertThat(entries.getLogs()).hasSize(20);
-        Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("User Updated");
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("User Created");
     }
 
     @Test

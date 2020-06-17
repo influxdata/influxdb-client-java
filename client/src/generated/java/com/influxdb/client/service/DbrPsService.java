@@ -26,21 +26,8 @@ public interface DbrPsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
-  @DELETE("api/v2/dprps/{dbrpID}")
+  @DELETE("api/v2/dbrps/{dbrpID}")
   Call<Void> deleteDBRPID(
-    @retrofit2.http.Path("dbrpID") String dbrpID, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Retrieve a database retention policy mapping
-   * 
-   * @param dbrpID The database retention policy mapping ID (required)
-   * @param orgID Specifies the organization ID of the mapping (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;DBRP&gt;
-   */
-  @GET("api/v2/dprps/{dbrpID}")
-  Call<DBRP> getDBRPsID(
     @retrofit2.http.Path("dbrpID") String dbrpID, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -57,8 +44,21 @@ public interface DbrPsService {
    * @return Call&lt;DBRPs&gt;
    */
   @GET("api/v2/dbrps")
-  Call<DBRPs> getDPRPs(
+  Call<DBRPs> getDBRPs(
     @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("id") String id, @retrofit2.http.Query("bucketID") String bucketID, @retrofit2.http.Query("default") Boolean _default, @retrofit2.http.Query("db") String db, @retrofit2.http.Query("rp") String rp
+  );
+
+  /**
+   * Retrieve a database retention policy mapping
+   * 
+   * @param dbrpID The database retention policy mapping ID (required)
+   * @param orgID Specifies the organization ID of the mapping (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;DBRP&gt;
+   */
+  @GET("api/v2/dbrps/{dbrpID}")
+  Call<DBRP> getDBRPsID(
+    @retrofit2.http.Path("dbrpID") String dbrpID, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -73,7 +73,7 @@ public interface DbrPsService {
   @Headers({
     "Content-Type:application/json"
   })
-  @PATCH("api/v2/dprps/{dbrpID}")
+  @PATCH("api/v2/dbrps/{dbrpID}")
   Call<DBRP> patchDBRPID(
     @retrofit2.http.Path("dbrpID") String dbrpID, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Body DBRPUpdate dbRPUpdate, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );

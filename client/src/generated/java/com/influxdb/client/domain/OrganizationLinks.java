@@ -61,10 +61,6 @@ public class OrganizationLinks {
   @SerializedName(SERIALIZED_NAME_DASHBOARDS)
   private String dashboards;
 
-  public static final String SERIALIZED_NAME_LOGS = "logs";
-  @SerializedName(SERIALIZED_NAME_LOGS)
-  private String logs;
-
    /**
    * URI of resource.
    * @return self
@@ -137,15 +133,6 @@ public class OrganizationLinks {
     return dashboards;
   }
 
-   /**
-   * URI of resource.
-   * @return logs
-  **/
-  @ApiModelProperty(value = "URI of resource.")
-  public String getLogs() {
-    return logs;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -163,13 +150,12 @@ public class OrganizationLinks {
         Objects.equals(this.secrets, organizationLinks.secrets) &&
         Objects.equals(this.buckets, organizationLinks.buckets) &&
         Objects.equals(this.tasks, organizationLinks.tasks) &&
-        Objects.equals(this.dashboards, organizationLinks.dashboards) &&
-        Objects.equals(this.logs, organizationLinks.logs);
+        Objects.equals(this.dashboards, organizationLinks.dashboards);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self, members, owners, labels, secrets, buckets, tasks, dashboards, logs);
+    return Objects.hash(self, members, owners, labels, secrets, buckets, tasks, dashboards);
   }
 
 
@@ -185,7 +171,6 @@ public class OrganizationLinks {
     sb.append("    buckets: ").append(toIndentedString(buckets)).append("\n");
     sb.append("    tasks: ").append(toIndentedString(tasks)).append("\n");
     sb.append("    dashboards: ").append(toIndentedString(dashboards)).append("\n");
-    sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
     sb.append("}");
     return sb.toString();
   }

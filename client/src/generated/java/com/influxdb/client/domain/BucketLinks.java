@@ -33,10 +33,6 @@ public class BucketLinks {
   @SerializedName(SERIALIZED_NAME_LABELS)
   private String labels;
 
-  public static final String SERIALIZED_NAME_LOGS = "logs";
-  @SerializedName(SERIALIZED_NAME_LOGS)
-  private String logs;
-
   public static final String SERIALIZED_NAME_MEMBERS = "members";
   @SerializedName(SERIALIZED_NAME_MEMBERS)
   private String members;
@@ -64,15 +60,6 @@ public class BucketLinks {
   @ApiModelProperty(value = "URI of resource.")
   public String getLabels() {
     return labels;
-  }
-
-   /**
-   * URI of resource.
-   * @return logs
-  **/
-  @ApiModelProperty(value = "URI of resource.")
-  public String getLogs() {
-    return logs;
   }
 
    /**
@@ -131,7 +118,6 @@ public class BucketLinks {
     }
     BucketLinks bucketLinks = (BucketLinks) o;
     return Objects.equals(this.labels, bucketLinks.labels) &&
-        Objects.equals(this.logs, bucketLinks.logs) &&
         Objects.equals(this.members, bucketLinks.members) &&
         Objects.equals(this.org, bucketLinks.org) &&
         Objects.equals(this.owners, bucketLinks.owners) &&
@@ -141,7 +127,7 @@ public class BucketLinks {
 
   @Override
   public int hashCode() {
-    return Objects.hash(labels, logs, members, org, owners, self, write);
+    return Objects.hash(labels, members, org, owners, self, write);
   }
 
 
@@ -150,7 +136,6 @@ public class BucketLinks {
     StringBuilder sb = new StringBuilder();
     sb.append("class BucketLinks {\n");
     sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
-    sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
     sb.append("    members: ").append(toIndentedString(members)).append("\n");
     sb.append("    org: ").append(toIndentedString(org)).append("\n");
     sb.append("    owners: ").append(toIndentedString(owners)).append("\n");

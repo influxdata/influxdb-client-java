@@ -27,8 +27,6 @@ import javax.annotation.Nonnull;
 
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.LabelResponse;
-import com.influxdb.client.domain.OperationLog;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceOwner;
@@ -352,41 +350,4 @@ public interface OrganizationsApi {
      * @param labelID the ID of a label
      */
     void deleteLabel(@Nonnull final String labelID, @Nonnull final String orgID);
-
-    /**
-     * Retrieve an organization's logs.
-     *
-     * @param organization for retrieve logs
-     * @return logs
-     */
-    @Nonnull
-    List<OperationLog> findOrganizationLogs(@Nonnull final Organization organization);
-
-    /**
-     * Retrieve an organization's logs.
-     *
-     * @param organization for retrieve logs
-     * @return logs
-     */
-    @Nonnull
-    OperationLogs findOrganizationLogs(@Nonnull final Organization organization,
-                                       @Nonnull final FindOptions findOptions);
-
-    /**
-     * Retrieve an organization's logs.
-     *
-     * @param orgID id of an organization
-     * @return logs
-     */
-    @Nonnull
-    List<OperationLog> findOrganizationLogs(@Nonnull final String orgID);
-
-    /**
-     * Retrieve an organization's logs.
-     *
-     * @param orgID id of an organization
-     * @return logs
-     */
-    @Nonnull
-    OperationLogs findOrganizationLogs(@Nonnull final String orgID, @Nonnull final FindOptions findOptions);
 }

@@ -27,10 +27,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import com.influxdb.Arguments;
-import com.influxdb.client.FindOptions;
 import com.influxdb.client.UsersApi;
-import com.influxdb.client.domain.OperationLog;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.PasswordResetBody;
 import com.influxdb.client.domain.User;
 import com.influxdb.client.domain.Users;
@@ -207,48 +204,6 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
         Call<Void> call = service.putMePassword(passwordResetBody, null, credentials);
 
         execute(call);
-    }
-
-    @Nonnull
-    @Override
-    public List<OperationLog> findUserLogs(@Nonnull final User user) {
-
-        Arguments.checkNotNull(user, "User");
-
-        return findUserLogs(user.getId());
-    }
-
-    @Nonnull
-    @Override
-    public List<OperationLog> findUserLogs(@Nonnull final String userID) {
-
-        Arguments.checkNonEmpty(userID, "User ID");
-
-        return findUserLogs(userID, new FindOptions()).getLogs();
-    }
-
-    @Nonnull
-    @Override
-    public OperationLogs findUserLogs(@Nonnull final User user, @Nonnull final FindOptions findOptions) {
-
-        Arguments.checkNotNull(user, "User");
-        Arguments.checkNotNull(findOptions, "findOptions");
-
-        return findUserLogs(user.getId(), findOptions);
-    }
-
-    @Nonnull
-    @Override
-    public OperationLogs findUserLogs(@Nonnull final String userID, @Nonnull final FindOptions findOptions) {
-
-        Arguments.checkNonEmpty(userID, "User ID");
-        Arguments.checkNotNull(findOptions, "findOptions");
-
-        Call<OperationLogs> call = service.getUsersIDLogs(userID, null,
-                findOptions.getOffset(),
-                findOptions.getLimit());
-
-        return execute(call);
     }
 
     private void updateUserPassword(@Nonnull final String userID,

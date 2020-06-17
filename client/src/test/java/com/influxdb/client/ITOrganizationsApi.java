@@ -29,11 +29,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 
+import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Label;
-import com.influxdb.client.domain.OperationLog;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceOwner;
@@ -88,7 +86,6 @@ class ITOrganizationsApi extends AbstractITClientTest {
         Assertions.assertThat(organization.getUpdatedAt()).isAfter(now);
         Assertions.assertThat(organization.getLinks().getBuckets()).isEqualTo("/api/v2/buckets?org=" + orgName);
         Assertions.assertThat(organization.getLinks().getDashboards()).isEqualTo("/api/v2/dashboards?org=" + orgName);
-        Assertions.assertThat(organization.getLinks().getLogs()).isEqualTo("/api/v2/orgs/" + organization.getId() + "/logs");
         Assertions.assertThat(organization.getLinks().getMembers()).isEqualTo("/api/v2/orgs/" + organization.getId() + "/members");
         Assertions.assertThat(organization.getLinks().getOwners()).isEqualTo("/api/v2/orgs/" + organization.getId() + "/owners");
         Assertions.assertThat(organization.getLinks().getSelf()).isEqualTo("/api/v2/orgs/" + organization.getId());
@@ -262,6 +259,8 @@ class ITOrganizationsApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/18563
     void labels() {
 
         LabelsApi labelsApi = influxDBClient.getLabelsApi();
@@ -294,109 +293,9 @@ class ITOrganizationsApi extends AbstractITClientTest {
         Assertions.assertThat(labels).hasSize(0);
     }
 
-    //TODO https://github.com/influxdata/influxdb/issues/18048
+    @Test
     @Disabled
-    @Test
-    void findOrganizationLogs() {
-
-        Organization organization = organizationsApi.createOrganization(generateName("Constant Pro"));
-
-        List<OperationLog> userLogs = organizationsApi.findOrganizationLogs(organization);
-        Assertions.assertThat(userLogs).isNotEmpty();
-        Assertions.assertThat(userLogs.get(0).getDescription()).isEqualTo("Organization Created");
-    }
-
-    @Test
-    void findOrganizationLogsNotFound() {
-        List<OperationLog> userLogs = organizationsApi.findOrganizationLogs("020f755c3c082000");
-        Assertions.assertThat(userLogs).isEmpty();
-    }
-
-    //TODO https://github.com/influxdata/influxdb/issues/18048
-    @Disabled
-    @Test
-    void findOrganizationLogsPaging() {
-
-        Organization organization = organizationsApi.createOrganization(generateName("Constant Pro"));
-
-        IntStream
-                .range(0, 19)
-                .forEach(value -> {
-
-                    organization.setName(value + "_" + organization.getName());
-                    organizationsApi.updateOrganization(organization);
-                });
-
-        List<OperationLog> logs = organizationsApi.findOrganizationLogs(organization);
-
-        Assertions.assertThat(logs).hasSize(20);
-        Assertions.assertThat(logs.get(0).getDescription()).isEqualTo("Organization Created");
-        Assertions.assertThat(logs.get(19).getDescription()).isEqualTo("Organization Updated");
-
-        FindOptions findOptions = new FindOptions();
-        findOptions.setLimit(5);
-        findOptions.setOffset(0);
-
-        OperationLogs entries = organizationsApi.findOrganizationLogs(organization, findOptions);
-
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Created");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Organization Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = organizationsApi.findOrganizationLogs(organization, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Organization Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = organizationsApi.findOrganizationLogs(organization, findOptions);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Organization Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = organizationsApi.findOrganizationLogs(organization, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(5);
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(1).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(2).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(3).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(4).getDescription()).isEqualTo("Organization Updated");
-
-        findOptions.setOffset(findOptions.getOffset() + 5);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        entries = organizationsApi.findOrganizationLogs(organization, findOptions);
-        Assertions.assertThat(entries.getLogs()).hasSize(0);
-        Assertions.assertThat(entries.getLinks().getNext()).isNull();
-
-        // order
-        findOptions = new FindOptions();
-        findOptions.setDescending(false);
-
-        entries = organizationsApi.findOrganizationLogs(organization, findOptions);
-
-        Assertions.assertThat(entries.getLogs()).hasSize(20);
-        Assertions.assertThat(entries.getLogs().get(19).getDescription()).isEqualTo("Organization Updated");
-        Assertions.assertThat(entries.getLogs().get(0).getDescription()).isEqualTo("Organization Created");
-    }
-
-    @Test
+    //TODO https://github.com/influxdata/influxdb/issues/18563
     void cloneOrganization() {
 
         Organization source = organizationsApi.createOrganization(generateName("Constant Pro"));

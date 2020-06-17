@@ -38,8 +38,6 @@ import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
-import com.influxdb.client.domain.OperationLog;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.PostBucketRequest;
 import com.influxdb.client.domain.ResourceMember;
@@ -387,49 +385,6 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
 
         Call<Void> call = service.deleteBucketsIDOwnersID(ownerID, bucketID, null);
         execute(call);
-    }
-
-    @Nonnull
-    @Override
-    public List<OperationLog> findBucketLogs(@Nonnull final Bucket bucket) {
-
-        Arguments.checkNotNull(bucket, "bucket");
-
-        return findBucketLogs(bucket.getId());
-    }
-
-    @Nonnull
-    @Override
-    public OperationLogs findBucketLogs(@Nonnull final Bucket bucket,
-                                        @Nonnull final FindOptions findOptions) {
-
-        Arguments.checkNotNull(bucket, "bucket");
-        Arguments.checkNotNull(findOptions, "findOptions");
-
-        return findBucketLogs(bucket.getId(), findOptions);
-    }
-
-    @Nonnull
-    @Override
-    public List<OperationLog> findBucketLogs(@Nonnull final String bucketID) {
-
-        Arguments.checkNonEmpty(bucketID, "Bucket.ID");
-
-        return findBucketLogs(bucketID, new FindOptions()).getLogs();
-    }
-
-    @Nonnull
-    @Override
-    public OperationLogs findBucketLogs(@Nonnull final String bucketID,
-                                        @Nonnull final FindOptions findOptions) {
-
-        Arguments.checkNonEmpty(bucketID, "Bucket.ID");
-        Arguments.checkNotNull(findOptions, "findOptions");
-
-        Call<OperationLogs> call = service.getBucketsIDLogs(bucketID, null,
-                findOptions.getOffset(), findOptions.getLimit());
-
-        return execute(call);
     }
 
     @Nonnull

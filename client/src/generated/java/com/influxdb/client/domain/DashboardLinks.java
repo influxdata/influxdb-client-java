@@ -45,10 +45,6 @@ public class DashboardLinks {
   @SerializedName(SERIALIZED_NAME_OWNERS)
   private String owners;
 
-  public static final String SERIALIZED_NAME_LOGS = "logs";
-  @SerializedName(SERIALIZED_NAME_LOGS)
-  private String logs;
-
   public static final String SERIALIZED_NAME_LABELS = "labels";
   @SerializedName(SERIALIZED_NAME_LABELS)
   private String labels;
@@ -95,15 +91,6 @@ public class DashboardLinks {
 
    /**
    * URI of resource.
-   * @return logs
-  **/
-  @ApiModelProperty(value = "URI of resource.")
-  public String getLogs() {
-    return logs;
-  }
-
-   /**
-   * URI of resource.
    * @return labels
   **/
   @ApiModelProperty(value = "URI of resource.")
@@ -134,14 +121,13 @@ public class DashboardLinks {
         Objects.equals(this.cells, dashboardLinks.cells) &&
         Objects.equals(this.members, dashboardLinks.members) &&
         Objects.equals(this.owners, dashboardLinks.owners) &&
-        Objects.equals(this.logs, dashboardLinks.logs) &&
         Objects.equals(this.labels, dashboardLinks.labels) &&
         Objects.equals(this.org, dashboardLinks.org);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self, cells, members, owners, logs, labels, org);
+    return Objects.hash(self, cells, members, owners, labels, org);
   }
 
 
@@ -153,7 +139,6 @@ public class DashboardLinks {
     sb.append("    cells: ").append(toIndentedString(cells)).append("\n");
     sb.append("    members: ").append(toIndentedString(members)).append("\n");
     sb.append("    owners: ").append(toIndentedString(owners)).append("\n");
-    sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
     sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
     sb.append("    org: ").append(toIndentedString(org)).append("\n");
     sb.append("}");

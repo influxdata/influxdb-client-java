@@ -9,7 +9,6 @@ import okhttp3.MultipartBody;
 
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
 import com.influxdb.client.domain.Error;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.PasswordResetBody;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceMembers;
@@ -368,20 +367,6 @@ public interface UsersService {
   @GET("api/v2/users/{userID}")
   Call<User> getUsersID(
     @retrofit2.http.Path("userID") String userID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Retrieve operation logs for a user
-   * 
-   * @param userID The user ID. (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param offset  (optional)
-   * @param limit  (optional, default to 20)
-   * @return Call&lt;OperationLogs&gt;
-   */
-  @GET("api/v2/users/{userID}/logs")
-  Call<OperationLogs> getUsersIDLogs(
-    @retrofit2.http.Path("userID") String userID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
   );
 
   /**
