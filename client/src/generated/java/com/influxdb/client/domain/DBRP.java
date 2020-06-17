@@ -38,6 +38,10 @@ public class DBRP {
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
   private String orgID;
 
+  public static final String SERIALIZED_NAME_ORG = "org";
+  @SerializedName(SERIALIZED_NAME_ORG)
+  private String org;
+
   public static final String SERIALIZED_NAME_BUCKET_I_D = "bucketID";
   @SerializedName(SERIALIZED_NAME_BUCKET_I_D)
   private String bucketID;
@@ -83,6 +87,24 @@ public class DBRP {
 
   public void setOrgID(String orgID) {
     this.orgID = orgID;
+  }
+
+  public DBRP org(String org) {
+    this.org = org;
+    return this;
+  }
+
+   /**
+   * the organization that owns this mapping.
+   * @return org
+  **/
+  @ApiModelProperty(required = true, value = "the organization that owns this mapping.")
+  public String getOrg() {
+    return org;
+  }
+
+  public void setOrg(String org) {
+    this.org = org;
   }
 
   public DBRP bucketID(String bucketID) {
@@ -187,6 +209,7 @@ public class DBRP {
     DBRP DBRP = (DBRP) o;
     return Objects.equals(this.id, DBRP.id) &&
         Objects.equals(this.orgID, DBRP.orgID) &&
+        Objects.equals(this.org, DBRP.org) &&
         Objects.equals(this.bucketID, DBRP.bucketID) &&
         Objects.equals(this.database, DBRP.database) &&
         Objects.equals(this.retentionPolicy, DBRP.retentionPolicy) &&
@@ -196,7 +219,7 @@ public class DBRP {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, orgID, bucketID, database, retentionPolicy, _default, links);
+    return Objects.hash(id, orgID, org, bucketID, database, retentionPolicy, _default, links);
   }
 
 
@@ -206,6 +229,7 @@ public class DBRP {
     sb.append("class DBRP {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
+    sb.append("    org: ").append(toIndentedString(org)).append("\n");
     sb.append("    bucketID: ").append(toIndentedString(bucketID)).append("\n");
     sb.append("    database: ").append(toIndentedString(database)).append("\n");
     sb.append("    retentionPolicy: ").append(toIndentedString(retentionPolicy)).append("\n");

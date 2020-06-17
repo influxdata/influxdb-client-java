@@ -27,7 +27,6 @@ import javax.annotation.Nullable;
 
 import com.influxdb.Arguments;
 import com.influxdb.client.DashboardsApi;
-import com.influxdb.client.FindOptions;
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
 import com.influxdb.client.domain.Cell;
 import com.influxdb.client.domain.CellUpdate;
@@ -39,8 +38,6 @@ import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
-import com.influxdb.client.domain.OperationLog;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceMembers;
@@ -151,48 +148,6 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
                 .getDashboards(null, null, null, null, null, orgName);
 
         return execute(call).getDashboards();
-    }
-
-    @Nonnull
-    @Override
-    public List<OperationLog> findDashboardLogs(@Nonnull final Dashboard dashboard) {
-
-        Arguments.checkNotNull(dashboard, "dashboard");
-
-        return findDashboardLogs(dashboard.getId());
-    }
-
-    @Nonnull
-    @Override
-    public OperationLogs findDashboardLogs(@Nonnull final Dashboard dashboard,
-                                           @Nonnull final FindOptions findOptions) {
-
-        Arguments.checkNotNull(dashboard, "dashboard");
-        Arguments.checkNotNull(findOptions, "findOptions");
-
-        return findDashboardLogs(dashboard.getId(), findOptions);
-    }
-
-    @Nonnull
-    @Override
-    public List<OperationLog> findDashboardLogs(@Nonnull final String dashboardID) {
-
-        Arguments.checkNotNull(dashboardID, "dashboardID");
-
-        return findDashboardLogs(dashboardID, new FindOptions()).getLogs();
-    }
-
-    @Nonnull
-    @Override
-    public OperationLogs findDashboardLogs(@Nonnull final String dashboardID, @Nonnull final FindOptions findOptions) {
-
-        Arguments.checkNotNull(dashboardID, "dashboardID");
-        Arguments.checkNotNull(findOptions, "findOptions");
-
-        Call<OperationLogs> call = service
-                .getDashboardsIDLogs(dashboardID, null, findOptions.getOffset(), findOptions.getLimit());
-
-        return execute(call);
     }
 
     @Nonnull

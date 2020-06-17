@@ -25,21 +25,30 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * OperationLogLinks
+ * UsersLinks
  */
 
-public class OperationLogLinks {
-  public static final String SERIALIZED_NAME_USER = "user";
-  @SerializedName(SERIALIZED_NAME_USER)
-  private String user;
+public class UsersLinks {
+  public static final String SERIALIZED_NAME_SELF = "self";
+  @SerializedName(SERIALIZED_NAME_SELF)
+  private String self;
+
+  public UsersLinks self(String self) {
+    this.self = self;
+    return this;
+  }
 
    /**
-   * URI of resource.
-   * @return user
+   * Get self
+   * @return self
   **/
-  @ApiModelProperty(value = "URI of resource.")
-  public String getUser() {
-    return user;
+  @ApiModelProperty(value = "")
+  public String getSelf() {
+    return self;
+  }
+
+  public void setSelf(String self) {
+    this.self = self;
   }
 
 
@@ -51,21 +60,21 @@ public class OperationLogLinks {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OperationLogLinks operationLogLinks = (OperationLogLinks) o;
-    return Objects.equals(this.user, operationLogLinks.user);
+    UsersLinks usersLinks = (UsersLinks) o;
+    return Objects.equals(this.self, usersLinks.self);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(user);
+    return Objects.hash(self);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class OperationLogLinks {\n");
-    sb.append("    user: ").append(toIndentedString(user)).append("\n");
+    sb.append("class UsersLinks {\n");
+    sb.append("    self: ").append(toIndentedString(self)).append("\n");
     sb.append("}");
     return sb.toString();
   }

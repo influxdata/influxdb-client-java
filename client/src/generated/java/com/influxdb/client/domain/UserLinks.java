@@ -33,10 +33,6 @@ public class UserLinks {
   @SerializedName(SERIALIZED_NAME_SELF)
   private String self;
 
-  public static final String SERIALIZED_NAME_LOGS = "logs";
-  @SerializedName(SERIALIZED_NAME_LOGS)
-  private String logs;
-
   public UserLinks self(String self) {
     this.self = self;
     return this;
@@ -55,24 +51,6 @@ public class UserLinks {
     this.self = self;
   }
 
-  public UserLinks logs(String logs) {
-    this.logs = logs;
-    return this;
-  }
-
-   /**
-   * Get logs
-   * @return logs
-  **/
-  @ApiModelProperty(value = "")
-  public String getLogs() {
-    return logs;
-  }
-
-  public void setLogs(String logs) {
-    this.logs = logs;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -83,13 +61,12 @@ public class UserLinks {
       return false;
     }
     UserLinks userLinks = (UserLinks) o;
-    return Objects.equals(this.self, userLinks.self) &&
-        Objects.equals(this.logs, userLinks.logs);
+    return Objects.equals(this.self, userLinks.self);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self, logs);
+    return Objects.hash(self);
   }
 
 
@@ -98,7 +75,6 @@ public class UserLinks {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserLinks {\n");
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
-    sb.append("    logs: ").append(toIndentedString(logs)).append("\n");
     sb.append("}");
     return sb.toString();
   }

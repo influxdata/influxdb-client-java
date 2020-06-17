@@ -24,8 +24,6 @@ package com.influxdb.client;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-import com.influxdb.client.domain.OperationLog;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.User;
 
 /**
@@ -150,40 +148,4 @@ public interface UsersApi {
      */
     @Nonnull
     List<User> findUsers();
-
-    /**
-     * Retrieve an user's logs.
-     *
-     * @param user for retrieve logs
-     * @return logs
-     */
-    @Nonnull
-    List<OperationLog> findUserLogs(@Nonnull final User user);
-
-    /**
-     * Retrieve an user's logs.
-     *
-     * @param user for retrieve logs
-     * @return logs
-     */
-    @Nonnull
-    OperationLogs findUserLogs(@Nonnull final User user, @Nonnull final FindOptions findOptions);
-
-    /**
-     * Retrieve an user's logs.
-     *
-     * @param userID id of an user
-     * @return logs
-     */
-    @Nonnull
-    List<OperationLog> findUserLogs(@Nonnull final String userID);
-
-    /**
-     * Retrieve an user's logs.
-     *
-     * @param userID id of an user
-     * @return logs
-     */
-    @Nonnull
-    OperationLogs findUserLogs(@Nonnull final String userID, @Nonnull final FindOptions findOptions);
 }

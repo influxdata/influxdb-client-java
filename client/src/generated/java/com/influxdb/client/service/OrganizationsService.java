@@ -9,11 +9,9 @@ import okhttp3.MultipartBody;
 
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
 import com.influxdb.client.domain.Error;
-import com.influxdb.client.domain.Invite;
 import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.Organizations;
 import com.influxdb.client.domain.ResourceMember;
@@ -39,45 +37,6 @@ public interface OrganizationsService {
   @DELETE("api/v2/orgs/{orgID}")
   Call<Void> deleteOrgsID(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Deletes a cloud user
-   * 
-   * @param userID The ID of the user to remove. (required)
-   * @param orgID The organization ID. (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/orgs/{orgID}/users/{userID}")
-  Call<Void> deleteOrgsIDCloudUserID(
-    @retrofit2.http.Path("userID") String userID, @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Remove an invite to an organization
-   * 
-   * @param inviteID The ID of the invite to remove. (required)
-   * @param orgID The organization ID. (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/orgs/{orgID}/invites/{inviteID}")
-  Call<Void> deleteOrgsIDInviteID(
-    @retrofit2.http.Path("inviteID") String inviteID, @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Resends an invite
-   * 
-   * @param inviteID The ID of the invite to resend. (required)
-   * @param orgID The organization ID. (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Invite&gt;
-   */
-  @POST("api/v2/orgs/{orgID}/invites/{inviteID}/resend")
-  Call<Invite> deleteOrgsIDInviteID_0(
-    @retrofit2.http.Path("inviteID") String inviteID, @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -155,20 +114,6 @@ public interface OrganizationsService {
   @GET("api/v2/orgs/{orgID}/labels")
   Call<LabelsResponse> getOrgsIDLabels(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Retrieve operation logs for an organization
-   * 
-   * @param orgID The organization ID. (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param offset  (optional)
-   * @param limit  (optional, default to 20)
-   * @return Call&lt;OperationLogs&gt;
-   */
-  @GET("api/v2/orgs/{orgID}/logs")
-  Call<OperationLogs> getOrgsIDLogs(
-    @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit
   );
 
   /**
@@ -252,22 +197,6 @@ public interface OrganizationsService {
   @POST("api/v2/orgs")
   Call<Organization> postOrgs(
     @retrofit2.http.Body Organization organization, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Creates an invite to an organization
-   * 
-   * @param orgID The organization ID. (required)
-   * @param invite Invite to be sent (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Invite&gt;
-   */
-  @Headers({
-    "Content-Type:application/json"
-  })
-  @POST("api/v2/orgs/{orgID}/invites")
-  Call<Invite> postOrgsIDInvites(
-    @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body Invite invite, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**

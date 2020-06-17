@@ -23,7 +23,7 @@ package com.influxdb.client;
 
 import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Authorization;
-import com.influxdb.client.domain.OperationLogs;
+import com.influxdb.client.domain.Run;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractInfluxDBClientTest;
 
@@ -175,11 +175,12 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
 
     @Test
     void parseDateTime() {
-        mockServer.enqueue(new MockResponse().setBody("{\"links\":{\"self\":\"/api/v2/buckets/038726b4d3b5c000/log\"},\"logs\":[{\"links\":{\"user\":\"/api/v2/users/0387094b4b75c000\"},\"description\":\"Bucket Created\",\"userID\":\"0387094b4b75c000\",\"time\":\"2019-03-11T11:57:30.830995162Z\"}]}"));
+        mockServer.enqueue(new MockResponse().setBody("{\"id\":\"runID\",\"taskID\":\"taskID\",\"startedAt\":\"2019-03-11T11:57:30.830995162Z\"}"));
 
-        OperationLogs operationLogs = influxDBClient.getBucketsApi().findBucketLogs("id", new FindOptions());
+        Run run = influxDBClient.getTasksApi().getRun("taskID", "runID");
 
-        Assertions.assertThat(operationLogs.getLogs()).hasSize(1);
+        Assertions.assertThat(run).isNotNull();
+        Assertions.assertThat(run.getStartedAt()).isNotNull();
     }
 
     @Test

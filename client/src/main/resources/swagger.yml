@@ -113,6 +113,35 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /setup/user:
+    post:
+      operationId: PostSetupUser
+      tags:
+        - Setup
+      summary: Set up a new user, org and bucket
+      description: Post an onboarding request to set up a new user, org and bucket.
+      parameters:
+        - $ref: "#/components/parameters/TraceSpan"
+      requestBody:
+        description: Source to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OnboardingRequest"
+      responses:
+        "201":
+          description: Created default user, bucket, org
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OnboardingResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /documents/templates:
     get:
       operationId: GetDocumentsTemplates
@@ -347,7 +376,7 @@ paths:
                 $ref: "#/components/schemas/Error"
   /dbrps:
     get:
-      operationId: GetDPRPs
+      operationId: GetDBRPs
       tags:
         - DBRPs
       summary: List all database retention policy mappings
@@ -436,7 +465,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  "/dprps/{dbrpID}":
+  "/dbrps/{dbrpID}":
     get:
       operationId: GetDBRPsID
       tags:
@@ -3061,36 +3090,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  "/dashboards/{dashboardID}/logs":
-    get:
-      operationId: GetDashboardsIDLogs
-      tags:
-        - Dashboards
-        - OperationLogs
-      summary: Retrieve operation logs for a dashboard
-      parameters:
-        - $ref: "#/components/parameters/TraceSpan"
-        - $ref: "#/components/parameters/Offset"
-        - $ref: "#/components/parameters/Limit"
-        - in: path
-          name: dashboardID
-          required: true
-          description: The dashboard ID.
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Operation logs for the dashboard
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OperationLogs"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
   /query/ast:
     post:
       operationId: PostQueryAst
@@ -3890,36 +3889,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  "/buckets/{bucketID}/logs":
-    get:
-      operationId: GetBucketsIDLogs
-      tags:
-        - Buckets
-        - OperationLogs
-      summary: Retrieve operation logs for a bucket
-      parameters:
-        - $ref: "#/components/parameters/TraceSpan"
-        - $ref: "#/components/parameters/Offset"
-        - $ref: "#/components/parameters/Limit"
-        - in: path
-          name: bucketID
-          required: true
-          description: The bucket ID.
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Operation logs for the bucket
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OperationLogs"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
   /orgs:
     get:
       operationId: GetOrgs
@@ -4421,161 +4390,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  "/orgs/{orgID}/invites":
-    post:
-      operationId: PostOrgsIDInvites
-      tags:
-        - Invites
-        - Organizations
-      summary: Creates an invite to an organization
-      parameters:
-        - $ref: "#/components/parameters/TraceSpan"
-        - in: path
-          name: orgID
-          schema:
-            type: string
-          required: true
-          description: The organization ID.
-      requestBody:
-        description: Invite to be sent
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Invite"
-      responses:
-        "201":
-          description: Invite sent
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Invite"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  "/orgs/{orgID}/invites/{inviteID}":
-    delete:
-      operationId: DeleteOrgsIDInviteID
-      tags:
-        - Invites
-        - Organizations
-      summary: Remove an invite to an organization
-      parameters:
-        - $ref: "#/components/parameters/TraceSpan"
-        - in: path
-          name: inviteID
-          schema:
-            type: string
-          required: true
-          description: The ID of the invite to remove.
-        - in: path
-          name: orgID
-          schema:
-            type: string
-          required: true
-          description: The organization ID.
-      responses:
-        "204":
-          description: Invite removed
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  "/orgs/{orgID}/invites/{inviteID}/resend":
-    post:
-      operationId: DeleteOrgsIDInviteID
-      tags:
-        - Invites
-        - Organizations
-      summary: Resends an invite
-      parameters:
-        - $ref: "#/components/parameters/TraceSpan"
-        - in: path
-          name: inviteID
-          schema:
-            type: string
-          required: true
-          description: The ID of the invite to resend.
-        - in: path
-          name: orgID
-          schema:
-            type: string
-          required: true
-          description: The organization ID.
-      responses:
-        "200":
-          description: Invite resent
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Invite"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  "/orgs/{orgID}/users":
-    get:
-      operationId: GetCloudUsers
-      tags:
-        - CloudUsers
-      parameters:
-        - $ref: "#/components/parameters/TraceSpan"
-        - in: path
-          name: orgID
-          description: Specifies the organization ID of the CloudUser.
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: A list of cloud users
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CloudUsers"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  "/orgs/{orgID}/users/{userID}":
-    delete:
-      operationId: DeleteOrgsIDCloudUserID
-      tags:
-        - CloudUsers
-        - Organizations
-      summary: Deletes a cloud user
-      parameters:
-        - $ref: "#/components/parameters/TraceSpan"
-        - in: path
-          name: userID
-          schema:
-            type: string
-          required: true
-          description: The ID of the user to remove.
-        - in: path
-          name: orgID
-          schema:
-            type: string
-          required: true
-          description: The organization ID.
-      responses:
-        "204":
-          description: User removed
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
   "/orgs/{orgID}/owners/{userID}":
     delete:
       operationId: DeleteOrgsIDOwnersID
@@ -4600,36 +4414,6 @@ paths:
       responses:
         "204":
           description: Owner removed
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  "/orgs/{orgID}/logs":
-    get:
-      operationId: GetOrgsIDLogs
-      tags:
-        - Organizations
-        - OperationLogs
-      summary: Retrieve operation logs for an organization
-      parameters:
-        - $ref: "#/components/parameters/TraceSpan"
-        - $ref: "#/components/parameters/Offset"
-        - $ref: "#/components/parameters/Limit"
-        - in: path
-          name: orgID
-          required: true
-          description: The organization ID.
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Operation logs for the organization
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OperationLogs"
         default:
           description: Unexpected error
           content:
@@ -5596,36 +5380,6 @@ paths:
           description: Password successfully updated
         default:
           description: Unsuccessful authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  "/users/{userID}/logs":
-    get:
-      operationId: GetUsersIDLogs
-      tags:
-        - Users
-        - OperationLogs
-      summary: Retrieve operation logs for a user
-      parameters:
-        - $ref: "#/components/parameters/TraceSpan"
-        - $ref: "#/components/parameters/Offset"
-        - $ref: "#/components/parameters/Limit"
-        - in: path
-          name: userID
-          required: true
-          description: The user ID.
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Operation logs for the user
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OperationLogs"
-        default:
-          description: Unexpected error
           content:
             application/json:
               schema:
@@ -6631,23 +6385,16 @@ components:
           description: Query script to execute.
           type: string
         type:
-          description: The type of query.
+          description: The type of query. Must be "flux".
           type: string
-          default: flux
           enum:
             - flux
-            - influxql
-        db:
-          description: Required for `influxql` type queries.
-          type: string
-        rp:
-          description: Required for `influxql` type queries.
-          type: string
-        cluster:
-          description: Required for `influxql` type queries.
-          type: string
         dialect:
           $ref: "#/components/schemas/Dialect"
+        now:
+          description: Specifies the time that should be reported as "now" in the query. Default is the server's now time.
+          type: string
+          format: date-time
     Package:
       description: Represents a complete package source tree.
       type: object
@@ -7279,7 +7026,6 @@ components:
           readOnly: true
           example:
             labels: "/api/v2/buckets/1/labels"
-            logs: "/api/v2/buckets/1/logs"
             members: "/api/v2/buckets/1/members"
             org: "/api/v2/orgs/2"
             owners: "/api/v2/buckets/1/owners"
@@ -7288,9 +7034,6 @@ components:
           properties:
             labels:
               description: URL to retrieve labels for this bucket
-              $ref: "#/components/schemas/Link"
-            logs:
-              description: URL to retrieve operation logs for this bucket
               $ref: "#/components/schemas/Link"
             members:
               description: URL to retrieve members that can read this bucket
@@ -7399,35 +7142,6 @@ components:
           description: A description of the event that occurred.
           type: string
           example: Halt and catch fire
-    OperationLog:
-      type: object
-      readOnly: true
-      properties:
-        description:
-          type: string
-          description: A description of the event that occurred.
-          example: Bucket Created
-        time:
-          type: string
-          description: Time event occurred, RFC3339Nano.
-          format: date-time
-        userID:
-          type: string
-          description: ID of the user who operated the event.
-        links:
-          type: object
-          properties:
-            user:
-              $ref: "#/components/schemas/Link"
-    OperationLogs:
-      type: object
-      properties:
-        logs:
-          type: array
-          items:
-            $ref: "#/components/schemas/OperationLog"
-        links:
-          $ref: "#/components/schemas/Links"
     Organization:
       properties:
         links:
@@ -7442,7 +7156,6 @@ components:
             buckets: "/api/v2/buckets?org=myorg"
             tasks: "/api/v2/tasks?org=myorg"
             dashboards: "/api/v2/dashboards?org=myorg"
-            logs: "/api/v2/orgs/1/logs"
           properties:
             self:
               $ref: "#/components/schemas/Link"
@@ -7459,8 +7172,6 @@ components:
             tasks:
               $ref: "#/components/schemas/Link"
             dashboards:
-              $ref: "#/components/schemas/Link"
-            logs:
               $ref: "#/components/schemas/Link"
         id:
           readOnly: true
@@ -7798,15 +7509,11 @@ components:
             self: "/api/v2/tasks/1/runs/1"
             task: "/api/v2/tasks/1"
             retry: "/api/v2/tasks/1/runs/1/retry"
-            logs: "/api/v2/tasks/1/runs/1/logs"
           properties:
             self:
               type: string
               format: uri
             task:
-              type: string
-              format: uri
-            logs:
               type: string
               format: uri
             retry:
@@ -7919,85 +7626,6 @@ components:
     TaskStatusType:
       type: string
       enum: [active, inactive]
-    Invite:
-      properties:
-        id:
-          description: the idpe id of the invite
-          readOnly: true
-          type: string
-        email:
-          type: string
-        role:
-          type: string
-          enum:
-            - member
-            - owner
-        expiresAt:
-          format: date-time
-          type: string
-        links:
-          type: object
-          readOnly: true
-          example:
-            self: "/api/v2/invites/1"
-          properties:
-            self:
-              type: string
-              format: uri
-      required: [id, email, role]
-    Invites:
-      type: object
-      properties:
-        links:
-          type: object
-          properties:
-            self:
-              type: string
-              format: uri
-        invites:
-          type: array
-          items:
-            $ref: "#/components/schemas/Invite"
-    CloudUser:
-      properties:
-        id:
-          description: the idpe id of the user
-          readOnly: true
-          type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-        role:
-          type: string
-          enum:
-            - member
-            - owner
-        links:
-          type: object
-          readOnly: true
-          example:
-            self: "/api/v2/cloud_users/1"
-          properties:
-            self:
-              type: string
-              format: uri
-      required: [id, email, role]
-    CloudUsers:
-      type: object
-      properties:
-        links:
-          type: object
-          properties:
-            self:
-              type: string
-              format: uri
-        users:
-          type: array
-          items:
-            $ref: "#/components/schemas/CloudUser"
     User:
       properties:
         id:
@@ -8019,12 +7647,8 @@ components:
           readOnly: true
           example:
             self: "/api/v2/users/1"
-            logs: "/api/v2/users/1/logs"
           properties:
             self:
-              type: string
-              format: uri
-            logs:
               type: string
               format: uri
       required: [name]
@@ -9264,7 +8888,6 @@ components:
                 cells: "/api/v2/dashboards/1/cells"
                 owners: "/api/v2/dashboards/1/owners"
                 members: "/api/v2/dashboards/1/members"
-                logs: "/api/v2/dashboards/1/logs"
                 labels: "/api/v2/dashboards/1/labels"
                 org: "/api/v2/labels/1"
               properties:
@@ -9275,8 +8898,6 @@ components:
                 members:
                   $ref: "#/components/schemas/Link"
                 owners:
-                  $ref: "#/components/schemas/Link"
-                logs:
                   $ref: "#/components/schemas/Link"
                 labels:
                   $ref: "#/components/schemas/Link"
@@ -10381,6 +10002,7 @@ components:
     DBRP:
       required:
         - orgID
+        - org
         - bucketID
         - database
         - retention_policy
@@ -10392,6 +10014,9 @@ components:
         orgID:
           type: string
           description: the organization ID that owns this mapping.
+        org:
+          type: string
+          description: the organization that owns this mapping.
         bucketID:
           type: string
           description: the bucket ID used as target for the translation.

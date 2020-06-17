@@ -28,15 +28,12 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import com.influxdb.Arguments;
-import com.influxdb.client.FindOptions;
 import com.influxdb.client.OrganizationsApi;
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
-import com.influxdb.client.domain.OperationLog;
-import com.influxdb.client.domain.OperationLogs;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.Organizations;
 import com.influxdb.client.domain.ResourceMember;
@@ -432,48 +429,5 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
 
         Call<Void> call = service.deleteOrgsIDLabelsID(orgID, labelID, null);
         execute(call);
-    }
-
-    @Nonnull
-    @Override
-    public List<OperationLog> findOrganizationLogs(@Nonnull final Organization organization) {
-
-        Arguments.checkNotNull(organization, "organization");
-
-        return findOrganizationLogs(organization.getId());
-    }
-
-    @Nonnull
-    @Override
-    public OperationLogs findOrganizationLogs(@Nonnull final Organization organization,
-                                              @Nonnull final FindOptions findOptions) {
-
-        Arguments.checkNotNull(organization, "organization");
-        Arguments.checkNotNull(findOptions, "findOptions");
-
-        return findOrganizationLogs(organization.getId(), findOptions);
-    }
-
-    @Nonnull
-    @Override
-    public List<OperationLog> findOrganizationLogs(@Nonnull final String orgID) {
-
-        Arguments.checkNonEmpty(orgID, "orgID");
-
-        return findOrganizationLogs(orgID, new FindOptions()).getLogs();
-    }
-
-    @Nonnull
-    @Override
-    public OperationLogs findOrganizationLogs(@Nonnull final String orgID,
-                                              @Nonnull final FindOptions findOptions) {
-
-        Arguments.checkNonEmpty(orgID, "orgID");
-        Arguments.checkNotNull(findOptions, "findOptions");
-
-        Call<OperationLogs> call = service
-                .getOrgsIDLogs(orgID, null, findOptions.getOffset(), findOptions.getLimit());
-
-        return execute(call);
     }
 }
