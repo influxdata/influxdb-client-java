@@ -1,5 +1,10 @@
 ## 1.10.0 [unreleased]
 
+### Dependencies
+
+1. [#124](https://github.com/influxdata/influxdb-client-java/pull/124): Update dependencies: akka: 2.6.6, commons-io: 2.7, spring: 5.2.7.RELEASE, retrofit: 2.9.0, okhttp3: 4.7.2
+1. [#124](https://github.com/influxdata/influxdb-client-java/pull/124): Update plugins: maven-project-info-reports-plugin: 3.1.0, dokka-maven-plugin: 0.10.1, scoverage-maven-plugin: 1.4.1
+
 ## 1.9.0 [2020-06-19]
 
 ### Features

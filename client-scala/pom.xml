@@ -71,8 +71,8 @@
   </scm>
 
     <properties>
-        <scoverage-maven-plugin.version>1.3.0</scoverage-maven-plugin.version>
-        <akka.version>2.6.5</akka.version>
+        <scoverage-maven-plugin.version>1.4.1</scoverage-maven-plugin.version>
+        <akka.version>2.6.6</akka.version>
     </properties>
 
     <build>
@@ -230,7 +230,7 @@
         <dependency>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_2.13</artifactId>
-            <version>3.1.2</version>
+            <version>3.2.0</version>
             <scope>test</scope>
         </dependency>
         

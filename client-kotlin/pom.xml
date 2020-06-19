@@ -107,7 +107,7 @@
             <plugin>
                 <groupId>org.jetbrains.dokka</groupId>
                 <artifactId>dokka-maven-plugin</artifactId>
-                <version>0.9.17</version>
+                <version>0.10.1</version>
                 <executions>
                     <execution>
                         <id>dokka-pre-site</id>
@@ -123,16 +123,16 @@
                             <goal>dokka</goal>
                             <goal>javadoc</goal>
                             <goal>javadocJar</goal>
-                        </goals>                    </execution>
+                        </goals>
+                    </execution>
                 </executions>
                 <configuration>
                     <skip>${maven.dokka.skip}</skip>
                     <sourceLinks>
                         <link>
-                            <dir>${project.basedir}</dir>
-                            <url>https://github.com/influxdata/influxdb-client-java/tree/master/client-kotlin
-                            </url>
-                            <urlSuffix>#L</urlSuffix>
+                            <path>${project.basedir}</path>
+                            <url>https://github.com/influxdata/influxdb-client-java/tree/master/client-kotlin</url>
+                            <lineSuffix>#L</lineSuffix>
                         </link>
                     </sourceLinks>
                 </configuration>
