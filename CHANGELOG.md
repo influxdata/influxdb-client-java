@@ -1,4 +1,4 @@
-## 1.9.0 [unreleased]
+## 1.9.0 [2020-06-19]
 
 ### Features
 1. [#119](https://github.com/influxdata/influxdb-client-java/pull/119): Scala and Kotlin clients has their own user agent string
