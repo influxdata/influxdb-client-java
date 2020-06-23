@@ -32,6 +32,7 @@
         <ignoreVersion type="regex">(?i).*CR(?:-?\d+)?</ignoreVersion>
         <ignoreVersion type="regex">(?i).*M(?:-?\d+)?</ignoreVersion>
         <ignoreVersion type="regex">(?i).*SNAP(?:-?\d+)?</ignoreVersion>
+        <ignoreVersion type="regex">.*[-_\.](alpha|Alpha|ALPHA|beta|Beta|BETA|rc|‌​RC)[-_\.]?.*</ignoreVersion>
     </ignoreVersions>
     <rules>
     </rules>
