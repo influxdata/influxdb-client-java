@@ -87,6 +87,19 @@ class PointTest {
     }
 
     @Test
+    public void tagEscapingKeyAndValue() {
+
+        Point point = Point.measurement("h\n2\ro\t_data")
+                .addTag("new\nline", "new\nline")
+                .addTag("carriage\rreturn", "carriage\rreturn")
+                .addTag("t\tab", "t\tab")
+                .addField("level", 2);
+
+        Assertions.assertThat(point.toLineProtocol())
+                .isEqualTo("h\\n2\\ro\\t_data,carriage\\rreturn=carriage\\rreturn,new\\nline=new\\nline,t\\tab=t\\tab level=2i");
+    }
+
+    @Test
     void fieldTypes() {
 
         Point point = Point.measurement("h2o").addTag("location", "europe")

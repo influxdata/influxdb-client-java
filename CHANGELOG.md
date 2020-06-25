@@ -1,5 +1,8 @@
 ## 1.10.0 [unreleased]
 
+### Bug Fixes
+1. [#129](https://github.com/influxdata/influxdb-client-java/pull/129): Fixed serialization of `\n`, `\r` and `\t` to Line Protocol 
+
 ### Dependencies
 
 1. [#124](https://github.com/influxdata/influxdb-client-java/pull/124): Update dependencies: akka: 2.6.6, commons-io: 2.7, spring: 5.2.7.RELEASE, retrofit: 2.9.0, okhttp3: 4.7.2

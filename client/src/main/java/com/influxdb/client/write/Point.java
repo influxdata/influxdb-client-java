@@ -423,6 +423,15 @@ public final class Point {
     private void escapeKey(@Nonnull final StringBuilder sb, @Nonnull final String key) {
         for (int i = 0; i < key.length(); i++) {
             switch (key.charAt(i)) {
+                case '\n':
+                    sb.append("\\n");
+                    break;
+                case '\r':
+                    sb.append("\\r");
+                    break;
+                case '\t':
+                    sb.append("\\t");
+                    break;
                 case ' ':
                 case ',':
                 case '=':
