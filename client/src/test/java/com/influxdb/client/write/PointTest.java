@@ -54,7 +54,7 @@ class PointTest {
                 .addTag("", "warn")
                 .addField("level", 2);
 
-        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2\\=o,location=europe level=2i");
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2=o,location=europe level=2i");
 
         point = Point.measurement("h2,o")
                 .addTag("location", "europe")
@@ -97,6 +97,17 @@ class PointTest {
 
         Assertions.assertThat(point.toLineProtocol())
                 .isEqualTo("h\\n2\\ro\\t_data,carriage\\rreturn=carriage\\rreturn,new\\nline=new\\nline,t\\tab=t\\tab level=2i");
+    }
+
+    @Test
+    public void equalSignEscaping() {
+
+        Point point = Point.measurement("h=2o")
+                .addTag("l=ocation", "e=urope")
+                .addField("l=evel", 2);
+
+        Assertions.assertThat(point.toLineProtocol())
+                .isEqualTo("h=2o,l\\=ocation=e\\=urope l\\=evel=2i");
     }
 
     @Test

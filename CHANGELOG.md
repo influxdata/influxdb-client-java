@@ -1,7 +1,7 @@
 ## 1.10.0 [unreleased]
 
 ### Bug Fixes
-1. [#129](https://github.com/influxdata/influxdb-client-java/pull/129): Fixed serialization of `\n`, `\r` and `\t` to Line Protocol 
+1. [#129](https://github.com/influxdata/influxdb-client-java/pull/129): Fixed serialization of `\n`, `\r` and `\t` to Line Protocol, `=` is valid sign for measurement name 
 
 ### Dependencies
 

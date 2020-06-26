@@ -303,7 +303,7 @@ public final class Point {
 
         StringBuilder sb = new StringBuilder();
 
-        escapeKey(sb, name);
+        escapeKey(sb, name, false);
         appendTags(sb, pointSettings);
         boolean appendedFields = appendFields(sb);
         if (!appendedFields) {
@@ -421,24 +421,34 @@ public final class Point {
     }
 
     private void escapeKey(@Nonnull final StringBuilder sb, @Nonnull final String key) {
+        escapeKey(sb, key, true);
+    }
+
+    private void escapeKey(@Nonnull final StringBuilder sb, @Nonnull final String key, final boolean escapeEqual) {
         for (int i = 0; i < key.length(); i++) {
             switch (key.charAt(i)) {
                 case '\n':
                     sb.append("\\n");
-                    break;
+                    continue;
                 case '\r':
                     sb.append("\\r");
-                    break;
+                    continue;
                 case '\t':
                     sb.append("\\t");
-                    break;
+                    continue;
                 case ' ':
                 case ',':
-                case '=':
                     sb.append('\\');
+                    break;
+                case '=':
+                    if (escapeEqual) {
+                        sb.append('\\');
+                    }
+                    break;
                 default:
-                    sb.append(key.charAt(i));
             }
+
+            sb.append(key.charAt(i));
         }
     }
 
