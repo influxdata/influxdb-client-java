@@ -101,6 +101,17 @@ class MeasurementMapperTest {
         Assertions.assertThat(mapper.toPoint(pojo, WritePrecision.NS).toLineProtocol()).isEqualTo("pojo,tag=value value=\"15\" 43658216763800123456");
     }
 
+    @Test
+    public void escapingTags() {
+
+        Pojo pojo = new Pojo();
+        pojo.tag = "mad\nrid";
+        pojo.value = 5;
+
+        String lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("pojo,tag=mad\\nrid value=\"5\"");
+    }
+
     @Measurement(name = "pojo")
     private static class Pojo {
 
