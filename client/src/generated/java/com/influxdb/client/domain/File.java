@@ -233,7 +233,7 @@ public class File {
       for (JsonElement arrayItem: json.getAsJsonArray()){
         JsonObject jsonObject = arrayItem.getAsJsonObject();
 
-        String[] types = discriminator.stream().map(jsonObject::get).filter(Objects::nonNull).map(JsonElement::getAsString).toArray(String[]::new);
+        String[] types = discriminator.stream().map(d -> jsonObject.get(d).getAsString()).toArray(String[]::new);
 
         results.add(deserialize(types, jsonObject, context));
       }
