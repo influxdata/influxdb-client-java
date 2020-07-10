@@ -134,7 +134,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         Assertions.assertThat(listener.getValue().getOrganization()).isEqualTo(organization.getId());
         Assertions.assertThat(listener.getValue().getLineProtocol()).isEqualTo(record);
 
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
@@ -170,7 +170,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         Assertions.assertThat(listener.getValue().getOrganization()).isEqualTo(organization.getName());
         Assertions.assertThat(listener.getValue().getLineProtocol()).isEqualTo(record);
 
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getName());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getName());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
@@ -472,13 +472,13 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record);
 
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
         writeApi.flush();
         Thread.sleep(10);
 
-        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
+        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
@@ -558,12 +558,12 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         writeApi.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record);
 
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
         Thread.sleep(5000);
 
-        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
+        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
@@ -601,7 +601,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         waitToCallback(errorListener.countDownLatch, 10);
 
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
         WriteEventListener<WriteSuccessEvent> successListener = new WriteEventListener<>();
@@ -611,7 +611,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         waitToCallback(successListener.countDownLatch, 10);
 
-        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
+        query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("location")).isEqualTo("coyote_creek");
@@ -773,7 +773,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         Assertions.assertThat(listener.getValue().getOrganization()).isEqualTo(organization.getId());
         Assertions.assertThat(listener.getValue().getLineProtocol()).isEqualTo(record);
 
-        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
+        List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
@@ -795,7 +795,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         client.close();
 
         List<FluxTable> query = queryApi.query(
-                "from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
+                "from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
@@ -815,7 +815,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         queryApi = client.getQueryApi();
 
         List<FluxTable> query = queryApi.query(
-                "from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()");
+                "from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)");
 
         Assertions.assertThat(query).hasSize(1);
         Assertions.assertThat(query.get(0).getRecords()).hasSize(1);

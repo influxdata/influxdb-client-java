@@ -148,7 +148,7 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
 
         Assertions.assertThat(countDownLatch.getCount()).isEqualTo(0);
 
-        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
+        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
         result.test().assertValueCount(1).assertValue(fluxRecord -> {
 
@@ -360,7 +360,7 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
 
         waitToCallback();
 
-        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
+        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
         result.test()
                 .assertValueCount(6)
@@ -389,7 +389,7 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
 
         waitToCallback();
 
-        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", null, organization.getId());
+        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", null, organization.getId());
 
         result.test()
                 .assertValueCount(3)
@@ -415,7 +415,7 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
 
         QueryReactiveApi queryApi = client.getQueryReactiveApi();
 
-        String query = "from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()";
+        String query = "from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)";
         // String
         {
             Flowable<FluxRecord> result = queryApi.query(query);
