@@ -73,6 +73,18 @@ public final class Point {
     private WritePrecision precision = DEFAULT_WRITE_PRECISION;
 
     /**
+     * Create a new Point with specified a measurement name.
+     *
+     * @param measurementName the measurement name
+     */
+    public Point(@Nonnull final String measurementName) {
+
+        Arguments.checkNotNull(measurementName, "measurement");
+
+        this.name = measurementName;
+    }
+
+    /**
      * Create a new Point withe specified a measurement name.
      *
      * @param measurementName the measurement name
@@ -83,10 +95,7 @@ public final class Point {
 
         Arguments.checkNotNull(measurementName, "measurement");
 
-        Point point = new Point();
-        point.name = measurementName;
-
-        return point;
+        return new Point(measurementName);
     }
 
     /**

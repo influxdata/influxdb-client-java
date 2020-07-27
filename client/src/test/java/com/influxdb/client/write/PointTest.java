@@ -65,6 +65,23 @@ class PointTest {
     }
 
     @Test
+    public void createByConstructor() {
+        Point point = new Point("h2o")
+                .addTag("location", "europe")
+                .addField("level", 2);
+
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe level=2i");
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    public void createByConstructorMeasurementRequired() {
+        Assertions.assertThatThrownBy(() -> new Point(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Expecting a not null reference for measurement");
+    }
+
+    @Test
     void tagEmptyKey() {
 
         Point point = Point.measurement("h2o")
@@ -124,7 +141,7 @@ class PointTest {
                 .addField("integer", 7)
                 .addField("integerObject", Integer.valueOf("8"))
                 .addField("boolean", false)
-                .addField("booleanObject", Boolean.parseBoolean("true"))
+                .addField("booleanObject", Boolean.TRUE)
                 .addField("string", "string value");
 
         String expected = "h2o,location=europe bigDecimal=33.45,boolean=false,booleanObject=true,double=2.0,doubleObject=5.0,"
