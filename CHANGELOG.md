@@ -1,5 +1,8 @@
 ## 1.11.0 [unreleased]
 
+### Bug Fixes
+1. [#136](https://github.com/influxdata/influxdb-client-java/pull/136): Data Point: measurement name is requiring in constructor
+
 ## 1.10.0 [2020-07-17]
 
 ### Bug Fixes
