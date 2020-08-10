@@ -23,47 +23,36 @@
 version: 2.1
 
 commands:
-  influxdb-restart:
+  influxdb-onboarding:
     steps:
       - run:
-          name: "Start InfluxDB service"
-          command: ./scripts/influxdb-restart.sh
+          name: "Post onBoarding request to InfluxDB 2"
+          command: ./scripts/influxdb-onboarding.sh
   prepare:
     description: "Prepare environment to tests"
     steps:
       - checkout
-      - influxdb-restart
+      - influxdb-onboarding
   client-test:
     description: "Run tests"
     parameters:
-      maven-container:
+      maven-image:
         type: string
-        default: &default-maven-container "3-jdk-8-slim"
     steps:
       - restore_cache:
           name: Restoring Maven Cache
           keys:
-            - &cache-key maven-cache-<< parameters.maven-container >>-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
-            - maven-cache-<< parameters.maven-container >>-
+            - &cache-key maven-cache_v3-<< parameters.maven-image >>-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
+            - maven-cache_v3-<< parameters.maven-image >>-
       - run:
           name: "Running tests"
           command: |
-            docker run -it --rm \
-                   --volume ${PWD}:/usr/src/mymaven \
-                   --volume ~/.m2:/root/.m2 \
-                   --workdir /usr/src/mymaven \
-                   --network influx_network \
-                   --env INFLUXDB_IP=192.168.0.2 \
-                   --env INFLUXDB_2_IP=192.168.0.3 \
-                   --env INFLUXDB_2_ONBOARDING_IP=192.168.0.4 \
-                   --env INFLUXDB_2_ONBOARDING_PORT=9999 \
-                   maven:<< parameters.maven-container >> mvn -B -U clean install -Dmaven.javadoc.skip=true -Dmaven.dokka.skip=true -Dbuild.env=CI
+            mvn -B -U clean install -Dmaven.javadoc.skip=true -Dmaven.dokka.skip=true -Dbuild.env=CI
       - save_cache:
           name: Saving Maven Cache
           key: *cache-key
           paths:
             - ~/.m2
-          when: always
   storing-test-results:
     steps:
       - run:
@@ -107,39 +96,39 @@ commands:
           path: artifacts
 
 jobs:
-  tests-jdk-8:
-    machine: true
+
+  tests-java:
+    parameters:
+      maven-image:
+        type: string
+        default: &default-maven-image "circleci/openjdk:8"
+      influxdb-image:
+        type: string
+        default: &default-influxdb-image "influxdb:2.0.0-beta"
+    docker:
+      - image: << parameters.maven-image >>
+      - image: &influx-image quay.io/influxdb/<< parameters.influxdb-image >>
+      - image: &influx-image quay.io/influxdb/<< parameters.influxdb-image >>
+        name: influxdb_v2_onboarding
+      - image: influxdb:1.8-alpine
+        environment:
+          INFLUXDB_HTTP_FLUX_ENABLED: true
+    environment:
+      INFLUXDB_2_ONBOARDING_IP: influxdb_v2_onboarding
+      INFLUXDB_2_ONBOARDING_PORT: 9999
     steps:
       - prepare
       - client-test:
-          maven-container: *default-maven-container
+          maven-image: << parameters.maven-image >>
       - storing-test-results
       - storing-artifacts
       - run:
           name: "Collecting coverage reports"
           command: bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
 
-  tests-jdk-11:
-    machine: true
-    parameters:
-      influxdb-repository:
-        type: string
-        default: "influxdb"
-      influxdb-version:
-        type: string
-        default: "2.0.0-beta"
-    environment:
-      INFLUXDB_V2_REPOSITORY: << parameters.influxdb-repository >>
-      INFLUXDB_V2_VERSION: << parameters.influxdb-version >>
-    steps:
-      - prepare
-      - client-test:
-          maven-container: "3-jdk-11-slim"
-      - storing-test-results
-      - storing-artifacts
-
   deploy-snapshot:
-    machine: true
+    docker:
+      - image: *default-maven-image
     steps:
       - run:
           name: Early return if this build is from a forked repository
@@ -160,52 +149,38 @@ jobs:
               echo "Nothing to do for this build, so marking this step successful"
               circleci step halt
             fi
-      - influxdb-restart
       - restore_cache:
           name: Restoring Maven Cache
           keys:
-            - &cache-key-deploy maven-cache-deploy-3-jdk-8-slim-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
-            - maven-cache-deploy-3-jdk-8-slim-
-            - maven-cache-3-jdk-8-slim-
+            - &cache-key-deploy maven-cache-deploy_v2-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
+            - maven-cache-deploy_v2-
       - run:
           name: Deploying Snapshot
           command: |
-            docker run -it --rm \
-                   --volume ${PWD}:/usr/src/mymaven \
-                   --volume ~/.m2:/root/.m2 \
-                   --workdir /usr/src/mymaven \
-                   --network influx_network \
-                   --env INFLUXDB_IP=192.168.0.2 \
-                   --env INFLUXDB_2_IP=192.168.0.3 \
-                   --env INFLUXDB_2_ONBOARDING_IP=192.168.0.4 \
-                   --env INFLUXDB_2_ONBOARDING_PORT=9999 \
-                   --env SONATYPE_USERNAME=${SONATYPE_USERNAME} \
-                   --env SONATYPE_PASSWORD=${SONATYPE_PASSWORD} \
-                   maven:3-jdk-8-slim mvn -s scripts/deploy-settings.xml -DskipTests=true clean package deploy
+            mvn -s scripts/deploy-settings.xml -DskipTests=true clean package deploy
       - save_cache:
           name: Saving Maven Cache
           key: *cache-key-deploy
           paths:
             - ~/.m2
-          when: always
 
 workflows:
   version: 2
   build:
     jobs:
-      - tests-jdk-8:
-          name: jdk-8-beta
-      - tests-jdk-11:
-          name: jdk-11-beta
-      - tests-jdk-11:
-          name: jdk-11-nightly
-          influxdb-repository: "influx"
-          influxdb-version: "nightly"
+      - tests-java:
+          name: jdk-8
+      - tests-java:
+          name: jdk-11
+          maven-image: "circleci/openjdk:11"
+      - tests-java:
+          name: jdk-8-nightly
+          influxdb-image: "influx:nightly"
       - deploy-snapshot:
           requires:
-            - jdk-8-beta
-            - jdk-11-beta
-            - jdk-11-nightly
+            - jdk-8
+            - jdk-11
+            - jdk-8-nightly
           filters:
             branches:
               only: master
@@ -219,5 +194,7 @@ workflows:
               only:
                 - master
     jobs:
-      - tests-jdk-8
-      - tests-jdk-11
+      - tests-java
+      - tests-java:
+          name: jdk-11-beta
+          maven-image: "circleci/openjdk:11"

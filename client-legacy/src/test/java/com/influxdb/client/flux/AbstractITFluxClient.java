@@ -44,7 +44,7 @@ public abstract class AbstractITFluxClient extends AbstractTest {
     protected void setUp() {
 
         String influxURL = getInfluxDbUrl();
-        
+
         LOG.log(Level.FINEST, "Influx URL: {0}", influxURL);
 
         FluxConnectionOptions options = FluxConnectionOptions.builder()
@@ -54,6 +54,7 @@ public abstract class AbstractITFluxClient extends AbstractTest {
         fluxClient = FluxClientFactory.create(options);
 
         influxDBQuery("CREATE DATABASE " + DATABASE_NAME, DATABASE_NAME);
+        waitToInflux();
     }
 
     @AfterEach
@@ -62,5 +63,15 @@ public abstract class AbstractITFluxClient extends AbstractTest {
         fluxClient.close();
 
         influxDBQuery("DROP DATABASE " + DATABASE_NAME, DATABASE_NAME);
+        waitToInflux();
+    }
+
+    private void waitToInflux() {
+        // Get Rest to InfluxDB
+        try {
+            Thread.sleep(1_000);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

@@ -45,9 +45,10 @@ abstract class AbstractITClientTest extends AbstractTest {
     InfluxDBClient influxDBClient;
     String influxDB_IP;
     String influxDB_URL;
+    private static Organization myOrg;
 
     @BeforeEach
-    void initInfluxDBClientClient(TestInfo testInfo) throws Exception {
+    void initInfluxDBClientClient(TestInfo testInfo) {
 
         influxDB_IP = getInfluxDb2Ip();
         influxDB_URL = getInfluxDb2Url();
@@ -75,10 +76,14 @@ abstract class AbstractITClientTest extends AbstractTest {
 
     @Nonnull
     Organization findMyOrg() {
-        return influxDBClient.getOrganizationsApi()
-                .findOrganizations().stream()
-                .filter(organization -> organization.getName().equals("my-org"))
-                .findFirst()
-                .orElseThrow(IllegalStateException::new);
+        if (myOrg == null) {
+            myOrg = influxDBClient.getOrganizationsApi()
+                    .findOrganizations().stream()
+                    .filter(organization -> organization.getName().equals("my-org"))
+                    .findFirst()
+                    .orElseThrow(IllegalStateException::new);
+        }
+
+        return myOrg;
     }
 }
