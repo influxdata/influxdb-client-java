@@ -168,6 +168,7 @@ jobs:
       - run:
           name: Deploying Snapshot
           command: |
+            echo "test"
 #            maven:3-jdk-8-slim mvn -s scripts/deploy-settings.xml -DskipTests=true clean package deploy
       - save_cache:
           name: Saving Maven Cache
