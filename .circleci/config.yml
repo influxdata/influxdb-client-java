@@ -158,7 +158,6 @@ jobs:
               echo "Nothing to do for this build, so marking this step successful"
               circleci step halt
             fi
-      - influxdb-onboarding
       - restore_cache:
           name: Restoring Maven Cache
           keys:
