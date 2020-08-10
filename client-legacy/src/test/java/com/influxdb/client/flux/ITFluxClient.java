@@ -52,7 +52,10 @@ class ITFluxClient extends AbstractITFluxClient {
             .format("from(bucket:\"%s\") |> range(start: 0)", DATABASE_NAME);
 
     @BeforeEach
-    void prepareDate() {
+    void prepareDate() throws InterruptedException {
+
+        // Get Rest to InfluxDB
+        Thread.sleep(1_000);
 
         influxDBWrite("mem,host=A,region=west free=10i 10000000000", DATABASE_NAME);
         influxDBWrite("mem,host=A,region=west free=11i 20000000000", DATABASE_NAME);
