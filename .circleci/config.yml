@@ -42,8 +42,8 @@ commands:
       - restore_cache:
           name: Restoring Maven Cache
           keys:
-            - &cache-key maven-cache-<< parameters.maven-image >>-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
-            - maven-cache-<< parameters.maven-image >>-
+            - &cache-key maven-cache_v2-<< parameters.maven-image >>-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
+            - maven-cache_v2-<< parameters.maven-image >>-
       - run:
           name: "Running tests"
           command: |
@@ -128,16 +128,16 @@ jobs:
           command: bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
 
   deploy-snapshot:
-    parameters:
-      influxdb-image:
-        type: string
-        default: *default-influxdb-image
+#    parameters:
+#      influxdb-image:
+#        type: string
+#        default: *default-influxdb-image
     docker:
       - image: *default-maven-image
     environment:
-      INFLUXDB_2_ONBOARDING_IP: influxdb_v2_onboarding
-      INFLUXDB_2_ONBOARDING_PORT: 9999
-      SONATYPE_USERNAME: ${SONATYPE_USERNAME}
+#      INFLUXDB_2_ONBOARDING_IP: influxdb_v2_onboarding
+#      INFLUXDB_2_ONBOARDING_PORT: 9999
+#      SONATYPE_USERNAME: ${SONATYPE_USERNAME}
     steps:
 #      - run:
 #          name: Early return if this build is from a forked repository
@@ -162,9 +162,8 @@ jobs:
       - restore_cache:
           name: Restoring Maven Cache
           keys:
-            - &cache-key-deploy maven-cache-deploy-3-jdk-8-slim-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
-            - maven-cache-deploy-3-jdk-8-slim-
-            - maven-cache-3-jdk-8-slim-
+            - &cache-key-deploy maven-cache-deploy-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
+            - maven-cache-deploy-
       - run:
           name: Deploying Snapshot
           command: |
