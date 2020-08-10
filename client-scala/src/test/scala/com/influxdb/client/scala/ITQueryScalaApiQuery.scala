@@ -184,19 +184,19 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       val source = queryScalaApi.queryRaw(flux).runWith(TestSink.probe[String])
 
       var line = source.requestNext()
-      line should be("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
+      line should be("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,long,string,string,string,string")
 
       line = source.requestNext()
-      line should be("#group,false,false,true,true,true,true,true,true,false")
+      line should be("#group,false,false,true,true,false,true,true,true,true")
 
       line = source.requestNext()
       line should be("#default,_result,,,,,,,,")
 
       line = source.requestNext()
-      line should be(",result,table,_start,_stop,_field,_measurement,host,region,_value")
+      line should be(",result,table,_start,_stop,_value,_field,_measurement,host,region")
 
       line = source.requestNext()
-      line should endWith(",free,mem,A,west,21")
+      line should endWith("21,free,mem,A,west")
 
       line = source.requestNext()
       line shouldBe empty
@@ -213,7 +213,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
       var line = source.requestNext()
 
-      line should endWith(",free,mem,A,west,21")
+      line should endWith("21,free,mem,A,west")
 
       line = source.requestNext()
       line shouldBe empty
@@ -230,7 +230,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
       var line = source.requestNext()
 
-      line should endWith(",free,mem,A,west,21")
+      line should endWith("21,free,mem,A,west")
 
       line = source.requestNext()
       line shouldBe empty
@@ -316,19 +316,19 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
     val source = queryScalaApi.queryRaw(flux, organization.getId).runWith(TestSink.probe[String])
 
     var line = source.requestNext()
-    line should be("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
+    line should be("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,long,string,string,string,string")
 
     line = source.requestNext()
-    line should be("#group,false,false,true,true,true,true,true,true,false")
+    line should be("#group,false,false,true,true,false,true,true,true,true")
 
     line = source.requestNext()
     line should be("#default,_result,,,,,,,,")
 
     line = source.requestNext()
-    line should be(",result,table,_start,_stop,_field,_measurement,host,region,_value")
+    line should be(",result,table,_start,_stop,_value,_field,_measurement,host,region")
 
     line = source.requestNext()
-    line should endWith(",free,mem,A,west,21")
+    line should endWith("21,free,mem,A,west")
 
     line = source.requestNext()
     line shouldBe empty
@@ -349,7 +349,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
     val source = queryScalaApi.queryRaw(flux, dialect, organization.getId).runWith(TestSink.probe[String])
 
     var line = source.requestNext()
-    line should endWith(",free,mem,A,west,21")
+    line should endWith("21,free,mem,A,west")
 
     line = source.requestNext()
     line shouldBe empty

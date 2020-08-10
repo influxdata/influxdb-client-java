@@ -185,12 +185,14 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
             val lines = queryKotlinApi.queryRaw(flux).toList()
 
             assertThat(lines).hasSize(7)
-            assertThat(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
-            assertThat(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
+            assertThat(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,long,string,string,string,string")
+            assertThat(lines[1]).isEqualTo("#group,false,false,true,true,false,true,true,true,true")
             assertThat(lines[2]).isEqualTo("#default,_result,,,,,,,,")
-            assertThat(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
-            assertThat(lines[4]).endsWith(",free,mem,A,west,21")
-            assertThat(lines[5]).endsWith(",free,mem,B,west,42")
+            assertThat(lines[3]).isEqualTo(",result,table,_start,_stop,_value,_field,_measurement,host,region")
+            assertThat(lines[4].endsWith("42,free,mem,B,west") ||
+                    lines[4].endsWith("21,free,mem,A,west"), name = lines[4]).isTrue()
+            assertThat(lines[5].endsWith("42,free,mem,B,west") ||
+                    lines[5].endsWith("21,free,mem,A,west"), name = lines[5]).isTrue()
             assertThat(lines[6]).isEmpty()
         }
 
@@ -199,12 +201,14 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
             val lines = queryKotlinApi.queryRaw(flux, AbstractInfluxDBClient.DEFAULT_DIALECT).toList()
 
             assertThat(lines).hasSize(7)
-            assertThat(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
-            assertThat(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
+            assertThat(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,long,string,string,string,string")
+            assertThat(lines[1]).isEqualTo("#group,false,false,true,true,false,true,true,true,true")
             assertThat(lines[2]).isEqualTo("#default,_result,,,,,,,,")
-            assertThat(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
-            assertThat(lines[4]).endsWith(",free,mem,A,west,21")
-            assertThat(lines[5]).endsWith(",free,mem,B,west,42")
+            assertThat(lines[3]).isEqualTo(",result,table,_start,_stop,_value,_field,_measurement,host,region")
+            assertThat(lines[4].endsWith("42,free,mem,B,west") ||
+                    lines[4].endsWith("21,free,mem,A,west"), name = lines[4]).isTrue()
+            assertThat(lines[5].endsWith("42,free,mem,B,west") ||
+                    lines[5].endsWith("21,free,mem,A,west"), name = lines[5]).isTrue()
             assertThat(lines[6]).isEmpty()
         }
 
@@ -213,12 +217,14 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
             val lines = queryKotlinApi.queryRaw(Query().dialect(AbstractInfluxDBClient.DEFAULT_DIALECT).query(flux)).toList()
 
             assertThat(lines).hasSize(7)
-            assertThat(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
-            assertThat(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
+            assertThat(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,long,string,string,string,string")
+            assertThat(lines[1]).isEqualTo("#group,false,false,true,true,false,true,true,true,true")
             assertThat(lines[2]).isEqualTo("#default,_result,,,,,,,,")
-            assertThat(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
-            assertThat(lines[4]).endsWith(",free,mem,A,west,21")
-            assertThat(lines[5]).endsWith(",free,mem,B,west,42")
+            assertThat(lines[3]).isEqualTo(",result,table,_start,_stop,_value,_field,_measurement,host,region")
+            assertThat(lines[4].endsWith("42,free,mem,B,west") ||
+                    lines[4].endsWith("21,free,mem,A,west"), name = lines[4]).isTrue()
+            assertThat(lines[5].endsWith("42,free,mem,B,west") ||
+                    lines[5].endsWith("21,free,mem,A,west"), name = lines[5]).isTrue()
             assertThat(lines[6]).isEmpty()
         }
     }
@@ -292,11 +298,11 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         val lines = queryKotlinApi.queryRaw(flux, organization.id).toList()
         assertThat(lines).hasSize(6)
-        assertThat(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,long")
-        assertThat(lines[1]).isEqualTo("#group,false,false,true,true,true,true,true,true,false")
+        assertThat(lines[0]).isEqualTo("#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,long,string,string,string,string")
+        assertThat(lines[1]).isEqualTo("#group,false,false,true,true,false,true,true,true,true")
         assertThat(lines[2]).isEqualTo("#default,_result,,,,,,,,")
-        assertThat(lines[3]).isEqualTo(",result,table,_start,_stop,_field,_measurement,host,region,_value")
-        assertThat(lines[4]).endsWith(",free,mem,A,west,21")
+        assertThat(lines[3]).isEqualTo(",result,table,_start,_stop,_value,_field,_measurement,host,region")
+        assertThat(lines[4]).endsWith(",21,free,mem,A,west")
         assertThat(lines[5]).isEmpty()
     }
 
@@ -313,7 +319,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
         val lines = queryKotlinApi.queryRaw(flux, dialect, organization.id).toList()
 
         assertThat(lines).hasSize(2)
-        assertThat(lines[0]).endsWith(",free,mem,A,west,21")
+        assertThat(lines[0]).endsWith(",21,free,mem,A,west")
         assertThat(lines[1]).isEmpty()
     }
 

@@ -152,8 +152,6 @@ class ITBucketsApi extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/14900
     void findBucketByNameNotFound() {
 
         Bucket bucket = bucketsApi.findBucketByName("my-bucket-not-found");
