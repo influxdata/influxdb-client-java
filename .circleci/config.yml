@@ -42,8 +42,8 @@ commands:
       - restore_cache:
           name: Restoring Maven Cache
           keys:
-            - &cache-key maven-cache_v2-<< parameters.maven-image >>-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
-            - maven-cache_v2-<< parameters.maven-image >>-
+            - &cache-key maven-cache_v3-<< parameters.maven-image >>-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
+            - maven-cache_v3-<< parameters.maven-image >>-
       - run:
           name: "Running tests"
           command: |
@@ -53,7 +53,6 @@ commands:
           key: *cache-key
           paths:
             - ~/.m2
-          when: always
   storing-test-results:
     steps:
       - run:
@@ -131,13 +130,13 @@ jobs:
     docker:
       - image: *default-maven-image
     steps:
-#      - run:
-#          name: Early return if this build is from a forked repository
-#          command: |
-#            if [[ $CIRCLE_PROJECT_USERNAME != "influxdata" ]]; then
-#              echo "Nothing to do for forked repositories, so marking this step successful"
-#              circleci step halt
-#            fi
+      - run:
+          name: Early return if this build is from a forked repository
+          command: |
+            if [[ $CIRCLE_PROJECT_USERNAME != "influxdata" ]]; then
+              echo "Nothing to do for forked repositories, so marking this step successful"
+              circleci step halt
+            fi
       - checkout
       - run:
           name: Early return if this build is not a Snapshot version
@@ -153,18 +152,17 @@ jobs:
       - restore_cache:
           name: Restoring Maven Cache
           keys:
-            - &cache-key-deploy maven-cache-deploy-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
-            - maven-cache-deploy-
+            - &cache-key-deploy maven-cache-deploy_v2-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
+            - maven-cache-deploy_v2-
       - run:
           name: Deploying Snapshot
           command: |
-            mvn -s scripts/deploy-settings.xml -DskipTests=true clean package
+            mvn -s scripts/deploy-settings.xml -DskipTests=true clean package deploy
       - save_cache:
           name: Saving Maven Cache
           key: *cache-key-deploy
           paths:
             - ~/.m2
-          when: always
 
 workflows:
   version: 2
@@ -183,9 +181,9 @@ workflows:
             - jdk-8
             - jdk-11
             - jdk-8-nightly
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
 
   nightly:
     triggers:
