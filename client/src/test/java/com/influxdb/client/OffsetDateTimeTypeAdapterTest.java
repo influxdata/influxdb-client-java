@@ -23,10 +23,14 @@ package com.influxdb.client;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
+import com.google.gson.JsonIOException;
 import com.google.gson.stream.JsonWriter;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -34,23 +38,67 @@ import org.junit.jupiter.api.Test;
  */
 public class OffsetDateTimeTypeAdapterTest {
 
+    private JSON.OffsetDateTimeTypeAdapter adapter;
+    private StringWriter writer;
+
+    @BeforeEach
+    void beforeEach() {
+        adapter = new JSON.OffsetDateTimeTypeAdapter();
+        writer = new StringWriter();
+    }
+
     @Test
     public void max() throws IOException {
-        JSON.OffsetDateTimeTypeAdapter offsetDateTimeTypeAdapter = new JSON.OffsetDateTimeTypeAdapter();
+        OffsetDateTime time = LocalDateTime.of(9999, 12, 31, 23, 59)
+                .atOffset(ZoneOffset.UTC);
+        adapter.write(new JsonWriter(writer), time);
 
-        StringWriter writer = new StringWriter();
-        offsetDateTimeTypeAdapter.write(new JsonWriter(writer), OffsetDateTime.MAX);
+        Assertions.assertThat(writer.toString()).isEqualTo("\"9999-12-31T23:59:00Z\"");
+    }
 
-        Assertions.assertThat(writer.toString()).isEqualTo("\"+999999999-12-31T23:59:59.999999999-18:00\"");
+    @Test
+    public void max_over() {
+
+        OffsetDateTime time = LocalDateTime.of(10_000, 12, 31, 23, 59)
+                .atOffset(ZoneOffset.UTC);
+
+        Assertions.assertThatThrownBy(() -> adapter.write(new JsonWriter(writer), time))
+                .isInstanceOf(JsonIOException.class)
+                .hasMessage("All dates and times are assumed to be in the \"current era\", somewhere between 0000AD and 9999AD.");
+    }
+
+    @Test
+    public void max_offset() {
+
+        Assertions.assertThatThrownBy(() -> adapter.write(new JsonWriter(writer), OffsetDateTime.MAX))
+                .isInstanceOf(JsonIOException.class)
+                .hasMessage("All dates and times are assumed to be in the \"current era\", somewhere between 0000AD and 9999AD.");
     }
 
     @Test
     public void min() throws IOException {
-        JSON.OffsetDateTimeTypeAdapter offsetDateTimeTypeAdapter = new JSON.OffsetDateTimeTypeAdapter();
+        OffsetDateTime time = LocalDateTime.of(0, 1, 1, 0, 0)
+                .atOffset(ZoneOffset.UTC);
+        adapter.write(new JsonWriter(writer), time);
 
-        StringWriter writer = new StringWriter();
-        offsetDateTimeTypeAdapter.write(new JsonWriter(writer), OffsetDateTime.MIN);
+        Assertions.assertThat(writer.toString()).isEqualTo("\"0000-01-01T00:00:00Z\"");
+    }
 
-        Assertions.assertThat(writer.toString()).isEqualTo("\"-999999999-01-01T00:00:00+18:00\"");
+    @Test
+    public void min_over() {
+        OffsetDateTime time = LocalDateTime.of(-1, 1, 1, 0, 0)
+                .atOffset(ZoneOffset.UTC);
+        Assertions.assertThatThrownBy(() -> adapter.write(new JsonWriter(writer), time))
+                .isInstanceOf(JsonIOException.class)
+                .hasMessage("All dates and times are assumed to be in the \"current era\", somewhere between 0000AD and 9999AD.");
+
+    }
+
+    @Test
+    public void min_offset() {
+        Assertions.assertThatThrownBy(() -> adapter.write(new JsonWriter(writer), OffsetDateTime.MIN))
+                .isInstanceOf(JsonIOException.class)
+                .hasMessage("All dates and times are assumed to be in the \"current era\", somewhere between 0000AD and 9999AD.");
+
     }
 }
