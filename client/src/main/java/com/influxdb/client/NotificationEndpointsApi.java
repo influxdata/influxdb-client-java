@@ -24,6 +24,7 @@ package com.influxdb.client;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.HTTPNotificationEndpoint;
 import com.influxdb.client.domain.HTTPNotificationEndpoint.MethodEnum;
@@ -40,6 +41,7 @@ import com.influxdb.client.domain.SlackNotificationEndpoint;
  *
  * @author Jakub Bednar (11/09/2019 09:20)
  */
+@ThreadSafe
 public interface NotificationEndpointsApi {
 
     /**

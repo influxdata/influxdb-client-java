@@ -24,6 +24,7 @@ package com.influxdb.client;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.Cell;
 import com.influxdb.client.domain.CellUpdate;
@@ -43,6 +44,7 @@ import com.influxdb.client.domain.View;
  *
  * @author Jakub Bednar (bednar@github) (01/04/2019 10:47)
  */
+@ThreadSafe
 public interface DashboardsApi {
 
     /**

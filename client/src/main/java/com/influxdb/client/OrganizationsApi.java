@@ -24,6 +24,7 @@ package com.influxdb.client;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.LabelResponse;
@@ -39,6 +40,7 @@ import com.influxdb.client.domain.User;
  *
  * @author Jakub Bednar (bednar@github) (11/09/2018 14:58)
  */
+@ThreadSafe
 public interface OrganizationsApi {
 
     /**

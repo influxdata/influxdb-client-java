@@ -23,6 +23,7 @@ package com.influxdb.client;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Authorization;
@@ -52,6 +53,7 @@ import com.influxdb.exceptions.UnprocessableEntityException;
  *
  * @author Jakub Bednar (bednar@github) (11/10/2018 08:56)
  */
+@ThreadSafe
 public interface InfluxDBClient extends AutoCloseable {
 
     /**

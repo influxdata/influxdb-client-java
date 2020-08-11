@@ -24,6 +24,7 @@ package com.influxdb.client;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
@@ -43,6 +44,7 @@ import com.influxdb.client.write.events.WriteSuccessEvent;
  *
  * @author Jakub Bednar (bednar@github) (20/09/2018 10:58)
  */
+@ThreadSafe
 public interface WriteApi extends AutoCloseable {
 
     /**

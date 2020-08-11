@@ -24,6 +24,7 @@ package com.influxdb.client;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.HealthCheck;
@@ -34,6 +35,7 @@ import com.influxdb.client.domain.Source;
  *
  * @author Jakub Bednar (bednar@github) (18/09/2018 09:01)
  */
+@ThreadSafe
 public interface SourcesApi {
 
     /**

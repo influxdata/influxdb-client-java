@@ -22,6 +22,7 @@
 package com.influxdb.client.reactive;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.WriteApi;
@@ -45,6 +46,7 @@ import org.reactivestreams.Publisher;
  *
  * @author Jakub Bednar (bednar@github) (22/11/2018 06:49)
  */
+@ThreadSafe
 public interface WriteReactiveApi extends AutoCloseable {
 
     /**

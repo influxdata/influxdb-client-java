@@ -23,6 +23,7 @@ package com.influxdb.client;
 
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.Organization;
@@ -33,6 +34,7 @@ import com.influxdb.client.domain.Variable;
  *
  * @author Jakub Bednar (27/03/2019 09:35)
  */
+@ThreadSafe
 public interface VariablesApi {
 
     /**

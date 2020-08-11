@@ -23,6 +23,7 @@ package com.influxdb.client;
 
 import java.time.OffsetDateTime;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.DeletePredicateRequest;
@@ -33,6 +34,7 @@ import com.influxdb.client.domain.Organization;
  *
  * @author Pavlina Rolincova (rolincova@github) (25/10/2019).
  */
+@ThreadSafe
 public interface DeleteApi {
 
     /**
