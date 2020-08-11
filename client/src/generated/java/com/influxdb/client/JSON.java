@@ -15,6 +15,7 @@ package com.influxdb.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializer;
 import com.google.gson.TypeAdapter;
@@ -34,7 +35,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
@@ -163,6 +166,9 @@ public class JSON {
      */
     public static class OffsetDateTimeTypeAdapter extends TypeAdapter<OffsetDateTime> {
 
+        private static final OffsetDateTime ZERO = LocalDateTime.of(0, 1, 1, 0, 0)
+                .atOffset(ZoneOffset.UTC);
+
         private DateTimeFormatter formatter;
 
         public OffsetDateTimeTypeAdapter() {
@@ -182,6 +188,12 @@ public class JSON {
             if (date == null) {
                 out.nullValue();
             } else {
+                if (date.getYear() > 9999 || date.isBefore(ZERO)) {
+                    // https://tools.ietf.org/html/rfc3339
+                    throw new JsonIOException("OffsetDateTime is out of range. All dates and times are assumed to be "
+                            + "in the \"current era\", somewhere between 0000AD and 9999AD.");
+                }
+
                 out.value(formatter.format(date));
             }
         }
