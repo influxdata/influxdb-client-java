@@ -1,7 +1,7 @@
 ## 1.11.0 [unreleased]
 
 ### Features
-1. [#138](https://github.com/influxdata/influxdb-client-java/pull/138): Marked Apis as @ThreadSafe
+1. [#139](https://github.com/influxdata/influxdb-client-java/pull/139): Marked Apis as @ThreadSafe
 
 ### Bug Fixes
 1. [#136](https://github.com/influxdata/influxdb-client-java/pull/136): Data Point: measurement name is requiring in constructor
