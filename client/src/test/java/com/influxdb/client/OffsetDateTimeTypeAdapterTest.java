@@ -64,7 +64,8 @@ public class OffsetDateTimeTypeAdapterTest {
 
         Assertions.assertThatThrownBy(() -> adapter.write(new JsonWriter(writer), time))
                 .isInstanceOf(JsonIOException.class)
-                .hasMessage("All dates and times are assumed to be in the \"current era\", somewhere between 0000AD and 9999AD.");
+                .hasMessage("OffsetDateTime is out of range. All dates and times are assumed to be in the "
+                        + "\"current era\", somewhere between 0000AD and 9999AD.");
     }
 
     @Test
@@ -72,7 +73,8 @@ public class OffsetDateTimeTypeAdapterTest {
 
         Assertions.assertThatThrownBy(() -> adapter.write(new JsonWriter(writer), OffsetDateTime.MAX))
                 .isInstanceOf(JsonIOException.class)
-                .hasMessage("All dates and times are assumed to be in the \"current era\", somewhere between 0000AD and 9999AD.");
+                .hasMessage("OffsetDateTime is out of range. All dates and times are assumed to be in the "
+                        + "\"current era\", somewhere between 0000AD and 9999AD.");
     }
 
     @Test
@@ -90,7 +92,8 @@ public class OffsetDateTimeTypeAdapterTest {
                 .atOffset(ZoneOffset.UTC);
         Assertions.assertThatThrownBy(() -> adapter.write(new JsonWriter(writer), time))
                 .isInstanceOf(JsonIOException.class)
-                .hasMessage("All dates and times are assumed to be in the \"current era\", somewhere between 0000AD and 9999AD.");
+                .hasMessage("OffsetDateTime is out of range. All dates and times are assumed to be in the "
+                        + "\"current era\", somewhere between 0000AD and 9999AD.");
 
     }
 
@@ -98,7 +101,8 @@ public class OffsetDateTimeTypeAdapterTest {
     public void min_offset() {
         Assertions.assertThatThrownBy(() -> adapter.write(new JsonWriter(writer), OffsetDateTime.MIN))
                 .isInstanceOf(JsonIOException.class)
-                .hasMessage("All dates and times are assumed to be in the \"current era\", somewhere between 0000AD and 9999AD.");
+                .hasMessage("OffsetDateTime is out of range. All dates and times are assumed to be in the "
+                        + "\"current era\", somewhere between 0000AD and 9999AD.");
 
     }
 }
