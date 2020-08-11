@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.LabelCreateRequest;
@@ -36,6 +37,7 @@ import com.influxdb.client.domain.Organization;
  *
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:37)
  */
+@ThreadSafe
 public interface LabelsApi {
 
     /**
@@ -43,7 +45,7 @@ public interface LabelsApi {
      *
      * @param name       name of a label
      * @param properties properties of a label
-     * @param orgID
+     * @param orgID      ID of the org
      * @return Label created
      */
     @Nonnull

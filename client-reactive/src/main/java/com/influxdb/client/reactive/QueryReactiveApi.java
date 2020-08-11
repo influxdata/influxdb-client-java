@@ -23,6 +23,7 @@ package com.influxdb.client.reactive;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.domain.Dialect;
@@ -36,6 +37,7 @@ import org.reactivestreams.Publisher;
  *
  * @author Jakub Bednar (bednar@github) (21/11/2018 07:19)
  */
+@ThreadSafe
 public interface QueryReactiveApi {
 
     /**

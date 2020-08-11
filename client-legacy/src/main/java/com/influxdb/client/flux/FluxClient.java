@@ -26,6 +26,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.Cancellable;
 import com.influxdb.LogLevel;
@@ -37,6 +38,7 @@ import com.influxdb.query.FluxTable;
  *
  * @author Jakub Bednar (bednar@github) (01/10/2018 12:17)
  */
+@ThreadSafe
 public interface FluxClient {
 
     /**

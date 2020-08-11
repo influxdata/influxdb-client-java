@@ -23,6 +23,7 @@ package com.influxdb.client;
 
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.User;
 
@@ -31,6 +32,7 @@ import com.influxdb.client.domain.User;
  *
  * @author Jakub Bednar (bednar@github) (11/09/2018 10:05)
  */
+@ThreadSafe
 public interface UsersApi {
 
     /**

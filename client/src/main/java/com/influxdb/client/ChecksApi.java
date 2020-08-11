@@ -23,6 +23,7 @@ package com.influxdb.client;
 
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.Check;
 import com.influxdb.client.domain.CheckPatch;
@@ -39,6 +40,7 @@ import com.influxdb.client.domain.ThresholdCheck;
  *
  * @author Jakub Bednar (18/09/2019 08:07)
  */
+@ThreadSafe
 public interface ChecksApi {
 
     /**

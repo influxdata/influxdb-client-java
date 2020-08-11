@@ -23,6 +23,7 @@ package com.influxdb.client;
 
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.HTTPNotificationEndpoint;
 import com.influxdb.client.domain.HTTPNotificationRule;
@@ -43,6 +44,7 @@ import com.influxdb.client.domain.TagRule;
  *
  * @author Jakub Bednar (23/09/2019 10:43)
  */
+@ThreadSafe
 public interface NotificationRulesApi {
 
     /**

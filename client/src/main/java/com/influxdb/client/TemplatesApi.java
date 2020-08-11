@@ -23,6 +23,7 @@ package com.influxdb.client;
 
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.Document;
 import com.influxdb.client.domain.DocumentCreate;
@@ -35,6 +36,7 @@ import com.influxdb.client.domain.Organization;
 /**
  * @author Jakub Bednar (bednar@github) (25/03/2019 09:11)
  */
+@ThreadSafe
 public interface TemplatesApi {
 
     /**

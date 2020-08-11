@@ -24,6 +24,7 @@ package com.influxdb.client;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.Organization;
@@ -35,6 +36,7 @@ import com.influxdb.client.domain.User;
  *
  * @author Jakub Bednar (bednar@github) (17/09/2018 11:09)
  */
+@ThreadSafe
 public interface AuthorizationsApi {
 
     /**
