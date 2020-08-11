@@ -263,8 +263,8 @@ public class JSON {
             } else {
                 if (date.getYear() > 9999 || date.isBefore(ZERO)) {
                     // https://tools.ietf.org/html/rfc3339
-                    throw new JsonIOException("All dates and times are assumed to be in the \"current era\", "
-                            + "somewhere between 0000AD and 9999AD.");
+                    throw new JsonIOException("OffsetDateTime is out of range. All dates and times are assumed to be "
+                            + "in the \"current era\", somewhere between 0000AD and 9999AD.");
                 }
 
                 out.value(formatter.format(date));
