@@ -6,6 +6,7 @@
 
 ### Bug Fixes
 1. [#136](https://github.com/influxdata/influxdb-client-java/pull/136): Data Point: measurement name is requiring in constructor
+1. [#132](https://github.com/influxdata/influxdb-client-java/pull/132): Fixed thread safe issue in MeasurementMapper 
 
 ## 1.10.0 [2020-07-17]
 

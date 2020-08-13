@@ -122,13 +122,7 @@ class MeasurementMapper {
             if (CLASS_FIELD_CACHE.containsKey(measurementType.getName())) {
                 continue;
             }
-            ConcurrentMap<String, Field> initialMap = new ConcurrentHashMap<>();
-            ConcurrentMap<String, Field> influxColumnAndFieldMap = CLASS_FIELD_CACHE
-                    .putIfAbsent(measurementType.getName(), initialMap);
-            if (influxColumnAndFieldMap == null) {
-                influxColumnAndFieldMap = initialMap;
-            }
-
+            ConcurrentMap<String, Field> map = new ConcurrentHashMap<>();
             Class<?> currentMeasurementType = measurementType;
             while (currentMeasurementType != null) {
                 for (Field field : currentMeasurementType.getDeclaredFields()) {
@@ -138,12 +132,14 @@ class MeasurementMapper {
                         if (name.isEmpty()) {
                             name = field.getName();
                         }
-                        influxColumnAndFieldMap.put(name, field);
+                        map.put(name, field);
                     }
                 }
 
                 currentMeasurementType = currentMeasurementType.getSuperclass();
             }
+
+            CLASS_FIELD_CACHE.putIfAbsent(measurementType.getName(), map);
         }
     }
 }
