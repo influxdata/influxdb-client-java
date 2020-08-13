@@ -81,38 +81,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.openapitools</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>3.3.4</version>
-                <configuration>
-                    <inputSpec>${project.basedir}/src/main/resources/swagger.yml</inputSpec>
-                    <generatorName>influx-java</generatorName>
-                    <library>retrofit2</library>
-                    <configOptions>
-                        <sourceFolder>java</sourceFolder>
-                        <dateLibrary>java8</dateLibrary>
-                        <hideGenerationTimestamp>true</hideGenerationTimestamp>
-                    </configOptions>
-                    <generateModelDocumentation>false</generateModelDocumentation>
-                    <generateApiDocumentation>false</generateApiDocumentation>
-                    <generateApis>true</generateApis>
-                    <generateApiTests>false</generateApiTests>
-                    <generateSupportingFiles>true</generateSupportingFiles>
-                    <verbose>false</verbose>
-                    <output>${project.basedir}/src/generated</output>
-                    <addCompileSourceRoot>false</addCompileSourceRoot>
-                    <modelPackage>com.influxdb.client.domain</modelPackage>
-                    <apiPackage>com.influxdb.client.service</apiPackage>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.influxdb</groupId>
-                        <artifactId>openapi-generator</artifactId>
-                        <version>1.0.0</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>3.1.0</version>
