@@ -1,4 +1,4 @@
-## 1.11.0 [unreleased]
+## 1.11.0 [2020-08-14]
 
 ### Features
 1. [#139](https://github.com/influxdata/influxdb-client-java/pull/139): Marked Apis as @ThreadSafe
