@@ -49,7 +49,7 @@ import io.reactivex.BackpressureOverflowStrategy;
 /*
   InfluxDB 2.0 onboarding tasks (create default user, organization and bucket) :
 
-  curl -i -X POST http://localhost:9999/api/v2/setup -H 'accept: application/json' \
+  curl -i -X POST http://localhost:8086/api/v2/setup -H 'accept: application/json' \
       -d '{
               "username": "my-user",
               "password": "my-password",
@@ -76,7 +76,7 @@ public class PlatformExample {
 
     public static void main(final String[] args) throws Exception {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", findToken().toCharArray());
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", findToken().toCharArray());
 
         Organization medicalGMBH = influxDBClient.getOrganizationsApi()
                 .createOrganization("Medical Corp" + System.currentTimeMillis());
@@ -108,7 +108,7 @@ public class PlatformExample {
         String token = authorization.getToken();
         System.out.println("The token to write to temperature-sensors bucket " + token);
 
-        InfluxDBClient client = InfluxDBClientFactory.create("http://localhost:9999", token.toCharArray());
+        InfluxDBClient client = InfluxDBClientFactory.create("http://localhost:8086", token.toCharArray());
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
 
@@ -171,7 +171,7 @@ public class PlatformExample {
 
     private static String findToken() throws Exception {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999",
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086",
                 "my-user", "my-password".toCharArray());
 
         String token = influxDBClient.getAuthorizationsApi()

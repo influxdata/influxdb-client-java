@@ -37,7 +37,7 @@ public class WriteDataPoint {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org, bucket);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucket);
 
         //
         // Write data

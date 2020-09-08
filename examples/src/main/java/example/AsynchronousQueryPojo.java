@@ -36,7 +36,7 @@ public class AsynchronousQueryPojo {
 
     public static void main(final String[] args) throws InterruptedException {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org);
 
         //
         // Query data

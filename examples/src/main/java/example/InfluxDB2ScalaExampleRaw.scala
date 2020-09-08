@@ -34,7 +34,7 @@ object InfluxDB2ScalaExampleRaw {
 
   def main(args: Array[String]): Unit = {
     val influxDBClient = InfluxDBClientScalaFactory
-      .create("http://localhost:9999", "my-token".toCharArray, "my-org")
+      .create("http://localhost:8086", "my-token".toCharArray, "my-org")
 
     val fluxQuery = ("from(bucket: \"my-bucket\")\n"
       + " |> range(start: -5m)"

@@ -27,7 +27,7 @@ import kotlinx.coroutines.runBlocking
 fun main(args: Array<String>) = runBlocking {
 
     val influxDBClient = InfluxDBClientKotlinFactory
-            .create("http://localhost:9999", "my-token".toCharArray(), "my-org")
+            .create("http://localhost:8086", "my-token".toCharArray(), "my-org")
 
     val fluxQuery = ("from(bucket: \"my-bucket\")\n"
             + " |> range(start: -1d)"
@@ -61,7 +61,7 @@ import kotlinx.coroutines.runBlocking
 fun main(args: Array<String>) = runBlocking {
 
     val influxDBClient = InfluxDBClientKotlinFactory
-            .create("http://localhost:9999", "my-token".toCharArray(), "my-org")
+            .create("http://localhost:8086", "my-token".toCharArray(), "my-org")
 
     val fluxQuery = ("from(bucket: \"my-bucket\")\n"
             + " |> range(start: -5m)"
@@ -103,7 +103,7 @@ The `influx2.readTimeout`, `influx2.writeTimeout` and `influx2.connectTimeout` s
 ##### Configuration example
 
 ```properties
-influx2.url=http://localhost:9999
+influx2.url=http://localhost:8086
 influx2.org=my-org
 influx2.bucket=my-bucket
 influx2.token=my-token
@@ -125,7 +125,7 @@ A client can be constructed using a connection string that can contain the Influ
  
 ```kotlin
 val influxDBClient = InfluxDBClientKotlinFactory
-            .create("http://localhost:9999?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
+            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
 ```
 The following options are supported:
 
@@ -177,7 +177,7 @@ import java.time.temporal.ChronoUnit
 fun main(args: Array<String>) = runBlocking {
 
     val influxDBClient = InfluxDBClientKotlinFactory
-            .create("http://localhost:9999", "my-token".toCharArray(), "my-org")
+            .create("http://localhost:8086", "my-token".toCharArray(), "my-org")
 
     val mem = Flux.from("my-bucket")
             .range(-30L, ChronoUnit.MINUTES)

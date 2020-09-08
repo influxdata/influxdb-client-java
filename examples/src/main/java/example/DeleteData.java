@@ -38,7 +38,7 @@ public class DeleteData {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token);
 
         DeleteApi deleteApi = influxDBClient.getDeleteApi();
 

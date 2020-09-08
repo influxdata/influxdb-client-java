@@ -40,7 +40,7 @@ object InfluxDB2ScalaExampleDSL {
   def main(args: Array[String]) {
 
     val influxDBClient = InfluxDBClientScalaFactory
-      .create("http://localhost:9999", "my-token".toCharArray, "my-org")
+      .create("http://localhost:8086", "my-token".toCharArray, "my-org")
 
     val mem = Flux.from("my-bucket")
       .range(-30L, ChronoUnit.MINUTES)

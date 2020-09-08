@@ -32,7 +32,7 @@ public class InfluxDB2ReactiveExampleRaw {
 
     public static void main(final String[] args) {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:8086", token, org);
 
         //
         // Query data
