@@ -241,7 +241,7 @@ class ITBucketsApi extends AbstractITClientTest {
 
         Bucket createBucket = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);
         createBucket.setName("Therm sensor 2000");
-        createBucket.getRetentionRules().get(0).setEverySeconds(1000);
+        createBucket.getRetentionRules().get(0).setEverySeconds(3600*2); //2h
 
         OffsetDateTime updatedAt = createBucket.getUpdatedAt();
 
@@ -251,7 +251,7 @@ class ITBucketsApi extends AbstractITClientTest {
         Assertions.assertThat(updatedBucket.getId()).isEqualTo(createBucket.getId());
         Assertions.assertThat(updatedBucket.getName()).isEqualTo("Therm sensor 2000");
         Assertions.assertThat(updatedBucket.getUpdatedAt()).isAfter(updatedAt);
-        Assertions.assertThat(updatedBucket.getRetentionRules().get(0).getEverySeconds()).isEqualTo(1000L);
+        Assertions.assertThat(updatedBucket.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600*2);
     }
 
     @Test
