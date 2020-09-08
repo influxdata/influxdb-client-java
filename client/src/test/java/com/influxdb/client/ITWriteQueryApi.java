@@ -70,7 +70,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         organization = findMyOrg();
 
         bucket = influxDBClient.getBucketsApi()
-                .createBucket(generateName("h2o"), retentionRule(), organization);
+                .createBucket(generateName("h2o"), null, organization);
 
         PermissionResource resource = new PermissionResource();
         resource.setId(bucket.getId());
