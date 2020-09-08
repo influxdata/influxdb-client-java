@@ -105,7 +105,7 @@ class ITBucketsApi extends AbstractITClientTest {
         Bucket bucket = new Bucket();
         bucket.setName(generateName("robot sensor"));
         bucket.setOrgID(organization.getId());
-        bucket.getRetentionRules().add(retentionRule());
+        bucket.getRetentionRules().add(new BucketRetentionRules().everySeconds(3600));
         bucket.setDescription("description _ test");
 
         bucket = bucketsApi.createBucket(bucket);
@@ -239,10 +239,10 @@ class ITBucketsApi extends AbstractITClientTest {
     @Test
     void updateBucket() {
 
-        Bucket createBucket = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);
-        createBucket.setName("Therm sensor 2000");
-        createBucket.getRetentionRules().get(0).setEverySeconds(3600*2); //2h
+        Bucket createBucket = bucketsApi.createBucket(generateName("robot sensor"), null, organization);
 
+        createBucket.setName("Therm sensor 2000");
+        createBucket.getRetentionRules().add(new BucketRetentionRules().everySeconds(3600*2));
         OffsetDateTime updatedAt = createBucket.getUpdatedAt();
 
         Bucket updatedBucket = bucketsApi.updateBucket(createBucket);
@@ -372,7 +372,7 @@ class ITBucketsApi extends AbstractITClientTest {
     @Test
     void cloneBucket() {
 
-        Bucket source = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);
+        Bucket source = bucketsApi.createBucket(generateName("robot sensor"), new BucketRetentionRules().everySeconds(3600), organization);
 
         String name = generateName("cloned");
 
