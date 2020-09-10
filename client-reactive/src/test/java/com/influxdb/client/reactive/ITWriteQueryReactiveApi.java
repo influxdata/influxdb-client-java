@@ -32,7 +32,6 @@ import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.Bucket;
-import com.influxdb.client.domain.BucketRetentionRules;
 import com.influxdb.client.domain.Permission;
 import com.influxdb.client.domain.PermissionResource;
 import com.influxdb.client.domain.User;
@@ -72,11 +71,8 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         InfluxDBClient client = InfluxDBClientFactory.create(influxDB_URL, "my-user",
                 "my-password".toCharArray());
 
-        BucketRetentionRules bucketRetentionRules = new BucketRetentionRules();
-        bucketRetentionRules.setEverySeconds(3600);
-
         bucket = client.getBucketsApi()
-                .createBucket(generateName("h2o"), bucketRetentionRules, organization);
+                .createBucket(generateName("h2o"), null, organization);
 
         //
         // Add Permissions to read and write to the Bucket
