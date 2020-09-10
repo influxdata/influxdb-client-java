@@ -60,26 +60,4 @@ class LastFluxTest {
         Assertions.assertThat(flux.toString(parameters))
                 .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> last(useStartTime: true)");
     }
-
-    @Test
-    void useStartTimeFalse() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .last(false);
-
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> last(useStartTime: false)");
-    }
-
-    @Test
-    void useStartTimeTrue() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .last(true);
-
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> last(useStartTime: true)");
-    }
 }

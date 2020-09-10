@@ -47,39 +47,28 @@ class CountFluxTest {
     }
 
     @Test
-    void countByParameter() {
+    void column() {
+
+        Flux flux = Flux
+                .from("telegraf")
+                .count("dif_val");
+
+        Assertions.assertThat(flux.toString())
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> count(column: \"dif_val\")");
+    }
+
+    @Test
+    void columnByParameter() {
 
         Flux flux = Flux
                 .from("telegraf")
                 .count()
-                .withPropertyNamed("useStartTime", "parameter");
+                .withPropertyNamed("column", "parameter");
 
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("parameter", true);
+        parameters.put("parameter", "\"column_b\"");
 
         Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> count(useStartTime: true)");
-    }
-
-    @Test
-    void useStartTimeFalse() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .count(false);
-
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> count(useStartTime: false)");
-    }
-
-    @Test
-    void useStartTimeTrue() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .count(true);
-
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> count(useStartTime: true)");
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> count(column:\"column_b\")");
     }
 }

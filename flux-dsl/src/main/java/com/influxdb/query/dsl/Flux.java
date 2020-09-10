@@ -354,13 +354,13 @@ public abstract class Flux {
     /**
      * Counts the number of results.
      *
-     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @param column The column to aggregate.
      * @return {@link CountFlux}
      */
     @Nonnull
-    public final CountFlux count(final boolean useStartTime) {
+    public final CountFlux count(@Nonnull final String column) {
         return new CountFlux(this)
-                .withUseStartTime(useStartTime);
+                .withColumn(column);
     }
 
     /**
@@ -802,18 +802,6 @@ public abstract class Flux {
     }
 
     /**
-     * Returns the first result of the query.
-     *
-     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
-     * @return {@link FirstFlux}
-     */
-    @Nonnull
-    public final FirstFlux first(final boolean useStartTime) {
-        return new FirstFlux(this)
-                .withUseStartTime(useStartTime);
-    }
-
-    /**
      * Groups results by a user-specified set of tags.
      *
      * <h3>The parameters had to be defined by:</h3>
@@ -958,17 +946,6 @@ public abstract class Flux {
     }
 
     /**
-     * Returns the last result of the query.
-     *
-     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
-     * @return {@link LastFlux}
-     */
-    @Nonnull
-    public final LastFlux last(final boolean useStartTime) {
-        return new LastFlux(this).withUseStartTime(useStartTime);
-    }
-
-    /**
      * Restricts the number of rows returned in the results.
      *
      * <h3>The parameters had to be defined by:</h3>
@@ -1042,12 +1019,12 @@ public abstract class Flux {
     /**
      * Returns the max value within the results.
      *
-     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @param column The column to use to calculate the maximum value.
      * @return {@link MaxFlux}
      */
     @Nonnull
-    public final MaxFlux max(final boolean useStartTime) {
-        return new MaxFlux(this).withUseStartTime(useStartTime);
+    public final MaxFlux max(@Nonnull final String column) {
+        return new MaxFlux(this).withColumn(column);
     }
 
     /**
@@ -1063,12 +1040,12 @@ public abstract class Flux {
     /**
      * Returns the mean of the values within the results.
      *
-     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @param column The column to use to compute the mean.
      * @return {@link MeanFlux}
      */
     @Nonnull
-    public final MeanFlux mean(final boolean useStartTime) {
-        return new MeanFlux(this).withUseStartTime(useStartTime);
+    public final MeanFlux mean(final String column) {
+        return new MeanFlux(this).withColumn(column);
     }
 
     /**
@@ -1084,12 +1061,12 @@ public abstract class Flux {
     /**
      * Returns the min value within the results.
      *
-     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @param column The column to use to calculate the minimum value.
      * @return {@link MinFlux}
      */
     @Nonnull
-    public final MinFlux min(final boolean useStartTime) {
-        return new MinFlux(this).withUseStartTime(useStartTime);
+    public final MinFlux min(@Nonnull final String column) {
+        return new MinFlux(this).withColumn(column);
     }
 
     /**
@@ -1577,12 +1554,12 @@ public abstract class Flux {
     /**
      * Skew of the results.
      *
-     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @param column The column on which to operate.
      * @return {@link SkewFlux}
      */
     @Nonnull
-    public final SkewFlux skew(final boolean useStartTime) {
-        return new SkewFlux(this).withUseStartTime(useStartTime);
+    public final SkewFlux skew(@Nonnull final String column) {
+        return new SkewFlux(this).withColumn(column);
     }
 
     /**
@@ -1677,12 +1654,12 @@ public abstract class Flux {
     /**
      * Difference between min and max values.
      *
-     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @param column The column on which to operate.
      * @return {@link SpreadFlux}
      */
     @Nonnull
-    public final SpreadFlux spread(final boolean useStartTime) {
-        return new SpreadFlux(this).withUseStartTime(useStartTime);
+    public final SpreadFlux spread(@Nonnull final String column) {
+        return new SpreadFlux(this).withColumn(column);
     }
 
     /**
@@ -1698,12 +1675,12 @@ public abstract class Flux {
     /**
      * Standard Deviation of the results.
      *
-     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @param column The column on which to operate.
      * @return {@link StddevFlux}
      */
     @Nonnull
-    public final StddevFlux stddev(final boolean useStartTime) {
-        return new StddevFlux(this).withUseStartTime(useStartTime);
+    public final StddevFlux stddev(@Nonnull final String column) {
+        return new StddevFlux(this).withColumn(column);
     }
 
     /**
@@ -1719,12 +1696,12 @@ public abstract class Flux {
     /**
      * Sum of the results.
      *
-     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @param column The column on which to operate.
      * @return {@link SumFlux}
      */
     @Nonnull
-    public final SumFlux sum(final boolean useStartTime) {
-        return new SumFlux(this).withUseStartTime(useStartTime);
+    public final SumFlux sum(@Nonnull final String column) {
+        return new SumFlux(this).withColumn(column);
     }
 
     /**

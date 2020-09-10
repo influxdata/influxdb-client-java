@@ -47,39 +47,28 @@ class SumFluxTest {
     }
 
     @Test
-    void sumByParameter() {
+    void column() {
+
+        Flux flux = Flux
+                .from("telegraf")
+                .sum("dif_val");
+
+        Assertions.assertThat(flux.toString())
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sum(column: \"dif_val\")");
+    }
+
+    @Test
+    void columnByParameter() {
 
         Flux flux = Flux
                 .from("telegraf")
                 .sum()
-                .withPropertyNamed("useStartTime", "parameter");
+                .withPropertyNamed("column", "parameter");
 
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("parameter", true);
+        parameters.put("parameter", "\"column_b\"");
 
         Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sum(useStartTime: true)");
-    }
-
-    @Test
-    void useStartTimeFalse() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .sum(false);
-
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sum(useStartTime: false)");
-    }
-
-    @Test
-    void useStartTimeTrue() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .sum(true);
-
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sum(useStartTime: true)");
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sum(column:\"column_b\")");
     }
 }

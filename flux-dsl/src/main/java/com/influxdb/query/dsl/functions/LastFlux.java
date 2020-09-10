@@ -29,11 +29,6 @@ import com.influxdb.query.dsl.Flux;
  * Returns the last result of the query.
  * <a href="http://bit.ly/flux-spec#last">See SPEC</a>.
  *
- * <h3>Options</h3>
- * <ul>
- * <li><b>useStartTime</b> - Use the start time as the timestamp of the resulting aggregate [boolean]
- * </ul>
- *
  * <h3>Example</h3>
  * <pre>
  * Flux flux = Flux
@@ -53,17 +48,5 @@ public final class LastFlux extends AbstractParametrizedFlux {
     @Override
     protected String operatorName() {
         return "last";
-    }
-
-    /**
-     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
-     * @return this
-     */
-    @Nonnull
-    public LastFlux withUseStartTime(final boolean useStartTime) {
-
-        this.withPropertyValue("useStartTime", useStartTime);
-
-        return this;
     }
 }

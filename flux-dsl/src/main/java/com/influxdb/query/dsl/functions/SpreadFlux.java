@@ -23,6 +23,7 @@ package com.influxdb.query.dsl.functions;
 
 import javax.annotation.Nonnull;
 
+import com.influxdb.Arguments;
 import com.influxdb.query.dsl.Flux;
 
 /**
@@ -31,7 +32,7 @@ import com.influxdb.query.dsl.Flux;
  *
  * <h3>Options</h3>
  * <ul>
- * <li><b>useStartTime</b> - Use the start time as the timestamp of the resulting aggregate [boolean]
+ * <li><b>column</b> - The column on which to operate [string]. Default to <i>_value</i>.</li>
  * </ul>
  *
  * <h3>Example</h3>
@@ -56,13 +57,15 @@ public final class SpreadFlux extends AbstractParametrizedFlux {
     }
 
     /**
-     * @param useStartTime Use the start time as the timestamp of the resulting aggregate
+     * @param column The column on which to operate.
      * @return this
      */
     @Nonnull
-    public SpreadFlux withUseStartTime(final boolean useStartTime) {
+    public SpreadFlux withColumn(@Nonnull final String column) {
 
-        this.withPropertyValue("useStartTime", useStartTime);
+        Arguments.checkNonEmpty(column, "Column");
+
+        this.withPropertyValueEscaped("column", column);
 
         return this;
     }

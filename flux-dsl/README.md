@@ -101,7 +101,7 @@ Flux flux = Flux
 ```
 ### count
 Counts the number of results [[doc](http://bit.ly/flux-spec#count)].
-- `useStartTime` - Use the start time as the timestamp of the resulting aggregate. [boolean]
+- `column` - The column to aggregate. Defaults to `_value`. [string]
 ```java
 Flux flux = Flux
     .from("telegraf")
@@ -272,7 +272,6 @@ Flux flux = Flux
 
 ### first
 Returns the first result of the query [[doc](http://bit.ly/flux-spec#first)].
-- `useStartTime` - Use the start time as the timestamp of the resulting aggregate. [boolean]
 
 ```java
 Flux flux = Flux
@@ -418,7 +417,7 @@ Flux flux = Flux
 
 ### max
 Returns the max value within the results [[doc](http://bit.ly/flux-spec#max)].
-- `useStartTime` - Use the start time as the timestamp of the resulting aggregate. [boolean]
+- `column` - The column to use to calculate the maximum value. Defaults to `_value`. [string]
 
 ```java
 Flux flux = Flux
@@ -430,7 +429,7 @@ Flux flux = Flux
 
 ### mean
 Returns the mean of the values within the results [[doc](http://bit.ly/flux-spec#mean)].
-- `useStartTime` - Use the start time as the timestamp of the resulting aggregate. [boolean]
+- `column` - The column to use to compute the mean. Defaults to `_value`. [string]
 
 ```java
 Flux flux = Flux
@@ -442,7 +441,7 @@ Flux flux = Flux
 
 ### min
 Returns the min value within the results [[doc](http://bit.ly/flux-spec#min)].
-- `useStartTime` - Use the start time as the timestamp of the resulting aggregate. [boolean]
+- `column` - The column to use to calculate the minimum value. Defaults to `_value`. [string]
 
 ```java
 Flux flux = Flux
@@ -604,7 +603,7 @@ Flux flux = Flux
 
 ### skew
 Skew of the results [[doc](http://bit.ly/flux-spec#skew)].
-- `useStartTime` - Use the start time as the timestamp of the resulting aggregate. [boolean]
+- `column` - The column on which to operate. Defaults to `_value`. [string]
 
 ```java
 Flux flux = Flux
@@ -631,7 +630,7 @@ Flux flux = Flux
 
 ### spread
 Difference between min and max values [[doc](http://bit.ly/flux-spec#spread)].
-- `useStartTime` - Use the start time as the timestamp of the resulting aggregate. [boolean]
+- `column` - The column on which to operate. Defaults to `_value`. [string]
 
 ```java
 Flux flux = Flux
@@ -641,7 +640,7 @@ Flux flux = Flux
 
 ### stddev
 Standard Deviation of the results [[doc](http://bit.ly/flux-spec#stddev)].
-- `useStartTime` - Use the start time as the timestamp of the resulting aggregate. [boolean]
+- `column` - The column on which to operate. Defaults to `_value`. [string]
 
 ```java
 Flux flux = Flux
@@ -651,6 +650,8 @@ Flux flux = Flux
 
 ### sum
 Sum of the results [[doc](http://bit.ly/flux-spec#sum)].
+- `column` - The column on which to operate. Defaults to `_value`. [string]
+
 ```java
 Flux flux = Flux
     .from("telegraf")
