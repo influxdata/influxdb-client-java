@@ -64,6 +64,11 @@ class ITBucketsApi extends AbstractITClientTest {
         organizationsApi = influxDBClient.getOrganizationsApi();
         usersApi = influxDBClient.getUsersApi();
 
+        organizationsApi.findOrganizations()
+                .stream()
+                .filter(org -> org.getName().endsWith("-IT"))
+                .forEach(organizationsApi::deleteOrganization);
+
         organization = organizationsApi.createOrganization(generateName("Org"));
 
         bucketsApi.findBuckets()
@@ -160,8 +165,6 @@ class ITBucketsApi extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/14900
     void findBuckets() {
 
         int size = bucketsApi.findBuckets().size();
@@ -172,7 +175,8 @@ class ITBucketsApi extends AbstractITClientTest {
         bucketsApi.createBucket(generateName("robot sensor"), organization2.getId());
 
         List<Bucket> buckets = bucketsApi.findBuckets();
-        Assertions.assertThat(buckets).hasSize(size + 2);
+        // 2 x created + task logs + monitoring logs for new org
+        Assertions.assertThat(buckets).hasSize(size + 4);
     }
 
     @Test
@@ -237,6 +241,8 @@ class ITBucketsApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled()
+    //TODO https://github.com/influxdata/influxdb/issues/19518
     void updateBucket() {
 
         Bucket createBucket = bucketsApi.createBucket(generateName("robot sensor"), null, organization);
