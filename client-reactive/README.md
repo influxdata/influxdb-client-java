@@ -33,7 +33,7 @@ public class InfluxDB2ReactiveExample {
 
     public static void main(final String[] args) {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:8086", token, org);
 
         //
         // Query data
@@ -80,7 +80,7 @@ public class InfluxDB2ReactiveExampleRaw {
 
     public static void main(final String[] args) {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:8086", token, org);
 
         //
         // Query data
@@ -127,7 +127,7 @@ public class InfluxDB2ReactiveExamplePojo {
 
     public static void main(final String[] args) {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:8086", token, org);
         //
         // Query data
         //
@@ -208,7 +208,7 @@ public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
 
     public static void main(final String[] args) throws InterruptedException {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org, bucket);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:8086", token, org, bucket);
 
         //
         // Write data
@@ -281,7 +281,7 @@ The `influx2.readTimeout`, `influx2.writeTimeout` and `influx2.connectTimeout` s
 ##### Configuration example
 
 ```properties
-influx2.url=http://localhost:9999
+influx2.url=http://localhost:8086
 influx2.org=my-org
 influx2.bucket=my-bucket
 influx2.token=my-token
@@ -303,7 +303,7 @@ A client can be constructed using a connection string that can contain the Influ
  
 ```java
 InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory
-            .create("http://localhost:9999?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
+            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
 ```
 The following options are supported:
 
@@ -358,7 +358,7 @@ public class InfluxDB2ReactiveExampleDSL {
 
     public static void main(final String[] args) {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:8086", token, org);
         
         //
         // Query data

@@ -39,7 +39,7 @@ public class SynchronousQueryDSL {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org);
 
         Flux flux = Flux.from("my-bucket")
                 .range(-30L, ChronoUnit.MINUTES)

@@ -36,7 +36,7 @@ public class SynchronousQuery {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org);
 
         String flux = "from(bucket:\"my-bucket\") |> range(start: 0)";
 

@@ -41,7 +41,7 @@ object InfluxDB2ScalaExample {
   def main(args: Array[String]): Unit = {
 
     val influxDBClient = InfluxDBClientScalaFactory
-      .create("http://localhost:9999", "my-token".toCharArray, "my-org")
+      .create("http://localhost:8086", "my-token".toCharArray, "my-org")
 
     val fluxQuery = ("from(bucket: \"my-bucket\")\n"
       + " |> range(start: -1d)"
@@ -88,7 +88,7 @@ object InfluxDB2ScalaExampleRaw {
 
   def main(args: Array[String]): Unit = {
     val influxDBClient = InfluxDBClientScalaFactory
-      .create("http://localhost:9999", "my-token".toCharArray, "my-org")
+      .create("http://localhost:8086", "my-token".toCharArray, "my-org")
 
     val fluxQuery = ("from(bucket: \"my-bucket\")\n"
       + " |> range(start: -5m)"
@@ -134,7 +134,7 @@ The `influx2.readTimeout`, `influx2.writeTimeout` and `influx2.connectTimeout` s
 ##### Configuration example
 
 ```properties
-influx2.url=http://localhost:9999
+influx2.url=http://localhost:8086
 influx2.org=my-org
 influx2.bucket=my-bucket
 influx2.token=my-token
@@ -156,7 +156,7 @@ A client can be constructed using a connection string that can contain the Influ
  
 ```scala
 val influxDBClient = InfluxDBClientScalaFactory
-            .create("http://localhost:9999?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
+            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
 ```
 The following options are supported:
 
@@ -215,7 +215,7 @@ object InfluxDB2ScalaExampleDSL {
   def main(args: Array[String]) {
 
     val influxDBClient = InfluxDBClientScalaFactory
-      .create("http://localhost:9999", "my-token".toCharArray, "my-org")
+      .create("http://localhost:8086", "my-token".toCharArray, "my-org")
 
     val mem = Flux.from("my-bucket")
       .range(-30L, ChronoUnit.MINUTES)

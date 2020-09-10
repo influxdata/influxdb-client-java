@@ -1,5 +1,8 @@
 ## 1.12.0 [unreleased]
 
+### API
+1. [#139](https://github.com/influxdata/influxdb-client-java/pull/148): Changed default port from 9999 to 8086
+
 ## 1.11.0 [2020-08-14]
 
 ### Features

@@ -64,6 +64,11 @@ class ITBucketsApi extends AbstractITClientTest {
         organizationsApi = influxDBClient.getOrganizationsApi();
         usersApi = influxDBClient.getUsersApi();
 
+        organizationsApi.findOrganizations()
+                .stream()
+                .filter(org -> org.getName().endsWith("-IT"))
+                .forEach(organizationsApi::deleteOrganization);
+
         organization = organizationsApi.createOrganization(generateName("Org"));
 
         bucketsApi.findBuckets()
@@ -105,7 +110,7 @@ class ITBucketsApi extends AbstractITClientTest {
         Bucket bucket = new Bucket();
         bucket.setName(generateName("robot sensor"));
         bucket.setOrgID(organization.getId());
-        bucket.getRetentionRules().add(retentionRule());
+        bucket.getRetentionRules().add(new BucketRetentionRules().everySeconds(3600));
         bucket.setDescription("description _ test");
 
         bucket = bucketsApi.createBucket(bucket);
@@ -160,8 +165,6 @@ class ITBucketsApi extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/14900
     void findBuckets() {
 
         int size = bucketsApi.findBuckets().size();
@@ -172,7 +175,8 @@ class ITBucketsApi extends AbstractITClientTest {
         bucketsApi.createBucket(generateName("robot sensor"), organization2.getId());
 
         List<Bucket> buckets = bucketsApi.findBuckets();
-        Assertions.assertThat(buckets).hasSize(size + 2);
+        // 2 x created + task logs + monitoring logs for new org
+        Assertions.assertThat(buckets).hasSize(size + 4);
     }
 
     @Test
@@ -237,12 +241,14 @@ class ITBucketsApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled()
+    //TODO https://github.com/influxdata/influxdb/issues/19518
     void updateBucket() {
 
-        Bucket createBucket = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);
-        createBucket.setName("Therm sensor 2000");
-        createBucket.getRetentionRules().get(0).setEverySeconds(1000);
+        Bucket createBucket = bucketsApi.createBucket(generateName("robot sensor"), null, organization);
 
+        createBucket.setName("Therm sensor 2000");
+        createBucket.getRetentionRules().add(new BucketRetentionRules().everySeconds(3600*2));
         OffsetDateTime updatedAt = createBucket.getUpdatedAt();
 
         Bucket updatedBucket = bucketsApi.updateBucket(createBucket);
@@ -251,7 +257,7 @@ class ITBucketsApi extends AbstractITClientTest {
         Assertions.assertThat(updatedBucket.getId()).isEqualTo(createBucket.getId());
         Assertions.assertThat(updatedBucket.getName()).isEqualTo("Therm sensor 2000");
         Assertions.assertThat(updatedBucket.getUpdatedAt()).isAfter(updatedAt);
-        Assertions.assertThat(updatedBucket.getRetentionRules().get(0).getEverySeconds()).isEqualTo(1000L);
+        Assertions.assertThat(updatedBucket.getRetentionRules().get(0).getEverySeconds()).isEqualTo(3600*2);
     }
 
     @Test
@@ -372,7 +378,7 @@ class ITBucketsApi extends AbstractITClientTest {
     @Test
     void cloneBucket() {
 
-        Bucket source = bucketsApi.createBucket(generateName("robot sensor"), retentionRule(), organization);
+        Bucket source = bucketsApi.createBucket(generateName("robot sensor"), new BucketRetentionRules().everySeconds(3600), organization);
 
         String name = generateName("cloned");
 

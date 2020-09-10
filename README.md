@@ -128,7 +128,7 @@ public class InfluxDB2Example {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org, bucket);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucket);
 
         //
         // Write data
@@ -239,7 +239,7 @@ public class InfluxDB2ManagementExample {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token);
 
         //
         // Create bucket "iot_bucket" with data retention set to 3,600 seconds

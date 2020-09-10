@@ -51,7 +51,7 @@ public class SynchronousQuery {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org);
 
         String flux = "from(bucket:\"my-bucket\") |> range(start: 0)";
 
@@ -94,7 +94,7 @@ public class SynchronousQueryPojo {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org);
 
         //
         // Query data
@@ -148,7 +148,7 @@ public class AsynchronousQuery {
 
     public static void main(final String[] args) throws InterruptedException {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org);
         //
         // Query data
         //
@@ -208,7 +208,7 @@ public class AsynchronousQueryPojo {
 
     public static void main(final String[] args) throws InterruptedException {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org);
 
         //
         // Query data
@@ -268,7 +268,7 @@ public class RawQuery {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org);
 
         //
         // Query data
@@ -302,7 +302,7 @@ public class RawQueryAsynchronous {
 
     public static void main(final String[] args) throws Exception {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org);
 
         //
         // Query data
@@ -409,7 +409,7 @@ public class WritePojo {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org, bucket);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucket);
 
         //
         // Write data
@@ -468,7 +468,7 @@ public class WriteDataPoint {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org, bucket);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucket);
 
         //
         // Write data
@@ -511,7 +511,7 @@ public class WriteLineProtocol {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org, bucket);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucket);
 
         //
         // Write data
@@ -642,7 +642,7 @@ public class InfluxDB2ManagementExample {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token);
 
         //
         // Create bucket "iot_bucket" with data retention set to 3,600 seconds
@@ -714,7 +714,7 @@ public class WriteDataBlocking {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org, bucket);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucket);
 
         WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
 
@@ -836,7 +836,7 @@ public class DeleteData {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token);
 
         DeleteApi deleteApi = influxDBClient.getDeleteApi();
 
@@ -879,7 +879,7 @@ The `influx2.readTimeout`, `influx2.writeTimeout` and `influx2.connectTimeout` s
 ##### Configuration example
 
 ```properties
-influx2.url=http://localhost:9999
+influx2.url=http://localhost:8086
 influx2.org=my-org
 influx2.bucket=my-bucket
 influx2.token=my-token
@@ -901,7 +901,7 @@ A client can be constructed using a connection string that can contain the Influ
  
 ```java
 InfluxDBClient influxDBClient = InfluxDBClientFactory
-            .create("http://localhost:9999?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
+            .create("http://localhost:8086?readTimeout=5000&connectTimeout=5000&logLevel=BASIC", token)
 ```
 The following options are supported:
 
@@ -958,7 +958,7 @@ public class SynchronousQueryDSL {
 
     public static void main(final String[] args) {
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org);
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org);
 
         Flux flux = Flux.from("my-bucket")
                 .range(-30L, ChronoUnit.MINUTES)

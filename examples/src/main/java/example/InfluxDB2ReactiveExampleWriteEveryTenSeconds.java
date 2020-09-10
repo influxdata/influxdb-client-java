@@ -42,7 +42,7 @@ public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
 
     public static void main(final String[] args) throws InterruptedException {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org, bucket);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:8086", token, org, bucket);
 
         //
         // Write data

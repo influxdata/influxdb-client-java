@@ -77,6 +77,7 @@ echo
 
 docker pull ${INFLUXDB_V2_IMAGE} || true
 docker run \
+       --env INFLUXD_HTTP_BIND_ADDRESS=:9999 \
        --detach \
        --name influxdb_v2 \
        --network influx_network \
@@ -106,6 +107,7 @@ echo "Restarting InfluxDB 2.0 for onboarding test... "
 echo
 
 docker run \
+       --env INFLUXD_HTTP_BIND_ADDRESS=:9999 \
        --detach \
        --name influxdb_v2_onboarding \
        --network influx_network \
