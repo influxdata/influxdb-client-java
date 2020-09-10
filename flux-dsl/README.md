@@ -374,10 +374,16 @@ Flux flux = Flux
 ### limit
 Restricts the number of rows returned in the results [[doc](http://bit.ly/flux-spec#limit)].
 - `n` - The maximum number of records to output. [int] 
+- `offset` - The number of records to skip per table. Default to `0`. [int]
 ```java
 Flux flux = Flux
     .from("telegraf")
     .limit(5);
+```    
+```java
+Flux flux = Flux
+    .from("telegraf")
+    .limit(100, 10);
 ```
 ### map
 Applies a function to each row of the table [[doc](http://bit.ly/flux-spec#map)].

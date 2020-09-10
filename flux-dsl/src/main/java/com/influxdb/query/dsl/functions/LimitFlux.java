@@ -32,7 +32,8 @@ import com.influxdb.query.dsl.Flux;
  *
  * <h3>Options</h3>
  * <ul>
- * <li><b>n</b> - The maximum number of records to output [int].
+ * <li><b>n</b> - The maximum number of records to output [int].</li>
+ * <li><b>offset</b> - The number of records to skip per table [int]. Default to <i>0</i>.</li>
  * </ul>
  *
  * <h3>Example</h3>
@@ -66,6 +67,20 @@ public final class LimitFlux extends AbstractParametrizedFlux {
         Arguments.checkPositiveNumber(numberOfResults, "Number of results");
 
         this.withPropertyValue("n", numberOfResults);
+
+        return this;
+    }
+
+    /**
+     * @param offset The number of records to skip per table.
+     * @return this
+     */
+    @Nonnull
+    public LimitFlux withOffset(final int offset) {
+
+        Arguments.checkPositiveNumber(offset, "The number of records to skip");
+
+        this.withPropertyValue("offset", offset);
 
         return this;
     }

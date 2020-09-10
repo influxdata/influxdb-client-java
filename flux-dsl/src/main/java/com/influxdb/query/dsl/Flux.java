@@ -977,6 +977,19 @@ public abstract class Flux {
     }
 
     /**
+     * Restricts the number of rows returned in the results.
+     *
+     * @param numberOfResults The number of results
+     * @param offset          The number of records to skip per table.
+     * @return {@link LimitFlux}
+     */
+    @Nonnull
+    public final LimitFlux limit(final int numberOfResults, final int offset) {
+
+        return new LimitFlux(this).withN(numberOfResults).withOffset(offset);
+    }
+
+    /**
      * Applies a function to each row of the table.
      *
      * <h3>The parameters had to be defined by:</h3>
