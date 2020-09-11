@@ -47,39 +47,28 @@ class SpreadFluxTest {
     }
 
     @Test
-    void spreadByParameter() {
+    void column() {
+
+        Flux flux = Flux
+                .from("telegraf")
+                .spread("dif_val");
+
+        Assertions.assertThat(flux.toString())
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> spread(column: \"dif_val\")");
+    }
+
+    @Test
+    void columnByParameter() {
 
         Flux flux = Flux
                 .from("telegraf")
                 .spread()
-                .withPropertyNamed("useStartTime", "parameter");
+                .withPropertyNamed("column", "parameter");
 
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("parameter", true);
+        parameters.put("parameter", "\"column_b\"");
 
         Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> spread(useStartTime: true)");
-    }
-
-    @Test
-    void useStartTimeFalse() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .spread(false);
-
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> spread(useStartTime: false)");
-    }
-
-    @Test
-    void useStartTimeTrue() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .spread(true);
-
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> spread(useStartTime: true)");
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> spread(column:\"column_b\")");
     }
 }

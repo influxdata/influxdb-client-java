@@ -47,39 +47,28 @@ class StddevFluxTest {
     }
 
     @Test
-    void stddevByParameter() {
+    void column() {
+
+        Flux flux = Flux
+                .from("telegraf")
+                .stddev("dif_val");
+
+        Assertions.assertThat(flux.toString())
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> stddev(column: \"dif_val\")");
+    }
+
+    @Test
+    void columnByParameter() {
 
         Flux flux = Flux
                 .from("telegraf")
                 .stddev()
-                .withPropertyNamed("useStartTime", "parameter");
+                .withPropertyNamed("column", "parameter");
 
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("parameter", true);
+        parameters.put("parameter", "\"column_b\"");
 
         Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> stddev(useStartTime: true)");
-    }
-
-    @Test
-    void useStartTimeFalse() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .stddev(false);
-
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> stddev(useStartTime: false)");
-    }
-
-    @Test
-    void useStartTimeTrue() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .stddev(true);
-
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> stddev(useStartTime: true)");
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> stddev(column:\"column_b\")");
     }
 }

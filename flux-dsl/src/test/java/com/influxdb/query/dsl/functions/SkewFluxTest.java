@@ -47,39 +47,28 @@ class SkewFluxTest {
     }
 
     @Test
-    void skewByParameter() {
+    void column() {
+
+        Flux flux = Flux
+                .from("telegraf")
+                .skew("dif_val");
+
+        Assertions.assertThat(flux.toString())
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> skew(column: \"dif_val\")");
+    }
+
+    @Test
+    void columnByParameter() {
 
         Flux flux = Flux
                 .from("telegraf")
                 .skew()
-                .withPropertyNamed("useStartTime", "parameter");
+                .withPropertyNamed("column", "parameter");
 
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("parameter", true);
+        parameters.put("parameter", "\"column_b\"");
 
         Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> skew(useStartTime: true)");
-    }
-
-    @Test
-    void useStartTimeFalse() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .skew(false);
-
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> skew(useStartTime: false)");
-    }
-
-    @Test
-    void useStartTimeTrue() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .skew(true);
-
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> skew(useStartTime: true)");
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> skew(column:\"column_b\")");
     }
 }

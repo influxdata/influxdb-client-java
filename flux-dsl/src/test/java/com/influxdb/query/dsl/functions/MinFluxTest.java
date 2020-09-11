@@ -59,27 +59,29 @@ class MinFluxTest {
 
         Assertions.assertThat(flux.toString(parameters))
                 .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> min(useStartTime: true)");
-    }
-
-    @Test
-    void useStartTimeFalse() {
+    }@Test
+    void column() {
 
         Flux flux = Flux
                 .from("telegraf")
-                .min(false);
+                .min("dif_val");
 
         Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> min(useStartTime: false)");
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> min(column: \"dif_val\")");
     }
 
     @Test
-    void useStartTimeTrue() {
+    void columnByParameter() {
 
         Flux flux = Flux
                 .from("telegraf")
-                .min(true);
+                .min()
+                .withPropertyNamed("column", "parameter");
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> min(useStartTime: true)");
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("parameter", "\"column_b\"");
+
+        Assertions.assertThat(flux.toString(parameters))
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> min(column:\"column_b\")");
     }
 }

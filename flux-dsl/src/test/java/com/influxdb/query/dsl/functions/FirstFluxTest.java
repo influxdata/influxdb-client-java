@@ -45,41 +45,4 @@ class FirstFluxTest {
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> first()");
     }
-
-    @Test
-    void firstByParameter() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .first()
-                .withPropertyNamed("useStartTime", "parameter");
-
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("parameter", true);
-
-        Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> first(useStartTime: true)");
-    }
-
-    @Test
-    void useStartTimeFalse() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .first(false);
-
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> first(useStartTime: false)");
-    }
-
-    @Test
-    void useStartTimeTrue() {
-
-        Flux flux = Flux
-                .from("telegraf")
-                .first(true);
-
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> first(useStartTime: true)");
-    }
 }

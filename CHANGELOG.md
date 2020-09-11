@@ -1,5 +1,8 @@
 ## 1.12.0 [unreleased]
 
+### Features
+1. [#150](https://github.com/influxdata/influxdb-client-java/pull/150): flux-dsl: added support for an offset parameter to limit operator, aggregates accept only a 'column' parameter
+
 ### API
 1. [#139](https://github.com/influxdata/influxdb-client-java/pull/148): Changed default port from 9999 to 8086
 
