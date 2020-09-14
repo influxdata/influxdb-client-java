@@ -30,6 +30,7 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
@@ -111,7 +112,8 @@ class GzipInterceptorTest extends AbstractMockServerTest {
                 .post(RequestBody.create(MediaType.parse("application/json"), "{name: \"Tom Type\"}"))
                 .build();
 
-        okHttpClient.newCall(request).execute();
+        Response execute = okHttpClient.newCall(request).execute();
+        execute.close();
 
         return mockServer.takeRequest();
     }

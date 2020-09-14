@@ -31,6 +31,7 @@ import okhttp3.Cookie;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
@@ -67,7 +68,8 @@ class AuthenticateInterceptorTest extends AbstractMockServerTest {
                 .get()
                 .build();
 
-        buildOkHttpClient(options).newCall(request).execute();
+        Response response = buildOkHttpClient(options).newCall(request).execute();
+        response.close();
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(1);
 
@@ -103,7 +105,8 @@ class AuthenticateInterceptorTest extends AbstractMockServerTest {
                 .get()
                 .build();
 
-        buildOkHttpClient(options).newCall(request).execute();
+        Response response = buildOkHttpClient(options).newCall(request).execute();
+        response.close();
 
         // Sign in request
         RecordedRequest requestToSignIn = mockServer.takeRequest();
@@ -138,7 +141,8 @@ class AuthenticateInterceptorTest extends AbstractMockServerTest {
                 .get()
                 .build();
 
-        buildOkHttpClient(options).newCall(request).execute();
+        Response response = buildOkHttpClient(options).newCall(request).execute();
+        response.close();
 
         // Sign in request in init
         RecordedRequest requestToSignIn = mockServer.takeRequest();
@@ -213,7 +217,8 @@ class AuthenticateInterceptorTest extends AbstractMockServerTest {
                 .get()
                 .build();
 
-        buildOkHttpClient(options).newCall(request).execute();
+        Response response = buildOkHttpClient(options).newCall(request).execute();
+        response.close();
 
         RecordedRequest recordedRequest = mockServer.takeRequest();
         Assertions.assertThat(recordedRequest.getHeader("Authorization")).isEqualTo("Token xyz");

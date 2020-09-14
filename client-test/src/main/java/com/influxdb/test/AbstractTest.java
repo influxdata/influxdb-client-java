@@ -159,9 +159,7 @@ public abstract class AbstractTest {
         Assertions.assertThat(request).isNotNull();
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
-        Response response;
-        try {
-            response = okHttpClient.newCall(request).execute();
+        try (Response response = okHttpClient.newCall(request).execute()) {
             Assertions.assertThat(response.isSuccessful())
                     .withFailMessage("Failed response <%s>. Body: <%s>", response, response.body())
                     .isTrue();

@@ -122,21 +122,18 @@ class AuthenticateInterceptor implements Interceptor {
                     .post(RequestBody.create(null, ""))
                     .build();
 
-            Response authResponse;
-            try {
-                authResponse = this.okHttpClient.newCall(authRequest).execute();
+            try (Response authResponse = this.okHttpClient.newCall(authRequest).execute()) {
+
+                Cookie sessionCookie = Cookie.parseAll(authRequest.url(), authResponse.headers()).stream()
+                        .filter(cookie -> "session".equals(cookie.name()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (sessionCookie != null) {
+                    sessionToken = sessionCookie.value().toCharArray();
+                }
             } catch (IOException e) {
                 LOG.log(Level.WARNING, "Cannot retrieve the Session token!", e);
-                return;
-            }
-
-            Cookie sessionCookie = Cookie.parseAll(authRequest.url(), authResponse.headers()).stream()
-                    .filter(cookie -> "session".equals(cookie.name()))
-                    .findFirst()
-                    .orElse(null);
-
-            if (sessionCookie != null) {
-                sessionToken = sessionCookie.value().toCharArray();
             }
         }
     }
@@ -162,7 +159,8 @@ class AuthenticateInterceptor implements Interceptor {
                 .post(RequestBody.create(null, ""))
                 .build();
 
-        this.okHttpClient.newCall(authRequest).execute();
+        Response response = this.okHttpClient.newCall(authRequest).execute();
+        response.close();
     }
 
     @Nonnull

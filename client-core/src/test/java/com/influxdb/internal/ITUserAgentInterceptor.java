@@ -27,6 +27,7 @@ import com.influxdb.test.AbstractMockServerTest;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
@@ -57,13 +58,14 @@ class ITUserAgentInterceptor extends AbstractMockServerTest {
     @Test
     public void userAgent() throws IOException, InterruptedException {
 
-        mockServer.enqueue(new MockResponse()                );
+        mockServer.enqueue(new MockResponse());
 
         Request request = new Request.Builder()
                 .url(url)
                 .build();
 
-        client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
+        response.close();
 
         RecordedRequest recordedRequest = mockServer.takeRequest();
         String userAgent = recordedRequest.getHeader("User-Agent");
