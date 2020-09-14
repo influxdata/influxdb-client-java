@@ -6,6 +6,9 @@
 ### API
 1. [#139](https://github.com/influxdata/influxdb-client-java/pull/148): Changed default port from 9999 to 8086
 
+### Bug Fixes
+1. [#151](https://github.com/influxdata/influxdb-client-java/pull/151): Fixed closing OkHttp3 response body
+
 ## 1.11.0 [2020-08-14]
 
 ### Features
