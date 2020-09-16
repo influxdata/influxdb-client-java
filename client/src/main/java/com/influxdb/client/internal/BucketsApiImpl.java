@@ -84,7 +84,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
         Arguments.checkNonEmpty(bucketName, "Bucket Name");
 
         Call<Buckets> bucket = service
-                .getBuckets(null, null, null, null, null, bucketName);
+                .getBuckets(null, null, null, null, null, null, bucketName);
 
         return execute(bucket).getBuckets().stream().findFirst().orElse(null);
     }
@@ -456,7 +456,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
                                 @Nonnull final FindOptions findOptions) {
 
         Call<Buckets> bucketsCall = service.getBuckets(null, findOptions.getOffset(),
-                findOptions.getLimit(), orgName, null, null);
+                findOptions.getLimit(), findOptions.getAfter(), orgName, null, null);
 
         return execute(bucketsCall);
     }

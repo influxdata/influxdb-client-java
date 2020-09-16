@@ -75,7 +75,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
     @Override
     public List<Organization> findOrganizations() {
 
-        Call<Organizations> organizationsCall = service.getOrgs(null, null, null, null);
+        Call<Organizations> organizationsCall = service.getOrgs(null, null, null, null, null, null, null);
 
         Organizations organizations = execute(organizationsCall);
         LOG.log(Level.FINEST, "findOrganizations found: {0}", organizations);

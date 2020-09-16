@@ -66,6 +66,9 @@ public interface OrganizationsService {
    * List all organizations
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
+   * @param offset  (optional)
+   * @param limit  (optional, default to 20)
+   * @param descending  (optional, default to false)
    * @param org Filter organizations to a specific organization name. (optional)
    * @param orgID Filter organizations to a specific organization ID. (optional)
    * @param userID Filter organizations to a specific user ID. (optional)
@@ -73,7 +76,7 @@ public interface OrganizationsService {
    */
   @GET("api/v2/orgs")
   Call<Organizations> getOrgs(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("userID") String userID
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit, @retrofit2.http.Query("descending") Boolean descending, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("userID") String userID
   );
 
   /**

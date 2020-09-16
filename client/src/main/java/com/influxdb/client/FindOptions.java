@@ -38,11 +38,13 @@ public final class FindOptions {
     public static final String OFFSET_KEY = "offset";
     public static final String SORT_BY_KEY = "sortBy";
     public static final String DESCENDING_KEY = "descending";
+    public static final String AFTER_KEY = "after";
 
     private Integer limit;
     private Integer offset;
     private String sortBy;
     private Boolean descending;
+    private String after;
 
     @Nonnull
     public static FindOptions create(@Nullable final String link) {
@@ -59,7 +61,7 @@ public final class FindOptions {
 
         Set<String> qp = httpUrl.queryParameterNames();
         if (!qp.contains(LIMIT_KEY) && !qp.contains(OFFSET_KEY) && !qp.contains(SORT_BY_KEY)
-                && !qp.contains(DESCENDING_KEY)) {
+                && !qp.contains(DESCENDING_KEY) && !qp.contains(AFTER_KEY)) {
 
             return options;
         }
@@ -82,6 +84,11 @@ public final class FindOptions {
         String descending = httpUrl.queryParameter(DESCENDING_KEY);
         if (descending != null) {
             options.setDescending(Boolean.valueOf(descending));
+        }
+
+        String after = httpUrl.queryParameter(AFTER_KEY);
+        if (after != null) {
+            options.setAfter(after);
         }
 
         return options;
@@ -117,5 +124,13 @@ public final class FindOptions {
 
     public void setDescending(final Boolean descending) {
         this.descending = descending;
+    }
+
+    public String getAfter() {
+        return after;
+    }
+
+    public void setAfter(final String after) {
+        this.after = after;
     }
 }
