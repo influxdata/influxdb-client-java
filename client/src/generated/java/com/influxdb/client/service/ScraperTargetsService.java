@@ -9,7 +9,6 @@ import okhttp3.MultipartBody;
 
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
 import com.influxdb.client.domain.Error;
-import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
@@ -155,23 +154,6 @@ public interface ScraperTargetsService {
   @PATCH("api/v2/scrapers/{scraperTargetID}")
   Call<ScraperTargetResponse> patchScrapersID(
     @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Body ScraperTargetRequest scraperTargetRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Update a label on a scraper target
-   * 
-   * @param scraperTargetID The scraper target ID. (required)
-   * @param labelID The label ID. (required)
-   * @param label Label update to apply (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @Headers({
-    "Content-Type:application/json"
-  })
-  @PATCH("api/v2/scrapers/{scraperTargetID}/labels/{labelID}")
-  Call<Void> patchScrapersIDLabelsID(
-    @retrofit2.http.Path("scraperTargetID") String scraperTargetID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Body Label label, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**

@@ -31,7 +31,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.influxdb.LogLevel;
-import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceOwner;
@@ -258,40 +257,6 @@ class ITOrganizationsApi extends AbstractITClientTest {
         Assertions.assertThat(secrets.getSecrets()).hasSize(1).contains("az");
     }
 
-    @Test
-    @Disabled
-    //TODO https://github.com/influxdata/influxdb/issues/18563
-    void labels() {
-
-        LabelsApi labelsApi = influxDBClient.getLabelsApi();
-
-        Organization organization = organizationsApi.createOrganization(generateName("Constant Pro"));
-
-        Map<String, String> properties = new HashMap<>();
-        properties.put("color", "green");
-        properties.put("location", "west");
-
-        Label label = labelsApi.createLabel(generateName("Cool Resource"), properties, organization.getId());
-
-        List<Label> labels = organizationsApi.getLabels(organization);
-        Assertions.assertThat(labels).hasSize(0);
-
-        Label addedLabel = organizationsApi.addLabel(label, organization).getLabel();
-        Assertions.assertThat(addedLabel).isNotNull();
-        Assertions.assertThat(addedLabel.getId()).isEqualTo(label.getId());
-        Assertions.assertThat(addedLabel.getName()).isEqualTo(label.getName());
-        Assertions.assertThat(addedLabel.getProperties()).isEqualTo(label.getProperties());
-
-        labels = organizationsApi.getLabels(organization);
-        Assertions.assertThat(labels).hasSize(1);
-        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
-        Assertions.assertThat(labels.get(0).getName()).isEqualTo(label.getName());
-
-        organizationsApi.deleteLabel(label, organization);
-
-        labels = organizationsApi.getLabels(organization);
-        Assertions.assertThat(labels).hasSize(0);
-    }
 
     @Test
     @Disabled
@@ -306,17 +271,10 @@ class ITOrganizationsApi extends AbstractITClientTest {
         properties.put("color", "green");
         properties.put("location", "west");
 
-        Label label = influxDBClient.getLabelsApi().createLabel(generateName("Cool Resource"), properties, source.getId());
-
-        organizationsApi.addLabel(label, source);
-
         Organization cloned = organizationsApi.cloneOrganization(name, source.getId());
 
         Assertions.assertThat(cloned.getName()).isEqualTo(name);
 
-        List<Label> labels = organizationsApi.getLabels(cloned);
-        Assertions.assertThat(labels).hasSize(1);
-        Assertions.assertThat(labels.get(0).getId()).isEqualTo(label.getId());
     }
 
     @Test

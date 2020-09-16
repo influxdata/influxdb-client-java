@@ -9,9 +9,6 @@ import okhttp3.MultipartBody;
 
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
 import com.influxdb.client.domain.Error;
-import com.influxdb.client.domain.LabelMapping;
-import com.influxdb.client.domain.LabelResponse;
-import com.influxdb.client.domain.LabelsResponse;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.Organizations;
 import com.influxdb.client.domain.ResourceMember;
@@ -37,19 +34,6 @@ public interface OrganizationsService {
   @DELETE("api/v2/orgs/{orgID}")
   Call<Void> deleteOrgsID(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Delete a label from an organization
-   * 
-   * @param orgID The organization ID. (required)
-   * @param labelID The label ID. (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @DELETE("api/v2/orgs/{orgID}/labels/{labelID}")
-  Call<Void> deleteOrgsIDLabelsID(
-    @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Path("labelID") String labelID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -101,18 +85,6 @@ public interface OrganizationsService {
    */
   @GET("api/v2/orgs/{orgID}")
   Call<Organization> getOrgsID(
-    @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * List all labels for a organization
-   * 
-   * @param orgID The organization ID. (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;LabelsResponse&gt;
-   */
-  @GET("api/v2/orgs/{orgID}/labels")
-  Call<LabelsResponse> getOrgsIDLabels(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
@@ -197,22 +169,6 @@ public interface OrganizationsService {
   @POST("api/v2/orgs")
   Call<Organization> postOrgs(
     @retrofit2.http.Body Organization organization, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Add a label to an organization
-   * 
-   * @param orgID The organization ID. (required)
-   * @param labelMapping Label to add (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;LabelResponse&gt;
-   */
-  @Headers({
-    "Content-Type:application/json"
-  })
-  @POST("api/v2/orgs/{orgID}/labels")
-  Call<LabelResponse> postOrgsIDLabels(
-    @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body LabelMapping labelMapping, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
