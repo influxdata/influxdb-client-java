@@ -31,4 +31,5 @@ Describe What actually happened.
 __Specifications:__
  - Client Version:
  - InfluxDB Version:
+ - JDK Version:
  - Platform:
