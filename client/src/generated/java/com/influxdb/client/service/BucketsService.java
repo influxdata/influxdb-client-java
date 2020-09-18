@@ -83,6 +83,7 @@ public interface BucketsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param offset  (optional)
    * @param limit  (optional, default to 20)
+   * @param after The last resource ID from which to seek from (but not including). This is to be used instead of &#x60;offset&#x60;.  (optional)
    * @param org The organization name. (optional)
    * @param orgID The organization ID. (optional)
    * @param name Only returns buckets with a specific name. (optional)
@@ -90,7 +91,7 @@ public interface BucketsService {
    */
   @GET("api/v2/buckets")
   Call<Buckets> getBuckets(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("name") String name
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit, @retrofit2.http.Query("after") String after, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("name") String name
   );
 
   /**

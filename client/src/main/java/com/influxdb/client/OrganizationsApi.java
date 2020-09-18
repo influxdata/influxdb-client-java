@@ -26,8 +26,6 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
-import com.influxdb.client.domain.Label;
-import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceOwner;
@@ -299,57 +297,4 @@ public interface OrganizationsApi {
      */
     void deleteOwner(@Nonnull final String ownerID, @Nonnull final String orgID);
 
-    /**
-     * List all labels of an organization.
-     *
-     * @param organization the organization with labels
-     * @return return List all labels of an organization.
-     */
-    @Nonnull
-    List<Label> getLabels(@Nonnull final Organization organization);
-
-    /**
-     * List all labels of an organization.
-     *
-     * @param orgID ID of organization to get labels
-     * @return return List all labels of an organization
-     */
-    @Nonnull
-    List<Label> getLabels(@Nonnull final String orgID);
-
-    /**
-     * Add the organization label.
-     *
-     * @param label        the label of an organization
-     * @param organization the organization
-     * @return added label
-     */
-    @Nonnull
-    LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Organization organization);
-
-    /**
-     * Add the organization label.
-     *
-     * @param orgID   the ID of an organization
-     * @param labelID the ID of a label
-     * @return added label
-     */
-    @Nonnull
-    LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String orgID);
-
-    /**
-     * Removes a label from an organization.
-     *
-     * @param label        the label
-     * @param organization the organization
-     */
-    void deleteLabel(@Nonnull final Label label, @Nonnull final Organization organization);
-
-    /**
-     * Removes a label from an organization.
-     *
-     * @param orgID   the ID of an organization
-     * @param labelID the ID of a label
-     */
-    void deleteLabel(@Nonnull final String labelID, @Nonnull final String orgID);
 }

@@ -30,10 +30,6 @@ import javax.annotation.Nonnull;
 import com.influxdb.Arguments;
 import com.influxdb.client.OrganizationsApi;
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
-import com.influxdb.client.domain.Label;
-import com.influxdb.client.domain.LabelMapping;
-import com.influxdb.client.domain.LabelResponse;
-import com.influxdb.client.domain.LabelsResponse;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.Organizations;
 import com.influxdb.client.domain.ResourceMember;
@@ -79,7 +75,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
     @Override
     public List<Organization> findOrganizations() {
 
-        Call<Organizations> organizationsCall = service.getOrgs(null, null, null, null);
+        Call<Organizations> organizationsCall = service.getOrgs(null, null, null, null, null, null, null);
 
         Organizations organizations = execute(organizationsCall);
         LOG.log(Level.FINEST, "findOrganizations found: {0}", organizations);
@@ -163,9 +159,6 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         cloned.setDescription(organization.getDescription());
 
         Organization created = createOrganization(cloned);
-
-        getLabels(organization).forEach(label -> addLabel(label, created));
-
         return created;
     }
 
@@ -364,70 +357,6 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
         Call<Void> call = service.deleteOrgsIDOwnersID(ownerID, orgID, null);
-        execute(call);
-    }
-
-    @Nonnull
-    @Override
-    public List<Label> getLabels(@Nonnull final Organization organization) {
-
-        Arguments.checkNotNull(organization, "organization");
-
-        return getLabels(organization.getId());
-    }
-
-    @Nonnull
-    @Override
-    public List<Label> getLabels(@Nonnull final String orgID) {
-
-        Arguments.checkNonEmpty(orgID, "orgID");
-
-        Call<LabelsResponse> call = service.getOrgsIDLabels(orgID, null);
-
-        return execute(call).getLabels();
-    }
-
-    @Nonnull
-    @Override
-    public LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Organization organization) {
-
-        Arguments.checkNotNull(label, "label");
-        Arguments.checkNotNull(organization, "organization");
-
-        return addLabel(label.getId(), organization.getId());
-    }
-
-    @Nonnull
-    @Override
-    public LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String orgID) {
-
-        Arguments.checkNonEmpty(labelID, "labelID");
-        Arguments.checkNonEmpty(orgID, "orgID");
-
-        LabelMapping labelMapping = new LabelMapping();
-        labelMapping.setLabelID(labelID);
-
-        Call<LabelResponse> call = service.postOrgsIDLabels(orgID, labelMapping, null);
-
-        return execute(call);
-    }
-
-    @Override
-    public void deleteLabel(@Nonnull final Label label, @Nonnull final Organization organization) {
-
-        Arguments.checkNotNull(label, "label");
-        Arguments.checkNotNull(organization, "organization");
-
-        deleteLabel(label.getId(), organization.getId());
-    }
-
-    @Override
-    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String orgID) {
-
-        Arguments.checkNonEmpty(labelID, "labelID");
-        Arguments.checkNonEmpty(orgID, "orgID");
-
-        Call<Void> call = service.deleteOrgsIDLabelsID(orgID, labelID, null);
         execute(call);
     }
 }
