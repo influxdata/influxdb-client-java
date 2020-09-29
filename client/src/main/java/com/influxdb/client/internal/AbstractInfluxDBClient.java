@@ -82,6 +82,8 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
         this.gzipInterceptor = new GzipInterceptor();
 
         this.okHttpClient = options.getOkHttpClient()
+                // Connection errors are handled by RetryAttempt in AbstractWriteClient.
+                .retryOnConnectionFailure(false)
                 .addInterceptor(new UserAgentInterceptor(clientType))
                 .addInterceptor(this.loggingInterceptor)
                 .addInterceptor(this.authenticateInterceptor)

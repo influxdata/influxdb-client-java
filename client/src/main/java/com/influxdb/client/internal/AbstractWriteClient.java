@@ -21,9 +21,7 @@
  */
 package com.influxdb.client.internal;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -67,7 +65,7 @@ import retrofit2.Response;
 public abstract class AbstractWriteClient extends AbstractRestClient implements AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(AbstractWriteClient.class.getName());
-    private static final List<Integer> ABLE_TO_RETRY_ERRORS = Arrays.asList(429, 503);
+    private static final Integer ABLE_TO_RETRY_ERROR = 429;
     private static final String CLOSED_EXCEPTION = "WriteApi is closed. "
             + "Data should be written before calling InfluxDBClient.close or WriteApi.close.";
     private static final int DEFAULT_WAIT = 30_000;
@@ -518,49 +516,83 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         Objects.requireNonNull(writeOptions, "WriteOptions are required");
         Objects.requireNonNull(retryScheduler, "RetryScheduler is required");
 
-        return errors -> errors.flatMap(throwable -> {
+        return errors -> errors
+                .zipWith(Flowable.range(1, writeOptions.getMaxRetries() + 1),
+                        (throwable, count) -> new RetryAttempt(throwable, count, writeOptions.getMaxRetries()))
+                .flatMap(attempt -> {
 
-            if (throwable instanceof HttpException) {
+                    if (attempt.isRetry()) {
+                        Throwable throwable = attempt.throwable;
 
-                HttpException ie = (HttpException) throwable;
+                        //
+                        // Retry request
+                        //
+                        long retryInterval;
 
-                //
-                // The type of error is not able to retry
-                //
-                if (!ABLE_TO_RETRY_ERRORS.contains(ie.code())) {
+                        String retryAfter = ((HttpException) throwable).response().headers().get("Retry-After");
+                        if (retryAfter != null) {
 
-                    return Flowable.error(throwable);
-                }
+                            retryInterval = TimeUnit.MILLISECONDS.convert(Integer.parseInt(retryAfter),
+                                    TimeUnit.SECONDS);
+                        } else {
 
-                //
-                // Retry request
-                //
-                long retryInterval;
+                            retryInterval = writeOptions.getRetryInterval();
 
-                String retryAfter = ((HttpException) throwable).response().headers().get("Retry-After");
-                if (retryAfter != null) {
+                            String msg = "The InfluxDB does not specify \"Retry-After\". "
+                                    + "Use the default retryInterval: {0}";
+                            LOG.log(Level.FINEST, msg, retryInterval);
+                        }
 
-                    retryInterval = TimeUnit.MILLISECONDS.convert(Integer.parseInt(retryAfter), TimeUnit.SECONDS);
-                } else {
+                        retryInterval = retryInterval + jitterDelay();
 
-                    retryInterval = writeOptions.getRetryInterval();
+                        publish(new WriteRetriableErrorEvent(throwable, retryInterval));
 
-                    String msg = "The InfluxDB does not specify \"Retry-After\". Use the default retryInterval: {0}";
-                    LOG.log(Level.FINEST, msg, retryInterval);
-                }
+                        return Flowable.just("notify").delay(retryInterval, TimeUnit.MILLISECONDS, retryScheduler);
+                    }
 
-                retryInterval = retryInterval + jitterDelay();
+                    //
+                    // This type of throwable is not able to retry
+                    //
+                    return Flowable.error(attempt.throwable);
+                });
+    }
 
-                publish(new WriteRetriableErrorEvent(throwable, retryInterval));
+    static final class RetryAttempt {
+        private final Throwable throwable;
+        private final int count;
+        private final int maxRetries;
 
-                return Flowable.just("notify").delay(retryInterval, TimeUnit.MILLISECONDS, retryScheduler);
+        RetryAttempt(final Throwable throwable, final int count, final int maxRetries) {
+            this.throwable = throwable;
+            this.count = count;
+            this.maxRetries = maxRetries;
+        }
+
+        boolean isRetry() {
+            if (!(throwable instanceof HttpException)) {
+                return false;
+            }
+
+            HttpException he = (HttpException) throwable;
+
+            //
+            // Retry HTTP error codes >= 429
+            //
+            if (he.code() < ABLE_TO_RETRY_ERROR) {
+                return false;
             }
 
             //
-            // This type of throwable is not able to retry
+            // Max retries exceeded.
             //
-            return Flowable.error(throwable);
-        });
+            if (count > maxRetries) {
+                String msg = String.format("Max write retries exceeded. Response: [%d]: %s", he.code(), he.message());
+                LOG.log(Level.WARNING, msg);
+                return false;
+            }
+
+            return true;
+        }
     }
 
     @Nonnull

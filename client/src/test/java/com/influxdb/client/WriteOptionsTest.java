@@ -43,6 +43,7 @@ class WriteOptionsTest {
         Assertions.assertThat(writeOptions.getBufferLimit()).isEqualTo(10000);
         Assertions.assertThat(writeOptions.getFlushInterval()).isEqualTo(1000);
         Assertions.assertThat(writeOptions.getJitterInterval()).isEqualTo(0);
+        Assertions.assertThat(writeOptions.getMaxRetries()).isEqualTo(3);
         Assertions.assertThat(writeOptions.getWriteScheduler()).isEqualTo(Schedulers.newThread());
         Assertions.assertThat(writeOptions.getBackpressureStrategy()).isEqualTo(BackpressureOverflowStrategy.DROP_OLDEST);
     }
@@ -56,6 +57,7 @@ class WriteOptionsTest {
                 .flushInterval(500)
                 .jitterInterval(1_000)
                 .retryInterval(2_000)
+                .maxRetries(5)
                 .writeScheduler(Schedulers.computation())
                 .backpressureStrategy(BackpressureOverflowStrategy.ERROR)
                 .build();
@@ -65,6 +67,7 @@ class WriteOptionsTest {
         Assertions.assertThat(writeOptions.getFlushInterval()).isEqualTo(500);
         Assertions.assertThat(writeOptions.getJitterInterval()).isEqualTo(1_000);
         Assertions.assertThat(writeOptions.getRetryInterval()).isEqualTo(2_000);
+        Assertions.assertThat(writeOptions.getMaxRetries()).isEqualTo(5);
         Assertions.assertThat(writeOptions.getWriteScheduler()).isEqualTo(Schedulers.computation());
         Assertions.assertThat(writeOptions.getBackpressureStrategy()).isEqualTo(BackpressureOverflowStrategy.ERROR);
     }

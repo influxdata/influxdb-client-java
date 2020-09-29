@@ -339,7 +339,7 @@ For writing data we use [WriteApi](https://influxdata.github.io/influxdb-client-
     - `WriteSuccessEvent` - published when arrived the success response from Platform server
     - `BackpressureEvent` - published when is **client** backpressure applied
     - `WriteErrorEvent` - published when occurs a unhandled exception
-    - `WriteRetriableErrorEvent` - published when occurs a retriable error
+    - `WriteRetriableErrorEvent` - published when exceed a maximal number of retries
 5. use GZIP compression for data
 
 The writes are processed in batches which are configurable by `WriteOptions`:
@@ -350,6 +350,7 @@ The writes are processed in batches which are configurable by `WriteOptions`:
 | **flushInterval** | the number of milliseconds before the batch is written | 1000 |
 | **jitterInterval** | the number of milliseconds to increase the batch flush interval by a random amount | 0 |
 | **retryInterval** | the number of milliseconds to retry unsuccessful write. The retry interval is used when the InfluxDB server does not specify "Retry-After" header.| 1000 |
+| **maxRetries** | the number of max retries when write fails| 3 |
 | **bufferLimit** | the maximum number of unwritten stored points | 10000 |
 | **backpressureStrategy** | the strategy to deal with buffer overflow | DROP_OLDEST |
 
