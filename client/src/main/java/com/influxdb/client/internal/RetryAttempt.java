@@ -21,12 +21,20 @@
  */
 package com.influxdb.client.internal;
 
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.net.ProtocolException;
+import java.net.SocketTimeoutException;
+import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLPeerUnverifiedException;
 
 import com.influxdb.client.WriteOptions;
 
+import org.jetbrains.annotations.Nullable;
 import retrofit2.HttpException;
 
 /**
@@ -54,29 +62,53 @@ final class RetryAttempt {
      * @return true if its retryable otherwise false
      */
     boolean isRetry() {
-        if (!(throwable instanceof HttpException)) {
-            return false;
-        }
-
-        HttpException he = (HttpException) throwable;
-
-        //
-        // Retry HTTP error codes >= 429
-        //
-        if (he.code() < ABLE_TO_RETRY_ERROR) {
-            return false;
-        }
 
         //
         // Max retries exceeded.
         //
         if (count > writeOptions.getMaxRetries()) {
-            String msg = String.format("Max write retries exceeded. Response: [%d]: %s", he.code(), he.message());
-            LOG.log(Level.WARNING, msg);
+
+            LOG.log(Level.WARNING, "Max write retries exceeded.", throwable);
+
             return false;
         }
 
-        return true;
+        if (throwable instanceof HttpException) {
+
+            HttpException he = (HttpException) throwable;
+
+            //
+            // Retry HTTP error codes >= 429
+            //
+            return he.code() >= ABLE_TO_RETRY_ERROR;
+        }
+
+        if (throwable instanceof IOException) {
+            // Much of the code here is inspired
+            // by that in okhttp3.internal.http.RetryAndFollowUpInterceptor.
+
+            if (throwable instanceof ProtocolException) {
+                return false;
+            }
+
+            if (throwable instanceof InterruptedIOException) {
+                return throwable instanceof SocketTimeoutException;
+            }
+
+            if (throwable instanceof SSLHandshakeException) {
+                if (throwable.getCause() instanceof CertificateException) {
+                    return false;
+                }
+            }
+            if (throwable instanceof SSLPeerUnverifiedException) {
+                // e.g. a certificate pinning error.
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -88,12 +120,11 @@ final class RetryAttempt {
 
         long retryInterval;
 
-        String retryAfter = ((HttpException) throwable).response().headers().get("Retry-After");
+        String retryAfter = getRetryAfter();
         // from header
         if (retryAfter != null) {
 
-            retryInterval = TimeUnit.MILLISECONDS.convert(Integer.parseInt(retryAfter),
-                    TimeUnit.SECONDS);
+            retryInterval = TimeUnit.MILLISECONDS.convert(Integer.parseInt(retryAfter), TimeUnit.SECONDS);
             // from default conf
         } else {
 
@@ -102,8 +133,7 @@ final class RetryAttempt {
 
             retryInterval = Math.min(retryInterval, writeOptions.getMaxRetryDelay());
 
-            String msg = "The InfluxDB does not specify \"Retry-After\". "
-                    + "Use the default retryInterval: {0}";
+            String msg = "The InfluxDB does not specify \"Retry-After\". Use the default retryInterval: {0}";
             LOG.log(Level.FINEST, msg, retryInterval);
         }
 
@@ -117,6 +147,15 @@ final class RetryAttempt {
      */
     Throwable getThrowable() {
         return throwable;
+    }
+
+    @Nullable
+    private String getRetryAfter() {
+        if (throwable instanceof HttpException) {
+            return ((HttpException) throwable).response().headers().get("Retry-After");
+        }
+
+        return null;
     }
 
     /**

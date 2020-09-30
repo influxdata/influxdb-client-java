@@ -21,7 +21,14 @@
  */
 package com.influxdb.client.internal;
 
+import java.io.InterruptedIOException;
+import java.net.ConnectException;
+import java.net.ProtocolException;
+import java.net.SocketTimeoutException;
+import java.security.cert.CertificateException;
 import javax.annotation.Nonnull;
+import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLPeerUnverifiedException;
 
 import com.influxdb.client.WriteOptions;
 
@@ -51,6 +58,30 @@ class RetryAttemptTest {
 
         retry = new RetryAttempt(new HttpException(errorResponse(429)), 1, DEFAULT);
         Assertions.assertThat(retry.isRetry()).isTrue();
+
+        retry = new RetryAttempt(new ConnectException("Failed to connect to localhost/127.0.0.1:59368"), 1, DEFAULT);
+        Assertions.assertThat(retry.isRetry()).isTrue();
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(5_000L);
+
+        retry = new RetryAttempt(new ProtocolException(), 1, DEFAULT);
+        Assertions.assertThat(retry.isRetry()).isFalse();
+
+        retry = new RetryAttempt(new InterruptedIOException(), 1, DEFAULT);
+        Assertions.assertThat(retry.isRetry()).isFalse();
+
+        retry = new RetryAttempt(new SocketTimeoutException(), 1, DEFAULT);
+        Assertions.assertThat(retry.isRetry()).isTrue();
+
+        retry = new RetryAttempt(new SSLHandshakeException(""), 1, DEFAULT);
+        Assertions.assertThat(retry.isRetry()).isTrue();
+
+        SSLHandshakeException sslHandshakeException = new SSLHandshakeException("");
+        sslHandshakeException.initCause(new CertificateException());
+        retry = new RetryAttempt(sslHandshakeException, 1, DEFAULT);
+        Assertions.assertThat(retry.isRetry()).isFalse();
+
+        retry = new RetryAttempt(new SSLPeerUnverifiedException(""), 1, DEFAULT);
+        Assertions.assertThat(retry.isRetry()).isFalse();
     }
 
     @Test
