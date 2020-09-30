@@ -60,6 +60,8 @@ class ITQueryService extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO wait for new beta
     void analyze() throws IOException {
 
         Query query = new Query().query("from(bucket: \"telegraf\")"
@@ -81,7 +83,7 @@ class ITQueryService extends AbstractITClientTest {
 
          Assertions.assertThat(analyze.getErrors()).isNotEmpty();
          Assertions.assertThat(analyze.getErrors().get(0).getMessage())
-                 .isEqualTo("expected an operator between two expressions");
+                 .isEqualTo("unknown operator \"<INVALID_OP>\"");
     }
 
     @Test
@@ -135,8 +137,6 @@ class ITQueryService extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-        //TODO wait for new beta
     void suggestions() throws IOException {
 
         FluxSuggestions suggestions = queryService.getQuerySuggestions(null).execute().body();

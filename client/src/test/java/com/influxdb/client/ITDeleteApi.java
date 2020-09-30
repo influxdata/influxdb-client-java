@@ -39,6 +39,7 @@ import com.influxdb.query.FluxTable;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -99,6 +100,8 @@ class ITDeleteApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/19545
     void delete() {
 
         WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
