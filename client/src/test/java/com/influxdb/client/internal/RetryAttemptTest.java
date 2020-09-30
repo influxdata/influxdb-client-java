@@ -91,11 +91,11 @@ class RetryAttemptTest {
 
     @Test
     public void headerHasPriority() {
-        RetryAttempt retry = new RetryAttempt(new HttpException(errorResponse(428, 10)), 1, DEFAULT);
+        RetryAttempt retry = new RetryAttempt(new HttpException(errorResponse(429, 10)), 1, DEFAULT);
 
         Assertions.assertThat(retry.getRetryInterval()).isEqualTo(10000L);
 
-        retry = new RetryAttempt(new HttpException(errorResponse(428)), 1, DEFAULT);
+        retry = new RetryAttempt(new HttpException(errorResponse(429)), 1, DEFAULT);
 
         Assertions.assertThat(retry.getRetryInterval()).isEqualTo(5000L);
     }
@@ -103,25 +103,56 @@ class RetryAttemptTest {
     @Test
     public void exponentialBase() {
 
-        WriteOptions options = WriteOptions.builder().retryInterval(5_000).exponentialBase(5).build();
+        WriteOptions options = WriteOptions.builder()
+                .retryInterval(5_000)
+                .exponentialBase(5)
+                .maxRetryDelay(Integer.MAX_VALUE)
+                .build();
 
-        RetryAttempt retry = new RetryAttempt(new HttpException(errorResponse(428)), 1, options);
+        RetryAttempt retry = new RetryAttempt(new HttpException(errorResponse(429)), 1, options);
         Assertions.assertThat(retry.getRetryInterval()).isEqualTo(5000L);
 
-        retry = new RetryAttempt(new HttpException(errorResponse(428)), 2, options);
+        retry = new RetryAttempt(new HttpException(errorResponse(429)), 2, options);
         Assertions.assertThat(retry.getRetryInterval()).isEqualTo(25000L);
 
-        retry = new RetryAttempt(new HttpException(errorResponse(428)), 3, options);
+        retry = new RetryAttempt(new HttpException(errorResponse(429)), 3, options);
         Assertions.assertThat(retry.getRetryInterval()).isEqualTo(125000L);
 
-        retry = new RetryAttempt(new HttpException(errorResponse(428)), 4, options);
+        retry = new RetryAttempt(new HttpException(errorResponse(429)), 4, options);
         Assertions.assertThat(retry.getRetryInterval()).isEqualTo(625000L);
 
-        retry = new RetryAttempt(new HttpException(errorResponse(428)), 5, options);
+        retry = new RetryAttempt(new HttpException(errorResponse(429)), 5, options);
         Assertions.assertThat(retry.getRetryInterval()).isEqualTo(3125000L);
 
-        retry = new RetryAttempt(new HttpException(errorResponse(428)), 6, options);
+        retry = new RetryAttempt(new HttpException(errorResponse(429)), 6, options);
         Assertions.assertThat(retry.getRetryInterval()).isEqualTo(15625000L);
+
+        retry = new RetryAttempt(new HttpException(errorResponse(429, 3)), 7, options);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(3000L);
+    }
+
+    @Test
+    public void maxRetryDelay() {
+
+        WriteOptions options = WriteOptions.builder().retryInterval(2_000).exponentialBase(2).maxRetryDelay(50_000).build();
+
+        RetryAttempt retry = new RetryAttempt(new HttpException(errorResponse(429)), 1, options);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(2_000L);
+
+        retry = new RetryAttempt(new HttpException(errorResponse(429)), 2, options);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(4_000L);
+
+        retry = new RetryAttempt(new HttpException(errorResponse(429)), 3, options);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(8_000L);
+
+        retry = new RetryAttempt(new HttpException(errorResponse(429)), 4, options);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(16_000L);
+
+        retry = new RetryAttempt(new HttpException(errorResponse(429)), 5, options);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(32_000L);
+
+        retry = new RetryAttempt(new HttpException(errorResponse(429)), 6, options);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(50_000L);
     }
 
     @Nonnull

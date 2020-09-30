@@ -351,6 +351,7 @@ The writes are processed in batches which are configurable by `WriteOptions`:
 | **jitterInterval** | the number of milliseconds to increase the batch flush interval by a random amount | 0 |
 | **retryInterval** | the number of milliseconds to retry unsuccessful write. The retry interval is used when the InfluxDB server does not specify "Retry-After" header.| 5000 |
 | **maxRetries** | the number of max retries when write fails | 3 |
+| **maxRetryDelay** | the maximum delay between each retry attempt in milliseconds | 180_000 |
 | **exponentialBase** | the base for the exponential retry delay, the next delay is computed as `retryInterval * exponentialBase^(attempts-1) + random(jitterInterval)` | 5 |
 | **bufferLimit** | the maximum number of unwritten stored points | 10000 |
 | **backpressureStrategy** | the strategy to deal with buffer overflow | DROP_OLDEST |

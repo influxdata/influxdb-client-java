@@ -57,6 +57,7 @@ public final class WriteOptions {
     private static final int DEFAULT_JITTER_INTERVAL = 0;
     private static final int DEFAULT_RETRY_INTERVAL = 5000;
     private static final int DEFAULT_MAX_RETRIES = 3;
+    private static final int DEFAULT_MAX_RETRY_DELAY = 180_000;
     private static final int DEFAULT_EXPONENTIAL_BASE = 5;
     private static final int DEFAULT_BUFFER_LIMIT = 10000;
 
@@ -70,6 +71,7 @@ public final class WriteOptions {
     private final int jitterInterval;
     private final int retryInterval;
     private final int maxRetries;
+    private final int maxRetryDelay;
     private final int exponentialBase;
     private final int bufferLimit;
     private final Scheduler writeScheduler;
@@ -122,6 +124,16 @@ public final class WriteOptions {
     }
 
     /**
+     * The maximum delay between each retry attempt in milliseconds.
+     *
+     * @return maximum delay
+     * @see WriteOptions.Builder#maxRetryDelay(int)
+     */
+    public int getMaxRetryDelay() {
+        return maxRetryDelay;
+    }
+
+    /**
      * The base for the exponential retry delay.
      *
      * The next delay is computed as: retryInterval * exponentialBase^(attempts-1) + random(jitterInterval)
@@ -168,6 +180,7 @@ public final class WriteOptions {
         jitterInterval = builder.jitterInterval;
         retryInterval = builder.retryInterval;
         maxRetries = builder.maxRetries;
+        maxRetryDelay = builder.maxRetryDelay;
         exponentialBase = builder.exponentialBase;
         bufferLimit = builder.bufferLimit;
         writeScheduler = builder.writeScheduler;
@@ -195,6 +208,7 @@ public final class WriteOptions {
         private int jitterInterval = DEFAULT_JITTER_INTERVAL;
         private int retryInterval = DEFAULT_RETRY_INTERVAL;
         private int maxRetries = DEFAULT_MAX_RETRIES;
+        private int maxRetryDelay = DEFAULT_MAX_RETRY_DELAY;
         private int exponentialBase = DEFAULT_EXPONENTIAL_BASE;
         private int bufferLimit = DEFAULT_BUFFER_LIMIT;
         private Scheduler writeScheduler = Schedulers.newThread();
@@ -268,6 +282,19 @@ public final class WriteOptions {
         public Builder maxRetries(final int maxRetries) {
             Arguments.checkPositiveNumber(maxRetries, "maxRetries");
             this.maxRetries = maxRetries;
+            return this;
+        }
+
+        /**
+         * The maximum delay between each retry attempt in milliseconds.
+         *
+         * @param maxRetryDelay  maximum delay
+         * @return {@code this}
+         */
+        @Nonnull
+        public Builder maxRetryDelay(final int maxRetryDelay) {
+            Arguments.checkPositiveNumber(maxRetryDelay, "maxRetryDelay");
+            this.maxRetryDelay = maxRetryDelay;
             return this;
         }
 

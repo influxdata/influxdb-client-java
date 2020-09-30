@@ -97,15 +97,17 @@ final class RetryAttempt {
             // from default conf
         } else {
 
-            retryInterval = writeOptions.getRetryInterval();
+            retryInterval = writeOptions.getRetryInterval()
+                    * (long) (Math.pow(writeOptions.getExponentialBase(), count - 1));
+
+            retryInterval = Math.min(retryInterval, writeOptions.getMaxRetryDelay());
 
             String msg = "The InfluxDB does not specify \"Retry-After\". "
                     + "Use the default retryInterval: {0}";
             LOG.log(Level.FINEST, msg, retryInterval);
         }
 
-        retryInterval = retryInterval * (long) (Math.pow(writeOptions.getExponentialBase(), count - 1))
-                + jitterDelay(writeOptions.getJitterInterval());
+        retryInterval = retryInterval + jitterDelay(writeOptions.getJitterInterval());
 
         return retryInterval;
     }
