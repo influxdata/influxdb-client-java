@@ -97,7 +97,7 @@ class RetryAttemptTest {
 
         retry = new RetryAttempt(new HttpException(errorResponse(428)), 1, DEFAULT);
 
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(1000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(5000L);
     }
 
     @Test

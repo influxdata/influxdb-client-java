@@ -39,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
  * <ul>
  * <li>batchSize = 1000</li>
  * <li>flushInterval = 1000 ms</li>
- * <li>retryInterval = 1000 ms</li>
+ * <li>retryInterval = 5000 ms</li>
  * <li>jitterInterval = 0</li>
  * <li>bufferLimit = 10_000</li>
  * </ul>
@@ -55,7 +55,7 @@ public final class WriteOptions {
     private static final int DEFAULT_BATCH_SIZE = 1000;
     private static final int DEFAULT_FLUSH_INTERVAL = 1000;
     private static final int DEFAULT_JITTER_INTERVAL = 0;
-    private static final int DEFAULT_RETRY_INTERVAL = 1000;
+    private static final int DEFAULT_RETRY_INTERVAL = 5000;
     private static final int DEFAULT_MAX_RETRIES = 3;
     private static final int DEFAULT_EXPONENTIAL_BASE = 5;
     private static final int DEFAULT_BUFFER_LIMIT = 10000;

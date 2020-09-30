@@ -43,6 +43,7 @@ class WriteOptionsTest {
         Assertions.assertThat(writeOptions.getBufferLimit()).isEqualTo(10000);
         Assertions.assertThat(writeOptions.getFlushInterval()).isEqualTo(1000);
         Assertions.assertThat(writeOptions.getJitterInterval()).isEqualTo(0);
+        Assertions.assertThat(writeOptions.getRetryInterval()).isEqualTo(5_000);
         Assertions.assertThat(writeOptions.getMaxRetries()).isEqualTo(3);
         Assertions.assertThat(writeOptions.getExponentialBase()).isEqualTo(5);
         Assertions.assertThat(writeOptions.getWriteScheduler()).isEqualTo(Schedulers.newThread());
