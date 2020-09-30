@@ -339,7 +339,7 @@ For writing data we use [WriteApi](https://influxdata.github.io/influxdb-client-
     - `WriteSuccessEvent` - published when arrived the success response from Platform server
     - `BackpressureEvent` - published when is **client** backpressure applied
     - `WriteErrorEvent` - published when occurs a unhandled exception
-    - `WriteRetriableErrorEvent` - published when exceed a maximal number of retries
+    - `WriteRetriableErrorEvent` - published when occurs a retriable error
 5. use GZIP compression for data
 
 The writes are processed in batches which are configurable by `WriteOptions`:
