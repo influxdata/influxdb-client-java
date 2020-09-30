@@ -57,6 +57,7 @@ public final class WriteOptions {
     private static final int DEFAULT_JITTER_INTERVAL = 0;
     private static final int DEFAULT_RETRY_INTERVAL = 1000;
     private static final int DEFAULT_MAX_RETRIES = 3;
+    private static final int DEFAULT_EXPONENTIAL_BASE = 5;
     private static final int DEFAULT_BUFFER_LIMIT = 10000;
 
     /**
@@ -69,6 +70,7 @@ public final class WriteOptions {
     private final int jitterInterval;
     private final int retryInterval;
     private final int maxRetries;
+    private final int exponentialBase;
     private final int bufferLimit;
     private final Scheduler writeScheduler;
     private final BackpressureOverflowStrategy backpressureStrategy;
@@ -120,6 +122,18 @@ public final class WriteOptions {
     }
 
     /**
+     * The base for the exponential retry delay.
+     *
+     * The next delay is computed as: retryInterval * exponentialBase^(attempts-1) + random(jitterInterval)
+     *
+     * @return exponential base
+     * @see WriteOptions.Builder#exponentialBase(int)
+     */
+    public int getExponentialBase() {
+        return exponentialBase;
+    }
+
+    /**
      * @return Maximum number of points stored in the retry buffer.
      * @see WriteOptions.Builder#bufferLimit(int)
      */
@@ -154,6 +168,7 @@ public final class WriteOptions {
         jitterInterval = builder.jitterInterval;
         retryInterval = builder.retryInterval;
         maxRetries = builder.maxRetries;
+        exponentialBase = builder.exponentialBase;
         bufferLimit = builder.bufferLimit;
         writeScheduler = builder.writeScheduler;
         backpressureStrategy = builder.backpressureStrategy;
@@ -180,6 +195,7 @@ public final class WriteOptions {
         private int jitterInterval = DEFAULT_JITTER_INTERVAL;
         private int retryInterval = DEFAULT_RETRY_INTERVAL;
         private int maxRetries = DEFAULT_MAX_RETRIES;
+        private int exponentialBase = DEFAULT_EXPONENTIAL_BASE;
         private int bufferLimit = DEFAULT_BUFFER_LIMIT;
         private Scheduler writeScheduler = Schedulers.newThread();
         private BackpressureOverflowStrategy backpressureStrategy = BackpressureOverflowStrategy.DROP_OLDEST;
@@ -252,6 +268,19 @@ public final class WriteOptions {
         public Builder maxRetries(final int maxRetries) {
             Arguments.checkPositiveNumber(maxRetries, "maxRetries");
             this.maxRetries = maxRetries;
+            return this;
+        }
+
+        /**
+         * The base for the exponential retry delay.
+         *
+         * @param exponentialBase exponential base
+         * @return {@code this}
+         */
+        @Nonnull
+        public Builder exponentialBase(final int exponentialBase) {
+            Arguments.checkPositiveNumber(exponentialBase, "exponentialBase");
+            this.exponentialBase = exponentialBase;
             return this;
         }
 

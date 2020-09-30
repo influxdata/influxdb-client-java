@@ -65,7 +65,6 @@ import retrofit2.Response;
 public abstract class AbstractWriteClient extends AbstractRestClient implements AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(AbstractWriteClient.class.getName());
-    private static final Integer ABLE_TO_RETRY_ERROR = 429;
     private static final String CLOSED_EXCEPTION = "WriteApi is closed. "
             + "Data should be written before calling InfluxDBClient.close or WriteApi.close.";
     private static final int DEFAULT_WAIT = 30_000;
@@ -262,18 +261,13 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             //
             return source.delay((Function<BatchWriteItem, Flowable<Long>>) pointFlowable -> {
 
-                int delay = jitterDelay();
+                int delay = RetryAttempt.jitterDelay(writeOptions.getJitterInterval());
 
                 LOG.log(Level.FINEST, "Generated Jitter dynamic delay: {0}", delay);
 
                 return Flowable.timer(delay, TimeUnit.MILLISECONDS, scheduler);
             });
         };
-    }
-
-    private int jitterDelay() {
-
-        return (int) (Math.random() * writeOptions.getJitterInterval());
     }
 
     private <T extends AbstractWriteEvent> void publish(@Nonnull final T event) {
@@ -518,32 +512,13 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
 
         return errors -> errors
                 .zipWith(Flowable.range(1, writeOptions.getMaxRetries() + 1),
-                        (throwable, count) -> new RetryAttempt(throwable, count, writeOptions.getMaxRetries()))
+                        (throwable, count) -> new RetryAttempt(throwable, count, writeOptions))
                 .flatMap(attempt -> {
 
+                    Throwable throwable = attempt.getThrowable();
                     if (attempt.isRetry()) {
-                        Throwable throwable = attempt.throwable;
 
-                        //
-                        // Retry request
-                        //
-                        long retryInterval;
-
-                        String retryAfter = ((HttpException) throwable).response().headers().get("Retry-After");
-                        if (retryAfter != null) {
-
-                            retryInterval = TimeUnit.MILLISECONDS.convert(Integer.parseInt(retryAfter),
-                                    TimeUnit.SECONDS);
-                        } else {
-
-                            retryInterval = writeOptions.getRetryInterval();
-
-                            String msg = "The InfluxDB does not specify \"Retry-After\". "
-                                    + "Use the default retryInterval: {0}";
-                            LOG.log(Level.FINEST, msg, retryInterval);
-                        }
-
-                        retryInterval = retryInterval + jitterDelay();
+                        long retryInterval = attempt.getRetryInterval();
 
                         publish(new WriteRetriableErrorEvent(throwable, retryInterval));
 
@@ -553,46 +528,8 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                     //
                     // This type of throwable is not able to retry
                     //
-                    return Flowable.error(attempt.throwable);
+                    return Flowable.error(throwable);
                 });
-    }
-
-    static final class RetryAttempt {
-        private final Throwable throwable;
-        private final int count;
-        private final int maxRetries;
-
-        RetryAttempt(final Throwable throwable, final int count, final int maxRetries) {
-            this.throwable = throwable;
-            this.count = count;
-            this.maxRetries = maxRetries;
-        }
-
-        boolean isRetry() {
-            if (!(throwable instanceof HttpException)) {
-                return false;
-            }
-
-            HttpException he = (HttpException) throwable;
-
-            //
-            // Retry HTTP error codes >= 429
-            //
-            if (he.code() < ABLE_TO_RETRY_ERROR) {
-                return false;
-            }
-
-            //
-            // Max retries exceeded.
-            //
-            if (count > maxRetries) {
-                String msg = String.format("Max write retries exceeded. Response: [%d]: %s", he.code(), he.message());
-                LOG.log(Level.WARNING, msg);
-                return false;
-            }
-
-            return true;
-        }
     }
 
     @Nonnull
