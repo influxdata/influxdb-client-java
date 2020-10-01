@@ -727,6 +727,28 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
     }
 
     @Test
+    void retryOnNetworkError() throws IOException, InterruptedException {
+
+        mockServer.close();
+
+        WriteOptions options = WriteOptions.builder()
+                .batchSize(1)
+                .maxRetryDelay(2_000)
+                .maxRetries(3)
+                .build();
+        writeApi = influxDBClient.getWriteApi(options);
+
+        WriteEventListener<WriteRetriableErrorEvent> retriableListener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteRetriableErrorEvent.class, retriableListener);
+
+        writeApi.writePoint("b1", "org1", Point.measurement("h2o").addTag("location", "europe").addField("level", 2));
+
+        Thread.sleep(7_000);
+
+        retriableListener.awaitCount(3);
+    }
+
+    @Test
     void parametersFromOptions() throws InterruptedException, IOException {
 
         tearDown();

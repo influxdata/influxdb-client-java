@@ -39,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
  * <ul>
  * <li>batchSize = 1000</li>
  * <li>flushInterval = 1000 ms</li>
- * <li>retryInterval = 1000 ms</li>
+ * <li>retryInterval = 5000 ms</li>
  * <li>jitterInterval = 0</li>
  * <li>bufferLimit = 10_000</li>
  * </ul>
@@ -55,7 +55,10 @@ public final class WriteOptions {
     private static final int DEFAULT_BATCH_SIZE = 1000;
     private static final int DEFAULT_FLUSH_INTERVAL = 1000;
     private static final int DEFAULT_JITTER_INTERVAL = 0;
-    private static final int DEFAULT_RETRY_INTERVAL = 1000;
+    private static final int DEFAULT_RETRY_INTERVAL = 5000;
+    private static final int DEFAULT_MAX_RETRIES = 3;
+    private static final int DEFAULT_MAX_RETRY_DELAY = 180_000;
+    private static final int DEFAULT_EXPONENTIAL_BASE = 5;
     private static final int DEFAULT_BUFFER_LIMIT = 10000;
 
     /**
@@ -67,6 +70,9 @@ public final class WriteOptions {
     private final int flushInterval;
     private final int jitterInterval;
     private final int retryInterval;
+    private final int maxRetries;
+    private final int maxRetryDelay;
+    private final int exponentialBase;
     private final int bufferLimit;
     private final Scheduler writeScheduler;
     private final BackpressureOverflowStrategy backpressureStrategy;
@@ -95,7 +101,6 @@ public final class WriteOptions {
         return jitterInterval;
     }
 
-
     /**
      * The retry interval is used when the InfluxDB server does not specify "Retry-After" header.
      * <br>
@@ -106,6 +111,38 @@ public final class WriteOptions {
      */
     public int getRetryInterval() {
         return retryInterval;
+    }
+
+    /**
+     * The number of max retries when write fails.
+     *
+     * @return number of max retries
+     * @see WriteOptions.Builder#maxRetries(int)
+     */
+    public int getMaxRetries() {
+        return maxRetries;
+    }
+
+    /**
+     * The maximum delay between each retry attempt in milliseconds.
+     *
+     * @return maximum delay
+     * @see WriteOptions.Builder#maxRetryDelay(int)
+     */
+    public int getMaxRetryDelay() {
+        return maxRetryDelay;
+    }
+
+    /**
+     * The base for the exponential retry delay.
+     *
+     * The next delay is computed as: retryInterval * exponentialBase^(attempts-1) + random(jitterInterval)
+     *
+     * @return exponential base
+     * @see WriteOptions.Builder#exponentialBase(int)
+     */
+    public int getExponentialBase() {
+        return exponentialBase;
     }
 
     /**
@@ -142,6 +179,9 @@ public final class WriteOptions {
         flushInterval = builder.flushInterval;
         jitterInterval = builder.jitterInterval;
         retryInterval = builder.retryInterval;
+        maxRetries = builder.maxRetries;
+        maxRetryDelay = builder.maxRetryDelay;
+        exponentialBase = builder.exponentialBase;
         bufferLimit = builder.bufferLimit;
         writeScheduler = builder.writeScheduler;
         backpressureStrategy = builder.backpressureStrategy;
@@ -167,6 +207,9 @@ public final class WriteOptions {
         private int flushInterval = DEFAULT_FLUSH_INTERVAL;
         private int jitterInterval = DEFAULT_JITTER_INTERVAL;
         private int retryInterval = DEFAULT_RETRY_INTERVAL;
+        private int maxRetries = DEFAULT_MAX_RETRIES;
+        private int maxRetryDelay = DEFAULT_MAX_RETRY_DELAY;
+        private int exponentialBase = DEFAULT_EXPONENTIAL_BASE;
         private int bufferLimit = DEFAULT_BUFFER_LIMIT;
         private Scheduler writeScheduler = Schedulers.newThread();
         private BackpressureOverflowStrategy backpressureStrategy = BackpressureOverflowStrategy.DROP_OLDEST;
@@ -226,6 +269,45 @@ public final class WriteOptions {
         public Builder retryInterval(final int retryInterval) {
             Arguments.checkPositiveNumber(retryInterval, "retryInterval");
             this.retryInterval = retryInterval;
+            return this;
+        }
+
+        /**
+         * The number of max retries when write fails.
+         *
+         * @param maxRetries number of max retries
+         * @return {@code this}
+         */
+        @Nonnull
+        public Builder maxRetries(final int maxRetries) {
+            Arguments.checkPositiveNumber(maxRetries, "maxRetries");
+            this.maxRetries = maxRetries;
+            return this;
+        }
+
+        /**
+         * The maximum delay between each retry attempt in milliseconds.
+         *
+         * @param maxRetryDelay  maximum delay
+         * @return {@code this}
+         */
+        @Nonnull
+        public Builder maxRetryDelay(final int maxRetryDelay) {
+            Arguments.checkPositiveNumber(maxRetryDelay, "maxRetryDelay");
+            this.maxRetryDelay = maxRetryDelay;
+            return this;
+        }
+
+        /**
+         * The base for the exponential retry delay.
+         *
+         * @param exponentialBase exponential base
+         * @return {@code this}
+         */
+        @Nonnull
+        public Builder exponentialBase(final int exponentialBase) {
+            Arguments.checkPositiveNumber(exponentialBase, "exponentialBase");
+            this.exponentialBase = exponentialBase;
             return this;
         }
 
