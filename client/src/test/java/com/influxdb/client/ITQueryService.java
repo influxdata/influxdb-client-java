@@ -60,8 +60,6 @@ class ITQueryService extends AbstractITClientTest {
     }
 
     @Test
-    @Disabled
-    //TODO wait for new beta
     void analyze() throws IOException {
 
         Query query = new Query().query("from(bucket: \"telegraf\")"
