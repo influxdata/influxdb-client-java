@@ -1,4 +1,4 @@
-## 1.12.0 [unreleased]
+## 1.12.0 [2020-10-02]
 
 ### Features
 1. [#150](https://github.com/influxdata/influxdb-client-java/pull/150): flux-dsl: added support for an offset parameter to limit operator, aggregates accept only a 'column' parameter
