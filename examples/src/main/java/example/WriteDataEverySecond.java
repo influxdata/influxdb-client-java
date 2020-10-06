@@ -43,12 +43,10 @@ import org.apache.commons.cli.ParseException;
 /**
  * The example how to write data every seconds to the InfluxDB.
  *
- * <p>
  * Usage:
  * <pre>
  * java WriteDataEverySecond --url http://localhost:9999 --token my-token --bucket my-bucket --org my-org
  * </pre>
- * </p>
  *
  * @author Jakub Bednar (06/10/2020 10:00)
  */
