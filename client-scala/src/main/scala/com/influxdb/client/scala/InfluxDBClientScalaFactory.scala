@@ -70,6 +70,11 @@ object InfluxDBClientScalaFactory {
   /**
    * Create an instance of the InfluxDB 2.0 reactive client.
    *
+   * The ''username/password'' auth is based on
+   * [[http://bit.ly/http-basic-auth HTTP "Basic" authentication]]. The authorization expires when the
+   * [[http://bit.ly/session-lengthh time-to-live (TTL)]] (default 60 minutes) is reached
+   * and client produces [[com.influxdb.exceptions.UnauthorizedException]].
+   *
    * @param url      the url to connect to the InfluxDB
    * @param username the username to use in the basic auth
    * @param password the password to use in the basic auth
