@@ -78,7 +78,7 @@ public final class LimitFlux extends AbstractParametrizedFlux {
     @Nonnull
     public LimitFlux withOffset(final int offset) {
 
-        Arguments.checkPositiveNumber(offset, "The number of records to skip");
+        Arguments.checkNotNegativeNumber(offset, "The number of records to skip");
 
         this.withPropertyValue("offset", offset);
 
