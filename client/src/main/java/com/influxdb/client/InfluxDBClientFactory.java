@@ -76,6 +76,13 @@ public final class InfluxDBClientFactory {
     /**
      * Create an instance of the InfluxDB 2.0 client.
      *
+     * <p>
+     * The <i>username/password</i> auth is based on
+     * <a href="http://bit.ly/http-basic-auth">HTTP "Basic" authentication</a>. The authorization expires when the
+     * <a href="http://bit.ly/session-lengthh">time-to-live (TTL)</a> (default 60 minutes) is reached
+     * and client produces {@link com.influxdb.exceptions.UnauthorizedException}.
+     * </p>
+     *
      * @param url      the url to connect to the InfluxDB
      * @param username the username to use in the basic auth
      * @param password the password to use in the basic auth
