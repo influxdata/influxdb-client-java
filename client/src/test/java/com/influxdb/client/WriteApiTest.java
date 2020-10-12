@@ -26,6 +26,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import com.influxdb.annotations.Column;
@@ -746,6 +749,40 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         Thread.sleep(7_000);
 
         retriableListener.awaitCount(3);
+    }
+
+    @Test
+    public void retryContainsMessage() {
+
+        MockLogHandler handler = new MockLogHandler();
+
+        final Logger logger = Logger.getLogger(WriteRetriableErrorEvent.class.getName());
+        logger.addHandler(handler);
+
+        MockResponse errorResponse = new MockResponse()
+                .setResponseCode(429)
+                .addHeader("Retry-After", 5)
+                .setBody("{\"code\":\"too many requests\",\"message\":\"org 04014de4ed590000 has exceeded limited_write plan limit\"}");
+        mockServer.enqueue(errorResponse);
+        mockServer.enqueue(createResponse("{}"));
+
+        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).build());
+
+        WriteEventListener<WriteRetriableErrorEvent> listener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteRetriableErrorEvent.class, listener);
+
+        writeApi.writePoint("b1", "org1", Point.measurement("h2o").addTag("location", "europe").addField("level", 2));
+
+        listener.awaitCount(1);
+
+        List<LogRecord> records = handler.getRecords(Level.WARNING);
+
+        Assertions.assertThat(records).hasSize(1);
+        Assertions.assertThat(records.get(0).getMessage())
+                .isEqualTo("The retriable error occurred during writing of data. Reason: '{0}'. Retry in: {1}ms.");
+        Assertions.assertThat(records.get(0).getParameters()).hasSize(2);
+        Assertions.assertThat(records.get(0).getParameters()[0]).isEqualTo("org 04014de4ed590000 has exceeded limited_write plan limit");
+        Assertions.assertThat(records.get(0).getParameters()[1]).isEqualTo(5000L);
     }
 
     @Test

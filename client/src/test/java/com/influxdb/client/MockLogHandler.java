@@ -19,44 +19,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.influxdb.client.internal;
+package com.influxdb.client;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-
-import com.influxdb.client.MockLogHandler;
-
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
- * @author Jakub Bednar (28/01/2020 14:47)
+ * @author Jakub Bednar (12/10/2020 13:49)
  */
-@RunWith(JUnitPlatform.class)
-class WaitToConditionTest {
-    
-    @Test
-    public void waitToCondition()
-    {
-        MockLogHandler handler = new MockLogHandler();
-        
-        final Logger logger = Logger.getLogger(AbstractWriteClient.class.getName());
-        logger.addHandler(handler);
+public class MockLogHandler extends Handler {
+    private final Map<Level, List<LogRecord>> levels = new HashMap<>();
 
-        AbstractWriteClient.waitToCondition(() -> true, 30000);
-        AbstractWriteClient.waitToCondition(() -> false, 1);
+    @Override
+    public void publish(final LogRecord record) {
+        List<LogRecord> records = levels.computeIfAbsent(record.getLevel(), level -> new ArrayList<>());
+        records.add(record);
+    }
 
-        List<String> records = handler.getRecords(Level.SEVERE)
-                .stream()
-                .map(LogRecord::getMessage)
-                .collect(Collectors.toList());
-        
-        Assertions.assertThat(records).contains("The WriteApi can't be gracefully dispose! - 1ms elapsed.");
-        Assertions.assertThat(records).doesNotContain("The WriteApi can't be gracefully dispose! - 30000ms elapsed.");
+    @Override
+    public void flush() {
+
+    }
+
+    @Override
+    public void close() throws SecurityException {
+
+    }
+
+    public List<LogRecord> getRecords(Level level) {
+        return levels.get(level);
     }
 }
