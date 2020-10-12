@@ -56,7 +56,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import retrofit2.HttpException;
 
 /**
  * @author Jakub Bednar (bednar@github) (21/09/2018 11:36)
@@ -649,8 +648,8 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         retriableListener.awaitCount(1);
         Assertions.assertThat(retriableListener.getValue().getThrowable())
-                .isInstanceOf(HttpException.class)
-                .hasMessage("HTTP 429 Client Error");
+                .isInstanceOf(InfluxException.class)
+                .hasMessage("token is temporarily over quota");
         
         Assertions.assertThat(retriableListener.getValue().getRetryInterval()).isEqualTo(5000);
 
