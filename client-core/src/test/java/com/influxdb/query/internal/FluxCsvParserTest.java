@@ -22,6 +22,8 @@
 package com.influxdb.query.internal;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
@@ -468,7 +470,7 @@ class FluxCsvParserTest {
     @Test
     void multipleQueries() throws IOException {
 
-        String data ="#datatype,string,long,string,string,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string\n"
+        String data = "#datatype,string,long,string,string,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string\n"
                 + "#group,false,false,true,true,true,true,false,false,true\n"
                 + "#default,t1,,,,,,,,\n"
                 + ",result,table,_field,_measurement,_start,_stop,_time,_value,tag\n"
@@ -521,7 +523,7 @@ class FluxCsvParserTest {
     @Test
     void tableIndexNotStartAtZero() throws IOException {
 
-        String data ="#datatype,string,long,string,string,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string\n"
+        String data = "#datatype,string,long,string,string,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string\n"
                 + "#group,false,false,true,true,true,true,false,false,true\n"
                 + "#default,t1,,,,,,,,\n"
                 + ",result,table,_field,_measurement,_start,_stop,_time,_value,tag\n"
@@ -548,6 +550,28 @@ class FluxCsvParserTest {
         Assertions.assertThat(tables.get(1).getRecords().get(0).getTable()).isEqualTo(1);
     }
 
+    @Test
+    public void responseIsInUTF8() throws IOException, IllegalAccessException, NoSuchFieldException {
+
+        String oldCharset = Charset.defaultCharset().toString();
+        setDefaultCharset("GBK");
+
+        try {
+            String data = "#datatype,string,long,string,string,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string\n"
+                    + "#group,false,false,true,true,true,true,false,false,true\n"
+                    + "#default,t1,,,,,,,,\n"
+                    + ",result,table,_field,_measurement,_start,_stop,_time,_value,tag\n"
+                    + ",,1,value,python_client_test,2010-02-27T04:48:32.752600083Z,2020-02-27T16:48:32.752600083Z,2020-02-27T16:20:00Z,2,ěščřĚŠČŘ Přerov 🍺\n";
+
+            List<FluxTable> tables = parseFluxResponse(data);
+            Assertions.assertThat(tables).hasSize(1);
+            Assertions.assertThat(tables.get(0).getRecords()).hasSize(1);
+            Assertions.assertThat(tables.get(0).getRecords().get(0).getValueByKey("tag")).isEqualTo("ěščřĚŠČŘ Přerov 🍺");
+        } finally {
+            setDefaultCharset(oldCharset);
+        }
+    }
+
     @Nonnull
     private List<FluxTable> parseFluxResponse(@Nonnull final String data) throws IOException {
 
@@ -561,7 +585,14 @@ class FluxCsvParserTest {
         return consumer.getTables();
     }
 
+    private void setDefaultCharset(final String name) throws NoSuchFieldException, IllegalAccessException {
+
+        Field charset = Charset.class.getDeclaredField("defaultCharset");
+        charset.setAccessible(true);
+        charset.set(null, Charset.forName(name));
+    }
     private static class DefaultCancellable implements Cancellable {
+
 
         private boolean cancelled = false;
 
