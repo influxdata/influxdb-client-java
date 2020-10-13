@@ -1,4 +1,6 @@
 ## 1.13.0 [unreleased]
+
+### Features
 1. [#163](https://github.com/influxdata/influxdb-client-java/pull/163): Improved logging message for retries
 
 ## 1.12.0 [2020-10-02]
