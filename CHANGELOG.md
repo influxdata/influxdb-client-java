@@ -5,6 +5,7 @@
 
 ### Bug Fixes
 1. [#161](https://github.com/influxdata/influxdb-client-java/pull/161): Offset param could be 0 - FluxDSL
+1. [#164](https://github.com/influxdata/influxdb-client-java/pull/164): Query response parser uses UTF-8 encoding
 
 ## 1.12.0 [2020-10-02]
 
