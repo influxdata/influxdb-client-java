@@ -41,7 +41,6 @@ import com.influxdb.client.service.QueryService;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -155,13 +154,10 @@ class ITQueryService extends AbstractITClientTest {
         FluxSuggestion suggestion = queryService.getQuerySuggestionsName("range", null).execute().body();
         Assertions.assertThat(suggestion).isNotNull();
         Assertions.assertThat(suggestion.getParams())
-                .hasSize(6)
+                .hasSize(3)
                 .hasEntrySatisfying("start", value -> Assertions.assertThat(value).isEqualTo("invalid"))
-                .hasEntrySatisfying("startColumn", value -> Assertions.assertThat(value).isEqualTo("string"))
                 .hasEntrySatisfying("stop", value -> Assertions.assertThat(value).isEqualTo("invalid"))
-                .hasEntrySatisfying("stopColumn", value -> Assertions.assertThat(value).isEqualTo("string"))
-                .hasEntrySatisfying("tables", value -> Assertions.assertThat(value).isEqualTo("array"))
-                .hasEntrySatisfying("timeColumn", value -> Assertions.assertThat(value).isEqualTo("string"));
+                .hasEntrySatisfying("tables", value -> Assertions.assertThat(value).isEqualTo("array"));
 
     }
 }

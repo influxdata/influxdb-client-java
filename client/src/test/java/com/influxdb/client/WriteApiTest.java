@@ -778,10 +778,10 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         Assertions.assertThat(records).hasSize(1);
         Assertions.assertThat(records.get(0).getMessage())
-                .isEqualTo("The retriable error occurred during writing of data. Reason: '{0}'. Retry in: {1}ms.");
+                .isEqualTo("The retriable error occurred during writing of data. Reason: ''{0}''. Retry in: {1}s.");
         Assertions.assertThat(records.get(0).getParameters()).hasSize(2);
         Assertions.assertThat(records.get(0).getParameters()[0]).isEqualTo("org 04014de4ed590000 has exceeded limited_write plan limit");
-        Assertions.assertThat(records.get(0).getParameters()[1]).isEqualTo(5000L);
+        Assertions.assertThat(records.get(0).getParameters()[1]).isEqualTo(5.0);
     }
 
     @Test
