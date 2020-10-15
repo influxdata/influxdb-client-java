@@ -520,7 +520,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
 
                         long retryInterval = attempt.getRetryInterval();
 
-                        publish(new WriteRetriableErrorEvent(throwable, retryInterval));
+                        publish(new WriteRetriableErrorEvent(toInfluxException(throwable), retryInterval));
 
                         return Flowable.just("notify").delay(retryInterval, TimeUnit.MILLISECONDS, retryScheduler);
                     }
