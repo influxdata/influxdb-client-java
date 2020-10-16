@@ -24,6 +24,7 @@ package com.influxdb.query.internal;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -116,7 +117,7 @@ public class FluxCsvParser {
 
         Arguments.checkNotNull(bufferedSource, "bufferedSource");
 
-        Reader reader = new InputStreamReader(bufferedSource.inputStream());
+        Reader reader = new InputStreamReader(bufferedSource.inputStream(), StandardCharsets.UTF_8);
 
         ParsingState parsingState = ParsingState.NORMAL;
 
