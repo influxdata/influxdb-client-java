@@ -58,6 +58,17 @@ class LimitFluxTest {
     }
 
     @Test
+    void limitOffsetZero() {
+
+        Flux flux = Flux
+                .from("telegraf")
+                .limit(100, 0);
+
+        Assertions.assertThat(flux.toString())
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> limit(n: 100, offset:0)");
+    }
+
+    @Test
     void limitPositive() {
         Assertions.assertThatThrownBy(() -> Flux.from("telegraf").limit(-5))
                 .isInstanceOf(IllegalArgumentException.class)
