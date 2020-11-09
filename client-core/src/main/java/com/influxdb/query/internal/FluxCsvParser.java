@@ -53,8 +53,6 @@ import org.apache.commons.csv.CSVRecord;
  */
 public class FluxCsvParser {
 
-    private static final int ERROR_RECORD_INDEX = 4;
-
     private enum ParsingState {
         NORMAL,
 
@@ -111,6 +109,7 @@ public class FluxCsvParser {
      * @param consumer       to accept {@link FluxTable}s and {@link FluxRecord}s
      * @throws IOException If there is a problem with reading CSV
      */
+    @SuppressWarnings("MagicNumber")
     public void parseFluxResponse(@Nonnull final BufferedSource bufferedSource,
                                   @Nonnull final Cancellable cancellable,
                                   @Nonnull final FluxResponseConsumer consumer) throws IOException {
@@ -132,13 +131,10 @@ public class FluxCsvParser {
                     return;
                 }
 
-                long recordNumber = csvRecord.getRecordNumber();
-
                 //
                 // Response has HTTP status ok, but response is error.
                 //
-                if (ERROR_RECORD_INDEX == recordNumber && csvRecord.get(1).equals("error")
-                        && csvRecord.get(2).equals("reference")) {
+                if (csvRecord.size() >= 3 && csvRecord.get(1).equals("error") && csvRecord.get(2).equals("reference")) {
 
                     parsingState = ParsingState.IN_ERROR;
                     continue;
@@ -153,7 +149,7 @@ public class FluxCsvParser {
 
                     int reference = 0;
                     if (referenceValue != null && !referenceValue.isEmpty()) {
-                        reference = Integer.valueOf(referenceValue);
+                        reference = Integer.parseInt(referenceValue);
                     }
 
                     throw new FluxQueryException(error, reference);
