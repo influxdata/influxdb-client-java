@@ -44,7 +44,12 @@ import com.influxdb.query.dsl.Flux;
  *     <li><b>fieldFn</b> - Function that takes a record from the input table and returns an object.</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <h3>Examples</h3>
+ * <pre>
+ * Flux flux = Flux
+ *     .from("telegraf")
+ *     .to("my-bucket");
+ * </pre>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")
