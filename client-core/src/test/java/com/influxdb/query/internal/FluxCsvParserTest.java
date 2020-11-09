@@ -573,7 +573,7 @@ class FluxCsvParserTest {
     }
 
     @Test
-    public void responseWitError() {
+    public void responseWithError() {
         String data = "#datatype,string,long,string,string,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string\n"
                 + "#group,false,false,true,true,true,true,false,false,true\n"
                 + "#default,t1,,,,,,,,\n"
