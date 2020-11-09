@@ -1,5 +1,8 @@
 ## 1.14.0 [unreleased]
 
+### Bug Fixes
+1. [#173](https://github.com/influxdata/influxdb-client-java/pull/173): Query error could be after _success_ table
+
 ## 1.13.0 [2020-10-30]
 
 ### Features
