@@ -572,6 +572,29 @@ class FluxCsvParserTest {
         }
     }
 
+    @Test
+    public void responseWithError() {
+        String data = "#datatype,string,long,string,string,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string\n"
+                + "#group,false,false,true,true,true,true,false,false,true\n"
+                + "#default,t1,,,,,,,,\n"
+                + ",result,table,_field,_measurement,_start,_stop,_time,_value,tag\n"
+                + ",,0,value,python_client_test,2010-02-27T04:48:32.752600083Z,2020-02-27T16:48:32.752600083Z,2020-02-27T16:20:00Z,2,test1\n"
+                + ",,0,value,python_client_test,2010-02-27T04:48:32.752600083Z,2020-02-27T16:48:32.752600083Z,2020-02-27T16:21:40Z,2,test1\n"
+                + ",,0,value,python_client_test,2010-02-27T04:48:32.752600083Z,2020-02-27T16:48:32.752600083Z,2020-02-27T16:23:20Z,2,test1\n"
+                + ",,0,value,python_client_test,2010-02-27T04:48:32.752600083Z,2020-02-27T16:48:32.752600083Z,2020-02-27T16:25:00Z,2,test1\n"
+                + "\n"
+                + "#datatype,string,string\n"
+                + "#group,true,true\n"
+                + "#default,,\n"
+                + ",error,reference\n"
+                + ",\"engine: unknown field type for value: xyz\",";
+
+        Assertions.assertThatThrownBy(() -> parseFluxResponse(data))
+                .isInstanceOf(FluxQueryException.class)
+                .hasMessage("engine: unknown field type for value: xyz")
+                .matches((Predicate<Throwable>) throwable -> ((FluxQueryException) throwable).reference() == 0);
+    }
+
     @Nonnull
     private List<FluxTable> parseFluxResponse(@Nonnull final String data) throws IOException {
 
@@ -591,6 +614,7 @@ class FluxCsvParserTest {
         charset.setAccessible(true);
         charset.set(null, Charset.forName(name));
     }
+
     private static class DefaultCancellable implements Cancellable {
 
 
