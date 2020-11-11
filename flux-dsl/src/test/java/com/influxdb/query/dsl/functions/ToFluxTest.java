@@ -57,6 +57,17 @@ class ToFluxTest {
     }
 
     @Test
+    void toBucket() {
+
+        Flux flux = Flux
+                .from("telegraf")
+                .to("my-bucket");
+
+        Assertions.assertThat(flux.toString())
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> to(bucket: \"my-bucket\")");
+    }
+
+    @Test
     void toBucketOrg() {
 
         Flux flux = Flux
