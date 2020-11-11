@@ -1748,6 +1748,19 @@ public abstract class Flux {
      * To operation takes data from a stream and writes it to a bucket.
      *
      * @param bucket The bucket to which data will be written.
+     * @return {@link ToFlux}
+     */
+    @Nonnull
+    public final ToFlux to(@Nonnull final String bucket) {
+
+        return new ToFlux(this)
+                .withBucket(bucket);
+    }
+
+    /**
+     * To operation takes data from a stream and writes it to a bucket.
+     *
+     * @param bucket The bucket to which data will be written.
      * @param org    The organization name of the above bucket.
      * @return {@link ToFlux}
      */
