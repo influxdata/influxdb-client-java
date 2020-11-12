@@ -202,6 +202,8 @@ class ITDashboardsApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/20006
     void owner() {
 
         Dashboard dashboard = dashboardsApi.createDashboard(generateName("dashboard"), "coolest dashboard", organization.getId());

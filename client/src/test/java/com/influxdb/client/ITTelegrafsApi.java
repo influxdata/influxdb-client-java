@@ -296,6 +296,8 @@ class ITTelegrafsApi extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
+    //TODO https://github.com/influxdata/influxdb/issues/20005
     void owner() {
 
         Telegraf telegrafConfig = telegrafsApi
