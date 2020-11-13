@@ -22,6 +22,7 @@
 package com.influxdb.client.internal;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -147,7 +148,12 @@ final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiB
         points
                 .stream()
                 .filter(Objects::nonNull)
-                .forEach(point -> write(bucket, org, point.getPrecision(), new BatchWriteDataPoint(point, options)));
+                .collect(Collectors.groupingBy(Point::getPrecision, LinkedHashMap::new, Collectors.toList()))
+                .forEach((precision, grouped) -> write(
+                        bucket,
+                        org,
+                        precision,
+                        grouped.stream().map(it -> new BatchWriteDataPoint(it, options))));
     }
 
     @Override
