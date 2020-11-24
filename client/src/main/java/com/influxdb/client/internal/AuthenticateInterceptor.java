@@ -118,7 +118,7 @@ class AuthenticateInterceptor implements Interceptor {
                     .basic(influxDBClientOptions.getUsername(), string(influxDBClientOptions.getPassword()));
 
             Request authRequest = new Request.Builder()
-                    .url(buildPath("/api/v2/signin"))
+                    .url(buildPath("api/v2/signin"))
                     .addHeader("Authorization", credentials)
                     .post(RequestBody.create(null, ""))
                     .build();
@@ -156,7 +156,7 @@ class AuthenticateInterceptor implements Interceptor {
         this.sessionToken = null;
 
         Request authRequest = new Request.Builder()
-                .url(buildPath("/api/v2/signout"))
+                .url(buildPath("api/v2/signout"))
                 .post(RequestBody.create(null, ""))
                 .build();
 
@@ -172,7 +172,7 @@ class AuthenticateInterceptor implements Interceptor {
         return HttpUrl
                 .parse(influxDBClientOptions.getUrl())
                 .newBuilder()
-                .encodedPath(buildPath)
+                .addEncodedPathSegments(buildPath)
                 .build()
                 .toString();
     }
