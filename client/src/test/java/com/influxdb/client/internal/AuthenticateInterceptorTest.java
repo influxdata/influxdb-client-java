@@ -121,6 +121,29 @@ class AuthenticateInterceptorTest extends AbstractMockServerTest {
     }
 
     @Test
+    void connectionStringSigInSignOutURL() {
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .connectionString("http://localhost:8086?writeTimeout=1000&connectTimeout=1000&logLevel=BODY")
+                .authenticate("user", "secret".toCharArray())
+                .build();
+
+        AuthenticateInterceptor interceptor = new AuthenticateInterceptor(options);
+
+        Assertions
+                .assertThat("http://localhost:8086/api/v2/signin")
+                .isEqualTo(interceptor.buildPath("/api/v2/signin"));
+
+        Assertions
+                .assertThat("http://localhost:8086/api/v2/signout")
+                .isEqualTo(interceptor.buildPath("/api/v2/signout"));
+
+        Assertions
+                .assertThat("http://localhost:8086/api/v2/setup")
+                .isEqualTo(interceptor.buildPath("/api/v2/setup"));
+    }
+
+    @Test
     void authorizationSessionWithoutCookie() throws IOException, InterruptedException {
 
         InfluxDBClientOptions options = InfluxDBClientOptions.builder()

@@ -22,7 +22,6 @@
 package com.influxdb.client;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import com.influxdb.client.domain.Dialect;
 import com.influxdb.client.domain.Query;
@@ -405,7 +404,5 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
         request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
-
-
     }
 }

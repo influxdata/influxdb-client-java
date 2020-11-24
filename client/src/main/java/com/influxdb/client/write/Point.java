@@ -179,7 +179,7 @@ public final class Point {
     }
 
     /**
-     * Add {@link Boolean} field.
+     * Add {@link String} field.
      *
      * @param field the field name
      * @param value the field value
