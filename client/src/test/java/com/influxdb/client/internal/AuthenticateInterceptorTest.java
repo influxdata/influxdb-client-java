@@ -121,6 +121,93 @@ class AuthenticateInterceptorTest extends AbstractMockServerTest {
     }
 
     @Test
+    public void buildPath() {
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url("http://localhost:8086")
+                .authenticate("user", "secret".toCharArray())
+                .build();
+
+        Assertions
+                .assertThat("http://localhost:8086/api/v2/signin")
+                .isEqualTo(new AuthenticateInterceptor(options).buildPath("api/v2/signin"));
+
+        options = InfluxDBClientOptions.builder()
+                .url("http://localhost:8086/")
+                .authenticate("user", "secret".toCharArray())
+                .build();
+
+        Assertions
+                .assertThat("http://localhost:8086/api/v2/signin")
+                .isEqualTo(new AuthenticateInterceptor(options).buildPath("api/v2/signin"));
+
+        options = InfluxDBClientOptions.builder()
+                .url("http://localhost:8086/proxy")
+                .authenticate("user", "secret".toCharArray())
+                .build();
+
+        Assertions
+                .assertThat("http://localhost:8086/proxy/api/v2/signin")
+                .isEqualTo(new AuthenticateInterceptor(options).buildPath("api/v2/signin"));
+
+        options = InfluxDBClientOptions.builder()
+                .url("http://localhost:8086/proxy/")
+                .authenticate("user", "secret".toCharArray())
+                .build();
+
+        Assertions
+                .assertThat("http://localhost:8086/proxy/api/v2/signin")
+                .isEqualTo(new AuthenticateInterceptor(options).buildPath("api/v2/signin"));
+    }
+
+    @Test
+    void connectionStringSigInSignOutURL() {
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .connectionString("http://localhost:8086?writeTimeout=1000&connectTimeout=1000&logLevel=BODY")
+                .authenticate("user", "secret".toCharArray())
+                .build();
+
+        AuthenticateInterceptor interceptor = new AuthenticateInterceptor(options);
+
+        Assertions
+                .assertThat("http://localhost:8086/api/v2/signin")
+                .isEqualTo(interceptor.buildPath("api/v2/signin"));
+
+        Assertions
+                .assertThat("http://localhost:8086/api/v2/signout")
+                .isEqualTo(interceptor.buildPath("api/v2/signout"));
+
+        Assertions
+                .assertThat("http://localhost:8086/api/v2/setup")
+                .isEqualTo(interceptor.buildPath("api/v2/setup"));
+    }
+
+
+    @Test
+    void connectionStringSigInSignOutURLProxy() {
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .connectionString("http://localhost:8086/proxy?writeTimeout=1000&connectTimeout=1000&logLevel=BODY")
+                .authenticate("user", "secret".toCharArray())
+                .build();
+
+        AuthenticateInterceptor interceptor = new AuthenticateInterceptor(options);
+
+        Assertions
+                .assertThat("http://localhost:8086/proxy/api/v2/signin")
+                .isEqualTo(interceptor.buildPath("api/v2/signin"));
+
+        Assertions
+                .assertThat("http://localhost:8086/proxy/api/v2/signout")
+                .isEqualTo(interceptor.buildPath("api/v2/signout"));
+
+        Assertions
+                .assertThat("http://localhost:8086/proxy/api/v2/setup")
+                .isEqualTo(interceptor.buildPath("api/v2/setup"));
+    }
+
+    @Test
     void authorizationSessionWithoutCookie() throws IOException, InterruptedException {
 
         InfluxDBClientOptions options = InfluxDBClientOptions.builder()

@@ -35,6 +35,7 @@ import com.influxdb.client.InfluxDBClientOptions;
 import okhttp3.Call;
 import okhttp3.Cookie;
 import okhttp3.Credentials;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -117,7 +118,7 @@ class AuthenticateInterceptor implements Interceptor {
                     .basic(influxDBClientOptions.getUsername(), string(influxDBClientOptions.getPassword()));
 
             Request authRequest = new Request.Builder()
-                    .url(influxDBClientOptions.getUrl() + "/api/v2/signin")
+                    .url(buildPath("api/v2/signin"))
                     .addHeader("Authorization", credentials)
                     .post(RequestBody.create(null, ""))
                     .build();
@@ -155,12 +156,25 @@ class AuthenticateInterceptor implements Interceptor {
         this.sessionToken = null;
 
         Request authRequest = new Request.Builder()
-                .url(influxDBClientOptions.getUrl() + "/api/v2/signout")
+                .url(buildPath("api/v2/signout"))
                 .post(RequestBody.create(null, ""))
                 .build();
 
         Response response = this.okHttpClient.newCall(authRequest).execute();
         response.close();
+    }
+
+    @Nonnull
+    String buildPath(final String buildPath) {
+
+        Arguments.checkNotNull(buildPath, "buildPath");
+
+        return HttpUrl
+                .parse(influxDBClientOptions.getUrl())
+                .newBuilder()
+                .addEncodedPathSegments(buildPath)
+                .build()
+                .toString();
     }
 
     @Nonnull
