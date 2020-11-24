@@ -51,6 +51,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (25/03/2019 09:52)
  */
 @RunWith(JUnitPlatform.class)
+@Disabled("https://github.com/influxdata/influxdb/issues/20163")
 class ITTemplatesApi extends AbstractITClientTest {
 
     private TemplatesApi templatesApi;
