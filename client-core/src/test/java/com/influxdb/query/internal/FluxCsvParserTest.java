@@ -270,6 +270,7 @@ class FluxCsvParserTest {
         List<FluxTable> tables = parseFluxResponse(data);
 
         byte[] value = (byte[]) tables.get(0).getRecords().get(0).getValueByKey("value");
+        Assertions.assertThat(value).isNotNull();
         Assertions.assertThat(value).isNotEmpty();
         Assertions.assertThat(new String(value, UTF_8)).isEqualTo(binaryData);
 
@@ -593,6 +594,24 @@ class FluxCsvParserTest {
                 .isInstanceOf(FluxQueryException.class)
                 .hasMessage("engine: unknown field type for value: xyz")
                 .matches((Predicate<Throwable>) throwable -> ((FluxQueryException) throwable).reference() == 0);
+    }
+
+    @Test
+    public void parseExportFromUserInterface() throws IOException {
+            String data = "#group,false,false,true,true,true,true,true,true,false,false\n"
+            + "#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,double,dateTime:RFC3339\n"
+            + "#default,mean,,,,,,,,,\n"
+            + ",result,table,_start,_stop,_field,_measurement,city,location,_value,_time\n"
+            + ",,0,1754-06-26T11:30:27.613654848Z,2040-10-27T12:13:46.485Z,temperatureC,weather,London,us-midwest,30,1975-09-01T16:59:54.5Z\n"
+            + ",,1,1754-06-26T11:30:27.613654848Z,2040-10-27T12:13:46.485Z,temperatureF,weather,London,us-midwest,86,1975-09-01T16:59:54.5Z\n";
+
+        List<FluxTable> tables = parseFluxResponse(data);
+        Assertions.assertThat(tables).hasSize(2);
+        Assertions.assertThat(tables.get(0).getRecords()).hasSize(1);
+        Assertions.assertThat(tables.get(0).getColumns().get(0).isGroup()).isFalse();
+        Assertions.assertThat(tables.get(0).getColumns().get(1).isGroup()).isFalse();
+        Assertions.assertThat(tables.get(0).getColumns().get(2).isGroup()).isTrue();
+        Assertions.assertThat(tables.get(1).getRecords()).hasSize(1);
     }
 
     @Nonnull

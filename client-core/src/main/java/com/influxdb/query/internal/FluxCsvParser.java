@@ -28,7 +28,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,6 +54,12 @@ import org.apache.commons.csv.CSVRecord;
  * @see com.influxdb.query
  */
 public class FluxCsvParser {
+
+    private static final String ANNOTATION_DATATYPE = "#datatype";
+    private static final String ANNOTATION_GROUP = "#group";
+    private static final String ANNOTATION_DEFAULT = "#default";
+    private static final List<String> ANNOTATIONS = Arrays
+            .asList(ANNOTATION_DATATYPE, ANNOTATION_GROUP, ANNOTATION_DEFAULT);
 
     private enum ParsingState {
         NORMAL,
@@ -125,6 +133,7 @@ public class FluxCsvParser {
             int tableId = -1;
             boolean startNewTable = false;
             FluxTable table = null;
+            List<String> groups = Collections.emptyList();
             for (CSVRecord csvRecord : parser) {
 
                 if (cancellable.isCancelled()) {
@@ -157,10 +166,11 @@ public class FluxCsvParser {
 
                 String token = csvRecord.get(0);
                 //// start new table
-                if ("#datatype".equals(token)) {
+                if (ANNOTATIONS.contains(token) && !startNewTable) {
                     startNewTable = true;
 
                     table = new FluxTable();
+                    groups = Collections.emptyList();
                     consumer.accept(tableIndex, cancellable, table);
                     tableIndex++;
                     tableId = -1;
@@ -171,18 +181,17 @@ public class FluxCsvParser {
                 }
 
                 //#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string
-                if ("#datatype".equals(token)) {
+                if (ANNOTATION_DATATYPE.equals(token)) {
                     addDataTypes(table, toList(csvRecord));
 
-                } else if ("#group".equals(token)) {
-                    addGroups(table, toList(csvRecord));
-
-                } else if ("#default".equals(token)) {
+                } else if (ANNOTATION_GROUP.equals(token)) {
+                    groups = toList(csvRecord);
+                } else if (ANNOTATION_DEFAULT.equals(token)) {
                     addDefaultEmptyValues(table, toList(csvRecord));
-
                 } else {
                     // parse column names
                     if (startNewTable) {
+                        addGroups(table, groups);
                         addColumnNamesAndTags(table, toList(csvRecord));
                         startNewTable = false;
                         continue;
@@ -297,12 +306,12 @@ public class FluxCsvParser {
         Arguments.checkNotNull(table, "table");
         Arguments.checkNotNull(groups, "groups");
 
-        for (int i = 0; i < groups.size(); i++) {
+        for (int i = 0; i < table.getColumns().size(); i++) {
 
             FluxColumn fluxColumn = getFluxColumn(i, table);
 
             String group = groups.get(i);
-            fluxColumn.setGroup(Boolean.valueOf(group));
+            fluxColumn.setGroup(Boolean.parseBoolean(group));
         }
     }
 
