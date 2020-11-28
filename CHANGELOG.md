@@ -2,6 +2,7 @@
 
 ### Features
 1. [#172](https://github.com/influxdata/influxdb-client-java/pull/172): flux-dsl: added `to` function without `org` parameter
+1. [#183](https://github.com/influxdata/influxdb-client-java/pull/183): CSV parser is able to parse export from UI
 
 ### Bug Fixes
 1. [#173](https://github.com/influxdata/influxdb-client-java/pull/173): Query error could be after _success_ table
