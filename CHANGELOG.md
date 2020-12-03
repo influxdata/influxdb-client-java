@@ -9,6 +9,9 @@
 1. [#176](https://github.com/influxdata/influxdb-client-java/pull/176): Blocking API batches Point by precision
 1. [#180](https://github.com/influxdata/influxdb-client-java/pull/180): Fixed concatenation of url
 
+### CI
+1. [#184](https://github.com/influxdata/influxdb-client-java/pull/184): Updated default docker image to v2.0.2
+
 ## 1.13.0 [2020-10-30]
 
 ### Features
