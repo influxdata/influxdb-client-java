@@ -40,7 +40,7 @@ cp -R "${SCRIPT_PATH}"/../target/staging/ "${HOME}"/site
 echo "Clone: gh-pages"
 cd "${HOME}"
 rm -rf "${HOME}"/gh-pages
-git clone --branch=gh-pages https://github.com/influxdata/influxdb-client-java "${HOME}"/gh-pages
+git clone --branch=gh-pages git@github.com:influxdata/influxdb-client-java.git "${HOME}"/gh-pages
 
 echo "Copy site"
 # Push Site
