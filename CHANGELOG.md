@@ -1,4 +1,4 @@
-## 1.14.0 [unreleased]
+## 1.14.0 [2020-12-04]
 
 ### Features
 1. [#172](https://github.com/influxdata/influxdb-client-java/pull/172): flux-dsl: added `to` function without `org` parameter
