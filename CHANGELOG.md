@@ -1,5 +1,8 @@
 ## 1.15.0 [unreleased]
 
+### CI
+1. [#192](https://github.com/influxdata/influxdb-client-java/pull/192): Updated default docker image to v2.0.3
+
 ## 1.14.0 [2020-12-04]
 
 ### Features
