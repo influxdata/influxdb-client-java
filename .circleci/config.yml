@@ -179,7 +179,7 @@ workflows:
           maven-image: "circleci/openjdk:11"
       - tests-java:
           name: jdk-8-nightly
-          influxdb-image: "influx:nightly"
+          influxdb-image: "influxdb2:nightly"
       - deploy-snapshot:
           requires:
             - jdk-8
