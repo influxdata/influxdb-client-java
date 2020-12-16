@@ -663,6 +663,22 @@ Flux flux = Flux
     .from("telegraf")
     .sum();
 ```
+
+### tail
+Tail caps the number of records in output tables to a fixed size [[doc](http://bit.ly/flux-spec#tail)].
+- `n` - The maximum number of records to output. [int]
+- `offset` - The number of records to skip per table. Default to `0`. [int]
+```java
+Flux flux = Flux
+    .from("telegraf")
+    .tail(5);
+```    
+```java
+Flux flux = Flux
+    .from("telegraf")
+    .tail(100, 10);
+```
+
 ### to
 The To operation takes data from a stream and writes it to a bucket [[doc](http://bit.ly/flux-spec#to)].
 - `bucket` - The bucket to which data will be written. [string]

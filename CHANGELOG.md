@@ -1,5 +1,8 @@
 ## 1.15.0 [unreleased]
 
+### Features
+1. [#191](https://github.com/influxdata/influxdb-client-java/pull/191): Added tail operator to FluxDSL
+
 ### CI
 1. [#192](https://github.com/influxdata/influxdb-client-java/pull/192): Updated default docker image to v2.0.3
 
