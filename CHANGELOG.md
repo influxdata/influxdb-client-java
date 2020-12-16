@@ -1,5 +1,8 @@
 ## 1.15.0 [unreleased]
 
+### Features
+1. [#191](https://github.com/influxdata/influxdb-client-java/pull/191): Added tail operator to FluxDSL
+
 ## 1.14.0 [2020-12-04]
 
 ### Features

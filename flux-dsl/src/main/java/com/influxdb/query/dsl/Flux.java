@@ -67,6 +67,7 @@ import com.influxdb.query.dsl.functions.SortFlux;
 import com.influxdb.query.dsl.functions.SpreadFlux;
 import com.influxdb.query.dsl.functions.StddevFlux;
 import com.influxdb.query.dsl.functions.SumFlux;
+import com.influxdb.query.dsl.functions.TailFlux;
 import com.influxdb.query.dsl.functions.ToBoolFlux;
 import com.influxdb.query.dsl.functions.ToDurationFlux;
 import com.influxdb.query.dsl.functions.ToFloatFlux;
@@ -1715,6 +1716,50 @@ public abstract class Flux {
     @Nonnull
     public final SumFlux sum(@Nonnull final String column) {
         return new SumFlux(this).withColumn(column);
+    }
+
+    /**
+     * Caps the number of records in output tables.
+     *
+     * <h3>The parameters had to be defined by:</h3>
+     * <ul>
+     * <li>{@link TailFlux#withN(int)}</li>
+     * <li>{@link TailFlux#withPropertyNamed(String)}</li>
+     * <li>{@link TailFlux#withPropertyNamed(String, String)}</li>
+     * <li>{@link TailFlux#withPropertyValueEscaped(String, String)}</li>
+     * </ul>
+     *
+     * @return {@link TailFlux}
+     */
+    @Nonnull
+    public final TailFlux tail() {
+
+        return new TailFlux(this);
+    }
+
+    /**
+     * Caps the number of records in output tables.
+     *
+     * @param numberOfResults The number of results
+     * @return {@link TailFlux}
+     */
+    @Nonnull
+    public final TailFlux tail(final int numberOfResults) {
+
+        return new TailFlux(this).withN(numberOfResults);
+    }
+
+    /**
+     * Caps the number of records in output tables.
+     *
+     * @param numberOfResults The number of results
+     * @param offset          The number of records to skip per table.
+     * @return {@link TailFlux}
+     */
+    @Nonnull
+    public final TailFlux tail(final int numberOfResults, final int offset) {
+
+        return new TailFlux(this).withN(numberOfResults).withOffset(offset);
     }
 
     /**
