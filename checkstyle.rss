@@ -23,9 +23,9 @@ under the License.
     <link>https://github.com/influxdata/influxdb-client-java</link>
     <description>The InfluxDB 2.0 JVM Based Clients - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2018 - 2020 InfluxData, Inc.</copyright>
+    <copyright>&#169;2018 - 2021 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 165,
+      <title>File: 166,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -2035,6 +2035,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.MinFlux.java">com/influxdb/query/dsl/functions/MinFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.TailFlux.java">com/influxdb/query/dsl/functions/TailFlux.java</a>
                 </td>
                 <td>
                   0

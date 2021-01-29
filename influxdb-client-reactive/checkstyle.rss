@@ -23,7 +23,7 @@ under the License.
     <link>https://github.com/influxdata/influxdb-client-java/tree/master/client-reactive</link>
     <description>The RxJava InfluxDB 2.0 Client - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2018 - 2020 InfluxData, Inc.</copyright>
+    <copyright>&#169;2018 - 2021 InfluxData, Inc.</copyright>
     <item>
       <title>File: 7,
              Errors: 0,
