@@ -1,5 +1,8 @@
 ## 1.16.0 [unreleased]
 
+### Bug Fixes
+1. [#197](https://github.com/influxdata/influxdb-client-java/pull/197): Removed badly licenced JSON-Java
+
 ## 1.15.0 [2021-01-29]
 
 ### Features
