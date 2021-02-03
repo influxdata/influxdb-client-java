@@ -29,6 +29,10 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.influxdb.Arguments;
 import com.influxdb.Cancellable;
 import com.influxdb.exceptions.InfluxException;
@@ -38,8 +42,6 @@ import com.influxdb.query.internal.FluxResultMapper;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.BufferedSource;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,12 +60,9 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
 
     };
 
-    protected static final JSONObject DEFAULT_DIALECT = new JSONObject()
-            .put("header", true)
-            .put("delimiter", ",")
-            .put("quoteChar", "\"")
-            .put("commentPrefix", "#")
-            .put("annotations", new JSONArray().put("datatype").put("group").put("default"));
+    protected static final JsonObject DEFAULT_DIALECT = new JsonParser().parse("{\"header\":true," +
+        "\"delimiter\":\",\",\"quoteChar\":\"\\\"\",\"commentPrefix\":\"#\"," +
+        "\"annotations\":[\"datatype\",\"group\",\"default\"]}").getAsJsonObject();
 
     protected static final Consumer<Throwable> ERROR_CONSUMER = throwable -> {
         if (throwable instanceof InfluxException) {
@@ -77,11 +76,13 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
     protected RequestBody createBody(@Nullable final String dialect, @Nonnull final String query) {
 
         Arguments.checkNonEmpty(query, "Flux query");
-        JSONObject json = new JSONObject()
-                .put("query", query);
+
+        JsonObject json = new JsonObject();
+        json.addProperty("query", query);
 
         if (dialect != null && !dialect.isEmpty()) {
-            json.put("dialect", new JSONObject(dialect));
+            JsonElement dialectJson = new Gson().fromJson(dialect, JsonElement.class);
+            json.add("dialect",  dialectJson);
         }
 
         return createBody(json.toString());

@@ -27,8 +27,9 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import okhttp3.ResponseBody;
-import org.json.JSONObject;
 import retrofit2.HttpException;
 import retrofit2.Response;
 
@@ -45,7 +46,7 @@ public class InfluxException extends RuntimeException {
     private final Response<?> response;
     private final String message;
 
-    private JSONObject errorBody = new JSONObject();
+    private JsonObject errorBody = new JsonObject();// = new JsonNode();
 
     public InfluxException(@Nullable final String message) {
 
@@ -118,22 +119,23 @@ public class InfluxException extends RuntimeException {
      * @return a response body
      */
     @Nonnull
-    public JSONObject errorBody() {
+    public JsonObject errorBody() {
 
         return errorBody;
     }
 
     @Nullable
     private String messageFromResponse() {
-
         if (response != null) {
-
             try {
                 ResponseBody body = response.errorBody();
                 if (body != null) {
-                    errorBody = new JSONObject(body.source().readUtf8());
-                    if (errorBody.has("message")) {
-                        return errorBody.getString("message");
+                    String json = body.source().readUtf8();
+                    if (!json.isEmpty()) {
+                        errorBody = new JsonParser().parse(json).getAsJsonObject();
+                        if (errorBody.has("message")) {
+                            return errorBody.get("message").getAsString();
+                        }
                     }
                 }
             } catch (Exception e) {

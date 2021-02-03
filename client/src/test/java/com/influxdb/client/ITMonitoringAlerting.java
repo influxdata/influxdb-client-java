@@ -26,6 +26,10 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.concurrent.TimeUnit;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.influxdb.client.domain.CheckStatusLevel;
 import com.influxdb.client.domain.LesserThreshold;
 import com.influxdb.client.domain.Organization;
@@ -36,8 +40,6 @@ import com.influxdb.client.write.Point;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -127,15 +129,16 @@ class ITMonitoringAlerting extends AbstractITClientTest {
         RecordedRequest request = mockServer.takeRequest(30, TimeUnit.SECONDS);
         Assertions.assertThat(request).isNotNull();
 
-        JSONObject json = new JSONObject(request.getBody().readUtf8());
+        JsonObject json = new JsonParser().parse(request.getBody().readUtf8()).getAsJsonObject();
         Assertions.assertThat(json.has("attachments")).isTrue();
 
-        JSONArray attachments = json.getJSONArray("attachments");
+        JsonArray attachments = json.getAsJsonArray("attachments");
         Assertions.assertThat(attachments).hasSize(1);
 
-        JSONObject notification = attachments.getJSONObject(0);
+        JsonElement notification = attachments.get(0);
         Assertions.assertThat(notification).isNotNull();
-        Assertions.assertThat(notification.getString("text")).isEqualTo("The Stock price for XYZ is on: crit level!");
+        Assertions.assertThat(notification.getAsJsonObject().get("text").getAsString())
+            .isEqualTo("The Stock price for XYZ is on: crit level!");
     }
 
     private String getHostNetwork() {
