@@ -46,7 +46,7 @@ public class InfluxException extends RuntimeException {
     private final Response<?> response;
     private final String message;
 
-    private JsonObject errorBody = new JsonObject();// = new JsonNode();
+    private JsonObject errorBody = new JsonObject();
 
     public InfluxException(@Nullable final String message) {
 

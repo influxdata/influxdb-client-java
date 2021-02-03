@@ -29,16 +29,16 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.influxdb.Arguments;
 import com.influxdb.Cancellable;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.query.internal.FluxCsvParser;
 import com.influxdb.query.internal.FluxResultMapper;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.BufferedSource;
@@ -60,9 +60,9 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
 
     };
 
-    protected static final JsonObject DEFAULT_DIALECT = new JsonParser().parse("{\"header\":true," +
-        "\"delimiter\":\",\",\"quoteChar\":\"\\\"\",\"commentPrefix\":\"#\"," +
-        "\"annotations\":[\"datatype\",\"group\",\"default\"]}").getAsJsonObject();
+    protected static final JsonObject DEFAULT_DIALECT = new JsonParser().parse("{\"header\":true,"
+        + "\"delimiter\":\",\",\"quoteChar\":\"\\\"\",\"commentPrefix\":\"#\","
+        + "\"annotations\":[\"datatype\",\"group\",\"default\"]}").getAsJsonObject();
 
     protected static final Consumer<Throwable> ERROR_CONSUMER = throwable -> {
         if (throwable instanceof InfluxException) {
