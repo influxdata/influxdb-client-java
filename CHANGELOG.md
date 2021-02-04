@@ -1,7 +1,10 @@
-## 1.16.0 [unreleased]
+## 2.0 [unreleased]
+
+### API
+1. [#197](https://github.com/influxdata/influxdb-client-java/pull/197): InfluxException bodyError type changed from JSONObject to Map<String, Object>
 
 ### Bug Fixes
-1. [#197](https://github.com/influxdata/influxdb-client-java/pull/197): Removed badly licenced JSON-Java
+1. [#197](https://github.com/influxdata/influxdb-client-java/issues/196): Removed badly licenced JSON-Java library
 
 ## 1.15.0 [2021-01-29]
 
