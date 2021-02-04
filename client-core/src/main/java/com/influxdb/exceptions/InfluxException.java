@@ -21,14 +21,16 @@
  */
 package com.influxdb.exceptions;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 import retrofit2.Response;
@@ -46,7 +48,7 @@ public class InfluxException extends RuntimeException {
     private final Response<?> response;
     private final String message;
 
-    private JsonObject errorBody = new JsonObject();
+    private Map<String, Object> errorBody = new HashMap<>();
 
     public InfluxException(@Nullable final String message) {
 
@@ -119,8 +121,7 @@ public class InfluxException extends RuntimeException {
      * @return a response body
      */
     @Nonnull
-    public JsonObject errorBody() {
-
+    public Map<String, Object> errorBody() {
         return errorBody;
     }
 
@@ -132,9 +133,10 @@ public class InfluxException extends RuntimeException {
                 if (body != null) {
                     String json = body.source().readUtf8();
                     if (!json.isEmpty()) {
-                        errorBody = new JsonParser().parse(json).getAsJsonObject();
-                        if (errorBody.has("message")) {
-                            return errorBody.get("message").getAsString();
+                        errorBody = new Gson().fromJson(json, new TypeToken<Map<String, Object>>() {
+                        }.getType());
+                        if (errorBody.containsKey("message")) {
+                            return errorBody.get("message").toString();
                         }
                     }
                 }

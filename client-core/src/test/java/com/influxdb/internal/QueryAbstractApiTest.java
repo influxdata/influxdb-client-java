@@ -110,7 +110,7 @@ class QueryAbstractApiTest extends AbstractMockServerTest {
     @Test
     void createBodyDefaultDialect() throws IOException {
 
-        RequestBody body = queryClient.createBody(AbstractQueryApi.DEFAULT_DIALECT.toString(), "from(bucket:\"telegraf\")");
+        RequestBody body = queryClient.createBody(AbstractQueryApi.DEFAULT_DIALECT, "from(bucket:\"telegraf\")");
 
         Buffer buffer = new Buffer();
         body.writeTo(buffer);
