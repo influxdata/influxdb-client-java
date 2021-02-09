@@ -98,7 +98,7 @@ public class FluxApiImpl extends AbstractQueryApi implements FluxClient {
 
         FluxResponseConsumerTable consumer = fluxCsvParser.new FluxResponseConsumerTable();
 
-        query(query, DEFAULT_DIALECT.toString(), consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
+        query(query, DEFAULT_DIALECT, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
 
         return consumer.getTables();
     }
@@ -130,7 +130,7 @@ public class FluxApiImpl extends AbstractQueryApi implements FluxClient {
             }
         };
 
-        query(query, DEFAULT_DIALECT.toString(), consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
+        query(query, DEFAULT_DIALECT, consumer, ERROR_CONSUMER, EMPTY_ACTION, false);
 
         return measurements;
     }
@@ -209,7 +209,7 @@ public class FluxApiImpl extends AbstractQueryApi implements FluxClient {
             }
         };
 
-        query(query, DEFAULT_DIALECT.toString(), consumer, onError, onComplete, true);
+        query(query, DEFAULT_DIALECT, consumer, onError, onComplete, true);
     }
 
 
@@ -246,7 +246,7 @@ public class FluxApiImpl extends AbstractQueryApi implements FluxClient {
             }
         };
 
-        query(query, DEFAULT_DIALECT.toString(), consumer, onError, onComplete, true);
+        query(query, DEFAULT_DIALECT, consumer, onError, onComplete, true);
 
     }
 

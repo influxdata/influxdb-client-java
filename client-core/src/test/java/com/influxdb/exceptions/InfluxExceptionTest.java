@@ -21,16 +21,17 @@
  */
 package com.influxdb.exceptions;
 
+import java.util.Map;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.gson.JsonObject;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
 import org.assertj.core.api.Assertions;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -160,7 +161,7 @@ class InfluxExceptionTest {
                     Response<Object> response = errorResponse("Wrong query", 501, 15, "{\"error\": \"error-body\"}");
                     throw new InfluxException(new HttpException(response));
                 })
-                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).errorBody().toString().equals("{\"error\":\"error-body\"}"));
+                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).errorBody().get("error").equals("error-body"));
     }
 
     @Test
@@ -201,9 +202,10 @@ class InfluxExceptionTest {
                     throw new InfluxException(new HttpException(response));
                 })
                 .matches((Predicate<Throwable>) throwable -> {
-                    JSONObject errorBody1 = ((InfluxException) throwable).errorBody();
-                    JSONObject errorBody2 = ((InfluxException) throwable).errorBody();
-                    return errorBody1.toString().equals("{\"error\":\"error-body\"}") && errorBody1.equals(errorBody2);
+                    Map errorBody1 = ((InfluxException) throwable).errorBody();
+                    Map errorBody2 = ((InfluxException) throwable).errorBody();
+                    return errorBody1.get("error").equals("error-body")
+                        && errorBody1.equals(errorBody2);
                 });
     }
 
@@ -214,7 +216,7 @@ class InfluxExceptionTest {
                 .assertThatThrownBy(() -> {
                     throw new InfluxException(new IllegalStateException("unExpectedError"));
                 })
-                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).errorBody().toString().equals("{}"));
+                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).errorBody().isEmpty());
     }
 
     @Test
@@ -224,7 +226,7 @@ class InfluxExceptionTest {
                 .assertThatThrownBy(() -> {
                     throw new InfluxException(new HttpException(errorResponse("Wrong query")));
                 })
-                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).errorBody().toString().equals("{}"));
+                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).errorBody().isEmpty());
     }
 
     @Test
@@ -237,7 +239,7 @@ class InfluxExceptionTest {
                 .hasMessage("Wrong query")
                 .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).status() == 0)
                 .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).reference() == 0)
-                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).errorBody().toString().equals("{}"));
+                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).errorBody().isEmpty());
 
     }
 
@@ -251,7 +253,7 @@ class InfluxExceptionTest {
                 .hasMessage(null)
                 .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).status() == 0)
                 .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).reference() == 0)
-                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).errorBody().toString().equals("{}"));
+                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).errorBody().isEmpty());
 
     }
 
@@ -264,7 +266,7 @@ class InfluxExceptionTest {
                 .hasMessage(null)
                 .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).status() == 0)
                 .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).reference() == 0)
-                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).errorBody().toString().equals("{}"));
+                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).errorBody().isEmpty());
     }
 
     @Nonnull

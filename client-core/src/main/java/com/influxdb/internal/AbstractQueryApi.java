@@ -22,6 +22,8 @@
 package com.influxdb.internal;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -35,11 +37,13 @@ import com.influxdb.exceptions.InfluxException;
 import com.influxdb.query.internal.FluxCsvParser;
 import com.influxdb.query.internal.FluxResultMapper;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.BufferedSource;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,15 +61,18 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
     protected static final Runnable EMPTY_ACTION = () -> {
 
     };
+    protected static final String DEFAULT_DIALECT;
+    static {
+        Map<String, Object> dialect = new HashMap<>();
+        dialect.put("header", true);
+        dialect.put("delimiter", ",");
+        dialect.put("quoteChar", "\"");
+        dialect.put("commentPrefix", "#");
+        dialect.put("annotations", new String[]{"datatype", "group", "default"});
+        DEFAULT_DIALECT = new GsonBuilder().create().toJson(dialect);
+    }
 
-    protected static final JSONObject DEFAULT_DIALECT = new JSONObject()
-            .put("header", true)
-            .put("delimiter", ",")
-            .put("quoteChar", "\"")
-            .put("commentPrefix", "#")
-            .put("annotations", new JSONArray().put("datatype").put("group").put("default"));
-
-    protected static final Consumer<Throwable> ERROR_CONSUMER = throwable -> {
+        protected static final Consumer<Throwable> ERROR_CONSUMER = throwable -> {
         if (throwable instanceof InfluxException) {
             throw (InfluxException) throwable;
         } else {
@@ -77,11 +84,13 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
     protected RequestBody createBody(@Nullable final String dialect, @Nonnull final String query) {
 
         Arguments.checkNonEmpty(query, "Flux query");
-        JSONObject json = new JSONObject()
-                .put("query", query);
+
+        JsonObject json = new JsonObject();
+        json.addProperty("query", query);
 
         if (dialect != null && !dialect.isEmpty()) {
-            json.put("dialect", new JSONObject(dialect));
+            JsonElement dialectJson = new Gson().fromJson(dialect, JsonElement.class);
+            json.add("dialect",  dialectJson);
         }
 
         return createBody(json.toString());

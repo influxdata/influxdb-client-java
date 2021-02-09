@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import javax.annotation.Nonnull;
 
+import com.google.gson.JsonParser;
 import com.influxdb.Cancellable;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.query.internal.FluxCsvParser;
@@ -90,7 +91,9 @@ class QueryAbstractApiTest extends AbstractMockServerTest {
         Buffer buffer = new Buffer();
         body.writeTo(buffer);
 
-        Assertions.assertThat(buffer.readUtf8()).isEqualTo("{\"dialect\":{\"header\":false},\"query\":\"from(bucket:\\\"telegraf\\\")\"}");
+        JsonParser parser = new JsonParser();
+        Assertions.assertThat(parser.parse(buffer.readUtf8()))
+            .isEqualTo(parser.parse("{\"dialect\":{\"header\":false},\"query\":\"from(bucket:\\\"telegraf\\\")\"}"));
     }
 
     @Test
@@ -107,13 +110,14 @@ class QueryAbstractApiTest extends AbstractMockServerTest {
     @Test
     void createBodyDefaultDialect() throws IOException {
 
-        RequestBody body = queryClient.createBody(AbstractQueryApi.DEFAULT_DIALECT.toString(), "from(bucket:\"telegraf\")");
+        RequestBody body = queryClient.createBody(AbstractQueryApi.DEFAULT_DIALECT, "from(bucket:\"telegraf\")");
 
         Buffer buffer = new Buffer();
         body.writeTo(buffer);
 
+        JsonParser parser = new JsonParser();
         String expected = "{\"dialect\":{\"quoteChar\":\"\\\"\",\"commentPrefix\":\"#\",\"delimiter\":\",\",\"header\":true,\"annotations\":[\"datatype\",\"group\",\"default\"]},\"query\":\"from(bucket:\\\"telegraf\\\")\"}";
-        Assertions.assertThat(buffer.readUtf8()).isEqualTo(expected);
+        Assertions.assertThat(parser.parse(buffer.readUtf8())).isEqualTo(parser.parse(expected));
     }
 
     @Test
