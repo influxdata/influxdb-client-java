@@ -21,37 +21,27 @@
  */
 package com.influxdb.client.scala.internal
 
-import java.util.function.BiConsumer
-
 import akka.NotUsed
-import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.Source
+import com.influxdb.Arguments
 import com.influxdb.client.InfluxDBClientOptions
 import com.influxdb.client.domain.{Dialect, Query}
 import com.influxdb.client.internal.AbstractInfluxDBClient
 import com.influxdb.client.scala.QueryScalaApi
 import com.influxdb.client.service.QueryService
 import com.influxdb.internal.AbstractQueryApi
-import com.influxdb.query.internal.FluxCsvParser
-import com.influxdb.query.{FluxRecord, FluxTable}
-import com.influxdb.{Arguments, Cancellable}
-import javax.annotation.Nonnull
+import com.influxdb.query.FluxRecord
 
-import scala.compat.java8.FunctionConverters.asJavaConsumer
+import javax.annotation.Nonnull
 
 /**
  * @author Jakub Bednar (bednar@github) (06/11/2018 08:19)
  */
-class QueryScalaApiImpl(@Nonnull service: QueryService,
-                        @Nonnull options: InfluxDBClientOptions,
-                        @Nonnull val bufferSize: Int,
-                        @Nonnull val overflowStrategy: OverflowStrategy)
+class QueryScalaApiImpl(@Nonnull service: QueryService, @Nonnull options: InfluxDBClientOptions)
 
   extends AbstractQueryApi()
     with QueryScalaApi {
 
-  Arguments.checkNotNull(overflowStrategy, "overflowStrategy")
-  Arguments.checkNotNull(bufferSize, "bufferSize")
 
   /**
    * Executes the Flux query against the InfluxDB and asynchronously stream [[FluxRecord]]s to [[Stream]].
@@ -110,37 +100,21 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
     Arguments.checkNotNull(query, "query")
     Arguments.checkNonEmpty(org, "org")
 
-    Source
-      .single(query)
-      .map(_ => service
-        .postQueryResponseBody(null, "application/json",
-          null, org, null, query))
-      .flatMapConcat(queryCall => {
-        Source.queue[FluxRecord](bufferSize, overflowStrategy)
-          .mapMaterializedValue(queue => {
+    Source.unfoldResource[FluxRecord, AbstractQueryApi#FluxRecordIterator](
+      () => {
+        val call = service.postQueryResponseBody(null, "application/json", null, org, null, query)
 
-            val eventualDone = queue.watchCompletion()
-            val consumer = new FluxCsvParser.FluxResponseConsumer() {
+        queryIterator(call)
 
-              override
-              def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull table: FluxTable): Unit = {
-              }
-
-              override
-              def accept(index: Int, @Nonnull cancellable: Cancellable, @Nonnull record: FluxRecord): Unit = {
-                if (eventualDone.isCompleted) {
-                  cancellable.cancel()
-                } else {
-                  queue.offer(record)
-                }
-              }
-            }
-
-            val onError = asJavaConsumer[Throwable](t => queue.fail(t))
-
-            this.query(queryCall, consumer, onError, new Runnable() { def run(): Unit = queue.complete() }, true)
-          })
-      })
+      },
+      query => {
+        if (query.hasNext)
+          Some(query.next())
+        else
+          None // signals end of results
+      },
+      reader => reader.close()
+    )
   }
 
   /**
@@ -301,31 +275,20 @@ class QueryScalaApiImpl(@Nonnull service: QueryService,
     Arguments.checkNotNull(query, "query")
     Arguments.checkNonEmpty(org, "org")
 
-    Source
-      .single(query)
-      .map(it => service
-        .postQueryResponseBody(null, "application/json",
-          null, org, null, query))
-      .flatMapConcat(queryCall => {
-        Source.queue[String](bufferSize, overflowStrategy)
-          .mapMaterializedValue(queue => {
+    Source.unfoldResource[String, AbstractQueryApi#RawIterator](
+      () => {
+        val call = service.postQueryResponseBody(null, "application/json", null, org, null, query)
 
-            val eventualDone = queue.watchCompletion()
+        queryRawIterator(call)
 
-            val onResponse = new BiConsumer[Cancellable, String] {
-              override def accept(cancellable: Cancellable, line: String): Unit = {
-                if (eventualDone.isCompleted) {
-                  cancellable.cancel()
-                } else {
-                  queue.offer(line)
-                }
-              }
-            }
-
-            val onError = asJavaConsumer[Throwable](t => queue.fail(t))
-
-            this.queryRaw(queryCall, onResponse, onError, () => queue.complete, true)
-          })
-      })
+      },
+      query => {
+        if (query.hasNext)
+          Some(query.next())
+        else
+          None // signals end of results
+      },
+      reader => reader.close()
+    )
   }
 }

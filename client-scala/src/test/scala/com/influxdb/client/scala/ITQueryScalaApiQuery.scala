@@ -21,19 +21,22 @@
  */
 package com.influxdb.client.scala
 
-import java.net.ConnectException
-import java.time.Instant
-
 import akka.actor.ActorSystem
+import akka.stream.scaladsl.FileIO
 import akka.stream.testkit.scaladsl.TestSink
+import akka.util.ByteString
 import com.influxdb.annotations.Column
-import com.influxdb.client.InfluxDBClientFactory
 import com.influxdb.client.domain._
 import com.influxdb.client.internal.AbstractInfluxDBClient
+import com.influxdb.client.{InfluxDBClientFactory, InfluxDBClientOptions}
 import com.influxdb.exceptions.InfluxException
 import com.influxdb.query.FluxRecord
 import org.scalatest.matchers.should.Matchers
 
+import java.nio.file.Paths
+import java.time.Instant
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 import scala.jdk.CollectionConverters._
 
 /**
@@ -47,6 +50,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
   var queryScalaApi: QueryScalaApi = _
   var fluxPrefix: String = _
   var token: String = _
+  var bucket: Bucket = _
 
   before {
 
@@ -60,7 +64,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       .filter(o => o.getName == "my-org").findFirst()
       .orElseThrow(() => new IllegalStateException())
 
-    val bucket = client.getBucketsApi.createBucket(influxDBUtils.generateName("h2o"), null, organization)
+    bucket = client.getBucketsApi.createBucket(influxDBUtils.generateName("h2o"), null, organization)
     fluxPrefix = "from(bucket:\"" + bucket.getName + "\")\n\t"
 
     //
@@ -118,6 +122,8 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
     record1.getMeasurement should be("mem")
     record1.getValue should be(21)
 
+    // end is signaled by None
+    source.request(1)
     source.expectComplete()
   }
 
@@ -141,6 +147,8 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       record1.getMeasurement should be("mem")
       record1.getValue should be(21)
 
+      // end is signaled by None
+      source.request(1)
       source.expectComplete()
     }
 
@@ -153,6 +161,8 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       record1.getMeasurement should be("mem")
       record1.getValue should be(21)
 
+      // end is signaled by None
+      source.request(1)
       source.expectComplete()
     }
 
@@ -163,6 +173,8 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       val mem = source.requestNext()
       mem.free should be(21L)
 
+      // end is signaled by None
+      source.request(1)
       source.expectComplete()
     }
 
@@ -173,6 +185,8 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       val mem = source.requestNext()
       mem.free should be(21L)
 
+      // end is signaled by None
+      source.request(1)
       source.expectComplete()
     }
 
@@ -198,6 +212,8 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       line = source.requestNext()
       line shouldBe empty
 
+      // end is signaled by None
+      source.request(1)
       source.expectComplete()
     }
 
@@ -215,6 +231,8 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       line = source.requestNext()
       line shouldBe empty
 
+      // end is signaled by None
+      source.request(1)
       source.expectComplete()
     }
 
@@ -232,6 +250,8 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       line = source.requestNext()
       line shouldBe empty
 
+      // end is signaled by None
+      source.request(1)
       source.expectComplete()
     }
   }
@@ -298,7 +318,8 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
     val throwable = source.expectSubscriptionAndError()
 
-    throwable shouldBe a[ConnectException]
+    throwable shouldBe a[InfluxException]
+    throwable.getMessage contains "Failed to connect"
 
     clientNotRunning.close()
   }
@@ -330,6 +351,8 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
     line = source.requestNext()
     line shouldBe empty
 
+    // end is signaled by None
+    source.request(1)
     source.expectComplete()
   }
 
@@ -351,9 +374,53 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
     line = source.requestNext()
     line shouldBe empty
 
+    // end is signaled by None
+    source.request(1)
     source.expectComplete()
   }
 
+  test("Exhausted too early") {
+
+    influxDBClient.close()
+
+    //
+    // Prepare data
+    //
+    val records = Range(0, 10000).map(n => s"buffer field=$n $n").mkString("\n")
+    val client = InfluxDBClientFactory.create(influxDBUtils.getUrl, "my-user", "my-password".toCharArray)
+    client.getWriteApi.writeRecord(bucket.getName, organization.getId, WritePrecision.NS, records)
+    client.close()
+
+    //
+    // Init client with small buffer
+    //
+    val influxOptions = InfluxDBClientOptions.builder()
+      .url(influxDBUtils.getUrl)
+      .authenticateToken(token.toCharArray)
+      .org(organization.getName)
+      .build()
+
+    influxDBClient = InfluxDBClientScalaFactory
+          .create(influxOptions)
+
+    //
+    // Query ALL
+    //
+    queryScalaApi = influxDBClient.getQueryScalaApi()
+
+    val flux = s"$fluxPrefix |> range(start: 1970-01-01T00:00:00.000000001Z) " +
+      "|> filter(fn: (r) => r[\"_measurement\"] == \"buffer\")"
+
+    var count = 0
+    val source = queryScalaApi.queryRaw(flux)
+      .map(s => {
+        count += 1
+        ByteString(s + "\n")
+      }).runWith(FileIO.toPath(Paths.get("./test.txt")))
+
+    Await.result(source, Duration.Inf)
+    count shouldBe 10004
+  }
 }
 
 class Mem {

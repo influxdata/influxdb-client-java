@@ -21,10 +21,10 @@
  */
 package com.influxdb.client.scala
 
-import akka.stream.OverflowStrategy
 import com.influxdb.Arguments
 import com.influxdb.client.InfluxDBClientOptions
 import com.influxdb.client.scala.internal.InfluxDBClientScalaImpl
+
 import javax.annotation.Nonnull
 
 /**
@@ -143,19 +143,13 @@ object InfluxDBClientScalaFactory {
   /**
    * Create an instance of the InfluxDB 2.0 reactive client.
    *
-   * @param options          the connection configuration
-   * @param bufferSize       size of a buffer for incoming responses. Default 10000.
-   * @param overflowStrategy Strategy that is used when incoming response cannot fit inside the buffer.
-   *                         Default [[akka.stream.OverflowStrategies.Backpressure]].
-   * @see [[akka.stream.scaladsl.Source#queue(int, akka.stream.OverflowStrategy)]]
+   * @param options the connection configuration
    * @return client
    */
-  @Nonnull def create(@Nonnull options: InfluxDBClientOptions,
-                      @Nonnull bufferSize: Int = 10000,
-                      @Nonnull overflowStrategy: OverflowStrategy = OverflowStrategy.backpressure): InfluxDBClientScala = {
+  @Nonnull def create(@Nonnull options: InfluxDBClientOptions): InfluxDBClientScala = {
 
     Arguments.checkNotNull(options, "InfluxDBClientOptions")
 
-    new InfluxDBClientScalaImpl(options, bufferSize, overflowStrategy)
+    new InfluxDBClientScalaImpl(options)
   }
 }
