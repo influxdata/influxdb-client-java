@@ -104,7 +104,7 @@ jobs:
         default: &default-maven-image "circleci/openjdk:8"
       influxdb-image:
         type: string
-        default: &default-influxdb-image "influxdb:v2.0.3"
+        default: &default-influxdb-image "influxdb:v2.0.4"
     docker:
       - image: << parameters.maven-image >>
       - image: &influx-image quay.io/influxdb/<< parameters.influxdb-image >>
