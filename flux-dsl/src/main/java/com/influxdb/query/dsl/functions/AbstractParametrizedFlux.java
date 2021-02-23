@@ -96,11 +96,11 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
      * @return {@link Boolean#TRUE} if was appended parameter
      */
     private boolean appendParameterTo(@Nonnull final String operatorName,
-                                      @Nullable final String propertyValue,
+                                      @Nullable final String propertyName,
                                       @Nonnull final StringBuilder operator,
                                       final boolean wasAppendProperty) {
 
-        if (propertyValue == null) {
+        if (propertyName == null) {
             return wasAppendProperty;
         }
 
@@ -113,7 +113,7 @@ public abstract class AbstractParametrizedFlux extends AbstractFluxWithUpstream 
         operator
                 .append(operatorName)
                 .append(functionsParameters.getDelimiter(operatorName))
-                .append(propertyValue);
+                .append(propertyName);
 
         return true;
     }

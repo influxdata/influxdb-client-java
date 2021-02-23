@@ -52,7 +52,7 @@ public final class FunctionsParameters {
     private static final String DEFAULT_DELIMITER = ":";
     private static final String FUNCTION_DELIMITER = " => ";
 
-    private Map<String, Property> properties = new LinkedHashMap<>();
+    private LinkedHashMap<String, Property> variables = new LinkedHashMap<>();
 
     private FunctionsParameters() {
     }
@@ -175,7 +175,7 @@ public final class FunctionsParameters {
             return;
         }
 
-        put(functionName, new Property() {
+        put(functionName, new AbstractProperty() {
             @Nonnull
             @Override
             public Object value(@Nonnull final Map namedProperties) {
@@ -227,24 +227,28 @@ public final class FunctionsParameters {
 
     @Nonnull
     public Collection<String> keys() {
-        return properties.keySet();
+        return variables.keySet();
+    }
+
+    public LinkedHashMap<String, Property> getVariables() {
+        return variables;
     }
 
     @Nullable
     public String get(@Nonnull final String key, @Nonnull final Map<String, Object> namedProperties) {
 
-        Property property = properties.get(key);
+        Property property = variables.get(key);
         if (property == null) {
             return null;
         }
+
 
         Object value = property.value(namedProperties);
         if (value == null) {
             return null;
         }
 
-        // array to collection
-        return serializeValue(value);
+        return property.appendToNamedProperties(namedProperties);
     }
 
     private void put(@Nonnull final String name, @Nullable final Property property) {
@@ -253,13 +257,13 @@ public final class FunctionsParameters {
             return;
         }
 
-        properties.put(name, property);
+        variables.put(name, property);
     }
 
     @Nonnull
     public String getDelimiter(@Nonnull final String key) {
 
-        Property property = properties.get(key);
+        Property property = variables.get(key);
         if (property == null) {
             return DEFAULT_DELIMITER;
         }
@@ -275,6 +279,13 @@ public final class FunctionsParameters {
          */
         @Nullable
         T value(@Nonnull final Map<String, Object> namedProperties);
+
+        /**
+         * @param namedProperties property values
+         * @return current index of property in properties
+         */
+        @Nonnull
+        String appendToNamedProperties(Map<String, Object> namedProperties);
 
         /**
          * @return For value property it is ": ", but for function it is "=&gt;".
@@ -316,6 +327,12 @@ public final class FunctionsParameters {
 
         @Nonnull
         @Override
+        public String appendToNamedProperties(final Map<String, Object> namedProperties) {
+            return parameterName;
+        }
+
+        @Nonnull
+        @Override
         public String delimiter() {
             return delimiter;
         }
@@ -342,6 +359,14 @@ public final class FunctionsParameters {
     }
 
     private abstract class AbstractProperty<T> implements Property<T> {
+
+        @Nonnull
+        @Override
+        public String appendToNamedProperties(final Map<String, Object> namedProperties) {
+            String key = "v" + namedProperties.size();
+            namedProperties.put(key, value(namedProperties));
+            return key;
+        }
 
         /**
          * @return For value property it is ": ", but for function it is "=&gt;".

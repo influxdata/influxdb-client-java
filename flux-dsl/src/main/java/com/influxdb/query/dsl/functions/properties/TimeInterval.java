@@ -23,6 +23,7 @@ package com.influxdb.query.dsl.functions.properties;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import com.influxdb.Arguments;
@@ -114,5 +115,18 @@ public class TimeInterval {
         }
 
         return String.valueOf(calculatedInterval) + unit;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TimeInterval)) return false;
+        TimeInterval that = (TimeInterval) o;
+        return interval.equals(that.interval) && chronoUnit == that.chronoUnit;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(interval, chronoUnit);
     }
 }

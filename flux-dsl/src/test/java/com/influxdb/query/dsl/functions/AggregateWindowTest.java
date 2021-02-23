@@ -23,7 +23,10 @@ package com.influxdb.query.dsl.functions;
 
 import java.time.temporal.ChronoUnit;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.functions.properties.TimeInterval;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -33,7 +36,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (13/05/2020 15:07)
  */
 @RunWith(JUnitPlatform.class)
-class AggregateWindowTest {
+class AggregateWindowTest extends AbstractFluxTest {
 
     @Test
     void aggregateWindow() {
@@ -42,7 +45,14 @@ class AggregateWindowTest {
                 .from("telegraf")
                 .aggregateWindow(10L, ChronoUnit.SECONDS, "mean");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> aggregateWindow(every: 10s, fn: mean)");
+        Flux.Query query = flux.toQuery();
+        Assertions
+                .assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0) |> aggregateWindow(every: v1, fn: v2)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(10L, ChronoUnit.SECONDS),
+                "v2", "mean");
     }
 
     @Test
@@ -58,7 +68,18 @@ class AggregateWindowTest {
                 .withTimeDst("_time")
                 .withCreateEmpty(true);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> aggregateWindow(every: 10s, fn: sum, column: \"_value\", timeSrc: \"_stop\", timeDst: \"_time\", createEmpty:true)");
+        Flux.Query query = flux.toQuery();
+        Assertions
+                .assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0) |> aggregateWindow(every: v1, fn: v2, column: v3, timeSrc: v4, timeDst: v5, createEmpty:v6)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "10s",
+                "v2", "sum",
+                "v3", "\"_value\"",
+                "v4", "\"_stop\"",
+                "v5", "\"_time\"",
+                "v6", true);
     }
 
     @Test
@@ -69,6 +90,14 @@ class AggregateWindowTest {
                 .withEvery(5L, ChronoUnit.MINUTES)
                 .withFunction("tables |> quantile(q: 0.99, column:column)");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> aggregateWindow(every: 5m, fn: (column, tables=<-) => tables |> quantile(q: 0.99, column:column))");
+        Flux.Query query = flux.toQuery();
+        Assertions
+                .assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0) |> aggregateWindow(every: v1, fn: (column, tables=<-) => v2)");
+        
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(5L, ChronoUnit.MINUTES),
+                "v2", "tables |> quantile(q: 0.99, column:column)");
     }
 }

@@ -2466,7 +2466,8 @@ public abstract class Flux {
                                       @Nonnull final StringBuilder builder);
 
     /**
-     * Create the Flux query that can be executed by FluxService.
+     * Create the Flux query that has interpolated variables as FLUX AST variables.
+     * To get Flux Query and variables use {@link #toQuery()}.
      *
      * @return Flux query
      */
@@ -2476,6 +2477,31 @@ public abstract class Flux {
         return toString(new HashMap<>());
     }
 
+
+    /**
+     * @return Flux Query with interpolated properties as FLUX AST variables
+     */
+    @Nonnull
+    public Flux.Query toQuery() {
+        return toQuery(new HashMap<>());
+    }
+
+    /**
+     * @param variables the variables already used as a named variables
+     * @return Flux Query with interpolated properties as FLUX AST variables
+     */
+    @Nonnull
+    public Flux.Query toQuery(@Nonnull final Map<String, Object> variables) {
+
+        Arguments.checkNotNull(variables, "Variables are required");
+
+        StringBuilder builder = new StringBuilder();
+
+        appendActual(variables, builder);
+
+        return new Flux.Query(builder.toString(), variables);
+    }
+
     /**
      * Create the Flux query that can be executed by FluxService.
      *
@@ -2483,6 +2509,7 @@ public abstract class Flux {
      * @return Flux query
      */
     @Nonnull
+    // TODO remove
     public String toString(@Nonnull final Map<String, Object> parameters) {
 
         Arguments.checkNotNull(parameters, "Parameters are required");
@@ -2492,5 +2519,25 @@ public abstract class Flux {
         appendActual(parameters, builder);
 
         return builder.toString();
+    }
+
+    /**
+     * The representation of Flux Query with interpolated properties as FLUX AST variables.
+     */
+    public static class Query
+    {
+        /**
+         * Flux query.
+         */
+        public String flux;
+        /**
+         * Flux AST variables.
+         */
+        public Map<String, Object> variables;
+
+        public Query(@Nonnull final String flux, @Nonnull final Map<String, Object> variables) {
+            this.flux = flux;
+            this.variables = variables;
+        }
     }
 }

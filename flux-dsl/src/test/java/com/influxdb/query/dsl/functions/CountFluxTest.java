@@ -23,6 +23,7 @@ package com.influxdb.query.dsl.functions;
 
 import java.util.HashMap;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -34,7 +35,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (22/06/2018 12:04)
  */
 @RunWith(JUnitPlatform.class)
-class CountFluxTest {
+class CountFluxTest extends AbstractFluxTest {
 
     @Test
     void count() {
@@ -43,7 +44,10 @@ class CountFluxTest {
                 .from("telegraf")
                 .count();
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> count()");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> count()");
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> count()");
+        assertVariables(query, "v0", "\"telegraf\"");
     }
 
     @Test
@@ -53,8 +57,10 @@ class CountFluxTest {
                 .from("telegraf")
                 .count("dif_val");
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> count(column: \"dif_val\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0) |> count(column: v1)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", "\"dif_val\"");
     }
 
     @Test
@@ -68,7 +74,10 @@ class CountFluxTest {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("parameter", "\"column_b\"");
 
-        Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> count(column:\"column_b\")");
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v1) |> count(column:parameter)");
+
+        assertVariables(query, "v1", "\"telegraf\"", "parameter", "\"column_b\"");
     }
 }

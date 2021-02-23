@@ -25,7 +25,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.functions.properties.TimeInterval;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -36,7 +38,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (03/07/2018 15:05)
  */
 @RunWith(JUnitPlatform.class)
-class DerivativeFluxTest {
+class DerivativeFluxTest extends AbstractFluxTest {
 
     @Test
     void derivative() {
@@ -45,7 +47,11 @@ class DerivativeFluxTest {
                 .from("telegraf")
                 .derivative(1L, ChronoUnit.MINUTES);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> derivative(unit: 1m)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> derivative(unit: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(1L, ChronoUnit.MINUTES));
     }
 
     @Test
@@ -59,7 +65,14 @@ class DerivativeFluxTest {
                 .withColumns(new String[]{"time1", "time2"})
                 .withTimeColumn("_timeMy");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> derivative(unit: 10d, nonNegative: true, columns: [\"time1\", \"time2\"], timeColumn: \"_timeMy\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> derivative(unit: v1, nonNegative: v2, columns: v3, timeColumn: v4)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(10L, ChronoUnit.DAYS),
+                "v2", true,
+                "v3", new String[]{"time1", "time2"},
+                "v4", "\"_timeMy\"");
     }
 
     @Test
@@ -75,7 +88,12 @@ class DerivativeFluxTest {
                 .withUnit(15L, ChronoUnit.DAYS)
                 .withColumns(columns);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> derivative(unit: 15d, columns: [\"time\", \"century\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> derivative(unit: v1, columns: v2)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(15L, ChronoUnit.DAYS),
+                "v2", columns);
     }
 
     @Test
@@ -86,6 +104,10 @@ class DerivativeFluxTest {
                 .derivative()
                     .withUnit("15s");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> derivative(unit: 15s)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> derivative(unit: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "15s");
     }
 }

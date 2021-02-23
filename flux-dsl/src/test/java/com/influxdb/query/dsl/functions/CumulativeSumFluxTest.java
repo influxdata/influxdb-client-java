@@ -24,6 +24,7 @@ package com.influxdb.query.dsl.functions;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -35,7 +36,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (10/10/2018 07:45)
  */
 @RunWith(JUnitPlatform.class)
-class CumulativeSumFluxTest {
+class CumulativeSumFluxTest extends AbstractFluxTest {
 
     @Test
     void cumulativeSum() {
@@ -45,8 +46,12 @@ class CumulativeSumFluxTest {
                 .cumulativeSum()
                     .withColumns(new String[]{"_value"});
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> cumulativeSum(columns: [\"_value\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0) |> cumulativeSum(columns: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"_value"});
     }
 
     @Test
@@ -56,8 +61,12 @@ class CumulativeSumFluxTest {
                 .from("telegraf")
                 .cumulativeSum(new String[]{"_value", "_value2"});
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> cumulativeSum(columns: [\"_value\", \"_value2\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0) |> cumulativeSum(columns: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"_value", "_value2"});
     }
 
     @Test
@@ -71,7 +80,11 @@ class CumulativeSumFluxTest {
                 .from("telegraf")
                 .cumulativeSum(columns);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> cumulativeSum(columns: [\"_value\", \"_host\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0) |> cumulativeSum(columns: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", columns);
     }
 }
