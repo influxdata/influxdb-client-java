@@ -23,6 +23,7 @@ package com.influxdb.query.dsl.functions;
 
 import java.util.HashMap;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -34,7 +35,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (25/06/2018 11:55)
  */
 @RunWith(JUnitPlatform.class)
-class LimitFluxTest {
+class LimitFluxTest extends AbstractFluxTest {
 
     @Test
     void limit() {
@@ -43,7 +44,11 @@ class LimitFluxTest {
                 .from("telegraf")
                 .limit(5);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> limit(n: 5)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> limit(n: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", 5);
     }
 
     @Test
@@ -53,8 +58,12 @@ class LimitFluxTest {
                 .from("telegraf")
                 .limit(100, 10);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> limit(n: 100, offset:10)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> limit(n: v1, offset:v2)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", 100, "v2", 10);
     }
 
     @Test
@@ -64,8 +73,12 @@ class LimitFluxTest {
                 .from("telegraf")
                 .limit(100, 0);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> limit(n: 100, offset:0)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> limit(n: v1, offset:v2)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", 100, "v2", 0);
     }
 
     @Test
@@ -86,8 +99,10 @@ class LimitFluxTest {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("limit", 15);
 
-        Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> limit(n: 15)");
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v1) |> limit(n: limit)");
+        assertVariables(query, "v1", "\"telegraf\"", "limit", 15);
     }
 
     @Test

@@ -23,7 +23,9 @@ package com.influxdb.query.dsl.functions;
 
 import java.time.temporal.ChronoUnit;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.functions.properties.TimeInterval;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -34,7 +36,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (03/07/2018 12:48)
  */
 @RunWith(JUnitPlatform.class)
-class IntegralFluxTest {
+class IntegralFluxTest extends AbstractFluxTest {
 
     @Test
     void integral() {
@@ -43,7 +45,11 @@ class IntegralFluxTest {
                 .from("telegraf")
                 .integral(1L, ChronoUnit.MINUTES);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> integral(unit: 1m)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> integral(unit: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(1L, ChronoUnit.MINUTES));
     }
 
     @Test
@@ -54,7 +60,11 @@ class IntegralFluxTest {
                 .integral()
                 .withUnit(5L, ChronoUnit.MINUTES);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> integral(unit: 5m)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> integral(unit: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(5L, ChronoUnit.MINUTES));
     }
 
     @Test
@@ -63,8 +73,12 @@ class IntegralFluxTest {
         Flux flux = Flux
                 .from("telegraf")
                 .integral()
-                    .withUnit("10m6h");
+                .withUnit("10m6h");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> integral(unit: 10m6h)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> integral(unit: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "10m6h");
     }
 }

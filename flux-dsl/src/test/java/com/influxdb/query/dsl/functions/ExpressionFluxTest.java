@@ -21,6 +21,7 @@
  */
 package com.influxdb.query.dsl.functions;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -32,7 +33,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (27/06/2018 11:30)
  */
 @RunWith(JUnitPlatform.class)
-class ExpressionFluxTest {
+class ExpressionFluxTest extends AbstractFluxTest {
 
     @Test
     void expression() {
@@ -41,7 +42,9 @@ class ExpressionFluxTest {
                 .expression("map(fn: (r) => r._value * r._value)")
                 .expression("sum()");
 
-        String expected = "from(bucket:\"telegraf\") |> map(fn: (r) => r._value * r._value) |> sum()";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket:v0) |> map(fn: (r) => r._value * r._value) |> sum()";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query, "v0", "\"telegraf\"");
     }
 }

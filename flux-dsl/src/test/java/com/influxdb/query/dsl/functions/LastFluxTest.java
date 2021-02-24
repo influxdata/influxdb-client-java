@@ -23,6 +23,7 @@ package com.influxdb.query.dsl.functions;
 
 import java.util.HashMap;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -34,7 +35,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (25/06/2018 09:47)
  */
 @RunWith(JUnitPlatform.class)
-class LastFluxTest {
+class LastFluxTest extends AbstractFluxTest {
 
     @Test
     void last() {
@@ -43,7 +44,10 @@ class LastFluxTest {
                 .from("telegraf")
                 .last();
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> last()");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> last()");
+        assertVariables(query,
+                "v0", "\"telegraf\"");
     }
 
     @Test
@@ -57,7 +61,11 @@ class LastFluxTest {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("parameter", true);
 
-        Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> last(useStartTime: true)");
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v1) |> last(useStartTime: parameter)");
+        assertVariables(query,
+                "v1", "\"telegraf\"",
+                "parameter", true);
     }
 }

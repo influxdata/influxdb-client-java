@@ -25,7 +25,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.functions.properties.TimeInterval;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -36,7 +38,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (17/07/2018 12:57)
  */
 @RunWith(JUnitPlatform.class)
-class DifferenceFluxTest {
+class DifferenceFluxTest extends AbstractFluxTest {
 
     @Test
     void differenceNonNegative() {
@@ -46,8 +48,13 @@ class DifferenceFluxTest {
                 .groupBy("_measurement")
                 .difference(false);
 
-        String expected = "from(bucket:\"telegraf\") |> group(columns: [\"_measurement\"]) |> difference(nonNegative: false)";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket:v0) |> group(columns: v1) |> difference(nonNegative: v2)";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"_measurement"},
+                "v2", false);
     }
 
     @Test
@@ -62,8 +69,13 @@ class DifferenceFluxTest {
                 .groupBy("_measurement")
                 .difference(columns);
 
-        String expected = "from(bucket:\"telegraf\") |> group(columns: [\"_measurement\"]) |> difference(columns: [\"_time\", \"_value\"])";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket:v0) |> group(columns: v1) |> difference(columns: v2)";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"_measurement"},
+                "v2", columns);
     }
 
     @Test
@@ -74,8 +86,13 @@ class DifferenceFluxTest {
                 .range(-5L, ChronoUnit.MINUTES)
                 .difference(new String[]{"_value", "_time"});
 
-        String expected = "from(bucket:\"telegraf\") |> range(start: -5m) |> difference(columns: [\"_value\", \"_time\"])";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket:v0) |> range(start: v1) |> difference(columns: v2)";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(-5L, ChronoUnit.MINUTES),
+                "v2", new String[]{"_value", "_time"});
     }
 
     @Test
@@ -90,8 +107,14 @@ class DifferenceFluxTest {
                 .groupBy("_measurement")
                 .difference(columns, true);
 
-        String expected = "from(bucket:\"telegraf\") |> group(columns: [\"_measurement\"]) |> difference(columns: [\"_time\", \"_value\"], nonNegative: true)";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket:v0) |> group(columns: v1) |> difference(columns: v2, nonNegative: v3)";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"_measurement"},
+                "v2", columns,
+                "v3", true);
     }
 
     @Test
@@ -102,8 +125,14 @@ class DifferenceFluxTest {
                 .groupBy("_measurement")
                 .difference(new String[]{"_val", "_time"}, false);
 
-        String expected = "from(bucket:\"telegraf\") |> group(columns: [\"_measurement\"]) |> difference(columns: [\"_val\", \"_time\"], nonNegative: false)";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket:v0) |> group(columns: v1) |> difference(columns: v2, nonNegative: v3)";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"_measurement"},
+                "v2", new String[]{"_val", "_time"},
+                "v3", false);
     }
 
     @Test
@@ -116,8 +145,13 @@ class DifferenceFluxTest {
                 .withColumns(new String[]{"_value", "_oldValue"});
 
 
-        String expected = "from(bucket:\"telegraf\") |> group(columns: [\"_measurement\"]) |> difference(columns: [\"_value\", \"_oldValue\"])";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket:v0) |> group(columns: v1) |> difference(columns: v2)";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"_measurement"},
+                "v2", new String[]{"_value", "_oldValue"});
     }
 
     @Test
@@ -128,7 +162,11 @@ class DifferenceFluxTest {
                 .groupBy("_measurement")
                 .difference();
 
-        String expected = "from(bucket:\"telegraf\") |> group(columns: [\"_measurement\"]) |> difference()";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket:v0) |> group(columns: v1) |> difference()";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"_measurement"});
     }
 }

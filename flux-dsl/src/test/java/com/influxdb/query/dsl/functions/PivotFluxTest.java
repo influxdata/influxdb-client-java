@@ -24,6 +24,7 @@ package com.influxdb.query.dsl.functions;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -35,20 +36,26 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (10/10/2018 06:59)
  */
 @RunWith(JUnitPlatform.class)
-class PivotFluxTest {
+class PivotFluxTest extends AbstractFluxTest {
 
     @Test
     void pivot() {
 
         Flux flux = Flux.from("telegraf")
                 .pivot()
-                    .withRowKey(new String[]{"_time"})
+                .withRowKey(new String[]{"_time"})
                 .withColumnKey(new String[]{"_field"})
                 .withValueColumn("_value");
 
-        String expected = "from(bucket:\"telegraf\") |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")";
+        String expected = "from(bucket: v0) |> pivot(rowKey: v1, columnKey: v2, valueColumn: v3)";
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"_time"},
+                "v2", new String[]{"_field"},
+                "v3", "\"_value\"");
     }
 
     @Test
@@ -57,9 +64,15 @@ class PivotFluxTest {
         Flux flux = Flux.from("telegraf")
                 .pivot(new String[]{"_time"}, new String[]{"_measurement", "_field"}, "_value");
 
-        String expected = "from(bucket:\"telegraf\") |> pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\", \"_field\"], valueColumn: \"_value\")";
+        String expected = "from(bucket: v0) |> pivot(rowKey: v1, columnKey: v2, valueColumn: v3)";
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"_time"},
+                "v2",new String[]{"_measurement", "_field"},
+                "v3", "\"_value\"");
     }
 
     @Test
@@ -73,8 +86,14 @@ class PivotFluxTest {
         Flux flux = Flux.from("telegraf")
                 .pivot(rowKey, columnKey, "_value");
 
-        String expected = "from(bucket:\"telegraf\") |> pivot(rowKey: [\"_stop\"], columnKey: [\"host\"], valueColumn: \"_value\")";
+        String expected = "from(bucket: v0) |> pivot(rowKey: v1, columnKey: v2, valueColumn: v3)";
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", rowKey,
+                "v2", columnKey,
+                "v3", "\"_value\"");
     }
 }

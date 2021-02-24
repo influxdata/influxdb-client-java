@@ -21,6 +21,7 @@
  */
 package com.influxdb.query.dsl.functions;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -32,7 +33,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (29/06/2018 10:03)
  */
 @RunWith(JUnitPlatform.class)
-class YieldFluxTest {
+class YieldFluxTest extends AbstractFluxTest {
 
     @Test
     void yield() {
@@ -41,7 +42,9 @@ class YieldFluxTest {
                 .from("telegraf")
                 .yield("0");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> yield(name: \"0\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> yield(name: v1)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", "\"0\"");
     }
 
     @Test
@@ -52,6 +55,8 @@ class YieldFluxTest {
                 .yield()
                 .withName("1");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> yield(name: \"1\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> yield(name: v1)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", "\"1\"");
     }
 }

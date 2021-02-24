@@ -24,6 +24,7 @@ package com.influxdb.query.dsl.functions;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -35,7 +36,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (02/08/2018 12:01)
  */
 @RunWith(JUnitPlatform.class)
-class RenameFluxTest {
+class RenameFluxTest extends AbstractFluxTest {
 
     @Test
     void renameByMap() {
@@ -48,9 +49,12 @@ class RenameFluxTest {
                 .from("telegraf")
                 .rename(map);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> rename(columns: {host: \"server\", _value: \"val\"})");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> rename(columns: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", map);
     }
-
 
     @Test
     void renameByFunction() {
@@ -59,7 +63,11 @@ class RenameFluxTest {
                 .from("telegraf")
                 .rename("\"{column}_new\"");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> rename(fn: (column) => \"{column}_new\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> rename(fn: (column) => v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "\"{column}_new\"");
     }
 
     @Test
@@ -70,6 +78,10 @@ class RenameFluxTest {
                 .rename()
                 .withFunction("\"{column}_new\"");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> rename(fn: (column) => \"{column}_new\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> rename(fn: (column) => v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "\"{column}_new\"");
     }
 }

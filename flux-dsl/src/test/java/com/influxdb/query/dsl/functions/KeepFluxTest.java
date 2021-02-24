@@ -24,6 +24,7 @@ package com.influxdb.query.dsl.functions;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -35,7 +36,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (02/08/2018 11:43)
  */
 @RunWith(JUnitPlatform.class)
-class KeepFluxTest {
+class KeepFluxTest extends AbstractFluxTest {
 
     @Test
     void keepByArray() {
@@ -44,7 +45,11 @@ class KeepFluxTest {
                 .from("telegraf")
                 .keep(new String[]{"host", "_measurement"});
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> keep(columns: [\"host\", \"_measurement\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> keep(columns: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"host", "_measurement"});
     }
 
     @Test
@@ -58,7 +63,9 @@ class KeepFluxTest {
                 .from("telegraf")
                 .keep(columns);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> keep(columns: [\"host\", \"_value\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> keep(columns: v1)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", columns);
     }
 
     @Test
@@ -68,7 +75,11 @@ class KeepFluxTest {
                 .from("telegraf")
                 .keep("column =~ /usage*/");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> keep(fn: (column) => column =~ /usage*/)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> keep(fn: (column) => v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "column =~ /usage*/");
     }
 
     @Test
@@ -79,6 +90,10 @@ class KeepFluxTest {
                 .keep()
                 .withFunction("column =~ /inodes*/");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> keep(fn: (column) => column =~ /inodes*/)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> keep(fn: (column) => v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "column =~ /inodes*/");
     }
 }

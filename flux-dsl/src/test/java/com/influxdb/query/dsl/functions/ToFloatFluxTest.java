@@ -21,6 +21,7 @@
  */
 package com.influxdb.query.dsl.functions;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -32,7 +33,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (25/06/2018 16:09)
  */
 @RunWith(JUnitPlatform.class)
-class ToFloatFluxTest {
+class ToFloatFluxTest extends AbstractFluxTest {
 
     @Test
     void toFloat() {
@@ -41,6 +42,8 @@ class ToFloatFluxTest {
                 .from("telegraf")
                 .toFloat();
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> toFloat()");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> toFloat()");
+        assertVariables(query, "v0", "\"telegraf\"");
     }
 }

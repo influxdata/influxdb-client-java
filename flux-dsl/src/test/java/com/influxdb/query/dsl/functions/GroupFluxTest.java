@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -36,7 +37,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (25/06/2018 15:16)
  */
 @RunWith(JUnitPlatform.class)
-class GroupFluxTest {
+class GroupFluxTest extends AbstractFluxTest {
 
     @Test
     void group() {
@@ -45,8 +46,10 @@ class GroupFluxTest {
                 .from("telegraf")
                 .group();
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> group()");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> group()");
+        assertVariables(query, "v0", "\"telegraf\"");
     }
 
     @Test
@@ -56,8 +59,12 @@ class GroupFluxTest {
                 .from("telegraf")
                 .groupBy("location");
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> group(columns: [\"location\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0) |> group(columns: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"location"});
     }
 
     @Test
@@ -71,8 +78,10 @@ class GroupFluxTest {
                 .from("telegraf")
                 .groupBy(groupBy);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> group(columns: [\"region\", \"host\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0) |> group(columns: v1)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", groupBy);
     }
 
     @Test
@@ -86,8 +95,12 @@ class GroupFluxTest {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("groupByParameter", new String[]{"region", "zip"});
 
-        Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> group(columns: [\"region\", \"zip\"])");
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v1) |> group(columns: groupByParameter)");
+        assertVariables(query,
+                "v1", "\"telegraf\"",
+                "groupByParameter", new String[]{"region", "zip"});
     }
 
     @Test
@@ -97,8 +110,12 @@ class GroupFluxTest {
                 .from("telegraf")
                 .groupBy(new String[]{"region", "value"});
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> group(columns: [\"region\", \"value\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0) |> group(columns: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"region", "value"});
     }
 
 
@@ -113,8 +130,13 @@ class GroupFluxTest {
                 .from("telegraf")
                 .groupExcept(groupBy);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> group(columns: [\"region\", \"host\"], mode: \"except\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0) |> group(columns: v1, mode: v2)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", groupBy,
+                "v2", "\"except\"");
     }
 
     @Test
@@ -129,8 +151,14 @@ class GroupFluxTest {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("columns", new String[]{"region", "zip"});
 
-        Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> group(columns: [\"region\", \"zip\"], mode: \"except\")");
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v1) |> group(columns: columns, mode: v2)");
+
+        assertVariables(query,
+                "v1", "\"telegraf\"",
+                "columns", new String[]{"region", "zip"},
+                "v2", "\"except\"");
     }
 
     @Test
@@ -140,8 +168,14 @@ class GroupFluxTest {
                 .from("telegraf")
                 .groupExcept("region");
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> group(columns: [\"region\"], mode: \"except\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0) |> group(columns: v1, mode: v2)");
+
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"region"},
+                "v2", "\"except\"");
     }
 
     @Test
@@ -151,8 +185,14 @@ class GroupFluxTest {
                 .from("telegraf")
                 .groupExcept(new String[]{"region", "value"});
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> group(columns: [\"region\", \"value\"], mode: \"except\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0) |> group(columns: v1, mode: v2)");
+
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"region", "value"},
+                "v2", "\"except\"");
     }
 
 }

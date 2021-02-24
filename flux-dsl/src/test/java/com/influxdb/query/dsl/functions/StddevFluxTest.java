@@ -23,6 +23,7 @@ package com.influxdb.query.dsl.functions;
 
 import java.util.HashMap;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -34,7 +35,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (25/06/2018 10:18)
  */
 @RunWith(JUnitPlatform.class)
-class StddevFluxTest {
+class StddevFluxTest extends AbstractFluxTest {
 
     @Test
     void stddev() {
@@ -43,7 +44,9 @@ class StddevFluxTest {
                 .from("telegraf")
                 .stddev();
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> stddev()");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> stddev()");
+        assertVariables(query, "v0", "\"telegraf\"");
     }
 
     @Test
@@ -53,8 +56,10 @@ class StddevFluxTest {
                 .from("telegraf")
                 .stddev("dif_val");
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> stddev(column: \"dif_val\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> stddev(column: v1)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", "\"dif_val\"");
     }
 
     @Test
@@ -68,7 +73,9 @@ class StddevFluxTest {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("parameter", "\"column_b\"");
 
-        Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> stddev(column:\"column_b\")");
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v1) |> stddev(column: parameter)");
+        assertVariables(query, "v1", "\"telegraf\"", "parameter", "\"column_b\"");
     }
 }

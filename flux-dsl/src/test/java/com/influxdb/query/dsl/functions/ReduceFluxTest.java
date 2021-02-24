@@ -21,10 +21,8 @@
  */
 package com.influxdb.query.dsl.functions;
 
-import java.time.temporal.ChronoUnit;
-
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
-import com.influxdb.query.dsl.functions.restriction.Restrictions;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -35,52 +33,43 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (24/02/2020 13:26)
  */
 @RunWith(JUnitPlatform.class)
-class ReduceFluxTest {
+class ReduceFluxTest extends AbstractFluxTest {
 
     @Test
     void reduce() {
 
-        Restrictions restriction = Restrictions.and(
-                Restrictions.measurement().equal("cpu"),
-                Restrictions.field().equal("usage_system"),
-                Restrictions.tag("service").equal("app-server")
-        );
-        
         Flux flux = Flux
                 .from("telegraf")
-                .filter(restriction)
-                .range(-12L, ChronoUnit.HOURS)
                 .reduce("{ sum: r._value + accumulator.sum }", "{sum: 0.0}");
 
-        String expected = "from(bucket:\"telegraf\") "
-                + "|> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\" and r[\"service\"] == \"app-server\")) "
-                + "|> range(start: -12h) "
-                + "|> reduce(fn: (r, accumulator) => ({sum: r._value + accumulator.sum}), identity: {sum: 0.0})";
+        String expected = "from(bucket: v0) "
+                + "|> reduce(fn: (r, accumulator) => v1, identity: v2)";
 
-        Assertions.assertThat(expected).isEqualToIgnoringWhitespace(flux.toString());
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "({ sum: r._value + accumulator.sum })",
+                "v2", "{sum: 0.0}");
     }
 
     @Test
     public void reduceByParameter() {
-        Restrictions restriction = Restrictions.and(
-                Restrictions.measurement().equal("cpu"),
-                Restrictions.field().equal("usage_system"),
-                Restrictions.tag("service").equal("app-server")
-        );
 
         Flux flux = Flux
                 .from("telegraf")
-                .filter(restriction)
-                .range(-12L, ChronoUnit.HOURS)
                 .reduce()
-                    .withFunction("{sum: r._value + accumulator.sum,\ncount: accumulator.count + 1.0}")
-                    .withIdentity("{sum: 0.0, count: 0.0}");
+                .withFunction("{sum: r._value + accumulator.sum,\ncount: accumulator.count + 1.0}")
+                .withIdentity("{sum: 0.0, count: 0.0}");
 
-        String expected = "from(bucket:\"telegraf\") "
-                + "|> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\" and r[\"service\"] == \"app-server\")) "
-                + "|> range(start: -12h) "
-                + "|> reduce(fn: (r, accumulator) => ({sum: r._value + accumulator.sum,\ncount: accumulator.count + 1.0}), identity: {sum: 0.0, count: 0.0})";
+        String expected = "from(bucket: v0) "
+                + "|> reduce(fn: (r, accumulator) => v1, identity: v2)";
 
-        Assertions.assertThat(expected).isEqualToIgnoringWhitespace(flux.toString());
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "({sum: r._value + accumulator.sum,\ncount: accumulator.count + 1.0})",
+                "v2", "{sum: 0.0, count: 0.0}");
     }
 }

@@ -242,10 +242,17 @@ public final class FunctionsParameters {
             return null;
         }
 
-
         Object value = property.value(namedProperties);
         if (value == null) {
             return null;
+        } else if (value.getClass().isArray()) {
+            if (((Object[]) value).length == 0) {
+                return null;
+            }
+        } else if (value instanceof Collection) {
+            if (((Collection) value).isEmpty()) {
+                return null;
+            }
         }
 
         return property.appendToNamedProperties(namedProperties);

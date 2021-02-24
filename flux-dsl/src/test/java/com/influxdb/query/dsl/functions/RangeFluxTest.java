@@ -25,7 +25,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.functions.properties.TimeInterval;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -36,7 +38,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (26/06/2018 07:23)
  */
 @RunWith(JUnitPlatform.class)
-class RangeFluxTest {
+class RangeFluxTest extends AbstractFluxTest {
 
     @Test
     void startInstant() {
@@ -45,8 +47,12 @@ class RangeFluxTest {
                 .from("telegraf")
                 .range(Instant.ofEpochSecond(1_500_000));
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> range(start: 1970-01-18T08:40:00.000000000Z)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> range(start: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", Instant.ofEpochSecond(1_500_000));
     }
 
     @Test
@@ -56,10 +62,15 @@ class RangeFluxTest {
                 .from("telegraf")
                 .range(Instant.ofEpochSecond(1_500_000), Instant.ofEpochSecond(2_000_000));
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "range(start: 1970-01-18T08:40:00.000000000Z, stop: 1970-01-24T03:33:20.000000000Z)";
+        String expected = "from(bucket: v0) |> "
+                + "range(start: v1, stop: v2)";
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", Instant.ofEpochSecond(1_500_000),
+                "v2", Instant.ofEpochSecond(2_000_000));
     }
 
     @Test
@@ -69,8 +80,12 @@ class RangeFluxTest {
                 .from("telegraf")
                 .range(15L, ChronoUnit.SECONDS);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> range(start: 15s)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> range(start: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(15L, ChronoUnit.SECONDS));
     }
 
     @Test
@@ -80,8 +95,12 @@ class RangeFluxTest {
                 .from("telegraf")
                 .range(-33L, ChronoUnit.HOURS);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> range(start: -33h)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> range(start: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(-33L, ChronoUnit.HOURS));
     }
 
     @Test
@@ -91,8 +110,13 @@ class RangeFluxTest {
                 .from("telegraf")
                 .range(15L, 44L, ChronoUnit.NANOS);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> range(start: 15ns, stop: 44ns)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> range(start: v1, stop: v2)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(15L, ChronoUnit.NANOS),
+                "v2", new TimeInterval(44L, ChronoUnit.NANOS));
     }
 
     @Test
@@ -101,11 +125,14 @@ class RangeFluxTest {
         Flux flux = Flux
                 .from("telegraf")
                 .range()
-                    .withStart("-1h")
-                    .withStop("10h");
+                .withStart("-1h")
+                .withStop("10h");
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> range(start: -1h, stop: 10h)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> range(start: v1, stop: v2)");
+
+        assertVariables(query, "v0", "\"telegraf\"", "v1", "-1h", "v2", "10h");
     }
 
     @Test
@@ -119,8 +146,10 @@ class RangeFluxTest {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("startParameter", Instant.ofEpochSecond(1_600_000));
 
-        Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> range(start: 1970-01-19T12:26:40.000000000Z)");
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v1) |> range(start: startParameter)");
+        assertVariables(query, "v1", "\"telegraf\"", "startParameter", Instant.ofEpochSecond(1_600_000));
     }
 
     @Test
@@ -136,9 +165,13 @@ class RangeFluxTest {
         parameters.put("startParameter", Instant.ofEpochSecond(1_600_000));
         parameters.put("stopParameter", Instant.ofEpochSecond(1_800_000));
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "range(start: 1970-01-19T12:26:40.000000000Z, stop: 1970-01-21T20:00:00.000000000Z)";
+        String expected = "from(bucket: v2) |> "
+                + "range(start: startParameter, stop: stopParameter)";
 
-        Assertions.assertThat(flux.toString(parameters)).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query, "v2", "\"telegraf\"",
+                "startParameter", Instant.ofEpochSecond(1_600_000),
+                "stopParameter", Instant.ofEpochSecond(1_800_000));
     }
 }

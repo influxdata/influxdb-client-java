@@ -21,6 +21,7 @@
  */
 package com.influxdb.query.dsl.functions;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -32,7 +33,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (29/06/2018 09:32)
  */
 @RunWith(JUnitPlatform.class)
-class SetFluxTest {
+class SetFluxTest extends AbstractFluxTest {
 
     @Test
     void set() {
@@ -41,7 +42,13 @@ class SetFluxTest {
                 .from("telegraf")
                 .set("location", "Carolina");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> set(key: \"location\", value: \"Carolina\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> set(key: v1, value: v2)");
+
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "\"location\"",
+                "v2", "\"Carolina\"");
     }
 
     @Test
@@ -52,6 +59,11 @@ class SetFluxTest {
                 .set()
                 .withKeyValue("type", "telegraphs");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> set(key: \"type\", value: \"telegraphs\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> set(key: v1, value: v2)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "\"type\"",
+                "v2", "\"telegraphs\"");
     }
 }

@@ -23,6 +23,7 @@ package com.influxdb.query.dsl.functions;
 
 import java.util.HashMap;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -34,7 +35,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (25/06/2018 10:03)
  */
 @RunWith(JUnitPlatform.class)
-class MinFluxTest {
+class MinFluxTest extends AbstractFluxTest {
 
     @Test
     void min() {
@@ -43,7 +44,9 @@ class MinFluxTest {
                 .from("telegraf")
                 .min();
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> min()");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> min()");
+        assertVariables(query, "v0", "\"telegraf\"");
     }
 
     @Test
@@ -57,17 +60,25 @@ class MinFluxTest {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("parameter", true);
 
-        Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> min(useStartTime: true)");
-    }@Test
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v1) |> min(useStartTime: parameter)");
+        assertVariables(query, "v1", "\"telegraf\"", "parameter", true);
+    }
+
+    @Test
     void column() {
 
         Flux flux = Flux
                 .from("telegraf")
                 .min("dif_val");
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> min(column: \"dif_val\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> min(column: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "\"dif_val\"");
     }
 
     @Test
@@ -81,7 +92,11 @@ class MinFluxTest {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("parameter", "\"column_b\"");
 
-        Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> min(column:\"column_b\")");
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v1) |> min(column: parameter)");
+        assertVariables(query,
+                "v1", "\"telegraf\"",
+                "parameter", "\"column_b\"");
     }
 }

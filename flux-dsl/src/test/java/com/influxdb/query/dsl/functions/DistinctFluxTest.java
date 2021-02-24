@@ -23,6 +23,7 @@ package com.influxdb.query.dsl.functions;
 
 import java.util.HashMap;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -34,7 +35,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (17/07/2018 12:15)
  */
 @RunWith(JUnitPlatform.class)
-class DistinctFluxTest {
+class DistinctFluxTest extends AbstractFluxTest {
 
     @Test
     void distinct() {
@@ -44,8 +45,13 @@ class DistinctFluxTest {
                 .groupBy("_measurement")
                 .distinct("_measurement");
 
-        String expected = "from(bucket:\"telegraf\") |> group(columns: [\"_measurement\"]) |> distinct(column: \"_measurement\")";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket:v0) |> group(columns: v1) |> distinct(column: v2)";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"_measurement"},
+                "v2", "\"_measurement\"");
     }
 
     @Test
@@ -60,7 +66,12 @@ class DistinctFluxTest {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("column", "\"_value\"");
 
-        String expected = "from(bucket:\"telegraf\") |> group(columns: [\"_measurement\"]) |> distinct(column: \"_value\")";
-        Assertions.assertThat(flux.toString(parameters)).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket:v1) |> group(columns: v2) |> distinct(column: column)";
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v1", "\"telegraf\"",
+                "v2", new String[]{"_measurement"},
+                "column", "\"_value\"");
     }
 }

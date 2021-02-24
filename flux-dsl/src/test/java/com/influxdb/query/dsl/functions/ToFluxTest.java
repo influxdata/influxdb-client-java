@@ -24,6 +24,7 @@ package com.influxdb.query.dsl.functions;
 import java.util.Arrays;
 import java.util.List;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -35,7 +36,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (10/10/2018 09:35)
  */
 @RunWith(JUnitPlatform.class)
-class ToFluxTest {
+class ToFluxTest extends AbstractFluxTest {
 
     @Test
     void to() {
@@ -43,17 +44,29 @@ class ToFluxTest {
         Flux flux = Flux
                 .from("telegraf")
                 .to()
-                    .withBucketID("O1")
-                    .withOrgID("02")
-                    .withHost("example.com")
-                    .withToken("secret")
-                    .withTimeColumn("timestamp")
-                    .withTagColumns(new String[]{"location", "production"})
-                    .withFieldFunction("return {\"hum\": r.hum, \"temp\": r.temp}");
+                .withBucketID("O1")
+                .withOrgID("02")
+                .withHost("example.com")
+                .withToken("secret")
+                .withTimeColumn("timestamp")
+                .withTagColumns(new String[]{"location", "production"})
+                .withFieldFunction("return {\"hum\": r.hum, \"temp\": r.temp}");
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "to(bucketID: \"O1\", orgID: \"02\", host: \"example.com\", token: \"secret\", timeColumn: \"timestamp\", tagColumns: [\"location\", \"production\"], fieldFn: (r) => return {\"hum\": r.hum, \"temp\": r.temp})";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket: v0) |> "
+                + "to(bucketID: v1, orgID: v2, host: v3, token: v4, timeColumn: v5, tagColumns: v6, fieldFn: (r) => v7)";
+
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "\"O1\"",
+                "v2", "\"02\"",
+                "v3", "\"example.com\"",
+                "v4", "\"secret\"",
+                "v5", "\"timestamp\"",
+                "v6", new String[]{"location", "production"},
+                "v7", "return {\"hum\": r.hum, \"temp\": r.temp}"
+        );
     }
 
     @Test
@@ -63,8 +76,11 @@ class ToFluxTest {
                 .from("telegraf")
                 .to("my-bucket");
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> to(bucket: \"my-bucket\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> to(bucket: v1)");
+
+        assertVariables(query, "v0", "\"telegraf\"", "v1", "\"my-bucket\"");
     }
 
     @Test
@@ -74,8 +90,11 @@ class ToFluxTest {
                 .from("telegraf")
                 .to("my-bucket", "my-org");
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> to(bucket: \"my-bucket\", org: \"my-org\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> to(bucket: v1, org: v2)");
+
+        assertVariables(query, "v0", "\"telegraf\"", "v1", "\"my-bucket\"", "v2", "\"my-org\"");
     }
 
     @Test
@@ -85,9 +104,15 @@ class ToFluxTest {
                 .from("telegraf")
                 .to("my-bucket", "my-org", "return {\"hum\": r.hum}");
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "to(bucket: \"my-bucket\", org: \"my-org\", fieldFn: (r) => return {\"hum\": r.hum})";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket: v0) |> "
+                + "to(bucket: v1, org: v2, fieldFn: (r) => v3)";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "\"my-bucket\"",
+                "v2", "\"my-org\"",
+                "v3", "return {\"hum\": r.hum}");
     }
 
     @Test
@@ -95,11 +120,18 @@ class ToFluxTest {
 
         Flux flux = Flux
                 .from("telegraf")
-                .to("my-bucket", "my-org", new String[]{"location"},"return {\"hum\": r.hum}");
+                .to("my-bucket", "my-org", new String[]{"location"}, "return {\"hum\": r.hum}");
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "to(bucket: \"my-bucket\", org: \"my-org\", tagColumns: [\"location\"], fieldFn: (r) => return {\"hum\": r.hum})";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket: v0) |> "
+                + "to(bucket: v1, org: v2, tagColumns: v3, fieldFn: (r) => v4)";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "\"my-bucket\"",
+                "v2", "\"my-org\"",
+                "v3", new String[]{"location"},
+                "v4", "return {\"hum\": r.hum}");
     }
 
     @Test
@@ -107,11 +139,18 @@ class ToFluxTest {
 
         Flux flux = Flux
                 .from("telegraf")
-                .to("my-bucket", "my-org", Arrays.asList("location", "host"),"return {\"hum\": r.hum}");
+                .to("my-bucket", "my-org", Arrays.asList("location", "host"), "return {\"hum\": r.hum}");
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "to(bucket: \"my-bucket\", org: \"my-org\", tagColumns: [\"location\", \"host\"], fieldFn: (r) => return {\"hum\": r.hum})";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket: v0) |> "
+                + "to(bucket: v1, org: v2, tagColumns: v3, fieldFn: (r) => v4)";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "\"my-bucket\"",
+                "v2", "\"my-org\"",
+                "v3", Arrays.asList("location", "host"),
+                "v4", "return {\"hum\": r.hum}");
     }
 
     @Test
@@ -122,23 +161,44 @@ class ToFluxTest {
                 .from("telegraf")
                 .to("my-bucket", "my-org", "example.com", "secret", "timestamp", tagColumns, "return {\"hum\": r.hum, \"temp\": r.temp}");
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "to(bucket: \"my-bucket\", org: \"my-org\", host: \"example.com\", token: \"secret\", timeColumn: \"timestamp\", tagColumns: [\"location\", \"production\"], fieldFn: (r) => return {\"hum\": r.hum, \"temp\": r.temp})";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket: v0) |> "
+                + "to(bucket: v1, org: v2, host: v3, token: v4, timeColumn: v5, tagColumns: v6, fieldFn: (r) => v7)";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "\"my-bucket\"",
+                "v2", "\"my-org\"",
+                "v3", "\"example.com\"",
+                "v4", "\"secret\"",
+                "v5", "\"timestamp\"",
+                "v6", tagColumns,
+                "v7", "return {\"hum\": r.hum, \"temp\": r.temp}"
+        );
     }
 
     @Test
     void toCollection() {
 
         List<String> tagColumns = Arrays.asList("location", "production");
-        
+
         Flux flux = Flux
                 .from("telegraf")
                 .to("my-bucket", "my-org", "example.com", "secret", "timestamp", tagColumns, "return {\"hum\": r.hum, \"temp\": r.temp}");
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "to(bucket: \"my-bucket\", org: \"my-org\", host: \"example.com\", token: \"secret\", timeColumn: \"timestamp\", tagColumns: [\"location\", \"production\"], fieldFn: (r) => return {\"hum\": r.hum, \"temp\": r.temp})";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket: v0) |> "
+                + "to(bucket: v1, org: v2, host: v3, token: v4, timeColumn: v5, tagColumns: v6, fieldFn: (r) => v7)";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "\"my-bucket\"",
+                "v2", "\"my-org\"",
+                "v3", "\"example.com\"",
+                "v4", "\"secret\"",
+                "v5", "\"timestamp\"",
+                "v6", tagColumns,
+                "v7", "return {\"hum\": r.hum, \"temp\": r.temp}"
+        );
     }
-
 }

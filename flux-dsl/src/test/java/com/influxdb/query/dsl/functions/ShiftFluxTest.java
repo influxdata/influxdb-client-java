@@ -25,7 +25,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.functions.properties.TimeInterval;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -36,7 +38,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (29/06/2018 10:46)
  */
 @RunWith(JUnitPlatform.class)
-class ShiftFluxTest {
+class ShiftFluxTest extends AbstractFluxTest {
 
     @Test
     void shift() {
@@ -45,7 +47,12 @@ class ShiftFluxTest {
                 .from("telegraf")
                 .shift(10L, ChronoUnit.HOURS);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> shift(shift: 10h)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> shift(shift: v1)");
+
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(10L, ChronoUnit.HOURS));
     }
 
     @Test
@@ -55,8 +62,14 @@ class ShiftFluxTest {
                 .from("telegraf")
                 .shift(10L, ChronoUnit.HOURS, new String[]{"time", "custom"});
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> shift(shift: 10h, columns: [\"time\", \"custom\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> shift(shift: v1, columns: v2)");
+
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(10L, ChronoUnit.HOURS),
+                "v2", new String[]{"time", "custom"});
     }
 
     @Test
@@ -70,8 +83,14 @@ class ShiftFluxTest {
                 .from("telegraf")
                 .shift(10L, ChronoUnit.HOURS, columns);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> shift(shift: 10h, columns: [\"time\", \"_start\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> shift(shift: v1, columns: v2)");
+
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(10L, ChronoUnit.HOURS),
+                "v2", columns);
     }
 
     @Test
@@ -82,8 +101,13 @@ class ShiftFluxTest {
                 .shift()
                 .withShift(20L, ChronoUnit.DAYS);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> shift(shift: 20d)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> shift(shift: v1)");
+
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(20L, ChronoUnit.DAYS));
     }
 
     @Test
@@ -92,9 +116,12 @@ class ShiftFluxTest {
         Flux flux = Flux
                 .from("telegraf")
                 .shift()
-                    .withShift("2y");
+                .withShift("2y");
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> shift(shift: 2y)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> shift(shift: v1)");
+
+        assertVariables(query, "v0", "\"telegraf\"", "v1", "2y");
     }
 }

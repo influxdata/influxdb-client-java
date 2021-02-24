@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -36,14 +37,16 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (22/06/2018 12:04)
  */
 @RunWith(JUnitPlatform.class)
-class FromFluxTest {
+class FromFluxTest extends AbstractFluxTest {
 
     @Test
     void database() {
 
         Flux flux = Flux.from("telegraf");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0)");
+        assertVariables(query, "v0", "\"telegraf\"");
     }
 
     @Test
@@ -63,8 +66,12 @@ class FromFluxTest {
 
         Flux flux = Flux.from("telegraf", hosts);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\", hosts:[\"fluxdHost\", \"192.168.1.100\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0, hosts:v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", hosts);
     }
 
     @Test
@@ -72,7 +79,9 @@ class FromFluxTest {
 
         Flux flux = Flux.from("telegraf", new ArrayList<>());
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0)");
+        assertVariables(query, "v0", "\"telegraf\"");
     }
 
     @Test
@@ -88,8 +97,12 @@ class FromFluxTest {
 
         Flux flux = Flux.from("telegraf", new String[]{"fluxdHost", "192.168.1.100"});
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\", hosts:[\"fluxdHost\", \"192.168.1.100\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket:v0, hosts:v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"fluxdHost", "192.168.1.100"});
     }
 
     @Test
@@ -97,7 +110,9 @@ class FromFluxTest {
 
         Flux flux = Flux.from("telegraf", new String[]{});
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0)");
+        assertVariables(query, "v0", "\"telegraf\"");
     }
 
     @Test

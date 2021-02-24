@@ -21,6 +21,7 @@
  */
 package com.influxdb.query.dsl.functions;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -32,7 +33,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (09/10/2018 13:27)
  */
 @RunWith(JUnitPlatform.class)
-class DuplicateFluxTest {
+class DuplicateFluxTest extends AbstractFluxTest {
 
     @Test
     void duplicate() {
@@ -41,7 +42,12 @@ class DuplicateFluxTest {
                 .from("telegraf")
                 .duplicate("host", "server");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> duplicate(column: \"host\", as: \"server\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> duplicate(column: v1, as: v2)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "\"host\"",
+                "v2", "\"server\"");
     }
 
     @Test
@@ -53,6 +59,11 @@ class DuplicateFluxTest {
                     .withColumn("time")
                     .withAs("timestamp");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> duplicate(column: \"time\", as: \"timestamp\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> duplicate(column: v1, as: v2)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "\"time\"",
+                "v2", "\"timestamp\"");
     }
 }

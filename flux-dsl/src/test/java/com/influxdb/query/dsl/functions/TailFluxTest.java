@@ -23,6 +23,7 @@ package com.influxdb.query.dsl.functions;
 
 import java.util.HashMap;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -34,67 +35,75 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (14/12/2020 10:24)
  */
 @RunWith(JUnitPlatform.class)
-class TailFluxTest
-{
-	@Test
-	void tail() {
+class TailFluxTest extends AbstractFluxTest {
+    @Test
+    void tail() {
 
-		Flux flux = Flux
-				.from("telegraf")
-				.tail(5);
+        Flux flux = Flux
+                .from("telegraf")
+                .tail(5);
 
-		Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> tail(n: 5)");
-	}
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> tail(n: v1)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", 5);
+    }
 
-	@Test
-	void tailOffset() {
+    @Test
+    void tailOffset() {
 
-		Flux flux = Flux
-				.from("telegraf")
-				.tail(100, 10);
+        Flux flux = Flux
+                .from("telegraf")
+                .tail(100, 10);
 
-		Assertions.assertThat(flux.toString())
-				.isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> tail(n: 100, offset:10)");
-	}
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> tail(n: v1, offset: v2)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", 100, "v2", 10);
+    }
 
-	@Test
-	void tailOffsetZero() {
+    @Test
+    void tailOffsetZero() {
 
-		Flux flux = Flux
-				.from("telegraf")
-				.tail(100, 0);
+        Flux flux = Flux
+                .from("telegraf")
+                .tail(100, 0);
 
-		Assertions.assertThat(flux.toString())
-				.isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> tail(n: 100, offset:0)");
-	}
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> tail(n: v1, offset: v2)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", 100, "v2", 0);
+    }
 
-	@Test
-	void tailPositive() {
-		Assertions.assertThatThrownBy(() -> Flux.from("telegraf").tail(-5))
-				.isInstanceOf(IllegalArgumentException.class)
-				.hasMessage("Expecting a positive number for Number of results");
-	}
+    @Test
+    void tailPositive() {
+        Assertions.assertThatThrownBy(() -> Flux.from("telegraf").tail(-5))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Expecting a positive number for Number of results");
+    }
 
-	@Test
-	void tailByParameter() {
+    @Test
+    void tailByParameter() {
 
-		Flux flux = Flux
-				.from("telegraf")
-				.tail()
-				.withPropertyNamed("n", "tail");
+        Flux flux = Flux
+                .from("telegraf")
+                .tail()
+                .withPropertyNamed("n", "tail");
 
-		HashMap<String, Object> parameters = new HashMap<>();
-		parameters.put("tail", 15);
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("tail", 15);
 
-		Assertions.assertThat(flux.toString(parameters))
-				.isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> tail(n: 15)");
-	}
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v1) |> tail(n: tail)");
 
-	@Test
-	void tailByParameterMissing() {
+        assertVariables(query, "v1", "\"telegraf\"", "tail", 15);
+    }
 
-		Assertions.assertThatThrownBy(() -> Flux.from("telegraf").tail().withPropertyNamed("tail").toString())
-				.isInstanceOf(IllegalStateException.class)
-				.hasMessage("The parameter 'tail' is not defined.");
-	}
+    @Test
+    void tailByParameterMissing() {
+
+        Assertions.assertThatThrownBy(() -> Flux.from("telegraf").tail().withPropertyNamed("tail").toString())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("The parameter 'tail' is not defined.");
+    }
 }

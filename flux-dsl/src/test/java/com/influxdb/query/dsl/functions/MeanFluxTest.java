@@ -23,6 +23,7 @@ package com.influxdb.query.dsl.functions;
 
 import java.util.HashMap;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -34,7 +35,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (25/06/2018 09:58)
  */
 @RunWith(JUnitPlatform.class)
-class MeanFluxTest {
+class MeanFluxTest extends AbstractFluxTest {
 
     @Test
     void mean() {
@@ -43,7 +44,9 @@ class MeanFluxTest {
                 .from("telegraf")
                 .mean();
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> mean()");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> mean()");
+        assertVariables(query, "v0", "\"telegraf\"");
     }
 
     @Test
@@ -53,8 +56,10 @@ class MeanFluxTest {
                 .from("telegraf")
                 .mean("dif_val");
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> mean(column: \"dif_val\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> mean(column: v1)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", "\"dif_val\"");
     }
 
     @Test
@@ -68,7 +73,9 @@ class MeanFluxTest {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("parameter", "\"column_b\"");
 
-        Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> mean(column:\"column_b\")");
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v1) |> mean(column: parameter)");
+        assertVariables(query, "v1", "\"telegraf\"", "parameter", "\"column_b\"");
     }
 }

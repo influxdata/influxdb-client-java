@@ -25,6 +25,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 import com.influxdb.query.dsl.functions.properties.TimeInterval;
 
@@ -37,7 +38,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (27/06/2018 12:42)
  */
 @RunWith(JUnitPlatform.class)
-class WindowFluxTest {
+class WindowFluxTest extends AbstractFluxTest {
 
     @Test
     void windowEveryChronoUnit() {
@@ -46,8 +47,12 @@ class WindowFluxTest {
                 .from("telegraf")
                 .window(15L, ChronoUnit.MINUTES);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> window(every: 15m)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> window(every: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(15L, ChronoUnit.MINUTES));
     }
 
     @Test
@@ -57,8 +62,13 @@ class WindowFluxTest {
                 .from("telegraf")
                 .window(15L, ChronoUnit.MINUTES, 20L, ChronoUnit.SECONDS);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> window(every: 15m, period: 20s)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> window(every: v1, period: v2)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(15L, ChronoUnit.MINUTES),
+                "v2", new TimeInterval(20L, ChronoUnit.SECONDS));
     }
 
     @Test
@@ -68,8 +78,14 @@ class WindowFluxTest {
                 .from("telegraf")
                 .window(15L, ChronoUnit.HALF_DAYS, 20L, ChronoUnit.SECONDS, -50L, ChronoUnit.DAYS);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> window(every: 180h, period: 20s, offset: -50d)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> window(every: v1, period: v2, offset: v3)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(15L, ChronoUnit.HALF_DAYS),
+                "v2", new TimeInterval(20L, ChronoUnit.SECONDS),
+                "v3", new TimeInterval(-50L, ChronoUnit.DAYS));
     }
 
     @Test
@@ -79,9 +95,15 @@ class WindowFluxTest {
                 .from("telegraf")
                 .window(15L, ChronoUnit.MINUTES, 20L, ChronoUnit.SECONDS, Instant.ofEpochSecond(1_750_000));
 
-        String expected = "from(bucket:\"telegraf\") |> window(every: 15m, period: 20s, offset: 1970-01-21T06:06:40.000000000Z)";
+        String expected = "from(bucket: v0) |> window(every: v1, period: v2, offset: v3)";
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(15L, ChronoUnit.MINUTES),
+                "v2", new TimeInterval(20L, ChronoUnit.SECONDS),
+                "v3", Instant.ofEpochSecond(1_750_000));
     }
 
     @Test
@@ -92,10 +114,15 @@ class WindowFluxTest {
                 .window()
                 .withEvery("10s").withPeriod("30m").withOffset("-1d");
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "window(every: 10s, period: 30m, offset: -1d)";
+        String expected = "from(bucket: v0) |> window(every: v1, period: v2, offset: v3)";
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "10s",
+                "v2", "30m",
+                "v3", "-1d");
     }
 
     @Test
@@ -108,11 +135,20 @@ class WindowFluxTest {
                         -50L, ChronoUnit.DAYS,
                         "time", "superStart", "totalEnd");
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "window(every: 15m, period: 20s, offset: -50d, timeColumn: \"time\", "
-                + "startColumn: \"superStart\", stopColumn: \"totalEnd\")";
+        String expected = "from(bucket: v0) |> "
+                + "window(every: v1, period: v2, offset: v3, timeColumn: v4, "
+                + "startColumn: v5, stopColumn: v6)";
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(15L, ChronoUnit.MINUTES),
+                "v2", new TimeInterval(20L, ChronoUnit.SECONDS),
+                "v3", new TimeInterval(-50L, ChronoUnit.DAYS),
+                "v4", "\"time\"",
+                "v5", "\"superStart\"",
+                "v6", "\"totalEnd\"");
     }
 
     @Test
@@ -125,11 +161,20 @@ class WindowFluxTest {
                         Instant.ofEpochSecond(1_750_000),
                         "time", "superStart", "totalEnd");
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "window(every: 15m, period: 20s, offset: 1970-01-21T06:06:40.000000000Z, timeColumn: \"time\", "
-                + "startColumn: \"superStart\", stopColumn: \"totalEnd\")";
+        String expected = "from(bucket: v0) |> "
+                + "window(every: v1, period: v2, offset: v3, timeColumn: v4, "
+                + "startColumn: v5, stopColumn: v6)";
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new TimeInterval(15L, ChronoUnit.MINUTES),
+                "v2", new TimeInterval(20L, ChronoUnit.SECONDS),
+                "v3", Instant.ofEpochSecond(1_750_000),
+                "v4", "\"time\"",
+                "v5", "\"superStart\"",
+                "v6", "\"totalEnd\"");
     }
 
     @Test
@@ -149,10 +194,17 @@ class WindowFluxTest {
         parameters.put("offset", new TimeInterval(-50L, ChronoUnit.DAYS));
         parameters.put("round", new TimeInterval(1L, ChronoUnit.HOURS));
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "window(every: 15m, period: 20s, offset: -50d, round: 1h)";
+        String expected = "from(bucket: v4) |> "
+                + "window(every: every, period: period, offset: offset, round: round)";
 
-        Assertions.assertThat(flux.toString(parameters)).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v4", "\"telegraf\"",
+                "every", new TimeInterval(15L, ChronoUnit.MINUTES),
+                "period", new TimeInterval(20L, ChronoUnit.SECONDS),
+                "offset", new TimeInterval(-50L, ChronoUnit.DAYS),
+                "round", new TimeInterval(1L, ChronoUnit.HOURS));
     }
 
     @Test
@@ -160,9 +212,13 @@ class WindowFluxTest {
 
         Flux flux = Flux.from("telegraf")
                 .window()
-                    .withPropertyValue("intervals", "intervals(every:1mo, period:-1d)");
+                .withPropertyValue("intervals", "intervals(every:1mo, period:-1d)");
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> window(intervals: intervals(every:1mo, period:-1d))");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> window(intervals: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "intervals(every:1mo, period:-1d)");
     }
 }

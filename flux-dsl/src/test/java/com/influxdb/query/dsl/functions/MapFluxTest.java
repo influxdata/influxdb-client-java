@@ -21,12 +21,11 @@
  */
 package com.influxdb.query.dsl.functions;
 
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
-import com.influxdb.query.dsl.functions.restriction.Restrictions;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -37,52 +36,40 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (17/07/2018 07:58)
  */
 @RunWith(JUnitPlatform.class)
-class MapFluxTest {
+class MapFluxTest extends AbstractFluxTest {
 
     @Test
     void map() {
 
-        Restrictions restriction = Restrictions.and(
-                Restrictions.measurement().equal("cpu"),
-                Restrictions.field().equal("usage_system"),
-                Restrictions.tag("service").equal("app-server")
-        );
-
         Flux flux = Flux
                 .from("telegraf")
-                .filter(restriction)
-                .range(-12L, ChronoUnit.HOURS)
                 .map("r._value * r._value");
 
-        String expected = "from(bucket:\"telegraf\") "
-                + "|> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\" and r[\"service\"] == \"app-server\")) "
-                + "|> range(start: -12h) "
-                + "|> map(fn: (r) => r._value * r._value)";
+        String expected = "from(bucket: v0) "
+                + "|> map(fn: (r) => v1)";
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "r._value * r._value");
     }
 
     @Test
     void mapObject() {
 
-        Restrictions restriction = Restrictions.and(
-                Restrictions.measurement().equal("cpu"),
-                Restrictions.field().equal("usage_system"),
-                Restrictions.tag("service").equal("app-server")
-        );
-
         Flux flux = Flux
                 .from("telegraf")
-                .filter(restriction)
-                .range(-12L, ChronoUnit.HOURS)
                 .map("{value: r._value, value2:r._value * r._value}");
 
-        String expected = "from(bucket:\"telegraf\") "
-                + "|> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\" and r[\"service\"] == \"app-server\")) "
-                + "|> range(start: -12h) "
-                + "|> map(fn: (r) => {value: r._value, value2:r._value * r._value})";
+        String expected = "from(bucket: v0) "
+                + "|> map(fn: (r) => v1)";
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "{value: r._value, value2:r._value * r._value}");
     }
 
     @Test
@@ -93,15 +80,16 @@ class MapFluxTest {
 
         Flux flux = Flux
                 .from("telegraf")
-                .range(-12L, ChronoUnit.HOURS)
                 .map()
                     .withFunctionNamed("fn: (r)", "function");
 
-        String expected = "from(bucket:\"telegraf\") "
-                + "|> range(start: -12h) "
-                + "|> map(fn: (r) => r._value * 10)";
+        String expected = "from(bucket: v1) "
+                + "|> map(fn: (r) => function)";
 
-        Assertions.assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v1", "\"telegraf\"",
+                "function", "r._value * 10");
     }
 }

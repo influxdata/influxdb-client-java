@@ -23,6 +23,7 @@ package com.influxdb.query.dsl.functions;
 
 import java.time.temporal.ChronoUnit;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 import com.influxdb.query.dsl.functions.restriction.Restrictions;
 
@@ -35,36 +36,34 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (29/06/2018 07:37)
  */
 @RunWith(JUnitPlatform.class)
-class SampleFluxTest {
+class SampleFluxTest extends AbstractFluxTest {
 
     @Test
     void sampleN() {
 
         Flux flux = Flux.from("telegraf")
-                .filter(Restrictions.and(Restrictions.measurement().equal("cpu"), Restrictions.field().equal("usage_system")))
-                .range(-1L, ChronoUnit.DAYS)
                 .sample(10);
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\")) |> "
-                + "range(start: -1d) |> sample(n: 10)";
+        String expected = "from(bucket: v0) |> sample(n: v1)";
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+
+        assertVariables(query, "v0", "\"telegraf\"", "v1", 10);
     }
 
     @Test
     void sampleNPosition() {
 
         Flux flux = Flux.from("telegraf")
-                .filter(Restrictions.and(Restrictions.measurement().equal("cpu"), Restrictions.field().equal("usage_system")))
-                .range(-1L, ChronoUnit.DAYS)
                 .sample(5, 1);
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\")) |> "
-                + "range(start: -1d) |> sample(n: 5, pos: 1)";
+        String expected = "from(bucket: v0) |> sample(n: v1, pos: v2)";
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+
+        assertVariables(query, "v0", "\"telegraf\"", "v1", 5, "v2", 1);
     }
 
     @Test
@@ -75,7 +74,11 @@ class SampleFluxTest {
                 .sample()
                 .withN(5);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sample(n: 5)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> sample(n: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", 5);
     }
 
     @Test

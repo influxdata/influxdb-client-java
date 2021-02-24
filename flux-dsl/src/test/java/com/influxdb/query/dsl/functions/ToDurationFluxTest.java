@@ -21,6 +21,7 @@
  */
 package com.influxdb.query.dsl.functions;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -32,7 +33,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (26/06/2018 06:30)
  */
 @RunWith(JUnitPlatform.class)
-class ToDurationFluxTest {
+class ToDurationFluxTest extends AbstractFluxTest {
 
     @Test
     void toDuration() {
@@ -41,6 +42,8 @@ class ToDurationFluxTest {
                 .from("telegraf")
                 .toDuration();
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> toDuration()");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> toDuration()");
+        assertVariables(query, "v0", "\"telegraf\"");
     }
 }

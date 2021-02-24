@@ -24,6 +24,7 @@ package com.influxdb.query.dsl.functions;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -35,7 +36,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (02/08/2018 11:09)
  */
 @RunWith(JUnitPlatform.class)
-class DropFluxTest {
+class DropFluxTest extends AbstractFluxTest {
 
     @Test
     void dropByArray() {
@@ -44,7 +45,11 @@ class DropFluxTest {
                 .from("telegraf")
                 .drop(new String[]{"host", "_measurement"});
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> drop(columns: [\"host\", \"_measurement\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> drop(columns: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"host", "_measurement"});
     }
 
     @Test
@@ -58,7 +63,11 @@ class DropFluxTest {
                 .from("telegraf")
                 .drop(columns);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> drop(columns: [\"host\", \"_value\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> drop(columns: v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", columns);
     }
 
     @Test
@@ -68,7 +77,11 @@ class DropFluxTest {
                 .from("telegraf")
                 .drop("column =~ /usage*/");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> drop(fn: (column) => column =~ /usage*/)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> drop(fn: (column) => v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "column =~ /usage*/");
     }
 
     @Test
@@ -79,6 +92,10 @@ class DropFluxTest {
                 .drop()
                 .withFunction("column =~ /free*/");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> drop(fn: (column) => column =~ /free*/)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket:v0) |> drop(fn: (column) => v1)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", "column =~ /free*/");
     }
 }

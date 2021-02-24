@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -36,7 +37,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (25/06/2018 13:54)
  */
 @RunWith(JUnitPlatform.class)
-class SortFluxTest {
+class SortFluxTest extends AbstractFluxTest {
 
     @Test
     void sortByColumnsCollection() {
@@ -49,8 +50,10 @@ class SortFluxTest {
                 .from("telegraf")
                 .sort(sortBy);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sort(columns: [\"region\", \"host\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> sort(columns: v1)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", sortBy);
     }
 
     @Test
@@ -60,8 +63,10 @@ class SortFluxTest {
                 .from("telegraf")
                 .sort(new ArrayList<>(), false);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sort(desc: false)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> sort(desc: v1)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", false);
     }
 
     @Test
@@ -71,8 +76,11 @@ class SortFluxTest {
                 .from("telegraf")
                 .sort(new String[]{"region", "value"});
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sort(columns: [\"region\", \"value\"])");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> sort(columns: v1)");
+
+        assertVariables(query, "v0", "\"telegraf\"", "v1", new String[]{"region", "value"});
     }
 
     @Test
@@ -81,8 +89,11 @@ class SortFluxTest {
                 .from("telegraf")
                 .sort(true);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sort(desc: true)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> sort(desc: v1)");
+
+        assertVariables(query, "v0", "\"telegraf\"", "v1", true);
     }
 
     @Test
@@ -92,8 +103,10 @@ class SortFluxTest {
                 .from("telegraf")
                 .sort(false);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> sort(desc: false)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> sort(desc: v1)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", false);
     }
 
     @Test
@@ -103,9 +116,11 @@ class SortFluxTest {
                 .from("telegraf")
                 .sort(new String[]{"region", "value"}, true);
 
-        String expected = "from(bucket:\"telegraf\") |> sort(columns: [\"region\", \"value\"], desc: true)";
+        String expected = "from(bucket: v0) |> sort(columns: v1, desc: v2)";
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query, "v0", "\"telegraf\"", "v1", new String[]{"region", "value"}, "v2", true);
     }
 
     @Test
@@ -119,9 +134,11 @@ class SortFluxTest {
                 .from("telegraf")
                 .sort(sortBy, false);
 
-        String expected = "from(bucket:\"telegraf\") |> sort(columns: [\"region\", \"host\"], desc: false)";
+        String expected = "from(bucket: v0) |> sort(columns: v1, desc: v2)";
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query, "v0", "\"telegraf\"", "v1", sortBy, "v2", false);
     }
 
     @Test
@@ -137,10 +154,14 @@ class SortFluxTest {
         parameters.put("columnsParameter", new String[]{"region", "tag"});
         parameters.put("descParameter", false);
 
-        String expected = "from(bucket:\"telegraf\") |> sort(columns: [\"region\", \"tag\"], desc: false)";
+        String expected = "from(bucket: v2) |> sort(columns: columnsParameter, desc: descParameter)";
 
-        Assertions
-                .assertThat(flux.toString(parameters))
-                .isEqualToIgnoringWhitespace(expected);
+        Flux.Query query = flux.toQuery(parameters);
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+
+        assertVariables(query,
+                "v2", "\"telegraf\"",
+                "columnsParameter", new String[]{"region", "tag"},
+                "descParameter", false);
     }
 }

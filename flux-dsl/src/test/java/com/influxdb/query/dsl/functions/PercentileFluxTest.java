@@ -23,6 +23,7 @@ package com.influxdb.query.dsl.functions;
 
 import java.util.Arrays;
 
+import com.influxdb.query.dsl.AbstractFluxTest;
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
@@ -34,7 +35,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (10/10/2018 12:38)
  */
 @RunWith(JUnitPlatform.class)
-class PercentileFluxTest {
+class PercentileFluxTest extends AbstractFluxTest {
 
     @Test
     void percentile() {
@@ -42,14 +43,19 @@ class PercentileFluxTest {
         Flux flux = Flux
                 .from("telegraf")
                 .percentile()
-                    .withColumns(new String[]{"value2"})
-                    .withPercentile(0.75F)
-                    .withMethod("exact_mean")
-                    .withCompression(2_000F);
+                .withColumns(new String[]{"value2"})
+                .withPercentile(0.75F)
+                .withMethod("exact_mean")
+                .withCompression(2_000F);
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "percentile(columns:[\"value2\"], percentile:0.75, method:\"exact_mean\", compression:2000.0)";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket: v0) |> "
+                + "percentile(columns: v1, percentile: v2, method: v3, compression: v4)";
+
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"value2"}, "v2", 0.75F, "v3", "\"exact_mean\"", "v4", 2_000F);
     }
 
     @Test
@@ -59,7 +65,9 @@ class PercentileFluxTest {
                 .from("telegraf")
                 .percentile(0.80F);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> percentile(percentile:0.8)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace("from(bucket: v0) |> percentile(percentile: v1)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", 0.80F);
     }
 
     @Test
@@ -69,8 +77,10 @@ class PercentileFluxTest {
                 .from("telegraf")
                 .percentile(0.80F, PercentileFlux.MethodType.EXACT_SELECTOR);
 
-        Assertions.assertThat(flux.toString())
-                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> percentile(percentile:0.8, method:\"exact_selector\")");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> percentile(percentile: v1, method: v2)");
+        assertVariables(query, "v0", "\"telegraf\"", "v1", 0.80F, "v2", "\"exact_selector\"");
     }
 
     @Test
@@ -80,7 +90,14 @@ class PercentileFluxTest {
                 .from("telegraf")
                 .percentile(0.80F, PercentileFlux.MethodType.EXACT_SELECTOR, 3_000F);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> percentile(percentile:0.8, method:\"exact_selector\", compression:3000.0)");
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux)
+                .isEqualToIgnoringWhitespace("from(bucket: v0) |> percentile(percentile: v1, method: v2, compression: v3)");
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", 0.80F,
+                "v2", "\"exact_selector\"",
+                "v3", 3_000F);
     }
 
     @Test
@@ -90,9 +107,16 @@ class PercentileFluxTest {
                 .from("telegraf")
                 .percentile(new String[]{"_value", "_value2"}, 0.80F, PercentileFlux.MethodType.EXACT_SELECTOR, 3_000F);
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "percentile(columns:[\"_value\", \"_value2\"], percentile:0.8, method:\"exact_selector\", compression:3000.0)";
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket: v0) |> "
+                + "percentile(columns: v1, percentile: v2, method: v3, compression: v4)";
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", new String[]{"_value", "_value2"},
+                "v2", 0.80F,
+                "v3", "\"exact_selector\"",
+                "v4", 3_000F);
     }
 
     @Test
@@ -104,9 +128,16 @@ class PercentileFluxTest {
                 .from("telegraf")
                 .percentile(Arrays.asList(columns), 0.80F, PercentileFlux.MethodType.ESTIMATE_TDIGEST, 3_000F);
 
-        String expected = "from(bucket:\"telegraf\") |> "
-                + "percentile(columns:[\"_value\", \"_value2\"], percentile:0.8, method:\"estimate_tdigest\", compression:3000.0)";
-        
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+        String expected = "from(bucket: v0) |> "
+                + "percentile(columns: v1, percentile: v2, method: v3, compression: v4)";
+
+        Flux.Query query = flux.toQuery();
+        Assertions.assertThat(query.flux).isEqualToIgnoringWhitespace(expected);
+        assertVariables(query,
+                "v0", "\"telegraf\"",
+                "v1", Arrays.asList(columns),
+                "v2", 0.80F,
+                "v3", "\"estimate_tdigest\"",
+                "v4", 3_000F);
     }
 }
