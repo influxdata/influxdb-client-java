@@ -4,7 +4,10 @@
 1. [#197](https://github.com/influxdata/influxdb-client-java/pull/197): InfluxException bodyError type changed from JSONObject to Map<String, Object>
 
 ### Bug Fixes
-1. [#197](https://github.com/influxdata/influxdb-client-java/issues/196): Removed badly licenced JSON-Java library
+1. [#196](https://github.com/influxdata/influxdb-client-java/issues/196): Removed badly licenced JSON-Java library
+
+### CI
+1. [#203](https://github.com/influxdata/influxdb-client-java/pull/203): Updated stable image to `influxdb:latest` and nightly to `quay.io/influxdb/influxdb:nightly`
 
 ## 1.15.0 [2021-01-29]
 
