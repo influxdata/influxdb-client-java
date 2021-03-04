@@ -226,7 +226,7 @@
                     <excludes>**/target/**, **/*.jar, **/.git/**, **/.*, **/*.png, **/*.iml, **/*.bolt, .idea/**,
                         **/*nightly*/**, **/.m2/**, LICENSE, **/*.md, **/PLACEHOLDER, **/.influxdb/**, **/generated/**,
                         **/openapi-generator/**, **/swagger.yml, **/*.json, **/spring.factories, **/PULL_REQUEST_TEMPLATE,
-                        release.properties/, **/pom.xml.releaseBackup, **/pom.xml.tag, **/semantic.yml
+                        release.properties/, **/pom.xml.releaseBackup, **/pom.xml.tag, **/semantic.yml, **/test.txt
                     </excludes>
                     <properties>
                         <organizationName>${project.organization.name}</organizationName>

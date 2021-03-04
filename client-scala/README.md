@@ -12,14 +12,6 @@ The reference Scala client that allows query and write for the InfluxDB 2.0 by [
 ## Queries
 
 The [QueryScalaApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-scala/scaladocs/org/influxdata/client/scala/QueryScalaApi.html) is based on the [Akka Streams](https://doc.akka.io/docs/akka/2.6/stream/). 
-The streaming can be configured by:
-
-- `bufferSize` - Size of a buffer for incoming responses. Default 10000. 
-- `overflowStrategy` - Strategy that is used when incoming response cannot fit inside the buffer. Default `akka.stream.OverflowStrategies.Backpressure`.
-
-```scala
-val fluxClient = InfluxDBClientScalaFactory.create(options, 5000, OverflowStrategy.dropTail)
-```
 
 The following example demonstrates querying using the Flux language:
 

@@ -21,27 +21,25 @@
  */
 package com.influxdb.client.scala.internal
 
-import akka.stream.OverflowStrategy
 import com.influxdb.LogLevel
 import com.influxdb.client.InfluxDBClientOptions
 import com.influxdb.client.domain.HealthCheck
 import com.influxdb.client.internal.AbstractInfluxDBClient
 import com.influxdb.client.scala.{InfluxDBClientScala, QueryScalaApi}
 import com.influxdb.client.service.QueryService
+
 import javax.annotation.Nonnull
 
 /**
  * @author Jakub Bednar (bednar@github) (08/02/2019 09:26)
  */
-class InfluxDBClientScalaImpl(@Nonnull options: InfluxDBClientOptions,
-                              @Nonnull val bufferSize: Int,
-                              @Nonnull val overflowStrategy: OverflowStrategy) extends AbstractInfluxDBClient(options, "scala") with InfluxDBClientScala {
+class InfluxDBClientScalaImpl(@Nonnull options: InfluxDBClientOptions) extends AbstractInfluxDBClient(options, "scala") with InfluxDBClientScala {
   /**
    * Get the Query client.
    *
    * @return the new client instance for the Query API
    */
-  override def getQueryScalaApi(): QueryScalaApi = new QueryScalaApiImpl(retrofit.create(classOf[QueryService]), options, bufferSize, overflowStrategy)
+  override def getQueryScalaApi(): QueryScalaApi = new QueryScalaApiImpl(retrofit.create(classOf[QueryService]), options)
 
   /**
    * Get the health of an instance.

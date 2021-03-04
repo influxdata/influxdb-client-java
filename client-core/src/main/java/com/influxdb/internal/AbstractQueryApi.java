@@ -21,8 +21,13 @@
  */
 package com.influxdb.internal;
 
+import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -34,6 +39,7 @@ import javax.annotation.Nullable;
 import com.influxdb.Arguments;
 import com.influxdb.Cancellable;
 import com.influxdb.exceptions.InfluxException;
+import com.influxdb.query.FluxRecord;
 import com.influxdb.query.internal.FluxCsvParser;
 import com.influxdb.query.internal.FluxResultMapper;
 
@@ -44,6 +50,9 @@ import com.google.gson.JsonObject;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.BufferedSource;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,7 +81,7 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
         DEFAULT_DIALECT = new GsonBuilder().create().toJson(dialect);
     }
 
-        protected static final Consumer<Throwable> ERROR_CONSUMER = throwable -> {
+    protected static final Consumer<Throwable> ERROR_CONSUMER = throwable -> {
         if (throwable instanceof InfluxException) {
             throw (InfluxException) throwable;
         } else {
@@ -113,6 +122,10 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
         query(queryCall, consumer, onError, onComplete, asynchronously);
     }
 
+    protected FluxRecordIterator queryIterator(@Nonnull final Call<ResponseBody> queryCall) {
+        return new FluxRecordIterator(queryCall, ERROR_CONSUMER);
+    }
+
     protected void queryRaw(@Nonnull final Call<ResponseBody> queryCall,
                             @Nonnull final BiConsumer<Cancellable, String> onResponse,
                             @Nonnull final Consumer<? super Throwable> onError,
@@ -131,11 +144,15 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
         query(queryCall, consumer, onError, onComplete, asynchronously);
     }
 
-    protected void query(@Nonnull final Call<ResponseBody> query,
-                         @Nonnull final BiConsumer<Cancellable, BufferedSource> consumer,
-                         @Nonnull final Consumer<? super Throwable> onError,
-                         @Nonnull final Runnable onComplete,
-                         @Nonnull final Boolean asynchronously) {
+    protected RawIterator queryRawIterator(@Nonnull final Call<ResponseBody> queryCall) {
+        return new RawIterator(queryCall, ERROR_CONSUMER);
+    }
+
+    private void query(@Nonnull final Call<ResponseBody> query,
+                       @Nonnull final BiConsumer<Cancellable, BufferedSource> consumer,
+                       @Nonnull final Consumer<? super Throwable> onError,
+                       @Nonnull final Runnable onComplete,
+                       @Nonnull final Boolean asynchronously) {
 
         Arguments.checkNotNull(query, "query");
         Arguments.checkNotNull(consumer, "consumer");
@@ -144,6 +161,46 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
         Arguments.checkNotNull(asynchronously, "asynchronously");
 
         DefaultCancellable cancellable = new DefaultCancellable();
+
+        Consumer<ResponseBody> bodyConsumer = body -> {
+            try {
+                BufferedSource source = body.source();
+
+                //
+                // Source has data => parse
+                //
+                while (source.isOpen() && !source.exhausted() && !cancellable.wasCancelled) {
+
+                    consumer.accept(cancellable, source);
+                }
+
+                if (!cancellable.wasCancelled) {
+                    onComplete.run();
+                }
+
+            } catch (Exception e) {
+                catchOrPropagateException(e, onError);
+
+            } finally {
+
+                body.close();
+            }
+        };
+
+        query(query, bodyConsumer, onError, onComplete, asynchronously);
+    }
+
+    private void query(@Nonnull final Call<ResponseBody> query,
+                       @Nonnull final Consumer<ResponseBody> consumer,
+                       @Nonnull final Consumer<? super Throwable> onError,
+                       @Nonnull final Runnable onComplete,
+                       @Nonnull final Boolean asynchronously) {
+
+        Arguments.checkNotNull(query, "query");
+        Arguments.checkNotNull(consumer, "consumer");
+        Arguments.checkNotNull(onError, "onError");
+        Arguments.checkNotNull(onComplete, "onComplete");
+        Arguments.checkNotNull(asynchronously, "asynchronously");
 
         Callback<ResponseBody> callback = new Callback<ResponseBody>() {
             @Override
@@ -160,28 +217,7 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
                     return;
                 }
 
-                try {
-                    BufferedSource source = body.source();
-
-                    //
-                    // Source has data => parse
-                    //
-                    while (source.isOpen() && !source.exhausted() && !cancellable.wasCancelled) {
-
-                        consumer.accept(cancellable, source);
-                    }
-
-                    if (!cancellable.wasCancelled) {
-                        onComplete.run();
-                    }
-
-                } catch (Exception e) {
-                    catchOrPropagateException(e, onError);
-
-                } finally {
-
-                    body.close();
-                }
+                consumer.accept(body);
             }
 
             @Override
@@ -233,4 +269,121 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
         }
     }
 
+    protected final class RawIterator implements Iterator<String>, Closeable, Consumer<ResponseBody> {
+
+        private String line = null;
+        private boolean closed = false;
+        private ResponseBody body;
+        private BufferedSource source;
+        private final Consumer<? super Throwable> onError;
+
+        private RawIterator(@Nonnull final Call<ResponseBody> call,
+                            @Nonnull final Consumer<? super Throwable> onError) {
+            this.onError = onError;
+            query(call, this, onError, EMPTY_ACTION, false);
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !closed && readNext();
+        }
+
+        @Override
+        public String next() {
+            return line;
+        }
+
+        @Override
+        public void accept(final ResponseBody body) {
+            this.body = body;
+            this.source = body.source();
+        }
+
+        @Override
+        public void close() throws IOException {
+            closed = true;
+            if (body != null) {
+                body.close();
+            }
+        }
+
+        private boolean readNext() {
+            line = null;
+            try {
+                if (!closed && source.isOpen() && !source.exhausted()) {
+                    line = source.readUtf8Line();
+                }
+            } catch (IOException e) {
+                catchOrPropagateException(e, onError);
+            }
+
+            return line != null;
+        }
+    }
+
+    protected final class FluxRecordIterator implements Iterator<FluxRecord>, Closeable, Consumer<ResponseBody> {
+
+        private FluxRecord record = null;
+        private boolean closed = false;
+        private ResponseBody body;
+        private CSVParser parser;
+        private Iterator<CSVRecord> iterator;
+
+        private final FluxCsvParser.FluxCsvState state = new FluxCsvParser.FluxCsvState();
+        private final Consumer<? super Throwable> onError;
+
+        public FluxRecordIterator(@Nonnull final Call<ResponseBody> call,
+                                  @Nonnull final Consumer<? super Throwable> onError) {
+            this.onError = onError;
+            query(call, this, onError, EMPTY_ACTION, false);
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !closed && readNext();
+        }
+
+        @Override
+        public FluxRecord next() {
+            return record;
+        }
+
+        @Override
+        public void accept(final ResponseBody body) {
+            this.body = body;
+
+            Reader reader = new InputStreamReader(body.source().inputStream(), StandardCharsets.UTF_8);
+            try {
+                parser = new CSVParser(reader, CSVFormat.DEFAULT);
+            } catch (IOException e) {
+                catchOrPropagateException(e, onError);
+            }
+            iterator = parser.iterator();
+        }
+
+        @Override
+        public void close() throws IOException {
+            closed = true;
+            if (parser != null) {
+                parser.close();
+            }
+            if (body != null) {
+                body.close();
+            }
+        }
+
+        private boolean readNext() {
+
+            record = null;
+            while (record == null && iterator.hasNext()) {
+                state.csvRecord = iterator.next();
+                FluxCsvParser.FluxRecordOrTable fluxRecordOrTable = fluxCsvParser.parseNextResponse(state);
+                if (fluxRecordOrTable.record != null) {
+                    record = fluxRecordOrTable.record;
+                }
+            }
+
+            return record != null;
+        }
+    }
 }
