@@ -1,4 +1,4 @@
-## 2.0 [unreleased]
+## 2.0.0 [2021-03-05]
 
 ### API
 1. [#197](https://github.com/influxdata/influxdb-client-java/pull/197): InfluxException bodyError type changed from JSONObject to Map<String, Object>

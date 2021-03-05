@@ -91,7 +91,7 @@ Download the latest version:
 <dependency>
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-java</artifactId>
-    <version>1.15.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
        
@@ -99,7 +99,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-java:1.15.0"
+    compile "com.influxdb:influxdb-client-java:2.0.0"
 }
 ```
 
@@ -208,7 +208,7 @@ Download the latest version:
 <dependency>
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-java</artifactId>
-    <version>1.15.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
        
@@ -216,7 +216,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-java:1.15.0"
+    compile "com.influxdb:influxdb-client-java:2.0.0"
 }
 ```
 
@@ -309,7 +309,7 @@ Download the latest version:
 <dependency>
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-flux</artifactId>
-    <version>1.15.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
        
@@ -317,7 +317,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-flux:1.15.0"
+    compile "com.influxdb:influxdb-client-flux:2.0.0"
 }
 ``` 
 
