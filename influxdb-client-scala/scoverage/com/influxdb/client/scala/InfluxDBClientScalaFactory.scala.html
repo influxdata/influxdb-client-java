@@ -45,10 +45,10 @@
 </span>21 <span style=''> */
 </span>22 <span style=''>package com.influxdb.client.scala
 </span>23 <span style=''>
-</span>24 <span style=''>import akka.stream.OverflowStrategy
-</span>25 <span style=''>import com.influxdb.Arguments
-</span>26 <span style=''>import com.influxdb.client.InfluxDBClientOptions
-</span>27 <span style=''>import com.influxdb.client.scala.internal.InfluxDBClientScalaImpl
+</span>24 <span style=''>import com.influxdb.Arguments
+</span>25 <span style=''>import com.influxdb.client.InfluxDBClientOptions
+</span>26 <span style=''>import com.influxdb.client.scala.internal.InfluxDBClientScalaImpl
+</span>27 <span style=''>
 </span>28 <span style=''>import javax.annotation.Nonnull
 </span>29 <span style=''>
 </span>30 <span style=''>/**
@@ -167,22 +167,16 @@
 </span>143 <span style=''>  /**
 </span>144 <span style=''>   * Create an instance of the InfluxDB 2.0 reactive client.
 </span>145 <span style=''>   *
-</span>146 <span style=''>   * @param options          the connection configuration
-</span>147 <span style=''>   * @param bufferSize       size of a buffer for incoming responses. Default 10000.
-</span>148 <span style=''>   * @param overflowStrategy Strategy that is used when incoming response cannot fit inside the buffer.
-</span>149 <span style=''>   *                         Default [[akka.stream.OverflowStrategies.Backpressure]].
-</span>150 <span style=''>   * @see [[akka.stream.scaladsl.Source#queue(int, akka.stream.OverflowStrategy)]]
-</span>151 <span style=''>   * @return client
-</span>152 <span style=''>   */
-</span>153 <span style=''>  @Nonnull def create(@Nonnull options: InfluxDBClientOptions,
-</span>154 <span style=''>                      @Nonnull bufferSize: Int = 10000,
-</span>155 <span style=''>                      @Nonnull overflowStrategy: OverflowStrategy = OverflowStrategy.backpressure): InfluxDBClientScala = {
-</span>156 <span style=''>
-</span>157 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(options, &quot;InfluxDBClientOptions&quot;)</span><span style=''>
-</span>158 <span style=''>
-</span>159 <span style=''>    </span><span style='background: #F0ADAD'>new InfluxDBClientScalaImpl(options, bufferSize, overflowStrategy)</span><span style=''>
-</span>160 <span style=''>  }
-</span>161 <span style=''>}
+</span>146 <span style=''>   * @param options the connection configuration
+</span>147 <span style=''>   * @return client
+</span>148 <span style=''>   */
+</span>149 <span style=''>  @Nonnull def create(@Nonnull options: InfluxDBClientOptions): InfluxDBClientScala = {
+</span>150 <span style=''>
+</span>151 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(options, &quot;InfluxDBClientOptions&quot;)</span><span style=''>
+</span>152 <span style=''>
+</span>153 <span style=''>    </span><span style='background: #F0ADAD'>new InfluxDBClientScalaImpl(options)</span><span style=''>
+</span>154 <span style=''>  }
+</span>155 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -202,9 +196,9 @@
           1
         </td>
         <td>
-          1781
+          1746
           -
-          1851
+          1816
         </td>
         <td>
           Apply
@@ -223,30 +217,9 @@
           2
         </td>
         <td>
-          1857
+          1822
           -
-          1857
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          com.influxdb.client.scala.InfluxDBClientScalaFactory.create$default$2
-        </td>
-        <td style="background: #F0ADAD">
-          InfluxDBClientScalaFactory.this.create$default$2
-        </td>
-      </tr><tr>
-        <td>
-          50
-        </td>
-        <td>
-          4
-        </td>
-        <td>
-          1857
-          -
-          1872
+          1837
         </td>
         <td>
           Apply
@@ -255,40 +228,19 @@
           com.influxdb.client.scala.InfluxDBClientScalaFactory.create
         </td>
         <td style="background: #F0ADAD">
-          InfluxDBClientScalaFactory.this.create(options, InfluxDBClientScalaFactory.this.create$default$2, InfluxDBClientScalaFactory.this.create$default$3)
-        </td>
-      </tr><tr>
-        <td>
-          50
-        </td>
-        <td>
-          3
-        </td>
-        <td>
-          1857
-          -
-          1857
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          com.influxdb.client.scala.InfluxDBClientScalaFactory.create$default$3
-        </td>
-        <td style="background: #F0ADAD">
-          InfluxDBClientScalaFactory.this.create$default$3
+          InfluxDBClientScalaFactory.this.create(options)
         </td>
       </tr><tr>
         <td>
           65
         </td>
         <td>
-          5
+          3
         </td>
         <td>
-          2300
+          2265
           -
-          2375
+          2340
         </td>
         <td>
           Apply
@@ -304,12 +256,12 @@
           67
         </td>
         <td>
-          8
+          4
         </td>
         <td>
-          2381
+          2346
           -
-          2396
+          2361
         </td>
         <td>
           Apply
@@ -318,61 +270,19 @@
           com.influxdb.client.scala.InfluxDBClientScalaFactory.create
         </td>
         <td style="background: #F0ADAD">
-          InfluxDBClientScalaFactory.this.create(options, InfluxDBClientScalaFactory.this.create$default$2, InfluxDBClientScalaFactory.this.create$default$3)
-        </td>
-      </tr><tr>
-        <td>
-          67
-        </td>
-        <td>
-          7
-        </td>
-        <td>
-          2381
-          -
-          2381
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          com.influxdb.client.scala.InfluxDBClientScalaFactory.create$default$3
-        </td>
-        <td style="background: #F0ADAD">
-          InfluxDBClientScalaFactory.this.create$default$3
-        </td>
-      </tr><tr>
-        <td>
-          67
-        </td>
-        <td>
-          6
-        </td>
-        <td>
-          2381
-          -
-          2381
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          com.influxdb.client.scala.InfluxDBClientScalaFactory.create$default$2
-        </td>
-        <td style="background: #F0ADAD">
-          InfluxDBClientScalaFactory.this.create$default$2
+          InfluxDBClientScalaFactory.this.create(options)
         </td>
       </tr><tr>
         <td>
           89
         </td>
         <td>
-          9
+          5
         </td>
         <td>
-          3160
+          3125
           -
-          3262
+          3227
         </td>
         <td>
           Apply
@@ -388,54 +298,12 @@
           91
         </td>
         <td>
-          11
+          6
         </td>
         <td>
-          3268
+          3233
           -
-          3268
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          com.influxdb.client.scala.InfluxDBClientScalaFactory.create$default$3
-        </td>
-        <td style="background: #F0ADAD">
-          InfluxDBClientScalaFactory.this.create$default$3
-        </td>
-      </tr><tr>
-        <td>
-          91
-        </td>
-        <td>
-          10
-        </td>
-        <td>
-          3268
-          -
-          3268
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          com.influxdb.client.scala.InfluxDBClientScalaFactory.create$default$2
-        </td>
-        <td style="background: #F0ADAD">
-          InfluxDBClientScalaFactory.this.create$default$2
-        </td>
-      </tr><tr>
-        <td>
-          91
-        </td>
-        <td>
-          12
-        </td>
-        <td>
-          3268
-          -
-          3283
+          3248
         </td>
         <td>
           Apply
@@ -444,19 +312,19 @@
           com.influxdb.client.scala.InfluxDBClientScalaFactory.create
         </td>
         <td style="background: #F0ADAD">
-          InfluxDBClientScalaFactory.this.create(options, InfluxDBClientScalaFactory.this.create$default$2, InfluxDBClientScalaFactory.this.create$default$3)
+          InfluxDBClientScalaFactory.this.create(options)
         </td>
       </tr><tr>
         <td>
           104
         </td>
         <td>
-          13
+          7
         </td>
         <td>
-          3626
+          3591
           -
-          3650
+          3615
         </td>
         <td>
           Apply
@@ -472,12 +340,12 @@
           118
         </td>
         <td>
-          14
+          8
         </td>
         <td>
-          4055
+          4020
           -
-          4084
+          4049
         </td>
         <td>
           Apply
@@ -493,12 +361,12 @@
           138
         </td>
         <td>
-          15
+          9
         </td>
         <td>
-          4561
+          4526
           -
-          4693
+          4658
         </td>
         <td>
           Apply
@@ -514,54 +382,12 @@
           140
         </td>
         <td>
-          17
+          10
         </td>
         <td>
-          4699
+          4664
           -
-          4699
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          com.influxdb.client.scala.InfluxDBClientScalaFactory.create$default$3
-        </td>
-        <td style="background: #F0ADAD">
-          InfluxDBClientScalaFactory.this.create$default$3
-        </td>
-      </tr><tr>
-        <td>
-          140
-        </td>
-        <td>
-          16
-        </td>
-        <td>
-          4699
-          -
-          4699
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          com.influxdb.client.scala.InfluxDBClientScalaFactory.create$default$2
-        </td>
-        <td style="background: #F0ADAD">
-          InfluxDBClientScalaFactory.this.create$default$2
-        </td>
-      </tr><tr>
-        <td>
-          140
-        </td>
-        <td>
-          18
-        </td>
-        <td>
-          4699
-          -
-          4714
+          4679
         </td>
         <td>
           Apply
@@ -570,19 +396,19 @@
           com.influxdb.client.scala.InfluxDBClientScalaFactory.create
         </td>
         <td style="background: #F0ADAD">
-          InfluxDBClientScalaFactory.this.create(options, InfluxDBClientScalaFactory.this.create$default$2, InfluxDBClientScalaFactory.this.create$default$3)
+          InfluxDBClientScalaFactory.this.create(options)
         </td>
       </tr><tr>
         <td>
-          157
+          151
         </td>
         <td>
-          19
+          11
         </td>
         <td>
-          5482
+          4925
           -
-          5538
+          4981
         </td>
         <td>
           Apply
@@ -595,15 +421,15 @@
         </td>
       </tr><tr>
         <td>
-          159
+          153
         </td>
         <td>
-          20
+          12
         </td>
         <td>
-          5544
+          4987
           -
-          5610
+          5023
         </td>
         <td>
           Apply
@@ -612,7 +438,7 @@
           com.influxdb.client.scala.internal.InfluxDBClientScalaImpl.&lt;init&gt;
         </td>
         <td style="background: #F0ADAD">
-          new com.influxdb.client.scala.internal.InfluxDBClientScalaImpl(options, bufferSize, overflowStrategy)
+          new com.influxdb.client.scala.internal.InfluxDBClientScalaImpl(options)
         </td>
       </tr>
     </table>
