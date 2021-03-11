@@ -793,8 +793,7 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
                        @Nonnull final Boolean asynchronously) {
 
         Call<ResponseBody> queryCall = service
-                .postQueryResponseBody(null, "application/json",
-                        null, org, null, query);
+                .postQueryResponseBody(null, null, null, org, null, query);
 
 
         LOG.log(Level.FINEST, "Prepare query \"{0}\" with dialect \"{1}\" on organization \"{2}\".",
@@ -811,7 +810,7 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
                           @Nonnull final Boolean asynchronously) {
 
         Call<ResponseBody> queryCall = service
-                .postQueryResponseBody(null, "application/json", null, org, null, query);
+                .postQueryResponseBody(null, null, null, org, null, query);
 
         LOG.log(Level.FINEST, "Prepare raw query \"{0}\" with dialect \"{1}\" on organization \"{2}\".",
                 new Object[]{query, query.getDialect(), org});
