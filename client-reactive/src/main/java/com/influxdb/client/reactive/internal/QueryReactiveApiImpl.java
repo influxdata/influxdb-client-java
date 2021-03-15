@@ -118,7 +118,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
         return Flowable
                 .fromPublisher(queryStream)
-                .map(it -> service.postQueryResponseBody(null, "application/json",
+                .map(it -> service.postQueryResponseBody(null, null,
                         null, org, null, new Query().query(it).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT)))
                 .flatMap(queryCall -> {
 
@@ -256,7 +256,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
         return Flowable
                 .fromPublisher(queryStream)
-                .map(it -> service.postQueryResponseBody(null, "application/json",
+                .map(it -> service.postQueryResponseBody(null, null,
                         null, org, null, new Query().query(it).dialect(dialect)))
                 .flatMap(queryCall -> {
 

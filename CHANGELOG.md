@@ -1,5 +1,8 @@
 ## 2.1.0 [unreleased]
 
+### Bug Fixes
+1. [#205](https://github.com/influxdata/influxdb-client-java/pull/205): Fix GZIP issue for query executed from all clients [see issue comments](https://github.com/influxdata/influxdb-client-java/issues/50#issuecomment-796896401)
+
 ## 2.0.0 [2021-03-05]
 
 ### API

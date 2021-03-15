@@ -102,7 +102,7 @@ class QueryScalaApiImpl(@Nonnull service: QueryService, @Nonnull options: Influx
 
     Source.unfoldResource[FluxRecord, AbstractQueryApi#FluxRecordIterator](
       () => {
-        val call = service.postQueryResponseBody(null, "application/json", null, org, null, query)
+        val call = service.postQueryResponseBody(null, null, null, org, null, query)
 
         queryIterator(call)
 
@@ -277,7 +277,7 @@ class QueryScalaApiImpl(@Nonnull service: QueryService, @Nonnull options: Influx
 
     Source.unfoldResource[String, AbstractQueryApi#RawIterator](
       () => {
-        val call = service.postQueryResponseBody(null, "application/json", null, org, null, query)
+        val call = service.postQueryResponseBody(null, null, null, org, null, query)
 
         queryRawIterator(call)
 
