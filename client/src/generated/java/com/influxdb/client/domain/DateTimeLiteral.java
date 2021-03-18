@@ -13,16 +13,12 @@
 
 package com.influxdb.client.domain;
 
+import java.time.OffsetDateTime;
 import java.util.Objects;
-import java.util.Arrays;
-import com.google.gson.TypeAdapter;
-import com.google.gson.annotations.JsonAdapter;
+
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.io.IOException;
 
 /**
  * Represents an instant in time with nanosecond precision using the syntax of golang&#39;s RFC3339 Nanosecond variant
@@ -36,7 +32,7 @@ public class DateTimeLiteral extends Expression {
 
   public static final String SERIALIZED_NAME_VALUE = "value";
   @SerializedName(SERIALIZED_NAME_VALUE)
-  private String value;
+  private OffsetDateTime value;
 
   public DateTimeLiteral type(String type) {
     this.type = type;
@@ -56,7 +52,7 @@ public class DateTimeLiteral extends Expression {
     this.type = type;
   }
 
-  public DateTimeLiteral value(String value) {
+  public DateTimeLiteral value(OffsetDateTime value) {
     this.value = value;
     return this;
   }
@@ -66,11 +62,11 @@ public class DateTimeLiteral extends Expression {
    * @return value
   **/
   @ApiModelProperty(value = "")
-  public String getValue() {
+  public OffsetDateTime getValue() {
     return value;
   }
 
-  public void setValue(String value) {
+  public void setValue(OffsetDateTime value) {
     this.value = value;
   }
 
