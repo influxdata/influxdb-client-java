@@ -485,7 +485,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
     }
 
     @Test
-    void flushByTime() throws InterruptedException {
+    void flushByTime() {
 
         String bucketName = bucket.getName();
 
@@ -498,12 +498,15 @@ class ITWriteQueryApi extends AbstractITClientTest {
         String record4 = "h2o_feet,location=coyote_creek level\\ water_level=4.0 4";
         String record5 = "h2o_feet,location=coyote_creek level\\ water_level=5.0 5";
 
+        WriteEventListener<WriteSuccessEvent> successListener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteSuccessEvent.class, successListener);
+
         writeApi.writeRecords(bucketName, organization.getId(), WritePrecision.NS, Arrays.asList(record1, record2, record3, record4, record5));
 
         List<FluxTable> query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
         Assertions.assertThat(query).hasSize(0);
 
-        Thread.sleep(600);
+        waitToCallback(successListener.countDownLatch, 10);
 
         query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
