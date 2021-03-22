@@ -485,7 +485,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
     }
 
     @Test
-    void flushByTime() throws InterruptedException {
+    void flushByTime() {
 
         String bucketName = bucket.getName();
 
