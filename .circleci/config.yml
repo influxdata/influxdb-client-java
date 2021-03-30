@@ -70,8 +70,10 @@ commands:
             cp -r client-reactive/target/*/TEST-*.xml test-results/client-reactive || true
             mkdir test-results/client-kotlin
             cp -r client-kotlin/target/*/TEST-*.xml test-results/client-kotlin || true
-            mkdir test-results/client-scala
-            cp -r client-scala/target/*/TEST-*.xml test-results/client-scala || true
+            mkdir test-results/client-scala_2.12
+            cp -r  client-scala/cross/2.12/target/*/TEST-*.xml test-results/client-scala_2.12 || true
+            mkdir test-results/client-scala_2.13
+            cp -r  client-scala/cross/2.13/target/*/TEST-*.xml test-results/client-scala_2.13 || true
             mkdir test-results/spring
             cp -r spring/target/*/TEST-*.xml test-results/spring || true
             mkdir test-results/flux-dsl
@@ -89,7 +91,8 @@ commands:
             cp -r client-legacy/target/*.jar artifacts/
             cp -r client-reactive/target/*.jar artifacts/
             cp -r client-kotlin/target/*.jar artifacts/
-            cp -r client-scala/target/*.jar artifacts/
+            cp -r client-scala/cross/2.12/target/*.jar artifacts/
+            cp -r client-scala/cross/2.13/target/*.jar artifacts/
             cp -r spring/target/*.jar artifacts/
             cp -r flux-dsl/target/*.jar artifacts/
       - store_artifacts:
