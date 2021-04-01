@@ -126,7 +126,7 @@
 </span>102 <span style=''>
 </span>103 <span style=''>    </span><span style='background: #F0ADAD'>Source.unfoldResource[FluxRecord, AbstractQueryApi#FluxRecordIterator](
 </span>104 <span style=''></span><span style='background: #F0ADAD'>      () =&gt; {
-</span>105 <span style=''></span><span style='background: #F0ADAD'>        val call = service.postQueryResponseBody(null, &quot;application/json&quot;, null, org, null, query)
+</span>105 <span style=''></span><span style='background: #F0ADAD'>        val call = service.postQueryResponseBody(null, null, null, org, null, query)
 </span>106 <span style=''></span><span style='background: #F0ADAD'>
 </span>107 <span style=''></span><span style='background: #F0ADAD'>        queryIterator(call)
 </span>108 <span style=''></span><span style='background: #F0ADAD'>
@@ -301,7 +301,7 @@
 </span>277 <span style=''>
 </span>278 <span style=''>    </span><span style='background: #F0ADAD'>Source.unfoldResource[String, AbstractQueryApi#RawIterator](
 </span>279 <span style=''></span><span style='background: #F0ADAD'>      () =&gt; {
-</span>280 <span style=''></span><span style='background: #F0ADAD'>        val call = service.postQueryResponseBody(null, &quot;application/json&quot;, null, org, null, query)
+</span>280 <span style=''></span><span style='background: #F0ADAD'>        val call = service.postQueryResponseBody(null, null, null, org, null, query)
 </span>281 <span style=''></span><span style='background: #F0ADAD'>
 </span>282 <span style=''></span><span style='background: #F0ADAD'>        queryRawIterator(call)
 </span>283 <span style=''></span><span style='background: #F0ADAD'>
@@ -694,7 +694,7 @@
         <td>
           3772
           -
-          4168
+          4154
         </td>
         <td>
           Apply
@@ -704,7 +704,7 @@
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Source.unfoldResource[com.influxdb.query.FluxRecord, com.influxdb.internal.AbstractQueryApi#FluxRecordIterator]((() =&gt; {
-  val call: retrofit2.Call[okhttp3.ResponseBody] = QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, org, null, query);
+  val call: retrofit2.Call[okhttp3.ResponseBody] = QueryScalaApiImpl.this.service.postQueryResponseBody(null, null, null, org, null, query);
   QueryScalaApiImpl.this.queryIterator(call)
 }), ((query: com.influxdb.internal.AbstractQueryApi#FluxRecordIterator) =&gt; if (query.hasNext())
   scala.Some.apply[com.influxdb.query.FluxRecord](query.next())
@@ -721,7 +721,7 @@ else
         <td>
           3877
           -
-          3956
+          3942
         </td>
         <td>
           Apply
@@ -730,7 +730,7 @@ else
           com.influxdb.client.service.QueryService.postQueryResponseBody
         </td>
         <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, org, null, query)
+          QueryScalaApiImpl.this.service.postQueryResponseBody(null, null, null, org, null, query)
         </td>
       </tr><tr>
         <td>
@@ -740,9 +740,9 @@ else
           43
         </td>
         <td>
-          3966
+          3952
           -
-          3985
+          3971
         </td>
         <td>
           Apply
@@ -761,9 +761,9 @@ else
           44
         </td>
         <td>
-          4025
+          4011
           -
-          4038
+          4024
         </td>
         <td>
           Apply
@@ -782,9 +782,9 @@ else
           47
         </td>
         <td>
-          4050
+          4036
           -
-          4068
+          4054
         </td>
         <td>
           Block
@@ -803,9 +803,9 @@ else
           46
         </td>
         <td>
-          4050
+          4036
           -
-          4068
+          4054
         </td>
         <td>
           Apply
@@ -824,9 +824,9 @@ else
           45
         </td>
         <td>
-          4055
+          4041
           -
-          4067
+          4053
         </td>
         <td>
           Apply
@@ -845,9 +845,9 @@ else
           49
         </td>
         <td>
-          4092
+          4078
           -
-          4096
+          4082
         </td>
         <td>
           Block
@@ -866,9 +866,9 @@ else
           48
         </td>
         <td>
-          4092
+          4078
           -
-          4096
+          4082
         </td>
         <td>
           Select
@@ -887,9 +887,9 @@ else
           50
         </td>
         <td>
-          4148
+          4134
           -
-          4162
+          4148
         </td>
         <td>
           Apply
@@ -908,9 +908,9 @@ else
           53
         </td>
         <td>
-          4734
+          4720
           -
-          4764
+          4750
         </td>
         <td>
           Literal
@@ -929,9 +929,9 @@ else
           52
         </td>
         <td>
-          4718
+          4704
           -
-          4732
+          4718
         </td>
         <td>
           Apply
@@ -950,9 +950,9 @@ else
           54
         </td>
         <td>
-          4695
+          4681
           -
-          4765
+          4751
         </td>
         <td>
           Apply
@@ -971,9 +971,9 @@ else
           56
         </td>
         <td>
-          4771
+          4757
           -
-          4821
+          4807
         </td>
         <td>
           Apply
@@ -992,9 +992,9 @@ else
           55
         </td>
         <td>
-          4789
+          4775
           -
-          4803
+          4789
         </td>
         <td>
           Apply
@@ -1013,9 +1013,9 @@ else
           57
         </td>
         <td>
-          5278
+          5264
           -
-          5317
+          5303
         </td>
         <td>
           Apply
@@ -1034,9 +1034,9 @@ else
           58
         </td>
         <td>
-          5322
+          5308
           -
-          5357
+          5343
         </td>
         <td>
           Apply
@@ -1055,9 +1055,9 @@ else
           59
         </td>
         <td>
-          5362
+          5348
           -
-          5420
+          5406
         </td>
         <td>
           Apply
@@ -1076,9 +1076,9 @@ else
           61
         </td>
         <td>
-          5426
+          5412
           -
-          5498
+          5484
         </td>
         <td>
           Apply
@@ -1097,9 +1097,9 @@ else
           60
         </td>
         <td>
-          5458
+          5444
           -
-          5497
+          5483
         </td>
         <td>
           Apply
@@ -1118,9 +1118,9 @@ else
           62
         </td>
         <td>
-          6047
+          6033
           -
-          6061
+          6047
         </td>
         <td>
           Apply
@@ -1139,9 +1139,9 @@ else
           64
         </td>
         <td>
-          6024
+          6010
           -
-          6094
+          6080
         </td>
         <td>
           Apply
@@ -1160,9 +1160,9 @@ else
           63
         </td>
         <td>
-          6063
+          6049
           -
-          6093
+          6079
         </td>
         <td>
           Literal
@@ -1181,9 +1181,9 @@ else
           65
         </td>
         <td>
-          6118
+          6104
           -
-          6132
+          6118
         </td>
         <td>
           Apply
@@ -1202,9 +1202,9 @@ else
           66
         </td>
         <td>
-          6100
+          6086
           -
-          6150
+          6136
         </td>
         <td>
           Apply
@@ -1223,9 +1223,9 @@ else
           67
         </td>
         <td>
-          6641
+          6627
           -
-          6679
+          6665
         </td>
         <td>
           Apply
@@ -1244,9 +1244,9 @@ else
           68
         </td>
         <td>
-          6684
+          6670
           -
-          6719
+          6705
         </td>
         <td>
           Apply
@@ -1265,9 +1265,9 @@ else
           69
         </td>
         <td>
-          6724
+          6710
           -
-          6782
+          6768
         </td>
         <td>
           Apply
@@ -1286,9 +1286,9 @@ else
           71
         </td>
         <td>
-          6788
+          6774
           -
-          6860
+          6846
         </td>
         <td>
           Apply
@@ -1307,9 +1307,9 @@ else
           70
         </td>
         <td>
-          6820
+          6806
           -
-          6859
+          6845
         </td>
         <td>
           Apply
@@ -1328,9 +1328,9 @@ else
           74
         </td>
         <td>
-          7243
+          7229
           -
-          7313
+          7299
         </td>
         <td>
           Apply
@@ -1349,9 +1349,9 @@ else
           73
         </td>
         <td>
-          7282
+          7268
           -
-          7312
+          7298
         </td>
         <td>
           Literal
@@ -1370,9 +1370,9 @@ else
           72
         </td>
         <td>
-          7266
+          7252
           -
-          7280
+          7266
         </td>
         <td>
           Apply
@@ -1391,9 +1391,9 @@ else
           76
         </td>
         <td>
-          7319
+          7305
           -
-          7355
+          7341
         </td>
         <td>
           Apply
@@ -1412,9 +1412,9 @@ else
           75
         </td>
         <td>
-          7340
+          7326
           -
-          7354
+          7340
         </td>
         <td>
           Apply
@@ -1433,9 +1433,9 @@ else
           77
         </td>
         <td>
-          7659
+          7645
           -
-          7698
+          7684
         </td>
         <td>
           Apply
@@ -1454,9 +1454,9 @@ else
           78
         </td>
         <td>
-          7703
+          7689
           -
-          7738
+          7724
         </td>
         <td>
           Apply
@@ -1475,9 +1475,9 @@ else
           80
         </td>
         <td>
-          7744
+          7730
           -
-          7809
+          7795
         </td>
         <td>
           Apply
@@ -1496,9 +1496,9 @@ else
           79
         </td>
         <td>
-          7765
+          7751
           -
-          7803
+          7789
         </td>
         <td>
           Select
@@ -1517,9 +1517,9 @@ else
           83
         </td>
         <td>
-          8378
+          8364
           -
-          8448
+          8434
         </td>
         <td>
           Apply
@@ -1538,9 +1538,9 @@ else
           82
         </td>
         <td>
-          8417
+          8403
           -
-          8447
+          8433
         </td>
         <td>
           Literal
@@ -1559,9 +1559,9 @@ else
           81
         </td>
         <td>
-          8401
+          8387
           -
-          8415
+          8401
         </td>
         <td>
           Apply
@@ -1580,9 +1580,9 @@ else
           85
         </td>
         <td>
-          8454
+          8440
           -
-          8499
+          8485
         </td>
         <td>
           Apply
@@ -1601,9 +1601,9 @@ else
           84
         </td>
         <td>
-          8484
+          8470
           -
-          8498
+          8484
         </td>
         <td>
           Apply
@@ -1622,9 +1622,9 @@ else
           86
         </td>
         <td>
-          8971
+          8957
           -
-          9010
+          8996
         </td>
         <td>
           Apply
@@ -1643,9 +1643,9 @@ else
           87
         </td>
         <td>
-          9015
+          9001
           -
-          9050
+          9036
         </td>
         <td>
           Apply
@@ -1664,9 +1664,9 @@ else
           89
         </td>
         <td>
-          9056
+          9042
           -
-          9117
+          9103
         </td>
         <td>
           Apply
@@ -1685,9 +1685,9 @@ else
           88
         </td>
         <td>
-          9070
+          9056
           -
-          9111
+          9097
         </td>
         <td>
           Apply
@@ -1706,9 +1706,9 @@ else
           92
         </td>
         <td>
-          9499
+          9485
           -
-          9569
+          9555
         </td>
         <td>
           Apply
@@ -1727,9 +1727,9 @@ else
           91
         </td>
         <td>
-          9538
+          9524
           -
-          9568
+          9554
         </td>
         <td>
           Literal
@@ -1748,9 +1748,9 @@ else
           90
         </td>
         <td>
-          9522
+          9508
           -
-          9536
+          9522
         </td>
         <td>
           Apply
@@ -1769,9 +1769,9 @@ else
           94
         </td>
         <td>
-          9575
+          9561
           -
-          9611
+          9597
         </td>
         <td>
           Apply
@@ -1790,9 +1790,9 @@ else
           93
         </td>
         <td>
-          9596
+          9582
           -
-          9610
+          9596
         </td>
         <td>
           Apply
@@ -1811,9 +1811,9 @@ else
           95
         </td>
         <td>
-          9948
+          9934
           -
-          9986
+          9972
         </td>
         <td>
           Apply
@@ -1832,9 +1832,9 @@ else
           96
         </td>
         <td>
-          9991
+          9977
           -
-          10026
+          10012
         </td>
         <td>
           Apply
@@ -1853,9 +1853,9 @@ else
           106
         </td>
         <td>
-          10032
+          10018
           -
-          10420
+          10392
         </td>
         <td>
           Apply
@@ -1865,7 +1865,7 @@ else
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Source.unfoldResource[String, com.influxdb.internal.AbstractQueryApi#RawIterator]((() =&gt; {
-  val call: retrofit2.Call[okhttp3.ResponseBody] = QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, org, null, query);
+  val call: retrofit2.Call[okhttp3.ResponseBody] = QueryScalaApiImpl.this.service.postQueryResponseBody(null, null, null, org, null, query);
   QueryScalaApiImpl.this.queryRawIterator(call)
 }), ((query: com.influxdb.internal.AbstractQueryApi#RawIterator) =&gt; if (query.hasNext())
   scala.Some.apply[String](query.next())
@@ -1880,9 +1880,9 @@ else
           97
         </td>
         <td>
-          10126
+          10112
           -
-          10205
+          10177
         </td>
         <td>
           Apply
@@ -1891,7 +1891,7 @@ else
           com.influxdb.client.service.QueryService.postQueryResponseBody
         </td>
         <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.service.postQueryResponseBody(null, &quot;application/json&quot;, null, org, null, query)
+          QueryScalaApiImpl.this.service.postQueryResponseBody(null, null, null, org, null, query)
         </td>
       </tr><tr>
         <td>
@@ -1901,9 +1901,9 @@ else
           98
         </td>
         <td>
-          10215
+          10187
           -
-          10237
+          10209
         </td>
         <td>
           Apply
@@ -1922,9 +1922,9 @@ else
           99
         </td>
         <td>
-          10277
+          10249
           -
-          10290
+          10262
         </td>
         <td>
           Apply
@@ -1943,9 +1943,9 @@ else
           101
         </td>
         <td>
-          10302
+          10274
           -
-          10320
+          10292
         </td>
         <td>
           Apply
@@ -1964,9 +1964,9 @@ else
           100
         </td>
         <td>
-          10307
+          10279
           -
-          10319
+          10291
         </td>
         <td>
           Apply
@@ -1985,9 +1985,9 @@ else
           102
         </td>
         <td>
-          10302
+          10274
           -
-          10320
+          10292
         </td>
         <td>
           Block
@@ -2006,9 +2006,9 @@ else
           104
         </td>
         <td>
-          10344
+          10316
           -
-          10348
+          10320
         </td>
         <td>
           Block
@@ -2027,9 +2027,9 @@ else
           103
         </td>
         <td>
-          10344
+          10316
           -
-          10348
+          10320
         </td>
         <td>
           Select
@@ -2048,9 +2048,9 @@ else
           105
         </td>
         <td>
-          10400
+          10372
           -
-          10414
+          10386
         </td>
         <td>
           Apply
