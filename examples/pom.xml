@@ -139,7 +139,7 @@
         </dependency>
         <dependency>
             <groupId>com.influxdb</groupId>
-            <artifactId>influxdb-client-scala</artifactId>
+            <artifactId>influxdb-client-scala_2.13</artifactId>
             <version>${influxdb-client.version}</version>
             <scope>compile</scope>
         </dependency>

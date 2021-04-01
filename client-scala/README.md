@@ -3,6 +3,7 @@
 [![KDoc](https://img.shields.io/badge/Scaladoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-scala/scaladocs/org/influxdata/client/scala/index.html)
 
 The reference Scala client that allows query and write for the InfluxDB 2.0 by [Akka Streams](https://doc.akka.io/docs/akka/2.6/stream/).
+The client is cross-built against Scala `2.12` and `2.13`.
 
 ## Features
 
@@ -236,11 +237,13 @@ object InfluxDB2ScalaExampleDSL {
 
 ## Version
 
+### Scala 2.12
+
 The latest version for Maven dependency:
 ```xml
 <dependency>
   <groupId>com.influxdb</groupId>
-  <artifactId>influxdb-client-scala</artifactId>
+  <artifactId>influxdb-client-scala_2.12</artifactId>
   <version>2.1.0</version>
 </dependency>
 ```
@@ -248,7 +251,25 @@ The latest version for Maven dependency:
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-scala:2.1.0"
+    compile "com.influxdb:influxdb-client-scala_2.12:2.1.0"
+}
+```
+
+### Scala 2.13
+
+The latest version for Maven dependency:
+```xml
+<dependency>
+  <groupId>com.influxdb</groupId>
+  <artifactId>influxdb-client-scala_2.13</artifactId>
+  <version>2.1.0</version>
+</dependency>
+```
+  
+Or when using with Gradle:
+```groovy
+dependencies {
+    compile "com.influxdb:influxdb-client-scala_2.13:2.1.0"
 }
 ```
 

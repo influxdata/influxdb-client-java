@@ -1,5 +1,15 @@
 ## 2.2.0 [unreleased]
 
+### Breaking Changes
+
+This release introduces a support to cross-built Scala Client against Scala `2.12` and `2.13`.
+You have to replace your dependency from: `influxdb-client-scala` to:
+- `influxdb-client-scala_2.12` or
+- `influxdb-client-scala_2.13`
+
+### Features
+1. [#211](https://github.com/influxdata/influxdb-client-java/pull/211): Add supports for Scala cross versioning [`2.12`, `2.13`]
+
 ## 2.1.0 [2021-04-01]
 
 ### Bug Fixes
