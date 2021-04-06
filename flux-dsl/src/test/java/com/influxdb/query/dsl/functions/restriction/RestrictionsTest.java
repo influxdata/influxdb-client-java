@@ -63,4 +63,21 @@ class RestrictionsTest {
 
         Assertions.assertThat(restrictions.toString()).isEqualTo("exists r[\"_value\"]");
     }
+
+    @Test
+    void emptyLogical() {
+
+        Restrictions restrictions = Restrictions.and(
+                Restrictions.tag("tag").equal("production"),
+                Restrictions.or(),
+                Restrictions.measurement().equal("data")
+        );
+        Assertions.assertThat(restrictions.toString()).isEqualTo("(r[\"tag\"] == \"production\" and r[\"_measurement\"] == \"data\")");
+
+        restrictions = Restrictions.and(Restrictions.or());
+        Assertions.assertThat(restrictions.toString()).isEqualTo("");
+
+        restrictions = Restrictions.or(Restrictions.or());
+        Assertions.assertThat(restrictions.toString()).isEqualTo("");
+    }
 }
