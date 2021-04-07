@@ -21,7 +21,7 @@
  */
 package com.influxdb.query.dsl.functions.restriction;
 
-import java.util.stream.Collectors;
+import java.util.StringJoiner;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 
@@ -141,7 +141,12 @@ public abstract class Restrictions {
 
             return Stream.of(restrictions)
                     .map(Object::toString)
-                    .collect(Collectors.joining(" " + operator + " ", "(", ")"));
+                    .filter(it -> it != null && !it.isEmpty())
+                    .collect(() -> new StringJoiner(" " + operator + " ", "(", ")")
+                                    .setEmptyValue(""),
+                            StringJoiner::add,
+                            StringJoiner::merge)
+                    .toString();
         }
     }
 }
