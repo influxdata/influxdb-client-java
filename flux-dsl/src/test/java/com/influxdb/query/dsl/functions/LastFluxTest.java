@@ -47,6 +47,17 @@ class LastFluxTest {
     }
 
     @Test
+    void column() {
+
+        Flux flux = Flux
+                .from("telegraf")
+                .last("_time");
+
+        Assertions.assertThat(flux.toString())
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> last(column: \"_time\")");
+    }
+
+    @Test
     void lastByParameter() {
 
         Flux flux = Flux

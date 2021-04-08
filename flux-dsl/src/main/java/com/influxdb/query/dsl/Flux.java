@@ -947,6 +947,18 @@ public abstract class Flux {
     }
 
     /**
+     * Returns the last result of the query.
+     *
+     * @param column The column used to verify the existence of a value.
+     * @return {@link LastFlux}
+     */
+    @Nonnull
+    public final LastFlux last(@Nonnull final String column) {
+        return new LastFlux(this)
+                .withColumn(column);
+    }
+
+    /**
      * Restricts the number of rows returned in the results.
      *
      * <h3>The parameters had to be defined by:</h3>

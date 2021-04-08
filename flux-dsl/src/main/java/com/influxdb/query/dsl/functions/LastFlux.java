@@ -23,11 +23,17 @@ package com.influxdb.query.dsl.functions;
 
 import javax.annotation.Nonnull;
 
+import com.influxdb.Arguments;
 import com.influxdb.query.dsl.Flux;
 
 /**
  * Returns the last result of the query.
  * <a href="http://bit.ly/flux-spec#last">See SPEC</a>.
+ *
+ * <h3>Options</h3>
+ * <ul>
+ * <li><b>column</b> - The column used to verify the existence of a value [string]. Default to <i>_value</i>.</li>
+ * </ul>
  *
  * <h3>Example</h3>
  * <pre>
@@ -48,5 +54,19 @@ public final class LastFlux extends AbstractParametrizedFlux {
     @Override
     protected String operatorName() {
         return "last";
+    }
+
+    /**
+     * @param column The column used to verify the existence of a value.
+     * @return this
+     */
+    @Nonnull
+    public LastFlux withColumn(@Nonnull final String column) {
+
+        Arguments.checkNonEmpty(column, "Column");
+
+        this.withPropertyValueEscaped("column", column);
+
+        return this;
     }
 }
