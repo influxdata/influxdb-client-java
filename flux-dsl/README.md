@@ -363,7 +363,7 @@ Flux flux = Flux
 
 ### last
 Returns the last result of the query [[doc](http://bit.ly/flux-spec#last)].
-- `useStartTime` - Use the start time as the timestamp of the resulting aggregate. [boolean]
+- `column` - The column used to verify the existence of a value. Defaults to `_value`. [string]
 
 ```java
 Flux flux = Flux

@@ -29,7 +29,7 @@
 <module name="Checker">
     <module name="SuppressWarningsFilter"/>
     <module name="FileLength">
-        <property name="max" value="2500"/>
+        <property name="max" value="3500"/>
     </module>
     <module name="FileTabCharacter"/>
 
