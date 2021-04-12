@@ -22,11 +22,12 @@
 package com.influxdb.client.osgi;
 
 import com.influxdb.client.InfluxDBClient;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -44,7 +45,7 @@ import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Slf4j
+@RunWith(JUnitPlatform.class)
 @ExtendWith(MockitoExtension.class)
 public class InfluxDBConnectorTest {
 

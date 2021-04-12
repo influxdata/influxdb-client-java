@@ -30,6 +30,7 @@ import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.influxdb.client.InfluxDBClient;
@@ -120,7 +121,17 @@ public class PointWriter implements EventHandler {
     /**
      * Field name used to store timestamp.
      */
-    static final String TIMESTAMP_NAME = "_timestamp";
+    static final String TIMESTAMP_KEY = "timestamp";
+
+    /**
+     * Field name used for tags.
+     */
+    static final String TAGS_KEY = "tags";
+
+    /**
+     * Field name used for fields.
+     */
+    static final String FIELDS_KEY = "fields";
 
     /**
      * Configuration for Point Writer.
@@ -172,7 +183,7 @@ public class PointWriter implements EventHandler {
          */
         @AttributeDefinition(required = false, name = "Precision",
                 description = "Precision used if adding timestamp")
-        String timestamp_precision() default "ms";
+        String timestamp_precision() default "ns";
 
         /**
          * InfluxDB organization to write data (overriding organization of {@link InfluxDBClient}).
@@ -226,20 +237,32 @@ public class PointWriter implements EventHandler {
         final Object point = event.getProperty(POINT);
         final Collection<Object> points = (Collection<Object>) event.getProperty(POINTS);
 
+        final Instant timestamp;
+        if (config.timestamp_add()) {
+            final Long epoch = (Long) event.getProperty(EventConstants.TIMESTAMP);
+            if (epoch != null) {
+                timestamp = new Date(epoch).toInstant();
+            } else {
+                timestamp = Instant.now();
+            }
+        } else {
+            timestamp = null;
+        }
+
         if (point != null) {
             if (organization != null && bucket != null) {
-                writeApi.writePoint(bucket, organization, decorate(point, event));
+                writeApi.writePoint(bucket, organization, decorate(point, event, timestamp));
             } else {
-                writeApi.writePoint(decorate(point, event));
+                writeApi.writePoint(decorate(point, event, timestamp));
             }
         } else if (points != null) {
             if (organization != null && bucket != null) {
                 writeApi.writePoints(bucket, organization, points.stream()
-                        .map(p -> decorate(p, event))
+                        .map(p -> decorate(p, event, timestamp))
                         .collect(Collectors.toList()));
             } else {
                 writeApi.writePoints(points.stream()
-                        .map(p -> decorate(p, event))
+                        .map(p -> decorate(p, event, timestamp))
                         .collect(Collectors.toList()));
             }
         } else {
@@ -248,45 +271,36 @@ public class PointWriter implements EventHandler {
     }
 
     @SneakyThrows
-    private Point decorate(final Object object, final Event event) {
-        final boolean missingTimestamp;
+    private Point decorate(final Object object, final Event event, final Instant instant) {
+        final WritePrecision precision = WritePrecision.fromValue(config.timestamp_precision());
 
         final Point point;
         if (object instanceof Point) {
             point = (Point) object;
-            missingTimestamp = false;
+            if (instant != null) {
+                point.time(instant, precision);
+            }
         } else if (object instanceof Map) {
             final String measurement = event.getTopic().replaceAll(".*/", "");
             point = Point.measurement(measurement);
 
             final Map<String, Object> data = (Map<String, Object>) object;
 
-            final Object timestamp = data.get(TIMESTAMP_NAME);
-            missingTimestamp = !setTimestamp(timestamp, point);
-            data.entrySet().stream()
-                    .filter(e -> !TIMESTAMP_NAME.equals(e.getKey()))
-                    .forEach(e -> {
-                        if (e.getValue() instanceof String) {
-                            point.addTag(e.getKey(), (String) e.getValue());
-                        } else if (e.getValue() instanceof Boolean) {
-                            point.addField(e.getKey(), (Boolean) e.getValue());
-                        } else if (e.getValue() instanceof Number) {
-                            point.addField(e.getKey(), (Number) e.getValue());
-                        } else {
-                            log.debug("Skipped unsupported tag or field: key={}, value={}", e.getKey(), e.getValue());
-                        }
-                    });
+            final Object timestamp = data.get(TIMESTAMP_KEY);
+            if (instant != null) {
+                point.time(instant, precision);
+            } else if (!setTimestamp(timestamp, point, precision)) {
+                // instant must be set because no (valid) _timestamp found in map
+                point.time(Instant.now(), precision);
+            }
+
+            Optional.ofNullable((Map<String, String>) data.get(TAGS_KEY))
+                    .ifPresent(tags -> point.addTags(tags));
+
+            Optional.ofNullable((Map<String, Object>) data.get(FIELDS_KEY))
+                    .ifPresent(fields -> point.addFields(fields));
         } else {
             throw new IllegalArgumentException("Invalid point");
-        }
-
-        if (config.timestamp_add() || missingTimestamp) {
-            final Long timestamp = (Long) event.getProperty(EventConstants.TIMESTAMP);
-            if (timestamp != null) {
-                point.time(timestamp, WritePrecision.MS);
-            } else {
-                point.time(Instant.now(), WritePrecision.fromValue(config.timestamp_precision()));
-            }
         }
 
         if (config.host_name_add()) {
@@ -301,21 +315,19 @@ public class PointWriter implements EventHandler {
         return point;
     }
 
-    private boolean setTimestamp(final Object timestamp, final Point point) {
-        final WritePrecision configPrecision = WritePrecision.fromValue(config.timestamp_precision());
-
+    private boolean setTimestamp(final Object timestamp, final Point point, final WritePrecision precision) {
         if (timestamp instanceof Date) {
-            point.time(((Date) timestamp).getTime(), WritePrecision.MS);
+            point.time(((Date) timestamp).toInstant(), precision);
         } else if (timestamp instanceof Instant) {
-            point.time((Instant) timestamp, configPrecision);
+            point.time((Instant) timestamp, precision);
         } else if (timestamp instanceof LocalDateTime) {
-            point.time(((LocalDateTime) timestamp).atZone(ZoneId.systemDefault()).toInstant(), configPrecision);
+            point.time(((LocalDateTime) timestamp).atZone(ZoneId.systemDefault()).toInstant(), precision);
         } else if (timestamp instanceof OffsetDateTime) {
-            point.time(((OffsetDateTime) timestamp).toInstant(), configPrecision);
+            point.time(((OffsetDateTime) timestamp).toInstant(), precision);
         } else if (timestamp instanceof ZonedDateTime) {
-            point.time(((ZonedDateTime) timestamp).toInstant(), configPrecision);
+            point.time(((ZonedDateTime) timestamp).toInstant(), precision);
         } else if (timestamp instanceof Long) {
-            point.time((Long) timestamp, configPrecision);
+            point.time((Long) timestamp, precision);
         } else {
             return false;
         }

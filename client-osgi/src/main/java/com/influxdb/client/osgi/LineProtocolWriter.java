@@ -21,15 +21,13 @@
  */
 package com.influxdb.client.osgi;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.WriteApi;
 import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.osgi.internal.MillisecondConverter;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -44,8 +42,6 @@ import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.AttributeType;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
-import static java.util.function.Function.identity;
-
 /**
  * OSGi event handler writing InfluxDB line protocol records.
  *
@@ -55,9 +51,9 @@ import static java.util.function.Function.identity;
  *
  * <ul>
  *     <li><i>record</i> ({@link String}): value must be a single line protocol record</li>
- *     <li><i>records</i> ({@link Collection}): value must be a collection of line protocol records</li>
+ *     <li><i>records</i> ({@link List}): value must be a list of line protocol records</li>
  *     <li><i>precision</i> ({@link String}, optional): write precision, values: <tt>s</tt>, <tt>ms</tt>, <tt>us</tt>,
- *         <tt>ns</tt>, default: <tt>ms</tt></li>
+ *         <tt>ns</tt>, default: <tt>ns</tt></li>
  *     <li><i>organization</i> ({@link String}, optional): used to override InfluxDB organization of
  *         {@link LineProtocolWriter} service (by event).</li>
  *     <li><i>bucket</i> ({@link String}, optional): used to override InfluxDB bucket of
@@ -85,7 +81,7 @@ public class LineProtocolWriter implements EventHandler {
      */
     public static final String RECORD = "record";
     /**
-     * OSGi event property name used to write collection of line protocol records.
+     * OSGi event property name used to write list of line protocol records.
      */
     public static final String RECORDS = "records";
     /**
@@ -101,21 +97,6 @@ public class LineProtocolWriter implements EventHandler {
      * OSGi event property name to override InfluxDB bucket.
      */
     public static final String BUCKET = "bucket";
-
-    private static final long THOUSAND = 1000L;
-    private static final long MILLION = 1000000L;
-
-    /**
-     * Timestamp calculation functions to add timestamp to records.
-     */
-    private static final Map<WritePrecision, Function<Long, Long>> TIMESTAMP_CALCULATIONS = new HashMap<>();
-
-    static {
-        TIMESTAMP_CALCULATIONS.put(WritePrecision.S, (timestamp) -> timestamp / THOUSAND);
-        TIMESTAMP_CALCULATIONS.put(WritePrecision.MS, identity());
-        TIMESTAMP_CALCULATIONS.put(WritePrecision.US, (timestamp) -> timestamp * THOUSAND);
-        TIMESTAMP_CALCULATIONS.put(WritePrecision.NS, (timestamp) -> timestamp * MILLION);
-    }
 
     /**
      * Configuration for Line Protocol Writer.
@@ -198,22 +179,23 @@ public class LineProtocolWriter implements EventHandler {
         final WriteApi writeApi = client.getWriteApi();
 
         final String record = (String) event.getProperty(RECORD);
-        final Collection<String> records = (Collection<String>) event.getProperty(RECORDS);
+        final List<String> records = (List<String>) event.getProperty(RECORDS);
+        final Long timestamp = calculateTimestamp(event, writePrecision);
         if (record != null) {
+            final String recordToWrite = timestamp != null ? record + " " + timestamp : record;
             if (organization != null && bucket != null) {
-                writeApi.writeRecord(bucket, organization, writePrecision, decorate(record, writePrecision, event));
+                writeApi.writeRecord(bucket, organization, writePrecision, recordToWrite);
             } else {
-                writeApi.writeRecord(writePrecision, decorate(record, writePrecision, event));
+                writeApi.writeRecord(writePrecision, recordToWrite);
             }
         } else if (records != null) {
+            final List<String> recordsToWrite = timestamp != null
+                    ? records.stream().map(r -> r + " " + timestamp).collect(Collectors.toList())
+                    : records;
             if (organization != null && bucket != null) {
-                writeApi.writeRecords(bucket, organization, writePrecision, records.stream()
-                        .map(r -> decorate(r, writePrecision, event))
-                        .collect(Collectors.toList()));
+                writeApi.writeRecords(bucket, organization, writePrecision, recordsToWrite);
             } else {
-                writeApi.writeRecords(writePrecision, records.stream()
-                        .map(r -> decorate(r, writePrecision, event))
-                        .collect(Collectors.toList()));
+                writeApi.writeRecords(writePrecision, recordsToWrite);
             }
         } else {
             throw new IllegalArgumentException("Missing line protocol record(s)");
@@ -231,22 +213,22 @@ public class LineProtocolWriter implements EventHandler {
         } else if (precision instanceof WritePrecision) {
             writePrecision = (WritePrecision) precision;
         } else {
-            writePrecision = WritePrecision.MS;
+            writePrecision = WritePrecision.NS;
         }
 
         return writePrecision;
     }
 
-    private String decorate(final String record, final WritePrecision writePrecision, final Event event) {
+    private Long calculateTimestamp(final Event event, final WritePrecision precision) {
         if (config.timestamp_append()) {
             final Long timestamp = (Long) event.getProperty(EventConstants.TIMESTAMP);
             if (timestamp != null) {
-                return record + " " + TIMESTAMP_CALCULATIONS.get(writePrecision).apply(timestamp);
+                return MillisecondConverter.convert(timestamp, precision);
             } else {
-                return record + " " + TIMESTAMP_CALCULATIONS.get(writePrecision).apply(System.currentTimeMillis());
+                return MillisecondConverter.convert(System.currentTimeMillis(), precision);
             }
         } else {
-            return record;
+            return null;
         }
     }
 }

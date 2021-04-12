@@ -22,13 +22,14 @@
 package com.influxdb.client.osgi;
 
 import com.influxdb.client.domain.HealthCheck;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-@Slf4j
+@RunWith(JUnitPlatform.class)
 public class ITConnectionTest extends InfluxDBConnectorTest {
 
     @Test

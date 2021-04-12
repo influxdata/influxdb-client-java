@@ -29,6 +29,8 @@ import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -36,9 +38,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 
-import java.net.InetAddress;
 import java.time.*;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -49,41 +51,47 @@ import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+@RunWith(JUnitPlatform.class)
 @ExtendWith(MockitoExtension.class)
 public class PointWriterTest {
 
     private PointWriter pointWriter;
 
     private static final String EVENT_TOPIC = "influxdb/weather";
-    private static final Point POINT1_WITHOUT_TIMESTAMP = Point.measurement("weather")
+    private static final Supplier<Point> POINT1_WITHOUT_TIMESTAMP = () -> Point.measurement("weather")
             .addTag("location", "HU")
             .addField("temperature", 5.89)
             .addField("humidity", 48);
-    private static final Point POINT2_WITHOUT_TIMESTAMP = Point.measurement("weather")
+    private static final Supplier<Point> POINT2_WITHOUT_TIMESTAMP = () -> Point.measurement("weather")
             .addTag("location", "HU")
             .addField("temperature", 5.93)
             .addField("humidity", 48);
-    private static final Point POINT3_WITHOUT_TIMESTAMP = Point.measurement("weather")
+    private static final Supplier<Point> POINT3_WITHOUT_TIMESTAMP = () ->Point.measurement("weather")
             .addTag("location", "HU")
             .addField("temperature", 5.90)
             .addField("humidity", 52);
-    private static final Point POINT4_WITHOUT_TIMESTAMP = Point.measurement("weather")
+    private static final Supplier<Point> POINT4_WITHOUT_TIMESTAMP = () -> Point.measurement("weather")
             .addTag("location", "HU")
             .addField("temperature", 6.03)
             .addField("humidity", 53);
-    private static final Point POINT5_WITHOUT_TIMESTAMP = Point.measurement("weather")
+    private static final Supplier<Point> POINT5_WITHOUT_TIMESTAMP = () -> Point.measurement("weather")
             .addTag("location", "HU")
             .addField("temperature", 5.98)
             .addField("humidity", 47);
-    private static final Map<String, Object> MAP1_WITHOUT_TIMESTAMP = new TreeMap<>();
+    private static final Supplier<Map<String, Object>> MAP1 = () -> {
+        final Map<String, Object> data = new TreeMap<>();
+        final Map<String, String> tags = new TreeMap<>();
+        tags.put("location", "HU");
+        final Map<String, Object> fields = new TreeMap<>();
+        fields.put("temperature", 5.89);
+        fields.put("humidity", 48);
+        data.put(PointWriter.TAGS_KEY, tags);
+        data.put(PointWriter.FIELDS_KEY, fields);
+        return data;
+    };
+
     private static final String ORGANIZATION_OVERRIDE = "my-org";
     private static final String BUCKET_OVERRIDE = "my-bucket";
-
-    static {
-        MAP1_WITHOUT_TIMESTAMP.put("location", "HU");
-        MAP1_WITHOUT_TIMESTAMP.put("temperature", 5.89);
-        MAP1_WITHOUT_TIMESTAMP.put("humidity", 48);
-    }
 
     @Mock
     private WriteApi writeApi;
@@ -125,7 +133,7 @@ public class PointWriterTest {
 
     @Test
     void testSinglePointDefaultPrecision() {
-        final Point point = POINT1_WITHOUT_TIMESTAMP.time(1617826119000L, WritePrecision.MS);
+        final Point point = POINT1_WITHOUT_TIMESTAMP.get().time(1617826119000L, WritePrecision.MS);
         payload.put(PointWriter.POINT, point);
 
         testPointWriter();
@@ -150,36 +158,36 @@ public class PointWriterTest {
     @Test
     void testSingleMapDefaultPrecision() {
         when(config.timestamp_precision()).thenReturn("ms");
-        when(config.host_name_add()).thenReturn(true);
 
-        MAP1_WITHOUT_TIMESTAMP.put("raining", false);
-        MAP1_WITHOUT_TIMESTAMP.put("date", LocalDate.now());
-        final Map<String, Object> map = new TreeMap<>(MAP1_WITHOUT_TIMESTAMP);
+        final Map<String, Object> map = new TreeMap<>(MAP1.get());
+        ((Map<String, Object>) map.get(PointWriter.FIELDS_KEY)).put("raining", false);
+        final LocalDate date = LocalDate.now();
+        ((Map<String, Object>) map.get(PointWriter.FIELDS_KEY)).put("date", date);
         payload.put(PointWriter.POINT, map);
 
         final long startTs = (Long) payload.get(EventConstants.TIMESTAMP);
 
         testPointWriter();
 
-        map.put(PointWriter.TIMESTAMP_NAME, System.currentTimeMillis());
+        map.put(PointWriter.TIMESTAMP_KEY, System.currentTimeMillis());
         testPointWriter();
 
-        map.put(PointWriter.TIMESTAMP_NAME, new Date());
+        map.put(PointWriter.TIMESTAMP_KEY, new Date());
         testPointWriter();
 
-        map.put(PointWriter.TIMESTAMP_NAME, LocalDateTime.now());
+        map.put(PointWriter.TIMESTAMP_KEY, LocalDateTime.now());
         testPointWriter();
 
-        map.put(PointWriter.TIMESTAMP_NAME, OffsetDateTime.now());
+        map.put(PointWriter.TIMESTAMP_KEY, OffsetDateTime.now());
         testPointWriter();
 
-        map.put(PointWriter.TIMESTAMP_NAME, ZonedDateTime.now());
+        map.put(PointWriter.TIMESTAMP_KEY, ZonedDateTime.now());
         testPointWriter();
 
-        map.put(PointWriter.TIMESTAMP_NAME, Instant.now());
+        map.put(PointWriter.TIMESTAMP_KEY, Instant.now());
         testPointWriter();
 
-        map.remove(PointWriter.TIMESTAMP_NAME);
+        map.remove(PointWriter.TIMESTAMP_KEY);
         payload.remove(EventConstants.TIMESTAMP);
         testPointWriter();
 
@@ -188,7 +196,9 @@ public class PointWriterTest {
         verify(writeApi, times(8)).writePoint(pointCaptor.capture());
         assertThat(pointCaptor.getAllValues(), hasSize(8));
 
-        final Point point = POINT1_WITHOUT_TIMESTAMP.addField("raining", false);
+        final Point point = POINT1_WITHOUT_TIMESTAMP.get()
+                .addField("raining", false)
+                .addFields(Collections.singletonMap("date", date));
         final String originalWithoutTimestamp = point.toLineProtocol().replaceFirst(" [0-9]+$", "");
 
         IntStream.rangeClosed(0, 7).forEach(i -> {
@@ -196,6 +206,24 @@ public class PointWriterTest {
             final Long timestamp = Long.parseLong(written.replace(originalWithoutTimestamp + " ", ""));
             assertThat(timestamp, allOf(greaterThanOrEqualTo(startTs), lessThanOrEqualTo(endTs)));
         });
+    }
+
+    @Test
+    void testSingleMapOsgiEventTimestamp() {
+        when(config.timestamp_add()).thenReturn(true);
+        when(config.timestamp_precision()).thenReturn("ms");
+        when(config.host_name_add()).thenReturn(false);
+        when(config.host_address_add()).thenReturn(false);
+
+        final Map<String, Object> map = new TreeMap<>(MAP1.get());
+        payload.put(PointWriter.POINTS, Arrays.asList(map));
+
+        testPointWriter();
+
+        verify(writeApi).writePoints(pointsCaptor.capture());
+        final Point point = POINT1_WITHOUT_TIMESTAMP.get().time((Long) payload.get(EventConstants.TIMESTAMP), WritePrecision.MS);
+        assertThat(pointsCaptor.getValue(), hasSize(1));
+        assertThat(pointsCaptor.getValue().get(0).toLineProtocol(), equalTo(point.toLineProtocol()));
     }
 
     @Test
@@ -211,11 +239,11 @@ public class PointWriterTest {
 
     @Test
     void testRecordSetDefaultPrecision() {
-        final Point point1 = POINT1_WITHOUT_TIMESTAMP.time(1617826119000L, WritePrecision.MS);
-        final Point point2 = POINT2_WITHOUT_TIMESTAMP.time(1617826120000L, WritePrecision.MS);
-        final Point point3 = POINT3_WITHOUT_TIMESTAMP.time(1617826121000L, WritePrecision.MS);
-        final Point point4 = POINT4_WITHOUT_TIMESTAMP.time(1617826122000L, WritePrecision.MS);
-        final Point point5 = POINT5_WITHOUT_TIMESTAMP.time(1617826123000L, WritePrecision.MS);
+        final Point point1 = POINT1_WITHOUT_TIMESTAMP.get().time(1617826119000L, WritePrecision.MS);
+        final Point point2 = POINT2_WITHOUT_TIMESTAMP.get().time(1617826120000L, WritePrecision.MS);
+        final Point point3 = POINT3_WITHOUT_TIMESTAMP.get().time(1617826121000L, WritePrecision.MS);
+        final Point point4 = POINT4_WITHOUT_TIMESTAMP.get().time(1617826122000L, WritePrecision.MS);
+        final Point point5 = POINT5_WITHOUT_TIMESTAMP.get().time(1617826123000L, WritePrecision.MS);
 
         final List<Point> points = Arrays.asList(point1, point2, point3, point4, point5);
         payload.put(PointWriter.POINTS, points);
@@ -240,29 +268,27 @@ public class PointWriterTest {
     }
 
     @Test
-    void testAddHostName() throws Exception {
+    void testAddHostName() {
         when(config.host_name_add()).thenReturn(true);
 
-        final Point point = POINT1_WITHOUT_TIMESTAMP.time(1617826119000L, WritePrecision.MS);
+        final Point point = POINT1_WITHOUT_TIMESTAMP.get().time(1617826119000L, WritePrecision.MS);
         payload.put(PointWriter.POINT, point);
 
         testPointWriter();
 
-        point.addField(PointWriter.HOST_NAME, InetAddress.getLocalHost().getHostName());
         verify(writeApi).writePoint(pointCaptor.capture());
         assertThat(pointCaptor.getValue(), equalTo(point));
     }
 
     @Test
-    void testAddHostAddress() throws Exception {
+    void testAddHostAddress() {
         when(config.host_address_add()).thenReturn(true);
 
-        final Point point = POINT1_WITHOUT_TIMESTAMP.time(1617826119000L, WritePrecision.MS);
+        final Point point = POINT1_WITHOUT_TIMESTAMP.get().time(1617826119000L, WritePrecision.MS);
         payload.put(PointWriter.POINT, point);
 
         testPointWriter();
 
-        point.addField(PointWriter.HOST_ADDRESS, InetAddress.getLocalHost().getHostAddress());
         verify(writeApi).writePoint(pointCaptor.capture());
         assertThat(pointCaptor.getValue(), equalTo(point));
     }
@@ -270,13 +296,14 @@ public class PointWriterTest {
     @Test
     void testOsgiEventTimestamp() {
         when(config.timestamp_add()).thenReturn(true);
+        when(config.timestamp_precision()).thenReturn("ns");
 
-        final Point point = POINT1_WITHOUT_TIMESTAMP.time(1617826119000L, WritePrecision.MS);
+        final Point point = POINT1_WITHOUT_TIMESTAMP.get().time(1617826119000L, WritePrecision.MS);
         payload.put(PointWriter.POINT, point);
 
         testPointWriter();
 
-        point.time((Long) payload.get(EventConstants.TIMESTAMP), WritePrecision.MS);
+        point.time((Long) payload.get(EventConstants.TIMESTAMP) * 1000000, WritePrecision.NS);
         verify(writeApi).writePoint(pointCaptor.capture());
         assertThat(pointCaptor.getValue(), equalTo(point));
     }
@@ -287,7 +314,7 @@ public class PointWriterTest {
         when(config.timestamp_precision()).thenReturn("us");
         payload.remove(EventConstants.TIMESTAMP);
 
-        final Point point = POINT1_WITHOUT_TIMESTAMP.time(1617826119000L, WritePrecision.MS);
+        final Point point = POINT1_WITHOUT_TIMESTAMP.get().time(1617826119000L, WritePrecision.MS);
         payload.put(PointWriter.POINT, point);
 
         final long startTs = System.currentTimeMillis() * 1000;

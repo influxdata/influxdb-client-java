@@ -42,7 +42,7 @@ This repository contains the reference JVM clients for the InfluxDB 2.0. Current
          
 ## Documentation
 
-The Java, Reactive, Kotlin and Scala clients are implemented for the InfluxDB 2.0:
+The Java, Reactive, OSGi, Kotlin and Scala clients are implemented for the InfluxDB 2.0:
 
 | Client | Description | Documentation | Compatibility |
 | --- | --- | --- |                                      --- |
@@ -50,6 +50,7 @@ The Java, Reactive, Kotlin and Scala clients are implemented for the InfluxDB 2.
 | **[reactive](./client-reactive)**  | The reference RxJava client for the InfluxDB 2.0 that allows query and write in a reactive way.| [javadoc](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html), [readme](./client#influxdb-client-java/) |2.0 |
 | **[kotlin](./client-kotlin)** | The reference Kotlin client that allows query and write for the InfluxDB 2.0 by [Kotlin Channel coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html). | [KDoc](https://influxdata.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/com.influxdb.client.kotlin/index.html), [readme](./client-kotlin#influxdb-client-kotlin/) | 2.0|
 | **[scala](./client-scala)** | The reference Scala client that allows query and write for the InfluxDB 2.0 by [Akka Streams](https://doc.akka.io/docs/akka/2.6/stream/). | [Scaladoc](https://influxdata.github.io/influxdb-client-java/client-scala/cross/influxdb-client-scala_2.13/scaladocs/com/influxdb/client/scala/index.html), [readme](./client-scala#influxdb-client-scala/) | 2.0 |
+| **[osgi](./client-osgi)** | The reference OSGi (R6) client embedding Java and reactive clients and providing standard features (declarative services, configuration, event processing) for the InfluxDB 2.0. | [javadoc](https://influxdata.github.io/influxdb-client-java/influxdb-client-osgi/apidocs/index.html), [readme](./client-osgi) | 2.0 |
 
 There is also possibility to use the Flux language over the InfluxDB 1.7+ provided by: 
 
