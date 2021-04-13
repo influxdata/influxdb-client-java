@@ -185,6 +185,7 @@
         <dependency>
             <groupId>com.influxdb</groupId>
             <artifactId>influxdb-client-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
