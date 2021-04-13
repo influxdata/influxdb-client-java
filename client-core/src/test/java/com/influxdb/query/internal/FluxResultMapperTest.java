@@ -84,6 +84,17 @@ class FluxResultMapperTest {
         Assertions.assertThat(bean.superValue).isEqualByComparingTo(new BigDecimal(20));
     }
 
+    @Test
+    public void enumTag() {
+        FluxRecord record = new FluxRecord(0);
+        record.getValues().put("tag", "tagB");
+        record.getValues().put("num", 20);
+
+        TagEnumBean bean = mapper.toPOJO(record, TagEnumBean.class);
+        Assertions.assertThat(bean.tag).isEqualTo(TagEnum.tagB);
+        Assertions.assertThat(bean.value).isEqualTo(20);
+    }
+
     public static class BigDecimalBean
     {
         @Column(name = "value1")
@@ -107,5 +118,19 @@ class FluxResultMapperTest {
     public static class BaseBean extends SuperBean {
         @Column(name = "baseValue")
         BigDecimal baseValue;
+    }
+
+    public static class TagEnumBean {
+
+        @Column(name = "tag", tag = true)
+        private TagEnum tag;
+
+        @Column(name = "num")
+        private Integer value;
+    }
+
+    public enum TagEnum {
+        tagA,
+        tagB
     }
 }

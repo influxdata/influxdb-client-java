@@ -11,6 +11,7 @@ You have to replace your dependency from: `influxdb-client-scala` to:
 1. [#211](https://github.com/influxdata/influxdb-client-java/pull/211): Add supports for Scala cross versioning [`2.12`, `2.13`]
 1. [#213](https://github.com/influxdata/influxdb-client-java/pull/213): Supports empty logic operator [FluxDSL]
 1. [#216](https://github.com/influxdata/influxdb-client-java/pull/216): Allow to specify a name of `column` in `last` function [FluxDSL]
+1. [#218](https://github.com/influxdata/influxdb-client-java/pull/218): Supports enum types in mapping into POJO
 
 ## 2.1.0 [2021-04-01]
 

@@ -102,7 +102,7 @@ class MeasurementMapperTest {
     }
 
     @Test
-    public void escapingTags() {
+    void escapingTags() {
 
         Pojo pojo = new Pojo();
         pojo.tag = "mad\nrid";
@@ -110,6 +110,16 @@ class MeasurementMapperTest {
 
         String lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
         Assertions.assertThat(lineProtocol).isEqualTo("pojo,tag=mad\\nrid value=\"5\"");
+    }
+
+    @Test
+    void enumTag() {
+        PojoTagEnum pojo = new PojoTagEnum();
+        pojo.tag = TagEnum.tagA;
+        pojo.value = 5;
+
+        String lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("pojo,tag=tagA num=5i");
     }
 
     @Measurement(name = "pojo")
@@ -129,5 +139,20 @@ class MeasurementMapperTest {
 
         @Column(timestamp = true)
         private Instant timestamp;
+    }
+
+    @Measurement(name = "pojo")
+    private static class PojoTagEnum {
+
+        @Column(name = "tag", tag = true)
+        private TagEnum tag;
+
+        @Column(name = "num")
+        private Integer value;
+    }
+
+    private enum TagEnum {
+        tagA,
+        tagB
     }
 }

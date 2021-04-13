@@ -130,7 +130,13 @@ public class FluxResultMapper {
             }
             if (BigDecimal.class.isAssignableFrom(fieldType)) {
                 field.set(object, toBigDecimalValue(value));
+                return;
+            }
 
+            //enum
+            if (fieldType.isEnum()) {
+                //noinspection unchecked, rawtypes
+                field.set(object, Enum.valueOf((Class<Enum>) fieldType, String.valueOf(value)));
                 return;
             }
 
