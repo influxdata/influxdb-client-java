@@ -1,3 +1,4 @@
+allow_coverage_offsets: True
 ignore:
   - "client/src/generated/java/com/influxdb/client/**/*"
   - "client/src/generated/java/com/influxdb/client/JSON.java"
