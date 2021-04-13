@@ -21,13 +21,14 @@
  */
 package com.influxdb.client.osgi;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.WriteApi;
 import com.influxdb.client.domain.WritePrecision;
-import com.influxdb.client.osgi.internal.MillisecondConverter;
+import com.influxdb.client.write.internal.NanosecondConverter;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -180,7 +181,7 @@ public class LineProtocolWriter implements EventHandler {
 
         final String record = (String) event.getProperty(RECORD);
         final List<String> records = (List<String>) event.getProperty(RECORDS);
-        final Long timestamp = calculateTimestamp(event, writePrecision);
+        final BigInteger timestamp = calculateTimestamp(event, writePrecision);
         if (record != null) {
             final String recordToWrite = timestamp != null ? record + " " + timestamp : record;
             if (organization != null && bucket != null) {
@@ -219,13 +220,13 @@ public class LineProtocolWriter implements EventHandler {
         return writePrecision;
     }
 
-    private Long calculateTimestamp(final Event event, final WritePrecision precision) {
+    private BigInteger calculateTimestamp(final Event event, final WritePrecision precision) {
         if (config.timestamp_append()) {
             final Long timestamp = (Long) event.getProperty(EventConstants.TIMESTAMP);
             if (timestamp != null) {
-                return MillisecondConverter.convert(timestamp, precision);
+                return NanosecondConverter.convert(timestamp, precision);
             } else {
-                return MillisecondConverter.convert(System.currentTimeMillis(), precision);
+                return NanosecondConverter.currentTimestamp(precision);
             }
         } else {
             return null;

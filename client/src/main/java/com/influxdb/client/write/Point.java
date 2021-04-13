@@ -38,6 +38,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import com.influxdb.Arguments;
 import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.write.internal.NanosecondConverter;
 
 /**
  * Point defines the values that will be written to the database.
@@ -47,11 +48,6 @@ import com.influxdb.client.domain.WritePrecision;
  */
 @NotThreadSafe
 public final class Point {
-
-    static final BigInteger NANOS_PER_SECOND = BigInteger.valueOf(1000_000_000L);
-    static final BigInteger MICRO_PER_NANOS = BigInteger.valueOf(1000L);
-    static final BigInteger MILLIS_PER_NANOS = BigInteger.valueOf(1000000L);
-    static final BigInteger SECONDS_PER_NANOS = BigInteger.valueOf(1000000000L);
 
     private static final WritePrecision DEFAULT_WRITE_PRECISION = WritePrecision.NS;
 
@@ -220,29 +216,7 @@ public final class Point {
             return time((Long) null, precision);
         }
 
-        BigInteger convertedTime;
-
-        BigInteger nanos = BigInteger.valueOf(time.getEpochSecond())
-                .multiply(NANOS_PER_SECOND)
-                .add(BigInteger.valueOf(time.getNano()));
-
-        switch (precision) {
-
-            case NS:
-                convertedTime = nanos;
-                break;
-            case US:
-                convertedTime = nanos.divide(MICRO_PER_NANOS);
-                break;
-            case MS:
-                convertedTime = nanos.divide(MILLIS_PER_NANOS);
-                break;
-            case S:
-                convertedTime = nanos.divide(SECONDS_PER_NANOS);
-                break;
-            default:
-                throw new IllegalStateException("Unsupported precision: " + precision);
-        }
+        BigInteger convertedTime = NanosecondConverter.convert(time, precision);
 
         return time(convertedTime, precision);
     }
