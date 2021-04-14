@@ -109,13 +109,17 @@ timestamp.add=true
 timestamp.precision=ns
 ```
 
-### Write RAW (line protocol) record via Karaf console
+### Write RAW (line protocol) record
+
+Publish OSGi event containing line protocol record (i.e. via Karaf console).
 
 ```
 karaf@root()> event:send influxdb/lineprotocol "record=weather,location=HU temperature=5.89,humidity=48"
 ```
 
-### Write structured data by custom sources
+### Write structured data
+
+Publish OSGi event containing structured data (i.e. by custom component). Both InfluxDB Point and Java Map types are supported (see [client-osgi](../client-osgi/README.md) and [javadoc](https://influxdata.github.io/influxdb-client-java/influxdb-client-osgi/apidocs/index.html) for details).
 
 ```java
 @Component
@@ -125,12 +129,20 @@ public class Tester {
     EventAdmin eventAdmin;
 
     public void tester() {
-        final Map<String, Object> data = new TreeMap<>();
-        data.put("location", "HU");
-        data.put("temperature", 5.89);
-        data.put("humidity", 48);
+        final Map<String, String> tags = new TreeMap<>();
+        tags.put("location", "HU");
 
-        eventAdmin.postEvent(new Event("influxdb/point/weather", Collections.singletonMap("point", data)));
+        final Map<String, Object> fields = new TreeMap<>();
+        fields.put("temperature", 5.89);
+        fields.put("humidity", 48);
+        fields.put("raining", false);
+        fields.put("sky", "CLOUDY");
+
+        final Map<String, Object> point = new TreeMap<>();
+        point.put("tags", tags);
+        point.put("fields", fields);
+
+        eventAdmin.postEvent(new Event("influxdb/point/weather", Collections.singletonMap("point", point)));
     }
 }
 ```
