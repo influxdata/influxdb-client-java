@@ -42,7 +42,7 @@ Feature repository can be referenced by custom Karaf distributions too.
 
 ### KAR deployment
 
-Install KAR Maven artifact `mvn:com.influxdb/influxdb-karaf-kar/VERSION/kar` (replace `VERSION` with current version:
+Install KAR Maven artifact `mvn:com.influxdb/influxdb-karaf-kar/VERSION/kar` (replace `VERSION` with current version):
 
 ```
 karaf@root()> kar:install mvn:com.influxdb/influxdb-karaf-kar/VERSION/kar

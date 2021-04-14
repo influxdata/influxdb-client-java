@@ -70,39 +70,6 @@
         <tag>HEAD</tag>
     </scm>
 
-    <properties>
-        <karaf.version>4.2.11</karaf.version>
-    </properties>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.karaf.tooling</groupId>
-                    <artifactId>karaf-maven-plugin</artifactId>
-                    <version>${karaf.version}</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <enableGeneration>true</enableGeneration>
-                        <aggregateFeatures>true</aggregateFeatures>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.5.2</version>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8.2</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.karaf.features</groupId>
@@ -118,21 +85,5 @@
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
-        <!--dependency>
-            <groupId>org.apache.karaf.features</groupId>
-            <artifactId>enterprise</artifactId>
-            <version>${karaf.version}</version>
-            <scope>runtime</scope>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency-->
-        <!--dependency>
-            <groupId>org.apache.karaf.features</groupId>
-            <artifactId>spring</artifactId>
-            <version>${karaf.version}</version>
-            <scope>runtime</scope>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency-->
     </dependencies>
 </project>

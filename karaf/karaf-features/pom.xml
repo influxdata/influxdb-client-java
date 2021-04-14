@@ -39,11 +39,6 @@
         Apache Karaf Features for InfluxDB 2.0: feature definition of client bundles and dependencies.
     </description>
 
-    <properties>
-        <dependency.gson-fire.version>1.8.3</dependency.gson-fire.version>
-        <dependency.reactivestreams.version>1.0.3</dependency.reactivestreams.version>
-    </properties>
-
     <build>
         <resources>
             <resource>
@@ -66,8 +61,6 @@
                             <descriptors>
                                 <descriptor>mvn:org.apache.karaf.features/framework/${karaf.version}/xml/features</descriptor>
                                 <descriptor>mvn:org.apache.karaf.features/standard/${karaf.version}/xml/features</descriptor>
-                                <!--descriptor>mvn:org.apache.karaf.features/enterprise/${karaf.version}/xml/features</descriptor-->
-                                <!--descriptor>mvn:org.apache.karaf.features/spring/${karaf.version}/xml/features</descriptor-->
                                 <descriptor>file:${project.build.directory}/feature/feature.xml</descriptor>
                             </descriptors>
                             <framework>
