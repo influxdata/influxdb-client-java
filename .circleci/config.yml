@@ -42,7 +42,7 @@ commands:
       - restore_cache:
           name: Restoring Maven Cache
           keys:
-            - &cache-key maven-cache_v3-<< parameters.maven-image >>-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/cross/2.12/pom.xml" }}-{{ checksum "client-scala/cross/2.13/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
+            - &cache-key maven-cache_v3-<< parameters.maven-image >>-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/cross/2.12/pom.xml" }}-{{ checksum "client-scala/cross/2.13/pom.xml" }}-{{ checksum "client-osgi/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
             - maven-cache_v3-<< parameters.maven-image >>-
       - run:
           name: "Running tests"
@@ -74,6 +74,8 @@ commands:
             cp -r  client-scala/cross/2.12/target/*/TEST-*.xml test-results/client-scala_2.12 || true
             mkdir test-results/client-scala_2.13
             cp -r  client-scala/cross/2.13/target/*/TEST-*.xml test-results/client-scala_2.13 || true
+            mkdir test-results/client-osgi
+            cp -r client-osgi/target/*/TEST-*.xml test-results/client-osgi || true
             mkdir test-results/spring
             cp -r spring/target/*/TEST-*.xml test-results/spring || true
             mkdir test-results/flux-dsl
@@ -93,6 +95,7 @@ commands:
             cp -r client-kotlin/target/*.jar artifacts/
             cp -r client-scala/cross/2.12/target/*.jar artifacts/
             cp -r client-scala/cross/2.13/target/*.jar artifacts/
+            cp -r client-osgi/target/*.jar artifacts/
             cp -r spring/target/*.jar artifacts/
             cp -r flux-dsl/target/*.jar artifacts/
       - store_artifacts:
@@ -159,7 +162,7 @@ jobs:
       - restore_cache:
           name: Restoring Maven Cache
           keys:
-            - &cache-key-deploy maven-cache-deploy_v2-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/cross/2.12/pom.xml" }}-{{ checksum "client-scala/cross/2.13/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
+            - &cache-key-deploy maven-cache-deploy_v2-{{ checksum "pom.xml" }}-{{ checksum "client-core/pom.xml" }}-{{ checksum "client/pom.xml" }}-{{ checksum "client-kotlin/pom.xml" }}-{{ checksum "client-legacy/pom.xml" }}-{{ checksum "client-reactive/pom.xml" }}-{{ checksum "client-scala/cross/2.12/pom.xml" }}-{{ checksum "client-scala/cross/2.13/pom.xml" }}-{{ checksum "client-osgi/pom.xml" }}-{{ checksum "client-test/pom.xml" }}-{{ checksum "spring/pom.xml" }}-{{ checksum "flux-dsl/pom.xml" }}
             - maven-cache-deploy_v2-
       - run:
           name: Deploying Snapshot
