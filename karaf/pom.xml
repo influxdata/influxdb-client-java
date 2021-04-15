@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    The MIT License
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>influxdb-client</artifactId>
+        <groupId>com.influxdb</groupId>
+        <version>2.2.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>influxdb-karaf</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>karaf-features</module>
+        <module>karaf-kar</module>
+        <module>karaf-assembly</module>
+    </modules>
+
+    <name>Apache Karaf Integration for InfluxDB 2.0</name>
+    <description>
+        Apache Karaf Integration for InfluxDB 2.0: features and KAR file.
+    </description>
+
+    <url>https://github.com/influxdata/influxdb-client-java/tree/master/karaf</url>
+
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <url>https://raw.githubusercontent.com/influxdata/influxdb-client-java/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>József Börcsök</name>
+            <email>borcsokj@gmail.com</email>
+            <url>http://www.github.com/borcsokj</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:influxdata/influxdb-client-java.git</connection>
+        <developerConnection>scm:git:git@github.com:influxdata/influxdb-client-java.git</developerConnection>
+        <url>http://github.com/influxdata/influxdb-client-java/tree/master</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.karaf.features</groupId>
+            <artifactId>framework</artifactId>
+            <version>${karaf.version}</version>
+            <type>kar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.karaf.features</groupId>
+            <artifactId>standard</artifactId>
+            <version>${karaf.version}</version>
+            <scope>runtime</scope>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
+    </dependencies>
+</project>
