@@ -15,6 +15,12 @@ You have to replace your dependency from: `influxdb-client-scala` to:
 1. [#220](https://github.com/influxdata/influxdb-client-java/pull/220): Create client supporting OSGi environments
 1. [#221](https://github.com/influxdata/influxdb-client-java/pull/221): Add feature definition and documentation for Apache Karaf support
 
+### Dependencies
+1. [#???](https://github.com/influxdata/influxdb-client-csharp/pull/???): Update dependencies:
+   - Kotlin to 1.4.32
+1. [#???](https://github.com/influxdata/influxdb-client-csharp/pull/???): Update plugins:
+   - dokka-maven-plugin to 1.4.30
+   
 ## 2.1.0 [2021-04-01]
 
 ### Bug Fixes

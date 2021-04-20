@@ -22,10 +22,11 @@
 package example
 
 import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
-import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.runBlocking
 
-fun main(args: Array<String>) = runBlocking {
+fun main() = runBlocking {
 
     val influxDBClient = InfluxDBClientKotlinFactory
             .create("http://localhost:8086", "my-token".toCharArray(), "my-org")
@@ -39,7 +40,9 @@ fun main(args: Array<String>) = runBlocking {
     val results = influxDBClient.getQueryKotlinApi().queryRaw(fluxQuery)
 
     //print results
-    results.consumeEach { println("Line: $it") }
+    results
+        .consumeAsFlow()
+        .collect { println("Line: $it") }
 
     influxDBClient.close()
 }

@@ -35,7 +35,8 @@
 
     <name>The Kotlin InfluxDB 2.0 Client</name>
     <description>
-        The reference Kotlin client that allows query and write for the InfluxDB 2.0 by Kotlin Channel coroutines.
+        The reference Kotlin client that allows query and write for the InfluxDB 2.0
+        by Kotlin Channel and Flow coroutines.
     </description>
 
     <url>https://github.com/influxdata/influxdb-client-java/tree/master/client-kotlin</url>
@@ -107,7 +108,7 @@
             <plugin>
                 <groupId>org.jetbrains.dokka</groupId>
                 <artifactId>dokka-maven-plugin</artifactId>
-                <version>0.10.1</version>
+                <version>1.4.30</version>
                 <executions>
                     <execution>
                         <id>dokka-pre-site</id>

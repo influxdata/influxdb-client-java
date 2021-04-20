@@ -36,7 +36,6 @@ import com.influxdb.query.internal.FluxCsvParser.FluxResponseConsumer
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import java.util.function.BiConsumer
-import java.util.function.Consumer
 
 /**
  * @author Jakub Bednar (bednar@github) (30/10/2018 08:51)
@@ -105,7 +104,7 @@ internal class QueryKotlinApiImpl(private val service: QueryService, private val
 
         Arguments.checkNotNull(options.org, "InfluxDBClientOptions.getOrg")
 
-        return query(query, options.org!!, measurementType);
+        return query(query, options.org!!, measurementType)
     }
 
     override fun <M> query(query: Query, org: String, measurementType: Class<M>): Channel<M> {
@@ -181,7 +180,7 @@ internal class QueryKotlinApiImpl(private val service: QueryService, private val
             }
         }
 
-        queryRaw(queryCall, consumer, Consumer { channel.close(it) }, Runnable { channel.close() }, true)
+        queryRaw(queryCall, consumer, { channel.close(it) }, { channel.close() }, true)
 
         return channel
 
