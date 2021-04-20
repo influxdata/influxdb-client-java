@@ -40,6 +40,13 @@ interface InfluxDBClientKotlin : Closeable {
     fun getQueryKotlinApi() : QueryKotlinApi
 
     /**
+     * Get the Write client.
+     *
+     * @return the new client instance for the Write API
+     */
+    fun getWriteKotlinApi() : WriteKotlinApi
+
+    /**
      * Get the health of an instance.
      *
      * @return health of an instance

@@ -46,7 +46,7 @@ interface WriteKotlinApi {
      *                      The [com.influxdb.client.InfluxDBClientOptions.getOrg] will be used as the destination
      *                      `organization` if the `org` is not specified.
      */
-    fun writeRecord(record: String, precision: WritePrecision, bucket: String?, org: String?)
+    suspend fun writeRecord(record: String, precision: WritePrecision, bucket: String?, org: String?)
 
     /**
      * Write Line Protocol records into InfluxDB.
@@ -63,7 +63,7 @@ interface WriteKotlinApi {
      *                  The [com.influxdb.client.InfluxDBClientOptions.getOrg] will be used as the destination
      *                  `organization` if the `org` is not specified.
      */
-    fun writeRecords(records: Iterable<String>, precision: WritePrecision, bucket: String?, org: String?)
+    suspend fun writeRecords(records: Iterable<String>, precision: WritePrecision, bucket: String?, org: String?)
 
     /**
      * Write Line Protocol records into InfluxDB.
@@ -80,7 +80,7 @@ interface WriteKotlinApi {
      *                  The [com.influxdb.client.InfluxDBClientOptions.getOrg] will be used as the destination
      *                  `organization` if the `org` is not specified.
      */
-    fun writeRecords(records: Flow<String>, precision: WritePrecision, bucket: String?, org: String?)
+    suspend fun writeRecords(records: Flow<String>, precision: WritePrecision, bucket: String?, org: String?)
 
     /**
      * Write Data Point into InfluxDB.
@@ -95,7 +95,7 @@ interface WriteKotlinApi {
      *                  The [com.influxdb.client.InfluxDBClientOptions.getOrg] will be used as the destination
      *                  `organization` if the `org` is not specified.
      */
-    fun writePoint(point: Point, bucket: String?, org: String?)
+    suspend fun writePoint(point: Point, bucket: String?, org: String?)
 
     /**
      * Write Data Points into InfluxDB.
@@ -110,7 +110,7 @@ interface WriteKotlinApi {
      *                  The [com.influxdb.client.InfluxDBClientOptions.getOrg] will be used as the destination
      *                  `organization` if the `org` is not specified.
      */
-    fun writePoints(points: Iterable<Point>, bucket: String?, org: String?)
+    suspend fun writePoints(points: Iterable<Point>, bucket: String?, org: String?)
 
     /**
      * Write Data Points into InfluxDB.
@@ -125,7 +125,7 @@ interface WriteKotlinApi {
      *                  The [com.influxdb.client.InfluxDBClientOptions.getOrg] will be used as the destination
      *                  `organization` if the `org` is not specified.
      */
-    fun writePoints(points: Flow<Point>, bucket: String?, org: String?)
+    suspend fun writePoints(points: Flow<Point>, bucket: String?, org: String?)
 
     /**
      * Write Measurement into InfluxDB.
@@ -142,7 +142,7 @@ interface WriteKotlinApi {
      *                      `organization` if the `org` is not specified.
      * @param <M>           measurement type
      */
-    fun <M> writeMeasurement(measurement: M, precision: WritePrecision, bucket: String?, org: String?)
+    suspend fun <M> writeMeasurement(measurement: M, precision: WritePrecision, bucket: String?, org: String?)
 
     /**
      * Write Measurements into InfluxDB.
@@ -159,7 +159,7 @@ interface WriteKotlinApi {
      *                      `organization` if the `org` is not specified.
      * @param <M>           measurement type
      */
-    fun <M> writeMeasurements(measurements: Iterable<M>, precision: WritePrecision, bucket: String?, org: String?)
+    suspend fun <M> writeMeasurements(measurements: Iterable<M>, precision: WritePrecision, bucket: String?, org: String?)
 
     /**
      * Write Measurements into InfluxDB.
@@ -176,5 +176,5 @@ interface WriteKotlinApi {
      *                      `organization` if the `org` is not specified.
      * @param <M>           measurement type
      */
-    fun <M> writeMeasurements(measurements: Flow<M>, precision: WritePrecision, bucket: String?, org: String?)
+    suspend fun <M> writeMeasurements(measurements: Flow<M>, precision: WritePrecision, bucket: String?, org: String?)
 }
