@@ -28,15 +28,11 @@ import com.influxdb.client.internal.AbstractWriteClient
 import com.influxdb.client.kotlin.WriteKotlinApi
 import com.influxdb.client.service.WriteService
 import com.influxdb.client.write.Point
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
+import java.util.*
 
 /**
  * @author Jakub Bednar (20/04/2021 9:27)
@@ -49,7 +45,12 @@ internal class WriteKotlinApiImpl(service: WriteService, options: InfluxDBClient
         writeRecords(listOf(record), precision, bucket, org)
     }
 
-    override suspend fun writeRecords(records: Iterable<String>, precision: WritePrecision, bucket: String?, org: String?) {
+    override suspend fun writeRecords(
+        records: Iterable<String>,
+        precision: WritePrecision,
+        bucket: String?,
+        org: String?
+    ) {
         writeRecords(records.asFlow(), precision, bucket, org)
     }
 
@@ -66,11 +67,25 @@ internal class WriteKotlinApiImpl(service: WriteService, options: InfluxDBClient
     }
 
     override suspend fun writePoints(points: Flow<Point>, bucket: String?, org: String?) {
-        points.group { it.precision }
-            .collect { group -> write(group.second.map { AbstractWriteClient.BatchWriteDataPoint(it, options) }, group.first, bucket, org) }
+        points
+            .toList()
+            .groupByTo(LinkedHashMap(), { it.precision }, { it })
+            .forEach { group ->
+                write(
+                    group.value.asFlow().map { AbstractWriteClient.BatchWriteDataPoint(it, options) },
+                    group.key,
+                    bucket,
+                    org
+                )
+            }
     }
 
-    override suspend fun <M> writeMeasurement(measurement: M, precision: WritePrecision, bucket: String?, org: String?) {
+    override suspend fun <M> writeMeasurement(
+        measurement: M,
+        precision: WritePrecision,
+        bucket: String?,
+        org: String?
+    ) {
         writeMeasurements(listOf(measurement), precision, bucket, org)
     }
 
@@ -103,23 +118,6 @@ internal class WriteKotlinApiImpl(service: WriteService, options: InfluxDBClient
         val orgOrOption = org ?: options.org.orEmpty()
 
         write(bucketOrOption, orgOrOption, precision, records.toList().stream())
-    }
-}
-
-private fun <T, K> Flow<T>.group(keySelector: (T) -> K): Flow<Pair<K, Flow<T>>> = flow {
-    val storage = mutableMapOf<K, SendChannel<T>>()
-    try {
-        collect { item ->
-            val key = keySelector(item)
-            storage.getOrPut(key) {
-                Channel<T>().also {  channel ->
-                    val group = key to channel.consumeAsFlow()
-                    emit(group)
-                }
-            }.send(item)
-        }
-    } finally {
-        storage.values.forEach { it.close() }
     }
 }
 
