@@ -85,6 +85,7 @@ The [WriteKotlinApi](https://influxdata.github.io/influxdb-client-java/influxdb-
 - `DataPoint`
 - `LineProtocol`
 - `Data class`
+- List of above items
 
 The following example shows how to use various type of data:
 
