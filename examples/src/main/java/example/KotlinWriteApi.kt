@@ -42,43 +42,44 @@ fun main() = runBlocking {
     val client = InfluxDBClientKotlinFactory
         .create("http://localhost:8086", "my-token".toCharArray(), org, bucket)
 
-    val writeApi = client.getWriteKotlinApi()
+    client.use {
 
-    //
-    // Write by Data Point
-    //
-    val point = Point.measurement("temperature")
-        .addTag("location", "west")
-        .addField("value", 55.0)
-        .time(Instant.now().toEpochMilli(), WritePrecision.MS)
+        val writeApi = client.getWriteKotlinApi()
 
-    writeApi.writePoint(point)
+        //
+        // Write by Data Point
+        //
+        val point = Point.measurement("temperature")
+            .addTag("location", "west")
+            .addField("value", 55.0)
+            .time(Instant.now().toEpochMilli(), WritePrecision.MS)
 
-    //
-    // Write by LineProtocol
-    //
-    writeApi.writeRecord("temperature,location=north value=60.0", WritePrecision.NS)
+        writeApi.writePoint(point)
 
-    //
-    // Write by DataClass
-    //
-    val temperature = Temperature("south", 62.0, Instant.now())
+        //
+        // Write by LineProtocol
+        //
+        writeApi.writeRecord("temperature,location=north value=60.0", WritePrecision.NS)
 
-    writeApi.writeMeasurement(temperature, WritePrecision.NS)
+        //
+        // Write by DataClass
+        //
+        val temperature = Temperature("south", 62.0, Instant.now())
 
-    //
-    // Query results
-    //
-    val fluxQuery =
-        """from(bucket: "$bucket") |> range(start: 0) |> filter(fn: (r) => (r["_measurement"] == "temperature"))"""
+        writeApi.writeMeasurement(temperature, WritePrecision.NS)
 
-    client
-        .getQueryKotlinApi()
-        .query(fluxQuery)
-        .consumeAsFlow()
-        .collect { println("Measurement: ${it.measurement}, value: ${it.value}") }
+        //
+        // Query results
+        //
+        val fluxQuery =
+            """from(bucket: "$bucket") |> range(start: 0) |> filter(fn: (r) => (r["_measurement"] == "temperature"))"""
 
-    client.close()
+        client
+            .getQueryKotlinApi()
+            .query(fluxQuery)
+            .consumeAsFlow()
+            .collect { println("Measurement: ${it.measurement}, value: ${it.value}") }
+    }
 }
 
 @Measurement(name = "temperature")
