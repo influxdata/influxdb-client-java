@@ -25,6 +25,9 @@ import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.write.Point
 import com.influxdb.exceptions.UnauthorizedException
 import com.influxdb.test.AbstractMockServerTest
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterEach
@@ -178,5 +181,66 @@ class WriteKotlinApiTest : AbstractMockServerTest() {
                 }
             }.hasMessageStartingWith("token does not have sufficient permissions")
             .isInstanceOf(UnauthorizedException::class.java)
+    }
+
+    @Test
+    fun batching(): Unit = runBlocking {
+
+        enqueuedResponse()
+        enqueuedResponse()
+        enqueuedResponse()
+        enqueuedResponse()
+        enqueuedResponse()
+
+        val lineProtocols = flow {
+            for (i in 1..49) {
+                emit("h2o,location=coyote_creek level=${i}.0 $i")
+            }
+        }
+
+        lineProtocols
+            .chunks(10)
+            .collect { batch -> writeApi.writeRecords(batch, WritePrecision.S)}
+
+        var request = mockServer.takeRequest(10L, TimeUnit.SECONDS)
+        var body = request?.body?.readUtf8()
+        Assertions.assertThat(body).startsWith("h2o,location=coyote_creek level=1.0 1")
+        Assertions.assertThat(body).endsWith("h2o,location=coyote_creek level=10.0 10")
+
+        request = mockServer.takeRequest(10L, TimeUnit.SECONDS)
+        body = request?.body?.readUtf8()
+        Assertions.assertThat(body).startsWith("h2o,location=coyote_creek level=11.0 11")
+        Assertions.assertThat(body).endsWith("h2o,location=coyote_creek level=20.0 20")
+
+        request = mockServer.takeRequest(10L, TimeUnit.SECONDS)
+        body = request?.body?.readUtf8()
+        Assertions.assertThat(body).startsWith("h2o,location=coyote_creek level=21.0 21")
+        Assertions.assertThat(body).endsWith("h2o,location=coyote_creek level=30.0 30")
+
+        request = mockServer.takeRequest(10L, TimeUnit.SECONDS)
+        body = request?.body?.readUtf8()
+        Assertions.assertThat(body).startsWith("h2o,location=coyote_creek level=31.0 31")
+        Assertions.assertThat(body).endsWith("h2o,location=coyote_creek level=40.0 40")
+
+        request = mockServer.takeRequest(10L, TimeUnit.SECONDS)
+        body = request?.body?.readUtf8()
+        Assertions.assertThat(body).startsWith("h2o,location=coyote_creek level=41.0 41")
+        Assertions.assertThat(body).endsWith("h2o,location=coyote_creek level=49.0 49")
+
+        Assertions.assertThat(mockServer.requestCount).isEqualTo(5)
+    }
+
+    private suspend fun <T> Flow<T>.chunks(size: Int): Flow<List<T>> = flow {
+        val chunk = ArrayList<T>(size)
+        collect {
+            chunk += it
+            if (chunk.size >= size) {
+                emit(chunk)
+                chunk.clear()
+            }
+        }
+        if (chunk.size > 0) {
+            emit(chunk)
+        }
     }
 }
