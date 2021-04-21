@@ -7,6 +7,7 @@ The reference Kotlin client that allows query and write for the InfluxDB 2.0 by 
 ## Features
 
 - [Querying data using Flux language](#queries)
+- [Writing data](#writes)
 - [Advanced Usage](#advanced-usage)
    
 ## Queries
@@ -77,6 +78,88 @@ fun main(args: Array<String>) = runBlocking {
     influxDBClient.close()
 }
 ```
+
+## Writes
+
+The [WriteKotlinApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/com.influxdb.client.kotlin/-write-kotlin-api/index.html) supports ingest data by:
+- `DataPoint`
+- `LineProtocol`
+- `Data class`
+
+The following example shows how to use various type of data:
+
+```kotlin
+package example
+
+import com.influxdb.annotations.Column
+import com.influxdb.annotations.Measurement
+import com.influxdb.client.domain.WritePrecision
+import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
+import com.influxdb.client.write.Point
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.runBlocking
+import java.time.Instant
+
+fun main() = runBlocking {
+
+    val org = "my-org"
+    val bucket = "my-bucket"
+
+    //
+    // Initialize client
+    //
+    val client = InfluxDBClientKotlinFactory
+        .create("http://localhost:8086", "my-token".toCharArray(), org, bucket)
+
+    val writeApi = client.getWriteKotlinApi()
+
+    //
+    // Write by Data Point
+    //
+    val point = Point.measurement("temperature")
+        .addTag("location", "west")
+        .addField("value", 55.0)
+        .time(Instant.now().toEpochMilli(), WritePrecision.MS)
+
+    writeApi.writePoint(point)
+
+    //
+    // Write by LineProtocol
+    //
+    writeApi.writeRecord("temperature,location=north value=60.0", WritePrecision.NS)
+
+    //
+    // Write by DataClass
+    //
+    val temperature = Temperature("south", 62.0, Instant.now())
+
+    writeApi.writeMeasurement(temperature, WritePrecision.NS)
+
+    //
+    // Query results
+    //
+    val fluxQuery =
+        """from(bucket: "$bucket") |> range(start: 0) |> filter(fn: (r) => (r["_measurement"] == "temperature"))"""
+
+    client
+        .getQueryKotlinApi()
+        .query(fluxQuery)
+        .consumeAsFlow()
+        .collect { println("Measurement: ${it.measurement}, value: ${it.value}") }
+
+    client.close()
+}
+
+@Measurement(name = "temperature")
+data class Temperature(
+    @Column(tag = true) val location: String,
+    @Column val value: Double,
+    @Column(timestamp = true) val time: Instant
+)
+
+```
+* sources - [KotlinWriteApi.kt](../examples/src/main/java/example/KotlinWriteApi.kt)
 
 ## Advanced Usage
 

@@ -8,7 +8,10 @@ This directory contains Java, Kotlin and Scala examples.
 ## Kotlin
 
 ### Query
-- [InfluxDB2KotlinExample.kt](src/main/java/example/InfluxDB2KotlinExample.kt) - How to query data into a stream of `FluxRecord`s and filter them by [Flow](https://kotlinlang.org/docs/flow.html) operators
-- [InfluxDB2KotlinExampleRaw.kt](src/main/java/example/InfluxDB2KotlinExampleRaw.kt) - How to query data into a stream of `String`s
-- [InfluxDB2KotlinExampleDSL.kt](src/main/java/example/InfluxDB2KotlinExampleDSL.kt) - How to use the [FluxDSL](../flux-dsl) to query data
+- [KotlinQuery.kt](src/main/java/example/KotlinQuery.kt) - How to query data into a stream of `FluxRecord` and filter them by [Flow](https://kotlinlang.org/docs/flow.html) operators
+- [KotlinQueryRaw.kt](src/main/java/example/KotlinQueryRaw.kt) - How to query data into a stream of `String`
+- [KotlinQueryDSL.kt](src/main/java/example/KotlinQueryDSL.kt) - How to use the [FluxDSL](../flux-dsl) to query data
+
+### Writes
+- [KotlinWriteApi.kt](src/main/java/example/KotlinWriteApi.kt) - How to ingest data by `DataPoint`, `LineProtocol` or `Data class`
   
