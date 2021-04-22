@@ -32,6 +32,7 @@ import assertk.assertions.isInstanceOf
 import assertk.assertions.isTrue
 import assertk.assertions.startsWith
 import com.influxdb.annotations.Column
+import com.influxdb.annotations.Measurement
 import com.influxdb.client.InfluxDBClientFactory
 import com.influxdb.client.domain.Bucket
 import com.influxdb.client.domain.Dialect
@@ -324,14 +325,17 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
         assertThat(lines[1]).isEmpty()
     }
 
+    @Measurement(name = "mem")
     class Mem {
 
-        internal val host: String? = null
-        internal val region: String? = null
+        @Column(tag = true)
+        internal var host: String? = null
+        @Column(tag = true)
+        internal var region: String? = null
 
         @Column(name = "_value")
-        internal val free: Long? = null
-        @Column(name = "_time")
-        internal val time: Instant? = null
+        internal var free: Long? = null
+        @Column(name = "_time", timestamp = true)
+        internal var time: Instant? = null
     }
 }

@@ -14,7 +14,14 @@ You have to replace your dependency from: `influxdb-client-scala` to:
 1. [#218](https://github.com/influxdata/influxdb-client-java/pull/218): Supports enum types in mapping into POJO
 1. [#220](https://github.com/influxdata/influxdb-client-java/pull/220): Create client supporting OSGi environments
 1. [#221](https://github.com/influxdata/influxdb-client-java/pull/221): Add feature definition and documentation for Apache Karaf support
+1. [#222](https://github.com/influxdata/influxdb-client-java/pull/221): Add `Kotlin` WriteApi
 
+### Dependencies
+1. [#222](https://github.com/influxdata/influxdb-client-csharp/pull/222): Update dependencies:
+   - Kotlin to 1.4.32
+1. [#222](https://github.com/influxdata/influxdb-client-csharp/pull/222): Update plugins:
+   - dokka-maven-plugin to 1.4.30
+   
 ## 2.1.0 [2021-04-01]
 
 ### Bug Fixes

@@ -35,47 +35,52 @@ import kotlinx.coroutines.channels.Channel
 interface QueryKotlinApi {
 
     /**
-     * Executes the Flux query against the InfluxDB and asynchronously stream [FluxRecord]s to [Channel].
+     * Executes the Flux query against the InfluxDB and asynchronously stream
+     * [com.influxdb.query.FluxRecord]s to [kotlinx.coroutines.channels.Channel].
      *
-     * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
+     * The [com.influxdb.client.InfluxDBClientOptions.getOrg] will be used as source organization.
      *
      * @param query the flux query to execute
-     * @return the stream of [FluxRecord]s
+     * @return the stream of [com.influxdb.query.FluxRecord]s
      */
     fun query(query: String): Channel<FluxRecord>
 
     /**
-     * Executes the Flux query against the InfluxDB and asynchronously stream [FluxRecord]s to [Channel].
+     * Executes the Flux query against the InfluxDB and asynchronously stream
+     * [com.influxdb.query.FluxRecord]s to [kotlinx.coroutines.channels.Channel].
      *
      * @param query the flux query to execute
      * @param org specifies the source organization
-     * @return the stream of [FluxRecord]s
+     * @return the stream of [com.influxdb.query.FluxRecord]s
      */
     fun query(query: String, org: String): Channel<FluxRecord>
 
     /**
-     * Executes the Flux query against the InfluxDB and asynchronously stream [FluxRecord]s to [Channel].
+     * Executes the Flux query against the InfluxDB and asynchronously stream
+     * [com.influxdb.query.FluxRecord]s to [kotlinx.coroutines.channels.Channel].
      *
-     * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
+     * The [com.influxdb.client.InfluxDBClientOptions.getOrg] will be used as source organization.
      *
      * @param query the flux query to execute
-     * @return the stream of [FluxRecord]s
+     * @return the stream of [com.influxdb.query.FluxRecord]s
      */
     fun query(query: Query): Channel<FluxRecord>
 
     /**
-     * Executes the Flux query against the InfluxDB and asynchronously stream [FluxRecord]s to [Channel].
+     * Executes the Flux query against the InfluxDB and asynchronously stream
+     * [com.influxdb.query.FluxRecord]s to [kotlinx.coroutines.channels.Channel].
      *
      * @param query the flux query to execute
      * @param org specifies the source organization
-     * @return the stream of [FluxRecord]s
+     * @return the stream of [com.influxdb.query.FluxRecord]s
      */
     fun query(query: Query, org: String): Channel<FluxRecord>
 
     /**
-     * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [Channel].
+     * Executes the Flux query against the InfluxDB and asynchronously stream measurements to
+     * [kotlinx.coroutines.channels.Channel].
      *
-     * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
+     * The [com.influxdb.client.InfluxDBClientOptions.getOrg] will be used as source organization.
      *
      * @param query the flux query to execute
      * @param <M> the type of the measurement (POJO)
@@ -84,7 +89,8 @@ interface QueryKotlinApi {
     fun <M> query(query: String, measurementType: Class<M>): Channel<M>
 
     /**
-     * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [Channel].
+     * Executes the Flux query against the InfluxDB and asynchronously stream measurements to
+     * [kotlinx.coroutines.channels.Channel].
      *
      * @param query the flux query to execute
      * @param org specifies the source organization
@@ -94,9 +100,10 @@ interface QueryKotlinApi {
     fun <M> query(query: String, org: String, measurementType: Class<M>): Channel<M>
 
     /**
-     * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [Channel].
+     * Executes the Flux query against the InfluxDB and asynchronously stream measurements to
+     * [kotlinx.coroutines.channels.Channel].
      *
-     * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
+     * The [com.influxdb.client.InfluxDBClientOptions.getOrg] will be used as source organization.
      *
      * @param query the flux query to execute
      * @param <M> the type of the measurement (POJO)
@@ -105,7 +112,8 @@ interface QueryKotlinApi {
     fun <M> query(query: Query, measurementType: Class<M>): Channel<M>
 
     /**
-     * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [Channel].
+     * Executes the Flux query against the InfluxDB and asynchronously stream measurements to
+     * [kotlinx.coroutines.channels.Channel].
      *
      * @param query the flux query to execute
      * @param org specifies the source organization
@@ -115,9 +123,10 @@ interface QueryKotlinApi {
     fun <M> query(query: Query, org: String, measurementType: Class<M>): Channel<M>
 
     /**
-     * Executes the Flux query against the InfluxDB and asynchronously stream response to [Channel].
+     * Executes the Flux query against the InfluxDB and asynchronously stream response to
+     * [kotlinx.coroutines.channels.Channel].
      *
-     * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
+     * The [com.influxdb.client.InfluxDBClientOptions.getOrg] will be used as source organization.
      *
      * @param query the flux query to execute
      * @return the response stream
@@ -125,7 +134,8 @@ interface QueryKotlinApi {
     fun queryRaw(query: String): Channel<String>
 
     /**
-     * Executes the Flux query against the InfluxDB and asynchronously stream response to [Channel].
+     * Executes the Flux query against the InfluxDB and asynchronously stream response to
+     * [kotlinx.coroutines.channels.Channel].
      *
      * @param query the flux query to execute
      * @param org specifies the source organization
@@ -134,9 +144,10 @@ interface QueryKotlinApi {
     fun queryRaw(query: String, org: String): Channel<String>
 
     /**
-     * Executes the Flux query against the InfluxDB and asynchronously stream response to [Channel].
+     * Executes the Flux query against the InfluxDB and asynchronously stream response to
+     * [kotlinx.coroutines.channels.Channel].
      *
-     * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
+     * The [com.influxdb.client.InfluxDBClientOptions.getOrg] will be used as source organization.
      *
      * @param query the flux query to execute
      * @param dialect    Dialect is an object defining the options to use when encoding the response.
@@ -146,7 +157,8 @@ interface QueryKotlinApi {
     fun queryRaw(query: String, dialect: Dialect): Channel<String>
 
     /**
-     * Executes the Flux query against the InfluxDB and asynchronously stream response to [Channel].
+     * Executes the Flux query against the InfluxDB and asynchronously stream response to
+     * [kotlinx.coroutines.channels.Channel].
      *
      * @param query the flux query to execute
      * @param org  specifies the source organization
@@ -157,9 +169,10 @@ interface QueryKotlinApi {
     fun queryRaw(query: String, dialect: Dialect, org: String): Channel<String>
 
     /**
-     * Executes the Flux query against the InfluxDB and asynchronously stream response to [Channel].
+     * Executes the Flux query against the InfluxDB and asynchronously stream response to
+     * [kotlinx.coroutines.channels.Channel].
      *
-     * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
+     * The [com.influxdb.client.InfluxDBClientOptions.getOrg] will be used as source organization.
      *
      * @param query the flux query to execute
      * @return the response stream
@@ -167,7 +180,8 @@ interface QueryKotlinApi {
     fun queryRaw(query: Query): Channel<String>
 
     /**
-     * Executes the Flux query against the InfluxDB and asynchronously stream response to [Channel].
+     * Executes the Flux query against the InfluxDB and asynchronously stream response to
+     * [kotlinx.coroutines.channels.Channel].
      *
      * @param query the flux query to execute
      * @param org specifies the source organization

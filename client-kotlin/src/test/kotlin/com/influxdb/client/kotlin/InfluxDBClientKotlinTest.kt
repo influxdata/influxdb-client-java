@@ -23,6 +23,8 @@ package com.influxdb.client.kotlin
 
 import com.influxdb.test.AbstractMockServerTest
 import org.assertj.core.api.Assertions
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
@@ -34,9 +36,20 @@ import java.util.concurrent.TimeUnit
 @RunWith(JUnitPlatform::class)
 class InfluxDBClientKotlinTest : AbstractMockServerTest() {
 
+    private lateinit var client: InfluxDBClientKotlin
+
+    @BeforeEach
+    fun beforeEach() {
+        client = InfluxDBClientKotlinFactory.create(startMockServer())
+    }
+
+    @AfterEach
+    fun afterEach() {
+        client.close()
+    }
+
     @Test
     fun userAgent() {
-        val client = InfluxDBClientKotlinFactory.create(startMockServer())
 
         enqueuedResponse()
 
@@ -51,5 +64,11 @@ class InfluxDBClientKotlinTest : AbstractMockServerTest() {
         val request = mockServer.takeRequest(10L, TimeUnit.SECONDS)
 
         Assertions.assertThat(request?.getHeader("User-Agent")).startsWith("influxdb-client-kotlin/")
+    }
+
+    @Test
+    fun createApiInstance() {
+        Assertions.assertThat(client.getQueryKotlinApi()).isNotNull
+        Assertions.assertThat(client.getWriteKotlinApi()).isNotNull
     }
 }

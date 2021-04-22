@@ -34,7 +34,7 @@ import com.influxdb.exceptions.InfluxException;
 /**
  * The synchronous blocking API to Write time-series data into InfluxDB 2.0.
  * <p>
- * The data are formatted in <a href="https://bit.ly/2QL99fu">Line Protocol</a>.
+ * The data are formatted in <a href="https://bit.ly/line-protocol">Line Protocol</a>.
  * <p>
  *
  * @author Jakub Bednar (bednar@github) (20/09/2018 10:58)

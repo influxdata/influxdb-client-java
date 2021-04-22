@@ -42,7 +42,7 @@ import org.reactivestreams.Publisher;
 /**
  * Write time-series data into InfluxDB 2.0.
  * <p>
- * The data are formatted in <a href="https://bit.ly/2QL99fu">Line Protocol</a>.
+ * The data are formatted in <a href="https://bit.ly/line-protocol">Line Protocol</a>.
  *
  * @author Jakub Bednar (bednar@github) (22/11/2018 06:49)
  */

@@ -27,7 +27,9 @@ import com.influxdb.client.domain.HealthCheck
 import com.influxdb.client.internal.AbstractInfluxDBClient
 import com.influxdb.client.kotlin.InfluxDBClientKotlin
 import com.influxdb.client.kotlin.QueryKotlinApi
+import com.influxdb.client.kotlin.WriteKotlinApi
 import com.influxdb.client.service.QueryService
+import com.influxdb.client.service.WriteService
 
 /**
  * @author Jakub Bednar (bednar@github) (07/02/2019 13:21)
@@ -35,7 +37,11 @@ import com.influxdb.client.service.QueryService
 internal class InfluxDBClientKotlinImpl(options: InfluxDBClientOptions) : AbstractInfluxDBClient(options, "kotlin"), InfluxDBClientKotlin {
 
     override fun getQueryKotlinApi(): QueryKotlinApi {
-        return QueryKotlinApiImpl(retrofit.create<QueryService>(QueryService::class.java), options)
+        return QueryKotlinApiImpl(retrofit.create(QueryService::class.java), options)
+    }
+
+    override fun getWriteKotlinApi(): WriteKotlinApi {
+        return WriteKotlinApiImpl(retrofit.create(WriteService::class.java), options)
     }
 
     override fun health(): HealthCheck {

@@ -25,8 +25,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
@@ -37,32 +35,19 @@ import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractWriteClient.BatchWriteData;
-import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement;
 import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint;
 import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.client.write.Point;
-import com.influxdb.internal.AbstractRestClient;
-
-import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (16/07/2019 06:48)
  */
-final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiBlocking {
-
-    private static final Logger LOG = Logger.getLogger(WriteApiBlockingImpl.class.getName());
-
-    private final WriteService service;
-    private final InfluxDBClientOptions options;
-
-    private final MeasurementMapper measurementMapper = new MeasurementMapper();
+final class WriteApiBlockingImpl extends AbstractWriteBlockingClient implements WriteApiBlocking {
 
     WriteApiBlockingImpl(@Nonnull final WriteService service,
                          @Nonnull final InfluxDBClientOptions options) {
-
-        this.service = service;
-        this.options = options;
+        super(service, options);
     }
 
     @Override
@@ -197,8 +182,7 @@ final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiB
         Arguments.checkNotNull(precision, "WritePrecision is required");
         Arguments.checkNotNull(measurements, "records");
 
-        write(bucket, org, precision, measurements.stream()
-                .map(it -> new BatchWriteDataMeasurement(it, precision, options, measurementMapper)));
+        write(bucket, org, precision, measurements.stream().map(it -> toMeasurementBatch(it, precision)));
     }
 
     private void write(@Nonnull final String bucket,
@@ -209,31 +193,4 @@ final class WriteApiBlockingImpl extends AbstractRestClient implements WriteApiB
         write(bucket, organization, precision, Stream.of(data));
     }
 
-    private void write(@Nonnull final String bucket,
-                       @Nonnull final String organization,
-                       @Nonnull final WritePrecision precision,
-                       @Nonnull final Stream<BatchWriteData> stream) {
-
-        String lineProtocol = stream.map(BatchWriteData::toLineProtocol)
-                .filter(it -> it != null && !it.isEmpty())
-                .collect(Collectors.joining("\n"));
-
-        if (lineProtocol.isEmpty()) {
-
-            LOG.warning("The writes: " + stream + " doesn't contains any Line Protocol, skipping");
-            return;
-        }
-
-        LOG.log(Level.FINEST,
-                "Writing time-series data into InfluxDB (org={0}, bucket={1}, precision={2})...",
-                new Object[]{organization, bucket, precision});
-
-        Call<Void> voidCall = service.postWrite(organization, bucket, lineProtocol, null,
-                "identity", "text/plain; charset=utf-8", null,
-                "application/json", null, precision);
-
-        execute(voidCall);
-
-        LOG.log(Level.FINEST, "Written data into InfluxDB: {0}", lineProtocol);
-    }
 }

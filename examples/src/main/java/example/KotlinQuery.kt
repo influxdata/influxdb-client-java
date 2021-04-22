@@ -22,15 +22,16 @@
 package example
 
 import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.channels.filter
-import kotlinx.coroutines.channels.take
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 
-fun main(args: Array<String>) = runBlocking {
+fun main() = runBlocking {
 
     val influxDBClient = InfluxDBClientKotlinFactory
-            .create("http://localhost:8086", "my-token".toCharArray(), "my-org")
+        .create("http://localhost:8086", "my-token".toCharArray(), "my-org")
 
     val fluxQuery = ("from(bucket: \"my-bucket\")\n"
             + " |> range(start: -1d)"
@@ -41,12 +42,13 @@ fun main(args: Array<String>) = runBlocking {
 
     //Example of additional result stream processing on client side
     results
-            //filter on client side using `filter` built-in operator
-            .filter { "cpu0" == it.getValueByKey("cpu") }
-            //take first 20 records
-            .take(20)
-            //print results
-            .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
+        .consumeAsFlow()
+        //filter on client side using `filter` built-in operator
+        .filter { "cpu0" == it.getValueByKey("cpu") }
+        //take first 20 records
+        .take(20)
+        //print results
+        .collect { println("Measurement: ${it.measurement}, value: ${it.value}") }
 
     influxDBClient.close()
 }

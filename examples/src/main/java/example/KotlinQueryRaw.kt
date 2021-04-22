@@ -22,34 +22,27 @@
 package example
 
 import com.influxdb.client.kotlin.InfluxDBClientKotlinFactory
-import com.influxdb.query.dsl.Flux
-import com.influxdb.query.dsl.functions.restriction.Restrictions
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.channels.filter
-import kotlinx.coroutines.channels.take
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.runBlocking
-import java.time.temporal.ChronoUnit
 
-fun main(args: Array<String>) = runBlocking {
+fun main() = runBlocking {
 
     val influxDBClient = InfluxDBClientKotlinFactory
             .create("http://localhost:8086", "my-token".toCharArray(), "my-org")
 
-    val mem = Flux.from("my-bucket")
-            .range(-30L, ChronoUnit.MINUTES)
-            .filter(Restrictions.and(Restrictions.measurement().equal("mem"), Restrictions.field().equal("used_percent")))
+    val fluxQuery = ("from(bucket: \"my-bucket\")\n"
+            + " |> range(start: -5m)"
+            + " |> filter(fn: (r) => (r[\"_measurement\"] == \"cpu\" and r[\"_field\"] == \"usage_system\"))"
+            + " |> sample(n: 5, pos: 1)")
 
     //Result is returned as a stream
-    val results = influxDBClient.getQueryKotlinApi().query(mem.toString())
+    val results = influxDBClient.getQueryKotlinApi().queryRaw(fluxQuery)
 
-    //Example of additional result stream processing on client side
+    //print results
     results
-            //filter on client side using `filter` built-in operator
-            .filter { (it.value as Double) > 55 }
-            // take first 20 records
-            .take(20)
-            //print results
-            .consumeEach { println("Measurement: ${it.measurement}, value: ${it.value}") }
+        .consumeAsFlow()
+        .collect { println("Line: $it") }
 
     influxDBClient.close()
 }
