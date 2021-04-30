@@ -1,51 +1,83 @@
-<HTML>
-<HEAD>
-<meta charset="UTF-8">
-<title>InfluxDBClientKotlinFactory - influxdb-client-kotlin</title>
-<link rel="stylesheet" href="../../../style.css">
-</HEAD>
-<BODY>
-<a href="../../index.html">influxdb-client-kotlin</a>&nbsp;/&nbsp;<a href="../index.html">com.influxdb.client.kotlin</a>&nbsp;/&nbsp;<a href="./index.html">InfluxDBClientKotlinFactory</a><br/>
-<br/>
-<h1>InfluxDBClientKotlinFactory</h1>
-<code><span class="keyword">class </span><span class="identifier">InfluxDBClientKotlinFactory</span></code> <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-kotlin/src/main/kotlin/com/influxdb/client/kotlin/InfluxDBClientKotlinFactory.kt#L33">(source)</a>
-<p>The Factory that creates an instance of a Flux client.</p>
-<p><strong>Author</strong><br/>
-Jakub Bednar (bednar@github) (30/10/2018 08:19)</p>
-<h3>Constructors</h3>
-<table>
-<tbody>
-<tr>
-<td>
-<h4><a href="-init-.html">&lt;init&gt;</a></h4>
-</td>
-<td>
-<p>The Factory that creates an instance of a Flux client.</p>
-<code><span class="identifier">InfluxDBClientKotlinFactory</span><span class="symbol">(</span><span class="symbol">)</span></code></td>
-</tr>
-</tbody>
-</table>
-<h3>Companion Object Functions</h3>
-<table>
-<tbody>
-<tr>
-<td>
-<h4><a href="create.html">create</a></h4>
-</td>
-<td>
-<p>Create an instance of the InfluxDB 2.0 client that is configured via {@code influx2.properties}.
-The {@code influx2.properties} has to be located on classpath.</p>
-<code><span class="keyword">fun </span><span class="identifier">create</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-influx-d-b-client-kotlin/index.html"><span class="identifier">InfluxDBClientKotlin</span></a></code>
-<p>Create an instance of the InfluxDB 2.0 client. The url could be a connection string with various configurations.</p>
-<code><span class="keyword">fun </span><span class="identifier">create</span><span class="symbol">(</span><span class="identifier" id="com.influxdb.client.kotlin.InfluxDBClientKotlinFactory.Companion$create(kotlin.String)/connectionString">connectionString</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-influx-d-b-client-kotlin/index.html"><span class="identifier">InfluxDBClientKotlin</span></a></code>
-<p>Create an instance of the InfluxDB 2.0 reactive client.</p>
-<code><span class="keyword">fun </span><span class="identifier">create</span><span class="symbol">(</span><span class="identifier" id="com.influxdb.client.kotlin.InfluxDBClientKotlinFactory.Companion$create(kotlin.String, kotlin.String, kotlin.CharArray)/url">url</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.influxdb.client.kotlin.InfluxDBClientKotlinFactory.Companion$create(kotlin.String, kotlin.String, kotlin.CharArray)/username">username</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.influxdb.client.kotlin.InfluxDBClientKotlinFactory.Companion$create(kotlin.String, kotlin.String, kotlin.CharArray)/password">password</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-char-array/index.html"><span class="identifier">CharArray</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-influx-d-b-client-kotlin/index.html"><span class="identifier">InfluxDBClientKotlin</span></a></code><br/>
-<code><span class="keyword">fun </span><span class="identifier">create</span><span class="symbol">(</span><span class="identifier" id="com.influxdb.client.kotlin.InfluxDBClientKotlinFactory.Companion$create(kotlin.String, kotlin.CharArray)/url">url</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.influxdb.client.kotlin.InfluxDBClientKotlinFactory.Companion$create(kotlin.String, kotlin.CharArray)/token">token</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-char-array/index.html"><span class="identifier">CharArray</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-influx-d-b-client-kotlin/index.html"><span class="identifier">InfluxDBClientKotlin</span></a></code><br/>
-<code><span class="keyword">fun </span><span class="identifier">create</span><span class="symbol">(</span><span class="identifier" id="com.influxdb.client.kotlin.InfluxDBClientKotlinFactory.Companion$create(kotlin.String, kotlin.CharArray, kotlin.String)/url">url</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.influxdb.client.kotlin.InfluxDBClientKotlinFactory.Companion$create(kotlin.String, kotlin.CharArray, kotlin.String)/token">token</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-char-array/index.html"><span class="identifier">CharArray</span></a><span class="symbol">, </span><span class="identifier" id="com.influxdb.client.kotlin.InfluxDBClientKotlinFactory.Companion$create(kotlin.String, kotlin.CharArray, kotlin.String)/org">org</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-influx-d-b-client-kotlin/index.html"><span class="identifier">InfluxDBClientKotlin</span></a></code><br/>
-<code><span class="keyword">fun </span><span class="identifier">create</span><span class="symbol">(</span><span class="identifier" id="com.influxdb.client.kotlin.InfluxDBClientKotlinFactory.Companion$create(kotlin.String, kotlin.CharArray, kotlin.String, kotlin.String)/url">url</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.influxdb.client.kotlin.InfluxDBClientKotlinFactory.Companion$create(kotlin.String, kotlin.CharArray, kotlin.String, kotlin.String)/token">token</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-char-array/index.html"><span class="identifier">CharArray</span></a><span class="symbol">, </span><span class="identifier" id="com.influxdb.client.kotlin.InfluxDBClientKotlinFactory.Companion$create(kotlin.String, kotlin.CharArray, kotlin.String, kotlin.String)/org">org</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.influxdb.client.kotlin.InfluxDBClientKotlinFactory.Companion$create(kotlin.String, kotlin.CharArray, kotlin.String, kotlin.String)/bucket">bucket</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-influx-d-b-client-kotlin/index.html"><span class="identifier">InfluxDBClientKotlin</span></a></code><br/>
-<code><span class="keyword">fun </span><span class="identifier">create</span><span class="symbol">(</span><span class="identifier" id="com.influxdb.client.kotlin.InfluxDBClientKotlinFactory.Companion$create(com.influxdb.client.InfluxDBClientOptions)/options">options</span><span class="symbol">:</span>&nbsp;<span class="identifier">InfluxDBClientOptions</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-influx-d-b-client-kotlin/index.html"><span class="identifier">InfluxDBClientKotlin</span></a></code></td>
-</tr>
-</tbody>
-</table>
-</BODY>
-</HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>InfluxDBClientKotlinFactory</title>
+<link href="../../../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script><script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script><link href="../../../styles/style.css" rel="Stylesheet"><link href="../../../styles/logo-styles.css" rel="Stylesheet"><link href="../../../styles/jetbrains-mono.css" rel="Stylesheet"><link href="../../../styles/main.css" rel="Stylesheet"><script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script><script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script><script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script><script type="text/javascript" src="../../../scripts/main.js" async="async"></script>  </head>
+  <body>
+    <div id="container">
+      <div id="leftColumn"><a href="../../../index.html">
+          <div id="logo"></div>
+        </a>
+        <div id="paneSearch"></div>
+        <div id="sideMenu"></div>
+      </div>
+      <div id="main">
+        <div id="leftToggler"><span class="icon-toggler"></span></div>
+<script type="text/javascript" src="../../../scripts/main.js"></script>        <div class="main-content" id="content" pageIds="influxdb-client-kotlin::com.influxdb.client.kotlin/InfluxDBClientKotlinFactory///PointingToDeclaration//1663166674">
+          <div class="navigation-wrapper" id="navigation-wrapper">
+            <div class="breadcrumbs"><a href="../../../index.html">influxdb-client-kotlin</a>/<a href="../index.html">com.influxdb.client.kotlin</a>/<a href="index.html">InfluxDBClientKotlinFactory</a></div>
+            <div class="pull-right d-flex">
+              <div id="searchBar"></div>
+            </div>
+          </div>
+          <div class="cover ">
+            <h1 class="cover"><span>Influx</span><wbr></wbr><span>D</span><wbr></wbr><span>B</span><wbr></wbr><span>Client</span><wbr></wbr><span>Kotlin</span><wbr></wbr><span>Factory</span></h1>
+            <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable="influxdb-client-kotlin/JVM"><div class="symbol monospace">class <a href="index.html">InfluxDBClientKotlinFactory</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">The Factory that creates an instance of a Flux client.</p><h4 class="">Author</h4><p class="paragraph">Jakub Bednar (bednar@github) (30/10/2018 08:19)</p></div></div>
+          </div>
+          <div class="tabbedcontent">
+            <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button><button class="section-tab" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Sources">Sources</button></div>
+            <div class="tabs-section-body">
+              <h2 class="tabbedcontent">Constructors</h2>
+              <div class="table" data-togglable="Constructors"><a data-name="%5Bcom.influxdb.client.kotlin%2FInfluxDBClientKotlinFactory%2FInfluxDBClientKotlinFactory%2F%23%2FPointingToDeclaration%2F%5D%2FConstructors%2F1663166674" anchor-label="InfluxDBClientKotlinFactory" id="%5Bcom.influxdb.client.kotlin%2FInfluxDBClientKotlinFactory%2FInfluxDBClientKotlinFactory%2F%23%2FPointingToDeclaration%2F%5D%2FConstructors%2F1663166674" data-filterable-set="influxdb-client-kotlin/JVM"></a>
+                <div class="table-row" data-filterable-current="influxdb-client-kotlin/JVM" data-filterable-set="influxdb-client-kotlin/JVM">
+                  <div class="main-subrow keyValue TabbedContent">
+                    <div class=""><span class="inline-flex"><a href="-influx-d-b-client-kotlin-factory.html">InfluxDBClientKotlinFactory</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bcom.influxdb.client.kotlin%2FInfluxDBClientKotlinFactory%2FInfluxDBClientKotlinFactory%2F%23%2FPointingToDeclaration%2F%5D%2FConstructors%2F1663166674"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable="influxdb-client-kotlin/JVM"><div class="symbol monospace">fun <a href="-influx-d-b-client-kotlin-factory.html">InfluxDBClientKotlinFactory</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h2 class="">Types</h2>
+              <div class="table" data-togglable="Types"><a data-name="%5Bcom.influxdb.client.kotlin%2FInfluxDBClientKotlinFactory.Companion%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F1663166674" anchor-label="Companion" id="%5Bcom.influxdb.client.kotlin%2FInfluxDBClientKotlinFactory.Companion%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F1663166674" data-filterable-set="influxdb-client-kotlin/JVM"></a>
+                <div class="table-row" data-filterable-current="influxdb-client-kotlin/JVM" data-filterable-set="influxdb-client-kotlin/JVM">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-companion/index.html">Companion</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bcom.influxdb.client.kotlin%2FInfluxDBClientKotlinFactory.Companion%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F1663166674"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current="influxdb-client-kotlin/JVM" data-filterable-set="influxdb-client-kotlin/JVM"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable="influxdb-client-kotlin/JVM"><div class="symbol monospace">object <a href="-companion/index.html">Companion</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h2 class="">Sources</h2>
+              <div class="table" data-togglable="Sources"><a data-name="%5Bcom.influxdb.client.kotlin%2FInfluxDBClientKotlinFactory%2F%2F%2FPointingToDeclaration%2F%5D%2FSource%2F1663166674" anchor-label="https://github.com/influxdata/influxdb-client-java/tree/master/client-kotlin/src/main/kotlin/com/influxdb/client/kotlin/InfluxDBClientKotlinFactory.kt#L28" id="%5Bcom.influxdb.client.kotlin%2FInfluxDBClientKotlinFactory%2F%2F%2FPointingToDeclaration%2F%5D%2FSource%2F1663166674" data-filterable-set="influxdb-client-kotlin/JVM"></a>
+                <div class="table-row" data-filterable-current="influxdb-client-kotlin/JVM" data-filterable-set="influxdb-client-kotlin/JVM">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-kotlin/src/main/kotlin/com/influxdb/client/kotlin/InfluxDBClientKotlinFactory.kt#L28">JVM source</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bcom.influxdb.client.kotlin%2FInfluxDBClientKotlinFactory%2F%2F%2FPointingToDeclaration%2F%5D%2FSource%2F1663166674"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span class="go-to-top-icon"><a href="#content"></a></span><span>© 2021 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span></div>
+      </div>
+    </div>
+  </body>
+</html>
+

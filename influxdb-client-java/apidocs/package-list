@@ -4,3 +4,4 @@ com.influxdb.client.internal
 com.influxdb.client.service
 com.influxdb.client.write
 com.influxdb.client.write.events
+com.influxdb.client.write.internal
