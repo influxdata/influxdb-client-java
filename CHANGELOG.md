@@ -1,3 +1,5 @@
+## 2.3.0 [unreleased]
+
 ## 2.2.0 [2021-04-30]
 
 ### Breaking Changes
