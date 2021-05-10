@@ -841,7 +841,8 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         WriteOptions options = WriteOptions.builder()
                 .batchSize(1)
-                .maxRetryDelay(2_000)
+                .retryInterval(1_000)
+                .maxRetryDelay(3_000)
                 .maxRetries(3)
                 .build();
         writeApi = influxDBClient.getWriteApi(options);
@@ -850,9 +851,6 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         writeApi.listenEvents(WriteRetriableErrorEvent.class, retriableListener);
 
         writeApi.writePoint("b1", "org1", Point.measurement("h2o").addTag("location", "europe").addField("level", 2));
-
-        Thread.sleep(7_000);
-
         retriableListener.awaitCount(3);
     }
 
