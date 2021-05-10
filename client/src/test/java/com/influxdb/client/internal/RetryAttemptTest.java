@@ -144,11 +144,11 @@ class RetryAttemptTest {
     public void headerHasPriority() {
         RetryAttempt retry = new NonRandomMinRetryAttempt(new HttpException(errorResponse(429, 10)), 1, DEFAULT);
 
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(10000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(10_000L);
 
         retry = new NonRandomMinRetryAttempt(new HttpException(errorResponse(429)), 1, DEFAULT);
 
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(5000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(5_000L);
     }
 
     @Test
@@ -161,25 +161,25 @@ class RetryAttemptTest {
                 .build();
 
         RetryAttempt retry = new NonRandomMinRetryAttempt(new HttpException(errorResponse(429)), 1, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(5000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(5_000L);
 
         retry = new NonRandomMinRetryAttempt(new HttpException(errorResponse(429)), 2, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(25000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(25_000L);
 
         retry = new NonRandomMinRetryAttempt(new HttpException(errorResponse(429)), 3, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(125000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(125_000L);
 
         retry = new NonRandomMinRetryAttempt(new HttpException(errorResponse(429)), 4, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(625000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(625_000L);
 
         retry = new NonRandomMinRetryAttempt(new HttpException(errorResponse(429)), 5, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(3125000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(3_125_000L);
 
         retry = new NonRandomMinRetryAttempt(new HttpException(errorResponse(429)), 6, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(15625000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(15_625_000L);
 
         retry = new NonRandomMinRetryAttempt(new HttpException(errorResponse(429, 3)), 7, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(3000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(3_000L);
     }
 
     @Test
@@ -192,25 +192,25 @@ class RetryAttemptTest {
             .build();
 
         RetryAttempt retry = new NonRandomMaxRetryAttempt(new HttpException(errorResponse(429)), 1, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(10000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(10_000L);
 
         retry = new NonRandomMaxRetryAttempt(new HttpException(errorResponse(429)), 2, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(20000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(20_000L);
 
         retry = new NonRandomMaxRetryAttempt(new HttpException(errorResponse(429)), 3, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(40000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(40_000L);
 
         retry = new NonRandomMaxRetryAttempt(new HttpException(errorResponse(429)), 4, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(80000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(80_000L);
 
         retry = new NonRandomMaxRetryAttempt(new HttpException(errorResponse(429)), 5, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(160000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(160_000L);
 
         retry = new NonRandomMaxRetryAttempt(new HttpException(errorResponse(429)), 6, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(320000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(320_000L);
 
         retry = new NonRandomMaxRetryAttempt(new HttpException(errorResponse(429, 3)), 7, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(3000L);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(3_000L);
     }
 
 
