@@ -207,7 +207,7 @@ class RetryAttemptTest {
         Assertions.assertThat(retry.getRetryInterval()).isEqualTo(160000L);
 
         retry = new NonRandomMaxRetryAttempt(new HttpException(errorResponse(429)), 6, options);
-        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(160000*2);
+        Assertions.assertThat(retry.getRetryInterval()).isEqualTo(320000L);
 
         retry = new NonRandomMaxRetryAttempt(new HttpException(errorResponse(429, 3)), 7, options);
         Assertions.assertThat(retry.getRetryInterval()).isEqualTo(3000L);
