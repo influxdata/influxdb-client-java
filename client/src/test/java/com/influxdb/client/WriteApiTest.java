@@ -26,11 +26,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
+import com.influxdb.LogLevel;
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
 import com.influxdb.client.domain.WritePrecision;
@@ -666,6 +668,110 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(2);
     }
+
+    @Test
+    void retryMaxTimoutRetryAfter() throws InterruptedException {
+
+        MockResponse errorResponse = createErrorResponse("token is temporarily over quota", true, 429, 1000);
+        errorResponse.addHeader("Retry-After", 1);
+        mockServer.enqueue(errorResponse);
+        mockServer.enqueue(createResponse("{}"));
+
+        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).maxRetryTime(500).build());
+
+        WriteEventListener<WriteErrorEvent> errorListener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteErrorEvent.class, errorListener);
+
+        WriteEventListener<WriteRetriableErrorEvent> retriableListener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteRetriableErrorEvent.class, retriableListener);
+
+        WriteEventListener<WriteSuccessEvent> successListener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteSuccessEvent.class, successListener);
+
+        writeApi.writePoint("b1", "org1", Point.measurement("h2o").addTag("location", "europe").addField("level", 2));
+
+        errorListener.awaitCount(1);
+        WriteErrorEvent error = errorListener.popValue();
+        Assertions.assertThat(error.getThrowable()).isInstanceOf(InfluxException.class);
+        Assertions.assertThat(error.getThrowable().getMessage()).contains("Max retry time exceeded.");
+
+        Thread.sleep(2_000);
+        Assertions.assertThat(successListener.values).hasSize(0);
+        successListener.awaitCount(0);
+
+        String body1 = getRequestBody(mockServer);
+        Assertions.assertThat(body1).isEqualTo("h2o,location=europe level=2i");
+
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(1);
+    }
+
+    @Test
+    void retryMaxTimoutNoError() throws InterruptedException {
+        //create delayed success response
+        mockServer.enqueue(createResponse("{}", "text/csv", true, 3000));
+        //write api with retry timeout does not affect normal requests
+        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).maxRetryTime(2000).build());
+
+        WriteEventListener<WriteSuccessEvent> successListener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteSuccessEvent.class, successListener);
+        writeApi.writePoint("b1", "org1", Point.measurement("h2o").addTag("location", "europe").addField("level", 2));
+        successListener.awaitCount(1);
+
+        Assertions.assertThat(successListener.values).hasSize(1);
+        Assertions.assertThat(getRequestBody(mockServer)).isEqualTo("h2o,location=europe level=2i");
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(1);
+    }
+
+
+    @Test
+    void retryAttempts() throws InterruptedException {
+
+        mockServer.enqueue(createErrorResponse("attempt1", true, 429));
+        mockServer.enqueue(createErrorResponse("attempt2", true, 429));
+        mockServer.enqueue(createErrorResponse("attempt3", true, 429));
+        mockServer.enqueue(createResponse("{}"));
+
+        influxDBClient.setLogLevel(LogLevel.BASIC);
+        int retryInterval = 100;
+        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).retryInterval(retryInterval).maxRetryTime(3000).build());
+
+        WriteEventListener<WriteRetriableErrorEvent> retriableListener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteRetriableErrorEvent.class, retriableListener);
+
+        WriteEventListener<WriteSuccessEvent> successListener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteSuccessEvent.class, successListener);
+
+        writeApi.writePoint("b1", "org1", Point.measurement("h2o").addTag("location", "europe").addField("level", 2));
+
+        WriteRetriableErrorEvent error = retriableListener.awaitCount(1).popValue();
+        Assertions.assertThat(error.getThrowable()).isInstanceOf(InfluxException.class).hasMessage("attempt1");
+        Assertions.assertThat(error.getRetryInterval()).isGreaterThan(100);
+        Assertions.assertThat(error.getRetryInterval()).isLessThan(200);
+
+        error = retriableListener.awaitCount(1).popValue();
+        Assertions.assertThat(error.getThrowable()).isInstanceOf(InfluxException.class).hasMessage("attempt2");
+        Assertions.assertThat(error.getRetryInterval()).isGreaterThan(200);
+        Assertions.assertThat(error.getRetryInterval()).isLessThan(400);
+
+        error = retriableListener.awaitCount(1).popValue();
+        Assertions.assertThat(error.getThrowable()).isInstanceOf(InfluxException.class).hasMessage("attempt3");
+        Assertions.assertThat(error.getRetryInterval()).isGreaterThan(400);
+        Assertions.assertThat(error.getRetryInterval()).isLessThan(800);
+
+        successListener.awaitCount(1);
+
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(4);
+
+        Assertions.assertThat(getRequestBody(mockServer)).isEqualTo("h2o,location=europe level=2i");
+        Assertions.assertThat(getRequestBody(mockServer)).isEqualTo("h2o,location=europe level=2i");
+        Assertions.assertThat(getRequestBody(mockServer)).isEqualTo("h2o,location=europe level=2i");
+        Assertions.assertThat(getRequestBody(mockServer)).isEqualTo("h2o,location=europe level=2i");
+        Assertions.assertThat(mockServer.takeRequest(100,TimeUnit.MILLISECONDS)).isEqualTo(null);
+
+    }
+
+
+
 
     @Test
     void retryNotApplied() {

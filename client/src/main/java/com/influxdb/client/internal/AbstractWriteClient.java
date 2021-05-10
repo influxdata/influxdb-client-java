@@ -24,6 +24,7 @@ package com.influxdb.client.internal;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -472,6 +473,11 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                     // Is exception retriable?
                     //
                     .retryWhen(AbstractWriteClient.this.retryHandler(retryScheduler, writeOptions))
+                    //
+                    // maxRetryTime timeout
+                    //
+                    .timeout(writeOptions.getMaxRetryTime(), TimeUnit.MILLISECONDS, retryScheduler,
+                        Maybe.error(new TimeoutException("Max retry time exceeded.")))
                     //
                     // Map response to Notification => possibility to consume error as event
                     //

@@ -56,9 +56,10 @@ public final class WriteOptions {
     private static final int DEFAULT_FLUSH_INTERVAL = 1000;
     private static final int DEFAULT_JITTER_INTERVAL = 0;
     private static final int DEFAULT_RETRY_INTERVAL = 5000;
-    private static final int DEFAULT_MAX_RETRIES = 3;
-    private static final int DEFAULT_MAX_RETRY_DELAY = 180_000;
-    private static final int DEFAULT_EXPONENTIAL_BASE = 5;
+    private static final int DEFAULT_MAX_RETRIES = 5;
+    private static final int DEFAULT_MAX_RETRY_DELAY = 125_000;
+    private static final int DEFAULT_MAX_RETRY_TIME = 180_000;
+    private static final int DEFAULT_EXPONENTIAL_BASE = 2;
     private static final int DEFAULT_BUFFER_LIMIT = 10000;
 
     /**
@@ -72,6 +73,7 @@ public final class WriteOptions {
     private final int retryInterval;
     private final int maxRetries;
     private final int maxRetryDelay;
+    private final int maxRetryTime;
     private final int exponentialBase;
     private final int bufferLimit;
     private final Scheduler writeScheduler;
@@ -134,6 +136,16 @@ public final class WriteOptions {
     }
 
     /**
+     * The maximum total retry timeout in milliseconds.
+     *
+     * @return maximum delay
+     * @see WriteOptions.Builder#maxRetryTime(int)
+     */
+    public int getMaxRetryTime() {
+        return maxRetryTime;
+    }
+
+    /**
      * The base for the exponential retry delay.
      *
      * The next delay is computed as: retryInterval * exponentialBase^(attempts-1) + random(jitterInterval)
@@ -181,6 +193,7 @@ public final class WriteOptions {
         retryInterval = builder.retryInterval;
         maxRetries = builder.maxRetries;
         maxRetryDelay = builder.maxRetryDelay;
+        maxRetryTime = builder.maxRetryTime;
         exponentialBase = builder.exponentialBase;
         bufferLimit = builder.bufferLimit;
         writeScheduler = builder.writeScheduler;
@@ -209,6 +222,7 @@ public final class WriteOptions {
         private int retryInterval = DEFAULT_RETRY_INTERVAL;
         private int maxRetries = DEFAULT_MAX_RETRIES;
         private int maxRetryDelay = DEFAULT_MAX_RETRY_DELAY;
+        private int maxRetryTime = DEFAULT_MAX_RETRY_TIME;
         private int exponentialBase = DEFAULT_EXPONENTIAL_BASE;
         private int bufferLimit = DEFAULT_BUFFER_LIMIT;
         private Scheduler writeScheduler = Schedulers.newThread();
@@ -299,6 +313,19 @@ public final class WriteOptions {
         }
 
         /**
+         * The maximum total retry timeout in milliseconds.
+         *
+         * @param maxRetryTime  maximum timout
+         * @return {@code this}
+         */
+        @Nonnull
+        public Builder maxRetryTime(final int maxRetryTime) {
+            Arguments.checkPositiveNumber(maxRetryTime, "maxRetryTime");
+            this.maxRetryTime = maxRetryTime;
+            return this;
+        }
+
+        /**RetryAttempt
          * The base for the exponential retry delay.
          *
          * @param exponentialBase exponential base

@@ -67,15 +67,23 @@ public abstract class AbstractMockServerTest extends AbstractTest {
 
     @Nonnull
     protected MockResponse createResponse(final String data) {
-        return createResponse(data, "text/csv", true);
+        return createResponse(data, "text/csv", true, 0);
     }
 
     @Nonnull
     protected MockResponse createResponse(final String data, final String contentType, final boolean chunked) {
+        return createResponse(data, contentType, chunked, 0);
+    }
+
+    @Nonnull
+    protected MockResponse createResponse(final String data, final String contentType, final boolean chunked,
+                                          final long bodyDelay) {
 
         MockResponse response = new MockResponse()
                 .setHeader("Content-Type", contentType + "; charset=utf-8")
                 .setHeader("Date", "Tue, 26 Jun 2018 13:15:01 GMT");
+
+        response.setBodyDelay(bodyDelay, TimeUnit.MILLISECONDS);
 
         if (chunked) {
             response.setChunkedBody(data, data.length());
@@ -101,11 +109,22 @@ public abstract class AbstractMockServerTest extends AbstractTest {
                                                final boolean chunked,
                                                final int responseCode) {
 
+        return createErrorResponse(influxError, chunked, responseCode, 0);
+    }
+
+
+    @Nonnull
+    protected MockResponse createErrorResponse(@Nullable final String influxError,
+                                               final boolean chunked,
+                                               final int responseCode,
+                                               final int bodyDelay) {
+
         String body = String.format("{\"error\":\"%s\"}", influxError);
 
         MockResponse mockResponse = new MockResponse()
-                .setResponseCode(responseCode)
-                .addHeader("X-Influx-Error", influxError);
+            .setResponseCode(responseCode)
+            .setBodyDelay(bodyDelay, TimeUnit.MILLISECONDS)
+            .addHeader("X-Influx-Error", influxError);
 
         if (chunked) {
             return mockResponse.setChunkedBody(body, body.length());
