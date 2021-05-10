@@ -555,7 +555,7 @@ class FluxCsvParserTest {
     public void responseIsInUTF8() throws IOException, IllegalAccessException, NoSuchFieldException {
 
         String oldCharset = Charset.defaultCharset().toString();
-        setDefaultCharset("GBK");
+        System.setProperty("file.encoding", "GBK");
 
         try {
             String data = "#datatype,string,long,string,string,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string\n"
@@ -569,7 +569,7 @@ class FluxCsvParserTest {
             Assertions.assertThat(tables.get(0).getRecords()).hasSize(1);
             Assertions.assertThat(tables.get(0).getRecords().get(0).getValueByKey("tag")).isEqualTo("ěščřĚŠČŘ Přerov 🍺");
         } finally {
-            setDefaultCharset(oldCharset);
+            System.setProperty("file.encoding", oldCharset);
         }
     }
 

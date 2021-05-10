@@ -184,6 +184,9 @@ workflows:
           name: jdk-11
           maven-image: "circleci/openjdk:11"
       - tests-java:
+          name: jdk-16
+          maven-image: "circleci/openjdk:16-buster"
+      - tests-java:
           name: jdk-8-nightly
           influxdb-image: "quay.io/influxdb/influxdb:nightly"
       - deploy-snapshot:
