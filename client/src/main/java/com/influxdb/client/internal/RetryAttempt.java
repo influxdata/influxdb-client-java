@@ -42,7 +42,7 @@ import retrofit2.HttpException;
  *
  * @author Jakub Bednar (29/09/2020 14:19)
  */
-final class RetryAttempt {
+class RetryAttempt {
     private static final Integer ABLE_TO_RETRY_ERROR = 429;
     private static final Logger LOG = Logger.getLogger(AbstractWriteClient.class.getName());
 
@@ -125,21 +125,38 @@ final class RetryAttempt {
         if (retryAfter != null) {
 
             retryInterval = TimeUnit.MILLISECONDS.convert(Integer.parseInt(retryAfter), TimeUnit.SECONDS);
+            return retryInterval + jitterDelay(writeOptions.getJitterInterval());
             // from default conf
         } else {
 
-            retryInterval = writeOptions.getRetryInterval()
-                    * (long) (Math.pow(writeOptions.getExponentialBase(), count - 1));
+            long rangeStart = writeOptions.getRetryInterval();
+            long rangeStop = (long) writeOptions.getRetryInterval() * this.writeOptions.getExponentialBase();
 
-            retryInterval = Math.min(retryInterval, writeOptions.getMaxRetryDelay());
+            int i = 1;
+            while (i < count) {
+                i++;
+                rangeStart = rangeStop;
+                rangeStop = rangeStop * writeOptions.getExponentialBase();
+                if (rangeStop > writeOptions.getMaxRetryDelay()) {
+                    break;
+                }
+            }
+
+            if (rangeStop > writeOptions.getMaxRetryDelay()) {
+                rangeStop = writeOptions.getMaxRetryDelay();
+            }
+
+            retryInterval = (long) (rangeStart + (rangeStop - rangeStart) * random());
 
             String msg = "The InfluxDB does not specify \"Retry-After\". Use the default retryInterval: {0}";
             LOG.log(Level.FINEST, msg, retryInterval);
+            LOG.log(Level.FINEST, "retry interval in range: [" + rangeStart + "," + rangeStop + "]");
+            return retryInterval;
         }
+    }
 
-        retryInterval = retryInterval + jitterDelay(writeOptions.getJitterInterval());
-
-        return retryInterval;
+    protected double random() {
+        return Math.random();
     }
 
     /**

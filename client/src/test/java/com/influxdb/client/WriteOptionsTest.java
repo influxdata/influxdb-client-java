@@ -44,9 +44,10 @@ class WriteOptionsTest {
         Assertions.assertThat(writeOptions.getFlushInterval()).isEqualTo(1000);
         Assertions.assertThat(writeOptions.getJitterInterval()).isEqualTo(0);
         Assertions.assertThat(writeOptions.getRetryInterval()).isEqualTo(5_000);
-        Assertions.assertThat(writeOptions.getMaxRetries()).isEqualTo(3);
-        Assertions.assertThat(writeOptions.getMaxRetryDelay()).isEqualTo(180_000);
-        Assertions.assertThat(writeOptions.getExponentialBase()).isEqualTo(5);
+        Assertions.assertThat(writeOptions.getMaxRetries()).isEqualTo(5);
+        Assertions.assertThat(writeOptions.getMaxRetryTime()).isEqualTo(180_000);
+        Assertions.assertThat(writeOptions.getMaxRetryDelay()).isEqualTo(125_000);
+        Assertions.assertThat(writeOptions.getExponentialBase()).isEqualTo(2);
         Assertions.assertThat(writeOptions.getWriteScheduler()).isEqualTo(Schedulers.newThread());
         Assertions.assertThat(writeOptions.getBackpressureStrategy()).isEqualTo(BackpressureOverflowStrategy.DROP_OLDEST);
     }

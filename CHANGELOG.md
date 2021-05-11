@@ -1,5 +1,8 @@
 ## 2.3.0 [unreleased]
 
+### Features
+1. [#223](https://github.com/influxdata/influxdb-client-java/pull/223):  Exponential random backoff retry strategy
+
 ## 2.2.0 [2021-04-30]
 
 ### Breaking Changes
