@@ -31,7 +31,6 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
-import com.influxdb.LogLevel;
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
 import com.influxdb.client.domain.WritePrecision;
