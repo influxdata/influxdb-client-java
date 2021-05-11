@@ -731,7 +731,6 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         mockServer.enqueue(createErrorResponse("attempt3", true, 429));
         mockServer.enqueue(createResponse("{}"));
 
-        influxDBClient.setLogLevel(LogLevel.BASIC);
         int retryInterval = 100;
         writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).retryInterval(retryInterval).maxRetryTime(3000).build());
 
