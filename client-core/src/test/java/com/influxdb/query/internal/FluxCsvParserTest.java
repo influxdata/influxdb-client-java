@@ -556,7 +556,6 @@ class FluxCsvParserTest {
 
         String oldCharset = Charset.defaultCharset().toString();
         setDefaultCharset("GBK");
-
         try {
             String data = "#datatype,string,long,string,string,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string\n"
                     + "#group,false,false,true,true,true,true,false,false,true\n"
@@ -628,10 +627,13 @@ class FluxCsvParserTest {
     }
 
     private void setDefaultCharset(final String name) throws NoSuchFieldException, IllegalAccessException {
-
-        Field charset = Charset.class.getDeclaredField("defaultCharset");
-        charset.setAccessible(true);
-        charset.set(null, Charset.forName(name));
+        String javaVersion = System.getProperty("java.version");
+        // changing default charset using reflection does not work on newer jdk 16
+        if (javaVersion.startsWith("1.8") || javaVersion.startsWith("11")) {
+            Field charset = Charset.class.getDeclaredField("defaultCharset");
+            charset.setAccessible(true);
+            charset.set(null, Charset.forName(name));
+        }
     }
 
     private static class DefaultCancellable implements Cancellable {
