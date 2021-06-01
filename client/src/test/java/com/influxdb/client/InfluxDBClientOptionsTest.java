@@ -40,7 +40,7 @@ class InfluxDBClientOptionsTest {
                 .authenticateToken("xyz".toCharArray())
                 .build();
 
-        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:9999");
+        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:9999/");
         Assertions.assertThat(options.getAuthScheme()).isEqualTo(InfluxDBClientOptions.AuthScheme.TOKEN);
         Assertions.assertThat(options.getOkHttpClient()).isNotNull();
     }
