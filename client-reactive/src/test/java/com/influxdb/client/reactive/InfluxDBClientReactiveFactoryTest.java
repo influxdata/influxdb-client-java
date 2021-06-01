@@ -70,7 +70,7 @@ class InfluxDBClientReactiveFactoryTest extends AbstractTest {
 
         InfluxDBClientOptions options = getDeclaredField(influxDBClient, "options", AbstractInfluxDBClient.class);
 
-        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:9999");
+        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:9999/");
         Assertions.assertThat(options.getOrg()).isEqualTo("my-org");
         Assertions.assertThat(options.getBucket()).isEqualTo("my-bucket");
         Assertions.assertThat(options.getToken()).isEqualTo("my-token".toCharArray());
