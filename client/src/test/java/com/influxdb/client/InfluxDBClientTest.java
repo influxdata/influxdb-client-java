@@ -214,4 +214,52 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
         Assertions.assertThat(request.getRequestUrl().toString()).isEqualTo(path + "api/v2/write?org=my-org&bucket=my-bucket&precision=ns");
         influxDBClient.close();
     }
+
+    @Test
+    void customPath() throws InterruptedException {
+
+        // http://localhost:8086
+        String serverURL = String.format("http://%s:%d", mockServer.url("").host(), mockServer.url("").port());
+
+        String[][] connectionStrings = {
+                // http://localhost:8086/influxDB/ -> http://localhost:8086/influxDB/api/v2/query
+                {serverURL + "/influxDB/", serverURL + "/influxDB/api/v2/query"},
+                // http://localhost:8086/influxDB -> http://localhost:8086/influxDB/api/v2/query
+                {serverURL + "/influxDB", serverURL + "/influxDB/api/v2/query"},
+                // http://localhost:8086/ -> http://localhost:8086/api/v2/query
+                {serverURL + "/", serverURL + "/api/v2/query"},
+                // http://localhost:8086 -> http://localhost:8086/api/v2/query
+                {serverURL, serverURL + "/api/v2/query"},
+                // http://localhost:8086?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS" -> http://localhost:8086/api/v2/query
+                {serverURL + "?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS", serverURL + "/api/v2/query"},
+                // http://localhost:8086/influx?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS" -> http://localhost:8086/influx/api/v2/query
+                {serverURL + "/influx?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS", serverURL + "/influx/api/v2/query"}
+        };
+
+        for (String[] connectionString : connectionStrings) {
+
+            mockServer.enqueue(new MockResponse());
+            mockServer.enqueue(new MockResponse());
+
+            // client via url
+            InfluxDBClient clientURL = InfluxDBClientFactory.create(connectionString[0], "my-token".toCharArray());
+            clientURL.getQueryApi().query("from(bucket:\"test\") |> range(start:-5m)", "my-org");
+            queryAndTest(connectionString[1]);
+
+            // client via connectionString
+            InfluxDBClient clientConnectionString = InfluxDBClientFactory.create(connectionString[0]);
+            clientConnectionString.getQueryApi().query("from(bucket:\"test\") |> range(start:-5m)", "my-org");
+            queryAndTest(connectionString[1]);
+            
+            clientURL.close();
+            clientConnectionString.close();
+        }
+    }
+
+    private void queryAndTest(final String expected) throws InterruptedException {
+        RecordedRequest request = takeRequest();
+        Assertions.assertThat(request).isNotNull();
+        Assertions.assertThat(request.getRequestUrl()).isNotNull();
+        Assertions.assertThat(request.getRequestUrl().toString()).isEqualTo(expected + "?org=my-org");
+    }
 }
