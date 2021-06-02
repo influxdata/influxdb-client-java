@@ -28,6 +28,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.CaseFormat;
 import com.influxdb.annotations.Column;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.query.FluxRecord;
@@ -71,6 +72,11 @@ public class FluxResultMapper {
                         col = columnName;
                     } else if (recordValues.containsKey("_" + columnName)) {
                         col = "_" + columnName;
+                    } else {
+                        String columnNameInSnakeCase = camelCaseToSnakeCase(columnName);
+                        if (recordValues.containsKey(columnNameInSnakeCase)) {
+                            col = columnNameInSnakeCase;
+                        }
                     }
 
                     if (col != null) {
@@ -86,6 +92,10 @@ public class FluxResultMapper {
         } catch (Exception e) {
             throw new InfluxException(e);
         }
+    }
+
+    private String camelCaseToSnakeCase(String str) {
+        return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, str);
     }
 
     private void setFieldValue(@Nonnull final Object object,
