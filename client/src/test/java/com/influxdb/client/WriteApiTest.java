@@ -742,18 +742,18 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         WriteRetriableErrorEvent error = retriableListener.awaitCount(1).popValue();
         Assertions.assertThat(error.getThrowable()).isInstanceOf(InfluxException.class).hasMessage("attempt1");
-        Assertions.assertThat(error.getRetryInterval()).isGreaterThan(100);
-        Assertions.assertThat(error.getRetryInterval()).isLessThan(200);
+        Assertions.assertThat(error.getRetryInterval()).isGreaterThanOrEqualTo(100);
+        Assertions.assertThat(error.getRetryInterval()).isLessThanOrEqualTo(200);
 
         error = retriableListener.awaitCount(1).popValue();
         Assertions.assertThat(error.getThrowable()).isInstanceOf(InfluxException.class).hasMessage("attempt2");
-        Assertions.assertThat(error.getRetryInterval()).isGreaterThan(200);
-        Assertions.assertThat(error.getRetryInterval()).isLessThan(400);
+        Assertions.assertThat(error.getRetryInterval()).isGreaterThanOrEqualTo(200);
+        Assertions.assertThat(error.getRetryInterval()).isLessThanOrEqualTo(400);
 
         error = retriableListener.awaitCount(1).popValue();
         Assertions.assertThat(error.getThrowable()).isInstanceOf(InfluxException.class).hasMessage("attempt3");
-        Assertions.assertThat(error.getRetryInterval()).isGreaterThan(400);
-        Assertions.assertThat(error.getRetryInterval()).isLessThan(800);
+        Assertions.assertThat(error.getRetryInterval()).isGreaterThanOrEqualTo(400);
+        Assertions.assertThat(error.getRetryInterval()).isLessThanOrEqualTo(800);
 
         successListener.awaitCount(1);
 
