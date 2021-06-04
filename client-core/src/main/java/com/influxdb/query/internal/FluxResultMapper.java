@@ -25,15 +25,19 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.base.CaseFormat;
 import com.influxdb.annotations.Column;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.query.FluxRecord;
 
 public class FluxResultMapper {
+
+    // we don't cover some corner cases(e.g. someURI someHRName) under which explicit mapping is required
+    private static final Pattern CAMEL_CASE_TO_SNAKE_CASE_REPLACE_PATTERN = Pattern.compile("[A-Z]");
 
     /**
      * Maps FluxRecord into custom POJO class.
@@ -95,7 +99,9 @@ public class FluxResultMapper {
     }
 
     private String camelCaseToSnakeCase(String str) {
-        return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, str);
+        return CAMEL_CASE_TO_SNAKE_CASE_REPLACE_PATTERN.matcher(str)
+            .replaceAll("_$0")
+            .toLowerCase();
     }
 
     private void setFieldValue(@Nonnull final Object object,
