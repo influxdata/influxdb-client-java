@@ -26,7 +26,6 @@ import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -98,7 +97,7 @@ public class FluxResultMapper {
         }
     }
 
-    private String camelCaseToSnakeCase(String str) {
+    private String camelCaseToSnakeCase(final String str) {
         return CAMEL_CASE_TO_SNAKE_CASE_REPLACE_PATTERN.matcher(str)
             .replaceAll("_$0")
             .toLowerCase();
