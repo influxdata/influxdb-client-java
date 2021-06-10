@@ -95,6 +95,15 @@ class FluxResultMapperTest {
         Assertions.assertThat(bean.value).isEqualTo(20);
     }
 
+    @Test
+    public void camelCaseToSnakeCase() {
+        FluxRecord record = new FluxRecord(0);
+        record.getValues().put("some_value", 20);
+
+        CamelCaseToSnakeCaseBean bean = mapper.toPOJO(record, CamelCaseToSnakeCaseBean.class);
+        Assertions.assertThat(bean.someValue).isEqualTo(20);
+    }
+
     public static class BigDecimalBean
     {
         @Column(name = "value1")
@@ -127,6 +136,10 @@ class FluxResultMapperTest {
 
         @Column(name = "num")
         private Integer value;
+    }
+
+    public static class CamelCaseToSnakeCaseBean {
+        int someValue;
     }
 
     public enum TagEnum {

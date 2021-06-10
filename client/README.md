@@ -29,6 +29,8 @@ The reference Java client that allows query, write and management (bucket, organ
 
 For querying data we use [QueryApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/QueryApi.html) that allow perform synchronous, asynchronous and also use raw query response.
 
+For POJO mapping, snake_case column names are mapped to camelCase field names if exact matches not found.
+
 ### Synchronous query
 
 The synchronous query is not intended for large query results because the Flux response can be potentially unbound.

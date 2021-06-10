@@ -10,6 +10,7 @@ Now you are able to use `micrometer-registry-influx`, for more info [see our doc
 
 ### Features
 1. [#231](https://github.com/influxdata/influxdb-client-java/pull/231): Add support for Spring Boot 2.4 [spring]
+2. [#229](https://github.com/influxdata/influxdb-client-java/pull/229): Support translating column name from some_col to someCol [query]
 
 ## 2.3.0 [2021-06-04]
 
