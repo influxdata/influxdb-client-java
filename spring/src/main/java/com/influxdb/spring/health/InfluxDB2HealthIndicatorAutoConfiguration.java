@@ -26,12 +26,10 @@ import java.util.Map;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.spring.influx.InfluxDB2AutoConfiguration;
 
-import org.springframework.boot.actuate.autoconfigure.health.CompositeHealthIndicatorConfiguration;
+import org.springframework.boot.actuate.autoconfigure.health.CompositeHealthContributorConfiguration;
 import org.springframework.boot.actuate.autoconfigure.health.ConditionalOnEnabledHealthIndicator;
-import org.springframework.boot.actuate.autoconfigure.health.HealthIndicatorAutoConfiguration;
-import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.actuate.health.HealthContributor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -44,25 +42,18 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author Jakub Bednar
  */
-@Configuration
-@ConditionalOnClass({CompositeHealthIndicatorConfiguration.class, InfluxDBClient.class})
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnClass(InfluxDBClient.class)
 @ConditionalOnBean(InfluxDBClient.class)
-@ConditionalOnEnabledHealthIndicator("influxdb2")
-@AutoConfigureBefore(HealthIndicatorAutoConfiguration.class)
+@ConditionalOnEnabledHealthIndicator("influxdb")
 @AutoConfigureAfter(InfluxDB2AutoConfiguration.class)
 public class InfluxDB2HealthIndicatorAutoConfiguration
-        extends CompositeHealthIndicatorConfiguration<InfluxDB2HealthIndicator, InfluxDBClient> {
-
-    private final Map<String, InfluxDBClient> influxDBClients;
-
-    public InfluxDB2HealthIndicatorAutoConfiguration(final Map<String, InfluxDBClient> influxDBClients) {
-        this.influxDBClients = influxDBClients;
-    }
+        extends CompositeHealthContributorConfiguration<InfluxDB2HealthIndicator, InfluxDBClient> {
 
     @Bean
-    @ConditionalOnMissingBean(name = "influxDB2HealthIndicator")
-    public HealthIndicator influxDbHealthIndicator() {
-        return createHealthIndicator(this.influxDBClients);
+    @ConditionalOnMissingBean(name = { "influxDB2HealthIndicator", "influxDB2HealthContributor" })
+    public HealthContributor influxDbHealthContributor(final Map<String, InfluxDBClient> influxDBClients) {
+        return createContributor(influxDBClients);
     }
 
 }

@@ -26,8 +26,7 @@ import com.influxdb.client.InfluxDBClient;
 import org.junit.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.springframework.boot.actuate.autoconfigure.health.HealthIndicatorAutoConfiguration;
-import org.springframework.boot.actuate.health.ApplicationHealthIndicator;
+import org.springframework.boot.actuate.autoconfigure.health.HealthContributorAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
@@ -47,21 +46,19 @@ class InfluxDB2HealthIndicatorAutoConfigurationTest {
     private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withUserConfiguration(InfluxDBClientConfiguration.class).withConfiguration(
                     AutoConfigurations.of(InfluxDB2HealthIndicatorAutoConfiguration.class,
-                            HealthIndicatorAutoConfiguration.class));
+                            HealthContributorAutoConfiguration.class));
 
     @Test
     public void runShouldCreateIndicator() {
         this.contextRunner.run((context) -> assertThat(context)
-                .hasSingleBean(InfluxDB2HealthIndicator.class)
-                .doesNotHaveBean(ApplicationHealthIndicator.class));
+                .hasSingleBean(InfluxDB2HealthIndicator.class));
     }
 
     @Test
     public void runWhenDisabledShouldNotCreateIndicator() {
         this.contextRunner.withPropertyValues("management.health.influxdb2.enabled:false")
                 .run((context) -> assertThat(context)
-                        .doesNotHaveBean(InfluxDB2HealthIndicator.class)
-                        .hasSingleBean(ApplicationHealthIndicator.class));
+                        .doesNotHaveBean(InfluxDB2HealthIndicator.class));
     }
 
     @Configuration

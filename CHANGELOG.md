@@ -1,7 +1,20 @@
-## 2.3.0 [unreleased]
+## 2.4.0 [unreleased]
+
+### Breaking Changes
+
+#### `influxdb-spring`:
+
+The `micrometer` v1.7.0 brings [support](https://github.com/micrometer-metrics/micrometer/issues/1974) for InfluxDB 2. 
+That is a reason why the [influxdb-spring](./spring) no longer needs provide a custom Micrometer metrics exporter.
+Now you are able to use `micrometer-registry-influx`, for more info [see our docs](./spring/README.md#actuator-for-influxdb2-micrometer-registry). 
 
 ### Features
-1. [#223](https://github.com/influxdata/influxdb-client-java/pull/223):  Exponential random backoff retry strategy
+1. [#231](https://github.com/influxdata/influxdb-client-java/pull/231): Add support for Spring Boot 2.4 [spring]
+
+## 2.3.0 [2021-06-04]
+
+### Features
+1. [#223](https://github.com/influxdata/influxdb-client-java/pull/223): Exponential random backoff retry strategy
 
 ## 2.2.0 [2021-04-30]
 

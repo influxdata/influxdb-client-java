@@ -27,14 +27,12 @@ import com.influxdb.client.InfluxDBClient;
 
 import okhttp3.OkHttpClient;
 import org.assertj.core.api.Assertions;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.assertj.AssertableApplicationContext;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.boot.test.rule.OutputCapture;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -47,9 +45,6 @@ import retrofit2.Retrofit;
  */
 @RunWith(JUnitPlatform.class)
 class InfluxDB2AutoConfigurationTest {
-
-    @Rule
-    public OutputCapture output = new OutputCapture();
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(InfluxDB2AutoConfiguration.class));

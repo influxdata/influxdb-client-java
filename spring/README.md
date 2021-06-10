@@ -32,19 +32,17 @@ spring.influx2:
 
 ## Actuator for InfluxDB2 micrometer registry
 
-The enable export metrics to **InfluxDB 2.0** you need to include `micrometer-registry-influx2` on your classpath.
+To enable export metrics to **InfluxDB 2.0** you need to include `micrometer-registry-influx` on your classpath.
 
 The default configuration can be override via properties:
 
 ```yaml
-management.metrics.export.influx2:
+management.metrics.export.influx:
     bucket: my-bucket # Specifies the destination bucket for writes
     org: my-org # Specifies the destination organization for writes.
     token: my-token # Authenticate requests with this token.
     uri: http://localhost:8086/api/v2 # The URI for the Influx backend. (Default: http://localhost:8086/api/v2)
     compressed: true # Whether to enable GZIP compression of metrics batches published to Influx. (Default: true)
-    autoCreateBucket: true #  Whether to create the Influx bucket if it does not exist before attempting to publish metrics to it. (Default: true)
-    everySeconds: 3600 # The duration in seconds for how long data will be kept in the created bucket.
     enabled: true # Whether exporting of metrics to this backend is enabled. (Default: true)
     step: 1m # Step size (i.e. reporting frequency) to use. (Default: 1m)
     connect-timeout: 1s # Connection timeout for requests to this backend. (Default: 1s)
@@ -57,15 +55,15 @@ Maven dependency:
 ```xml
 <dependency>
     <groupId>io.micrometer</groupId>
-    <artifactId>micrometer-registry-influx2</artifactId>
-    <version>1.2.0-bonitoo-SNAPSHOT</version>
+    <artifactId>micrometer-registry-influx</artifactId>
+    <version>1.7.0</version>
 </dependency>
 ```
 
 or when using with Gradle:
 ```groovy
 dependencies {
-    compile "io.micrometer:micrometer-registry-influx2:1.2.0-bonitoo-SNAPSHOT"
+    compile "io.micrometer:micrometer-registry-influx:1.7.0"
 }
 ```
  
@@ -86,37 +84,13 @@ The latest version for Maven dependency:
 <dependency>
   <groupId>com.influxdb</groupId>
   <artifactId>influxdb-spring</artifactId>
-  <version>2.2.0</version>
+  <version>2.3.0</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-spring:2.2.0"
-}
-```
-
-### Snapshot Repository
-The snapshots are deployed into [OSS Snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/).
-
-#### Maven
-```xml
-<repository>
-    <id>ossrh</id>
-    <name>OSS Snapshot repository</name>
-    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-    <releases>
-        <enabled>false</enabled>
-    </releases>
-    <snapshots>
-        <enabled>true</enabled>
-    </snapshots>
-</repository>
-```
-#### Gradle
-```
-repositories {
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    compile "com.influxdb:influxdb-spring:2.3.0"
 }
 ```
