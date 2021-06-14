@@ -254,6 +254,21 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
             clientURL.close();
             clientConnectionString.close();
         }
+
+        // verify Cloud URL
+        {
+            InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                    .connectionString("https://us-west-2-1.aws.cloud2.influxdata.com/")
+                    .build();
+            Assertions.assertThat(options.getUrl()).isEqualTo("https://us-west-2-1.aws.cloud2.influxdata.com:443/");
+
+            options = InfluxDBClientOptions.builder()
+                    .url("https://us-west-2-1.aws.cloud2.influxdata.com/")
+                    .authenticateToken("my-token".toCharArray())
+                    .org("my-org")
+                    .build();
+            Assertions.assertThat(options.getUrl()).isEqualTo("https://us-west-2-1.aws.cloud2.influxdata.com:443/");
+        }
     }
 
     private void queryAndTest(final String expected) throws InterruptedException {
