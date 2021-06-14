@@ -14,6 +14,10 @@ Now you are able to use `micrometer-registry-influx`, for more info [see our doc
 ### Bug Fixes
 1. [#227](https://github.com/influxdata/influxdb-client-java/pull/227): Connection URL with custom base path
 
+### Dependencies
+1. [#227](https://github.com/influxdata/influxdb-client-csharp/pull/227): Update dependencies:
+   - Kotlin to 1.5.10
+   
 ## 2.3.0 [2021-06-04]
 
 ### Features
