@@ -54,7 +54,7 @@ class InfluxDBClientKotlinFactoryTest : AbstractTest() {
 
         val options = getDeclaredField<InfluxDBClientOptions>(influxDBClient, "options", AbstractInfluxDBClient::class.java)
 
-        Assertions.assertThat(options.url).isEqualTo("http://localhost:9999")
+        Assertions.assertThat(options.url).isEqualTo("http://localhost:9999/")
         Assertions.assertThat(options.org).isEqualTo("my-org")
         Assertions.assertThat(options.bucket).isEqualTo("my-bucket")
         Assertions.assertThat(options.token).isEqualTo("my-token".toCharArray())

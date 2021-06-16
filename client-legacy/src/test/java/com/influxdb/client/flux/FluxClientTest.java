@@ -23,6 +23,7 @@ package com.influxdb.client.flux;
 
 import com.influxdb.LogLevel;
 
+import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -42,5 +43,42 @@ class FluxClientTest extends AbstractFluxClientTest {
         Assertions.assertThat(fluxClient).isEqualTo(this.fluxClient);
 
         Assertions.assertThat(this.fluxClient.getLogLevel()).isEqualTo(LogLevel.HEADERS);
+    }
+
+    @Test
+    void customPath() throws InterruptedException {
+
+        // http://localhost:8086
+        String serverURL = String.format("http://%s:%d", mockServer.url("").host(), mockServer.url("").port());
+
+        String[][] connectionStrings = {
+                // http://localhost:8086/influxDB/ -> http://localhost:8086/influxDB/api/v2/query
+                {serverURL + "/influxDB/", serverURL + "/influxDB/api/v2/query"},
+                // http://localhost:8086/influxDB -> http://localhost:8086/influxDB/api/v2/query
+                {serverURL + "/influxDB", serverURL + "/influxDB/api/v2/query"},
+                // http://localhost:8086/ -> http://localhost:8086/api/v2/query
+                {serverURL + "/", serverURL + "/api/v2/query"},
+                // http://localhost:8086 -> http://localhost:8086/api/v2/query
+                {serverURL, serverURL + "/api/v2/query"},
+                // http://localhost:8086?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS" -> http://localhost:8086/api/v2/query
+                {serverURL + "?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS", serverURL + "/api/v2/query"},
+                // http://localhost:8086/influx?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS" -> http://localhost:8086/influx/api/v2/query
+                {serverURL + "/influx?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS", serverURL + "/influx/api/v2/query"}
+        };
+
+        for (String[] connectionString : connectionStrings) {
+
+            mockServer.enqueue(createResponse());
+
+            FluxClient fluxClient = FluxClientFactory.create(connectionString[0]);
+            fluxClient.query("from(bucket:\"test\") |> range(start:-5m)");
+
+            RecordedRequest request = takeRequest();
+            Assertions.assertThat(request).isNotNull();
+            Assertions.assertThat(request.getRequestUrl()).isNotNull();
+            Assertions.assertThat(request.getRequestUrl().toString()).isEqualTo(connectionString[1]);
+
+            fluxClient.close();
+        }
     }
 }

@@ -12,6 +12,13 @@ Now you are able to use `micrometer-registry-influx`, for more info [see our doc
 1. [#231](https://github.com/influxdata/influxdb-client-java/pull/231): Add support for Spring Boot 2.4 [spring]
 2. [#229](https://github.com/influxdata/influxdb-client-java/pull/229): Support translating column name from some_col to someCol [query]
 
+### Bug Fixes
+1. [#227](https://github.com/influxdata/influxdb-client-java/pull/227): Connection URL with custom base path
+
+### Dependencies
+1. [#227](https://github.com/influxdata/influxdb-client-csharp/pull/227): Update dependencies:
+   - Kotlin to 1.5.10
+   
 ## 2.3.0 [2021-06-04]
 
 ### Features

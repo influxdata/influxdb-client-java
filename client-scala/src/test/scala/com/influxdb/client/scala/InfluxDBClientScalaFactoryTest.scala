@@ -48,7 +48,7 @@ class InfluxDBClientScalaFactoryTest extends AnyFunSuite with Matchers {
     val client = InfluxDBClientScalaFactory.create()
     val options = utils.getDeclaredField(client, "options", classOf[AbstractInfluxDBClient]).asInstanceOf[InfluxDBClientOptions]
 
-    options.getUrl should be("http://localhost:9999")
+    options.getUrl should be("http://localhost:9999/")
     options.getOrg should be("my-org")
     options.getBucket should be("my-bucket")
     options.getToken should be("my-token".toCharArray)

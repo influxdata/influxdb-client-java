@@ -69,11 +69,12 @@ public final class FluxConnectionOptions {
 
     public static Builder builder(final String connectionString) {
         Builder builder = new Builder();
-        HttpUrl parse = HttpUrl.parse(connectionString);
 
+        HttpUrl parse = HttpUrl.parse(connectionString);
         if (parse == null) {
             throw new InfluxException("Unable to parse connection string " + connectionString);
         }
+
         HttpUrl url = parse.newBuilder().build();
 
         String urlWithoutParams = url.scheme() + "://" + url.host() + ":" + url.port() + url.encodedPath();

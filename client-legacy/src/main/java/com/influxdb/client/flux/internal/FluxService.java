@@ -38,11 +38,11 @@ import retrofit2.http.Streaming;
 public interface FluxService {
 
     @Streaming
-    @POST("/api/v2/query")
+    @POST("api/v2/query")
     @Nonnull
     @Headers("Content-Type: application/json")
     Call<ResponseBody> query(@Nonnull @Body final RequestBody query);
 
-    @GET("/ping")
+    @GET("ping")
     Call<ResponseBody> ping();
 }

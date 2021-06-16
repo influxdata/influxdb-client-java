@@ -229,7 +229,7 @@ public final class InfluxDBClientOptions {
         public InfluxDBClientOptions.Builder url(@Nonnull final String url) {
             Arguments.checkNonEmpty(url, "url");
 
-            this.url = url;
+            this.url = new ParsedUrl(url).urlWithoutParams;
 
             return this;
         }
@@ -374,12 +374,8 @@ public final class InfluxDBClientOptions {
 
             Arguments.checkNonEmpty(connectionString, "url");
 
-            HttpUrl parse = HttpUrl.parse(connectionString);
-            if (parse == null) {
-                throw new InfluxException("Unable to parse connection string " + connectionString);
-            }
-
-            String url = parse.scheme() + "://" + parse.host() + ":" + parse.port() + parse.encodedPath();
+            ParsedUrl parsedUrl = new ParsedUrl(connectionString);
+            HttpUrl parse = parsedUrl.httpUrl;
 
             String org = parse.queryParameter("org");
             String bucket = parse.queryParameter("bucket");
@@ -389,6 +385,7 @@ public final class InfluxDBClientOptions {
             String writeTimeout = parse.queryParameter("writeTimeout");
             String connectTimeout = parse.queryParameter("connectTimeout");
 
+            String url = parsedUrl.urlWithoutParams;
             return configure(url, org, bucket, token, logLevel, readTimeout, writeTimeout, connectTimeout);
         }
 
@@ -522,6 +519,31 @@ public final class InfluxDBClientOptions {
             }
 
             return Duration.of(Long.valueOf(amount), chronoUnit);
+        }
+
+        private static final class ParsedUrl {
+            @Nonnull
+            private final String urlWithoutParams;
+            @Nonnull
+            private final HttpUrl httpUrl;
+
+            private ParsedUrl(@Nonnull final String connectionString) {
+
+                HttpUrl parse = HttpUrl.parse(connectionString);
+                if (parse == null) {
+                    throw new InfluxException("Unable to parse connection string " + connectionString);
+                }
+                this.httpUrl = parse;
+
+                HttpUrl url = this.httpUrl.newBuilder().build();
+
+                String urlWithoutParams = url.scheme() + "://" + url.host() + ":" + url.port() + url.encodedPath();
+                if (!urlWithoutParams.endsWith("/")) {
+                    urlWithoutParams += "/";
+                }
+
+                this.urlWithoutParams = urlWithoutParams;
+            }
         }
     }
 }

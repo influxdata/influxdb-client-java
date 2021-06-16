@@ -137,7 +137,7 @@ class InfluxDBClientFactoryTest extends AbstractTest {
 
         InfluxDBClientOptions options = getDeclaredField(influxDBClient, "options", AbstractInfluxDBClient.class);
 
-        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:9999");
+        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:9999/");
         Assertions.assertThat(options.getOrg()).isEqualTo("my-org");
         Assertions.assertThat(options.getBucket()).isEqualTo("my-bucket");
         Assertions.assertThat(options.getToken()).isEqualTo("my-token".toCharArray());
@@ -166,7 +166,7 @@ class InfluxDBClientFactoryTest extends AbstractTest {
 
         InfluxDBClientOptions options = getDeclaredField(client, "options", AbstractInfluxDBClient.class);
 
-        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:8086");
+        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:8086/");
         Assertions.assertThat(options.getOrg()).isEqualTo("-");
         Assertions.assertThat(options.getBucket()).isEqualTo("database/week");
         Assertions.assertThat(options.getToken()).isEqualTo("my-username:my-password".toCharArray());
@@ -174,7 +174,7 @@ class InfluxDBClientFactoryTest extends AbstractTest {
         client = InfluxDBClientFactory.createV1("http://localhost:8086", null, null, "database", null);
 
         options = getDeclaredField(client, "options", AbstractInfluxDBClient.class);
-        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:8086");
+        Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:8086/");
         Assertions.assertThat(options.getOrg()).isEqualTo("-");
         Assertions.assertThat(options.getBucket()).isEqualTo("database/");
         Assertions.assertThat(options.getToken()).isEqualTo(":".toCharArray());
