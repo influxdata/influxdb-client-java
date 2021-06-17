@@ -41,7 +41,6 @@ import com.influxdb.client.domain.PermissionResource;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceOwner;
 import com.influxdb.client.domain.Run;
-import com.influxdb.client.domain.RunLog;
 import com.influxdb.client.domain.RunManually;
 import com.influxdb.client.domain.Task;
 import com.influxdb.client.domain.TaskStatusType;
@@ -474,7 +473,7 @@ class ITTasksApi extends AbstractITClientTest {
                 .findFirst()
                 .orElseThrow(() -> new AssertionError(String.format("The runs: <%s> doesn't have a success run", runs)));
 
-        List<RunLog> logs = firstRun.getLog();
+        List<LogEvent> logs = firstRun.getLog();
         Assertions.assertThat(logs).isNotEmpty();
         Assertions.assertThat(logs.size())
                 .withFailMessage("Run logs: <%s>", logs)

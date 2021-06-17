@@ -31,7 +31,7 @@ import com.influxdb.client.domain.OnboardingResponse;
 import com.influxdb.client.domain.Ready;
 import com.influxdb.client.domain.Routes;
 import com.influxdb.client.domain.User;
-import com.influxdb.client.service.DefaultService;
+import com.influxdb.client.service.RoutesService;
 import com.influxdb.exceptions.UnprocessableEntityException;
 
 import org.assertj.core.api.Assertions;
@@ -162,9 +162,9 @@ class ITInfluxDBClient extends AbstractITClientTest {
     }
 
     @Test
-    void defaultService() throws IOException {
+    void routesService() throws IOException {
 
-        DefaultService service = influxDBClient.getService(DefaultService.class);
+        RoutesService service = influxDBClient.getService(RoutesService.class);
 
         Assertions.assertThat(service).isNotNull();
 

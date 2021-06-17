@@ -15,7 +15,6 @@ import com.influxdb.client.domain.NotificationRule;
 import com.influxdb.client.domain.NotificationRuleDiscriminator;
 import com.influxdb.client.domain.NotificationRuleUpdate;
 import com.influxdb.client.domain.NotificationRules;
-import com.influxdb.client.domain.PostNotificationRule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +25,7 @@ public interface NotificationRulesService {
   /**
    * Add a notification rule
    * 
-   * @param postNotificationRule Notification rule to create (required)
+   * @param notificationRule Notification rule to create (required)
    * @return Call&lt;NotificationRule&gt;
    */
   @Headers({
@@ -34,7 +33,7 @@ public interface NotificationRulesService {
   })
   @POST("api/v2/notificationRules")
   Call<NotificationRule> createNotificationRule(
-    @retrofit2.http.Body PostNotificationRule postNotificationRule
+    @retrofit2.http.Body NotificationRule notificationRule
   );
 
   /**
@@ -63,7 +62,7 @@ public interface NotificationRulesService {
   );
 
   /**
-   * Get all notification rules
+   * List all notification rules
    * 
    * @param orgID Only show notification rules that belong to a specific organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -79,7 +78,7 @@ public interface NotificationRulesService {
   );
 
   /**
-   * Get a notification rule
+   * Retrieve a notification rule
    * 
    * @param ruleID The notification rule ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)

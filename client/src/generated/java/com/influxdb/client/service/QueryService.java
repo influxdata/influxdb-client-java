@@ -22,7 +22,7 @@ import java.util.Map;
 
 public interface QueryService {
   /**
-   * 
+   * Retrieve query suggestions
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;FluxSuggestions&gt;
@@ -33,7 +33,7 @@ public interface QueryService {
   );
 
   /**
-   * 
+   * Retrieve query suggestions for a branching suggestion
    * 
    * @param name The name of the branching suggestion. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -112,7 +112,7 @@ public interface QueryService {
   );
 
   /**
-   * 
+   * Generate an Abstract Syntax Tree (AST) from a query
    * Analyzes flux query and generates a query specification.
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param contentType  (optional)

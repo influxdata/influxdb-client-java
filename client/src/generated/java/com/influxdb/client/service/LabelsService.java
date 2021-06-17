@@ -32,7 +32,7 @@ public interface LabelsService {
   );
 
   /**
-   * Get all labels
+   * List all labels
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param orgID The organization ID. (optional)
@@ -44,7 +44,7 @@ public interface LabelsService {
   );
 
   /**
-   * Get a label
+   * Retrieve a label
    * 
    * @param labelID The ID of the label to update. (required)
    * @param zapTraceSpan OpenTracing span context (optional)

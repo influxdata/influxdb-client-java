@@ -44,19 +44,4 @@ public interface SetupService {
     @retrofit2.http.Body OnboardingRequest onboardingRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
-  /**
-   * Set up a new user, org and bucket
-   * Post an onboarding request to set up a new user, org and bucket.
-   * @param onboardingRequest Source to create (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;OnboardingResponse&gt;
-   */
-  @Headers({
-    "Content-Type:application/json"
-  })
-  @POST("api/v2/setup/user")
-  Call<OnboardingResponse> postSetupUser(
-    @retrofit2.http.Body OnboardingRequest onboardingRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
 }

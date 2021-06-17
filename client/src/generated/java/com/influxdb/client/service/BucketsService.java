@@ -14,6 +14,7 @@ import com.influxdb.client.domain.Error;
 import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
+import com.influxdb.client.domain.PatchBucketRequest;
 import com.influxdb.client.domain.PostBucketRequest;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceMembers;
@@ -39,7 +40,7 @@ public interface BucketsService {
   );
 
   /**
-   * delete a label from a bucket
+   * Delete a label from a bucket
    * 
    * @param bucketID The bucket ID. (required)
    * @param labelID The ID of the label to delete. (required)
@@ -83,15 +84,16 @@ public interface BucketsService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param offset  (optional)
    * @param limit  (optional, default to 20)
-   * @param after The last resource ID from which to seek from (but not including). This is to be used instead of &#x60;offset&#x60;.  (optional)
-   * @param org The organization name. (optional)
+   * @param after The last resource ID from which to seek from (but not including). This is to be used instead of &#x60;offset&#x60;. (optional)
+   * @param org The name of the organization. (optional)
    * @param orgID The organization ID. (optional)
    * @param name Only returns buckets with a specific name. (optional)
+   * @param id Only returns buckets with a specific ID. (optional)
    * @return Call&lt;Buckets&gt;
    */
   @GET("api/v2/buckets")
   Call<Buckets> getBuckets(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit, @retrofit2.http.Query("after") String after, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("name") String name
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit, @retrofit2.http.Query("after") String after, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("name") String name, @retrofit2.http.Query("id") String id
   );
 
   /**
@@ -147,7 +149,7 @@ public interface BucketsService {
    * 
    * @param sourceID The source ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param org The organization name. (optional)
+   * @param org The name of the organization. (optional)
    * @return Call&lt;Buckets&gt;
    */
   @GET("api/v2/sources/{sourceID}/buckets")
@@ -159,7 +161,7 @@ public interface BucketsService {
    * Update a bucket
    * 
    * @param bucketID The bucket ID. (required)
-   * @param bucket Bucket update to apply (required)
+   * @param patchBucketRequest Bucket update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Bucket&gt;
    */
@@ -168,7 +170,7 @@ public interface BucketsService {
   })
   @PATCH("api/v2/buckets/{bucketID}")
   Call<Bucket> patchBucketsID(
-    @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Body Bucket bucket, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Path("bucketID") String bucketID, @retrofit2.http.Body PatchBucketRequest patchBucketRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**

@@ -7,6 +7,24 @@
 The `micrometer` v1.7.0 brings [support](https://github.com/micrometer-metrics/micrometer/issues/1974) for InfluxDB 2. 
 That is a reason why the [influxdb-spring](./spring) no longer needs provide a custom Micrometer metrics exporter.
 Now you are able to use `micrometer-registry-influx`, for more info [see our docs](./spring/README.md#actuator-for-influxdb2-micrometer-registry). 
+ 
+#### Management API
+This release introduces a support for new InfluxDB OSS API definitions - [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml). The following breaking changes are in underlying API services and doesn't affect common apis such as - `WriteApi`, `QueryApi`, `BucketsApi`, `OrganizationsApi`...
+
+- `UsersService` uses `PostUser` to create `User`
+- `AuthorizationsService` uses `AuthorizationPostRequest` to create `Authorization`
+- `BucketsService` uses `PatchBucketRequest` to update `Bucket`
+- `OrganizationsService` uses `PostOrganizationRequest` to create `Organization`
+- `OrganizationsService` uses `PatchOrganizationRequest` to update `Organization`
+- `DashboardsService` uses `PatchDashboardRequest` to update `Dashboard`
+- `DeleteService` is used to delete time series data instead of `DefaultService`
+- `Run` contains list of `LogEvent` in `Log` property
+- `DBRPs` contains list of `DBRP` in `Content` property
+- Inheritance structure:
+   - `Check` <- `CheckDiscriminator` <- `CheckBase`
+   - `NotificationEndpoint` <- `NotificationEndpointDiscriminator` <- `NotificationEndpointBase`
+   - `NotificationRule` <- `NotificationRuleDiscriminator` <- `NNotificationRuleBase`
+- Flux AST literals extends the AST `Expression` object
 
 ### Features
 1. [#231](https://github.com/influxdata/influxdb-client-java/pull/231): Add support for Spring Boot 2.4 [spring]

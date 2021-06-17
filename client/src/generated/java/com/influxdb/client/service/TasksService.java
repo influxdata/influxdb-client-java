@@ -317,11 +317,15 @@ public interface TasksService {
    * @param taskID The task ID. (required)
    * @param runID The run ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
+   * @param body  (optional)
    * @return Call&lt;Run&gt;
    */
+  @Headers({
+    "Content-Type:application/json; charset=utf-8"
+  })
   @POST("api/v2/tasks/{taskID}/runs/{runID}/retry")
   Call<Run> postTasksIDRunsIDRetry(
-    @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Path("runID") String runID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Path("taskID") String taskID, @retrofit2.http.Path("runID") String runID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Body String body
   );
 
 }

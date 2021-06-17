@@ -32,10 +32,10 @@ public interface SourcesService {
   );
 
   /**
-   * Get all sources
+   * List all sources
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param org The organization name. (optional)
+   * @param org The name of the organization. (optional)
    * @return Call&lt;Sources&gt;
    */
   @GET("api/v2/sources")
@@ -44,7 +44,7 @@ public interface SourcesService {
   );
 
   /**
-   * Get a source
+   * Retrieve a source
    * 
    * @param sourceID The source ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -60,7 +60,7 @@ public interface SourcesService {
    * 
    * @param sourceID The source ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param org The organization name. (optional)
+   * @param org The name of the organization. (optional)
    * @return Call&lt;Buckets&gt;
    */
   @GET("api/v2/sources/{sourceID}/buckets")
@@ -97,7 +97,7 @@ public interface SourcesService {
   );
 
   /**
-   * Creates a source
+   * Create a source
    * 
    * @param source Source to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)

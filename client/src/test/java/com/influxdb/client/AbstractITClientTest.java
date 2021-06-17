@@ -27,8 +27,6 @@ import javax.annotation.Nonnull;
 
 import com.influxdb.client.domain.BucketRetentionRules;
 import com.influxdb.client.domain.Organization;
-import com.influxdb.client.domain.Permission;
-import com.influxdb.client.domain.PermissionResource;
 import com.influxdb.test.AbstractTest;
 
 import org.junit.jupiter.api.AfterEach;
