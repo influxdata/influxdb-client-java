@@ -1,4 +1,4 @@
-## 2.4.0 [unreleased]
+## 3.0.0 [unreleased]
 
 ### Breaking Changes
 
@@ -34,9 +34,12 @@ This release introduces a support for new InfluxDB OSS API definitions - [oss.ym
 1. [#227](https://github.com/influxdata/influxdb-client-java/pull/227): Connection URL with custom base path
 
 ### Dependencies
-1. [#227](https://github.com/influxdata/influxdb-client-csharp/pull/227): Update dependencies:
+1. [#227](https://github.com/influxdata/influxdb-client-java/pull/227): Update dependencies:
    - Kotlin to 1.5.10
-   
+
+### API
+1. [#233](https://github.com/influxdata/influxdb-client-java/pull/233): Use InfluxDB OSS API definitions to generated APIs
+ 
 ## 2.3.0 [2021-06-04]
 
 ### Features
