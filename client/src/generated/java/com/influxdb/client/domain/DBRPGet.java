@@ -20,57 +20,36 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.influxdb.client.domain.DBRP;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * DBRPUpdate
+ * DBRPGet
  */
 
-public class DBRPUpdate {
-  public static final String SERIALIZED_NAME_RETENTION_POLICY = "retention_policy";
-  @SerializedName(SERIALIZED_NAME_RETENTION_POLICY)
-  private String retentionPolicy;
+public class DBRPGet {
+  public static final String SERIALIZED_NAME_CONTENT = "content";
+  @SerializedName(SERIALIZED_NAME_CONTENT)
+  private DBRP content = null;
 
-  public static final String SERIALIZED_NAME_DEFAULT = "default";
-  @SerializedName(SERIALIZED_NAME_DEFAULT)
-  private Boolean _default;
-
-  public DBRPUpdate retentionPolicy(String retentionPolicy) {
-    this.retentionPolicy = retentionPolicy;
+  public DBRPGet content(DBRP content) {
+    this.content = content;
     return this;
   }
 
    /**
-   * InfluxDB v1 retention policy
-   * @return retentionPolicy
-  **/
-  @ApiModelProperty(value = "InfluxDB v1 retention policy")
-  public String getRetentionPolicy() {
-    return retentionPolicy;
-  }
-
-  public void setRetentionPolicy(String retentionPolicy) {
-    this.retentionPolicy = retentionPolicy;
-  }
-
-  public DBRPUpdate _default(Boolean _default) {
-    this._default = _default;
-    return this;
-  }
-
-   /**
-   * Get _default
-   * @return _default
+   * Get content
+   * @return content
   **/
   @ApiModelProperty(value = "")
-  public Boolean getDefault() {
-    return _default;
+  public DBRP getContent() {
+    return content;
   }
 
-  public void setDefault(Boolean _default) {
-    this._default = _default;
+  public void setContent(DBRP content) {
+    this.content = content;
   }
 
 
@@ -82,23 +61,21 @@ public class DBRPUpdate {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    DBRPUpdate dbRPUpdate = (DBRPUpdate) o;
-    return Objects.equals(this.retentionPolicy, dbRPUpdate.retentionPolicy) &&
-        Objects.equals(this._default, dbRPUpdate._default);
+    DBRPGet dbRPGet = (DBRPGet) o;
+    return Objects.equals(this.content, dbRPGet.content);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(retentionPolicy, _default);
+    return Objects.hash(content);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class DBRPUpdate {\n");
-    sb.append("    retentionPolicy: ").append(toIndentedString(retentionPolicy)).append("\n");
-    sb.append("    _default: ").append(toIndentedString(_default)).append("\n");
+    sb.append("class DBRPGet {\n");
+    sb.append("    content: ").append(toIndentedString(content)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -20,23 +20,22 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.influxdb.client.domain.Links;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * DBRP
+ * DBRPCreate
  */
 
-public class DBRP {
-  public static final String SERIALIZED_NAME_ID = "id";
-  @SerializedName(SERIALIZED_NAME_ID)
-  private String id;
-
+public class DBRPCreate {
   public static final String SERIALIZED_NAME_ORG_I_D = "orgID";
   @SerializedName(SERIALIZED_NAME_ORG_I_D)
   private String orgID;
+
+  public static final String SERIALIZED_NAME_ORG = "org";
+  @SerializedName(SERIALIZED_NAME_ORG)
+  private String org;
 
   public static final String SERIALIZED_NAME_BUCKET_I_D = "bucketID";
   @SerializedName(SERIALIZED_NAME_BUCKET_I_D)
@@ -54,20 +53,7 @@ public class DBRP {
   @SerializedName(SERIALIZED_NAME_DEFAULT)
   private Boolean _default;
 
-  public static final String SERIALIZED_NAME_LINKS = "links";
-  @SerializedName(SERIALIZED_NAME_LINKS)
-  private Links links = null;
-
-   /**
-   * the mapping identifier
-   * @return id
-  **/
-  @ApiModelProperty(required = true, value = "the mapping identifier")
-  public String getId() {
-    return id;
-  }
-
-  public DBRP orgID(String orgID) {
+  public DBRPCreate orgID(String orgID) {
     this.orgID = orgID;
     return this;
   }
@@ -76,7 +62,7 @@ public class DBRP {
    * the organization ID that owns this mapping.
    * @return orgID
   **/
-  @ApiModelProperty(required = true, value = "the organization ID that owns this mapping.")
+  @ApiModelProperty(value = "the organization ID that owns this mapping.")
   public String getOrgID() {
     return orgID;
   }
@@ -85,7 +71,25 @@ public class DBRP {
     this.orgID = orgID;
   }
 
-  public DBRP bucketID(String bucketID) {
+  public DBRPCreate org(String org) {
+    this.org = org;
+    return this;
+  }
+
+   /**
+   * the organization that owns this mapping.
+   * @return org
+  **/
+  @ApiModelProperty(value = "the organization that owns this mapping.")
+  public String getOrg() {
+    return org;
+  }
+
+  public void setOrg(String org) {
+    this.org = org;
+  }
+
+  public DBRPCreate bucketID(String bucketID) {
     this.bucketID = bucketID;
     return this;
   }
@@ -103,7 +107,7 @@ public class DBRP {
     this.bucketID = bucketID;
   }
 
-  public DBRP database(String database) {
+  public DBRPCreate database(String database) {
     this.database = database;
     return this;
   }
@@ -121,7 +125,7 @@ public class DBRP {
     this.database = database;
   }
 
-  public DBRP retentionPolicy(String retentionPolicy) {
+  public DBRPCreate retentionPolicy(String retentionPolicy) {
     this.retentionPolicy = retentionPolicy;
     return this;
   }
@@ -139,7 +143,7 @@ public class DBRP {
     this.retentionPolicy = retentionPolicy;
   }
 
-  public DBRP _default(Boolean _default) {
+  public DBRPCreate _default(Boolean _default) {
     this._default = _default;
     return this;
   }
@@ -148,31 +152,13 @@ public class DBRP {
    * Specify if this mapping represents the default retention policy for the database specificed.
    * @return _default
   **/
-  @ApiModelProperty(required = true, value = "Specify if this mapping represents the default retention policy for the database specificed.")
+  @ApiModelProperty(value = "Specify if this mapping represents the default retention policy for the database specificed.")
   public Boolean getDefault() {
     return _default;
   }
 
   public void setDefault(Boolean _default) {
     this._default = _default;
-  }
-
-  public DBRP links(Links links) {
-    this.links = links;
-    return this;
-  }
-
-   /**
-   * Get links
-   * @return links
-  **/
-  @ApiModelProperty(value = "")
-  public Links getLinks() {
-    return links;
-  }
-
-  public void setLinks(Links links) {
-    this.links = links;
   }
 
 
@@ -184,33 +170,31 @@ public class DBRP {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    DBRP DBRP = (DBRP) o;
-    return Objects.equals(this.id, DBRP.id) &&
-        Objects.equals(this.orgID, DBRP.orgID) &&
-        Objects.equals(this.bucketID, DBRP.bucketID) &&
-        Objects.equals(this.database, DBRP.database) &&
-        Objects.equals(this.retentionPolicy, DBRP.retentionPolicy) &&
-        Objects.equals(this._default, DBRP._default) &&
-        Objects.equals(this.links, DBRP.links);
+    DBRPCreate dbRPCreate = (DBRPCreate) o;
+    return Objects.equals(this.orgID, dbRPCreate.orgID) &&
+        Objects.equals(this.org, dbRPCreate.org) &&
+        Objects.equals(this.bucketID, dbRPCreate.bucketID) &&
+        Objects.equals(this.database, dbRPCreate.database) &&
+        Objects.equals(this.retentionPolicy, dbRPCreate.retentionPolicy) &&
+        Objects.equals(this._default, dbRPCreate._default);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, orgID, bucketID, database, retentionPolicy, _default, links);
+    return Objects.hash(orgID, org, bucketID, database, retentionPolicy, _default);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class DBRP {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("class DBRPCreate {\n");
     sb.append("    orgID: ").append(toIndentedString(orgID)).append("\n");
+    sb.append("    org: ").append(toIndentedString(org)).append("\n");
     sb.append("    bucketID: ").append(toIndentedString(bucketID)).append("\n");
     sb.append("    database: ").append(toIndentedString(database)).append("\n");
     sb.append("    retentionPolicy: ").append(toIndentedString(retentionPolicy)).append("\n");
     sb.append("    _default: ").append(toIndentedString(_default)).append("\n");
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("}");
     return sb.toString();
   }

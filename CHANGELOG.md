@@ -20,6 +20,7 @@ This release introduces a support for new InfluxDB OSS API definitions - [oss.ym
 - `DeleteService` is used to delete time series data instead of `DefaultService`
 - `Run` contains list of `LogEvent` in `Log` property
 - `DBRPs` contains list of `DBRP` in `Content` property
+- `DbrPsService` uses `DBRPCreate` to create `DBRP`
 - Inheritance structure:
    - `Check` <- `CheckDiscriminator` <- `CheckBase`
    - `NotificationEndpoint` <- `NotificationEndpointDiscriminator` <- `NotificationEndpointBase`
