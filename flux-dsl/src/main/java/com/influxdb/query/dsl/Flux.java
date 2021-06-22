@@ -61,7 +61,7 @@ import com.influxdb.query.dsl.functions.ReduceFlux;
 import com.influxdb.query.dsl.functions.RenameFlux;
 import com.influxdb.query.dsl.functions.SampleFlux;
 import com.influxdb.query.dsl.functions.SetFlux;
-import com.influxdb.query.dsl.functions.ShiftFlux;
+import com.influxdb.query.dsl.functions.TimeShiftFlux;
 import com.influxdb.query.dsl.functions.SkewFlux;
 import com.influxdb.query.dsl.functions.SortFlux;
 import com.influxdb.query.dsl.functions.SpreadFlux;
@@ -116,7 +116,7 @@ import com.influxdb.query.dsl.functions.restriction.Restrictions;
  * <li>{@link RenameFlux}</li>
  * <li>{@link SampleFlux}</li>
  * <li>{@link SetFlux}</li>
- * <li>{@link ShiftFlux}</li>
+ * <li>{@link TimeShiftFlux}</li>
  * <li>{@link SkewFlux}</li>
  * <li>{@link SortFlux}</li>
  * <li>{@link SpreadFlux}</li>
@@ -1506,19 +1506,19 @@ public abstract class Flux {
      *
      * <h3>The parameters had to be defined by:</h3>
      * <ul>
-     * <li>{@link ShiftFlux#withShift(Long, ChronoUnit)}</li>
-     * <li>{@link ShiftFlux#withColumns(String[])}</li>
-     * <li>{@link ShiftFlux#withColumns(Collection)} )}</li>
-     * <li>{@link ShiftFlux#withPropertyNamed(String)}</li>
-     * <li>{@link ShiftFlux#withPropertyNamed(String, String)}</li>
-     * <li>{@link ShiftFlux#withPropertyValueEscaped(String, String)}</li>
+     * <li>{@link TimeShiftFlux#withDuration(Long, ChronoUnit)}</li>
+     * <li>{@link TimeShiftFlux#withColumns(String[])}</li>
+     * <li>{@link TimeShiftFlux#withColumns(Collection)} )}</li>
+     * <li>{@link TimeShiftFlux#withPropertyNamed(String)}</li>
+     * <li>{@link TimeShiftFlux#withPropertyNamed(String, String)}</li>
+     * <li>{@link TimeShiftFlux#withPropertyValueEscaped(String, String)}</li>
      * </ul>
      *
-     * @return {@link ShiftFlux}
+     * @return {@link TimeShiftFlux}
      */
     @Nonnull
-    public final ShiftFlux shift() {
-        return new ShiftFlux(this);
+    public final TimeShiftFlux timeShift() {
+        return new TimeShiftFlux(this);
     }
 
     /**
@@ -1526,13 +1526,13 @@ public abstract class Flux {
      *
      * @param amount The amount to add to each time value
      * @param unit   a {@code ChronoUnit} determining how to interpret the {@code amount} parameter
-     * @return {@link ShiftFlux}
+     * @return {@link TimeShiftFlux}
      */
     @Nonnull
-    public final ShiftFlux shift(@Nonnull final Long amount,
-                                 @Nonnull final ChronoUnit unit) {
+    public final TimeShiftFlux timeShift(@Nonnull final Long amount,
+                                         @Nonnull final ChronoUnit unit) {
 
-        return new ShiftFlux(this).withShift(amount, unit);
+        return new TimeShiftFlux(this).withDuration(amount, unit);
     }
 
     /**
@@ -1541,14 +1541,14 @@ public abstract class Flux {
      * @param amount  The amount to add to each time value
      * @param unit    a {@code ChronoUnit} determining how to interpret the {@code amount} parameter
      * @param columns The list of all columns that should be shifted.
-     * @return {@link ShiftFlux}
+     * @return {@link TimeShiftFlux}
      */
     @Nonnull
-    public final ShiftFlux shift(@Nonnull final Long amount,
-                                 @Nonnull final ChronoUnit unit,
-                                 @Nonnull final String[] columns) {
+    public final TimeShiftFlux timeShift(@Nonnull final Long amount,
+                                         @Nonnull final ChronoUnit unit,
+                                         @Nonnull final String[] columns) {
 
-        return new ShiftFlux(this).withShift(amount, unit).withColumns(columns);
+        return new TimeShiftFlux(this).withDuration(amount, unit).withColumns(columns);
     }
 
     /**
@@ -1557,14 +1557,14 @@ public abstract class Flux {
      * @param amount  The amount to add to each time value
      * @param unit    a {@code ChronoUnit} determining how to interpret the {@code amount} parameter
      * @param columns The list of all columns that should be shifted.
-     * @return {@link ShiftFlux}
+     * @return {@link TimeShiftFlux}
      */
     @Nonnull
-    public final ShiftFlux shift(@Nonnull final Long amount,
-                                 @Nonnull final ChronoUnit unit,
-                                 @Nonnull final Collection<String> columns) {
+    public final TimeShiftFlux timeShift(@Nonnull final Long amount,
+                                         @Nonnull final ChronoUnit unit,
+                                         @Nonnull final Collection<String> columns) {
 
-        return new ShiftFlux(this).withShift(amount, unit).withColumns(columns);
+        return new TimeShiftFlux(this).withDuration(amount, unit).withColumns(columns);
     }
 
     /**

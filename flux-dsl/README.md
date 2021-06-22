@@ -592,19 +592,19 @@ Flux flux = Flux
     .set("location", "Carolina");
 ```
 
-### shift
+### timeShift
 Shift add a fixed duration to time columns [[doc](http://bit.ly/flux-spec#shift)].
-- `shift` - The amount to add to each time value. [duration]
+- `duration` - The amount to add to each time value. [duration]
 - `columns` - The list of all columns that should be shifted. Defaults `["_start", "_stop", "_time"]`. [array of strings]
 ```java
 Flux flux = Flux
     .from("telegraf")
-    .shift(10L, ChronoUnit.HOURS);
+    .timeShift(10L, ChronoUnit.HOURS);
 ```
 ```java
 Flux flux = Flux
     .from("telegraf")
-    .shift(10L, ChronoUnit.HOURS, new String[]{"_time", "custom"});
+    .timeShift(10L, ChronoUnit.HOURS, new String[]{"_time", "custom"});
 ```
 
 ### skew
