@@ -8,12 +8,16 @@ The `micrometer` v1.7.0 brings [support](https://github.com/micrometer-metrics/m
 That is a reason why the [influxdb-spring](./spring) no longer needs provide a custom Micrometer metrics exporter.
 Now you are able to use `micrometer-registry-influx`, for more info [see our docs](./spring/README.md#actuator-for-influxdb2-micrometer-registry). 
 
+#### FluxDSL
+The `shift()` function renamed to `timeShift()`.
+
 ### Features
 1. [#231](https://github.com/influxdata/influxdb-client-java/pull/231): Add support for Spring Boot 2.4 [spring]
 2. [#229](https://github.com/influxdata/influxdb-client-java/pull/229): Support translating column name from some_col to someCol [query]
 
 ### Bug Fixes
 1. [#227](https://github.com/influxdata/influxdb-client-java/pull/227): Connection URL with custom base path
+1. [#236](https://github.com/influxdata/influxdb-client-java/pull/236): Rename `shift()` to `timeShift()` [FluxDSL]
 
 ### Dependencies
 1. [#227](https://github.com/influxdata/influxdb-client-csharp/pull/227): Update dependencies:

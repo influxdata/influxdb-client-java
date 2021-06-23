@@ -30,11 +30,11 @@ import com.influxdb.query.dsl.Flux;
 
 /**
  * Shift add a fixed duration to time columns.
- * <a href="http://bit.ly/flux-spec#shift">See SPEC</a>.
+ * <a href="http://bit.ly/flux-spec#timeshift">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>
- * <li><b>shift</b> - The amount to add to each time value [duration]</li>
+ * <li><b>duration</b> - The amount to add to each time value [duration]</li>
  * <li><b>columns</b> - The list of all columns that should be shifted.
  * Defaults `["_start", "_stop", "_time"]` [array of strings].</li>
  * </ul>
@@ -43,25 +43,25 @@ import com.influxdb.query.dsl.Flux;
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")
- *     .shift(10L, ChronoUnit.HOURS);
+ *     .timeShift(10L, ChronoUnit.HOURS);
  *
  * Flux flux = Flux
  *     .from("telegraf")
- *     .shift(10L, ChronoUnit.HOURS, new String[]{"_time", "custom"});
+ *     .timeShift(10L, ChronoUnit.HOURS, new String[]{"_time", "custom"});
  * </pre>
  *
  * @author Jakub Bednar (bednar@github) (29/06/2018 10:27)
  */
-public final class ShiftFlux extends AbstractParametrizedFlux {
+public final class TimeShiftFlux extends AbstractParametrizedFlux {
 
-    public ShiftFlux(@Nonnull final Flux source) {
+    public TimeShiftFlux(@Nonnull final Flux source) {
         super(source);
     }
 
     @Nonnull
     @Override
     protected String operatorName() {
-        return "shift";
+        return "timeShift";
     }
 
     /**
@@ -70,11 +70,11 @@ public final class ShiftFlux extends AbstractParametrizedFlux {
      * @return this
      */
     @Nonnull
-    public ShiftFlux withShift(@Nonnull final Long amount, @Nonnull final ChronoUnit unit) {
+    public TimeShiftFlux withDuration(@Nonnull final Long amount, @Nonnull final ChronoUnit unit) {
         Arguments.checkNotNull(amount, "Amount is required");
         Arguments.checkNotNull(unit, "ChronoUnit is required");
 
-        this.withPropertyValue("shift", amount, unit);
+        this.withPropertyValue("duration", amount, unit);
 
         return this;
     }
@@ -84,10 +84,10 @@ public final class ShiftFlux extends AbstractParametrizedFlux {
      * @return this
      */
     @Nonnull
-    public ShiftFlux withShift(@Nonnull final String amount) {
+    public TimeShiftFlux withDuration(@Nonnull final String amount) {
         Arguments.checkDuration(amount, "Amount");
 
-        this.withPropertyValue("shift", amount);
+        this.withPropertyValue("duration", amount);
 
         return this;
     }
@@ -97,7 +97,7 @@ public final class ShiftFlux extends AbstractParametrizedFlux {
      * @return this
      */
     @Nonnull
-    public ShiftFlux withColumns(@Nonnull final String[] columns) {
+    public TimeShiftFlux withColumns(@Nonnull final String[] columns) {
 
         Arguments.checkNotNull(columns, "Columns are required");
 
@@ -111,7 +111,7 @@ public final class ShiftFlux extends AbstractParametrizedFlux {
      * @return this
      */
     @Nonnull
-    public ShiftFlux withColumns(@Nonnull final Collection<String> columns) {
+    public TimeShiftFlux withColumns(@Nonnull final Collection<String> columns) {
 
         Arguments.checkNotNull(columns, "Columns are required");
 
