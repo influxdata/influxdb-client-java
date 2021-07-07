@@ -94,12 +94,12 @@ final class ChecksApiImpl extends AbstractRestClient implements ChecksApi {
 
         ThresholdCheck threshold = new ThresholdCheck();
         threshold
+                .every(every)
+                .statusMessageTemplate(messageTemplate)
                 .thresholds(thresholds)
                 .name(name)
                 .orgID(orgID)
-                .every(every)
                 .query(createDashboardQuery(query))
-                .statusMessageTemplate(messageTemplate)
                 .status(TaskStatusType.ACTIVE);
 
         return (ThresholdCheck) createCheck(threshold);
@@ -127,14 +127,14 @@ final class ChecksApiImpl extends AbstractRestClient implements ChecksApi {
 
         DeadmanCheck deadman = new DeadmanCheck();
         deadman
+                .every(every)
+                .statusMessageTemplate(messageTemplate)
                 .level(level)
                 .staleTime(staleTime)
                 .timeSince(timeSince)
                 .name(name)
-                .every(every)
                 .orgID(orgID)
                 .query(createDashboardQuery(query))
-                .statusMessageTemplate(messageTemplate)
                 .status(TaskStatusType.ACTIVE);
 
         return (DeadmanCheck) createCheck(deadman);

@@ -31,7 +31,7 @@ import com.influxdb.client.DeleteApi;
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.DeletePredicateRequest;
 import com.influxdb.client.domain.Organization;
-import com.influxdb.client.service.DefaultService;
+import com.influxdb.client.service.DeleteService;
 import com.influxdb.internal.AbstractRestClient;
 
 import retrofit2.Call;
@@ -43,9 +43,9 @@ public class DeleteApiImpl extends AbstractRestClient implements DeleteApi {
 
     private static final Logger LOG = Logger.getLogger(DeleteApiImpl.class.getName());
 
-    private final DefaultService service;
+    private final DeleteService service;
 
-    DeleteApiImpl(@Nonnull final DefaultService service) {
+    DeleteApiImpl(@Nonnull final DeleteService service) {
 
         Arguments.checkNotNull(service, "service");
 
@@ -102,7 +102,7 @@ public class DeleteApiImpl extends AbstractRestClient implements DeleteApi {
                 "Deleting time-series data from InfluxDB (org={0}, bucket={1})...",
                 new Object[]{org, bucket});
 
-        Call<Void> call = service.deletePost(predicate, null, org, bucket,
+        Call<Void> call = service.postDelete(predicate, null, org, bucket,
                 null, null);
 
         execute(call);

@@ -41,6 +41,7 @@ import com.influxdb.client.service.QueryService;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -59,6 +60,7 @@ class ITQueryService extends AbstractITClientTest {
     }
 
     @Test
+    @Disabled
     void analyze() throws IOException {
 
         Query query = new Query().query("from(bucket: \"telegraf\")"

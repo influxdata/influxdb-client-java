@@ -15,7 +15,6 @@ import com.influxdb.client.domain.NotificationEndpoint;
 import com.influxdb.client.domain.NotificationEndpointDiscriminator;
 import com.influxdb.client.domain.NotificationEndpointUpdate;
 import com.influxdb.client.domain.NotificationEndpoints;
-import com.influxdb.client.domain.PostNotificationEndpoint;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +25,7 @@ public interface NotificationEndpointsService {
   /**
    * Add a notification endpoint
    * 
-   * @param postNotificationEndpoint Notification endpoint to create (required)
+   * @param notificationEndpoint Notification endpoint to create (required)
    * @return Call&lt;NotificationEndpoint&gt;
    */
   @Headers({
@@ -34,7 +33,7 @@ public interface NotificationEndpointsService {
   })
   @POST("api/v2/notificationEndpoints")
   Call<NotificationEndpoint> createNotificationEndpoint(
-    @retrofit2.http.Body PostNotificationEndpoint postNotificationEndpoint
+    @retrofit2.http.Body NotificationEndpoint notificationEndpoint
   );
 
   /**
@@ -63,7 +62,7 @@ public interface NotificationEndpointsService {
   );
 
   /**
-   * Get all notification endpoints
+   * List all notification endpoints
    * 
    * @param orgID Only show notification endpoints that belong to specific organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -77,7 +76,7 @@ public interface NotificationEndpointsService {
   );
 
   /**
-   * Get a notification endpoint
+   * Retrieve a notification endpoint
    * 
    * @param endpointID The notification endpoint ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)

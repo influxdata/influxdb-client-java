@@ -8,6 +8,7 @@ import okhttp3.ResponseBody;
 import okhttp3.MultipartBody;
 
 import com.influxdb.client.domain.Authorization;
+import com.influxdb.client.domain.AuthorizationPostRequest;
 import com.influxdb.client.domain.AuthorizationUpdateRequest;
 import com.influxdb.client.domain.Authorizations;
 import com.influxdb.client.domain.Error;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 public interface AuthorizationsService {
   /**
-   * Delete a authorization
+   * Delete an authorization
    * 
    * @param authID The ID of the authorization to delete. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -76,7 +77,7 @@ public interface AuthorizationsService {
   /**
    * Create an authorization
    * 
-   * @param authorization Authorization to create (required)
+   * @param authorizationPostRequest Authorization to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Authorization&gt;
    */
@@ -85,7 +86,7 @@ public interface AuthorizationsService {
   })
   @POST("api/v2/authorizations")
   Call<Authorization> postAuthorizations(
-    @retrofit2.http.Body Authorization authorization, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Body AuthorizationPostRequest authorizationPostRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
 }

@@ -24,6 +24,7 @@ package com.influxdb.client.internal;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -39,6 +40,8 @@ import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
 import com.influxdb.client.domain.Organization;
+import com.influxdb.client.domain.PatchBucketRequest;
+import com.influxdb.client.domain.PatchRetentionRule;
 import com.influxdb.client.domain.PostBucketRequest;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceMembers;
@@ -84,7 +87,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
         Arguments.checkNonEmpty(bucketName, "Bucket Name");
 
         Call<Buckets> bucket = service
-                .getBuckets(null, null, null, null, null, null, bucketName);
+                .getBuckets(null, null, null, null, null, null, bucketName, null);
 
         return execute(bucket).getBuckets().stream().findFirst().orElse(null);
     }
@@ -200,7 +203,21 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
 
         Arguments.checkNotNull(bucket, "Bucket is required");
 
-        Call<Bucket> bucketCall = service.patchBucketsID(bucket.getId(), bucket, null);
+        PatchBucketRequest request = new PatchBucketRequest();
+        List<PatchRetentionRule> retentionRules = bucket
+                .getRetentionRules()
+                .stream()
+                .map(bucketRetentionRules -> new PatchRetentionRule()
+                        .everySeconds(bucketRetentionRules.getEverySeconds())
+                        .shardGroupDurationSeconds(bucketRetentionRules.getShardGroupDurationSeconds()))
+                .collect(Collectors.toList());
+
+        request
+                .name(bucket.getName())
+                .description(bucket.getDescription())
+                .retentionRules(retentionRules);
+
+        Call<Bucket> bucketCall = service.patchBucketsID(bucket.getId(), request, null);
 
         return execute(bucketCall);
     }
@@ -456,7 +473,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
                                 @Nonnull final FindOptions findOptions) {
 
         Call<Buckets> bucketsCall = service.getBuckets(null, findOptions.getOffset(),
-                findOptions.getLimit(), findOptions.getAfter(), orgName, null, null);
+                findOptions.getLimit(), findOptions.getAfter(), orgName, null, null, null);
 
         return execute(bucketsCall);
     }

@@ -29,7 +29,7 @@ public interface ScraperTargetsService {
   /**
    * Delete a scraper target
    * 
-   * @param scraperTargetID The scraper target ID. (required)
+   * @param scraperTargetID The identifier of the scraper target. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -78,7 +78,7 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * Get all scraper targets
+   * List all scraper targets
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param name Specifies the name of the scraper target. (optional)
@@ -93,9 +93,9 @@ public interface ScraperTargetsService {
   );
 
   /**
-   * Get a scraper target by ID
+   * Retrieve a scraper target
    * 
-   * @param scraperTargetID The scraper target ID. (required)
+   * @param scraperTargetID The identifier of the scraper target. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ScraperTargetResponse&gt;
    */
@@ -143,7 +143,7 @@ public interface ScraperTargetsService {
   /**
    * Update a scraper target
    * 
-   * @param scraperTargetID The scraper target ID. (required)
+   * @param scraperTargetID The identifier of the scraper target. (required)
    * @param scraperTargetRequest Scraper target update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ScraperTargetResponse&gt;

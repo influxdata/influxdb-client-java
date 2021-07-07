@@ -48,7 +48,7 @@ public interface TemplatesService {
   );
 
   /**
-   * 
+   * List all templates
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param org Specifies the name of the organization of the template. (optional)
@@ -61,7 +61,7 @@ public interface TemplatesService {
   );
 
   /**
-   * 
+   * Retrieve a template
    * 
    * @param templateID The template ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -116,7 +116,7 @@ public interface TemplatesService {
   );
 
   /**
-   * 
+   * Update a template
    * 
    * @param templateID The template ID. (required)
    * @param documentUpdate Template that will be updated (required)

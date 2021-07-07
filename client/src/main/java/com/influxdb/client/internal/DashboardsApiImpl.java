@@ -39,6 +39,7 @@ import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
 import com.influxdb.client.domain.Organization;
+import com.influxdb.client.domain.PatchDashboardRequest;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceMembers;
 import com.influxdb.client.domain.ResourceOwner;
@@ -93,7 +94,11 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
 
         Arguments.checkNotNull(dashboard, "Dashboard");
 
-        Call<Dashboard> call = service.patchDashboardsID(dashboard.getId(), dashboard, null);
+        PatchDashboardRequest request = new PatchDashboardRequest()
+                .name(dashboard.getName())
+                .description(dashboard.getDescription());
+
+        Call<Dashboard> call = service.patchDashboardsID(dashboard.getId(), null, request);
 
         return execute(call);
     }
@@ -145,7 +150,7 @@ final class DashboardsApiImpl extends AbstractRestClient implements DashboardsAp
     public List<Dashboard> findDashboardsByOrgName(@Nullable final String orgName) {
 
         Call<Dashboards> call = service
-                .getDashboards(null, null, null, null, null, orgName);
+                .getDashboards(null, null, null, null, null, null, null, null, orgName);
 
         return execute(call).getDashboards();
     }

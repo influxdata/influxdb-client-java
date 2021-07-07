@@ -32,6 +32,8 @@ import com.influxdb.client.OrganizationsApi;
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.Organizations;
+import com.influxdb.client.domain.PatchOrganizationRequest;
+import com.influxdb.client.domain.PostOrganizationRequest;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceMembers;
 import com.influxdb.client.domain.ResourceOwner;
@@ -40,6 +42,7 @@ import com.influxdb.client.domain.SecretKeys;
 import com.influxdb.client.domain.SecretKeysResponse;
 import com.influxdb.client.domain.User;
 import com.influxdb.client.service.OrganizationsService;
+import com.influxdb.client.service.SecretsService;
 import com.influxdb.internal.AbstractRestClient;
 
 import retrofit2.Call;
@@ -52,12 +55,15 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
     private static final Logger LOG = Logger.getLogger(OrganizationsApiImpl.class.getName());
 
     private final OrganizationsService service;
+    private final SecretsService secretsService;
 
-    OrganizationsApiImpl(@Nonnull final OrganizationsService service) {
+    OrganizationsApiImpl(@Nonnull final OrganizationsService service, @Nonnull final SecretsService secretsService) {
 
         Arguments.checkNotNull(service, "service");
+        Arguments.checkNotNull(secretsService, "secretsService");
 
         this.service = service;
+        this.secretsService = secretsService;
     }
 
     @Nonnull
@@ -101,7 +107,11 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
 
         Arguments.checkNotNull(organization, "Organization");
 
-        Call<Organization> call = service.postOrgs(organization, null);
+        PostOrganizationRequest request = new PostOrganizationRequest()
+                .name(organization.getName())
+                .description(organization.getDescription());
+
+        Call<Organization> call = service.postOrgs(request, null);
 
         return execute(call);
     }
@@ -112,8 +122,12 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
 
         Arguments.checkNotNull(organization, "Organization");
 
+        PatchOrganizationRequest patch = new PatchOrganizationRequest()
+                .name(organization.getName())
+                .description(organization.getName());
+
         Call<Organization> orgCall = service
-                .patchOrgsID(organization.getId(), organization, null);
+                .patchOrgsID(organization.getId(), patch, null);
 
         return execute(orgCall);
     }
@@ -175,7 +189,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
 
         Arguments.checkNonEmpty(orgID, "Organization ID");
 
-        Call<SecretKeysResponse> call = service.getOrgsIDSecrets(orgID, null);
+        Call<SecretKeysResponse> call = secretsService.getOrgsIDSecrets(orgID, null);
 
         return execute(call);
     }
@@ -194,7 +208,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         Arguments.checkNonEmpty(orgID, "Organization ID");
         Arguments.checkNotNull(secrets, "secrets");
 
-        Call<Void> call = service.patchOrgsIDSecrets(orgID, secrets, null);
+        Call<Void> call = secretsService.patchOrgsIDSecrets(orgID, secrets, null);
         execute(call);
     }
 
@@ -225,7 +239,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         Arguments.checkNonEmpty(orgID, "Organization ID");
         Arguments.checkNotNull(secretKeys, "secretKeys");
 
-        Call<Void> call = service.postOrgsIDSecrets(orgID, secretKeys, null);
+        Call<Void> call = secretsService.postOrgsIDSecrets(orgID, secretKeys, null);
         execute(call);
     }
 

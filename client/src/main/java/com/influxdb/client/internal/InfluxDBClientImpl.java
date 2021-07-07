@@ -59,7 +59,7 @@ import com.influxdb.client.service.AuthorizationsService;
 import com.influxdb.client.service.BucketsService;
 import com.influxdb.client.service.ChecksService;
 import com.influxdb.client.service.DashboardsService;
-import com.influxdb.client.service.DefaultService;
+import com.influxdb.client.service.DeleteService;
 import com.influxdb.client.service.LabelsService;
 import com.influxdb.client.service.NotificationEndpointsService;
 import com.influxdb.client.service.NotificationRulesService;
@@ -67,6 +67,7 @@ import com.influxdb.client.service.OrganizationsService;
 import com.influxdb.client.service.QueryService;
 import com.influxdb.client.service.ReadyService;
 import com.influxdb.client.service.ScraperTargetsService;
+import com.influxdb.client.service.SecretsService;
 import com.influxdb.client.service.SetupService;
 import com.influxdb.client.service.SourcesService;
 import com.influxdb.client.service.TasksService;
@@ -141,7 +142,9 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Nonnull
     @Override
     public OrganizationsApi getOrganizationsApi() {
-        return new OrganizationsApiImpl(retrofit.create(OrganizationsService.class));
+        return new OrganizationsApiImpl(
+                retrofit.create(OrganizationsService.class),
+                retrofit.create(SecretsService.class));
     }
 
     @Nonnull
@@ -219,7 +222,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Nonnull
     @Override
     public DeleteApi getDeleteApi() {
-        return new DeleteApiImpl(retrofit.create(DefaultService.class));
+        return new DeleteApiImpl(retrofit.create(DeleteService.class));
     }
 
     @Nonnull

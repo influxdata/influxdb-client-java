@@ -17,7 +17,7 @@ import java.util.Map;
 
 public interface RulesService {
   /**
-   * Get a notification rule query
+   * Retrieve a notification rule query
    * 
    * @param ruleID The notification rule ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)

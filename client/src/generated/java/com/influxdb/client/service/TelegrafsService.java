@@ -27,9 +27,9 @@ import java.util.Map;
 
 public interface TelegrafsService {
   /**
-   * Delete a Telegraf config
+   * Delete a Telegraf configuration
    * 
-   * @param telegrafID The Telegraf config ID. (required)
+   * @param telegrafID The Telegraf configuration ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */
@@ -78,7 +78,7 @@ public interface TelegrafsService {
   );
 
   /**
-   * 
+   * List all Telegraf configurations
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param orgID The organization ID the Telegraf config belongs to. (optional)
@@ -90,9 +90,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * Retrieve a Telegraf config
+   * Retrieve a Telegraf configuration
    * 
-   * @param telegrafID The Telegraf config ID. (required)
+   * @param telegrafID The Telegraf configuration ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param accept  (optional, default to application/toml)
    * @return Call&lt;String&gt;
@@ -103,9 +103,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * Retrieve a Telegraf config
+   * Retrieve a Telegraf configuration
    * 
-   * @param telegrafID The Telegraf config ID. (required)
+   * @param telegrafID The Telegraf configuration ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param accept  (optional, default to application/toml)
    * @return Call&lt;ResponseBody&gt;
@@ -116,9 +116,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * Retrieve a Telegraf config
+   * Retrieve a Telegraf configuration
    * 
-   * @param telegrafID The Telegraf config ID. (required)
+   * @param telegrafID The Telegraf configuration ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param accept  (optional, default to application/toml)
    * @return Call&lt;String&gt;
@@ -129,9 +129,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * Retrieve a Telegraf config
+   * Retrieve a Telegraf configuration
    * 
-   * @param telegrafID The Telegraf config ID. (required)
+   * @param telegrafID The Telegraf configuration ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param accept  (optional, default to application/toml)
    * @return Call&lt;Telegraf&gt;
@@ -166,9 +166,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * List all owners of a Telegraf config
+   * List all owners of a Telegraf configuration
    * 
-   * @param telegrafID The Telegraf config ID. (required)
+   * @param telegrafID The Telegraf configuration ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwners&gt;
    */
@@ -178,9 +178,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * Create a Telegraf config
+   * Create a Telegraf configuration
    * 
-   * @param telegrafRequest Telegraf config to create (required)
+   * @param telegrafRequest Telegraf configuration to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Telegraf&gt;
    */
@@ -225,9 +225,9 @@ public interface TelegrafsService {
   );
 
   /**
-   * Add an owner to a Telegraf config
+   * Add an owner to a Telegraf configuration
    * 
-   * @param telegrafID The Telegraf config ID. (required)
+   * @param telegrafID The Telegraf configuration ID. (required)
    * @param addResourceMemberRequestBody User to add as owner (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;ResourceOwner&gt;
@@ -241,10 +241,10 @@ public interface TelegrafsService {
   );
 
   /**
-   * Update a Telegraf config
+   * Update a Telegraf configuration
    * 
    * @param telegrafID The Telegraf config ID. (required)
-   * @param telegrafRequest Telegraf config update to apply (required)
+   * @param telegrafRequest Telegraf configuration update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Telegraf&gt;
    */

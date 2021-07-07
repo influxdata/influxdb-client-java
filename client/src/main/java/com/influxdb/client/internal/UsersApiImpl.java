@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import com.influxdb.Arguments;
 import com.influxdb.client.UsersApi;
 import com.influxdb.client.domain.PasswordResetBody;
+import com.influxdb.client.domain.PostUser;
 import com.influxdb.client.domain.User;
 import com.influxdb.client.domain.Users;
 import com.influxdb.client.service.UsersService;
@@ -68,7 +69,7 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
     @Override
     public List<User> findUsers() {
 
-        Call<Users> usersCall = service.getUsers(null);
+        Call<Users> usersCall = service.getUsers(null, null, null, null, null, null);
 
         Users users = execute(usersCall);
         LOG.log(Level.FINEST, "findUsers found: {0}", users);
@@ -94,7 +95,12 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
 
         Arguments.checkNotNull(user, "User");
 
-        Call<User> call = service.postUsers(user, null);
+        PostUser request = new PostUser()
+                .oauthID(user.getOauthID())
+                .name(user.getName())
+                .status(PostUser.StatusEnum.fromValue(user.getStatus().getValue()));
+
+        Call<User> call = service.postUsers(request, null);
 
         return execute(call);
     }
@@ -105,7 +111,12 @@ final class UsersApiImpl extends AbstractRestClient implements UsersApi {
 
         Arguments.checkNotNull(user, "User");
 
-        Call<User> userCall = service.patchUsersID(user.getId(), user, null);
+        PostUser request = new PostUser()
+                .oauthID(user.getOauthID())
+                .name(user.getName())
+                .status(PostUser.StatusEnum.fromValue(user.getStatus().getValue()));
+
+        Call<User> userCall = service.patchUsersID(user.getId(), request, null);
 
         return execute(userCall);
     }

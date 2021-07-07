@@ -46,10 +46,10 @@ public interface VariablesService {
   );
 
   /**
-   * Get all variables
+   * List all variables
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param org The organization name. (optional)
+   * @param org The name of the organization. (optional)
    * @param orgID The organization ID. (optional)
    * @return Call&lt;Variables&gt;
    */
@@ -59,7 +59,7 @@ public interface VariablesService {
   );
 
   /**
-   * Get a variable
+   * Retrieve a variable
    * 
    * @param variableID The variable ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)

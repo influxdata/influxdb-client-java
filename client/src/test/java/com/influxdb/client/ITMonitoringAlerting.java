@@ -26,10 +26,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.concurrent.TimeUnit;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.influxdb.client.domain.CheckStatusLevel;
 import com.influxdb.client.domain.LesserThreshold;
 import com.influxdb.client.domain.Organization;
@@ -37,6 +33,11 @@ import com.influxdb.client.domain.RuleStatusLevel;
 import com.influxdb.client.domain.SlackNotificationEndpoint;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;

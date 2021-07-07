@@ -1,4 +1,4 @@
-## 2.4.0 [unreleased]
+## 3.0.0 [unreleased]
 
 ### Breaking Changes
 
@@ -7,6 +7,25 @@
 The `micrometer` v1.7.0 brings [support](https://github.com/micrometer-metrics/micrometer/issues/1974) for InfluxDB 2. 
 That is a reason why the [influxdb-spring](./spring) no longer needs provide a custom Micrometer metrics exporter.
 Now you are able to use `micrometer-registry-influx`, for more info [see our docs](./spring/README.md#actuator-for-influxdb2-micrometer-registry). 
+ 
+#### Management API
+This release introduces a support for new InfluxDB OSS API definitions - [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml). The following breaking changes are in underlying API services and doesn't affect common apis such as - `WriteApi`, `QueryApi`, `BucketsApi`, `OrganizationsApi`...
+
+- `UsersService` uses `PostUser` to create `User`
+- `AuthorizationsService` uses `AuthorizationPostRequest` to create `Authorization`
+- `BucketsService` uses `PatchBucketRequest` to update `Bucket`
+- `OrganizationsService` uses `PostOrganizationRequest` to create `Organization`
+- `OrganizationsService` uses `PatchOrganizationRequest` to update `Organization`
+- `DashboardsService` uses `PatchDashboardRequest` to update `Dashboard`
+- `DeleteService` is used to delete time series data instead of `DefaultService`
+- `Run` contains list of `LogEvent` in `Log` property
+- `DBRPs` contains list of `DBRP` in `Content` property
+- `DbrPsService` uses `DBRPCreate` to create `DBRP`
+- Inheritance structure:
+   - `Check` <- `CheckDiscriminator` <- `CheckBase`
+   - `NotificationEndpoint` <- `NotificationEndpointDiscriminator` <- `NotificationEndpointBase`
+   - `NotificationRule` <- `NotificationRuleDiscriminator` <- `NNotificationRuleBase`
+- Flux AST literals extends the AST `Expression` object
 
 #### FluxDSL
 The `shift()` function renamed to `timeShift()`.
@@ -20,9 +39,12 @@ The `shift()` function renamed to `timeShift()`.
 1. [#236](https://github.com/influxdata/influxdb-client-java/pull/236): Rename `shift()` to `timeShift()` [FluxDSL]
 
 ### Dependencies
-1. [#227](https://github.com/influxdata/influxdb-client-csharp/pull/227): Update dependencies:
+1. [#227](https://github.com/influxdata/influxdb-client-java/pull/227): Update dependencies:
    - Kotlin to 1.5.10
-   
+
+### API
+1. [#233](https://github.com/influxdata/influxdb-client-java/pull/233): Use InfluxDB OSS API definitions to generated APIs
+ 
 ## 2.3.0 [2021-06-04]
 
 ### Features

@@ -18,6 +18,7 @@ import com.influxdb.client.domain.Error;
 import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
+import com.influxdb.client.domain.PatchDashboardRequest;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceMembers;
 import com.influxdb.client.domain.ResourceOwner;
@@ -95,23 +96,26 @@ public interface DashboardsService {
   );
 
   /**
-   * Get all dashboards
+   * List all dashboards
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param owner The owner ID. (optional)
+   * @param offset  (optional)
+   * @param limit  (optional, default to 20)
+   * @param descending  (optional, default to false)
+   * @param owner A user identifier. Returns only dashboards where this user has the &#x60;owner&#x60; role. (optional)
    * @param sortBy The column to sort by. (optional)
-   * @param id List of dashboard IDs to return. If both &#x60;id and &#x60;owner&#x60; are specified, only &#x60;id&#x60; is used. (optional, default to new ArrayList&lt;&gt;())
-   * @param orgID The organization ID. (optional)
-   * @param org The organization name. (optional)
+   * @param id A list of dashboard identifiers. Returns only the listed dashboards. If both &#x60;id&#x60; and &#x60;owner&#x60; are specified, only &#x60;id&#x60; is used. (optional, default to new ArrayList&lt;&gt;())
+   * @param orgID The identifier of the organization. (optional)
+   * @param org The name of the organization. (optional)
    * @return Call&lt;Dashboards&gt;
    */
   @GET("api/v2/dashboards")
   Call<Dashboards> getDashboards(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("owner") String owner, @retrofit2.http.Query("sortBy") String sortBy, @retrofit2.http.Query("id") List<String> id, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("org") String org
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("offset") Integer offset, @retrofit2.http.Query("limit") Integer limit, @retrofit2.http.Query("descending") Boolean descending, @retrofit2.http.Query("owner") String owner, @retrofit2.http.Query("sortBy") String sortBy, @retrofit2.http.Query("id") List<String> id, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("org") String org
   );
 
   /**
-   * Get a Dashboard
+   * Retrieve a Dashboard
    * 
    * @param dashboardID The ID of the dashboard to update. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -137,7 +141,7 @@ public interface DashboardsService {
   );
 
   /**
-   * list all labels for a dashboard
+   * List all labels for a dashboard
    * 
    * @param dashboardID The dashboard ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -176,8 +180,8 @@ public interface DashboardsService {
    * Update a dashboard
    * 
    * @param dashboardID The ID of the dashboard to update. (required)
-   * @param dashboard Patching of a dashboard (required)
    * @param zapTraceSpan OpenTracing span context (optional)
+   * @param patchDashboardRequest  (optional)
    * @return Call&lt;Dashboard&gt;
    */
   @Headers({
@@ -185,7 +189,7 @@ public interface DashboardsService {
   })
   @PATCH("api/v2/dashboards/{dashboardID}")
   Call<Dashboard> patchDashboardsID(
-    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Body Dashboard dashboard, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Path("dashboardID") String dashboardID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Body PatchDashboardRequest patchDashboardRequest
   );
 
   /**

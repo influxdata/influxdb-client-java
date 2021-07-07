@@ -16,7 +16,6 @@ import com.influxdb.client.domain.FluxResponse;
 import com.influxdb.client.domain.LabelMapping;
 import com.influxdb.client.domain.LabelResponse;
 import com.influxdb.client.domain.LabelsResponse;
-import com.influxdb.client.domain.PostCheck;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +26,7 @@ public interface ChecksService {
   /**
    * Add new check
    * 
-   * @param postCheck Check to create (required)
+   * @param check Check to create (required)
    * @return Call&lt;Check&gt;
    */
   @Headers({
@@ -35,7 +34,7 @@ public interface ChecksService {
   })
   @POST("api/v2/checks")
   Call<Check> createCheck(
-    @retrofit2.http.Body PostCheck postCheck
+    @retrofit2.http.Body Check check
   );
 
   /**
@@ -64,7 +63,7 @@ public interface ChecksService {
   );
 
   /**
-   * Get all checks
+   * List all checks
    * 
    * @param orgID Only show checks that belong to a specific organization ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -78,7 +77,7 @@ public interface ChecksService {
   );
 
   /**
-   * Get a check
+   * Retrieve a check
    * 
    * @param checkID The check ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
@@ -102,7 +101,7 @@ public interface ChecksService {
   );
 
   /**
-   * Get a check query
+   * Retrieve a check query
    * 
    * @param checkID The check ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)

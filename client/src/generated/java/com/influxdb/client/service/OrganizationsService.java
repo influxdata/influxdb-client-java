@@ -11,12 +11,12 @@ import com.influxdb.client.domain.AddResourceMemberRequestBody;
 import com.influxdb.client.domain.Error;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.Organizations;
+import com.influxdb.client.domain.PatchOrganizationRequest;
+import com.influxdb.client.domain.PostOrganizationRequest;
 import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceMembers;
 import com.influxdb.client.domain.ResourceOwner;
 import com.influxdb.client.domain.ResourceOwners;
-import com.influxdb.client.domain.SecretKeys;
-import com.influxdb.client.domain.SecretKeysResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,22 +116,10 @@ public interface OrganizationsService {
   );
 
   /**
-   * List all secret keys for an organization
-   * 
-   * @param orgID The organization ID. (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;SecretKeysResponse&gt;
-   */
-  @GET("api/v2/orgs/{orgID}/secrets")
-  Call<SecretKeysResponse> getOrgsIDSecrets(
-    @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
    * Update an organization
    * 
    * @param orgID The ID of the organization to get. (required)
-   * @param organization Organization update to apply (required)
+   * @param patchOrganizationRequest Organization update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Organization&gt;
    */
@@ -140,29 +128,13 @@ public interface OrganizationsService {
   })
   @PATCH("api/v2/orgs/{orgID}")
   Call<Organization> patchOrgsID(
-    @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body Organization organization, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Update secrets in an organization
-   * 
-   * @param orgID The organization ID. (required)
-   * @param requestBody Secret key value pairs to update/add (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @Headers({
-    "Content-Type:application/json"
-  })
-  @PATCH("api/v2/orgs/{orgID}/secrets")
-  Call<Void> patchOrgsIDSecrets(
-    @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body Map<String, String> requestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body PatchOrganizationRequest patchOrganizationRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
    * Create an organization
    * 
-   * @param organization Organization to create (required)
+   * @param postOrganizationRequest Organization to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Organization&gt;
    */
@@ -171,7 +143,7 @@ public interface OrganizationsService {
   })
   @POST("api/v2/orgs")
   Call<Organization> postOrgs(
-    @retrofit2.http.Body Organization organization, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Body PostOrganizationRequest postOrganizationRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -204,22 +176,6 @@ public interface OrganizationsService {
   @POST("api/v2/orgs/{orgID}/owners")
   Call<ResourceOwner> postOrgsIDOwners(
     @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body AddResourceMemberRequestBody addResourceMemberRequestBody, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
-  );
-
-  /**
-   * Delete secrets from an organization
-   * 
-   * @param orgID The organization ID. (required)
-   * @param secretKeys Secret key to delete (required)
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @Headers({
-    "Content-Type:application/json"
-  })
-  @POST("api/v2/orgs/{orgID}/secrets/delete")
-  Call<Void> postOrgsIDSecrets(
-    @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Body SecretKeys secretKeys, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
 }
