@@ -21,11 +21,15 @@
  */
 package com.influxdb.spring.influx;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nonnull;
 
 import com.influxdb.client.InfluxDBClient;
 
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -96,11 +100,27 @@ class InfluxDB2AutoConfigurationTest {
                 });
     }
 
+    @Test
+    public void protocolVersion() {
+        this.contextRunner.withPropertyValues("spring.influx2.url=http://localhost:8086/", "spring.influx2.token:token")
+                .run((context) -> {
+                    List<Protocol> protocols = getOkHttpClient(context).protocols();
+                    Assertions.assertThat(protocols).hasSize(1);
+                    Assertions.assertThat(protocols).contains(Protocol.HTTP_1_1);
+                });
+    }
+
     private int getReadTimeoutProperty(AssertableApplicationContext context) {
+        OkHttpClient callFactory = getOkHttpClient(context);
+        return callFactory.readTimeoutMillis();
+    }
+
+    @Nonnull
+    private OkHttpClient getOkHttpClient(final AssertableApplicationContext context) {
         InfluxDBClient influxDB = context.getBean(InfluxDBClient.class);
         Retrofit retrofit = (Retrofit) ReflectionTestUtils.getField(influxDB, "retrofit");
         OkHttpClient callFactory = (OkHttpClient) retrofit.callFactory();
-        return callFactory.readTimeoutMillis();
+        return callFactory;
     }
 
     @Configuration

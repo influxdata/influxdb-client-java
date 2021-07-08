@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +40,7 @@ import com.influxdb.exceptions.InfluxException;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 
 /**
  * InfluxDBClientOptions are used to configure theInfluxDB 2.0 connections.
@@ -445,7 +447,8 @@ public final class InfluxDBClientOptions {
             }
 
             if (okHttpClient == null) {
-                okHttpClient = new OkHttpClient.Builder();
+                okHttpClient = new OkHttpClient.Builder()
+                        .protocols(Collections.singletonList(Protocol.HTTP_1_1));
             }
 
             if (logLevel == null) {
@@ -477,7 +480,8 @@ public final class InfluxDBClientOptions {
                 logLevel(Enum.valueOf(LogLevel.class, logLevel));
             }
 
-            okHttpClient = new OkHttpClient.Builder();
+            okHttpClient = new OkHttpClient.Builder()
+                    .protocols(Collections.singletonList(Protocol.HTTP_1_1));
             if (readTimeout != null) {
                 okHttpClient.readTimeout(toDuration(readTimeout));
             }

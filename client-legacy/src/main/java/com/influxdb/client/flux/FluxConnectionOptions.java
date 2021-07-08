@@ -21,6 +21,7 @@
  */
 package com.influxdb.client.flux;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +36,7 @@ import com.influxdb.exceptions.InfluxException;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 
 /**
  * FluxConnectionOptions are used to configure queries to the Flux.
@@ -121,7 +123,8 @@ public final class FluxConnectionOptions {
     public static class Builder {
 
         private String url;
-        private OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
+        private OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder()
+                .protocols(Collections.singletonList(Protocol.HTTP_1_1));
         private Map<String, String> parameters = new HashMap<>();
 
         /**
