@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 - 2021 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 171,
+      <title>File: 168,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -369,20 +369,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.LabelsApiImpl.java">com/influxdb/client/internal/LabelsApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.ShiftFlux.java">com/influxdb/query/dsl/functions/ShiftFlux.java</a>
                 </td>
                 <td>
                   0
@@ -971,34 +957,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.spring.influx.InfluxDB2AutoConfiguration.java">com/influxdb/spring/influx/InfluxDB2AutoConfiguration.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.spring.metrics.Influx2MetricsExportAutoConfiguration.java">com/influxdb/spring/metrics/Influx2MetricsExportAutoConfiguration.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.spring.metrics.Influx2Properties.java">com/influxdb/spring/metrics/Influx2Properties.java</a>
                 </td>
                 <td>
                   0
@@ -2160,20 +2118,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.spring.metrics.Influx2PropertiesConfigAdapter.java">com/influxdb/spring/metrics/Influx2PropertiesConfigAdapter.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.events.AbstractWriteEvent.java">com/influxdb/client/write/events/AbstractWriteEvent.java</a>
                 </td>
                 <td>
@@ -2203,6 +2147,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.NotificationRulesApi.java">com/influxdb/client/NotificationRulesApi.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.TimeShiftFlux.java">com/influxdb/query/dsl/functions/TimeShiftFlux.java</a>
                 </td>
                 <td>
                   0

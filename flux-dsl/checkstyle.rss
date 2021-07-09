@@ -256,20 +256,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.ShiftFlux.java">com/influxdb/query/dsl/functions/ShiftFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.FirstFlux.java">com/influxdb/query/dsl/functions/FirstFlux.java</a>
                 </td>
                 <td>
@@ -607,6 +593,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.PivotFlux.java">com/influxdb/query/dsl/functions/PivotFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.TimeShiftFlux.java">com/influxdb/query/dsl/functions/TimeShiftFlux.java</a>
                 </td>
                 <td>
                   0
