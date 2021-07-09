@@ -153,14 +153,14 @@ The latest version for Maven dependency:
 <dependency>
   <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-flux</artifactId>
-  <version>2.3.0</version>
+  <version>3.0.0</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-flux:2.3.0"
+    compile "com.influxdb:influxdb-client-flux:3.0.0"
 }
 ```
 
