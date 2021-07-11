@@ -1,5 +1,9 @@
 ## 3.1.0 [unreleased]
 
+#### `inflixdb-spring`
+
+Added Spring Boot configuration metadata that helps the IDE understand the `application.properties`.
+
 ## 3.0.0 [2021-07-09]
 
 ### Breaking Changes
