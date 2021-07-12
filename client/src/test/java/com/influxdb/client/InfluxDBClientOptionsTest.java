@@ -21,7 +21,10 @@
  */
 package com.influxdb.client;
 
+import java.util.List;
+
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -86,5 +89,18 @@ class InfluxDBClientOptionsTest {
                 .build();
 
         Assertions.assertThat(options.getAuthScheme()).isEqualTo(InfluxDBClientOptions.AuthScheme.SESSION);
+    }
+
+    @Test
+    void protocolVersion() {
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url("http://localhost:9999")
+                .authenticateToken("xyz".toCharArray())
+                .build();
+
+        List<Protocol> protocols = options.getOkHttpClient().build().protocols();
+        Assertions.assertThat(protocols).hasSize(1);
+        Assertions.assertThat(protocols).contains(Protocol.HTTP_1_1);
     }
 }

@@ -21,7 +21,10 @@
  */
 package com.influxdb.client.flux;
 
+import java.util.List;
+
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -64,5 +67,17 @@ class FluxConnectionOptionsTest {
                 .build();
 
         Assertions.assertThat(fluxConnectionOptions.getOkHttpClient()).isEqualTo(okHttpClient);
+    }
+
+    @Test
+    void protocolVersion() {
+
+        FluxConnectionOptions options = FluxConnectionOptions.builder()
+                .url("http://localhost:8093")
+                .build();
+
+        List<Protocol> protocols = options.getOkHttpClient().build().protocols();
+        Assertions.assertThat(protocols).hasSize(1);
+        Assertions.assertThat(protocols).contains(Protocol.HTTP_1_1);
     }
 }
