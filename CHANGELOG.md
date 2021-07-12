@@ -1,8 +1,8 @@
 ## 3.1.0 [unreleased]
 
-#### `inflixdb-spring`
+### Features
 
-Added Spring Boot configuration metadata that helps the IDE understand the `application.properties`.
+1. [#242](https://github.com/influxdata/influxdb-client-java/pull/242): Added Spring Boot configuration metadata that helps the IDE understand the `application.properties` [spring]
 
 ## 3.0.0 [2021-07-09]
 
