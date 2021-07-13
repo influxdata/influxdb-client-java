@@ -109,6 +109,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.influxdb</groupId>
+            <artifactId>influxdb-client-reactive</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-influx</artifactId>
             <version>${micrometer.version}</version>

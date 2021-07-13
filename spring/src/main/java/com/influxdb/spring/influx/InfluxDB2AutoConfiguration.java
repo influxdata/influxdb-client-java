@@ -21,15 +21,20 @@
  */
 package com.influxdb.spring.influx;
 
+import javax.annotation.Nonnull;
+
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.client.reactive.InfluxDBClientReactive;
+import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 
 import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -57,10 +62,28 @@ public class InfluxDB2AutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty("influx.url")
     @ConditionalOnMissingBean
-    @ConditionalOnProperty("spring.influx2.url")
+    @ConditionalOnMissingClass("com.influxdb.client.reactive.InfluxDBClientReactive")
     public InfluxDBClient influxDBClient() {
 
+        InfluxDBClientOptions.Builder influxBuilder = makeBuilder();
+
+        return InfluxDBClientFactory.create(influxBuilder.build()).setLogLevel(properties.getLogLevel());
+    }
+
+    @Bean
+    @ConditionalOnProperty("influx.url")
+    @ConditionalOnMissingBean
+    @ConditionalOnClass(InfluxDBClientReactive.class)
+    public InfluxDBClientReactive influxDBClientReactive() {
+        InfluxDBClientOptions.Builder influxBuilder = makeBuilder();
+
+        return InfluxDBClientReactiveFactory.create(influxBuilder.build()).setLogLevel(properties.getLogLevel());
+    }
+
+    @Nonnull
+    private InfluxDBClientOptions.Builder makeBuilder() {
         OkHttpClient.Builder okHttpBuilder;
         if (builderProvider == null) {
             okHttpBuilder = new OkHttpClient.Builder()
@@ -82,8 +105,6 @@ public class InfluxDB2AutoConfiguration {
         } else if (StringUtils.hasLength(properties.getUsername()) && StringUtils.hasLength(properties.getPassword())) {
             influxBuilder.authenticate(properties.getUsername(), properties.getPassword().toCharArray());
         }
-
-        return InfluxDBClientFactory.create(influxBuilder.build()).setLogLevel(properties.getLogLevel());
+        return influxBuilder;
     }
-
 }

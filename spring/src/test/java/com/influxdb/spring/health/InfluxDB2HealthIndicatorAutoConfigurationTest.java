@@ -23,7 +23,7 @@ package com.influxdb.spring.health;
 
 import com.influxdb.client.InfluxDBClient;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.springframework.boot.actuate.autoconfigure.health.HealthContributorAutoConfiguration;
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(JUnitPlatform.class)
 class InfluxDB2HealthIndicatorAutoConfigurationTest {
 
-    private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
+    private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withUserConfiguration(InfluxDBClientConfiguration.class).withConfiguration(
                     AutoConfigurations.of(InfluxDB2HealthIndicatorAutoConfiguration.class,
                             HealthContributorAutoConfiguration.class));
@@ -56,7 +56,7 @@ class InfluxDB2HealthIndicatorAutoConfigurationTest {
 
     @Test
     public void runWhenDisabledShouldNotCreateIndicator() {
-        this.contextRunner.withPropertyValues("management.health.influxdb2.enabled:false")
+        this.contextRunner.withPropertyValues("management.health.influx.enabled:false")
                 .run((context) -> assertThat(context)
                         .doesNotHaveBean(InfluxDB2HealthIndicator.class));
     }

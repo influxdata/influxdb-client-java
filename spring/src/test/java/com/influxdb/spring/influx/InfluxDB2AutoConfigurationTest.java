@@ -24,6 +24,7 @@ package com.influxdb.spring.influx;
 import java.util.concurrent.TimeUnit;
 
 import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.reactive.InfluxDBClientReactive;
 
 import okhttp3.OkHttpClient;
 import org.assertj.core.api.Assertions;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
+import org.springframework.boot.test.context.FilteredClassLoader;
 import org.springframework.boot.test.context.assertj.AssertableApplicationContext;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
@@ -47,6 +49,7 @@ import retrofit2.Retrofit;
 class InfluxDB2AutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
+            .withClassLoader(new FilteredClassLoader(InfluxDBClientReactive.class))
             .withConfiguration(AutoConfigurations.of(InfluxDB2AutoConfiguration.class));
 
     @Test
@@ -58,15 +61,15 @@ class InfluxDB2AutoConfigurationTest {
     @Test
     public void influxDBClientCanBeCustomized() {
         this.contextRunner
-                .withPropertyValues("spring.influx2.url=http://localhost:8086/",
-                        "spring.influx2.password:password", "spring.influx2.username:username")
+                .withPropertyValues("influx.url=http://localhost:8086/",
+                        "influx.password:password", "influx.username:username")
                 .run(((context) -> Assertions.assertThat(context.getBeansOfType(InfluxDBClient.class))
                         .hasSize(1)));
     }
 
     @Test
     public void influxDBClientCanBeCreatedWithoutCredentials() {
-        this.contextRunner.withPropertyValues("spring.influx2.url=http://localhost:8086/")
+        this.contextRunner.withPropertyValues("influx.url=http://localhost:8086/")
                 .run((context) -> {
                     Assertions.assertThat(context.getBeansOfType(InfluxDBClient.class)).hasSize(1);
                     int readTimeout = getReadTimeoutProperty(context);
@@ -78,7 +81,7 @@ class InfluxDB2AutoConfigurationTest {
     public void influxDBClientWithOkHttpClientBuilderProvider() {
         this.contextRunner
                 .withUserConfiguration(CustomOkHttpClientBuilderProviderConfig.class)
-                .withPropertyValues("spring.influx2.url=http://localhost:8086/", "spring.influx2.token:token")
+                .withPropertyValues("influx.url=http://localhost:8086/", "influx.token:token")
                 .run((context) -> {
                     Assertions.assertThat(context.getBeansOfType(InfluxDBClient.class)).hasSize(1);
                     int readTimeout = getReadTimeoutProperty(context);
@@ -88,12 +91,27 @@ class InfluxDB2AutoConfigurationTest {
 
     @Test
     public void influxDBClientWithReadTimeout() {
-        this.contextRunner.withPropertyValues("spring.influx2.url=http://localhost:8086/", "spring.influx2.readTimeout=13s")
+        this.contextRunner.withPropertyValues("influx.url=http://localhost:8086/", "influx.readTimeout=13s")
                 .run((context) -> {
                     Assertions.assertThat(context.getBeansOfType(InfluxDBClient.class)).hasSize(1);
                     int readTimeout = getReadTimeoutProperty(context);
                     Assertions.assertThat(readTimeout).isEqualTo(13_000);
                 });
+    }
+
+    @Test
+    public void influxDBClientReactive() {
+        ApplicationContextRunner contextRunner = new ApplicationContextRunner()
+                .withPropertyValues("influx.url=http://localhost:8086/")
+                .withConfiguration(AutoConfigurations.of(InfluxDB2AutoConfiguration.class));
+
+        contextRunner
+                .run(((context) -> Assertions.assertThat(context.getBeansOfType(InfluxDBClientReactive.class))
+                .hasSize(1)));
+
+        contextRunner
+                .run(((context) -> Assertions.assertThat(context.getBeansOfType(InfluxDBClient.class))
+                .hasSize(0)));
     }
 
     private int getReadTimeoutProperty(AssertableApplicationContext context) {

@@ -32,7 +32,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author Jakub Bednar (bednar@github) (06/05/2019 12:54)
  */
-@ConfigurationProperties(prefix = "spring.influx2")
+@ConfigurationProperties(prefix = "influx")
 public class InfluxDB2Properties {
 
     private static final int DEFAULT_TIMEOUT = 10_000;

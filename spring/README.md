@@ -10,14 +10,14 @@
 
 ## InfluxDB2 auto-configuration
 
-To enable `InfluxDBClient` support you need to set a `spring.influx2.url` property, and include `influxdb-client-java` on your classpath. 
+To enable `InfluxDBClient` support you need to set a `influx.url` property, and include `influxdb-client-java` on your classpath. 
 
 `InfluxDBClient` relies on OkHttp. If you need to tune the http client, you can register an `InfluxDB2OkHttpClientBuilderProvider` bean.
 
 The default configuration can be override via properties:
 
 ```yaml
-spring.influx2:
+influx:
     url: http://localhost:8086/api/v2 # URL to connect to InfluxDB.
     username: my-user # Username to use in the basic auth.
     password: my-password # Password to use in the basic auth.
@@ -29,6 +29,8 @@ spring.influx2:
     writeTimeout: 5s # Write timeout for OkHttpClient. (Default: 10s)
     connectTimeout: 5s # Connection timeout for OkHttpClient. (Default: 10s)
 ```
+
+If you want to configure the `InfluxDBClientReactive` client, you need to include `influxdb-client-reactive` on your classpath instead of `influxdb-client-java`.
 
 ## Actuator for InfluxDB2 micrometer registry
 
@@ -74,7 +76,7 @@ The `/health` endpoint can monitor an **InfluxDB 2.0** server.
 InfluxDB 2.0 health check relies on `InfluxDBClient` and can be configured via:
 
 ```yaml
-management.health.influxdb2.enabled=true # Whether to enable InfluxDB 2.0 health check.
+management.health.influx.enabled=true # Whether to enable InfluxDB 2.0 health check.
 ```
 
 ## Version
