@@ -1,3 +1,8 @@
+## 3.1.0 [unreleased]
+
+### Bug Fixes
+1. [#246](https://github.com/influxdata/influxdb-client-java/pull/246): Parsing Infinite numbers into `Double `
+
 ## 3.0.1 [2021-07-16]
 
 ### Features
@@ -45,7 +50,6 @@ The `shift()` function renamed to `timeShift()`.
 ### Bug Fixes
 1. [#227](https://github.com/influxdata/influxdb-client-java/pull/227): Connection URL with custom base path
 1. [#236](https://github.com/influxdata/influxdb-client-java/pull/236): Rename `shift()` to `timeShift()` [FluxDSL]
-1. [#241](https://github.com/influxdata/influxdb-client-java/pull/241): Set default HTTP protocol to HTTP 1.1
 
 ### Dependencies
 1. [#227](https://github.com/influxdata/influxdb-client-java/pull/227): Update dependencies:
