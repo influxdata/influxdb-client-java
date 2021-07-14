@@ -289,7 +289,14 @@ public class FluxCsvParser {
             case "long":
                 return Long.parseLong(strValue);
             case "double":
-                return Double.parseDouble(strValue);
+                switch (strValue) {
+                    case "+Inf":
+                        return Double.POSITIVE_INFINITY;
+                    case "-Inf":
+                        return Double.NEGATIVE_INFINITY;
+                    default:
+                        return Double.parseDouble(strValue);
+                }
             case "base64Binary":
                 return Base64.getDecoder().decode(strValue);
             case "dateTime:RFC3339":

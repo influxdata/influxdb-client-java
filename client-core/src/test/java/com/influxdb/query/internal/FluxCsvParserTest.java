@@ -613,6 +613,33 @@ class FluxCsvParserTest {
         Assertions.assertThat(tables.get(1).getRecords()).hasSize(1);
     }
 
+    @Test
+    public void parseInf() throws IOException {
+         String data = "#group,false,false,true,true,true,true,true,true,true,true,false,false\n"
+                 + "#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,string,string,double,double\n"
+                 + "#default,_result,,,,,,,,,,,\n"
+                 + ",result,table,_start,_stop,_field,_measurement,language,license,name,owner,le,_value\n"
+                 + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,0,0\n"
+                 + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,10,0\n"
+                 + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,20,0\n"
+                 + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,30,0\n"
+                 + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,40,0\n"
+                 + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,50,0\n"
+                 + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,60,0\n"
+                 + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,70,0\n"
+                 + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,80,0\n"
+                 + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,90,0\n"
+                 + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,+Inf,15\n"
+                 + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,-Inf,15\n"
+                 + "\n";
+
+        List<FluxTable> tables = parseFluxResponse(data);
+        Assertions.assertThat(tables).hasSize(1);
+        Assertions.assertThat(tables.get(0).getRecords()).hasSize(12);
+        Assertions.assertThat(tables.get(0).getRecords().get(10).getValueByKey("le")).isEqualTo(Double.POSITIVE_INFINITY);
+        Assertions.assertThat(tables.get(0).getRecords().get(11).getValueByKey("le")).isEqualTo(Double.NEGATIVE_INFINITY);
+    }
+
     @Nonnull
     private List<FluxTable> parseFluxResponse(@Nonnull final String data) throws IOException {
 
