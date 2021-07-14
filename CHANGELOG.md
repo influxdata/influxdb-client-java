@@ -1,7 +1,7 @@
 ## 3.1.0 [unreleased]
 
 ### Bug Fixes
-1. [#246](https://github.com/influxdata/influxdb-client-java/pull/246): Parsing Infinite numbers into `Double `
+1. [#246](https://github.com/influxdata/influxdb-client-java/pull/246): Parsing infinite numbers
 
 ## 3.0.1 [2021-07-16]
 
