@@ -1,8 +1,10 @@
-## 3.1.0 [unreleased]
+## 3.0.1 [2021-07-16]
 
 ### Features
-
 1. [#242](https://github.com/influxdata/influxdb-client-java/pull/242): Add Spring Boot configuration metadata that helps the IDE understand the `application.properties` [spring]
+
+### Bug Fixes
+1. [#248](https://github.com/influxdata/influxdb-client-java/pull/248): Remove not supported autoconfiguration [spring]
 
 ## 3.0.0 [2021-07-09]
 
