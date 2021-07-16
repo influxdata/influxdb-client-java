@@ -32,7 +32,7 @@
 
     <properties>
         <checkstyle.skip>true</checkstyle.skip>
-        <influxdb-client.version>3.1.0-SNAPSHOT</influxdb-client.version>
+        <influxdb-client.version>3.0.1-SNAPSHOT</influxdb-client.version>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
