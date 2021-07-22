@@ -21,11 +21,14 @@
  */
 package com.influxdb.spring.influx;
 
+import java.util.Collections;
+
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.InfluxDBClientOptions;
 
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -64,6 +67,7 @@ public class InfluxDB2AutoConfiguration {
         OkHttpClient.Builder okHttpBuilder;
         if (builderProvider == null) {
             okHttpBuilder = new OkHttpClient.Builder()
+                    .protocols(Collections.singletonList(Protocol.HTTP_1_1))
                     .readTimeout(properties.getReadTimeout())
                     .writeTimeout(properties.getWriteTimeout())
                     .connectTimeout(properties.getConnectTimeout());
