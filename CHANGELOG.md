@@ -2,6 +2,7 @@
 
 ### Bug Fixes
 1. [#246](https://github.com/influxdata/influxdb-client-java/pull/246): Parsing infinite numbers
+1. [#241](https://github.com/influxdata/influxdb-client-java/pull/241): Set default HTTP protocol to HTTP 1.1
 
 ## 3.0.1 [2021-07-16]
 
