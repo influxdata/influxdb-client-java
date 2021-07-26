@@ -1,5 +1,14 @@
 ## 3.1.0 [unreleased]
 
+### Breaking Changes
+
+#### `influxdb-spring`:
+
+Change configuration prefix from `spring.influx2` to `influx` according to [Spring Docs](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.developing-auto-configuration.custom-starter.configuration-keys) - for more info see [README.md](./spring).
+
+### Features
+1. [#244](https://github.com/influxdata/influxdb-client-java/pull/244): Add support for auto-configure the reactive client - `InfluxDBClientReactive` [spring]
+
 ### Bug Fixes
 1. [#246](https://github.com/influxdata/influxdb-client-java/pull/246): Parsing infinite numbers
 1. [#241](https://github.com/influxdata/influxdb-client-java/pull/241): Set default HTTP protocol to HTTP 1.1
