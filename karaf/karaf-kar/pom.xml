@@ -32,7 +32,6 @@
     </parent>
 
     <artifactId>influxdb-karaf-kar</artifactId>
-  <version>3.1.1-SNAPSHOT</version>
     <packaging>kar</packaging>
 
     <name>Apache Karaf KAR for InfluxDB 2.0</name>
