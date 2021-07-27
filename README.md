@@ -13,17 +13,6 @@ This repository contains the reference JVM clients for the InfluxDB 2.0. Current
 
 #### Note: Use this client library with InfluxDB 2.x and InfluxDB 1.8+ ([see details](#influxdb-18-api-compatibility)). For connecting to InfluxDB 1.7 or earlier instances, use the [influxdb-java](https://github.com/influxdata/influxdb-java) client library.
 
-## Documentation
-
-This section contains links to the client library documentation.
-
-* [Product documentation](https://docs.influxdata.com/influxdb/v2.0/api-guide/client-libraries/), [Getting Started](#how-to-use)
-* [Examples](examples)
-* [API Reference](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html)
-* [Changelog](CHANGELOG.md)
-
-## Index
-
 - [Features](#features)
 - [Clients](#clients)
 - [How To Use](#how-to-use)
@@ -33,6 +22,15 @@ This section contains links to the client library documentation.
 - [Build Requirements](#build-requirements)
 - [Contributing](#contributing)
 - [License](#license)
+
+## Documentation
+
+This section contains links to the client library documentation.
+
+* [Product documentation](https://docs.influxdata.com/influxdb/v2.0/api-guide/client-libraries/), [Getting Started](#how-to-use)
+* [Examples](examples)
+* [API Reference](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html)
+* [Changelog](CHANGELOG.md)
 
 ## Features
 
