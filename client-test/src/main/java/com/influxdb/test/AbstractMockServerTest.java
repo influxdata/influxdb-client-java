@@ -29,6 +29,7 @@ import javax.annotation.Nullable;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 
 /**
@@ -139,5 +140,21 @@ public abstract class AbstractMockServerTest extends AbstractTest {
 
     protected RecordedRequest takeRequest() throws InterruptedException {
         return mockServer.takeRequest(10L, TimeUnit.SECONDS);
+    }
+
+    @Nonnull
+    protected String getRequestBody(@Nonnull final MockWebServer server) {
+
+        Assertions.assertThat(server).isNotNull();
+
+        RecordedRequest recordedRequest = null;
+        try {
+            recordedRequest = server.takeRequest(10L, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Assertions.fail("Unexpected exception", e);
+        }
+        Assertions.assertThat(recordedRequest).isNotNull();
+
+        return recordedRequest.getBody().readUtf8();
     }
 }

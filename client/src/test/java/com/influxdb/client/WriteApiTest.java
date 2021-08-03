@@ -1018,22 +1018,6 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         Assertions.assertThat(userAgent).startsWith("influxdb-client-java/4.");
     }
 
-    @Nonnull
-    private String getRequestBody(@Nonnull final MockWebServer server) {
-
-        Assertions.assertThat(server).isNotNull();
-
-        RecordedRequest recordedRequest = null;
-        try {
-            recordedRequest = server.takeRequest(10L, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Assertions.fail("Unexpected exception", e);
-        }
-        Assertions.assertThat(recordedRequest).isNotNull();
-
-        return recordedRequest.getBody().readUtf8();
-    }
-
     public abstract class Metric {
         @Column(name = "source", tag = true)
         private String source;

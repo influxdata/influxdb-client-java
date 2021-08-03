@@ -52,6 +52,7 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
+import retrofit2.HttpException;
 import retrofit2.Response;
 
 /**
@@ -84,6 +85,20 @@ public abstract class AbstractRestClient {
         } catch (IOException e) {
             throw new InfluxException(e);
         }
+    }
+
+    @Nonnull
+    protected InfluxException toInfluxException(@Nonnull final Throwable throwable) {
+
+        if (throwable instanceof InfluxException) {
+            return (InfluxException) throwable;
+        }
+
+        if (throwable instanceof HttpException) {
+            return responseToError(((HttpException) throwable).response());
+        }
+
+        return new InfluxException(throwable);
     }
 
     @Nonnull

@@ -23,7 +23,6 @@ package com.influxdb.client.reactive;
 
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.concurrent.CountDownLatch;
 
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
@@ -32,17 +31,18 @@ import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.Bucket;
+import com.influxdb.client.domain.Dialect;
 import com.influxdb.client.domain.Permission;
 import com.influxdb.client.domain.PermissionResource;
 import com.influxdb.client.domain.User;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractInfluxDBClient;
 import com.influxdb.client.write.Point;
-import com.influxdb.client.write.events.WriteSuccessEvent;
+import com.influxdb.exceptions.BadRequestException;
 import com.influxdb.query.FluxRecord;
 
 import io.reactivex.Flowable;
-import io.reactivex.Maybe;
+import io.reactivex.schedulers.Schedulers;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -101,17 +101,13 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         client.close();
 
         influxDBClient.close();
-        influxDBClient = InfluxDBClientReactiveFactory.create(influxDB_URL, token.toCharArray());
+        influxDBClient = InfluxDBClientReactiveFactory.create(influxDB_URL, token.toCharArray(), organization.getId(), bucket.getId());
         queryClient = influxDBClient.getQueryReactiveApi();
+        writeClient = influxDBClient.getWriteReactiveApi();
     }
 
     @AfterEach
-    void tearDown() throws Exception {
-
-        if (writeClient != null) {
-            writeClient.close();
-        }
-
+    void tearDown() {
         influxDBClient.close();
     }
 
@@ -120,28 +116,12 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
 
         String bucketName = bucket.getName();
 
-        writeClient = influxDBClient.getWriteReactiveApi();
-
         String lineProtocol = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
-        Maybe<String> record = Maybe.just(lineProtocol);
 
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> {
-
-                    Assertions.assertThat(event).isNotNull();
-                    Assertions.assertThat(event.getBucket()).isEqualTo(bucket.getName());
-                    Assertions.assertThat(event.getOrganization()).isEqualTo(organization.getId());
-                    Assertions.assertThat(event.getLineProtocol()).isEqualTo(lineProtocol);
-
-                    countDownLatch.countDown();
-                });
-
-        writeClient.writeRecord(bucketName, organization.getId(), WritePrecision.NS, record);
-
-        waitToCallback();
-
-        Assertions.assertThat(countDownLatch.getCount()).isEqualTo(0);
+        Publisher<WriteReactiveApi.Success> success = writeClient.writeRecord(WritePrecision.NS, lineProtocol);
+        Flowable.fromPublisher(success)
+                .test()
+                .assertValueCount(1);
 
         Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
@@ -159,9 +139,10 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
     @Test
     void writeRecordEmpty() {
 
-        writeClient = influxDBClient.getWriteReactiveApi();
-
-        writeClient.writeRecord(bucket.getName(), organization.getId(), WritePrecision.S, Maybe.empty());
+        Publisher<WriteReactiveApi.Success> success = writeClient.writeRecord(WritePrecision.S, null);
+        Flowable.fromPublisher(success)
+                .test()
+                .assertValueCount(1);
     }
 
     @Test
@@ -169,21 +150,16 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
 
         writeClient = influxDBClient.getWriteReactiveApi(WriteOptions.builder().batchSize(1).build());
 
-        countDownLatch = new CountDownLatch(2);
-
         Publisher<String> records = Flowable.just(
                 "h2o_feet,location=coyote_creek level\\ water_level=1.0 1",
                 "h2o_feet,location=coyote_creek level\\ water_level=2.0 2");
 
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> countDownLatch.countDown());
+        Publisher<WriteReactiveApi.Success> success = writeClient.writeRecords(WritePrecision.S, records);
+        Flowable.fromPublisher(success)
+                .test()
+                .assertValueCount(2);
 
-        writeClient.writeRecords(bucket.getName(), organization.getId(), WritePrecision.S, records);
-
-        waitToCallback();
-
-        Flowable<FluxRecord> results = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
+        Flowable<FluxRecord> results = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)");
 
         results.test()
                 .assertValueCount(2)
@@ -210,20 +186,15 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
     @Test
     void writePoint() {
 
-        writeClient = influxDBClient.getWriteReactiveApi();
-
         Instant time = Instant.ofEpochSecond(1000);
         Point point = Point.measurement("h2o_feet").addTag("location", "south").addField("water_level", 1).time(time, WritePrecision.MS);
 
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> countDownLatch.countDown());
+        Publisher<WriteReactiveApi.Success> success = writeClient.writePoint(WritePrecision.MS, point);
+        Flowable.fromPublisher(success)
+                .test()
+                .assertValueCount(1);
 
-        writeClient.writePoint(bucket.getName(), organization.getId(), Maybe.just(point));
-
-        waitToCallback();
-
-        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()", organization.getId());
+        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()");
 
         result.test().assertValueCount(1).assertValue(fluxRecord -> {
 
@@ -240,28 +211,31 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
     @Test
     void writePoints() {
 
-        writeClient = influxDBClient.getWriteReactiveApi();
-
-        countDownLatch = new CountDownLatch(2);
-
         Instant time = Instant.ofEpochSecond(2000);
 
         Point point1 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 1).time(time, WritePrecision.MS);
         Point point2 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusSeconds(10), WritePrecision.S);
 
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> countDownLatch.countDown());
+        Publisher<WriteReactiveApi.Success> success = writeClient.writePoints(WritePrecision.S, Flowable.just(point1, point2));
+        Flowable.fromPublisher(success)
+                .test()
+                .assertValueCount(1);
 
-        writeClient.writePoints(bucket.getName(), organization.getId(), (Publisher<Point>) Flowable.just(point1, point2));
-
-        waitToCallback();
-
-        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
+        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)");
 
         result
                 .test()
                 .assertValueCount(2);
+        //
+        //
+        //
+        //
+        //TODO test correct time of points
+        //
+        //
+        //
+        //
+        //
     }
 
     @Test
@@ -272,16 +246,12 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         measurement.level = 2.927;
         measurement.time = Instant.ofEpochSecond(10);
 
-        writeClient = influxDBClient.getWriteReactiveApi();
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> countDownLatch.countDown());
+        Publisher<WriteReactiveApi.Success> success = writeClient.writeMeasurement(WritePrecision.NS, measurement);
+        Flowable.fromPublisher(success)
+                .test()
+                .assertValueCount(1);
 
-        writeClient.writeMeasurement(bucket.getName(), organization.getId(), WritePrecision.NS, Maybe.just(measurement));
-
-        waitToCallback();
-
-        Flowable<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last() |> rename(columns:{_value: \"water_level\"})", organization.getId(), H2O.class);
+        Flowable<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last() |> rename(columns:{_value: \"water_level\"})", H2O.class);
 
         measurements.test().assertValueCount(1).assertValueAt(0, h2O -> {
 
@@ -309,16 +279,12 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         measurement2.level = 3.927;
         measurement2.time = time.plusSeconds(1);
 
-        writeClient = influxDBClient.getWriteReactiveApi();
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> countDownLatch.countDown());
+        Publisher<WriteReactiveApi.Success> success = writeClient.writeMeasurements(WritePrecision.NS, Flowable.just(measurement1, measurement2));
+        Flowable.fromPublisher(success)
+                .test()
+                .assertValueCount(1);
 
-        writeClient.writeMeasurements(bucket.getName(), organization.getId(), WritePrecision.NS, (Publisher<H2O>) Flowable.just(measurement1, measurement2));
-
-        waitToCallback();
-
-        Flowable<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> sort(desc: false, columns:[\"_time\"]) |>rename(columns:{_value: \"water_level\"})", organization.getId(), H2O.class);
+        Flowable<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> sort(desc: false, columns:[\"_time\"]) |>rename(columns:{_value: \"water_level\"})", H2O.class);
 
         measurements
                 .test()
@@ -346,16 +312,12 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
     @Test
     void queryRaw() {
 
-        writeClient = influxDBClient.getWriteReactiveApi();
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> countDownLatch.countDown());
+        Publisher<WriteReactiveApi.Success> success = writeClient.writeRecord(WritePrecision.NS, "h2o_feet,location=coyote_creek level\\ water_level=1.0 1");
+        Flowable.fromPublisher(success)
+                .test()
+                .assertValueCount(1);
 
-        writeClient.writeRecord(bucket.getName(), organization.getId(), WritePrecision.NS, Maybe.just("h2o_feet,location=coyote_creek level\\ water_level=1.0 1"));
-
-        waitToCallback();
-
-        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
+        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)");
 
         result.test()
                 .assertValueCount(6)
@@ -375,16 +337,12 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
     @Test
     void queryRawDialect() {
 
-        writeClient = influxDBClient.getWriteReactiveApi();
-        writeClient
-                .listenEvents(WriteSuccessEvent.class)
-                .subscribe(event -> countDownLatch.countDown());
+        Publisher<WriteReactiveApi.Success> success = writeClient.writeRecord(WritePrecision.NS, "h2o_feet,location=coyote_creek level\\ water_level=1.0 1");
+        Flowable.fromPublisher(success)
+                .test()
+                .assertValueCount(1);
 
-        writeClient.writeRecord(bucket.getName(), organization.getId(), WritePrecision.NS, Maybe.just("h2o_feet,location=coyote_creek level\\ water_level=1.0 1"));
-
-        waitToCallback();
-
-        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", null, organization.getId());
+        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", (Dialect) null);
 
         result.test()
                 .assertValueCount(3)
@@ -399,14 +357,30 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
     }
 
     @Test
+    public void subscribeOn() {
+
+        Publisher<WriteReactiveApi.Success> success = writeClient.writeRecord(WritePrecision.NS,
+                "h2o_feet,location=coyote_creek level\\ water_level=1.0 1");
+
+        Flowable.fromPublisher(success)
+                .subscribeOn(Schedulers.newThread())
+                .test()
+                .awaitCount(1)
+                .assertValueCount(1)
+                .assertSubscribed();
+    }
+
+    @Test
     public void defaultOrgBucket() {
 
         InfluxDBClientReactive client = InfluxDBClientReactiveFactory.create(influxDB_URL, token.toCharArray(), organization.getId(), bucket.getName());
 
         WriteReactiveApi writeApi = client.getWriteReactiveApi();
 
-        writeApi.writeRecord(WritePrecision.NS, Maybe.just("h2o,location=north water_level=60.0 1"));
-        writeApi.close();
+        Publisher<WriteReactiveApi.Success> success = writeApi.writeRecord(bucket.getId(), organization.getName(), WritePrecision.NS, "h2o,location=north water_level=60.0 1");
+        Flowable.fromPublisher(success)
+                .test()
+                .assertValueCount(1);
 
         QueryReactiveApi queryApi = client.getQueryReactiveApi();
 
@@ -458,6 +432,21 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         }
 
         client.close();
+    }
+
+    @Test
+    public void propagateError() {
+
+        writeClient = influxDBClient.getWriteReactiveApi();
+
+        Publisher<WriteReactiveApi.Success> success = writeClient.writeRecord(bucket.getName(), organization.getId(), WritePrecision.S, "not.valid.lp");
+        Flowable.fromPublisher(success)
+                .test()
+                .assertError(throwable -> {
+                    Assertions.assertThat(throwable).isInstanceOf(BadRequestException.class);
+                    Assertions.assertThat(throwable).hasMessageContaining("unable to parse");
+                    return true;
+                });
     }
 
     @Measurement(name = "h2o")

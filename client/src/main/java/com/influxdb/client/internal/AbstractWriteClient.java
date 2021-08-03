@@ -548,20 +548,6 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                 });
     }
 
-    @Nonnull
-    private InfluxException toInfluxException(@Nonnull final Throwable throwable) {
-
-        if (throwable instanceof InfluxException) {
-            return (InfluxException) throwable;
-        }
-
-        if (throwable instanceof HttpException) {
-            return responseToError(((HttpException) throwable).response());
-        }
-
-        return new InfluxException(throwable);
-    }
-
     static void waitToCondition(final Supplier<Boolean> condition, final int millis) {
         long start = System.currentTimeMillis();
         while (!condition.get()) {

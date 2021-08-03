@@ -21,6 +21,7 @@
  */
 package com.influxdb.client.reactive.internal;
 
+import java.util.Collections;
 import javax.annotation.Nonnull;
 
 import com.influxdb.LogLevel;
@@ -36,6 +37,7 @@ import com.influxdb.client.service.WriteService;
 import com.influxdb.utils.Arguments;
 
 import io.reactivex.Single;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 07:12)
@@ -44,7 +46,7 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient
         implements InfluxDBClientReactive {
 
     public InfluxDBClientReactiveImpl(@Nonnull final InfluxDBClientOptions options) {
-        super(options, "java");
+        super(options, "java", Collections.singletonList(RxJava2CallAdapterFactory.create()));
     }
 
     @Nonnull
@@ -65,7 +67,7 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
-        return new WriteReactiveApiImpl(writeOptions, retrofit.create(WriteService.class), options, autoCloseables);
+        return new WriteReactiveApiImpl(writeOptions, retrofit.create(WriteService.class), options);
     }
 
     @Nonnull

@@ -22,22 +22,15 @@
 package com.influxdb.client.reactive;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.InfluxDBClientOptions;
-import com.influxdb.client.WriteApi;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
-import com.influxdb.client.write.events.AbstractWriteEvent;
-import com.influxdb.client.write.events.BackpressureEvent;
-import com.influxdb.client.write.events.WriteErrorEvent;
-import com.influxdb.client.write.events.WriteRetriableErrorEvent;
-import com.influxdb.client.write.events.WriteSuccessEvent;
 
-import io.reactivex.Flowable;
-import io.reactivex.Maybe;
-import io.reactivex.Observable;
 import org.reactivestreams.Publisher;
+import org.reactivestreams.Subscriber;
 
 /**
  * Write time-series data into InfluxDB 2.0.
@@ -47,7 +40,17 @@ import org.reactivestreams.Publisher;
  * @author Jakub Bednar (bednar@github) (22/11/2018 06:49)
  */
 @ThreadSafe
-public interface WriteReactiveApi extends AutoCloseable {
+public interface WriteReactiveApi {
+
+    /**
+     * The enum represents a successful written operation.
+     */
+    enum Success {
+        /**
+         * Success write.
+         */
+        OK
+    }
 
     /**
      * Write Line Protocol record into specified bucket.
@@ -57,26 +60,28 @@ public interface WriteReactiveApi extends AutoCloseable {
      * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
      * </p>
      *
-     * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
+     * @param precision specifies the precision for the unix timestamps within the body line-protocol
      * @param record    specifies the record in InfluxDB Line Protocol.
-     *                  The {@code record} is considered as one batch unit.
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
      */
-    void writeRecord(@Nonnull final WritePrecision precision,
-                     @Nonnull final Maybe<String> record);
+    Publisher<Success> writeRecord(@Nonnull final WritePrecision precision,
+                                   @Nullable final String record);
 
     /**
      * Write Line Protocol record into specified bucket.
      *
      * @param bucket    specifies the destination bucket for writes
      * @param org       specifies the destination organization for writes
-     * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
+     * @param precision specifies the precision for the unix timestamps within the body line-protocol
      * @param record    specifies the record in InfluxDB Line Protocol.
-     *                  The {@code record} is considered as one batch unit.
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
      */
-    void writeRecord(@Nonnull final String bucket,
-                     @Nonnull final String org,
-                     @Nonnull final WritePrecision precision,
-                     @Nonnull final Maybe<String> record);
+    Publisher<Success> writeRecord(@Nonnull final String bucket,
+                                   @Nonnull final String org,
+                                   @Nonnull final WritePrecision precision,
+                                   @Nullable final String record);
 
 
     /**
@@ -87,11 +92,13 @@ public interface WriteReactiveApi extends AutoCloseable {
      * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
      * </p>
      *
-     * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
+     * @param precision specifies the precision for the unix timestamps within the body line-protocol
      * @param records   specifies the records in InfluxDB Line Protocol
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
      */
-    void writeRecords(@Nonnull final WritePrecision precision,
-                      @Nonnull final Flowable<String> records);
+    Publisher<Success> writeRecords(@Nonnull final WritePrecision precision,
+                                    @Nonnull final Publisher<String> records);
 
 
     /**
@@ -99,40 +106,15 @@ public interface WriteReactiveApi extends AutoCloseable {
      *
      * @param bucket    specifies the destination bucket for writes
      * @param org       specifies the destination organization for writes
-     * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
+     * @param precision specifies the precision for the unix timestamps within the body line-protocol
      * @param records   specifies the records in InfluxDB Line Protocol
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
      */
-    void writeRecords(@Nonnull final String bucket,
-                      @Nonnull final String org,
-                      @Nonnull final WritePrecision precision,
-                      @Nonnull final Flowable<String> records);
-
-    /**
-     * Write Line Protocol records into specified bucket.
-     *
-     * <p>
-     * The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
-     * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
-     * </p>
-     *
-     * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
-     * @param records   specifies the records in InfluxDB Line Protocol
-     */
-    void writeRecords(@Nonnull final WritePrecision precision,
-                      @Nonnull final Publisher<String> records);
-
-    /**
-     * Write Line Protocol records into specified bucket.
-     *
-     * @param bucket    specifies the destination bucket for writes
-     * @param org       specifies the destination organization for writes
-     * @param precision specifies the precision for the unix timestamps within the body line-protocol (optional)
-     * @param records   specifies the records in InfluxDB Line Protocol
-     */
-    void writeRecords(@Nonnull final String bucket,
-                      @Nonnull final String org,
-                      @Nonnull final WritePrecision precision,
-                      @Nonnull final Publisher<String> records);
+    Publisher<Success> writeRecords(@Nonnull final String bucket,
+                                    @Nonnull final String org,
+                                    @Nonnull final WritePrecision precision,
+                                    @Nonnull final Publisher<String> records);
 
     /**
      * Write Data point into specified bucket.
@@ -142,43 +124,28 @@ public interface WriteReactiveApi extends AutoCloseable {
      * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
      * </p>
      *
-     * @param point specifies the Data point to write into bucket
+     * @param precision specifies the precision for the unix timestamps within the body line-protocol
+     * @param point     specifies the Data point to write into bucket
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
      */
-    void writePoint(@Nonnull final Maybe<Point> point);
+    Publisher<Success> writePoint(@Nonnull final WritePrecision precision,
+                                  @Nonnull final Point point);
 
     /**
      * Write Data point into specified bucket.
      *
-     * @param bucket specifies the destination bucket for writes
-     * @param org    specifies the destination organization for writes
-     * @param point  specifies the Data point to write into bucket
+     * @param bucket    specifies the destination bucket for writes
+     * @param org       specifies the destination organization for writes
+     * @param precision specifies the precision for the unix timestamps within the body line-protocol
+     * @param point     specifies the Data point to write into bucket
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
      */
-    void writePoint(@Nonnull final String bucket,
-                    @Nonnull final String org,
-                    @Nonnull final Maybe<Point> point);
-
-    /**
-     * Write Data points into specified bucket.
-     *
-     * <p>
-     * The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
-     * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
-     * </p>*
-     *
-     * @param points specifies the Data points to write into bucket
-     */
-    void writePoints(@Nonnull final Flowable<Point> points);
-
-    /**
-     * Write Data points into specified bucket.
-     *
-     * @param bucket specifies the destination bucket ID for writes
-     * @param org    specifies the destination organization ID for writes
-     * @param points specifies the Data points to write into bucket
-     */
-    void writePoints(@Nonnull final String bucket,
-                     @Nonnull final String org,
-                     @Nonnull final Flowable<Point> points);
+    Publisher<Success> writePoint(@Nonnull final String bucket,
+                                  @Nonnull final String org,
+                                  @Nonnull final WritePrecision precision,
+                                  @Nonnull final Point point);
 
     /**
      * Write Data points into specified bucket.
@@ -188,20 +155,28 @@ public interface WriteReactiveApi extends AutoCloseable {
      * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
      * </p>
      *
-     * @param points specifies the Data points to write into bucket
+     * @param precision specifies the precision for the unix timestamps within the body line-protocol
+     * @param points    specifies the Data points to write into bucket
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
      */
-    void writePoints(@Nonnull final Publisher<Point> points);
+    Publisher<Success> writePoints(@Nonnull final WritePrecision precision,
+                                   @Nonnull final Publisher<Point> points);
 
     /**
      * Write Data points into specified bucket.
      *
-     * @param bucket specifies the destination bucket ID for writes
-     * @param org    specifies the destination organization ID for writes
-     * @param points specifies the Data points to write into bucket
+     * @param bucket    specifies the destination bucket ID for writes
+     * @param org       specifies the destination organization ID for writes
+     * @param precision specifies the precision for the unix timestamps within the body line-protocol
+     * @param points    specifies the Data points to write into bucket
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
      */
-    void writePoints(@Nonnull final String bucket,
-                     @Nonnull final String org,
-                     @Nonnull final Publisher<Point> points);
+    Publisher<Success> writePoints(@Nonnull final String bucket,
+                                   @Nonnull final String org,
+                                   @Nonnull final WritePrecision precision,
+                                   @Nonnull final Publisher<Point> points);
 
     /**
      * Write Measurement into specified bucket.
@@ -211,26 +186,30 @@ public interface WriteReactiveApi extends AutoCloseable {
      * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
      * </p>
      *
-     * @param precision   specifies the precision for the unix timestamps within the body line-protocol (optional)
+     * @param precision   specifies the precision for the unix timestamps within the body line-protocol
      * @param measurement specifies the Measurement to write into bucket
      * @param <M>         type of measurement
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
      */
-    <M> void writeMeasurement(@Nonnull final WritePrecision precision,
-                              @Nonnull final Maybe<M> measurement);
+    <M> Publisher<Success> writeMeasurement(@Nonnull final WritePrecision precision,
+                                            @Nonnull final M measurement);
 
     /**
      * Write Measurement into specified bucket.
      *
      * @param bucket      specifies the destination bucket for writes
      * @param org         specifies the destination organization for writes
-     * @param precision   specifies the precision for the unix timestamps within the body line-protocol (optional)
+     * @param precision   specifies the precision for the unix timestamps within the body line-protocol
      * @param measurement specifies the Measurement to write into bucket
      * @param <M>         type of measurement
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
      */
-    <M> void writeMeasurement(@Nonnull final String bucket,
-                              @Nonnull final String org,
-                              @Nonnull final WritePrecision precision,
-                              @Nonnull final Maybe<M> measurement);
+    <M> Publisher<Success> writeMeasurement(@Nonnull final String bucket,
+                                            @Nonnull final String org,
+                                            @Nonnull final WritePrecision precision,
+                                            @Nonnull final M measurement);
 
     /**
      * Write Measurements into specified bucket.
@@ -240,71 +219,28 @@ public interface WriteReactiveApi extends AutoCloseable {
      * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
      * </p>
      *
-     * @param precision    specifies the precision for the unix timestamps within the body line-protocol (optional)
+     * @param precision    specifies the precision for the unix timestamps within the body line-protocol
      * @param measurements specifies the Measurements to write into bucket
      * @param <M>          type of measurement
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
      */
-    <M> void writeMeasurements(@Nonnull final WritePrecision precision,
-                               @Nonnull final Flowable<M> measurements);
+    <M> Publisher<Success> writeMeasurements(@Nonnull final WritePrecision precision,
+                                             @Nonnull final Publisher<M> measurements);
 
     /**
      * Write Measurements into specified bucket.
      *
      * @param bucket       specifies the destination bucket for writes
      * @param org          specifies the destination organization for writes
-     * @param precision    specifies the precision for the unix timestamps within the body line-protocol (optional)
+     * @param precision    specifies the precision for the unix timestamps within the body line-protocol
      * @param measurements specifies the Measurements to write into bucket
      * @param <M>          type of measurement
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
      */
-    <M> void writeMeasurements(@Nonnull final String bucket,
-                               @Nonnull final String org,
-                               @Nonnull final WritePrecision precision,
-                               @Nonnull final Flowable<M> measurements);
-
-    /**
-     * Write Measurements into specified bucket.
-     *
-     * <p>
-     * The {@link InfluxDBClientOptions#getBucket()} will be use as destination bucket
-     * and {@link InfluxDBClientOptions#getOrg()} will be used as destination organization.
-     * </p>
-     *
-     * @param precision    specifies the precision for the unix timestamps within the body line-protocol (optional)
-     * @param measurements specifies the Measurements to write into bucket
-     * @param <M>          type of measurement
-     */
-    <M> void writeMeasurements(@Nonnull final WritePrecision precision,
-                               @Nonnull final Publisher<M> measurements);
-
-    /**
-     * Write Measurements into specified bucket.
-     *
-     * @param bucket       specifies the destination bucket for writes
-     * @param org          specifies the destination organization for writes
-     * @param precision    specifies the precision for the unix timestamps within the body line-protocol (optional)
-     * @param measurements specifies the Measurements to write into bucket
-     * @param <M>          type of measurement
-     */
-    <M> void writeMeasurements(@Nonnull final String bucket,
-                               @Nonnull final String org,
-                               @Nonnull final WritePrecision precision,
-                               @Nonnull final Publisher<M> measurements);
-
-    /**
-     * Listen the events produced by {@link WriteApi}.
-     * <p>
-     * The {@link WriteApi} produces: {@link WriteSuccessEvent},
-     * {@link BackpressureEvent}, {@link WriteErrorEvent} and {@link WriteRetriableErrorEvent}.
-     *
-     * @param eventType type of event to listen
-     * @param <T>       type of event to listen
-     * @return lister for {@code eventType} events
-     */
-    @Nonnull
-    <T extends AbstractWriteEvent> Observable<T> listenEvents(@Nonnull final Class<T> eventType);
-
-    /**
-     * Close threads for asynchronous batch writing.
-     */
-    void close();
+    <M> Publisher<Success> writeMeasurements(@Nonnull final String bucket,
+                                             @Nonnull final String org,
+                                             @Nonnull final WritePrecision precision,
+                                             @Nonnull final Publisher<M> measurements);
 }

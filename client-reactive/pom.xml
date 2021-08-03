@@ -98,6 +98,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>adapter-rxjava2</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.influxdb</groupId>
             <artifactId>influxdb-client-test</artifactId>
             <scope>test</scope>
