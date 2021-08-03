@@ -62,7 +62,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
-    public Flowable<FluxRecord> query(@Nonnull final String query) {
+    public Publisher<FluxRecord> query(@Nonnull final String query) {
 
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
@@ -71,7 +71,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
-    public Flowable<FluxRecord> query(@Nonnull final String query, @Nonnull final String org) {
+    public Publisher<FluxRecord> query(@Nonnull final String query, @Nonnull final String org) {
 
         Arguments.checkNonEmpty(query, "Flux query");
         Arguments.checkNonEmpty(org, "org");
@@ -80,7 +80,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
     }
 
     @Override
-    public <M> Flowable<M> query(@Nonnull final String query, @Nonnull final Class<M> measurementType) {
+    public <M> Publisher<M> query(@Nonnull final String query, @Nonnull final Class<M> measurementType) {
 
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
@@ -88,9 +88,9 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
     }
 
     @Override
-    public <M> Flowable<M> query(@Nonnull final String query,
-                                 @Nonnull final String org,
-                                 @Nonnull final Class<M> measurementType) {
+    public <M> Publisher<M> query(@Nonnull final String query,
+                                  @Nonnull final String org,
+                                  @Nonnull final Class<M> measurementType) {
 
         Arguments.checkNonEmpty(query, "Flux query");
         Arguments.checkNotNull(measurementType, "Measurement type");
@@ -101,7 +101,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
-    public Flowable<FluxRecord> query(@Nonnull final Publisher<String> queryStream) {
+    public Publisher<FluxRecord> query(@Nonnull final Publisher<String> queryStream) {
 
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
@@ -110,8 +110,8 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
-    public Flowable<FluxRecord> query(@Nonnull final Publisher<String> queryStream,
-                                      @Nonnull final String org) {
+    public Publisher<FluxRecord> query(@Nonnull final Publisher<String> queryStream,
+                                       @Nonnull final String org) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
         Arguments.checkNonEmpty(org, "org");
@@ -155,8 +155,8 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
-    public <M> Flowable<M> query(@Nonnull final Publisher<String> queryStream,
-                                 @Nonnull final Class<M> measurementType) {
+    public <M> Publisher<M> query(@Nonnull final Publisher<String> queryStream,
+                                  @Nonnull final Class<M> measurementType) {
 
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
@@ -165,20 +165,22 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
-    public <M> Flowable<M> query(@Nonnull final Publisher<String> queryStream,
-                                 @Nonnull final String org,
-                                 @Nonnull final Class<M> measurementType) {
+    public <M> Publisher<M> query(@Nonnull final Publisher<String> queryStream,
+                                  @Nonnull final String org,
+                                  @Nonnull final Class<M> measurementType) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
         Arguments.checkNotNull(measurementType, "Measurement type");
         Arguments.checkNonEmpty(org, "org");
 
-        return query(queryStream, org).map(fluxRecord -> resultMapper.toPOJO(fluxRecord, measurementType));
+        return Flowable
+                .fromPublisher(query(queryStream, org))
+                .map(fluxRecord -> resultMapper.toPOJO(fluxRecord, measurementType));
     }
 
     @Nonnull
     @Override
-    public Flowable<String> queryRaw(@Nonnull final String query) {
+    public Publisher<String> queryRaw(@Nonnull final String query) {
 
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
@@ -187,7 +189,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
-    public Flowable<String> queryRaw(@Nonnull final String query, @Nonnull final String org) {
+    public Publisher<String> queryRaw(@Nonnull final String query, @Nonnull final String org) {
 
         Arguments.checkNonEmpty(query, "Flux query");
         Arguments.checkNonEmpty(org, "org");
@@ -197,7 +199,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
-    public Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream) {
+    public Publisher<String> queryRaw(@Nonnull final Publisher<String> queryStream) {
 
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
@@ -206,8 +208,8 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
-    public Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream,
-                                     @Nonnull final String org) {
+    public Publisher<String> queryRaw(@Nonnull final Publisher<String> queryStream,
+                                      @Nonnull final String org) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
         Arguments.checkNonEmpty(org, "org");
@@ -217,7 +219,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
-    public Flowable<String> queryRaw(@Nonnull final String query, @Nullable final Dialect dialect) {
+    public Publisher<String> queryRaw(@Nonnull final String query, @Nullable final Dialect dialect) {
 
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
@@ -226,9 +228,9 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
-    public Flowable<String> queryRaw(@Nonnull final String query,
-                                     @Nullable final Dialect dialect,
-                                     @Nonnull final String org) {
+    public Publisher<String> queryRaw(@Nonnull final String query,
+                                      @Nullable final Dialect dialect,
+                                      @Nonnull final String org) {
 
         Arguments.checkNonEmpty(query, "Flux query");
         Arguments.checkNonEmpty(org, "org");
@@ -238,7 +240,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
-    public Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream, @Nullable final Dialect dialect) {
+    public Publisher<String> queryRaw(@Nonnull final Publisher<String> queryStream, @Nullable final Dialect dialect) {
 
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
@@ -247,9 +249,9 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
-    public Flowable<String> queryRaw(@Nonnull final Publisher<String> queryStream,
-                                     @Nullable final Dialect dialect,
-                                     @Nonnull final String org) {
+    public Publisher<String> queryRaw(@Nonnull final Publisher<String> queryStream,
+                                      @Nullable final Dialect dialect,
+                                      @Nonnull final String org) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
         Arguments.checkNonEmpty(org, "org");

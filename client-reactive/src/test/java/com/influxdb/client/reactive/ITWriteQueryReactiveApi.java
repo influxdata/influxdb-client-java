@@ -123,17 +123,20 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
                 .test()
                 .assertValueCount(1);
 
-        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
+        Publisher<FluxRecord> result = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
-        result.test().assertValueCount(1).assertValue(fluxRecord -> {
+        Flowable.fromPublisher(result)
+                .test()
+                .assertValueCount(1)
+                .assertValue(fluxRecord -> {
 
-            Assertions.assertThat(fluxRecord.getMeasurement()).isEqualTo("h2o_feet");
-            Assertions.assertThat(fluxRecord.getValue()).isEqualTo(1.0D);
-            Assertions.assertThat(fluxRecord.getField()).isEqualTo("level water_level");
-            Assertions.assertThat(fluxRecord.getTime()).isEqualTo(Instant.ofEpochSecond(0, 1));
+                    Assertions.assertThat(fluxRecord.getMeasurement()).isEqualTo("h2o_feet");
+                    Assertions.assertThat(fluxRecord.getValue()).isEqualTo(1.0D);
+                    Assertions.assertThat(fluxRecord.getField()).isEqualTo("level water_level");
+                    Assertions.assertThat(fluxRecord.getTime()).isEqualTo(Instant.ofEpochSecond(0, 1));
 
-            return true;
-        });
+                    return true;
+                });
     }
 
     @Test
@@ -159,9 +162,10 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
                 .test()
                 .assertValueCount(2);
 
-        Flowable<FluxRecord> results = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)");
+        Publisher<FluxRecord> results = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)");
 
-        results.test()
+        Flowable.fromPublisher(results)
+                .test()
                 .assertValueCount(2)
                 .assertValueAt(0, fluxRecord -> {
 
@@ -194,18 +198,21 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
                 .test()
                 .assertValueCount(1);
 
-        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()");
+        Publisher<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()");
 
-        result.test().assertValueCount(1).assertValue(fluxRecord -> {
+        Flowable.fromPublisher(result)
+                .test()
+                .assertValueCount(1)
+                .assertValue(fluxRecord -> {
 
-            Assertions.assertThat(fluxRecord.getMeasurement()).isEqualTo("h2o_feet");
-            Assertions.assertThat(fluxRecord.getValue()).isEqualTo(1L);
-            Assertions.assertThat(fluxRecord.getField()).isEqualTo("water_level");
-            Assertions.assertThat(fluxRecord.getValueByKey("location")).isEqualTo("south");
-            Assertions.assertThat(fluxRecord.getTime()).isEqualTo(time);
+                    Assertions.assertThat(fluxRecord.getMeasurement()).isEqualTo("h2o_feet");
+                    Assertions.assertThat(fluxRecord.getValue()).isEqualTo(1L);
+                    Assertions.assertThat(fluxRecord.getField()).isEqualTo("water_level");
+                    Assertions.assertThat(fluxRecord.getValueByKey("location")).isEqualTo("south");
+                    Assertions.assertThat(fluxRecord.getTime()).isEqualTo(time);
 
-            return true;
-        });
+                    return true;
+                });
     }
 
     @Test
@@ -221,9 +228,9 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
                 .test()
                 .assertValueCount(1);
 
-        Flowable<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)");
+        Publisher<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)");
 
-        result
+        Flowable.fromPublisher(result)
                 .test()
                 .assertValueCount(2);
         //
@@ -251,17 +258,20 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
                 .test()
                 .assertValueCount(1);
 
-        Flowable<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last() |> rename(columns:{_value: \"water_level\"})", H2O.class);
+        Publisher<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last() |> rename(columns:{_value: \"water_level\"})", H2O.class);
 
-        measurements.test().assertValueCount(1).assertValueAt(0, h2O -> {
+        Flowable.fromPublisher(measurements)
+                .test()
+                .assertValueCount(1)
+                .assertValueAt(0, h2O -> {
 
-            Assertions.assertThat(h2O.location).isEqualTo("coyote_creek");
-            Assertions.assertThat(h2O.description).isNull();
-            Assertions.assertThat(h2O.level).isEqualTo(2.927);
-            Assertions.assertThat(h2O.time).isEqualTo(measurement.time);
+                    Assertions.assertThat(h2O.location).isEqualTo("coyote_creek");
+                    Assertions.assertThat(h2O.description).isNull();
+                    Assertions.assertThat(h2O.level).isEqualTo(2.927);
+                    Assertions.assertThat(h2O.time).isEqualTo(measurement.time);
 
-            return true;
-        });
+                    return true;
+                });
     }
 
     @Test
@@ -284,9 +294,9 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
                 .test()
                 .assertValueCount(1);
 
-        Flowable<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> sort(desc: false, columns:[\"_time\"]) |>rename(columns:{_value: \"water_level\"})", H2O.class);
+        Publisher<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> sort(desc: false, columns:[\"_time\"]) |>rename(columns:{_value: \"water_level\"})", H2O.class);
 
-        measurements
+        Flowable.fromPublisher(measurements)
                 .test()
                 .assertValueCount(2)
                 .assertValueAt(1, h2O -> {
@@ -317,9 +327,10 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
                 .test()
                 .assertValueCount(1);
 
-        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)");
+        Publisher<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)");
 
-        result.test()
+        Flowable.fromPublisher(result)
+                .test()
                 .assertValueCount(6)
                 .assertValueAt(0, "#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string,string,string")
                 .assertValueAt(1, "#group,false,false,true,true,false,false,true,true,true")
@@ -342,9 +353,10 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
                 .test()
                 .assertValueCount(1);
 
-        Flowable<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", (Dialect) null);
+        Publisher<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", (Dialect) null);
 
-        result.test()
+        Flowable.fromPublisher(result)
+                .test()
                 .assertValueCount(3)
                 .assertValueAt(0, ",result,table,_start,_stop,_time,_value,_field,_measurement,location")
                 .assertValueAt(1, value -> {
@@ -387,48 +399,54 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         String query = "from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)";
         // String
         {
-            Flowable<FluxRecord> result = queryApi.query(query);
+            Publisher<FluxRecord> result = queryApi.query(query);
 
-            result.test().assertValueCount(1).assertValue(fluxRecord -> {
+            Flowable.fromPublisher(result)
+                    .test()
+                    .assertValueCount(1)
+                    .assertValue(fluxRecord -> {
 
-                Assertions.assertThat(fluxRecord.getValue()).isEqualTo(60.0);
+                        Assertions.assertThat(fluxRecord.getValue()).isEqualTo(60.0);
 
-                return true;
-            });
+                        return true;
+                    });
         }
 
         // Publisher
         {
-            Flowable<FluxRecord> result = queryApi.query(Flowable.just(query));
+            Publisher<FluxRecord> result = queryApi.query(Flowable.just(query));
 
-            result.test().assertValueCount(1).assertValue(fluxRecord -> {
+            Flowable.fromPublisher(result)
+                    .test()
+                    .assertValueCount(1)
+                    .assertValue(fluxRecord -> {
 
-                Assertions.assertThat(fluxRecord.getValue()).isEqualTo(60.0);
+                        Assertions.assertThat(fluxRecord.getValue()).isEqualTo(60.0);
 
-                return true;
-            });
+                        return true;
+                    });
         }
 
         // Measurement
         {
-            Flowable<H2O> result = queryApi.query(query, H2O.class);
+            Publisher<H2O> result = queryApi.query(query, H2O.class);
 
-            result.test().assertValueCount(1);
+            Flowable.fromPublisher(result).test().assertValueCount(1);
         }
 
         // Raw
         {
-            Flowable<String> result = queryApi.queryRaw(query);
-            result.test().assertValueCount(6);
+            Publisher<String> result = queryApi.queryRaw(query);
+            Flowable.fromPublisher(result).test().assertValueCount(6);
 
             result = queryApi.queryRaw(Flowable.just(query));
-            result.test().assertValueCount(6);
+            Flowable.fromPublisher(result).test().assertValueCount(6);
 
             result = queryApi.queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT);
-            result.test().assertValueCount(6);
+            Flowable.fromPublisher(result).test().assertValueCount(6);
 
             result = queryApi.queryRaw(Flowable.just(query), AbstractInfluxDBClient.DEFAULT_DIALECT);
-            result.test().assertValueCount(6);
+            Flowable.fromPublisher(result).test().assertValueCount(6);
         }
 
         client.close();

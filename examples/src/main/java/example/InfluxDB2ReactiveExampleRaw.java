@@ -25,6 +25,8 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
+import io.reactivex.Flowable;
+
 public class InfluxDB2ReactiveExampleRaw {
 
     private static char[] token = "my-token".toCharArray();
@@ -41,8 +43,7 @@ public class InfluxDB2ReactiveExampleRaw {
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
-        queryApi
-                .queryRaw(flux)
+        Flowable.fromPublisher(queryApi.queryRaw(flux))
                 //
                 // Take first 10 records
                 //
