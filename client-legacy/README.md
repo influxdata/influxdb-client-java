@@ -4,6 +4,15 @@
 
 The client that allow perform Flux Query against the InfluxDB 1.7+.
 
+## Documentation
+
+This section contains links to the client library documentation.
+
+* [Product documentation](https://docs.influxdata.com/influxdb/v2.0/api-guide/client-libraries/), [Getting Started](#create-client)
+* [Examples](../examples)
+* [API Reference](https://influxdata.github.io/influxdb-client-java/influxdb-client-flux/apidocs/index.html)
+* [Changelog](../CHANGELOG.md)
+
 ### Create client
 
 The `FluxClientFactory` creates an instance of a `FluxClient` client that can be customized with `FluxConnectionOptions`.
