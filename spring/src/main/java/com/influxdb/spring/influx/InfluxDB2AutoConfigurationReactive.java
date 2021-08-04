@@ -21,9 +21,9 @@
  */
 package com.influxdb.spring.influx;
 
-import com.influxdb.client.InfluxDBClient;
-import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.client.reactive.InfluxDBClientReactive;
+import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -40,22 +40,22 @@ import org.springframework.context.annotation.Configuration;
  * @author Jakub Bednar (bednar@github) (06/05/2019 13:09)
  */
 @Configuration
-@ConditionalOnClass(InfluxDBClient.class)
+@ConditionalOnClass(name = "com.influxdb.client.reactive.InfluxDBClientReactive")
 @EnableConfigurationProperties(InfluxDB2Properties.class)
-public class InfluxDB2AutoConfiguration extends AbstractInfluxDB2AutoConfiguration {
+public class InfluxDB2AutoConfigurationReactive extends AbstractInfluxDB2AutoConfiguration {
 
-    public InfluxDB2AutoConfiguration(final InfluxDB2Properties properties,
-                                      final ObjectProvider<InfluxDB2OkHttpClientBuilderProvider> builderProvider) {
+    public InfluxDB2AutoConfigurationReactive(final InfluxDB2Properties properties,
+                                              final ObjectProvider<InfluxDB2OkHttpClientBuilderProvider>
+                                                      builderProvider) {
         super(properties, builderProvider.getIfAvailable());
     }
 
     @Bean
     @ConditionalOnProperty("influx.url")
-    @ConditionalOnMissingBean(InfluxDBClient.class)
-    public InfluxDBClient influxDBClient() {
-
+    @ConditionalOnMissingBean(InfluxDBClientReactive.class)
+    public InfluxDBClientReactive influxDBClientReactive() {
         InfluxDBClientOptions.Builder influxBuilder = makeBuilder();
 
-        return InfluxDBClientFactory.create(influxBuilder.build()).setLogLevel(properties.getLogLevel());
+        return InfluxDBClientReactiveFactory.create(influxBuilder.build()).setLogLevel(properties.getLogLevel());
     }
 }
