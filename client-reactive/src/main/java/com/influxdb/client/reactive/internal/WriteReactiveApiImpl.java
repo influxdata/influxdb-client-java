@@ -82,7 +82,8 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
         Arguments.checkNonEmpty(org, "organization");
         Arguments.checkNotNull(precision, "precision");
         if (record == null) {
-            return Flowable.just(Success.OK);
+            //TODO add logging
+            return Flowable.just(new Success());
         }
 
         return writeRecords(bucket, org, precision, Flowable.just(record));
@@ -269,7 +270,7 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
                         return Flowable.error(responseToError(response));
                     }
 
-                    return Flowable.just(Success.OK);
+                    return Flowable.just(new Success());
                 })
                 .onErrorResumeNext(throwable -> {
                     return Flowable.error(toInfluxException(throwable));

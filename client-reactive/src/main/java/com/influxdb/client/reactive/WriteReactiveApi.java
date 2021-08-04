@@ -43,13 +43,9 @@ import org.reactivestreams.Subscriber;
 public interface WriteReactiveApi {
 
     /**
-     * The enum represents a successful written operation.
+     * The class represents a successful written operation.
      */
-    enum Success {
-        /**
-         * Success write.
-         */
-        OK
+    class Success {
     }
 
     /**
