@@ -23,12 +23,15 @@ package com.influxdb.client.reactive.internal;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.internal.AbstractWriteClient;
 import com.influxdb.client.internal.AbstractWriteClient.BatchWriteData;
 import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement;
 import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint;
@@ -42,12 +45,16 @@ import com.influxdb.internal.AbstractRestClient;
 import com.influxdb.utils.Arguments;
 
 import io.reactivex.Flowable;
+import io.reactivex.Scheduler;
+import io.reactivex.schedulers.Schedulers;
 import org.reactivestreams.Publisher;
 
 /**
  * @author Jakub Bednar (bednar@github) (22/11/2018 06:50)
  */
 public class WriteReactiveApiImpl extends AbstractRestClient implements WriteReactiveApi {
+
+    private static final Logger LOG = Logger.getLogger(WriteReactiveApi.class.getName());
 
     private final WriteOptions writeOptions;
     private final InfluxDBClientOptions options;
@@ -81,8 +88,11 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(org, "organization");
         Arguments.checkNotNull(precision, "precision");
+
         if (record == null) {
-            //TODO add logging
+            LOG.log(Level.FINE, "The record is null for bucket: ''{0}'', org: ''{1}'' and precision: ''{2}''.",
+                    new Object[]{bucket, org, precision});
+
             return Flowable.just(new Success());
         }
 
@@ -232,12 +242,18 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
         Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(stream, "stream");
 
+        //
+        // TODO scheduler
+        //
+        Scheduler scheduler = Schedulers.computation();
+
         Flowable<String> batches = stream
                 // Create batches
-                //
-                // TODO scheduler
-                //
-                .window(writeOptions.getFlushInterval(), TimeUnit.MILLISECONDS, writeOptions.getBatchSize(), true)
+                .window(writeOptions.getFlushInterval(),
+                        TimeUnit.MILLISECONDS,
+                        scheduler,
+                        writeOptions.getBatchSize(),
+                        true)
                 // Collect batch to LineProtocol concatenated by '\n'
                 .concatMapSingle(batch -> batch
                         .map(item -> {
@@ -259,6 +275,8 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
                 .filter(it -> !it.isEmpty());
 
         return batches
+                // jitter
+                .compose(AbstractWriteClient.jitter(scheduler, writeOptions))
                 // HTTP post
                 .flatMapSingle(it -> service.postWriteRx(organization, bucket, it, null,
                         "identity", "text/plain; charset=utf-8", null,

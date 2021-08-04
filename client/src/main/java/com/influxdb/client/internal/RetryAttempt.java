@@ -27,6 +27,7 @@ import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
 import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLHandshakeException;
@@ -42,9 +43,11 @@ import retrofit2.HttpException;
  *
  * @author Jakub Bednar (29/09/2020 14:19)
  */
-class RetryAttempt {
+public final class RetryAttempt {
     private static final Integer ABLE_TO_RETRY_ERROR = 429;
     private static final Logger LOG = Logger.getLogger(AbstractWriteClient.class.getName());
+    private static Supplier<Double> jitterRandomSupplier;
+    private static Supplier<Double> retryRandomSupplier;
 
     private final Throwable throwable;
     private final int count;
@@ -54,6 +57,22 @@ class RetryAttempt {
         this.throwable = throwable;
         this.count = count;
         this.writeOptions = writeOptions;
+    }
+
+    /**
+     * Sets the specific jitter random supplier.
+     * @param supplier the hook supplier to set, null allowed
+     */
+    public static void setJitterRandomSupplier(@Nullable final Supplier<Double> supplier) {
+        jitterRandomSupplier = supplier;
+    }
+
+    /**
+     * Sets the specific retry random supplier.
+     * @param supplier the hook supplier to set, null allowed
+     */
+    public static void setRetryRandomSupplier(@Nullable final Supplier<Double> supplier) {
+        retryRandomSupplier = supplier;
     }
 
     /**
@@ -146,17 +165,14 @@ class RetryAttempt {
                 rangeStop = writeOptions.getMaxRetryDelay();
             }
 
-            retryInterval = (long) (rangeStart + (rangeStop - rangeStart) * random());
+            retryInterval = (long) (rangeStart + (rangeStop - rangeStart)
+                    * (retryRandomSupplier != null ? retryRandomSupplier.get() : Math.random()));
 
             String msg = "The InfluxDB does not specify \"Retry-After\". Use the default retryInterval: {0}";
             LOG.log(Level.FINEST, msg, retryInterval);
             LOG.log(Level.FINEST, "retry interval in range: [" + rangeStart + "," + rangeStop + "]");
             return retryInterval;
         }
-    }
-
-    protected double random() {
-        return Math.random();
     }
 
     /**
@@ -181,6 +197,6 @@ class RetryAttempt {
      */
     static int jitterDelay(final int jitterInterval) {
 
-        return (int) (Math.random() * jitterInterval);
+        return (int) ((jitterRandomSupplier != null ? jitterRandomSupplier.get() : Math.random()) * jitterInterval);
     }
 }

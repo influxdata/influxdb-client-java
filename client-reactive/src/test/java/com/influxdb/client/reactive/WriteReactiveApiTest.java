@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.internal.RetryAttempt;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.test.AbstractMockServerTest;
 
@@ -58,7 +59,6 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
 
         testScheduler = new TestScheduler();
         RxJavaPlugins.setComputationSchedulerHandler(scheduler -> testScheduler);
-
     }
 
     @AfterEach
@@ -68,6 +68,7 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
 
         testScheduler.shutdown();
         RxJavaPlugins.setComputationSchedulerHandler(null);
+        RetryAttempt.setJitterRandomSupplier(null);
     }
 
     @Test
@@ -133,7 +134,45 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
     }
 
     @Test
-    public void networkError() throws IOException {
+    void jitter() {
+        mockServer.enqueue(createResponse("{}"));
+        mockServer.enqueue(createResponse("{}"));
+        RetryAttempt.setJitterRandomSupplier(() -> 1D);
+
+        // Without jitter
+        {
+            writeClient = influxDBClient.getWriteReactiveApi(WriteOptions.builder().batchSize(1).build());
+
+            Publisher<WriteReactiveApi.Success> success = writeClient
+                    .writeRecord("my-bucket", "my-org", WritePrecision.S, "mem,tag=a field=1 1");
+
+            TestSubscriber<WriteReactiveApi.Success> test = Flowable.fromPublisher(success)
+                    .test();
+
+            testScheduler.advanceTimeBy(100, TimeUnit.MILLISECONDS);
+            test.assertValueCount(1).assertComplete();
+        }
+
+        // With jitter
+        {
+            writeClient = influxDBClient.getWriteReactiveApi(WriteOptions.builder().batchSize(1).jitterInterval(2_000).build());
+
+            Publisher<WriteReactiveApi.Success> success = writeClient
+                    .writeRecord("my-bucket", "my-org", WritePrecision.S, "mem,tag=a field=1 1");
+
+            TestSubscriber<WriteReactiveApi.Success> test = Flowable.fromPublisher(success)
+                    .test();
+
+            testScheduler.advanceTimeBy(100, TimeUnit.MILLISECONDS);
+            test.assertValueCount(0).assertNotComplete();
+
+            testScheduler.advanceTimeBy(2_000, TimeUnit.MILLISECONDS);
+            test.assertValueCount(1).assertComplete();
+        }
+    }
+
+    @Test
+    void networkError() throws IOException {
         mockServer.shutdown();
 
         writeClient = influxDBClient.getWriteReactiveApi();

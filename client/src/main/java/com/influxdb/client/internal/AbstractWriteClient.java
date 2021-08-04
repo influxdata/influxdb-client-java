@@ -168,7 +168,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                 //
                 // Jitter interval
                 //
-                .compose(jitter(processorScheduler))
+                .compose(jitter(processorScheduler, writeOptions))
                 //
                 // To WritePoints "request creator"
                 //
@@ -244,9 +244,19 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                 .subscribe(processor::onNext, throwable -> publish(new WriteErrorEvent(throwable)));
     }
 
+    /**
+     * Add Jitter delay to upstream.
+     *
+     * @param scheduler    to use for timer operator
+     * @param writeOptions with configured jitter interval
+     * @param <T>          upstream type
+     * @return Flowable with jitter delay
+     */
     @Nonnull
-    private FlowableTransformer<BatchWriteItem, BatchWriteItem> jitter(@Nonnull final Scheduler scheduler) {
+    public static <T> FlowableTransformer<T, T> jitter(@Nonnull final Scheduler scheduler,
+                                                       @Nonnull final WriteOptions writeOptions) {
 
+        Arguments.checkNotNull(writeOptions, "WriteOptions is required");
         Arguments.checkNotNull(scheduler, "Jitter scheduler is required");
 
         return source -> {
@@ -261,7 +271,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             //
             // Add jitter => dynamic delay
             //
-            return source.delay((Function<BatchWriteItem, Flowable<Long>>) pointFlowable -> {
+            return source.delay((Function<T, Flowable<Long>>) pointFlowable -> {
 
                 int delay = RetryAttempt.jitterDelay(writeOptions.getJitterInterval());
 
