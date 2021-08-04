@@ -23,6 +23,7 @@ package com.influxdb.client.reactive;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.WritePrecision;
@@ -35,6 +36,7 @@ import io.reactivex.Flowable;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.TestScheduler;
 import io.reactivex.subscribers.TestSubscriber;
+import okhttp3.mockwebserver.MockResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -199,6 +201,35 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
 
         String body2 = getRequestBody(mockServer);
         Assertions.assertThat(body2).isEqualTo("h2o,location=europe level=2i");
+    }
+
+    @Test
+    public void maxRetryTime() {
+        MockResponse errorResponse = createErrorResponse("token is temporarily over quota", true, 429, 1000);
+        errorResponse.addHeader("Retry-After", 1);
+        mockServer.enqueue(errorResponse);
+
+        writeClient = influxDBClient.getWriteReactiveApi(WriteOptions.builder().batchSize(1).maxRetryTime(500).build());
+
+        Point point = Point.measurement("h2o").addTag("location", "europe").addField("level", 2);
+        Publisher<WriteReactiveApi.Success> success = writeClient.writePoint("b1", "org1", WritePrecision.NS, point);
+
+        TestSubscriber<WriteReactiveApi.Success> test = Flowable.fromPublisher(success)
+                .test();
+
+        test.assertValueCount(0).assertNotComplete();
+
+        // max retry delay
+        testScheduler.advanceTimeBy(500, TimeUnit.MILLISECONDS);
+        test.awaitCount(1)
+                .assertValueCount(0)
+                .assertError(throwable -> {
+                    Assertions.assertThat(throwable).isInstanceOf(InfluxException.class);
+                    Assertions.assertThat(throwable).hasMessage("Max retry time exceeded.");
+                    Assertions.assertThat(throwable).hasCauseInstanceOf(TimeoutException.class);
+                    return true;
+                })
+                .assertTerminated();
     }
 
     @Test

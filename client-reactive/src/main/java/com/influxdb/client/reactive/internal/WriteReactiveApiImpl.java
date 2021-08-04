@@ -24,6 +24,7 @@ package com.influxdb.client.reactive.internal;
 import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -312,6 +313,13 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
                             (double) retryInterval / 1000);
                     LOG.log(Level.WARNING, msg, throwable);
                 }))
+                //
+                // maxRetryTime timeout
+                //
+                .timeout(writeOptions.getMaxRetryTime(),
+                        TimeUnit.MILLISECONDS,
+                        scheduler,
+                        Flowable.error(new TimeoutException("Max retry time exceeded.")))
                 //
                 // Map to Influx Error
                 //
