@@ -21,6 +21,7 @@
  */
 package com.influxdb.client.reactive.internal;
 
+import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -48,6 +49,7 @@ import io.reactivex.Flowable;
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
 import org.reactivestreams.Publisher;
+import retrofit2.HttpException;
 
 /**
  * @author Jakub Bednar (bednar@github) (22/11/2018 06:50)
@@ -232,6 +234,7 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
     }
 
     @Nonnull
+    @SuppressWarnings("MagicNumber")
     private Publisher<Success> write(@Nonnull final String bucket,
                                      @Nonnull final String organization,
                                      @Nonnull final WritePrecision precision,
@@ -248,13 +251,17 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
         Scheduler scheduler = Schedulers.computation();
 
         Flowable<String> batches = stream
+                //
                 // Create batches
+                //
                 .window(writeOptions.getFlushInterval(),
                         TimeUnit.MILLISECONDS,
                         scheduler,
                         writeOptions.getBatchSize(),
                         true)
+                //
                 // Collect batch to LineProtocol concatenated by '\n'
+                //
                 .concatMapSingle(batch -> batch
                         .map(item -> {
                             String lineProtocol = item.toLineProtocol();
@@ -275,21 +282,39 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
                 .filter(it -> !it.isEmpty());
 
         return batches
-                // jitter
+                //
+                // Jitter
+                //
                 .compose(AbstractWriteClient.jitter(scheduler, writeOptions))
+                //
                 // HTTP post
+                //
                 .flatMapSingle(it -> service.postWriteRx(organization, bucket, it, null,
                         "identity", "text/plain; charset=utf-8", null,
                         "application/json", null, precision)
                 )
+                //
                 // Map to Success
+                //
                 .flatMap(response -> {
                     if (!response.isSuccessful()) {
-                        return Flowable.error(responseToError(response));
+                        return Flowable.error(new HttpException(response));
                     }
 
                     return Flowable.just(new Success());
                 })
+                //
+                // Retry
+                //
+                .retryWhen(AbstractWriteClient.retry(scheduler, writeOptions, (throwable, retryInterval) -> {
+                    String msg = MessageFormat.format(
+                            "The retriable error occurred during writing of data. Retry in: {0}s.",
+                            (double) retryInterval / 1000);
+                    LOG.log(Level.WARNING, msg, throwable);
+                }))
+                //
+                // Map to Influx Error
+                //
                 .onErrorResumeNext(throwable -> {
                     return Flowable.error(toInfluxException(throwable));
                 });

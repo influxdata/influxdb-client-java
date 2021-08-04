@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -244,44 +245,6 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                 .subscribe(processor::onNext, throwable -> publish(new WriteErrorEvent(throwable)));
     }
 
-    /**
-     * Add Jitter delay to upstream.
-     *
-     * @param scheduler    to use for timer operator
-     * @param writeOptions with configured jitter interval
-     * @param <T>          upstream type
-     * @return Flowable with jitter delay
-     */
-    @Nonnull
-    public static <T> FlowableTransformer<T, T> jitter(@Nonnull final Scheduler scheduler,
-                                                       @Nonnull final WriteOptions writeOptions) {
-
-        Arguments.checkNotNull(writeOptions, "WriteOptions is required");
-        Arguments.checkNotNull(scheduler, "Jitter scheduler is required");
-
-        return source -> {
-
-            //
-            // source without jitter
-            //
-            if (writeOptions.getJitterInterval() <= 0) {
-                return source;
-            }
-
-            //
-            // Add jitter => dynamic delay
-            //
-            return source.delay((Function<T, Flowable<Long>>) pointFlowable -> {
-
-                int delay = RetryAttempt.jitterDelay(writeOptions.getJitterInterval());
-
-                LOG.log(Level.FINEST, "Generated Jitter dynamic delay: {0}", delay);
-
-                return Flowable.timer(delay, TimeUnit.MILLISECONDS, scheduler);
-            });
-        };
-    }
-
     private <T extends AbstractWriteEvent> void publish(@Nonnull final T event) {
 
         Arguments.checkNotNull(event, "event");
@@ -492,7 +455,8 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                     //
                     // Is exception retriable?
                     //
-                    .retryWhen(AbstractWriteClient.this.retryHandler(retryScheduler, writeOptions))
+                    .retryWhen(retry(retryScheduler, writeOptions, (throwable, retryInterval) ->
+                            publish(new WriteRetriableErrorEvent(toInfluxException(throwable), retryInterval))))
                     //
                     // maxRetryTime timeout
                     //
@@ -530,8 +494,56 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         }
     }
 
-    private Function<Flowable<Throwable>, Publisher<?>> retryHandler(@Nonnull final Scheduler retryScheduler,
-                                                                     @Nonnull final WriteOptions writeOptions) {
+    /**
+     * Add Jitter delay to upstream.
+     *
+     * @param scheduler    to use for timer operator
+     * @param writeOptions with configured jitter interval
+     * @param <T>          upstream type
+     * @return Flowable with jitter delay
+     */
+    @Nonnull
+    public static <T> FlowableTransformer<T, T> jitter(@Nonnull final Scheduler scheduler,
+                                                       @Nonnull final WriteOptions writeOptions) {
+
+        Arguments.checkNotNull(writeOptions, "WriteOptions is required");
+        Arguments.checkNotNull(scheduler, "Jitter scheduler is required");
+
+        return source -> {
+
+            //
+            // source without jitter
+            //
+            if (writeOptions.getJitterInterval() <= 0) {
+                return source;
+            }
+
+            //
+            // Add jitter => dynamic delay
+            //
+            return source.delay((Function<T, Flowable<Long>>) pointFlowable -> {
+
+                int delay = RetryAttempt.jitterDelay(writeOptions.getJitterInterval());
+
+                LOG.log(Level.FINEST, "Generated Jitter dynamic delay: {0}", delay);
+
+                return Flowable.timer(delay, TimeUnit.MILLISECONDS, scheduler);
+            });
+        };
+    }
+
+    /**
+     * Add Retry handler to upstream.
+     *
+     * @param retryScheduler for retry delay
+     * @param writeOptions   with configured retry strategy
+     * @param notify         to notify about retryable error
+     * @return Flowable with retry handler
+     */
+    @Nonnull
+    public static Function<Flowable<Throwable>, Publisher<?>> retry(@Nonnull final Scheduler retryScheduler,
+                                                                    @Nonnull final WriteOptions writeOptions,
+                                                                    @Nonnull final BiConsumer<Throwable, Long> notify) {
 
         Objects.requireNonNull(writeOptions, "WriteOptions are required");
         Objects.requireNonNull(retryScheduler, "RetryScheduler is required");
@@ -546,7 +558,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
 
                         long retryInterval = attempt.getRetryInterval();
 
-                        publish(new WriteRetriableErrorEvent(toInfluxException(throwable), retryInterval));
+                        notify.accept(throwable, retryInterval);
 
                         return Flowable.just("notify").delay(retryInterval, TimeUnit.MILLISECONDS, retryScheduler);
                     }

@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.RetryAttempt;
+import com.influxdb.client.write.Point;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.test.AbstractMockServerTest;
 
@@ -59,6 +60,7 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
 
         testScheduler = new TestScheduler();
         RxJavaPlugins.setComputationSchedulerHandler(scheduler -> testScheduler);
+        RetryAttempt.setRetryRandomSupplier(() -> 0D);
     }
 
     @AfterEach
@@ -172,18 +174,53 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
     }
 
     @Test
+    void retry() {
+        mockServer.enqueue(createErrorResponse("token is temporarily over quota", true, 429));
+        mockServer.enqueue(createResponse("{}"));
+
+        writeClient = influxDBClient.getWriteReactiveApi(WriteOptions.builder().batchSize(1).build());
+
+        Point point = Point.measurement("h2o").addTag("location", "europe").addField("level", 2);
+        Publisher<WriteReactiveApi.Success> success = writeClient.writePoint("b1", "org1", WritePrecision.NS, point);
+
+        TestSubscriber<WriteReactiveApi.Success> test = Flowable.fromPublisher(success)
+                .test();
+
+        test.assertValueCount(0).assertNotComplete();
+
+        // retry interval
+        testScheduler.advanceTimeBy(5_000, TimeUnit.MILLISECONDS);
+        test.assertValueCount(1).assertComplete();
+
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(2);
+
+        String body1 = getRequestBody(mockServer);
+        Assertions.assertThat(body1).isEqualTo("h2o,location=europe level=2i");
+
+        String body2 = getRequestBody(mockServer);
+        Assertions.assertThat(body2).isEqualTo("h2o,location=europe level=2i");
+    }
+
+    @Test
     void networkError() throws IOException {
         mockServer.shutdown();
 
-        writeClient = influxDBClient.getWriteReactiveApi();
+        writeClient = influxDBClient.getWriteReactiveApi(WriteOptions.builder().batchSize(1).maxRetries(1).build());
 
         Publisher<WriteReactiveApi.Success> success = writeClient.writeRecord("my-bucket", "my-org", WritePrecision.S, "mem,tag=a field=10");
-        Flowable.fromPublisher(success)
-                .test()
+        TestSubscriber<WriteReactiveApi.Success> test = Flowable.fromPublisher(success)
+                .test();
+
+        testScheduler.advanceTimeBy(5_000, TimeUnit.MILLISECONDS);
+
+        test
+                .awaitCount(1)
+                .assertValueCount(0)
                 .assertError(throwable -> {
                     Assertions.assertThat(throwable).isInstanceOf(InfluxException.class);
                     Assertions.assertThat(throwable).hasCauseInstanceOf(IOException.class);
                     return true;
-                });
+                })
+                .assertTerminated();
     }
 }
