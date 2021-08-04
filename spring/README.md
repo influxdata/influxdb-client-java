@@ -18,7 +18,7 @@ The default configuration can be override via properties:
 
 ```yaml
 influx:
-    url: http://localhost:8086/api/v2 # URL to connect to InfluxDB.
+    url: http://localhost:8086/ # URL to connect to InfluxDB.
     username: my-user # Username to use in the basic auth.
     password: my-password # Password to use in the basic auth.
     token: my-token # Token to use for the authorization.

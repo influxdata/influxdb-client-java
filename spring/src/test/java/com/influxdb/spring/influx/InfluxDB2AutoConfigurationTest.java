@@ -26,7 +26,6 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 
 import com.influxdb.client.InfluxDBClient;
-import com.influxdb.client.reactive.InfluxDBClientReactive;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
@@ -35,7 +34,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
-import org.springframework.boot.test.context.FilteredClassLoader;
 import org.springframework.boot.test.context.assertj.AssertableApplicationContext;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
@@ -52,7 +50,6 @@ import retrofit2.Retrofit;
 class InfluxDB2AutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-            .withClassLoader(new FilteredClassLoader(InfluxDBClientReactive.class))
             .withConfiguration(AutoConfigurations.of(InfluxDB2AutoConfiguration.class));
 
     @Test
@@ -100,21 +97,6 @@ class InfluxDB2AutoConfigurationTest {
                     int readTimeout = getReadTimeoutProperty(context);
                     Assertions.assertThat(readTimeout).isEqualTo(13_000);
                 });
-    }
-
-    @Test
-    public void influxDBClientReactive() {
-        ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-                .withPropertyValues("influx.url=http://localhost:8086/")
-                .withConfiguration(AutoConfigurations.of(InfluxDB2AutoConfiguration.class));
-
-        contextRunner
-                .run(((context) -> Assertions.assertThat(context.getBeansOfType(InfluxDBClientReactive.class))
-                .hasSize(1)));
-
-        contextRunner
-                .run(((context) -> Assertions.assertThat(context.getBeansOfType(InfluxDBClient.class))
-                .hasSize(0)));
     }
 
     @Test
