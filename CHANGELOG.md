@@ -2,7 +2,7 @@
 
 ### Bug Fixes
 1. [#252](https://github.com/influxdata/influxdb-client-java/pull/252): Spring auto-configuration works even without `influxdb-client-reactive` [spring]
-
+1. [#254](https://github.com/influxdata/influxdb-client-java/pull/254): Avoid reading entire query response into bytes array
 
 ## 3.1.0 [2021-07-27]
 
