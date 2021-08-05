@@ -26,11 +26,11 @@ import javax.annotation.Nonnull;
 
 import com.influxdb.LogLevel;
 import com.influxdb.client.InfluxDBClientOptions;
-import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.internal.AbstractInfluxDBClient;
 import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.QueryReactiveApi;
+import com.influxdb.client.reactive.WriteOptionsReactive;
 import com.influxdb.client.reactive.WriteReactiveApi;
 import com.influxdb.client.service.QueryService;
 import com.influxdb.client.service.WriteService;
@@ -58,12 +58,12 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient
     @Nonnull
     @Override
     public WriteReactiveApi getWriteReactiveApi() {
-        return getWriteReactiveApi(WriteOptions.DEFAULTS);
+        return getWriteReactiveApi(WriteOptionsReactive.DEFAULTS);
     }
 
     @Nonnull
     @Override
-    public WriteReactiveApi getWriteReactiveApi(@Nonnull final WriteOptions writeOptions) {
+    public WriteReactiveApi getWriteReactiveApi(@Nonnull final WriteOptionsReactive writeOptions) {
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 

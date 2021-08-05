@@ -25,7 +25,6 @@ import javax.annotation.Nonnull;
 
 import com.influxdb.LogLevel;
 import com.influxdb.client.InfluxDBClient;
-import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.HealthCheck;
 
 import io.reactivex.Single;
@@ -60,7 +59,7 @@ public interface InfluxDBClientReactive extends AutoCloseable {
      * @return the new client instance for the Write API
      */
     @Nonnull
-    WriteReactiveApi getWriteReactiveApi(@Nonnull final WriteOptions writeOptions);
+    WriteReactiveApi getWriteReactiveApi(@Nonnull final WriteOptionsReactive writeOptions);
 
     /**
      * Get the health of an instance.

@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLPeerUnverifiedException;
 
-import com.influxdb.client.WriteOptions;
+import com.influxdb.client.WriteApi.RetryOptions;
 
 import org.jetbrains.annotations.Nullable;
 import retrofit2.HttpException;
@@ -51,12 +51,12 @@ public final class RetryAttempt {
 
     private final Throwable throwable;
     private final int count;
-    private final WriteOptions writeOptions;
+    private final RetryOptions writeOptions;
 
-    RetryAttempt(final Throwable throwable, final int count, final WriteOptions writeOptions) {
+    RetryAttempt(final Throwable throwable, final int count, final RetryOptions retryOptions) {
         this.throwable = throwable;
         this.count = count;
-        this.writeOptions = writeOptions;
+        this.writeOptions = retryOptions;
     }
 
     /**

@@ -34,6 +34,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.client.WriteApi;
 import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.service.WriteService;
@@ -498,15 +499,15 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
      * Add Jitter delay to upstream.
      *
      * @param scheduler    to use for timer operator
-     * @param writeOptions with configured jitter interval
+     * @param retryOptions with configured jitter interval
      * @param <T>          upstream type
      * @return Flowable with jitter delay
      */
     @Nonnull
     public static <T> FlowableTransformer<T, T> jitter(@Nonnull final Scheduler scheduler,
-                                                       @Nonnull final WriteOptions writeOptions) {
+                                                       @Nonnull final WriteApi.RetryOptions retryOptions) {
 
-        Arguments.checkNotNull(writeOptions, "WriteOptions is required");
+        Arguments.checkNotNull(retryOptions, "JitterOptions is required");
         Arguments.checkNotNull(scheduler, "Jitter scheduler is required");
 
         return source -> {
@@ -514,7 +515,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             //
             // source without jitter
             //
-            if (writeOptions.getJitterInterval() <= 0) {
+            if (retryOptions.getJitterInterval() <= 0) {
                 return source;
             }
 
@@ -523,7 +524,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             //
             return source.delay((Function<T, Flowable<Long>>) pointFlowable -> {
 
-                int delay = RetryAttempt.jitterDelay(writeOptions.getJitterInterval());
+                int delay = RetryAttempt.jitterDelay(retryOptions.getJitterInterval());
 
                 LOG.log(Level.FINEST, "Generated Jitter dynamic delay: {0}", delay);
 
@@ -536,21 +537,21 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
      * Add Retry handler to upstream.
      *
      * @param retryScheduler for retry delay
-     * @param writeOptions   with configured retry strategy
+     * @param retryOptions   with configured retry strategy
      * @param notify         to notify about retryable error
      * @return Flowable with retry handler
      */
     @Nonnull
     public static Function<Flowable<Throwable>, Publisher<?>> retry(@Nonnull final Scheduler retryScheduler,
-                                                                    @Nonnull final WriteOptions writeOptions,
+                                                                    @Nonnull final WriteApi.RetryOptions retryOptions,
                                                                     @Nonnull final BiConsumer<Throwable, Long> notify) {
 
-        Objects.requireNonNull(writeOptions, "WriteOptions are required");
+        Objects.requireNonNull(retryOptions, "RetryOptions are required");
         Objects.requireNonNull(retryScheduler, "RetryScheduler is required");
 
         return errors -> errors
-                .zipWith(Flowable.range(1, writeOptions.getMaxRetries() + 1),
-                        (throwable, count) -> new RetryAttempt(throwable, count, writeOptions))
+                .zipWith(Flowable.range(1, retryOptions.getMaxRetries() + 1),
+                        (throwable, count) -> new RetryAttempt(throwable, count, retryOptions))
                 .flatMap(attempt -> {
 
                     Throwable throwable = attempt.getThrowable();

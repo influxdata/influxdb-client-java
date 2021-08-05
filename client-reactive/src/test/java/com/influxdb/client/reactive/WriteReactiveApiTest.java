@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.RetryAttempt;
 import com.influxdb.client.write.Point;
@@ -80,7 +79,7 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
 
         mockServer.enqueue(createResponse("{}"));
         mockServer.enqueue(createResponse("{}"));
-        writeClient = influxDBClient.getWriteReactiveApi(WriteOptions.builder().batchSize(1).build());
+        writeClient = influxDBClient.getWriteReactiveApi(WriteOptionsReactive.builder().batchSize(1).build());
 
         Publisher<String> records = Flowable.just(
                 "h2o_feet,location=coyote_creek level=1.0 1",
@@ -106,7 +105,7 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
         mockServer.enqueue(createResponse("{}"));
         mockServer.enqueue(createResponse("{}"));
 
-        writeClient = influxDBClient.getWriteReactiveApi(WriteOptions.builder().batchSize(100_000)
+        writeClient = influxDBClient.getWriteReactiveApi(WriteOptionsReactive.builder().batchSize(100_000)
                 .flushInterval(100).build());
 
         Flowable<String> records = Flowable.interval(500, TimeUnit.MILLISECONDS)
@@ -145,7 +144,7 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
 
         // Without jitter
         {
-            writeClient = influxDBClient.getWriteReactiveApi(WriteOptions.builder().batchSize(1).build());
+            writeClient = influxDBClient.getWriteReactiveApi(WriteOptionsReactive.builder().batchSize(1).build());
 
             Publisher<WriteReactiveApi.Success> success = writeClient
                     .writeRecord("my-bucket", "my-org", WritePrecision.S, "mem,tag=a field=1 1");
@@ -159,7 +158,7 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
 
         // With jitter
         {
-            writeClient = influxDBClient.getWriteReactiveApi(WriteOptions.builder().batchSize(1).jitterInterval(2_000).build());
+            writeClient = influxDBClient.getWriteReactiveApi(WriteOptionsReactive.builder().batchSize(1).jitterInterval(2_000).build());
 
             Publisher<WriteReactiveApi.Success> success = writeClient
                     .writeRecord("my-bucket", "my-org", WritePrecision.S, "mem,tag=a field=1 1");
@@ -180,7 +179,7 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
         mockServer.enqueue(createErrorResponse("token is temporarily over quota", true, 429));
         mockServer.enqueue(createResponse("{}"));
 
-        writeClient = influxDBClient.getWriteReactiveApi(WriteOptions.builder().batchSize(1).build());
+        writeClient = influxDBClient.getWriteReactiveApi(WriteOptionsReactive.builder().batchSize(1).build());
 
         Point point = Point.measurement("h2o").addTag("location", "europe").addField("level", 2);
         Publisher<WriteReactiveApi.Success> success = writeClient.writePoint("b1", "org1", WritePrecision.NS, point);
@@ -209,7 +208,7 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
         errorResponse.addHeader("Retry-After", 1);
         mockServer.enqueue(errorResponse);
 
-        writeClient = influxDBClient.getWriteReactiveApi(WriteOptions.builder().batchSize(1).maxRetryTime(500).build());
+        writeClient = influxDBClient.getWriteReactiveApi(WriteOptionsReactive.builder().batchSize(1).maxRetryTime(500).build());
 
         Point point = Point.measurement("h2o").addTag("location", "europe").addField("level", 2);
         Publisher<WriteReactiveApi.Success> success = writeClient.writePoint("b1", "org1", WritePrecision.NS, point);
@@ -236,7 +235,7 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
     void networkError() throws IOException {
         mockServer.shutdown();
 
-        writeClient = influxDBClient.getWriteReactiveApi(WriteOptions.builder().batchSize(1).maxRetries(1).build());
+        writeClient = influxDBClient.getWriteReactiveApi(WriteOptionsReactive.builder().batchSize(1).maxRetries(1).build());
 
         Publisher<WriteReactiveApi.Success> success = writeClient.writeRecord("my-bucket", "my-org", WritePrecision.S, "mem,tag=a field=10");
         TestSubscriber<WriteReactiveApi.Success> test = Flowable.fromPublisher(success)

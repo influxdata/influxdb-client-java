@@ -151,7 +151,7 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
     @Test
     void writeRecords() {
 
-        writeClient = influxDBClient.getWriteReactiveApi(WriteOptions.builder().batchSize(1).build());
+        writeClient = influxDBClient.getWriteReactiveApi(WriteOptionsReactive.builder().batchSize(1).build());
 
         Publisher<String> records = Flowable.just(
                 "h2o_feet,location=coyote_creek level\\ water_level=1.0 1",

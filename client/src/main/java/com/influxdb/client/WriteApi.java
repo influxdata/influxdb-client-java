@@ -236,4 +236,51 @@ public interface WriteApi extends AutoCloseable {
      * Close threads for asynchronous batch writing.
      */
     void close();
+
+    /**
+     * Retry configuration.
+     */
+    interface RetryOptions {
+
+        /**
+         * Jitters the batch flush interval by a random amount. This is primarily to avoid
+         * large write spikes for users running a large number of client instances.
+         * ie, a jitter of 5s and flush duration 10s means flushes will happen every 10-15s.
+         *
+         * @return milliseconds
+         */
+        int getJitterInterval();
+
+        /**
+         * The retry interval is used when the InfluxDB server does not specify "Retry-After" header.
+         * <br>
+         * Retry-After: A non-negative decimal integer indicating the seconds to delay after the response is received.
+         *
+         * @return the time to wait before retry unsuccessful write (milliseconds)
+         */
+        int getRetryInterval();
+
+        /**
+         * The number of max retries when write fails.
+         *
+         * @return number of max retries
+         */
+        int getMaxRetries();
+
+        /**
+         * The maximum delay between each retry attempt in milliseconds.
+         *
+         * @return maximum delay
+         */
+        int getMaxRetryDelay();
+
+        /**
+         * The base for the exponential retry delay.
+         *
+         * The next delay is computed as: retryInterval * exponentialBase^(attempts-1) + random(jitterInterval)
+         *
+         * @return exponential base
+         */
+        int getExponentialBase();
+    }
 }
