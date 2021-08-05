@@ -420,7 +420,7 @@ public class WriteDataBlocking {
          
 ### Asynchronous non-blocking API
 
-> :warning: **The `WriteApi` is supposed to be use as a singleton**: Don't create new instance for every write!
+> :warning: **The `WriteApi` is supposed to be use as a singleton**. Don't create a new instance for every write!
 
 For writing data we use [WriteApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/WriteApi.html) that is an asynchronous non-blocking API and supports:
 
@@ -510,7 +510,7 @@ public class WritePojo {
         //
         // Write data
         //
-        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+        try (WriteApi writeApi = influxDBClient.makeWriteApi()) {
 
             //
             // Write by POJO
@@ -569,7 +569,7 @@ public class WriteDataPoint {
         //
         // Write data
         //
-        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+        try (WriteApi writeApi = influxDBClient.makeWriteApi()) {
 
             //
             // Write by Data Point
@@ -612,7 +612,7 @@ public class WriteLineProtocol {
         //
         // Write data
         //
-        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+        try (WriteApi writeApi = influxDBClient.makeWriteApi()) {
 
             //
             // Write by LineProtocol
@@ -672,7 +672,7 @@ mine-sensor,id=132-987-655,customer="California Miner",hostname=example.com,sens
 ##### Handle the Success write
 
 ```java
-WriteApi writeApi = influxDBClient.getWriteApi();
+WriteApi writeApi = influxDBClient.makeWriteApi();
 writeApi.listenEvents(WriteSuccessEvent.class, event -> {
 
     String data = event.getLineProtocol();
@@ -686,7 +686,7 @@ writeApi.listenEvents(WriteSuccessEvent.class, event -> {
 ##### Handle the Error Write
 
 ```java
-WriteApi writeApi = influxDBClient.getWriteApi();
+WriteApi writeApi = influxDBClient.makeWriteApi();
 writeApi.listenEvents(WriteErrorEvent.class, event -> {
 
     Throwable exception = event.getThrowable();
