@@ -34,7 +34,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.influxdb.client.InfluxDBClient;
-import com.influxdb.client.WriteApi;
+import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 
@@ -232,7 +232,7 @@ public class PointWriter implements EventHandler {
             bucket = config.bucket();
         }
 
-        final WriteApi writeApi = client.getWriteApi();
+        final WriteApiBlocking writeApi = client.getWriteApiBlocking();
 
         final Object point = event.getProperty(POINT);
         final Collection<Object> points = (Collection<Object>) event.getProperty(POINTS);

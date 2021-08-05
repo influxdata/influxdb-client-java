@@ -73,7 +73,7 @@ public class WriteDataEverySecond {
         //
         // Initialize write API with flush interval to 5sec
         //
-        WriteApi writeApi = client.getWriteApi(WriteOptions.builder().flushInterval(5_000).build());
+        WriteApi writeApi = client.makeWriteApi(WriteOptions.builder().flushInterval(5_000).build());
 
         //
         // Produce DataPoint every seconds and pass it to WriteApi

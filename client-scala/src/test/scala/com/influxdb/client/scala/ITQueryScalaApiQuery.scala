@@ -98,7 +98,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       "cpu,host=A,hyper-threading=true,region=west usage_system=55i,user_usage=65i 20000000000")
       .mkString("\n")
 
-    val writeApi = client.getWriteApi
+    val writeApi = client.getWriteApiBlocking
     writeApi.writeRecord(bucket.getName, organization.getId, WritePrecision.NS, records)
 
     client.close()
@@ -388,7 +388,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
     //
     val records = Range(0, 10000).map(n => s"buffer field=$n $n").mkString("\n")
     val client = InfluxDBClientFactory.create(influxDBUtils.getUrl, "my-user", "my-password".toCharArray)
-    client.getWriteApi.writeRecord(bucket.getName, organization.getId, WritePrecision.NS, records)
+    client.getWriteApiBlocking.writeRecord(bucket.getName, organization.getId, WritePrecision.NS, records)
     client.close()
 
     //

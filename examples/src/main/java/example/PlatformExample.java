@@ -115,7 +115,7 @@ public class PlatformExample {
         //
         // Write data
         //
-        try (WriteApi writeApi = client.getWriteApi(WriteOptions.builder()
+        try (WriteApi writeApi = client.makeWriteApi(WriteOptions.builder()
                 .batchSize(5000)
                 .flushInterval(1000)
                 .backpressureStrategy(BackpressureOverflowStrategy.DROP_OLDEST)

@@ -109,13 +109,27 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Nonnull
     @Override
     public WriteApi getWriteApi() {
-        return getWriteApi(WriteOptions.DEFAULTS);
+        return makeWriteApi();
     }
 
     @Nonnull
     @Override
     public WriteApi getWriteApi(@Nonnull final WriteOptions writeOptions) {
 
+        Arguments.checkNotNull(writeOptions, "WriteOptions");
+
+        return makeWriteApi(writeOptions);
+    }
+
+    @Nonnull
+    @Override
+    public WriteApi makeWriteApi() {
+        return makeWriteApi(WriteOptions.DEFAULTS);
+    }
+
+    @Nonnull
+    @Override
+    public WriteApi makeWriteApi(@Nonnull final WriteOptions writeOptions) {
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
         return new WriteApiImpl(writeOptions, retrofit.create(WriteService.class), options, autoCloseables);

@@ -33,14 +33,14 @@ import java.io.Closeable
 interface InfluxDBClientKotlin : Closeable {
 
     /**
-     * Get the Query client.
+     * Create a new Query client.
      *
      * @return the new client instance for the Query API
      */
     fun getQueryKotlinApi() : QueryKotlinApi
 
     /**
-     * Get the Write client.
+     * Create a new Write client.
      *
      * @return the new client instance for the Write API
      */

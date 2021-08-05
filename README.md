@@ -124,7 +124,7 @@ import com.influxdb.annotations.Measurement;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.QueryApi;
-import com.influxdb.client.WriteApi;
+import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxRecord;
@@ -143,33 +143,32 @@ public class InfluxDB2Example {
         //
         // Write data
         //
-        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+        WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
 
-            //
-            // Write by Data Point
-            //
-            Point point = Point.measurement("temperature")
-                    .addTag("location", "west")
-                    .addField("value", 55D)
-                    .time(Instant.now().toEpochMilli(), WritePrecision.MS);
+        //
+        // Write by Data Point
+        //
+        Point point = Point.measurement("temperature")
+                .addTag("location", "west")
+                .addField("value", 55D)
+                .time(Instant.now().toEpochMilli(), WritePrecision.MS);
 
-            writeApi.writePoint(point);
+        writeApi.writePoint(point);
 
-            //
-            // Write by LineProtocol
-            //
-            writeApi.writeRecord(WritePrecision.MS, "temperature,location=north value=60.0");
+        //
+        // Write by LineProtocol
+        //
+        writeApi.writeRecord(WritePrecision.NS, "temperature,location=north value=60.0");
 
-            //
-            // Write by POJO
-            //
-            Temperature temperature = new Temperature();
-            temperature.location = "south";
-            temperature.value = 62D;
-            temperature.time = Instant.now();
+        //
+        // Write by POJO
+        //
+        Temperature temperature = new Temperature();
+        temperature.location = "south";
+        temperature.value = 62D;
+        temperature.time = Instant.now();
 
-            writeApi.writeMeasurement(WritePrecision.MS, temperature);
-        }
+        writeApi.writeMeasurement( WritePrecision.NS, temperature);
 
         //
         // Query data
