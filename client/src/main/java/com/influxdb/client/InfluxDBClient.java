@@ -67,6 +67,11 @@ public interface InfluxDBClient extends AutoCloseable {
     /**
      * Create a new asynchronous non-blocking Write client.
      *
+     * <p>
+     * The {@link WriteApi} uses background thread to ingesting data into InfluxDB and is suppose to run as a singleton.
+     * <b>Don't create new instance for every write.</b>
+     * </p>
+     *
      * @deprecated use {@link #makeWriteApi()}, the API is subject to removal in a next major release
      * @return the new client instance for the Write API
      */
