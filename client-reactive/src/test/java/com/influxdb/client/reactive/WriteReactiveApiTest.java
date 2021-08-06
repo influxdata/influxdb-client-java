@@ -253,4 +253,39 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
                 })
                 .assertTerminated();
     }
+
+    @Test
+    void customBatching() {
+
+        mockServer.enqueue(createResponse("{}"));
+        mockServer.enqueue(createResponse("{}"));
+        mockServer.enqueue(createResponse("{}"));
+
+        writeClient = influxDBClient.getWriteReactiveApi(WriteOptionsReactive.builder().batchSize(0).build());
+
+        Flowable<WriteReactiveApi.Success> successFlowable = Flowable.range(0, 100)
+                .take(10)
+                .map(it -> String.format("mem,tag=a field=%d %d", it, it))
+                .buffer(4)
+                .flatMap(records -> writeClient.writeRecords("my-bucket", "my-org", WritePrecision.S, Flowable.fromIterable(records)));
+
+        Flowable.fromPublisher(successFlowable)
+                .test()
+                .awaitCount(3)
+                .assertValueCount(3)
+                .assertTerminated();
+
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(3);
+
+        Assertions.assertThat(getRequestBody(mockServer)).isEqualTo("mem,tag=a field=0 0\n"
+                + "mem,tag=a field=1 1\n"
+                + "mem,tag=a field=2 2\n"
+                + "mem,tag=a field=3 3");
+        Assertions.assertThat(getRequestBody(mockServer)).isEqualTo("mem,tag=a field=4 4\n"
+                + "mem,tag=a field=5 5\n"
+                + "mem,tag=a field=6 6\n"
+                + "mem,tag=a field=7 7");
+        Assertions.assertThat(getRequestBody(mockServer)).isEqualTo("mem,tag=a field=8 8\n"
+                + "mem,tag=a field=9 9");
+    }
 }

@@ -248,11 +248,23 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
                 //
                 // Create batches
                 //
-                .window(writeOptions.getFlushInterval(),
-                        TimeUnit.MILLISECONDS,
-                        writeOptions.getComputationScheduler(),
-                        writeOptions.getBatchSize(),
-                        true)
+                .compose(source -> {
+                    //
+                    // disabled batches
+                    //
+                    if (writeOptions.getBatchSize() == 0) {
+                        return Flowable.just(Flowable.fromPublisher(stream));
+                    }
+
+                    //
+                    // batching
+                    //
+                    return source.window(writeOptions.getFlushInterval(),
+                            TimeUnit.MILLISECONDS,
+                            writeOptions.getComputationScheduler(),
+                            writeOptions.getBatchSize(),
+                            true);
+                })
                 //
                 // Collect batch to LineProtocol concatenated by '\n'
                 //

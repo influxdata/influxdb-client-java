@@ -57,4 +57,14 @@ class WriteOptionsReactiveTest {
         Assertions.assertThat(writeOptions.getExponentialBase()).isEqualTo(2);
         Assertions.assertThat(writeOptions.getComputationScheduler()).isEqualTo(Schedulers.newThread());
     }
+
+    @Test
+    void disableBatchingConfiguration() {
+        WriteOptionsReactive writeOptions = WriteOptionsReactive.builder().batchSize(0).build();
+        Assertions.assertThat(writeOptions.getBatchSize()).isEqualTo(0);
+
+        Assertions.assertThatThrownBy(() -> WriteOptionsReactive.builder().batchSize(-1).build())
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageEndingWith("Expecting a positive or zero number for batchSize");
+    }
 }

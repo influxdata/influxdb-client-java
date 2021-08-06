@@ -197,12 +197,14 @@ public final class WriteOptionsReactive implements WriteApi.RetryOptions {
         /**
          * Set the number of data point to collect in batch.
          *
+         * <p>It you set the bath-size to 0 the batching is disabled - whole </p>
+         *
          * @param batchSize the number of data point to collect in batch
          * @return {@code this}
          */
         @Nonnull
         public WriteOptionsReactive.Builder batchSize(final int batchSize) {
-            Arguments.checkPositiveNumber(batchSize, "batchSize");
+            Arguments.checkNotNegativeNumber(batchSize, "batchSize");
             this.batchSize = batchSize;
             return this;
         }
