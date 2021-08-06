@@ -133,8 +133,9 @@ public final class WriteOptionsReactive implements WriteApi.RetryOptions {
 
     /**
      * The base for the exponential retry delay.
-     *
+     * <p>
      * The next delay is computed as: retryInterval * exponentialBase^(attempts-1) + random(jitterInterval)
+     * </p>
      *
      * @return exponential base
      * @see WriteOptionsReactive.Builder#exponentialBase(int)
@@ -197,7 +198,10 @@ public final class WriteOptionsReactive implements WriteApi.RetryOptions {
         /**
          * Set the number of data point to collect in batch.
          *
-         * <p>It you set the bath-size to 0 the batching is disabled - whole </p>
+         * <p>
+         * If you set the {@code batchSize} to '0'
+         * the batching is disabled - whole upstream is written in one batch.
+         * </p>
          *
          * @param batchSize the number of data point to collect in batch
          * @return {@code this}
@@ -257,12 +261,17 @@ public final class WriteOptionsReactive implements WriteApi.RetryOptions {
         /**
          * The number of max retries when write fails.
          *
+         * <p>
+         * If you set the {@code maxRetries} to '0'
+         * the retry strategy is disabled - the error is immediately propagate to upstream.
+         * </p>
+         *
          * @param maxRetries number of max retries
          * @return {@code this}
          */
         @Nonnull
         public WriteOptionsReactive.Builder maxRetries(final int maxRetries) {
-            Arguments.checkPositiveNumber(maxRetries, "maxRetries");
+            Arguments.checkNotNegativeNumber(maxRetries, "maxRetries");
             this.maxRetries = maxRetries;
             return this;
         }
@@ -270,7 +279,7 @@ public final class WriteOptionsReactive implements WriteApi.RetryOptions {
         /**
          * The maximum delay between each retry attempt in milliseconds.
          *
-         * @param maxRetryDelay  maximum delay
+         * @param maxRetryDelay maximum delay
          * @return {@code this}
          */
         @Nonnull
@@ -283,7 +292,7 @@ public final class WriteOptionsReactive implements WriteApi.RetryOptions {
         /**
          * The maximum total retry timeout in milliseconds.
          *
-         * @param maxRetryTime  maximum timout
+         * @param maxRetryTime maximum timout
          * @return {@code this}
          */
         @Nonnull

@@ -288,4 +288,33 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
         Assertions.assertThat(getRequestBody(mockServer)).isEqualTo("mem,tag=a field=8 8\n"
                 + "mem,tag=a field=9 9");
     }
+
+    @Test
+    void disableRetry() {
+        mockServer.enqueue(createErrorResponse("token is temporarily over quota", true, 429));
+        mockServer.enqueue(createResponse("{}"));
+
+        writeClient = influxDBClient.getWriteReactiveApi(WriteOptionsReactive.builder().maxRetries(0).batchSize(1).build());
+
+        Publisher<WriteReactiveApi.Success> success = writeClient
+                .writeRecord("b1", "org1", WritePrecision.NS, "mem,tag=a field=0 0");
+
+        TestSubscriber<WriteReactiveApi.Success> test = Flowable.fromPublisher(success)
+                .test();
+
+        test
+                .awaitCount(1)
+                .assertValueCount(0)
+                .assertError(throwable -> {
+                    Assertions.assertThat(throwable).isInstanceOf(InfluxException.class);
+                    Assertions.assertThat(throwable).hasMessage("token is temporarily over quota");
+                    return true;
+                })
+                .assertTerminated();
+
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(1);
+
+        String body1 = getRequestBody(mockServer);
+        Assertions.assertThat(body1).isEqualTo("mem,tag=a field=0 0");
+    }
 }

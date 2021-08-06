@@ -67,4 +67,14 @@ class WriteOptionsReactiveTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageEndingWith("Expecting a positive or zero number for batchSize");
     }
+
+    @Test
+    void disableRetryConfiguration() {
+        WriteOptionsReactive writeOptions = WriteOptionsReactive.builder().maxRetries(0).build();
+        Assertions.assertThat(writeOptions.getMaxRetries()).isEqualTo(0);
+
+        Assertions.assertThatThrownBy(() -> WriteOptionsReactive.builder().maxRetries(-1).build())
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageEndingWith("Expecting a positive or zero number for maxRetries");
+    }
 }
