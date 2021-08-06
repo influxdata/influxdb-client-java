@@ -75,6 +75,7 @@ public interface QueryService {
    * @return Call&lt;ResponseBody&gt;
    */
   @POST("api/v2/query")
+  @Streaming
   Call<ResponseBody> postQueryResponseBody(
     @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Accept-Encoding") String acceptEncoding, @retrofit2.http.Header("Content-Type") String contentType, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Body Query query
   );
