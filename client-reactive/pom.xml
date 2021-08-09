@@ -35,7 +35,8 @@
 
     <name>The RxJava InfluxDB 2.0 Client</name>
     <description>
-        The reference Java client that allows query and write for the InfluxDB 2.0 by a reactive way.
+        The reference reactive Java client for InfluxDB 2.0. The client provide supports for asynchronous stream
+        processing with backpressure as is defined by the Reactive Streams.
     </description>
 
     <url>https://github.com/influxdata/influxdb-client-java/tree/master/client-reactive</url>

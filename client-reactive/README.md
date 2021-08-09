@@ -2,7 +2,14 @@
 
 [![javadoc](https://img.shields.io/badge/javadoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/index.html)
 
-The reference Java client that allows query and write for the InfluxDB 2.0 by a reactive way.
+The reference reactive Java client for InfluxDB 2.0. The client provide supports for asynchronous stream processing with backpressure as is defined by the [Reactive Streams specification](http://www.reactive-streams.org/).
+
+---
+**Importatnt**
+
+The `Publishers` returned from [Query](src/main/java/com/influxdb/client/reactive/QueryReactiveApi.java) and [Write](src/main/java/com/influxdb/client/reactive/WriteReactiveApi.java) API are cold.
+That means no request to InfluxDB is trigger until register a subscription to `Publisher`.  
+---
 
 ## Documentation
 
@@ -35,6 +42,8 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
+import io.reactivex.Flowable;
+
 public class InfluxDB2ReactiveExample {
 
     private static char[] token = "my-token".toCharArray();
@@ -51,8 +60,7 @@ public class InfluxDB2ReactiveExample {
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
-        queryApi
-                .query(flux)
+        Flowable.fromPublisher(queryApi.query(flux))
                 //
                 // Filter records by measurement name
                 //
@@ -82,6 +90,8 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
+import io.reactivex.Flowable;
+
 public class InfluxDB2ReactiveExampleRaw {
 
     private static char[] token = "my-token".toCharArray();
@@ -98,8 +108,7 @@ public class InfluxDB2ReactiveExampleRaw {
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
-        queryApi
-                .queryRaw(flux)
+        Flowable.fromPublisher(queryApi.queryRaw(flux))
                 //
                 // Take first 10 records
                 //
@@ -116,7 +125,7 @@ public class InfluxDB2ReactiveExampleRaw {
 }
 ```
 
-The mapping result to POJO is also supported:
+The mapping result to POJO is also support:
 
 ```java
 package example;
@@ -128,6 +137,9 @@ import com.influxdb.annotations.Measurement;
 import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
+
+import io.reactivex.Flowable;
+import org.reactivestreams.Publisher;
 
 public class InfluxDB2ReactiveExamplePojo {
 
@@ -144,8 +156,8 @@ public class InfluxDB2ReactiveExamplePojo {
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
-        queryApi
-                .query(flux, Temperature.class)
+        Publisher<Temperature> query = queryApi.query(flux, Temperature.class);
+        Flowable.fromPublisher(query)
                 //
                 // Take first 10 records
                 //

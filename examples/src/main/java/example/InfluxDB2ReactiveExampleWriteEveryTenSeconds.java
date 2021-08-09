@@ -33,6 +33,8 @@ import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.WriteReactiveApi;
 
 import io.reactivex.Flowable;
+import io.reactivex.disposables.Disposable;
+import org.reactivestreams.Publisher;
 
 public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
 
@@ -42,7 +44,7 @@ public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
 
     public static void main(final String[] args) throws InterruptedException {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:8086", token, org, bucket);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org, bucket);
 
         //
         // Write data
@@ -59,9 +61,20 @@ public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
                     return temperature;
                 });
 
-        writeApi.writeMeasurements(WritePrecision.NS, measurements);
+        //
+        // ReactiveStreams publisher
+        //
+        Publisher<WriteReactiveApi.Success> publisher = writeApi.writeMeasurements(WritePrecision.NS, measurements);
 
-        Thread.sleep(30_000);
+        //
+        // Subscribe to Publisher
+        //
+        Disposable subscriber = Flowable.fromPublisher(publisher)
+                .subscribe(success -> System.out.println("Successfully written temperature"));
+
+        Thread.sleep(35_000);
+
+        subscriber.dispose();
 
         influxDBClient.close();
     }
