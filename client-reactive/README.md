@@ -4,12 +4,10 @@
 
 The reference reactive Java client for InfluxDB 2.0. The client provide supports for asynchronous stream processing with backpressure as is defined by the [Reactive Streams specification](http://www.reactive-streams.org/).
 
----
-**Importatnt**
+## Important
 
-The `Publishers` returned from [Query](src/main/java/com/influxdb/client/reactive/QueryReactiveApi.java) and [Write](src/main/java/com/influxdb/client/reactive/WriteReactiveApi.java) API are cold.
+> :warning: The `Publishers` returned from [Query](src/main/java/com/influxdb/client/reactive/QueryReactiveApi.java) and [Write](src/main/java/com/influxdb/client/reactive/WriteReactiveApi.java) API are cold.
 That means no request to InfluxDB is trigger until register a subscription to `Publisher`.  
----
 
 ## Documentation
 
