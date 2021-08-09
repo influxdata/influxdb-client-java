@@ -190,7 +190,7 @@ public class InfluxDB2ReactiveExamplePojo {
 For writing data we use [WriteReactiveApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/com/influxdb/client/reactive/WriteReactiveApi.html) 
 that supports writing data using Line Protocol, Data Point or POJO. The [GZIP compression](#gzip-support) is also supported.
 
-The writes are processed in batches which are configurable by [`WriteOptionsReactive`](src/main/java/com/influxdb/client/reactive/WriteOptionsReactive.java):
+The writes are configurable by [`WriteOptionsReactive`](src/main/java/com/influxdb/client/reactive/WriteOptionsReactive.java):
 
 | Property | Description | Default Value |
 | --- | --- | --- |
