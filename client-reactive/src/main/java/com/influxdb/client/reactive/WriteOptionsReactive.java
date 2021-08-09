@@ -41,6 +41,25 @@ import static com.influxdb.client.WriteOptions.DEFAULT_MAX_RETRY_TIME;
 import static com.influxdb.client.WriteOptions.DEFAULT_RETRY_INTERVAL;
 
 /**
+ * The configuration for {@link WriteReactiveApi}.
+ *
+ * <p>
+ * <b>Example:</b>
+ * <pre>
+ *     WriteOptionsReactive writeOptions = WriteOptionsReactive.builder()
+ *                 .batchSize(10_000)
+ *                 .flushInterval(500)
+ *                 .jitterInterval(1_000)
+ *                 .retryInterval(2_000)
+ *                 .maxRetries(5)
+ *                 .maxRetryDelay(250_123)
+ *                 .maxRetryTime(500_000)
+ *                 .exponentialBase(2)
+ *                 .computationScheduler(Schedulers.newThread())
+ *                 .build();
+ * </pre>
+ * </p>
+ *
  * @author Jakub Bednar (05/08/2021 9:13)
  */
 @ThreadSafe

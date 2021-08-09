@@ -33,7 +33,7 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 
 /**
- * Write time-series data into InfluxDB 2.0.
+ * Write time-series data into by reactive way InfluxDB 2.0.
  * <p>
  * The data are formatted in <a href="https://bit.ly/line-protocol">Line Protocol</a>.
  *
