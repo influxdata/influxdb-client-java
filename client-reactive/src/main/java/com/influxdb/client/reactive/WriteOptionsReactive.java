@@ -45,6 +45,7 @@ import static com.influxdb.client.WriteOptions.DEFAULT_RETRY_INTERVAL;
  *
  * <p>
  * <b>Example:</b>
+ * </p>
  * <pre>
  *     WriteOptionsReactive writeOptions = WriteOptionsReactive.builder()
  *                 .batchSize(10_000)
@@ -58,7 +59,6 @@ import static com.influxdb.client.WriteOptions.DEFAULT_RETRY_INTERVAL;
  *                 .computationScheduler(Schedulers.newThread())
  *                 .build();
  * </pre>
- * </p>
  *
  * @author Jakub Bednar (05/08/2021 9:13)
  */
