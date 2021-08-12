@@ -42,6 +42,10 @@ import com.influxdb.client.write.events.WriteSuccessEvent;
  * The data are formatted in <a href="https://bit.ly/line-protocol">Line Protocol</a>.
  * <p>
  *
+ * <b>
+ *     The {@link WriteApi} uses background thread to ingesting data into InfluxDB and is suppose to run as a singleton.
+ * </b>
+ *
  * @author Jakub Bednar (bednar@github) (20/09/2018 10:58)
  */
 @ThreadSafe

@@ -28,6 +28,7 @@ import com.influxdb.annotations.Measurement;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteApi;
+import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
 
 public class WritePojo {
@@ -43,18 +44,17 @@ public class WritePojo {
         //
         // Write data
         //
-        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+        WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
 
-            //
-            // Write by POJO
-            //
-            Temperature temperature = new Temperature();
-            temperature.location = "south";
-            temperature.value = 62D;
-            temperature.time = Instant.now();
+        //
+        // Write by POJO
+        //
+        Temperature temperature = new Temperature();
+        temperature.location = "south";
+        temperature.value = 62D;
+        temperature.time = Instant.now();
 
-            writeApi.writeMeasurement(WritePrecision.NS, temperature);
-        }
+        writeApi.writeMeasurement(WritePrecision.NS, temperature);
 
         influxDBClient.close();
     }

@@ -26,6 +26,7 @@ import java.time.Instant;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteApi;
+import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 
@@ -42,18 +43,17 @@ public class WriteDataPoint {
         //
         // Write data
         //
-        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+        WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
 
-            //
-            // Write by Data Point
-            //
-            Point point = Point.measurement("temperature")
-                    .addTag("location", "west")
-                    .addField("value", 55D)
-                    .time(Instant.now().toEpochMilli(), WritePrecision.MS);
+        //
+        // Write by Data Point
+        //
+        Point point = Point.measurement("temperature")
+                .addTag("location", "west")
+                .addField("value", 55D)
+                .time(Instant.now().toEpochMilli(), WritePrecision.MS);
 
-            writeApi.writePoint(point);
-        }
+        writeApi.writePoint(point);
 
         influxDBClient.close();
     }

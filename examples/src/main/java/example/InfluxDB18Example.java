@@ -47,7 +47,7 @@ public class InfluxDB18Example {
 
         System.out.println("*** Write Points ***");
 
-        try (WriteApi writeApi = client.getWriteApi()) {
+        try (WriteApi writeApi = client.makeWriteApi()) {
 
             Point point = Point.measurement("mem")
                     .addTag("host", "host1")

@@ -39,7 +39,7 @@ import io.reactivex.Single;
 public interface InfluxDBClientReactive extends AutoCloseable {
 
     /**
-     * Get the Query client.
+     * Create a new Query client.
      *
      * @return the new client instance for the Query API
      */
@@ -47,7 +47,7 @@ public interface InfluxDBClientReactive extends AutoCloseable {
     QueryReactiveApi getQueryReactiveApi();
 
     /**
-     * Get the Write client.
+     * Create a new Write client.
      *
      * @return the new client instance for the Write API
      */
@@ -55,7 +55,7 @@ public interface InfluxDBClientReactive extends AutoCloseable {
     WriteReactiveApi getWriteReactiveApi();
 
     /**
-     * Get the Write client.
+     * Create a new Write client.
      *
      * @return the new client instance for the Write API
      */

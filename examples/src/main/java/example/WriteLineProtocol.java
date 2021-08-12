@@ -24,6 +24,7 @@ package example;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteApi;
+import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
 
 public class WriteLineProtocol {
@@ -39,15 +40,14 @@ public class WriteLineProtocol {
         //
         // Write data
         //
-        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+        WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
 
-            //
-            // Write by LineProtocol
-            //
-            String record = "temperature,location=north value=60.0";
+        //
+        // Write by LineProtocol
+        //
+        String record = "temperature,location=north value=60.0";
 
-            writeApi.writeRecord(WritePrecision.NS, record);
-        }
+        writeApi.writeRecord(WritePrecision.NS, record);
 
         influxDBClient.close();
     }

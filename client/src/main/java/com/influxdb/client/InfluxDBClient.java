@@ -57,7 +57,7 @@ import com.influxdb.exceptions.UnprocessableEntityException;
 public interface InfluxDBClient extends AutoCloseable {
 
     /**
-     * Get the Query client.
+     * Create a new Query client.
      *
      * @return the new client instance for the Query API
      */
@@ -65,24 +65,60 @@ public interface InfluxDBClient extends AutoCloseable {
     QueryApi getQueryApi();
 
     /**
-     * Get the asynchronous non-blocking Write client.
+     * Create a new asynchronous non-blocking Write client.
+     *
+     * <p>
+     * The {@link WriteApi} uses background thread to ingesting data into InfluxDB and is suppose to run as a singleton.
+     * <b>Don't create new instance for every write.</b>
+     * </p>
+     *
+     * @deprecated use {@link #makeWriteApi()}, the API is subject to removal in a next major release
+     * @return the new client instance for the Write API
+     */
+    @Nonnull
+    @Deprecated
+    WriteApi getWriteApi();
+
+    /**
+     * Create a new asynchronous non-blocking Write client.
+     *
+     * <p>
+     * The {@link WriteApi} uses background thread to ingesting data into InfluxDB and is suppose to run as a singleton.
+     * <b>Don't create new instance for every write.</b>
+     * </p>
      *
      * @return the new client instance for the Write API
      */
     @Nonnull
-    WriteApi getWriteApi();
+    WriteApi makeWriteApi();
 
     /**
-     * Get the asynchronous non-blocking Write client.
+     * Create a new asynchronous non-blocking Write client.
+     *
+     * @param writeOptions the writes configuration
+     * @deprecated use {@link #makeWriteApi(WriteOptions)}, the API is subject to removal in a next major release
+     * @return the new client instance for the Write API
+     */
+    @Nonnull
+    @Deprecated
+    WriteApi getWriteApi(@Nonnull final WriteOptions writeOptions);
+
+    /**
+     * Create a new asynchronous non-blocking Write client.
+     *
+     * <p>
+     * The {@link WriteApi} uses background thread to ingesting data into InfluxDB and is suppose to run as a singleton.
+     * <b>Don't create new instance for every write.</b>
+     * </p>
      *
      * @param writeOptions the writes configuration
      * @return the new client instance for the Write API
      */
     @Nonnull
-    WriteApi getWriteApi(@Nonnull final WriteOptions writeOptions);
+    WriteApi makeWriteApi(@Nonnull final WriteOptions writeOptions);
 
     /**
-     * Get the synchronous blocking Write client.
+     * Create a new synchronous blocking Write client.
      *
      * @return the new client instance for the Write API
      */
@@ -90,7 +126,7 @@ public interface InfluxDBClient extends AutoCloseable {
     WriteApiBlocking getWriteApiBlocking();
 
     /**
-     * Get the {@link Authorization} client.
+     * Create a new {@link Authorization} client.
      *
      * @return the new client instance for Authorization API
      */
@@ -98,7 +134,7 @@ public interface InfluxDBClient extends AutoCloseable {
     AuthorizationsApi getAuthorizationsApi();
 
     /**
-     * Get the {@link Bucket} client.
+     * Create a new {@link Bucket} client.
      *
      * @return the new client instance for Bucket API
      */
@@ -106,7 +142,7 @@ public interface InfluxDBClient extends AutoCloseable {
     BucketsApi getBucketsApi();
 
     /**
-     * Get the {@link Organization} client.
+     * Create a new {@link Organization} client.
      *
      * @return the new client instance for Organization API
      */
@@ -114,7 +150,7 @@ public interface InfluxDBClient extends AutoCloseable {
     OrganizationsApi getOrganizationsApi();
 
     /**
-     * Get the {@link Source} client.
+     * Create a new {@link Source} client.
      *
      * @return the new client instance for Source API
      */
@@ -122,7 +158,7 @@ public interface InfluxDBClient extends AutoCloseable {
     SourcesApi getSourcesApi();
 
     /**
-     * Get the {@link Task} client.
+     * Create a new {@link Task} client.
      *
      * @return the new client instance for Task API
      */
@@ -130,7 +166,7 @@ public interface InfluxDBClient extends AutoCloseable {
     TasksApi getTasksApi();
 
     /**
-     * Get the {@link User} client.
+     * Create a new {@link User} client.
      *
      * @return the new client instance for User API
      */
@@ -138,7 +174,7 @@ public interface InfluxDBClient extends AutoCloseable {
     UsersApi getUsersApi();
 
     /**
-     * Get the {@link ScraperTargetResponse} client.
+     * Create a new {@link ScraperTargetResponse} client.
      *
      * @return the new client instance for Scraper API
      */
@@ -146,7 +182,7 @@ public interface InfluxDBClient extends AutoCloseable {
     ScraperTargetsApi getScraperTargetsApi();
 
     /**
-     * Get the {@link Telegraf} client.
+     * Create a new {@link Telegraf} client.
      *
      * @return the new client instance for Telegrafs API
      */
@@ -154,7 +190,7 @@ public interface InfluxDBClient extends AutoCloseable {
     TelegrafsApi getTelegrafsApi();
 
     /**
-     * Get the {@link Label} client.
+     * Create a new {@link Label} client.
      *
      * @return the new client instance for Label API
      */
@@ -162,7 +198,7 @@ public interface InfluxDBClient extends AutoCloseable {
     LabelsApi getLabelsApi();
 
     /**
-     * Get the {@link Document} client.
+     * Create a new {@link Document} client.
      *
      * @return the new client instance for Template API
      */
@@ -170,7 +206,7 @@ public interface InfluxDBClient extends AutoCloseable {
     TemplatesApi getTemplatesApi();
 
     /**
-     * Get the {@link Variable} client.
+     * Create a new {@link Variable} client.
      *
      * @return the new client instance for Variable API
      */
@@ -178,7 +214,7 @@ public interface InfluxDBClient extends AutoCloseable {
     VariablesApi getVariablesApi();
 
     /**
-     * Get the {@link Dashboard} client.
+     * Create a new {@link Dashboard} client.
      *
      * @return the new client instance for Dashboard API
      */
@@ -186,7 +222,7 @@ public interface InfluxDBClient extends AutoCloseable {
     DashboardsApi getDashboardsApi();
 
     /**
-     * Get the {@link Check} client.
+     * Create a new {@link Check} client.
      *
      * @return the new client instance for Checks API
      */
@@ -194,7 +230,7 @@ public interface InfluxDBClient extends AutoCloseable {
     ChecksApi getChecksApi();
 
     /**
-     * Get the {@link NotificationEndpoint} client.
+     * Create a new {@link NotificationEndpoint} client.
      *
      * @return the new client instance for NotificationEndpoint API
      */
@@ -202,7 +238,7 @@ public interface InfluxDBClient extends AutoCloseable {
     NotificationEndpointsApi getNotificationEndpointsApi();
 
     /**
-     * Get the {@link NotificationRules} client.
+     * Create a new {@link NotificationRules} client.
      *
      * @return the new client instance for NotificationRules API
      */
@@ -210,7 +246,7 @@ public interface InfluxDBClient extends AutoCloseable {
     NotificationRulesApi getNotificationRulesApi();
 
     /**
-     * Get the Delete client.
+     * Create a new Delete client.
      *
      * @return the new client instance for the Delete API
      */

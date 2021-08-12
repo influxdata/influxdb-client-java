@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.influxdb.client.InfluxDBClient;
-import com.influxdb.client.WriteApi;
+import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.internal.NanosecondConverter;
 
@@ -177,7 +177,7 @@ public class LineProtocolWriter implements EventHandler {
         }
 
         final WritePrecision writePrecision = getPrecision(event);
-        final WriteApi writeApi = client.getWriteApi();
+        final WriteApiBlocking writeApi = client.getWriteApiBlocking();
 
         final String record = (String) event.getProperty(RECORD);
         final List<String> records = (List<String>) event.getProperty(RECORDS);

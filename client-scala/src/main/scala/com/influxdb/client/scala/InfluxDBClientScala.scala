@@ -33,7 +33,7 @@ import javax.annotation.Nonnull
 trait InfluxDBClientScala {
 
   /**
-   * Get the Query client.
+   * Create a new Query client.
    *
    * @return the new client instance for the Query API
    */

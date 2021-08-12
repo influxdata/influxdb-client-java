@@ -113,7 +113,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
@@ -149,7 +149,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
@@ -187,7 +187,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
     void writeErrorListenerTest () {
         String bucketName = "non_existing_bucket";
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
@@ -208,7 +208,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
@@ -230,7 +230,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
@@ -252,7 +252,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
@@ -274,7 +274,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
@@ -308,7 +308,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
@@ -341,7 +341,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
@@ -367,7 +367,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
@@ -448,7 +448,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
                 .addField("water_level", 1)
                 .time(Instant.now(), WritePrecision.MS);
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
@@ -465,7 +465,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(100_000)
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(100_000)
                 .flushInterval(100_000).build());
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
@@ -489,7 +489,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(100_000)
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(100_000)
                 .flushInterval(500).build());
 
         String record1 = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
@@ -519,7 +519,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(6)
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(6)
                 .flushInterval(100_000).build());
 
         String record1 = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
@@ -553,7 +553,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1)
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1)
                 .jitterInterval(4_000)
                 .build());
 
@@ -577,7 +577,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         String record1 = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
         String record2 = "h2o_feet,location=coyote_hill level\\ water_level=2.0 2x";
@@ -596,7 +596,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
         WriteEventListener<WriteErrorEvent> errorListener = new WriteEventListener<>();
         writeApi.listenEvents(WriteErrorEvent.class, errorListener);
 
@@ -640,7 +640,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         influxDBClient = InfluxDBClientFactory.create(options);
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
@@ -684,7 +684,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         influxDBClient = InfluxDBClientFactory.create(options);
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
@@ -724,7 +724,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         influxDBClient = InfluxDBClientFactory.create(options);
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
@@ -755,7 +755,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
@@ -791,7 +791,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         InfluxDBClient client = InfluxDBClientFactory.create(influxDB_URL, token.toCharArray());
 
-        WriteApi writeApi = client.getWriteApi();
+        WriteApi writeApi = client.makeWriteApi();
 
         writeApi.writeRecord(bucket.getName(), organization.getId(), WritePrecision.NS, "temperature,location=north value=60.0 1");
 
@@ -810,7 +810,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         InfluxDBClient client = InfluxDBClientFactory.create(influxDB_URL, token.toCharArray(), organization.getId(), bucket.getName());
 
-        WriteApi writeApi = client.getWriteApi();
+        WriteApi writeApi = client.makeWriteApi();
 
         writeApi.writeRecord(WritePrecision.NS, "temperature,location=north value=60.0 1");
         writeApi.close();

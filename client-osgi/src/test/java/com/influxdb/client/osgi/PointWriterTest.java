@@ -23,6 +23,7 @@ package com.influxdb.client.osgi;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.WriteApi;
+import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import org.hamcrest.CoreMatchers;
@@ -94,7 +95,7 @@ public class PointWriterTest {
     private static final String BUCKET_OVERRIDE = "my-bucket";
 
     @Mock
-    private WriteApi writeApi;
+    private WriteApiBlocking writeApi;
 
     @Mock
     private InfluxDBClient client;
@@ -119,7 +120,7 @@ public class PointWriterTest {
     @BeforeEach
     void setUp() {
         pointWriter = new PointWriter();
-        when(client.getWriteApi()).thenReturn(writeApi);
+        when(client.getWriteApiBlocking()).thenReturn(writeApi);
         pointWriter.client = client;
         payload = new TreeMap<>();
         payload.put(EventConstants.TIMESTAMP, System.currentTimeMillis());

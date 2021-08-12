@@ -60,7 +60,7 @@ class ITWriteTooManyData extends AbstractITWrite {
         List<AbstractWriteEvent> events = new CopyOnWriteArrayList<>();
 
         WriteApi api = influxDBClient
-                .getWriteApi(WriteOptions.builder().batchSize(BATCH_SIZE).flushInterval(1_000_000).build());
+                .makeWriteApi(WriteOptions.builder().batchSize(BATCH_SIZE).flushInterval(1_000_000).build());
 
         api.listenEvents(AbstractWriteEvent.class, events::add)                        ;
 

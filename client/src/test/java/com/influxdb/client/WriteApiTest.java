@@ -85,7 +85,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         writeApi.writePoint("b1", "org1", Point.measurement("h2o").addTag("location", "europe").addField("level", 2));
 
@@ -107,7 +107,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         writeApi.writePoint("b1", "org1", null);
 
@@ -120,7 +120,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         mockServer.enqueue(createResponse("{}"));
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1).build());
 
         Point point1 = Point.measurement("h2o").addTag("location", "europe").addField("level", 1).time(1L, WritePrecision.MS);
         Point point2 = Point.measurement("h2o").addTag("location", "europe").addField("level", 2).time(2L, WritePrecision.S);
@@ -146,7 +146,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         mockServer.enqueue(new MockResponse());
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         H2OFeetMeasurement measurement = new H2OFeetMeasurement(
                 "coyote_creek", 2.927, "below 3 feet", 1440046800L);
@@ -172,7 +172,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         mockServer.enqueue(new MockResponse());
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         Metric measurement = new Visitor();
         //noinspection CastCanBeRemovedNarrowingVariableType
@@ -200,7 +200,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         writeApi.writeMeasurement("b1", "org1", WritePrecision.S, null);
 
@@ -210,7 +210,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
     @Test
     void writeMeasurementWhichIsNotMappableToPoint() {
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
         WriteEventListener<WriteErrorEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteErrorEvent.class, listener);
 
@@ -230,7 +230,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
     @Test
     void writeMeasurements() throws InterruptedException {
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1).build());
 
         mockServer.enqueue(new MockResponse());
         mockServer.enqueue(new MockResponse());
@@ -263,7 +263,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         writeApi.writeRecord("b1", "org1", WritePrecision.NS,
                 "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
@@ -281,7 +281,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
     @Test
     void emptyRequest() {
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         WriteEventListener<WriteErrorEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteErrorEvent.class, listener);
@@ -303,7 +303,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         mockServer.enqueue(createResponse("{}"));
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1).build());
 
         String record1 = "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1";
         writeApi.writeRecord("b1", "org1", WritePrecision.NS, record1);
@@ -336,7 +336,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         enqueuedResponse();
         enqueuedResponse();
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().flushInterval(10_000).batchSize(2).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().flushInterval(10_000).batchSize(2).build());
 
         String record1 = "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1";
         String record2 = "h2o_feet,location=coyote_creek level\\ description=\"feet 2\",water_level=2.0 2";
@@ -360,7 +360,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         mockServer.enqueue(createResponse("{}"));
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).flushInterval(10_00000).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1).flushInterval(10_00000).build());
 
         String record1 = "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1";
         String record2 = "h2o_feet,location=coyote_creek level\\ description=\"feet 2\",water_level=2.0 2";
@@ -393,7 +393,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         mockServer.enqueue(createResponse("{}"));
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1).build());
 
         String record1 = "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1";
         String record2 = "h2o_feet,location=coyote_creek level\\ description=\"feet 2\",water_level=2.0 2";
@@ -436,7 +436,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
                 .flushInterval(100_000_000)
                 .build();
 
-        writeApi = influxDBClient.getWriteApi(writeOptions);
+        writeApi = influxDBClient.makeWriteApi(writeOptions);
 
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
@@ -463,7 +463,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
                 .writeScheduler(scheduler)
                 .build();
 
-        writeApi = influxDBClient.getWriteApi(writeOptions);
+        writeApi = influxDBClient.makeWriteApi(writeOptions);
         
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
@@ -494,7 +494,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
                 .writeScheduler(scheduler)
                 .build();
 
-        writeApi = influxDBClient.getWriteApi(writeOptions);
+        writeApi = influxDBClient.makeWriteApi(writeOptions);
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
 
@@ -521,7 +521,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         writeApi.writeRecord("b1", "org1", WritePrecision.NS,
                 "h2o_feet,location=coyote_creek level\\ description=\"feet 1\",water_level=1.0 1");
@@ -541,7 +541,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1).build());
 
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener);
@@ -569,7 +569,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1).build());
 
         WriteEventListener<WriteSuccessEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, listener).dispose();
@@ -589,7 +589,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         mockServer.enqueue(createErrorResponse("no token was sent and they are required", true, 403));
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1).build());
         WriteEventListener<WriteErrorEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteErrorEvent.class, listener);
 
@@ -614,7 +614,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         mockServer.enqueue(createErrorResponse("token is temporarily over quota", true, 429));
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         writeApi.writePoint("b1", "org1", Point.measurement("h2o").addTag("location", "europe").addField("level", 2));
 
@@ -636,7 +636,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         mockServer.enqueue(errorResponse);
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1).build());
 
         WriteEventListener<WriteRetriableErrorEvent> retriableListener = new WriteEventListener<>();
         writeApi.listenEvents(WriteRetriableErrorEvent.class, retriableListener);
@@ -675,7 +675,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         mockServer.enqueue(errorResponse);
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).maxRetryTime(500).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1).maxRetryTime(500).build());
 
         WriteEventListener<WriteErrorEvent> errorListener = new WriteEventListener<>();
         writeApi.listenEvents(WriteErrorEvent.class, errorListener);
@@ -708,7 +708,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         //create delayed success response
         mockServer.enqueue(createResponse("{}", "text/csv", true, 3000));
         //write api with retry timeout does not affect normal requests
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).maxRetryTime(2000).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1).maxRetryTime(2000).build());
 
         WriteEventListener<WriteSuccessEvent> successListener = new WriteEventListener<>();
         writeApi.listenEvents(WriteSuccessEvent.class, successListener);
@@ -730,7 +730,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         mockServer.enqueue(createResponse("{}"));
 
         int retryInterval = 100;
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).retryInterval(retryInterval).maxRetryTime(3000).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1).retryInterval(retryInterval).maxRetryTime(3000).build());
 
         WriteEventListener<WriteRetriableErrorEvent> retriableListener = new WriteEventListener<>();
         writeApi.listenEvents(WriteRetriableErrorEvent.class, retriableListener);
@@ -778,7 +778,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         mockServer.enqueue(createErrorResponse("no token was sent and they are required", true, 403));
         mockServer.enqueue(createErrorResponse("write has been rejected because the payload is too large. Error message returns max size supported. All data in body was rejected and not written", true, 413));
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         WriteEventListener<WriteErrorEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteErrorEvent.class, listener);
@@ -842,7 +842,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
                 .maxRetryDelay(3_000)
                 .maxRetries(3)
                 .build();
-        writeApi = influxDBClient.getWriteApi(options);
+        writeApi = influxDBClient.makeWriteApi(options);
 
         WriteEventListener<WriteRetriableErrorEvent> retriableListener = new WriteEventListener<>();
         writeApi.listenEvents(WriteRetriableErrorEvent.class, retriableListener);
@@ -866,7 +866,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         mockServer.enqueue(errorResponse);
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1).build());
 
         WriteEventListener<WriteRetriableErrorEvent> listener = new WriteEventListener<>();
         writeApi.listenEvents(WriteRetriableErrorEvent.class, listener);
@@ -899,7 +899,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         influxDBClient = InfluxDBClientFactory.create(options);
 
-        writeApi = influxDBClient.getWriteApi(WriteOptions.builder().batchSize(1).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1).build());
 
         // Points
         mockServer.enqueue(createResponse("{}"));
@@ -973,7 +973,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
     @Test
     public void callingClose() {
         
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
         writeApi.close();
         writeApi.close();
 
@@ -985,14 +985,14 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
     @Test
     public void writeToClosedClient() {
         
-        WriteApi writeApiSelfClose = influxDBClient.getWriteApi();
+        WriteApi writeApiSelfClose = influxDBClient.makeWriteApi();
         writeApiSelfClose.close();
 
         Assertions.assertThatThrownBy(() -> writeApiSelfClose.writeRecord("b1", "org1", WritePrecision.NS,"h2o_feet water_level=1.0 1"))
                 .isInstanceOf(InfluxException.class)
                 .hasMessage("WriteApi is closed. Data should be written before calling InfluxDBClient.close or WriteApi.close.");
 
-        WriteApi writeApiClientClose = influxDBClient.getWriteApi();
+        WriteApi writeApiClientClose = influxDBClient.makeWriteApi();
         influxDBClient.close();
 
         Assertions.assertThatThrownBy(() -> writeApiClientClose.writePoint("b1", "org1", Point.measurement("h2o").addField("level", 1)))
@@ -1005,7 +1005,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         mockServer.enqueue(createResponse("{}"));
 
-        writeApi = influxDBClient.getWriteApi();
+        writeApi = influxDBClient.makeWriteApi();
 
         writeApi.writeRecord("b1", "org1", WritePrecision.NS, "h2o,location=coyote_creek level\\ description=\"below 3 feet\",water_level=2.927 1440046800000000");
 

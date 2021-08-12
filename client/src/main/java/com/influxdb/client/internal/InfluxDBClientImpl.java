@@ -109,7 +109,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Nonnull
     @Override
     public WriteApi getWriteApi() {
-        return getWriteApi(WriteOptions.DEFAULTS);
+        return makeWriteApi();
     }
 
     @Nonnull
@@ -117,6 +117,28 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     public WriteApi getWriteApi(@Nonnull final WriteOptions writeOptions) {
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
+
+        return makeWriteApi(writeOptions);
+    }
+
+    @Nonnull
+    @Override
+    public WriteApi makeWriteApi() {
+        return makeWriteApi(WriteOptions.DEFAULTS);
+    }
+
+    @Nonnull
+    @Override
+    @SuppressWarnings("MagicNumber")
+    public WriteApi makeWriteApi(@Nonnull final WriteOptions writeOptions) {
+        Arguments.checkNotNull(writeOptions, "WriteOptions");
+
+        if (autoCloseables.size() >= 10) {
+            String format = "There is already created %d instances of 'WriteApi'. "
+                    + "The 'WriteApi' is suppose to run as a singleton and should be reused across threads. "
+                    + "Use 'WriteApiBlocking` if you would like to use one-time ingesting.";
+            LOG.warning(String.format(format, autoCloseables.size()));
+        }
 
         return new WriteApiImpl(writeOptions, retrofit.create(WriteService.class), options, autoCloseables);
     }

@@ -27,6 +27,7 @@ import java.util.stream.IntStream;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.WriteApi;
+import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -69,7 +70,7 @@ public class LineProtocolWriterTest {
     private static final String BUCKET_OVERRIDE = "my-bucket";
 
     @Mock
-    private WriteApi writeApi;
+    private WriteApiBlocking writeApi;
 
     @Mock
     private InfluxDBClient client;
@@ -97,7 +98,7 @@ public class LineProtocolWriterTest {
     @BeforeEach
     void setUp() {
         lineProtocolWriter = new LineProtocolWriter();
-        when(client.getWriteApi()).thenReturn(writeApi);
+        when(client.getWriteApiBlocking()).thenReturn(writeApi);
         lineProtocolWriter.client = client;
         payload = new TreeMap<>();
         payload.put(EventConstants.TIMESTAMP, System.currentTimeMillis());

@@ -332,6 +332,96 @@ public class RawQueryAsynchronous {
 
 ## Writes
 
+The client offers two types of API to ingesting data:
+1. [Synchronous blocking API](#synchronous-blocking-api)
+1. [Asynchronous non-blocking API](#asynchronous-non-blocking-api) which supports batching, retrying and jittering
+
+### Synchronous blocking API
+
+The [WriteApiBlocking](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/WriteApiBlocking.html) provides a synchronous blocking API to writing data using [InfluxDB Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/), Data Point and POJO.
+
+_It's up to user to handle a server or a http exception._
+
+```java
+package example;
+
+import java.time.Instant;
+
+import com.influxdb.annotations.Column;
+import com.influxdb.annotations.Measurement;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.WriteApiBlocking;
+import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.write.Point;
+import com.influxdb.exceptions.InfluxException;
+
+public class WriteDataBlocking {
+
+    private static char[] token = "my-token".toCharArray();
+    private static String org = "my-org";
+    private static String bucket = "my-bucket";
+
+    public static void main(final String[] args) {
+
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucket);
+
+        WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
+
+        try {
+            //
+            // Write by LineProtocol
+            //
+            String record = "temperature,location=north value=60.0";
+
+            writeApi.writeRecord(WritePrecision.NS, record);
+
+            //
+            // Write by Data Point
+            //
+            Point point = Point.measurement("temperature")
+                    .addTag("location", "west")
+                    .addField("value", 55D)
+                    .time(Instant.now().toEpochMilli(), WritePrecision.MS);
+
+            writeApi.writePoint(point);
+
+            //
+            // Write by POJO
+            //
+            Temperature temperature = new Temperature();
+            temperature.location = "south";
+            temperature.value = 62D;
+            temperature.time = Instant.now();
+
+            writeApi.writeMeasurement(WritePrecision.NS, temperature);
+
+        } catch (InfluxException ie) {
+            System.out.println("InfluxException: " + ie);
+        }
+
+        influxDBClient.close();
+    }
+
+    @Measurement(name = "temperature")
+    private static class Temperature {
+
+        @Column(tag = true)
+        String location;
+
+        @Column
+        Double value;
+
+        @Column(timestamp = true)
+        Instant time;
+    }
+}
+```
+         
+### Asynchronous non-blocking API
+
+> :warning: **The `WriteApi` is supposed to be use as a singleton**. Don't create a new instance for every write!
+
 For writing data we use [WriteApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/org/influxdata/client/WriteApi.html) that is an asynchronous non-blocking API and supports:
 
 1. writing data using [InfluxDB Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/), Data Point, POJO 
@@ -359,7 +449,7 @@ The writes are processed in batches which are configurable by `WriteOptions`:
 | **bufferLimit** | the maximum number of unwritten stored points | 10000 |
 | **backpressureStrategy** | the strategy to deal with buffer overflow | DROP_OLDEST |
 
-### Backpressure
+#### Backpressure
 The backpressure presents the problem of what to do with a growing backlog of unconsumed data points. 
 The key feature of backpressure is to provide the capability to avoid consuming the unexpected amount of system resources.  
 This situation is not common and can be caused by several problems: generating too much measurements in short interval,
@@ -368,7 +458,7 @@ long term unavailability of the InfluxDB server, network issues.
 The size of backlog is configured by 
 `WriteOptions.bufferLimit` and backpressure strategy by `WriteOptions.backpressureStrategy`.
 
-#### Strategy how react to backlog overflows
+##### Strategy how react to backlog overflows
 - `DROP_OLDEST` - Drop the oldest data points from the backlog 
 - `DROP_LATEST` - Drop the latest data points from the backlog  
 - `ERROR` - Signal a exception
@@ -389,9 +479,9 @@ writeApi.listenEvents(BackpressureEvent.class, value -> {
 
 There is also a synchronous blocking version of `WriteApi` - [WriteApiBlocking](#writing-data-using-synchronous-blocking-api).
 
-### Writing data
+#### Writing data
 
-#### By POJO
+##### By POJO
 
 Write Measurement into specified bucket:
 
@@ -420,7 +510,7 @@ public class WritePojo {
         //
         // Write data
         //
-        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+        try (WriteApi writeApi = influxDBClient.makeWriteApi()) {
 
             //
             // Write by POJO
@@ -451,7 +541,7 @@ public class WritePojo {
 }
 ```
 
-#### By Data Point
+##### By Data Point
 
 Write Data point into specified bucket:
 
@@ -479,7 +569,7 @@ public class WriteDataPoint {
         //
         // Write data
         //
-        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+        try (WriteApi writeApi = influxDBClient.makeWriteApi()) {
 
             //
             // Write by Data Point
@@ -497,7 +587,7 @@ public class WriteDataPoint {
 }
 ```
 
-#### By LineProtocol
+##### By LineProtocol
 
 Write Line Protocol record into specified bucket:
 
@@ -522,7 +612,7 @@ public class WriteLineProtocol {
         //
         // Write data
         //
-        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+        try (WriteApi writeApi = influxDBClient.makeWriteApi()) {
 
             //
             // Write by LineProtocol
@@ -537,7 +627,7 @@ public class WriteLineProtocol {
 }
 ```
 
-#### Default Tags
+##### Default Tags
 
 Sometimes is useful to store same information in every measurement e.g. `hostname`, `location`, `customer`. 
 The client is able to use static value, system property or env property as a tag value.
@@ -547,7 +637,7 @@ The expressions:
 - `${version}` -  system property
 - `${env.hostname}` - environment property
 
-##### Via Configuration file
+###### Via Configuration file
 
 In a [configuration file](#client-configuration-file) you are able to specify default tags by `influx2.measurement` prefix.
 
@@ -558,7 +648,7 @@ influx2.tags.hostname = ${env.hostname}
 influx2.tags.sensor-version = ${version}
 ```
 
-##### Via API
+###### Via API
 
 ```java
 InfluxDBClientOptions options = InfluxDBClientOptions.builder()
@@ -577,12 +667,12 @@ Both of configurations will produce the Line protocol:
 mine-sensor,id=132-987-655,customer="California Miner",hostname=example.com,sensor-version=v1.00 altitude=10
 ```
 
-### Handle the Events
+#### Handle the Events
 
-#### Handle the Success write
+##### Handle the Success write
 
 ```java
-WriteApi writeApi = influxDBClient.getWriteApi();
+WriteApi writeApi = influxDBClient.makeWriteApi();
 writeApi.listenEvents(WriteSuccessEvent.class, event -> {
 
     String data = event.getLineProtocol();
@@ -593,10 +683,10 @@ writeApi.listenEvents(WriteSuccessEvent.class, event -> {
 });
 ```
 
-#### Handle the Error Write
+##### Handle the Error Write
 
 ```java
-WriteApi writeApi = influxDBClient.getWriteApi();
+WriteApi writeApi = influxDBClient.makeWriteApi();
 writeApi.listenEvents(WriteErrorEvent.class, event -> {
 
     Throwable exception = event.getThrowable();

@@ -48,8 +48,8 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
     @Test
     void createWriteClient() {
 
-        Assertions.assertThat(influxDBClient.getWriteApi()).isNotNull();
-        Assertions.assertThat(influxDBClient.getWriteApi(WriteOptions.DEFAULTS)).isNotNull();
+        Assertions.assertThat(influxDBClient.makeWriteApi()).isNotNull();
+        Assertions.assertThat(influxDBClient.makeWriteApi(WriteOptions.DEFAULTS)).isNotNull();
     }
 
     @Test
