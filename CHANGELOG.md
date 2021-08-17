@@ -7,6 +7,9 @@
 ### Deprecates
 1. [#255](https://github.com/influxdata/influxdb-client-java/pull/255): `InfluxDBClient#getWriteApi()` instead use `InfluxDBClient#makeWriteApi()`
 
+### Documentation
+1. [#257](https://github.com/influxdata/influxdb-client-java/pull/257): How to configure proxy
+
 ## 3.1.0 [2021-07-27]
 
 ### Breaking Changes
