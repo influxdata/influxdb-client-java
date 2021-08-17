@@ -280,12 +280,21 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         private static final Logger LOG = Logger.getLogger(BatchWriteDataPoint.class.getName());
 
         private final Point point;
+        private final WritePrecision precision;
         private final InfluxDBClientOptions options;
 
         public BatchWriteDataPoint(@Nonnull final Point point,
                                    @Nonnull final InfluxDBClientOptions options) {
 
+            this(point, point.getPrecision(), options);
+        }
+
+        public BatchWriteDataPoint(@Nonnull final Point point,
+                                   @Nonnull final WritePrecision precision,
+                                   @Nonnull final InfluxDBClientOptions options) {
+
             this.point = point;
+            this.precision = precision;
             this.options = options;
         }
 
@@ -300,7 +309,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                 return null;
             }
 
-            return point.toLineProtocol(options.getPointSettings());
+            return point.toLineProtocol(options.getPointSettings(), precision);
         }
     }
 

@@ -22,6 +22,7 @@
 package com.influxdb.client.reactive;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -29,6 +30,7 @@ import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.RetryAttempt;
 import com.influxdb.client.write.Point;
 import com.influxdb.exceptions.InfluxException;
+import com.influxdb.query.FluxRecord;
 import com.influxdb.test.AbstractMockServerTest;
 
 import io.reactivex.Flowable;
@@ -316,5 +318,32 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
 
         String body1 = getRequestBody(mockServer);
         Assertions.assertThat(body1).isEqualTo("mem,tag=a field=0 0");
+    }
+
+    @Test
+    void pointsPrecision() {
+
+        mockServer.enqueue(createResponse("{}"));
+
+        writeClient = influxDBClient.getWriteReactiveApi();
+
+        Instant time = Instant.ofEpochSecond(2000);
+
+        Point point1 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 1).time(time, WritePrecision.MS);
+        Point point2 = Point.measurement("h2o_feet").addTag("location", "west").addField("water_level", 2).time(time.plusSeconds(10), WritePrecision.S);
+
+
+        Publisher<WriteReactiveApi.Success> success = writeClient.writePoints("b1", "org1", WritePrecision.S, Flowable.just(point1, point2));
+        Flowable.fromPublisher(success)
+                .test()
+                .awaitCount(1)
+                .assertValueCount(1)
+          .assertTerminated();
+
+        Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(1);
+
+        String body = getRequestBody(mockServer);
+        Assertions.assertThat(body).isEqualTo("h2o_feet,location=west water_level=1i 2000\n"
+                + "h2o_feet,location=west water_level=2i 2010");
     }
 }

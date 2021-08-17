@@ -44,6 +44,8 @@ import com.influxdb.exceptions.ForbiddenException;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.RequestEntityTooLargeException;
 import com.influxdb.exceptions.UnauthorizedException;
+import com.influxdb.query.FluxRecord;
+import com.influxdb.query.FluxTable;
 
 import io.reactivex.schedulers.TestScheduler;
 import okhttp3.mockwebserver.MockResponse;

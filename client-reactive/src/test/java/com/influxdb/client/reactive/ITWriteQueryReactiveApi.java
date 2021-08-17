@@ -233,16 +233,6 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         Flowable.fromPublisher(result)
                 .test()
                 .assertValueCount(2);
-        //
-        //
-        //
-        //
-        //TODO test correct time of points
-        //
-        //
-        //
-        //
-        //
     }
 
     @Test
