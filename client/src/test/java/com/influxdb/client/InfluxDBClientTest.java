@@ -21,13 +21,26 @@
  */
 package com.influxdb.client;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.util.Objects;
+import javax.annotation.Nonnull;
+
 import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.Run;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractInfluxDBClientTest;
 
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -250,7 +263,7 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
             InfluxDBClient clientConnectionString = InfluxDBClientFactory.create(connectionString[0]);
             clientConnectionString.getQueryApi().query("from(bucket:\"test\") |> range(start:-5m)", "my-org");
             queryAndTest(connectionString[1]);
-            
+
             clientURL.close();
             clientConnectionString.close();
         }
@@ -269,6 +282,108 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
                     .build();
             Assertions.assertThat(options.getUrl()).isEqualTo("https://us-west-2-1.aws.cloud2.influxdata.com:443/");
         }
+    }
+
+    @Test
+    public void proxy() throws InterruptedException, IOException {
+
+        mockServer.enqueue(new MockResponse());
+
+        OkHttpClient httpClient = new OkHttpClient.Builder().build();
+
+        MockWebServer proxy = new MockWebServer();
+        proxy.setDispatcher(new Dispatcher() {
+
+            @Nonnull
+            @Override
+            public MockResponse dispatch(@Nonnull final RecordedRequest recordedRequest) {
+
+                HttpUrl httpUrl = HttpUrl.parse(mockServer.url("/") + recordedRequest.getPath());
+
+                Request.Builder requestBuilder = new Request.Builder()
+                        .url(Objects.requireNonNull(httpUrl).newBuilder().build())
+                        .headers(recordedRequest.getHeaders());
+
+                try {
+                    Response response = httpClient.newCall(requestBuilder.build()).execute();
+
+                    return new MockResponse()
+                            .setHeaders(response.headers())
+                            .setBody(Objects.requireNonNull(response.body()).string())
+                            .setResponseCode(response.code());
+
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        });
+
+        String token = "my-token";
+        OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder()
+                .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", proxy.getPort())));
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url(mockServer.url("/").toString())
+                .authenticateToken(token.toCharArray())
+                .okHttpClient(okHttpClient)
+                .build();
+
+        InfluxDBClient client = InfluxDBClientFactory.create(options);
+
+        client.health();
+
+        RecordedRequest request = mockServer.takeRequest();
+        Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my-token");
+
+        // dispose
+        client.close();
+        proxy.shutdown();
+    }
+
+    @Test
+    public void permanentRedirect() throws InterruptedException, IOException {
+
+        mockServer.enqueue(new MockResponse());
+
+        MockWebServer proxy = new MockWebServer();
+        proxy.setDispatcher(new Dispatcher() {
+            @Nonnull
+            @Override
+            public MockResponse dispatch(@Nonnull final RecordedRequest recordedRequest) {
+                return new MockResponse()
+                        .setResponseCode(301)
+                        .setHeader("Location", mockServer.url("/").url().toString());
+            }
+        });
+
+        String token = "my-token";
+        OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder()
+                .addNetworkInterceptor(new Interceptor() {
+                    @Nonnull
+                    @Override
+                    public Response intercept(@Nonnull final Chain chain) throws IOException {
+                        Request authorization = chain.request().newBuilder()
+                                .header("Authorization", "Token " + token)
+                                .build();
+                        return chain.proceed(authorization);
+                    }
+                });
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url(proxy.url("/").toString())
+                .authenticateToken(token.toCharArray())
+                .okHttpClient(okHttpClient)
+                .build();
+
+        InfluxDBClient client = InfluxDBClientFactory.create(options);
+
+        client.health();
+
+        RecordedRequest request = mockServer.takeRequest();
+        Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my-token");
+
+        // dispose
+        client.close();
+        proxy.shutdown();
     }
 
     private void queryAndTest(final String expected) throws InterruptedException {
