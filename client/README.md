@@ -18,12 +18,13 @@ The reference Java client that allows query, write and management (bucket, organ
     - authorizations
     - health check
 - [Advanced Usage](#advanced-usage)
-    - [Writing data using synchronous blocking API](#writing-data-using-synchronous-blocking-api)
-    - [Monitoring & Alerting](#monitoring--alerting)
     - [Delete data](#delete-data)
+    - [Gzip support](#gzip-support)
+    - [Proxy configuration](#proxy-configuration)
     - [Client configuration file](#client-configuration-file)
     - [Client connection string](#client-connection-string)
-    - [Gzip support](#gzip-support)
+    - [Writing data using synchronous blocking API](#writing-data-using-synchronous-blocking-api)
+    - [Monitoring & Alerting](#monitoring--alerting)
          
 ## Queries
 
@@ -1018,6 +1019,75 @@ The `readTimeout`, `writeTimeout` and `connectTimeout` supports `ms`, `s` and `m
 
 ```java
 influxDBClient.enableGzip();
+```
+
+### Proxy configuration
+
+You can configure the client to tunnel requests through an HTTP proxy. To configure the proxy use a `okHttpClient` configuration:
+        
+```java
+OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder()
+        .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy", 8088)));
+
+InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+        .url("http://localhost:9999")
+        .authenticateToken("my-token".toCharArray())
+        .okHttpClient(okHttpBuilder)
+        .build();
+
+InfluxDBClient client = InfluxDBClientFactory.create(options);
+```
+
+If you need to use proxy authentication then use something like:
+
+```java
+OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder()
+        .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy", 8088)))
+        .proxyAuthenticator(new Authenticator() {
+            @Override
+            public Request authenticate(@Nullable final Route route, @Nonnull final Response response) {
+                return response.request().newBuilder()
+                        .header("Proxy-Authorization", "Token proxy-token")
+                        .build();
+            }
+        });
+
+InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+        .url("http://localhost:9999")
+        .authenticateToken("my-token".toCharArray())
+        .okHttpClient(okHttpBuilder)
+        .build();
+
+InfluxDBClient client = InfluxDBClientFactory.create(options);
+```
+
+> :warning: If your proxy notify the client with permanent redirect (``HTTP 301``) to **different host**.
+The client removes ``Authorization`` header, because otherwise the contents of ``Authorization`` is sent to third parties
+which is a security vulnerability.
+
+You can bypass this behaviour by:
+
+```java
+String token = "my-token";
+OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder()
+        .addNetworkInterceptor(new Interceptor() {
+            @Nonnull
+            @Override
+            public Response intercept(@Nonnull final Chain chain) throws IOException {
+                Request authorization = chain.request().newBuilder()
+                        .header("Authorization", "Token " + token)
+                        .build();
+                return chain.proceed(authorization);
+            }
+        });
+
+InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+        .url("http://localhost:9999")
+        .authenticateToken(token.toCharArray())
+        .okHttpClient(okHttpClient)
+        .build();
+
+InfluxDBClient client = InfluxDBClientFactory.create(options);
 ```
 
 ### Log HTTP Request and Response
