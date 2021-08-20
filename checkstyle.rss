@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 - 2021 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 168,
+      <title>File: 170,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -1404,6 +1404,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.spring.influx.AbstractInfluxDB2AutoConfiguration.java">com/influxdb/spring/influx/AbstractInfluxDB2AutoConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.FluxColumn.java">com/influxdb/query/FluxColumn.java</a>
                 </td>
                 <td>
@@ -1713,6 +1727,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.InfluxDBClientImpl.java">com/influxdb/client/internal/InfluxDBClientImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.spring.influx.InfluxDB2AutoConfigurationReactive.java">com/influxdb/spring/influx/InfluxDB2AutoConfigurationReactive.java</a>
                 </td>
                 <td>
                   0
