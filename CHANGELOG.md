@@ -1,4 +1,4 @@
-## 3.2.0 [unreleased]
+## 3.2.0 [2021-08-20]
 
 ### Bug Fixes
 1. [#252](https://github.com/influxdata/influxdb-client-java/pull/252): Spring auto-configuration works even without `influxdb-client-reactive` [spring]
