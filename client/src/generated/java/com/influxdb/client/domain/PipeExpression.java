@@ -155,7 +155,7 @@ public class PipeExpression extends Expression {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class PipeExpressionArgumentAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class PipeExpressionArgumentAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public PipeExpressionArgumentAdapter() {
     }

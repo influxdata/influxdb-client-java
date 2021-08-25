@@ -47,7 +47,6 @@ import java.util.HashMap;
 public class JSON {
     private Gson gson;
     private DateTypeAdapter dateTypeAdapter = new DateTypeAdapter();
-    private SqlDateTypeAdapter sqlDateTypeAdapter = new SqlDateTypeAdapter();
     private OffsetDateTimeTypeAdapter offsetDateTimeTypeAdapter = new OffsetDateTimeTypeAdapter();
     private LocalDateTypeAdapter localDateTypeAdapter = new LocalDateTypeAdapter();
 
@@ -174,7 +173,6 @@ public class JSON {
     public JSON() {
         gson = createGson()
             .registerTypeAdapter(Date.class, dateTypeAdapter)
-            .registerTypeAdapter(java.sql.Date.class, sqlDateTypeAdapter)
             .registerTypeAdapter(OffsetDateTime.class, offsetDateTimeTypeAdapter)
             .registerTypeAdapter(LocalDate.class, localDateTypeAdapter)
             .create();
@@ -304,60 +302,6 @@ public class JSON {
         return this;
     }
 
-    /**
-     * Gson TypeAdapter for java.sql.Date type
-     * If the dateFormat is null, a simple "yyyy-MM-dd" format will be used
-     * (more efficient than SimpleDateFormat).
-     */
-    public static class SqlDateTypeAdapter extends TypeAdapter<java.sql.Date> {
-
-        private DateFormat dateFormat;
-
-        public SqlDateTypeAdapter() {
-        }
-
-        public SqlDateTypeAdapter(DateFormat dateFormat) {
-            this.dateFormat = dateFormat;
-        }
-
-        public void setFormat(DateFormat dateFormat) {
-            this.dateFormat = dateFormat;
-        }
-
-        @Override
-        public void write(JsonWriter out, java.sql.Date date) throws IOException {
-            if (date == null) {
-                out.nullValue();
-            } else {
-                String value;
-                if (dateFormat != null) {
-                    value = dateFormat.format(date);
-                } else {
-                    value = date.toString();
-                }
-                out.value(value);
-            }
-        }
-
-        @Override
-        public java.sql.Date read(JsonReader in) throws IOException {
-            switch (in.peek()) {
-                case NULL:
-                    in.nextNull();
-                    return null;
-                default:
-                    String date = in.nextString();
-                    try {
-                        if (dateFormat != null) {
-                            return new java.sql.Date(dateFormat.parse(date).getTime());
-                        }
-                        return new java.sql.Date(ISO8601Utils.parse(date, new ParsePosition(0)).getTime());
-                    } catch (ParseException e) {
-                        throw new JsonParseException(e);
-                    }
-            }
-        }
-    }
 
     /**
      * Gson TypeAdapter for java.util.Date type
@@ -421,10 +365,4 @@ public class JSON {
         dateTypeAdapter.setFormat(dateFormat);
         return this;
     }
-
-    public JSON setSqlDateFormat(DateFormat dateFormat) {
-        sqlDateTypeAdapter.setFormat(dateFormat);
-        return this;
-    }
-
 }

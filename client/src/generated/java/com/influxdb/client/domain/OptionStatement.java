@@ -129,7 +129,7 @@ public class OptionStatement extends Statement {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class OptionStatementAssignmentAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class OptionStatementAssignmentAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public OptionStatementAssignmentAdapter() {
     }

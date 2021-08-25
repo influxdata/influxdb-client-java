@@ -163,7 +163,7 @@ public class CallExpression extends Expression {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class CallExpressionArgumentsAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class CallExpressionArgumentsAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public CallExpressionArgumentsAdapter() {
     }
@@ -267,7 +267,7 @@ public class CallExpression extends Expression {
       return context.deserialize(json, Object.class);
     }
   }
-  public class CallExpressionCalleeAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class CallExpressionCalleeAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public CallExpressionCalleeAdapter() {
     }

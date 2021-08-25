@@ -167,7 +167,7 @@ public class View {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class ViewPropertiesAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class ViewPropertiesAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public ViewPropertiesAdapter() {
     }

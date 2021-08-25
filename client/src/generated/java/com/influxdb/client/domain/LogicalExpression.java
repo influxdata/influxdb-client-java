@@ -179,7 +179,7 @@ public class LogicalExpression extends Expression {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class LogicalExpressionLeftAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class LogicalExpressionLeftAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public LogicalExpressionLeftAdapter() {
     }
@@ -277,7 +277,7 @@ public class LogicalExpression extends Expression {
       return context.deserialize(json, Object.class);
     }
   }
-  public class LogicalExpressionRightAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class LogicalExpressionRightAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public LogicalExpressionRightAdapter() {
     }

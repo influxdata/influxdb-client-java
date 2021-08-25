@@ -179,7 +179,7 @@ public class BinaryExpression extends Expression {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class BinaryExpressionLeftAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class BinaryExpressionLeftAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public BinaryExpressionLeftAdapter() {
     }
@@ -277,7 +277,7 @@ public class BinaryExpression extends Expression {
       return context.deserialize(json, Object.class);
     }
   }
-  public class BinaryExpressionRightAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class BinaryExpressionRightAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public BinaryExpressionRightAdapter() {
     }

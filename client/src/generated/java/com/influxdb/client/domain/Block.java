@@ -138,7 +138,7 @@ public class Block extends Node {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class BlockBodyAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class BlockBodyAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public BlockBodyAdapter() {
     }

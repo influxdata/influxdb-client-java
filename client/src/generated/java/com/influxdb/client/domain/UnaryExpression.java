@@ -154,7 +154,7 @@ public class UnaryExpression extends Expression {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class UnaryExpressionArgumentAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class UnaryExpressionArgumentAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public UnaryExpressionArgumentAdapter() {
     }

@@ -180,7 +180,7 @@ public class ConditionalExpression extends Expression {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class ConditionalExpressionAlternateAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class ConditionalExpressionAlternateAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public ConditionalExpressionAlternateAdapter() {
     }
@@ -278,7 +278,7 @@ public class ConditionalExpression extends Expression {
       return context.deserialize(json, Object.class);
     }
   }
-  public class ConditionalExpressionTestAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class ConditionalExpressionTestAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public ConditionalExpressionTestAdapter() {
     }
@@ -376,7 +376,7 @@ public class ConditionalExpression extends Expression {
       return context.deserialize(json, Object.class);
     }
   }
-  public class ConditionalExpressionConsequentAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class ConditionalExpressionConsequentAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public ConditionalExpressionConsequentAdapter() {
     }

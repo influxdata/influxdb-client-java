@@ -154,7 +154,7 @@ public class Property {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class PropertyKeyAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class PropertyKeyAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public PropertyKeyAdapter() {
     }
@@ -189,7 +189,7 @@ public class Property {
       return context.deserialize(json, Object.class);
     }
   }
-  public class PropertyValueAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class PropertyValueAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public PropertyValueAdapter() {
     }
