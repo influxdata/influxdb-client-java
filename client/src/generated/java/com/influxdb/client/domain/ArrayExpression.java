@@ -138,7 +138,7 @@ public class ArrayExpression extends Expression {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class ArrayExpressionElementsAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class ArrayExpressionElementsAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public ArrayExpressionElementsAdapter() {
     }

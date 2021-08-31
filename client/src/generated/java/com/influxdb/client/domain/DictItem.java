@@ -153,7 +153,7 @@ public class DictItem {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class DictItemValAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class DictItemValAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public DictItemValAdapter() {
     }
@@ -251,7 +251,7 @@ public class DictItem {
       return context.deserialize(json, Object.class);
     }
   }
-  public class DictItemKeyAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class DictItemKeyAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public DictItemKeyAdapter() {
     }

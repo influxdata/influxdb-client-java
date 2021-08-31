@@ -155,7 +155,7 @@ public class MemberAssignment extends Statement {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class MemberAssignmentInitAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class MemberAssignmentInitAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public MemberAssignmentInitAdapter() {
     }

@@ -1,4 +1,11 @@
 ## 3.3.0 [unreleased]
+                                                                     
+### Bug Fixes
+1. [#258](https://github.com/influxdata/influxdb-client-java/pull/258): Avoid requirements to `jdk.unsupported` module
+
+### Dependencies
+1. [#258](https://github.com/influxdata/influxdb-client-java/pull/258): Update dependencies:
+    - Gson to 2.8.8
 
 ## 3.2.0 [2021-08-20]
 

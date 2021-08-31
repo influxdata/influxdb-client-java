@@ -130,7 +130,7 @@ public class ExpressionStatement extends Statement {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class ExpressionStatementExpressionAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class ExpressionStatementExpressionAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public ExpressionStatementExpressionAdapter() {
     }

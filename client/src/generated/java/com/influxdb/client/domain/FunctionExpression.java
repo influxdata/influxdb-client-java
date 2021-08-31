@@ -163,7 +163,7 @@ public class FunctionExpression extends Expression {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class FunctionExpressionBodyAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class FunctionExpressionBodyAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public FunctionExpressionBodyAdapter() {
     }

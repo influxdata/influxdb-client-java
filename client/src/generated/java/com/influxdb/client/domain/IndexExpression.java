@@ -155,7 +155,7 @@ public class IndexExpression extends Expression {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class IndexExpressionArrayAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class IndexExpressionArrayAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public IndexExpressionArrayAdapter() {
     }
@@ -253,7 +253,7 @@ public class IndexExpression extends Expression {
       return context.deserialize(json, Object.class);
     }
   }
-  public class IndexExpressionIndexAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class IndexExpressionIndexAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public IndexExpressionIndexAdapter() {
     }

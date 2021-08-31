@@ -130,7 +130,7 @@ public class ParenExpression extends Expression {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class ParenExpressionExpressionAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class ParenExpressionExpressionAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public ParenExpressionExpressionAdapter() {
     }

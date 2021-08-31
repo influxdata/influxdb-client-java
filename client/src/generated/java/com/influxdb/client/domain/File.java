@@ -218,7 +218,7 @@ public class File {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class FileBodyAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class FileBodyAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public FileBodyAdapter() {
     }

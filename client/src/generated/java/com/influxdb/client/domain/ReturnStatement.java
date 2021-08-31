@@ -130,7 +130,7 @@ public class ReturnStatement extends Statement {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class ReturnStatementArgumentAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class ReturnStatementArgumentAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public ReturnStatementArgumentAdapter() {
     }

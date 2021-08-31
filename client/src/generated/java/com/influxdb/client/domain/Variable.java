@@ -329,7 +329,7 @@ public class Variable {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class VariableArgumentsAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class VariableArgumentsAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public VariableArgumentsAdapter() {
     }

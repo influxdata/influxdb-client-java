@@ -156,7 +156,7 @@ public class MemberExpression extends Expression {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class MemberExpressionPropertyAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class MemberExpressionPropertyAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public MemberExpressionPropertyAdapter() {
     }
@@ -191,7 +191,7 @@ public class MemberExpression extends Expression {
       return context.deserialize(json, Object.class);
     }
   }
-  public class MemberExpressionObjectAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class MemberExpressionObjectAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public MemberExpressionObjectAdapter() {
     }

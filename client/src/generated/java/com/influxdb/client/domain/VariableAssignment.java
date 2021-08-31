@@ -155,7 +155,7 @@ public class VariableAssignment extends Statement {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public class VariableAssignmentInitAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
+  public static class VariableAssignmentInitAdapter implements JsonDeserializer<Object>, JsonSerializer<Object> {
 
     public VariableAssignmentInitAdapter() {
     }
