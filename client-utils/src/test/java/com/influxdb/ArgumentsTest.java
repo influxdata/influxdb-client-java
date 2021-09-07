@@ -141,6 +141,11 @@ class ArgumentsTest {
 
     @Test
     void checkNotNull() {
+        Arguments.checkNotNull("value", "property");
+    }
+
+    @Test
+    void checkNotNullFail() {
         Assertions.assertThatThrownBy(() -> Arguments.checkNotNull(null, "property"))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("Expecting a not null reference for property");
