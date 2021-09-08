@@ -24,7 +24,7 @@ This section contains links to the client library documentation.
          
 ## Queries
 
-For querying data we use [QueryReactiveApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/org/influxdata/client/reactive/QueryReactiveApi.html) that use [Reactive-Streams Pattern](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html) for streaming query results and also support query raw response.
+For querying data we use [QueryReactiveApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/com/influxdb/client/reactive/QueryReactiveApi.html) that use [Reactive-Streams Pattern](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html) for streaming query results and also support query raw response.
 
 The following example demonstrates querying using the Flux language:
 
@@ -177,7 +177,7 @@ public class InfluxDB2ReactiveExamplePojo {
 
 ## Writes
 
-For writing data we use [WriteReactiveApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/org/influxdata/client/reactive/WriteReactiveApi.html) that supports same configuration as [non reactive client](../client#writes):
+For writing data we use [WriteReactiveApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/com/influxdb/client/reactive/WriteReactiveApi.html) that supports same configuration as [non reactive client](../client#writes):
 
 1. writing data using Line Protocol, Data Point, POJO
 2. use batching for writes
