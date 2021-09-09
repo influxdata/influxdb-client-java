@@ -2,6 +2,7 @@
                                                                      
 ### Bug Fixes
 1. [#258](https://github.com/influxdata/influxdb-client-java/pull/258): Avoid requirements to `jdk.unsupported` module
+1. [#263](https://github.com/influxdata/influxdb-client-java/pull/263): Fix dependency structure for `flux-dsl` module
 
 ### Dependencies
 1. [#258](https://github.com/influxdata/influxdb-client-java/pull/258): Update dependencies:

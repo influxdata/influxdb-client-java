@@ -92,8 +92,7 @@
 
         <dependency>
             <groupId>com.influxdb</groupId>
-            <artifactId>influxdb-client-test</artifactId>
-            <scope>test</scope>
+            <artifactId>influxdb-client-utils</artifactId>
         </dependency>
 
         <dependency>
@@ -114,6 +113,17 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.influxdb</groupId>
+            <artifactId>influxdb-client-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -139,12 +149,6 @@
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
-
 
     </dependencies>
 

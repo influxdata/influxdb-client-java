@@ -31,6 +31,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>client-utils</module>
         <module>client-test</module>
         <module>client-core</module>
         <module>client-legacy</module>
@@ -479,6 +480,12 @@
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-core</artifactId>
+                <version>3.3.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.influxdb</groupId>
+                <artifactId>influxdb-client-utils</artifactId>
                 <version>3.3.0-SNAPSHOT</version>
             </dependency>
 
