@@ -8,6 +8,9 @@
 1. [#258](https://github.com/influxdata/influxdb-client-java/pull/258): Update dependencies:
     - Gson to 2.8.8
 
+### CI
+1. [#266](https://github.com/influxdata/influxdb-client-java/pull/266): Switch to next-gen CircleCI's convenience images
+ 
 ## 3.2.0 [2021-08-20]
 
 ### Bug Fixes

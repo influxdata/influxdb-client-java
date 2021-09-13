@@ -107,7 +107,7 @@ jobs:
     parameters:
       maven-image:
         type: string
-        default: &default-maven-image "circleci/openjdk:8"
+        default: &default-maven-image "cimg/openjdk:8.0"
       influxdb-image:
         type: string
         default: &default-influxdb-image "influxdb:latest"
@@ -182,10 +182,10 @@ workflows:
           name: jdk-8
       - tests-java:
           name: jdk-11
-          maven-image: "circleci/openjdk:11"
+          maven-image: "cimg/openjdk:11.0"
       - tests-java:
           name: jdk-16
-          maven-image: "circleci/openjdk:16-buster"
+          maven-image: "cimg/openjdk:16.0"
       - tests-java:
           name: jdk-8-nightly
           influxdb-image: "quay.io/influxdb/influxdb:nightly"
@@ -210,4 +210,4 @@ workflows:
       - tests-java
       - tests-java:
           name: jdk-11-beta
-          maven-image: "circleci/openjdk:11"
+          maven-image: "cimg/openjdk:11.0"
