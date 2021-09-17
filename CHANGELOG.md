@@ -1,4 +1,4 @@
-## 3.3.0 [unreleased]
+## 3.3.0 [2021-09-17]
                                                                      
 ### Bug Fixes
 1. [#258](https://github.com/influxdata/influxdb-client-java/pull/258): Avoid requirements to `jdk.unsupported` module

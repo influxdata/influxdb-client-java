@@ -299,14 +299,14 @@ The latest version for Maven dependency:
 <dependency>
   <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-kotlin</artifactId>
-  <version>3.2.0</version>
+  <version>3.3.0</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-kotlin:3.2.0"
+    compile "com.influxdb:influxdb-client-kotlin:3.3.0"
 }
 ```
 
