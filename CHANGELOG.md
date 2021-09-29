@@ -1,4 +1,7 @@
 ## 3.4.0 [unreleased]
+
+### CI
+1. [#267](https://github.com/influxdata/influxdb-client-java/pull/267): Add JDK 17 (LTS) to CI pipeline instead of JDK 16
                                                                      
 ## 3.3.0 [2021-09-17]
                                                                      
