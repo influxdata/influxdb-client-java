@@ -184,8 +184,8 @@ workflows:
           name: jdk-11
           maven-image: "cimg/openjdk:11.0"
       - tests-java:
-          name: jdk-16
-          maven-image: "cimg/openjdk:16.0"
+          name: jdk-17
+          maven-image: "cimg/openjdk:17.0"
       - tests-java:
           name: jdk-8-nightly
           influxdb-image: "quay.io/influxdb/influxdb:nightly"
