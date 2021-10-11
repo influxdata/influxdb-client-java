@@ -68,8 +68,7 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
 
         super.setUp();
 
-        InfluxDBClient client = InfluxDBClientFactory.create(influxDB_URL, "my-user",
-                "my-password".toCharArray());
+        InfluxDBClient client = InfluxDBClientFactory.create(influxDB_URL, "my-token".toCharArray());
 
         bucket = client.getBucketsApi()
                 .createBucket(generateName("h2o"), null, organization);
