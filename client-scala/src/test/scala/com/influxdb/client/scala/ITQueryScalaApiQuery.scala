@@ -56,7 +56,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
     super.setUp()
 
-    val client = InfluxDBClientFactory.create(influxDBUtils.getUrl, "my-user", "my-password".toCharArray)
+    val client = InfluxDBClientFactory.create(influxDBUtils.getUrl, "my-token".toCharArray)
 
     organization = client.getOrganizationsApi
       .findOrganizations()
