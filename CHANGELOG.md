@@ -1,5 +1,8 @@
 ## 3.4.0 [unreleased]
 
+### Features
+1. [#269](https://github.com/influxdata/influxdb-client-java/pull/269): Add possibility to use dynamic `measurement` in mapping from/to `POJO`
+
 ### CI
 1. [#267](https://github.com/influxdata/influxdb-client-java/pull/267): Add JDK 17 (LTS) to CI pipeline instead of JDK 16
                                                                      
