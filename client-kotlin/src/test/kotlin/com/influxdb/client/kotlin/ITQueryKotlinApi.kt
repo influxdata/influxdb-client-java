@@ -67,8 +67,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
     @BeforeEach
     fun `Write testing data`(): Unit = runBlocking {
 
-        val client = InfluxDBClientFactory.create(influxDb2Url, "my-user",
-                "my-password".toCharArray())
+        val client = InfluxDBClientFactory.create(influxDb2Url, "my-token".toCharArray())
 
         organization = client.organizationsApi
                 .findOrganizations().stream()

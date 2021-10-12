@@ -23,6 +23,7 @@ package com.influxdb.client.internal;
 
 import java.lang.reflect.Field;
 import java.time.Instant;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
@@ -54,32 +55,22 @@ class MeasurementMapper {
         Class<?> measurementType = measurement.getClass();
         cacheMeasurementClass(measurementType);
 
-        if (measurementType.getAnnotation(Measurement.class) == null) {
-            String message = String
-                    .format("Measurement type '%s' does not have a @Measurement annotation.", measurementType);
+        Point point = Point.measurement(getMeasurementName(measurement, measurementType));
 
-            throw new InfluxException(message);
-        }
-
-        Point point = Point.measurement(getMeasurementName(measurementType));
-
-        CLASS_FIELD_CACHE.get(measurementType.getName()).forEach((name, field) -> {
-
+        for (Map.Entry<String, Field> entry : CLASS_FIELD_CACHE.get(measurementType.getName()).entrySet()) {
+            String name = entry.getKey();
+            Field field = entry.getValue();
             Column column = field.getAnnotation(Column.class);
-
-            Object value;
-            try {
-                field.setAccessible(true);
-                value = field.get(measurement);
-            } catch (IllegalAccessException e) {
-
-                throw new InfluxException(e);
+            if (column.measurement()) {
+                continue;
             }
+
+            Object value = getObject(measurement, field);
 
             if (value == null) {
                 Object[] params = {field.getName(), measurement};
                 LOG.log(Level.FINEST, "Field {0} of {1} has null value", params);
-                return;
+                continue;
             }
 
             Class<?> fieldType = field.getType();
@@ -97,7 +88,7 @@ class MeasurementMapper {
             } else {
                 point.addField(name, value.toString());
             }
-        });
+        }
 
         LOG.log(Level.FINEST, "Mapped measurement: {0} to Point: {1}", new Object[]{measurement, point});
 
@@ -105,8 +96,43 @@ class MeasurementMapper {
     }
 
     @Nonnull
-    private String getMeasurementName(@Nonnull final Class<?> measurementType) {
-        return measurementType.getAnnotation(Measurement.class).name();
+    private <M> String getMeasurementName(@Nonnull final M measurement, @Nonnull final Class<?> measurementType) {
+
+        // from @Measurement annotation for class
+        Measurement measurementAnnotation = measurementType.getAnnotation(Measurement.class);
+        if (measurementAnnotation != null) {
+            return measurementAnnotation.name();
+        }
+
+        // from Field with @Column(measurement = true)
+        Field measurementField = CLASS_FIELD_CACHE.get(measurementType.getName())
+                .values()
+                .stream()
+                .filter(field -> field.getAnnotation(Column.class).measurement())
+                .findFirst()
+                .orElse(null);
+
+        if (measurementField == null) {
+            String message = String
+                    .format("Unable to determine Measurement for '%s'. Does it have a @Measurement annotation or "
+                            + "field with @Column(measurement = true) annotation?", measurementType);
+
+            throw new InfluxException(message);
+        }
+
+        return getObject(measurement, measurementField).toString();
+    }
+
+    private <M> Object getObject(@Nonnull final M measurement, @Nonnull final Field field) {
+        Object value;
+        try {
+            field.setAccessible(true);
+            value = field.get(measurement);
+        } catch (IllegalAccessException e) {
+
+            throw new InfluxException(e);
+        }
+        return value;
     }
 
     private boolean isNumber(@Nonnull final Class<?> fieldType) {

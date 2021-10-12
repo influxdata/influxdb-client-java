@@ -75,6 +75,8 @@ public class FluxResultMapper {
                         col = columnName;
                     } else if (recordValues.containsKey("_" + columnName)) {
                         col = "_" + columnName;
+                    } else if (anno != null && anno.measurement()) {
+                        col = "_measurement";
                     } else {
                         String columnNameInSnakeCase = camelCaseToSnakeCase(columnName);
                         if (recordValues.containsKey(columnNameInSnakeCase)) {

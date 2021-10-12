@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 
 
 /**
- * The annotation is used to customize bidirectional mapping between POJO and Flux query result or lineprotocol.
+ * The annotation to customize bidirectional mapping between POJO and Flux query result or LineProtocol.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
@@ -36,7 +36,18 @@ public @interface Column {
 
   String name() default "";
 
+  /**
+   * @return {@link Boolean#TRUE} it an annotated field is Tag
+   */
   boolean tag() default false;
 
+  /**
+   * @return {@link Boolean#TRUE} it an annotated field is Measurement
+   */
+  boolean measurement() default false;
+
+  /**
+   * @return {@link Boolean#TRUE} it an annotated field is Timestamp
+   */
   boolean timestamp () default false;
 }

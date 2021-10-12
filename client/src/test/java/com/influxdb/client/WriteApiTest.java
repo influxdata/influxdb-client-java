@@ -224,7 +224,9 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         Assertions.assertThat(listener.getValue()).isNotNull();
         Assertions.assertThat(listener.getValue().getThrowable())
                 .isInstanceOf(InfluxException.class)
-                .hasMessage("Measurement type 'class java.lang.Integer' does not have a @Measurement annotation.");
+                .hasMessage("Unable to determine Measurement for 'class java.lang.Integer'. "
+                        + "Does it have a @Measurement annotation or "
+                        + "field with @Column(measurement = true) annotation?");
     }
 
     @Test

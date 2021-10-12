@@ -122,6 +122,17 @@ class MeasurementMapperTest {
         Assertions.assertThat(lineProtocol).isEqualTo("pojo,tag=tagA num=5i");
     }
 
+    @Test
+    void pojoMeasurement() {
+        PojoMeasurement pojo = new PojoMeasurement();
+        pojo.tag = "a";
+        pojo.value = 5;
+        pojo.customField = "mem";
+
+        String lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("mem,tag=a value=5i");
+    }
+
     @Measurement(name = "pojo")
     private static class Pojo {
 
@@ -154,5 +165,16 @@ class MeasurementMapperTest {
     private enum TagEnum {
         tagA,
         tagB
+    }
+
+    public static class PojoMeasurement {
+        @Column(measurement = true)
+        String customField;
+
+        @Column(name = "tag", tag = true)
+        private String tag;
+
+        @Column(name = "value")
+        private Integer value;
     }
 }

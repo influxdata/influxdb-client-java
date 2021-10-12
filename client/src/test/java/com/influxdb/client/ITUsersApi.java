@@ -197,6 +197,7 @@ class ITUsersApi extends AbstractITClientTest {
 
     @Test
     @Tag("basic_auth")
+    @Disabled("TODO not implemented set password https://github.com/influxdata/influxdb/pull/15981")
     void updatePasswordNotFound() {
 
         Assertions.assertThatThrownBy(() -> usersApi.updateUserPassword("020f755c3c082000", "", "new-password"))

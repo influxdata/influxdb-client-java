@@ -50,7 +50,7 @@ abstract class AbstractITInfluxDBClientTest extends AbstractTest {
         influxDB_URL = getInfluxDb2Url();
         LOG.log(Level.FINEST, "InfluxDB URL: {0}", influxDB_URL);
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-user", "my-password".toCharArray());
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create(influxDB_URL, "my-token".toCharArray());
 
         organization = influxDBClient.getOrganizationsApi()
                 .findOrganizations().stream()
@@ -60,12 +60,7 @@ abstract class AbstractITInfluxDBClientTest extends AbstractTest {
 
         influxDBClient.close();
 
-        try {
-            this.influxDBClient = InfluxDBClientReactiveFactory.create(influxDB_URL, "my-user", "my-password".toCharArray());
-        } catch (Exception e) {
-            Assertions.fail("Can't authorize via password", e);
-        }
-
+        this.influxDBClient = InfluxDBClientReactiveFactory.create(influxDB_URL, "my-token".toCharArray());
     }
 
     @AfterEach
