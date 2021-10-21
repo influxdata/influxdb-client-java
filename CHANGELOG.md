@@ -1,5 +1,13 @@
 ## 3.5.0 [unreleased]
 
+### Deprecates
+- `InfluxDBClient.health()`: instead use `InfluxDBClient.ping()`
+- `InfluxDBClientKotlin.health()`: instead use `InfluxDBClientKotlin.ping()`
+- `InfluxDBClientScala.health()`: instead use `InfluxDBClientScala.ping()`
+
+### Features
+1. [#272](https://github.com/influxdata/influxdb-client-java/pull/272): Add `PingService` to check status of OSS and Cloud instance
+
 ## 3.4.0 [2021-10-22]
 
 ### Features
