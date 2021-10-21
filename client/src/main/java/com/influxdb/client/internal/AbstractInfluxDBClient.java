@@ -35,6 +35,7 @@ import com.influxdb.client.JSON;
 import com.influxdb.client.domain.Dialect;
 import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.service.HealthService;
+import com.influxdb.client.service.PingService;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.internal.AbstractRestClient;
 import com.influxdb.internal.UserAgentInterceptor;
@@ -60,6 +61,7 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
             .addAnnotationsItem(Dialect.AnnotationsEnum.GROUP).addAnnotationsItem(Dialect.AnnotationsEnum.DEFAULT);
 
     public final HealthService healthService;
+    public final PingService pingService;
 
     protected final Retrofit retrofit;
     protected final InfluxDBClientOptions options;
@@ -100,6 +102,7 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
                 .build();
 
         this.healthService = retrofit.create(HealthService.class);
+        this.pingService = retrofit.create(PingService.class);
     }
 
     public void close() {

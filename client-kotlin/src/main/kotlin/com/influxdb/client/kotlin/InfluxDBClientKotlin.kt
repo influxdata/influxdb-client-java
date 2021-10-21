@@ -24,6 +24,7 @@ package com.influxdb.client.kotlin
 import com.influxdb.LogLevel
 import com.influxdb.client.domain.HealthCheck
 import java.io.Closeable
+import javax.annotation.Nonnull
 
 /**
  * The reference Kotlin client that allows query and write for the InfluxDB 2.0 by Kotlin Channel coroutines.
@@ -51,7 +52,24 @@ interface InfluxDBClientKotlin : Closeable {
      *
      * @return health of an instance
      */
+    @Deprecated("This method is obsolete. Use `ping()` or `version()`", ReplaceWith("ping()"))
     fun health(): HealthCheck
+
+    /**
+     * Check the status of InfluxDB Server.
+     *
+     * @return `true` if server is healthy otherwise return `false`
+     */
+    @Nonnull
+    fun ping(): Boolean
+
+    /**
+     * Returns the version of the connected InfluxDB Server.
+     *
+     * @return the version String, otherwise unknown.
+     */
+    @Nonnull
+    fun version(): String
 
     /**
      * Gets the [LogLevel] that is used for logging requests and responses.

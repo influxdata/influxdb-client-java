@@ -49,6 +49,20 @@ class InfluxDBClientScalaImpl(@Nonnull options: InfluxDBClientOptions) extends A
   override def health: HealthCheck = health(healthService.getHealth(null))
 
   /**
+   * Check the status of InfluxDB Server.
+   *
+   * @return true if server is healthy otherwise return false
+   */
+  override def ping: Boolean = ping(pingService.getPing)
+
+  /**
+   * Returns the version of the connected InfluxDB Server.
+   *
+   * @return the version String, otherwise unknown.
+   */
+  override def version: String = version(pingService.getPing)
+
+  /**
    * Gets the [[LogLevel]] that is used for logging requests and responses.
    *
    * @return the [[LogLevel]] that is used for logging requests and responses

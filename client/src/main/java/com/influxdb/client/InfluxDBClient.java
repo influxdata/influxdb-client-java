@@ -268,10 +268,28 @@ public interface InfluxDBClient extends AutoCloseable {
     /**
      * Get the health of an instance.
      *
+     * @deprecated use {@link #ping()} or {@link #version()}, the API is subject to removal in a next major release
      * @return health of an instance
      */
     @Nonnull
+    @Deprecated
     HealthCheck health();
+
+    /**
+     * Check the status of InfluxDB Server.
+     *
+     * @return {@link Boolean#TRUE} if server is healthy otherwise return {@link Boolean#FALSE}
+     */
+    @Nonnull
+    Boolean ping();
+
+    /**
+     * Returns the version of the connected InfluxDB Server.
+     *
+     * @return the version String, otherwise unknown.
+     */
+    @Nonnull
+    String version();
 
     /**
      * The readiness of the InfluxDB 2.0.

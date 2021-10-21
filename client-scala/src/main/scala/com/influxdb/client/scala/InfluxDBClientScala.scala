@@ -44,7 +44,22 @@ trait InfluxDBClientScala {
    *
    * @return health of an instance
    */
+  @deprecated("This method is obsolete. Use `ping()` or `version()`")
   @Nonnull def health: HealthCheck
+
+  /**
+   * Check the status of InfluxDB Server.
+   *
+   * @return true if server is healthy otherwise return false
+   */
+  @Nonnull def ping: Boolean
+
+  /**
+   * Returns the version of the connected InfluxDB Server.
+   *
+   * @return the version String, otherwise unknown.
+   */
+  @Nonnull def version: String
 
   /**
    * Gets the [[LogLevel]] that is used for logging requests and responses.

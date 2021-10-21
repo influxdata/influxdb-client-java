@@ -263,6 +263,18 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
         return health(healthService.getHealth(null));
     }
 
+    @Nonnull
+    @Override
+    public Boolean ping() {
+        return ping(pingService.getPing());
+    }
+
+    @Nonnull
+    @Override
+    public String version() {
+        return version(pingService.getPing());
+    }
+
     @Nullable
     @Override
     public Ready ready() {

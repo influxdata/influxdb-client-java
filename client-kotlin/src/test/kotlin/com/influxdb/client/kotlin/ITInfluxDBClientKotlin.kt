@@ -23,6 +23,7 @@ package com.influxdb.client.kotlin
 
 import com.influxdb.LogLevel
 import com.influxdb.client.domain.HealthCheck
+import com.influxdb.exceptions.InfluxException
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.platform.runner.JUnitPlatform
@@ -63,6 +64,31 @@ internal class ITInfluxDBClientKotlin : AbstractITInfluxDBClientKotlin() {
         Assertions.assertThat(health.status).isEqualTo(HealthCheck.StatusEnum.FAIL)
         Assertions.assertThat(health.message).startsWith("Failed to connect to")
 
+        clientNotRunning.close()
+    }
+
+    @Test
+    fun ping() {
+        Assertions.assertThat(influxDBClient.ping()).isTrue
+    }
+
+    @Test
+    fun pingNotRunningInstance() {
+        val clientNotRunning = InfluxDBClientKotlinFactory.create("http://localhost:8099")
+        Assertions.assertThat(clientNotRunning.ping()).isFalse
+        clientNotRunning.close()
+    }
+
+    @Test
+    fun version() {
+        Assertions.assertThat(influxDBClient.version()).isNotBlank
+    }
+
+    @Test
+    fun versionNotRunningInstance() {
+        val clientNotRunning = InfluxDBClientKotlinFactory.create("http://localhost:8099")
+        Assertions.assertThatThrownBy { clientNotRunning.version() }
+            .isInstanceOf(InfluxException::class.java)
         clientNotRunning.close()
     }
 

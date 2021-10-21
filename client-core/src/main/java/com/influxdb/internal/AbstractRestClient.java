@@ -49,6 +49,7 @@ import com.influxdb.exceptions.UnprocessableEntityException;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -164,5 +165,33 @@ public abstract class AbstractRestClient {
         Arguments.checkNotNull(exception, "exception");
 
         return exception instanceof EOFException;
+    }
+
+    @Nonnull
+    protected Boolean ping(@Nonnull final Call<ResponseBody> responseBody) {
+
+        Arguments.checkNotNull(responseBody, "responseBody");
+
+        try {
+            return responseBody.execute().isSuccessful();
+        } catch (IOException e) {
+
+            LOG.log(Level.WARNING, "Ping request wasn't successful", e);
+            return false;
+        }
+    }
+
+    @Nonnull
+    protected String version(@Nonnull final Call<ResponseBody> ping) {
+        try {
+            String version = ping.execute().headers().get("X-Influxdb-Version");
+            if (version != null) {
+                return version;
+            }
+
+            return "unknown";
+        } catch (IOException e) {
+            throw new InfluxException(e);
+        }
     }
 }

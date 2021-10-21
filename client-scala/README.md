@@ -191,7 +191,7 @@ influxDBClient.setLogLevel(LogLevel.HEADERS)
 
 ### Check the server status 
 
-Server availability can be checked using the `influxDBClient.health()` endpoint.
+Server availability can be checked using the `influxDBClient.ping()` endpoint.
 
 ### Construct queries using the [flux-dsl](../flux-dsl) query builder
 

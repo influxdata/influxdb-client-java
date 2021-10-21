@@ -32,6 +32,7 @@ import com.influxdb.client.domain.Ready;
 import com.influxdb.client.domain.Routes;
 import com.influxdb.client.domain.User;
 import com.influxdb.client.service.RoutesService;
+import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.UnprocessableEntityException;
 
 import org.assertj.core.api.Assertions;
@@ -66,6 +67,37 @@ class ITInfluxDBClient extends AbstractITClientTest {
         Assertions.assertThat(check.getName()).isEqualTo("influxdb");
         Assertions.assertThat(check.getStatus()).isEqualTo(HealthCheck.StatusEnum.FAIL);
         Assertions.assertThat(check.getMessage()).startsWith("Failed to connect to");
+
+        clientNotRunning.close();
+    }
+
+    @Test
+    void ping() {
+
+        Assertions.assertThat(influxDBClient.ping()).isTrue();
+    }
+
+    @Test
+    void pingNotRunningInstance() {
+
+        InfluxDBClient clientNotRunning = InfluxDBClientFactory.create("http://localhost:8099");
+
+        Assertions.assertThat(clientNotRunning.ping()).isFalse();
+
+        clientNotRunning.close();
+    }
+
+    @Test
+    void version() {
+        Assertions.assertThat(influxDBClient.version()).isNotBlank();
+    }
+
+    @Test
+    void versionNotRunningInstance() {
+        InfluxDBClient clientNotRunning = InfluxDBClientFactory.create("http://localhost:8099");
+
+        Assertions.assertThatThrownBy(clientNotRunning::version)
+                .isInstanceOf(InfluxException.class);
 
         clientNotRunning.close();
     }
