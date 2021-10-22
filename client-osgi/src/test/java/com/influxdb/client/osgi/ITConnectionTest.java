@@ -37,7 +37,7 @@ public class ITConnectionTest extends InfluxDBConnectorTest {
     void testConnectorWithToken() {
         super.testConnectorWithToken();
 
-        assertThat(client.getValue().health().getStatus(), equalTo(HealthCheck.StatusEnum.PASS));
+        assertThat(client.getValue().ping(), equalTo(true));
     }
 
     @Test
@@ -45,7 +45,7 @@ public class ITConnectionTest extends InfluxDBConnectorTest {
     void testConnectorV1() {
         super.testConnectorV1();
 
-        assertThat(client.getValue().health().getStatus(), equalTo(HealthCheck.StatusEnum.PASS));
+        assertThat(client.getValue().ping(), equalTo(true));
     }
 
     @Test
@@ -53,6 +53,6 @@ public class ITConnectionTest extends InfluxDBConnectorTest {
     void testConnectorWithUsernameAndPassword() {
         super.testConnectorWithUsernameAndPassword();
 
-        assertThat(client.getValue().health().getStatus(), equalTo(HealthCheck.StatusEnum.PASS));
+        assertThat(client.getValue().ping(), equalTo(true));
     }
 }

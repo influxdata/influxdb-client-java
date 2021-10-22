@@ -21,13 +21,10 @@
  */
 package com.influxdb.client.flux.internal;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -36,7 +33,6 @@ import com.influxdb.Cancellable;
 import com.influxdb.LogLevel;
 import com.influxdb.client.flux.FluxClient;
 import com.influxdb.client.flux.FluxConnectionOptions;
-import com.influxdb.exceptions.InfluxException;
 import com.influxdb.internal.AbstractQueryApi;
 import com.influxdb.internal.UserAgentInterceptor;
 import com.influxdb.query.FluxRecord;
@@ -54,8 +50,6 @@ import retrofit2.Retrofit;
  * @author Jakub Bednar (bednar@github) (03/10/2018 14:20)
  */
 public class FluxApiImpl extends AbstractQueryApi implements FluxClient {
-
-    private static final Logger LOG = Logger.getLogger(FluxApiImpl.class.getName());
 
     private final FluxService fluxService;
 
@@ -353,33 +347,14 @@ public class FluxApiImpl extends AbstractQueryApi implements FluxClient {
     @Override
     public Boolean ping() {
 
-        Call<ResponseBody> ping = fluxService.ping();
-
-        try {
-            return ping.execute().isSuccessful();
-        } catch (IOException e) {
-
-            LOG.log(Level.WARNING, "Ping request wasn't successful", e);
-            return false;
-        }
+        return ping(fluxService.ping());
     }
 
     @Override
     @Nonnull
     public String version() {
 
-        Call<ResponseBody> ping = fluxService.ping();
-
-        try {
-            String version = ping.execute().headers().get("X-Influxdb-Version");
-            if (version != null) {
-                return version;
-            }
-
-            return "unknown";
-        } catch (IOException e) {
-            throw new InfluxException(e);
-        }
+        return version(fluxService.ping());
     }
 
     @Nonnull

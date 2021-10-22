@@ -61,6 +61,38 @@ class ITInfluxDBClientScala extends AbstractITQueryScalaApi with Matchers {
     client.close()
   }
 
+  test("ping") {
+
+    val ping = influxDBClient.ping
+
+    ping should be(true)
+  }
+
+  test("ping not running") {
+    val clientNotRunning = InfluxDBClientScalaFactory.create("http://localhost:8099")
+
+    val ping = clientNotRunning.ping
+    ping should be(false)
+
+    clientNotRunning.close()
+  }
+
+  test("version") {
+    val version = influxDBClient.version
+
+    version should not be empty
+  }
+
+  test("version not running") {
+    val clientNotRunning = InfluxDBClientScalaFactory.create("http://localhost:8099")
+
+    assertThrows[com.influxdb.exceptions.InfluxException] { // Result type: Assertion
+      clientNotRunning.version
+    }
+
+    clientNotRunning.close()
+  }
+
   test("log level") {
 
     influxDBClient.getLogLevel should be(LogLevel.NONE)

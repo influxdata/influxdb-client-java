@@ -48,6 +48,14 @@ internal class InfluxDBClientKotlinImpl(options: InfluxDBClientOptions) : Abstra
         return health(healthService.getHealth(null))
     }
 
+    override fun ping(): Boolean {
+        return ping(pingService.ping)
+    }
+
+    override fun version(): String {
+        return version(pingService.ping)
+    }
+
     override fun getLogLevel(): LogLevel {
         return getLogLevel(loggingInterceptor)
     }

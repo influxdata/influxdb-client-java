@@ -330,7 +330,7 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
 
         InfluxDBClient client = InfluxDBClientFactory.create(options);
 
-        client.health();
+        client.ping();
 
         RecordedRequest request = mockServer.takeRequest();
         Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my-token");
@@ -376,7 +376,7 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
 
         InfluxDBClient client = InfluxDBClientFactory.create(options);
 
-        client.health();
+        client.ping();
 
         RecordedRequest request = mockServer.takeRequest();
         Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my-token");

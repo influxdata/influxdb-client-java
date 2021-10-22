@@ -22,7 +22,6 @@
 package com.influxdb.spring.health;
 
 import com.influxdb.client.InfluxDBClient;
-import com.influxdb.client.domain.HealthCheck;
 
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
@@ -47,21 +46,12 @@ public class InfluxDB2HealthIndicator extends AbstractHealthIndicator {
 
     @Override
     protected void doHealthCheck(final Health.Builder builder) {
-        HealthCheck check = this.influxDBClient.health();
+        boolean success = this.influxDBClient.ping();
 
-        switch (check.getStatus()) {
-            case PASS:
-                builder.up();
-                break;
-            case FAIL:
-                builder.down();
-                break;
-            default:
-                builder.unknown();
+        if (success) {
+            builder.up();
+        } else {
+            builder.down();
         }
-
-        builder
-                .withDetail("status", check.getStatus())
-                .withDetail("message", check.getMessage());
     }
 }
