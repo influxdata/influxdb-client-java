@@ -1,4 +1,4 @@
-## 3.4.0 [unreleased]
+## 3.4.0 [2021-10-22]
 
 ### Features
 1. [#269](https://github.com/influxdata/influxdb-client-java/pull/269): Add possibility to use dynamic `measurement` in mapping from/to `POJO`

@@ -253,14 +253,14 @@ The latest version for Maven dependency:
 <dependency>
   <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-scala_2.12</artifactId>
-  <version>3.3.0</version>
+  <version>3.4.0</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-scala_2.12:3.3.0"
+    compile "com.influxdb:influxdb-client-scala_2.12:3.4.0"
 }
 ```
 
@@ -271,14 +271,14 @@ The latest version for Maven dependency:
 <dependency>
   <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-scala_2.13</artifactId>
-  <version>3.3.0</version>
+  <version>3.4.0</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-scala_2.13:3.3.0"
+    compile "com.influxdb:influxdb-client-scala_2.13:3.4.0"
 }
 ```
 
