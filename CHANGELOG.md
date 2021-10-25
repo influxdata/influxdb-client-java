@@ -8,6 +8,9 @@
 ### Features
 1. [#272](https://github.com/influxdata/influxdb-client-java/pull/272): Add `PingService` to check status of OSS and Cloud instance
 
+### CI
+1. [#275](https://github.com/influxdata/influxdb-client-java/pull/275): Deploy `influxdb-client-test` package into Maven repository
+
 ## 3.4.0 [2021-10-22]
 
 ### Features
