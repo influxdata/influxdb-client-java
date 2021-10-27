@@ -29,7 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.JSON;
 import com.influxdb.client.domain.Dialect;
@@ -39,6 +38,7 @@ import com.influxdb.client.service.PingService;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.internal.AbstractRestClient;
 import com.influxdb.internal.UserAgentInterceptor;
+import com.influxdb.utils.Arguments;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.SourcesApi;
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.Buckets;
@@ -36,6 +35,7 @@ import com.influxdb.client.domain.Source;
 import com.influxdb.client.domain.Sources;
 import com.influxdb.client.service.SourcesService;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
 
 import retrofit2.Call;
 

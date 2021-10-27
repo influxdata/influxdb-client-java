@@ -31,8 +31,8 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
 
-import com.influxdb.Arguments;
 import com.influxdb.exceptions.InfluxException;
+import com.influxdb.utils.Arguments;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;

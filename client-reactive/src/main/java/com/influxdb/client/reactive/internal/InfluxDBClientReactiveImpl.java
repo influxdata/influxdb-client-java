@@ -23,7 +23,6 @@ package com.influxdb.client.reactive.internal;
 
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.LogLevel;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.WriteOptions;
@@ -34,6 +33,7 @@ import com.influxdb.client.reactive.QueryReactiveApi;
 import com.influxdb.client.reactive.WriteReactiveApi;
 import com.influxdb.client.service.QueryService;
 import com.influxdb.client.service.WriteService;
+import com.influxdb.utils.Arguments;
 
 import io.reactivex.Single;
 

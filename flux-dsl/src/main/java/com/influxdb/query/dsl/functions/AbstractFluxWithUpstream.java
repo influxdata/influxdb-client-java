@@ -25,8 +25,8 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.utils.Arguments;
 
 /**
  * Abstract base class for operators that take an upstream source of {@link Flux}.

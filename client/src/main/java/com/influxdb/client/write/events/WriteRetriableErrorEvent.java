@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
+import com.influxdb.utils.Arguments;
 
 /**
  * The event is published when occurs a retriable write exception.

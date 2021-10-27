@@ -24,7 +24,6 @@ package com.influxdb.client.internal;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.TemplatesApi;
 import com.influxdb.client.domain.Document;
 import com.influxdb.client.domain.DocumentCreate;
@@ -38,6 +37,7 @@ import com.influxdb.client.domain.LabelsResponse;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.service.TemplatesService;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
 
 import retrofit2.Call;
 

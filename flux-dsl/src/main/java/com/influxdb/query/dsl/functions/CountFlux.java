@@ -23,8 +23,8 @@ package com.influxdb.query.dsl.functions;
 
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.utils.Arguments;
 
 /**
  * Counts the number of results. <a href="http://bit.ly/flux-spec#count">See SPEC</a>.

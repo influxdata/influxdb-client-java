@@ -32,7 +32,6 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.WritePrecision;
@@ -45,6 +44,7 @@ import com.influxdb.client.write.events.WriteRetriableErrorEvent;
 import com.influxdb.client.write.events.WriteSuccessEvent;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;

@@ -24,7 +24,7 @@ package com.influxdb.internal;
 import java.io.IOException;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
+import com.influxdb.utils.Arguments;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;

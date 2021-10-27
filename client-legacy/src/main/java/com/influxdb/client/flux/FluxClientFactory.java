@@ -23,8 +23,8 @@ package com.influxdb.client.flux;
 
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.flux.internal.FluxApiImpl;
+import com.influxdb.utils.Arguments;
 
 /**
  * The Factory that creates an instance of a Flux client.

@@ -35,13 +35,13 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.Cancellable;
 import com.influxdb.query.FluxColumn;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 import com.influxdb.query.exceptions.FluxCsvParserException;
 import com.influxdb.query.exceptions.FluxQueryException;
+import com.influxdb.utils.Arguments;
 
 import okio.BufferedSource;
 import org.apache.commons.csv.CSVFormat;

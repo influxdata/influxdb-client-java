@@ -25,7 +25,6 @@ import java.util.function.BiConsumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.Cancellable;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.domain.Dialect;
@@ -37,6 +36,7 @@ import com.influxdb.internal.AbstractQueryApi;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 import com.influxdb.query.internal.FluxCsvParser;
+import com.influxdb.utils.Arguments;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;

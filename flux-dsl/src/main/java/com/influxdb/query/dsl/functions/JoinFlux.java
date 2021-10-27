@@ -28,8 +28,8 @@ import java.util.StringJoiner;
 import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.utils.Arguments;
 
 /**
  * Join two time series together on time and the list of <i>on</i> keys.

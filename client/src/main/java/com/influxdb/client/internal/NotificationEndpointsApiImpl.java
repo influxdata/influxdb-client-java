@@ -25,7 +25,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.FindOptions;
 import com.influxdb.client.NotificationEndpointsApi;
 import com.influxdb.client.domain.HTTPNotificationEndpoint;
@@ -43,6 +42,7 @@ import com.influxdb.client.domain.PagerDutyNotificationEndpoint;
 import com.influxdb.client.domain.SlackNotificationEndpoint;
 import com.influxdb.client.service.NotificationEndpointsService;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
 
 import retrofit2.Call;
 

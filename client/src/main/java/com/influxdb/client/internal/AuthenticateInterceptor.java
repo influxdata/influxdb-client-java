@@ -29,8 +29,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.utils.Arguments;
 
 import okhttp3.Call;
 import okhttp3.Cookie;

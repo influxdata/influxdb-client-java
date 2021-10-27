@@ -28,7 +28,6 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.WriteApi;
 import com.influxdb.client.WriteOptions;
@@ -38,6 +37,7 @@ import com.influxdb.client.write.Point;
 import com.influxdb.client.write.events.AbstractWriteEvent;
 import com.influxdb.client.write.events.EventListener;
 import com.influxdb.client.write.events.ListenerRegistration;
+import com.influxdb.utils.Arguments;
 
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;

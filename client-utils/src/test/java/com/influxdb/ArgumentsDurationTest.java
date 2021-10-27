@@ -21,6 +21,8 @@
  */
 package com.influxdb;
 
+import com.influxdb.utils.Arguments;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;

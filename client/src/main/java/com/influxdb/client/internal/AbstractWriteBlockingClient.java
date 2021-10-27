@@ -28,12 +28,12 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
 
 import retrofit2.Call;
 

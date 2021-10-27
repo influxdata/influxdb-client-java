@@ -24,8 +24,8 @@ package com.influxdb.query.dsl.functions;
 import java.util.Collection;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.utils.Arguments;
 
 /**
  * Percentile is both an aggregate operation and a selector operation depending on selected options.

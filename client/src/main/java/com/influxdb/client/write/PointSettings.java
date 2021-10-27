@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
+import com.influxdb.utils.Arguments;
 
 /**
  * The setting for store data point: default values, threshold, ...

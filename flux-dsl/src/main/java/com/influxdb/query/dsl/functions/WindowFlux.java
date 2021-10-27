@@ -25,8 +25,8 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.utils.Arguments;
 
 /**
  * Groups the results by a given time range.

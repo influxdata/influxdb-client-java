@@ -30,7 +30,7 @@ import java.util.StringJoiner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
+import com.influxdb.utils.Arguments;
 
 
 /**

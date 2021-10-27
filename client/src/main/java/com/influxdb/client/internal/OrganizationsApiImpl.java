@@ -27,7 +27,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.OrganizationsApi;
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
 import com.influxdb.client.domain.Organization;
@@ -44,6 +43,7 @@ import com.influxdb.client.domain.User;
 import com.influxdb.client.service.OrganizationsService;
 import com.influxdb.client.service.SecretsService;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
 
 import retrofit2.Call;
 

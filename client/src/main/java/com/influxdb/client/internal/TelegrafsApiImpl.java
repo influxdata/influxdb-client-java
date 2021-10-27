@@ -33,7 +33,6 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.TelegrafsApi;
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
 import com.influxdb.client.domain.Label;
@@ -53,6 +52,7 @@ import com.influxdb.client.domain.Telegrafs;
 import com.influxdb.client.domain.User;
 import com.influxdb.client.service.TelegrafsService;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
 
 import retrofit2.Call;
 

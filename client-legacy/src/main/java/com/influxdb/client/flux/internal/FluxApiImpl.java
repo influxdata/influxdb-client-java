@@ -28,7 +28,6 @@ import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.Cancellable;
 import com.influxdb.LogLevel;
 import com.influxdb.client.flux.FluxClient;
@@ -39,6 +38,7 @@ import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 import com.influxdb.query.internal.FluxCsvParser.FluxResponseConsumer;
 import com.influxdb.query.internal.FluxCsvParser.FluxResponseConsumerTable;
+import com.influxdb.utils.Arguments;
 
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;

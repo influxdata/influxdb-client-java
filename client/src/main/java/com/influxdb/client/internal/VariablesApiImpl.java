@@ -24,7 +24,6 @@ package com.influxdb.client.internal;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.VariablesApi;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.LabelMapping;
@@ -35,6 +34,7 @@ import com.influxdb.client.domain.Variable;
 import com.influxdb.client.domain.Variables;
 import com.influxdb.client.service.VariablesService;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
 
 import retrofit2.Call;
 

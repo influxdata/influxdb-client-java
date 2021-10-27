@@ -24,9 +24,9 @@ package com.influxdb.client.reactive;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.reactive.internal.InfluxDBClientReactiveImpl;
+import com.influxdb.utils.Arguments;
 
 /**
  * The Factory that create an instance of a InfluxDB reactive client.

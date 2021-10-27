@@ -25,8 +25,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.utils.Arguments;
 
 /**
  * Shift add a fixed duration to time columns.

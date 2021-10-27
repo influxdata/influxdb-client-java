@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
@@ -39,6 +38,7 @@ import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint;
 import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.client.write.Point;
+import com.influxdb.utils.Arguments;
 
 /**
  * @author Jakub Bednar (bednar@github) (16/07/2019 06:48)

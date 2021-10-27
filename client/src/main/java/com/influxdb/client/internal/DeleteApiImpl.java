@@ -26,13 +26,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.DeleteApi;
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.DeletePredicateRequest;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.service.DeleteService;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
 
 import retrofit2.Call;
 
