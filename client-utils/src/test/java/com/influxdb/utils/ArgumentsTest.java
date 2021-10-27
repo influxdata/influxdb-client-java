@@ -19,11 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.influxdb;
+package com.influxdb.utils;
 
 import java.time.temporal.ChronoUnit;
-
-import com.influxdb.utils.Arguments;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
