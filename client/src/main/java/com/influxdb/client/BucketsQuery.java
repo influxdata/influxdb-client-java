@@ -78,7 +78,7 @@ public class BucketsQuery {
         return org;
     }
 
-    public void setOrg(@Nullable String org) {
+    public void setOrg(@Nullable final String org) {
         this.org = org;
     }
 
