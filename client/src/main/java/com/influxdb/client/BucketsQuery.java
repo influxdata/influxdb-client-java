@@ -105,7 +105,7 @@ public class BucketsQuery {
         return id;
     }
 
-    public void setId(@Nullable String id) {
+    public void setId(@Nullable final String id) {
         this.id = id;
     }
 
