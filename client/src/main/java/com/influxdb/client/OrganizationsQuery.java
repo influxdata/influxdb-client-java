@@ -53,7 +53,7 @@ public class OrganizationsQuery {
         return limit;
     }
 
-    public void setLimit(@Nullable Integer limit) {
+    public void setLimit(@Nullable final Integer limit) {
         this.limit = limit;
     }
 
