@@ -51,7 +51,7 @@ public class BucketsQuery {
         return offset;
     }
 
-    public void setOffset(@Nullable Integer offset) {
+    public void setOffset(@Nullable final Integer offset) {
         this.offset = offset;
     }
 
