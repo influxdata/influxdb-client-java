@@ -96,7 +96,7 @@ public class TaskQuery {
         return status;
     }
 
-    public void setStatus(@Nullable String status) {
+    public void setStatus(@Nullable final String status) {
         this.status = status;
     }
 
