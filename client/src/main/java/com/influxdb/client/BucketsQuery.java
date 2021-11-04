@@ -60,7 +60,7 @@ public class BucketsQuery {
         return limit;
     }
 
-    public void setLimit(@Nullable Integer limit) {
+    public void setLimit(@Nullable final Integer limit) {
         this.limit = limit;
     }
 
