@@ -136,7 +136,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         return findTasks(taskQuery);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<Task> findTasks(@NotNull TaskQuery query) {
         Call<Tasks> call = service.getTasks(null, query.getName(), query.getAfter(), query.getUser(),
