@@ -213,7 +213,7 @@ public interface BucketsApi {
      * @return List all buckets
      */
     @Nonnull
-    List<Bucket> findBuckets(BucketsQuery query);
+    List<Bucket> findBuckets(@Nonnull final BucketsQuery query);
 
     /**
      * List all users with member privileges for a bucket.
