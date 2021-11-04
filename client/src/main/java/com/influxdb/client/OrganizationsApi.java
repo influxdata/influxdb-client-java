@@ -125,7 +125,7 @@ public interface OrganizationsApi {
      * @return List all organizations
      */
     @Nonnull
-    List<Organization> findOrganizations(OrganizationsQuery query);
+    List<Organization> findOrganizations(@Nonnull final OrganizationsQuery query);
 
     /**
      * List of secret keys the are stored for Organization.
