@@ -86,7 +86,7 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
 
     @Nonnull
     @Override
-    public List<Organization> findOrganizations(OrganizationsQuery query) {
+    public List<Organization> findOrganizations(@Nonnull final OrganizationsQuery query) {
 
         Call<Organizations> organizationsCall = service.getOrgs(null, query.getOffset(), query.getLimit(),
                 query.getDescending(), query.getOrg(), query.getOrgID(), query.getUserID());
