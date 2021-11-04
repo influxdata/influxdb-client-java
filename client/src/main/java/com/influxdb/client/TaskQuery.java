@@ -69,7 +69,7 @@ public class TaskQuery {
         return user;
     }
 
-    public void setUser(@Nullable String user) {
+    public void setUser(@Nullable final String user) {
         this.user = user;
     }
 
