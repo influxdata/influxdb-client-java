@@ -52,7 +52,6 @@ import com.influxdb.client.domain.User;
 import com.influxdb.client.service.BucketsService;
 import com.influxdb.internal.AbstractRestClient;
 
-import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
 
 /**
