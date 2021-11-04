@@ -89,7 +89,7 @@ public class OrganizationsQuery {
         return userID;
     }
 
-    public void setUserID(@Nullable String userID) {
+    public void setUserID(@Nullable final String userID) {
         this.userID = userID;
     }
 
