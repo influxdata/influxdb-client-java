@@ -80,7 +80,7 @@ public class OrganizationsQuery {
         return orgID;
     }
 
-    public void setOrgID(@Nullable String orgID) {
+    public void setOrgID(@Nullable final String orgID) {
         this.orgID = orgID;
     }
 
