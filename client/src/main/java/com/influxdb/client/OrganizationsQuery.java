@@ -62,7 +62,7 @@ public class OrganizationsQuery {
         return descending;
     }
 
-    public void setDescending(@Nullable Boolean descending) {
+    public void setDescending(@Nullable final Boolean descending) {
         this.descending = descending;
     }
 
