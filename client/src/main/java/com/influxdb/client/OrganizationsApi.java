@@ -120,6 +120,14 @@ public interface OrganizationsApi {
     List<Organization> findOrganizations();
 
     /**
+     * List all organizations.
+     *
+     * @return List all organizations
+     */
+    @Nonnull
+    List<Organization> findOrganizations(OrganizationsQuery query);
+
+    /**
      * List of secret keys the are stored for Organization.
      * <p>
      * For example
@@ -185,7 +193,7 @@ public interface OrganizationsApi {
      * Delete provided secrets.
      *
      * @param secretKeys secret key to deleted (required)
-     * @param orgID ID of the organization (required)
+     * @param orgID      ID of the organization (required)
      */
     void deleteSecrets(@Nonnull final SecretKeys secretKeys, @Nonnull final String orgID);
 

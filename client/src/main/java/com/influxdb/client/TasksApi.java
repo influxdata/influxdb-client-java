@@ -39,6 +39,7 @@ import com.influxdb.client.domain.Task;
 import com.influxdb.client.domain.TaskCreateRequest;
 import com.influxdb.client.domain.TaskUpdateRequest;
 import com.influxdb.client.domain.User;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The client of the InfluxDB 2.0 that implement Task HTTP API endpoint.
@@ -267,6 +268,15 @@ public interface TasksApi {
                          @Nullable final String orgID);
 
     /**
+     * Lists tasks, limit 100.
+     *
+     * @param query query params for task
+     * @return A list of tasks
+     */
+    @Nonnull
+    List<Task> findTasks(@NotNull TaskQuery query);
+
+    /**
      * List all task members.
      *
      * @param taskID ID of the task
@@ -402,7 +412,6 @@ public interface TasksApi {
      * Retrieve list of run records for a task.
      *
      * @param taskID ID of task to get runs for
-     *
      * @return the list of run records for a task
      */
     @Nonnull

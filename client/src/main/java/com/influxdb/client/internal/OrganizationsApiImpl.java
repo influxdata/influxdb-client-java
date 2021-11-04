@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 
 import com.influxdb.Arguments;
 import com.influxdb.client.OrganizationsApi;
+import com.influxdb.client.OrganizationsQuery;
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.Organizations;
@@ -80,8 +81,15 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
     @Nonnull
     @Override
     public List<Organization> findOrganizations() {
+        return findOrganizations(new OrganizationsQuery());
+    }
 
-        Call<Organizations> organizationsCall = service.getOrgs(null, null, null, null, null, null, null);
+    @Nonnull
+    @Override
+    public List<Organization> findOrganizations(OrganizationsQuery query) {
+
+        Call<Organizations> organizationsCall = service.getOrgs(null, query.getOffset(), query.getLimit(),
+                query.getDescending(), query.getOrg(), query.getOrgID(), query.getUserID());
 
         Organizations organizations = execute(organizationsCall);
         LOG.log(Level.FINEST, "findOrganizations found: {0}", organizations);

@@ -208,6 +208,14 @@ public interface BucketsApi {
     List<Bucket> findBucketsByOrgName(@Nullable final String orgName);
 
     /**
+     * List all buckets.
+     *
+     * @return List all buckets
+     */
+    @Nonnull
+    List<Bucket> findBuckets(BucketsQuery query);
+
+    /**
      * List all users with member privileges for a bucket.
      *
      * @param bucket the bucket with members
