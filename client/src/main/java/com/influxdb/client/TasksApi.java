@@ -39,7 +39,6 @@ import com.influxdb.client.domain.Task;
 import com.influxdb.client.domain.TaskCreateRequest;
 import com.influxdb.client.domain.TaskUpdateRequest;
 import com.influxdb.client.domain.User;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * The client of the InfluxDB 2.0 that implement Task HTTP API endpoint.
