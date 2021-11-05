@@ -273,7 +273,7 @@ public interface TasksApi {
      * @return A list of tasks
      */
     @Nonnull
-    List<Task> findTasks(@Nonnull final TaskQuery query);
+    List<Task> findTasks(@Nonnull final TasksQuery query);
 
     /**
      * List all task members.
