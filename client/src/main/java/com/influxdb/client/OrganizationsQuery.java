@@ -17,7 +17,7 @@ public class OrganizationsQuery {
     private Integer limit;
 
     /**
-     * descending  (optional, default to false)
+     * Descending. (optional, default to false)
      */
     @Nullable
     private Boolean descending;
