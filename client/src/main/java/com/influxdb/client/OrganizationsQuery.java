@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 public class OrganizationsQuery {
 
     /**
-     * offset  (optional)
+     * Offset. (optional)
      */
     @Nullable
     private Integer offset;
