@@ -11,7 +11,7 @@ public class OrganizationsQuery {
     private Integer offset;
 
     /**
-     * limit  (optional, default to 20)
+     * Limit. (optional, default to 20)
      */
     @Nullable
     private Integer limit;
