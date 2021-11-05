@@ -41,7 +41,7 @@ public class TasksQuery {
     private String status;
 
     /**
-     * The number of tasks to return (optional, default to 100)
+     * The number of tasks to return. (optional, default to 100)
      */
     @Nullable
     private Integer limit;
