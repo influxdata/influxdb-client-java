@@ -129,7 +129,7 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
 
     @Nonnull
     @Override
-    public List<Bucket> findBuckets(BucketsQuery query) {
+    public List<Bucket> findBuckets(@Nonnull final BucketsQuery query) {
         Call<Buckets> bucketsCall = service.getBuckets(null, query.getOffset(),
                 query.getLimit(), query.getAfter(), query.getOrg(), query.getOrgID(), query.getName(), query.getId());
 
