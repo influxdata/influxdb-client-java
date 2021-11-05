@@ -60,7 +60,7 @@ public class TaskQuery {
         return after;
     }
 
-    public void setAfter(@Nullable String after) {
+    public void setAfter(@Nullable final String after) {
         this.after = after;
     }
 
