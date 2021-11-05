@@ -17,7 +17,8 @@ public class BucketsQuery {
     private Integer limit;
 
     /**
-     * The last resource ID from which to seek from (but not including). This is to be used instead of &#x60;offset&#x60;. (optional)
+     * The last resource ID from which to seek from (but not including). 
+     * This is to be used instead of &#x60;offset&#x60;. (optional)
      */
     @Nullable
     private String after;
