@@ -2,7 +2,7 @@ package com.influxdb.client;
 
 import javax.annotation.Nullable;
 
-public class TaskQuery {
+public class TasksQuery {
 
     /**
      * Returns task with a specific name. (optional)
