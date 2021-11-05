@@ -267,6 +267,15 @@ public interface TasksApi {
                          @Nullable final String orgID);
 
     /**
+     * Lists tasks, limit 100.
+     *
+     * @param query query params for task
+     * @return A list of tasks
+     */
+    @Nonnull
+    List<Task> findTasks(@Nonnull final TasksQuery query);
+
+    /**
      * List all task members.
      *
      * @param taskID ID of the task
@@ -402,7 +411,6 @@ public interface TasksApi {
      * Retrieve list of run records for a task.
      *
      * @param taskID ID of task to get runs for
-     *
      * @return the list of run records for a task
      */
     @Nonnull

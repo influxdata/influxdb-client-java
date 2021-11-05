@@ -7,6 +7,7 @@
 
 ### Features
 1. [#272](https://github.com/influxdata/influxdb-client-java/pull/272): Add `PingService` to check status of OSS and Cloud instance
+2. [#278](https://github.com/influxdata/influxdb-client-java/pull/278): Add query method with all params for BucketsApi, OrganizationApi and TasksApi
 
 ### CI
 1. [#275](https://github.com/influxdata/influxdb-client-java/pull/275): Deploy `influxdb-client-test` package into Maven repository

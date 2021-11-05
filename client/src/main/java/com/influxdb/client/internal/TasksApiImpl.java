@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 
 import com.influxdb.Arguments;
 import com.influxdb.client.TasksApi;
+import com.influxdb.client.TasksQuery;
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.LabelMapping;
@@ -120,13 +121,25 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         return findTasks(null, null, orgID);
     }
 
+
     @Nonnull
     @Override
     public List<Task> findTasks(@Nullable final String afterID,
                                 @Nullable final String userID,
                                 @Nullable final String orgID) {
+        final TasksQuery tasksQuery = new TasksQuery();
+        tasksQuery.setAfter(afterID);
+        tasksQuery.setUser(userID);
+        tasksQuery.setOrgID(orgID);
 
-        Call<Tasks> call = service.getTasks(null, null, afterID, userID, null, orgID, null, null);
+        return findTasks(tasksQuery);
+    }
+
+    @Nonnull
+    @Override
+    public List<Task> findTasks(@Nonnull final TasksQuery query) {
+        Call<Tasks> call = service.getTasks(null, query.getName(), query.getAfter(), query.getUser(),
+                query.getOrg(), query.getOrgID(), query.getStatus(), query.getLimit());
 
         Tasks tasks = execute(call);
         LOG.log(Level.FINEST, "findTasks found: {0}", tasks);

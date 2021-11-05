@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 
 import com.influxdb.Arguments;
 import com.influxdb.client.BucketsApi;
+import com.influxdb.client.BucketsQuery;
 import com.influxdb.client.FindOptions;
 import com.influxdb.client.domain.AddResourceMemberRequestBody;
 import com.influxdb.client.domain.Bucket;
@@ -124,6 +125,18 @@ final class BucketsApiImpl extends AbstractRestClient implements BucketsApi {
 
         return buckets.getBuckets();
 
+    }
+
+    @Nonnull
+    @Override
+    public List<Bucket> findBuckets(@Nonnull final BucketsQuery query) {
+        Call<Buckets> bucketsCall = service.getBuckets(null, query.getOffset(),
+                query.getLimit(), query.getAfter(), query.getOrg(), query.getOrgID(), query.getName(), query.getId());
+
+        final Buckets buckets = execute(bucketsCall);
+        LOG.log(Level.FINEST, "findBuckets found: {0}", buckets);
+
+        return buckets.getBuckets();
     }
 
     @Nonnull
