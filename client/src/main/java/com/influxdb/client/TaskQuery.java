@@ -51,7 +51,7 @@ public class TaskQuery {
         return name;
     }
 
-    public void setName(@Nullable String name) {
+    public void setName(@Nullable final String name) {
         this.name = name;
     }
 
