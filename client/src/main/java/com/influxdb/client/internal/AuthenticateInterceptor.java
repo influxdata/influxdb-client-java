@@ -33,7 +33,6 @@ import com.influxdb.Arguments;
 import com.influxdb.client.InfluxDBClientOptions;
 
 import okhttp3.Call;
-import okhttp3.Cookie;
 import okhttp3.Credentials;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -56,8 +55,8 @@ class AuthenticateInterceptor implements Interceptor {
 
     private OkHttpClient okHttpClient;
 
-    private char[] sessionToken;
-    private AtomicBoolean signout = new AtomicBoolean(false);
+    private char[] sessionCookies;
+    private final AtomicBoolean signout = new AtomicBoolean(false);
 
     AuthenticateInterceptor(@Nonnull final InfluxDBClientOptions influxDBClientOptions) {
 
@@ -67,6 +66,7 @@ class AuthenticateInterceptor implements Interceptor {
     }
 
     @Override
+    @Nonnull
     public Response intercept(@Nonnull final Chain chain) throws IOException {
 
         Request request = chain.request();
@@ -87,9 +87,9 @@ class AuthenticateInterceptor implements Interceptor {
 
             initToken(this.okHttpClient);
 
-            if (sessionToken != null) {
+            if (sessionCookies != null) {
                 request = request.newBuilder()
-                        .header("Cookie", "session=" + string(sessionToken))
+                        .header("Cookie", string(sessionCookies))
                         .build();
             }
         }
@@ -111,8 +111,7 @@ class AuthenticateInterceptor implements Interceptor {
             return;
         }
 
-        //TODO or expired
-        if (sessionToken == null) {
+        if (sessionCookies == null) {
 
             String credentials = Credentials
                     .basic(influxDBClientOptions.getUsername(), string(influxDBClientOptions.getPassword()));
@@ -120,18 +119,14 @@ class AuthenticateInterceptor implements Interceptor {
             Request authRequest = new Request.Builder()
                     .url(buildPath("api/v2/signin"))
                     .addHeader("Authorization", credentials)
-                    .post(RequestBody.create(null, ""))
+                    .post(RequestBody.create("application/json", null))
                     .build();
 
             try (Response authResponse = this.okHttpClient.newCall(authRequest).execute()) {
+                String cookieHeader = authResponse.headers().get("Set-Cookie");
 
-                Cookie sessionCookie = Cookie.parseAll(authRequest.url(), authResponse.headers()).stream()
-                        .filter(cookie -> "session".equals(cookie.name()))
-                        .findFirst()
-                        .orElse(null);
-
-                if (sessionCookie != null) {
-                    sessionToken = sessionCookie.value().toCharArray();
+                if (cookieHeader != null) {
+                    sessionCookies = cookieHeader.toCharArray();
                 }
             } catch (IOException e) {
                 LOG.log(Level.WARNING, "Cannot retrieve the Session token!", e);
@@ -152,13 +147,14 @@ class AuthenticateInterceptor implements Interceptor {
             return;
         }
 
-        this.signout.set(true);
-        this.sessionToken = null;
-
         Request authRequest = new Request.Builder()
                 .url(buildPath("api/v2/signout"))
-                .post(RequestBody.create(null, ""))
+                .post(RequestBody.create("application/json", null))
+                .header("Cookie", string(sessionCookies))
                 .build();
+
+        this.signout.set(true);
+        this.sessionCookies = null;
 
         Response response = this.okHttpClient.newCall(authRequest).execute();
         response.close();

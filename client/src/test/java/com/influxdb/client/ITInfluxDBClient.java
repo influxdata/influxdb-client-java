@@ -24,16 +24,20 @@ package com.influxdb.client;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 
+import com.influxdb.LogLevel;
 import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.domain.OnboardingRequest;
 import com.influxdb.client.domain.OnboardingResponse;
 import com.influxdb.client.domain.Ready;
 import com.influxdb.client.domain.Routes;
 import com.influxdb.client.domain.User;
+import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.service.RoutesService;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.UnprocessableEntityException;
+import com.influxdb.query.FluxTable;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -61,7 +65,7 @@ class ITInfluxDBClient extends AbstractITClientTest {
     void healthNotRunningInstance() {
 
         InfluxDBClient clientNotRunning = InfluxDBClientFactory.create("http://localhost:8099");
-		HealthCheck check = clientNotRunning.health();
+        HealthCheck check = clientNotRunning.health();
 
         Assertions.assertThat(check).isNotNull();
         Assertions.assertThat(check.getName()).isEqualTo("influxdb");
@@ -219,5 +223,24 @@ class ITInfluxDBClient extends AbstractITClientTest {
         Assertions.assertThat(routes.getTelegrafs()).isEqualTo("/api/v2/telegrafs");
         Assertions.assertThat(routes.getUsers()).isEqualTo("/api/v2/users");
         Assertions.assertThat(routes.getWrite()).isEqualTo("/api/v2/write");
+    }
+
+    @Test
+    void useUsernamePassword() {
+        try (InfluxDBClient client = InfluxDBClientFactory.create(influxDB_URL, "my-user", "my-password".toCharArray())) {
+            String measurement = "mem_" + System.currentTimeMillis();
+            client
+                    .getWriteApiBlocking()
+                    .writeRecord("my-bucket", "my-org", WritePrecision.NS, measurement + ",tag=a value=5.0");
+
+            String flux = "from(bucket: \"my-bucket\")\n" +
+                    " |> range(start: 0)" +
+                    " |> filter(fn: (r) => r[\"_measurement\"] == \""+measurement+"\")";
+
+            List<FluxTable> tables = client.getQueryApi().query(flux, "my-org");
+            Assertions.assertThat(tables).hasSize(1);
+            Assertions.assertThat(tables.get(0).getRecords()).hasSize(1);
+            Assertions.assertThat(tables.get(0).getRecords().get(0).getValue()).isEqualTo(5.0);
+        }
     }
 }
