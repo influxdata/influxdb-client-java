@@ -147,16 +147,18 @@ class AuthenticateInterceptor implements Interceptor {
             return;
         }
 
-        Request authRequest = new Request.Builder()
+        Request.Builder authRequest = new Request.Builder()
                 .url(buildPath("api/v2/signout"))
-                .post(RequestBody.create("application/json", null))
-                .header("Cookie", string(sessionCookies))
-                .build();
+                .post(RequestBody.create("application/json", null));
 
-        this.signout.set(true);
-        this.sessionCookies = null;
+        if (sessionCookies != null) {
+            authRequest.addHeader("Cookie", string(sessionCookies));
+        }
 
-        Response response = this.okHttpClient.newCall(authRequest).execute();
+        signout.set(true);
+        sessionCookies = null;
+
+        Response response = okHttpClient.newCall(authRequest.build()).execute();
         response.close();
     }
 

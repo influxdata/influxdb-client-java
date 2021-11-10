@@ -117,7 +117,7 @@ class AuthenticateInterceptorTest extends AbstractMockServerTest {
         RecordedRequest requestToTasks = mockServer.takeRequest();
         Assertions.assertThat(requestToTasks.getPath()).endsWith("/api/v2/tasks");
         Assertions.assertThat(requestToTasks.getHeader("Cookie"))
-                .isEqualTo("session=yCgXaEBF8mYSmJUweRcW0g_5jElMs7mv6_-G1bNcau4Z0ZLQYtj0BkHZYRnBVA6uXHtyuhflcOzyNDNRxnaC0A==");
+                .isEqualTo("session=yCgXaEBF8mYSmJUweRcW0g_5jElMs7mv6_-G1bNcau4Z0ZLQYtj0BkHZYRnBVA6uXHtyuhflcOzyNDNRxnaC0A==; path=/api/v2");
     }
 
     @Test
