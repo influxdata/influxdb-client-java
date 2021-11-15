@@ -8,6 +8,7 @@
 ### Features
 1. [#272](https://github.com/influxdata/influxdb-client-java/pull/272): Add `PingService` to check status of OSS and Cloud instance
 1. [#278](https://github.com/influxdata/influxdb-client-java/pull/278): Add query method with all params for BucketsApi, OrganizationApi and TasksApi
+1. [#280](https://github.com/influxdata/influxdb-client-java/pull/280): Use async HTTP calls in the Batching writer
 
 ### Bug Fixes
 1. [#279](https://github.com/influxdata/influxdb-client-java/pull/279): Session authentication for InfluxDB `2.1`
