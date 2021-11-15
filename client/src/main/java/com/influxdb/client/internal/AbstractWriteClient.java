@@ -57,6 +57,7 @@ import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subjects.PublishSubject;
 import org.reactivestreams.Publisher;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.HttpException;
 import retrofit2.Response;
 
@@ -450,12 +451,21 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             String bucket = batchWrite.batchWriteOptions.bucket;
             WritePrecision precision = batchWrite.batchWriteOptions.precision;
 
-            Maybe<Response<Void>> requestSource = Maybe
-                    .fromCallable(() -> service
-                            .postWrite(organization, bucket, content, null,
-                                    "identity", "text/plain; charset=utf-8", null,
-                                    "application/json", null, precision))
-                    .map(Call::execute);
+            Maybe<Response<Void>> requestSource = Maybe.create(emitter -> service
+                    .postWrite(organization, bucket, content, null,
+                            "identity", "text/plain; charset=utf-8", null,
+                            "application/json", null, precision)
+                    .enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(@Nonnull final Call<Void> call, @Nonnull final Response<Void> response) {
+                            emitter.onSuccess(response);
+                        }
+
+                        @Override
+                        public void onFailure(@Nonnull final Call<Void> call, @Nonnull final Throwable throwable) {
+                            emitter.onError(throwable);
+                        }
+                    }));
 
             return requestSource
                     //

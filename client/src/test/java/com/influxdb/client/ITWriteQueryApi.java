@@ -461,12 +461,15 @@ class ITWriteQueryApi extends AbstractITClientTest {
     }
 
     @Test
-    void flush() throws InterruptedException {
+    void flush() {
 
         String bucketName = bucket.getName();
 
-        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(100_000)
-                .flushInterval(100_000).build());
+        writeApi = influxDBClient.makeWriteApi(WriteOptions.builder().batchSize(1_000_000)
+                .flushInterval(1_000_000).build());
+
+        WriteEventListener<WriteSuccessEvent> successListener = new WriteEventListener<>();
+        writeApi.listenEvents(WriteSuccessEvent.class, successListener);
 
         String record = "h2o_feet,location=coyote_creek level\\ water_level=1.0 1";
 
@@ -476,7 +479,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         Assertions.assertThat(query).hasSize(0);
 
         writeApi.flush();
-        Thread.sleep(10);
+        waitToCallback(successListener.countDownLatch, 10);
 
         query = queryApi.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
 
