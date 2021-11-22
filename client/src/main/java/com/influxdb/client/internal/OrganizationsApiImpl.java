@@ -23,6 +23,7 @@ package com.influxdb.client.internal;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -247,8 +248,12 @@ final class OrganizationsApiImpl extends AbstractRestClient implements Organizat
         Arguments.checkNonEmpty(orgID, "Organization ID");
         Arguments.checkNotNull(secretKeys, "secretKeys");
 
-        Call<Void> call = secretsService.postOrgsIDSecrets(orgID, secretKeys, null);
-        execute(call);
+        secretKeys
+                .getSecrets()
+                .forEach(secretID -> {
+                    Call<Void> call = secretsService.deleteOrgsIDSecretsID(orgID, secretID, null);
+                    execute(call);
+                });
     }
 
     @Nonnull

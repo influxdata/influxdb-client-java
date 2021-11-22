@@ -17,9 +17,9 @@ import java.util.Map;
 
 public interface DeleteService {
   /**
-   * Delete time series data from InfluxDB
+   * Delete data
    * 
-   * @param deletePredicateRequest Predicate delete request (required)
+   * @param deletePredicateRequest Deletes data from an InfluxDB bucket. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param org Specifies the organization to delete data from. (optional)
    * @param bucket Specifies the bucket to delete data from. (optional)

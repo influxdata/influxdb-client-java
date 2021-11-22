@@ -14,22 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public interface DefaultService {
+public interface SignoutService {
   /**
-   * Exchange basic auth credentials for session
-   * 
-   * @param zapTraceSpan OpenTracing span context (optional)
-   * @param authorization An auth credential for the Basic scheme (optional)
-   * @return Call&lt;Void&gt;
-   */
-  @POST("api/v2/signin")
-  Call<Void> postSignin(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Authorization") String authorization
-  );
-
-  /**
-   * Expire the current session
-   * 
+   * Expire the current UI session
+   * Expires the current UI session for the user.
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
    */

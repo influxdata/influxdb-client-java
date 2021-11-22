@@ -35,7 +35,7 @@ public interface DbrPsService {
   );
 
   /**
-   * List all database retention policy mappings
+   * List database retention policy mappings
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param orgID Specifies the organization ID to filter on (optional)

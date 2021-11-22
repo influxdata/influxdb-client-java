@@ -45,12 +45,12 @@ public interface QueryService {
   );
 
   /**
-   * Query InfluxDB
-   * 
+   * Query data
+   * Retrieves data from InfluxDB buckets.  To query data, you need the following: - **organization** – _See [View organizations](https://docs.influxdata.com/influxdb/v2.1/organizations/view-orgs/#view-your-organization-id) for instructions on viewing your organization ID._ - **API token** – _See [View tokens](https://docs.influxdata.com/influxdb/v2.1/security/tokens/view-tokens/)  for instructions on viewing your API token._ - **InfluxDB URL** – _See [InfluxDB URLs](https://docs.influxdata.com/influxdb/v2.1/reference/urls/)_. - **Flux query** – _See [Flux](https://docs.influxdata.com/flux/v0.x/)._  For more information and examples, see [Query with the InfluxDB API](https://docs.influxdata.com/influxdb/v2.1/query-data/execute-queries/influx-api/).
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param acceptEncoding The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand. (optional, default to identity)
+   * @param acceptEncoding Indicates the content encoding (usually a compression algorithm) that the client can understand. (optional, default to identity)
    * @param contentType  (optional)
-   * @param org Specifies the name of the organization executing the query. Takes either the ID or Name interchangeably. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
+   * @param org Specifies the name of the organization executing the query. Takes either the ID or Name. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
    * @param orgID Specifies the ID of the organization executing the query. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
    * @param query Flux query or specification to execute (optional)
    * @return Call&lt;String&gt;
@@ -64,12 +64,12 @@ public interface QueryService {
   );
 
   /**
-   * Query InfluxDB
-   * 
+   * Query data
+   * Retrieves data from InfluxDB buckets.  To query data, you need the following: - **organization** – _See [View organizations](https://docs.influxdata.com/influxdb/v2.1/organizations/view-orgs/#view-your-organization-id) for instructions on viewing your organization ID._ - **API token** – _See [View tokens](https://docs.influxdata.com/influxdb/v2.1/security/tokens/view-tokens/)  for instructions on viewing your API token._ - **InfluxDB URL** – _See [InfluxDB URLs](https://docs.influxdata.com/influxdb/v2.1/reference/urls/)_. - **Flux query** – _See [Flux](https://docs.influxdata.com/flux/v0.x/)._  For more information and examples, see [Query with the InfluxDB API](https://docs.influxdata.com/influxdb/v2.1/query-data/execute-queries/influx-api/).
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param acceptEncoding The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand. (optional, default to identity)
+   * @param acceptEncoding Indicates the content encoding (usually a compression algorithm) that the client can understand. (optional, default to identity)
    * @param contentType  (optional)
-   * @param org Specifies the name of the organization executing the query. Takes either the ID or Name interchangeably. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
+   * @param org Specifies the name of the organization executing the query. Takes either the ID or Name. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
    * @param orgID Specifies the ID of the organization executing the query. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
    * @param query Flux query or specification to execute (optional)
    * @return Call&lt;ResponseBody&gt;
@@ -81,12 +81,12 @@ public interface QueryService {
   );
 
   /**
-   * Query InfluxDB
-   * 
+   * Query data
+   * Retrieves data from InfluxDB buckets.  To query data, you need the following: - **organization** – _See [View organizations](https://docs.influxdata.com/influxdb/v2.1/organizations/view-orgs/#view-your-organization-id) for instructions on viewing your organization ID._ - **API token** – _See [View tokens](https://docs.influxdata.com/influxdb/v2.1/security/tokens/view-tokens/)  for instructions on viewing your API token._ - **InfluxDB URL** – _See [InfluxDB URLs](https://docs.influxdata.com/influxdb/v2.1/reference/urls/)_. - **Flux query** – _See [Flux](https://docs.influxdata.com/flux/v0.x/)._  For more information and examples, see [Query with the InfluxDB API](https://docs.influxdata.com/influxdb/v2.1/query-data/execute-queries/influx-api/).
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param acceptEncoding The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand. (optional, default to identity)
+   * @param acceptEncoding Indicates the content encoding (usually a compression algorithm) that the client can understand. (optional, default to identity)
    * @param contentType  (optional)
-   * @param org Specifies the name of the organization executing the query. Takes either the ID or Name interchangeably. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
+   * @param org Specifies the name of the organization executing the query. Takes either the ID or Name. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
    * @param orgID Specifies the ID of the organization executing the query. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
    * @param query Flux query or specification to execute (optional)
    * @return Call&lt;String&gt;
@@ -97,11 +97,11 @@ public interface QueryService {
   );
 
   /**
-   * Analyze an InfluxQL or Flux query
+   * Analyze a Flux query
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param contentType  (optional)
-   * @param query Flux or InfluxQL query to analyze (optional)
+   * @param query Flux query to analyze (optional)
    * @return Call&lt;AnalyzeQueryResponse&gt;
    */
   @Headers({
