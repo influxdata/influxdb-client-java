@@ -834,13 +834,13 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
     }
 
     @Test
-    void retryOnNetworkError() throws IOException, InterruptedException {
+    void retryOnNetworkError() throws IOException {
 
         mockServer.close();
 
         WriteOptions options = WriteOptions.builder()
                 .batchSize(1)
-                .retryInterval(1_000)
+                .retryInterval(100)
                 .maxRetryDelay(3_000)
                 .maxRetries(3)
                 .build();
