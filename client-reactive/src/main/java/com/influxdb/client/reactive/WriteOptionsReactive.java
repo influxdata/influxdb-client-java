@@ -25,8 +25,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.WriteApi;
+import com.influxdb.utils.Arguments;
 
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;

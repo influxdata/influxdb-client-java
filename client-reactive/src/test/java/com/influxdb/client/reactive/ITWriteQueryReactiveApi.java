@@ -28,7 +28,6 @@ import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
-import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.Dialect;

@@ -42,7 +42,6 @@ import com.influxdb.client.reactive.WriteOptionsReactive;
 import com.influxdb.client.reactive.WriteReactiveApi;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.client.write.Point;
-import com.influxdb.client.write.events.AbstractWriteEvent;
 import com.influxdb.internal.AbstractRestClient;
 import com.influxdb.utils.Arguments;
 

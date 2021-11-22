@@ -30,7 +30,6 @@ import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.RetryAttempt;
 import com.influxdb.client.write.Point;
 import com.influxdb.exceptions.InfluxException;
-import com.influxdb.query.FluxRecord;
 import com.influxdb.test.AbstractMockServerTest;
 
 import io.reactivex.Flowable;
