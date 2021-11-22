@@ -26,7 +26,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.UsersApi;
 import com.influxdb.client.domain.PasswordResetBody;
 import com.influxdb.client.domain.PostUser;
@@ -34,6 +33,7 @@ import com.influxdb.client.domain.User;
 import com.influxdb.client.domain.Users;
 import com.influxdb.client.service.UsersService;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
 
 import okhttp3.Credentials;
 import retrofit2.Call;

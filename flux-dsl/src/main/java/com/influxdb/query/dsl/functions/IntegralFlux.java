@@ -24,8 +24,8 @@ package com.influxdb.query.dsl.functions;
 import java.time.temporal.ChronoUnit;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.utils.Arguments;
 
 /**
  * For each aggregate column, it outputs the area under the curve of non null records.

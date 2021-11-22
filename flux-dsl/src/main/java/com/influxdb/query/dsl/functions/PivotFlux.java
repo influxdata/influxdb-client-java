@@ -24,8 +24,8 @@ package com.influxdb.query.dsl.functions;
 import java.util.Collection;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.utils.Arguments;
 
 /**
  * Pivot collects values stored vertically (column-wise) in a table and aligns them horizontally (row-wise)

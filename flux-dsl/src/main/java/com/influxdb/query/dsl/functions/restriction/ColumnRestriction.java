@@ -23,8 +23,8 @@ package com.influxdb.query.dsl.functions.restriction;
 
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.query.dsl.functions.properties.FunctionsParameters;
+import com.influxdb.utils.Arguments;
 
 /**
  * The column restrictions.

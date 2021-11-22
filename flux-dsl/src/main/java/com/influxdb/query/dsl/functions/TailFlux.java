@@ -23,8 +23,8 @@ package com.influxdb.query.dsl.functions;
 
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.utils.Arguments;
 
 /**
  * Tail caps the number of records in output tables to a fixed size <i>n</i>.

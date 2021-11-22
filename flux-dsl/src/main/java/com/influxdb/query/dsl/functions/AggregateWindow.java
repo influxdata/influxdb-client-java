@@ -24,8 +24,8 @@ package com.influxdb.query.dsl.functions;
 import java.time.temporal.ChronoUnit;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.utils.Arguments;
 
 /**
  * Applies an aggregate or selector function (any function with a column parameter) to fixed windows of time.

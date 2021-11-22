@@ -23,7 +23,6 @@ package com.influxdb.client.scala.internal
 
 import akka.NotUsed
 import akka.stream.scaladsl.Source
-import com.influxdb.Arguments
 import com.influxdb.client.InfluxDBClientOptions
 import com.influxdb.client.domain.{Dialect, Query}
 import com.influxdb.client.internal.AbstractInfluxDBClient
@@ -31,6 +30,7 @@ import com.influxdb.client.scala.QueryScalaApi
 import com.influxdb.client.service.QueryService
 import com.influxdb.internal.AbstractQueryApi
 import com.influxdb.query.FluxRecord
+import com.influxdb.utils.Arguments
 
 import javax.annotation.Nonnull
 

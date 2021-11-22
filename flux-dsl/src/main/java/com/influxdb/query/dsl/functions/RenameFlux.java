@@ -24,8 +24,8 @@ package com.influxdb.query.dsl.functions;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.utils.Arguments;
 
 /**
  * Rename will rename specified columns in a table. If a column is renamed and is part of the group key,

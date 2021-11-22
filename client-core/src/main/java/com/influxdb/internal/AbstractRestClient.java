@@ -28,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.LogLevel;
 import com.influxdb.exceptions.BadGatewayException;
 import com.influxdb.exceptions.BadRequestException;
@@ -46,6 +45,7 @@ import com.influxdb.exceptions.RequestTimeoutException;
 import com.influxdb.exceptions.ServiceUnavailableException;
 import com.influxdb.exceptions.UnauthorizedException;
 import com.influxdb.exceptions.UnprocessableEntityException;
+import com.influxdb.utils.Arguments;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;

@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.influxdb;
+package com.influxdb.utils;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

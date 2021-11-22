@@ -21,7 +21,6 @@
  */
 package com.influxdb.client.kotlin.internal
 
-import com.influxdb.Arguments
 import com.influxdb.Cancellable
 import com.influxdb.client.InfluxDBClientOptions
 import com.influxdb.client.domain.Dialect
@@ -33,6 +32,7 @@ import com.influxdb.internal.AbstractQueryApi
 import com.influxdb.query.FluxRecord
 import com.influxdb.query.FluxTable
 import com.influxdb.query.internal.FluxCsvParser.FluxResponseConsumer
+import com.influxdb.utils.Arguments
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import java.util.function.BiConsumer

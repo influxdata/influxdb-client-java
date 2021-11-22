@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.LabelsApi;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.LabelCreateRequest;
@@ -38,6 +37,7 @@ import com.influxdb.client.domain.LabelsResponse;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.service.LabelsService;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
 
 import retrofit2.Call;
 

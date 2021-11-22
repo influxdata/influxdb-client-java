@@ -1,4 +1,8 @@
-## 3.5.0 [unreleased]
+## 4.0.0 [unreleased]
+
+### Breaking Changes
+
+The `Arguments` helper moved from package `com.influxdb` to package `com.influxdb.utils`.
 
 ### Deprecates
 - `InfluxDBClient.health()`: instead use `InfluxDBClient.ping()`
@@ -12,6 +16,9 @@
 
 ### Bug Fixes
 1. [#279](https://github.com/influxdata/influxdb-client-java/pull/279): Session authentication for InfluxDB `2.1`
+
+### Bug Fixes
+1. [#276](https://github.com/influxdata/influxdb-client-java/pull/276): `influxdb-client-utils` uses different package then `influxdb-client-core`[java module system]
 
 ### CI
 1. [#275](https://github.com/influxdata/influxdb-client-java/pull/275): Deploy `influxdb-client-test` package into Maven repository

@@ -33,10 +33,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
-import com.influxdb.Arguments;
 import com.influxdb.LogLevel;
 import com.influxdb.client.write.PointSettings;
 import com.influxdb.exceptions.InfluxException;
+import com.influxdb.utils.Arguments;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;

@@ -21,9 +21,9 @@
  */
 package com.influxdb.client.kotlin
 
-import com.influxdb.Arguments
 import com.influxdb.client.InfluxDBClientOptions
 import com.influxdb.client.kotlin.internal.InfluxDBClientKotlinImpl
+import com.influxdb.utils.Arguments
 
 /**
  * The Factory that creates an instance of a Flux client.

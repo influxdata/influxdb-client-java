@@ -36,9 +36,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.internal.NanosecondConverter;
+import com.influxdb.utils.Arguments;
 
 /**
  * Point defines the values that will be written to the database.

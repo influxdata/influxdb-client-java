@@ -24,10 +24,10 @@ package com.influxdb.client;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.domain.OnboardingRequest;
 import com.influxdb.client.domain.OnboardingResponse;
 import com.influxdb.client.internal.InfluxDBClientImpl;
+import com.influxdb.utils.Arguments;
 
 /**
  * The Factory that create an instance of a InfluxDB 2.0 client.

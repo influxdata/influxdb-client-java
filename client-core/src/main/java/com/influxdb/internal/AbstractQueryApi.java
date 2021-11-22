@@ -36,12 +36,12 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.Cancellable;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.internal.FluxCsvParser;
 import com.influxdb.query.internal.FluxResultMapper;
+import com.influxdb.utils.Arguments;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

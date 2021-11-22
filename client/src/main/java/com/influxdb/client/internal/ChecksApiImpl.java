@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.ChecksApi;
 import com.influxdb.client.FindOptions;
 import com.influxdb.client.domain.Check;
@@ -44,6 +43,7 @@ import com.influxdb.client.domain.Threshold;
 import com.influxdb.client.domain.ThresholdCheck;
 import com.influxdb.client.service.ChecksService;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
 
 import retrofit2.Call;
 

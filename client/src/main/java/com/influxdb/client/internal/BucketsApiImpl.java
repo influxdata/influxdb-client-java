@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.BucketsApi;
 import com.influxdb.client.BucketsQuery;
 import com.influxdb.client.FindOptions;
@@ -51,6 +50,7 @@ import com.influxdb.client.domain.ResourceOwners;
 import com.influxdb.client.domain.User;
 import com.influxdb.client.service.BucketsService;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
 
 import retrofit2.Call;
 

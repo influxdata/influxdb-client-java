@@ -24,8 +24,8 @@ package com.influxdb.query.dsl.functions;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.utils.Arguments;
 
 /**
  * The custom Flux expression.

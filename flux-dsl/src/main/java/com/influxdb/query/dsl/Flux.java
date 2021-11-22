@@ -29,7 +29,6 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.query.dsl.functions.AbstractParametrizedFlux;
 import com.influxdb.query.dsl.functions.AggregateWindow;
 import com.influxdb.query.dsl.functions.CountFlux;
@@ -80,6 +79,7 @@ import com.influxdb.query.dsl.functions.WindowFlux;
 import com.influxdb.query.dsl.functions.YieldFlux;
 import com.influxdb.query.dsl.functions.properties.FunctionsParameters;
 import com.influxdb.query.dsl.functions.restriction.Restrictions;
+import com.influxdb.utils.Arguments;
 
 /**
  * <a href="http://bit.ly/flux-spec#basic-syntax">Flux</a> - Data Scripting Language.

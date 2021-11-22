@@ -30,7 +30,6 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.Arguments;
 import com.influxdb.Cancellable;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.QueryApi;
@@ -41,6 +40,7 @@ import com.influxdb.internal.AbstractQueryApi;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 import com.influxdb.query.internal.FluxCsvParser;
+import com.influxdb.utils.Arguments;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

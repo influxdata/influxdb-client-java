@@ -21,9 +21,9 @@
  */
 package com.influxdb.client.scala
 
-import com.influxdb.Arguments
 import com.influxdb.client.InfluxDBClientOptions
 import com.influxdb.client.scala.internal.InfluxDBClientScalaImpl
+import com.influxdb.utils.Arguments
 
 import javax.annotation.Nonnull
 

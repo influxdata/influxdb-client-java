@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-import com.influxdb.Arguments;
 import com.influxdb.client.FindOptions;
 import com.influxdb.client.NotificationRulesApi;
 import com.influxdb.client.domain.HTTPNotificationEndpoint;
@@ -48,6 +47,7 @@ import com.influxdb.client.domain.TagRule;
 import com.influxdb.client.domain.TaskStatusType;
 import com.influxdb.client.service.NotificationRulesService;
 import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
 
 import retrofit2.Call;
 

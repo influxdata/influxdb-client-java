@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
 
-import com.influxdb.Arguments;
+import com.influxdb.utils.Arguments;
 
 import io.reactivex.BackpressureOverflowStrategy;
 import io.reactivex.Scheduler;
