@@ -11,7 +11,7 @@ This release uses the latest InfluxDB OSS API definitions - [oss.yml](https://ra
 - Add `ResourceService` to retrieve all knows resources
 - Move `postSignin` operation from `DefaultService` to `SigninService` 
 - Move `postSignout` operation from `DefaultService` to `SignoutService` 
-- Remove `TemplateApi` favor to [InfluxDB Community Templates](https://github.com/influxdata/community-templates). For more info see - [influxdb#19300](https://github.com/influxdata/influxdb/pull/19300), [openapi#192](https://github.com/influxdata/openapi/pull/192)
+- Remove `TemplateApi` in favour of [InfluxDB Community Templates](https://github.com/influxdata/community-templates). For more info see - [influxdb#19300](https://github.com/influxdata/influxdb/pull/19300), [openapi#192](https://github.com/influxdata/openapi/pull/192)
 
 ### Deprecates
 - `InfluxDBClient.health()`: instead use `InfluxDBClient.ping()`
