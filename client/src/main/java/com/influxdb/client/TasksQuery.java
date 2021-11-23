@@ -67,6 +67,12 @@ public class TasksQuery {
     @Nullable
     private Integer limit;
 
+    /**
+     * Type of task. (optional, default unset)
+     */
+    @Nullable
+    private String type;
+
     @Nullable
     public String getName() {
         return name;
@@ -130,4 +136,12 @@ public class TasksQuery {
         this.limit = limit;
     }
 
+    @Nullable
+    public String getType() {
+        return type;
+    }
+
+    public void setType(@Nullable final String type) {
+        this.type = type;
+    }
 }

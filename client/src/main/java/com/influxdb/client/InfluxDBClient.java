@@ -30,7 +30,6 @@ import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.Check;
 import com.influxdb.client.domain.Dashboard;
-import com.influxdb.client.domain.Document;
 import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationEndpoint;
@@ -196,14 +195,6 @@ public interface InfluxDBClient extends AutoCloseable {
      */
     @Nonnull
     LabelsApi getLabelsApi();
-
-    /**
-     * Create a new {@link Document} client.
-     *
-     * @return the new client instance for Template API
-     */
-    @Nonnull
-    TemplatesApi getTemplatesApi();
 
     /**
      * Create a new {@link Variable} client.

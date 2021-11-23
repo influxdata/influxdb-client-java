@@ -107,11 +107,12 @@ public interface TasksService {
    * @param orgID Filter tasks to a specific organization ID. (optional)
    * @param status Filter tasks by a status--\&quot;inactive\&quot; or \&quot;active\&quot;. (optional)
    * @param limit The number of tasks to return (optional, default to 100)
+   * @param type Type of task, unset by default. (optional)
    * @return Call&lt;Tasks&gt;
    */
   @GET("api/v2/tasks")
   Call<Tasks> getTasks(
-    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("name") String name, @retrofit2.http.Query("after") String after, @retrofit2.http.Query("user") String user, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("status") String status, @retrofit2.http.Query("limit") Integer limit
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Query("name") String name, @retrofit2.http.Query("after") String after, @retrofit2.http.Query("user") String user, @retrofit2.http.Query("org") String org, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("status") String status, @retrofit2.http.Query("limit") Integer limit, @retrofit2.http.Query("type") String type
   );
 
   /**

@@ -18,6 +18,19 @@ import java.util.Map;
 
 public interface SecretsService {
   /**
+   * Delete a secret from an organization
+   * 
+   * @param orgID The organization ID. (required)
+   * @param secretID The secret ID. (required)
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;Void&gt;
+   */
+  @DELETE("api/v2/orgs/{orgID}/secrets/{secretID}")
+  Call<Void> deleteOrgsIDSecretsID(
+    @retrofit2.http.Path("orgID") String orgID, @retrofit2.http.Path("secretID") String secretID, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
    * List all secret keys for an organization
    * 
    * @param orgID The organization ID. (required)
@@ -52,7 +65,9 @@ public interface SecretsService {
    * @param secretKeys Secret key to delete (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Void&gt;
+   * @deprecated
    */
+  @Deprecated
   @Headers({
     "Content-Type:application/json"
   })

@@ -19,10 +19,23 @@ import java.util.Map;
 
 public interface BackupService {
   /**
+   * Download snapshot of metadata stored in the server&#39;s embedded KV store. Should not be used in versions greater than 2.1.x, as it doesn&#39;t include metadata stored in embedded SQL.
+   * 
+   * @param zapTraceSpan OpenTracing span context (optional)
+   * @return Call&lt;ResponseBody&gt;
+   * @deprecated
+   */
+  @Deprecated
+  @GET("api/v2/backup/kv")
+  Call<ResponseBody> getBackupKV(
+    @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+  );
+
+  /**
    * Download snapshot of all metadata in the server
    * 
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param acceptEncoding The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand. (optional, default to identity)
+   * @param acceptEncoding Indicates the content encoding (usually a compression algorithm) that the client can understand. (optional, default to identity)
    * @return Call&lt;MetadataBackup&gt;
    */
   @GET("api/v2/backup/metadata")
@@ -35,7 +48,7 @@ public interface BackupService {
    * 
    * @param shardID The shard ID. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param acceptEncoding The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand. (optional, default to identity)
+   * @param acceptEncoding Indicates the content encoding (usually a compression algorithm) that the client can understand. (optional, default to identity)
    * @param since Earliest time to include in the snapshot. RFC3339 format. (optional)
    * @return Call&lt;ResponseBody&gt;
    */
