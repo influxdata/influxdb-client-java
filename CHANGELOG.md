@@ -4,10 +4,20 @@
 
 The `Arguments` helper moved from package `com.influxdb` to package `com.influxdb.utils`.
 
+#### Management API
+This release uses the latest InfluxDB OSS API definitions - [oss.yml](https://raw.githubusercontent.com/influxdata/openapi/7d9edc32995f38b3474a24c36b89a8e125837f3c/contracts/oss.yml). The following breaking changes are in underlying API services and doesn't affect common apis such as - `WriteApi`, `QueryApi`, `BucketsApi`, `OrganizationsApi`...
+
+- Add `LegacyAuthorizationsService` to deal with legacy authorizations
+- Add `ResourceService` to retrieve all knows resources
+- Move `postSignin` operation from `DefaultService` to `SigninService` 
+- Move `postSignout` operation from `DefaultService` to `SignoutService` 
+- Remove `TemplateApi` favor to [InfluxDB Community Templates](https://github.com/influxdata/community-templates). For more info see - [influxdb#19300](https://github.com/influxdata/influxdb/pull/19300), [openapi#192](https://github.com/influxdata/openapi/pull/192)
+
 ### Deprecates
 - `InfluxDBClient.health()`: instead use `InfluxDBClient.ping()`
 - `InfluxDBClientKotlin.health()`: instead use `InfluxDBClientKotlin.ping()`
 - `InfluxDBClientScala.health()`: instead use `InfluxDBClientScala.ping()`
+- `SecretsService.postOrgsIDSecrets()`: instead use `SecretsService.deleteOrgsIDSecretsID()`
 
 ### Features
 1. [#272](https://github.com/influxdata/influxdb-client-java/pull/272): Add `PingService` to check status of OSS and Cloud instance
@@ -16,9 +26,10 @@ The `Arguments` helper moved from package `com.influxdb` to package `com.influxd
 
 ### Bug Fixes
 1. [#279](https://github.com/influxdata/influxdb-client-java/pull/279): Session authentication for InfluxDB `2.1`
-
-### Bug Fixes
 1. [#276](https://github.com/influxdata/influxdb-client-java/pull/276): `influxdb-client-utils` uses different package then `influxdb-client-core`[java module system]
+
+### API
+1. [#281](https://github.com/influxdata/influxdb-client-java/pull/281): Update to the latest InfluxDB OSS API
 
 ### CI
 1. [#275](https://github.com/influxdata/influxdb-client-java/pull/275): Deploy `influxdb-client-test` package into Maven repository
