@@ -406,18 +406,24 @@ public final class Point {
 
         sb.append(" ");
 
-        BigInteger time;
-        if (this.time instanceof BigDecimal) {
-            time = ((BigDecimal) this.time).toBigInteger();
-        } else if (this.time instanceof BigInteger) {
-            time = (BigInteger) this.time;
+        if (this.precision == precision) {
+            if (this.time instanceof BigDecimal) {
+                sb.append(((BigDecimal) this.time).toBigInteger());
+            } else if (this.time instanceof BigInteger) {
+                sb.append(this.time);
+            } else {
+                sb.append(this.time.longValue());
+            }
         } else {
-            time = BigInteger.valueOf(this.time.longValue());
-        }
-        if (this.precision != precision) {
-            sb.append(toTimeUnit(precision).convert(time.longValueExact(), toTimeUnit(this.precision)));
-        } else {
-            sb.append(time);
+            long time;
+            if (this.time instanceof BigDecimal) {
+                time = ((BigDecimal) this.time).longValueExact();
+            } else if (this.time instanceof BigInteger) {
+                time = ((BigInteger) this.time).longValueExact();
+            } else {
+                time = this.time.longValue();
+            }
+            sb.append(toTimeUnit(precision).convert(time, toTimeUnit(this.precision)));
         }
     }
 
