@@ -44,6 +44,8 @@ import com.influxdb.exceptions.ForbiddenException;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.RequestEntityTooLargeException;
 import com.influxdb.exceptions.UnauthorizedException;
+import com.influxdb.query.FluxRecord;
+import com.influxdb.query.FluxTable;
 
 import io.reactivex.schedulers.TestScheduler;
 import okhttp3.mockwebserver.MockResponse;
@@ -1016,22 +1018,6 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         String userAgent = recordedRequest.getHeader("User-Agent");
 
         Assertions.assertThat(userAgent).startsWith("influxdb-client-java/4.");
-    }
-
-    @Nonnull
-    private String getRequestBody(@Nonnull final MockWebServer server) {
-
-        Assertions.assertThat(server).isNotNull();
-
-        RecordedRequest recordedRequest = null;
-        try {
-            recordedRequest = server.takeRequest(10L, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Assertions.fail("Unexpected exception", e);
-        }
-        Assertions.assertThat(recordedRequest).isNotNull();
-
-        return recordedRequest.getBody().readUtf8();
     }
 
     public abstract class Metric {

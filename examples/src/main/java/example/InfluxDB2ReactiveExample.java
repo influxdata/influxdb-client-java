@@ -25,6 +25,8 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
+import io.reactivex.Flowable;
+
 public class InfluxDB2ReactiveExample {
 
     private static char[] token = "my-token".toCharArray();
@@ -41,8 +43,7 @@ public class InfluxDB2ReactiveExample {
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
-        queryApi
-                .query(flux)
+        Flowable.fromPublisher(queryApi.query(flux))
                 //
                 // Filter records by measurement name
                 //

@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +34,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.client.WriteApi;
 import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.service.WriteService;
@@ -168,7 +170,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                 //
                 // Jitter interval
                 //
-                .compose(jitter(processorScheduler))
+                .compose(jitter(processorScheduler, writeOptions))
                 //
                 // To WritePoints "request creator"
                 //
@@ -244,34 +246,6 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                 .subscribe(processor::onNext, throwable -> publish(new WriteErrorEvent(throwable)));
     }
 
-    @Nonnull
-    private FlowableTransformer<BatchWriteItem, BatchWriteItem> jitter(@Nonnull final Scheduler scheduler) {
-
-        Arguments.checkNotNull(scheduler, "Jitter scheduler is required");
-
-        return source -> {
-
-            //
-            // source without jitter
-            //
-            if (writeOptions.getJitterInterval() <= 0) {
-                return source;
-            }
-
-            //
-            // Add jitter => dynamic delay
-            //
-            return source.delay((Function<BatchWriteItem, Flowable<Long>>) pointFlowable -> {
-
-                int delay = RetryAttempt.jitterDelay(writeOptions.getJitterInterval());
-
-                LOG.log(Level.FINEST, "Generated Jitter dynamic delay: {0}", delay);
-
-                return Flowable.timer(delay, TimeUnit.MILLISECONDS, scheduler);
-            });
-        };
-    }
-
     private <T extends AbstractWriteEvent> void publish(@Nonnull final T event) {
 
         Arguments.checkNotNull(event, "event");
@@ -306,12 +280,21 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         private static final Logger LOG = Logger.getLogger(BatchWriteDataPoint.class.getName());
 
         private final Point point;
+        private final WritePrecision precision;
         private final InfluxDBClientOptions options;
 
         public BatchWriteDataPoint(@Nonnull final Point point,
                                    @Nonnull final InfluxDBClientOptions options) {
 
+            this(point, point.getPrecision(), options);
+        }
+
+        public BatchWriteDataPoint(@Nonnull final Point point,
+                                   @Nonnull final WritePrecision precision,
+                                   @Nonnull final InfluxDBClientOptions options) {
+
             this.point = point;
+            this.precision = precision;
             this.options = options;
         }
 
@@ -326,7 +309,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                 return null;
             }
 
-            return point.toLineProtocol(options.getPointSettings());
+            return point.toLineProtocol(options.getPointSettings(), precision);
         }
     }
 
@@ -482,7 +465,8 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                     //
                     // Is exception retriable?
                     //
-                    .retryWhen(AbstractWriteClient.this.retryHandler(retryScheduler, writeOptions))
+                    .retryWhen(retry(retryScheduler, writeOptions, (throwable, retryInterval) ->
+                            publish(new WriteRetriableErrorEvent(toInfluxException(throwable), retryInterval))))
                     //
                     // maxRetryTime timeout
                     //
@@ -520,15 +504,63 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         }
     }
 
-    private Function<Flowable<Throwable>, Publisher<?>> retryHandler(@Nonnull final Scheduler retryScheduler,
-                                                                     @Nonnull final WriteOptions writeOptions) {
+    /**
+     * Add Jitter delay to upstream.
+     *
+     * @param scheduler    to use for timer operator
+     * @param retryOptions with configured jitter interval
+     * @param <T>          upstream type
+     * @return Flowable with jitter delay
+     */
+    @Nonnull
+    public static <T> FlowableTransformer<T, T> jitter(@Nonnull final Scheduler scheduler,
+                                                       @Nonnull final WriteApi.RetryOptions retryOptions) {
 
-        Objects.requireNonNull(writeOptions, "WriteOptions are required");
+        Arguments.checkNotNull(retryOptions, "JitterOptions is required");
+        Arguments.checkNotNull(scheduler, "Jitter scheduler is required");
+
+        return source -> {
+
+            //
+            // source without jitter
+            //
+            if (retryOptions.getJitterInterval() <= 0) {
+                return source;
+            }
+
+            //
+            // Add jitter => dynamic delay
+            //
+            return source.delay((Function<T, Flowable<Long>>) pointFlowable -> {
+
+                int delay = RetryAttempt.jitterDelay(retryOptions.getJitterInterval());
+
+                LOG.log(Level.FINEST, "Generated Jitter dynamic delay: {0}", delay);
+
+                return Flowable.timer(delay, TimeUnit.MILLISECONDS, scheduler);
+            });
+        };
+    }
+
+    /**
+     * Add Retry handler to upstream.
+     *
+     * @param retryScheduler for retry delay
+     * @param retryOptions   with configured retry strategy
+     * @param notify         to notify about retryable error
+     * @return Flowable with retry handler
+     */
+    @Nonnull
+    public static Function<Flowable<Throwable>, Publisher<?>> retry(@Nonnull final Scheduler retryScheduler,
+                                                                    @Nonnull final WriteApi.RetryOptions retryOptions,
+                                                                    @Nonnull final BiConsumer<Throwable, Long> notify) {
+
+        Objects.requireNonNull(retryOptions, "RetryOptions are required");
         Objects.requireNonNull(retryScheduler, "RetryScheduler is required");
 
         return errors -> errors
-                .zipWith(Flowable.range(1, writeOptions.getMaxRetries() + 1),
-                        (throwable, count) -> new RetryAttempt(throwable, count, writeOptions))
+                .zipWith(Flowable.range(1, retryOptions.getMaxRetries() + 1),
+                        (throwable, count) -> new RetryAttempt(throwable, count, retryOptions))
                 .flatMap(attempt -> {
 
                     Throwable throwable = attempt.getThrowable();
@@ -536,7 +568,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
 
                         long retryInterval = attempt.getRetryInterval();
 
-                        publish(new WriteRetriableErrorEvent(toInfluxException(throwable), retryInterval));
+                        notify.accept(throwable, retryInterval);
 
                         return Flowable.just("notify").delay(retryInterval, TimeUnit.MILLISECONDS, retryScheduler);
                     }
@@ -546,20 +578,6 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                     //
                     return Flowable.error(throwable);
                 });
-    }
-
-    @Nonnull
-    private InfluxException toInfluxException(@Nonnull final Throwable throwable) {
-
-        if (throwable instanceof InfluxException) {
-            return (InfluxException) throwable;
-        }
-
-        if (throwable instanceof HttpException) {
-            return responseToError(((HttpException) throwable).response());
-        }
-
-        return new InfluxException(throwable);
     }
 
     static void waitToCondition(final Supplier<Boolean> condition, final int millis) {

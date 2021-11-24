@@ -30,6 +30,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
@@ -283,6 +284,17 @@ public final class Point {
      */
     @Nonnull
     public String toLineProtocol(@Nullable final PointSettings pointSettings) {
+        return toLineProtocol(pointSettings, precision);
+    }
+
+    /**
+     * @param pointSettings with the default values
+     * @param precision     required precision
+     * @return Line Protocol
+     */
+    @Nonnull
+    public String toLineProtocol(@Nullable final PointSettings pointSettings,
+                                 @Nonnull final WritePrecision precision) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -292,7 +304,7 @@ public final class Point {
         if (!appendedFields) {
             return "";
         }
-        appendTime(sb);
+        appendTime(sb, precision);
 
         return sb.toString();
     }
@@ -386,7 +398,7 @@ public final class Point {
         return appended;
     }
 
-    private void appendTime(@Nonnull final StringBuilder sb) {
+    private void appendTime(@Nonnull final StringBuilder sb, final WritePrecision precision) {
 
         if (this.time == null) {
             return;
@@ -394,12 +406,24 @@ public final class Point {
 
         sb.append(" ");
 
-        if (this.time instanceof BigDecimal) {
-            sb.append(((BigDecimal) this.time).toBigInteger());
-        } else if (this.time instanceof BigInteger) {
-            sb.append(this.time);
+        if (this.precision == precision) {
+            if (this.time instanceof BigDecimal) {
+                sb.append(((BigDecimal) this.time).toBigInteger());
+            } else if (this.time instanceof BigInteger) {
+                sb.append(this.time);
+            } else {
+                sb.append(this.time.longValue());
+            }
         } else {
-            sb.append(this.time.longValue());
+            long time;
+            if (this.time instanceof BigDecimal) {
+                time = ((BigDecimal) this.time).longValueExact();
+            } else if (this.time instanceof BigInteger) {
+                time = ((BigInteger) this.time).longValueExact();
+            } else {
+                time = this.time.longValue();
+            }
+            sb.append(toTimeUnit(precision).convert(time, toTimeUnit(this.precision)));
         }
     }
 
@@ -451,5 +475,21 @@ public final class Point {
         return value == null
                 || (value instanceof Double && !Double.isFinite((Double) value))
                 || (value instanceof Float && !Float.isFinite((Float) value));
+    }
+
+    @Nonnull
+    private TimeUnit toTimeUnit(@Nonnull final WritePrecision precision) {
+        switch (precision) {
+            case MS:
+                return TimeUnit.MILLISECONDS;
+            case S:
+                return TimeUnit.SECONDS;
+            case US:
+                return TimeUnit.MICROSECONDS;
+            case NS:
+                return TimeUnit.NANOSECONDS;
+            default:
+                throw new IllegalStateException("Unexpected value: " + precision);
+        }
     }
 }

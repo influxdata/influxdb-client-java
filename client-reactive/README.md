@@ -2,7 +2,12 @@
 
 [![javadoc](https://img.shields.io/badge/javadoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/index.html)
 
-The reference Java client that allows query and write for the InfluxDB 2.0 by a reactive way.
+The reference reactive Java client for InfluxDB 2.0. The client provide supports for asynchronous stream processing with backpressure as is defined by the [Reactive Streams specification](http://www.reactive-streams.org/).
+
+## Important
+
+> :warning: The `Publishers` returned from [Query](src/main/java/com/influxdb/client/reactive/QueryReactiveApi.java) and [Write](src/main/java/com/influxdb/client/reactive/WriteReactiveApi.java) API are cold.
+That means no request to InfluxDB is trigger until register a subscription to `Publisher`.  
 
 ## Documentation
 
@@ -35,6 +40,8 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
+import io.reactivex.Flowable;
+
 public class InfluxDB2ReactiveExample {
 
     private static char[] token = "my-token".toCharArray();
@@ -51,8 +58,7 @@ public class InfluxDB2ReactiveExample {
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
-        queryApi
-                .query(flux)
+        Flowable.fromPublisher(queryApi.query(flux))
                 //
                 // Filter records by measurement name
                 //
@@ -82,6 +88,8 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
+import io.reactivex.Flowable;
+
 public class InfluxDB2ReactiveExampleRaw {
 
     private static char[] token = "my-token".toCharArray();
@@ -98,8 +106,7 @@ public class InfluxDB2ReactiveExampleRaw {
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
-        queryApi
-                .queryRaw(flux)
+        Flowable.fromPublisher(queryApi.queryRaw(flux))
                 //
                 // Take first 10 records
                 //
@@ -116,7 +123,7 @@ public class InfluxDB2ReactiveExampleRaw {
 }
 ```
 
-The mapping result to POJO is also supported:
+The mapping result to POJO is also support:
 
 ```java
 package example;
@@ -128,6 +135,9 @@ import com.influxdb.annotations.Measurement;
 import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
+
+import io.reactivex.Flowable;
+import org.reactivestreams.Publisher;
 
 public class InfluxDB2ReactiveExamplePojo {
 
@@ -144,8 +154,8 @@ public class InfluxDB2ReactiveExamplePojo {
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
-        queryApi
-                .query(flux, Temperature.class)
+        Publisher<Temperature> query = queryApi.query(flux, Temperature.class);
+        Flowable.fromPublisher(query)
                 //
                 // Take first 10 records
                 //
@@ -177,17 +187,23 @@ public class InfluxDB2ReactiveExamplePojo {
 
 ## Writes
 
-For writing data we use [WriteReactiveApi](https://influxdata.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/com/influxdb/client/reactive/WriteReactiveApi.html) that supports same configuration as [non reactive client](../client#writes):
+For writing data we use [`WriteReactiveApi`](src/main/java/com/influxdb/client/reactive/WriteReactiveApi.java) 
+that supports writing data using Line Protocol, Data Point or POJO. The [GZIP compression](#gzip-support) is also supported.
 
-1. writing data using Line Protocol, Data Point, POJO
-2. use batching for writes
-3. use client backpressure strategy
-4. produces events that allow user to be notified and react to this events
-    - `WriteSuccessEvent` - published when arrived the success response from Platform server
-    - `BackpressureEvent` - published when is **client** backpressure applied
-    - `WriteErrorEvent` - published when occurs a unhandled exception
-    - `WriteRetriableErrorEvent` - published when occurs a retriable error
-5. use GZIP compression for data
+The writes are configurable by [`WriteOptionsReactive`](src/main/java/com/influxdb/client/reactive/WriteOptionsReactive.java):
+
+| Property | Description | Default Value |
+| --- | --- | --- |
+| **batchSize** | the number of data point to collect in batch. The `0` disable batching - whole upstream is written in one batch. | 1000 |
+| **flushInterval** | the number of milliseconds before the batch is written | 1000 |
+| **jitterInterval** | the number of milliseconds to increase the batch flush interval by a random amount | 0 |
+| **retryInterval** | the number of milliseconds to retry unsuccessful write. The retry interval is used when the InfluxDB server does not specify "Retry-After" header.| 5000 |
+| **maxRetries** | the number of max retries when write fails. The `0` disable retry strategy - the error is immediately propagate to upstream. | 5 |
+| **maxRetryDelay** | the maximum delay between each retry attempt in milliseconds | 125_000 |
+| **maxRetryTime** | maximum total retry timeout in milliseconds | 180_000 |
+| **exponentialBase** | the base for the exponential retry delay, the next delay is computed using random exponential backoff as a random value within the interval  ``retryInterval * exponentialBase^(attempts-1)`` and ``retryInterval * exponentialBase^(attempts)``. Example for ``retryInterval=5_000, exponentialBase=2, maxRetryDelay=125_000, total=5`` Retry delays are random distributed values within the ranges of ``[5_000-10_000, 10_000-20_000, 20_000-40_000, 40_000-80_000, 80_000-125_000]``
+
+> Backpressure: is defined by the backpressure behavior of the upstream publisher.
 
 ### Writing data
 
@@ -208,6 +224,8 @@ import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.WriteReactiveApi;
 
 import io.reactivex.Flowable;
+import io.reactivex.disposables.Disposable;
+import org.reactivestreams.Publisher;
 
 public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
 
@@ -217,7 +235,7 @@ public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
 
     public static void main(final String[] args) throws InterruptedException {
 
-        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:8086", token, org, bucket);
+        InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory.create("http://localhost:9999", token, org, bucket);
 
         //
         // Write data
@@ -234,9 +252,20 @@ public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
                     return temperature;
                 });
 
-        writeApi.writeMeasurements(WritePrecision.NS, measurements);
+        //
+        // ReactiveStreams publisher
+        //
+        Publisher<WriteReactiveApi.Success> publisher = writeApi.writeMeasurements(WritePrecision.NS, measurements);
 
-        Thread.sleep(30_000);
+        //
+        // Subscribe to Publisher
+        //
+        Disposable subscriber = Flowable.fromPublisher(publisher)
+                .subscribe(success -> System.out.println("Successfully written temperature"));
+
+        Thread.sleep(35_000);
+
+        subscriber.dispose();
 
         influxDBClient.close();
     }

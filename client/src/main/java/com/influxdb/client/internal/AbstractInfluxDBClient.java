@@ -23,6 +23,7 @@ package com.influxdb.client.internal;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
@@ -43,6 +44,7 @@ import com.influxdb.utils.Arguments;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
+import retrofit2.CallAdapter;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -73,8 +75,15 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
     protected final Collection<AutoCloseable> autoCloseables = new CopyOnWriteArrayList<>();
 
     public AbstractInfluxDBClient(@Nonnull final InfluxDBClientOptions options, @Nonnull final String clientType) {
+        this(options, clientType, Collections.emptyList());
+    }
+
+    public AbstractInfluxDBClient(@Nonnull final InfluxDBClientOptions options,
+                                  @Nonnull final String clientType,
+                                  @Nonnull final Collection<CallAdapter.Factory> factories) {
 
         Arguments.checkNotNull(options, "InfluxDBClientOptions");
+        Arguments.checkNotNull(factories, "factories");
         Arguments.checkNonEmpty(clientType, "clientType");
 
         this.options = options;
@@ -94,12 +103,17 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
 
         this.authenticateInterceptor.initToken(okHttpClient);
 
-        this.retrofit = new Retrofit.Builder()
+        Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
                 .baseUrl(options.getUrl())
                 .client(okHttpClient)
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(new JSON().getGson()))
-                .build();
+                .addConverterFactory(GsonConverterFactory.create(new JSON().getGson()));
+
+        for (CallAdapter.Factory factory : factories) {
+            retrofitBuilder.addCallAdapterFactory(factory);
+        }
+
+        this.retrofit = retrofitBuilder.build();
 
         this.healthService = retrofit.create(HealthService.class);
         this.pingService = retrofit.create(PingService.class);

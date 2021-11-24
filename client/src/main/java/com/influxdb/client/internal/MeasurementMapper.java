@@ -40,7 +40,7 @@ import com.influxdb.utils.Arguments;
 /**
  * @author Jakub Bednar (bednar@github) (15/10/2018 13:04)
  */
-class MeasurementMapper {
+public final class MeasurementMapper {
 
     private static final Logger LOG = Logger.getLogger(MeasurementMapper.class.getName());
 

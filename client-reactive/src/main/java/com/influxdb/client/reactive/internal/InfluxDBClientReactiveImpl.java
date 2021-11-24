@@ -21,21 +21,23 @@
  */
 package com.influxdb.client.reactive.internal;
 
+import java.util.Collections;
 import javax.annotation.Nonnull;
 
 import com.influxdb.LogLevel;
 import com.influxdb.client.InfluxDBClientOptions;
-import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.internal.AbstractInfluxDBClient;
 import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.QueryReactiveApi;
+import com.influxdb.client.reactive.WriteOptionsReactive;
 import com.influxdb.client.reactive.WriteReactiveApi;
 import com.influxdb.client.service.QueryService;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.utils.Arguments;
 
 import io.reactivex.Single;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 07:12)
@@ -44,7 +46,7 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient
         implements InfluxDBClientReactive {
 
     public InfluxDBClientReactiveImpl(@Nonnull final InfluxDBClientOptions options) {
-        super(options, "java");
+        super(options, "java", Collections.singletonList(RxJava2CallAdapterFactory.create()));
     }
 
     @Nonnull
@@ -56,16 +58,16 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient
     @Nonnull
     @Override
     public WriteReactiveApi getWriteReactiveApi() {
-        return getWriteReactiveApi(WriteOptions.DEFAULTS);
+        return getWriteReactiveApi(WriteOptionsReactive.DEFAULTS);
     }
 
     @Nonnull
     @Override
-    public WriteReactiveApi getWriteReactiveApi(@Nonnull final WriteOptions writeOptions) {
+    public WriteReactiveApi getWriteReactiveApi(@Nonnull final WriteOptionsReactive writeOptions) {
 
         Arguments.checkNotNull(writeOptions, "WriteOptions");
 
-        return new WriteReactiveApiImpl(writeOptions, retrofit.create(WriteService.class), options, autoCloseables);
+        return new WriteReactiveApiImpl(writeOptions, retrofit.create(WriteService.class), options);
     }
 
     @Nonnull

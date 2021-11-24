@@ -29,6 +29,8 @@ import com.influxdb.client.reactive.QueryReactiveApi;
 import com.influxdb.query.dsl.Flux;
 import com.influxdb.query.dsl.functions.restriction.Restrictions;
 
+import io.reactivex.Flowable;
+
 public class InfluxDB2ReactiveExampleDSL {
 
     private static char[] token = "my-token".toCharArray();
@@ -47,8 +49,7 @@ public class InfluxDB2ReactiveExampleDSL {
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
-        queryApi
-                .query(flux.toString())
+        Flowable.fromPublisher(queryApi.query(flux.toString()))
                 .subscribe(fluxRecord -> {
                     //
                     // The callback to consume a FluxRecord.

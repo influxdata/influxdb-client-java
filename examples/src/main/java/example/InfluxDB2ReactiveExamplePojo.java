@@ -29,6 +29,9 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
+import io.reactivex.Flowable;
+import org.reactivestreams.Publisher;
+
 public class InfluxDB2ReactiveExamplePojo {
 
     private static char[] token = "my-token".toCharArray();
@@ -44,8 +47,8 @@ public class InfluxDB2ReactiveExamplePojo {
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
-        queryApi
-                .query(flux, Temperature.class)
+        Publisher<Temperature> query = queryApi.query(flux, Temperature.class);
+        Flowable.fromPublisher(query)
                 //
                 // Take first 10 records
                 //

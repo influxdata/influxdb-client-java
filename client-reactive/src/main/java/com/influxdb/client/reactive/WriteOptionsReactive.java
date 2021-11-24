@@ -19,53 +19,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.influxdb.client;
+package com.influxdb.client.reactive;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
 
+import com.influxdb.client.WriteApi;
 import com.influxdb.utils.Arguments;
 
-import io.reactivex.BackpressureOverflowStrategy;
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.influxdb.client.WriteOptions.DEFAULT_BATCH_SIZE;
+import static com.influxdb.client.WriteOptions.DEFAULT_EXPONENTIAL_BASE;
+import static com.influxdb.client.WriteOptions.DEFAULT_FLUSH_INTERVAL;
+import static com.influxdb.client.WriteOptions.DEFAULT_JITTER_INTERVAL;
+import static com.influxdb.client.WriteOptions.DEFAULT_MAX_RETRIES;
+import static com.influxdb.client.WriteOptions.DEFAULT_MAX_RETRY_DELAY;
+import static com.influxdb.client.WriteOptions.DEFAULT_MAX_RETRY_TIME;
+import static com.influxdb.client.WriteOptions.DEFAULT_RETRY_INTERVAL;
+
 /**
- * WriteOptions are used to configure writes the data point into InfluxDB 2.0.
+ * The configuration for {@link WriteReactiveApi}.
  *
  * <p>
- * The default setting use the batching configured to (consistent with Telegraf):
- * <ul>
- * <li>batchSize = 1000</li>
- * <li>flushInterval = 1000 ms</li>
- * <li>retryInterval = 5000 ms</li>
- * <li>jitterInterval = 0</li>
- * <li>bufferLimit = 10_000</li>
- * </ul>
- * <p>
- * The default backpressure strategy is {@link BackpressureOverflowStrategy#DROP_OLDEST}.
- * <p>
+ * <b>Example:</b>
+ * </p>
+ * <pre>
+ *     WriteOptionsReactive writeOptions = WriteOptionsReactive.builder()
+ *                 .batchSize(10_000)
+ *                 .flushInterval(500)
+ *                 .jitterInterval(1_000)
+ *                 .retryInterval(2_000)
+ *                 .maxRetries(5)
+ *                 .maxRetryDelay(250_123)
+ *                 .maxRetryTime(500_000)
+ *                 .exponentialBase(2)
+ *                 .computationScheduler(Schedulers.newThread())
+ *                 .build();
+ * </pre>
  *
- * @author Jakub Bednar (bednar@github) (21/09/2018 10:11)
+ * @author Jakub Bednar (05/08/2021 9:13)
  */
 @ThreadSafe
-public final class WriteOptions implements WriteApi.RetryOptions {
-
-    public static final int DEFAULT_BATCH_SIZE = 1000;
-    public static final int DEFAULT_FLUSH_INTERVAL = 1000;
-    public static final int DEFAULT_JITTER_INTERVAL = 0;
-    public static final int DEFAULT_RETRY_INTERVAL = 5000;
-    public static final int DEFAULT_MAX_RETRIES = 5;
-    public static final int DEFAULT_MAX_RETRY_DELAY = 125_000;
-    public static final int DEFAULT_MAX_RETRY_TIME = 180_000;
-    public static final int DEFAULT_EXPONENTIAL_BASE = 2;
-    public static final int DEFAULT_BUFFER_LIMIT = 10000;
+public final class WriteOptionsReactive implements WriteApi.RetryOptions {
 
     /**
      * Default configuration with values that are consistent with Telegraf.
      */
-    public static final WriteOptions DEFAULTS = WriteOptions.builder().build();
+    public static final WriteOptionsReactive DEFAULTS = WriteOptionsReactive.builder().build();
 
     private final int batchSize;
     private final int flushInterval;
@@ -75,13 +78,11 @@ public final class WriteOptions implements WriteApi.RetryOptions {
     private final int maxRetryDelay;
     private final int maxRetryTime;
     private final int exponentialBase;
-    private final int bufferLimit;
-    private final Scheduler writeScheduler;
-    private final BackpressureOverflowStrategy backpressureStrategy;
+    private final Scheduler computationScheduler;
 
     /**
      * @return the number of data point to collect in batch
-     * @see WriteOptions.Builder#batchSize(int)
+     * @see WriteOptionsReactive.Builder#batchSize(int)
      */
     public int getBatchSize() {
         return batchSize;
@@ -89,7 +90,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
 
     /**
      * @return the time to wait at most (milliseconds)
-     * @see WriteOptions.Builder#flushInterval(int) (int)
+     * @see WriteOptionsReactive.Builder#flushInterval(int) (int)
      */
     public int getFlushInterval() {
         return flushInterval;
@@ -97,7 +98,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
 
     /**
      * @return batch flush jitter interval value (milliseconds)
-     * @see WriteOptions.Builder#jitterInterval(int)
+     * @see WriteOptionsReactive.Builder#jitterInterval(int)
      */
     @Override
     public int getJitterInterval() {
@@ -110,7 +111,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
      * Retry-After: A non-negative decimal integer indicating the seconds to delay after the response is received.
      *
      * @return the time to wait before retry unsuccessful write (milliseconds)
-     * @see WriteOptions.Builder#retryInterval(int)
+     * @see WriteOptionsReactive.Builder#retryInterval(int)
      */
     @Override
     public int getRetryInterval() {
@@ -121,7 +122,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
      * The number of max retries when write fails.
      *
      * @return number of max retries
-     * @see WriteOptions.Builder#maxRetries(int)
+     * @see WriteOptionsReactive.Builder#maxRetries(int)
      */
     @Override
     public int getMaxRetries() {
@@ -132,7 +133,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
      * The maximum delay between each retry attempt in milliseconds.
      *
      * @return maximum delay
-     * @see WriteOptions.Builder#maxRetryDelay(int)
+     * @see WriteOptionsReactive.Builder#maxRetryDelay(int)
      */
     @Override
     public int getMaxRetryDelay() {
@@ -143,7 +144,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
      * The maximum total retry timeout in milliseconds.
      *
      * @return maximum delay
-     * @see WriteOptions.Builder#maxRetryTime(int)
+     * @see WriteOptionsReactive.Builder#maxRetryTime(int)
      */
     public int getMaxRetryTime() {
         return maxRetryTime;
@@ -151,11 +152,12 @@ public final class WriteOptions implements WriteApi.RetryOptions {
 
     /**
      * The base for the exponential retry delay.
-     *
+     * <p>
      * The next delay is computed as: retryInterval * exponentialBase^(attempts-1) + random(jitterInterval)
+     * </p>
      *
      * @return exponential base
-     * @see WriteOptions.Builder#exponentialBase(int)
+     * @see WriteOptionsReactive.Builder#exponentialBase(int)
      */
     @Override
     public int getExponentialBase() {
@@ -163,34 +165,17 @@ public final class WriteOptions implements WriteApi.RetryOptions {
     }
 
     /**
-     * @return Maximum number of points stored in the retry buffer.
-     * @see WriteOptions.Builder#bufferLimit(int)
-     */
-    public int getBufferLimit() {
-        return bufferLimit;
-    }
-
-    /**
-     * @return The scheduler which is used for write data points.
-     * @see WriteOptions.Builder#writeScheduler(Scheduler)
+     * @return The scheduler which is used for computational work.
+     * @see WriteOptionsReactive.Builder#computationScheduler(Scheduler)
      */
     @Nonnull
-    public Scheduler getWriteScheduler() {
-        return writeScheduler;
+    public Scheduler getComputationScheduler() {
+        return computationScheduler;
     }
 
-    /**
-     * @return the strategy to deal with buffer overflow when using onBackpressureBuffer
-     * @see WriteOptions.Builder#backpressureStrategy(BackpressureOverflowStrategy)
-     */
-    @Nonnull
-    public BackpressureOverflowStrategy getBackpressureStrategy() {
-        return backpressureStrategy;
-    }
+    private WriteOptionsReactive(@Nonnull final WriteOptionsReactive.Builder builder) {
 
-    private WriteOptions(@Nonnull final Builder builder) {
-
-        Arguments.checkNotNull(builder, "WriteOptions.Builder");
+        Arguments.checkNotNull(builder, "WriteOptionsReactive.Builder");
 
         batchSize = builder.batchSize;
         flushInterval = builder.flushInterval;
@@ -200,9 +185,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
         maxRetryDelay = builder.maxRetryDelay;
         maxRetryTime = builder.maxRetryTime;
         exponentialBase = builder.exponentialBase;
-        bufferLimit = builder.bufferLimit;
-        writeScheduler = builder.writeScheduler;
-        backpressureStrategy = builder.backpressureStrategy;
+        computationScheduler = builder.computationScheduler;
     }
 
     /**
@@ -211,12 +194,12 @@ public final class WriteOptions implements WriteApi.RetryOptions {
      * @return a builder
      */
     @Nonnull
-    public static WriteOptions.Builder builder() {
-        return new WriteOptions.Builder();
+    public static WriteOptionsReactive.Builder builder() {
+        return new WriteOptionsReactive.Builder();
     }
 
     /**
-     * A builder for {@code WriteOptions}.
+     * A builder for {@link WriteOptionsReactive}.
      */
     @NotThreadSafe
     public static class Builder {
@@ -229,19 +212,22 @@ public final class WriteOptions implements WriteApi.RetryOptions {
         private int maxRetryDelay = DEFAULT_MAX_RETRY_DELAY;
         private int maxRetryTime = DEFAULT_MAX_RETRY_TIME;
         private int exponentialBase = DEFAULT_EXPONENTIAL_BASE;
-        private int bufferLimit = DEFAULT_BUFFER_LIMIT;
-        private Scheduler writeScheduler = Schedulers.newThread();
-        private BackpressureOverflowStrategy backpressureStrategy = BackpressureOverflowStrategy.DROP_OLDEST;
+        private Scheduler computationScheduler = Schedulers.computation();
 
         /**
          * Set the number of data point to collect in batch.
+         *
+         * <p>
+         * If you set the {@code batchSize} to '0'
+         * the batching is disabled - whole upstream is written in one batch.
+         * </p>
          *
          * @param batchSize the number of data point to collect in batch
          * @return {@code this}
          */
         @Nonnull
-        public Builder batchSize(final int batchSize) {
-            Arguments.checkPositiveNumber(batchSize, "batchSize");
+        public WriteOptionsReactive.Builder batchSize(final int batchSize) {
+            Arguments.checkNotNegativeNumber(batchSize, "batchSize");
             this.batchSize = batchSize;
             return this;
         }
@@ -253,7 +239,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
          * @return {@code this}
          */
         @Nonnull
-        public Builder flushInterval(final int flushInterval) {
+        public WriteOptionsReactive.Builder flushInterval(final int flushInterval) {
             Arguments.checkPositiveNumber(flushInterval, "flushInterval");
             this.flushInterval = flushInterval;
             return this;
@@ -268,7 +254,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
          * @return {@code this}
          */
         @Nonnull
-        public Builder jitterInterval(final int jitterInterval) {
+        public WriteOptionsReactive.Builder jitterInterval(final int jitterInterval) {
             Arguments.checkNotNegativeNumber(jitterInterval, "jitterInterval");
             this.jitterInterval = jitterInterval;
             return this;
@@ -285,7 +271,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
          * @return {@code this}
          */
         @Nonnull
-        public Builder retryInterval(final int retryInterval) {
+        public WriteOptionsReactive.Builder retryInterval(final int retryInterval) {
             Arguments.checkPositiveNumber(retryInterval, "retryInterval");
             this.retryInterval = retryInterval;
             return this;
@@ -294,12 +280,17 @@ public final class WriteOptions implements WriteApi.RetryOptions {
         /**
          * The number of max retries when write fails.
          *
+         * <p>
+         * If you set the {@code maxRetries} to '0'
+         * the retry strategy is disabled - the error is immediately propagate to upstream.
+         * </p>
+         *
          * @param maxRetries number of max retries
          * @return {@code this}
          */
         @Nonnull
-        public Builder maxRetries(final int maxRetries) {
-            Arguments.checkPositiveNumber(maxRetries, "maxRetries");
+        public WriteOptionsReactive.Builder maxRetries(final int maxRetries) {
+            Arguments.checkNotNegativeNumber(maxRetries, "maxRetries");
             this.maxRetries = maxRetries;
             return this;
         }
@@ -307,11 +298,11 @@ public final class WriteOptions implements WriteApi.RetryOptions {
         /**
          * The maximum delay between each retry attempt in milliseconds.
          *
-         * @param maxRetryDelay  maximum delay
+         * @param maxRetryDelay maximum delay
          * @return {@code this}
          */
         @Nonnull
-        public Builder maxRetryDelay(final int maxRetryDelay) {
+        public WriteOptionsReactive.Builder maxRetryDelay(final int maxRetryDelay) {
             Arguments.checkPositiveNumber(maxRetryDelay, "maxRetryDelay");
             this.maxRetryDelay = maxRetryDelay;
             return this;
@@ -320,11 +311,11 @@ public final class WriteOptions implements WriteApi.RetryOptions {
         /**
          * The maximum total retry timeout in milliseconds.
          *
-         * @param maxRetryTime  maximum timout
+         * @param maxRetryTime maximum timout
          * @return {@code this}
          */
         @Nonnull
-        public Builder maxRetryTime(final int maxRetryTime) {
+        public WriteOptionsReactive.Builder maxRetryTime(final int maxRetryTime) {
             Arguments.checkPositiveNumber(maxRetryTime, "maxRetryTime");
             this.maxRetryTime = maxRetryTime;
             return this;
@@ -337,54 +328,25 @@ public final class WriteOptions implements WriteApi.RetryOptions {
          * @return {@code this}
          */
         @Nonnull
-        public Builder exponentialBase(final int exponentialBase) {
+        public WriteOptionsReactive.Builder exponentialBase(final int exponentialBase) {
             Arguments.checkPositiveNumber(exponentialBase, "exponentialBase");
             this.exponentialBase = exponentialBase;
             return this;
         }
 
+
         /**
-         * The client maintains a buffer for failed writes so that the writes will be retried later on. This may
-         * help to overcome temporary network problems or InfluxDB load spikes.
-         * When the buffer is full and new points are written, oldest entries in the buffer are lost.
+         * Set the scheduler which is used for computational work. Default value is {@link Schedulers#computation()}.
          *
-         * @param bufferLimit maximum number of points stored in the retry buffer
+         * @param computationScheduler the scheduler which is used for computational work.
          * @return {@code this}
          */
         @Nonnull
-        public Builder bufferLimit(final int bufferLimit) {
-            Arguments.checkNotNegativeNumber(bufferLimit, "bufferLimit");
-            this.bufferLimit = bufferLimit;
-            return this;
-        }
+        public WriteOptionsReactive.Builder computationScheduler(@Nonnull final Scheduler computationScheduler) {
 
-        /**
-         * Set the scheduler which is used for write data points. It is useful for disabling batch writes or
-         * for tuning the performance. Default value is {@link Schedulers#newThread()}.
-         *
-         * @param writeScheduler the scheduler which is used for write data points.
-         * @return {@code this}
-         */
-        @Nonnull
-        public Builder writeScheduler(@Nonnull final Scheduler writeScheduler) {
+            Arguments.checkNotNull(computationScheduler, "Computation scheduler");
 
-            Arguments.checkNotNull(writeScheduler, "Write scheduler");
-
-            this.writeScheduler = writeScheduler;
-            return this;
-        }
-
-        /**
-         * Set the strategy to deal with buffer overflow when using onBackpressureBuffer.
-         *
-         * @param backpressureStrategy the strategy to deal with buffer overflow when using onBackpressureBuffer.
-         *                             Default {@link BackpressureOverflowStrategy#DROP_OLDEST};
-         * @return {@code this}
-         */
-        @Nonnull
-        public Builder backpressureStrategy(@Nonnull final BackpressureOverflowStrategy backpressureStrategy) {
-            Arguments.checkNotNull(backpressureStrategy, "Backpressure Overflow Strategy");
-            this.backpressureStrategy = backpressureStrategy;
+            this.computationScheduler = computationScheduler;
             return this;
         }
 
@@ -394,9 +356,9 @@ public final class WriteOptions implements WriteApi.RetryOptions {
          * @return {@code WriteOptions}
          */
         @Nonnull
-        public WriteOptions build() {
+        public WriteOptionsReactive build() {
 
-            return new WriteOptions(this);
+            return new WriteOptionsReactive(this);
         }
     }
 }

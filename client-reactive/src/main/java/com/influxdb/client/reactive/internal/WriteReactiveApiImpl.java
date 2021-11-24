@@ -21,256 +21,314 @@
  */
 package com.influxdb.client.reactive.internal;
 
-import java.util.Collection;
+import java.text.MessageFormat;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.influxdb.client.InfluxDBClientOptions;
-import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractWriteClient;
+import com.influxdb.client.internal.AbstractWriteClient.BatchWriteData;
+import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement;
+import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint;
+import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord;
+import com.influxdb.client.internal.MeasurementMapper;
+import com.influxdb.client.reactive.WriteOptionsReactive;
 import com.influxdb.client.reactive.WriteReactiveApi;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.client.write.Point;
-import com.influxdb.client.write.events.AbstractWriteEvent;
+import com.influxdb.internal.AbstractRestClient;
 import com.influxdb.utils.Arguments;
 
 import io.reactivex.Flowable;
-import io.reactivex.Maybe;
-import io.reactivex.Observable;
 import org.reactivestreams.Publisher;
+import retrofit2.HttpException;
 
 /**
  * @author Jakub Bednar (bednar@github) (22/11/2018 06:50)
  */
-public class WriteReactiveApiImpl extends AbstractWriteClient implements WriteReactiveApi {
+public class WriteReactiveApiImpl extends AbstractRestClient implements WriteReactiveApi {
 
-    WriteReactiveApiImpl(@Nonnull final WriteOptions writeOptions,
+    private static final Logger LOG = Logger.getLogger(WriteReactiveApi.class.getName());
+
+    private final WriteOptionsReactive writeOptions;
+    private final InfluxDBClientOptions options;
+    private final WriteService service;
+    private final MeasurementMapper measurementMapper = new MeasurementMapper();
+
+    WriteReactiveApiImpl(@Nonnull final WriteOptionsReactive writeOptions,
                          @Nonnull final WriteService service,
-                         @Nonnull final InfluxDBClientOptions options, final Collection<AutoCloseable> autoCloseables) {
+                         @Nonnull final InfluxDBClientOptions options) {
 
-        super(writeOptions, options, writeOptions.getWriteScheduler(), service, autoCloseables);
+        this.writeOptions = writeOptions;
+        this.options = options;
+        this.service = service;
     }
 
     @Override
-    public void writeRecord(@Nonnull final WritePrecision precision, @Nonnull final Maybe<String> record) {
+    public Publisher<Success> writeRecord(@Nonnull final WritePrecision precision, @Nullable final String record) {
 
         Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
-        writeRecord(options.getBucket(), options.getOrg(), precision, record);
+        return writeRecord(options.getBucket(), options.getOrg(), precision, record);
     }
 
     @Override
-    public void writeRecord(@Nonnull final String bucket,
-                            @Nonnull final String org,
-                            @Nonnull final WritePrecision precision,
-                            @Nonnull final Maybe<String> record) {
+    public Publisher<Success> writeRecord(@Nonnull final String bucket,
+                                          @Nonnull final String org,
+                                          @Nonnull final WritePrecision precision,
+                                          @Nullable final String record) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(org, "organization");
         Arguments.checkNotNull(precision, "precision");
-        Arguments.checkNotNull(record, "record");
 
-        writeRecords(bucket, org, precision, record.toFlowable());
+        if (record == null) {
+            LOG.log(Level.FINE, "The record is null for bucket: ''{0}'', org: ''{1}'' and precision: ''{2}''.",
+                    new Object[]{bucket, org, precision});
+
+            return Flowable.just(new Success());
+        }
+
+        return writeRecords(bucket, org, precision, Flowable.just(record));
     }
 
     @Override
-    public void writeRecords(@Nonnull final WritePrecision precision, @Nonnull final Flowable<String> records) {
+    public Publisher<Success> writeRecords(@Nonnull final WritePrecision precision,
+                                           @Nonnull final Publisher<String> records) {
 
         Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
-        writeRecords(options.getBucket(), options.getOrg(), precision, records);
+        return writeRecords(options.getBucket(), options.getOrg(), precision, records);
     }
 
     @Override
-    public void writeRecords(@Nonnull final String bucket,
-                             @Nonnull final String org,
-                             @Nonnull final WritePrecision precision,
-                             @Nonnull final Flowable<String> records) {
-
-        Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(org, "organization");
-        Arguments.checkNotNull(precision, "precision");
-        Arguments.checkNotNull(records, "records");
-
-        Flowable<BatchWriteData> stream = records.map(BatchWriteDataRecord::new);
-
-        write(bucket, org, precision, stream);
-    }
-
-    @Override
-    public void writeRecords(@Nonnull final WritePrecision precision, @Nonnull final Publisher<String> records) {
-
-        Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
-        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
-
-        writeRecords(options.getBucket(), options.getOrg(), precision, records);
-    }
-
-    @Override
-    public void writeRecords(@Nonnull final String bucket,
-                             @Nonnull final String org,
-                             @Nonnull final WritePrecision precision,
-                             @Nonnull final Publisher<String> records) {
+    public Publisher<Success> writeRecords(@Nonnull final String bucket,
+                                           @Nonnull final String org,
+                                           @Nonnull final WritePrecision precision,
+                                           @Nonnull final Publisher<String> records) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(org, "organization");
         Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(records, "records");
 
-        writeRecords(bucket, org, precision, Flowable.fromPublisher(records));
+        Flowable<BatchWriteData> stream = Flowable.fromPublisher(records).map(BatchWriteDataRecord::new);
+
+        return write(bucket, org, precision, stream);
     }
 
     @Override
-    public void writePoint(@Nonnull final Maybe<Point> point) {
+    public Publisher<Success> writePoint(@Nonnull final WritePrecision precision, @Nonnull final Point point) {
 
+        Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
-        writePoint(options.getBucket(), options.getOrg(), point);
+        return writePoint(options.getBucket(), options.getOrg(), precision, point);
     }
 
     @Override
-    public void writePoint(@Nonnull final String bucket,
-                           @Nonnull final String org,
-                           @Nonnull final Maybe<Point> point) {
+    public Publisher<Success> writePoint(@Nonnull final String bucket,
+                                         @Nonnull final String org,
+                                         @Nonnull final WritePrecision precision,
+                                         @Nonnull final Point point) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(org, "organization");
+        Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(point, "point");
 
-        writePoints(bucket, org, point.toFlowable());
+        return writePoints(bucket, org, precision, Flowable.just(point));
     }
 
     @Override
-    public void writePoints(@Nonnull final Flowable<Point> points) {
+    public Publisher<Success> writePoints(@Nonnull final WritePrecision precision,
+                                          @Nonnull final Publisher<Point> points) {
 
         Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
-        writePoints(options.getBucket(), options.getOrg(), points);
+        return writePoints(options.getBucket(), options.getOrg(), precision, points);
     }
 
     @Override
-    public void writePoints(@Nonnull final String bucket,
-                            @Nonnull final String org,
-                            @Nonnull final Flowable<Point> points) {
+    public Publisher<Success> writePoints(@Nonnull final String bucket,
+                                          @Nonnull final String org,
+                                          @Nonnull final WritePrecision precision,
+                                          @Nonnull final Publisher<Point> points) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(org, "organization");
         Arguments.checkNotNull(points, "points");
 
-        Flowable<BatchWriteDataPoint> stream = points.filter(Objects::nonNull)
-                .map(point -> new BatchWriteDataPoint(point, options));
+        Flowable<BatchWriteData> stream = Flowable
+                .fromPublisher(points)
+                .filter(Objects::nonNull)
+                .map(point -> new BatchWriteDataPoint(point, precision, options));
 
-        write(bucket, org, stream);
+        return write(bucket, org, precision, stream);
     }
 
     @Override
-    public void writePoints(@Nonnull final Publisher<Point> points) {
+    public <M> Publisher<Success> writeMeasurement(@Nonnull final WritePrecision precision,
+                                                   @Nonnull final M measurement) {
 
         Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
-        writePoints(options.getBucket(), options.getOrg(), points);
+        return writeMeasurement(options.getBucket(), options.getOrg(), precision, measurement);
     }
 
     @Override
-    public void writePoints(@Nonnull final String bucket,
-                            @Nonnull final String org,
-                            @Nonnull final Publisher<Point> points) {
-
-        Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(org, "organization");
-        Arguments.checkNotNull(points, "points");
-
-        writePoints(bucket, org, Flowable.fromPublisher(points));
-    }
-
-    @Override
-    public <M> void writeMeasurement(@Nonnull final WritePrecision precision, @Nonnull final Maybe<M> measurement) {
-
-        Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
-        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
-
-        writeMeasurement(options.getBucket(), options.getOrg(), precision, measurement);
-    }
-
-    @Override
-    public <M> void writeMeasurement(@Nonnull final String bucket,
-                                     @Nonnull final String org,
-                                     @Nonnull final WritePrecision precision,
-                                     @Nonnull final Maybe<M> measurement) {
+    public <M> Publisher<Success> writeMeasurement(@Nonnull final String bucket,
+                                                   @Nonnull final String org,
+                                                   @Nonnull final WritePrecision precision,
+                                                   @Nonnull final M measurement) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(org, "organization");
         Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(measurement, "measurement");
 
-        writeMeasurements(bucket, org, precision, measurement.toFlowable());
+        return writeMeasurements(bucket, org, precision, Flowable.just(measurement));
     }
 
     @Override
-    public <M> void writeMeasurements(@Nonnull final WritePrecision precision,
-                                      @Nonnull final Flowable<M> measurements) {
+    public <M> Publisher<Success> writeMeasurements(@Nonnull final WritePrecision precision,
+                                                    @Nonnull final Publisher<M> measurements) {
 
         Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
 
-        writeMeasurements(options.getBucket(), options.getOrg(), precision, measurements);
+        return writeMeasurements(options.getBucket(), options.getOrg(), precision, measurements);
     }
 
     @Override
-    public <M> void writeMeasurements(@Nonnull final String bucket,
-                                      @Nonnull final String org,
-                                      @Nonnull final WritePrecision precision,
-                                      @Nonnull final Flowable<M> measurements) {
+    public <M> Publisher<Success> writeMeasurements(@Nonnull final String bucket,
+                                                    @Nonnull final String org,
+                                                    @Nonnull final WritePrecision precision,
+                                                    @Nonnull final Publisher<M> measurements) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
         Arguments.checkNonEmpty(org, "organization");
         Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(measurements, "measurements");
 
-        Flowable<BatchWriteData> stream = measurements
+        Flowable<BatchWriteData> stream = Flowable.fromPublisher(measurements)
                 .map(it -> new BatchWriteDataMeasurement(it, precision, options, measurementMapper));
 
-        write(bucket, org, precision, stream);
-    }
-
-    @Override
-    public <M> void writeMeasurements(@Nonnull final WritePrecision precision,
-                                      @Nonnull final Publisher<M> measurements) {
-
-        Arguments.checkNotNull(options.getBucket(), "InfluxDBClientOptions.getBucket");
-        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
-
-        writeMeasurements(options.getBucket(), options.getOrg(), precision, measurements);
-    }
-
-    @Override
-    public <M> void writeMeasurements(@Nonnull final String bucket,
-                                      @Nonnull final String org,
-                                      @Nonnull final WritePrecision precision,
-                                      @Nonnull final Publisher<M> measurements) {
-
-        Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(org, "organization");
-        Arguments.checkNotNull(precision, "precision");
-        Arguments.checkNotNull(measurements, "measurements");
-
-        writeMeasurements(bucket, org, precision, Flowable.fromPublisher(measurements));
+        return write(bucket, org, precision, stream);
     }
 
     @Nonnull
-    @Override
-    public <T extends AbstractWriteEvent> Observable<T> listenEvents(@Nonnull final Class<T> eventType) {
-        return super.addEventListener(eventType);
-    }
+    @SuppressWarnings("MagicNumber")
+    private Publisher<Success> write(@Nonnull final String bucket,
+                                     @Nonnull final String organization,
+                                     @Nonnull final WritePrecision precision,
+                                     @Nonnull final Flowable<BatchWriteData> stream) {
 
-    @Override
-    public void close() {
-        super.close();
+        Arguments.checkNonEmpty(bucket, "bucket");
+        Arguments.checkNonEmpty(organization, "organization");
+        Arguments.checkNotNull(precision, "precision");
+        Arguments.checkNotNull(stream, "stream");
+
+        Flowable<String> batches = stream
+                //
+                // Create batches
+                //
+                .compose(source -> {
+                    //
+                    // disabled batches
+                    //
+                    if (writeOptions.getBatchSize() == 0) {
+                        return Flowable.just(Flowable.fromPublisher(stream));
+                    }
+
+                    //
+                    // batching
+                    //
+                    return source.window(writeOptions.getFlushInterval(),
+                            TimeUnit.MILLISECONDS,
+                            writeOptions.getComputationScheduler(),
+                            writeOptions.getBatchSize(),
+                            true);
+                })
+                //
+                // Collect batch to LineProtocol concatenated by '\n'
+                //
+                .concatMapSingle(batch -> batch
+                        .map(item -> {
+                            String lineProtocol = item.toLineProtocol();
+                            if (lineProtocol == null) {
+                                return "";
+                            }
+                            return lineProtocol;
+                        })
+                        .filter(it -> !it.isEmpty())
+                        .collect(StringBuilder::new, (sb, x) -> {
+                            if (sb.length() > 0) {
+                                sb.append("\n");
+                            }
+                            sb.append(x);
+                        })
+                        .map(StringBuilder::toString))
+                // Filter empty batches
+                .filter(it -> !it.isEmpty());
+
+        return batches
+                //
+                // Jitter
+                //
+                .compose(AbstractWriteClient.jitter(writeOptions.getComputationScheduler(), writeOptions))
+                //
+                // HTTP post
+                //
+                .flatMapSingle(it -> service.postWriteRx(organization, bucket, it, null,
+                        "identity", "text/plain; charset=utf-8", null,
+                        "application/json", null, precision)
+                )
+                //
+                // Map to Success
+                //
+                .flatMap(response -> {
+                    if (!response.isSuccessful()) {
+                        return Flowable.error(new HttpException(response));
+                    }
+
+                    return Flowable.just(new Success());
+                })
+                //
+                // Retry
+                //
+                .retryWhen(AbstractWriteClient.retry(
+                        writeOptions.getComputationScheduler(),
+                        writeOptions,
+                        (throwable, retryInterval) -> {
+                            String msg = MessageFormat.format(
+                                    "The retriable error occurred during writing of data. Retry in: {0}s.",
+                                    (double) retryInterval / 1000);
+                            LOG.log(Level.WARNING, msg, throwable);
+                        }))
+                //
+                // maxRetryTime timeout
+                //
+                .timeout(writeOptions.getMaxRetryTime(),
+                        TimeUnit.MILLISECONDS,
+                        writeOptions.getComputationScheduler(),
+                        Flowable.error(new TimeoutException("Max retry time exceeded.")))
+                //
+                // Map to Influx Error
+                //
+                .onErrorResumeNext(throwable -> {
+                    return Flowable.error(toInfluxException(throwable));
+                });
     }
 }
