@@ -73,52 +73,66 @@
 </span>49 <span style=''>  override def health: HealthCheck = </span><span style='background: #F0ADAD'>health(healthService.getHealth(null))</span><span style=''>
 </span>50 <span style=''>
 </span>51 <span style=''>  /**
-</span>52 <span style=''>   * Gets the [[LogLevel]] that is used for logging requests and responses.
+</span>52 <span style=''>   * Check the status of InfluxDB Server.
 </span>53 <span style=''>   *
-</span>54 <span style=''>   * @return the [[LogLevel]] that is used for logging requests and responses
+</span>54 <span style=''>   * @return true if server is healthy otherwise return false
 </span>55 <span style=''>   */
-</span>56 <span style=''>  override def getLogLevel: LogLevel = </span><span style='background: #F0ADAD'>getLogLevel(loggingInterceptor)</span><span style=''>
+</span>56 <span style=''>  override def ping: Boolean = </span><span style='background: #F0ADAD'>ping(pingService.getPing)</span><span style=''>
 </span>57 <span style=''>
 </span>58 <span style=''>  /**
-</span>59 <span style=''>   * Sets the log level for the request and response information.
+</span>59 <span style=''>   * Returns the version of the connected InfluxDB Server.
 </span>60 <span style=''>   *
-</span>61 <span style=''>   * @param logLevel the log level to set.
-</span>62 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
-</span>63 <span style=''>   */
-</span>64 <span style=''>  override def setLogLevel(logLevel: LogLevel): InfluxDBClientScala = {
-</span>65 <span style=''>    </span><span style='background: #F0ADAD'>setLogLevel(loggingInterceptor, logLevel)</span><span style=''>
-</span>66 <span style=''>    this
-</span>67 <span style=''>  }
-</span>68 <span style=''>
-</span>69 <span style=''>  /**
-</span>70 <span style=''>   * Enable Gzip compress for http requests.
-</span>71 <span style=''>   *
-</span>72 <span style=''>   * Currently only the &quot;Write&quot; and &quot;Query&quot; endpoints supports the Gzip compression.
-</span>73 <span style=''>   *
-</span>74 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
-</span>75 <span style=''>   */
-</span>76 <span style=''>  override def enableGzip(): InfluxDBClientScala = {
-</span>77 <span style=''>    </span><span style='background: #F0ADAD'>gzipInterceptor.enableGzip()</span><span style=''>
-</span>78 <span style=''>    this
-</span>79 <span style=''>  }
-</span>80 <span style=''>
-</span>81 <span style=''>  /**
-</span>82 <span style=''>   * Disable Gzip compress for http request body.
-</span>83 <span style=''>   *
-</span>84 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
-</span>85 <span style=''>   */
-</span>86 <span style=''>  override def disableGzip(): InfluxDBClientScala = {
-</span>87 <span style=''>    </span><span style='background: #F0ADAD'>gzipInterceptor.disableGzip()</span><span style=''>
-</span>88 <span style=''>    this
-</span>89 <span style=''>  }
-</span>90 <span style=''>
-</span>91 <span style=''>  /**
-</span>92 <span style=''>   * Returns whether Gzip compress for http request body is enabled.
-</span>93 <span style=''>   *
-</span>94 <span style=''>   * @return true if gzip is enabled.
-</span>95 <span style=''>   */
-</span>96 <span style=''>  override def isGzipEnabled: Boolean = </span><span style='background: #F0ADAD'>gzipInterceptor.isEnabledGzip</span><span style=''>
-</span>97 <span style=''>}
+</span>61 <span style=''>   * @return the version String, otherwise unknown.
+</span>62 <span style=''>   */
+</span>63 <span style=''>  override def version: String = </span><span style='background: #F0ADAD'>version(pingService.getPing)</span><span style=''>
+</span>64 <span style=''>
+</span>65 <span style=''>  /**
+</span>66 <span style=''>   * Gets the [[LogLevel]] that is used for logging requests and responses.
+</span>67 <span style=''>   *
+</span>68 <span style=''>   * @return the [[LogLevel]] that is used for logging requests and responses
+</span>69 <span style=''>   */
+</span>70 <span style=''>  override def getLogLevel: LogLevel = </span><span style='background: #F0ADAD'>getLogLevel(loggingInterceptor)</span><span style=''>
+</span>71 <span style=''>
+</span>72 <span style=''>  /**
+</span>73 <span style=''>   * Sets the log level for the request and response information.
+</span>74 <span style=''>   *
+</span>75 <span style=''>   * @param logLevel the log level to set.
+</span>76 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
+</span>77 <span style=''>   */
+</span>78 <span style=''>  override def setLogLevel(logLevel: LogLevel): InfluxDBClientScala = {
+</span>79 <span style=''>    </span><span style='background: #F0ADAD'>setLogLevel(loggingInterceptor, logLevel)</span><span style=''>
+</span>80 <span style=''>    this
+</span>81 <span style=''>  }
+</span>82 <span style=''>
+</span>83 <span style=''>  /**
+</span>84 <span style=''>   * Enable Gzip compress for http requests.
+</span>85 <span style=''>   *
+</span>86 <span style=''>   * Currently only the &quot;Write&quot; and &quot;Query&quot; endpoints supports the Gzip compression.
+</span>87 <span style=''>   *
+</span>88 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
+</span>89 <span style=''>   */
+</span>90 <span style=''>  override def enableGzip(): InfluxDBClientScala = {
+</span>91 <span style=''>    </span><span style='background: #F0ADAD'>gzipInterceptor.enableGzip()</span><span style=''>
+</span>92 <span style=''>    this
+</span>93 <span style=''>  }
+</span>94 <span style=''>
+</span>95 <span style=''>  /**
+</span>96 <span style=''>   * Disable Gzip compress for http request body.
+</span>97 <span style=''>   *
+</span>98 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
+</span>99 <span style=''>   */
+</span>100 <span style=''>  override def disableGzip(): InfluxDBClientScala = {
+</span>101 <span style=''>    </span><span style='background: #F0ADAD'>gzipInterceptor.disableGzip()</span><span style=''>
+</span>102 <span style=''>    this
+</span>103 <span style=''>  }
+</span>104 <span style=''>
+</span>105 <span style=''>  /**
+</span>106 <span style=''>   * Returns whether Gzip compress for http request body is enabled.
+</span>107 <span style=''>   *
+</span>108 <span style=''>   * @return true if gzip is enabled.
+</span>109 <span style=''>   */
+</span>110 <span style=''>  override def isGzipEnabled: Boolean = </span><span style='background: #F0ADAD'>gzipInterceptor.isEnabledGzip</span><span style=''>
+</span>111 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -240,12 +254,138 @@
           56
         </td>
         <td>
+          20
+        </td>
+        <td>
+          2233
+          -
+          2258
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          scala.Predef.Boolean2boolean
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.Boolean2boolean(InfluxDBClientScalaImpl.this.ping(InfluxDBClientScalaImpl.this.pingService.getPing()))
+        </td>
+      </tr><tr>
+        <td>
+          56
+        </td>
+        <td>
           19
         </td>
         <td>
-          2291
+          2233
           -
-          2322
+          2258
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.internal.AbstractRestClient.ping
+        </td>
+        <td style="background: #F0ADAD">
+          InfluxDBClientScalaImpl.this.ping(InfluxDBClientScalaImpl.this.pingService.getPing())
+        </td>
+      </tr><tr>
+        <td>
+          56
+        </td>
+        <td>
+          18
+        </td>
+        <td>
+          2238
+          -
+          2257
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.service.PingService.getPing
+        </td>
+        <td style="background: #F0ADAD">
+          InfluxDBClientScalaImpl.this.pingService.getPing()
+        </td>
+      </tr><tr>
+        <td>
+          63
+        </td>
+        <td>
+          22
+        </td>
+        <td>
+          2421
+          -
+          2449
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.internal.AbstractRestClient.version
+        </td>
+        <td style="background: #F0ADAD">
+          InfluxDBClientScalaImpl.this.version(InfluxDBClientScalaImpl.this.pingService.getPing())
+        </td>
+      </tr><tr>
+        <td>
+          63
+        </td>
+        <td>
+          21
+        </td>
+        <td>
+          2429
+          -
+          2448
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.service.PingService.getPing
+        </td>
+        <td style="background: #F0ADAD">
+          InfluxDBClientScalaImpl.this.pingService.getPing()
+        </td>
+      </tr><tr>
+        <td>
+          70
+        </td>
+        <td>
+          23
+        </td>
+        <td>
+          2673
+          -
+          2691
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          com.influxdb.client.internal.AbstractInfluxDBClient.loggingInterceptor
+        </td>
+        <td style="background: #F0ADAD">
+          InfluxDBClientScalaImpl.this.loggingInterceptor
+        </td>
+      </tr><tr>
+        <td>
+          70
+        </td>
+        <td>
+          24
+        </td>
+        <td>
+          2661
+          -
+          2692
         </td>
         <td>
           Apply
@@ -258,57 +398,15 @@
         </td>
       </tr><tr>
         <td>
-          56
+          79
         </td>
         <td>
-          18
+          26
         </td>
         <td>
-          2303
+          2987
           -
-          2321
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          com.influxdb.client.internal.AbstractInfluxDBClient.loggingInterceptor
-        </td>
-        <td style="background: #F0ADAD">
-          InfluxDBClientScalaImpl.this.loggingInterceptor
-        </td>
-      </tr><tr>
-        <td>
-          65
-        </td>
-        <td>
-          20
-        </td>
-        <td>
-          2629
-          -
-          2647
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          com.influxdb.client.internal.AbstractInfluxDBClient.loggingInterceptor
-        </td>
-        <td style="background: #F0ADAD">
-          InfluxDBClientScalaImpl.this.loggingInterceptor
-        </td>
-      </tr><tr>
-        <td>
-          65
-        </td>
-        <td>
-          21
-        </td>
-        <td>
-          2617
-          -
-          2658
+          3028
         </td>
         <td>
           Apply
@@ -321,15 +419,36 @@
         </td>
       </tr><tr>
         <td>
-          77
+          79
         </td>
         <td>
-          22
+          25
         </td>
         <td>
-          2973
+          2999
           -
-          3001
+          3017
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          com.influxdb.client.internal.AbstractInfluxDBClient.loggingInterceptor
+        </td>
+        <td style="background: #F0ADAD">
+          InfluxDBClientScalaImpl.this.loggingInterceptor
+        </td>
+      </tr><tr>
+        <td>
+          91
+        </td>
+        <td>
+          27
+        </td>
+        <td>
+          3343
+          -
+          3371
         </td>
         <td>
           Apply
@@ -342,15 +461,15 @@
         </td>
       </tr><tr>
         <td>
-          87
+          101
         </td>
         <td>
-          23
+          28
         </td>
         <td>
-          3232
+          3602
           -
-          3261
+          3631
         </td>
         <td>
           Apply
@@ -363,15 +482,15 @@
         </td>
       </tr><tr>
         <td>
-          96
+          110
         </td>
         <td>
-          24
+          29
         </td>
         <td>
-          3440
+          3810
           -
-          3469
+          3839
         </td>
         <td>
           Apply

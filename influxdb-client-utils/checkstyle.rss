@@ -46,7 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-utils/checkstyle.html#com.influxdb.Arguments.java">com/influxdb/Arguments.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-utils/checkstyle.html#com.influxdb.utils.Arguments.java">com/influxdb/utils/Arguments.java</a>
                 </td>
                 <td>
                   0

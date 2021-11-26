@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 - 2021 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 61,
+      <title>File: 62,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -186,6 +186,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.TasksQuery.java">com/influxdb/client/TasksQuery.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.WriteApiBlocking.java">com/influxdb/client/WriteApiBlocking.java</a>
                 </td>
                 <td>
@@ -243,20 +257,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.internal.TelegrafsApiImpl.java">com/influxdb/client/internal/TelegrafsApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.TemplatesApi.java">com/influxdb/client/TemplatesApi.java</a>
                 </td>
                 <td>
                   0
@@ -452,20 +452,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.internal.TemplatesApiImpl.java">com/influxdb/client/internal/TemplatesApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.UsersApi.java">com/influxdb/client/UsersApi.java</a>
                 </td>
                 <td>
@@ -578,6 +564,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.BucketsQuery.java">com/influxdb/client/BucketsQuery.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.write.events.AbstractWriteEvent.java">com/influxdb/client/write/events/AbstractWriteEvent.java</a>
                 </td>
                 <td>
@@ -663,6 +663,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.internal.ChecksApiImpl.java">com/influxdb/client/internal/ChecksApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.OrganizationsQuery.java">com/influxdb/client/OrganizationsQuery.java</a>
                 </td>
                 <td>
                   0

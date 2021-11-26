@@ -10,7 +10,9 @@ $dokka.location:com.influxdb.client.kotlin/InfluxDBClientKotlin/getQueryKotlinAp
 $dokka.location:com.influxdb.client.kotlin/InfluxDBClientKotlin/getWriteKotlinApi/#/PointingToDeclaration/influxdb-client-kotlin/com.influxdb.client.kotlin/-influx-d-b-client-kotlin/get-write-kotlin-api.html
 $dokka.location:com.influxdb.client.kotlin/InfluxDBClientKotlin/health/#/PointingToDeclaration/influxdb-client-kotlin/com.influxdb.client.kotlin/-influx-d-b-client-kotlin/health.html
 $dokka.location:com.influxdb.client.kotlin/InfluxDBClientKotlin/isGzipEnabled/#/PointingToDeclaration/influxdb-client-kotlin/com.influxdb.client.kotlin/-influx-d-b-client-kotlin/is-gzip-enabled.html
+$dokka.location:com.influxdb.client.kotlin/InfluxDBClientKotlin/ping/#/PointingToDeclaration/influxdb-client-kotlin/com.influxdb.client.kotlin/-influx-d-b-client-kotlin/ping.html
 $dokka.location:com.influxdb.client.kotlin/InfluxDBClientKotlin/setLogLevel/#com.influxdb.LogLevel/PointingToDeclaration/influxdb-client-kotlin/com.influxdb.client.kotlin/-influx-d-b-client-kotlin/set-log-level.html
+$dokka.location:com.influxdb.client.kotlin/InfluxDBClientKotlin/version/#/PointingToDeclaration/influxdb-client-kotlin/com.influxdb.client.kotlin/-influx-d-b-client-kotlin/version.html
 $dokka.location:com.influxdb.client.kotlin/InfluxDBClientKotlinFactory.Companion///PointingToDeclaration/influxdb-client-kotlin/com.influxdb.client.kotlin/-influx-d-b-client-kotlin-factory/-companion/index.html
 $dokka.location:com.influxdb.client.kotlin/InfluxDBClientKotlinFactory.Companion/create/#/PointingToDeclaration/influxdb-client-kotlin/com.influxdb.client.kotlin/-influx-d-b-client-kotlin-factory/-companion/create.html
 $dokka.location:com.influxdb.client.kotlin/InfluxDBClientKotlinFactory.Companion/create/#com.influxdb.client.InfluxDBClientOptions/PointingToDeclaration/influxdb-client-kotlin/com.influxdb.client.kotlin/-influx-d-b-client-kotlin-factory/-companion/create.html

@@ -47,14 +47,14 @@
 </span>23 <span style=''>
 </span>24 <span style=''>import akka.NotUsed
 </span>25 <span style=''>import akka.stream.scaladsl.Source
-</span>26 <span style=''>import com.influxdb.Arguments
-</span>27 <span style=''>import com.influxdb.client.InfluxDBClientOptions
-</span>28 <span style=''>import com.influxdb.client.domain.{Dialect, Query}
-</span>29 <span style=''>import com.influxdb.client.internal.AbstractInfluxDBClient
-</span>30 <span style=''>import com.influxdb.client.scala.QueryScalaApi
-</span>31 <span style=''>import com.influxdb.client.service.QueryService
-</span>32 <span style=''>import com.influxdb.internal.AbstractQueryApi
-</span>33 <span style=''>import com.influxdb.query.FluxRecord
+</span>26 <span style=''>import com.influxdb.client.InfluxDBClientOptions
+</span>27 <span style=''>import com.influxdb.client.domain.{Dialect, Query}
+</span>28 <span style=''>import com.influxdb.client.internal.AbstractInfluxDBClient
+</span>29 <span style=''>import com.influxdb.client.scala.QueryScalaApi
+</span>30 <span style=''>import com.influxdb.client.service.QueryService
+</span>31 <span style=''>import com.influxdb.internal.AbstractQueryApi
+</span>32 <span style=''>import com.influxdb.query.FluxRecord
+</span>33 <span style=''>import com.influxdb.utils.Arguments
 </span>34 <span style=''>
 </span>35 <span style=''>import javax.annotation.Nonnull
 </span>36 <span style=''>
@@ -332,12 +332,33 @@
           56
         </td>
         <td>
-          26
+          32
         </td>
         <td>
-          2257
+          2224
           -
-          2287
+          2294
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.utils.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.utils.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          56
+        </td>
+        <td>
+          31
+        </td>
+        <td>
+          2263
+          -
+          2293
         </td>
         <td>
           Literal
@@ -353,12 +374,12 @@
           56
         </td>
         <td>
-          25
+          30
         </td>
         <td>
-          2241
+          2247
           -
-          2255
+          2261
         </td>
         <td>
           Apply
@@ -371,36 +392,15 @@
         </td>
       </tr><tr>
         <td>
-          56
-        </td>
-        <td>
-          27
-        </td>
-        <td>
-          2218
-          -
-          2288
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.Arguments.checkNotNull
-        </td>
-        <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
-        </td>
-      </tr><tr>
-        <td>
           58
         </td>
         <td>
-          29
+          34
         </td>
         <td>
-          2294
+          2300
           -
-          2327
+          2333
         </td>
         <td>
           Apply
@@ -416,12 +416,12 @@
           58
         </td>
         <td>
-          28
+          33
         </td>
         <td>
-          2312
+          2318
           -
-          2326
+          2332
         </td>
         <td>
           Apply
@@ -437,54 +437,75 @@
           69
         </td>
         <td>
-          30
+          35
         </td>
         <td>
-          2649
+          2655
           -
-          2688
+          2694
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNonEmpty
+          com.influxdb.utils.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(query, &quot;query&quot;)
+          com.influxdb.utils.Arguments.checkNonEmpty(query, &quot;query&quot;)
         </td>
       </tr><tr>
         <td>
           70
         </td>
         <td>
-          31
+          36
         </td>
         <td>
-          2693
+          2699
           -
-          2728
+          2734
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNonEmpty
+          com.influxdb.utils.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(org, &quot;org&quot;)
+          com.influxdb.utils.Arguments.checkNonEmpty(org, &quot;org&quot;)
         </td>
       </tr><tr>
         <td>
           72
         </td>
         <td>
-          32
+          38
         </td>
         <td>
-          2778
+          2751
           -
-          2816
+          2823
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.domain.Query.dialect
+        </td>
+        <td style="background: #F0ADAD">
+          new com.influxdb.client.domain.Query().query(query).dialect(com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT)
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          37
+        </td>
+        <td>
+          2784
+          -
+          2822
         </td>
         <td>
           Select
@@ -500,12 +521,12 @@
           72
         </td>
         <td>
-          34
+          39
         </td>
         <td>
-          2734
+          2740
           -
-          2823
+          2829
         </td>
         <td>
           Apply
@@ -518,78 +539,15 @@
         </td>
       </tr><tr>
         <td>
-          72
-        </td>
-        <td>
-          33
-        </td>
-        <td>
-          2745
-          -
-          2817
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.client.domain.Query.dialect
-        </td>
-        <td style="background: #F0ADAD">
-          new com.influxdb.client.domain.Query().query(query).dialect(com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT)
-        </td>
-      </tr><tr>
-        <td>
           86
         </td>
         <td>
-          35
+          41
         </td>
         <td>
-          3247
+          3269
           -
-          3261
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.client.InfluxDBClientOptions.getOrg
-        </td>
-        <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.options.getOrg()
-        </td>
-      </tr><tr>
-        <td>
-          86
-        </td>
-        <td>
-          37
-        </td>
-        <td>
-          3224
-          -
-          3294
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.Arguments.checkNotNull
-        </td>
-        <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
-        </td>
-      </tr><tr>
-        <td>
-          86
-        </td>
-        <td>
-          36
-        </td>
-        <td>
-          3263
-          -
-          3293
+          3299
         </td>
         <td>
           Literal
@@ -602,15 +560,15 @@
         </td>
       </tr><tr>
         <td>
-          88
+          86
         </td>
         <td>
-          38
+          40
         </td>
         <td>
-          3318
+          3253
           -
-          3332
+          3267
         </td>
         <td>
           Apply
@@ -623,15 +581,36 @@
         </td>
       </tr><tr>
         <td>
+          86
+        </td>
+        <td>
+          42
+        </td>
+        <td>
+          3230
+          -
+          3300
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.utils.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.utils.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+        </td>
+      </tr><tr>
+        <td>
           88
         </td>
         <td>
-          39
+          44
         </td>
         <td>
-          3300
+          3306
           -
-          3333
+          3339
         </td>
         <td>
           Apply
@@ -644,57 +623,78 @@
         </td>
       </tr><tr>
         <td>
-          100
+          88
         </td>
         <td>
-          40
+          43
         </td>
         <td>
-          3688
+          3324
           -
-          3726
+          3338
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNotNull
+          com.influxdb.client.InfluxDBClientOptions.getOrg
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNotNull(query, &quot;query&quot;)
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          100
+        </td>
+        <td>
+          45
+        </td>
+        <td>
+          3694
+          -
+          3732
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.utils.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.utils.Arguments.checkNotNull(query, &quot;query&quot;)
         </td>
       </tr><tr>
         <td>
           101
         </td>
         <td>
-          41
+          46
         </td>
         <td>
-          3731
+          3737
           -
-          3766
+          3772
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNonEmpty
+          com.influxdb.utils.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(org, &quot;org&quot;)
+          com.influxdb.utils.Arguments.checkNonEmpty(org, &quot;org&quot;)
         </td>
       </tr><tr>
         <td>
           103
         </td>
         <td>
-          51
+          56
         </td>
         <td>
-          3772
+          3778
           -
-          4154
+          4160
         </td>
         <td>
           Apply
@@ -716,12 +716,12 @@ else
           105
         </td>
         <td>
-          42
+          47
         </td>
         <td>
-          3877
+          3883
           -
-          3942
+          3948
         </td>
         <td>
           Apply
@@ -737,12 +737,12 @@ else
           107
         </td>
         <td>
-          43
+          48
         </td>
         <td>
-          3952
+          3958
           -
-          3971
+          3977
         </td>
         <td>
           Apply
@@ -758,12 +758,12 @@ else
           111
         </td>
         <td>
-          44
+          49
         </td>
         <td>
-          4011
+          4017
           -
-          4024
+          4030
         </td>
         <td>
           Apply
@@ -779,54 +779,12 @@ else
           112
         </td>
         <td>
-          47
+          50
         </td>
         <td>
-          4036
+          4047
           -
-          4054
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          scala.Some.apply
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Some.apply[com.influxdb.query.FluxRecord](query.next())
-        </td>
-      </tr><tr>
-        <td>
-          112
-        </td>
-        <td>
-          46
-        </td>
-        <td>
-          4036
-          -
-          4054
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Some.apply
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Some.apply[com.influxdb.query.FluxRecord](query.next())
-        </td>
-      </tr><tr>
-        <td>
-          112
-        </td>
-        <td>
-          45
-        </td>
-        <td>
-          4041
-          -
-          4053
+          4059
         </td>
         <td>
           Apply
@@ -839,36 +797,57 @@ else
         </td>
       </tr><tr>
         <td>
-          114
+          112
         </td>
         <td>
-          49
+          52
         </td>
         <td>
-          4078
+          4042
           -
-          4082
+          4060
         </td>
         <td>
           Block
         </td>
         <td>
-          scala.None
+          scala.Some.apply
         </td>
         <td style="background: #F0ADAD">
-          scala.None
+          scala.Some.apply[com.influxdb.query.FluxRecord](query.next())
+        </td>
+      </tr><tr>
+        <td>
+          112
+        </td>
+        <td>
+          51
+        </td>
+        <td>
+          4042
+          -
+          4060
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Some.apply
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Some.apply[com.influxdb.query.FluxRecord](query.next())
         </td>
       </tr><tr>
         <td>
           114
         </td>
         <td>
-          48
+          53
         </td>
         <td>
-          4078
+          4084
           -
-          4082
+          4088
         </td>
         <td>
           Select
@@ -881,15 +860,36 @@ else
         </td>
       </tr><tr>
         <td>
+          114
+        </td>
+        <td>
+          54
+        </td>
+        <td>
+          4084
+          -
+          4088
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          scala.None
+        </td>
+        <td style="background: #F0ADAD">
+          scala.None
+        </td>
+      </tr><tr>
+        <td>
           116
         </td>
         <td>
-          50
+          55
         </td>
         <td>
-          4134
+          4140
           -
-          4148
+          4154
         </td>
         <td>
           Apply
@@ -905,12 +905,33 @@ else
           132
         </td>
         <td>
-          53
+          59
         </td>
         <td>
-          4720
+          4687
           -
-          4750
+          4757
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.utils.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.utils.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          132
+        </td>
+        <td>
+          58
+        </td>
+        <td>
+          4726
+          -
+          4756
         </td>
         <td>
           Literal
@@ -926,12 +947,12 @@ else
           132
         </td>
         <td>
-          52
+          57
         </td>
         <td>
-          4704
+          4710
           -
-          4718
+          4724
         </td>
         <td>
           Apply
@@ -944,36 +965,15 @@ else
         </td>
       </tr><tr>
         <td>
-          132
-        </td>
-        <td>
-          54
-        </td>
-        <td>
-          4681
-          -
-          4751
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.Arguments.checkNotNull
-        </td>
-        <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
-        </td>
-      </tr><tr>
-        <td>
           134
         </td>
         <td>
-          56
+          61
         </td>
         <td>
-          4757
+          4763
           -
-          4807
+          4813
         </td>
         <td>
           Apply
@@ -989,12 +989,12 @@ else
           134
         </td>
         <td>
-          55
+          60
         </td>
         <td>
-          4775
+          4781
           -
-          4789
+          4795
         </td>
         <td>
           Apply
@@ -1010,96 +1010,75 @@ else
           147
         </td>
         <td>
-          57
+          62
         </td>
         <td>
-          5264
+          5270
           -
-          5303
+          5309
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNonEmpty
+          com.influxdb.utils.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(query, &quot;query&quot;)
+          com.influxdb.utils.Arguments.checkNonEmpty(query, &quot;query&quot;)
         </td>
       </tr><tr>
         <td>
           148
         </td>
         <td>
-          58
+          63
         </td>
         <td>
-          5308
+          5314
           -
-          5343
+          5349
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNonEmpty
+          com.influxdb.utils.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(org, &quot;org&quot;)
+          com.influxdb.utils.Arguments.checkNonEmpty(org, &quot;org&quot;)
         </td>
       </tr><tr>
         <td>
           149
         </td>
         <td>
-          59
+          64
         </td>
         <td>
-          5348
+          5354
           -
-          5406
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.Arguments.checkNotNull
-        </td>
-        <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)
-        </td>
-      </tr><tr>
-        <td>
-          151
-        </td>
-        <td>
-          61
-        </td>
-        <td>
           5412
-          -
-          5484
         </td>
         <td>
           Apply
         </td>
         <td>
-          akka.stream.scaladsl.FlowOps.map
+          com.influxdb.utils.Arguments.checkNotNull
         </td>
         <td style="background: #F0ADAD">
-          this.query(query, org).map[M](((t: com.influxdb.query.FluxRecord) =&gt; QueryScalaApiImpl.this.resultMapper.toPOJO[M](t, measurementType)))
+          com.influxdb.utils.Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)
         </td>
       </tr><tr>
         <td>
           151
         </td>
         <td>
-          60
+          65
         </td>
         <td>
-          5444
+          5450
           -
-          5483
+          5489
         </td>
         <td>
           Apply
@@ -1112,57 +1091,36 @@ else
         </td>
       </tr><tr>
         <td>
-          166
+          151
         </td>
         <td>
-          62
+          66
         </td>
         <td>
-          6033
+          5418
           -
-          6047
+          5490
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.client.InfluxDBClientOptions.getOrg
+          akka.stream.scaladsl.FlowOps.map
         </td>
         <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.options.getOrg()
+          this.query(query, org).map[M](((t: com.influxdb.query.FluxRecord) =&gt; QueryScalaApiImpl.this.resultMapper.toPOJO[M](t, measurementType)))
         </td>
       </tr><tr>
         <td>
           166
         </td>
         <td>
-          64
+          68
         </td>
         <td>
-          6010
+          6055
           -
-          6080
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.Arguments.checkNotNull
-        </td>
-        <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
-        </td>
-      </tr><tr>
-        <td>
-          166
-        </td>
-        <td>
-          63
-        </td>
-        <td>
-          6049
-          -
-          6079
+          6085
         </td>
         <td>
           Literal
@@ -1175,15 +1133,15 @@ else
         </td>
       </tr><tr>
         <td>
-          168
+          166
         </td>
         <td>
-          65
+          67
         </td>
         <td>
-          6104
+          6039
           -
-          6118
+          6053
         </td>
         <td>
           Apply
@@ -1196,15 +1154,36 @@ else
         </td>
       </tr><tr>
         <td>
+          166
+        </td>
+        <td>
+          69
+        </td>
+        <td>
+          6016
+          -
+          6086
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.utils.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.utils.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+        </td>
+      </tr><tr>
+        <td>
           168
         </td>
         <td>
-          66
+          71
         </td>
         <td>
-          6086
+          6092
           -
-          6136
+          6142
         </td>
         <td>
           Apply
@@ -1217,78 +1196,99 @@ else
         </td>
       </tr><tr>
         <td>
-          182
+          168
         </td>
         <td>
-          67
+          70
         </td>
         <td>
-          6627
+          6110
           -
-          6665
+          6124
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNotNull
+          com.influxdb.client.InfluxDBClientOptions.getOrg
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNotNull(query, &quot;query&quot;)
+          QueryScalaApiImpl.this.options.getOrg()
+        </td>
+      </tr><tr>
+        <td>
+          182
+        </td>
+        <td>
+          72
+        </td>
+        <td>
+          6633
+          -
+          6671
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.utils.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.utils.Arguments.checkNotNull(query, &quot;query&quot;)
         </td>
       </tr><tr>
         <td>
           183
         </td>
         <td>
-          68
+          73
         </td>
         <td>
-          6670
+          6676
           -
-          6705
+          6711
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNonEmpty
+          com.influxdb.utils.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(org, &quot;org&quot;)
+          com.influxdb.utils.Arguments.checkNonEmpty(org, &quot;org&quot;)
         </td>
       </tr><tr>
         <td>
           184
         </td>
         <td>
-          69
+          74
         </td>
         <td>
-          6710
+          6716
           -
-          6768
+          6774
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNotNull
+          com.influxdb.utils.Arguments.checkNotNull
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)
+          com.influxdb.utils.Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)
         </td>
       </tr><tr>
         <td>
           186
         </td>
         <td>
-          71
+          76
         </td>
         <td>
-          6774
+          6780
           -
-          6846
+          6852
         </td>
         <td>
           Apply
@@ -1304,12 +1304,12 @@ else
           186
         </td>
         <td>
-          70
+          75
         </td>
         <td>
-          6806
+          6812
           -
-          6845
+          6851
         </td>
         <td>
           Apply
@@ -1325,33 +1325,54 @@ else
           199
         </td>
         <td>
-          74
+          77
         </td>
         <td>
-          7229
+          7258
           -
-          7299
+          7272
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNotNull
+          com.influxdb.client.InfluxDBClientOptions.getOrg
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+          QueryScalaApiImpl.this.options.getOrg()
         </td>
       </tr><tr>
         <td>
           199
         </td>
         <td>
-          73
+          79
         </td>
         <td>
-          7268
+          7235
           -
-          7298
+          7305
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.utils.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.utils.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          199
+        </td>
+        <td>
+          78
+        </td>
+        <td>
+          7274
+          -
+          7304
         </td>
         <td>
           Literal
@@ -1364,15 +1385,15 @@ else
         </td>
       </tr><tr>
         <td>
-          199
+          201
         </td>
         <td>
-          72
+          80
         </td>
         <td>
-          7252
+          7332
           -
-          7266
+          7346
         </td>
         <td>
           Apply
@@ -1388,12 +1409,12 @@ else
           201
         </td>
         <td>
-          76
+          81
         </td>
         <td>
-          7305
+          7311
           -
-          7341
+          7347
         </td>
         <td>
           Apply
@@ -1406,78 +1427,57 @@ else
         </td>
       </tr><tr>
         <td>
-          201
-        </td>
-        <td>
-          75
-        </td>
-        <td>
-          7326
-          -
-          7340
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.client.InfluxDBClientOptions.getOrg
-        </td>
-        <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.options.getOrg()
-        </td>
-      </tr><tr>
-        <td>
           212
         </td>
         <td>
-          77
+          82
         </td>
         <td>
-          7645
+          7651
           -
-          7684
+          7690
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNonEmpty
+          com.influxdb.utils.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(query, &quot;query&quot;)
+          com.influxdb.utils.Arguments.checkNonEmpty(query, &quot;query&quot;)
         </td>
       </tr><tr>
         <td>
           213
         </td>
         <td>
-          78
+          83
         </td>
         <td>
-          7689
+          7695
           -
-          7724
+          7730
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNonEmpty
+          com.influxdb.utils.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(org, &quot;org&quot;)
+          com.influxdb.utils.Arguments.checkNonEmpty(org, &quot;org&quot;)
         </td>
       </tr><tr>
         <td>
           215
         </td>
         <td>
-          80
+          85
         </td>
         <td>
-          7730
+          7736
           -
-          7795
+          7801
         </td>
         <td>
           Apply
@@ -1493,12 +1493,12 @@ else
           215
         </td>
         <td>
-          79
+          84
         </td>
         <td>
-          7751
+          7757
           -
-          7789
+          7795
         </td>
         <td>
           Select
@@ -1514,33 +1514,54 @@ else
           230
         </td>
         <td>
-          83
+          86
         </td>
         <td>
-          8364
+          8393
           -
-          8434
+          8407
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNotNull
+          com.influxdb.client.InfluxDBClientOptions.getOrg
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+          QueryScalaApiImpl.this.options.getOrg()
         </td>
       </tr><tr>
         <td>
           230
         </td>
         <td>
-          82
+          88
         </td>
         <td>
-          8403
+          8370
           -
-          8433
+          8440
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.utils.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.utils.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          230
+        </td>
+        <td>
+          87
+        </td>
+        <td>
+          8409
+          -
+          8439
         </td>
         <td>
           Literal
@@ -1553,15 +1574,15 @@ else
         </td>
       </tr><tr>
         <td>
-          230
+          232
         </td>
         <td>
-          81
+          89
         </td>
         <td>
-          8387
+          8476
           -
-          8401
+          8490
         </td>
         <td>
           Apply
@@ -1577,12 +1598,12 @@ else
           232
         </td>
         <td>
-          85
+          90
         </td>
         <td>
-          8440
+          8446
           -
-          8485
+          8491
         </td>
         <td>
           Apply
@@ -1595,78 +1616,57 @@ else
         </td>
       </tr><tr>
         <td>
-          232
-        </td>
-        <td>
-          84
-        </td>
-        <td>
-          8470
-          -
-          8484
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.client.InfluxDBClientOptions.getOrg
-        </td>
-        <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.options.getOrg()
-        </td>
-      </tr><tr>
-        <td>
           245
         </td>
         <td>
-          86
+          91
         </td>
         <td>
-          8957
+          8963
           -
-          8996
+          9002
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNonEmpty
+          com.influxdb.utils.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(query, &quot;query&quot;)
+          com.influxdb.utils.Arguments.checkNonEmpty(query, &quot;query&quot;)
         </td>
       </tr><tr>
         <td>
           246
         </td>
         <td>
-          87
+          92
         </td>
         <td>
-          9001
+          9007
           -
-          9036
+          9042
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNonEmpty
+          com.influxdb.utils.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(org, &quot;org&quot;)
+          com.influxdb.utils.Arguments.checkNonEmpty(org, &quot;org&quot;)
         </td>
       </tr><tr>
         <td>
           248
         </td>
         <td>
-          89
+          94
         </td>
         <td>
-          9042
+          9048
           -
-          9103
+          9109
         </td>
         <td>
           Apply
@@ -1682,12 +1682,12 @@ else
           248
         </td>
         <td>
-          88
+          93
         </td>
         <td>
-          9056
+          9062
           -
-          9097
+          9103
         </td>
         <td>
           Apply
@@ -1703,33 +1703,54 @@ else
           261
         </td>
         <td>
-          92
+          95
         </td>
         <td>
-          9485
+          9514
           -
-          9555
+          9528
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNotNull
+          com.influxdb.client.InfluxDBClientOptions.getOrg
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+          QueryScalaApiImpl.this.options.getOrg()
         </td>
       </tr><tr>
         <td>
           261
         </td>
         <td>
-          91
+          97
         </td>
         <td>
-          9524
+          9491
           -
-          9554
+          9561
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.utils.Arguments.checkNotNull
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.utils.Arguments.checkNotNull(QueryScalaApiImpl.this.options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          261
+        </td>
+        <td>
+          96
+        </td>
+        <td>
+          9530
+          -
+          9560
         </td>
         <td>
           Literal
@@ -1742,15 +1763,15 @@ else
         </td>
       </tr><tr>
         <td>
-          261
+          263
         </td>
         <td>
-          90
+          98
         </td>
         <td>
-          9508
+          9588
           -
-          9522
+          9602
         </td>
         <td>
           Apply
@@ -1766,12 +1787,12 @@ else
           263
         </td>
         <td>
-          94
+          99
         </td>
         <td>
-          9561
+          9567
           -
-          9597
+          9603
         </td>
         <td>
           Apply
@@ -1784,78 +1805,57 @@ else
         </td>
       </tr><tr>
         <td>
-          263
-        </td>
-        <td>
-          93
-        </td>
-        <td>
-          9582
-          -
-          9596
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          com.influxdb.client.InfluxDBClientOptions.getOrg
-        </td>
-        <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.options.getOrg()
-        </td>
-      </tr><tr>
-        <td>
           275
         </td>
         <td>
-          95
+          100
         </td>
         <td>
-          9934
+          9940
           -
-          9972
+          9978
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNotNull
+          com.influxdb.utils.Arguments.checkNotNull
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNotNull(query, &quot;query&quot;)
+          com.influxdb.utils.Arguments.checkNotNull(query, &quot;query&quot;)
         </td>
       </tr><tr>
         <td>
           276
         </td>
         <td>
-          96
+          101
         </td>
         <td>
-          9977
+          9983
           -
-          10012
+          10018
         </td>
         <td>
           Apply
         </td>
         <td>
-          com.influxdb.Arguments.checkNonEmpty
+          com.influxdb.utils.Arguments.checkNonEmpty
         </td>
         <td style="background: #F0ADAD">
-          com.influxdb.Arguments.checkNonEmpty(org, &quot;org&quot;)
+          com.influxdb.utils.Arguments.checkNonEmpty(org, &quot;org&quot;)
         </td>
       </tr><tr>
         <td>
           278
         </td>
         <td>
-          106
+          111
         </td>
         <td>
-          10018
+          10024
           -
-          10392
+          10398
         </td>
         <td>
           Apply
@@ -1877,12 +1877,12 @@ else
           280
         </td>
         <td>
-          97
+          102
         </td>
         <td>
-          10112
+          10118
           -
-          10177
+          10183
         </td>
         <td>
           Apply
@@ -1898,12 +1898,12 @@ else
           282
         </td>
         <td>
-          98
+          103
         </td>
         <td>
-          10187
+          10193
           -
-          10209
+          10215
         </td>
         <td>
           Apply
@@ -1919,12 +1919,12 @@ else
           286
         </td>
         <td>
-          99
+          104
         </td>
         <td>
-          10249
+          10255
           -
-          10262
+          10268
         </td>
         <td>
           Apply
@@ -1940,12 +1940,33 @@ else
           287
         </td>
         <td>
-          101
+          107
         </td>
         <td>
-          10274
+          10280
           -
-          10292
+          10298
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          scala.Some.apply
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Some.apply[String](query.next())
+        </td>
+      </tr><tr>
+        <td>
+          287
+        </td>
+        <td>
+          106
+        </td>
+        <td>
+          10280
+          -
+          10298
         </td>
         <td>
           Apply
@@ -1961,12 +1982,12 @@ else
           287
         </td>
         <td>
-          100
+          105
         </td>
         <td>
-          10279
+          10285
           -
-          10291
+          10297
         </td>
         <td>
           Apply
@@ -1979,36 +2000,15 @@ else
         </td>
       </tr><tr>
         <td>
-          287
-        </td>
-        <td>
-          102
-        </td>
-        <td>
-          10274
-          -
-          10292
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          scala.Some.apply
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Some.apply[String](query.next())
-        </td>
-      </tr><tr>
-        <td>
           289
         </td>
         <td>
-          104
+          109
         </td>
         <td>
-          10316
+          10322
           -
-          10320
+          10326
         </td>
         <td>
           Block
@@ -2024,12 +2024,12 @@ else
           289
         </td>
         <td>
-          103
+          108
         </td>
         <td>
-          10316
+          10322
           -
-          10320
+          10326
         </td>
         <td>
           Select
@@ -2045,12 +2045,12 @@ else
           291
         </td>
         <td>
-          105
+          110
         </td>
         <td>
-          10372
+          10378
           -
-          10386
+          10392
         </td>
         <td>
           Apply

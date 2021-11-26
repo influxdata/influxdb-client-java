@@ -24,4 +24,5 @@ com.influxdb.query.internal
 com.influxdb.spring.health
 com.influxdb.spring.influx
 com.influxdb.test
+com.influxdb.utils
 example

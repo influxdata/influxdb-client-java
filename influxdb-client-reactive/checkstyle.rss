@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 - 2021 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 7,
+      <title>File: 8,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -61,6 +61,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-reactive/checkstyle.html#com.influxdb.client.reactive.internal.QueryReactiveApiImpl.java">com/influxdb/client/reactive/internal/QueryReactiveApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-reactive/checkstyle.html#com.influxdb.client.reactive.WriteOptionsReactive.java">com/influxdb/client/reactive/WriteOptionsReactive.java</a>
                 </td>
                 <td>
                   0
