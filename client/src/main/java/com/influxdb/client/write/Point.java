@@ -347,7 +347,7 @@ public final class Point {
             String key = tag.getKey();
             String value = tag.getValue();
 
-            if (key.isEmpty() || value.isEmpty()) {
+            if (key.isEmpty() || value == null || value.isEmpty()) {
                 continue;
             }
 
