@@ -1,5 +1,8 @@
 ## 4.1.0 [unreleased]
 
+### Bug Fixes
+1. [#283](https://github.com/influxdata/influxdb-client-java/pull/283): Serialization `null` tag's value into LineProtocol
+
 ## 4.0.0 [2021-11-26]
 
 ### Breaking Changes
