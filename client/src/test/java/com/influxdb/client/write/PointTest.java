@@ -104,6 +104,17 @@ class PointTest {
     }
 
     @Test
+    void tagNullValue() {
+
+        Point point = Point.measurement("h2o")
+                .addTag("location", "europe")
+                .addTag("log", null)
+                .addField("level", 2);
+
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe level=2i");
+    }
+
+    @Test
     public void tagEscapingKeyAndValue() {
 
         Point point = Point.measurement("h\n2\ro\t_data")
