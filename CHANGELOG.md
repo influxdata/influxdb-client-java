@@ -2,7 +2,7 @@
 
 ### Bug Fixes
 1. [#285](https://github.com/influxdata/influxdb-client-java/pull/285): Fix default dialect in `QueryApi`
-1. [#283](https://github.com/influxdata/influxdb-client-java/pull/284): Serialization `null` tag's value into LineProtocol
+1. [#283](https://github.com/influxdata/influxdb-client-java/pull/283): Serialization `null` tag's value into LineProtocol
 
 ## 4.0.0 [2021-11-26]
 
