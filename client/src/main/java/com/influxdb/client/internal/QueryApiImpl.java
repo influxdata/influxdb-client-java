@@ -80,7 +80,7 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Arguments.checkNonEmpty(query, "query");
         Arguments.checkNonEmpty(org, "org");
 
-        return query(new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT), org);
+        return query(new Query().query(query), org);
     }
 
     @Nonnull
@@ -124,7 +124,7 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
 
         Arguments.checkNonEmpty(query, "query");
 
-        Query dialect = new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT);
+        Query dialect = new Query().query(query);
 
         return query(dialect, org, measurementType);
     }
@@ -383,7 +383,7 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Arguments.checkNotNull(onError, "onError");
         Arguments.checkNotNull(onComplete, "onComplete");
 
-        Query queryObj = new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT);
+        Query queryObj = new Query().query(query);
 
         query(queryObj, org, onNext, onError, onComplete);
     }
@@ -458,7 +458,7 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Arguments.checkNotNull(onComplete, "onComplete");
         Arguments.checkNotNull(measurementType, "measurementType");
 
-        Query queryObj = new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT);
+        Query queryObj = new Query().query(query);
 
         query(queryObj, org, measurementType,  onNext, onError, onComplete);
     }
@@ -793,7 +793,7 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
                        @Nonnull final Boolean asynchronously) {
 
         Call<ResponseBody> queryCall = service
-                .postQueryResponseBody(null, null, null, org, null, query);
+            .postQueryResponseBody(null, null, null, org, null, query.dialect(AbstractInfluxDBClient.DEFAULT_DIALECT));
 
 
         LOG.log(Level.FINEST, "Prepare query \"{0}\" with dialect \"{1}\" on organization \"{2}\".",
