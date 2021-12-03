@@ -194,7 +194,7 @@ internal class QueryKotlinApiImpl(private val service: QueryService, private val
         val channel = Channel<T>()
 
         val queryCall = service.postQueryResponseBody(null, null,
-                null, org, null, query)
+                null, org, null, query.dialect(AbstractInfluxDBClient.DEFAULT_DIALECT))
 
         val responseConsumer = object : FluxResponseConsumer {
 

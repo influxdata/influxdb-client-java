@@ -102,7 +102,8 @@ class QueryScalaApiImpl(@Nonnull service: QueryService, @Nonnull options: Influx
 
     Source.unfoldResource[FluxRecord, AbstractQueryApi#FluxRecordIterator](
       () => {
-        val call = service.postQueryResponseBody(null, null, null, org, null, query)
+        val call = service.postQueryResponseBody(null, null, null, org, null,
+          query.dialect(AbstractInfluxDBClient.DEFAULT_DIALECT))
 
         queryIterator(call)
 
