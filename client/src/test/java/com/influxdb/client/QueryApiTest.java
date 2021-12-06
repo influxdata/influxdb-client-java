@@ -22,9 +22,13 @@
 package com.influxdb.client;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
 
+import com.google.gson.Gson;
 import com.influxdb.client.domain.Dialect;
 import com.influxdb.client.domain.Query;
+import static com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT;
 import com.influxdb.client.internal.AbstractInfluxDBClientTest;
 
 import okhttp3.mockwebserver.RecordedRequest;
@@ -84,6 +88,15 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
         request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
+
+        // check default dialect presence
+        Gson gson = JSON.createGson().create();
+        Map dialect = (Map) gson.fromJson(request.getBody().readUtf8(), Map.class).get("dialect");
+        Assertions.assertThat(dialect.get("header")).isEqualTo(DEFAULT_DIALECT.getHeader());
+        Assertions.assertThat(dialect.get("delimiter")).isEqualTo(DEFAULT_DIALECT.getDelimiter());
+        Assertions.assertThat(dialect.get("annotations")).isEqualTo(Arrays.asList("datatype", "group", "default"));
+        Assertions.assertThat(dialect.get("dateTimeFormat")).isEqualTo(DEFAULT_DIALECT.getDateTimeFormat().toString());
+        Assertions.assertThat(dialect.get("commentPrefix")).isEqualTo(DEFAULT_DIALECT.getCommentPrefix());
 
         // String Measurement
         enqueuedResponse();
