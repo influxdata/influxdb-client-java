@@ -23,6 +23,7 @@ package com.influxdb.client;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -71,6 +72,26 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
 
         queryApi = influxDBClient.getQueryApi();
 
+        // String & params
+        enqueuedResponse();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("bucketParam","telegraf");
+
+        queryApi.query("from(bucket: \"telegraf\")", "123456", params);
+
+        request = takeRequest();
+
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
+        Gson gson = JSON.createGson().create();
+        Map p = (Map) gson.fromJson(request.getBody().readUtf8(), Map.class).get("params");
+
+        Assertions.assertThat(p.get("bucketParam")).isEqualTo("telegraf");
+
+        influxDBClient = InfluxDBClientFactory.create(url, "my-token".toCharArray(), "123456");
+
+        queryApi = influxDBClient.getQueryApi();
+
         // String
         enqueuedResponse();
 
@@ -90,7 +111,6 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
 
         // check default dialect presence
-        Gson gson = JSON.createGson().create();
         Map dialect = (Map) gson.fromJson(request.getBody().readUtf8(), Map.class).get("dialect");
         Assertions.assertThat(dialect.get("header")).isEqualTo(DEFAULT_DIALECT.getHeader());
         Assertions.assertThat(dialect.get("delimiter")).isEqualTo(DEFAULT_DIALECT.getDelimiter());
@@ -106,6 +126,17 @@ class QueryApiTest extends AbstractInfluxDBClientTest {
         request = takeRequest();
 
         Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
+
+        // Query parameters
+        enqueuedResponse();
+
+        queryApi.query("from(bucket: params.bucketParam)", "123456", H2OFeetMeasurement.class, params);
+        request = takeRequest();
+
+        Assertions.assertThat(request.getRequestUrl().queryParameter("org")).isEqualTo("123456");
+        p = (Map) gson.fromJson(request.getBody().readUtf8(), Map.class).get("params");
+        Assertions.assertThat(p.get("bucketParam")).isEqualTo("telegraf");
+        Assertions.assertThat(p).isEqualTo(params);
 
         // Query Measurement
         enqueuedResponse();

@@ -22,7 +22,9 @@
 package com.influxdb.client.internal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -85,6 +87,22 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
 
     @Nonnull
     @Override
+    public List<FluxTable> query(@Nonnull final String query,
+                                 @Nonnull final String org,
+                                 @Nullable final Map<String, Object> params) {
+
+        Arguments.checkNonEmpty(query, "query");
+        Arguments.checkNonEmpty(org, "org");
+
+        Query q = new Query().query(query);
+        if (params != null) {
+            q.params(Collections.unmodifiableMap(params));
+        }
+        return query(q, org);
+    }
+
+    @Nonnull
+    @Override
     public List<FluxTable> query(@Nonnull final Query query) {
 
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
@@ -131,6 +149,23 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
 
     @Nonnull
     @Override
+    public <M> List<M> query(@Nonnull final String query,
+                             @Nonnull final String org,
+                             @Nonnull final Class<M> measurementType,
+                             @Nullable final Map<String, Object> params) {
+
+        Arguments.checkNonEmpty(query, "query");
+
+        Query dialect = new Query().query(query);
+        if (params != null) {
+            dialect.params(Collections.unmodifiableMap(params));
+        }
+
+        return query(dialect, org, measurementType);
+    }
+
+    @Nonnull
+    @Override
     public <M> List<M> query(@Nonnull final Query query, @Nonnull final Class<M> measurementType) {
 
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
@@ -171,7 +206,8 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         return measurements;
     }
 
-    @Override
+
+        @Override
     public void query(@Nonnull final String query, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext) {
 
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
@@ -389,6 +425,28 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
     }
 
     @Override
+    public void query(@Nonnull final String query,
+                      @Nonnull final String org,
+                      @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
+                      @Nonnull final Consumer<? super Throwable> onError,
+                      @Nonnull final Runnable onComplete,
+                      @Nullable final Map<String, Object> params) {
+
+        Arguments.checkNonEmpty(query, "query");
+        Arguments.checkNonEmpty(org, "org");
+        Arguments.checkNotNull(onNext, "onNext");
+        Arguments.checkNotNull(onError, "onError");
+        Arguments.checkNotNull(onComplete, "onComplete");
+
+        Query queryObj = new Query().query(query);
+        if (params != null) {
+            queryObj.params(Collections.unmodifiableMap(params));
+        }
+
+        query(queryObj, org, onNext, onError, onComplete);
+    }
+
+    @Override
     public void query(@Nonnull final Query query,
                       @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
                       @Nonnull final Consumer<? super Throwable> onError,
@@ -462,6 +520,31 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
 
         query(queryObj, org, measurementType,  onNext, onError, onComplete);
     }
+
+    @Override
+    public <M> void query(@Nonnull final String query,
+                          @Nonnull final String org,
+                          @Nonnull final Class<M> measurementType,
+                          @Nonnull final BiConsumer<Cancellable, M> onNext,
+                          @Nonnull final Consumer<? super Throwable> onError,
+                          @Nonnull final Runnable onComplete,
+                          @Nullable final Map<String, Object> params) {
+
+        Arguments.checkNonEmpty(query, "query");
+        Arguments.checkNonEmpty(org, "org");
+        Arguments.checkNotNull(onNext, "onNext");
+        Arguments.checkNotNull(onError, "onError");
+        Arguments.checkNotNull(onComplete, "onComplete");
+        Arguments.checkNotNull(measurementType, "measurementType");
+
+        Query queryObj = new Query().query(query);
+        if (params != null) {
+            queryObj.params(Collections.unmodifiableMap(params));
+        }
+
+        query(queryObj, org, measurementType, onNext, onError, onComplete);
+    }
+
 
     @Override
     public <M> void query(@Nonnull final Query query,
@@ -550,6 +633,24 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         Arguments.checkNonEmpty(org, "org");
 
         return queryRaw(new Query().query(query).dialect(dialect), org);
+    }
+
+    @Nonnull
+    @Override
+    public String queryRaw(@Nonnull final String query,
+                           @Nullable final Dialect dialect,
+                           @Nonnull final String org,
+                           @Nullable final Map<String, Object> params) {
+
+        Arguments.checkNonEmpty(query, "query");
+        Arguments.checkNonEmpty(org, "org");
+
+        Query queryObj = new Query().query(query).dialect(dialect);
+        if (params != null) {
+            queryObj.params(Collections.unmodifiableMap(params));
+        }
+
+        return queryRaw(queryObj, org);
     }
 
     @Nonnull
@@ -664,6 +765,20 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
     }
 
     @Override
+    public void queryRaw(@Nonnull final String query,
+                         @Nonnull final String org,
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                         @Nonnull final Consumer<? super Throwable> onError,
+                         @Nullable final Map<String, Object> params) {
+
+        Arguments.checkNonEmpty(query, "query");
+        Arguments.checkNotNull(onResponse, "onNext");
+        Arguments.checkNotNull(onError, "onError");
+
+        queryRaw(query, null, org, onResponse, onError, EMPTY_ACTION, params);
+    }
+
+    @Override
     public void queryRaw(@Nonnull final Query query,
                          @Nonnull final BiConsumer<Cancellable, String> onResponse,
                          @Nonnull final Consumer<? super Throwable> onError) {
@@ -763,6 +878,29 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
 
         queryRaw(new Query().query(query).dialect(dialect), org, onResponse, onError, onComplete, true);
     }
+
+    @Override
+    public void queryRaw(@Nonnull final String query,
+                         @Nullable final Dialect dialect,
+                         @Nonnull final String org,
+                         @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                         @Nonnull final Consumer<? super Throwable> onError,
+                         @Nonnull final Runnable onComplete,
+                         @Nullable final Map<String, Object> params) {
+
+        Arguments.checkNonEmpty(query, "query");
+        Arguments.checkNonEmpty(org, "org");
+        Arguments.checkNotNull(onResponse, "onNext");
+        Arguments.checkNotNull(onError, "onError");
+        Arguments.checkNotNull(onComplete, "onComplete");
+
+        Query queryObj = new Query().query(query).dialect(dialect);
+        if (params != null) {
+            queryObj.params(Collections.unmodifiableMap(params));
+        }
+        queryRaw(queryObj, org, onResponse, onError, onComplete, true);
+    }
+
 
     @Override
     public void queryRaw(@Nonnull final Query query,
