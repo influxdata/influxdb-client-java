@@ -30,6 +30,9 @@ import javax.annotation.Nonnull
 /**
  * The client that allows perform Flux queries against the InfluxDB /api/v2/query endpoint.
  *
+ * For parametrized queries use [[Query]] object, see [[com.influxdb.client.QueryApi]] in Java module
+ * for more details.
+ *
  * @author Jakub Bednar (bednar@github) (02/11/2018 09:48)
  */
 trait QueryScalaApi {

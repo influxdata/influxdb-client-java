@@ -30,6 +30,9 @@ import kotlinx.coroutines.channels.Channel
 /**
  * The client that allows perform Flux queries against the InfluxDB /api/v2/query endpoint.
  *
+ * For parametrized queries use [Query] object, see [com.influxdb.client.QueryApi] in Java module
+ * for more details.
+ *
  * @author Jakub Bednar (bednar@github) (29/10/2018 10:45)
  */
 interface QueryKotlinApi {
