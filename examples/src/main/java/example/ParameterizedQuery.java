@@ -30,7 +30,7 @@ import java.util.Map;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.QueryApi;
-import com.influxdb.client.WriteApi;
+import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxTable;
@@ -39,53 +39,46 @@ public class ParameterizedQuery {
 
     public static void main(String[] args) {
 
-        String url = System.getenv("INFLUX_URL");
-        String token = System.getenv("INFLUX_TOKEN");
-        String org = System.getenv("INFLUX_ORG");
-        String bucket = System.getenv("INFLUX_BUCKET");
+        String url = "https://us-west-2-1.aws.cloud2.influxdata.com";
+        String token = "my-token";
+        String org = "my-org";
+        String bucket = "my-bucket";
+        try (InfluxDBClient client = InfluxDBClientFactory.create(url, token.toCharArray(), org, bucket)) {
 
-        InfluxDBClient client = InfluxDBClientFactory.create(url,
-            token.toCharArray(),
-            org, bucket);
+            QueryApi queryApi = client.getQueryApi();
 
-        WriteApi writeApi = client.makeWriteApi();
+            Instant yesterday = Instant.now().minus(Period.ofDays(1));
 
-        Instant yesterday = Instant.now().minus(Period.ofDays(1));
+            Point p = Point.measurement("temperature")
+                .addTag("location", "north")
+                .addField("value", 60.0)
+                .time(yesterday, WritePrecision.NS);
 
-        Point p = Point.measurement("temperature")
-            .addTag("location", "north")
-            .addField("value", 60.0)
-            .time(yesterday, WritePrecision.NS);
+            WriteApiBlocking writeApi = client.getWriteApiBlocking();
+            writeApi.writePoint(p);
 
-        writeApi.writePoint(p);
+            //
+            // Query range start parameter using Instant
+            //
+            Map<String, Object> params = new HashMap<>();
+            params.put("bucketParam", bucket);
+            params.put("startParam", yesterday.toString());
 
-        writeApi.close();
+            String parametrizedQuery = "from(bucket: params.bucketParam) |> range(start: time(v: params.startParam))";
 
-        //
-        // Query range start parameter using Instant
-        //
-        QueryApi queryApi = client.getQueryApi();
-        Map<String, Object> params = new HashMap<>();
-        params.put("bucketParam", bucket);
-        params.put("startParam", yesterday.toString());
+            List<FluxTable> query = queryApi.query(parametrizedQuery, org, params);
+            query.forEach(fluxTable -> fluxTable.getRecords()
+                .forEach(r -> System.out.println(r.getTime() + ": " + r.getValueByKey("_value"))));
 
-        String parametrizedQuery = "from(bucket: params.bucketParam) |> range(start: time(v: params.startParam))";
-        List<FluxTable> query = queryApi.query(parametrizedQuery, org, params);
-        query.forEach(fluxTable -> fluxTable.getRecords()
-            .forEach(r -> System.out.println(r.getTime() + ": " + r.getValueByKey("_value"))));
+            //
+            // Query range start parameter using duration
+            //
+            params.put("startParam", "-1d10s");
+            parametrizedQuery = "from(bucket: params.bucketParam) |> range(start: duration(v: params.startParam))";
+            query = queryApi.query(parametrizedQuery, org, params);
+            query.forEach(fluxTable -> fluxTable.getRecords()
+                .forEach(r -> System.out.println(r.getTime() + ": " + r.getValueByKey("_value"))));
 
-        //
-        // Query range start parameter using duration
-        //
-        params = new HashMap<>();
-        params.put("bucketParam", bucket);
-        params.put("startParam", "-1d10s");
-        parametrizedQuery = "from(bucket: params.bucketParam) |> range(start: duration(v: params.startParam))";
-        query = queryApi.query(parametrizedQuery, org, params);
-        query.forEach(fluxTable -> fluxTable.getRecords()
-            .forEach(r -> System.out.println(r.getTime() + ": " + r.getValueByKey("_value"))));
-
-        client.close();
-
+        }
     }
 }

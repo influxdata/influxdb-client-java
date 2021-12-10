@@ -206,8 +206,7 @@ final class QueryApiImpl extends AbstractQueryApi implements QueryApi {
         return measurements;
     }
 
-
-        @Override
+    @Override
     public void query(@Nonnull final String query, @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext) {
 
         Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");

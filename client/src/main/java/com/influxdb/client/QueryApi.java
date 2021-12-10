@@ -598,12 +598,12 @@ public interface QueryApi {
      *                        usage.
      */
     <M> void query(@Nonnull final String query,
-                          @Nonnull final String org,
-                          @Nonnull final Class<M> measurementType,
-                          @Nonnull final BiConsumer<Cancellable, M> onNext,
-                          @Nonnull final Consumer<? super Throwable> onError,
-                          @Nonnull final Runnable onComplete,
-                          @Nullable final Map<String, Object> params);
+                   @Nonnull final String org,
+                   @Nonnull final Class<M> measurementType,
+                   @Nonnull final BiConsumer<Cancellable, M> onNext,
+                   @Nonnull final Consumer<? super Throwable> onError,
+                   @Nonnull final Runnable onComplete,
+                   @Nullable final Map<String, Object> params);
     /**
      * Executes the Flux query and asynchronously stream result as POJO.
      *
