@@ -33,7 +33,10 @@ import com.influxdb.query.FluxRecord;
 import org.reactivestreams.Publisher;
 
 /**
- * The client that allow perform Flux query against theInfluxDB 2.0by a reactive way.
+ * The client that allow perform Flux query against the InfluxDB 2.0 by a reactive way.
+ *
+ * For parametrized queries use {@link Query} object, see <code>com.influxdb.client.QueryApi</code> in Java module
+ * for more details.
  *
  * @author Jakub Bednar (bednar@github) (21/11/2018 07:19)
  */
