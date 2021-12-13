@@ -33,6 +33,7 @@ import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.Dialect;
 import com.influxdb.client.domain.Permission;
 import com.influxdb.client.domain.PermissionResource;
+import com.influxdb.client.domain.Query;
 import com.influxdb.client.domain.User;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractInfluxDBClient;
@@ -45,6 +46,7 @@ import io.reactivex.schedulers.Schedulers;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -356,6 +358,35 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
                 })
                 .assertValueAt(2, "");
     }
+
+    @Test
+    @Disabled("https://github.com/influxdata/influxdb/issues/16109")
+    void queryRawParams() {
+
+        Publisher<WriteReactiveApi.Success> success = writeClient.writeRecord(WritePrecision.NS,
+            "h2o_feet,location=coyote_creek level\\ water_level=1.0 1");
+
+        Flowable.fromPublisher(success)
+            .test()
+            .assertValueCount(1);
+
+        Publisher<String> result = queryClient.queryRaw(
+            new Query().query("from(bucket: params.bucketParam) |> range(start: 1970-01-01T00:00:00.000000001Z)")
+                .dialect(null).putParamsItem("bucketParam", bucket.getName()));
+
+        Flowable.fromPublisher(result)
+            .test()
+            .assertValueCount(3)
+            .assertValueAt(0, ",result,table,_start,_stop,_time,_value,_field,_measurement,location")
+            .assertValueAt(1, value -> {
+
+                Assertions.assertThat(value).endsWith("1970-01-01T00:00:00.000000001Z,1,level water_level,h2o_feet,coyote_creek");
+
+                return true;
+            })
+            .assertValueAt(2, "");
+    }
+
 
     @Test
     public void subscribeOn() {
