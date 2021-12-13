@@ -79,6 +79,26 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
         return query(Flowable.just(query), org);
     }
 
+    @Nonnull
+    @Override
+    public Publisher<FluxRecord> query(@Nonnull final Query query, @Nonnull final String org) {
+
+        Arguments.checkNotNull(query, "Flux query");
+        Arguments.checkNonEmpty(org, "org");
+        return queryQuery(Flowable.just(query), org);
+    }
+
+    @Nonnull
+
+    @Override
+    public Publisher<FluxRecord> query(@Nonnull final Query query) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+        Arguments.checkNotNull(query, "Flux query");
+
+        return queryQuery(Flowable.just(query), options.getOrg());
+    }
+
     @Override
     public <M> Publisher<M> query(@Nonnull final String query, @Nonnull final Class<M> measurementType) {
 
@@ -99,6 +119,19 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
         return query(Flowable.just(query), org, measurementType);
     }
 
+    @Override
+    public <M> Publisher<M> query(@Nonnull final Query query, @Nonnull final String org,
+                                  @Nonnull final Class<M> measurementType) {
+        Arguments.checkNotNull(query, "Flux query");
+        Arguments.checkNotNull(measurementType, "Measurement type");
+        Arguments.checkNonEmpty(org, "org");
+
+        return Flowable
+            .fromPublisher(queryQuery(Flowable.just(query), org))
+            .map(fluxRecord -> resultMapper.toPOJO(fluxRecord, measurementType));
+    }
+
+
     @Nonnull
     @Override
     public Publisher<FluxRecord> query(@Nonnull final Publisher<String> queryStream) {
@@ -112,6 +145,14 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
     @Override
     public Publisher<FluxRecord> query(@Nonnull final Publisher<String> queryStream,
                                        @Nonnull final String org) {
+        return queryQuery(Flowable.fromPublisher(queryStream)
+            .map(query -> new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT)), org);
+    }
+
+    @Nonnull
+    @Override
+    public Publisher<FluxRecord> queryQuery(@Nonnull final Publisher<Query> queryStream,
+                                            @Nonnull final String org) {
 
         Arguments.checkNotNull(queryStream, "queryStream");
         Arguments.checkNonEmpty(org, "org");
@@ -119,7 +160,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
         return Flowable
                 .fromPublisher(queryStream)
                 .map(it -> service.postQueryResponseBody(null, null,
-                        null, org, null, new Query().query(it).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT)))
+                        null, org, null, it.dialect(AbstractInfluxDBClient.DEFAULT_DIALECT)))
                 .flatMap(queryCall -> {
 
                     Observable<FluxRecord> observable = Observable.create(subscriber -> {
@@ -189,6 +230,15 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
+    public Publisher<String> queryRaw(@Nonnull final Query query) {
+
+        Arguments.checkNotNull(options.getOrg(), "InfluxDBClientOptions.getOrg");
+
+        return queryRawQuery(Flowable.just(query), null, options.getOrg());
+    }
+
+    @Nonnull
+    @Override
     public Publisher<String> queryRaw(@Nonnull final String query, @Nonnull final String org) {
 
         Arguments.checkNonEmpty(query, "Flux query");
@@ -249,6 +299,47 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
     @Nonnull
     @Override
+    public Publisher<String> queryRaw(@Nonnull final Query query,
+                                      @Nullable final Dialect dialect,
+                                      @Nonnull final String org) {
+        return queryRawQuery(Flowable.just(query), dialect, org);
+    }
+
+    @Nonnull
+    @Override
+    public Publisher<String> queryRawQuery(@Nonnull final Publisher<Query> queryStream,
+                                           @Nullable final Dialect dialect,
+                                           @Nonnull final String org) {
+
+        Arguments.checkNotNull(queryStream, "queryStream");
+        Arguments.checkNonEmpty(org, "org");
+
+        return Flowable
+            .fromPublisher(queryStream)
+            .map(it -> service.postQueryResponseBody(null, null,
+                null, org, null, it.dialect(dialect)))
+            .flatMap(queryCall -> {
+
+                Observable<String> observable = Observable.create(subscriber -> {
+
+
+                    BiConsumer<Cancellable, String> consumer = (cancellable, line) -> {
+                        if (subscriber.isDisposed()) {
+                            cancellable.cancel();
+                        } else {
+                            subscriber.onNext(line);
+                        }
+                    };
+
+                    queryRaw(queryCall, consumer, subscriber::onError, subscriber::onComplete, false);
+                });
+
+                return observable.toFlowable(BackpressureStrategy.BUFFER);
+            });
+    }
+
+    @Nonnull
+    @Override
     public Publisher<String> queryRaw(@Nonnull final Publisher<String> queryStream,
                                       @Nullable final Dialect dialect,
                                       @Nonnull final String org) {
@@ -256,27 +347,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
         Arguments.checkNotNull(queryStream, "queryStream");
         Arguments.checkNonEmpty(org, "org");
 
-        return Flowable
-                .fromPublisher(queryStream)
-                .map(it -> service.postQueryResponseBody(null, null,
-                        null, org, null, new Query().query(it).dialect(dialect)))
-                .flatMap(queryCall -> {
-
-                    Observable<String> observable = Observable.create(subscriber -> {
-
-
-                        BiConsumer<Cancellable, String> consumer = (cancellable, line) -> {
-                            if (subscriber.isDisposed()) {
-                                cancellable.cancel();
-                            } else {
-                                subscriber.onNext(line);
-                            }
-                        };
-
-                        queryRaw(queryCall, consumer, subscriber::onError, subscriber::onComplete, false);
-                    });
-
-                    return observable.toFlowable(BackpressureStrategy.BUFFER);
-                });
+        return queryRawQuery(Flowable.fromPublisher(queryStream)
+            .map(q -> new Query().query(q).dialect(dialect)), dialect, org);
     }
 }

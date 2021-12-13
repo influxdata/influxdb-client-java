@@ -1,5 +1,8 @@
 ## 4.1.0 [unreleased]
 
+### Features
+1. [#286](https://github.com/influxdata/influxdb-client-java/pull/286): Add support for Parameterized Queries 
+
 ### Bug Fixes
 1. [#283](https://github.com/influxdata/influxdb-client-java/pull/283): Serialization `null` tag's value into LineProtocol
 1. [#285](https://github.com/influxdata/influxdb-client-java/pull/285): Default dialect for Query APIs

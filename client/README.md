@@ -7,6 +7,7 @@ The reference Java client that allows query, write and management (bucket, organ
 ## Features
  
 - [Querying data using Flux language](#queries)
+  - [Parameterized Queries](#parameterized-queries)
 - [Writing data using](#writes)
     - [Line Protocol](#by-lineprotocol) 
     - [Data Point](#by-data-point) 
@@ -327,6 +328,85 @@ public class RawQueryAsynchronous {
         Thread.sleep(5_000);
 
         influxDBClient.close();
+    }
+}
+```
+
+### Parameterized Queries
+
+InfluxDB Cloud supports [Parameterized Queries](https://docs.influxdata.com/influxdb/cloud/query-data/parameterized-queries/)
+that let you dynamically change values in a query using the InfluxDB API. Parameterized queries make Flux queries more
+reusable and can also be used to help prevent injection attacks.
+
+InfluxDB Cloud inserts the params object into the Flux query as a Flux record named `params`. Use dot or bracket
+notation to access parameters in the `params` record in your Flux query. Parameterized Flux queries support only `int`
+, `float`, and `string` data types. To convert the supported data types into
+other [Flux basic data types, use Flux type conversion functions](https://docs.influxdata.com/influxdb/cloud/query-data/parameterized-queries/#supported-parameter-data-types).
+
+Parameterized query example:
+> :warning: Parameterized Queries are supported only in InfluxDB Cloud, currently there is no support in InfluxDB OSS.
+```java
+package example;
+
+import java.time.Instant;
+import java.time.Period;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
+import com.influxdb.client.WriteApiBlocking;
+import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.write.Point;
+import com.influxdb.query.FluxTable;
+
+public class ParameterizedQuery {
+
+    public static void main(String[] args) {
+
+        String url = "https://us-west-2-1.aws.cloud2.influxdata.com";
+        String token = "my-token";
+        String org = "my-org";
+        String bucket = "my-bucket";
+        try (InfluxDBClient client = InfluxDBClientFactory.create(url, token.toCharArray(), org, bucket)) {
+
+            QueryApi queryApi = client.getQueryApi();
+
+            Instant yesterday = Instant.now().minus(Period.ofDays(1));
+
+            Point p = Point.measurement("temperature")
+                .addTag("location", "north")
+                .addField("value", 60.0)
+                .time(yesterday, WritePrecision.NS);
+
+            WriteApiBlocking writeApi = client.getWriteApiBlocking();
+            writeApi.writePoint(p);
+
+            //
+            // Query range start parameter using Instant
+            //
+            Map<String, Object> params = new HashMap<>();
+            params.put("bucketParam", bucket);
+            params.put("startParam", yesterday.toString());
+
+            String parametrizedQuery = "from(bucket: params.bucketParam) |> range(start: time(v: params.startParam))";
+
+            List<FluxTable> query = queryApi.query(parametrizedQuery, org, params);
+            query.forEach(fluxTable -> fluxTable.getRecords()
+                .forEach(r -> System.out.println(r.getTime() + ": " + r.getValueByKey("_value"))));
+
+            //
+            // Query range start parameter using duration
+            //
+            params.put("startParam", "-1d10s");
+            parametrizedQuery = "from(bucket: params.bucketParam) |> range(start: duration(v: params.startParam))";
+            query = queryApi.query(parametrizedQuery, org, params);
+            query.forEach(fluxTable -> fluxTable.getRecords()
+                .forEach(r -> System.out.println(r.getTime() + ": " + r.getValueByKey("_value"))));
+
+        }
     }
 }
 ```

@@ -24,7 +24,9 @@ package com.influxdb.client;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,6 +47,7 @@ import com.influxdb.query.FluxTable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -832,4 +835,32 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         client.close();
     }
+
+    @Test
+    @Disabled("https://github.com/influxdata/influxdb/issues/16109")
+    public void queryParameters() {
+
+        InfluxDBClient client = InfluxDBClientFactory.create(influxDB_URL, token.toCharArray(), organization.getId(), bucket.getName());
+
+        WriteApi writeApi = client.makeWriteApi();
+
+        writeApi.writeRecord(WritePrecision.NS, "temperature,location=north value=60.0 1");
+        writeApi.close();
+
+        queryApi = client.getQueryApi();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("bucketParam", bucket.getName());
+        params.put("startParam", "1970-01-01T00:00:00.000000001Z");
+        List<FluxTable> query = queryApi.query(
+            "from(bucket: params.bucketParam) |> range(start: time(v: params.startParam))",
+            organization.getName(), params);
+
+        Assertions.assertThat(query).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords()).hasSize(1);
+        Assertions.assertThat(query.get(0).getRecords().get(0).getValue()).isEqualTo(60.0);
+
+        client.close();
+    }
+
 }

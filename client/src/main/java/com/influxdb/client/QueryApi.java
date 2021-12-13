@@ -22,6 +22,7 @@
 package com.influxdb.client;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import javax.annotation.Nonnull;
@@ -70,6 +71,44 @@ public interface QueryApi {
      */
     @Nonnull
     List<FluxTable> query(@Nonnull final String query, @Nonnull final String org);
+
+    /**
+     * Executes the Parameterized Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * to {@code List<FluxTable>}. Query parameters currently are supported only in InfluxDB Cloud.
+     * <p>
+     * NOTE: This method is not intended for large query results.
+     * Use {@link QueryApi#query(String, String, BiConsumer, Consumer, Runnable, Map)} for large data streaming.
+     * </p>
+     * Parameterized Flux queries support int, float, and string data types.
+     * To convert the supported data types into other Flux basic data types, use Flux type conversion functions.
+     * <p>
+     *
+     * Example:
+     * </p>
+     * <blockquote>
+     * <pre>{@code
+     * Instant yesterday = Instant.now().minus(Period.ofDays(1));
+     * QueryApi queryApi = client.getQueryApi();
+     * Map<String, Object> params = new HashMap<>();
+     * params.put("bucketParam", bucket);
+     * params.put("startParam", yesterday.toString());
+     * String parametrizedQuery = "from(bucket: params.bucketParam) |> range(start: time(v: params.startParam))";
+     * List<FluxTable> query = queryApi.query(parametrizedQuery, org, params);
+     * }
+     * </pre>
+     * </blockquote>
+     *
+     * @param query the flux query to execute
+     * @param org   specifies the source organization
+     * @param params the map of query parameters.
+     *
+     * @return {@code List<FluxTable>} which are matched the query
+     *
+     * @see <a href="https://docs.influxdata.com/influxdb/cloud/query-data/parameterized-queries/">InfluxDB Cloud
+     * Parametrized Queries</a>
+     */
+    List<FluxTable> query(@Nonnull final String query, @Nonnull final String org,
+                          @Nullable Map<String, Object> params);
 
     /**
      * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
@@ -133,6 +172,28 @@ public interface QueryApi {
     @Nonnull
     <M> List<M> query(@Nonnull final String query,
                       @Nonnull final String org, @Nonnull final Class<M> measurementType);
+
+    /**
+     * Executes the Parameterized Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * to list of object with given type.
+     * <p>
+     * NOTE: This method is not intended for large query results.
+     * Use {@link QueryApi#query(String, String, Class, BiConsumer, Consumer, Runnable)} for large data streaming.
+     *
+     * @param <M>             the type of the measurement (POJO)
+     * @param query           the flux query to execute
+     * @param org             specifies the source organization
+     * @param measurementType the type of measurement
+     * @param params          the map of query parameters. See {@link QueryApi#query(String, String, Map)} for parameter
+     *                        usage.
+     *
+     * @return {@code List<T>} which are matched the query
+     */
+    <M> List<M> query(@Nonnull final String query,
+                      @Nonnull final String org,
+                      @Nonnull final Class<M> measurementType,
+                      @Nullable final Map<String, Object> params);
+
 
     /**
      * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
@@ -438,6 +499,26 @@ public interface QueryApi {
                @Nonnull final Runnable onComplete);
 
     /**
+     * Executes the Parameterized Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
+     * to {@code onNext} consumer.
+     *
+     * @param query      the flux query to execute
+     * @param org        specifies the source organization
+     * @param onNext     the callback to consume FluxRecord result with capability to discontinue a streaming query
+     * @param onError    the callback to consume any error notification
+     * @param onComplete the callback to consume a notification about successfully end of stream
+     * @param params     the map of query parameters, see {@link QueryApi#query(String, String, Map)} for parameter
+     *                   usage.
+     */
+    void query(@Nonnull final String query,
+               @Nonnull final String org,
+               @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext,
+               @Nonnull final Consumer<? super Throwable> onError,
+               @Nonnull final Runnable onComplete,
+               @Nullable final Map<String, Object> params);
+
+
+    /**
      * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
@@ -503,6 +584,26 @@ public interface QueryApi {
                    @Nonnull final Consumer<? super Throwable> onError,
                    @Nonnull final Runnable onComplete);
 
+    /**
+     * Executes the Parameterized Flux query and asynchronously stream result as POJO.
+     *
+     * @param <M>             the type of the measurement (POJO)
+     * @param query           the flux query to execute
+     * @param org             specifies the source organization
+     * @param measurementType the measurement type (POJO)
+     * @param onNext          the callback to consume POJO record with capability to discontinue a streaming query
+     * @param onError         the callback to consume any error notification
+     * @param onComplete      the callback to consume a notification about successfully end of stream
+     * @param params          the map of query parameters, See {@link QueryApi#query(String, String, Map)} for parameter
+     *                        usage.
+     */
+    <M> void query(@Nonnull final String query,
+                   @Nonnull final String org,
+                   @Nonnull final Class<M> measurementType,
+                   @Nonnull final BiConsumer<Cancellable, M> onNext,
+                   @Nonnull final Consumer<? super Throwable> onError,
+                   @Nonnull final Runnable onComplete,
+                   @Nullable final Map<String, Object> params);
     /**
      * Executes the Flux query and asynchronously stream result as POJO.
      *
@@ -601,6 +702,27 @@ public interface QueryApi {
      */
     @Nonnull
     String queryRaw(@Nonnull final String query, @Nullable final Dialect dialect, @Nonnull final String org);
+
+    /**
+     * Executes the Parameterized Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * to {@link String} result.
+     * <p>
+     * NOTE: This method is not intended for large responses, that do not fit into memory.
+     * Use {@link QueryApi#queryRaw(String, String, BiConsumer, Consumer, Runnable)} for large data streaming.
+     *
+     * @param query   the flux query to execute
+     * @param dialect Dialect is an object defining the options to use when encoding the response.
+     *                <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
+     * @param org     specifies the source organization
+     * @param params the map of query parameters, See {@link QueryApi#query(String, String, Map)} for parameter
+     *                usage.
+     * @return the raw response that matched the query
+     */
+    @Nonnull
+    String queryRaw(@Nonnull final String query,
+                    @Nullable final Dialect dialect,
+                    @Nonnull final String org,
+                    @Nullable final Map<String, Object> params);
 
     /**
      * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
@@ -737,6 +859,25 @@ public interface QueryApi {
                   @Nonnull final String org, @Nonnull final BiConsumer<Cancellable, String> onResponse,
                   @Nonnull final Consumer<? super Throwable> onError);
 
+
+    /**
+     * Executes the Parameterized Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * (line by line) to {@code onResponse}.
+     *
+     * @param query      the flux query to execute
+     * @param org        specifies the source organization
+     * @param onResponse the callback to consume the response line by line
+     *                   with capability to discontinue a streaming query
+     * @param onError    callback to consume any error notification
+     * @param params     the map of query parameters, See {@link QueryApi#query(String, String, Map)} for parameter
+     *                   usage.
+     */
+    void queryRaw(@Nonnull final String query,
+                  @Nonnull final String org,
+                  @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                  @Nonnull final Consumer<? super Throwable> onError,
+                  @Nullable final Map<String, Object> params);
+
     /**
      * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
      * (line by line) to {@code onResponse}.
@@ -872,6 +1013,31 @@ public interface QueryApi {
                   @Nonnull final String org, @Nonnull final BiConsumer<Cancellable, String> onResponse,
                   @Nonnull final Consumer<? super Throwable> onError,
                   @Nonnull final Runnable onComplete);
+
+    /**
+     * Executes the Parameterized Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * (line by line) to {@code onResponse}.
+     *
+     * @param query      the flux query to execute
+     * @param dialect    Dialect is an object defining the options to use when encoding the response.
+     *                   <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
+     * @param org        specifies the source organization
+     * @param onResponse the callback to consume the response line by line
+     *                   with capability to discontinue a streaming query
+     *                   The callback call contains the one line of the response.
+     * @param onError    callback to consume any error notification
+     * @param onComplete callback to consume a notification about successfully end of stream
+     * @param params     the map of query parameters, See {@link QueryApi#query(String, String, Map)} for parameter
+     *                   usage.
+     */
+
+    void queryRaw(@Nonnull final String query,
+                  @Nullable final Dialect dialect,
+                  @Nonnull final String org,
+                  @Nonnull final BiConsumer<Cancellable, String> onResponse,
+                  @Nonnull final Consumer<? super Throwable> onError,
+                  @Nonnull final Runnable onComplete,
+                  @Nullable final Map<String, Object> params);
 
     /**
      * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
