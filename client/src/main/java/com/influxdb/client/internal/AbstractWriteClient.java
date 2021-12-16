@@ -181,7 +181,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                     if (responseNotification.isOnError()) {
                         publish(new WriteErrorEvent(toInfluxException(responseNotification.getError())));
                     }
-                }, throwable -> new WriteErrorEvent(toInfluxException(throwable)));
+                }, throwable -> publish(new WriteErrorEvent(toInfluxException(throwable))));
 
         autoCloseables.add(this);
     }
