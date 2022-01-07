@@ -43,8 +43,7 @@ class MeasurementMapperTest {
     private MeasurementMapper mapper;
 
     @BeforeEach
-    void setUp()
-    {
+    void setUp() {
         mapper = new MeasurementMapper();
     }
 
@@ -133,6 +132,24 @@ class MeasurementMapperTest {
         Assertions.assertThat(lineProtocol).isEqualTo("mem,tag=a value=5i");
     }
 
+    @Test
+    void primitives() {
+        PojoPrimitives pojo = new PojoPrimitives();
+        pojo.float1 = 10.5F;
+        pojo.float2 = pojo.float1;
+        pojo.integer1 = 50;
+        pojo.integer2 = pojo.integer1;
+        pojo.bool1 = true;
+        pojo.bool2 = pojo.bool1;
+        pojo.double1 = 123.12;
+        pojo.double2 = pojo.double1;
+        pojo.long1 = 123456789L;
+        pojo.long2 = pojo.long1;
+
+        String lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("primitives bool1=true,bool2=true,double1=123.12,double2=123.12,float1=10.5,float2=10.5,integer1=50i,integer2=50i,long1=123456789i,long2=123456789i");
+    }
+
     @Measurement(name = "pojo")
     private static class Pojo {
 
@@ -176,5 +193,33 @@ class MeasurementMapperTest {
 
         @Column(name = "value")
         private Integer value;
+    }
+
+    @Measurement(name = "primitives")
+    public static class PojoPrimitives {
+        @Column
+        private Float float1;
+        @Column
+        private float float2;
+
+        @Column
+        private Integer integer1;
+        @Column
+        private int integer2;
+
+        @Column
+        private Boolean bool1;
+        @Column
+        private boolean bool2;
+
+        @Column
+        private Double double1;
+        @Column
+        private double double2;
+
+        @Column
+        private Long long1;
+        @Column
+        private long long2;
     }
 }

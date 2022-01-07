@@ -139,6 +139,7 @@ public final class MeasurementMapper {
         return Number.class.isAssignableFrom(fieldType)
                 || double.class.isAssignableFrom(fieldType)
                 || long.class.isAssignableFrom(fieldType)
+                || float.class.isAssignableFrom(fieldType)
                 || int.class.isAssignableFrom(fieldType);
     }
 
