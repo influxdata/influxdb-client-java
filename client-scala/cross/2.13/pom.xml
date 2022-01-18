@@ -207,6 +207,12 @@
       <groupId>com.typesafe.akka</groupId>
       <artifactId>akka-stream_2.13</artifactId>
       <version>${akka.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-library</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -214,6 +220,12 @@
       <artifactId>akka-testkit_2.13</artifactId>
       <version>${akka.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-library</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -221,6 +233,12 @@
       <artifactId>akka-stream-testkit_2.13</artifactId>
       <version>${akka.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-library</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -234,6 +252,12 @@
       <artifactId>scalatest_2.13</artifactId>
       <version>3.2.0</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-library</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
   </dependencies>

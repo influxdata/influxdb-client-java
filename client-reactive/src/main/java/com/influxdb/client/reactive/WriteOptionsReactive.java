@@ -28,8 +28,8 @@ import javax.annotation.concurrent.ThreadSafe;
 import com.influxdb.client.WriteApi;
 import com.influxdb.utils.Arguments;
 
-import io.reactivex.Scheduler;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import static com.influxdb.client.WriteOptions.DEFAULT_BATCH_SIZE;
 import static com.influxdb.client.WriteOptions.DEFAULT_EXPONENTIAL_BASE;

@@ -48,15 +48,15 @@ import com.influxdb.exceptions.InfluxException;
 import com.influxdb.internal.AbstractRestClient;
 import com.influxdb.utils.Arguments;
 
-import io.reactivex.Flowable;
-import io.reactivex.FlowableTransformer;
-import io.reactivex.Maybe;
-import io.reactivex.Notification;
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.functions.Function;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.FlowableTransformer;
+import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.Notification;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.processors.PublishProcessor;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 import org.reactivestreams.Publisher;
 import retrofit2.HttpException;
 import retrofit2.Response;
@@ -75,7 +75,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
     private final WriteOptions writeOptions;
     protected final InfluxDBClientOptions options;
 
-    private final PublishProcessor<AbstractWriteClient.BatchWriteItem> processor;
+    private final PublishProcessor<BatchWriteItem> processor;
     private final PublishProcessor<Flowable<BatchWriteItem>> flushPublisher;
     private final PublishSubject<AbstractWriteEvent> eventPublisher;
 

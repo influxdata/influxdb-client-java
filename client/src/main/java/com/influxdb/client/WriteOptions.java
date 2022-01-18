@@ -27,9 +27,10 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.utils.Arguments;
 
-import io.reactivex.BackpressureOverflowStrategy;
-import io.reactivex.Scheduler;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.BackpressureOverflowStrategy;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 
 /**
  * WriteOptions are used to configure writes the data point into InfluxDB 2.0.
