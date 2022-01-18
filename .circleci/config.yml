@@ -151,6 +151,19 @@ jobs:
             chmod +x ./codecov
             ./codecov
 
+  check-dependencies:
+    parameters:
+      maven-image:
+        type: string
+        default: *default-maven-image
+    docker:
+      - image: << parameters.maven-image >>
+    steps:
+      - checkout
+      - run:
+          name: "Check dependency rules"
+          command: mvn enforcer:enforce -Drules=banDuplicatePomDependencyVersions,dependencyConvergence
+
   deploy-snapshot:
     docker:
       - image: *default-maven-image
@@ -193,6 +206,7 @@ workflows:
   version: 2
   build:
     jobs:
+      - check-dependencies
       - tests-java:
           name: jdk-8
       - tests-java:
@@ -209,8 +223,10 @@ workflows:
           junit-tests: "-DclientBenchmark=true -Dit.test=com.influxdb.client.ITBenchmarkTest -DfailIfNoTests=false -Dtest=ignore -DwildcardSuites=ignore"
       - deploy-snapshot:
           requires:
+            - check-dependencies
             - jdk-8
             - jdk-11
+            - jdk-17
             - jdk-8-nightly
           filters:
             branches:
