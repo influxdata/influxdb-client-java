@@ -160,6 +160,10 @@ jobs:
       - image: << parameters.maven-image >>
     steps:
       - checkout
+      - restore_cache:
+          name: Restoring Maven Cache
+          keys:
+            - maven-cache_v3-<< parameters.maven-image >>-
       - run:
           name: "Check dependency rules"
           command: mvn enforcer:enforce -Drules=banDuplicatePomDependencyVersions,dependencyConvergence
