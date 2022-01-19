@@ -8,6 +8,7 @@
 1. [#285](https://github.com/influxdata/influxdb-client-java/pull/285): Default dialect for Query APIs
 1. [#294](https://github.com/influxdata/influxdb-client-java/pull/294): Mapping measurement with primitive `float`
 1. [#297](https://github.com/influxdata/influxdb-client-java/pull/297): Transient dependency of `okhttp`, `retrofit` and `rxjava`
+1. [#292](https://github.com/influxdata/influxdb-client-java/pull/292): Publishing runtime error as a WriteErrorEvent
 
 ## 4.0.0 [2021-11-26]
 
