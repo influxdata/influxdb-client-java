@@ -44,7 +44,7 @@ import org.junit.runner.RunWith;
  * https://github.com/influxdata/influxdb-client-java/issues/291
  */
 @RunWith(JUnitPlatform.class)
-public class PublishRuntimeErrorAsWriteErrorEvent extends AbstractInfluxDBClientTest {
+public class PublishRuntimeErrorAsWriteErrorEventTest extends AbstractInfluxDBClientTest {
 
     @Test
     void publishRuntimeErrorAsWriteErrorEvent() {
