@@ -26,6 +26,7 @@ import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import com.influxdb.LogLevel;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.RetryAttempt;
 import com.influxdb.client.write.Point;
@@ -59,6 +60,7 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
     void setUp() {
 
         influxDBClient = InfluxDBClientReactiveFactory.create(startMockServer());
+        influxDBClient.setLogLevel(LogLevel.BASIC);
 
         testScheduler = new TestScheduler();
         RxJavaPlugins.setComputationSchedulerHandler(scheduler -> testScheduler);
