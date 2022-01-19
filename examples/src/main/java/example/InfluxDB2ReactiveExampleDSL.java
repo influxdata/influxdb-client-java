@@ -29,7 +29,7 @@ import com.influxdb.client.reactive.QueryReactiveApi;
 import com.influxdb.query.dsl.Flux;
 import com.influxdb.query.dsl.functions.restriction.Restrictions;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 
 public class InfluxDB2ReactiveExampleDSL {
 

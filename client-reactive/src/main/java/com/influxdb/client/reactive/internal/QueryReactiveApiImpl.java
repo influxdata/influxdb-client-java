@@ -40,10 +40,10 @@ import com.influxdb.query.FluxTable;
 import com.influxdb.query.internal.FluxCsvParser;
 import com.influxdb.utils.Arguments;
 
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
+import io.reactivex.rxjava3.core.BackpressureStrategy;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableEmitter;
 import org.jetbrains.annotations.NotNull;
 import org.reactivestreams.Publisher;
 

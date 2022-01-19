@@ -47,7 +47,7 @@ import com.influxdb.exceptions.UnauthorizedException;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 
-import io.reactivex.schedulers.TestScheduler;
+import io.reactivex.rxjava3.schedulers.TestScheduler;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;

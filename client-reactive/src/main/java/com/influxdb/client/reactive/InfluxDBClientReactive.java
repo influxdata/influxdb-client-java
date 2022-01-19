@@ -27,7 +27,7 @@ import com.influxdb.LogLevel;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.domain.HealthCheck;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  *  The reference RxJava client for the <a href="https://github.com/influxdata/influxdb">InfluxDB 2.0</a>

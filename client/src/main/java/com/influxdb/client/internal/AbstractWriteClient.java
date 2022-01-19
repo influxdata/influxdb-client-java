@@ -120,7 +120,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                 .publish(connectedSource -> {
 
                     return connectedSource
-                            .window(() -> tempBoundary)
+                            .window(tempBoundary)
                             .mergeWith(Flowable.defer(() -> {
                                 connectedSource
                                         // Buffering

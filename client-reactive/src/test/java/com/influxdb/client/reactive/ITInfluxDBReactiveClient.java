@@ -24,7 +24,7 @@ package com.influxdb.client.reactive;
 import com.influxdb.LogLevel;
 import com.influxdb.client.domain.HealthCheck;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;

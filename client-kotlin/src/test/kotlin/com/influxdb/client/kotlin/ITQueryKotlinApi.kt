@@ -42,7 +42,6 @@ import com.influxdb.client.domain.PermissionResource
 import com.influxdb.client.domain.Query
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.internal.AbstractInfluxDBClient
-import kotlinx.coroutines.channels.map
 import kotlinx.coroutines.channels.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
@@ -236,7 +235,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         val records = queryKotlinApi.query(flux, organization.id)
 
-        val values = records.map { it.value }.toList()
+        val values = records.toList().map { it.value }
 
         assertThat(values).hasSize(2)
         assertThat(values).containsExactly(10L, 11L)

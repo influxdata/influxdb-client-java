@@ -36,8 +36,8 @@ import com.influxdb.client.service.QueryService;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.utils.Arguments;
 
-import io.reactivex.Single;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import io.reactivex.rxjava3.core.Single;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 07:12)
@@ -46,7 +46,7 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient
         implements InfluxDBClientReactive {
 
     public InfluxDBClientReactiveImpl(@Nonnull final InfluxDBClientOptions options) {
-        super(options, "java", Collections.singletonList(RxJava2CallAdapterFactory.create()));
+        super(options, "java", Collections.singletonList(RxJava3CallAdapterFactory.create()));
     }
 
     @Nonnull

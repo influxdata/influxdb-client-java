@@ -44,7 +44,7 @@ import com.influxdb.client.write.events.WriteSuccessEvent;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 
-import io.reactivex.BackpressureOverflowStrategy;
+import io.reactivex.rxjava3.core.BackpressureOverflowStrategy;
 
 /*
   InfluxDB 2.0 onboarding tasks (create default user, organization and bucket) :

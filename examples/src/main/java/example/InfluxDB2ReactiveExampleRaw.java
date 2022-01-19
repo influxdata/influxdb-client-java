@@ -25,7 +25,7 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 
 public class InfluxDB2ReactiveExampleRaw {
 
