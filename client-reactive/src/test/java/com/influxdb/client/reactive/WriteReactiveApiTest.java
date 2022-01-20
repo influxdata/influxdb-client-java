@@ -26,7 +26,6 @@ import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import com.influxdb.LogLevel;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.RetryAttempt;
 import com.influxdb.client.write.Point;
@@ -60,7 +59,6 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
     void setUp() {
 
         influxDBClient = InfluxDBClientReactiveFactory.create(startMockServer());
-        influxDBClient.setLogLevel(LogLevel.BASIC);
 
         testScheduler = new TestScheduler();
         RxJavaPlugins.setComputationSchedulerHandler(scheduler -> testScheduler);
@@ -230,8 +228,8 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
                     Assertions.assertThat(throwable).hasMessage("Max retry time exceeded.");
                     Assertions.assertThat(throwable).hasCauseInstanceOf(TimeoutException.class);
                     return true;
-                });
-//                .assertTerminated();
+                })
+                .assertNotComplete();
     }
 
     @Test
@@ -253,8 +251,8 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
                     Assertions.assertThat(throwable).isInstanceOf(InfluxException.class);
                     Assertions.assertThat(throwable).hasCauseInstanceOf(IOException.class);
                     return true;
-                });
-//                .assertTerminated();
+                })
+                .assertNotComplete();
     }
 
     @Test
@@ -275,8 +273,9 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
         Flowable.fromPublisher(successFlowable)
                 .test()
                 .awaitCount(3)
-                .assertValueCount(3);
-//                .assertTerminated();
+                .assertValueCount(3)
+                .assertNoErrors()
+                .assertComplete();
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(3);
 
@@ -312,8 +311,8 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
                     Assertions.assertThat(throwable).isInstanceOf(InfluxException.class);
                     Assertions.assertThat(throwable).hasMessage("token is temporarily over quota");
                     return true;
-                });
-//                .assertTerminated();
+                })
+                .assertNotComplete();
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(1);
 
@@ -338,8 +337,9 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
         Flowable.fromPublisher(success)
                 .test()
                 .awaitCount(1)
-                .assertValueCount(1);
-//          .assertTerminated();
+                .assertValueCount(1)
+                .assertNoErrors()
+                .assertComplete();
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(1);
 

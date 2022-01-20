@@ -23,7 +23,6 @@ package com.influxdb.client.reactive;
 
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
@@ -125,7 +124,6 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         Publisher<WriteReactiveApi.Success> success = writeClient.writeRecord(WritePrecision.NS, lineProtocol);
         Flowable.fromPublisher(success)
                 .test()
-                .awaitDone(1, TimeUnit.SECONDS)
                 .assertValueCount(1);
 
         Publisher<FluxRecord> result = queryClient.query("from(bucket:\"" + bucketName + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
@@ -165,7 +163,6 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         Publisher<WriteReactiveApi.Success> success = writeClient.writeRecords(WritePrecision.S, records);
         Flowable.fromPublisher(success)
                 .test()
-                .awaitDone(1, TimeUnit.SECONDS)
                 .assertValueCount(2);
 
         Publisher<FluxRecord> results = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)");
@@ -202,7 +199,6 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         Publisher<WriteReactiveApi.Success> success = writeClient.writePoint(WritePrecision.MS, point);
         Flowable.fromPublisher(success)
                 .test()
-                .awaitDone(1, TimeUnit.SECONDS)
                 .assertValueCount(1);
 
         Publisher<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last()");
@@ -233,7 +229,6 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         Publisher<WriteReactiveApi.Success> success = writeClient.writePoints(WritePrecision.S, Flowable.just(point1, point2));
         Flowable.fromPublisher(success)
                 .test()
-                .awaitDone(1, TimeUnit.SECONDS)
                 .assertValueCount(1);
 
         Publisher<FluxRecord> result = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)");
@@ -254,7 +249,6 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         Publisher<WriteReactiveApi.Success> success = writeClient.writeMeasurement(WritePrecision.NS, measurement);
         Flowable.fromPublisher(success)
                 .test()
-                .awaitCount(1)
                 .assertValueCount(1);
 
         Publisher<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> last() |> rename(columns:{_value: \"water_level\"})", H2O.class);
@@ -291,7 +285,6 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         Publisher<WriteReactiveApi.Success> success = writeClient.writeMeasurements(WritePrecision.NS, Flowable.just(measurement1, measurement2));
         Flowable.fromPublisher(success)
                 .test()
-                .awaitCount(1)
                 .assertValueCount(1);
 
         Publisher<H2O> measurements = queryClient.query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z) |> sort(desc: false, columns:[\"_time\"]) |>rename(columns:{_value: \"water_level\"})", H2O.class);
@@ -324,8 +317,8 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
 
         Publisher<WriteReactiveApi.Success> success = writeClient.writeRecord(WritePrecision.NS, "h2o_feet,location=coyote_creek level\\ water_level=1.0 1");
         Flowable.fromPublisher(success)
-            .test()
-            .awaitDone(1, TimeUnit.SECONDS);
+                .test()
+                .assertValueCount(1);
 
         Publisher<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)");
 
@@ -351,14 +344,12 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         Publisher<WriteReactiveApi.Success> success = writeClient.writeRecord(WritePrecision.NS, "h2o_feet,location=coyote_creek level\\ water_level=1.0 1");
         Flowable.fromPublisher(success)
                 .test()
-                .awaitDone(1, TimeUnit.SECONDS)
                 .assertValueCount(1);
 
         Publisher<String> result = queryClient.queryRaw("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", (Dialect) null);
 
         Flowable.fromPublisher(result)
                 .test()
-                .awaitCount(3)
                 .assertValueCount(3)
                 .assertValueAt(0, ",result,table,_start,_stop,_time,_value,_field,_measurement,location")
                 .assertValueAt(1, value -> {
@@ -408,8 +399,9 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         Flowable.fromPublisher(success)
                 .subscribeOn(Schedulers.newThread())
                 .test()
-                .awaitDone(1, TimeUnit.SECONDS)
-                .assertValueCount(1);
+                .awaitCount(1)
+                .assertValueCount(1)
+                .assertComplete();
     }
 
     @Test
@@ -422,7 +414,6 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         Publisher<WriteReactiveApi.Success> success = writeApi.writeRecord(bucket.getId(), organization.getName(), WritePrecision.NS, "h2o,location=north water_level=60.0 1");
         Flowable.fromPublisher(success)
                 .test()
-                .awaitDone(1, TimeUnit.SECONDS)
                 .assertValueCount(1);
 
         QueryReactiveApi queryApi = client.getQueryReactiveApi();
@@ -491,7 +482,6 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
         Publisher<WriteReactiveApi.Success> success = writeClient.writeRecord(bucket.getName(), organization.getId(), WritePrecision.S, "not.valid.lp");
         Flowable.fromPublisher(success)
                 .test()
-                .awaitDone(1, TimeUnit.SECONDS)
                 .assertError(throwable -> {
                     Assertions.assertThat(throwable).isInstanceOf(BadRequestException.class);
                     Assertions.assertThat(throwable).hasMessageContaining("unable to parse");

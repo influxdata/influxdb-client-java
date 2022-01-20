@@ -46,7 +46,7 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient
         implements InfluxDBClientReactive {
 
     public InfluxDBClientReactiveImpl(@Nonnull final InfluxDBClientOptions options) {
-        super(options, "java", Collections.singletonList(RxJava3CallAdapterFactory.create()));
+        super(options, "java", Collections.singletonList(RxJava3CallAdapterFactory.createSynchronous()));
     }
 
     @Nonnull
