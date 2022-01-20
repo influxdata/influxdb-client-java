@@ -120,7 +120,7 @@ jobs:
         name: influxdb_v2_onboarding
         environment:
           INFLUXD_HTTP_BIND_ADDRESS: :9999
-      - image: influxdb:1.8-alpine
+      - image: influxdb:1.8
         environment:
           INFLUXDB_HTTP_FLUX_ENABLED: true
     environment:

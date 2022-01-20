@@ -23,7 +23,7 @@ under the License.
     <link>https://github.com/influxdata/influxdb-client-java/tree/master/karaf/influxdb-karaf-features</link>
     <description>Apache Karaf Features for InfluxDB 2.0 - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2018 - 2021 InfluxData, Inc.</copyright>
+    <copyright>&#169;2018 - 2022 InfluxData, Inc.</copyright>
     <item>
       <title>File: 0,
              Errors: 0,

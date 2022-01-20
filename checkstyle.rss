@@ -23,7 +23,7 @@ under the License.
     <link>https://github.com/influxdata/influxdb-client-java</link>
     <description>The InfluxDB 2.0 JVM Based Clients - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2018 - 2021 InfluxData, Inc.</copyright>
+    <copyright>&#169;2018 - 2022 InfluxData, Inc.</copyright>
     <item>
       <title>File: 172,
              Errors: 0,

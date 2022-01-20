@@ -126,196 +126,197 @@
 </span>102 <span style=''>
 </span>103 <span style=''>    </span><span style='background: #F0ADAD'>Source.unfoldResource[FluxRecord, AbstractQueryApi#FluxRecordIterator](
 </span>104 <span style=''></span><span style='background: #F0ADAD'>      () =&gt; {
-</span>105 <span style=''></span><span style='background: #F0ADAD'>        val call = service.postQueryResponseBody(null, null, null, org, null, query)
-</span>106 <span style=''></span><span style='background: #F0ADAD'>
-</span>107 <span style=''></span><span style='background: #F0ADAD'>        queryIterator(call)
-</span>108 <span style=''></span><span style='background: #F0ADAD'>
-</span>109 <span style=''></span><span style='background: #F0ADAD'>      },
-</span>110 <span style=''></span><span style='background: #F0ADAD'>      query =&gt; {
-</span>111 <span style=''></span><span style='background: #F0ADAD'>        if (query.hasNext)
-</span>112 <span style=''></span><span style='background: #F0ADAD'>          Some(query.next())
-</span>113 <span style=''></span><span style='background: #F0ADAD'>        else
-</span>114 <span style=''></span><span style='background: #F0ADAD'>          None // signals end of results
-</span>115 <span style=''></span><span style='background: #F0ADAD'>      },
-</span>116 <span style=''></span><span style='background: #F0ADAD'>      reader =&gt; reader.close()
-</span>117 <span style=''></span><span style='background: #F0ADAD'>    )</span><span style=''>
-</span>118 <span style=''>  }
-</span>119 <span style=''>
-</span>120 <span style=''>  /**
-</span>121 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
-</span>122 <span style=''>   *
-</span>123 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
-</span>124 <span style=''>   *
-</span>125 <span style=''>   * @param query           the flux query to execute
-</span>126 <span style=''>   * @param measurementType the measurement (POJO)
-</span>127 <span style=''>   * @tparam M the type of the measurement (POJO)
-</span>128 <span style=''>   * @return the stream of measurements
-</span>129 <span style=''>   */
-</span>130 <span style=''>  override def query[M](query: String, measurementType: Class[M]): Source[M, NotUsed] = {
-</span>131 <span style=''>
-</span>132 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)</span><span style=''>
-</span>133 <span style=''>
-</span>134 <span style=''>    </span><span style='background: #F0ADAD'>this.query(query, options.getOrg, measurementType)</span><span style=''>
-</span>135 <span style=''>  }
-</span>136 <span style=''>
-</span>137 <span style=''>  /**
-</span>138 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
-</span>139 <span style=''>   *
-</span>140 <span style=''>   * @param query           the flux query to execute
-</span>141 <span style=''>   * @param measurementType the measurement (POJO)
-</span>142 <span style=''>   * @tparam M the type of the measurement (POJO)
-</span>143 <span style=''>   * @return the stream of measurements
-</span>144 <span style=''>   */
-</span>145 <span style=''>  override def query[M](@Nonnull query: String, @Nonnull org: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed] = {
-</span>146 <span style=''>
-</span>147 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(query, &quot;query&quot;)</span><span style=''>
-</span>148 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(org, &quot;org&quot;)</span><span style=''>
-</span>149 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)</span><span style=''>
-</span>150 <span style=''>
-</span>151 <span style=''>    </span><span style='background: #F0ADAD'>this.query(query, org).map(t =&gt; resultMapper.toPOJO(t, measurementType))</span><span style=''>
-</span>152 <span style=''>  }
-</span>153 <span style=''>
-</span>154 <span style=''>  /**
-</span>155 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
-</span>156 <span style=''>   *
-</span>157 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
-</span>158 <span style=''>   *
-</span>159 <span style=''>   * @param query           the flux query to execute
-</span>160 <span style=''>   * @param measurementType the measurement (POJO)
-</span>161 <span style=''>   * @tparam M the type of the measurement (POJO)
-</span>162 <span style=''>   * @return the stream of measurements
-</span>163 <span style=''>   */
-</span>164 <span style=''>  override def query[M](query: Query, measurementType: Class[M]): Source[M, NotUsed] = {
-</span>165 <span style=''>
-</span>166 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)</span><span style=''>
-</span>167 <span style=''>
-</span>168 <span style=''>    </span><span style='background: #F0ADAD'>this.query(query, options.getOrg, measurementType)</span><span style=''>
-</span>169 <span style=''>  }
-</span>170 <span style=''>
-</span>171 <span style=''>  /**
-</span>172 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
-</span>173 <span style=''>   *
-</span>174 <span style=''>   * @param query           the flux query to execute
-</span>175 <span style=''>   * @param org             specifies the source organization
-</span>176 <span style=''>   * @param measurementType the measurement (POJO)
-</span>177 <span style=''>   * @tparam M the type of the measurement (POJO)
-</span>178 <span style=''>   * @return the stream of measurements
-</span>179 <span style=''>   */
-</span>180 <span style=''>  override def query[M](query: Query, org: String, measurementType: Class[M]): Source[M, NotUsed] = {
-</span>181 <span style=''>
-</span>182 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(query, &quot;query&quot;)</span><span style=''>
-</span>183 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(org, &quot;org&quot;)</span><span style=''>
-</span>184 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)</span><span style=''>
-</span>185 <span style=''>
-</span>186 <span style=''>    </span><span style='background: #F0ADAD'>this.query(query, org).map(t =&gt; resultMapper.toPOJO(t, measurementType))</span><span style=''>
-</span>187 <span style=''>  }
-</span>188 <span style=''>
-</span>189 <span style=''>  /**
-</span>190 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
-</span>191 <span style=''>   *
-</span>192 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
-</span>193 <span style=''>   *
-</span>194 <span style=''>   * @param query the flux query to execute
-</span>195 <span style=''>   * @return the response stream
-</span>196 <span style=''>   */
-</span>197 <span style=''>  override def queryRaw(query: String): Source[String, NotUsed] = {
-</span>198 <span style=''>
-</span>199 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)</span><span style=''>
-</span>200 <span style=''>
-</span>201 <span style=''>    </span><span style='background: #F0ADAD'>this.queryRaw(query, options.getOrg)</span><span style=''>
-</span>202 <span style=''>  }
-</span>203 <span style=''>
-</span>204 <span style=''>  /**
-</span>205 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
-</span>206 <span style=''>   *
-</span>207 <span style=''>   * @param query the flux query to execute
-</span>208 <span style=''>   * @return the response stream
-</span>209 <span style=''>   */
-</span>210 <span style=''>  override def queryRaw(@Nonnull query: String, @Nonnull org: String): Source[String, NotUsed] = {
-</span>211 <span style=''>
-</span>212 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(query, &quot;query&quot;)</span><span style=''>
-</span>213 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(org, &quot;org&quot;)</span><span style=''>
-</span>214 <span style=''>
-</span>215 <span style=''>    </span><span style='background: #F0ADAD'>this.queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, org)</span><span style=''>
-</span>216 <span style=''>  }
-</span>217 <span style=''>
-</span>218 <span style=''>  /**
-</span>219 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
-</span>220 <span style=''>   *
-</span>221 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
-</span>222 <span style=''>   *
-</span>223 <span style=''>   * @param query   the flux query to execute
-</span>224 <span style=''>   * @param dialect Dialect is an object defining the options to use when encoding the response.
-</span>225 <span style=''>   *                [[http://bit.ly/flux-dialect See dialect SPEC]].
-</span>226 <span style=''>   * @return the response stream
-</span>227 <span style=''>   */
-</span>228 <span style=''>  override def queryRaw(query: String, dialect: Dialect): Source[String, NotUsed] = {
-</span>229 <span style=''>
-</span>230 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)</span><span style=''>
-</span>231 <span style=''>
-</span>232 <span style=''>    </span><span style='background: #F0ADAD'>this.queryRaw(query, dialect, options.getOrg)</span><span style=''>
-</span>233 <span style=''>  }
-</span>234 <span style=''>
-</span>235 <span style=''>  /**
-</span>236 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
-</span>237 <span style=''>   *
-</span>238 <span style=''>   * @param query   the flux query to execute
-</span>239 <span style=''>   * @param dialect Dialect is an object defining the options to use when encoding the response.
-</span>240 <span style=''>   *                [[http://bit.ly/flux-dialect See dialect SPEC]].
-</span>241 <span style=''>   * @return the response stream
-</span>242 <span style=''>   */
-</span>243 <span style=''>  override def queryRaw(query: String, dialect: Dialect, org: String): Source[String, NotUsed] = {
-</span>244 <span style=''>
-</span>245 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(query, &quot;query&quot;)</span><span style=''>
-</span>246 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(org, &quot;org&quot;)</span><span style=''>
-</span>247 <span style=''>
-</span>248 <span style=''>    </span><span style='background: #F0ADAD'>this.queryRaw(new Query().query(query).dialect(dialect), org)</span><span style=''>
-</span>249 <span style=''>  }
-</span>250 <span style=''>
-</span>251 <span style=''>  /**
-</span>252 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
-</span>253 <span style=''>   *
-</span>254 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
-</span>255 <span style=''>   *
-</span>256 <span style=''>   * @param query the flux query to execute
-</span>257 <span style=''>   * @return the response stream
-</span>258 <span style=''>   */
-</span>259 <span style=''>  override def queryRaw(query: Query): Source[String, NotUsed] = {
-</span>260 <span style=''>
-</span>261 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)</span><span style=''>
-</span>262 <span style=''>
-</span>263 <span style=''>    </span><span style='background: #F0ADAD'>this.queryRaw(query, options.getOrg)</span><span style=''>
-</span>264 <span style=''>  }
-</span>265 <span style=''>
-</span>266 <span style=''>  /**
-</span>267 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
-</span>268 <span style=''>   *
-</span>269 <span style=''>   * @param query the flux query to execute
-</span>270 <span style=''>   * @param org   specifies the source organization
-</span>271 <span style=''>   * @return the response stream
-</span>272 <span style=''>   */
-</span>273 <span style=''>  override def queryRaw(query: Query, org: String): Source[String, NotUsed] = {
-</span>274 <span style=''>
-</span>275 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(query, &quot;query&quot;)</span><span style=''>
-</span>276 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(org, &quot;org&quot;)</span><span style=''>
-</span>277 <span style=''>
-</span>278 <span style=''>    </span><span style='background: #F0ADAD'>Source.unfoldResource[String, AbstractQueryApi#RawIterator](
-</span>279 <span style=''></span><span style='background: #F0ADAD'>      () =&gt; {
-</span>280 <span style=''></span><span style='background: #F0ADAD'>        val call = service.postQueryResponseBody(null, null, null, org, null, query)
-</span>281 <span style=''></span><span style='background: #F0ADAD'>
-</span>282 <span style=''></span><span style='background: #F0ADAD'>        queryRawIterator(call)
-</span>283 <span style=''></span><span style='background: #F0ADAD'>
-</span>284 <span style=''></span><span style='background: #F0ADAD'>      },
-</span>285 <span style=''></span><span style='background: #F0ADAD'>      query =&gt; {
-</span>286 <span style=''></span><span style='background: #F0ADAD'>        if (query.hasNext)
-</span>287 <span style=''></span><span style='background: #F0ADAD'>          Some(query.next())
-</span>288 <span style=''></span><span style='background: #F0ADAD'>        else
-</span>289 <span style=''></span><span style='background: #F0ADAD'>          None // signals end of results
-</span>290 <span style=''></span><span style='background: #F0ADAD'>      },
-</span>291 <span style=''></span><span style='background: #F0ADAD'>      reader =&gt; reader.close()
-</span>292 <span style=''></span><span style='background: #F0ADAD'>    )</span><span style=''>
-</span>293 <span style=''>  }
-</span>294 <span style=''>}
+</span>105 <span style=''></span><span style='background: #F0ADAD'>        val call = service.postQueryResponseBody(null, null, null, org, null,
+</span>106 <span style=''></span><span style='background: #F0ADAD'>          query.dialect(AbstractInfluxDBClient.DEFAULT_DIALECT))
+</span>107 <span style=''></span><span style='background: #F0ADAD'>
+</span>108 <span style=''></span><span style='background: #F0ADAD'>        queryIterator(call)
+</span>109 <span style=''></span><span style='background: #F0ADAD'>
+</span>110 <span style=''></span><span style='background: #F0ADAD'>      },
+</span>111 <span style=''></span><span style='background: #F0ADAD'>      query =&gt; {
+</span>112 <span style=''></span><span style='background: #F0ADAD'>        if (query.hasNext)
+</span>113 <span style=''></span><span style='background: #F0ADAD'>          Some(query.next())
+</span>114 <span style=''></span><span style='background: #F0ADAD'>        else
+</span>115 <span style=''></span><span style='background: #F0ADAD'>          None // signals end of results
+</span>116 <span style=''></span><span style='background: #F0ADAD'>      },
+</span>117 <span style=''></span><span style='background: #F0ADAD'>      reader =&gt; reader.close()
+</span>118 <span style=''></span><span style='background: #F0ADAD'>    )</span><span style=''>
+</span>119 <span style=''>  }
+</span>120 <span style=''>
+</span>121 <span style=''>  /**
+</span>122 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+</span>123 <span style=''>   *
+</span>124 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
+</span>125 <span style=''>   *
+</span>126 <span style=''>   * @param query           the flux query to execute
+</span>127 <span style=''>   * @param measurementType the measurement (POJO)
+</span>128 <span style=''>   * @tparam M the type of the measurement (POJO)
+</span>129 <span style=''>   * @return the stream of measurements
+</span>130 <span style=''>   */
+</span>131 <span style=''>  override def query[M](query: String, measurementType: Class[M]): Source[M, NotUsed] = {
+</span>132 <span style=''>
+</span>133 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)</span><span style=''>
+</span>134 <span style=''>
+</span>135 <span style=''>    </span><span style='background: #F0ADAD'>this.query(query, options.getOrg, measurementType)</span><span style=''>
+</span>136 <span style=''>  }
+</span>137 <span style=''>
+</span>138 <span style=''>  /**
+</span>139 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+</span>140 <span style=''>   *
+</span>141 <span style=''>   * @param query           the flux query to execute
+</span>142 <span style=''>   * @param measurementType the measurement (POJO)
+</span>143 <span style=''>   * @tparam M the type of the measurement (POJO)
+</span>144 <span style=''>   * @return the stream of measurements
+</span>145 <span style=''>   */
+</span>146 <span style=''>  override def query[M](@Nonnull query: String, @Nonnull org: String, @Nonnull measurementType: Class[M]): Source[M, NotUsed] = {
+</span>147 <span style=''>
+</span>148 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(query, &quot;query&quot;)</span><span style=''>
+</span>149 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(org, &quot;org&quot;)</span><span style=''>
+</span>150 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)</span><span style=''>
+</span>151 <span style=''>
+</span>152 <span style=''>    </span><span style='background: #F0ADAD'>this.query(query, org).map(t =&gt; resultMapper.toPOJO(t, measurementType))</span><span style=''>
+</span>153 <span style=''>  }
+</span>154 <span style=''>
+</span>155 <span style=''>  /**
+</span>156 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+</span>157 <span style=''>   *
+</span>158 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
+</span>159 <span style=''>   *
+</span>160 <span style=''>   * @param query           the flux query to execute
+</span>161 <span style=''>   * @param measurementType the measurement (POJO)
+</span>162 <span style=''>   * @tparam M the type of the measurement (POJO)
+</span>163 <span style=''>   * @return the stream of measurements
+</span>164 <span style=''>   */
+</span>165 <span style=''>  override def query[M](query: Query, measurementType: Class[M]): Source[M, NotUsed] = {
+</span>166 <span style=''>
+</span>167 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)</span><span style=''>
+</span>168 <span style=''>
+</span>169 <span style=''>    </span><span style='background: #F0ADAD'>this.query(query, options.getOrg, measurementType)</span><span style=''>
+</span>170 <span style=''>  }
+</span>171 <span style=''>
+</span>172 <span style=''>  /**
+</span>173 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream measurements to [[Stream]].
+</span>174 <span style=''>   *
+</span>175 <span style=''>   * @param query           the flux query to execute
+</span>176 <span style=''>   * @param org             specifies the source organization
+</span>177 <span style=''>   * @param measurementType the measurement (POJO)
+</span>178 <span style=''>   * @tparam M the type of the measurement (POJO)
+</span>179 <span style=''>   * @return the stream of measurements
+</span>180 <span style=''>   */
+</span>181 <span style=''>  override def query[M](query: Query, org: String, measurementType: Class[M]): Source[M, NotUsed] = {
+</span>182 <span style=''>
+</span>183 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(query, &quot;query&quot;)</span><span style=''>
+</span>184 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(org, &quot;org&quot;)</span><span style=''>
+</span>185 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(measurementType, &quot;measurementType&quot;)</span><span style=''>
+</span>186 <span style=''>
+</span>187 <span style=''>    </span><span style='background: #F0ADAD'>this.query(query, org).map(t =&gt; resultMapper.toPOJO(t, measurementType))</span><span style=''>
+</span>188 <span style=''>  }
+</span>189 <span style=''>
+</span>190 <span style=''>  /**
+</span>191 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>192 <span style=''>   *
+</span>193 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
+</span>194 <span style=''>   *
+</span>195 <span style=''>   * @param query the flux query to execute
+</span>196 <span style=''>   * @return the response stream
+</span>197 <span style=''>   */
+</span>198 <span style=''>  override def queryRaw(query: String): Source[String, NotUsed] = {
+</span>199 <span style=''>
+</span>200 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)</span><span style=''>
+</span>201 <span style=''>
+</span>202 <span style=''>    </span><span style='background: #F0ADAD'>this.queryRaw(query, options.getOrg)</span><span style=''>
+</span>203 <span style=''>  }
+</span>204 <span style=''>
+</span>205 <span style=''>  /**
+</span>206 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>207 <span style=''>   *
+</span>208 <span style=''>   * @param query the flux query to execute
+</span>209 <span style=''>   * @return the response stream
+</span>210 <span style=''>   */
+</span>211 <span style=''>  override def queryRaw(@Nonnull query: String, @Nonnull org: String): Source[String, NotUsed] = {
+</span>212 <span style=''>
+</span>213 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(query, &quot;query&quot;)</span><span style=''>
+</span>214 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(org, &quot;org&quot;)</span><span style=''>
+</span>215 <span style=''>
+</span>216 <span style=''>    </span><span style='background: #F0ADAD'>this.queryRaw(query, AbstractInfluxDBClient.DEFAULT_DIALECT, org)</span><span style=''>
+</span>217 <span style=''>  }
+</span>218 <span style=''>
+</span>219 <span style=''>  /**
+</span>220 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>221 <span style=''>   *
+</span>222 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
+</span>223 <span style=''>   *
+</span>224 <span style=''>   * @param query   the flux query to execute
+</span>225 <span style=''>   * @param dialect Dialect is an object defining the options to use when encoding the response.
+</span>226 <span style=''>   *                [[http://bit.ly/flux-dialect See dialect SPEC]].
+</span>227 <span style=''>   * @return the response stream
+</span>228 <span style=''>   */
+</span>229 <span style=''>  override def queryRaw(query: String, dialect: Dialect): Source[String, NotUsed] = {
+</span>230 <span style=''>
+</span>231 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)</span><span style=''>
+</span>232 <span style=''>
+</span>233 <span style=''>    </span><span style='background: #F0ADAD'>this.queryRaw(query, dialect, options.getOrg)</span><span style=''>
+</span>234 <span style=''>  }
+</span>235 <span style=''>
+</span>236 <span style=''>  /**
+</span>237 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>238 <span style=''>   *
+</span>239 <span style=''>   * @param query   the flux query to execute
+</span>240 <span style=''>   * @param dialect Dialect is an object defining the options to use when encoding the response.
+</span>241 <span style=''>   *                [[http://bit.ly/flux-dialect See dialect SPEC]].
+</span>242 <span style=''>   * @return the response stream
+</span>243 <span style=''>   */
+</span>244 <span style=''>  override def queryRaw(query: String, dialect: Dialect, org: String): Source[String, NotUsed] = {
+</span>245 <span style=''>
+</span>246 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(query, &quot;query&quot;)</span><span style=''>
+</span>247 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(org, &quot;org&quot;)</span><span style=''>
+</span>248 <span style=''>
+</span>249 <span style=''>    </span><span style='background: #F0ADAD'>this.queryRaw(new Query().query(query).dialect(dialect), org)</span><span style=''>
+</span>250 <span style=''>  }
+</span>251 <span style=''>
+</span>252 <span style=''>  /**
+</span>253 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>254 <span style=''>   *
+</span>255 <span style=''>   * &lt;p&gt;[[com.influxdb.client.InfluxDBClientOptions#getOrg()]] will be used as source organization. &lt;/p&gt;
+</span>256 <span style=''>   *
+</span>257 <span style=''>   * @param query the flux query to execute
+</span>258 <span style=''>   * @return the response stream
+</span>259 <span style=''>   */
+</span>260 <span style=''>  override def queryRaw(query: Query): Source[String, NotUsed] = {
+</span>261 <span style=''>
+</span>262 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(options.getOrg, &quot;InfluxDBClientOptions.getOrg&quot;)</span><span style=''>
+</span>263 <span style=''>
+</span>264 <span style=''>    </span><span style='background: #F0ADAD'>this.queryRaw(query, options.getOrg)</span><span style=''>
+</span>265 <span style=''>  }
+</span>266 <span style=''>
+</span>267 <span style=''>  /**
+</span>268 <span style=''>   * Executes the Flux query against the InfluxDB and asynchronously stream response to [[Stream]].
+</span>269 <span style=''>   *
+</span>270 <span style=''>   * @param query the flux query to execute
+</span>271 <span style=''>   * @param org   specifies the source organization
+</span>272 <span style=''>   * @return the response stream
+</span>273 <span style=''>   */
+</span>274 <span style=''>  override def queryRaw(query: Query, org: String): Source[String, NotUsed] = {
+</span>275 <span style=''>
+</span>276 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(query, &quot;query&quot;)</span><span style=''>
+</span>277 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNonEmpty(org, &quot;org&quot;)</span><span style=''>
+</span>278 <span style=''>
+</span>279 <span style=''>    </span><span style='background: #F0ADAD'>Source.unfoldResource[String, AbstractQueryApi#RawIterator](
+</span>280 <span style=''></span><span style='background: #F0ADAD'>      () =&gt; {
+</span>281 <span style=''></span><span style='background: #F0ADAD'>        val call = service.postQueryResponseBody(null, null, null, org, null, query)
+</span>282 <span style=''></span><span style='background: #F0ADAD'>
+</span>283 <span style=''></span><span style='background: #F0ADAD'>        queryRawIterator(call)
+</span>284 <span style=''></span><span style='background: #F0ADAD'>
+</span>285 <span style=''></span><span style='background: #F0ADAD'>      },
+</span>286 <span style=''></span><span style='background: #F0ADAD'>      query =&gt; {
+</span>287 <span style=''></span><span style='background: #F0ADAD'>        if (query.hasNext)
+</span>288 <span style=''></span><span style='background: #F0ADAD'>          Some(query.next())
+</span>289 <span style=''></span><span style='background: #F0ADAD'>        else
+</span>290 <span style=''></span><span style='background: #F0ADAD'>          None // signals end of results
+</span>291 <span style=''></span><span style='background: #F0ADAD'>      },
+</span>292 <span style=''></span><span style='background: #F0ADAD'>      reader =&gt; reader.close()
+</span>293 <span style=''></span><span style='background: #F0ADAD'>    )</span><span style=''>
+</span>294 <span style=''>  }
+</span>295 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -689,12 +690,12 @@
           103
         </td>
         <td>
-          56
+          62
         </td>
         <td>
           3778
           -
-          4160
+          4218
         </td>
         <td>
           Apply
@@ -704,7 +705,7 @@
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Source.unfoldResource[com.influxdb.query.FluxRecord, com.influxdb.internal.AbstractQueryApi#FluxRecordIterator]((() =&gt; {
-  val call: retrofit2.Call[okhttp3.ResponseBody] = QueryScalaApiImpl.this.service.postQueryResponseBody(null, null, null, org, null, query);
+  val call: retrofit2.Call[okhttp3.ResponseBody] = QueryScalaApiImpl.this.service.postQueryResponseBody(null, null, null, org, null, query.dialect(com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT));
   QueryScalaApiImpl.this.queryIterator(call)
 }), ((query: com.influxdb.internal.AbstractQueryApi#FluxRecordIterator) =&gt; if (query.hasNext())
   scala.Some.apply[com.influxdb.query.FluxRecord](query.next())
@@ -716,12 +717,33 @@ else
           105
         </td>
         <td>
-          47
+          50
+        </td>
+        <td>
+          3936
+          -
+          3940
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          null
+        </td>
+      </tr><tr>
+        <td>
+          105
+        </td>
+        <td>
+          53
         </td>
         <td>
           3883
           -
-          3948
+          4006
         </td>
         <td>
           Apply
@@ -730,19 +752,124 @@ else
           com.influxdb.client.service.QueryService.postQueryResponseBody
         </td>
         <td style="background: #F0ADAD">
-          QueryScalaApiImpl.this.service.postQueryResponseBody(null, null, null, org, null, query)
+          QueryScalaApiImpl.this.service.postQueryResponseBody(null, null, null, org, null, query.dialect(com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT))
         </td>
       </tr><tr>
         <td>
-          107
+          105
+        </td>
+        <td>
+          47
+        </td>
+        <td>
+          3913
+          -
+          3917
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          null
+        </td>
+      </tr><tr>
+        <td>
+          105
+        </td>
+        <td>
+          49
+        </td>
+        <td>
+          3925
+          -
+          3929
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          null
+        </td>
+      </tr><tr>
+        <td>
+          105
         </td>
         <td>
           48
         </td>
         <td>
-          3958
+          3919
           -
-          3977
+          3923
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          null
+        </td>
+      </tr><tr>
+        <td>
+          106
+        </td>
+        <td>
+          52
+        </td>
+        <td>
+          3952
+          -
+          4005
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.domain.Query.dialect
+        </td>
+        <td style="background: #F0ADAD">
+          query.dialect(com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT)
+        </td>
+      </tr><tr>
+        <td>
+          106
+        </td>
+        <td>
+          51
+        </td>
+        <td>
+          3966
+          -
+          4004
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT
+        </td>
+        <td style="background: #F0ADAD">
+          com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT
+        </td>
+      </tr><tr>
+        <td>
+          108
+        </td>
+        <td>
+          54
+        </td>
+        <td>
+          4016
+          -
+          4035
         </td>
         <td>
           Apply
@@ -755,15 +882,15 @@ else
         </td>
       </tr><tr>
         <td>
-          111
+          112
         </td>
         <td>
-          49
+          55
         </td>
         <td>
-          4017
+          4075
           -
-          4030
+          4088
         </td>
         <td>
           Apply
@@ -776,15 +903,15 @@ else
         </td>
       </tr><tr>
         <td>
-          112
+          113
         </td>
         <td>
-          50
+          56
         </td>
         <td>
-          4047
+          4105
           -
-          4059
+          4117
         </td>
         <td>
           Apply
@@ -797,15 +924,15 @@ else
         </td>
       </tr><tr>
         <td>
-          112
+          113
         </td>
         <td>
-          52
+          58
         </td>
         <td>
-          4042
+          4100
           -
-          4060
+          4118
         </td>
         <td>
           Block
@@ -818,15 +945,15 @@ else
         </td>
       </tr><tr>
         <td>
-          112
+          113
         </td>
         <td>
-          51
+          57
         </td>
         <td>
-          4042
+          4100
           -
-          4060
+          4118
         </td>
         <td>
           Apply
@@ -839,15 +966,15 @@ else
         </td>
       </tr><tr>
         <td>
-          114
+          115
         </td>
         <td>
-          53
+          59
         </td>
         <td>
-          4084
+          4142
           -
-          4088
+          4146
         </td>
         <td>
           Select
@@ -860,15 +987,15 @@ else
         </td>
       </tr><tr>
         <td>
-          114
+          115
         </td>
         <td>
-          54
+          60
         </td>
         <td>
-          4084
+          4142
           -
-          4088
+          4146
         </td>
         <td>
           Block
@@ -881,15 +1008,15 @@ else
         </td>
       </tr><tr>
         <td>
-          116
+          117
         </td>
         <td>
-          55
+          61
         </td>
         <td>
-          4140
+          4198
           -
-          4154
+          4212
         </td>
         <td>
           Apply
@@ -902,15 +1029,15 @@ else
         </td>
       </tr><tr>
         <td>
-          132
+          133
         </td>
         <td>
-          59
+          65
         </td>
         <td>
-          4687
+          4745
           -
-          4757
+          4815
         </td>
         <td>
           Apply
@@ -923,15 +1050,15 @@ else
         </td>
       </tr><tr>
         <td>
-          132
+          133
         </td>
         <td>
-          58
+          64
         </td>
         <td>
-          4726
+          4784
           -
-          4756
+          4814
         </td>
         <td>
           Literal
@@ -944,15 +1071,15 @@ else
         </td>
       </tr><tr>
         <td>
-          132
+          133
         </td>
         <td>
-          57
+          63
         </td>
         <td>
-          4710
+          4768
           -
-          4724
+          4782
         </td>
         <td>
           Apply
@@ -965,15 +1092,15 @@ else
         </td>
       </tr><tr>
         <td>
-          134
+          135
         </td>
         <td>
-          61
+          67
         </td>
         <td>
-          4763
+          4821
           -
-          4813
+          4871
         </td>
         <td>
           Apply
@@ -986,15 +1113,15 @@ else
         </td>
       </tr><tr>
         <td>
-          134
+          135
         </td>
         <td>
-          60
+          66
         </td>
         <td>
-          4781
+          4839
           -
-          4795
+          4853
         </td>
         <td>
           Apply
@@ -1007,15 +1134,15 @@ else
         </td>
       </tr><tr>
         <td>
-          147
+          148
         </td>
         <td>
-          62
+          68
         </td>
         <td>
-          5270
+          5328
           -
-          5309
+          5367
         </td>
         <td>
           Apply
@@ -1028,15 +1155,15 @@ else
         </td>
       </tr><tr>
         <td>
-          148
+          149
         </td>
         <td>
-          63
+          69
         </td>
         <td>
-          5314
+          5372
           -
-          5349
+          5407
         </td>
         <td>
           Apply
@@ -1049,15 +1176,15 @@ else
         </td>
       </tr><tr>
         <td>
-          149
+          150
         </td>
         <td>
-          64
+          70
         </td>
         <td>
-          5354
-          -
           5412
+          -
+          5470
         </td>
         <td>
           Apply
@@ -1070,15 +1197,15 @@ else
         </td>
       </tr><tr>
         <td>
-          151
+          152
         </td>
         <td>
-          65
+          71
         </td>
         <td>
-          5450
+          5508
           -
-          5489
+          5547
         </td>
         <td>
           Apply
@@ -1091,15 +1218,15 @@ else
         </td>
       </tr><tr>
         <td>
-          151
+          152
         </td>
         <td>
-          66
+          72
         </td>
         <td>
-          5418
+          5476
           -
-          5490
+          5548
         </td>
         <td>
           Apply
@@ -1112,15 +1239,15 @@ else
         </td>
       </tr><tr>
         <td>
-          166
+          167
         </td>
         <td>
-          68
+          74
         </td>
         <td>
-          6055
+          6113
           -
-          6085
+          6143
         </td>
         <td>
           Literal
@@ -1133,15 +1260,15 @@ else
         </td>
       </tr><tr>
         <td>
-          166
+          167
         </td>
         <td>
-          67
+          73
         </td>
         <td>
-          6039
+          6097
           -
-          6053
+          6111
         </td>
         <td>
           Apply
@@ -1154,15 +1281,15 @@ else
         </td>
       </tr><tr>
         <td>
-          166
+          167
         </td>
         <td>
-          69
+          75
         </td>
         <td>
-          6016
+          6074
           -
-          6086
+          6144
         </td>
         <td>
           Apply
@@ -1175,15 +1302,15 @@ else
         </td>
       </tr><tr>
         <td>
-          168
+          169
         </td>
         <td>
-          71
+          77
         </td>
         <td>
-          6092
+          6150
           -
-          6142
+          6200
         </td>
         <td>
           Apply
@@ -1196,15 +1323,15 @@ else
         </td>
       </tr><tr>
         <td>
-          168
+          169
         </td>
         <td>
-          70
+          76
         </td>
         <td>
-          6110
+          6168
           -
-          6124
+          6182
         </td>
         <td>
           Apply
@@ -1217,15 +1344,15 @@ else
         </td>
       </tr><tr>
         <td>
-          182
+          183
         </td>
         <td>
-          72
+          78
         </td>
         <td>
-          6633
+          6691
           -
-          6671
+          6729
         </td>
         <td>
           Apply
@@ -1238,15 +1365,15 @@ else
         </td>
       </tr><tr>
         <td>
-          183
+          184
         </td>
         <td>
-          73
+          79
         </td>
         <td>
-          6676
+          6734
           -
-          6711
+          6769
         </td>
         <td>
           Apply
@@ -1259,15 +1386,15 @@ else
         </td>
       </tr><tr>
         <td>
-          184
+          185
         </td>
         <td>
-          74
+          80
         </td>
         <td>
-          6716
-          -
           6774
+          -
+          6832
         </td>
         <td>
           Apply
@@ -1280,15 +1407,15 @@ else
         </td>
       </tr><tr>
         <td>
-          186
+          187
         </td>
         <td>
-          76
+          82
         </td>
         <td>
-          6780
+          6838
           -
-          6852
+          6910
         </td>
         <td>
           Apply
@@ -1301,15 +1428,15 @@ else
         </td>
       </tr><tr>
         <td>
-          186
+          187
         </td>
         <td>
-          75
+          81
         </td>
         <td>
-          6812
+          6870
           -
-          6851
+          6909
         </td>
         <td>
           Apply
@@ -1322,15 +1449,15 @@ else
         </td>
       </tr><tr>
         <td>
-          199
+          200
         </td>
         <td>
-          77
+          83
         </td>
         <td>
-          7258
+          7316
           -
-          7272
+          7330
         </td>
         <td>
           Apply
@@ -1343,15 +1470,15 @@ else
         </td>
       </tr><tr>
         <td>
-          199
+          200
         </td>
         <td>
-          79
+          85
         </td>
         <td>
-          7235
+          7293
           -
-          7305
+          7363
         </td>
         <td>
           Apply
@@ -1364,15 +1491,15 @@ else
         </td>
       </tr><tr>
         <td>
-          199
+          200
         </td>
         <td>
-          78
+          84
         </td>
         <td>
-          7274
+          7332
           -
-          7304
+          7362
         </td>
         <td>
           Literal
@@ -1385,15 +1512,15 @@ else
         </td>
       </tr><tr>
         <td>
-          201
+          202
         </td>
         <td>
-          80
+          86
         </td>
         <td>
-          7332
+          7390
           -
-          7346
+          7404
         </td>
         <td>
           Apply
@@ -1406,15 +1533,15 @@ else
         </td>
       </tr><tr>
         <td>
-          201
+          202
         </td>
         <td>
-          81
+          87
         </td>
         <td>
-          7311
+          7369
           -
-          7347
+          7405
         </td>
         <td>
           Apply
@@ -1427,15 +1554,15 @@ else
         </td>
       </tr><tr>
         <td>
-          212
+          213
         </td>
         <td>
-          82
+          88
         </td>
         <td>
-          7651
+          7709
           -
-          7690
+          7748
         </td>
         <td>
           Apply
@@ -1448,15 +1575,15 @@ else
         </td>
       </tr><tr>
         <td>
-          213
+          214
         </td>
         <td>
-          83
+          89
         </td>
         <td>
-          7695
+          7753
           -
-          7730
+          7788
         </td>
         <td>
           Apply
@@ -1469,15 +1596,15 @@ else
         </td>
       </tr><tr>
         <td>
-          215
+          216
         </td>
         <td>
-          85
+          91
         </td>
         <td>
-          7736
+          7794
           -
-          7801
+          7859
         </td>
         <td>
           Apply
@@ -1490,15 +1617,15 @@ else
         </td>
       </tr><tr>
         <td>
-          215
+          216
         </td>
         <td>
-          84
+          90
         </td>
         <td>
-          7757
+          7815
           -
-          7795
+          7853
         </td>
         <td>
           Select
@@ -1511,15 +1638,15 @@ else
         </td>
       </tr><tr>
         <td>
-          230
+          231
         </td>
         <td>
-          86
+          92
         </td>
         <td>
-          8393
+          8451
           -
-          8407
+          8465
         </td>
         <td>
           Apply
@@ -1532,15 +1659,15 @@ else
         </td>
       </tr><tr>
         <td>
-          230
+          231
         </td>
         <td>
-          88
+          94
         </td>
         <td>
-          8370
+          8428
           -
-          8440
+          8498
         </td>
         <td>
           Apply
@@ -1553,15 +1680,15 @@ else
         </td>
       </tr><tr>
         <td>
-          230
+          231
         </td>
         <td>
-          87
+          93
         </td>
         <td>
-          8409
+          8467
           -
-          8439
+          8497
         </td>
         <td>
           Literal
@@ -1574,15 +1701,15 @@ else
         </td>
       </tr><tr>
         <td>
-          232
+          233
         </td>
         <td>
-          89
+          95
         </td>
         <td>
-          8476
+          8534
           -
-          8490
+          8548
         </td>
         <td>
           Apply
@@ -1595,15 +1722,15 @@ else
         </td>
       </tr><tr>
         <td>
-          232
+          233
         </td>
         <td>
-          90
+          96
         </td>
         <td>
-          8446
+          8504
           -
-          8491
+          8549
         </td>
         <td>
           Apply
@@ -1616,15 +1743,15 @@ else
         </td>
       </tr><tr>
         <td>
-          245
+          246
         </td>
         <td>
-          91
+          97
         </td>
         <td>
-          8963
+          9021
           -
-          9002
+          9060
         </td>
         <td>
           Apply
@@ -1637,15 +1764,15 @@ else
         </td>
       </tr><tr>
         <td>
-          246
+          247
         </td>
         <td>
-          92
+          98
         </td>
         <td>
-          9007
+          9065
           -
-          9042
+          9100
         </td>
         <td>
           Apply
@@ -1658,15 +1785,15 @@ else
         </td>
       </tr><tr>
         <td>
-          248
+          249
         </td>
         <td>
-          94
+          100
         </td>
         <td>
-          9048
+          9106
           -
-          9109
+          9167
         </td>
         <td>
           Apply
@@ -1679,15 +1806,15 @@ else
         </td>
       </tr><tr>
         <td>
-          248
+          249
         </td>
         <td>
-          93
+          99
         </td>
         <td>
-          9062
+          9120
           -
-          9103
+          9161
         </td>
         <td>
           Apply
@@ -1700,15 +1827,15 @@ else
         </td>
       </tr><tr>
         <td>
-          261
+          262
         </td>
         <td>
-          95
+          101
         </td>
         <td>
-          9514
+          9572
           -
-          9528
+          9586
         </td>
         <td>
           Apply
@@ -1721,15 +1848,15 @@ else
         </td>
       </tr><tr>
         <td>
-          261
+          262
         </td>
         <td>
-          97
+          103
         </td>
         <td>
-          9491
+          9549
           -
-          9561
+          9619
         </td>
         <td>
           Apply
@@ -1742,15 +1869,15 @@ else
         </td>
       </tr><tr>
         <td>
-          261
+          262
         </td>
         <td>
-          96
+          102
         </td>
         <td>
-          9530
+          9588
           -
-          9560
+          9618
         </td>
         <td>
           Literal
@@ -1763,15 +1890,15 @@ else
         </td>
       </tr><tr>
         <td>
-          263
+          264
         </td>
         <td>
-          98
+          104
         </td>
         <td>
-          9588
+          9646
           -
-          9602
+          9660
         </td>
         <td>
           Apply
@@ -1784,15 +1911,15 @@ else
         </td>
       </tr><tr>
         <td>
-          263
+          264
         </td>
         <td>
-          99
+          105
         </td>
         <td>
-          9567
+          9625
           -
-          9603
+          9661
         </td>
         <td>
           Apply
@@ -1805,15 +1932,15 @@ else
         </td>
       </tr><tr>
         <td>
-          275
+          276
         </td>
         <td>
-          100
+          106
         </td>
         <td>
-          9940
+          9998
           -
-          9978
+          10036
         </td>
         <td>
           Apply
@@ -1826,15 +1953,15 @@ else
         </td>
       </tr><tr>
         <td>
-          276
+          277
         </td>
         <td>
-          101
+          107
         </td>
         <td>
-          9983
+          10041
           -
-          10018
+          10076
         </td>
         <td>
           Apply
@@ -1847,15 +1974,15 @@ else
         </td>
       </tr><tr>
         <td>
-          278
+          279
         </td>
         <td>
-          111
+          117
         </td>
         <td>
-          10024
+          10082
           -
-          10398
+          10456
         </td>
         <td>
           Apply
@@ -1874,15 +2001,15 @@ else
         </td>
       </tr><tr>
         <td>
-          280
+          281
         </td>
         <td>
-          102
+          108
         </td>
         <td>
-          10118
+          10176
           -
-          10183
+          10241
         </td>
         <td>
           Apply
@@ -1895,15 +2022,15 @@ else
         </td>
       </tr><tr>
         <td>
-          282
+          283
         </td>
         <td>
-          103
+          109
         </td>
         <td>
-          10193
+          10251
           -
-          10215
+          10273
         </td>
         <td>
           Apply
@@ -1916,15 +2043,15 @@ else
         </td>
       </tr><tr>
         <td>
-          286
+          287
         </td>
         <td>
-          104
+          110
         </td>
         <td>
-          10255
+          10313
           -
-          10268
+          10326
         </td>
         <td>
           Apply
@@ -1937,15 +2064,15 @@ else
         </td>
       </tr><tr>
         <td>
-          287
+          288
         </td>
         <td>
-          107
+          113
         </td>
         <td>
-          10280
+          10338
           -
-          10298
+          10356
         </td>
         <td>
           Block
@@ -1958,15 +2085,15 @@ else
         </td>
       </tr><tr>
         <td>
-          287
+          288
         </td>
         <td>
-          106
+          112
         </td>
         <td>
-          10280
+          10338
           -
-          10298
+          10356
         </td>
         <td>
           Apply
@@ -1979,15 +2106,15 @@ else
         </td>
       </tr><tr>
         <td>
-          287
+          288
         </td>
         <td>
-          105
+          111
         </td>
         <td>
-          10285
+          10343
           -
-          10297
+          10355
         </td>
         <td>
           Apply
@@ -2000,15 +2127,15 @@ else
         </td>
       </tr><tr>
         <td>
-          289
+          290
         </td>
         <td>
-          109
+          115
         </td>
         <td>
-          10322
+          10380
           -
-          10326
+          10384
         </td>
         <td>
           Block
@@ -2021,15 +2148,15 @@ else
         </td>
       </tr><tr>
         <td>
-          289
+          290
         </td>
         <td>
-          108
+          114
         </td>
         <td>
-          10322
+          10380
           -
-          10326
+          10384
         </td>
         <td>
           Select
@@ -2042,15 +2169,15 @@ else
         </td>
       </tr><tr>
         <td>
-          291
+          292
         </td>
         <td>
-          110
+          116
         </td>
         <td>
-          10378
+          10436
           -
-          10392
+          10450
         </td>
         <td>
           Apply
