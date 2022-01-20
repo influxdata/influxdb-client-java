@@ -1,4 +1,4 @@
-## 4.1.0 [unreleased]
+## 4.1.0 [2022-01-20]
 
 ### Features
 1. [#286](https://github.com/influxdata/influxdb-client-java/pull/286): Add support for Parameterized Queries 
