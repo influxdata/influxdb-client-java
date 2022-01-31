@@ -46,6 +46,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.CallAdapter;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
@@ -75,7 +76,7 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
     protected final Collection<AutoCloseable> autoCloseables = new CopyOnWriteArrayList<>();
 
     public AbstractInfluxDBClient(@Nonnull final InfluxDBClientOptions options, @Nonnull final String clientType) {
-        this(options, clientType, Collections.emptyList());
+        this(options, clientType, Collections.singletonList(RxJava3CallAdapterFactory.createSynchronous()));
     }
 
     public AbstractInfluxDBClient(@Nonnull final InfluxDBClientOptions options,
