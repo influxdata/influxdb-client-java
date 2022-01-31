@@ -53,7 +53,7 @@
         <developer>
             <name>József Börcsök</name>
             <email>borcsokj@gmail.com</email>
-            <url>http://www.github.com/borcsokj</url>
+            <url>https://www.github.com/borcsokj</url>
         </developer>
     </developers>
 
@@ -64,7 +64,7 @@
     <scm>
         <connection>scm:git:git@github.com:influxdata/influxdb-client-java.git</connection>
         <developerConnection>scm:git:git@github.com:influxdata/influxdb-client-java.git</developerConnection>
-        <url>http://github.com/influxdata/influxdb-client-java/tree/master</url>
+        <url>https://github.com/influxdata/influxdb-client-java/tree/master</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -144,41 +144,41 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
+            <version>1.18.22</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.32</version>
+            <version>1.7.35</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.core</artifactId>
-            <version>6.0.0</version>
+            <version>8.0.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.cmpn</artifactId>
-            <version>6.0.0</version>
+            <version>7.0.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.service.component.annotations</artifactId>
-            <version>1.3.0</version>
+            <version>1.5.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.service.metatype.annotations</artifactId>
-            <version>1.3.0</version>
+            <version>1.4.1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -191,7 +191,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.10</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>

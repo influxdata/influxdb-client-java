@@ -71,7 +71,7 @@
     <scm>
         <connection>scm:git:git@github.com:influxdata/influxdb-client-java.git</connection>
         <developerConnection>scm:git:git@github.com:influxdata/influxdb-client-java.git</developerConnection>
-        <url>http://github.com/influxdata/influxdb-client-java/tree/master</url>
+        <url>https://github.com/influxdata/influxdb-client-java/tree/master</url>
       <tag>HEAD</tag>
   </scm>
 
@@ -179,7 +179,7 @@
         <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-coroutines-core-jvm</artifactId>
-            <version>1.4.3</version>
+            <version>1.6.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.jetbrains.kotlin</groupId>
@@ -191,7 +191,6 @@
         <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-coroutines-core</artifactId>
-            <version>1.6.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.jetbrains.kotlinx</groupId>

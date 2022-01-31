@@ -67,14 +67,14 @@
   <scm>
     <connection>scm:git:git@github.com:influxdata/influxdb-client-java.git</connection>
     <developerConnection>scm:git:git@github.com:influxdata/influxdb-client-java.git</developerConnection>
-    <url>http://github.com/influxdata/influxdb-client-java/tree/master</url>
+    <url>https://github.com/influxdata/influxdb-client-java/tree/master</url>
     <tag>HEAD</tag>
   </scm>
 
   <properties>
     <scoverage-maven-plugin.version>1.4.1</scoverage-maven-plugin.version>
-    <scala.version>2.13.5</scala.version>
-    <akka.version>2.6.6</akka.version>
+    <scala.version>2.13.8</scala.version>
+    <akka.version>2.6.18</akka.version>
   </properties>
 
   <build>
@@ -250,7 +250,7 @@
     <dependency>
       <groupId>org.scalatest</groupId>
       <artifactId>scalatest_2.13</artifactId>
-      <version>3.2.0</version>
+      <version>3.2.11</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
