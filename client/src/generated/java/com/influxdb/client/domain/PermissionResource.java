@@ -76,7 +76,11 @@ public class PermissionResource {
     
     REMOTES("remotes"),
     
-    REPLICATIONS("replications");
+    REPLICATIONS("replications"),
+    
+    FLOWS("flows"),
+    
+    FUNCTIONS("functions");
 
     private String value;
 
