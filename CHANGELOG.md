@@ -1,5 +1,8 @@
 ## 4.2.0 [unreleased]
 
+### Bug Fixes
+1. [#300](https://github.com/influxdata/influxdb-client-java/pull/300): Add missing PermissionResources from Cloud API definition
+
 ## 4.1.0 [2022-01-20]
 
 ### Features
