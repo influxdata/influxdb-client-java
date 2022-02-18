@@ -1,4 +1,4 @@
-## 4.3.0 [unreleased]
+## 4.3.0 [2022-02-18]
 
 ### Bug Fixes
 1. [#300](https://github.com/influxdata/influxdb-client-java/pull/300): Uses native support for Rx requests to better performance
