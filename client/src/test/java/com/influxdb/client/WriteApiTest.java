@@ -1017,7 +1017,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         String userAgent = recordedRequest.getHeader("User-Agent");
 
-        Assertions.assertThat(userAgent).startsWith("influxdb-client-java/4.");
+        Assertions.assertThat(userAgent).startsWith("influxdb-client-java/5.");
     }
 
     public abstract class Metric {
