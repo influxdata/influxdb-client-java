@@ -73,7 +73,7 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
 
     val resource = new PermissionResource
     resource.setOrgID(organization.getId)
-    resource.setType(PermissionResource.TypeEnum.BUCKETS)
+    resource.setType(PermissionResource.TYPE_BUCKETS)
     resource.setId(bucket.getId)
 
     val readBucket = new Permission

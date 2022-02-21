@@ -78,7 +78,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         PermissionResource resource = new PermissionResource();
         resource.setId(bucket.getId());
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResource.TypeEnum.BUCKETS);
+        resource.setType(PermissionResource.TYPE_BUCKETS);
 
         //
         // Add Permissions to read and write to the Bucket
@@ -409,7 +409,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         PermissionResource bucketResource = new PermissionResource();
         bucketResource.setId(bucket.getId());
         bucketResource.setOrgID(organization.getId());
-        bucketResource.setType(PermissionResource.TypeEnum.BUCKETS);
+        bucketResource.setType(PermissionResource.TYPE_BUCKETS);
 
         Permission readBucket = new Permission();
         readBucket.setResource(bucketResource);
@@ -422,7 +422,7 @@ class ITWriteQueryApi extends AbstractITClientTest {
         PermissionResource orgResource = new PermissionResource();
         orgResource.setId(organization.getId());
         orgResource.setOrgID(organization.getId());
-        orgResource.setType(PermissionResource.TypeEnum.ORGS);
+        orgResource.setType(PermissionResource.TYPE_ORGS);
 
         Permission readOrganization = new Permission();
         readOrganization.setResource(orgResource);

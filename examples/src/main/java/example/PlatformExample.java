@@ -92,7 +92,7 @@ public class PlatformExample {
         PermissionResource resource = new PermissionResource();
         resource.setId(temperatureBucket.getId());
         resource.setOrgID(medicalGMBH.getId());
-        resource.setType(PermissionResource.TypeEnum.BUCKETS);
+        resource.setType(PermissionResource.TYPE_BUCKETS);
 
         Permission readBucket = new Permission();
         readBucket.setResource(resource);
@@ -180,7 +180,7 @@ public class PlatformExample {
                 .filter(authorization -> authorization.getPermissions().stream()
                         .map(Permission::getResource)
                         .anyMatch(resource ->
-                                resource.getType().equals(PermissionResource.TypeEnum.ORGS) &&
+                                resource.getType().equals(PermissionResource.TYPE_ORGS) &&
                                         resource.getId() == null &&
                                         resource.getOrgID() == null))
                 .findFirst()

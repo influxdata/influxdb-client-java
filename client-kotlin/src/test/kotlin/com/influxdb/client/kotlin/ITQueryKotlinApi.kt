@@ -84,7 +84,7 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         val resource = PermissionResource()
         resource.orgID = organization.id
-        resource.type = PermissionResource.TypeEnum.BUCKETS
+        resource.type = PermissionResource.TYPE_BUCKETS
         resource.id = bucket.id
 
         val readBucket = Permission()

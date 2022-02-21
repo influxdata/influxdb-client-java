@@ -29,100 +29,34 @@ import java.io.IOException;
  */
 
 public class PermissionResource {
-  /**
-   * Gets or Sets type
-   */
-  @JsonAdapter(TypeEnum.Adapter.class)
-  public enum TypeEnum {
-    AUTHORIZATIONS("authorizations"),
-    
-    BUCKETS("buckets"),
-    
-    DASHBOARDS("dashboards"),
-    
-    ORGS("orgs"),
-    
-    SOURCES("sources"),
-    
-    TASKS("tasks"),
-    
-    TELEGRAFS("telegrafs"),
-    
-    USERS("users"),
-    
-    VARIABLES("variables"),
-    
-    SCRAPERS("scrapers"),
-    
-    SECRETS("secrets"),
-    
-    LABELS("labels"),
-    
-    VIEWS("views"),
-    
-    DOCUMENTS("documents"),
-    
-    NOTIFICATIONRULES("notificationRules"),
-    
-    NOTIFICATIONENDPOINTS("notificationEndpoints"),
-    
-    CHECKS("checks"),
-    
-    DBRP("dbrp"),
-    
-    NOTEBOOKS("notebooks"),
-    
-    ANNOTATIONS("annotations"),
-    
-    REMOTES("remotes"),
-    
-    REPLICATIONS("replications"),
-    
-    FLOWS("flows"),
-    
-    FUNCTIONS("functions");
-
-    private String value;
-
-    TypeEnum(String value) {
-      this.value = value;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static TypeEnum fromValue(String text) {
-      for (TypeEnum b : TypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    public static class Adapter extends TypeAdapter<TypeEnum> {
-      @Override
-      public void write(final JsonWriter jsonWriter, final TypeEnum enumeration) throws IOException {
-        jsonWriter.value(enumeration.getValue());
-      }
-
-      @Override
-      public TypeEnum read(final JsonReader jsonReader) throws IOException {
-        String value = jsonReader.nextString();
-        return TypeEnum.fromValue(String.valueOf(value));
-      }
-    }
-  }
-
+  // Possible values for type property:
+  public static String TYPE_AUTHORIZATIONS = "authorizations";
+  public static String TYPE_BUCKETS = "buckets";
+  public static String TYPE_DASHBOARDS = "dashboards";
+  public static String TYPE_ORGS = "orgs";
+  public static String TYPE_SOURCES = "sources";
+  public static String TYPE_TASKS = "tasks";
+  public static String TYPE_TELEGRAFS = "telegrafs";
+  public static String TYPE_USERS = "users";
+  public static String TYPE_VARIABLES = "variables";
+  public static String TYPE_SCRAPERS = "scrapers";
+  public static String TYPE_SECRETS = "secrets";
+  public static String TYPE_LABELS = "labels";
+  public static String TYPE_VIEWS = "views";
+  public static String TYPE_DOCUMENTS = "documents";
+  public static String TYPE_NOTIFICATIONRULES = "notificationRules";
+  public static String TYPE_NOTIFICATIONENDPOINTS = "notificationEndpoints";
+  public static String TYPE_CHECKS = "checks";
+  public static String TYPE_DBRP = "dbrp";
+  public static String TYPE_NOTEBOOKS = "notebooks";
+  public static String TYPE_ANNOTATIONS = "annotations";
+  public static String TYPE_REMOTES = "remotes";
+  public static String TYPE_REPLICATIONS = "replications";
+  public static String TYPE_FLOWS = "flows";
+  public static String TYPE_FUNCTIONS = "functions";
   public static final String SERIALIZED_NAME_TYPE = "type";
   @SerializedName(SERIALIZED_NAME_TYPE)
-  private TypeEnum type;
+  private String type;
 
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
@@ -140,7 +74,7 @@ public class PermissionResource {
   @SerializedName(SERIALIZED_NAME_ORG)
   private String org;
 
-  public PermissionResource type(TypeEnum type) {
+  public PermissionResource type(String type) {
     this.type = type;
     return this;
   }
@@ -150,11 +84,11 @@ public class PermissionResource {
    * @return type
   **/
   @ApiModelProperty(required = true, value = "")
-  public TypeEnum getType() {
+  public String getType() {
     return type;
   }
 
-  public void setType(TypeEnum type) {
+  public void setType(String type) {
     this.type = type;
   }
 

@@ -731,7 +731,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResource.TypeEnum.TASKS);
+        resource.setType(PermissionResource.TYPE_TASKS);
 
         Permission createTask = new Permission();
         createTask.setResource(resource);
@@ -742,7 +742,7 @@ class ITTasksApi extends AbstractITClientTest {
         deleteTask.setAction(Permission.ActionEnum.WRITE);
 
         PermissionResource orgResource = new PermissionResource();
-        orgResource.setType(PermissionResource.TypeEnum.ORGS);
+        orgResource.setType(PermissionResource.TYPE_ORGS);
 
         Permission createOrg = new Permission();
         createOrg.setAction(Permission.ActionEnum.WRITE);
@@ -753,14 +753,14 @@ class ITTasksApi extends AbstractITClientTest {
         readOrg.setResource(orgResource);
 
         PermissionResource userResource = new PermissionResource();
-        userResource.setType(PermissionResource.TypeEnum.USERS);
+        userResource.setType(PermissionResource.TYPE_USERS);
 
         Permission createUsers = new Permission();
         createUsers.setAction(Permission.ActionEnum.WRITE);
         createUsers.setResource(userResource);
 
         PermissionResource labelResource = new PermissionResource();
-        labelResource.setType(PermissionResource.TypeEnum.LABELS);
+        labelResource.setType(PermissionResource.TYPE_LABELS);
 
         Permission createLabels = new Permission();
         createLabels.setAction(Permission.ActionEnum.WRITE);
@@ -771,7 +771,7 @@ class ITTasksApi extends AbstractITClientTest {
         readLabels.setResource(labelResource);
 
         PermissionResource authResource = new PermissionResource();
-        authResource.setType(PermissionResource.TypeEnum.AUTHORIZATIONS);
+        authResource.setType(PermissionResource.TYPE_AUTHORIZATIONS);
 
         Permission createAuth = new Permission();
         createAuth.setAction(Permission.ActionEnum.WRITE);
@@ -782,7 +782,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         PermissionResource bucketResource = new PermissionResource();
         bucketResource.setOrgID(organization.getId());
-        bucketResource.setType(PermissionResource.TypeEnum.BUCKETS);
+        bucketResource.setType(PermissionResource.TYPE_BUCKETS);
         bucketResource.setId(bucket.getId());
 
         Permission readBucket = new Permission();
