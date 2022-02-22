@@ -80,7 +80,7 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResource.TypeEnum.BUCKETS);
+        resource.setType(PermissionResource.TYPE_BUCKETS);
         resource.setId(bucket.getId());
 
         Permission readBucket = new Permission();

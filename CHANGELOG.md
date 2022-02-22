@@ -1,4 +1,15 @@
-## 4.4.0 [unreleased]
+## 5.0.0 [unreleased]
+
+### Breaking Changes
+
+- Change type of `PermissionResource.type` to `String`. You are able to easily migrate by:
+    ```diff
+    - resource.setType(PermissionResource.TypeEnum.BUCKETS);
+    + resource.setType(PermissionResource.TYPE_BUCKETS);
+    ```
+
+### Bug Fixes
+1. [#303](https://github.com/influxdata/influxdb-client-java/pull/303): Change `PermissionResource.type` to `String`
 
 ## 4.3.0 [2022-02-18]
 

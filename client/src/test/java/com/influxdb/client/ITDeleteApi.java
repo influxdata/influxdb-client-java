@@ -67,7 +67,7 @@ class ITDeleteApi extends AbstractITClientTest {
         PermissionResource resource = new PermissionResource();
         resource.setId(bucket.getId());
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResource.TypeEnum.BUCKETS);
+        resource.setType(PermissionResource.TYPE_BUCKETS);
 
         //
         // Add Permissions to read and write to the Bucket

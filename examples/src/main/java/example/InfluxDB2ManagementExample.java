@@ -53,7 +53,7 @@ public class InfluxDB2ManagementExample {
         PermissionResource resource = new PermissionResource();
         resource.setId(bucket.getId());
         resource.setOrgID("12bdc4164c2e8141");
-        resource.setType(PermissionResource.TypeEnum.BUCKETS);
+        resource.setType(PermissionResource.TYPE_BUCKETS);
 
         // Read permission
         Permission read = new Permission();

@@ -68,7 +68,7 @@ class ITAuthorizationsApi extends AbstractITClientTest {
 
         PermissionResource userResource = new PermissionResource();
         userResource.setOrgID(organization.getId());
-        userResource.setType(PermissionResource.TypeEnum.USERS);
+        userResource.setType(PermissionResource.TYPE_USERS);
 
         Permission readUsers = new Permission();
         readUsers.setAction(Permission.ActionEnum.READ);
@@ -76,7 +76,7 @@ class ITAuthorizationsApi extends AbstractITClientTest {
 
         PermissionResource orgResource = new PermissionResource();
         orgResource.setOrgID(organization.getId());
-        orgResource.setType(PermissionResource.TypeEnum.ORGS);
+        orgResource.setType(PermissionResource.TYPE_ORGS);
 
         Permission writeOrganizations = new Permission();
         writeOrganizations.setAction(Permission.ActionEnum.WRITE);
@@ -100,11 +100,11 @@ class ITAuthorizationsApi extends AbstractITClientTest {
         Assertions.assertThat(authorization.getStatus()).isEqualTo(Authorization.StatusEnum.ACTIVE);
 
         Assertions.assertThat(authorization.getPermissions()).hasSize(2);
-        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(PermissionResource.TypeEnum.USERS);
+        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(PermissionResource.TYPE_USERS);
         Assertions.assertThat(authorization.getPermissions().get(0).getResource().getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(authorization.getPermissions().get(0).getAction()).isEqualTo(Permission.ActionEnum.READ);
 
-        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(PermissionResource.TypeEnum.ORGS);
+        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(PermissionResource.TYPE_ORGS);
         Assertions.assertThat(authorization.getPermissions().get(1).getResource().getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(authorization.getPermissions().get(1).getAction()).isEqualTo(Permission.ActionEnum.WRITE);
 
@@ -118,7 +118,7 @@ class ITAuthorizationsApi extends AbstractITClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResource.TypeEnum.SOURCES);
+        resource.setType(PermissionResource.TYPE_SOURCES);
 
         Permission createSource = new Permission();
         createSource.setResource(resource);
@@ -144,7 +144,7 @@ class ITAuthorizationsApi extends AbstractITClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResource.TypeEnum.TASKS);
+        resource.setType(PermissionResource.TYPE_TASKS);
 
         Permission createTask = new Permission();
         createTask.setResource(resource);
@@ -161,10 +161,10 @@ class ITAuthorizationsApi extends AbstractITClientTest {
         Authorization authorization = authorizationsApi.createAuthorization(organization, permissions);
 
         Assertions.assertThat(authorization.getPermissions()).hasSize(2);
-        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(PermissionResource.TypeEnum.TASKS);
+        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(PermissionResource.TYPE_TASKS);
         Assertions.assertThat(authorization.getPermissions().get(0).getResource().getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(authorization.getPermissions().get(0).getAction()).isEqualTo(Permission.ActionEnum.READ);
-        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(PermissionResource.TypeEnum.TASKS);
+        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(PermissionResource.TYPE_TASKS);
         Assertions.assertThat(authorization.getPermissions().get(1).getResource().getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(authorization.getPermissions().get(1).getAction()).isEqualTo(Permission.ActionEnum.WRITE);
     }
@@ -177,7 +177,7 @@ class ITAuthorizationsApi extends AbstractITClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResource.TypeEnum.BUCKETS);
+        resource.setType(PermissionResource.TYPE_BUCKETS);
         resource.setId(bucket.getId());
 
         Permission readBucket = new Permission();
@@ -196,10 +196,10 @@ class ITAuthorizationsApi extends AbstractITClientTest {
 
         Assertions.assertThat(authorization.getPermissions()).hasSize(2);
         Assertions.assertThat(authorization.getPermissions().get(0).getResource().getId()).isEqualTo(bucket.getId());
-        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(PermissionResource.TypeEnum.BUCKETS);
+        Assertions.assertThat(authorization.getPermissions().get(0).getResource().getType()).isEqualTo(PermissionResource.TYPE_BUCKETS);
         Assertions.assertThat(authorization.getPermissions().get(0).getAction()).isEqualTo(Permission.ActionEnum.READ);
         Assertions.assertThat(authorization.getPermissions().get(1).getResource().getId()).isEqualTo(bucket.getId());
-        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(PermissionResource.TypeEnum.BUCKETS);
+        Assertions.assertThat(authorization.getPermissions().get(1).getResource().getType()).isEqualTo(PermissionResource.TYPE_BUCKETS);
         Assertions.assertThat(authorization.getPermissions().get(1).getAction()).isEqualTo(Permission.ActionEnum.WRITE);
     }
 
@@ -283,7 +283,7 @@ class ITAuthorizationsApi extends AbstractITClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResource.TypeEnum.USERS);
+        resource.setType(PermissionResource.TYPE_USERS);
 
         Permission readUsers = new Permission();
         readUsers.setAction(Permission.ActionEnum.READ);
@@ -341,7 +341,7 @@ class ITAuthorizationsApi extends AbstractITClientTest {
         Assertions.assertThat(cloned.getDescription()).isEqualTo(source.getDescription());
         Assertions.assertThat(cloned.getPermissions()).hasSize(1);
         Assertions.assertThat(cloned.getPermissions().get(0).getAction()).isEqualTo(Permission.ActionEnum.READ);
-        Assertions.assertThat(cloned.getPermissions().get(0).getResource().getType()).isEqualTo(PermissionResource.TypeEnum.USERS);
+        Assertions.assertThat(cloned.getPermissions().get(0).getResource().getType()).isEqualTo(PermissionResource.TYPE_USERS);
         Assertions.assertThat(cloned.getPermissions().get(0).getResource().getOrgID()).isEqualTo(organization.getId());
     }
 
@@ -358,7 +358,7 @@ class ITAuthorizationsApi extends AbstractITClientTest {
 
         PermissionResource resource = new PermissionResource();
         resource.setOrgID(organization.getId());
-        resource.setType(PermissionResource.TypeEnum.USERS);
+        resource.setType(PermissionResource.TYPE_USERS);
 
         Permission permission = new Permission();
         permission.setAction(Permission.ActionEnum.READ);
