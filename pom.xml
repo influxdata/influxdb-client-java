@@ -691,20 +691,6 @@
         </profile>
     </profiles>
 
-    <repositories>
-        <repository>
-            <id>bonitoo-repository</id>
-            <name>Bonitoo.io repository</name>
-            <url>https://apitea.com/nexus/content/repositories/bonitoo-snapshot/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <pluginRepositories>
         <pluginRepository>
             <id>jcenter</id>
