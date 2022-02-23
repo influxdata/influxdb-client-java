@@ -11,6 +11,9 @@
 ### Bug Fixes
 1. [#303](https://github.com/influxdata/influxdb-client-java/pull/303): Change `PermissionResource.type` to `String`
 
+### CI
+1. [#304](https://github.com/influxdata/influxdb-client-java/pull/304): Use new Codecov uploader for reporting code coverage
+
 ## 4.3.0 [2022-02-18]
 
 ### Bug Fixes
