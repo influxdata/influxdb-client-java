@@ -109,7 +109,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-java:4.3.0"
+    implementation "com.influxdb:influxdb-client-java:4.3.0"
 }
 ```
 
@@ -225,7 +225,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-java:4.3.0"
+    implementation "com.influxdb:influxdb-client-java:4.3.0"
 }
 ```
 
@@ -326,7 +326,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-flux:4.3.0"
+    implementation "com.influxdb:influxdb-client-flux:4.3.0"
 }
 ``` 
 
