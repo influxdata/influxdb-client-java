@@ -169,7 +169,7 @@ The latest version for Maven dependency:
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-flux:4.3.0"
+    implementation "com.influxdb:influxdb-client-flux:4.3.0"
 }
 ```
 

@@ -260,7 +260,7 @@ The latest version for Maven dependency:
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-scala_2.12:4.3.0"
+    implementation "com.influxdb:influxdb-client-scala_2.12:4.3.0"
 }
 ```
 
@@ -278,7 +278,7 @@ The latest version for Maven dependency:
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-client-scala_2.13:4.3.0"
+    implementation "com.influxdb:influxdb-client-scala_2.13:4.3.0"
 }
 ```
 
