@@ -65,7 +65,7 @@ Maven dependency:
 or when using with Gradle:
 ```groovy
 dependencies {
-    compile "io.micrometer:micrometer-registry-influx:1.7.0"
+    implementation "io.micrometer:micrometer-registry-influx:1.7.0"
 }
 ```
  
@@ -93,6 +93,6 @@ The latest version for Maven dependency:
 Or when using with Gradle:
 ```groovy
 dependencies {
-    compile "com.influxdb:influxdb-spring:4.3.0"
+    implementation "com.influxdb:influxdb-spring:4.3.0"
 }
 ```
