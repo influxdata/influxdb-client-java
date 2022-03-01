@@ -72,7 +72,7 @@ class InfluxDBClientKotlinFactory {
          * <p>
          * The <i>username/password</i> auth is based on
          * <a href="http://bit.ly/http-basic-auth">HTTP "Basic" authentication</a>. The authorization expires when the
-         * <a href="http://bit.ly/session-lengthh">time-to-live (TTL)</a> (default 60 minutes) is reached
+         * <a href="http://bit.ly/session-length">time-to-live (TTL)</a> (default 60 minutes) is reached
          * and client produces {@link com.influxdb.exceptions.UnauthorizedException}.
          * </p>
          *
