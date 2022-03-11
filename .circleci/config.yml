@@ -131,6 +131,7 @@ jobs:
     environment:
       INFLUXDB_2_ONBOARDING_IP: influxdb_v2_onboarding
       INFLUXDB_2_ONBOARDING_PORT: 9999
+    resource_class: large
     steps:
       - prepare
       - client-test:
