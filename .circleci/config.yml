@@ -115,7 +115,7 @@ jobs:
         default: &default-influxdb-image "influxdb:latest"
       junit-tests:
         type: string
-        default: "-Dit.test=!com.influxdb.client.ITBenchmarkTest -DfailIfNoTests=false"
+        default: "-Dit.test=!com.influxdb.client.ITBenchmarkTest -Dtest=!com.influxdb.client.ITBenchmarkTest -DfailIfNoTests=false"
     docker:
       - image: << parameters.maven-image >>
       - image: &influx-image << parameters.influxdb-image >>
