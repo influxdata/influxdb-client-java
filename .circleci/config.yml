@@ -38,6 +38,8 @@ commands:
     parameters:
       maven-image:
         type: string
+      junit-tests:
+        type: string
     steps:
       - restore_cache:
           name: Restoring Maven Cache
@@ -47,7 +49,7 @@ commands:
       - run:
           name: "Running tests"
           command: |
-            mvn -B -U clean install -Dmaven.javadoc.skip=true -Dmaven.dokka.skip=true -Dbuild.env=CI
+            mvn -B -U clean install -Dmaven.javadoc.skip=true -Dmaven.dokka.skip=true -Dbuild.env=CI << parameters.junit-tests >>
       - save_cache:
           name: Saving Maven Cache
           key: *cache-key
@@ -111,6 +113,9 @@ jobs:
       influxdb-image:
         type: string
         default: &default-influxdb-image "influxdb:latest"
+      junit-tests:
+        type: string
+        default: "-Dit.test=!com.influxdb.client.ITBenchmarkTest"
     docker:
       - image: << parameters.maven-image >>
       - image: &influx-image << parameters.influxdb-image >>
@@ -130,6 +135,7 @@ jobs:
       - prepare
       - client-test:
           maven-image: << parameters.maven-image >>
+          junit-tests: << parameters.junit-tests>>
       - storing-test-results
       - storing-artifacts
       - run:
@@ -197,6 +203,10 @@ workflows:
       - tests-java:
           name: jdk-8-nightly
           influxdb-image: "quay.io/influxdb/influxdb:nightly"
+      - tests-java:
+          name: client-benchmark
+          influxdb-image: "quay.io/influxdb/influxdb:nightly"
+          junit-tests: "-Dit.test=com.influxdb.client.ITBenchmarkTest -DfailIfNoTests=false -Dtest=ignore -DwildcardSuites=ignore"
       - deploy-snapshot:
           requires:
             - jdk-8
