@@ -31,6 +31,7 @@ import com.influxdb.client.domain.Bucket;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
@@ -67,13 +68,14 @@ class ITBenchmarkTest extends AbstractITClientTest {
     }
 
     @Test
+    @EnabledIfSystemProperty(named = "clientBenchmark", matches = "true")
     public void benchmarkBenchmark() throws InterruptedException {
 
         //warmup
-        clientBenchmark(50, 20, 100, 1000, 5000, 10_000_000);
-        clientBenchmark(100, 20, 100, 1000, 5000, 10_000_000);
-        clientBenchmark(800, 20, 100, 1000, 5000, 10_000_000);
-        clientBenchmark(2000, 20, 100, 1000, 5000, 10_000_000);
+        clientBenchmark(50, 20, 100, 1_000, 5_000, 10_000_000);
+        clientBenchmark(500, 20, 100, 1_000, 5_000, 10_000_000);
+        clientBenchmark(1_000, 20, 100, 1_000, 5_000, 10_000_000);
+        clientBenchmark(1_500, 20, 100, 1_000, 5_000, 10_000_000);
 
     }
 

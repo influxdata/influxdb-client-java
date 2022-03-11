@@ -115,7 +115,6 @@ jobs:
         default: &default-influxdb-image "influxdb:latest"
       junit-tests:
         type: string
-        default: "-Dit.test=!com.influxdb.client.ITBenchmarkTest -Dtest=!com.influxdb.client.ITBenchmarkTest -DfailIfNoTests=false"
     docker:
       - image: << parameters.maven-image >>
       - image: &influx-image << parameters.influxdb-image >>
@@ -207,7 +206,7 @@ workflows:
       - tests-java:
           name: client-benchmark
           influxdb-image: "quay.io/influxdb/influxdb:nightly"
-          junit-tests: "-Dit.test=com.influxdb.client.ITBenchmarkTest -DfailIfNoTests=false -Dtest=ignore -DwildcardSuites=ignore"
+          junit-tests: "-DclientBenchmark=true -Dit.test=com.influxdb.client.ITBenchmarkTest -DfailIfNoTests=false -Dtest=ignore -DwildcardSuites=ignore"
       - deploy-snapshot:
           requires:
             - jdk-8
