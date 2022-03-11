@@ -115,6 +115,7 @@ jobs:
         default: &default-influxdb-image "influxdb:latest"
       junit-tests:
         type: string
+        default: ""
     docker:
       - image: << parameters.maven-image >>
       - image: &influx-image << parameters.influxdb-image >>
