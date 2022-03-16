@@ -62,7 +62,7 @@ import retrofit2.Response;
  */
 public abstract class AbstractQueryApi extends AbstractRestClient {
 
-    private static final Logger LOG = Logger.getLogger(AbstractQueryApi.class.getName());
+    protected static final Logger LOG = Logger.getLogger(AbstractQueryApi.class.getName());
 
     protected final FluxCsvParser fluxCsvParser = new FluxCsvParser();
     protected final FluxResultMapper resultMapper = new FluxResultMapper();
