@@ -125,7 +125,7 @@ public final class JoinFlux extends AbstractParametrizedFlux {
     }
 
     /**
-     * Map of table to join. Currently only two tables are allowed.
+     * Map of table to join. Currently, only two tables are allowed.
      *
      * @param name  table name
      * @param table Flux script to map table

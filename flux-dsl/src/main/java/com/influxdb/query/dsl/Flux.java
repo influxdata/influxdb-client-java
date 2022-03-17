@@ -149,10 +149,10 @@ public abstract class Flux {
      * @return {@link FromFlux}
      */
     @Nonnull
-    public static Flux from(@Nonnull final String bucket) {
+    public static FromFlux from(@Nonnull final String bucket) {
         Arguments.checkNonEmpty(bucket, "Bucket name");
 
-        return new FromFlux().withPropertyValueEscaped("bucket", bucket);
+        return new FromFlux().withBucket(bucket);
     }
 
     /**
@@ -163,13 +163,13 @@ public abstract class Flux {
      * @return {@link FromFlux}
      */
     @Nonnull
-    public static Flux from(@Nonnull final String bucket, @Nonnull final Collection<String> hosts) {
+    public static FromFlux from(@Nonnull final String bucket, @Nonnull final Collection<String> hosts) {
         Arguments.checkNonEmpty(bucket, "Bucket name");
         Arguments.checkNotNull(hosts, "Hosts are required");
 
         return new FromFlux()
-                .withPropertyValueEscaped("bucket", bucket)
-                .withPropertyValue("hosts", hosts);
+                .withBucket(bucket)
+                .withHosts(hosts);
     }
 
     /**
@@ -180,13 +180,13 @@ public abstract class Flux {
      * @return {@link FromFlux}
      */
     @Nonnull
-    public static Flux from(@Nonnull final String bucket, @Nonnull final String[] hosts) {
+    public static FromFlux from(@Nonnull final String bucket, @Nonnull final String[] hosts) {
         Arguments.checkNonEmpty(bucket, "Database name");
         Arguments.checkNotNull(hosts, "Hosts are required");
 
         return new FromFlux()
-                .withPropertyValueEscaped("bucket", bucket)
-                .withPropertyValue("hosts", hosts);
+                .withBucket(bucket)
+                .withHosts(hosts);
     }
 
     /**

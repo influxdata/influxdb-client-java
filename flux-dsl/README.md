@@ -1,6 +1,13 @@
 # flux-dsl
 
-## Operator properties
+## Features
+
+- [Function properties](#function-properties)
+- [Supported functions](#supported-functions)
+- [Custom function](#custom-function)
+- [Time zones](#time-zones)
+
+## Function properties
 There are four possibilities how to add properties to the functions.
 
 ### Use built-in constructor
@@ -41,7 +48,7 @@ Flux flux = Flux
     .sum();
 ```
 
-## Supported operators
+## Supported functions
 
 ### from
 
@@ -793,7 +800,7 @@ Flux flux = Flux
     .yield("0");
 ```
 
-## Custom operator
+## Custom function
 We assume that exist custom function measurement that filter measurement by their name. The `Flux` implementation looks like this: 
 
 ```flux
@@ -849,3 +856,44 @@ from(bucket:"telegraf")
     |> sum()
 ```
 
+## Time zones
+
+The Flux option sets the default time zone of all times in the script. The default value is `timezone.utc`.
+
+You can construct a timezone with a fixed offset:
+
+```java
+Flux flux = Flux
+    .from("telegraf")
+    .withLocationFixed("-8h")
+    .count();
+```
+
+The Flux script:
+```
+import "timezone"
+
+option location = timezone.fixed(offset: -8h)
+
+from(bucket:"telegraf")
+    |> count()
+```
+
+or you can construct a timezone based on a location name:
+
+```java
+Flux flux = Flux
+    .from("telegraf")
+    .withLocationNamed("America/Los_Angeles")
+    .count(
+```
+
+The Flux script:
+```
+import "timezone"
+
+option location = timezone.location(name: "America/Los_Angeles")
+
+from(bucket:"telegraf")
+    |> count()
+```

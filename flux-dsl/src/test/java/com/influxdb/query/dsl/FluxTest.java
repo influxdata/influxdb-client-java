@@ -88,4 +88,26 @@ class FluxTest {
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> count()");
     }
+
+    @Test
+    void withLocationNamed() {
+
+        Flux flux = Flux
+                .from("telegraf")
+                .withLocationNamed("America/Los_Angeles")
+                .count();
+
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("import \"timezone\" option location = timezone.location(name: \"America/Los_Angeles\") from(bucket:\"telegraf\") |> count()");
+    }
+
+    @Test
+    void withLocationFixed() {
+
+        Flux flux = Flux
+                .from("telegraf")
+                .withLocationFixed("-8h")
+                .count();
+
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("import \"timezone\" option location = timezone.fixed(offset: -8h) from(bucket:\"telegraf\") |> count()");
+    }
 }
