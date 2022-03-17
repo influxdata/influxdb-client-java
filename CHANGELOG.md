@@ -16,6 +16,9 @@
     + resource.setType(PermissionResource.TYPE_BUCKETS);
     ```
 
+### Features
+1. [#315](https://github.com/influxdata/influxdb-client-java/pull/315): Add support for timezones [FluxDSL]
+
 ### Bug Fixes
 1. [#303](https://github.com/influxdata/influxdb-client-java/pull/303): Change `PermissionResource.type` to `String`
 

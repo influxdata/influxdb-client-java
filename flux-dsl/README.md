@@ -885,7 +885,7 @@ or you can construct a timezone based on a location name:
 Flux flux = Flux
     .from("telegraf")
     .withLocationNamed("America/Los_Angeles")
-    .count(
+    .count();
 ```
 
 The Flux script:
