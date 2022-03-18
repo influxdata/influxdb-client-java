@@ -1,5 +1,8 @@
 ## 5.1.0 [unreleased]
 
+### Bug Fixes
+1. [#313](https://github.com/influxdata/influxdb-client-java/pull/313): Do not deliver `exception` when the consumer is already disposed [influxdb-client-reactive]
+
 ## 5.0.0 [2022-03-18]
 
 ### Breaking Changes
@@ -12,7 +15,6 @@
 
 ### Bug Fixes
 1. [#303](https://github.com/influxdata/influxdb-client-java/pull/303): Change `PermissionResource.type` to `String`
-1. [#313](https://github.com/influxdata/influxdb-client-java/pull/313): Do not deliver `exception` when the consumer is already disposed [influxdb-client-reactive]
 
 ### CI
 1. [#304](https://github.com/influxdata/influxdb-client-java/pull/304): Use new Codecov uploader for reporting code coverage
