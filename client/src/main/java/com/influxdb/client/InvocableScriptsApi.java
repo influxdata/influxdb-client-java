@@ -21,11 +21,17 @@
  */
 package com.influxdb.client;
 
+import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
+
+import com.influxdb.client.domain.Script;
+import com.influxdb.client.domain.ScriptCreateRequest;
+import com.influxdb.client.domain.ScriptUpdateRequest;
 
 /**
  * Use API invokable scripts to create custom InfluxDB API endpoints that query, process, and shape data.
- *
+ * <p>
  * API invokable scripts let you assign scripts to API endpoints and then execute them as standard REST operations
  * in InfluxDB Cloud.
  *
@@ -33,4 +39,45 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public interface InvocableScriptsApi {
+
+    /**
+     * Create a script.
+     *
+     * @param createRequest The script to create. (required)
+     * @return The created script.
+     */
+    @Nonnull
+    Script createScript(@Nonnull final ScriptCreateRequest createRequest);
+
+    /**
+     * Update a script.
+     *
+     * @param scriptId      The ID of the script to update. (required)
+     * @param updateRequest Script updates to apply (required)
+     * @return The updated script.
+     */
+    @Nonnull
+    Script updateScript(@Nonnull final String scriptId, @Nonnull final ScriptUpdateRequest updateRequest);
+
+    /**
+     * List scripts.
+     * @return scripts
+     */
+    @Nonnull
+    List<Script> findScripts();
+
+    /**
+     * List scripts.
+     * @param query to filtering results
+     * @return scripts
+     */
+    @Nonnull
+    List<Script> findScripts(@Nonnull final InvocableScriptsQuery query);
+
+    /**
+     * Delete a script.
+     *
+     * @param scriptId The ID of the script to delete. (required)
+     */
+    void deleteScript(@Nonnull final String scriptId);
 }

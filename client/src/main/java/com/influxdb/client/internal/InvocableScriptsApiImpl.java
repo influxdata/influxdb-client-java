@@ -21,12 +21,20 @@
  */
 package com.influxdb.client.internal;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.influxdb.client.InvocableScriptsApi;
+import com.influxdb.client.InvocableScriptsQuery;
+import com.influxdb.client.domain.Script;
+import com.influxdb.client.domain.ScriptCreateRequest;
+import com.influxdb.client.domain.ScriptUpdateRequest;
+import com.influxdb.client.domain.Scripts;
 import com.influxdb.client.service.InvocableScriptsService;
 import com.influxdb.internal.AbstractRestClient;
 import com.influxdb.utils.Arguments;
+
+import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (03/21/2022 07:54)
@@ -40,5 +48,51 @@ final class InvocableScriptsApiImpl extends AbstractRestClient implements Invoca
         Arguments.checkNotNull(service, "service");
 
         this.service = service;
+    }
+
+    @Nonnull
+    @Override
+    public Script createScript(@Nonnull final ScriptCreateRequest createRequest) {
+
+        Arguments.checkNotNull(createRequest, "createRequest");
+
+        Call<Script> call = service.postScripts(createRequest);
+        return execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public Script updateScript(@Nonnull final String scriptId, @Nonnull final ScriptUpdateRequest updateRequest) {
+        Arguments.checkNonEmpty(scriptId, "scriptId");
+        Arguments.checkNotNull(updateRequest, "updateRequest");
+
+        Call<Script> call = service.patchScriptsID(scriptId, updateRequest);
+        return execute(call);
+    }
+
+    @Nonnull
+    @Override
+    public List<Script> findScripts() {
+        return findScripts(new InvocableScriptsQuery());
+    }
+
+    @Nonnull
+    @Override
+    public List<Script> findScripts(@Nonnull final InvocableScriptsQuery query) {
+
+        Arguments.checkNotNull(query, "query");
+
+        Call<Scripts> call = service.getScripts(query.getLimit(), query.getOffset());
+
+        return execute(call).getScripts();
+    }
+
+    @Override
+    public void deleteScript(@Nonnull final String scriptId) {
+        Arguments.checkNonEmpty(scriptId, "scriptId");
+
+        Call<Void> call = service.deleteScriptsID(scriptId);
+
+        execute(call);
     }
 }

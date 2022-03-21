@@ -22,12 +22,15 @@
 package example;
 
 import java.util.Arrays;
+import java.util.List;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.InvocableScriptsApi;
-import com.influxdb.client.OrganizationsQuery;
-import com.influxdb.client.domain.Organization;
+import com.influxdb.client.domain.Script;
+import com.influxdb.client.domain.ScriptCreateRequest;
+import com.influxdb.client.domain.ScriptLanguage;
+import com.influxdb.client.domain.ScriptUpdateRequest;
 import com.influxdb.client.write.Point;
 
 public class InvocableScripts {
@@ -50,14 +53,44 @@ public class InvocableScripts {
             Point point2 = Point.measurement("my_measurement").addTag("location", "New York").addField("temperature", 24.3);
             client.getWriteApiBlocking().writePoints(bucket, org, Arrays.asList(point1, point2));
 
-            //
-            // Find Organization ID by Organization API.
-            //
-            OrganizationsQuery orgFilter = new OrganizationsQuery();
-            orgFilter.setOrg("my-org");
-            Organization organization = client.getOrganizationsApi().findOrganizations(orgFilter).get(0);
-
             InvocableScriptsApi scriptsApi = client.getInvocableScriptsApi();
+
+            //
+            // Create Invocable Script
+            //
+            System.out.println("------- Create -------\n");
+            ScriptCreateRequest createRequest = new ScriptCreateRequest()
+                    .name("my_script_" + System.currentTimeMillis())
+                    .description("my first try")
+                    .language(ScriptLanguage.FLUX)
+                    .script("from(bucket: params.bucket_name) |> range(start: -30d) |> limit(n:2)");
+            Script createdScript = scriptsApi.createScript(createRequest);
+            System.out.println(createdScript);
+
+            //
+            // Update Invocable Script
+            //
+            System.out.println("------- Update -------\n");
+            ScriptUpdateRequest updateRequest = new ScriptUpdateRequest().description("my updated description");
+            createdScript = scriptsApi.updateScript(createdScript.getId(), updateRequest);
+            System.out.println(createdScript);
+
+            //
+            // List scripts
+            //
+            System.out.println("\n------- List -------\n");
+            List<Script> scripts = scriptsApi.findScripts();
+            for (Script script : scripts) {
+                System.out.printf(" ---\n ID: %s\n Name: %s\n Description: %s%n", script.getId(), script.getName(), script.getDescription());
+            }
+            System.out.println("---");
+
+            //
+            // Delete previously created Script
+            //
+            System.out.println("------- Delete -------\n");
+            scriptsApi.deleteScript(createdScript.getId());
+            System.out.printf(" Successfully deleted script: '%s'%n", createdScript.getName());
         }
     }
 }
