@@ -70,7 +70,7 @@ public class FluxCsvParser {
         IN_ERROR
     }
 
-    enum ResponseMetadataMode {
+    public enum ResponseMetadataMode {
         FULL,
 
         // useful for Invocable scripts
@@ -123,7 +123,7 @@ public class FluxCsvParser {
         this(ResponseMetadataMode.FULL);
     }
 
-    FluxCsvParser(@Nonnull final ResponseMetadataMode responseMetadataMode) {
+    public FluxCsvParser(@Nonnull final ResponseMetadataMode responseMetadataMode) {
         Arguments.checkNotNull(responseMetadataMode, "ResponseMetadataMode");
         this.responseMetadataMode = responseMetadataMode;
     }

@@ -97,4 +97,19 @@ public interface InvocableScriptsService {
     @retrofit2.http.Path("scriptID") String scriptID, @retrofit2.http.Body ScriptInvocationParams scriptInvocationParams
   );
 
+  /**
+   * Invoke a script
+   * Invokes a script and substitutes &#x60;params&#x60; keys referenced in the script with &#x60;params&#x60; key-values sent in the request body.
+   * @param scriptID  (required)
+   * @param scriptInvocationParams  (optional)
+   * @return Call&lt;ResponseBody&gt;
+   */
+  @Headers({
+    "Content-Type:application/json"
+  })
+  @POST("api/v2/scripts/{scriptID}/invoke")
+  Call<ResponseBody> postScriptsIDInvokeResponseBody(
+    @retrofit2.http.Path("scriptID") String scriptID, @retrofit2.http.Body ScriptInvocationParams scriptInvocationParams
+  );
+
 }

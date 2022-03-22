@@ -22,6 +22,7 @@
 package example;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.influxdb.client.InfluxDBClient;
@@ -32,6 +33,8 @@ import com.influxdb.client.domain.ScriptCreateRequest;
 import com.influxdb.client.domain.ScriptLanguage;
 import com.influxdb.client.domain.ScriptUpdateRequest;
 import com.influxdb.client.write.Point;
+import com.influxdb.query.FluxRecord;
+import com.influxdb.query.FluxTable;
 
 public class InvocableScripts {
 
@@ -74,6 +77,19 @@ public class InvocableScripts {
             ScriptUpdateRequest updateRequest = new ScriptUpdateRequest().description("my updated description");
             createdScript = scriptsApi.updateScript(createdScript.getId(), updateRequest);
             System.out.println(createdScript);
+
+            //
+            // Invoke a script
+            //
+            
+            // List<FluxTable>
+            System.out.println("\n------- Invoke to List<FluxTable> -------\n") ;
+            List<FluxTable> tables = scriptsApi.invokeScript(createdScript.getId(), Collections.singletonMap("bucket_name", bucket));
+            for (FluxTable table : tables) {
+                for (FluxRecord record : table.getRecords()) {
+                    System.out.printf("%s: %s %s°C%n", record.getValueByKey("_time"), record.getValueByKey("location"), record.getValue());
+                }
+            }
 
             //
             // List scripts

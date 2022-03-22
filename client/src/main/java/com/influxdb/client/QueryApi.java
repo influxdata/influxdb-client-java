@@ -107,6 +107,7 @@ public interface QueryApi {
      * @see <a href="https://docs.influxdata.com/influxdb/cloud/query-data/parameterized-queries/">InfluxDB Cloud
      * Parametrized Queries</a>
      */
+    @Nonnull
     List<FluxTable> query(@Nonnull final String query, @Nonnull final String org,
                           @Nullable Map<String, Object> params);
 
