@@ -35,6 +35,7 @@ import com.influxdb.client.DashboardsApi;
 import com.influxdb.client.DeleteApi;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.client.InvocableScriptsApi;
 import com.influxdb.client.LabelsApi;
 import com.influxdb.client.NotificationEndpointsApi;
 import com.influxdb.client.NotificationRulesApi;
@@ -59,6 +60,7 @@ import com.influxdb.client.service.BucketsService;
 import com.influxdb.client.service.ChecksService;
 import com.influxdb.client.service.DashboardsService;
 import com.influxdb.client.service.DeleteService;
+import com.influxdb.client.service.InvocableScriptsService;
 import com.influxdb.client.service.LabelsService;
 import com.influxdb.client.service.NotificationEndpointsService;
 import com.influxdb.client.service.NotificationRulesService;
@@ -78,6 +80,7 @@ import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.UnprocessableEntityException;
 import com.influxdb.utils.Arguments;
 
+import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
@@ -239,6 +242,12 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Override
     public DeleteApi getDeleteApi() {
         return new DeleteApiImpl(retrofit.create(DeleteService.class));
+    }
+
+    @NotNull
+    @Override
+    public InvocableScriptsApi getInvocableScriptsApi() {
+        return new InvocableScriptsApiImpl(retrofit.create(InvocableScriptsService.class));
     }
 
     @Nonnull

@@ -64,7 +64,7 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
 
     protected static final Logger LOG = Logger.getLogger(AbstractQueryApi.class.getName());
 
-    protected final FluxCsvParser fluxCsvParser = new FluxCsvParser();
+    protected final FluxCsvParser fluxCsvParser;
     protected final FluxResultMapper resultMapper = new FluxResultMapper();
 
     protected static final Runnable EMPTY_ACTION = () -> {
@@ -88,6 +88,14 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
             throw new InfluxException(throwable);
         }
     };
+
+    protected AbstractQueryApi() {
+        this(new FluxCsvParser());
+    }
+
+    protected AbstractQueryApi(@Nonnull final FluxCsvParser fluxCsvParser) {
+        this.fluxCsvParser = fluxCsvParser;
+    }
 
     @Nonnull
     protected RequestBody createBody(@Nullable final String dialect, @Nonnull final String query) {

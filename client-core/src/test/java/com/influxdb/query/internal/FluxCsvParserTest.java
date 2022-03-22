@@ -469,6 +469,24 @@ class FluxCsvParserTest {
     }
 
     @Test
+    void enableParsingWithoutTableDefinition() throws IOException {
+
+        String data = ",result,table,_start,_stop,_time,_value,_field,_measurement,host,value\n"
+                + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,12.25\n"
+                + ",,1,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,15.55\n";
+
+        parser = new FluxCsvParser(FluxCsvParser.ResponseMetadataMode.ONLY_NAMES);
+        List<FluxTable> tables = parseFluxResponse(data);
+        Assertions.assertThat(tables).hasSize(2);
+        Assertions.assertThat(tables.get(0).getRecords()).hasSize(1);
+        Assertions.assertThat(tables.get(0).getRecords().get(0).getValues().get("value")).isEqualTo("12.25");
+        Assertions.assertThat(tables.get(0).getRecords().get(0).getValues().get("host")).isEqualTo("A");
+        Assertions.assertThat(tables.get(1).getRecords()).hasSize(1);
+        Assertions.assertThat(tables.get(1).getRecords().get(0).getValues().get("value")).isEqualTo("15.55");
+        Assertions.assertThat(tables.get(1).getRecords().get(0).getValues().get("host")).isEqualTo("A");
+    }
+
+    @Test
     void multipleQueries() throws IOException {
 
         String data = "#datatype,string,long,string,string,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,double,string\n"

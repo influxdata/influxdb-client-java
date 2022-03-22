@@ -6,6 +6,9 @@ This directory contains Java, Kotlin and Scala examples.
 - [WriteDataEverySecond.java](src/main/java/example/WriteDataEverySecond.java) - Write data every second 
 - [ParameterizedQuery.java](src/main/java/example/ParameterizedQuery.java) - How to use Parameterized Queries
 
+### Others
+- [InvocableScripts.py](src/main/java/example/InvocableScripts.java) - How to use Invocable scripts Cloud API to create custom endpoints that query data
+
 ## Kotlin
 
 ### Query

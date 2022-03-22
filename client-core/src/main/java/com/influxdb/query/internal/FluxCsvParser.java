@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -61,10 +62,19 @@ public class FluxCsvParser {
     private static final List<String> ANNOTATIONS = Arrays
             .asList(ANNOTATION_DATATYPE, ANNOTATION_GROUP, ANNOTATION_DEFAULT);
 
+    private final ResponseMetadataMode responseMetadataMode;
+
     private enum ParsingState {
         NORMAL,
 
         IN_ERROR
+    }
+
+    public enum ResponseMetadataMode {
+        FULL,
+
+        // useful for Invocable scripts
+        ONLY_NAMES
     }
 
     public interface FluxResponseConsumer {
@@ -107,6 +117,15 @@ public class FluxCsvParser {
         public List<FluxTable> getTables() {
             return tables;
         }
+    }
+
+    public FluxCsvParser() {
+        this(ResponseMetadataMode.FULL);
+    }
+
+    public FluxCsvParser(@Nonnull final ResponseMetadataMode responseMetadataMode) {
+        Arguments.checkNotNull(responseMetadataMode, "ResponseMetadataMode");
+        this.responseMetadataMode = responseMetadataMode;
     }
 
     /**
@@ -186,7 +205,8 @@ public class FluxCsvParser {
 
         String token = csvRecord.get(0);
         //// start new table
-        if (ANNOTATIONS.contains(token) && !state.startNewTable) {
+        if ((ANNOTATIONS.contains(token) && !state.startNewTable)
+                || (responseMetadataMode == ResponseMetadataMode.ONLY_NAMES && state.table == null)) {
             state.startNewTable = true;
 
             state.table = new FluxTable();
@@ -211,6 +231,14 @@ public class FluxCsvParser {
         } else {
             // parse column names
             if (state.startNewTable) {
+                if (responseMetadataMode == ResponseMetadataMode.ONLY_NAMES && state.table.getColumns().isEmpty()) {
+                    List<String> dataTypes = toList(csvRecord)
+                            .stream()
+                            .map(it -> "string")
+                            .collect(Collectors.toList());
+                    addDataTypes(state.table, dataTypes);
+                    state.groups = toList(csvRecord).stream().map(it -> "false").collect(Collectors.toList());
+                }
                 addGroups(state.table, state.groups);
                 addColumnNamesAndTags(state.table, toList(csvRecord));
                 state.startNewTable = false;
