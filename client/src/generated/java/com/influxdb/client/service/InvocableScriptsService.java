@@ -104,9 +104,6 @@ public interface InvocableScriptsService {
    * @param scriptInvocationParams  (optional)
    * @return Call&lt;ResponseBody&gt;
    */
-  @Headers({
-    "Content-Type:application/json"
-  })
   @POST("api/v2/scripts/{scriptID}/invoke")
   Call<ResponseBody> postScriptsIDInvokeResponseBody(
     @retrofit2.http.Path("scriptID") String scriptID, @retrofit2.http.Body ScriptInvocationParams scriptInvocationParams
