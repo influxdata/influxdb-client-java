@@ -22,6 +22,8 @@
 package com.influxdb.client.reactive.internal;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.logging.Level;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -41,6 +43,8 @@ import com.influxdb.utils.Arguments;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import org.jetbrains.annotations.NotNull;
 import org.reactivestreams.Publisher;
 
 /**
@@ -187,7 +191,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
                             }
                         };
 
-                        query(queryCall, consumer, subscriber::onError, subscriber::onComplete, false);
+                        query(queryCall, consumer, onError(subscriber), subscriber::onComplete, false);
                     });
 
                     return observable.toFlowable(BackpressureStrategy.BUFFER);
@@ -331,7 +335,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
                         }
                     };
 
-                    queryRaw(queryCall, consumer, subscriber::onError, subscriber::onComplete, false);
+                    queryRaw(queryCall, consumer, onError(subscriber), subscriber::onComplete, false);
                 });
 
                 return observable.toFlowable(BackpressureStrategy.BUFFER);
@@ -349,5 +353,17 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
 
         return queryRawQuery(Flowable.fromPublisher(queryStream)
             .map(q -> new Query().query(q).dialect(dialect)), dialect, org);
+    }
+
+    @NotNull
+    private Consumer<Throwable> onError(final ObservableEmitter<?> subscriber) {
+        return throwable -> {
+            if (!subscriber.isDisposed()) {
+                subscriber.onError(throwable);
+            } else {
+                LOG.log(Level.FINEST, "The exception could not be delivered to the consumer "
+                        + "because it has already canceled/disposed.", throwable);
+            }
+        };
     }
 }

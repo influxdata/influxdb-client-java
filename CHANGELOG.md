@@ -1,5 +1,8 @@
 ## 5.1.0 [unreleased]
 
+### Bug Fixes
+1. [#313](https://github.com/influxdata/influxdb-client-java/pull/313): Do not deliver `exception` when the consumer is already disposed [influxdb-client-reactive]
+
 ## 5.0.0 [2022-03-18]
 
 ### Breaking Changes
