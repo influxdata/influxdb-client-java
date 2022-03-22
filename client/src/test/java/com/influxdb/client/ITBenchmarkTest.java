@@ -29,6 +29,7 @@ import com.influxdb.client.benchmark.BenchmarkOptions;
 import com.influxdb.client.benchmark.ClientBenchmark;
 import com.influxdb.client.domain.Bucket;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
@@ -46,25 +47,13 @@ class ITBenchmarkTest extends AbstractITClientTest {
 
     @BeforeEach
     void setUp() {
-
         bucketsApi = influxDBClient.getBucketsApi();
-        OrganizationsApi organizationsApi = influxDBClient.getOrganizationsApi();
+        bucket = bucketsApi.createBucket(generateName("benchmark"), findMyOrg());
+    }
 
-        organizationsApi.findOrganizations()
-            .stream()
-            .filter(org -> org.getName().endsWith("-IT"))
-            .forEach(organizationsApi::deleteOrganization);
-
-        bucketsApi.findBuckets()
-            .stream()
-            .filter(bucket -> bucket.getName().endsWith("-IT"))
-            .forEach(bucket -> {
-                console("delete bucket: " + bucket.getName());
-                bucketsApi.deleteBucket(bucket);
-            });
-
-        bucket = bucketsApi.createBucket("benchmark-IT", findMyOrg());
-
+    @AfterEach
+    void tearDown() {
+        bucketsApi.deleteBucket(bucket);
     }
 
     @Test

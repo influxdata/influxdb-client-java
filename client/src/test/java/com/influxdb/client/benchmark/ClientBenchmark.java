@@ -66,8 +66,7 @@ public class ClientBenchmark {
         console("measurement:           " + opts.measurementName);
         console("secondsCount:          " + opts.secondsCount);
         console("lineProtocolsCount:    " + opts.lineProtocolsCount);
-        console("expected   size:       " + expectedCount);
-        console("\n");
+        console("expected count:        " + expectedCount);
         client.setLogLevel(LogLevel.NONE);
 
         WriteOptions writeOptions = WriteOptions.builder()

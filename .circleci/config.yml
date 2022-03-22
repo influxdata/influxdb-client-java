@@ -206,7 +206,6 @@ workflows:
           influxdb-image: "quay.io/influxdb/influxdb:nightly"
       - tests-java:
           name: client-benchmark
-          influxdb-image: "quay.io/influxdb/influxdb:nightly"
           junit-tests: "-DclientBenchmark=true -Dit.test=com.influxdb.client.ITBenchmarkTest -DfailIfNoTests=false -Dtest=ignore -DwildcardSuites=ignore"
       - deploy-snapshot:
           requires:
