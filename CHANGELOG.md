@@ -1,5 +1,8 @@
 ## 5.1.0 [unreleased]
 
+### Features
+1. [#316](https://github.com/influxdata/influxdb-client-java/pull/316): Add `InvocableScriptsApi` to create, update, list, delete and invoke scripts by seamless way
+
 ### Bug Fixes
 1. [#313](https://github.com/influxdata/influxdb-client-java/pull/313): Do not deliver `exception` when the consumer is already disposed [influxdb-client-reactive]
 
