@@ -21,7 +21,12 @@
  */
 package com.influxdb.query.dsl.functions;
 
+import java.util.Collection;
+import java.util.Map;
 import javax.annotation.Nonnull;
+
+import com.influxdb.query.dsl.Flux;
+import com.influxdb.utils.Arguments;
 
 /**
  * From produces a stream of tables from the specified bucket.
@@ -46,6 +51,8 @@ import javax.annotation.Nonnull;
  */
 public final class FromFlux extends AbstractParametrizedFlux {
 
+    private final FluxOptions options = new FluxOptions();
+
     public FromFlux() {
     }
 
@@ -53,5 +60,95 @@ public final class FromFlux extends AbstractParametrizedFlux {
     @Override
     protected String operatorName() {
         return "from";
+    }
+
+
+    /**
+     * @param bucket Bucket name
+     * @return {@link FromFlux}
+     */
+    @Nonnull
+    public FromFlux withBucket(@Nonnull final String bucket) {
+
+        Arguments.checkNonEmpty(bucket, "Bucket name");
+
+        this.withPropertyValueEscaped("bucket", bucket);
+
+        return this;
+    }
+
+    /**
+     * @param hosts the Fluxd hosts
+     * @return {@link FromFlux}
+     */
+    @Nonnull
+    public FromFlux withHosts(@Nonnull final Collection<String> hosts) {
+
+        Arguments.checkNotNull(hosts, "Hosts are required");
+
+        this.withPropertyValue("hosts", hosts);
+
+        return this;
+    }
+
+    /**
+     * @param hosts the Fluxd hosts
+     * @return {@link FromFlux}
+     */
+    @Nonnull
+    public FromFlux withHosts(@Nonnull final String[] hosts) {
+
+        Arguments.checkNotNull(hosts, "Hosts are required");
+
+        this.withPropertyValue("hosts", hosts);
+
+        return this;
+    }
+
+    /**
+     * Use a timezone based on a location name.
+     *
+     * @param name Location name as defined by InfluxDB server operating system timezone database
+     * @return this
+     */
+    @Nonnull
+    public Flux withLocationNamed(@Nonnull final String name) {
+        Arguments.checkNonEmpty(name, "name");
+        this.options.location = String.format("timezone.location(name: \"%s\")", name);
+        return this;
+    }
+
+    /**
+     * Use a location with a fixed offset.
+     *
+     * @param offset The fixed duration for the location offset. The duration is the offset from UTC time.
+     * @return this
+     */
+    @Nonnull
+    public Flux withLocationFixed(@Nonnull final String offset) {
+        Arguments.checkDuration(offset, "offset");
+        this.options.location = String.format("timezone.fixed(offset: %s)", offset);
+        return this;
+    }
+
+    @Override
+    public void appendActual(@Nonnull final Map<String, Object> parameters, @Nonnull final StringBuilder builder) {
+        // append timezone configuration
+        if (options.location != null) {
+            builder.append("import \"timezone\"");
+            builder.append("\n");
+            builder.append("option location = ");
+            builder.append(options.location);
+            builder.append("\n");
+        }
+        super.appendActual(parameters, builder);
+    }
+
+    @Override
+    void appendDelimiter(@Nonnull final StringBuilder builder) {
+    }
+
+    private static class FluxOptions {
+        private String location;
     }
 }
