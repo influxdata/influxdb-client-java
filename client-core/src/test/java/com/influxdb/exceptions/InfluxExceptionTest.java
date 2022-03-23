@@ -21,12 +21,13 @@
  */
 package com.influxdb.exceptions;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.gson.JsonObject;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
 import okhttp3.Request;
@@ -173,7 +174,7 @@ class InfluxExceptionTest {
                 })
                 .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals("user not found"));
     }
-    
+
     @Test
     void errorBodyInfluxDBWithoutMsg() {
         Assertions
@@ -205,7 +206,7 @@ class InfluxExceptionTest {
                     Map errorBody1 = ((InfluxException) throwable).errorBody();
                     Map errorBody2 = ((InfluxException) throwable).errorBody();
                     return errorBody1.get("error").equals("error-body")
-                        && errorBody1.equals(errorBody2);
+                            && errorBody1.equals(errorBody2);
                 });
     }
 
@@ -233,8 +234,8 @@ class InfluxExceptionTest {
     void message() {
 
         Assertions.assertThatThrownBy(() -> {
-            throw new InfluxException("Wrong query");
-        })
+                    throw new InfluxException("Wrong query");
+                })
                 .isInstanceOf(InfluxException.class)
                 .hasMessage("Wrong query")
                 .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).status() == 0)
@@ -247,8 +248,8 @@ class InfluxExceptionTest {
     void messageNull() {
 
         Assertions.assertThatThrownBy(() -> {
-            throw new InfluxException((String) null);
-        })
+                    throw new InfluxException((String) null);
+                })
                 .isInstanceOf(InfluxException.class)
                 .hasMessage(null)
                 .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).status() == 0)
@@ -258,10 +259,54 @@ class InfluxExceptionTest {
     }
 
     @Test
+    void headerValues() {
+        Assertions
+                .assertThatThrownBy(() -> {
+                    Response<Object> response = errorResponse(
+                            "not found",
+                            404,
+                            15,
+                            "not-json",
+                            "X-Platform-Error-Code",
+                            Collections.singletonMap("Retry-After", "145"));
+                    throw new InfluxException(new HttpException(response));
+                })
+                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().size() == 3)
+                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("Retry-After").equals("145"))
+                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("X-Platform-Error-Code").equals("not found"))
+                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("X-Influx-Reference").equals("15"));
+    }
+
+    @Test
+    void headerValuesEmpty() {
+        Assertions
+                .assertThatThrownBy(() -> {
+                    throw new InfluxException("Wrong query");
+                })
+                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().isEmpty());
+    }
+
+    @Test
+    void headerValuesIgnoreCase() {
+        Assertions
+                .assertThatThrownBy(() -> {
+                    Response<Object> response = errorResponse(
+                            "not found",
+                            404,
+                            15,
+                            "not-json",
+                            "X-Platform-Error-Code",
+                            Collections.singletonMap("Retry-After", "145"));
+                    throw new InfluxException(new HttpException(response));
+                })
+                .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("retry-after").equals("145"));
+    }
+
+    @Test
     void nullResponse() {
         Assertions.assertThatThrownBy(() -> {
-            throw new InfluxException((Response<?>) null);
-        })
+                    throw new InfluxException((Response<?>) null);
+                })
                 .isInstanceOf(InfluxException.class)
                 .hasMessage(null)
                 .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).status() == 0)
@@ -294,10 +339,21 @@ class InfluxExceptionTest {
     }
 
     @Nonnull
-    private Response<Object> errorResponse(@Nullable final String influxError, final int responseCode,
+    private Response<Object> errorResponse(@Nullable final String influxError,
+                                           final int responseCode,
                                            @Nullable final Integer referenceCode,
                                            @Nonnull final String errorBody,
-                                           @Nonnull final String headerErrorName) {
+                                           @Nonnull final String errorHeaderName) {
+        return errorResponse(influxError, responseCode, referenceCode, errorBody, errorHeaderName, new HashMap<>());
+    }
+
+    @Nonnull
+    private Response<Object> errorResponse(@Nullable final String influxError,
+                                           final int responseCode,
+                                           @Nullable final Integer referenceCode,
+                                           @Nonnull final String errorBody,
+                                           @Nonnull final String errorHeaderName,
+                                           @Nonnull final Map<String, String> headers) {
 
         okhttp3.Response.Builder builder = new okhttp3.Response.Builder() //
                 .code(responseCode)
@@ -306,14 +362,16 @@ class InfluxExceptionTest {
                 .request(new Request.Builder().url("http://localhost/").build());
 
         if (influxError != null) {
-            builder.addHeader(headerErrorName, influxError);
+            builder.addHeader(errorHeaderName, influxError);
         }
 
         if (referenceCode != null) {
             builder.addHeader("X-Influx-Reference", referenceCode.toString());
         }
 
-        ResponseBody body = ResponseBody.create(MediaType.parse("application/json"), errorBody);
+        headers.forEach(builder::addHeader);
+
+        ResponseBody body = ResponseBody.create(errorBody, MediaType.parse("application/json"));
 
         return Response.error(body, builder.build());
     }
