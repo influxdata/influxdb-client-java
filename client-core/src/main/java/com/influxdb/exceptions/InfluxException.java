@@ -21,16 +21,22 @@
  */
 package com.influxdb.exceptions;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import kotlin.Pair;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 import retrofit2.Response;
@@ -113,6 +119,27 @@ public class InfluxException extends RuntimeException {
         }
 
         return 0;
+    }
+
+    /**
+     * Gets the HTTP headers from the unsuccessful response.
+     * If the response is not present than return empty {@code Map}.
+     *
+     * @return HTTP headers
+     */
+    @Nonnull
+    public Map<String, String> headers() {
+        if (response != null) {
+            return StreamSupport
+                    .stream(response.headers().spliterator(), false)
+                    .collect(Collectors.toMap(
+                            Pair::component1,
+                            Pair::component2,
+                            (oldValue, newValue) -> newValue,
+                            (Supplier<Map<String, String>>) () -> new TreeMap<>(String.CASE_INSENSITIVE_ORDER)));
+        }
+
+        return Collections.emptyMap();
     }
 
     /**

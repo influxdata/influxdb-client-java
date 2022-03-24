@@ -3,6 +3,7 @@
 ### Features
 1. [#316](https://github.com/influxdata/influxdb-client-java/pull/316): Add `InvocableScriptsApi` to create, update, list, delete and invoke scripts by seamless way
 1. [#315](https://github.com/influxdata/influxdb-client-java/pull/315): Add support for timezones [FluxDSL]
+1. [#317](https://github.com/influxdata/influxdb-client-java/pull/317): Gets HTTP headers from the unsuccessful HTTP request
 
 ### Bug Fixes
 1. [#313](https://github.com/influxdata/influxdb-client-java/pull/313): Do not deliver `exception` when the consumer is already disposed [influxdb-client-reactive]
