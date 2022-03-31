@@ -179,6 +179,10 @@
       <version>${akka.version}</version>
       <exclusions>
         <exclusion>
+          <groupId>com.typesafe</groupId>
+          <artifactId>ssl-config-core_2.12</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>org.scala-lang</groupId>
           <artifactId>scala-library</artifactId>
         </exclusion>
