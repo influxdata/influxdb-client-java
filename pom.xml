@@ -602,7 +602,7 @@
             <dependency>
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-runner</artifactId>
-                <version>1.7.2</version>
+                <version>1.8.2</version>
             </dependency>
 
             <dependency>
@@ -620,7 +620,7 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-junit-jupiter</artifactId>
-                <version>3.11.2</version>
+                <version>4.4.0</version>
             </dependency>
 
             <dependency>
