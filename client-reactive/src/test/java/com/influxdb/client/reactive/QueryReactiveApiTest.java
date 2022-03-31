@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.influxdb.test.AbstractMockServerTest;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

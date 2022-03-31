@@ -129,7 +129,7 @@
 
         <dependency>
             <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>adapter-rxjava2</artifactId>
+            <artifactId>adapter-rxjava3</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>com.squareup.okhttp3</groupId>
@@ -164,25 +164,6 @@
         <dependency>
             <groupId>com.squareup.retrofit2</groupId>
             <artifactId>converter-gson</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>adapter-rxjava3</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.squareup.okhttp3</groupId>
-                    <artifactId>okhttp</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.squareup.retrofit2</groupId>
-                    <artifactId>retrofit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.reactivex.rxjava2</groupId>
-                    <artifactId>rxjava</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
