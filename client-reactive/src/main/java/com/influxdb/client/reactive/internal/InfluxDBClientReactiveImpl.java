@@ -36,7 +36,8 @@ import com.influxdb.client.service.QueryService;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.utils.Arguments;
 
-import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.Flowable;
+import org.reactivestreams.Publisher;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 
 /**
@@ -72,9 +73,9 @@ public class InfluxDBClientReactiveImpl extends AbstractInfluxDBClient
 
     @Nonnull
     @Override
-    public Single<HealthCheck> health() {
+    public Publisher<HealthCheck> health() {
 
-        return Single.fromCallable(() -> health(healthService.getHealth(null)));
+        return Flowable.fromCallable(() -> health(healthService.getHealth(null)));
     }
 
     @Nonnull

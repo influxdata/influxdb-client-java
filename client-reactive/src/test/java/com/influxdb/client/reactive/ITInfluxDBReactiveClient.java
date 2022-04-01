@@ -29,6 +29,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import org.reactivestreams.Publisher;
 
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 08:06)
@@ -51,9 +52,9 @@ class ITInfluxDBReactiveClient extends AbstractITInfluxDBClientTest {
     @Test
     void health() {
 
-        Single<HealthCheck> check = influxDBClient.health();
+        Publisher<HealthCheck> check = influxDBClient.health();
 
-        check
+        Single.fromPublisher(check)
                 .test()
                 .assertNoErrors()
                 .assertValue(it -> {
@@ -67,22 +68,22 @@ class ITInfluxDBReactiveClient extends AbstractITInfluxDBClientTest {
     }
 
     @Test
-    void healthNotRunningInstance() throws Exception {
+    void healthNotRunningInstance() {
 
         InfluxDBClientReactive clientNotRunning = InfluxDBClientReactiveFactory.create("http://localhost:8099");
-        Single<HealthCheck> health = clientNotRunning.health();
+        Publisher<HealthCheck> health = clientNotRunning.health();
 
-        health
-                .test()
-                .assertNoErrors()
-                .assertValue(it -> {
+        Single.fromPublisher(health)
+            .test()
+            .assertNoErrors()
+            .assertValue(it -> {
 
-                    Assertions.assertThat(it).isNotNull();
-                    Assertions.assertThat(it.getStatus()).isEqualTo(HealthCheck.StatusEnum.FAIL);
-                    Assertions.assertThat(it.getMessage()).startsWith("Failed to connect to");
+                Assertions.assertThat(it).isNotNull();
+                Assertions.assertThat(it.getStatus()).isEqualTo(HealthCheck.StatusEnum.FAIL);
+                Assertions.assertThat(it.getMessage()).startsWith("Failed to connect to");
 
-                    return true;
-                });
+                return true;
+            });
 
         clientNotRunning.close();
     }

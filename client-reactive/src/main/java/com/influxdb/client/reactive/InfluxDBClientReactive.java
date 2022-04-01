@@ -27,7 +27,7 @@ import com.influxdb.LogLevel;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.domain.HealthCheck;
 
-import io.reactivex.rxjava3.core.Single;
+import org.reactivestreams.Publisher;
 
 /**
  *  The reference RxJava client for the <a href="https://github.com/influxdata/influxdb">InfluxDB 2.0</a>
@@ -68,7 +68,7 @@ public interface InfluxDBClientReactive extends AutoCloseable {
      * @return health of an instance
      */
     @Nonnull
-    Single<HealthCheck> health();
+    Publisher<HealthCheck> health();
 
     /**
      * @return the {@link LogLevel} that is used for logging requests and responses
