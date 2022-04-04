@@ -1,4 +1,4 @@
-## 5.1.0 [unreleased]
+## 6.0.0 [unreleased]
 
 ### Migration Notice
 :warning: The InfluxDB Client Library uses internally `RxJava` to support write with batching, retry and backpressure.
