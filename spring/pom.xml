@@ -74,7 +74,7 @@
     <properties>
         <micrometer.version>1.8.4</micrometer.version>
         <spring-boot.version>2.6.6</spring-boot.version>
-        <spring.version>5.3.17</spring.version>
+        <spring.version>5.3.18</spring.version>
         <mockito.version>4.4.0</mockito.version>
     </properties>
 
@@ -125,6 +125,12 @@
             <artifactId>spring-boot-actuator-autoconfigure</artifactId>
             <version>${spring-boot.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
