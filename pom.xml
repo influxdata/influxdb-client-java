@@ -121,7 +121,7 @@
         <plugin.site.version>3.9.0</plugin.site.version>
         <plugin.scala.version>3.4.4</plugin.scala.version>
 
-        <kotlin.version>1.6.10</kotlin.version>
+        <kotlin.version>1.6.20</kotlin.version>
         <karaf.version>4.3.6</karaf.version>
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
     </properties>
@@ -585,12 +585,6 @@
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
                 <version>3.0.2</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.json</groupId>
-                <artifactId>json</artifactId>
-                <version>20220320</version>
             </dependency>
 
             <dependency>
