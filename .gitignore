@@ -16,3 +16,7 @@ tree.txt
 **/swagger2.yml
 **/response.json
 **/test.txt
+
+# Mac OS
+.DS_Store
+client/.DS_Store

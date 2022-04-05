@@ -21,7 +21,6 @@
  */
 package com.influxdb.client.internal;
 
-import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -82,7 +81,6 @@ import com.influxdb.utils.Arguments;
 
 import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/10/2018 09:36)
@@ -97,7 +95,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
 
     public InfluxDBClientImpl(@Nonnull final InfluxDBClientOptions options) {
 
-        super(options, "java", Collections.singletonList(RxJava2CallAdapterFactory.create()));
+        super(options, "java");
 
         setupService = retrofit.create(SetupService.class);
         readyService = retrofit.create(ReadyService.class);

@@ -27,7 +27,7 @@
 
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client</artifactId>
-    <version>5.1.0-SNAPSHOT</version>
+    <version>6.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -109,8 +109,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <dependency.retrofit.version>2.9.0</dependency.retrofit.version>
-        <dependency.okhttp3.version>4.7.2</dependency.okhttp3.version>
-        <dependency.gson.version>2.8.8</dependency.gson.version>
+        <dependency.okhttp3.version>4.9.3</dependency.okhttp3.version>
+        <dependency.com.squareup.okio>2.10.0</dependency.com.squareup.okio>
+        <dependency.gson.version>2.9.0</dependency.gson.version>
+        <dependency.io.reactivex.rxjava3>3.1.4</dependency.io.reactivex.rxjava3>
 
         <plugin.surefire.version>3.0.0-M5</plugin.surefire.version>
         <plugin.javadoc.version>3.2.0</plugin.javadoc.version>
@@ -119,8 +121,8 @@
         <plugin.site.version>3.9.0</plugin.site.version>
         <plugin.scala.version>3.4.4</plugin.scala.version>
 
-        <kotlin.version>1.5.10</kotlin.version>
-        <karaf.version>4.2.11</karaf.version>
+        <kotlin.version>1.6.20</kotlin.version>
+        <karaf.version>4.3.6</karaf.version>
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
     </properties>
 
@@ -473,38 +475,38 @@
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-test</artifactId>
-                <version>5.1.0-SNAPSHOT</version>
+                <version>6.0.0-SNAPSHOT</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-core</artifactId>
-                <version>5.1.0-SNAPSHOT</version>
+                <version>6.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-utils</artifactId>
-                <version>5.1.0-SNAPSHOT</version>
+                <version>6.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-java</artifactId>
-                <version>5.1.0-SNAPSHOT</version>
+                <version>6.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-reactive</artifactId>
-                <version>5.1.0-SNAPSHOT</version>
+                <version>6.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-flux</artifactId>
-                <version>5.1.0-SNAPSHOT</version>
+                <version>6.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
@@ -527,14 +529,14 @@
 
             <dependency>
                 <groupId>com.squareup.retrofit2</groupId>
-                <artifactId>adapter-rxjava2</artifactId>
+                <artifactId>adapter-rxjava3</artifactId>
                 <version>${dependency.retrofit.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.squareup.okio</groupId>
                 <artifactId>okio</artifactId>
-                <version>2.6.0</version>
+                <version>${dependency.com.squareup.okio}</version>
             </dependency>
 
             <dependency>
@@ -558,37 +560,31 @@
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
-                <version>1.6.1</version>
+                <version>1.6.5</version>
             </dependency>
 
             <dependency>
                 <groupId>io.gsonfire</groupId>
                 <artifactId>gson-fire</artifactId>
-                <version>1.8.4</version>
+                <version>1.8.5</version>
             </dependency>
 
             <dependency>
-                <groupId>io.reactivex.rxjava2</groupId>
+                <groupId>io.reactivex.rxjava3</groupId>
                 <artifactId>rxjava</artifactId>
-                <version>2.2.19</version>
+                <version>${dependency.io.reactivex.rxjava3}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-csv</artifactId>
-                <version>1.8</version>
+                <version>1.9.0</version>
             </dependency>
 
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
                 <version>3.0.2</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.json</groupId>
-                <artifactId>json</artifactId>
-                <version>20200518</version>
             </dependency>
 
             <dependency>
@@ -600,7 +596,7 @@
             <dependency>
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-runner</artifactId>
-                <version>1.6.2</version>
+                <version>1.8.2</version>
             </dependency>
 
             <dependency>
@@ -612,19 +608,19 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>3.9.0</version>
+                <version>4.4.0</version>
             </dependency>
 
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-junit-jupiter</artifactId>
-                <version>3.9.0</version>
+                <version>4.4.0</version>
             </dependency>
 
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.16.1</version>
+                <version>3.22.0</version>
             </dependency>
 
             <dependency>
@@ -648,7 +644,7 @@
             <dependency>
                 <groupId>org.jetbrains.kotlinx</groupId>
                 <artifactId>kotlinx-coroutines-core</artifactId>
-                <version>1.3.7</version>
+                <version>1.6.0</version>
             </dependency>
             
         </dependencies>

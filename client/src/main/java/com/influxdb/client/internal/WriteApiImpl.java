@@ -39,8 +39,9 @@ import com.influxdb.client.write.events.EventListener;
 import com.influxdb.client.write.events.ListenerRegistration;
 import com.influxdb.utils.Arguments;
 
-import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.disposables.Disposable;
+
 
 /**
  * @author Jakub Bednar (bednar@github) (15/10/2018 09:42)

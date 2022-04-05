@@ -11,7 +11,7 @@ import com.influxdb.client.domain.Error;
 import com.influxdb.client.domain.LineProtocolError;
 import com.influxdb.client.domain.LineProtocolLengthError;
 import com.influxdb.client.domain.WritePrecision;
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 import retrofit2.Response;
 
 import java.util.ArrayList;

@@ -26,7 +26,7 @@
   <parent>
     <artifactId>influxdb-client</artifactId>
     <groupId>com.influxdb</groupId>
-    <version>5.1.0-SNAPSHOT</version>
+    <version>6.0.0-SNAPSHOT</version>
     <relativePath>../../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -67,13 +67,13 @@
   <scm>
     <connection>scm:git:git@github.com:influxdata/influxdb-client-java.git</connection>
     <developerConnection>scm:git:git@github.com:influxdata/influxdb-client-java.git</developerConnection>
-    <url>http://github.com/influxdata/influxdb-client-java/tree/master</url>
+    <url>https://github.com/influxdata/influxdb-client-java/tree/master</url>
     <tag>HEAD</tag>
   </scm>
 
   <properties>
-    <scala.version>2.12.13</scala.version>
-    <akka.version>2.6.6</akka.version>
+    <scala.version>2.12.15</scala.version>
+    <akka.version>2.6.19</akka.version>
   </properties>
 
   <build>
@@ -164,13 +164,29 @@
     <dependency>
       <groupId>org.scala-lang.modules</groupId>
       <artifactId>scala-collection-compat_2.12</artifactId>
-      <version>2.4.2</version>
+      <version>2.7.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-library</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>com.typesafe.akka</groupId>
       <artifactId>akka-stream_2.12</artifactId>
       <version>${akka.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.typesafe</groupId>
+          <artifactId>ssl-config-core_2.12</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-library</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -178,6 +194,12 @@
       <artifactId>akka-testkit_2.12</artifactId>
       <version>${akka.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-library</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -185,6 +207,12 @@
       <artifactId>akka-stream-testkit_2.12</artifactId>
       <version>${akka.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-library</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -196,8 +224,14 @@
     <dependency>
       <groupId>org.scalatest</groupId>
       <artifactId>scalatest_2.12</artifactId>
-      <version>3.2.0</version>
+      <version>3.2.11</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-library</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
   </dependencies>

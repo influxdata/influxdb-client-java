@@ -41,8 +41,10 @@ import com.influxdb.client.write.Point;
 import com.influxdb.exceptions.BadRequestException;
 import com.influxdb.query.FluxRecord;
 
-import io.reactivex.Flowable;
-import io.reactivex.schedulers.Schedulers;
+
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -399,7 +401,7 @@ class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
                 .test()
                 .awaitCount(1)
                 .assertValueCount(1)
-                .assertSubscribed();
+                .assertComplete();
     }
 
     @Test

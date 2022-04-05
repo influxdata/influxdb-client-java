@@ -45,7 +45,7 @@ import com.influxdb.client.write.Point;
 import com.influxdb.internal.AbstractRestClient;
 import com.influxdb.utils.Arguments;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 import org.reactivestreams.Publisher;
 import retrofit2.HttpException;
 

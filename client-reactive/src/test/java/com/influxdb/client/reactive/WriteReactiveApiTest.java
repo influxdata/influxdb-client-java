@@ -32,10 +32,10 @@ import com.influxdb.client.write.Point;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.test.AbstractMockServerTest;
 
-import io.reactivex.Flowable;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.TestScheduler;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.schedulers.TestScheduler;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 import okhttp3.mockwebserver.MockResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -229,7 +229,7 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
                     Assertions.assertThat(throwable).hasCauseInstanceOf(TimeoutException.class);
                     return true;
                 })
-                .assertTerminated();
+                .assertNotComplete();
     }
 
     @Test
@@ -252,7 +252,7 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
                     Assertions.assertThat(throwable).hasCauseInstanceOf(IOException.class);
                     return true;
                 })
-                .assertTerminated();
+                .assertNotComplete();
     }
 
     @Test
@@ -274,7 +274,8 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
                 .test()
                 .awaitCount(3)
                 .assertValueCount(3)
-                .assertTerminated();
+                .assertNoErrors()
+                .assertComplete();
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(3);
 
@@ -311,7 +312,7 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
                     Assertions.assertThat(throwable).hasMessage("token is temporarily over quota");
                     return true;
                 })
-                .assertTerminated();
+                .assertNotComplete();
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(1);
 
@@ -337,7 +338,8 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
                 .test()
                 .awaitCount(1)
                 .assertValueCount(1)
-          .assertTerminated();
+                .assertNoErrors()
+                .assertComplete();
 
         Assertions.assertThat(mockServer.getRequestCount()).isEqualTo(1);
 

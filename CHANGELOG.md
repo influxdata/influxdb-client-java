@@ -1,9 +1,55 @@
-## 5.1.0 [unreleased]
+## 6.0.0 [unreleased]
+
+### Migration Notice
+:warning: The InfluxDB Client Library uses internally `RxJava` to support write with batching, retry and backpressure.
+ The underlying outdated `RxJava2` library was upgraded to the latest `RxJava3`.
+
+- see [What is different in RxJava3](https://github.com/ReactiveX/RxJava/wiki/What's-different-in-3.0)
+
+ 
+### Changes in public API
+
+  - `WriteService` imports:
+    - `io.reactivex.Single` is refactored to `io.reactivex.rxjava3.core.Single`
+  - `WriteOptions` imports:
+    - `io.reactivex.BackpressureOverflowStrategy` -> `io.reactivex.rxjava3.core.BackpressureOverflowStrategy`
+    - `io.reactivex.Scheduler` -> `io.reactivex.rxjava3.core.Scheduler`
+    - `io.reactivex.schedulers.Schedulers` -> `io.reactivex.rxjava3.schedulers.Schedulers`
+  - `InfluxDBClientReactive`:
+    - `Single<HealthCheck> health()` -> `Publisher<HealthCheck> health()`
+  - `WriteOptionsReactive`
+     - `io.reactivex.Scheduler` -> `io.reactivex.rxjava3.core.Scheduler`
+     - `io.reactivex.schedulers.Schedulers` -> `io.reactivex.rxjava3.schedulers.Schedulers`
+          
+
+### List of updated dependencies: 
+ - Core:
+    - com.squareup.okhttp3:okhttp:jar:4.9.3 
+    - com.squareup.okio:okio:jar:2.10.0
+    - com.google.code.gson:gson:jar:2.9.0
+    - io.reactivex.rxjava3:rxjava:jar:3.1.4
+    - org.apache.commons:commons-csv:jar 1.9.0
+    - io.gsonfire:gson-fire:1.8.5
+ - Kotlin
+   - org.jetbrains.kotlin:kotlin-stdlib:1.6.20
+   - org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.3
+   - org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0
+ - Karaf
+   - karaf 4.3.6
+   - gson-fire 1.8.5
+ - Micrometer 
+   - micrometer 1.8.4
+ - OSGi
+   - org.osgi:osgi.core:8.0.0
+ - Spring integration
+   - org.springframework.boot:spring-boot:jar:2.6.6
+   - org.springframework:spring-core:jar:5.3.17
 
 ### Features
+1. [#289](https://github.com/influxdata/influxdb-client-java/pull/298): Upgrade `RxJava2` -> `RxJava3`, update outdated dependencies
 1. [#316](https://github.com/influxdata/influxdb-client-java/pull/316): Add `InvocableScriptsApi` to create, update, list, delete and invoke scripts by seamless way
 1. [#315](https://github.com/influxdata/influxdb-client-java/pull/315): Add support for timezones [FluxDSL]
-1. [#317](https://github.com/influxdata/influxdb-client-java/pull/317): Gets HTTP headers from the unsuccessful HTTP request
+1. [#317](https://github.com/influxdata/influxdb-client-java/pull/317): Gets HTTP headers from the unsuccessful HTTP reques
 
 ### Bug Fixes
 1. [#313](https://github.com/influxdata/influxdb-client-java/pull/313): Do not deliver `exception` when the consumer is already disposed [influxdb-client-reactive]
