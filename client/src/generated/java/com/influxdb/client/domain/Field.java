@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Field;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,7 +110,6 @@ public class Field {
    * value is the value of the field.  Meaning of the value is implied by the &#x60;type&#x60; key
    * @return value
   **/
-  @ApiModelProperty(value = "value is the value of the field.  Meaning of the value is implied by the `type` key")
   public String getValue() {
     return value;
   }
@@ -130,7 +127,6 @@ public class Field {
    * &#x60;type&#x60; describes the field type. &#x60;func&#x60; is a function. &#x60;field&#x60; is a field reference.
    * @return type
   **/
-  @ApiModelProperty(value = "`type` describes the field type. `func` is a function. `field` is a field reference.")
   public TypeEnum getType() {
     return type;
   }
@@ -148,7 +144,6 @@ public class Field {
    * Alias overrides the field name in the returned response.  Applies only if type is &#x60;func&#x60;
    * @return alias
   **/
-  @ApiModelProperty(value = "Alias overrides the field name in the returned response.  Applies only if type is `func`")
   public String getAlias() {
     return alias;
   }
@@ -174,7 +169,6 @@ public class Field {
    * Args are the arguments to the function
    * @return args
   **/
-  @ApiModelProperty(value = "Args are the arguments to the function")
   public List<Field> getArgs() {
     return args;
   }

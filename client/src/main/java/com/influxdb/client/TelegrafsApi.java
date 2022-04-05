@@ -36,7 +36,7 @@ import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceOwner;
 import com.influxdb.client.domain.Telegraf;
 import com.influxdb.client.domain.TelegrafPlugin;
-import com.influxdb.client.domain.TelegrafRequest;
+import com.influxdb.client.domain.TelegrafPluginRequest;
 import com.influxdb.client.domain.TelegrafRequestMetadata;
 import com.influxdb.client.domain.User;
 
@@ -48,7 +48,7 @@ import com.influxdb.client.domain.User;
  * The following example shows how to create a Telegraf configuration with an output plugin and an input cpu plugin.
  * <pre>
  * TelegrafPlugin output = new TelegrafPlugin()
- *                 .type(TelegrafPlugin.TypeEnum.OUTPUTS)
+ *                 .type(TelegrafPlugin.TypeEnum.OUTPUT)
  *                 .name("influxdb_v2")
  *                 .description("my instance")
  *                 .putConfigItem("organization", "my-org")
@@ -57,7 +57,7 @@ import com.influxdb.client.domain.User;
  *                 .putConfigItem("urls", Collections.singletonList("http://127.0.0.1:9999"));
  *
  * TelegrafPlugin cpu = new TelegrafPlugin()
- *                 .type(TelegrafPlugin.TypeEnum.INPUTS)
+ *                 .type(TelegrafPlugin.TypeEnum.INPUT)
  *                 .name("cpu")
  *                 .putConfigItem("percpu", true)
  *                 .putConfigItem("totalcpu", true)
@@ -174,11 +174,11 @@ public interface TelegrafsApi {
     /**
      * Create a telegraf config.
      *
-     * @param telegrafRequest Telegraf Configuration to create
+     * @param telegrafPluginRequest Telegraf Configuration to create
      * @return Telegraf config created
      */
     @Nonnull
-    Telegraf createTelegraf(@Nonnull final TelegrafRequest telegrafRequest);
+    Telegraf createTelegraf(@Nonnull final TelegrafPluginRequest telegrafPluginRequest);
 
     /**
      * Created default Telegraf Agent configuration.
@@ -217,7 +217,7 @@ public interface TelegrafsApi {
      */
     @Nonnull
     Telegraf updateTelegraf(@Nonnull final String telegrafID,
-                            @Nonnull final TelegrafRequest telegrafRequest);
+                            @Nonnull final TelegrafPluginRequest telegrafRequest);
 
     /**
      * Delete a telegraf config.

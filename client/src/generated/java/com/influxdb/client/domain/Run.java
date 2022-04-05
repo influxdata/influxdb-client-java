@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -22,8 +22,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.LogEvent;
 import com.influxdb.client.domain.RunLinks;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -127,7 +125,6 @@ public class Run {
    * Get id
    * @return id
   **/
-  @ApiModelProperty(value = "")
   public String getId() {
     return id;
   }
@@ -136,7 +133,6 @@ public class Run {
    * Get taskID
    * @return taskID
   **/
-  @ApiModelProperty(value = "")
   public String getTaskID() {
     return taskID;
   }
@@ -145,7 +141,6 @@ public class Run {
    * Get status
    * @return status
   **/
-  @ApiModelProperty(value = "")
   public StatusEnum getStatus() {
     return status;
   }
@@ -159,7 +154,6 @@ public class Run {
    * Time used for run&#39;s \&quot;now\&quot; option, RFC3339.
    * @return scheduledFor
   **/
-  @ApiModelProperty(value = "Time used for run's \"now\" option, RFC3339.")
   public OffsetDateTime getScheduledFor() {
     return scheduledFor;
   }
@@ -172,7 +166,6 @@ public class Run {
    * An array of logs associated with the run.
    * @return log
   **/
-  @ApiModelProperty(value = "An array of logs associated with the run.")
   public List<LogEvent> getLog() {
     return log;
   }
@@ -181,7 +174,6 @@ public class Run {
    * Time run started executing, RFC3339Nano.
    * @return startedAt
   **/
-  @ApiModelProperty(value = "Time run started executing, RFC3339Nano.")
   public OffsetDateTime getStartedAt() {
     return startedAt;
   }
@@ -190,7 +182,6 @@ public class Run {
    * Time run finished executing, RFC3339Nano.
    * @return finishedAt
   **/
-  @ApiModelProperty(value = "Time run finished executing, RFC3339Nano.")
   public OffsetDateTime getFinishedAt() {
     return finishedAt;
   }
@@ -199,7 +190,6 @@ public class Run {
    * Time run was manually requested, RFC3339Nano.
    * @return requestedAt
   **/
-  @ApiModelProperty(value = "Time run was manually requested, RFC3339Nano.")
   public OffsetDateTime getRequestedAt() {
     return requestedAt;
   }
@@ -213,7 +203,6 @@ public class Run {
    * Get links
    * @return links
   **/
-  @ApiModelProperty(value = "")
   public RunLinks getLinks() {
     return links;
   }

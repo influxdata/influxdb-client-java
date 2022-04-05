@@ -20,8 +20,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -50,7 +48,6 @@ public class ScriptUpdateRequest {
    * Get name
    * @return name
   **/
-  @ApiModelProperty(value = "")
   public String getName() {
     return name;
   }
@@ -68,7 +65,6 @@ public class ScriptUpdateRequest {
    * Get description
    * @return description
   **/
-  @ApiModelProperty(value = "")
   public String getDescription() {
     return description;
   }
@@ -86,7 +82,6 @@ public class ScriptUpdateRequest {
    * script is script to be executed
    * @return script
   **/
-  @ApiModelProperty(value = "script is script to be executed")
   public String getScript() {
     return script;
   }

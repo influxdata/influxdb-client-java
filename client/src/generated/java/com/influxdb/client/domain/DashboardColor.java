@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,14 +20,11 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
  * Defines an encoding of data value into color space.
  */
-@ApiModel(description = "Defines an encoding of data value into color space.")
 
 public class DashboardColor {
   public static final String SERIALIZED_NAME_ID = "id";
@@ -114,7 +111,6 @@ public class DashboardColor {
    * The unique ID of the view color.
    * @return id
   **/
-  @ApiModelProperty(required = true, value = "The unique ID of the view color.")
   public String getId() {
     return id;
   }
@@ -132,7 +128,6 @@ public class DashboardColor {
    * Type is how the color is used.
    * @return type
   **/
-  @ApiModelProperty(required = true, value = "Type is how the color is used.")
   public TypeEnum getType() {
     return type;
   }
@@ -150,7 +145,6 @@ public class DashboardColor {
    * The hex number of the color
    * @return hex
   **/
-  @ApiModelProperty(required = true, value = "The hex number of the color")
   public String getHex() {
     return hex;
   }
@@ -168,7 +162,6 @@ public class DashboardColor {
    * The user-facing name of the hex color.
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "The user-facing name of the hex color.")
   public String getName() {
     return name;
   }
@@ -186,7 +179,6 @@ public class DashboardColor {
    * The data value mapped to this color.
    * @return value
   **/
-  @ApiModelProperty(required = true, value = "The data value mapped to this color.")
   public Float getValue() {
     return value;
   }

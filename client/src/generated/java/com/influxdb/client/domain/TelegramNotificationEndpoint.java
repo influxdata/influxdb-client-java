@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -24,8 +24,6 @@ import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationEndpointBase;
 import com.influxdb.client.domain.NotificationEndpointBaseLinks;
 import com.influxdb.client.domain.NotificationEndpointType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -52,7 +50,6 @@ public class TelegramNotificationEndpoint extends NotificationEndpoint {
    * Specifies the Telegram bot token. See https://core.telegram.org/bots#creating-a-new-bot .
    * @return token
   **/
-  @ApiModelProperty(required = true, value = "Specifies the Telegram bot token. See https://core.telegram.org/bots#creating-a-new-bot .")
   public String getToken() {
     return token;
   }
@@ -70,7 +67,6 @@ public class TelegramNotificationEndpoint extends NotificationEndpoint {
    * ID of the telegram channel, a chat_id in https://core.telegram.org/bots/api#sendmessage .
    * @return channel
   **/
-  @ApiModelProperty(required = true, value = "ID of the telegram channel, a chat_id in https://core.telegram.org/bots/api#sendmessage .")
   public String getChannel() {
     return channel;
   }

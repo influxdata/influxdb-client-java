@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,8 +20,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +27,6 @@ import java.util.List;
 /**
  * Dialect are options to change the default CSV output format; https://www.w3.org/TR/2015/REC-tabular-metadata-20151217/#dialect-descriptions
  */
-@ApiModel(description = "Dialect are options to change the default CSV output format; https://www.w3.org/TR/2015/REC-tabular-metadata-20151217/#dialect-descriptions")
 
 public class Dialect {
   public static final String SERIALIZED_NAME_HEADER = "header";
@@ -157,7 +154,6 @@ public class Dialect {
    * If true, the results will contain a header row
    * @return header
   **/
-  @ApiModelProperty(value = "If true, the results will contain a header row")
   public Boolean getHeader() {
     return header;
   }
@@ -175,7 +171,6 @@ public class Dialect {
    * Separator between cells; the default is ,
    * @return delimiter
   **/
-  @ApiModelProperty(value = "Separator between cells; the default is ,")
   public String getDelimiter() {
     return delimiter;
   }
@@ -201,7 +196,6 @@ public class Dialect {
    * https://www.w3.org/TR/2015/REC-tabular-data-model-20151217/#columns
    * @return annotations
   **/
-  @ApiModelProperty(value = "https://www.w3.org/TR/2015/REC-tabular-data-model-20151217/#columns")
   public List<AnnotationsEnum> getAnnotations() {
     return annotations;
   }
@@ -219,7 +213,6 @@ public class Dialect {
    * Character prefixed to comment strings
    * @return commentPrefix
   **/
-  @ApiModelProperty(value = "Character prefixed to comment strings")
   public String getCommentPrefix() {
     return commentPrefix;
   }
@@ -237,7 +230,6 @@ public class Dialect {
    * Format of timestamps
    * @return dateTimeFormat
   **/
-  @ApiModelProperty(value = "Format of timestamps")
   public DateTimeFormatEnum getDateTimeFormat() {
     return dateTimeFormat;
   }

@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -30,8 +30,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Expression;
 import com.influxdb.client.domain.PropertyKey;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -40,7 +38,6 @@ import java.util.List;
 /**
  * The value associated with a key
  */
-@ApiModel(description = "The value associated with a key")
 
 public class Property {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -66,7 +63,6 @@ public class Property {
    * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }
@@ -84,7 +80,6 @@ public class Property {
    * Get key
    * @return key
   **/
-  @ApiModelProperty(value = "")
   public PropertyKey getKey() {
     return key;
   }
@@ -102,7 +97,6 @@ public class Property {
    * Get value
    * @return value
   **/
-  @ApiModelProperty(value = "")
   public Expression getValue() {
     return value;
   }

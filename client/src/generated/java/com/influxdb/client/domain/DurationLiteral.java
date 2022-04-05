@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Duration;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +28,6 @@ import java.util.List;
 /**
  * Represents the elapsed time between two instants as an int64 nanosecond count with syntax of golang&#39;s time.Duration
  */
-@ApiModel(description = "Represents the elapsed time between two instants as an int64 nanosecond count with syntax of golang's time.Duration")
 
 public class DurationLiteral extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -50,7 +47,6 @@ public class DurationLiteral extends Expression {
    * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }
@@ -76,7 +72,6 @@ public class DurationLiteral extends Expression {
    * Duration values
    * @return values
   **/
-  @ApiModelProperty(value = "Duration values")
   public List<Duration> getValues() {
     return values;
   }

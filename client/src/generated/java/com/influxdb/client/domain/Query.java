@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -22,8 +22,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Dialect;
 import com.influxdb.client.domain.File;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -33,7 +31,6 @@ import java.util.Map;
 /**
  * Query influx using the Flux language
  */
-@ApiModel(description = "Query influx using the Flux language")
 
 public class Query {
   public static final String SERIALIZED_NAME_EXTERN = "extern";
@@ -114,7 +111,6 @@ public class Query {
    * Get extern
    * @return extern
   **/
-  @ApiModelProperty(value = "")
   public File getExtern() {
     return extern;
   }
@@ -132,7 +128,6 @@ public class Query {
    * Query script to execute.
    * @return query
   **/
-  @ApiModelProperty(required = true, value = "Query script to execute.")
   public String getQuery() {
     return query;
   }
@@ -145,7 +140,6 @@ public class Query {
    * The type of query. Must be \&quot;flux\&quot;.
    * @return type
   **/
-  @ApiModelProperty(value = "The type of query. Must be \"flux\".")
   public TypeEnum getType() {
     return type;
   }
@@ -167,7 +161,6 @@ public class Query {
    * Enumeration of key/value pairs that respresent parameters to be injected into query (can only specify either this field or extern and not both)
    * @return params
   **/
-  @ApiModelProperty(value = "Enumeration of key/value pairs that respresent parameters to be injected into query (can only specify either this field or extern and not both)")
   public Map<String, Object> getParams() {
     return params;
   }
@@ -185,7 +178,6 @@ public class Query {
    * Get dialect
    * @return dialect
   **/
-  @ApiModelProperty(value = "")
   public Dialect getDialect() {
     return dialect;
   }
@@ -203,7 +195,6 @@ public class Query {
    * Specifies the time that should be reported as \&quot;now\&quot; in the query. Default is the server&#39;s now time.
    * @return now
   **/
-  @ApiModelProperty(value = "Specifies the time that should be reported as \"now\" in the query. Default is the server's now time.")
   public OffsetDateTime getNow() {
     return now;
   }

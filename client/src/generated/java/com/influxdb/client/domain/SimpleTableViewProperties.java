@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.DashboardQuery;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -150,7 +148,6 @@ public class SimpleTableViewProperties extends ViewProperties {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(required = true, value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -164,7 +161,6 @@ public class SimpleTableViewProperties extends ViewProperties {
    * Get showAll
    * @return showAll
   **/
-  @ApiModelProperty(required = true, value = "")
   public Boolean getShowAll() {
     return showAll;
   }
@@ -187,7 +183,6 @@ public class SimpleTableViewProperties extends ViewProperties {
    * Get queries
    * @return queries
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<DashboardQuery> getQueries() {
     return queries;
   }
@@ -200,7 +195,6 @@ public class SimpleTableViewProperties extends ViewProperties {
    * Get shape
    * @return shape
   **/
-  @ApiModelProperty(required = true, value = "")
   public ShapeEnum getShape() {
     return shape;
   }
@@ -214,7 +208,6 @@ public class SimpleTableViewProperties extends ViewProperties {
    * Get note
    * @return note
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getNote() {
     return note;
   }
@@ -232,7 +225,6 @@ public class SimpleTableViewProperties extends ViewProperties {
    * If true, will display note when empty
    * @return showNoteWhenEmpty
   **/
-  @ApiModelProperty(required = true, value = "If true, will display note when empty")
   public Boolean getShowNoteWhenEmpty() {
     return showNoteWhenEmpty;
   }

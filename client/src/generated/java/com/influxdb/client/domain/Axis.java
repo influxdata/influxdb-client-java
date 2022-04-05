@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -21,16 +21,13 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.AxisScale;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The description of a particular axis for a visualization.
+ * Axis used in a visualization.
  */
-@ApiModel(description = "The description of a particular axis for a visualization.")
 
 public class Axis {
   public static final String SERIALIZED_NAME_BOUNDS = "bounds";
@@ -50,7 +47,7 @@ public class Axis {
   private String suffix;
 
   /**
-   * Base represents the radix for formatting axis values.
+   * Radix for formatting axis values.
    */
   @JsonAdapter(BaseEnum.Adapter.class)
   public enum BaseEnum {
@@ -120,10 +117,9 @@ public class Axis {
   }
 
    /**
-   * The extents of an axis in the form [lower, upper]. Clients determine whether bounds are to be inclusive or exclusive of their limits
+   * The extents of the axis in the form [lower, upper]. Clients determine whether bounds are inclusive or exclusive of their limits.
    * @return bounds
   **/
-  @ApiModelProperty(value = "The extents of an axis in the form [lower, upper]. Clients determine whether bounds are to be inclusive or exclusive of their limits")
   public List<String> getBounds() {
     return bounds;
   }
@@ -138,10 +134,9 @@ public class Axis {
   }
 
    /**
-   * Label is a description of this Axis
+   * Description of the axis.
    * @return label
   **/
-  @ApiModelProperty(value = "Label is a description of this Axis")
   public String getLabel() {
     return label;
   }
@@ -156,10 +151,9 @@ public class Axis {
   }
 
    /**
-   * Prefix represents a label prefix for formatting axis values.
+   * Label prefix for formatting axis values.
    * @return prefix
   **/
-  @ApiModelProperty(value = "Prefix represents a label prefix for formatting axis values.")
   public String getPrefix() {
     return prefix;
   }
@@ -174,10 +168,9 @@ public class Axis {
   }
 
    /**
-   * Suffix represents a label suffix for formatting axis values.
+   * Label suffix for formatting axis values.
    * @return suffix
   **/
-  @ApiModelProperty(value = "Suffix represents a label suffix for formatting axis values.")
   public String getSuffix() {
     return suffix;
   }
@@ -192,10 +185,9 @@ public class Axis {
   }
 
    /**
-   * Base represents the radix for formatting axis values.
+   * Radix for formatting axis values.
    * @return base
   **/
-  @ApiModelProperty(value = "Base represents the radix for formatting axis values.")
   public BaseEnum getBase() {
     return base;
   }
@@ -213,7 +205,6 @@ public class Axis {
    * Get scale
    * @return scale
   **/
-  @ApiModelProperty(value = "")
   public AxisScale getScale() {
     return scale;
   }

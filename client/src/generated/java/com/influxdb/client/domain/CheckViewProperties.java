@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -23,8 +23,6 @@ import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Check;
 import com.influxdb.client.domain.DashboardColor;
 import com.influxdb.client.domain.DashboardQuery;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -168,7 +166,6 @@ public class CheckViewProperties extends ViewProperties {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(required = true, value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -177,7 +174,6 @@ public class CheckViewProperties extends ViewProperties {
    * Get shape
    * @return shape
   **/
-  @ApiModelProperty(required = true, value = "")
   public ShapeEnum getShape() {
     return shape;
   }
@@ -191,7 +187,6 @@ public class CheckViewProperties extends ViewProperties {
    * Get checkID
    * @return checkID
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getCheckID() {
     return checkID;
   }
@@ -209,7 +204,6 @@ public class CheckViewProperties extends ViewProperties {
    * Get check
    * @return check
   **/
-  @ApiModelProperty(value = "")
   public Check getCheck() {
     return check;
   }
@@ -232,7 +226,6 @@ public class CheckViewProperties extends ViewProperties {
    * Get queries
    * @return queries
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<DashboardQuery> getQueries() {
     return queries;
   }
@@ -255,7 +248,6 @@ public class CheckViewProperties extends ViewProperties {
    * Colors define color encoding of data into a visualization
    * @return colors
   **/
-  @ApiModelProperty(required = true, value = "Colors define color encoding of data into a visualization")
   public List<DashboardColor> getColors() {
     return colors;
   }
@@ -273,7 +265,6 @@ public class CheckViewProperties extends ViewProperties {
    * Get legendColorizeRows
    * @return legendColorizeRows
   **/
-  @ApiModelProperty(value = "")
   public Boolean getLegendColorizeRows() {
     return legendColorizeRows;
   }
@@ -291,7 +282,6 @@ public class CheckViewProperties extends ViewProperties {
    * Get legendHide
    * @return legendHide
   **/
-  @ApiModelProperty(value = "")
   public Boolean getLegendHide() {
     return legendHide;
   }
@@ -309,7 +299,6 @@ public class CheckViewProperties extends ViewProperties {
    * Get legendOpacity
    * @return legendOpacity
   **/
-  @ApiModelProperty(value = "")
   public Float getLegendOpacity() {
     return legendOpacity;
   }
@@ -327,7 +316,6 @@ public class CheckViewProperties extends ViewProperties {
    * Get legendOrientationThreshold
    * @return legendOrientationThreshold
   **/
-  @ApiModelProperty(value = "")
   public Integer getLegendOrientationThreshold() {
     return legendOrientationThreshold;
   }

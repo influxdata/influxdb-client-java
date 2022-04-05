@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,8 +20,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -82,35 +80,20 @@ public class LineProtocolLengthError {
   @SerializedName(SERIALIZED_NAME_MESSAGE)
   private String message;
 
-  public static final String SERIALIZED_NAME_MAX_LENGTH = "maxLength";
-  @SerializedName(SERIALIZED_NAME_MAX_LENGTH)
-  private Integer maxLength;
-
    /**
    * Code is the machine-readable error code.
    * @return code
   **/
-  @ApiModelProperty(required = true, value = "Code is the machine-readable error code.")
   public CodeEnum getCode() {
     return code;
   }
 
    /**
-   * Message is a human-readable message.
+   * Human-readable message.
    * @return message
   **/
-  @ApiModelProperty(required = true, value = "Message is a human-readable message.")
   public String getMessage() {
     return message;
-  }
-
-   /**
-   * Max length in bytes for a body of line-protocol.
-   * @return maxLength
-  **/
-  @ApiModelProperty(required = true, value = "Max length in bytes for a body of line-protocol.")
-  public Integer getMaxLength() {
-    return maxLength;
   }
 
 
@@ -124,13 +107,12 @@ public class LineProtocolLengthError {
     }
     LineProtocolLengthError lineProtocolLengthError = (LineProtocolLengthError) o;
     return Objects.equals(this.code, lineProtocolLengthError.code) &&
-        Objects.equals(this.message, lineProtocolLengthError.message) &&
-        Objects.equals(this.maxLength, lineProtocolLengthError.maxLength);
+        Objects.equals(this.message, lineProtocolLengthError.message);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, message, maxLength);
+    return Objects.hash(code, message);
   }
 
 
@@ -140,7 +122,6 @@ public class LineProtocolLengthError {
     sb.append("class LineProtocolLengthError {\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
-    sb.append("    maxLength: ").append(toIndentedString(maxLength)).append("\n");
     sb.append("}");
     return sb.toString();
   }

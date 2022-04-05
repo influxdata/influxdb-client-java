@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -24,8 +24,6 @@ import com.influxdb.client.domain.BucketLinks;
 import com.influxdb.client.domain.BucketRetentionRules;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.SchemaType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -140,7 +138,6 @@ public class Bucket {
    * Get links
    * @return links
   **/
-  @ApiModelProperty(value = "")
   public BucketLinks getLinks() {
     return links;
   }
@@ -153,7 +150,6 @@ public class Bucket {
    * Get id
    * @return id
   **/
-  @ApiModelProperty(value = "")
   public String getId() {
     return id;
   }
@@ -162,7 +158,6 @@ public class Bucket {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -176,7 +171,6 @@ public class Bucket {
    * Get name
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getName() {
     return name;
   }
@@ -194,7 +188,6 @@ public class Bucket {
    * Get description
    * @return description
   **/
-  @ApiModelProperty(value = "")
   public String getDescription() {
     return description;
   }
@@ -212,7 +205,6 @@ public class Bucket {
    * Get orgID
    * @return orgID
   **/
-  @ApiModelProperty(value = "")
   public String getOrgID() {
     return orgID;
   }
@@ -230,7 +222,6 @@ public class Bucket {
    * Get rp
    * @return rp
   **/
-  @ApiModelProperty(value = "")
   public String getRp() {
     return rp;
   }
@@ -248,7 +239,6 @@ public class Bucket {
    * Get schemaType
    * @return schemaType
   **/
-  @ApiModelProperty(value = "")
   public SchemaType getSchemaType() {
     return schemaType;
   }
@@ -261,7 +251,6 @@ public class Bucket {
    * Get createdAt
    * @return createdAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
@@ -270,7 +259,6 @@ public class Bucket {
    * Get updatedAt
    * @return updatedAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getUpdatedAt() {
     return updatedAt;
   }
@@ -289,7 +277,6 @@ public class Bucket {
    * Rules to expire or retain data.  No rules means data never expires.
    * @return retentionRules
   **/
-  @ApiModelProperty(required = true, value = "Rules to expire or retain data.  No rules means data never expires.")
   public List<BucketRetentionRules> getRetentionRules() {
     return retentionRules;
   }
@@ -315,7 +302,6 @@ public class Bucket {
    * Get labels
    * @return labels
   **/
-  @ApiModelProperty(value = "")
   public List<Label> getLabels() {
     return labels;
   }

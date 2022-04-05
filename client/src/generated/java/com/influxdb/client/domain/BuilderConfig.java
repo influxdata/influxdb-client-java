@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -23,8 +23,6 @@ import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.BuilderConfigAggregateWindow;
 import com.influxdb.client.domain.BuilderFunctionsType;
 import com.influxdb.client.domain.BuilderTagsType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +65,6 @@ public class BuilderConfig {
    * Get buckets
    * @return buckets
   **/
-  @ApiModelProperty(value = "")
   public List<String> getBuckets() {
     return buckets;
   }
@@ -93,7 +90,6 @@ public class BuilderConfig {
    * Get tags
    * @return tags
   **/
-  @ApiModelProperty(value = "")
   public List<BuilderTagsType> getTags() {
     return tags;
   }
@@ -119,7 +115,6 @@ public class BuilderConfig {
    * Get functions
    * @return functions
   **/
-  @ApiModelProperty(value = "")
   public List<BuilderFunctionsType> getFunctions() {
     return functions;
   }
@@ -137,7 +132,6 @@ public class BuilderConfig {
    * Get aggregateWindow
    * @return aggregateWindow
   **/
-  @ApiModelProperty(value = "")
   public BuilderConfigAggregateWindow getAggregateWindow() {
     return aggregateWindow;
   }

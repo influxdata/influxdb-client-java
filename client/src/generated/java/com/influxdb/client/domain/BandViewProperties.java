@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -25,8 +25,6 @@ import com.influxdb.client.domain.DashboardColor;
 import com.influxdb.client.domain.DashboardQuery;
 import com.influxdb.client.domain.StaticLegend;
 import com.influxdb.client.domain.XYGeom;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -298,7 +296,6 @@ public class BandViewProperties extends ViewProperties {
    * Get timeFormat
    * @return timeFormat
   **/
-  @ApiModelProperty(value = "")
   public String getTimeFormat() {
     return timeFormat;
   }
@@ -311,7 +308,6 @@ public class BandViewProperties extends ViewProperties {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(required = true, value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -330,7 +326,6 @@ public class BandViewProperties extends ViewProperties {
    * Get queries
    * @return queries
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<DashboardQuery> getQueries() {
     return queries;
   }
@@ -353,7 +348,6 @@ public class BandViewProperties extends ViewProperties {
    * Colors define color encoding of data into a visualization
    * @return colors
   **/
-  @ApiModelProperty(required = true, value = "Colors define color encoding of data into a visualization")
   public List<DashboardColor> getColors() {
     return colors;
   }
@@ -366,7 +360,6 @@ public class BandViewProperties extends ViewProperties {
    * Get shape
    * @return shape
   **/
-  @ApiModelProperty(required = true, value = "")
   public ShapeEnum getShape() {
     return shape;
   }
@@ -380,7 +373,6 @@ public class BandViewProperties extends ViewProperties {
    * Get note
    * @return note
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getNote() {
     return note;
   }
@@ -398,7 +390,6 @@ public class BandViewProperties extends ViewProperties {
    * If true, will display note when empty
    * @return showNoteWhenEmpty
   **/
-  @ApiModelProperty(required = true, value = "If true, will display note when empty")
   public Boolean getShowNoteWhenEmpty() {
     return showNoteWhenEmpty;
   }
@@ -416,7 +407,6 @@ public class BandViewProperties extends ViewProperties {
    * Get axes
    * @return axes
   **/
-  @ApiModelProperty(required = true, value = "")
   public Axes getAxes() {
     return axes;
   }
@@ -434,7 +424,6 @@ public class BandViewProperties extends ViewProperties {
    * Get staticLegend
    * @return staticLegend
   **/
-  @ApiModelProperty(value = "")
   public StaticLegend getStaticLegend() {
     return staticLegend;
   }
@@ -452,7 +441,6 @@ public class BandViewProperties extends ViewProperties {
    * Get xColumn
    * @return xColumn
   **/
-  @ApiModelProperty(value = "")
   public String getXColumn() {
     return xColumn;
   }
@@ -478,7 +466,6 @@ public class BandViewProperties extends ViewProperties {
    * Get generateXAxisTicks
    * @return generateXAxisTicks
   **/
-  @ApiModelProperty(value = "")
   public List<String> getGenerateXAxisTicks() {
     return generateXAxisTicks;
   }
@@ -496,7 +483,6 @@ public class BandViewProperties extends ViewProperties {
    * Get xTotalTicks
    * @return xTotalTicks
   **/
-  @ApiModelProperty(value = "")
   public Integer getXTotalTicks() {
     return xTotalTicks;
   }
@@ -514,7 +500,6 @@ public class BandViewProperties extends ViewProperties {
    * Get xTickStart
    * @return xTickStart
   **/
-  @ApiModelProperty(value = "")
   public Float getXTickStart() {
     return xTickStart;
   }
@@ -532,7 +517,6 @@ public class BandViewProperties extends ViewProperties {
    * Get xTickStep
    * @return xTickStep
   **/
-  @ApiModelProperty(value = "")
   public Float getXTickStep() {
     return xTickStep;
   }
@@ -550,7 +534,6 @@ public class BandViewProperties extends ViewProperties {
    * Get yColumn
    * @return yColumn
   **/
-  @ApiModelProperty(value = "")
   public String getYColumn() {
     return yColumn;
   }
@@ -576,7 +559,6 @@ public class BandViewProperties extends ViewProperties {
    * Get generateYAxisTicks
    * @return generateYAxisTicks
   **/
-  @ApiModelProperty(value = "")
   public List<String> getGenerateYAxisTicks() {
     return generateYAxisTicks;
   }
@@ -594,7 +576,6 @@ public class BandViewProperties extends ViewProperties {
    * Get yTotalTicks
    * @return yTotalTicks
   **/
-  @ApiModelProperty(value = "")
   public Integer getYTotalTicks() {
     return yTotalTicks;
   }
@@ -612,7 +593,6 @@ public class BandViewProperties extends ViewProperties {
    * Get yTickStart
    * @return yTickStart
   **/
-  @ApiModelProperty(value = "")
   public Float getYTickStart() {
     return yTickStart;
   }
@@ -630,7 +610,6 @@ public class BandViewProperties extends ViewProperties {
    * Get yTickStep
    * @return yTickStep
   **/
-  @ApiModelProperty(value = "")
   public Float getYTickStep() {
     return yTickStep;
   }
@@ -648,7 +627,6 @@ public class BandViewProperties extends ViewProperties {
    * Get upperColumn
    * @return upperColumn
   **/
-  @ApiModelProperty(value = "")
   public String getUpperColumn() {
     return upperColumn;
   }
@@ -666,7 +644,6 @@ public class BandViewProperties extends ViewProperties {
    * Get mainColumn
    * @return mainColumn
   **/
-  @ApiModelProperty(value = "")
   public String getMainColumn() {
     return mainColumn;
   }
@@ -684,7 +661,6 @@ public class BandViewProperties extends ViewProperties {
    * Get lowerColumn
    * @return lowerColumn
   **/
-  @ApiModelProperty(value = "")
   public String getLowerColumn() {
     return lowerColumn;
   }
@@ -702,7 +678,6 @@ public class BandViewProperties extends ViewProperties {
    * Get hoverDimension
    * @return hoverDimension
   **/
-  @ApiModelProperty(value = "")
   public HoverDimensionEnum getHoverDimension() {
     return hoverDimension;
   }
@@ -720,7 +695,6 @@ public class BandViewProperties extends ViewProperties {
    * Get geom
    * @return geom
   **/
-  @ApiModelProperty(required = true, value = "")
   public XYGeom getGeom() {
     return geom;
   }
@@ -738,7 +712,6 @@ public class BandViewProperties extends ViewProperties {
    * Get legendColorizeRows
    * @return legendColorizeRows
   **/
-  @ApiModelProperty(value = "")
   public Boolean getLegendColorizeRows() {
     return legendColorizeRows;
   }
@@ -756,7 +729,6 @@ public class BandViewProperties extends ViewProperties {
    * Get legendHide
    * @return legendHide
   **/
-  @ApiModelProperty(value = "")
   public Boolean getLegendHide() {
     return legendHide;
   }
@@ -774,7 +746,6 @@ public class BandViewProperties extends ViewProperties {
    * Get legendOpacity
    * @return legendOpacity
   **/
-  @ApiModelProperty(value = "")
   public Float getLegendOpacity() {
     return legendOpacity;
   }
@@ -792,7 +763,6 @@ public class BandViewProperties extends ViewProperties {
    * Get legendOrientationThreshold
    * @return legendOrientationThreshold
   **/
-  @ApiModelProperty(value = "")
   public Integer getLegendOrientationThreshold() {
     return legendOrientationThreshold;
   }

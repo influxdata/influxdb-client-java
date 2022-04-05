@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,8 +20,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -66,7 +64,6 @@ public class OnboardingRequest {
    * Get username
    * @return username
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getUsername() {
     return username;
   }
@@ -84,7 +81,6 @@ public class OnboardingRequest {
    * Get password
    * @return password
   **/
-  @ApiModelProperty(value = "")
   public String getPassword() {
     return password;
   }
@@ -102,7 +98,6 @@ public class OnboardingRequest {
    * Get org
    * @return org
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getOrg() {
     return org;
   }
@@ -120,7 +115,6 @@ public class OnboardingRequest {
    * Get bucket
    * @return bucket
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getBucket() {
     return bucket;
   }
@@ -138,7 +132,6 @@ public class OnboardingRequest {
    * Get retentionPeriodSeconds
    * @return retentionPeriodSeconds
   **/
-  @ApiModelProperty(value = "")
   public Long getRetentionPeriodSeconds() {
     return retentionPeriodSeconds;
   }
@@ -156,7 +149,6 @@ public class OnboardingRequest {
    * Retention period *in nanoseconds* for the new bucket. This key&#39;s name has been misleading since OSS 2.0 GA, please transition to use &#x60;retentionPeriodSeconds&#x60;
    * @return retentionPeriodHrs
   **/
-  @ApiModelProperty(value = "Retention period *in nanoseconds* for the new bucket. This key's name has been misleading since OSS 2.0 GA, please transition to use `retentionPeriodSeconds`")
   public Integer getRetentionPeriodHrs() {
     return retentionPeriodHrs;
   }
@@ -174,7 +166,6 @@ public class OnboardingRequest {
    * Authentication token to set on the initial user. If not specified, the server will generate a token.
    * @return token
   **/
-  @ApiModelProperty(value = "Authentication token to set on the initial user. If not specified, the server will generate a token.")
   public String getToken() {
     return token;
   }

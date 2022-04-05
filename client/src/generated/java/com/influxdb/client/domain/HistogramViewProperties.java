@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -22,8 +22,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.DashboardColor;
 import com.influxdb.client.domain.DashboardQuery;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -238,7 +236,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(required = true, value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -257,7 +254,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Get queries
    * @return queries
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<DashboardQuery> getQueries() {
     return queries;
   }
@@ -280,7 +276,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Colors define color encoding of data into a visualization
    * @return colors
   **/
-  @ApiModelProperty(required = true, value = "Colors define color encoding of data into a visualization")
   public List<DashboardColor> getColors() {
     return colors;
   }
@@ -293,7 +288,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Get shape
    * @return shape
   **/
-  @ApiModelProperty(required = true, value = "")
   public ShapeEnum getShape() {
     return shape;
   }
@@ -307,7 +301,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Get note
    * @return note
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getNote() {
     return note;
   }
@@ -325,7 +318,6 @@ public class HistogramViewProperties extends ViewProperties {
    * If true, will display note when empty
    * @return showNoteWhenEmpty
   **/
-  @ApiModelProperty(required = true, value = "If true, will display note when empty")
   public Boolean getShowNoteWhenEmpty() {
     return showNoteWhenEmpty;
   }
@@ -343,7 +335,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Get xColumn
    * @return xColumn
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getXColumn() {
     return xColumn;
   }
@@ -366,7 +357,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Get fillColumns
    * @return fillColumns
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<String> getFillColumns() {
     return fillColumns;
   }
@@ -389,7 +379,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Get xDomain
    * @return xDomain
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<Float> getXDomain() {
     return xDomain;
   }
@@ -407,7 +396,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Get xAxisLabel
    * @return xAxisLabel
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getXAxisLabel() {
     return xAxisLabel;
   }
@@ -425,7 +413,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Get position
    * @return position
   **/
-  @ApiModelProperty(required = true, value = "")
   public PositionEnum getPosition() {
     return position;
   }
@@ -443,7 +430,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Get binCount
    * @return binCount
   **/
-  @ApiModelProperty(required = true, value = "")
   public Integer getBinCount() {
     return binCount;
   }
@@ -461,7 +447,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Get legendColorizeRows
    * @return legendColorizeRows
   **/
-  @ApiModelProperty(value = "")
   public Boolean getLegendColorizeRows() {
     return legendColorizeRows;
   }
@@ -479,7 +464,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Get legendHide
    * @return legendHide
   **/
-  @ApiModelProperty(value = "")
   public Boolean getLegendHide() {
     return legendHide;
   }
@@ -497,7 +481,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Get legendOpacity
    * @return legendOpacity
   **/
-  @ApiModelProperty(value = "")
   public Float getLegendOpacity() {
     return legendOpacity;
   }
@@ -515,7 +498,6 @@ public class HistogramViewProperties extends ViewProperties {
    * Get legendOrientationThreshold
    * @return legendOrientationThreshold
   **/
-  @ApiModelProperty(value = "")
   public Integer getLegendOrientationThreshold() {
     return legendOrientationThreshold;
   }

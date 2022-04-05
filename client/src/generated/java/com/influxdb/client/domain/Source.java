@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.SourceLinks;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -201,7 +199,6 @@ public class Source {
    * Get links
    * @return links
   **/
-  @ApiModelProperty(value = "")
   public SourceLinks getLinks() {
     return links;
   }
@@ -219,7 +216,6 @@ public class Source {
    * Get id
    * @return id
   **/
-  @ApiModelProperty(value = "")
   public String getId() {
     return id;
   }
@@ -237,7 +233,6 @@ public class Source {
    * Get orgID
    * @return orgID
   **/
-  @ApiModelProperty(value = "")
   public String getOrgID() {
     return orgID;
   }
@@ -255,7 +250,6 @@ public class Source {
    * Get _default
    * @return _default
   **/
-  @ApiModelProperty(value = "")
   public Boolean getDefault() {
     return _default;
   }
@@ -273,7 +267,6 @@ public class Source {
    * Get name
    * @return name
   **/
-  @ApiModelProperty(value = "")
   public String getName() {
     return name;
   }
@@ -291,7 +284,6 @@ public class Source {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -309,7 +301,6 @@ public class Source {
    * Get url
    * @return url
   **/
-  @ApiModelProperty(value = "")
   public String getUrl() {
     return url;
   }
@@ -327,7 +318,6 @@ public class Source {
    * Get insecureSkipVerify
    * @return insecureSkipVerify
   **/
-  @ApiModelProperty(value = "")
   public Boolean getInsecureSkipVerify() {
     return insecureSkipVerify;
   }
@@ -345,7 +335,6 @@ public class Source {
    * Get telegraf
    * @return telegraf
   **/
-  @ApiModelProperty(value = "")
   public String getTelegraf() {
     return telegraf;
   }
@@ -363,7 +352,6 @@ public class Source {
    * Get token
    * @return token
   **/
-  @ApiModelProperty(value = "")
   public String getToken() {
     return token;
   }
@@ -381,7 +369,6 @@ public class Source {
    * Get username
    * @return username
   **/
-  @ApiModelProperty(value = "")
   public String getUsername() {
     return username;
   }
@@ -399,7 +386,6 @@ public class Source {
    * Get password
    * @return password
   **/
-  @ApiModelProperty(value = "")
   public String getPassword() {
     return password;
   }
@@ -417,7 +403,6 @@ public class Source {
    * Get sharedSecret
    * @return sharedSecret
   **/
-  @ApiModelProperty(value = "")
   public String getSharedSecret() {
     return sharedSecret;
   }
@@ -435,7 +420,6 @@ public class Source {
    * Get metaUrl
    * @return metaUrl
   **/
-  @ApiModelProperty(value = "")
   public String getMetaUrl() {
     return metaUrl;
   }
@@ -453,7 +437,6 @@ public class Source {
    * Get defaultRP
    * @return defaultRP
   **/
-  @ApiModelProperty(value = "")
   public String getDefaultRP() {
     return defaultRP;
   }
@@ -466,7 +449,6 @@ public class Source {
    * Get languages
    * @return languages
   **/
-  @ApiModelProperty(value = "")
   public List<LanguagesEnum> getLanguages() {
     return languages;
   }

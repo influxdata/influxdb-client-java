@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,14 +20,11 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
  * Describes a field that can be renamed and made visible or invisible.
  */
-@ApiModel(description = "Describes a field that can be renamed and made visible or invisible.")
 
 public class RenamableField {
   public static final String SERIALIZED_NAME_INTERNAL_NAME = "internalName";
@@ -46,7 +43,6 @@ public class RenamableField {
    * The calculated name of a field.
    * @return internalName
   **/
-  @ApiModelProperty(value = "The calculated name of a field.")
   public String getInternalName() {
     return internalName;
   }
@@ -60,7 +56,6 @@ public class RenamableField {
    * The name that a field is renamed to by the user.
    * @return displayName
   **/
-  @ApiModelProperty(value = "The name that a field is renamed to by the user.")
   public String getDisplayName() {
     return displayName;
   }
@@ -78,7 +73,6 @@ public class RenamableField {
    * Indicates whether this field should be visible on the table.
    * @return visible
   **/
-  @ApiModelProperty(value = "Indicates whether this field should be visible on the table.")
   public Boolean getVisible() {
     return visible;
   }

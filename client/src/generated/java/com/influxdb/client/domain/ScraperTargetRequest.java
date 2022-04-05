@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,8 +20,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -107,7 +105,6 @@ public class ScraperTargetRequest {
    * The name of the scraper target.
    * @return name
   **/
-  @ApiModelProperty(value = "The name of the scraper target.")
   public String getName() {
     return name;
   }
@@ -120,7 +117,6 @@ public class ScraperTargetRequest {
    * The type of the metrics to be parsed.
    * @return type
   **/
-  @ApiModelProperty(value = "The type of the metrics to be parsed.")
   public TypeEnum getType() {
     return type;
   }
@@ -134,7 +130,6 @@ public class ScraperTargetRequest {
    * The URL of the metrics endpoint.
    * @return url
   **/
-  @ApiModelProperty(example = "http://localhost:9090/metrics", value = "The URL of the metrics endpoint.")
   public String getUrl() {
     return url;
   }
@@ -152,7 +147,6 @@ public class ScraperTargetRequest {
    * The organization ID.
    * @return orgID
   **/
-  @ApiModelProperty(value = "The organization ID.")
   public String getOrgID() {
     return orgID;
   }
@@ -170,7 +164,6 @@ public class ScraperTargetRequest {
    * The ID of the bucket to write to.
    * @return bucketID
   **/
-  @ApiModelProperty(value = "The ID of the bucket to write to.")
   public String getBucketID() {
     return bucketID;
   }
@@ -188,7 +181,6 @@ public class ScraperTargetRequest {
    * Skip TLS verification on endpoint.
    * @return allowInsecure
   **/
-  @ApiModelProperty(value = "Skip TLS verification on endpoint.")
   public Boolean getAllowInsecure() {
     return allowInsecure;
   }

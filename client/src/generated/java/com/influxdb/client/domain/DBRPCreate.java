@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,8 +20,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -59,10 +57,9 @@ public class DBRPCreate {
   }
 
    /**
-   * the organization ID that owns this mapping.
+   * ID of the organization that owns this mapping.
    * @return orgID
   **/
-  @ApiModelProperty(value = "the organization ID that owns this mapping.")
   public String getOrgID() {
     return orgID;
   }
@@ -77,10 +74,9 @@ public class DBRPCreate {
   }
 
    /**
-   * the organization that owns this mapping.
+   * Name of the organization that owns this mapping.
    * @return org
   **/
-  @ApiModelProperty(value = "the organization that owns this mapping.")
   public String getOrg() {
     return org;
   }
@@ -95,10 +91,9 @@ public class DBRPCreate {
   }
 
    /**
-   * the bucket ID used as target for the translation.
+   * ID of the bucket used as the target for the translation.
    * @return bucketID
   **/
-  @ApiModelProperty(required = true, value = "the bucket ID used as target for the translation.")
   public String getBucketID() {
     return bucketID;
   }
@@ -116,7 +111,6 @@ public class DBRPCreate {
    * InfluxDB v1 database
    * @return database
   **/
-  @ApiModelProperty(required = true, value = "InfluxDB v1 database")
   public String getDatabase() {
     return database;
   }
@@ -134,7 +128,6 @@ public class DBRPCreate {
    * InfluxDB v1 retention policy
    * @return retentionPolicy
   **/
-  @ApiModelProperty(required = true, value = "InfluxDB v1 retention policy")
   public String getRetentionPolicy() {
     return retentionPolicy;
   }
@@ -149,10 +142,9 @@ public class DBRPCreate {
   }
 
    /**
-   * Specify if this mapping represents the default retention policy for the database specificed.
+   * Mapping represents the default retention policy for the database specified.
    * @return _default
   **/
-  @ApiModelProperty(value = "Specify if this mapping represents the default retention policy for the database specificed.")
   public Boolean getDefault() {
     return _default;
   }

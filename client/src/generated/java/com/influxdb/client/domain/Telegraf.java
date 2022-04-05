@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -24,8 +24,6 @@ import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.TelegrafLinks;
 import com.influxdb.client.domain.TelegrafRequest;
 import com.influxdb.client.domain.TelegrafRequestMetadata;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +49,6 @@ public class Telegraf extends TelegrafRequest {
    * Get id
    * @return id
   **/
-  @ApiModelProperty(value = "")
   public String getId() {
     return id;
   }
@@ -65,7 +62,6 @@ public class Telegraf extends TelegrafRequest {
    * Get links
    * @return links
   **/
-  @ApiModelProperty(value = "")
   public TelegrafLinks getLinks() {
     return links;
   }
@@ -91,7 +87,6 @@ public class Telegraf extends TelegrafRequest {
    * Get labels
    * @return labels
   **/
-  @ApiModelProperty(value = "")
   public List<Label> getLabels() {
     return labels;
   }

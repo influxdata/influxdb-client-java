@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,14 +20,11 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
  * Indicates whether decimal places should be enforced, and how many digits it should show.
  */
-@ApiModel(description = "Indicates whether decimal places should be enforced, and how many digits it should show.")
 
 public class DecimalPlaces {
   public static final String SERIALIZED_NAME_IS_ENFORCED = "isEnforced";
@@ -47,7 +44,6 @@ public class DecimalPlaces {
    * Indicates whether decimal point setting should be enforced
    * @return isEnforced
   **/
-  @ApiModelProperty(value = "Indicates whether decimal point setting should be enforced")
   public Boolean getIsEnforced() {
     return isEnforced;
   }
@@ -65,7 +61,6 @@ public class DecimalPlaces {
    * The number of digits after decimal to display
    * @return digits
   **/
-  @ApiModelProperty(value = "The number of digits after decimal to display")
   public Integer getDigits() {
     return digits;
   }

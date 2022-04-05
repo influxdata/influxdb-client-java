@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.File;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +28,6 @@ import java.util.List;
 /**
  * Represents a complete package source tree.
  */
-@ApiModel(description = "Represents a complete package source tree.")
 
 public class ModelPackage {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -58,7 +55,6 @@ public class ModelPackage {
    * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }
@@ -76,7 +72,6 @@ public class ModelPackage {
    * Package import path
    * @return path
   **/
-  @ApiModelProperty(value = "Package import path")
   public String getPath() {
     return path;
   }
@@ -94,7 +89,6 @@ public class ModelPackage {
    * Package name
    * @return _package
   **/
-  @ApiModelProperty(value = "Package name")
   public String getPackage() {
     return _package;
   }
@@ -120,7 +114,6 @@ public class ModelPackage {
    * Package files
    * @return files
   **/
-  @ApiModelProperty(value = "Package files")
   public List<File> getFiles() {
     return files;
   }

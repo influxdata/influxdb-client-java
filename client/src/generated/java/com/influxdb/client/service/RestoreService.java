@@ -8,7 +8,6 @@ import okhttp3.ResponseBody;
 import okhttp3.MultipartBody;
 
 import com.influxdb.client.domain.BucketMetadataManifest;
-import com.influxdb.client.domain.Error;
 import com.influxdb.client.domain.File;
 import com.influxdb.client.domain.PostRestoreKVResponse;
 import com.influxdb.client.domain.RestoredBucketMappings;
@@ -58,7 +57,7 @@ public interface RestoreService {
    * 
    * @param body Full KV snapshot. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param contentEncoding The value tells InfluxDB what compression is applied to the line protocol in the request payload. To make an API request with a GZIP payload, send &#x60;Content-Encoding: gzip&#x60; as a request header.  (optional, default to identity)
+   * @param contentEncoding The value tells InfluxDB what compression is applied to the line protocol in the request payload. To make an API request with a GZIP payload, send &#x60;Content-Encoding: gzip&#x60; as a request header. (optional, default to identity)
    * @param contentType  (optional, default to application/octet-stream)
    * @return Call&lt;PostRestoreKVResponse&gt;
    */
@@ -75,7 +74,7 @@ public interface RestoreService {
    * 
    * @param body Full SQL snapshot. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param contentEncoding The value tells InfluxDB what compression is applied to the line protocol in the request payload. To make an API request with a GZIP payload, send &#x60;Content-Encoding: gzip&#x60; as a request header.  (optional, default to identity)
+   * @param contentEncoding The value tells InfluxDB what compression is applied to the line protocol in the request payload. To make an API request with a GZIP payload, send &#x60;Content-Encoding: gzip&#x60; as a request header. (optional, default to identity)
    * @param contentType  (optional, default to application/octet-stream)
    * @return Call&lt;Void&gt;
    */
@@ -93,7 +92,7 @@ public interface RestoreService {
    * @param shardID The shard ID. (required)
    * @param body TSM snapshot. (required)
    * @param zapTraceSpan OpenTracing span context (optional)
-   * @param contentEncoding The value tells InfluxDB what compression is applied to the line protocol in the request payload. To make an API request with a GZIP payload, send &#x60;Content-Encoding: gzip&#x60; as a request header.  (optional, default to identity)
+   * @param contentEncoding The value tells InfluxDB what compression is applied to the line protocol in the request payload. To make an API request with a GZIP payload, send &#x60;Content-Encoding: gzip&#x60; as a request header. (optional, default to identity)
    * @param contentType  (optional, default to application/octet-stream)
    * @return Call&lt;Void&gt;
    */
