@@ -18,20 +18,25 @@
   - `InfluxDBClientReactive`:
     - `Single<HealthCheck> health()` -> `Publisher<HealthCheck> health()`
   - `WriteOptionsReactive`
-     - `io.reactivex.Scheduler` -> `io.reactivex.rxjava3.core.Scheduler`
-     - `io.reactivex.schedulers.Schedulers` -> `io.reactivex.rxjava3.schedulers.Schedulers`
+    - `io.reactivex.Scheduler` -> `io.reactivex.rxjava3.core.Scheduler`
+    - `io.reactivex.schedulers.Schedulers` -> `io.reactivex.rxjava3.schedulers.Schedulers`
+  - `TelegrafsService` and `TelegrafsApi` 
+    - `TelegrafRequest` renamed to  `TelegrafPluginRequest` to create/update `Telegraf` configuration
+    - `TelegrafPlugin.TypeEnum.INPUTS` renamed to  `TelegrafPlugin.TypeEnum.INPUT`
+    - `TelegrafPlugin.TypeEnum.OUTPUTS` renamed to  `TelegrafPlugin.TypeEnum.OUTPUT`
+
 
 ### Services
 
 This release also uses new version of InfluxDB OSS API definitions - [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml). The following breaking changes are in underlying API services and doesn't affect common apis such as - `WriteApi`, `QueryApi`, `BucketsApi`, `OrganizationsApi`...
 
 - Add `ConfigService` to retrieve InfluxDB's runtime configuration
+- Add `DebugService` to retrieve debug and performance data from runtime
 - Add `RemoteConnectionsService` to deal with registered remote InfluxDB connections
 - Add `MetricsService` to deal with exposed prometheus metrics
+- Add `ReplicationService` to manage InfluxDB replications
 - Update `TemplatesService` to deal with `Stack` and `Template` API
-- Update `BackupService` to deal with new backup functions of InfluxDB
 - Update `RestoreService` to deal with new restore functions of InfluxDB
-- `TelegrafsService` uses `TelegrafPluginRequest` to create/update `Telegraf` configuration
 
 ### List of updated dependencies: 
  - Core:
