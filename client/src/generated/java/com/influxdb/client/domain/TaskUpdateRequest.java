@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.TaskStatusType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -67,7 +65,6 @@ public class TaskUpdateRequest {
    * Get status
    * @return status
   **/
-  @ApiModelProperty(value = "")
   public TaskStatusType getStatus() {
     return status;
   }
@@ -85,7 +82,6 @@ public class TaskUpdateRequest {
    * The Flux script to run for this task.
    * @return flux
   **/
-  @ApiModelProperty(value = "The Flux script to run for this task.")
   public String getFlux() {
     return flux;
   }
@@ -103,7 +99,6 @@ public class TaskUpdateRequest {
    * Override the &#39;name&#39; option in the flux script.
    * @return name
   **/
-  @ApiModelProperty(value = "Override the 'name' option in the flux script.")
   public String getName() {
     return name;
   }
@@ -121,7 +116,6 @@ public class TaskUpdateRequest {
    * Override the &#39;every&#39; option in the flux script.
    * @return every
   **/
-  @ApiModelProperty(value = "Override the 'every' option in the flux script.")
   public String getEvery() {
     return every;
   }
@@ -139,7 +133,6 @@ public class TaskUpdateRequest {
    * Override the &#39;cron&#39; option in the flux script.
    * @return cron
   **/
-  @ApiModelProperty(value = "Override the 'cron' option in the flux script.")
   public String getCron() {
     return cron;
   }
@@ -157,7 +150,6 @@ public class TaskUpdateRequest {
    * Override the &#39;offset&#39; option in the flux script.
    * @return offset
   **/
-  @ApiModelProperty(value = "Override the 'offset' option in the flux script.")
   public String getOffset() {
     return offset;
   }
@@ -175,7 +167,6 @@ public class TaskUpdateRequest {
    * An optional description of the task.
    * @return description
   **/
-  @ApiModelProperty(value = "An optional description of the task.")
   public String getDescription() {
     return description;
   }

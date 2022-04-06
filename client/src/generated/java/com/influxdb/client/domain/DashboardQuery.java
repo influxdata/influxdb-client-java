@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -22,8 +22,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.BuilderConfig;
 import com.influxdb.client.domain.QueryEditMode;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -56,7 +54,6 @@ public class DashboardQuery {
    * The text of the Flux query.
    * @return text
   **/
-  @ApiModelProperty(value = "The text of the Flux query.")
   public String getText() {
     return text;
   }
@@ -74,7 +71,6 @@ public class DashboardQuery {
    * Get editMode
    * @return editMode
   **/
-  @ApiModelProperty(value = "")
   public QueryEditMode getEditMode() {
     return editMode;
   }
@@ -92,7 +88,6 @@ public class DashboardQuery {
    * Get name
    * @return name
   **/
-  @ApiModelProperty(value = "")
   public String getName() {
     return name;
   }
@@ -110,7 +105,6 @@ public class DashboardQuery {
    * Get builderConfig
    * @return builderConfig
   **/
-  @ApiModelProperty(value = "")
   public BuilderConfig getBuilderConfig() {
     return builderConfig;
   }

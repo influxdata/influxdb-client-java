@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -25,8 +25,6 @@ import com.influxdb.client.domain.NotificationRuleBaseLinks;
 import com.influxdb.client.domain.StatusRule;
 import com.influxdb.client.domain.TagRule;
 import com.influxdb.client.domain.TaskStatusType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -179,10 +177,9 @@ public class NotificationRuleBase {
   private NotificationRuleBaseLinks links = null;
 
    /**
-   * Timestamp of latest scheduled, completed run, RFC3339.
+   * Timestamp (in RFC3339 date/time format](https://datatracker.ietf.org/doc/html/rfc3339)) of the latest scheduled and completed run.
    * @return latestCompleted
   **/
-  @ApiModelProperty(value = "Timestamp of latest scheduled, completed run, RFC3339.")
   public OffsetDateTime getLatestCompleted() {
     return latestCompleted;
   }
@@ -191,7 +188,6 @@ public class NotificationRuleBase {
    * Get lastRunStatus
    * @return lastRunStatus
   **/
-  @ApiModelProperty(value = "")
   public LastRunStatusEnum getLastRunStatus() {
     return lastRunStatus;
   }
@@ -200,7 +196,6 @@ public class NotificationRuleBase {
    * Get lastRunError
    * @return lastRunError
   **/
-  @ApiModelProperty(value = "")
   public String getLastRunError() {
     return lastRunError;
   }
@@ -209,7 +204,6 @@ public class NotificationRuleBase {
    * Get id
    * @return id
   **/
-  @ApiModelProperty(value = "")
   public String getId() {
     return id;
   }
@@ -223,7 +217,6 @@ public class NotificationRuleBase {
    * Get endpointID
    * @return endpointID
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getEndpointID() {
     return endpointID;
   }
@@ -241,7 +234,6 @@ public class NotificationRuleBase {
    * The ID of the organization that owns this notification rule.
    * @return orgID
   **/
-  @ApiModelProperty(required = true, value = "The ID of the organization that owns this notification rule.")
   public String getOrgID() {
     return orgID;
   }
@@ -259,7 +251,6 @@ public class NotificationRuleBase {
    * The ID of the task associated with this notification rule.
    * @return taskID
   **/
-  @ApiModelProperty(value = "The ID of the task associated with this notification rule.")
   public String getTaskID() {
     return taskID;
   }
@@ -272,7 +263,6 @@ public class NotificationRuleBase {
    * The ID of creator used to create this notification rule.
    * @return ownerID
   **/
-  @ApiModelProperty(value = "The ID of creator used to create this notification rule.")
   public String getOwnerID() {
     return ownerID;
   }
@@ -281,7 +271,6 @@ public class NotificationRuleBase {
    * Get createdAt
    * @return createdAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
@@ -290,7 +279,6 @@ public class NotificationRuleBase {
    * Get updatedAt
    * @return updatedAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getUpdatedAt() {
     return updatedAt;
   }
@@ -304,7 +292,6 @@ public class NotificationRuleBase {
    * Get status
    * @return status
   **/
-  @ApiModelProperty(required = true, value = "")
   public TaskStatusType getStatus() {
     return status;
   }
@@ -322,7 +309,6 @@ public class NotificationRuleBase {
    * Human-readable name describing the notification rule.
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "Human-readable name describing the notification rule.")
   public String getName() {
     return name;
   }
@@ -340,7 +326,6 @@ public class NotificationRuleBase {
    * Get sleepUntil
    * @return sleepUntil
   **/
-  @ApiModelProperty(value = "")
   public String getSleepUntil() {
     return sleepUntil;
   }
@@ -358,7 +343,6 @@ public class NotificationRuleBase {
    * The notification repetition interval.
    * @return every
   **/
-  @ApiModelProperty(value = "The notification repetition interval.")
   public String getEvery() {
     return every;
   }
@@ -376,7 +360,6 @@ public class NotificationRuleBase {
    * Duration to delay after the schedule, before executing check.
    * @return offset
   **/
-  @ApiModelProperty(value = "Duration to delay after the schedule, before executing check.")
   public String getOffset() {
     return offset;
   }
@@ -394,7 +377,6 @@ public class NotificationRuleBase {
    * Get runbookLink
    * @return runbookLink
   **/
-  @ApiModelProperty(value = "")
   public String getRunbookLink() {
     return runbookLink;
   }
@@ -412,7 +394,6 @@ public class NotificationRuleBase {
    * Don&#39;t notify me more than &lt;limit&gt; times every &lt;limitEvery&gt; seconds. If set, limit cannot be empty.
    * @return limitEvery
   **/
-  @ApiModelProperty(value = "Don't notify me more than <limit> times every <limitEvery> seconds. If set, limit cannot be empty.")
   public Integer getLimitEvery() {
     return limitEvery;
   }
@@ -430,7 +411,6 @@ public class NotificationRuleBase {
    * Don&#39;t notify me more than &lt;limit&gt; times every &lt;limitEvery&gt; seconds. If set, limitEvery cannot be empty.
    * @return limit
   **/
-  @ApiModelProperty(value = "Don't notify me more than <limit> times every <limitEvery> seconds. If set, limitEvery cannot be empty.")
   public Integer getLimit() {
     return limit;
   }
@@ -456,7 +436,6 @@ public class NotificationRuleBase {
    * List of tag rules the notification rule attempts to match.
    * @return tagRules
   **/
-  @ApiModelProperty(value = "List of tag rules the notification rule attempts to match.")
   public List<TagRule> getTagRules() {
     return tagRules;
   }
@@ -474,7 +453,6 @@ public class NotificationRuleBase {
    * An optional description of the notification rule.
    * @return description
   **/
-  @ApiModelProperty(value = "An optional description of the notification rule.")
   public String getDescription() {
     return description;
   }
@@ -497,7 +475,6 @@ public class NotificationRuleBase {
    * List of status rules the notification rule attempts to match.
    * @return statusRules
   **/
-  @ApiModelProperty(required = true, value = "List of status rules the notification rule attempts to match.")
   public List<StatusRule> getStatusRules() {
     return statusRules;
   }
@@ -523,7 +500,6 @@ public class NotificationRuleBase {
    * Get labels
    * @return labels
   **/
-  @ApiModelProperty(value = "")
   public List<Label> getLabels() {
     return labels;
   }
@@ -541,7 +517,6 @@ public class NotificationRuleBase {
    * Get links
    * @return links
   **/
-  @ApiModelProperty(value = "")
   public NotificationRuleBaseLinks getLinks() {
     return links;
   }

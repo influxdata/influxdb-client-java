@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.OrganizationLinks;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 
@@ -115,7 +113,6 @@ public class Organization {
    * Get links
    * @return links
   **/
-  @ApiModelProperty(value = "")
   public OrganizationLinks getLinks() {
     return links;
   }
@@ -128,7 +125,6 @@ public class Organization {
    * Get id
    * @return id
   **/
-  @ApiModelProperty(value = "")
   public String getId() {
     return id;
   }
@@ -142,7 +138,6 @@ public class Organization {
    * Get name
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getName() {
     return name;
   }
@@ -160,7 +155,6 @@ public class Organization {
    * Get description
    * @return description
   **/
-  @ApiModelProperty(value = "")
   public String getDescription() {
     return description;
   }
@@ -173,7 +167,6 @@ public class Organization {
    * Get createdAt
    * @return createdAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
@@ -182,7 +175,6 @@ public class Organization {
    * Get updatedAt
    * @return updatedAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getUpdatedAt() {
     return updatedAt;
   }
@@ -196,7 +188,6 @@ public class Organization {
    * If inactive the organization is inactive.
    * @return status
   **/
-  @ApiModelProperty(value = "If inactive the organization is inactive.")
   public StatusEnum getStatus() {
     return status;
   }

@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -23,8 +23,6 @@ import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.AuthorizationLinks;
 import com.influxdb.client.domain.AuthorizationUpdateRequest;
 import com.influxdb.client.domain.Permission;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -79,7 +77,6 @@ public class Authorization extends AuthorizationUpdateRequest {
    * Get createdAt
    * @return createdAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
@@ -88,7 +85,6 @@ public class Authorization extends AuthorizationUpdateRequest {
    * Get updatedAt
    * @return updatedAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getUpdatedAt() {
     return updatedAt;
   }
@@ -99,10 +95,9 @@ public class Authorization extends AuthorizationUpdateRequest {
   }
 
    /**
-   * ID of org that authorization is scoped to.
+   * ID of the organization that the authorization is scoped to.
    * @return orgID
   **/
-  @ApiModelProperty(value = "ID of org that authorization is scoped to.")
   public String getOrgID() {
     return orgID;
   }
@@ -125,10 +120,9 @@ public class Authorization extends AuthorizationUpdateRequest {
   }
 
    /**
-   * List of permissions for an auth.  An auth must have at least one Permission.
+   * List of permissions for an authorization.  An authorization must have at least one permission.
    * @return permissions
   **/
-  @ApiModelProperty(value = "List of permissions for an auth.  An auth must have at least one Permission.")
   public List<Permission> getPermissions() {
     return permissions;
   }
@@ -141,43 +135,38 @@ public class Authorization extends AuthorizationUpdateRequest {
    * Get id
    * @return id
   **/
-  @ApiModelProperty(value = "")
   public String getId() {
     return id;
   }
 
    /**
-   * Passed via the Authorization Header and Token Authentication type.
+   * Token used to authenticate API requests.
    * @return token
   **/
-  @ApiModelProperty(value = "Passed via the Authorization Header and Token Authentication type.")
   public String getToken() {
     return token;
   }
 
    /**
-   * ID of user that created and owns the token.
+   * ID of the user that created and owns the token.
    * @return userID
   **/
-  @ApiModelProperty(value = "ID of user that created and owns the token.")
   public String getUserID() {
     return userID;
   }
 
    /**
-   * Name of user that created and owns the token.
+   * Name of the user that created and owns the token.
    * @return user
   **/
-  @ApiModelProperty(value = "Name of user that created and owns the token.")
   public String getUser() {
     return user;
   }
 
    /**
-   * Name of the org token is scoped to.
+   * Name of the organization that the token is scoped to.
    * @return org
   **/
-  @ApiModelProperty(value = "Name of the org token is scoped to.")
   public String getOrg() {
     return org;
   }
@@ -191,7 +180,6 @@ public class Authorization extends AuthorizationUpdateRequest {
    * Get links
    * @return links
   **/
-  @ApiModelProperty(value = "")
   public AuthorizationLinks getLinks() {
     return links;
   }

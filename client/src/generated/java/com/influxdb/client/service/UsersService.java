@@ -59,7 +59,7 @@ public interface UsersService {
    * @param zapTraceSpan OpenTracing span context (optional)
    * @param offset  (optional)
    * @param limit  (optional, default to 20)
-   * @param after The last resource ID from which to seek from (but not including). This is to be used instead of &#x60;offset&#x60;. (optional)
+   * @param after Resource ID to seek from. Results are not inclusive of this ID. Use &#x60;after&#x60; instead of &#x60;offset&#x60;. (optional)
    * @param name  (optional)
    * @param id  (optional)
    * @return Call&lt;Users&gt;

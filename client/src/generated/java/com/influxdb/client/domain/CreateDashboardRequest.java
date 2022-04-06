@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,8 +20,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -50,7 +48,6 @@ public class CreateDashboardRequest {
    * The ID of the organization that owns the dashboard.
    * @return orgID
   **/
-  @ApiModelProperty(required = true, value = "The ID of the organization that owns the dashboard.")
   public String getOrgID() {
     return orgID;
   }
@@ -68,7 +65,6 @@ public class CreateDashboardRequest {
    * The user-facing name of the dashboard.
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "The user-facing name of the dashboard.")
   public String getName() {
     return name;
   }
@@ -86,7 +82,6 @@ public class CreateDashboardRequest {
    * The user-facing description of the dashboard.
    * @return description
   **/
-  @ApiModelProperty(value = "The user-facing description of the dashboard.")
   public String getDescription() {
     return description;
   }

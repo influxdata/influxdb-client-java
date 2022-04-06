@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -24,8 +24,6 @@ import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationEndpointBase;
 import com.influxdb.client.domain.NotificationEndpointBaseLinks;
 import com.influxdb.client.domain.NotificationEndpointType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -176,7 +174,6 @@ public class HTTPNotificationEndpoint extends NotificationEndpoint {
    * Get url
    * @return url
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getUrl() {
     return url;
   }
@@ -194,7 +191,6 @@ public class HTTPNotificationEndpoint extends NotificationEndpoint {
    * Get username
    * @return username
   **/
-  @ApiModelProperty(value = "")
   public String getUsername() {
     return username;
   }
@@ -212,7 +208,6 @@ public class HTTPNotificationEndpoint extends NotificationEndpoint {
    * Get password
    * @return password
   **/
-  @ApiModelProperty(value = "")
   public String getPassword() {
     return password;
   }
@@ -230,7 +225,6 @@ public class HTTPNotificationEndpoint extends NotificationEndpoint {
    * Get token
    * @return token
   **/
-  @ApiModelProperty(value = "")
   public String getToken() {
     return token;
   }
@@ -248,7 +242,6 @@ public class HTTPNotificationEndpoint extends NotificationEndpoint {
    * Get method
    * @return method
   **/
-  @ApiModelProperty(required = true, value = "")
   public MethodEnum getMethod() {
     return method;
   }
@@ -266,7 +259,6 @@ public class HTTPNotificationEndpoint extends NotificationEndpoint {
    * Get authMethod
    * @return authMethod
   **/
-  @ApiModelProperty(required = true, value = "")
   public AuthMethodEnum getAuthMethod() {
     return authMethod;
   }
@@ -284,7 +276,6 @@ public class HTTPNotificationEndpoint extends NotificationEndpoint {
    * Get contentTemplate
    * @return contentTemplate
   **/
-  @ApiModelProperty(value = "")
   public String getContentTemplate() {
     return contentTemplate;
   }
@@ -310,7 +301,6 @@ public class HTTPNotificationEndpoint extends NotificationEndpoint {
    * Customized headers.
    * @return headers
   **/
-  @ApiModelProperty(value = "Customized headers.")
   public Map<String, String> getHeaders() {
     return headers;
   }

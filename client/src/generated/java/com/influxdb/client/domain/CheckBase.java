@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -24,8 +24,6 @@ import com.influxdb.client.domain.CheckBaseLinks;
 import com.influxdb.client.domain.DashboardQuery;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.TaskStatusType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -149,7 +147,6 @@ public class CheckBase {
    * Get id
    * @return id
   **/
-  @ApiModelProperty(value = "")
   public String getId() {
     return id;
   }
@@ -163,7 +160,6 @@ public class CheckBase {
    * Get name
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getName() {
     return name;
   }
@@ -181,7 +177,6 @@ public class CheckBase {
    * The ID of the organization that owns this check.
    * @return orgID
   **/
-  @ApiModelProperty(required = true, value = "The ID of the organization that owns this check.")
   public String getOrgID() {
     return orgID;
   }
@@ -199,7 +194,6 @@ public class CheckBase {
    * The ID of the task associated with this check.
    * @return taskID
   **/
-  @ApiModelProperty(value = "The ID of the task associated with this check.")
   public String getTaskID() {
     return taskID;
   }
@@ -212,7 +206,6 @@ public class CheckBase {
    * The ID of creator used to create this check.
    * @return ownerID
   **/
-  @ApiModelProperty(value = "The ID of creator used to create this check.")
   public String getOwnerID() {
     return ownerID;
   }
@@ -221,7 +214,6 @@ public class CheckBase {
    * Get createdAt
    * @return createdAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
@@ -230,7 +222,6 @@ public class CheckBase {
    * Get updatedAt
    * @return updatedAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getUpdatedAt() {
     return updatedAt;
   }
@@ -244,7 +235,6 @@ public class CheckBase {
    * Get query
    * @return query
   **/
-  @ApiModelProperty(required = true, value = "")
   public DashboardQuery getQuery() {
     return query;
   }
@@ -262,7 +252,6 @@ public class CheckBase {
    * Get status
    * @return status
   **/
-  @ApiModelProperty(value = "")
   public TaskStatusType getStatus() {
     return status;
   }
@@ -280,7 +269,6 @@ public class CheckBase {
    * An optional description of the check.
    * @return description
   **/
-  @ApiModelProperty(value = "An optional description of the check.")
   public String getDescription() {
     return description;
   }
@@ -290,10 +278,9 @@ public class CheckBase {
   }
 
    /**
-   * Timestamp of latest scheduled, completed run, RFC3339.
+   * Timestamp (in RFC3339 date/time format](https://datatracker.ietf.org/doc/html/rfc3339)) of the latest scheduled and completed run.
    * @return latestCompleted
   **/
-  @ApiModelProperty(value = "Timestamp of latest scheduled, completed run, RFC3339.")
   public OffsetDateTime getLatestCompleted() {
     return latestCompleted;
   }
@@ -302,7 +289,6 @@ public class CheckBase {
    * Get lastRunStatus
    * @return lastRunStatus
   **/
-  @ApiModelProperty(value = "")
   public LastRunStatusEnum getLastRunStatus() {
     return lastRunStatus;
   }
@@ -311,7 +297,6 @@ public class CheckBase {
    * Get lastRunError
    * @return lastRunError
   **/
-  @ApiModelProperty(value = "")
   public String getLastRunError() {
     return lastRunError;
   }
@@ -333,7 +318,6 @@ public class CheckBase {
    * Get labels
    * @return labels
   **/
-  @ApiModelProperty(value = "")
   public List<Label> getLabels() {
     return labels;
   }
@@ -351,7 +335,6 @@ public class CheckBase {
    * Get links
    * @return links
   **/
-  @ApiModelProperty(value = "")
   public CheckBaseLinks getLinks() {
     return links;
   }

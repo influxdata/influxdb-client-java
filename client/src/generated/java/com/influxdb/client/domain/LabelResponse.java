@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -22,8 +22,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.Links;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -48,7 +46,6 @@ public class LabelResponse {
    * Get label
    * @return label
   **/
-  @ApiModelProperty(value = "")
   public Label getLabel() {
     return label;
   }
@@ -66,7 +63,6 @@ public class LabelResponse {
    * Get links
    * @return links
   **/
-  @ApiModelProperty(value = "")
   public Links getLinks() {
     return links;
   }

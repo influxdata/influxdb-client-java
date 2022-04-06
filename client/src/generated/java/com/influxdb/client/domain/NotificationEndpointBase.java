@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -23,8 +23,6 @@ import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationEndpointBaseLinks;
 import com.influxdb.client.domain.NotificationEndpointType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -135,7 +133,6 @@ public class NotificationEndpointBase {
    * Get id
    * @return id
   **/
-  @ApiModelProperty(value = "")
   public String getId() {
     return id;
   }
@@ -153,7 +150,6 @@ public class NotificationEndpointBase {
    * Get orgID
    * @return orgID
   **/
-  @ApiModelProperty(value = "")
   public String getOrgID() {
     return orgID;
   }
@@ -171,7 +167,6 @@ public class NotificationEndpointBase {
    * Get userID
    * @return userID
   **/
-  @ApiModelProperty(value = "")
   public String getUserID() {
     return userID;
   }
@@ -184,7 +179,6 @@ public class NotificationEndpointBase {
    * Get createdAt
    * @return createdAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
@@ -193,7 +187,6 @@ public class NotificationEndpointBase {
    * Get updatedAt
    * @return updatedAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getUpdatedAt() {
     return updatedAt;
   }
@@ -207,7 +200,6 @@ public class NotificationEndpointBase {
    * An optional description of the notification endpoint.
    * @return description
   **/
-  @ApiModelProperty(value = "An optional description of the notification endpoint.")
   public String getDescription() {
     return description;
   }
@@ -225,7 +217,6 @@ public class NotificationEndpointBase {
    * Get name
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getName() {
     return name;
   }
@@ -243,7 +234,6 @@ public class NotificationEndpointBase {
    * The status of the endpoint.
    * @return status
   **/
-  @ApiModelProperty(value = "The status of the endpoint.")
   public StatusEnum getStatus() {
     return status;
   }
@@ -269,7 +259,6 @@ public class NotificationEndpointBase {
    * Get labels
    * @return labels
   **/
-  @ApiModelProperty(value = "")
   public List<Label> getLabels() {
     return labels;
   }
@@ -287,7 +276,6 @@ public class NotificationEndpointBase {
    * Get links
    * @return links
   **/
-  @ApiModelProperty(value = "")
   public NotificationEndpointBaseLinks getLinks() {
     return links;
   }
@@ -305,7 +293,6 @@ public class NotificationEndpointBase {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(required = true, value = "")
   public NotificationEndpointType getType() {
     return type;
   }

@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -46,7 +44,8 @@ import com.influxdb.client.domain.ResourceOwner;
 import com.influxdb.client.domain.ResourceOwners;
 import com.influxdb.client.domain.Telegraf;
 import com.influxdb.client.domain.TelegrafPlugin;
-import com.influxdb.client.domain.TelegrafRequest;
+import com.influxdb.client.domain.TelegrafPluginRequest;
+import com.influxdb.client.domain.TelegrafPluginRequestPlugins;
 import com.influxdb.client.domain.TelegrafRequestMetadata;
 import com.influxdb.client.domain.Telegrafs;
 import com.influxdb.client.domain.User;
@@ -123,24 +122,20 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
         // append agent configuration
         config.append("[agent]").append("\n");
-        agentConfiguration.forEach((key, value) -> appendConfiguration(config, key, value));
 
-        config.append("\n");
-
-        // append plugins configuration
-        for (TelegrafPlugin plugin : plugins) {
-            if (plugin.getDescription() != null) {
-                config.append("#").append(plugin.getDescription()).append("\n");
-            }
-            config.append("[[").append(plugin.getType()).append(".").append(plugin.getName()).append("]]").append("\n");
-            plugin.getConfig().forEach((key, value) -> appendConfiguration(config, key, value));
-        }
-
-        TelegrafRequest telegrafRequest = new TelegrafRequest()
+        TelegrafPluginRequest telegrafRequest = new TelegrafPluginRequest()
                 .name(name)
                 .description(description)
                 .orgID(orgID)
                 .config(config.toString());
+
+        for (TelegrafPlugin plugin : plugins) {
+            telegrafRequest.addPluginsItem(new TelegrafPluginRequestPlugins()
+                    .description(plugin.getDescription())
+                    .type(plugin.getType().getValue())
+                    .name(plugin.getName())
+                    .config(plugin.getConfig()));
+        }
 
         return createTelegraf(telegrafRequest);
     }
@@ -157,7 +152,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         Arguments.checkNonEmpty(orgID, "orgID");
         Arguments.checkNonEmpty(config, "config");
 
-        TelegrafRequest telegrafRequest = new TelegrafRequest()
+        TelegrafPluginRequest telegrafRequest = new TelegrafPluginRequest()
                 .name(name)
                 .description(description)
                 .orgID(orgID)
@@ -184,11 +179,11 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
     @Nonnull
     @Override
-    public Telegraf createTelegraf(@Nonnull final TelegrafRequest telegrafRequest) {
+    public Telegraf createTelegraf(@Nonnull final TelegrafPluginRequest telegrafPluginRequest) {
 
-        Arguments.checkNotNull(telegrafRequest, "telegrafRequest");
+        Arguments.checkNotNull(telegrafPluginRequest, "telegrafPluginRequest");
 
-        Call<Telegraf> call = service.postTelegrafs(telegrafRequest, null);
+        Call<Telegraf> call = service.postTelegrafs(telegrafPluginRequest, null);
 
         return execute(call);
     }
@@ -215,7 +210,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
 
         Arguments.checkNotNull(telegraf, "TelegrafConfig");
 
-        TelegrafRequest telegrafRequest = toTelegrafRequest(telegraf);
+        TelegrafPluginRequest telegrafRequest = toTelegrafRequest(telegraf);
 
         return updateTelegraf(telegraf.getId(), telegrafRequest);
     }
@@ -223,12 +218,10 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
     @Nonnull
     @Override
     public Telegraf updateTelegraf(@Nonnull final String telegrafID,
-                                   @Nonnull final TelegrafRequest telegrafRequest) {
+                                   @Nonnull final TelegrafPluginRequest telegrafPluginRequest) {
+        Arguments.checkNotNull(telegrafPluginRequest, "TelegrafPluginRequest");
 
-        Arguments.checkNotNull(telegrafRequest, "TelegrafRequest");
-
-
-        Call<Telegraf> telegrafConfigCall = service.putTelegrafsID(telegrafID, telegrafRequest, null);
+        Call<Telegraf> telegrafConfigCall = service.putTelegrafsID(telegrafID, telegrafPluginRequest, null);
 
         return execute(telegrafConfigCall);
     }
@@ -272,7 +265,7 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         Arguments.checkNotNull(telegraf, "TelegrafConfig");
 
 
-        TelegrafRequest telegrafRequest = toTelegrafRequest(telegraf);
+        TelegrafPluginRequest telegrafRequest = toTelegrafRequest(telegraf);
 
         Telegraf created = createTelegraf(telegrafRequest);
         created.setName(clonedName);
@@ -538,11 +531,11 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
     }
 
     @Nonnull
-    private TelegrafRequest toTelegrafRequest(@Nonnull final Telegraf telegraf) {
+    private TelegrafPluginRequest toTelegrafRequest(@Nonnull final Telegraf telegraf) {
 
         Arguments.checkNotNull(telegraf, "telegraf");
 
-        TelegrafRequest telegrafRequest = new TelegrafRequest();
+        TelegrafPluginRequest telegrafRequest = new TelegrafPluginRequest();
         telegrafRequest.setName(telegraf.getName());
         telegrafRequest.setDescription(telegraf.getDescription());
         telegrafRequest.setConfig(telegraf.getConfig());
@@ -550,32 +543,5 @@ final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi 
         telegrafRequest.setOrgID(telegraf.getOrgID());
 
         return telegrafRequest;
-    }
-
-    private void appendConfiguration(@Nonnull final StringBuilder config,
-                                     @Nonnull final String key,
-                                     @Nullable final Object value) {
-        if (value != null) {
-            config.append("  ").append(key).append(" = ");
-            if (value instanceof Collection) {
-                Stream<String> values = ((Collection<Object>) value).stream()
-                        .map(it -> {
-                            if (it instanceof  String) {
-                                return "\"" + it.toString() + "\"";
-                            }
-                            return it.toString();
-                        });
-                config.append("[");
-                config.append(values.collect(Collectors.joining(", ")));
-                config.append("]");
-            } else if (value instanceof String) {
-                config.append('"');
-                config.append(value.toString());
-                config.append('"');
-            } else {
-                config.append(value.toString());
-            }
-            config.append("\n");
-        }
     }
 }

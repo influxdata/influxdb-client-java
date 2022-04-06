@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,8 +20,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -30,7 +28,7 @@ import java.io.IOException;
 
 public class AuthorizationUpdateRequest {
   /**
-   * If inactive the token is inactive and requests using the token will be rejected.
+   * Status of the token. If &#x60;inactive&#x60;, requests using the token will be rejected.
    */
   @JsonAdapter(StatusEnum.Adapter.class)
   public enum StatusEnum {
@@ -90,10 +88,9 @@ public class AuthorizationUpdateRequest {
   }
 
    /**
-   * If inactive the token is inactive and requests using the token will be rejected.
+   * Status of the token. If &#x60;inactive&#x60;, requests using the token will be rejected.
    * @return status
   **/
-  @ApiModelProperty(value = "If inactive the token is inactive and requests using the token will be rejected.")
   public StatusEnum getStatus() {
     return status;
   }
@@ -111,7 +108,6 @@ public class AuthorizationUpdateRequest {
    * A description of the token.
    * @return description
   **/
-  @ApiModelProperty(value = "A description of the token.")
   public String getDescription() {
     return description;
   }

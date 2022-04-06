@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.ScriptLanguage;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -55,7 +53,6 @@ public class ScriptCreateRequest {
    * The name of the script. The name must be unique within the organization.
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "The name of the script. The name must be unique within the organization.")
   public String getName() {
     return name;
   }
@@ -73,7 +70,6 @@ public class ScriptCreateRequest {
    * Get description
    * @return description
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getDescription() {
     return description;
   }
@@ -91,7 +87,6 @@ public class ScriptCreateRequest {
    * The script to execute.
    * @return script
   **/
-  @ApiModelProperty(required = true, value = "The script to execute.")
   public String getScript() {
     return script;
   }
@@ -109,7 +104,6 @@ public class ScriptCreateRequest {
    * Get language
    * @return language
   **/
-  @ApiModelProperty(required = true, value = "")
   public ScriptLanguage getLanguage() {
     return language;
   }

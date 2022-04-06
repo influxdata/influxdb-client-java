@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -25,11 +25,11 @@ import com.influxdb.client.domain.DashboardColor;
 import com.influxdb.client.domain.DashboardQuery;
 import com.influxdb.client.domain.StaticLegend;
 import com.influxdb.client.domain.XYGeom;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * XYViewProperties
@@ -96,6 +96,10 @@ public class XYViewProperties extends ViewProperties {
   public static final String SERIALIZED_NAME_COLORS = "colors";
   @SerializedName(SERIALIZED_NAME_COLORS)
   private List<DashboardColor> colors = new ArrayList<>();
+
+  public static final String SERIALIZED_NAME_COLOR_MAPPING = "colorMapping";
+  @SerializedName(SERIALIZED_NAME_COLOR_MAPPING)
+  private Map<String, String> colorMapping = new HashMap<>();
 
   /**
    * Gets or Sets shape
@@ -341,7 +345,6 @@ public class XYViewProperties extends ViewProperties {
    * Get timeFormat
    * @return timeFormat
   **/
-  @ApiModelProperty(value = "")
   public String getTimeFormat() {
     return timeFormat;
   }
@@ -354,7 +357,6 @@ public class XYViewProperties extends ViewProperties {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(required = true, value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -373,7 +375,6 @@ public class XYViewProperties extends ViewProperties {
    * Get queries
    * @return queries
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<DashboardQuery> getQueries() {
     return queries;
   }
@@ -396,7 +397,6 @@ public class XYViewProperties extends ViewProperties {
    * Colors define color encoding of data into a visualization
    * @return colors
   **/
-  @ApiModelProperty(required = true, value = "Colors define color encoding of data into a visualization")
   public List<DashboardColor> getColors() {
     return colors;
   }
@@ -405,11 +405,35 @@ public class XYViewProperties extends ViewProperties {
     this.colors = colors;
   }
 
+  public XYViewProperties colorMapping(Map<String, String> colorMapping) {
+    this.colorMapping = colorMapping;
+    return this;
+  }
+
+  public XYViewProperties putColorMappingItem(String key, String colorMappingItem) {
+    if (this.colorMapping == null) {
+      this.colorMapping = new HashMap<>();
+    }
+    this.colorMapping.put(key, colorMappingItem);
+    return this;
+  }
+
+   /**
+   * A color mapping is an object that maps time series data to a UI color scheme to allow the UI to render graphs consistent colors across reloads.
+   * @return colorMapping
+  **/
+  public Map<String, String> getColorMapping() {
+    return colorMapping;
+  }
+
+  public void setColorMapping(Map<String, String> colorMapping) {
+    this.colorMapping = colorMapping;
+  }
+
    /**
    * Get shape
    * @return shape
   **/
-  @ApiModelProperty(required = true, value = "")
   public ShapeEnum getShape() {
     return shape;
   }
@@ -423,7 +447,6 @@ public class XYViewProperties extends ViewProperties {
    * Get note
    * @return note
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getNote() {
     return note;
   }
@@ -441,7 +464,6 @@ public class XYViewProperties extends ViewProperties {
    * If true, will display note when empty
    * @return showNoteWhenEmpty
   **/
-  @ApiModelProperty(required = true, value = "If true, will display note when empty")
   public Boolean getShowNoteWhenEmpty() {
     return showNoteWhenEmpty;
   }
@@ -459,7 +481,6 @@ public class XYViewProperties extends ViewProperties {
    * Get axes
    * @return axes
   **/
-  @ApiModelProperty(required = true, value = "")
   public Axes getAxes() {
     return axes;
   }
@@ -477,7 +498,6 @@ public class XYViewProperties extends ViewProperties {
    * Get staticLegend
    * @return staticLegend
   **/
-  @ApiModelProperty(value = "")
   public StaticLegend getStaticLegend() {
     return staticLegend;
   }
@@ -495,7 +515,6 @@ public class XYViewProperties extends ViewProperties {
    * Get xColumn
    * @return xColumn
   **/
-  @ApiModelProperty(value = "")
   public String getXColumn() {
     return xColumn;
   }
@@ -521,7 +540,6 @@ public class XYViewProperties extends ViewProperties {
    * Get generateXAxisTicks
    * @return generateXAxisTicks
   **/
-  @ApiModelProperty(value = "")
   public List<String> getGenerateXAxisTicks() {
     return generateXAxisTicks;
   }
@@ -539,7 +557,6 @@ public class XYViewProperties extends ViewProperties {
    * Get xTotalTicks
    * @return xTotalTicks
   **/
-  @ApiModelProperty(value = "")
   public Integer getXTotalTicks() {
     return xTotalTicks;
   }
@@ -557,7 +574,6 @@ public class XYViewProperties extends ViewProperties {
    * Get xTickStart
    * @return xTickStart
   **/
-  @ApiModelProperty(value = "")
   public Float getXTickStart() {
     return xTickStart;
   }
@@ -575,7 +591,6 @@ public class XYViewProperties extends ViewProperties {
    * Get xTickStep
    * @return xTickStep
   **/
-  @ApiModelProperty(value = "")
   public Float getXTickStep() {
     return xTickStep;
   }
@@ -593,7 +608,6 @@ public class XYViewProperties extends ViewProperties {
    * Get yColumn
    * @return yColumn
   **/
-  @ApiModelProperty(value = "")
   public String getYColumn() {
     return yColumn;
   }
@@ -619,7 +633,6 @@ public class XYViewProperties extends ViewProperties {
    * Get generateYAxisTicks
    * @return generateYAxisTicks
   **/
-  @ApiModelProperty(value = "")
   public List<String> getGenerateYAxisTicks() {
     return generateYAxisTicks;
   }
@@ -637,7 +650,6 @@ public class XYViewProperties extends ViewProperties {
    * Get yTotalTicks
    * @return yTotalTicks
   **/
-  @ApiModelProperty(value = "")
   public Integer getYTotalTicks() {
     return yTotalTicks;
   }
@@ -655,7 +667,6 @@ public class XYViewProperties extends ViewProperties {
    * Get yTickStart
    * @return yTickStart
   **/
-  @ApiModelProperty(value = "")
   public Float getYTickStart() {
     return yTickStart;
   }
@@ -673,7 +684,6 @@ public class XYViewProperties extends ViewProperties {
    * Get yTickStep
    * @return yTickStep
   **/
-  @ApiModelProperty(value = "")
   public Float getYTickStep() {
     return yTickStep;
   }
@@ -691,7 +701,6 @@ public class XYViewProperties extends ViewProperties {
    * Get shadeBelow
    * @return shadeBelow
   **/
-  @ApiModelProperty(value = "")
   public Boolean getShadeBelow() {
     return shadeBelow;
   }
@@ -709,7 +718,6 @@ public class XYViewProperties extends ViewProperties {
    * Get hoverDimension
    * @return hoverDimension
   **/
-  @ApiModelProperty(value = "")
   public HoverDimensionEnum getHoverDimension() {
     return hoverDimension;
   }
@@ -727,7 +735,6 @@ public class XYViewProperties extends ViewProperties {
    * Get position
    * @return position
   **/
-  @ApiModelProperty(required = true, value = "")
   public PositionEnum getPosition() {
     return position;
   }
@@ -745,7 +752,6 @@ public class XYViewProperties extends ViewProperties {
    * Get geom
    * @return geom
   **/
-  @ApiModelProperty(required = true, value = "")
   public XYGeom getGeom() {
     return geom;
   }
@@ -763,7 +769,6 @@ public class XYViewProperties extends ViewProperties {
    * Get legendColorizeRows
    * @return legendColorizeRows
   **/
-  @ApiModelProperty(value = "")
   public Boolean getLegendColorizeRows() {
     return legendColorizeRows;
   }
@@ -781,7 +786,6 @@ public class XYViewProperties extends ViewProperties {
    * Get legendHide
    * @return legendHide
   **/
-  @ApiModelProperty(value = "")
   public Boolean getLegendHide() {
     return legendHide;
   }
@@ -799,7 +803,6 @@ public class XYViewProperties extends ViewProperties {
    * Get legendOpacity
    * @return legendOpacity
   **/
-  @ApiModelProperty(value = "")
   public Float getLegendOpacity() {
     return legendOpacity;
   }
@@ -817,7 +820,6 @@ public class XYViewProperties extends ViewProperties {
    * Get legendOrientationThreshold
    * @return legendOrientationThreshold
   **/
-  @ApiModelProperty(value = "")
   public Integer getLegendOrientationThreshold() {
     return legendOrientationThreshold;
   }
@@ -840,6 +842,7 @@ public class XYViewProperties extends ViewProperties {
         Objects.equals(this.type, xyViewProperties.type) &&
         Objects.equals(this.queries, xyViewProperties.queries) &&
         Objects.equals(this.colors, xyViewProperties.colors) &&
+        Objects.equals(this.colorMapping, xyViewProperties.colorMapping) &&
         Objects.equals(this.shape, xyViewProperties.shape) &&
         Objects.equals(this.note, xyViewProperties.note) &&
         Objects.equals(this.showNoteWhenEmpty, xyViewProperties.showNoteWhenEmpty) &&
@@ -868,7 +871,7 @@ public class XYViewProperties extends ViewProperties {
 
   @Override
   public int hashCode() {
-    return Objects.hash(timeFormat, type, queries, colors, shape, note, showNoteWhenEmpty, axes, staticLegend, xColumn, generateXAxisTicks, xTotalTicks, xTickStart, xTickStep, yColumn, generateYAxisTicks, yTotalTicks, yTickStart, yTickStep, shadeBelow, hoverDimension, position, geom, legendColorizeRows, legendHide, legendOpacity, legendOrientationThreshold, super.hashCode());
+    return Objects.hash(timeFormat, type, queries, colors, colorMapping, shape, note, showNoteWhenEmpty, axes, staticLegend, xColumn, generateXAxisTicks, xTotalTicks, xTickStart, xTickStep, yColumn, generateYAxisTicks, yTotalTicks, yTickStart, yTickStep, shadeBelow, hoverDimension, position, geom, legendColorizeRows, legendHide, legendOpacity, legendOrientationThreshold, super.hashCode());
   }
 
 
@@ -881,6 +884,7 @@ public class XYViewProperties extends ViewProperties {
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    queries: ").append(toIndentedString(queries)).append("\n");
     sb.append("    colors: ").append(toIndentedString(colors)).append("\n");
+    sb.append("    colorMapping: ").append(toIndentedString(colorMapping)).append("\n");
     sb.append("    shape: ").append(toIndentedString(shape)).append("\n");
     sb.append("    note: ").append(toIndentedString(note)).append("\n");
     sb.append("    showNoteWhenEmpty: ").append(toIndentedString(showNoteWhenEmpty)).append("\n");

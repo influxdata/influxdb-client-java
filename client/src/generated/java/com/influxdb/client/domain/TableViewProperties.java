@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -25,8 +25,6 @@ import com.influxdb.client.domain.DashboardQuery;
 import com.influxdb.client.domain.DecimalPlaces;
 import com.influxdb.client.domain.RenamableField;
 import com.influxdb.client.domain.TableViewPropertiesTableOptions;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -170,7 +168,6 @@ public class TableViewProperties extends ViewProperties {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(required = true, value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -189,7 +186,6 @@ public class TableViewProperties extends ViewProperties {
    * Get queries
    * @return queries
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<DashboardQuery> getQueries() {
     return queries;
   }
@@ -212,7 +208,6 @@ public class TableViewProperties extends ViewProperties {
    * Colors define color encoding of data into a visualization
    * @return colors
   **/
-  @ApiModelProperty(required = true, value = "Colors define color encoding of data into a visualization")
   public List<DashboardColor> getColors() {
     return colors;
   }
@@ -225,7 +220,6 @@ public class TableViewProperties extends ViewProperties {
    * Get shape
    * @return shape
   **/
-  @ApiModelProperty(required = true, value = "")
   public ShapeEnum getShape() {
     return shape;
   }
@@ -239,7 +233,6 @@ public class TableViewProperties extends ViewProperties {
    * Get note
    * @return note
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getNote() {
     return note;
   }
@@ -257,7 +250,6 @@ public class TableViewProperties extends ViewProperties {
    * If true, will display note when empty
    * @return showNoteWhenEmpty
   **/
-  @ApiModelProperty(required = true, value = "If true, will display note when empty")
   public Boolean getShowNoteWhenEmpty() {
     return showNoteWhenEmpty;
   }
@@ -275,7 +267,6 @@ public class TableViewProperties extends ViewProperties {
    * Get tableOptions
    * @return tableOptions
   **/
-  @ApiModelProperty(required = true, value = "")
   public TableViewPropertiesTableOptions getTableOptions() {
     return tableOptions;
   }
@@ -298,7 +289,6 @@ public class TableViewProperties extends ViewProperties {
    * fieldOptions represent the fields retrieved by the query with customization options
    * @return fieldOptions
   **/
-  @ApiModelProperty(required = true, value = "fieldOptions represent the fields retrieved by the query with customization options")
   public List<RenamableField> getFieldOptions() {
     return fieldOptions;
   }
@@ -316,7 +306,6 @@ public class TableViewProperties extends ViewProperties {
    * timeFormat describes the display format for time values according to moment.js date formatting
    * @return timeFormat
   **/
-  @ApiModelProperty(required = true, value = "timeFormat describes the display format for time values according to moment.js date formatting")
   public String getTimeFormat() {
     return timeFormat;
   }
@@ -334,7 +323,6 @@ public class TableViewProperties extends ViewProperties {
    * Get decimalPlaces
    * @return decimalPlaces
   **/
-  @ApiModelProperty(required = true, value = "")
   public DecimalPlaces getDecimalPlaces() {
     return decimalPlaces;
   }

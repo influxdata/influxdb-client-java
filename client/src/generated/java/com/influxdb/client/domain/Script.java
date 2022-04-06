@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.ScriptLanguage;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 
@@ -71,7 +69,6 @@ public class Script {
    * Get id
    * @return id
   **/
-  @ApiModelProperty(value = "")
   public String getId() {
     return id;
   }
@@ -85,7 +82,6 @@ public class Script {
    * Get name
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getName() {
     return name;
   }
@@ -103,7 +99,6 @@ public class Script {
    * Get description
    * @return description
   **/
-  @ApiModelProperty(value = "")
   public String getDescription() {
     return description;
   }
@@ -121,7 +116,6 @@ public class Script {
    * Get orgID
    * @return orgID
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getOrgID() {
     return orgID;
   }
@@ -139,7 +133,6 @@ public class Script {
    * script to be executed
    * @return script
   **/
-  @ApiModelProperty(required = true, value = "script to be executed")
   public String getScript() {
     return script;
   }
@@ -157,7 +150,6 @@ public class Script {
    * Get language
    * @return language
   **/
-  @ApiModelProperty(value = "")
   public ScriptLanguage getLanguage() {
     return language;
   }
@@ -175,7 +167,6 @@ public class Script {
    * invocation endpoint address
    * @return url
   **/
-  @ApiModelProperty(value = "invocation endpoint address")
   public String getUrl() {
     return url;
   }
@@ -188,7 +179,6 @@ public class Script {
    * Get createdAt
    * @return createdAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
@@ -197,7 +187,6 @@ public class Script {
    * Get updatedAt
    * @return updatedAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getUpdatedAt() {
     return updatedAt;
   }

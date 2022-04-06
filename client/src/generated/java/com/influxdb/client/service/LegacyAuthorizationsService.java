@@ -10,7 +10,6 @@ import okhttp3.MultipartBody;
 import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.AuthorizationUpdateRequest;
 import com.influxdb.client.domain.Authorizations;
-import com.influxdb.client.domain.Error;
 import com.influxdb.client.domain.LegacyAuthorizationPostRequest;
 import com.influxdb.client.domain.PasswordResetBody;
 

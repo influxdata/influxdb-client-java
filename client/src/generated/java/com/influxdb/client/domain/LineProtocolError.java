@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,8 +20,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -108,43 +106,38 @@ public class LineProtocolError {
    * Code is the machine-readable error code.
    * @return code
   **/
-  @ApiModelProperty(required = true, value = "Code is the machine-readable error code.")
   public CodeEnum getCode() {
     return code;
   }
 
    /**
-   * Message is a human-readable message.
+   * Human-readable message.
    * @return message
   **/
-  @ApiModelProperty(required = true, value = "Message is a human-readable message.")
   public String getMessage() {
     return message;
   }
 
    /**
-   * Op describes the logical code operation during error. Useful for debugging.
+   * Describes the logical code operation when the error occurred. Useful for debugging.
    * @return op
   **/
-  @ApiModelProperty(required = true, value = "Op describes the logical code operation during error. Useful for debugging.")
   public String getOp() {
     return op;
   }
 
    /**
-   * Err is a stack of errors that occurred during processing of the request. Useful for debugging.
+   * Stack of errors that occurred during processing of the request. Useful for debugging.
    * @return err
   **/
-  @ApiModelProperty(required = true, value = "Err is a stack of errors that occurred during processing of the request. Useful for debugging.")
   public String getErr() {
     return err;
   }
 
    /**
-   * First line within sent body containing malformed data
+   * First line in the request body that contains malformed data.
    * @return line
   **/
-  @ApiModelProperty(value = "First line within sent body containing malformed data")
   public Integer getLine() {
     return line;
   }

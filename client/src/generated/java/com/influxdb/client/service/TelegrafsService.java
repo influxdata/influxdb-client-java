@@ -17,7 +17,7 @@ import com.influxdb.client.domain.ResourceMembers;
 import com.influxdb.client.domain.ResourceOwner;
 import com.influxdb.client.domain.ResourceOwners;
 import com.influxdb.client.domain.Telegraf;
-import com.influxdb.client.domain.TelegrafRequest;
+import com.influxdb.client.domain.TelegrafPluginRequest;
 import com.influxdb.client.domain.Telegrafs;
 
 import java.util.ArrayList;
@@ -180,7 +180,7 @@ public interface TelegrafsService {
   /**
    * Create a Telegraf configuration
    * 
-   * @param telegrafRequest Telegraf configuration to create (required)
+   * @param telegrafPluginRequest Telegraf configuration to create (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Telegraf&gt;
    */
@@ -189,7 +189,7 @@ public interface TelegrafsService {
   })
   @POST("api/v2/telegrafs")
   Call<Telegraf> postTelegrafs(
-    @retrofit2.http.Body TelegrafRequest telegrafRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Body TelegrafPluginRequest telegrafPluginRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
   /**
@@ -244,7 +244,7 @@ public interface TelegrafsService {
    * Update a Telegraf configuration
    * 
    * @param telegrafID The Telegraf config ID. (required)
-   * @param telegrafRequest Telegraf configuration update to apply (required)
+   * @param telegrafPluginRequest Telegraf configuration update to apply (required)
    * @param zapTraceSpan OpenTracing span context (optional)
    * @return Call&lt;Telegraf&gt;
    */
@@ -253,7 +253,7 @@ public interface TelegrafsService {
   })
   @PUT("api/v2/telegrafs/{telegrafID}")
   Call<Telegraf> putTelegrafsID(
-    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Body TelegrafRequest telegrafRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
+    @retrofit2.http.Path("telegrafID") String telegrafID, @retrofit2.http.Body TelegrafPluginRequest telegrafPluginRequest, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan
   );
 
 }

@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -22,8 +22,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.BucketMetadataManifest;
 import com.influxdb.client.domain.File;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +52,6 @@ public class MetadataBackup {
    * Get kv
    * @return kv
   **/
-  @ApiModelProperty(required = true, value = "")
   public File getKv() {
     return kv;
   }
@@ -72,7 +69,6 @@ public class MetadataBackup {
    * Get sql
    * @return sql
   **/
-  @ApiModelProperty(required = true, value = "")
   public File getSql() {
     return sql;
   }
@@ -95,7 +91,6 @@ public class MetadataBackup {
    * Get buckets
    * @return buckets
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<BucketMetadataManifest> getBuckets() {
     return buckets;
   }

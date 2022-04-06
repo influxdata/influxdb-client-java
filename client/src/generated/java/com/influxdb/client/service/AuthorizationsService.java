@@ -11,7 +11,6 @@ import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.AuthorizationPostRequest;
 import com.influxdb.client.domain.AuthorizationUpdateRequest;
 import com.influxdb.client.domain.Authorizations;
-import com.influxdb.client.domain.Error;
 
 import java.util.ArrayList;
 import java.util.HashMap;

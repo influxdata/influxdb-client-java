@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.RuleStatusLevel;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -55,7 +53,6 @@ public class StatusRule {
    * Get currentLevel
    * @return currentLevel
   **/
-  @ApiModelProperty(value = "")
   public RuleStatusLevel getCurrentLevel() {
     return currentLevel;
   }
@@ -73,7 +70,6 @@ public class StatusRule {
    * Get previousLevel
    * @return previousLevel
   **/
-  @ApiModelProperty(value = "")
   public RuleStatusLevel getPreviousLevel() {
     return previousLevel;
   }
@@ -91,7 +87,6 @@ public class StatusRule {
    * Get count
    * @return count
   **/
-  @ApiModelProperty(value = "")
   public Integer getCount() {
     return count;
   }
@@ -109,7 +104,6 @@ public class StatusRule {
    * Get period
    * @return period
   **/
-  @ApiModelProperty(value = "")
   public String getPeriod() {
     return period;
   }

@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -23,8 +23,6 @@ import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.RoutesExternal;
 import com.influxdb.client.domain.RoutesQuery;
 import com.influxdb.client.domain.RoutesSystem;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -113,7 +111,6 @@ public class Routes {
    * Get authorizations
    * @return authorizations
   **/
-  @ApiModelProperty(value = "")
   public String getAuthorizations() {
     return authorizations;
   }
@@ -131,7 +128,6 @@ public class Routes {
    * Get buckets
    * @return buckets
   **/
-  @ApiModelProperty(value = "")
   public String getBuckets() {
     return buckets;
   }
@@ -149,7 +145,6 @@ public class Routes {
    * Get dashboards
    * @return dashboards
   **/
-  @ApiModelProperty(value = "")
   public String getDashboards() {
     return dashboards;
   }
@@ -167,7 +162,6 @@ public class Routes {
    * Get external
    * @return external
   **/
-  @ApiModelProperty(value = "")
   public RoutesExternal getExternal() {
     return external;
   }
@@ -185,7 +179,6 @@ public class Routes {
    * Get variables
    * @return variables
   **/
-  @ApiModelProperty(value = "")
   public String getVariables() {
     return variables;
   }
@@ -203,7 +196,6 @@ public class Routes {
    * Get me
    * @return me
   **/
-  @ApiModelProperty(value = "")
   public String getMe() {
     return me;
   }
@@ -221,7 +213,6 @@ public class Routes {
    * Get flags
    * @return flags
   **/
-  @ApiModelProperty(value = "")
   public String getFlags() {
     return flags;
   }
@@ -239,7 +230,6 @@ public class Routes {
    * Get orgs
    * @return orgs
   **/
-  @ApiModelProperty(value = "")
   public String getOrgs() {
     return orgs;
   }
@@ -257,7 +247,6 @@ public class Routes {
    * Get query
    * @return query
   **/
-  @ApiModelProperty(value = "")
   public RoutesQuery getQuery() {
     return query;
   }
@@ -275,7 +264,6 @@ public class Routes {
    * Get setup
    * @return setup
   **/
-  @ApiModelProperty(value = "")
   public String getSetup() {
     return setup;
   }
@@ -293,7 +281,6 @@ public class Routes {
    * Get signin
    * @return signin
   **/
-  @ApiModelProperty(value = "")
   public String getSignin() {
     return signin;
   }
@@ -311,7 +298,6 @@ public class Routes {
    * Get signout
    * @return signout
   **/
-  @ApiModelProperty(value = "")
   public String getSignout() {
     return signout;
   }
@@ -329,7 +315,6 @@ public class Routes {
    * Get sources
    * @return sources
   **/
-  @ApiModelProperty(value = "")
   public String getSources() {
     return sources;
   }
@@ -347,7 +332,6 @@ public class Routes {
    * Get system
    * @return system
   **/
-  @ApiModelProperty(value = "")
   public RoutesSystem getSystem() {
     return system;
   }
@@ -365,7 +349,6 @@ public class Routes {
    * Get tasks
    * @return tasks
   **/
-  @ApiModelProperty(value = "")
   public String getTasks() {
     return tasks;
   }
@@ -383,7 +366,6 @@ public class Routes {
    * Get telegrafs
    * @return telegrafs
   **/
-  @ApiModelProperty(value = "")
   public String getTelegrafs() {
     return telegrafs;
   }
@@ -401,7 +383,6 @@ public class Routes {
    * Get users
    * @return users
   **/
-  @ApiModelProperty(value = "")
   public String getUsers() {
     return users;
   }
@@ -419,7 +400,6 @@ public class Routes {
    * Get write
    * @return write
   **/
-  @ApiModelProperty(value = "")
   public String getWrite() {
     return write;
   }

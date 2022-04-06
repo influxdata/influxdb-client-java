@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.DashboardQuery;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -299,7 +297,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get timeFormat
    * @return timeFormat
   **/
-  @ApiModelProperty(value = "")
   public String getTimeFormat() {
     return timeFormat;
   }
@@ -312,7 +309,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(required = true, value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -331,7 +327,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get queries
    * @return queries
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<DashboardQuery> getQueries() {
     return queries;
   }
@@ -354,7 +349,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Colors define color encoding of data into a visualization
    * @return colors
   **/
-  @ApiModelProperty(required = true, value = "Colors define color encoding of data into a visualization")
   public List<String> getColors() {
     return colors;
   }
@@ -367,7 +361,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get shape
    * @return shape
   **/
-  @ApiModelProperty(required = true, value = "")
   public ShapeEnum getShape() {
     return shape;
   }
@@ -381,7 +374,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get note
    * @return note
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getNote() {
     return note;
   }
@@ -399,7 +391,6 @@ public class MosaicViewProperties extends ViewProperties {
    * If true, will display note when empty
    * @return showNoteWhenEmpty
   **/
-  @ApiModelProperty(required = true, value = "If true, will display note when empty")
   public Boolean getShowNoteWhenEmpty() {
     return showNoteWhenEmpty;
   }
@@ -417,7 +408,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get xColumn
    * @return xColumn
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getXColumn() {
     return xColumn;
   }
@@ -443,7 +433,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get generateXAxisTicks
    * @return generateXAxisTicks
   **/
-  @ApiModelProperty(value = "")
   public List<String> getGenerateXAxisTicks() {
     return generateXAxisTicks;
   }
@@ -461,7 +450,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get xTotalTicks
    * @return xTotalTicks
   **/
-  @ApiModelProperty(value = "")
   public Integer getXTotalTicks() {
     return xTotalTicks;
   }
@@ -479,7 +467,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get xTickStart
    * @return xTickStart
   **/
-  @ApiModelProperty(value = "")
   public Float getXTickStart() {
     return xTickStart;
   }
@@ -497,7 +484,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get xTickStep
    * @return xTickStep
   **/
-  @ApiModelProperty(value = "")
   public Float getXTickStep() {
     return xTickStep;
   }
@@ -515,7 +501,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get yLabelColumnSeparator
    * @return yLabelColumnSeparator
   **/
-  @ApiModelProperty(value = "")
   public String getYLabelColumnSeparator() {
     return yLabelColumnSeparator;
   }
@@ -541,7 +526,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get yLabelColumns
    * @return yLabelColumns
   **/
-  @ApiModelProperty(value = "")
   public List<String> getYLabelColumns() {
     return yLabelColumns;
   }
@@ -564,7 +548,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get ySeriesColumns
    * @return ySeriesColumns
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<String> getYSeriesColumns() {
     return ySeriesColumns;
   }
@@ -587,7 +570,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get fillColumns
    * @return fillColumns
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<String> getFillColumns() {
     return fillColumns;
   }
@@ -610,7 +592,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get xDomain
    * @return xDomain
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<BigDecimal> getXDomain() {
     return xDomain;
   }
@@ -633,7 +614,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get yDomain
    * @return yDomain
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<BigDecimal> getYDomain() {
     return yDomain;
   }
@@ -651,7 +631,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get xAxisLabel
    * @return xAxisLabel
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getXAxisLabel() {
     return xAxisLabel;
   }
@@ -669,7 +648,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get yAxisLabel
    * @return yAxisLabel
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getYAxisLabel() {
     return yAxisLabel;
   }
@@ -687,7 +665,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get xPrefix
    * @return xPrefix
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getXPrefix() {
     return xPrefix;
   }
@@ -705,7 +682,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get xSuffix
    * @return xSuffix
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getXSuffix() {
     return xSuffix;
   }
@@ -723,7 +699,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get yPrefix
    * @return yPrefix
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getYPrefix() {
     return yPrefix;
   }
@@ -741,7 +716,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get ySuffix
    * @return ySuffix
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getYSuffix() {
     return ySuffix;
   }
@@ -759,7 +733,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get hoverDimension
    * @return hoverDimension
   **/
-  @ApiModelProperty(value = "")
   public HoverDimensionEnum getHoverDimension() {
     return hoverDimension;
   }
@@ -777,7 +750,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get legendColorizeRows
    * @return legendColorizeRows
   **/
-  @ApiModelProperty(value = "")
   public Boolean getLegendColorizeRows() {
     return legendColorizeRows;
   }
@@ -795,7 +767,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get legendHide
    * @return legendHide
   **/
-  @ApiModelProperty(value = "")
   public Boolean getLegendHide() {
     return legendHide;
   }
@@ -813,7 +784,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get legendOpacity
    * @return legendOpacity
   **/
-  @ApiModelProperty(value = "")
   public Float getLegendOpacity() {
     return legendOpacity;
   }
@@ -831,7 +801,6 @@ public class MosaicViewProperties extends ViewProperties {
    * Get legendOrientationThreshold
    * @return legendOrientationThreshold
   **/
-  @ApiModelProperty(value = "")
   public Integer getLegendOrientationThreshold() {
     return legendOrientationThreshold;
   }

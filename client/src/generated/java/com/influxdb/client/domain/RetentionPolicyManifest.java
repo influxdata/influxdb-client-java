@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -22,8 +22,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.ShardGroupManifest;
 import com.influxdb.client.domain.SubscriptionManifest;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +64,6 @@ public class RetentionPolicyManifest {
    * Get name
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getName() {
     return name;
   }
@@ -84,7 +81,6 @@ public class RetentionPolicyManifest {
    * Get replicaN
    * @return replicaN
   **/
-  @ApiModelProperty(required = true, value = "")
   public Integer getReplicaN() {
     return replicaN;
   }
@@ -102,7 +98,6 @@ public class RetentionPolicyManifest {
    * Get duration
    * @return duration
   **/
-  @ApiModelProperty(required = true, value = "")
   public Long getDuration() {
     return duration;
   }
@@ -120,7 +115,6 @@ public class RetentionPolicyManifest {
    * Get shardGroupDuration
    * @return shardGroupDuration
   **/
-  @ApiModelProperty(required = true, value = "")
   public Long getShardGroupDuration() {
     return shardGroupDuration;
   }
@@ -143,7 +137,6 @@ public class RetentionPolicyManifest {
    * Get shardGroups
    * @return shardGroups
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<ShardGroupManifest> getShardGroups() {
     return shardGroups;
   }
@@ -166,7 +159,6 @@ public class RetentionPolicyManifest {
    * Get subscriptions
    * @return subscriptions
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<SubscriptionManifest> getSubscriptions() {
     return subscriptions;
   }

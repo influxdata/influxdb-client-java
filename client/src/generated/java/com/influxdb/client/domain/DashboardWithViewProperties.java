@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -25,8 +25,6 @@ import com.influxdb.client.domain.CreateDashboardRequest;
 import com.influxdb.client.domain.DashboardLinks;
 import com.influxdb.client.domain.DashboardMeta;
 import com.influxdb.client.domain.Label;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +63,6 @@ public class DashboardWithViewProperties extends CreateDashboardRequest {
    * Get links
    * @return links
   **/
-  @ApiModelProperty(value = "")
   public DashboardLinks getLinks() {
     return links;
   }
@@ -78,7 +75,6 @@ public class DashboardWithViewProperties extends CreateDashboardRequest {
    * Get id
    * @return id
   **/
-  @ApiModelProperty(value = "")
   public String getId() {
     return id;
   }
@@ -92,7 +88,6 @@ public class DashboardWithViewProperties extends CreateDashboardRequest {
    * Get meta
    * @return meta
   **/
-  @ApiModelProperty(value = "")
   public DashboardMeta getMeta() {
     return meta;
   }
@@ -118,7 +113,6 @@ public class DashboardWithViewProperties extends CreateDashboardRequest {
    * Get cells
    * @return cells
   **/
-  @ApiModelProperty(value = "")
   public List<CellWithViewProperties> getCells() {
     return cells;
   }
@@ -144,7 +138,6 @@ public class DashboardWithViewProperties extends CreateDashboardRequest {
    * Get labels
    * @return labels
   **/
-  @ApiModelProperty(value = "")
   public List<Label> getLabels() {
     return labels;
   }

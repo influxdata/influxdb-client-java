@@ -18,9 +18,25 @@
   - `InfluxDBClientReactive`:
     - `Single<HealthCheck> health()` -> `Publisher<HealthCheck> health()`
   - `WriteOptionsReactive`
-     - `io.reactivex.Scheduler` -> `io.reactivex.rxjava3.core.Scheduler`
-     - `io.reactivex.schedulers.Schedulers` -> `io.reactivex.rxjava3.schedulers.Schedulers`
-          
+    - `io.reactivex.Scheduler` -> `io.reactivex.rxjava3.core.Scheduler`
+    - `io.reactivex.schedulers.Schedulers` -> `io.reactivex.rxjava3.schedulers.Schedulers`
+  - `TelegrafsService` and `TelegrafsApi` 
+    - `TelegrafRequest` renamed to  `TelegrafPluginRequest` to create/update `Telegraf` configuration
+    - `TelegrafPlugin.TypeEnum.INPUTS` renamed to  `TelegrafPlugin.TypeEnum.INPUT`
+    - `TelegrafPlugin.TypeEnum.OUTPUTS` renamed to  `TelegrafPlugin.TypeEnum.OUTPUT`
+
+
+### Services
+
+This release also uses new version of InfluxDB OSS API definitions - [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml). The following breaking changes are in underlying API services and doesn't affect common apis such as - `WriteApi`, `QueryApi`, `BucketsApi`, `OrganizationsApi`...
+
+- Add `ConfigService` to retrieve InfluxDB's runtime configuration
+- Add `DebugService` to retrieve debug and performance data from runtime
+- Add `RemoteConnectionsService` to deal with registered remote InfluxDB connections
+- Add `MetricsService` to deal with exposed prometheus metrics
+- Add `ReplicationService` to manage InfluxDB replications
+- Update `TemplatesService` to deal with `Stack` and `Template` API
+- Update `RestoreService` to deal with new restore functions of InfluxDB
 
 ### List of updated dependencies: 
  - Core:
@@ -46,6 +62,7 @@
    - org.springframework:spring-core:jar:5.3.17
 
 ### Features
+1. [#324](https://github.com/influxdata/influxdb-client-java/pull/298) Removed dependency on `io.swagger:swagger-annotations` and updated swagger to the latest version
 1. [#289](https://github.com/influxdata/influxdb-client-java/pull/298): Upgrade `RxJava2` -> `RxJava3`, update outdated dependencies
 1. [#316](https://github.com/influxdata/influxdb-client-java/pull/316): Add `InvocableScriptsApi` to create, update, list, delete and invoke scripts by seamless way
 1. [#315](https://github.com/influxdata/influxdb-client-java/pull/315): Add support for timezones [FluxDSL]

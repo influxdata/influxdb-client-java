@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.RenamableField;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -104,7 +102,6 @@ public class TableViewPropertiesTableOptions {
    * verticalTimeAxis describes the orientation of the table by indicating whether the time axis will be displayed vertically
    * @return verticalTimeAxis
   **/
-  @ApiModelProperty(value = "verticalTimeAxis describes the orientation of the table by indicating whether the time axis will be displayed vertically")
   public Boolean getVerticalTimeAxis() {
     return verticalTimeAxis;
   }
@@ -122,7 +119,6 @@ public class TableViewPropertiesTableOptions {
    * Get sortBy
    * @return sortBy
   **/
-  @ApiModelProperty(value = "")
   public RenamableField getSortBy() {
     return sortBy;
   }
@@ -140,7 +136,6 @@ public class TableViewPropertiesTableOptions {
    * Wrapping describes the text wrapping style to be used in table views
    * @return wrapping
   **/
-  @ApiModelProperty(value = "Wrapping describes the text wrapping style to be used in table views")
   public WrappingEnum getWrapping() {
     return wrapping;
   }
@@ -158,7 +153,6 @@ public class TableViewPropertiesTableOptions {
    * fixFirstColumn indicates whether the first column of the table should be locked
    * @return fixFirstColumn
   **/
-  @ApiModelProperty(value = "fixFirstColumn indicates whether the first column of the table should be locked")
   public Boolean getFixFirstColumn() {
     return fixFirstColumn;
   }

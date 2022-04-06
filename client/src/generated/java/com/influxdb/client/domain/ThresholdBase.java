@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.CheckStatusLevel;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -47,7 +45,6 @@ public class ThresholdBase {
    * Get level
    * @return level
   **/
-  @ApiModelProperty(value = "")
   public CheckStatusLevel getLevel() {
     return level;
   }
@@ -65,7 +62,6 @@ public class ThresholdBase {
    * If true, only alert if all values meet threshold.
    * @return allValues
   **/
-  @ApiModelProperty(value = "If true, only alert if all values meet threshold.")
   public Boolean getAllValues() {
     return allValues;
   }

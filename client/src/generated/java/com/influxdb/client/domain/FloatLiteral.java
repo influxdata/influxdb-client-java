@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,15 +20,12 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
  * Represents floating point numbers according to the double representations defined by the IEEE-754-1985
  */
-@ApiModel(description = "Represents floating point numbers according to the double representations defined by the IEEE-754-1985")
 
 public class FloatLiteral extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -48,7 +45,6 @@ public class FloatLiteral extends Expression {
    * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }
@@ -66,7 +62,6 @@ public class FloatLiteral extends Expression {
    * Get value
    * @return value
   **/
-  @ApiModelProperty(value = "")
   public BigDecimal getValue() {
     return value;
   }

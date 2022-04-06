@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -29,8 +29,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Expression;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -39,7 +37,6 @@ import java.util.List;
 /**
  * Selects one of two expressions, &#x60;Alternate&#x60; or &#x60;Consequent&#x60;, depending on a third boolean expression, &#x60;Test&#x60;
  */
-@ApiModel(description = "Selects one of two expressions, `Alternate` or `Consequent`, depending on a third boolean expression, `Test`")
 
 public class ConditionalExpression extends Expression {
   public static final String SERIALIZED_NAME_TYPE = "type";
@@ -70,7 +67,6 @@ public class ConditionalExpression extends Expression {
    * Type of AST node
    * @return type
   **/
-  @ApiModelProperty(value = "Type of AST node")
   public String getType() {
     return type;
   }
@@ -88,7 +84,6 @@ public class ConditionalExpression extends Expression {
    * Get test
    * @return test
   **/
-  @ApiModelProperty(value = "")
   public Expression getTest() {
     return test;
   }
@@ -106,7 +101,6 @@ public class ConditionalExpression extends Expression {
    * Get alternate
    * @return alternate
   **/
-  @ApiModelProperty(value = "")
   public Expression getAlternate() {
     return alternate;
   }
@@ -124,7 +118,6 @@ public class ConditionalExpression extends Expression {
    * Get consequent
    * @return consequent
   **/
-  @ApiModelProperty(value = "")
   public Expression getConsequent() {
     return consequent;
   }

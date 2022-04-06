@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,8 +20,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -143,7 +141,6 @@ public class TelegramNotificationRuleBase extends NotificationRule {
    * The discriminator between other types of notification rules is \&quot;telegram\&quot;.
    * @return type
   **/
-  @ApiModelProperty(required = true, value = "The discriminator between other types of notification rules is \"telegram\".")
   public TypeEnum getType() {
     return type;
   }
@@ -157,7 +154,6 @@ public class TelegramNotificationRuleBase extends NotificationRule {
    * The message template as a flux interpolated string.
    * @return messageTemplate
   **/
-  @ApiModelProperty(required = true, value = "The message template as a flux interpolated string.")
   public String getMessageTemplate() {
     return messageTemplate;
   }
@@ -175,7 +171,6 @@ public class TelegramNotificationRuleBase extends NotificationRule {
    * Parse mode of the message text per https://core.telegram.org/bots/api#formatting-options . Defaults to \&quot;MarkdownV2\&quot; .
    * @return parseMode
   **/
-  @ApiModelProperty(value = "Parse mode of the message text per https://core.telegram.org/bots/api#formatting-options . Defaults to \"MarkdownV2\" .")
   public ParseModeEnum getParseMode() {
     return parseMode;
   }
@@ -193,7 +188,6 @@ public class TelegramNotificationRuleBase extends NotificationRule {
    * Disables preview of web links in the sent messages when \&quot;true\&quot;. Defaults to \&quot;false\&quot; .
    * @return disableWebPagePreview
   **/
-  @ApiModelProperty(value = "Disables preview of web links in the sent messages when \"true\". Defaults to \"false\" .")
   public Boolean getDisableWebPagePreview() {
     return disableWebPagePreview;
   }

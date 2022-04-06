@@ -34,6 +34,7 @@ import com.influxdb.client.domain.ResourceMember;
 import com.influxdb.client.domain.ResourceOwner;
 import com.influxdb.client.domain.Telegraf;
 import com.influxdb.client.domain.TelegrafPlugin;
+import com.influxdb.client.domain.TelegrafPluginRequest;
 import com.influxdb.client.domain.User;
 import com.influxdb.exceptions.NotFoundException;
 
@@ -114,28 +115,6 @@ class ITTelegrafsApi extends AbstractITClientTest {
     }
 
     @Test
-    void createTelegrafWithCustomPlugin() {
-
-        String name = generateName("TelegrafConfig");
-
-        TelegrafPlugin custom = new TelegrafPlugin().type(TelegrafPlugin.TypeEnum.INPUTS).name("custom")
-                .putConfigItem("bin", "/sbin/ping")
-                .putConfigItem("count", 10)
-                .putConfigItem("host", "8.8.8.8");
-
-        Telegraf telegrafConfig = telegrafsApi
-                .createTelegraf(name, "test-config", organization.getId(), Collections.singletonList(custom));
-
-        Toml toml = new Toml().read(telegrafConfig.getConfig());
-
-        List<HashMap<String, Object>> inputs = toml.getList("inputs.custom");
-        Assertions.assertThat(inputs.get(0))
-                .hasEntrySatisfying("bin", value -> Assertions.assertThat(value).isEqualTo("/sbin/ping"))
-                .hasEntrySatisfying("count", value -> Assertions.assertThat(value).isEqualTo(10L))
-                .hasEntrySatisfying("host", value -> Assertions.assertThat(value).isEqualTo("8.8.8.8"));
-    }
-
-    @Test
     void pluginWithoutConfiguration() {
 
         Telegraf telegrafConfig = telegrafsApi
@@ -155,10 +134,15 @@ class ITTelegrafsApi extends AbstractITClientTest {
         telegrafConfig.setDescription("updated");
         telegrafConfig.setConfig("my-updated-config");
 
-        telegrafConfig = telegrafsApi.updateTelegraf(telegrafConfig);
+        TelegrafPluginRequest updated = new TelegrafPluginRequest()
+                .name(telegrafConfig.getName())
+                .description("updated")
+                .metadata(telegrafConfig.getMetadata())
+                .orgID(telegrafConfig.getOrgID());
+
+        telegrafConfig = telegrafsApi.updateTelegraf(telegrafConfig.getId(), updated);
 
         Assertions.assertThat(telegrafConfig.getDescription()).isEqualTo("updated");
-        Assertions.assertThat(telegrafConfig.getConfig()).isEqualTo("my-updated-config");
     }
 
     @Test
@@ -403,8 +387,6 @@ class ITTelegrafsApi extends AbstractITClientTest {
         Assertions.assertThat(cloned.getName()).isEqualTo(name);
         Assertions.assertThat(cloned.getOrgID()).isEqualTo(organization.getId());
         Assertions.assertThat(cloned.getDescription()).isEqualTo(source.getDescription());
-        Assertions.assertThat(cloned.getConfig()).isEqualTo(source.getConfig());
-        Assertions.assertThat(cloned.getMetadata().getBuckets()).isEqualTo(source.getMetadata().getBuckets());
 
         List<Label> labels = telegrafsApi.getLabels(cloned);
         Assertions.assertThat(labels).hasSize(1);
@@ -421,25 +403,24 @@ class ITTelegrafsApi extends AbstractITClientTest {
     @Nonnull
     private TelegrafPlugin newCpuPlugin() {
         return new TelegrafPlugin()
-                .type(TelegrafPlugin.TypeEnum.INPUTS)
+                .type(TelegrafPlugin.TypeEnum.INPUT)
                 .name("cpu")
                 .putConfigItem("percpu", true)
                 .putConfigItem("totalcpu", true)
                 .putConfigItem("collect_cpu_time", false)
-                .putConfigItem("report_active", false)
-                .putConfigItem("avoid_null", null);
+                .putConfigItem("report_active", false);
     }
 
     @Nonnull
     private TelegrafPlugin newKernelPlugin() {
-        return new TelegrafPlugin().type(TelegrafPlugin.TypeEnum.INPUTS).name("kernel");
+        return new TelegrafPlugin().type(TelegrafPlugin.TypeEnum.INPUT).name("kernel");
     }
 
     @Nonnull
     private TelegrafPlugin newOutputPlugin() {
 
         return new TelegrafPlugin()
-                .type(TelegrafPlugin.TypeEnum.OUTPUTS)
+                .type(TelegrafPlugin.TypeEnum.OUTPUT)
                 .name("influxdb_v2")
                 .description("my instance")
                 .putConfigItem("organization", "my-org")

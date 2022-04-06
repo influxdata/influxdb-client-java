@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -23,8 +23,6 @@ import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.TaskLinks;
 import com.influxdb.client.domain.TaskStatusType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -168,7 +166,6 @@ public class Task {
    * Get id
    * @return id
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getId() {
     return id;
   }
@@ -179,10 +176,9 @@ public class Task {
   }
 
    /**
-   * The type of task, this can be used for filtering tasks on list actions.
+   * Type of the task, useful for filtering a task list.
    * @return type
   **/
-  @ApiModelProperty(value = "The type of task, this can be used for filtering tasks on list actions.")
   public String getType() {
     return type;
   }
@@ -197,10 +193,9 @@ public class Task {
   }
 
    /**
-   * The ID of the organization that owns this Task.
+   * ID of the organization that owns the task.
    * @return orgID
   **/
-  @ApiModelProperty(required = true, value = "The ID of the organization that owns this Task.")
   public String getOrgID() {
     return orgID;
   }
@@ -215,10 +210,9 @@ public class Task {
   }
 
    /**
-   * The name of the organization that owns this Task.
+   * Name of the organization that owns the task.
    * @return org
   **/
-  @ApiModelProperty(value = "The name of the organization that owns this Task.")
   public String getOrg() {
     return org;
   }
@@ -233,10 +227,9 @@ public class Task {
   }
 
    /**
-   * The name of the task.
+   * Name of the task.
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "The name of the task.")
   public String getName() {
     return name;
   }
@@ -251,10 +244,9 @@ public class Task {
   }
 
    /**
-   * The ID of the user who owns this Task.
+   * ID of the user who owns this Task.
    * @return ownerID
   **/
-  @ApiModelProperty(value = "The ID of the user who owns this Task.")
   public String getOwnerID() {
     return ownerID;
   }
@@ -269,10 +261,9 @@ public class Task {
   }
 
    /**
-   * An optional description of the task.
+   * Description of the task.
    * @return description
   **/
-  @ApiModelProperty(value = "An optional description of the task.")
   public String getDescription() {
     return description;
   }
@@ -290,7 +281,6 @@ public class Task {
    * Get status
    * @return status
   **/
-  @ApiModelProperty(value = "")
   public TaskStatusType getStatus() {
     return status;
   }
@@ -316,7 +306,6 @@ public class Task {
    * Get labels
    * @return labels
   **/
-  @ApiModelProperty(value = "")
   public List<Label> getLabels() {
     return labels;
   }
@@ -331,10 +320,9 @@ public class Task {
   }
 
    /**
-   * The ID of the authorization used when this task communicates with the query engine.
+   * ID of the authorization used when the task communicates with the query engine.
    * @return authorizationID
   **/
-  @ApiModelProperty(value = "The ID of the authorization used when this task communicates with the query engine.")
   public String getAuthorizationID() {
     return authorizationID;
   }
@@ -349,10 +337,9 @@ public class Task {
   }
 
    /**
-   * The Flux script to run for this task.
+   * Flux script to run for this task.
    * @return flux
   **/
-  @ApiModelProperty(required = true, value = "The Flux script to run for this task.")
   public String getFlux() {
     return flux;
   }
@@ -367,10 +354,9 @@ public class Task {
   }
 
    /**
-   * A simple task repetition schedule; parsed from Flux.
+   * Interval at which the task runs. &#x60;every&#x60; also determines when the task first runs, depending on the specified time. Value is a [duration literal](https://docs.influxdata.com/flux/v0.x/spec/lexical-elements/#duration-literals)).
    * @return every
   **/
-  @ApiModelProperty(value = "A simple task repetition schedule; parsed from Flux.")
   public String getEvery() {
     return every;
   }
@@ -385,10 +371,9 @@ public class Task {
   }
 
    /**
-   * A task repetition schedule in the form &#39;* * * * * *&#39;; parsed from Flux.
+   * [Cron expression](https://en.wikipedia.org/wiki/Cron#Overview) that defines the schedule on which the task runs. Cron scheduling is based on system time. Value is a [Cron expression](https://en.wikipedia.org/wiki/Cron#Overview).
    * @return cron
   **/
-  @ApiModelProperty(value = "A task repetition schedule in the form '* * * * * *'; parsed from Flux.")
   public String getCron() {
     return cron;
   }
@@ -403,10 +388,9 @@ public class Task {
   }
 
    /**
-   * Duration to delay after the schedule, before executing the task; parsed from flux, if set to zero it will remove this option and use 0 as the default.
+   * [Duration](https://docs.influxdata.com/flux/v0.x/spec/lexical-elements/#duration-literals) to delay execution of the task after the scheduled time has elapsed. &#x60;0&#x60; removes the offset. The value is a [duration literal](https://docs.influxdata.com/flux/v0.x/spec/lexical-elements/#duration-literals).
    * @return offset
   **/
-  @ApiModelProperty(value = "Duration to delay after the schedule, before executing the task; parsed from flux, if set to zero it will remove this option and use 0 as the default.")
   public String getOffset() {
     return offset;
   }
@@ -416,10 +400,9 @@ public class Task {
   }
 
    /**
-   * Timestamp of latest scheduled, completed run, RFC3339.
+   * Timestamp of the latest scheduled and completed run. Value is a timestamp in [RFC3339 date/time format](https://docs.influxdata.com/flux/v0.x/data-types/basic/time/#time-syntax).
    * @return latestCompleted
   **/
-  @ApiModelProperty(value = "Timestamp of latest scheduled, completed run, RFC3339.")
   public OffsetDateTime getLatestCompleted() {
     return latestCompleted;
   }
@@ -428,7 +411,6 @@ public class Task {
    * Get lastRunStatus
    * @return lastRunStatus
   **/
-  @ApiModelProperty(value = "")
   public LastRunStatusEnum getLastRunStatus() {
     return lastRunStatus;
   }
@@ -437,7 +419,6 @@ public class Task {
    * Get lastRunError
    * @return lastRunError
   **/
-  @ApiModelProperty(value = "")
   public String getLastRunError() {
     return lastRunError;
   }
@@ -446,7 +427,6 @@ public class Task {
    * Get createdAt
    * @return createdAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
@@ -455,7 +435,6 @@ public class Task {
    * Get updatedAt
    * @return updatedAt
   **/
-  @ApiModelProperty(value = "")
   public OffsetDateTime getUpdatedAt() {
     return updatedAt;
   }
@@ -469,7 +448,6 @@ public class Task {
    * Get links
    * @return links
   **/
-  @ApiModelProperty(value = "")
   public TaskLinks getLinks() {
     return links;
   }

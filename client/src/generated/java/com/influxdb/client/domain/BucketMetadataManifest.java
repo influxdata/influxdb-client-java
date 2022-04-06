@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -21,8 +21,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.RetentionPolicyManifest;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +67,6 @@ public class BucketMetadataManifest {
    * Get organizationID
    * @return organizationID
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getOrganizationID() {
     return organizationID;
   }
@@ -87,7 +84,6 @@ public class BucketMetadataManifest {
    * Get organizationName
    * @return organizationName
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getOrganizationName() {
     return organizationName;
   }
@@ -105,7 +101,6 @@ public class BucketMetadataManifest {
    * Get bucketID
    * @return bucketID
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getBucketID() {
     return bucketID;
   }
@@ -123,7 +118,6 @@ public class BucketMetadataManifest {
    * Get bucketName
    * @return bucketName
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getBucketName() {
     return bucketName;
   }
@@ -141,7 +135,6 @@ public class BucketMetadataManifest {
    * Get description
    * @return description
   **/
-  @ApiModelProperty(value = "")
   public String getDescription() {
     return description;
   }
@@ -159,7 +152,6 @@ public class BucketMetadataManifest {
    * Get defaultRetentionPolicy
    * @return defaultRetentionPolicy
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getDefaultRetentionPolicy() {
     return defaultRetentionPolicy;
   }
@@ -182,7 +174,6 @@ public class BucketMetadataManifest {
    * Get retentionPolicies
    * @return retentionPolicies
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<RetentionPolicyManifest> getRetentionPolicies() {
     return retentionPolicies;
   }

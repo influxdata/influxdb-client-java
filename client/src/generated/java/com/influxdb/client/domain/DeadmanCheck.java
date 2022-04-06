@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -27,8 +27,6 @@ import com.influxdb.client.domain.DashboardQuery;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.TaskStatusType;
 import com.influxdb.client.domain.ThresholdCheckTags;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -124,7 +122,6 @@ public class DeadmanCheck extends Check {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(required = true, value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -138,7 +135,6 @@ public class DeadmanCheck extends Check {
    * String duration before deadman triggers.
    * @return timeSince
   **/
-  @ApiModelProperty(value = "String duration before deadman triggers.")
   public String getTimeSince() {
     return timeSince;
   }
@@ -156,7 +152,6 @@ public class DeadmanCheck extends Check {
    * String duration for time that a series is considered stale and should not trigger deadman.
    * @return staleTime
   **/
-  @ApiModelProperty(value = "String duration for time that a series is considered stale and should not trigger deadman.")
   public String getStaleTime() {
     return staleTime;
   }
@@ -174,7 +169,6 @@ public class DeadmanCheck extends Check {
    * If only zero values reported since time, trigger an alert
    * @return reportZero
   **/
-  @ApiModelProperty(value = "If only zero values reported since time, trigger an alert")
   public Boolean getReportZero() {
     return reportZero;
   }
@@ -192,7 +186,6 @@ public class DeadmanCheck extends Check {
    * Get level
    * @return level
   **/
-  @ApiModelProperty(value = "")
   public CheckStatusLevel getLevel() {
     return level;
   }
@@ -210,7 +203,6 @@ public class DeadmanCheck extends Check {
    * Check repetition interval.
    * @return every
   **/
-  @ApiModelProperty(value = "Check repetition interval.")
   public String getEvery() {
     return every;
   }
@@ -228,7 +220,6 @@ public class DeadmanCheck extends Check {
    * Duration to delay after the schedule, before executing check.
    * @return offset
   **/
-  @ApiModelProperty(value = "Duration to delay after the schedule, before executing check.")
   public String getOffset() {
     return offset;
   }
@@ -254,7 +245,6 @@ public class DeadmanCheck extends Check {
    * List of tags to write to each status.
    * @return tags
   **/
-  @ApiModelProperty(value = "List of tags to write to each status.")
   public List<ThresholdCheckTags> getTags() {
     return tags;
   }
@@ -272,7 +262,6 @@ public class DeadmanCheck extends Check {
    * The template used to generate and write a status message.
    * @return statusMessageTemplate
   **/
-  @ApiModelProperty(value = "The template used to generate and write a status message.")
   public String getStatusMessageTemplate() {
     return statusMessageTemplate;
   }

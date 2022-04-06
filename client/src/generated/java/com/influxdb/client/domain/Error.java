@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,8 +20,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -118,34 +116,30 @@ public class Error {
    * code is the machine-readable error code.
    * @return code
   **/
-  @ApiModelProperty(required = true, value = "code is the machine-readable error code.")
   public CodeEnum getCode() {
     return code;
   }
 
    /**
-   * message is a human-readable message.
+   * Human-readable message.
    * @return message
   **/
-  @ApiModelProperty(required = true, value = "message is a human-readable message.")
   public String getMessage() {
     return message;
   }
 
    /**
-   * op describes the logical code operation during error. Useful for debugging.
+   * Describes the logical code operation when the error occurred. Useful for debugging.
    * @return op
   **/
-  @ApiModelProperty(value = "op describes the logical code operation during error. Useful for debugging.")
   public String getOp() {
     return op;
   }
 
    /**
-   * err is a stack of errors that occurred during processing of the request. Useful for debugging.
+   * Stack of errors that occurred during processing of the request. Useful for debugging.
    * @return err
   **/
-  @ApiModelProperty(value = "err is a stack of errors that occurred during processing of the request. Useful for debugging.")
   public String getErr() {
     return err;
   }

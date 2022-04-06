@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -24,8 +24,6 @@ import com.influxdb.client.domain.DashboardColor;
 import com.influxdb.client.domain.DashboardQuery;
 import com.influxdb.client.domain.DecimalPlaces;
 import com.influxdb.client.domain.StaticLegend;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -177,7 +175,6 @@ public class SingleStatViewProperties extends ViewProperties {
    * Get type
    * @return type
   **/
-  @ApiModelProperty(required = true, value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -196,7 +193,6 @@ public class SingleStatViewProperties extends ViewProperties {
    * Get queries
    * @return queries
   **/
-  @ApiModelProperty(required = true, value = "")
   public List<DashboardQuery> getQueries() {
     return queries;
   }
@@ -219,7 +215,6 @@ public class SingleStatViewProperties extends ViewProperties {
    * Colors define color encoding of data into a visualization
    * @return colors
   **/
-  @ApiModelProperty(required = true, value = "Colors define color encoding of data into a visualization")
   public List<DashboardColor> getColors() {
     return colors;
   }
@@ -232,7 +227,6 @@ public class SingleStatViewProperties extends ViewProperties {
    * Get shape
    * @return shape
   **/
-  @ApiModelProperty(required = true, value = "")
   public ShapeEnum getShape() {
     return shape;
   }
@@ -246,7 +240,6 @@ public class SingleStatViewProperties extends ViewProperties {
    * Get note
    * @return note
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getNote() {
     return note;
   }
@@ -264,7 +257,6 @@ public class SingleStatViewProperties extends ViewProperties {
    * If true, will display note when empty
    * @return showNoteWhenEmpty
   **/
-  @ApiModelProperty(required = true, value = "If true, will display note when empty")
   public Boolean getShowNoteWhenEmpty() {
     return showNoteWhenEmpty;
   }
@@ -282,7 +274,6 @@ public class SingleStatViewProperties extends ViewProperties {
    * Get prefix
    * @return prefix
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getPrefix() {
     return prefix;
   }
@@ -300,7 +291,6 @@ public class SingleStatViewProperties extends ViewProperties {
    * Get tickPrefix
    * @return tickPrefix
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getTickPrefix() {
     return tickPrefix;
   }
@@ -318,7 +308,6 @@ public class SingleStatViewProperties extends ViewProperties {
    * Get suffix
    * @return suffix
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getSuffix() {
     return suffix;
   }
@@ -336,7 +325,6 @@ public class SingleStatViewProperties extends ViewProperties {
    * Get tickSuffix
    * @return tickSuffix
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getTickSuffix() {
     return tickSuffix;
   }
@@ -354,7 +342,6 @@ public class SingleStatViewProperties extends ViewProperties {
    * Get staticLegend
    * @return staticLegend
   **/
-  @ApiModelProperty(value = "")
   public StaticLegend getStaticLegend() {
     return staticLegend;
   }
@@ -372,7 +359,6 @@ public class SingleStatViewProperties extends ViewProperties {
    * Get decimalPlaces
    * @return decimalPlaces
   **/
-  @ApiModelProperty(required = true, value = "")
   public DecimalPlaces getDecimalPlaces() {
     return decimalPlaces;
   }

@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -22,8 +22,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.BucketRetentionRules;
 import com.influxdb.client.domain.SchemaType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +64,6 @@ public class PostBucketRequest {
    * Get orgID
    * @return orgID
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getOrgID() {
     return orgID;
   }
@@ -84,7 +81,6 @@ public class PostBucketRequest {
    * Get name
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "")
   public String getName() {
     return name;
   }
@@ -102,7 +98,6 @@ public class PostBucketRequest {
    * Get description
    * @return description
   **/
-  @ApiModelProperty(value = "")
   public String getDescription() {
     return description;
   }
@@ -120,7 +115,6 @@ public class PostBucketRequest {
    * Get rp
    * @return rp
   **/
-  @ApiModelProperty(value = "")
   public String getRp() {
     return rp;
   }
@@ -143,7 +137,6 @@ public class PostBucketRequest {
    * Rules to expire or retain data.  No rules means data never expires.
    * @return retentionRules
   **/
-  @ApiModelProperty(required = true, value = "Rules to expire or retain data.  No rules means data never expires.")
   public List<BucketRetentionRules> getRetentionRules() {
     return retentionRules;
   }
@@ -161,7 +154,6 @@ public class PostBucketRequest {
    * Get schemaType
    * @return schemaType
   **/
-  @ApiModelProperty(value = "")
   public SchemaType getSchemaType() {
     return schemaType;
   }

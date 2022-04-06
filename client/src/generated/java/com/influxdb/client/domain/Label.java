@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,8 +20,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +50,6 @@ public class Label {
    * Get id
    * @return id
   **/
-  @ApiModelProperty(value = "")
   public String getId() {
     return id;
   }
@@ -61,7 +58,6 @@ public class Label {
    * Get orgID
    * @return orgID
   **/
-  @ApiModelProperty(value = "")
   public String getOrgID() {
     return orgID;
   }
@@ -75,7 +71,6 @@ public class Label {
    * Get name
    * @return name
   **/
-  @ApiModelProperty(value = "")
   public String getName() {
     return name;
   }
@@ -101,7 +96,6 @@ public class Label {
    * Key/Value pairs associated with this label. Keys can be removed by sending an update with an empty value.
    * @return properties
   **/
-  @ApiModelProperty(example = "{\"color\":\"ffb3b3\",\"description\":\"this is a description\"}", value = "Key/Value pairs associated with this label. Keys can be removed by sending an update with an empty value.")
   public Map<String, String> getProperties() {
     return properties;
   }

@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -20,14 +20,11 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
  * StaticLegend represents the options specific to the static legend
  */
-@ApiModel(description = "StaticLegend represents the options specific to the static legend")
 
 public class StaticLegend {
   public static final String SERIALIZED_NAME_COLORIZE_ROWS = "colorizeRows";
@@ -67,7 +64,6 @@ public class StaticLegend {
    * Get colorizeRows
    * @return colorizeRows
   **/
-  @ApiModelProperty(value = "")
   public Boolean getColorizeRows() {
     return colorizeRows;
   }
@@ -85,7 +81,6 @@ public class StaticLegend {
    * Get heightRatio
    * @return heightRatio
   **/
-  @ApiModelProperty(value = "")
   public Float getHeightRatio() {
     return heightRatio;
   }
@@ -103,7 +98,6 @@ public class StaticLegend {
    * Get show
    * @return show
   **/
-  @ApiModelProperty(value = "")
   public Boolean getShow() {
     return show;
   }
@@ -121,7 +115,6 @@ public class StaticLegend {
    * Get opacity
    * @return opacity
   **/
-  @ApiModelProperty(value = "")
   public Float getOpacity() {
     return opacity;
   }
@@ -139,7 +132,6 @@ public class StaticLegend {
    * Get orientationThreshold
    * @return orientationThreshold
   **/
-  @ApiModelProperty(value = "")
   public Integer getOrientationThreshold() {
     return orientationThreshold;
   }
@@ -157,7 +149,6 @@ public class StaticLegend {
    * Get valueAxis
    * @return valueAxis
   **/
-  @ApiModelProperty(value = "")
   public String getValueAxis() {
     return valueAxis;
   }
@@ -175,7 +166,6 @@ public class StaticLegend {
    * Get widthRatio
    * @return widthRatio
   **/
-  @ApiModelProperty(value = "")
   public Float getWidthRatio() {
     return widthRatio;
   }

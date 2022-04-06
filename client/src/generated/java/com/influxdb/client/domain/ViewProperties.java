@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -39,6 +39,7 @@ import com.influxdb.client.domain.XYGeom;
 import com.influxdb.client.domain.XYViewProperties;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ViewProperties

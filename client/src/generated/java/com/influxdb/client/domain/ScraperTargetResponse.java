@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -22,8 +22,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.influxdb.client.domain.ScraperTargetRequest;
 import com.influxdb.client.domain.ScraperTargetResponseLinks;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -51,7 +49,6 @@ public class ScraperTargetResponse extends ScraperTargetRequest {
    * Get id
    * @return id
   **/
-  @ApiModelProperty(value = "")
   public String getId() {
     return id;
   }
@@ -65,7 +62,6 @@ public class ScraperTargetResponse extends ScraperTargetRequest {
    * The name of the organization.
    * @return org
   **/
-  @ApiModelProperty(value = "The name of the organization.")
   public String getOrg() {
     return org;
   }
@@ -83,7 +79,6 @@ public class ScraperTargetResponse extends ScraperTargetRequest {
    * The bucket name.
    * @return bucket
   **/
-  @ApiModelProperty(value = "The bucket name.")
   public String getBucket() {
     return bucket;
   }
@@ -101,7 +96,6 @@ public class ScraperTargetResponse extends ScraperTargetRequest {
    * Get links
    * @return links
   **/
-  @ApiModelProperty(value = "")
   public ScraperTargetResponseLinks getLinks() {
     return links;
   }

@@ -1,5 +1,5 @@
 /*
- * Influx OSS API Service
+ * InfluxDB OSS API Service
  * The InfluxDB v2 API provides a programmatic interface for all interactions with InfluxDB. Access the InfluxDB API using the `/api/v2/` endpoint. 
  *
  * OpenAPI spec version: 2.0.0
@@ -24,8 +24,6 @@ import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.User;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
@@ -58,7 +56,6 @@ public class OnboardingResponse {
    * Get user
    * @return user
   **/
-  @ApiModelProperty(value = "")
   public User getUser() {
     return user;
   }
@@ -76,7 +73,6 @@ public class OnboardingResponse {
    * Get org
    * @return org
   **/
-  @ApiModelProperty(value = "")
   public Organization getOrg() {
     return org;
   }
@@ -94,7 +90,6 @@ public class OnboardingResponse {
    * Get bucket
    * @return bucket
   **/
-  @ApiModelProperty(value = "")
   public Bucket getBucket() {
     return bucket;
   }
@@ -112,7 +107,6 @@ public class OnboardingResponse {
    * Get auth
    * @return auth
   **/
-  @ApiModelProperty(value = "")
   public Authorization getAuth() {
     return auth;
   }
