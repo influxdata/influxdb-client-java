@@ -47,7 +47,7 @@ import com.influxdb.client.domain.Variable;
 import com.influxdb.exceptions.UnprocessableEntityException;
 
 /**
- * The client of theInfluxDB 2.0for Time Series that implements HTTP API defined by
+ * The client of theInfluxDB 2.x for Time Series that implements HTTP API defined by
  * <a href="https://github.com/influxdata/influxdb/blob/master/http/swagger.yml">Influx API Service swagger.yml</a>.
  *
  * @author Jakub Bednar (bednar@github) (11/10/2018 08:56)
@@ -291,7 +291,7 @@ public interface InfluxDBClient extends AutoCloseable {
     String version();
 
     /**
-     * The readiness of the InfluxDB 2.0.
+     * The readiness of the InfluxDB 2.x.
      *
      * @return return null if the InfluxDB is not ready
      */

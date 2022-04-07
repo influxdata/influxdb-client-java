@@ -37,7 +37,7 @@ import com.influxdb.client.domain.PagerDutyNotificationEndpoint;
 import com.influxdb.client.domain.SlackNotificationEndpoint;
 
 /**
- * The client of the InfluxDB 2.0 that implement NotificationEndpoint HTTP API.
+ * The client of the InfluxDB 2.x that implement NotificationEndpoint HTTP API.
  *
  * @author Jakub Bednar (11/09/2019 09:20)
  */

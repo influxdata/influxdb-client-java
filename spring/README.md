@@ -1,4 +1,4 @@
-# Spring Integration for InfluxDB 2.0
+# Spring Integration for InfluxDB 2.x
 
 [![javadoc](https://img.shields.io/badge/javadoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html)
 
@@ -34,7 +34,7 @@ If you want to configure the `InfluxDBClientReactive` client, you need to includ
 
 ## Actuator for InfluxDB2 micrometer registry
 
-To enable export metrics to **InfluxDB 2.0** you need to include `micrometer-registry-influx` on your classpath.
+To enable export metrics to **InfluxDB 2.x** you need to include `micrometer-registry-influx` on your classpath.
 
 The default configuration can be override via properties:
 
@@ -71,12 +71,12 @@ dependencies {
  
 ## Actuator for InfluxDB2 health
 
-The `/health` endpoint can monitor an **InfluxDB 2.0** server.
+The `/health` endpoint can monitor an **InfluxDB 2.x** server.
 
-InfluxDB 2.0 health check relies on `InfluxDBClient` and can be configured via:
+InfluxDB 2.x health check relies on `InfluxDBClient` and can be configured via:
 
 ```yaml
-management.health.influx.enabled=true # Whether to enable InfluxDB 2.0 health check.
+management.health.influx.enabled=true # Whether to enable InfluxDB 2.x health check.
 ```
 
 ## Version

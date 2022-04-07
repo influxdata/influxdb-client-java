@@ -40,7 +40,7 @@ import com.influxdb.client.domain.User;
 import com.influxdb.client.domain.View;
 
 /**
- * The client of the InfluxDB 2.0 that implement Dashboards HTTP API endpoint.
+ * The client of the InfluxDB 2.x that implement Dashboards HTTP API endpoint.
  *
  * @author Jakub Bednar (bednar@github) (01/04/2019 10:47)
  */

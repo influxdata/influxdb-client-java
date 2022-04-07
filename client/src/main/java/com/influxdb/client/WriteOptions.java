@@ -33,7 +33,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
 /**
- * WriteOptions are used to configure writes the data point into InfluxDB 2.0.
+ * WriteOptions are used to configure writes the data point into InfluxDB 2.x.
  *
  * <p>
  * The default setting use the batching configured to (consistent with Telegraf):

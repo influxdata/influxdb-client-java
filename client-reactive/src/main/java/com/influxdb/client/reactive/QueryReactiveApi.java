@@ -33,7 +33,7 @@ import com.influxdb.query.FluxRecord;
 import org.reactivestreams.Publisher;
 
 /**
- * The client that allow perform Flux query against the InfluxDB 2.0 by a reactive way.
+ * The client that allow perform Flux query against the InfluxDB 2.x by a reactive way.
  *
  * For parametrized queries use {@link Query} object, see <code>com.influxdb.client.QueryApi</code> in Java module
  * for more details.
@@ -199,7 +199,7 @@ public interface QueryReactiveApi {
                            @Nonnull final Class<M> measurementType);
 
     /**
-     * Returns {@link Publisher} emitting raw response fromInfluxDB 2.0server line by line.
+     * Returns {@link Publisher} emitting raw response fromInfluxDB 2.x server line by line.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
      *
@@ -210,7 +210,7 @@ public interface QueryReactiveApi {
     Publisher<String> queryRaw(@Nonnull final String query);
 
     /**
-     * Returns {@link Publisher} emitting raw response fromInfluxDB 2.0server line by line.
+     * Returns {@link Publisher} emitting raw response fromInfluxDB 2.x server line by line.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
      *
@@ -221,7 +221,7 @@ public interface QueryReactiveApi {
     Publisher<String> queryRaw(@Nonnull Query query);
 
     /**
-     * Returns {@link Publisher} emitting raw response fromInfluxDB 2.0server line by line.
+     * Returns {@link Publisher} emitting raw response fromInfluxDB 2.x server line by line.
      *
      * @param query the Flux query to execute
      * @param org   specifies the source organization
@@ -252,7 +252,7 @@ public interface QueryReactiveApi {
     Publisher<String> queryRaw(@Nonnull final Publisher<String> queryStream, @Nonnull final String org);
 
     /**
-     * Returns {@link Publisher} emitting queryRaw response fromInfluxDB 2.0server line by line.
+     * Returns {@link Publisher} emitting queryRaw response fromInfluxDB 2.x server line by line.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
      *
@@ -266,7 +266,7 @@ public interface QueryReactiveApi {
                                @Nullable final Dialect dialect);
 
     /**
-     * Returns {@link Publisher} emitting queryRaw response fromInfluxDB 2.0server line by line.
+     * Returns {@link Publisher} emitting queryRaw response fromInfluxDB 2.x server line by line.
      *
      * @param dialect Dialect is an object defining the options to use when encoding the response.
      *                <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
@@ -280,7 +280,7 @@ public interface QueryReactiveApi {
                                @Nonnull final String org);
 
     /**
-     * Returns {@link Publisher} emitting queryRaw response fromInfluxDB 2.0server line by line.
+     * Returns {@link Publisher} emitting queryRaw response fromInfluxDB 2.x server line by line.
      *
      * @param dialect Dialect is an object defining the options to use when encoding the response.
      *                <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
@@ -294,7 +294,7 @@ public interface QueryReactiveApi {
                                @Nonnull final String org);
 
     /**
-     * Returns {@link Publisher} emitting queryRaw response fromInfluxDB 2.0server line by line.
+     * Returns {@link Publisher} emitting queryRaw response fromInfluxDB 2.x server line by line.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
      *
@@ -308,7 +308,7 @@ public interface QueryReactiveApi {
                                @Nullable final Dialect dialect);
 
     /**
-     * Returns {@link Publisher} emitting queryRaw response fromInfluxDB 2.0server line by line.
+     * Returns {@link Publisher} emitting queryRaw response fromInfluxDB 2.x server line by line.
      *
      * @param dialect     Dialect is an object defining the options to use when encoding the response.
      *                    <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.
@@ -322,7 +322,7 @@ public interface QueryReactiveApi {
                                @Nonnull final String org);
 
     /**
-     * Returns {@link Publisher} emitting queryRaw response fromInfluxDB 2.0server line by line.
+     * Returns {@link Publisher} emitting queryRaw response fromInfluxDB 2.x server line by line.
      *
      * @param dialect     Dialect is an object defining the options to use when encoding the response.
      *                    <a href="http://bit.ly/flux-dialect">See dialect SPEC.</a>.

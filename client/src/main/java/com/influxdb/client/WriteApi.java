@@ -37,7 +37,7 @@ import com.influxdb.client.write.events.WriteRetriableErrorEvent;
 import com.influxdb.client.write.events.WriteSuccessEvent;
 
 /**
- * The asynchronous non-blocking API to Write time-series data into InfluxDB 2.0.
+ * The asynchronous non-blocking API to Write time-series data into InfluxDB 2.x.
  * <p>
  * The data are formatted in <a href="https://bit.ly/line-protocol">Line Protocol</a>.
  * <p>
@@ -228,7 +228,7 @@ public interface WriteApi extends AutoCloseable {
                                                                      @Nonnull final EventListener<T> listener);
 
     /**
-     * Forces the client to flush all pending writes from the buffer toInfluxDB 2.0via HTTP.
+     * Forces the client to flush all pending writes from the buffer toInfluxDB 2.x via HTTP.
      */
     void flush();
 

@@ -2,7 +2,7 @@
 
 [![javadoc](https://img.shields.io/badge/javadoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/index.html)
 
-The reference reactive Java client for InfluxDB 2.0. The client provide supports for asynchronous stream processing with backpressure as is defined by the [Reactive Streams specification](http://www.reactive-streams.org/).
+The reference reactive Java client for InfluxDB 2.x. The client provide supports for asynchronous stream processing with backpressure as is defined by the [Reactive Streams specification](http://www.reactive-streams.org/).
 
 ## Important
 
@@ -13,7 +13,7 @@ That means no request to InfluxDB is trigger until register a subscription to `P
 
 This section contains links to the client library documentation.
 
-* [Product documentation](https://docs.influxdata.com/influxdb/v2.0/api-guide/client-libraries/), [Getting Started](#queries)
+* [Product documentation](https://docs.influxdata.com/influxdb/latest/api-guide/client-libraries/), [Getting Started](#queries)
 * [Examples](../examples)
 * [API Reference](https://influxdata.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/index.html)
 * [Changelog](../CHANGELOG.md)

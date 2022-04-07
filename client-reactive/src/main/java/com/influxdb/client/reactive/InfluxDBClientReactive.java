@@ -30,7 +30,7 @@ import com.influxdb.client.domain.HealthCheck;
 import org.reactivestreams.Publisher;
 
 /**
- *  The reference RxJava client for the <a href="https://github.com/influxdata/influxdb">InfluxDB 2.0</a>
+ *  The reference RxJava client for the <a href="https://github.com/influxdata/influxdb">InfluxDB 2.x</a>
  *  that allows query and write in a reactive way.
  *
  * @author Jakub Bednar (bednar@github) (20/11/2018 07:08)

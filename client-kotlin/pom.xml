@@ -33,9 +33,9 @@
     <artifactId>influxdb-client-kotlin</artifactId>
     <packaging>jar</packaging>
 
-    <name>The Kotlin InfluxDB 2.0 Client</name>
+    <name>The Kotlin InfluxDB 2.x Client</name>
     <description>
-        The reference Kotlin client that allows query and write for the InfluxDB 2.0
+        The reference Kotlin client that allows query and write for the InfluxDB 2.x
         by Kotlin Channel and Flow coroutines.
     </description>
 

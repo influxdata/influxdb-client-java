@@ -34,9 +34,9 @@
   <artifactId>influxdb-client-scala_2.13</artifactId>
   <packaging>jar</packaging>
 
-  <name>The Scala InfluxDB 2.0 Client [Scala 2.13]</name>
+  <name>The Scala InfluxDB 2.x Client [Scala 2.13]</name>
   <description>
-    The reference Scala client that allows query and write for the InfluxDB 2.0 by Akka Streams.
+    The reference Scala client that allows query and write for the InfluxDB 2.x by Akka Streams.
   </description>
 
   <url>https://github.com/influxdata/influxdb-client-java/tree/master/client-scala</url>

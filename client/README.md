@@ -2,7 +2,7 @@
 
 [![javadoc](https://img.shields.io/badge/javadoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html)
 
-The reference Java client that allows query, write and management (bucket, organization, users) for the InfluxDB 2.0.
+The reference Java client that allows query, write and management (bucket, organization, users) for the InfluxDB 2.x.
 
 ## Features
  
@@ -13,7 +13,7 @@ The reference Java client that allows query, write and management (bucket, organ
     - [Data Point](#by-data-point) 
     - [POJO](#by-pojo)
     - [Default Tags](#default-tags)
-- [InfluxDB 2.0 Management API](#management-api)
+- [InfluxDB 2.x Management API](#management-api)
     - sources, buckets
     - tasks
     - authorizations
@@ -798,7 +798,7 @@ The client has following management API:
 | **/health** | Get the health of an instance anytime during execution | [InfluxDBClient#health()](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/com/influxdb/client/InfluxDBClient.html#health--) |
 
 
-The following example demonstrates how to use a InfluxDB 2.0 Management API. For further information see endpoints Javadoc.
+The following example demonstrates how to use a InfluxDB 2.x Management API. For further information see endpoints Javadoc.
 
 ```java
 package example;
@@ -994,7 +994,7 @@ influxDBClient
 
 ### Delete data
 
-The following example demonstrates how to delete data from InfluxDB 2.0.
+The following example demonstrates how to delete data from InfluxDB 2.x.
 
 ```java
 package example;

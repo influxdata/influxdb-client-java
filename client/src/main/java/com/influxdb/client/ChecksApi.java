@@ -36,7 +36,7 @@ import com.influxdb.client.domain.Threshold;
 import com.influxdb.client.domain.ThresholdCheck;
 
 /**
- * The client of the InfluxDB 2.0 that implement Check Api.
+ * The client of the InfluxDB 2.x that implement Check Api.
  *
  * @author Jakub Bednar (18/09/2019 08:07)
  */

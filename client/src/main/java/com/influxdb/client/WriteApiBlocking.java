@@ -32,7 +32,7 @@ import com.influxdb.exceptions.InfluxException;
 
 
 /**
- * The synchronous blocking API to Write time-series data into InfluxDB 2.0.
+ * The synchronous blocking API to Write time-series data into InfluxDB 2.x.
  * <p>
  * The data are formatted in <a href="https://bit.ly/line-protocol">Line Protocol</a>.
  * <p>
@@ -51,7 +51,7 @@ public interface WriteApiBlocking {
      * </p>
      *
      * <p>
-     * NOTE: This method directly write data info InfluxDB 2.0 without batching, jittering and backpressure.
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
      * The method blocks the executing thread until their operation finished.
      * There is also non-blocking alternative {@link WriteApi#writeRecord(WritePrecision, String)}.
      * </p>
@@ -68,7 +68,7 @@ public interface WriteApiBlocking {
      * Write Line Protocol record into specified bucket.
      *
      * <p>
-     * NOTE: This method directly write data info InfluxDB 2.0 without batching, jittering and backpressure.
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
      * The method blocks the executing thread until their operation finished.
      * There is also non-blocking alternative {@link WriteApi#writeRecords(String, String, WritePrecision, List)}.
      * </p>
@@ -94,7 +94,7 @@ public interface WriteApiBlocking {
      * </p>
      *
      * <p>
-     * NOTE: This method directly write data info InfluxDB 2.0 without batching, jittering and backpressure.
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
      * The method blocks the executing thread until their operation finished.
      * There is also non-blocking alternative {@link WriteApi#writeRecords(WritePrecision, List)}.
      * </p>
@@ -110,7 +110,7 @@ public interface WriteApiBlocking {
      * Write Line Protocol records into specified bucket.
      *
      * <p>
-     * NOTE: This method directly write data info InfluxDB 2.0 without batching, jittering and backpressure.
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
      * The method blocks the executing thread until their operation finished.
      * There is also non-blocking alternative {@link WriteApi#writeRecords(String, String, WritePrecision, List)}.
      * </p>
@@ -135,7 +135,7 @@ public interface WriteApiBlocking {
      * </p>
      *
      * <p>
-     * NOTE: This method directly write data info InfluxDB 2.0 without batching, jittering and backpressure.
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
      * The method blocks the executing thread until their operation finished.
      * There is also non-blocking alternative {@link WriteApi#writePoint(Point)}.
      * </p>
@@ -149,7 +149,7 @@ public interface WriteApiBlocking {
      * Write Data point into specified bucket.
      *
      * <p>
-     * NOTE: This method directly write data info InfluxDB 2.0 without batching, jittering and backpressure.
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
      * The method blocks the executing thread until their operation finished.
      * There is also non-blocking alternative {@link WriteApi#writePoint(String, String, Point)}.
      * </p>
@@ -172,7 +172,7 @@ public interface WriteApiBlocking {
      * </p>
      *
      * <p>
-     * NOTE: This method directly write data info InfluxDB 2.0 without batching, jittering and backpressure.
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
      * The method blocks the executing thread until their operation finished.
      * There is also non-blocking alternative {@link WriteApi#writePoints(List)}.
      * </p>
@@ -187,7 +187,7 @@ public interface WriteApiBlocking {
      * Write Data points into specified bucket.
      *
      * <p>
-     * NOTE: This method directly write data info InfluxDB 2.0 without batching, jittering and backpressure.
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
      * The method blocks the executing thread until their operation finished.
      * There is also non-blocking alternative {@link WriteApi#writePoints(String, String, List)}.
      * </p>
@@ -210,7 +210,7 @@ public interface WriteApiBlocking {
      * </p>
      *
      * <p>
-     * NOTE: This method directly write data info InfluxDB 2.0 without batching, jittering and backpressure.
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
      * The method blocks the executing thread until their operation finished.
      * There is also non-blocking alternative {@link WriteApi#writeMeasurement(WritePrecision, Object)}.
      * </p>
@@ -227,7 +227,7 @@ public interface WriteApiBlocking {
      * Write Measurement into specified bucket.
      *
      * <p>
-     * NOTE: This method directly write data info InfluxDB 2.0 without batching, jittering and backpressure.
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
      * The method blocks the executing thread until their operation finished.
      * There is also non-blocking alternative {@link WriteApi#writeMeasurement(String, String, WritePrecision, Object)}.
      * </p>
@@ -253,7 +253,7 @@ public interface WriteApiBlocking {
      * </p>
      *
      * <p>
-     * NOTE: This method directly write data info InfluxDB 2.0 without batching, jittering and backpressure.
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
      * The method blocks the executing thread until their operation finished.
      * There is also non-blocking alternative {@link WriteApi#writeMeasurements(WritePrecision, List)}.
      * </p>
@@ -270,7 +270,7 @@ public interface WriteApiBlocking {
      * Write Measurements into specified bucket.
      *
      * <p>
-     * NOTE: This method directly write data info InfluxDB 2.0 without batching, jittering and backpressure.
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
      * The method blocks the executing thread until their operation finished.
      * There is also non-blocking alternative {@link WriteApi#writeMeasurements(String, String, WritePrecision, List)}.
      * </p>

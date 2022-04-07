@@ -35,7 +35,7 @@ class InfluxDBClientKotlinFactory {
     companion object {
 
         /**
-         * Create an instance of the InfluxDB 2.0 client that is configured via {@code influx2.properties}.
+         * Create an instance of the InfluxDB 2.x client that is configured via {@code influx2.properties}.
          * The {@code influx2.properties} has to be located on classpath.
          *
          * @return client
@@ -50,7 +50,7 @@ class InfluxDBClientKotlinFactory {
         }
 
         /**
-         * Create an instance of the InfluxDB 2.0 client. The url could be a connection string with various configurations.
+         * Create an instance of the InfluxDB 2.x client. The url could be a connection string with various configurations.
          *
          * e.g.: "http://localhost:8086?readTimeout=5000&amp;connectTimeout=5000&amp;logLevel=BASIC
          *
@@ -67,7 +67,7 @@ class InfluxDBClientKotlinFactory {
         }
 
         /**
-         * Create an instance of the InfluxDB 2.0 reactive client.
+         * Create an instance of the InfluxDB 2.x reactive client.
          *
          * <p>
          * The <i>username/password</i> auth is based on
@@ -95,7 +95,7 @@ class InfluxDBClientKotlinFactory {
         }
 
         /**
-         * Create an instance of the InfluxDB 2.0 reactive client.
+         * Create an instance of the InfluxDB 2.x reactive client.
          *
          * @param url   the url to connect to the InfluxDB
          * @param token the token to use for the authorization
@@ -108,7 +108,7 @@ class InfluxDBClientKotlinFactory {
         }
 
         /**
-         * Create an instance of the InfluxDB 2.0 reactive client.
+         * Create an instance of the InfluxDB 2.x reactive client.
          *
          * @param url   the url to connect to the InfluxDB
          * @param token the token to use for the authorization
@@ -122,7 +122,7 @@ class InfluxDBClientKotlinFactory {
         }
 
         /**
-         * Create an instance of the InfluxDB 2.0 reactive client.
+         * Create an instance of the InfluxDB 2.x reactive client.
          *
          * @param url   the url to connect to the InfluxDB
          * @param token the token to use for the authorization
@@ -144,7 +144,7 @@ class InfluxDBClientKotlinFactory {
         }
 
         /**
-         * Create an instance of the InfluxDB 2.0 reactive client.
+         * Create an instance of the InfluxDB 2.x reactive client.
          *
          * @param options the connection configuration
          * @return client

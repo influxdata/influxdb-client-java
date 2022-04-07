@@ -40,7 +40,7 @@ import com.influxdb.client.domain.SlackNotificationRule;
 import com.influxdb.client.domain.TagRule;
 
 /**
- * The client of the InfluxDB 2.0 that implement NotificationRules HTTP API endpoint.
+ * The client of the InfluxDB 2.x that implement NotificationRules HTTP API endpoint.
  *
  * @author Jakub Bednar (23/09/2019 10:43)
  */

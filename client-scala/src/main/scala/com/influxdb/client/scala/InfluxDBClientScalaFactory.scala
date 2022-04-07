@@ -36,7 +36,7 @@ object InfluxDBClientScalaFactory {
 
 
   /**
-   * Create an instance of the InfluxDB 2.0 client that is configured via `influx2.properties`.
+   * Create an instance of the InfluxDB 2.x client that is configured via `influx2.properties`.
    * The `influx2.properties` has to be located on classpath.
    *
    * @return client
@@ -51,7 +51,7 @@ object InfluxDBClientScalaFactory {
   }
 
   /**
-   * Create an instance of the InfluxDB 2.0 client. The url could be a connection string with various configurations.
+   * Create an instance of the InfluxDB 2.x client. The url could be a connection string with various configurations.
    *
    * e.g.: "http://localhost:8086?readTimeout=5000&amp;connectTimeout=5000&amp;logLevel=BASIC
    *
@@ -68,7 +68,7 @@ object InfluxDBClientScalaFactory {
   }
 
   /**
-   * Create an instance of the InfluxDB 2.0 reactive client.
+   * Create an instance of the InfluxDB 2.x reactive client.
    *
    * The ''username/password'' auth is based on
    * [[http://bit.ly/http-basic-auth HTTP "Basic" authentication]]. The authorization expires when the
@@ -92,7 +92,7 @@ object InfluxDBClientScalaFactory {
   }
 
   /**
-   * Create an instance of the InfluxDB 2.0 reactive client.
+   * Create an instance of the InfluxDB 2.x reactive client.
    *
    * @param url   the url to connect to the InfluxDB
    * @param token the token to use for the authorization
@@ -105,7 +105,7 @@ object InfluxDBClientScalaFactory {
   }
 
   /**
-   * Create an instance of the InfluxDB 2.0 reactive client.
+   * Create an instance of the InfluxDB 2.x reactive client.
    *
    * @param url   the url to connect to the InfluxDB
    * @param token the token to use for the authorization
@@ -119,7 +119,7 @@ object InfluxDBClientScalaFactory {
   }
 
   /**
-   * Create an instance of the InfluxDB 2.0 reactive client.
+   * Create an instance of the InfluxDB 2.x reactive client.
    *
    * @param url   the url to connect to the InfluxDB
    * @param token the token to use for the authorization
@@ -141,7 +141,7 @@ object InfluxDBClientScalaFactory {
   }
 
   /**
-   * Create an instance of the InfluxDB 2.0 reactive client.
+   * Create an instance of the InfluxDB 2.x reactive client.
    *
    * @param options the connection configuration
    * @return client

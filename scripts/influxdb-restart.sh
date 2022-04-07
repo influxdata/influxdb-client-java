@@ -64,10 +64,10 @@ echo "Wait to start InfluxDB"
 wget -S --spider --tries=20 --retry-connrefused --waitretry=5 http://localhost:8086/ping
 
 #
-# InfluxDB 2.0
+# InfluxDB 2.x
 #
 echo
-echo "Restarting InfluxDB 2.0 [${INFLUXDB_V2_IMAGE}] ... "
+echo "Restarting InfluxDB 2.x [${INFLUXDB_V2_IMAGE}] ... "
 echo
 
 docker pull ${INFLUXDB_V2_IMAGE} || true
@@ -79,7 +79,7 @@ docker run \
        --publish 9999:9999 \
        ${INFLUXDB_V2_IMAGE}
 
-echo "Wait to start InfluxDB 2.0"
+echo "Wait to start InfluxDB 2.x"
 wget -S --spider --tries=20 --retry-connrefused --waitretry=5 http://localhost:9999/metrics
 
 echo
@@ -95,10 +95,10 @@ curl -i -X POST http://localhost:9999/api/v2/setup -H 'accept: application/json'
         }'
 
 #
-# InfluxDB 2.0
+# InfluxDB 2.x
 #
 echo
-echo "Restarting InfluxDB 2.0 for onboarding test... "
+echo "Restarting InfluxDB 2.x for onboarding test... "
 echo
 
 docker run \

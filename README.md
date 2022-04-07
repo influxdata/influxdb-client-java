@@ -9,15 +9,15 @@
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/influxdata/influxdb-client-java.svg)](https://github.com/influxdata/influxdb-client-java/pulls)
 [![Slack Status](https://img.shields.io/badge/slack-join_chat-white.svg?logo=slack&style=social)](https://www.influxdata.com/slack)
 
-This repository contains the reference JVM clients for the InfluxDB 2.0. Currently, Java, Reactive, Kotlin and Scala clients are implemented.
+This repository contains the reference JVM clients for the InfluxDB 2.x. Currently, Java, Reactive, Kotlin and Scala clients are implemented.
 
 #### Note: Use this client library with InfluxDB 2.x and InfluxDB 1.8+ ([see details](#influxdb-18-api-compatibility)). For connecting to InfluxDB 1.7 or earlier instances, use the [influxdb-java](https://github.com/influxdata/influxdb-java) client library.
 
 - [Features](#features)
 - [Clients](#clients)
 - [How To Use](#how-to-use)
-    - [Writes and Queries in InfluxDB 2.0](#writes-and-queries-in-influxdb-20)
-    - [Use Management API to create a new Bucket in InfluxDB 2.0](#use-management-api-to-create-a-new-bucket-in-influxdb-20)
+    - [Writes and Queries in InfluxDB 2.x](#writes-and-queries-in-influxdb-2x)
+    - [Use Management API to create a new Bucket in InfluxDB 2.x](#use-management-api-to-create-a-new-bucket-in-influxdb-2x)
     - [Flux queries in InfluxDB 1.7+](#flux-queries-in-influxdb-17)
 - [Build Requirements](#build-requirements)
 - [Contributing](#contributing)
@@ -27,20 +27,20 @@ This repository contains the reference JVM clients for the InfluxDB 2.0. Current
 
 This section contains links to the client library documentation.
 
-* [Product documentation](https://docs.influxdata.com/influxdb/v2.0/api-guide/client-libraries/), [Getting Started](#how-to-use)
+* [Product documentation](https://docs.influxdata.com/influxdb/v2.x/api-guide/client-libraries/), [Getting Started](#how-to-use)
 * [Examples](examples)
 * [API Reference](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html)
 * [Changelog](CHANGELOG.md)
 
 ## Features
 
-- InfluxDB 2.0 client
+- InfluxDB 2.x client
     - Querying data using the Flux language
     - Writing data using
         - [Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/) 
         - [Data Point](https://github.com/influxdata/influxdb-client-java/blob/master/client/src/main/java/org/influxdata/client/write/Point.java#L46) 
         - POJO
-    - InfluxDB 2.0 Management API client for managing
+    - InfluxDB 2.x Management API client for managing
         - sources, buckets
         - tasks
         - authorizations
@@ -50,16 +50,16 @@ This section contains links to the client library documentation.
          
 ## Clients
 
-The Java, Reactive, OSGi, Kotlin and Scala clients are implemented for the InfluxDB 2.0:
+The Java, Reactive, OSGi, Kotlin and Scala clients are implemented for the InfluxDB 2.x:
 
 | Client | Description | Documentation | Compatibility |
 | --- | --- | --- |                                      --- |
-| **[java](./client)** | The reference Java client that allows query, write and InfluxDB 2.0 management. |  [javadoc](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html), [readme](./client#influxdb-client-java/)| 2.0 |
-| **[reactive](./client-reactive)**  | The reference RxJava client for the InfluxDB 2.0 that allows query and write in a reactive way.| [javadoc](https://influxdata.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/index.html), [readme](./client-reactive#influxdb-client-reactive/) |2.0 |
-| **[kotlin](./client-kotlin)** | The reference Kotlin client that allows query and write for the InfluxDB 2.0 by Kotlin [Channel](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html) and [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/index.html) coroutines. | [KDoc](https://influxdata.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/com.influxdb.client.kotlin/index.html), [readme](./client-kotlin#influxdb-client-kotlin/) | 2.0|
-| **[scala](./client-scala)** | The reference Scala client that allows query and write for the InfluxDB 2.0 by [Akka Streams](https://doc.akka.io/docs/akka/2.6/stream/). | [Scaladoc](https://influxdata.github.io/influxdb-client-java/client-scala/cross/influxdb-client-scala_2.13/scaladocs/com/influxdb/client/scala/index.html), [readme](./client-scala#influxdb-client-scala/) | 2.0 |
-| **[osgi](./client-osgi)** | The reference OSGi (R6) client embedding Java and reactive clients and providing standard features (declarative services, configuration, event processing) for the InfluxDB 2.0. | [javadoc](https://influxdata.github.io/influxdb-client-java/influxdb-client-osgi/apidocs/index.html), [readme](./client-osgi) | 2.0 |
-| **[karaf](./karaf)** | The Apache Karaf feature definition for the InfluxDB 2.0. | [readme](./karaf) | 2.0 |
+| **[java](./client)** | The reference Java client that allows query, write and InfluxDB 2.x management. |  [javadoc](https://influxdata.github.io/influxdb-client-java/influxdb-client-java/apidocs/index.html), [readme](./client#influxdb-client-java/)| 2.x |
+| **[reactive](./client-reactive)**  | The reference RxJava client for the InfluxDB 2.x that allows query and write in a reactive way.| [javadoc](https://influxdata.github.io/influxdb-client-java/influxdb-client-reactive/apidocs/index.html), [readme](./client-reactive#influxdb-client-reactive/) |2.x |
+| **[kotlin](./client-kotlin)** | The reference Kotlin client that allows query and write for the InfluxDB 2.x by Kotlin [Channel](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html) and [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/index.html) coroutines. | [KDoc](https://influxdata.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/com.influxdb.client.kotlin/index.html), [readme](./client-kotlin#influxdb-client-kotlin/) | 2.x|
+| **[scala](./client-scala)** | The reference Scala client that allows query and write for the InfluxDB 2.x by [Akka Streams](https://doc.akka.io/docs/akka/2.6/stream/). | [Scaladoc](https://influxdata.github.io/influxdb-client-java/client-scala/cross/influxdb-client-scala_2.13/scaladocs/com/influxdb/client/scala/index.html), [readme](./client-scala#influxdb-client-scala/) | 2.x |
+| **[osgi](./client-osgi)** | The reference OSGi (R6) client embedding Java and reactive clients and providing standard features (declarative services, configuration, event processing) for the InfluxDB 2.x. | [javadoc](https://influxdata.github.io/influxdb-client-java/influxdb-client-osgi/apidocs/index.html), [readme](./client-osgi) | 2.x |
+| **[karaf](./karaf)** | The Apache Karaf feature definition for the InfluxDB 2.x. | [readme](./karaf) | 2.x |
 
 There is also possibility to use the Flux language over the InfluxDB 1.7+ provided by: 
 
@@ -78,7 +78,7 @@ Flux flux = Flux
 
 | Module | Description | Documentation | Compatibility |
 | --- | --- | --- |                                      --- |
-| **[flux-dsl](./flux-dsl)** | A Java query builder for the Flux language | [javadoc](https://influxdata.github.io/influxdb-client-java/flux-dsl/apidocs/index.html), [readme](./flux-dsl#flux-dsl/)| 1.7+, 2.0 |
+| **[flux-dsl](./flux-dsl)** | A Java query builder for the Flux language | [javadoc](https://influxdata.github.io/influxdb-client-java/flux-dsl/apidocs/index.html), [readme](./flux-dsl#flux-dsl/)| 1.7+, 2.x |
 
 
 ## How To Use  
@@ -87,9 +87,9 @@ This clients are hosted in Maven central Repository.
 
 If you want to use it with the Maven, you have to add only the dependency on the artifact.
 
-### Writes and Queries in InfluxDB 2.0
+### Writes and Queries in InfluxDB 2.x
 
-The following example demonstrates how to write data to InfluxDB 2.0 and read them back using the Flux language.
+The following example demonstrates how to write data to InfluxDB 2.x and read them back using the Flux language.
 
 #### Installation
 
@@ -203,9 +203,9 @@ public class InfluxDB2Example {
 }
 ```    
 
-### Use Management API to create a new Bucket in InfluxDB 2.0  
+### Use Management API to create a new Bucket in InfluxDB 2.x  
 
-The following example demonstrates how to use a InfluxDB 2.0 Management API. For further information see [client documentation](./client#management-api).
+The following example demonstrates how to use a InfluxDB 2.x Management API. For further information see [client documentation](./client#management-api).
 
 #### Installation
 
@@ -292,14 +292,14 @@ public class InfluxDB2ManagementExample {
 
 ### InfluxDB 1.8 API compatibility
 
-[InfluxDB 1.8.0 introduced forward compatibility APIs](https://docs.influxdata.com/influxdb/v1.8/tools/api/#influxdb-2-0-api-compatibility-endpoints) for InfluxDB 2.0. This allow you to easily move from InfluxDB 1.x to InfluxDB 2.0 Cloud or open source.
+[InfluxDB 1.8.0 introduced forward compatibility APIs](https://docs.influxdata.com/influxdb/v1.8/tools/api/#influxdb-2-0-api-compatibility-endpoints) for InfluxDB 2.x. This allow you to easily move from InfluxDB 1.x to InfluxDB 2.x Cloud or open source.
 
 The following forward compatible APIs are available:
 
 | API | Endpoint | Description |
 |:----------|:----------|:----------|
-| [QueryApi.java](client/src/main/java/com/influxdb/client/QueryApi.java) | [/api/v2/query](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-query-http-endpoint) | Query data in InfluxDB 1.8.0+ using the InfluxDB 2.0 API and [Flux](https://docs.influxdata.com/flux/latest/) _(endpoint should be enabled by [`flux-enabled` option](https://docs.influxdata.com/influxdb/latest/administration/config/#flux-enabled-false))_  |
-| [WriteApi.java](client/src/main/java/com/influxdb/client/WriteApi.java) | [/api/v2/write](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-write-http-endpoint) | Write data to InfluxDB 1.8.0+ using the InfluxDB 2.0 API |
+| [QueryApi.java](client/src/main/java/com/influxdb/client/QueryApi.java) | [/api/v2/query](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-query-http-endpoint) | Query data in InfluxDB 1.8.0+ using the InfluxDB 2.x API and [Flux](https://docs.influxdata.com/flux/latest/) _(endpoint should be enabled by [`flux-enabled` option](https://docs.influxdata.com/influxdb/latest/administration/config/#flux-enabled-false))_  |
+| [WriteApi.java](client/src/main/java/com/influxdb/client/WriteApi.java) | [/api/v2/write](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-write-http-endpoint) | Write data to InfluxDB 1.8.0+ using the InfluxDB 2.x API |
 | [health()](client/src/main/java/com/influxdb/client/InfluxDBClient.java#L236) | [/health](https://docs.influxdata.com/influxdb/latest/tools/api/#health-http-endpoint) | Check the health of your InfluxDB instance |    
 
 For detail info see [InfluxDB 1.8 example](examples/src/main/java/example/InfluxDB18Example.java).
@@ -395,7 +395,7 @@ public class FluxExample {
 * Java 1.8+ (tested with jdk8)
 * Maven 3.0+ (tested with maven 3.5.0)
 * Docker daemon running
-* The latest InfluxDB 2.0 and InfluxDB 1.X docker instances, which can be started using the `./scripts/influxdb-restart.sh` script
+* The latest InfluxDB 2.x and InfluxDB 1.X docker instances, which can be started using the `./scripts/influxdb-restart.sh` script
 
 
 Once these are in place you can build influxdb-client-java with all tests with:
@@ -429,4 +429,4 @@ If you would like to contribute code you can do through GitHub by forking the re
 
 ## License
 
-The InfluxDB 2.0 JVM Based Clients are released under the [MIT License](https://opensource.org/licenses/MIT).
+The InfluxDB 2.x JVM Based Clients are released under the [MIT License](https://opensource.org/licenses/MIT).

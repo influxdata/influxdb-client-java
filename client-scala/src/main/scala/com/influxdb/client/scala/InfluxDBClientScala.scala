@@ -26,7 +26,7 @@ import com.influxdb.client.domain.HealthCheck
 import javax.annotation.Nonnull
 
 /**
- * The reference Scala client that allows query and write for the InfluxDB 2.0 by Akka Streams.
+ * The reference Scala client that allows query and write for the InfluxDB 2.x by Akka Streams.
  *
  * @author Jakub Bednar (bednar@github) (08/02/2019 09:09)
  */

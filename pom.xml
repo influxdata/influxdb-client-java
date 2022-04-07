@@ -47,9 +47,9 @@
         <module>examples</module>
     </modules>
 
-    <name>The InfluxDB 2.0 JVM Based Clients</name>
+    <name>The InfluxDB 2.x JVM Based Clients</name>
     <description>
-        The reference JVM clients for the InfluxDB 2.0 - currently Java, Reactive, Kotlin and Scala clients are implemented.
+        The reference JVM clients for the InfluxDB 2.x - currently Java, Reactive, Kotlin and Scala clients are implemented.
     </description>
 
     <url>https://github.com/influxdata/influxdb-client-java</url>

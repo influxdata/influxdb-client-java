@@ -34,7 +34,7 @@ import com.influxdb.client.domain.SecretKeysResponse;
 import com.influxdb.client.domain.User;
 
 /**
- * The client of the InfluxDB 2.0 that implement Organization HTTP API endpoint.
+ * The client of the InfluxDB 2.x that implement Organization HTTP API endpoint.
  *
  * @author Jakub Bednar (bednar@github) (11/09/2018 14:58)
  */
