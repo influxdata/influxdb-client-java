@@ -38,13 +38,13 @@
             <item name="Client Core" href="./influxdb-client-core/index.html" />
         </menu>
         <menu name="Clients" inheritAsRef="true">
-            <item name="InfluxDB 2.0 client" href="./influxdb-client-java/index.html" />
-            <item name="InfluxDB 2.0 client - Reactive" href="./influxdb-client-reactive/index.html" />
-            <item name="InfluxDB 2.0 client - Kotlin" href="./influxdb-client-kotlin/index.html" />
-            <item name="InfluxDB 2.0 client - Scala [2.12]" href="./client-scala/cross/influxdb-client-scala_2.12/index.html" />
-            <item name="InfluxDB 2.0 client - Scala [2.13]" href="./client-scala/cross/influxdb-client-scala_2.13/index.html" />
+            <item name="InfluxDB 2.x client" href="./influxdb-client-java/index.html" />
+            <item name="InfluxDB 2.x client - Reactive" href="./influxdb-client-reactive/index.html" />
+            <item name="InfluxDB 2.x client - Kotlin" href="./influxdb-client-kotlin/index.html" />
+            <item name="InfluxDB 2.x client - Scala [2.12]" href="./client-scala/cross/influxdb-client-scala_2.12/index.html" />
+            <item name="InfluxDB 2.x client - Scala [2.13]" href="./client-scala/cross/influxdb-client-scala_2.13/index.html" />
             <item name="InfluxDB 1.7+ Flux Client" href="./influxdb-client-flux/index.html" />
-            <item name="InfluxDB 2.0 client - OSGi" href="./influxdb-client-osgi/index.html" />
+            <item name="InfluxDB 2.x client - OSGi" href="./influxdb-client-osgi/index.html" />
         </menu>
         <menu ref="parent" inherit="top" />
         <menu ref="reports" inherit="top" />

@@ -34,9 +34,9 @@
     <artifactId>influxdb-karaf-features</artifactId>
     <packaging>feature</packaging>
 
-    <name>Apache Karaf Features for InfluxDB 2.0</name>
+    <name>Apache Karaf Features for InfluxDB 2.x</name>
     <description>
-        Apache Karaf Features for InfluxDB 2.0: feature definition of client bundles and dependencies.
+        Apache Karaf Features for InfluxDB 2.x: feature definition of client bundles and dependencies.
     </description>
 
     <build>

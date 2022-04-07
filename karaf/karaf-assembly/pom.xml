@@ -34,9 +34,9 @@
     <artifactId>influxdb-karaf-assembly</artifactId>
     <packaging>karaf-assembly</packaging>
 
-    <name>Apache Karaf Assembly for InfluxDB 2.0</name>
+    <name>Apache Karaf Assembly for InfluxDB 2.x</name>
     <description>
-        Apache Karaf distribution including InfluxDB 2.0 client.
+        Apache Karaf distribution including InfluxDB 2.x client.
     </description>
 
     <build>

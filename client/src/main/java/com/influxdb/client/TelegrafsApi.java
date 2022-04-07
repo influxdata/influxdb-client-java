@@ -41,7 +41,7 @@ import com.influxdb.client.domain.TelegrafRequestMetadata;
 import com.influxdb.client.domain.User;
 
 /**
- * The client of the InfluxDB 2.0 that implement Telegrafs HTTP API endpoint.
+ * The client of the InfluxDB 2.x that implement Telegrafs HTTP API endpoint.
  * <br>
  * <br>
  * <p>

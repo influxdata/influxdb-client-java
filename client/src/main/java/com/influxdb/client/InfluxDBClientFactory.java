@@ -30,7 +30,7 @@ import com.influxdb.client.internal.InfluxDBClientImpl;
 import com.influxdb.utils.Arguments;
 
 /**
- * The Factory that create an instance of a InfluxDB 2.0 client.
+ * The Factory that create an instance of a InfluxDB 2.x client.
  *
  * @author Jakub Bednar (bednar@github) (05/09/2018 10:04)
  */
@@ -40,7 +40,7 @@ public final class InfluxDBClientFactory {
     }
 
     /**
-     * Create an instance of the InfluxDB 2.0 client that is configured via {@code influx2.properties}.
+     * Create an instance of the InfluxDB 2.x client that is configured via {@code influx2.properties}.
      * The {@code influx2.properties} has to be located on classpath.
      *
      * @return client
@@ -56,7 +56,7 @@ public final class InfluxDBClientFactory {
     }
 
     /**
-     * Create an instance of the InfluxDB 2.0 client. The url could be a connection string with various configurations.
+     * Create an instance of the InfluxDB 2.x client. The url could be a connection string with various configurations.
      * <p>
      * e.g.: "http://localhost:8086?readTimeout=5000&amp;connectTimeout=5000&amp;logLevel=BASIC
      *
@@ -74,7 +74,7 @@ public final class InfluxDBClientFactory {
     }
 
     /**
-     * Create an instance of the InfluxDB 2.0 client.
+     * Create an instance of the InfluxDB 2.x client.
      *
      * <p>
      * The <i>username/password</i> auth is based on
@@ -103,7 +103,7 @@ public final class InfluxDBClientFactory {
     }
 
     /**
-     * Create an instance of the InfluxDB 2.0 client.
+     * Create an instance of the InfluxDB 2.x client.
      *
      * @param url   the url to connect to the InfluxDB
      * @param token the token to use for the authorization
@@ -117,7 +117,7 @@ public final class InfluxDBClientFactory {
     }
 
     /**
-     * Create an instance of the InfluxDB 2.0 client.
+     * Create an instance of the InfluxDB 2.x client.
      *
      * @param url   the url to connect to the InfluxDB
      * @param token the token to use for the authorization
@@ -134,7 +134,7 @@ public final class InfluxDBClientFactory {
     }
 
     /**
-     * Create an instance of the InfluxDB 2.0 client.
+     * Create an instance of the InfluxDB 2.x client.
      *
      * @param url    the url to connect to the InfluxDB
      * @param token  the token to use for the authorization
@@ -160,7 +160,7 @@ public final class InfluxDBClientFactory {
     }
 
     /**
-     * Create a instance of the InfluxDB 2.0 client to connect into InfluxDB 1.8.
+     * Create a instance of the InfluxDB 2.x client to connect into InfluxDB 1.8.
      *
      * @param url             the url to connect to the InfluxDB 1.8
      * @param username        authorization username
@@ -191,7 +191,7 @@ public final class InfluxDBClientFactory {
     }
 
     /**
-     * Create an instance of the InfluxDB 2.0 client.
+     * Create an instance of the InfluxDB 2.x client.
      *
      * @param options the connection configuration
      * @return client

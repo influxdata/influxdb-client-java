@@ -38,7 +38,7 @@ import com.influxdb.client.domain.ResourceOwner;
 import com.influxdb.client.domain.User;
 
 /**
- * The client of the InfluxDB 2.0 that implement Bucket HTTP API endpoint.
+ * The client of the InfluxDB 2.x that implement Bucket HTTP API endpoint.
  *
  * @author Jakub Bednar (bednar@github) (13/09/2018 10:31)
  */

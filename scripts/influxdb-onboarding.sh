@@ -26,7 +26,7 @@ set -e
 echo "Wait to start InfluxDB"
 wget -S --spider --tries=20 --retry-connrefused --waitretry=5 http://localhost:8086/ping
 
-echo "Wait to start InfluxDB 2.0"
+echo "Wait to start InfluxDB 2.x"
 wget -S --spider --tries=20 --retry-connrefused --waitretry=5 http://localhost:9999/metrics
 
 echo

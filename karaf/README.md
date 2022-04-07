@@ -1,4 +1,4 @@
-# Apache Karaf Integration for InfluxDB 2.0
+# Apache Karaf Integration for InfluxDB 2.x
 
 ## Features
 
@@ -9,13 +9,13 @@
 
 ## Submodules
 
-The Apache Karaf feature definition modules supporting InfluxDB 2.0:
+The Apache Karaf feature definition modules supporting InfluxDB 2.x:
 
-| Module | Description |
-| --- | --- |
-| **karaf-features** | Apache Karaf feature definition (XML) artifact for InfluxDB 2.0. |
-| **karaf-kar**      | KAraf aRchive (KAR) artifact containing client for InfluxDB 2.0. |
-| **karaf-assembly** | Apache Karaf (sample) distribution having InfluxDB 2.0 client. |
+| Module | Description                                                      |
+| --- |------------------------------------------------------------------|
+| **karaf-features** | Apache Karaf feature definition (XML) artifact for InfluxDB 2.x. |
+| **karaf-kar**      | KAraf aRchive (KAR) artifact containing client for InfluxDB 2.x. |
+| **karaf-assembly** | Apache Karaf (sample) distribution having InfluxDB 2.x client.   |
 
 ## Installation
 
@@ -58,9 +58,9 @@ An alternate way to start the server is running `karaf-assembly/target/assembly/
 karaf@root()> feature:list | grep influx
 influxdb-client                      │ 2.2.0.SNAPSHOT   │          │ Started     │ influxdb-features-2.2.0-SNAPSHOT     │ InfluxDB client
 kotlin                               │ 1.3.72           │          │ Started     │ influxdb-features-2.2.0-SNAPSHOT     │ Kotlin
-influxdb-karaf-features              │ 2.2.0.SNAPSHOT   │          │ Uninstalled │ influxdb-features-2.2.0-SNAPSHOT     │ Apache Karaf Features for InfluxDB 2.0
+influxdb-karaf-features              │ 2.2.0.SNAPSHOT   │          │ Uninstalled │ influxdb-features-2.2.0-SNAPSHOT     │ Apache Karaf Features for InfluxDB 2.x
 karaf@root()> bundle:list | grep -i influx
-16 │ Active │  80 │ 2.2.0.SNAPSHOT │ The OSGi InfluxDB 2.0 Client
+16 │ Active │  80 │ 2.2.0.SNAPSHOT │ The OSGi InfluxDB 2.x Client
 ```
 
 Declarative services (i.e. that are writing data to InfluxDB by OSGi events) become available if you copy configuration files (see below) to `karaf-assembly/target/assembly/deploy` directory.

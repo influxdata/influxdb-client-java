@@ -30,7 +30,7 @@ import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.Variable;
 
 /**
- * The client of the InfluxDB 2.0 that implement Variables HTTP API endpoint.
+ * The client of the InfluxDB 2.x that implement Variables HTTP API endpoint.
  *
  * @author Jakub Bednar (27/03/2019 09:35)
  */

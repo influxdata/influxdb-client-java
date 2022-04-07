@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 import com.influxdb.client.domain.WritePrecision;
 
 /**
- * The event is published when arrived the success response from InfluxDB 2.0 server.
+ * The event is published when arrived the success response from InfluxDB 2.x server.
  *
  * @author Jakub Bednar (bednar@github) (25/09/2018 12:26)
  */

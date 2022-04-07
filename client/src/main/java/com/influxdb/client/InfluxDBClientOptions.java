@@ -43,7 +43,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 
 /**
- * InfluxDBClientOptions are used to configure theInfluxDB 2.0 connections.
+ * InfluxDBClientOptions are used to configure theInfluxDB 2.x connections.
  *
  * @author Jakub Bednar (bednar@github) (05/09/2018 10:22)
  */

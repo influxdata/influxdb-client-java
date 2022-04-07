@@ -27,7 +27,7 @@ import java.io.Closeable
 import javax.annotation.Nonnull
 
 /**
- * The reference Kotlin client that allows query and write for the InfluxDB 2.0 by Kotlin Channel coroutines.
+ * The reference Kotlin client that allows query and write for the InfluxDB 2.x by Kotlin Channel coroutines.
  * 
  * @author Jakub Bednar (bednar@github) (07/02/2019 13:11)
  */

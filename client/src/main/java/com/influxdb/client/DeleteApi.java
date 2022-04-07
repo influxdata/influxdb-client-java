@@ -30,7 +30,7 @@ import com.influxdb.client.domain.DeletePredicateRequest;
 import com.influxdb.client.domain.Organization;
 
 /**
- * API to Delete time-series data from InfluxDB 2.0.
+ * API to Delete time-series data from InfluxDB 2.x.
  *
  * @author Pavlina Rolincova (rolincova@github) (25/10/2019).
  */

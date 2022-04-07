@@ -40,9 +40,9 @@
         <module>karaf-assembly</module>
     </modules>
 
-    <name>Apache Karaf Integration for InfluxDB 2.0</name>
+    <name>Apache Karaf Integration for InfluxDB 2.x</name>
     <description>
-        Apache Karaf Integration for InfluxDB 2.0: features and KAR file.
+        Apache Karaf Integration for InfluxDB 2.x: features and KAR file.
     </description>
 
     <url>https://github.com/influxdata/influxdb-client-java/tree/master/karaf</url>

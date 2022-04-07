@@ -34,9 +34,9 @@
     <artifactId>influxdb-client-osgi</artifactId>
     <packaging>bundle</packaging>
 
-    <name>The OSGi InfluxDB 2.0 Client</name>
+    <name>The OSGi InfluxDB 2.x Client</name>
     <description>
-        InfluxDB 2.0 Java client extension for OSGi environments.
+        InfluxDB 2.x Java client extension for OSGi environments.
     </description>
 
     <url>https://github.com/influxdata/influxdb-client-java/tree/master/client-osgi</url>

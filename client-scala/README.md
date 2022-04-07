@@ -2,14 +2,14 @@
 
 [![ScalaDoc](https://img.shields.io/badge/Scaladoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/client-scala/cross/influxdb-client-scala_2.13/scaladocs/com/influxdb/client/scala/index.html)
 
-The reference Scala client that allows query and write for the InfluxDB 2.0 by [Akka Streams](https://doc.akka.io/docs/akka/2.6/stream/).
+The reference Scala client that allows query and write for the InfluxDB 2.x by [Akka Streams](https://doc.akka.io/docs/akka/2.6/stream/).
 The client is cross-built against Scala `2.12` and `2.13`.
 
 ## Documentation
 
 This section contains links to the client library documentation.
 
-* [Product documentation](https://docs.influxdata.com/influxdb/v2.0/api-guide/client-libraries/), [Getting Started](#queries)
+* [Product documentation](https://docs.influxdata.com/influxdb/latest/api-guide/client-libraries/), [Getting Started](#queries)
 * [Examples](../examples)
 * [API Reference](https://influxdata.github.io/influxdb-client-java/client-scala/cross/influxdb-client-scala_2.13/scaladocs/com/influxdb/client/scala/index.html)
 * [Changelog](../CHANGELOG.md)

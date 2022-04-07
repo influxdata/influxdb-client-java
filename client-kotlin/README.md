@@ -2,13 +2,13 @@
 
 [![KDoc](https://img.shields.io/badge/KDoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/com.influxdb.client.kotlin/index.html)
 
-The reference Kotlin client that allows query and write for the InfluxDB 2.0 by Kotlin Channel coroutines. 
+The reference Kotlin client that allows query and write for the InfluxDB 2.x by Kotlin Channel coroutines. 
 
 ## Documentation
 
 This section contains links to the client library documentation.
 
-* [Product documentation](https://docs.influxdata.com/influxdb/v2.0/api-guide/client-libraries/), [Getting Started](#queries)
+* [Product documentation](https://docs.influxdata.com/influxdb/latest/api-guide/client-libraries/), [Getting Started](#queries)
 * [Examples](../examples)
 * [API Reference](https://influxdata.github.io/influxdb-client-java/influxdb-client-kotlin/dokka/influxdb-client-kotlin/com.influxdb.client.kotlin/index.html)
 * [Changelog](../CHANGELOG.md)

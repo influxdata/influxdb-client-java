@@ -1,8 +1,8 @@
-# OSGi Client Bundle for InfluxDB 2.0
+# OSGi Client Bundle for InfluxDB 2.x
 
 [![javadoc](https://img.shields.io/badge/javadoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/influxdb-client-osgi/apidocs/index.html)
 
-OSGi (R6) client bundle contains InfluxDB 2.0 client and dependencies excluding Kotlin and JSR-305 (FindBugs).
+OSGi (R6) client bundle contains InfluxDB 2.x client and dependencies excluding Kotlin and JSR-305 (FindBugs).
 
 ## Services
 

@@ -33,10 +33,10 @@
     <artifactId>influxdb-client-java</artifactId>
     <packaging>jar</packaging>
 
-    <name>The Java InfluxDB 2.0 Client</name>
+    <name>The Java InfluxDB 2.x Client</name>
     <description>
         The reference Java client that allows query, write
-        and management (bucket, organization, users) for the InfluxDB 2.0.
+        and management (bucket, organization, users) for the InfluxDB 2.x.
     </description>
 
     <url>https://github.com/influxdata/influxdb-client-java/tree/master/client</url>

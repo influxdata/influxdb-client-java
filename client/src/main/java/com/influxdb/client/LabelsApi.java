@@ -33,7 +33,7 @@ import com.influxdb.client.domain.LabelUpdate;
 import com.influxdb.client.domain.Organization;
 
 /**
- * The client of the InfluxDB 2.0 that implement Labels HTTP API endpoint.
+ * The client of the InfluxDB 2.x that implement Labels HTTP API endpoint.
  *
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:37)
  */

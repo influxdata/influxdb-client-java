@@ -47,7 +47,7 @@ import com.influxdb.query.FluxTable;
 import io.reactivex.BackpressureOverflowStrategy;
 
 /*
-  InfluxDB 2.0 onboarding tasks (create default user, organization and bucket) :
+  InfluxDB 2.x onboarding tasks (create default user, organization and bucket) :
 
   curl -i -X POST http://localhost:8086/api/v2/setup -H 'accept: application/json' \
       -d '{

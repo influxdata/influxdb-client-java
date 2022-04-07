@@ -34,9 +34,9 @@
     <artifactId>influxdb-karaf-kar</artifactId>
     <packaging>kar</packaging>
 
-    <name>Apache Karaf KAR for InfluxDB 2.0</name>
+    <name>Apache Karaf KAR for InfluxDB 2.x</name>
     <description>
-        InfluxDB 2.0 KAR deployable artifact for Apache Karaf.
+        InfluxDB 2.x KAR deployable artifact for Apache Karaf.
     </description>
 
     <build>

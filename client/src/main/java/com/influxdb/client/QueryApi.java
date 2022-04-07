@@ -36,7 +36,7 @@ import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 
 /**
- * The client of the InfluxDB 2.0 that implement Query HTTP API endpoint.
+ * The client of the InfluxDB 2.x that implement Query HTTP API endpoint.
  *
  * @author Jakub Bednar (bednar@github) (01/10/2018 12:17)
  */
@@ -44,7 +44,7 @@ import com.influxdb.query.FluxTable;
 public interface QueryApi {
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Flux query against the InfluxDB 2.x and synchronously map whole response
      * to {@code List<FluxTable>}.
      * <p>
      * NOTE: This method is not intended for large query results.
@@ -59,7 +59,7 @@ public interface QueryApi {
     List<FluxTable> query(@Nonnull final String query);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Flux query against the InfluxDB 2.x and synchronously map whole response
      * to {@code List<FluxTable>}.
      * <p>
      * NOTE: This method is not intended for large query results.
@@ -73,7 +73,7 @@ public interface QueryApi {
     List<FluxTable> query(@Nonnull final String query, @Nonnull final String org);
 
     /**
-     * Executes the Parameterized Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Parameterized Flux query against the InfluxDB 2.x and synchronously map whole response
      * to {@code List<FluxTable>}. Query parameters currently are supported only in InfluxDB Cloud.
      * <p>
      * NOTE: This method is not intended for large query results.
@@ -112,7 +112,7 @@ public interface QueryApi {
                           @Nullable Map<String, Object> params);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Flux query against the InfluxDB 2.x and synchronously map whole response
      * to {@code List<FluxTable>}.
      * <p>
      * NOTE: This method is not intended for large query results.
@@ -127,7 +127,7 @@ public interface QueryApi {
     List<FluxTable> query(@Nonnull final Query query);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Flux query against the InfluxDB 2.x and synchronously map whole response
      * to {@code List<FluxTable>}.
      * <p>
      * NOTE: This method is not intended for large query results.
@@ -141,7 +141,7 @@ public interface QueryApi {
     List<FluxTable> query(@Nonnull final Query query, @Nonnull final String org);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Flux query against the InfluxDB 2.x and synchronously map whole response
      * to list of object with given type.
      * <p>
      * NOTE: This method is not intended for large query results.
@@ -158,7 +158,7 @@ public interface QueryApi {
     <M> List<M> query(@Nonnull final String query, @Nonnull final Class<M> measurementType);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Flux query against the InfluxDB 2.x and synchronously map whole response
      * to list of object with given type.
      * <p>
      * NOTE: This method is not intended for large query results.
@@ -175,7 +175,7 @@ public interface QueryApi {
                       @Nonnull final String org, @Nonnull final Class<M> measurementType);
 
     /**
-     * Executes the Parameterized Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Parameterized Flux query against the InfluxDB 2.x and synchronously map whole response
      * to list of object with given type.
      * <p>
      * NOTE: This method is not intended for large query results.
@@ -197,7 +197,7 @@ public interface QueryApi {
 
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Flux query against the InfluxDB 2.x and synchronously map whole response
      * to list of object with given type.
      * <p>
      * NOTE: This method is not intended for large query results.
@@ -214,7 +214,7 @@ public interface QueryApi {
     <M> List<M> query(@Nonnull final Query query, @Nonnull final Class<M> measurementType);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Flux query against the InfluxDB 2.x and synchronously map whole response
      * to list of object with given type.
      * <p>
      * NOTE: This method is not intended for large query results.
@@ -231,7 +231,7 @@ public interface QueryApi {
                       @Nonnull final String org, @Nonnull final Class<M> measurementType);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -244,7 +244,7 @@ public interface QueryApi {
                @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * @param query  the flux query to execute
@@ -257,7 +257,7 @@ public interface QueryApi {
                @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -270,7 +270,7 @@ public interface QueryApi {
                @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * @param query  the flux query to execute
@@ -283,7 +283,7 @@ public interface QueryApi {
                @Nonnull final BiConsumer<Cancellable, FluxRecord> onNext);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream POJO classes
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream POJO classes
      * to {@code onNext} consumer.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -299,7 +299,7 @@ public interface QueryApi {
                    @Nonnull final BiConsumer<Cancellable, M> onNext);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream POJO classes
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream POJO classes
      * to {@code onNext} consumer.
      *
      * @param <M>             the type of the measurement (POJO)
@@ -315,7 +315,7 @@ public interface QueryApi {
                    @Nonnull final BiConsumer<Cancellable, M> onNext);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream POJO classes
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream POJO classes
      * to {@code onNext} consumer.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -331,7 +331,7 @@ public interface QueryApi {
                    @Nonnull final BiConsumer<Cancellable, M> onNext);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream POJO classes
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream POJO classes
      * to {@code onNext} consumer.
      *
      * @param <M>             the type of the measurement (POJO)
@@ -347,7 +347,7 @@ public interface QueryApi {
                    @Nonnull final BiConsumer<Cancellable, M> onNext);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -361,7 +361,7 @@ public interface QueryApi {
                @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * @param query   the flux query to execute
@@ -375,7 +375,7 @@ public interface QueryApi {
                @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -389,7 +389,7 @@ public interface QueryApi {
                @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * @param query   the flux query to execute
@@ -403,7 +403,7 @@ public interface QueryApi {
                @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream POJO classes
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream POJO classes
      * to {@code onNext} consumer.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -420,7 +420,7 @@ public interface QueryApi {
                    @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream POJO classes
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream POJO classes
      * to {@code onNext} consumer.
      *
      * @param <M>             the type of the measurement (POJO)
@@ -436,7 +436,7 @@ public interface QueryApi {
                    @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream POJO classes
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream POJO classes
      * to {@code onNext} consumer.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -453,7 +453,7 @@ public interface QueryApi {
                    @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream POJO classes
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream POJO classes
      * to {@code onNext} consumer.
      *
      * @param <M>             the type of the measurement (POJO)
@@ -469,7 +469,7 @@ public interface QueryApi {
                    @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -485,7 +485,7 @@ public interface QueryApi {
                @Nonnull final Runnable onComplete);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * @param query      the flux query to execute
@@ -500,7 +500,7 @@ public interface QueryApi {
                @Nonnull final Runnable onComplete);
 
     /**
-     * Executes the Parameterized Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
+     * Executes the Parameterized Flux query against the InfluxDB 2.x and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * @param query      the flux query to execute
@@ -520,7 +520,7 @@ public interface QueryApi {
 
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -536,7 +536,7 @@ public interface QueryApi {
                @Nonnull final Runnable onComplete);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream {@link FluxRecord}s
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream {@link FluxRecord}s
      * to {@code onNext} consumer.
      *
      * @param query      the flux query to execute
@@ -642,7 +642,7 @@ public interface QueryApi {
 
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Flux query against the InfluxDB 2.x and synchronously map whole response
      * to {@link String} result.
      * <p>
      * NOTE: This method is not intended for large responses, that do not fit into memory.
@@ -657,7 +657,7 @@ public interface QueryApi {
     String queryRaw(@Nonnull final String query);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Flux query against the InfluxDB 2.x and synchronously map whole response
      * to {@link String} result.
      * <p>
      * NOTE: This method is not intended for large responses, that do not fit into memory.
@@ -671,7 +671,7 @@ public interface QueryApi {
     String queryRaw(@Nonnull final String query, @Nonnull final String org);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Flux query against the InfluxDB 2.x and synchronously map whole response
      * to {@link String} result.
      * <p>
      * NOTE: This method is not intended for large responses, that do not fit into memory.
@@ -689,7 +689,7 @@ public interface QueryApi {
 
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Flux query against the InfluxDB 2.x and synchronously map whole response
      * to {@link String} result.
      * <p>
      * NOTE: This method is not intended for large responses, that do not fit into memory.
@@ -705,7 +705,7 @@ public interface QueryApi {
     String queryRaw(@Nonnull final String query, @Nullable final Dialect dialect, @Nonnull final String org);
 
     /**
-     * Executes the Parameterized Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Parameterized Flux query against the InfluxDB 2.x and synchronously map whole response
      * to {@link String} result.
      * <p>
      * NOTE: This method is not intended for large responses, that do not fit into memory.
@@ -726,7 +726,7 @@ public interface QueryApi {
                     @Nullable final Map<String, Object> params);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Flux query against the InfluxDB 2.x and synchronously map whole response
      * to {@link String} result.
      * <p>
      * NOTE: This method is not intended for large responses, that do not fit into memory.
@@ -741,7 +741,7 @@ public interface QueryApi {
     String queryRaw(@Nonnull final Query query);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and synchronously map whole response
+     * Executes the Flux query against the InfluxDB 2.x and synchronously map whole response
      * to {@link String} result.
      * <p>
      * NOTE: This method is not intended for large responses, that do not fit into memory.
@@ -755,7 +755,7 @@ public interface QueryApi {
     String queryRaw(@Nonnull final Query query, @Nonnull final String org);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -767,7 +767,7 @@ public interface QueryApi {
     void queryRaw(@Nonnull final String query, @Nonnull final BiConsumer<Cancellable, String> onResponse);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
@@ -779,7 +779,7 @@ public interface QueryApi {
                   @Nonnull final String org, @Nonnull final BiConsumer<Cancellable, String> onResponse);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
@@ -791,7 +791,7 @@ public interface QueryApi {
                   @Nonnull final String org, @Nonnull final BiConsumer<Cancellable, String> onResponse);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -803,7 +803,7 @@ public interface QueryApi {
     void queryRaw(@Nonnull final Query query, @Nonnull final BiConsumer<Cancellable, String> onResponse);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -817,7 +817,7 @@ public interface QueryApi {
                   @Nullable final Dialect dialect, @Nonnull final BiConsumer<Cancellable, String> onResponse);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
@@ -831,7 +831,7 @@ public interface QueryApi {
                   @Nonnull final String org, @Nonnull final BiConsumer<Cancellable, String> onResponse);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -847,7 +847,7 @@ public interface QueryApi {
 
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
@@ -862,7 +862,7 @@ public interface QueryApi {
 
 
     /**
-     * Executes the Parameterized Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Parameterized Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
@@ -880,7 +880,7 @@ public interface QueryApi {
                   @Nullable final Map<String, Object> params);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -895,7 +895,7 @@ public interface QueryApi {
                   @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
@@ -909,7 +909,7 @@ public interface QueryApi {
                   @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -926,7 +926,7 @@ public interface QueryApi {
                   @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
@@ -943,7 +943,7 @@ public interface QueryApi {
                   @Nonnull final Consumer<? super Throwable> onError);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
@@ -959,7 +959,7 @@ public interface QueryApi {
                   @Nonnull final Runnable onComplete);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -975,7 +975,7 @@ public interface QueryApi {
                   @Nonnull final Runnable onComplete);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>
@@ -996,7 +996,7 @@ public interface QueryApi {
                   @Nonnull final Runnable onComplete);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
@@ -1016,7 +1016,7 @@ public interface QueryApi {
                   @Nonnull final Runnable onComplete);
 
     /**
-     * Executes the Parameterized Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Parameterized Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
@@ -1041,7 +1041,7 @@ public interface QueryApi {
                   @Nullable final Map<String, Object> params);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * @param query      the flux query to execute
@@ -1057,7 +1057,7 @@ public interface QueryApi {
                   @Nonnull final Runnable onComplete);
 
     /**
-     * Executes the Flux query against the InfluxDB 2.0 and asynchronously stream response
+     * Executes the Flux query against the InfluxDB 2.x and asynchronously stream response
      * (line by line) to {@code onResponse}.
      *
      * <p>The {@link InfluxDBClientOptions#getOrg()} will be used as source organization.</p>

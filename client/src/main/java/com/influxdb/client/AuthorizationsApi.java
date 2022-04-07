@@ -32,7 +32,7 @@ import com.influxdb.client.domain.Permission;
 import com.influxdb.client.domain.User;
 
 /**
- * The client of the InfluxDB 2.0 that implement Authorization HTTP API endpoint.
+ * The client of the InfluxDB 2.x that implement Authorization HTTP API endpoint.
  *
  * @author Jakub Bednar (bednar@github) (17/09/2018 11:09)
  */

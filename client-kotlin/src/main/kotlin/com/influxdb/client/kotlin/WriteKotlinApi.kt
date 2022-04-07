@@ -26,7 +26,7 @@ import com.influxdb.client.write.Point
 import kotlinx.coroutines.flow.Flow
 
 /**
- * The Kotlin API to write time-series data into InfluxDB 2.0.
+ * The Kotlin API to write time-series data into InfluxDB 2.x.
  *
  * @author Jakub Bednar (20/04/2021 8:18)
  */
