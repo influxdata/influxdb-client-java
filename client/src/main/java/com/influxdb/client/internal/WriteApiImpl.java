@@ -78,7 +78,7 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
             return;
         }
 
-        write(bucket, org, precision, Flowable.just(new BatchWriteDataRecord(record)));
+        write(new BatchWriteOptions(bucket, org, precision), Flowable.just(new BatchWriteDataRecord(record)));
     }
 
     @Override
@@ -103,7 +103,7 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
 
         Flowable<BatchWriteData> stream = Flowable.fromIterable(records).map(BatchWriteDataRecord::new);
 
-        write(bucket, org, precision, stream);
+        write(new BatchWriteOptions(bucket, org, precision), stream);
     }
 
     @Override
@@ -197,7 +197,7 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
                 .fromIterable(measurements)
                 .map(it -> new BatchWriteDataMeasurement(it, precision, options, measurementMapper));
 
-        write(bucket, org, precision, stream);
+        write(new BatchWriteOptions(bucket, org, precision), stream);
     }
 
     @Nonnull

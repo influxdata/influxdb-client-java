@@ -36,6 +36,7 @@ import javax.annotation.Nullable;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.WriteApi;
 import com.influxdb.client.WriteOptions;
+import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.client.write.Point;
@@ -220,20 +221,18 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         }
 
         stream.subscribe(
-                dataPoint -> write(bucket, organization, dataPoint.point.getPrecision(), Flowable.just(dataPoint)),
+                dataPoint -> {
+                    WritePrecision precision = dataPoint.point.getPrecision();
+                    write(new BatchWriteOptions(bucket, organization, precision), Flowable.just(dataPoint));
+                },
                 throwable -> publish(new WriteErrorEvent(throwable)));
     }
 
-    public void write(@Nonnull final String bucket,
-                      @Nonnull final String organization,
-                      @Nonnull final WritePrecision precision,
+    public void write(@Nonnull final BatchWriteOptions batchWriteOptions,
                       @Nonnull final Publisher<AbstractWriteClient.BatchWriteData> stream) {
 
-        Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organization, "organization");
+        Arguments.checkNotNull(batchWriteOptions, "batchWriteOptions");
         Arguments.checkNotNull(stream, "data to write");
-
-        BatchWriteOptions batchWriteOptions = new BatchWriteOptions(bucket, organization, precision);
 
         if (processor.hasComplete()) {
             throw new InfluxException(CLOSED_EXCEPTION);
@@ -370,15 +369,15 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
     /**
      * The options to apply to a @{@link BatchWriteItem}.
      */
-    private final class BatchWriteOptions {
+    final class BatchWriteOptions implements WriteApi.WriteParameters {
 
         private String bucket;
         private String organization;
         private WritePrecision precision;
 
-        private BatchWriteOptions(@Nonnull final String bucket,
-                                  @Nonnull final String organization,
-                                  @Nonnull final WritePrecision precision) {
+        BatchWriteOptions(@Nonnull final String bucket,
+                          @Nonnull final String organization,
+                          @Nonnull final WritePrecision precision) {
 
             Arguments.checkNonEmpty(bucket, "bucket");
             Arguments.checkNonEmpty(organization, "organization");
@@ -406,6 +405,18 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         @Override
         public int hashCode() {
             return Objects.hash(bucket, organization, precision);
+        }
+
+        @Nullable
+        @Override
+        public WritePrecision getPrecision() {
+            return precision;
+        }
+
+        @Nullable
+        @Override
+        public WriteConsistency getConsistency() {
+            return null;
         }
     }
 
@@ -435,7 +446,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             Maybe<Response<Void>> requestSource = service
                     .postWriteRx(organization, bucket, content, null,
                             "identity", "text/plain; charset=utf-8", null,
-                            "application/json", null, precision)
+                            "application/json", null, precision, null)
                     .toMaybe();
 
             return requestSource

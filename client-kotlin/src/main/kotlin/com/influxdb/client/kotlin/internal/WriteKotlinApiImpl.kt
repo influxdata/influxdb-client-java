@@ -22,6 +22,8 @@
 package com.influxdb.client.kotlin.internal
 
 import com.influxdb.client.InfluxDBClientOptions
+import com.influxdb.client.WriteApi.WriteParameters
+import com.influxdb.client.domain.WriteConsistency
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.internal.AbstractWriteBlockingClient
 import com.influxdb.client.internal.AbstractWriteClient
@@ -32,7 +34,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
-import java.util.*
 
 /**
  * @author Jakub Bednar (20/04/2021 9:27)
@@ -117,7 +118,17 @@ internal class WriteKotlinApiImpl(service: WriteService, options: InfluxDBClient
         val bucketOrOption = bucket ?: options.bucket.orEmpty()
         val orgOrOption = org ?: options.org.orEmpty()
 
-        write(bucketOrOption, orgOrOption, precision, records.toList().stream())
+        val obj = object : WriteParameters {
+            override fun getPrecision(): WritePrecision {
+                return precision
+            }
+
+            override fun getConsistency(): WriteConsistency? {
+                return null
+            }
+        }
+
+        write(bucketOrOption, orgOrOption, obj, records.toList().stream())
     }
 }
 

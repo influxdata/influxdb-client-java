@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.client.write.events.AbstractWriteEvent;
@@ -43,7 +44,7 @@ import com.influxdb.client.write.events.WriteSuccessEvent;
  * <p>
  *
  * <b>
- *     The {@link WriteApi} uses background thread to ingesting data into InfluxDB and is suppose to run as a singleton.
+ * The {@link WriteApi} uses background thread to ingesting data into InfluxDB and is suppose to run as a singleton.
  * </b>
  *
  * @author Jakub Bednar (bednar@github) (20/09/2018 10:58)
@@ -276,11 +277,37 @@ public interface WriteApi extends AutoCloseable {
 
         /**
          * The base for the exponential retry delay.
-         *
+         * <p>
          * The next delay is computed as: retryInterval * exponentialBase^(attempts-1) + random(jitterInterval)
          *
          * @return exponential base
          */
         int getExponentialBase();
+    }
+
+    /**
+     * Write API optional parameters.
+     */
+    interface WriteParameters {
+        /**
+         * Precision for unix timestamps in the line protocol of the request payload.
+         *
+         * @return {@link WritePrecision}
+         */
+        @Nullable
+        WritePrecision getPrecision();
+
+        /**
+         * The write consistency for the point. InfluxDB assumes that the write consistency is
+         * {@link  WriteConsistency#ONE} if you do not specify consistency.
+         * See the <a href="https://bit.ly/enterprise-consistency">InfluxDB Enterprise documentation</a>
+         * for detailed descriptions of each consistency option.
+         *
+         * <b>Available with InfluxDB Enterprise clusters only!</b>
+         *
+         * @return {@link WriteConsistency}
+         */
+        @Nullable
+        WriteConsistency getConsistency();
     }
 }

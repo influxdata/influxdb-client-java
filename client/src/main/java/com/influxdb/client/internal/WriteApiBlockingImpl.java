@@ -31,7 +31,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.client.WriteApi;
 import com.influxdb.client.WriteApiBlocking;
+import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractWriteClient.BatchWriteData;
 import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint;
@@ -93,7 +95,7 @@ final class WriteApiBlockingImpl extends AbstractWriteBlockingClient implements 
         Arguments.checkNotNull(precision, "WritePrecision is required");
         Arguments.checkNotNull(records, "records");
 
-        write(bucket, org, precision, records.stream().map(BatchWriteDataRecord::new));
+        write(bucket, org, new WriteBlockingParameters(precision), records.stream().map(BatchWriteDataRecord::new));
     }
 
     @Override
@@ -137,7 +139,7 @@ final class WriteApiBlockingImpl extends AbstractWriteBlockingClient implements 
                 .forEach((precision, grouped) -> write(
                         bucket,
                         org,
-                        precision,
+                        new WriteBlockingParameters(precision),
                         grouped.stream().map(it -> new BatchWriteDataPoint(it, options))));
     }
 
@@ -182,7 +184,8 @@ final class WriteApiBlockingImpl extends AbstractWriteBlockingClient implements 
         Arguments.checkNotNull(precision, "WritePrecision is required");
         Arguments.checkNotNull(measurements, "records");
 
-        write(bucket, org, precision, measurements.stream().map(it -> toMeasurementBatch(it, precision)));
+        write(bucket, org, new WriteBlockingParameters(precision),
+                measurements.stream().map(it -> toMeasurementBatch(it, precision)));
     }
 
     private void write(@Nonnull final String bucket,
@@ -190,7 +193,28 @@ final class WriteApiBlockingImpl extends AbstractWriteBlockingClient implements 
                        @Nonnull final WritePrecision precision,
                        @Nonnull final BatchWriteData data) {
 
-        write(bucket, organization, precision, Stream.of(data));
+        write(bucket, organization, new WriteBlockingParameters(precision), Stream.of(data));
     }
 
+    private static final class WriteBlockingParameters implements WriteApi.WriteParameters {
+
+        private final WritePrecision writePrecision;
+
+        WriteBlockingParameters(@Nonnull final WritePrecision writePrecision) {
+            Arguments.checkNotNull(writePrecision, "writePrecision");
+            this.writePrecision = writePrecision;
+        }
+
+        @Nullable
+        @Override
+        public WritePrecision getPrecision() {
+            return writePrecision;
+        }
+
+        @Nullable
+        @Override
+        public WriteConsistency getConsistency() {
+            return null;
+        }
+    }
 }

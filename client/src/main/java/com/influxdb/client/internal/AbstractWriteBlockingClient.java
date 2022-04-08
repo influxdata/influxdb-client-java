@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.client.WriteApi;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement;
 import com.influxdb.client.service.WriteService;
@@ -61,7 +62,7 @@ public abstract class AbstractWriteBlockingClient extends AbstractRestClient {
 
     protected void write(@Nonnull final String bucket,
                          @Nonnull final String organization,
-                         @Nonnull final WritePrecision precision,
+                         @Nonnull final WriteApi.WriteParameters parameters,
                          @Nonnull final Stream<AbstractWriteClient.BatchWriteData> stream) {
 
         String lineProtocol = stream.map(AbstractWriteClient.BatchWriteData::toLineProtocol)
@@ -76,11 +77,11 @@ public abstract class AbstractWriteBlockingClient extends AbstractRestClient {
 
         LOG.log(Level.FINEST,
                 "Writing time-series data into InfluxDB (org={0}, bucket={1}, precision={2})...",
-                new Object[]{organization, bucket, precision});
+                new Object[]{organization, bucket, parameters.getPrecision()});
 
         Call<Void> voidCall = service.postWrite(organization, bucket, lineProtocol, null,
                 "identity", "text/plain; charset=utf-8", null,
-                "application/json", null, precision);
+                "application/json", null, parameters.getPrecision(), parameters.getConsistency());
 
         execute(voidCall);
 
