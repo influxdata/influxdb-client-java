@@ -150,7 +150,7 @@ class ITQueryService extends AbstractITClientTest {
                 .hasSize(4)
                 .hasEntrySatisfying("columnKey", value -> Assertions.assertThat(value).isEqualTo("array"))
                 .hasEntrySatisfying("rowKey", value -> Assertions.assertThat(value).isEqualTo("array"))
-                .hasEntrySatisfying("tables", value -> Assertions.assertThat(value).isEqualTo("array"))
+                .hasEntrySatisfying("tables", value -> Assertions.assertThat(value).isIn("stream", "array"))
                 .hasEntrySatisfying("valueColumn", value -> Assertions.assertThat(value).isEqualTo("string"));
 
         FluxSuggestion suggestion = queryService.getQuerySuggestionsName("range", null).execute().body();
@@ -159,7 +159,7 @@ class ITQueryService extends AbstractITClientTest {
                 .hasSize(3)
                 .hasEntrySatisfying("start", value -> Assertions.assertThat(value).isEqualTo("invalid"))
                 .hasEntrySatisfying("stop", value -> Assertions.assertThat(value).isEqualTo("invalid"))
-                .hasEntrySatisfying("tables", value -> Assertions.assertThat(value).isEqualTo("array"));
+                .hasEntrySatisfying("tables", value -> Assertions.assertThat(value).isIn("stream", "array"));
 
     }
 }
