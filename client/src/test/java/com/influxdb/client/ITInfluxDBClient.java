@@ -26,7 +26,13 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
-import com.influxdb.client.domain.*;
+import com.influxdb.client.domain.HealthCheck;
+import com.influxdb.client.domain.OnboardingRequest;
+import com.influxdb.client.domain.OnboardingResponse;
+import com.influxdb.client.domain.Ready;
+import com.influxdb.client.domain.Routes;
+import com.influxdb.client.domain.User;
+import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.service.RoutesService;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.UnprocessableEntityException;
