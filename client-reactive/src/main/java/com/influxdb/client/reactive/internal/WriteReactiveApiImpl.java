@@ -31,7 +31,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.influxdb.client.InfluxDBClientOptions;
-import com.influxdb.client.WriteApi;
 import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractWriteClient;
@@ -44,6 +43,7 @@ import com.influxdb.client.reactive.WriteOptionsReactive;
 import com.influxdb.client.reactive.WriteReactiveApi;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.client.write.Point;
+import com.influxdb.client.write.WriteParameters;
 import com.influxdb.internal.AbstractRestClient;
 import com.influxdb.utils.Arguments;
 
@@ -124,7 +124,7 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
 
         Flowable<BatchWriteData> stream = Flowable.fromPublisher(records).map(BatchWriteDataRecord::new);
 
-        return write(bucket, org, new WriteReactiveParameters(precision), stream);
+        return write(new WriteParameters(bucket, org, precision), stream);
     }
 
     @Override
@@ -176,7 +176,7 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
                 .filter(Objects::nonNull)
                 .map(point -> new BatchWriteDataPoint(point, precision, options));
 
-        return write(bucket, org, new WriteReactiveParameters(precision), stream);
+        return write(new WriteParameters(bucket, org, precision), stream);
     }
 
     @Override
@@ -227,18 +227,14 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
         Flowable<BatchWriteData> stream = Flowable.fromPublisher(measurements)
                 .map(it -> new BatchWriteDataMeasurement(it, precision, options, measurementMapper));
 
-        return write(bucket, org, new WriteReactiveParameters(precision), stream);
+        return write(new WriteParameters(bucket, org, precision), stream);
     }
 
     @Nonnull
     @SuppressWarnings("MagicNumber")
-    private Publisher<Success> write(@Nonnull final String bucket,
-                                     @Nonnull final String organization,
-                                     @Nonnull final WriteApi.WriteParameters parameters,
+    private Publisher<Success> write(@Nonnull final WriteParameters parameters,
                                      @Nonnull final Flowable<BatchWriteData> stream) {
 
-        Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organization, "organization");
         Arguments.checkNotNull(parameters, "parameters");
         Arguments.checkNotNull(stream, "stream");
 
@@ -293,9 +289,16 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
                 //
                 // HTTP post
                 //
-                .flatMapSingle(it -> service.postWriteRx(organization, bucket, it, null,
-                        "identity", "text/plain; charset=utf-8", null,
-                        "application/json", null, parameters.getPrecision(), parameters.getConsistency())
+                .flatMapSingle(it -> {
+                            String organization = parameters.organizationSafe(options);
+                            String bucket = parameters.bucketSafe(options);
+                            WritePrecision precision = parameters.precisionSafe(options);
+                            WriteConsistency consistency = parameters.consistencySafe(options);
+
+                            return service.postWriteRx(organization, bucket, it, null,
+                                    "identity", "text/plain; charset=utf-8", null,
+                                    "application/json", null, precision, consistency);
+                        }
                 )
                 //
                 // Map to Success
@@ -332,27 +335,5 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
                 .onErrorResumeNext(throwable -> {
                     return Flowable.error(toInfluxException(throwable));
                 });
-    }
-
-    private static final class WriteReactiveParameters implements WriteApi.WriteParameters {
-
-        private final WritePrecision writePrecision;
-
-        private WriteReactiveParameters(@Nonnull final WritePrecision writePrecision) {
-            Arguments.checkNotNull(writePrecision, "writePrecision");
-            this.writePrecision = writePrecision;
-        }
-
-        @Nullable
-        @Override
-        public WritePrecision getPrecision() {
-            return writePrecision;
-        }
-
-        @Nullable
-        @Override
-        public WriteConsistency getConsistency() {
-            return null;
-        }
     }
 }

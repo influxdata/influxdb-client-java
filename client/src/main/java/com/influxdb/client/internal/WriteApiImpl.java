@@ -34,6 +34,7 @@ import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.client.write.Point;
+import com.influxdb.client.write.WriteParameters;
 import com.influxdb.client.write.events.AbstractWriteEvent;
 import com.influxdb.client.write.events.EventListener;
 import com.influxdb.client.write.events.ListenerRegistration;
@@ -78,7 +79,7 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
             return;
         }
 
-        write(new BatchWriteOptions(bucket, org, precision), Flowable.just(new BatchWriteDataRecord(record)));
+        write(new WriteParameters(bucket, org, precision), Flowable.just(new BatchWriteDataRecord(record)));
     }
 
     @Override
@@ -103,7 +104,7 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
 
         Flowable<BatchWriteData> stream = Flowable.fromIterable(records).map(BatchWriteDataRecord::new);
 
-        write(new BatchWriteOptions(bucket, org, precision), stream);
+        write(new WriteParameters(bucket, org, precision), stream);
     }
 
     @Override
@@ -197,7 +198,7 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
                 .fromIterable(measurements)
                 .map(it -> new BatchWriteDataMeasurement(it, precision, options, measurementMapper));
 
-        write(new BatchWriteOptions(bucket, org, precision), stream);
+        write(new WriteParameters(bucket, org, precision), stream);
     }
 
     @Nonnull

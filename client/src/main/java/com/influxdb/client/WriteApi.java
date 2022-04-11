@@ -26,7 +26,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
-import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.client.write.events.AbstractWriteEvent;
@@ -283,31 +282,5 @@ public interface WriteApi extends AutoCloseable {
          * @return exponential base
          */
         int getExponentialBase();
-    }
-
-    /**
-     * Write API optional parameters.
-     */
-    interface WriteParameters {
-        /**
-         * Precision for unix timestamps in the line protocol of the request payload.
-         *
-         * @return {@link WritePrecision}
-         */
-        @Nullable
-        WritePrecision getPrecision();
-
-        /**
-         * The write consistency for the point. InfluxDB assumes that the write consistency is
-         * {@link  WriteConsistency#ONE} if you do not specify consistency.
-         * See the <a href="https://bit.ly/enterprise-consistency">InfluxDB Enterprise documentation</a>
-         * for detailed descriptions of each consistency option.
-         *
-         * <b>Available with InfluxDB Enterprise clusters only!</b>
-         *
-         * @return {@link WriteConsistency}
-         */
-        @Nullable
-        WriteConsistency getConsistency();
     }
 }

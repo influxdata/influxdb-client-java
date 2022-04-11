@@ -29,10 +29,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.influxdb.client.InfluxDBClientOptions;
-import com.influxdb.client.WriteApi;
+import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement;
 import com.influxdb.client.service.WriteService;
+import com.influxdb.client.write.WriteParameters;
 import com.influxdb.internal.AbstractRestClient;
 import com.influxdb.utils.Arguments;
 
@@ -60,9 +61,7 @@ public abstract class AbstractWriteBlockingClient extends AbstractRestClient {
         this.service = service;
     }
 
-    protected void write(@Nonnull final String bucket,
-                         @Nonnull final String organization,
-                         @Nonnull final WriteApi.WriteParameters parameters,
+    protected void write(@Nonnull final WriteParameters parameters,
                          @Nonnull final Stream<AbstractWriteClient.BatchWriteData> stream) {
 
         String lineProtocol = stream.map(AbstractWriteClient.BatchWriteData::toLineProtocol)
@@ -75,13 +74,18 @@ public abstract class AbstractWriteBlockingClient extends AbstractRestClient {
             return;
         }
 
+        String organization = parameters.organizationSafe(options);
+        String bucket = parameters.bucketSafe(options);
+        WritePrecision precision = parameters.precisionSafe(options);
+        WriteConsistency consistency = parameters.consistencySafe(options);
+
         LOG.log(Level.FINEST,
                 "Writing time-series data into InfluxDB (org={0}, bucket={1}, precision={2})...",
-                new Object[]{organization, bucket, parameters.getPrecision()});
+                new Object[]{organization, bucket, precision});
 
         Call<Void> voidCall = service.postWrite(organization, bucket, lineProtocol, null,
                 "identity", "text/plain; charset=utf-8", null,
-                "application/json", null, parameters.getPrecision(), parameters.getConsistency());
+                "application/json", null, precision, consistency);
 
         execute(voidCall);
 

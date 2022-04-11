@@ -40,6 +40,7 @@ import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.client.write.Point;
+import com.influxdb.client.write.WriteParameters;
 import com.influxdb.client.write.events.AbstractWriteEvent;
 import com.influxdb.client.write.events.BackpressureEvent;
 import com.influxdb.client.write.events.WriteErrorEvent;
@@ -140,7 +141,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                 //
                 // Group by key - same bucket, same org
                 //
-                .concatMap(it -> it.groupBy(batchWrite -> batchWrite.batchWriteOptions))
+                .concatMap(it -> it.groupBy(batchWrite -> batchWrite.writeParameters))
                 //
                 // Create Write Point = bucket, org, ... + data
                 //
@@ -223,15 +224,15 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         stream.subscribe(
                 dataPoint -> {
                     WritePrecision precision = dataPoint.point.getPrecision();
-                    write(new BatchWriteOptions(bucket, organization, precision), Flowable.just(dataPoint));
+                    write(new WriteParameters(bucket, organization, precision), Flowable.just(dataPoint));
                 },
                 throwable -> publish(new WriteErrorEvent(throwable)));
     }
 
-    public void write(@Nonnull final BatchWriteOptions batchWriteOptions,
+    public void write(@Nonnull final WriteParameters writeParameters,
                       @Nonnull final Publisher<AbstractWriteClient.BatchWriteData> stream) {
 
-        Arguments.checkNotNull(batchWriteOptions, "batchWriteOptions");
+        Arguments.checkNotNull(writeParameters, "writeParameters");
         Arguments.checkNotNull(stream, "data to write");
 
         if (processor.hasComplete()) {
@@ -239,7 +240,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         }
 
         Flowable.fromPublisher(stream)
-                .map(it -> new BatchWriteItem(batchWriteOptions, it))
+                .map(it -> new BatchWriteItem(writeParameters, it))
                 .subscribe(processor::onNext, throwable -> publish(new WriteErrorEvent(throwable)));
     }
 
@@ -352,71 +353,17 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
      */
     final class BatchWriteItem {
 
-        private BatchWriteOptions batchWriteOptions;
+        private WriteParameters writeParameters;
         private BatchWriteData data;
 
-        private BatchWriteItem(@Nonnull final BatchWriteOptions batchWriteOptions,
+        private BatchWriteItem(@Nonnull final WriteParameters writeParameters,
                                @Nonnull final BatchWriteData data) {
 
-            Arguments.checkNotNull(batchWriteOptions, "data");
-            Arguments.checkNotNull(data, "write options");
+            Arguments.checkNotNull(writeParameters, "writeParameters");
+            Arguments.checkNotNull(data, "data");
 
-            this.batchWriteOptions = batchWriteOptions;
+            this.writeParameters = writeParameters;
             this.data = data;
-        }
-    }
-
-    /**
-     * The options to apply to a @{@link BatchWriteItem}.
-     */
-    final class BatchWriteOptions implements WriteApi.WriteParameters {
-
-        private String bucket;
-        private String organization;
-        private WritePrecision precision;
-
-        BatchWriteOptions(@Nonnull final String bucket,
-                          @Nonnull final String organization,
-                          @Nonnull final WritePrecision precision) {
-
-            Arguments.checkNonEmpty(bucket, "bucket");
-            Arguments.checkNonEmpty(organization, "organization");
-            Arguments.checkNotNull(precision, "TimeUnit.precision is required");
-
-            this.bucket = bucket;
-            this.organization = organization;
-            this.precision = precision;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof BatchWriteOptions)) {
-                return false;
-            }
-            BatchWriteOptions that = (BatchWriteOptions) o;
-            return Objects.equals(bucket, that.bucket)
-                    && Objects.equals(organization, that.organization)
-                    && precision == that.precision;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(bucket, organization, precision);
-        }
-
-        @Nullable
-        @Override
-        public WritePrecision getPrecision() {
-            return precision;
-        }
-
-        @Nullable
-        @Override
-        public WriteConsistency getConsistency() {
-            return null;
         }
     }
 
@@ -439,14 +386,15 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             }
 
             // Parameters
-            String organization = batchWrite.batchWriteOptions.organization;
-            String bucket = batchWrite.batchWriteOptions.bucket;
-            WritePrecision precision = batchWrite.batchWriteOptions.precision;
+            String organization = batchWrite.writeParameters.organizationSafe(options);
+            String bucket = batchWrite.writeParameters.bucketSafe(options);
+            WritePrecision precision = batchWrite.writeParameters.precisionSafe(options);
+            WriteConsistency consistency = batchWrite.writeParameters.consistencySafe(options);
 
             Maybe<Response<Void>> requestSource = service
                     .postWriteRx(organization, bucket, content, null,
                             "identity", "text/plain; charset=utf-8", null,
-                            "application/json", null, precision, null)
+                            "application/json", null, precision, consistency)
                     .toMaybe();
 
             return requestSource
@@ -496,9 +444,9 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         private WriteSuccessEvent toSuccessEvent(@Nonnull final BatchWriteItem batchWrite, final String lineProtocol) {
 
             return new WriteSuccessEvent(
-                    batchWrite.batchWriteOptions.organization,
-                    batchWrite.batchWriteOptions.bucket,
-                    batchWrite.batchWriteOptions.precision,
+                    batchWrite.writeParameters.organizationSafe(options),
+                    batchWrite.writeParameters.bucketSafe(options),
+                    batchWrite.writeParameters.precisionSafe(options),
                     lineProtocol);
         }
     }
