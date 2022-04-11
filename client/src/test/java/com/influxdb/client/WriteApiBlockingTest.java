@@ -22,10 +22,13 @@
 package com.influxdb.client;
 
 import java.util.Arrays;
+import java.util.Collections;
 
+import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractInfluxDBClientTest;
 import com.influxdb.client.write.Point;
+import com.influxdb.client.write.WriteParameters;
 
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
@@ -56,10 +59,12 @@ class WriteApiBlockingTest extends AbstractInfluxDBClientTest {
 
         Assertions.assertThat("h2o,location=europe level=1i 1\nh2o,location=europe level=2i 2")
                 .isEqualTo(request.getBody().readUtf8());
+        Assertions.assertThat(request.getRequestUrl()).isNotNull();
         Assertions.assertThat("ns").isEqualTo(request.getRequestUrl().queryParameter("precision"));
         Assertions.assertThat("b1").isEqualTo(request.getRequestUrl().queryParameter("bucket"));
         Assertions.assertThat("org1").isEqualTo(request.getRequestUrl().queryParameter("org"));
     }
+
     @Test
     public void groupPointsByPrecisionDifferent() throws InterruptedException {
         mockServer.enqueue(createResponse("{}"));
@@ -78,6 +83,7 @@ class WriteApiBlockingTest extends AbstractInfluxDBClientTest {
 
         Assertions.assertThat("h2o,location=europe level=1i 1")
                 .isEqualTo(request.getBody().readUtf8());
+        Assertions.assertThat(request.getRequestUrl()).isNotNull();
         Assertions.assertThat("ns").isEqualTo(request.getRequestUrl().queryParameter("precision"));
         Assertions.assertThat("b1").isEqualTo(request.getRequestUrl().queryParameter("bucket"));
         Assertions.assertThat("org1").isEqualTo(request.getRequestUrl().queryParameter("org"));
@@ -86,8 +92,74 @@ class WriteApiBlockingTest extends AbstractInfluxDBClientTest {
 
         Assertions.assertThat("h2o,location=europe level=2i 2")
                 .isEqualTo(request.getBody().readUtf8());
+        Assertions.assertThat(request.getRequestUrl()).isNotNull();
         Assertions.assertThat("s").isEqualTo(request.getRequestUrl().queryParameter("precision"));
         Assertions.assertThat("b1").isEqualTo(request.getRequestUrl().queryParameter("bucket"));
         Assertions.assertThat("org1").isEqualTo(request.getRequestUrl().queryParameter("org"));
+    }
+
+    @Test
+    void writeParameters() {
+        Runnable assertParameters = () -> {
+            RecordedRequest request;
+            try {
+                request = takeRequest();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            Assertions.assertThat(request.getRequestUrl()).isNotNull();
+            Assertions.assertThat("s").isEqualTo(request.getRequestUrl().queryParameter("precision"));
+            Assertions.assertThat("a").isEqualTo(request.getRequestUrl().queryParameter("bucket"));
+            Assertions.assertThat("b").isEqualTo(request.getRequestUrl().queryParameter("org"));
+            Assertions.assertThat("quorum").isEqualTo(request.getRequestUrl().queryParameter("consistency"));
+        };
+
+        WriteParameters parameters = new WriteParameters("a", "b", WritePrecision.S, WriteConsistency.QUORUM);
+
+        // record
+        mockServer.enqueue(createResponse("{}"));
+        influxDBClient
+                .getWriteApiBlocking()
+                .writeRecord("h2o,location=europe level=1i 1", parameters);
+        assertParameters.run();
+
+        // records
+        mockServer.enqueue(createResponse("{}"));
+        influxDBClient
+                .getWriteApiBlocking()
+                .writeRecords(Collections.singletonList("h2o,location=europe level=1i 1"), parameters);
+        assertParameters.run();
+
+        // point
+        Point point = Point.measurement("h2o").addTag("location", "europe").addField("level", 1).time(1L, WritePrecision.S);
+        mockServer.enqueue(createResponse("{}"));
+        influxDBClient
+                .getWriteApiBlocking()
+                .writePoint(point, parameters);
+        assertParameters.run();
+
+        // points
+        mockServer.enqueue(createResponse("{}"));
+        influxDBClient
+                .getWriteApiBlocking()
+                .writePoints(Collections.singletonList(point), parameters);
+        assertParameters.run();
+
+        // measurement
+        H2OFeetMeasurement measurement = new H2OFeetMeasurement("coyote_creek", 2.927, "below 3 feet", 1440046800L);
+        mockServer.enqueue(createResponse("{}"));
+        influxDBClient
+                .getWriteApiBlocking()
+                .writeMeasurement(measurement, parameters);
+        assertParameters.run();
+
+        // measurements
+        mockServer.enqueue(createResponse("{}"));
+        influxDBClient
+                .getWriteApiBlocking()
+                .writeMeasurements(Collections.singletonList(measurement), parameters);
+        assertParameters.run();
+
     }
 }

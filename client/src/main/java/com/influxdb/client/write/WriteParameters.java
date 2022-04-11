@@ -31,7 +31,7 @@ import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.utils.Arguments;
 
 /**
- * Write API optional parameters.
+ * Write API parameters.
  * <p>
  * Supports to specify:
  * <ul>

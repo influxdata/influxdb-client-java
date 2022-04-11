@@ -28,6 +28,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
+import com.influxdb.client.write.WriteParameters;
 import com.influxdb.exceptions.InfluxException;
 
 
@@ -86,6 +87,22 @@ public interface WriteApiBlocking {
                      @Nullable final String record) throws InfluxException;
 
     /**
+     * Write Line Protocol record into specified bucket.
+     *
+     * <p>
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
+     * The method blocks the executing thread until their operation finished.
+     * There is also non-blocking alternative {@link WriteApi#writeRecords(List, WriteParameters)}.
+     * </p>
+     *
+     * @param record     specifies the record in InfluxDB Line Protocol.
+     *                   The {@code record} is considered as one batch unit.
+     * @param parameters specify InfluxDB Write endpoint parameters
+     * @throws InfluxException if a problem occurred during write time-series data into InfluxDB
+     */
+    void writeRecord(@Nullable final String record, @Nonnull final WriteParameters parameters) throws InfluxException;
+
+    /**
      * Write Line Protocol records into specified bucket.
      *
      * <p>
@@ -127,6 +144,22 @@ public interface WriteApiBlocking {
                       @Nonnull final List<String> records) throws InfluxException;
 
     /**
+     * Write Line Protocol records into specified bucket.
+     *
+     * <p>
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
+     * The method blocks the executing thread until their operation finished.
+     * There is also non-blocking alternative {@link WriteApi#writeRecords(List, WriteParameters)}.
+     * </p>
+     *
+     * @param records    specifies the records in InfluxDB Line Protocol
+     * @param parameters specify InfluxDB Write endpoint parameters
+     * @throws InfluxException if a problem occurred during write time-series data into InfluxDB
+     */
+    void writeRecords(@Nonnull final List<String> records, @Nonnull final WriteParameters parameters)
+            throws InfluxException;
+
+    /**
      * Write Data point into specified bucket.
      *
      * <p>
@@ -164,6 +197,21 @@ public interface WriteApiBlocking {
                     @Nullable final Point point) throws InfluxException;
 
     /**
+     * Write Data point into specified bucket.
+     *
+     * <p>
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
+     * The method blocks the executing thread until their operation finished.
+     * There is also non-blocking alternative {@link WriteApi#writePoint(Point, WriteParameters)}.
+     * </p>
+     *
+     * @param point      specifies the Data point to write into bucket
+     * @param parameters specify InfluxDB Write endpoint parameters
+     * @throws InfluxException if a problem occurred during write time-series data into InfluxDB
+     */
+    void writePoint(@Nullable final Point point, @Nonnull final WriteParameters parameters) throws InfluxException;
+
+    /**
      * Write Data points into specified bucket.
      *
      * <p>
@@ -182,7 +230,6 @@ public interface WriteApiBlocking {
      */
     void writePoints(@Nonnull final List<Point> points) throws InfluxException;
 
-
     /**
      * Write Data points into specified bucket.
      *
@@ -200,6 +247,22 @@ public interface WriteApiBlocking {
     void writePoints(@Nonnull final String bucket,
                      @Nonnull final String org,
                      @Nonnull final List<Point> points) throws InfluxException;
+
+    /**
+     * Write Data points into specified bucket.
+     *
+     * <p>
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
+     * The method blocks the executing thread until their operation finished.
+     * There is also non-blocking alternative {@link WriteApi#writePoints(List, WriteParameters)}.
+     * </p>
+     *
+     * @param points     specifies the Data points to write into bucket
+     * @param parameters specify InfluxDB Write endpoint parameters
+     * @throws InfluxException if a problem occurred during write time-series data into InfluxDB
+     */
+    void writePoints(@Nonnull final List<Point> points, @Nonnull final WriteParameters parameters)
+            throws InfluxException;
 
     /**
      * Write Measurement into specified bucket.
@@ -245,6 +308,23 @@ public interface WriteApiBlocking {
                               @Nullable final M measurement) throws InfluxException;
 
     /**
+     * Write Measurement into specified bucket.
+     *
+     * <p>
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
+     * The method blocks the executing thread until their operation finished.
+     * There is also non-blocking alternative {@link WriteApi#writeMeasurement(Object, WriteParameters)}.
+     * </p>
+     *
+     * @param <M>         measurement type
+     * @param measurement specifies the Measurement to write into bucket
+     * @param parameters  specify InfluxDB Write endpoint parameters
+     * @throws InfluxException if a problem occurred during write time-series data into InfluxDB
+     */
+    <M> void writeMeasurement(@Nullable final M measurement, @Nonnull final WriteParameters parameters)
+            throws InfluxException;
+
+    /**
      * Write Measurements into specified bucket.
      *
      * <p>
@@ -286,4 +366,21 @@ public interface WriteApiBlocking {
                                @Nonnull final String org,
                                @Nonnull final WritePrecision precision,
                                @Nonnull final List<M> measurements) throws InfluxException;
+
+    /**
+     * Write Measurements into specified bucket.
+     *
+     * <p>
+     * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
+     * The method blocks the executing thread until their operation finished.
+     * There is also non-blocking alternative {@link WriteApi#writeMeasurements(List, WriteParameters)}.
+     * </p>
+     *
+     * @param <M>          measurement type
+     * @param measurements specifies the Measurements to write into bucket
+     * @param parameters   specify InfluxDB Write endpoint parameters
+     * @throws InfluxException if a problem occurred during write time-series data into InfluxDB
+     */
+    <M> void writeMeasurements(@Nonnull final List<M> measurements, @Nonnull final WriteParameters parameters)
+            throws InfluxException;
 }
