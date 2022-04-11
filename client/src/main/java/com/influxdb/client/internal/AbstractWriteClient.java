@@ -386,7 +386,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             }
 
             // Parameters
-            String organization = batchWrite.writeParameters.organizationSafe(options);
+            String organization = batchWrite.writeParameters.orgSafe(options);
             String bucket = batchWrite.writeParameters.bucketSafe(options);
             WritePrecision precision = batchWrite.writeParameters.precisionSafe(options);
             WriteConsistency consistency = batchWrite.writeParameters.consistencySafe(options);
@@ -444,7 +444,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         private WriteSuccessEvent toSuccessEvent(@Nonnull final BatchWriteItem batchWrite, final String lineProtocol) {
 
             return new WriteSuccessEvent(
-                    batchWrite.writeParameters.organizationSafe(options),
+                    batchWrite.writeParameters.orgSafe(options),
                     batchWrite.writeParameters.bucketSafe(options),
                     batchWrite.writeParameters.precisionSafe(options),
                     lineProtocol);

@@ -23,6 +23,8 @@ package com.influxdb.client;
 
 import java.util.List;
 
+import com.influxdb.client.domain.WritePrecision;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import org.assertj.core.api.Assertions;
@@ -46,6 +48,7 @@ class InfluxDBClientOptionsTest {
         Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:9999/");
         Assertions.assertThat(options.getAuthScheme()).isEqualTo(InfluxDBClientOptions.AuthScheme.TOKEN);
         Assertions.assertThat(options.getOkHttpClient()).isNotNull();
+        Assertions.assertThat(options.getPrecision()).isEqualTo(WritePrecision.NS);
     }
 
     @Test

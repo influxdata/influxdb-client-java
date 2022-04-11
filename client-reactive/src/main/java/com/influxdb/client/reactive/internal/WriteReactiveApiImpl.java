@@ -290,7 +290,7 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
                 // HTTP post
                 //
                 .flatMapSingle(it -> {
-                            String organization = parameters.organizationSafe(options);
+                            String organization = parameters.orgSafe(options);
                             String bucket = parameters.bucketSafe(options);
                             WritePrecision precision = parameters.precisionSafe(options);
                             WriteConsistency consistency = parameters.consistencySafe(options);

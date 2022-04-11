@@ -23,6 +23,7 @@ package com.influxdb.client.write;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.domain.WriteConsistency;
@@ -35,7 +36,7 @@ import com.influxdb.utils.Arguments;
  * Supports to specify:
  * <ul>
  *     <li><code>bucket</code> - Specifies the destination bucket for writes.</li>
- *     <li><code>organization</code> - Specifies the destination organization for writes.</li>
+ *     <li><code>org</code> - Specifies the destination organization for writes.</li>
  *     <li><code>precision</code> - Precision for unix timestamps in the line protocol of the request payload.</li>
  *     <li>
  *         <code>consistency</code> - The write consistency for the point.
@@ -47,28 +48,56 @@ import com.influxdb.utils.Arguments;
  *     </li>
  * </ul>
  */
+@ThreadSafe
+@SuppressWarnings("ConstantConditions")
 public final class WriteParameters {
 
+    public static final WritePrecision DEFAULT_WRITE_PRECISION = WritePrecision.NS;
+
     private final String bucket;
-    private final String organization;
+    private final String org;
     private final WritePrecision precision;
     private final WriteConsistency consistency;
 
     /**
-     * @param bucket       Specifies the destination bucket for writes.
-     * @param organization Specifies the destination organization for writes.
-     * @param precision    Precision for unix timestamps in the line protocol of the request payload.
+     * Construct WriteAPI parameters.
+     *
+     * @param bucket      The destination bucket for writes.
+     *                    If it is not specified then use {@link InfluxDBClientOptions#getBucket()}.
+     * @param org         The destination organization for writes.
+     *                    If it is not specified then use {@link InfluxDBClientOptions#getOrg()}.
+     * @param precision   Precision for unix timestamps in the line protocol of the request payload.
+     *                    If it is not specified then use {@link WritePrecision#NS}.
+     * @param consistency The write consistency for the point. For more info see {@link WriteParameters}.
+     */
+    public WriteParameters(@Nullable final String bucket,
+                           @Nullable final String org,
+                           @Nullable final WritePrecision precision,
+                           @Nullable final WriteConsistency consistency) {
+        this.bucket = bucket;
+        this.org = org;
+        this.precision = precision;
+        this.consistency = consistency;
+    }
+
+    /**
+     * The backward internal constructor, please use
+     * {@link #WriteParameters(String, String, WritePrecision, WriteConsistency)}.
+     *
+     * @param bucket    The destination bucket for writes.
+     * @param org       The destination organization for writes.
+     * @param precision Precision for unix timestamps in the line protocol of the request payload.
      */
     public WriteParameters(@Nonnull final String bucket,
-                           @Nonnull final String organization,
+                           @Nonnull final String org,
                            @Nonnull final WritePrecision precision) {
 
         Arguments.checkNonEmpty(bucket, "bucket");
-        Arguments.checkNonEmpty(organization, "organization");
+        Arguments.checkNonEmpty(org, "org");
         Arguments.checkNotNull(precision, "WritePrecision");
 
         this.bucket = bucket;
-        this.organization = organization;
+        this.org = org;
         this.precision = precision;
         this.consistency = null;
     }
@@ -78,8 +107,9 @@ public final class WriteParameters {
      * @return The destination organization for writes.
      */
     @Nonnull
-    public String organizationSafe(@Nonnull final InfluxDBClientOptions options) {
-        return organization;
+    public String orgSafe(@Nonnull final InfluxDBClientOptions options) {
+        Arguments.checkNotNull(options, "options");
+        return isNotDefined(org) ? options.getOrg() : org;
     }
 
     /**
@@ -88,7 +118,8 @@ public final class WriteParameters {
      */
     @Nonnull
     public String bucketSafe(@Nonnull final InfluxDBClientOptions options) {
-        return bucket;
+        Arguments.checkNotNull(options, "options");
+        return isNotDefined(bucket) ? options.getBucket() : bucket;
     }
 
     /**
@@ -97,7 +128,8 @@ public final class WriteParameters {
      */
     @Nonnull
     public WritePrecision precisionSafe(@Nonnull final InfluxDBClientOptions options) {
-        return precision;
+        Arguments.checkNotNull(options, "options");
+        return precision == null ? options.getPrecision() : precision;
     }
 
     /**
@@ -106,7 +138,30 @@ public final class WriteParameters {
      */
     @Nullable
     public WriteConsistency consistencySafe(@Nonnull final InfluxDBClientOptions options) {
-        return consistency;
+        Arguments.checkNotNull(options, "options");
+        return consistency == null ? options.getConsistency() : consistency;
+    }
+
+    /**
+     * Enforces that the destination {@code bucket} and destination {@code organization} are defined.
+     *
+     * @param options with default values
+     * @throws IllegalArgumentException if the bucket or organization is not defined
+     */
+    public void check(@Nonnull final InfluxDBClientOptions options) {
+        Arguments.checkNotNull(options, "options");
+
+        if (isNotDefined(bucket) && isNotDefined(options.getBucket())) {
+            throw new IllegalArgumentException("Expecting a non-empty string for destination bucket. "
+                    + "Please specify the bucket as a method parameter or use default configuration "
+                    + "at 'InfluxDBClientOptions.Bucket'.");
+        }
+
+        if (isNotDefined(org) && isNotDefined(options.getOrg())) {
+            throw new IllegalArgumentException("Expecting a non-empty string for destination organization. "
+                    + "Please specify the organization as a method parameter or use default configuration "
+                    + "at 'InfluxDBClientOptions.Organization'.");
+        }
     }
 
     @Override
@@ -123,7 +178,7 @@ public final class WriteParameters {
         if (!bucket.equals(that.bucket)) {
             return false;
         }
-        if (!organization.equals(that.organization)) {
+        if (!org.equals(that.org)) {
             return false;
         }
         if (precision != that.precision) {
@@ -136,9 +191,13 @@ public final class WriteParameters {
     @SuppressWarnings("MagicNumber")
     public int hashCode() {
         int result = bucket.hashCode();
-        result = 31 * result + organization.hashCode();
+        result = 31 * result + org.hashCode();
         result = 31 * result + precision.hashCode();
         result = 31 * result + (consistency != null ? consistency.hashCode() : 0);
         return result;
+    }
+
+    private boolean isNotDefined(final String option) {
+        return option == null || option.isEmpty();
     }
 }
