@@ -31,13 +31,12 @@ import com.influxdb.client.MockLogHandler;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (28/01/2020 14:47)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class WaitToConditionTest {
     
     @Test

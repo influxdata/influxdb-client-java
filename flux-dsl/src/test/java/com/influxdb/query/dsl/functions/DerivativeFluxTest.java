@@ -29,13 +29,12 @@ import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (bednar@github) (03/07/2018 15:05)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class DerivativeFluxTest {
 
     @Test

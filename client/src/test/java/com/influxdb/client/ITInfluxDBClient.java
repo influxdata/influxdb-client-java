@@ -26,14 +26,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
-import com.influxdb.LogLevel;
-import com.influxdb.client.domain.HealthCheck;
-import com.influxdb.client.domain.OnboardingRequest;
-import com.influxdb.client.domain.OnboardingResponse;
-import com.influxdb.client.domain.Ready;
-import com.influxdb.client.domain.Routes;
-import com.influxdb.client.domain.User;
-import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.domain.*;
 import com.influxdb.client.service.RoutesService;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.UnprocessableEntityException;
@@ -41,13 +34,12 @@ import com.influxdb.query.FluxTable;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 07:37)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class ITInfluxDBClient extends AbstractITClientTest {
 
     @Test

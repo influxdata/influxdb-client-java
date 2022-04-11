@@ -36,14 +36,13 @@ import com.influxdb.client.write.Point;
 import com.influxdb.client.write.events.WriteErrorEvent;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * This test ensures publish is called with WriteErrorEvent as described in
  * https://github.com/influxdata/influxdb-client-java/issues/291
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 public class PublishRuntimeErrorAsWriteErrorEventTest extends AbstractInfluxDBClientTest {
 
     @Test

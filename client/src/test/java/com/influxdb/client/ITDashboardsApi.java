@@ -45,13 +45,12 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (bednar@github) (01/04/2019 10:58)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class ITDashboardsApi extends AbstractITClientTest {
 
     private DashboardsApi dashboardsApi;

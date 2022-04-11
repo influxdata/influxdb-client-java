@@ -25,13 +25,12 @@ import com.influxdb.client.domain.File;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (26/08/2021 6:24)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class GeneratedCodeTest {
     @Test
     void adapterCanBeInstantiateWithoutParameters() {

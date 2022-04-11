@@ -36,13 +36,12 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (bednar@github) (15/10/2018 11:27)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class GzipInterceptorTest extends AbstractMockServerTest {
 
     private String url;

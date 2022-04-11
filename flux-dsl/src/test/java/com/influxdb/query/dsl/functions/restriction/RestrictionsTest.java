@@ -23,13 +23,12 @@ package com.influxdb.query.dsl.functions.restriction;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (bednar@github) (09/10/2018 10:33)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class RestrictionsTest {
 
     @Test

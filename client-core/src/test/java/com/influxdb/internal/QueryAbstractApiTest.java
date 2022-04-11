@@ -27,12 +27,12 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import javax.annotation.Nonnull;
 
-import com.google.gson.JsonParser;
 import com.influxdb.Cancellable;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.query.internal.FluxCsvParser;
 import com.influxdb.test.AbstractMockServerTest;
 
+import com.google.gson.JsonParser;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -41,8 +41,7 @@ import okio.Buffer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
@@ -53,7 +52,7 @@ import retrofit2.http.Streaming;
 /**
  * @author Jakub Bednar (bednar@github) (17/10/2018 09:44)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class QueryAbstractApiTest extends AbstractMockServerTest {
 
     private AbstractQueryApi queryClient;

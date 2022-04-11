@@ -24,13 +24,12 @@ package com.influxdb.client.reactive;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (05/08/2021 9:23)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class WriteOptionsReactiveTest {
     @Test
     void configure() {

@@ -23,13 +23,12 @@ package com.influxdb.client.flux;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (bednar@github) (31/07/2018 13:12)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class FluxClientFactoryTest {
 
     @Test

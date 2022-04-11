@@ -28,13 +28,12 @@ import com.influxdb.query.dsl.functions.restriction.Restrictions;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (24/02/2020 13:26)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class ReduceFluxTest {
 
     @Test

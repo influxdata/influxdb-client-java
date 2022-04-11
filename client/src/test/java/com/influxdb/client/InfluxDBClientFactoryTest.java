@@ -32,14 +32,13 @@ import com.influxdb.test.AbstractTest;
 import okhttp3.OkHttpClient;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 import retrofit2.Retrofit;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 10:59)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class InfluxDBClientFactoryTest extends AbstractTest {
 
     @Test

@@ -34,13 +34,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/09/2018 11:26)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class ITUsersApi extends AbstractITClientTest {
 
     private static final Logger LOG = Logger.getLogger(ITUsersApi.class.getName());

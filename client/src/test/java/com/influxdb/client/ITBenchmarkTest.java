@@ -33,13 +33,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * Client benchmark test
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class ITBenchmarkTest extends AbstractITClientTest {
 
     private BucketsApi bucketsApi;

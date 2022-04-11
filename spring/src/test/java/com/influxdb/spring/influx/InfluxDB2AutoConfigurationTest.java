@@ -31,8 +31,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.assertj.AssertableApplicationContext;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -46,7 +45,7 @@ import retrofit2.Retrofit;
  *
  * @author Jakub Bednar (bednar@github) (07/05/2019 12:59)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class InfluxDB2AutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

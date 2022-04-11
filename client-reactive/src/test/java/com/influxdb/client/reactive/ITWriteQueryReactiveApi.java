@@ -50,14 +50,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 import org.reactivestreams.Publisher;
 
 /**
  * @author Jakub Bednar (bednar@github) (22/11/2018 06:59)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
 
     private WriteReactiveApi writeClient;

@@ -57,8 +57,7 @@ import okio.Buffer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -69,7 +68,7 @@ import retrofit2.http.Path;
 /**
  * @author Jakub Bednar (bednar@github) (04/10/2018 07:57)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class RestClientTest extends AbstractMockServerTest {
 
     private AbstractRestClient restClient;

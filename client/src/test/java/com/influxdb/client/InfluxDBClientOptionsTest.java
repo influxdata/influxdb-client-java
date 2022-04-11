@@ -21,19 +21,18 @@
  */
 package com.influxdb.client;
 
-import java.util.List;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
+
+import java.util.List;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 10:38)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class InfluxDBClientOptionsTest {
 
     @Test

@@ -26,13 +26,12 @@ import java.util.Map;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (bednar@github) (28/06/2019 09:35)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class PointSettingsTest {
 
     private PointSettings defaults;

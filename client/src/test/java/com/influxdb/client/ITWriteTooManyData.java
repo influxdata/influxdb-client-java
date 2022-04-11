@@ -38,13 +38,12 @@ import com.influxdb.client.write.events.WriteSuccessEvent;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (24/01/2020 09:40)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class ITWriteTooManyData extends AbstractITWrite {
 
     private static final Logger LOG = Logger.getLogger(WriteApiTest.class.getName());

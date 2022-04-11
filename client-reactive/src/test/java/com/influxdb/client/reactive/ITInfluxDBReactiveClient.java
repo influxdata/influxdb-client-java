@@ -27,14 +27,13 @@ import com.influxdb.client.domain.HealthCheck;
 import io.reactivex.rxjava3.core.Single;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 import org.reactivestreams.Publisher;
 
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 08:06)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class ITInfluxDBReactiveClient extends AbstractITInfluxDBClientTest {
 
     @Test

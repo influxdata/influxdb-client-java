@@ -34,10 +34,9 @@ import com.influxdb.query.FluxTable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
-@RunWith(JUnitPlatform.class)
+@Suite
 class InvocableScriptsApiTest extends AbstractInfluxDBClientTest {
 
     static final String SUCCESS_DATA = ",result,table,_start,_stop,_time,_value,_field,_measurement,host,value\n"

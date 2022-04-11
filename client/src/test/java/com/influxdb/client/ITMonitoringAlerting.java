@@ -45,13 +45,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (25/09/2019 09:41)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class ITMonitoringAlerting extends AbstractITClientTest {
 
     private MockWebServer mockServer;

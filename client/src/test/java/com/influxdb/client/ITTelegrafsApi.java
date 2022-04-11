@@ -43,13 +43,12 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (bednar@github) (28/02/2019 10:31)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class ITTelegrafsApi extends AbstractITClientTest {
 
     private TelegrafsApi telegrafsApi;

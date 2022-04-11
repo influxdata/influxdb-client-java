@@ -33,13 +33,12 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (02/03/2020 10:18)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class ITUserAgentInterceptor extends AbstractMockServerTest {
 
     private OkHttpClient client;

@@ -39,15 +39,14 @@ import okhttp3.ResponseBody;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 import retrofit2.HttpException;
 import retrofit2.Response;
 
 /**
  * @author Jakub Bednar (29/09/2020 11:21)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class RetryAttemptTest {
     
     private final WriteOptions DEFAULT = WriteOptions.builder().build();

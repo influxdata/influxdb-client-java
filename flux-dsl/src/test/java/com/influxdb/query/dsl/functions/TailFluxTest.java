@@ -27,13 +27,12 @@ import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (14/12/2020 10:24)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class TailFluxTest
 {
 	@Test

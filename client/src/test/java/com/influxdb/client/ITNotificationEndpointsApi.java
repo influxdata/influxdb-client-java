@@ -44,13 +44,12 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (10/09/2019 08:50)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class ITNotificationEndpointsApi extends AbstractITClientTest {
 
     private NotificationEndpointsApi notificationEndpointsApi;

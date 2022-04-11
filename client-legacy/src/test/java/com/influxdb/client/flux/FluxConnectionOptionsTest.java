@@ -27,13 +27,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (bednar@github) (26/06/2018 09:09)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class FluxConnectionOptionsTest {
 
     @Test

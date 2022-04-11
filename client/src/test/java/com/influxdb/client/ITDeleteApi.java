@@ -40,13 +40,12 @@ import com.influxdb.query.FluxTable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Pavlina Rolincova (rolincova@github) (30/10/2019).
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class ITDeleteApi extends AbstractITClientTest {
 
     private DeleteApi deleteApi;

@@ -35,13 +35,12 @@ import com.influxdb.client.internal.AbstractInfluxDBClientTest;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (bednar@github) (07/05/2019 09:17)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class QueryApiTest extends AbstractInfluxDBClientTest {
 
     @Test

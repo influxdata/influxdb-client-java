@@ -33,13 +33,12 @@ import com.influxdb.exceptions.NotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Jakub Bednar (bednar@github) (28/01/2019 10:52)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class ITLabelsApi extends AbstractITClientTest {
 
     private LabelsApi labelsApi;

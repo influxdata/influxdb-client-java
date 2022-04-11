@@ -34,15 +34,14 @@ import okhttp3.Request;
 import okhttp3.ResponseBody;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 import retrofit2.HttpException;
 import retrofit2.Response;
 
 /**
  * @author Jakub Bednar (bednar@github) (02/08/2018 08:58)
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 class InfluxExceptionTest {
 
     @Test
