@@ -246,10 +246,7 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
         Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(measurements, "measurements");
 
-        Flowable<BatchWriteData> stream = Flowable.fromPublisher(measurements)
-                .map(it -> new BatchWriteDataMeasurement(it, precision, options, measurementMapper));
-
-        return writeMeasurements(stream, new WriteParameters(bucket, org, precision));
+        return writeMeasurements(measurements, new WriteParameters(bucket, org, precision));
     }
 
     @Override
