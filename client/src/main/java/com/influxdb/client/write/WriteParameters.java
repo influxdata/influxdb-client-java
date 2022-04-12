@@ -164,6 +164,27 @@ public final class WriteParameters {
         }
     }
 
+    /**
+     * Copy current parameters with new precision.
+     *
+     * @param precision new precision
+     * @param options   default values
+     * @return copied parameters
+     */
+    @Nonnull
+    public WriteParameters copy(@Nonnull final WritePrecision precision,
+                                @Nonnull final InfluxDBClientOptions options) {
+
+        Arguments.checkNotNull(precision, "precision");
+        Arguments.checkNotNull(options, "options");
+
+        return new WriteParameters(
+                bucketSafe(options),
+                orgSafe(options),
+                precision,
+                consistencySafe(options));
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

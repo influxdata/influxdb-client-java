@@ -160,6 +160,5 @@ class WriteApiBlockingTest extends AbstractInfluxDBClientTest {
                 .getWriteApiBlocking()
                 .writeMeasurements(Collections.singletonList(measurement), parameters);
         assertParameters.run();
-
     }
 }

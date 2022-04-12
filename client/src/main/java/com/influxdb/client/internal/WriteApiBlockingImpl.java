@@ -182,11 +182,7 @@ final class WriteApiBlockingImpl extends AbstractWriteBlockingClient implements 
                 .filter(Objects::nonNull)
                 .collect(Collectors.groupingBy(Point::getPrecision, LinkedHashMap::new, Collectors.toList()))
                 .forEach((precision, grouped) -> {
-                    WriteParameters groupParameters = new WriteParameters(
-                            parameters.bucketSafe(options),
-                            parameters.orgSafe(options),
-                            precision,
-                            parameters.consistencySafe(options));
+                    WriteParameters groupParameters = parameters.copy(precision, options);
                     write(
                             groupParameters,
                             grouped.stream().map(it -> new BatchWriteDataPoint(it, options)));
