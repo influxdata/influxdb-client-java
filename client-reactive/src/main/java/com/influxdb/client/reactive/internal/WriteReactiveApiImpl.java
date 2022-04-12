@@ -122,9 +122,20 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
         Arguments.checkNotNull(precision, "precision");
         Arguments.checkNotNull(records, "records");
 
+        return writeRecords(records, new WriteParameters(bucket, org, precision));
+    }
+
+    @Override
+    public Publisher<Success> writeRecords(@Nonnull final Publisher<String> records,
+                                           @Nonnull final WriteParameters parameters) {
+
+        Arguments.checkNotNull(records, "records");
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
         Flowable<BatchWriteData> stream = Flowable.fromPublisher(records).map(BatchWriteDataRecord::new);
 
-        return write(new WriteParameters(bucket, org, precision), stream);
+        return write(parameters, stream);
     }
 
     @Override
@@ -171,12 +182,23 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
         Arguments.checkNonEmpty(org, "organization");
         Arguments.checkNotNull(points, "points");
 
+        return writePoints(points, new WriteParameters(bucket, org, precision));
+    }
+
+    @Override
+    public Publisher<Success> writePoints(@Nonnull final Publisher<Point> points,
+                                          @Nonnull final WriteParameters parameters) {
+
+        Arguments.checkNotNull(points, "points");
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
         Flowable<BatchWriteData> stream = Flowable
                 .fromPublisher(points)
                 .filter(Objects::nonNull)
-                .map(point -> new BatchWriteDataPoint(point, precision, options));
+                .map(point -> new BatchWriteDataPoint(point, parameters.precisionSafe(options), options));
 
-        return write(new WriteParameters(bucket, org, precision), stream);
+        return write(parameters, stream);
     }
 
     @Override
@@ -227,7 +249,22 @@ public class WriteReactiveApiImpl extends AbstractRestClient implements WriteRea
         Flowable<BatchWriteData> stream = Flowable.fromPublisher(measurements)
                 .map(it -> new BatchWriteDataMeasurement(it, precision, options, measurementMapper));
 
-        return write(new WriteParameters(bucket, org, precision), stream);
+        return writeMeasurements(stream, new WriteParameters(bucket, org, precision));
+    }
+
+    @Override
+    public <M> Publisher<Success> writeMeasurements(@Nonnull final Publisher<M> measurements,
+                                                    @Nonnull final WriteParameters parameters) {
+
+        Arguments.checkNotNull(measurements, "points");
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
+        Flowable<BatchWriteData> stream = Flowable.fromPublisher(measurements)
+                .map(it -> new BatchWriteDataMeasurement(it, parameters.precisionSafe(options), options,
+                        measurementMapper));
+
+        return write(parameters, stream);
     }
 
     @Nonnull

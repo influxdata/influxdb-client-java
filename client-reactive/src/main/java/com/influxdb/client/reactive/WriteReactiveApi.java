@@ -28,6 +28,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
+import com.influxdb.client.write.WriteParameters;
 
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
@@ -96,7 +97,6 @@ public interface WriteReactiveApi {
     Publisher<Success> writeRecords(@Nonnull final WritePrecision precision,
                                     @Nonnull final Publisher<String> records);
 
-
     /**
      * Write Line Protocol records into specified bucket.
      *
@@ -111,6 +111,17 @@ public interface WriteReactiveApi {
                                     @Nonnull final String org,
                                     @Nonnull final WritePrecision precision,
                                     @Nonnull final Publisher<String> records);
+
+    /**
+     * Write Line Protocol records into specified bucket.
+     *
+     * @param records    specifies the records in InfluxDB Line Protocol
+     * @param parameters specify InfluxDB Write endpoint parameters
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
+     */
+    Publisher<Success> writeRecords(@Nonnull final Publisher<String> records,
+                                    @Nonnull final WriteParameters parameters);
 
     /**
      * Write Data point into specified bucket.
@@ -173,6 +184,16 @@ public interface WriteReactiveApi {
                                    @Nonnull final String org,
                                    @Nonnull final WritePrecision precision,
                                    @Nonnull final Publisher<Point> points);
+
+    /**
+     * Write Data points into specified bucket.
+     *
+     * @param points     specifies the Data points to write into bucket
+     * @param parameters specify InfluxDB Write endpoint parameters
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
+     */
+    Publisher<Success> writePoints(@Nonnull final Publisher<Point> points, @Nonnull final WriteParameters parameters);
 
     /**
      * Write Measurement into specified bucket.
@@ -239,4 +260,16 @@ public interface WriteReactiveApi {
                                              @Nonnull final String org,
                                              @Nonnull final WritePrecision precision,
                                              @Nonnull final Publisher<M> measurements);
+
+    /**
+     * Write Measurements into specified bucket.
+     *
+     * @param measurements specifies the Measurements to write into bucket
+     * @param <M>          type of measurement
+     * @param parameters   specify InfluxDB Write endpoint parameters
+     * @return Publisher representing a successful written operation or signal
+     * the {@link com.influxdb.exceptions.InfluxException} via {@link Subscriber#onError}
+     */
+    <M> Publisher<Success> writeMeasurements(@Nonnull final Publisher<M> measurements,
+                                             @Nonnull final WriteParameters parameters);
 }
