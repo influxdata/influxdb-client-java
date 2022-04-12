@@ -7,7 +7,8 @@ This directory contains Java, Kotlin and Scala examples.
 - [ParameterizedQuery.java](src/main/java/example/ParameterizedQuery.java) - How to use Parameterized Queries
 
 ### Others
-- [InvocableScripts.py](src/main/java/example/InvocableScripts.java) - How to use Invocable scripts Cloud API to create custom endpoints that query data
+- [InvocableScripts.java](src/main/java/example/InvocableScripts.java) - How to use Invocable scripts Cloud API to create custom endpoints that query data
+- [InfluxDBEnterpriseExample.java](src/main/java/example/InfluxDBEnterpriseExample.java) - How to use `consistency` parameter for InfluxDB Enterprise
 
 ## Kotlin
 
