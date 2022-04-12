@@ -46,7 +46,6 @@ public abstract class Restrictions {
     @Nonnull
     public static Restrictions not(@Nonnull final Restrictions restrictions) {
         return new Not(restrictions);
-        return new Logical("or", restrictions);
     }
 
     /**
