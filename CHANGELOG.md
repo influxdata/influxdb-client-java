@@ -62,11 +62,18 @@ This release also uses new version of InfluxDB OSS API definitions - [oss.yml](h
 
 ### Features
 1. [#324](https://github.com/influxdata/influxdb-client-java/pull/298) Removed dependency on `io.swagger:swagger-annotations` and updated swagger to the latest version
-1. [#289](https://github.com/influxdata/influxdb-client-java/pull/298): Upgrade `RxJava2` -> `RxJava3`, update outdated dependencies
-1. [#316](https://github.com/influxdata/influxdb-client-java/pull/316): Add `InvocableScriptsApi` to create, update, list, delete and invoke scripts by seamless way
-1. [#315](https://github.com/influxdata/influxdb-client-java/pull/315): Add support for timezones [FluxDSL]
-1. [#317](https://github.com/influxdata/influxdb-client-java/pull/317): Gets HTTP headers from the unsuccessful HTTP request
-1. [#334](https://github.com/influxdata/influxdb-client-java/pull/334): Supports not operator [FluxDSL]
+2. [#289](https://github.com/influxdata/influxdb-client-java/pull/298): Upgrade `RxJava2` -> `RxJava3`, update outdated dependencies
+3. [#316](https://github.com/influxdata/influxdb-client-java/pull/316): Add `InvocableScriptsApi` to create, update, list, delete and invoke scripts by seamless way
+4. [#315](https://github.com/influxdata/influxdb-client-java/pull/315): Add support for timezones [FluxDSL]
+5. [#317](https://github.com/influxdata/influxdb-client-java/pull/317): Gets HTTP headers from the unsuccessful HTTP request
+6. [#334](https://github.com/influxdata/influxdb-client-java/pull/334): Supports not operator [FluxDSL]
+7. [#329](https://github.com/influxdata/influxdb-client-java/pull/329): Add support for write `consistency` parameter [InfluxDB Enterprise]
+    ```diff
+    - writeApi.writeRecord(WritePrecision.NS, "cpu_load_short,host=server02 value=0.67");
+    + WriteParameters parameters = new WriteParameters(WritePrecision.NS, WriteConsistency.ALL);
+    + 
+    + writeApi.writeRecord("cpu_load_short,host=server02 value=0.67", parameters);
+    ```
 
 ### Bug Fixes
 1. [#313](https://github.com/influxdata/influxdb-client-java/pull/313): Do not deliver `exception` when the consumer is already disposed [influxdb-client-reactive]
