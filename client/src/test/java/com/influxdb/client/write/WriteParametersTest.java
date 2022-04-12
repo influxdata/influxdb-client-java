@@ -100,4 +100,16 @@ class WriteParametersTest {
         Assertions.assertThat(parameters.precisionSafe(options)).isEqualTo(WritePrecision.NS);
         Assertions.assertThat(parameters.consistencySafe(options)).isNull();
     }
+
+    @Test
+    void v1Constructor() {
+        InfluxDBClientOptions options = optionsBuilder.bucket("my-bucket").org("my-org").build();
+
+        WriteParameters parameters = new WriteParameters(WritePrecision.NS, WriteConsistency.ONE);
+
+        Assertions.assertThat(parameters.orgSafe(options)).isEqualTo("my-org");
+        Assertions.assertThat(parameters.bucketSafe(options)).isEqualTo("my-bucket");
+        Assertions.assertThat(parameters.precisionSafe(options)).isEqualTo(WritePrecision.NS);
+        Assertions.assertThat(parameters.consistencySafe(options)).isEqualTo(WriteConsistency.ONE);
+    }
 }

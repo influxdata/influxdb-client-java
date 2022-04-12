@@ -81,6 +81,18 @@ public final class WriteParameters {
     }
 
     /**
+     * Construct WriteAPI parameters.
+     *
+     * @param precision   Precision for unix timestamps in the line protocol of the request payload.
+     *                    If it is not specified then use {@link WritePrecision#NS}.
+     * @param consistency The write consistency for the point. For more info see {@link WriteParameters}.
+     */
+    public WriteParameters(@Nullable final WritePrecision precision,
+                           @Nullable final WriteConsistency consistency) {
+        this(null, null, precision, consistency);
+    }
+
+    /**
      * The backward internal constructor, please use
      * {@link #WriteParameters(String, String, WritePrecision, WriteConsistency)}.
      *
