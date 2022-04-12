@@ -75,11 +75,19 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
         Arguments.checkNonEmpty(org, "org");
         Arguments.checkNotNull(precision, "WritePrecision is required");
 
+        writeRecord(record, new WriteParameters(bucket, org, precision));
+    }
+
+    @Override
+    public void writeRecord(@Nullable final String record, @Nonnull final WriteParameters parameters) {
         if (record == null) {
             return;
         }
 
-        write(new WriteParameters(bucket, org, precision), Flowable.just(new BatchWriteDataRecord(record)));
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
+        write(parameters, Flowable.just(new BatchWriteDataRecord(record)));
     }
 
     @Override
@@ -102,9 +110,20 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
         Arguments.checkNotNull(precision, "WritePrecision is required");
         Arguments.checkNotNull(records, "records");
 
+        writeRecords(records, new WriteParameters(bucket, org, precision));
+    }
+
+    @Override
+    public void writeRecords(@Nonnull final List<String> records,
+                             @Nonnull final WriteParameters parameters) {
+
+        Arguments.checkNotNull(records, "records");
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
         Flowable<BatchWriteData> stream = Flowable.fromIterable(records).map(BatchWriteDataRecord::new);
 
-        write(new WriteParameters(bucket, org, precision), stream);
+        write(parameters, stream);
     }
 
     @Override
@@ -121,11 +140,20 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
                            @Nonnull final String org,
                            @Nullable final Point point) {
 
+        writePoint(point, new WriteParameters(bucket, org, WriteParameters.DEFAULT_WRITE_PRECISION));
+    }
+
+    @Override
+    public void writePoint(@Nullable final Point point, @Nonnull final WriteParameters parameters) {
+
         if (point == null) {
             return;
         }
 
-        writePoints(bucket, org, Collections.singletonList(point));
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
+        writePoints(Collections.singletonList(point), parameters);
     }
 
     @Override
@@ -146,10 +174,20 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
         Arguments.checkNonEmpty(org, "org");
         Arguments.checkNotNull(points, "points");
 
+        writePoints(points, new WriteParameters(bucket, org, WriteParameters.DEFAULT_WRITE_PRECISION));
+    }
+
+    @Override
+    public void writePoints(@Nonnull final List<Point> points, @Nonnull final WriteParameters parameters) {
+
+        Arguments.checkNotNull(points, "points");
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
         Flowable<BatchWriteDataPoint> stream = Flowable.fromIterable(points).filter(Objects::nonNull)
                 .map(point -> new BatchWriteDataPoint(point, options));
 
-        write(bucket, org, stream);
+        writePoints(parameters, stream);
     }
 
     @Override
@@ -167,11 +205,19 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
                                      @Nonnull final WritePrecision precision,
                                      @Nullable final M measurement) {
 
+        writeMeasurement(measurement, new WriteParameters(bucket, org, precision));
+    }
+
+    @Override
+    public <M> void writeMeasurement(@Nullable final M measurement, @Nonnull final WriteParameters parameters) {
         if (measurement == null) {
             return;
         }
 
-        writeMeasurements(bucket, org, precision, Collections.singletonList(measurement));
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
+        writeMeasurements(Collections.singletonList(measurement), parameters);
     }
 
     @Override
@@ -194,11 +240,21 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
         Arguments.checkNotNull(precision, "WritePrecision is required");
         Arguments.checkNotNull(measurements, "records");
 
+        writeMeasurements(measurements, new WriteParameters(bucket, org, precision));
+    }
+
+    @Override
+    public <M> void writeMeasurements(@Nonnull final List<M> measurements, @Nonnull final WriteParameters parameters) {
+        Arguments.checkNotNull(measurements, "points");
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
         Flowable<BatchWriteData> stream = Flowable
                 .fromIterable(measurements)
-                .map(it -> new BatchWriteDataMeasurement(it, precision, options, measurementMapper));
+                .map(it -> new BatchWriteDataMeasurement(it, parameters.precisionSafe(options), options,
+                        measurementMapper));
 
-        write(new WriteParameters(bucket, org, precision), stream);
+        write(parameters, stream);
     }
 
     @Nonnull

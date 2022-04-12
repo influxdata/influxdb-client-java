@@ -92,7 +92,7 @@ public interface WriteApiBlocking {
      * <p>
      * NOTE: This method directly write data info InfluxDB 2.x without batching, jittering and backpressure.
      * The method blocks the executing thread until their operation finished.
-     * There is also non-blocking alternative {@link WriteApi#writeRecords(List, WriteParameters)}.
+     * There is also non-blocking alternative {@link WriteApi#writeRecord(String, WriteParameters)}.
      * </p>
      *
      * @param record     specifies the record in InfluxDB Line Protocol.

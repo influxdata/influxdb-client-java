@@ -213,9 +213,8 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         waitToCondition(() -> finished.get(), DEFAULT_WAIT);
     }
 
-    public void write(@Nonnull final String bucket,
-                      @Nonnull final String organization,
-                      @Nonnull final Flowable<BatchWriteDataPoint> stream) {
+    public void writePoints(@Nonnull final WriteParameters writeParameters,
+                            @Nonnull final Flowable<BatchWriteDataPoint> stream) {
 
         if (processor.hasComplete()) {
             throw new InfluxException(CLOSED_EXCEPTION);
@@ -224,7 +223,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         stream.subscribe(
                 dataPoint -> {
                     WritePrecision precision = dataPoint.point.getPrecision();
-                    write(new WriteParameters(bucket, organization, precision), Flowable.just(dataPoint));
+                    write(writeParameters.copy(precision, options), Flowable.just(dataPoint));
                 },
                 throwable -> publish(new WriteErrorEvent(throwable)));
     }

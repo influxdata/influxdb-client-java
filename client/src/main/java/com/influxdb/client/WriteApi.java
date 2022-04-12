@@ -28,6 +28,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
+import com.influxdb.client.write.WriteParameters;
 import com.influxdb.client.write.events.AbstractWriteEvent;
 import com.influxdb.client.write.events.BackpressureEvent;
 import com.influxdb.client.write.events.EventListener;
@@ -81,6 +82,15 @@ public interface WriteApi extends AutoCloseable {
                      @Nullable final String record);
 
     /**
+     * Write Line Protocol record into specified bucket.
+     *
+     * @param record     specifies the record in InfluxDB Line Protocol.
+     *                   The {@code record} is considered as one batch unit.
+     * @param parameters specify InfluxDB Write endpoint parameters
+     */
+    void writeRecord(@Nullable final String record, @Nonnull final WriteParameters parameters);
+
+    /**
      * Write Line Protocol records into specified bucket.
      *
      * <p>
@@ -108,6 +118,14 @@ public interface WriteApi extends AutoCloseable {
                       @Nonnull final List<String> records);
 
     /**
+     * Write Line Protocol records into specified bucket.
+     *
+     * @param records    specifies the records in InfluxDB Line Protocol
+     * @param parameters specify InfluxDB Write endpoint parameters
+     */
+    void writeRecords(@Nonnull final List<String> records, @Nonnull final WriteParameters parameters);
+
+    /**
      * Write Data point into specified bucket.
      *
      * <p>
@@ -131,6 +149,14 @@ public interface WriteApi extends AutoCloseable {
                     @Nullable final Point point);
 
     /**
+     * Write Data point into specified bucket.
+     *
+     * @param point      specifies the Data point to write into bucket
+     * @param parameters specify InfluxDB Write endpoint parameters
+     */
+    void writePoint(@Nullable final Point point, @Nonnull final WriteParameters parameters);
+
+    /**
      * Write Data points into specified bucket.
      *
      * <p>
@@ -142,7 +168,6 @@ public interface WriteApi extends AutoCloseable {
      */
     void writePoints(@Nonnull final List<Point> points);
 
-
     /**
      * Write Data points into specified bucket.
      *
@@ -153,6 +178,14 @@ public interface WriteApi extends AutoCloseable {
     void writePoints(@Nonnull final String bucket,
                      @Nonnull final String org,
                      @Nonnull final List<Point> points);
+
+    /**
+     * Write Data points into specified bucket.
+     *
+     * @param points     specifies the Data points to write into bucket
+     * @param parameters specify InfluxDB Write endpoint parameters
+     */
+    void writePoints(@Nonnull final List<Point> points, @Nonnull final WriteParameters parameters);
 
     /**
      * Write Measurement into specified bucket.
@@ -184,6 +217,15 @@ public interface WriteApi extends AutoCloseable {
                               @Nullable final M measurement);
 
     /**
+     * Write Measurement into specified bucket.
+     *
+     * @param <M>         measurement type
+     * @param measurement specifies the Measurement to write into bucket
+     * @param parameters  specify InfluxDB Write endpoint parameters
+     */
+    <M> void writeMeasurement(@Nullable final M measurement, @Nonnull final WriteParameters parameters);
+
+    /**
      * Write Measurements into specified bucket.
      *
      * <p>
@@ -211,6 +253,15 @@ public interface WriteApi extends AutoCloseable {
                                @Nonnull final String org,
                                @Nonnull final WritePrecision precision,
                                @Nonnull final List<M> measurements);
+
+    /**
+     * Write Measurements into specified bucket.
+     *
+     * @param <M>          measurement type
+     * @param measurements specifies the Measurements to write into bucket
+     * @param parameters   specify InfluxDB Write endpoint parameters
+     */
+    <M> void writeMeasurements(@Nonnull final List<M> measurements, @Nonnull final WriteParameters parameters);
 
     /**
      * Listen the events produced by {@link WriteApi}.

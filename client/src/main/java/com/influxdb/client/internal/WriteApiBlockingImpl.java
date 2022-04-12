@@ -204,10 +204,6 @@ final class WriteApiBlockingImpl extends AbstractWriteBlockingClient implements 
                                      @Nonnull final WritePrecision precision,
                                      @Nullable final M measurement) {
 
-        if (measurement == null) {
-            return;
-        }
-
         writeMeasurement(measurement, new WriteParameters(bucket, org, precision));
     }
 
