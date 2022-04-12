@@ -74,7 +74,8 @@ This release also uses new version of InfluxDB OSS API definitions - [oss.yml](h
     - writeApi.writeRecord(WritePrecision.NS, "cpu_load_short,host=server02 value=0.67");
     + WriteParameters parameters = new WriteParameters(WritePrecision.NS, WriteConsistency.ALL);
     + 
-    + wri
+    + writeApi.writeRecord("cpu_load_short,host=server02 value=0.67", parameters);
+    ```
     
     Configure `consistency` via client options:
     ```diff
