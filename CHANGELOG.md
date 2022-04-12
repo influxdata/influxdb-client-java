@@ -68,11 +68,27 @@ This release also uses new version of InfluxDB OSS API definitions - [oss.yml](h
 5. [#317](https://github.com/influxdata/influxdb-client-java/pull/317): Gets HTTP headers from the unsuccessful HTTP request
 6. [#334](https://github.com/influxdata/influxdb-client-java/pull/334): Supports not operator [FluxDSL]
 7. [#329](https://github.com/influxdata/influxdb-client-java/pull/329): Add support for write `consistency` parameter [InfluxDB Enterprise]
+
+   Configure `consistency` via `Write API`:
     ```diff
     - writeApi.writeRecord(WritePrecision.NS, "cpu_load_short,host=server02 value=0.67");
     + WriteParameters parameters = new WriteParameters(WritePrecision.NS, WriteConsistency.ALL);
     + 
-    + writeApi.writeRecord("cpu_load_short,host=server02 value=0.67", parameters);
+    + wri
+    
+    Configure `consistency` via client options:
+    ```diff
+    - InfluxDBClient client = InfluxDBClientFactory.createV1("http://influxdb_enterpriser:8086",
+    -    "my-username",
+    -    "my-password".toCharArray(),
+    -    "my-db",
+    -    "autogen");
+    + InfluxDBClient client = InfluxDBClientFactory.createV1("http://influxdb_enterpriser:8086",
+    +    "my-username",
+    +    "my-password".toCharArray(),
+    +    "my-db",
+    +    "autogen", 
+    +    WriteConsistency.ALL);
     ```
 
 ### Bug Fixes
