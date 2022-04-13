@@ -240,6 +240,7 @@ Supported Record columns:
 
 Supported Record restrictions:
 - `equal`
+- `not`
 - `notEqual`
 - `less`
 - `greater`
