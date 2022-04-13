@@ -10,6 +10,7 @@ import okhttp3.MultipartBody;
 import com.influxdb.client.domain.Error;
 import com.influxdb.client.domain.LineProtocolError;
 import com.influxdb.client.domain.LineProtocolLengthError;
+import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import io.reactivex.rxjava3.core.Single;
 import retrofit2.Response;
@@ -33,6 +34,7 @@ public interface WriteService {
    * @param accept Content type that the client can understand. Writes only return a response body if they fail, e.g. due to a formatting problem or quota limit. #### InfluxDB Cloud   - returns only &#x60;application/json&#x60; for format and limit errors.   - returns only &#x60;text/html&#x60; for some quota limit errors.   #### InfluxDB OSS   - returns only &#x60;application/json&#x60; for format and limit errors.   For more information about write errors, see how to [troubleshoot issues writing data](https://docs.influxdata.com/influxdb/v2.1/write-data/troubleshoot/). (optional, default to application/json)
    * @param orgID ID of the destination organization for writes. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
    * @param precision Precision for unix timestamps in the line protocol of the request payload. (optional, default to null)
+   * @param consistency Sets the write consistency for the point. InfluxDB assumes that the write consistency is &#39;one&#39; if you do not specify. Available with InfluxDB Enterprise clusters only. (optional, default to null)
    * @return Call&lt;Void&gt;
    */
   @Headers({
@@ -40,7 +42,7 @@ public interface WriteService {
   })
   @POST("api/v2/write")
   Call<Void> postWrite(
-    @retrofit2.http.Query("org") String org, @retrofit2.http.Query("bucket") String bucket, @retrofit2.http.Body String body, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Content-Encoding") String contentEncoding, @retrofit2.http.Header("Content-Type") String contentType, @retrofit2.http.Header("Content-Length") Integer contentLength, @retrofit2.http.Header("Accept") String accept, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("precision") WritePrecision precision
+    @retrofit2.http.Query("org") String org, @retrofit2.http.Query("bucket") String bucket, @retrofit2.http.Body String body, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Content-Encoding") String contentEncoding, @retrofit2.http.Header("Content-Type") String contentType, @retrofit2.http.Header("Content-Length") Integer contentLength, @retrofit2.http.Header("Accept") String accept, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("precision") WritePrecision precision, @retrofit2.http.Query("consistency") WriteConsistency consistency
   );
 
   /**
@@ -56,11 +58,12 @@ public interface WriteService {
    * @param accept Content type that the client can understand. Writes only return a response body if they fail, e.g. due to a formatting problem or quota limit. #### InfluxDB Cloud   - returns only &#x60;application/json&#x60; for format and limit errors.   - returns only &#x60;text/html&#x60; for some quota limit errors.   #### InfluxDB OSS   - returns only &#x60;application/json&#x60; for format and limit errors.   For more information about write errors, see how to [troubleshoot issues writing data](https://docs.influxdata.com/influxdb/v2.1/write-data/troubleshoot/). (optional, default to application/json)
    * @param orgID ID of the destination organization for writes. If both &#x60;orgID&#x60; and &#x60;org&#x60; are specified, &#x60;org&#x60; takes precedence. (optional)
    * @param precision Precision for unix timestamps in the line protocol of the request payload. (optional, default to null)
+   * @param consistency Sets the write consistency for the point. InfluxDB assumes that the write consistency is &#39;one&#39; if you do not specify. Available with InfluxDB Enterprise clusters only. (optional, default to null)
    * @return Single&lt;Response&lt;Void&gt;&gt;
    */
   @POST("api/v2/write")
   Single<Response<Void>> postWriteRx(
-    @retrofit2.http.Query("org") String org, @retrofit2.http.Query("bucket") String bucket, @retrofit2.http.Body String body, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Content-Encoding") String contentEncoding, @retrofit2.http.Header("Content-Type") String contentType, @retrofit2.http.Header("Content-Length") Integer contentLength, @retrofit2.http.Header("Accept") String accept, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("precision") WritePrecision precision
+    @retrofit2.http.Query("org") String org, @retrofit2.http.Query("bucket") String bucket, @retrofit2.http.Body String body, @retrofit2.http.Header("Zap-Trace-Span") String zapTraceSpan, @retrofit2.http.Header("Content-Encoding") String contentEncoding, @retrofit2.http.Header("Content-Type") String contentType, @retrofit2.http.Header("Content-Length") Integer contentLength, @retrofit2.http.Header("Accept") String accept, @retrofit2.http.Query("orgID") String orgID, @retrofit2.http.Query("precision") WritePrecision precision, @retrofit2.http.Query("consistency") WriteConsistency consistency
   );
 
 }

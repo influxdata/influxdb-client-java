@@ -38,6 +38,8 @@ import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint;
 import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.client.write.Point;
+import com.influxdb.client.write.WriteParameters;
+import com.influxdb.exceptions.InfluxException;
 import com.influxdb.utils.Arguments;
 
 /**
@@ -65,11 +67,21 @@ final class WriteApiBlockingImpl extends AbstractWriteBlockingClient implements 
                             @Nonnull final WritePrecision precision,
                             @Nullable final String record) {
 
+        writeRecord(record, new WriteParameters(bucket, org, precision));
+    }
+
+    @Override
+    public void writeRecord(@Nullable final String record,
+                            @Nonnull final WriteParameters parameters) throws InfluxException {
+
         if (record == null) {
             return;
         }
 
-        write(bucket, org, precision, new BatchWriteDataRecord(record));
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
+        write(parameters, new BatchWriteDataRecord(record));
     }
 
     @Override
@@ -93,7 +105,18 @@ final class WriteApiBlockingImpl extends AbstractWriteBlockingClient implements 
         Arguments.checkNotNull(precision, "WritePrecision is required");
         Arguments.checkNotNull(records, "records");
 
-        write(bucket, org, precision, records.stream().map(BatchWriteDataRecord::new));
+        writeRecords(records, new WriteParameters(bucket, org, precision));
+    }
+
+    @Override
+    public void writeRecords(@Nonnull final List<String> records,
+                             @Nonnull final WriteParameters parameters) throws InfluxException {
+
+        Arguments.checkNotNull(records, "records");
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
+        write(parameters, records.stream().map(BatchWriteDataRecord::new));
     }
 
     @Override
@@ -106,11 +129,25 @@ final class WriteApiBlockingImpl extends AbstractWriteBlockingClient implements 
 
     @Override
     public void writePoint(@Nonnull final String bucket, @Nonnull final String org, @Nullable final Point point) {
+
+        Arguments.checkNonEmpty(bucket, "bucket");
+        Arguments.checkNonEmpty(org, "org");
+
+        writePoint(point, new WriteParameters(bucket, org, WriteParameters.DEFAULT_WRITE_PRECISION));
+    }
+
+    @Override
+    public void writePoint(@Nullable final Point point,
+                           @Nonnull final WriteParameters parameters) throws InfluxException {
+
         if (point == null) {
             return;
         }
 
-        writePoints(bucket, org, Collections.singletonList(point));
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
+        writePoints(Collections.singletonList(point), parameters);
     }
 
     @Override
@@ -130,15 +167,26 @@ final class WriteApiBlockingImpl extends AbstractWriteBlockingClient implements 
         Arguments.checkNonEmpty(org, "org");
         Arguments.checkNotNull(points, "points");
 
+        writePoints(points, new WriteParameters(bucket, org, WriteParameters.DEFAULT_WRITE_PRECISION));
+    }
+
+    @Override
+    public void writePoints(@Nonnull final List<Point> points,
+                            @Nonnull final WriteParameters parameters) throws InfluxException {
+        Arguments.checkNotNull(points, "points");
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
         points
                 .stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.groupingBy(Point::getPrecision, LinkedHashMap::new, Collectors.toList()))
-                .forEach((precision, grouped) -> write(
-                        bucket,
-                        org,
-                        precision,
-                        grouped.stream().map(it -> new BatchWriteDataPoint(it, options))));
+                .forEach((precision, grouped) -> {
+                    WriteParameters groupParameters = parameters.copy(precision, options);
+                    write(
+                            groupParameters,
+                            grouped.stream().map(it -> new BatchWriteDataPoint(it, options)));
+                });
     }
 
     @Override
@@ -156,11 +204,20 @@ final class WriteApiBlockingImpl extends AbstractWriteBlockingClient implements 
                                      @Nonnull final WritePrecision precision,
                                      @Nullable final M measurement) {
 
+        writeMeasurement(measurement, new WriteParameters(bucket, org, precision));
+    }
+
+    @Override
+    public <M> void writeMeasurement(@Nullable final M measurement,
+                                     @Nonnull final WriteParameters parameters) throws InfluxException {
         if (measurement == null) {
             return;
         }
 
-        writeMeasurements(bucket, org, precision, Collections.singletonList(measurement));
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
+        writeMeasurements(Collections.singletonList(measurement), parameters);
     }
 
     @Override
@@ -182,15 +239,23 @@ final class WriteApiBlockingImpl extends AbstractWriteBlockingClient implements 
         Arguments.checkNotNull(precision, "WritePrecision is required");
         Arguments.checkNotNull(measurements, "records");
 
-        write(bucket, org, precision, measurements.stream().map(it -> toMeasurementBatch(it, precision)));
+        writeMeasurements(measurements, new WriteParameters(bucket, org, precision));
     }
 
-    private void write(@Nonnull final String bucket,
-                       @Nonnull final String organization,
-                       @Nonnull final WritePrecision precision,
+    @Override
+    public <M> void writeMeasurements(@Nonnull final List<M> measurements, @Nonnull final WriteParameters parameters)
+            throws InfluxException {
+
+        Arguments.checkNotNull(measurements, "points");
+        Arguments.checkNotNull(parameters, "WriteParameters");
+        parameters.check(options);
+
+        write(parameters, measurements.stream().map(it -> toMeasurementBatch(it, parameters.precisionSafe(options))));
+    }
+
+    private void write(@Nonnull final WriteParameters parameters,
                        @Nonnull final BatchWriteData data) {
 
-        write(bucket, organization, precision, Stream.of(data));
+        write(parameters, Stream.of(data));
     }
-
 }

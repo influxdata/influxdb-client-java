@@ -25,10 +25,13 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 
+import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.RetryAttempt;
 import com.influxdb.client.write.Point;
+import com.influxdb.client.write.WriteParameters;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.test.AbstractMockServerTest;
 
@@ -37,6 +40,7 @@ import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import io.reactivex.rxjava3.schedulers.TestScheduler;
 import io.reactivex.rxjava3.subscribers.TestSubscriber;
 import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -346,5 +350,58 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
         String body = getRequestBody(mockServer);
         Assertions.assertThat(body).isEqualTo("h2o_feet,location=west water_level=1i 2000\n"
                 + "h2o_feet,location=west water_level=2i 2010");
+    }
+
+    @Test
+    void writeParameters() {
+
+        writeClient = influxDBClient.getWriteReactiveApi();
+
+        Runnable assertParameters = () -> {
+            RecordedRequest request;
+            try {
+                request = takeRequest();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            Assertions.assertThat(request.getRequestUrl()).isNotNull();
+            Assertions.assertThat("s").isEqualTo(request.getRequestUrl().queryParameter("precision"));
+            Assertions.assertThat("g").isEqualTo(request.getRequestUrl().queryParameter("bucket"));
+            Assertions.assertThat("h").isEqualTo(request.getRequestUrl().queryParameter("org"));
+            Assertions.assertThat("all").isEqualTo(request.getRequestUrl().queryParameter("consistency"));
+        };
+
+        Consumer<Publisher<WriteReactiveApi.Success>> assertSuccess = success -> Flowable.fromPublisher(success)
+                .test()
+                .awaitCount(1)
+                .assertValueCount(1)
+                .assertNoErrors()
+                .assertComplete();
+
+        WriteParameters parameters = new WriteParameters("g", "h", WritePrecision.S, WriteConsistency.ALL);
+
+        // records
+        mockServer.enqueue(createResponse("{}"));
+        Publisher<WriteReactiveApi.Success> success = writeClient.writeRecords(Flowable.just("h2o,location=europe level=1i 1"), parameters);
+        assertSuccess.accept(success);
+        assertParameters.run();
+
+        // points
+        Point point = Point.measurement("h2o").addTag("location", "europe").addField("level", 1).time(1L, WritePrecision.S);
+        mockServer.enqueue(createResponse("{}"));
+        success = writeClient.writePoints(Flowable.just(point), parameters);
+        assertSuccess.accept(success);
+        assertParameters.run();
+
+        // measurements
+        ITWriteQueryReactiveApi.H2O measurement = new ITWriteQueryReactiveApi.H2O();
+        measurement.location = "coyote_creek";
+        measurement.level = 2.927;
+        measurement.time = Instant.ofEpochSecond(10);
+        mockServer.enqueue(createResponse("{}"));
+        success = writeClient.writeMeasurements(Flowable.just(measurement), parameters);
+        assertSuccess.accept(success);
+        assertParameters.run();
     }
 }

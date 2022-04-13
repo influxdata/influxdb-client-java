@@ -22,6 +22,7 @@
 package com.influxdb.client.kotlin
 
 import com.influxdb.client.domain.WritePrecision
+import com.influxdb.client.write.WriteParameters
 import com.influxdb.client.write.Point
 import kotlinx.coroutines.flow.Flow
 
@@ -83,6 +84,17 @@ interface WriteKotlinApi {
     suspend fun writeRecords(records: Flow<String>, precision: WritePrecision, bucket: String? = null, org: String? = null)
 
     /**
+     * Write Line Protocol records into InfluxDB.
+     *
+     * If any exception occurs during write, this exception is rethrown from this method.
+     *
+     * @param records       specified in [LineProtocol](http://bit.ly/line-protocol).
+     *                      The `records` are considered as one batch unit.
+     * @param parameters    specify InfluxDB Write endpoint parameters
+     */
+    suspend fun writeRecords(records: Flow<String>, parameters: WriteParameters)
+
+    /**
      * Write Data Point into InfluxDB.
      *
      * If any exception occurs during write, this exception is rethrown from this method.
@@ -126,6 +138,16 @@ interface WriteKotlinApi {
      *                  `organization` if the `org` is not specified.
      */
     suspend fun writePoints(points: Flow<Point>, bucket: String? = null, org: String? = null)
+
+    /**
+     * Write Data Points into InfluxDB.
+     *
+     * If any exception occurs during write, this exception is rethrown from this method.
+     *
+     * @param points        specified data points. The `points` are considered as one batch unit.
+     * @param parameters    specify InfluxDB Write endpoint parameters
+     */
+    suspend fun writePoints(points: Flow<Point>, parameters: WriteParameters)
 
     /**
      * Write Measurement into InfluxDB.
@@ -177,4 +199,14 @@ interface WriteKotlinApi {
      * @param <M>           measurement type
      */
     suspend fun <M> writeMeasurements(measurements: Flow<M>, precision: WritePrecision, bucket: String? = null, org: String? = null)
+
+    /**
+     * Write Measurements into InfluxDB.
+     *
+     * If any exception occurs during write, this exception is rethrown from this method.
+     *
+     * @param measurements  specified Measurements. The `measurements` are considered as one batch unit.
+     * @param parameters    specify InfluxDB Write endpoint parameters
+     */
+    suspend fun <M> writeMeasurements(measurements: Flow<M>, parameters: WriteParameters)
 }

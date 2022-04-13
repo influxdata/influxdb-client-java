@@ -302,16 +302,17 @@ A client can be configured via configuration file. The configuration file has to
 
 The following options are supported:
 
-| Property name             | default   | description |
-| --------------------------|-----------|-------------| 
-| influx2.url               | -         | the url to connect to InfluxDB |
-| influx2.org               | -         | default destination organization for writes and queries |
-| influx2.bucket            | -         | default destination bucket for writes |
-| influx2.token             | -         | the token to use for the authorization |
-| influx2.logLevel          | NONE      | rest client verbosity level |
-| influx2.readTimeout       | 10000 ms  | read timeout |
-| influx2.writeTimeout      | 10000 ms  | write timeout |
-| influx2.connectTimeout    | 10000 ms  | socket timeout |
+| Property name            | default    | description                                                |
+|--------------------------|------------|------------------------------------------------------------| 
+| influx2.url              | -          | the url to connect to InfluxDB                             |
+| influx2.org              | -          | default destination organization for writes and queries    |
+| influx2.bucket           | -          | default destination bucket for writes                      |
+| influx2.token            | -          | the token to use for the authorization                     |
+| influx2.logLevel         | NONE       | rest client verbosity level                                |
+| influx2.readTimeout      | 10000 ms   | read timeout                                               |
+| influx2.writeTimeout     | 10000 ms   | write timeout                                              |
+| influx2.connectTimeout   | 10000 ms   | socket timeout                                             |
+| influx2.precision        | NS         | default precision for unix timestamps in the line protocol |
 
 The `influx2.readTimeout`, `influx2.writeTimeout` and `influx2.connectTimeout` supports `ms`, `s` and `m` as unit. Default is milliseconds.
 
@@ -345,15 +346,16 @@ InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory
 ```
 The following options are supported:
 
-| Property name     | default   | description |
-| ------------------|-----------|-------------| 
-| org               | -         | default destination organization for writes and queries |
-| bucket            | -         | default destination bucket for writes |
-| token             | -         | the token to use for the authorization |
-| logLevel          | NONE      | rest client verbosity level |
-| readTimeout       | 10000 ms  | read timeout |
-| writeTimeout      | 10000 ms  | write timeout |
-| connectTimeout    | 10000 ms  | socket timeout |
+| Property name    | default    | description                                                |
+|------------------|------------|------------------------------------------------------------| 
+| org              | -          | default destination organization for writes and queries    |
+| bucket           | -          | default destination bucket for writes                      |
+| token            | -          | the token to use for the authorization                     |
+| logLevel         | NONE       | rest client verbosity level                                |
+| readTimeout      | 10000 ms   | read timeout                                               |
+| writeTimeout     | 10000 ms   | write timeout                                              |
+| connectTimeout   | 10000 ms   | socket timeout                                             |
+| precision        | NS         | default precision for unix timestamps in the line protocol |
 
 The `readTimeout`, `writeTimeout` and `connectTimeout` supports `ms`, `s` and `m` as unit. Default is milliseconds.
 

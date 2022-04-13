@@ -21,14 +21,18 @@
  */
 package com.influxdb.client.kotlin
 
+import com.influxdb.client.domain.WriteConsistency
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.write.Point
+import com.influxdb.client.write.WriteParameters
 import com.influxdb.exceptions.UnauthorizedException
 import com.influxdb.test.AbstractMockServerTest
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
+import okhttp3.mockwebserver.RecordedRequest
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -228,6 +232,57 @@ class WriteKotlinApiTest : AbstractMockServerTest() {
         Assertions.assertThat(body).endsWith("h2o,location=coyote_creek level=49.0 49")
 
         Assertions.assertThat(mockServer.requestCount).isEqualTo(5)
+    }
+
+    @Test
+    fun writeParameters(): Unit = runBlocking {
+        val assertParameters = Runnable {
+            val request: RecordedRequest = try {
+                takeRequest()
+            } catch (e: InterruptedException) {
+                throw RuntimeException(e)
+            }
+            Assertions.assertThat(request.requestUrl).isNotNull
+            Assertions.assertThat("s")
+                .isEqualTo(request.requestUrl!!.queryParameter("precision"))
+            Assertions.assertThat("c").isEqualTo(request.requestUrl!!.queryParameter("bucket"))
+            Assertions.assertThat("d").isEqualTo(request.requestUrl!!.queryParameter("org"))
+            Assertions.assertThat("quorum")
+                .isEqualTo(request.requestUrl!!.queryParameter("consistency"))
+        }
+
+        val parameters = WriteParameters("c", "d", WritePrecision.S, WriteConsistency.QUORUM)
+
+        // records
+        val lineProtocols = flow {
+            for (i in 1..49) {
+                emit("h2o,location=coyote_creek level=${i}.0 $i")
+            }
+        }
+        enqueuedResponse()
+        writeApi.writeRecords(lineProtocols, parameters)
+        assertParameters.run()
+
+        // points
+        val point = Point
+            .measurement("h2o")
+            .addField("level", 1)
+            .time(1, WritePrecision.S)
+
+        enqueuedResponse()
+        writeApi.writePoints(listOf(point, point).asFlow(), parameters)
+        assertParameters.run()
+
+        // measurements
+        val mem = ITQueryKotlinApi.Mem()
+        mem.host = "192.168.1.100"
+        mem.region = "europe"
+        mem.free = 40
+        mem.time = Instant.ofEpochSecond(10)
+
+        enqueuedResponse()
+        writeApi.writeMeasurements(listOf(mem, mem).asFlow(), parameters)
+        assertParameters.run()
     }
 
     private suspend fun <T> Flow<T>.chunks(size: Int): Flow<List<T>> = flow {

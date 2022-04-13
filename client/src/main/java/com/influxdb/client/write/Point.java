@@ -41,6 +41,8 @@ import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.internal.NanosecondConverter;
 import com.influxdb.utils.Arguments;
 
+import static com.influxdb.client.write.WriteParameters.DEFAULT_WRITE_PRECISION;
+
 /**
  * Point defines the values that will be written to the database.
  * <a href="http://bit.ly/influxdata-point">See Go Implementation</a>.
@@ -49,8 +51,6 @@ import com.influxdb.utils.Arguments;
  */
 @NotThreadSafe
 public final class Point {
-
-    private static final WritePrecision DEFAULT_WRITE_PRECISION = WritePrecision.NS;
 
     private static final int MAX_FRACTION_DIGITS = 340;
     private static final ThreadLocal<NumberFormat> NUMBER_FORMATTER =
@@ -63,7 +63,7 @@ public final class Point {
             });
 
 
-    private String name;
+    private final String name;
     private final Map<String, String> tags = new TreeMap<>();
     private final Map<String, Object> fields = new TreeMap<>();
     private Number time;

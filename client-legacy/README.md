@@ -43,12 +43,12 @@ FluxClient fluxClient = FluxClientFactory.create("http://localhost:8086?readTime
 ```
 The following options are supported:
 
-| Property name | default | description |
-| --------------|-------------|-------------| 
-| readTimeout       | 10000 ms| read timeout |
-| writeTimeout      | 10000 ms| write timeout |
-| connectTimeout    | 10000 ms| socket timeout |
-| logLevel          | NONE | rest client verbosity level |
+| Property name  | default  | description                 |
+|----------------|----------|-----------------------------| 
+| readTimeout    | 10000 ms | read timeout                |
+| writeTimeout   | 10000 ms | write timeout               |
+| connectTimeout | 10000 ms | socket timeout              |
+| logLevel       | NONE     | rest client verbosity level |
 
 ## Query using the Flux language
 

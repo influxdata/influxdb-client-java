@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 
 import com.influxdb.client.domain.OnboardingRequest;
 import com.influxdb.client.domain.OnboardingResponse;
+import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.internal.InfluxDBClientImpl;
 import com.influxdb.utils.Arguments;
 
@@ -160,7 +161,7 @@ public final class InfluxDBClientFactory {
     }
 
     /**
-     * Create a instance of the InfluxDB 2.x client to connect into InfluxDB 1.8.
+     * Create an instance of the InfluxDB 2.x client to connect into InfluxDB 1.8.
      *
      * @param url             the url to connect to the InfluxDB 1.8
      * @param username        authorization username
@@ -175,6 +176,31 @@ public final class InfluxDBClientFactory {
                                           final char[] password,
                                           @Nonnull final String database,
                                           @Nullable final String retentionPolicy) {
+        return createV1(url, username, password, database, retentionPolicy, null);
+    }
+
+    /**
+     * Create an instance of the InfluxDB 2.x client to connect into InfluxDB 1.8.
+     *
+     * @param url             the url to connect to the InfluxDB 1.8
+     * @param username        authorization username
+     * @param password        authorization password
+     * @param database        database name
+     * @param retentionPolicy retention policy
+     * @param consistency     Specify the write consistency for the point.
+     *                        InfluxDB assumes that the write consistency is {@link  WriteConsistency#ONE} if you
+     *                        do not specify consistency. See the <a href="https://bit.ly/enterprise-consistency">
+     *                        InfluxDB Enterprise documentation</a> for detailed descriptions of each consistency
+     *                        option. <b>Available with InfluxDB Enterprise clusters only!</b>
+     * @return client
+     */
+    @Nonnull
+    public static InfluxDBClient createV1(@Nonnull final String url,
+                                          @Nullable final String username,
+                                          final char[] password,
+                                          @Nonnull final String database,
+                                          @Nullable final String retentionPolicy,
+                                          @Nullable final WriteConsistency consistency) {
 
         Arguments.checkNonEmpty(database, "database");
 
@@ -185,6 +211,7 @@ public final class InfluxDBClientFactory {
                         username == null ? "" : username,
                         password == null ? "" : String.valueOf(password)).toCharArray())
                 .bucket(String.format("%s/%s", database, retentionPolicy == null ? "" : retentionPolicy))
+                .consistency(consistency)
                 .build();
 
         return create(options);

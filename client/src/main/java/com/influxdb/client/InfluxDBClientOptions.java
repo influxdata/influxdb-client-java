@@ -34,7 +34,10 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.influxdb.LogLevel;
+import com.influxdb.client.domain.WriteConsistency;
+import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.PointSettings;
+import com.influxdb.client.write.WriteParameters;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.utils.Arguments;
 
@@ -56,13 +59,15 @@ public final class InfluxDBClientOptions {
     private final OkHttpClient.Builder okHttpClient;
     private final LogLevel logLevel;
 
-    private AuthScheme authScheme;
-    private char[] token;
-    private String username;
-    private char[] password;
+    private final AuthScheme authScheme;
+    private final char[] token;
+    private final String username;
+    private final char[] password;
 
-    private String org;
-    private String bucket;
+    private final String org;
+    private final String bucket;
+    private final WritePrecision precision;
+    private final WriteConsistency consistency;
     private final PointSettings pointSettings;
 
     private InfluxDBClientOptions(@Nonnull final InfluxDBClientOptions.Builder builder) {
@@ -79,6 +84,8 @@ public final class InfluxDBClientOptions {
 
         this.org = builder.org;
         this.bucket = builder.bucket;
+        this.precision = builder.precision != null ? builder.precision : WriteParameters.DEFAULT_WRITE_PRECISION;
+        this.consistency = builder.consistency;
         this.pointSettings = builder.pointSettings;
     }
 
@@ -181,6 +188,33 @@ public final class InfluxDBClientOptions {
     }
 
     /**
+     * @return default precision for unix timestamps in the line protocol
+     * @see InfluxDBClientOptions.Builder#precision(WritePrecision)
+     */
+    @Nonnull
+    public WritePrecision getPrecision() {
+        return precision;
+    }
+
+
+    /**
+     * The write consistency for the point.
+     * <p>
+     * InfluxDB assumes that the write consistency is {@link  WriteConsistency#ONE} if you do not specify consistency.
+     * See the <a href="https://bit.ly/enterprise-consistency">InfluxDB Enterprise documentation</a> for
+     * detailed descriptions of each consistency option.
+     *
+     * <b>Available with InfluxDB Enterprise clusters only!</b>
+     *
+     * @see InfluxDBClientOptions.Builder#consistency(WriteConsistency)
+     * @return the write consistency for the point.
+     */
+    @Nullable
+    public WriteConsistency getConsistency() {
+        return consistency;
+    }
+
+    /**
      * Default tags that will be use for writes by Point and POJO.
      *
      * @return default tags
@@ -218,8 +252,10 @@ public final class InfluxDBClientOptions {
 
         private String org;
         private String bucket;
+        private WritePrecision precision;
+        private WriteConsistency consistency;
 
-        private PointSettings pointSettings = new PointSettings();
+        private final PointSettings pointSettings = new PointSettings();
 
         /**
          * Set the url to connect to InfluxDB.
@@ -342,6 +378,41 @@ public final class InfluxDBClientOptions {
         }
 
         /**
+         * Specify the default precision for unix timestamps in the line protocol.
+         *
+         * @param precision default precision for unix timestamps in the line protocol
+         * @return {@code this}
+         */
+        @Nonnull
+        public InfluxDBClientOptions.Builder precision(@Nullable final WritePrecision precision) {
+
+            this.precision = precision;
+
+            return this;
+        }
+
+        /**
+         * Specify the write consistency for the point.
+         * <p>
+         * InfluxDB assumes that the write consistency is {@link  WriteConsistency#ONE}
+         * if you do not specify consistency.
+         * See the <a href="https://bit.ly/enterprise-consistency">InfluxDB Enterprise documentation</a> for
+         * detailed descriptions of each consistency option.
+         *
+         * <b>Available with InfluxDB Enterprise clusters only!</b>
+         *
+         * @param consistency The write consistency for the point.
+         * @return {@code this}
+         */
+        @Nonnull
+        public InfluxDBClientOptions.Builder consistency(@Nullable final WriteConsistency consistency) {
+
+            this.consistency = consistency;
+
+            return this;
+        }
+
+        /**
          * Add default tag that will be use for writes by Point and POJO.
          * <p>
          * The expressions can be:
@@ -386,9 +457,12 @@ public final class InfluxDBClientOptions {
             String readTimeout = parse.queryParameter("readTimeout");
             String writeTimeout = parse.queryParameter("writeTimeout");
             String connectTimeout = parse.queryParameter("connectTimeout");
+            String precision = parse.queryParameter("precision");
+            String consistency = parse.queryParameter("consistency");
 
             String url = parsedUrl.urlWithoutParams;
-            return configure(url, org, bucket, token, logLevel, readTimeout, writeTimeout, connectTimeout);
+            return configure(url, org, bucket, token, logLevel, readTimeout, writeTimeout, connectTimeout,
+                    precision, consistency);
         }
 
         /**
@@ -412,6 +486,8 @@ public final class InfluxDBClientOptions {
                 String readTimeout = properties.getProperty("influx2.readTimeout");
                 String writeTimeout = properties.getProperty("influx2.writeTimeout");
                 String connectTimeout = properties.getProperty("influx2.connectTimeout");
+                String precision = properties.getProperty("influx2.precision");
+                String consistency = properties.getProperty("influx2.consistency");
 
                 //
                 // Default tags
@@ -427,7 +503,8 @@ public final class InfluxDBClientOptions {
                     }
                 });
 
-                return configure(url, org, bucket, token, logLevel, readTimeout, writeTimeout, connectTimeout);
+                return configure(url, org, bucket, token, logLevel, readTimeout, writeTimeout, connectTimeout,
+                        precision, consistency);
 
             } catch (IOException e) {
                 throw new IllegalStateException(e);
@@ -466,7 +543,9 @@ public final class InfluxDBClientOptions {
                                                         @Nullable final String logLevel,
                                                         @Nullable final String readTimeout,
                                                         @Nullable final String writeTimeout,
-                                                        @Nullable final String connectTimeout) {
+                                                        @Nullable final String connectTimeout,
+                                                        @Nullable final String precision,
+                                                        @Nullable final String consistency) {
 
             url(url);
             org(org);
@@ -478,6 +557,14 @@ public final class InfluxDBClientOptions {
 
             if (logLevel != null) {
                 logLevel(Enum.valueOf(LogLevel.class, logLevel));
+            }
+
+            if (precision != null) {
+                precision(Enum.valueOf(WritePrecision.class, precision));
+            }
+
+            if (consistency != null) {
+                consistency(Enum.valueOf(WriteConsistency.class, consistency));
             }
 
             okHttpClient = new OkHttpClient.Builder()
@@ -522,7 +609,7 @@ public final class InfluxDBClientOptions {
                     throw new InfluxException("unknown unit for '" + value + "'");
             }
 
-            return Duration.of(Long.valueOf(amount), chronoUnit);
+            return Duration.of(Long.parseLong(amount), chronoUnit);
         }
 
         private static final class ParsedUrl {
