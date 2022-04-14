@@ -84,7 +84,12 @@ public final class InfluxDBClientFactory {
      * and client produces {@link com.influxdb.exceptions.UnauthorizedException}.
      * </p>
      *
-     * @param url      the url to connect to the InfluxDB
+     * <p>
+     * The url could be a connection string with various configurations. For more info
+     * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+     * </p>
+     *
+     * @param url      url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
      * @param username the username to use in the basic auth
      * @param password the password to use in the basic auth
      * @return client
@@ -106,7 +111,12 @@ public final class InfluxDBClientFactory {
     /**
      * Create an instance of the InfluxDB 2.x client.
      *
-     * @param url   the url to connect to the InfluxDB
+     * <p>
+     * The url could be a connection string with various configurations. For more info
+     * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+     * </p>
+     *
+     * @param url   url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
      * @param token the token to use for the authorization
      * @return client
      * @see InfluxDBClientOptions.Builder#url(String)
@@ -120,7 +130,12 @@ public final class InfluxDBClientFactory {
     /**
      * Create an instance of the InfluxDB 2.x client.
      *
-     * @param url   the url to connect to the InfluxDB
+     * <p>
+     * The url could be a connection string with various configurations. For more info
+     * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+     * </p>
+     *
+     * @param url   url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
      * @param token the token to use for the authorization
      * @param org   the name of an organization
      * @return client
@@ -137,7 +152,12 @@ public final class InfluxDBClientFactory {
     /**
      * Create an instance of the InfluxDB 2.x client.
      *
-     * @param url    the url to connect to the InfluxDB
+     * <p>
+     * The url could be a connection string with various configurations. For more info
+     * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+     * </p>
+     *
+     * @param url    url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
      * @param token  the token to use for the authorization
      * @param org    the name of an organization
      * @param bucket the name of a bucket
@@ -163,7 +183,12 @@ public final class InfluxDBClientFactory {
     /**
      * Create an instance of the InfluxDB 2.x client to connect into InfluxDB 1.8.
      *
-     * @param url             the url to connect to the InfluxDB 1.8
+     * <p>
+     * The url could be a connection string with various configurations. For more info
+     * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+     * </p>
+     *
+     * @param url             the url to connect to InfluxDB 1.8 (required). http://localhost:8086?readTimeout=5000
      * @param username        authorization username
      * @param password        authorization password
      * @param database        database name
@@ -182,7 +207,12 @@ public final class InfluxDBClientFactory {
     /**
      * Create an instance of the InfluxDB 2.x client to connect into InfluxDB 1.8.
      *
-     * @param url             the url to connect to the InfluxDB 1.8
+     * <p>
+     * The url could be a connection string with various configurations. For more info
+     * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+     * </p>
+     *
+     * @param url             the url to connect to InfluxDB 1.8 (required). http://localhost:8086?readTimeout=5000
      * @param username        authorization username
      * @param password        authorization password
      * @param database        database name

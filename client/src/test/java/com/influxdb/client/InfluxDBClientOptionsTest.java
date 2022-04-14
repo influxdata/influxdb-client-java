@@ -106,4 +106,16 @@ class InfluxDBClientOptionsTest {
         Assertions.assertThat(protocols).hasSize(1);
         Assertions.assertThat(protocols).contains(Protocol.HTTP_1_1);
     }
+
+    @Test
+    void parseURLAsConnectionString() {
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url("http://localhost:9999?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS&token=my-token&bucket=my-bucket&org=my-org")
+                .build();
+
+        Assertions.assertThat(options.getAuthScheme()).isEqualTo(InfluxDBClientOptions.AuthScheme.TOKEN);
+        Assertions.assertThat(options.getToken()).isEqualTo("my-token".toCharArray());
+        Assertions.assertThat(options.getBucket()).isEqualTo("my-bucket");
+        Assertions.assertThat(options.getOrg()).isEqualTo("my-org");
+    }
 }

@@ -50,9 +50,12 @@ class InfluxDBClientKotlinFactory {
         }
 
         /**
-         * Create an instance of the InfluxDB 2.x client. The url could be a connection string with various configurations.
+         * Create an instance of the InfluxDB 2.x client.
          *
-         * e.g.: "http://localhost:8086?readTimeout=5000&amp;connectTimeout=5000&amp;logLevel=BASIC
+         * <p>
+         * The url could be a connection string with various configurations. For more info
+         * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+         * </p>
          *
          * @param connectionString connection string with various configurations.
          * @return client
@@ -76,7 +79,12 @@ class InfluxDBClientKotlinFactory {
          * and client produces {@link com.influxdb.exceptions.UnauthorizedException}.
          * </p>
          *
-         * @param url      the url to connect to the InfluxDB
+         * <p>
+         * The url could be a connection string with various configurations. For more info
+         * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+         * </p>
+         *
+         * @param url      the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
          * @param username the username to use in the basic auth
          * @param password the password to use in the basic auth
          * @return client
@@ -97,7 +105,12 @@ class InfluxDBClientKotlinFactory {
         /**
          * Create an instance of the InfluxDB 2.x reactive client.
          *
-         * @param url   the url to connect to the InfluxDB
+         * <p>
+         * The url could be a connection string with various configurations. For more info
+         * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+         * </p>
+         *
+         * @param url   the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
          * @param token the token to use for the authorization
          * @return client
          * @see InfluxDBClientOptions.Builder.url
@@ -110,7 +123,12 @@ class InfluxDBClientKotlinFactory {
         /**
          * Create an instance of the InfluxDB 2.x reactive client.
          *
-         * @param url   the url to connect to the InfluxDB
+         * <p>
+         * The url could be a connection string with various configurations. For more info
+         * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+         * </p>
+         *
+         * @param url   the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
          * @param token the token to use for the authorization
          * @param org    the name of an organization
          * @return client
@@ -124,7 +142,12 @@ class InfluxDBClientKotlinFactory {
         /**
          * Create an instance of the InfluxDB 2.x reactive client.
          *
-         * @param url   the url to connect to the InfluxDB
+         * <p>
+         * The url could be a connection string with various configurations. For more info
+         * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+         * </p>
+         *
+         * @param url   the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
          * @param token the token to use for the authorization
          * @param org    the name of an organization
          * @param bucket the name of a bucket

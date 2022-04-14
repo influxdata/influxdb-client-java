@@ -76,4 +76,13 @@ class InfluxDBClientKotlinFactoryTest : AbstractTest() {
             Assertions.assertThat(it).isNotNull
         }
     }
+
+    @Test
+    @Throws(NoSuchFieldException::class, IllegalAccessException::class)
+    fun connectionStringConfiguration() {
+        val client = InfluxDBClientKotlinFactory.create("http://localhost:8086?connectTimeout=45000", "xyz".toCharArray())
+        val retrofit = getDeclaredField<Retrofit>(client, "retrofit", AbstractInfluxDBClient::class.java)
+        val okHttpClient = retrofit.callFactory() as OkHttpClient
+        Assertions.assertThat(okHttpClient.connectTimeoutMillis).isEqualTo(45000)
+    }
 }

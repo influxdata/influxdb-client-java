@@ -179,4 +179,18 @@ class InfluxDBClientFactoryTest extends AbstractTest {
         Assertions.assertThat(options.getBucket()).isEqualTo("database/");
         Assertions.assertThat(options.getToken()).isEqualTo(":".toCharArray());
     }
+
+    @Test
+    void v1ConfigurationWithTimeout() throws NoSuchFieldException, IllegalAccessException {
+        InfluxDBClient client = InfluxDBClientFactory.createV1("http://localhost:8086?writeTimeout=30000",
+                "my-username",
+                "my-password".toCharArray(),
+                "database",
+                "week");
+
+        Retrofit retrofit = getDeclaredField(client, "retrofit", AbstractInfluxDBClient.class);
+        OkHttpClient okHttpClient = (OkHttpClient) retrofit.callFactory();
+
+        Assertions.assertThat(okHttpClient.writeTimeoutMillis()).isEqualTo(30_000);
+    }
 }
