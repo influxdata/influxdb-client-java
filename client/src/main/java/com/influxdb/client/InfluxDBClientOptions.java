@@ -259,15 +259,19 @@ public final class InfluxDBClientOptions {
 
         /**
          * Set the url to connect to InfluxDB.
+         * <p>
+         * The url could be a connection string with various configurations. For more info
+         * see: {@link #connectionString(String)}.
+         * </p>
          *
-         * @param url the url to connect to InfluxDB. It must be defined.
+         * @param url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
          * @return {@code this}
          */
         @Nonnull
         public InfluxDBClientOptions.Builder url(@Nonnull final String url) {
             Arguments.checkNonEmpty(url, "url");
 
-            this.url = new ParsedUrl(url).urlWithoutParams;
+            connectionString(url);
 
             return this;
         }
@@ -438,7 +442,24 @@ public final class InfluxDBClientOptions {
         }
 
         /**
-         * Configure Builder via connection string.
+         * Configure Builder via connection string. The allowed configuration:
+         *
+         * <ul>
+         *     <li><code>org</code> - default destination organization for writes and queries</li>
+         *     <li><code>bucket</code> - default destination bucket for writes</li>
+         *     <li><code>token</code> - the token to use for the authorization</li>
+         *     <li><code>logLevel</code> - rest client verbosity level</li>
+         *     <li><code>readTimeout</code> - read timeout</li>
+         *     <li><code>writeTimeout</code> - write timeout</li>
+         *     <li><code>connectTimeout</code> - socket timeout</li>
+         *     <li><code>precision</code> - default precision for unix timestamps in the line protocol</li>
+         *     <li><code>consistency</code> - specify the write consistency for the point</li>
+         * </ul>
+         *
+         * Connection string example:
+         * <pre>
+         * http://localhost:8086?readTimeout=30000&amp;token=my-token&amp;bucket=my-bucket&amp;org=my-org
+         * </pre>
          *
          * @return {@code this}
          */
@@ -547,7 +568,7 @@ public final class InfluxDBClientOptions {
                                                         @Nullable final String precision,
                                                         @Nullable final String consistency) {
 
-            url(url);
+            this.url = new ParsedUrl(url).urlWithoutParams;
             org(org);
             bucket(bucket);
 

@@ -51,9 +51,10 @@ object InfluxDBClientScalaFactory {
   }
 
   /**
-   * Create an instance of the InfluxDB 2.x client. The url could be a connection string with various configurations.
+   * Create an instance of the InfluxDB 2.x client.
    *
-   * e.g.: "http://localhost:8086?readTimeout=5000&amp;connectTimeout=5000&amp;logLevel=BASIC
+   * The url could be a connection string with various configurations. For more info
+   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
    *
    * @param connectionString connection string with various configurations.
    * @return client
@@ -75,7 +76,10 @@ object InfluxDBClientScalaFactory {
    * [[http://bit.ly/session-length time-to-live (TTL)]] (default 60 minutes) is reached
    * and client produces [[com.influxdb.exceptions.UnauthorizedException]].
    *
-   * @param url      the url to connect to the InfluxDB
+   * The url could be a connection string with various configurations. For more info
+   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
+   *
+   * @param url      the url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
    * @param username the username to use in the basic auth
    * @param password the password to use in the basic auth
    * @return client
@@ -94,7 +98,10 @@ object InfluxDBClientScalaFactory {
   /**
    * Create an instance of the InfluxDB 2.x reactive client.
    *
-   * @param url   the url to connect to the InfluxDB
+   * The url could be a connection string with various configurations. For more info
+   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
+   *
+   * @param url   the url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
    * @param token the token to use for the authorization
    * @return client
    * @see [[InfluxDBClientOptions.Builder]]
@@ -107,7 +114,10 @@ object InfluxDBClientScalaFactory {
   /**
    * Create an instance of the InfluxDB 2.x reactive client.
    *
-   * @param url   the url to connect to the InfluxDB
+   * The url could be a connection string with various configurations. For more info
+   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
+   *
+   * @param url   the url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
    * @param token the token to use for the authorization
    * @param org      the name of an organization
    * @return client
@@ -121,7 +131,10 @@ object InfluxDBClientScalaFactory {
   /**
    * Create an instance of the InfluxDB 2.x reactive client.
    *
-   * @param url   the url to connect to the InfluxDB
+   * The url could be a connection string with various configurations. For more info
+   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
+   *
+   * @param url   the url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
    * @param token the token to use for the authorization
    * @param org      the name of an organization
    * @param bucket   the name of a bucket
