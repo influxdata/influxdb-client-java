@@ -22,10 +22,13 @@
 package com.influxdb.client.reactive;
 
 import java.io.InterruptedIOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import com.influxdb.exceptions.InfluxException;
 import com.influxdb.test.AbstractMockServerTest;
 
 import io.reactivex.rxjava3.core.Flowable;
@@ -64,7 +67,7 @@ class QueryReactiveApiTest extends AbstractMockServerTest {
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
-        final Throwable[] throwable = new Throwable[1];
+        final List<Throwable> throwable = new ArrayList<>();
         Future<?> future = Executors
                 .newSingleThreadScheduledExecutor()
                 .scheduleWithFixedDelay(() -> Flowable
@@ -73,14 +76,14 @@ class QueryReactiveApiTest extends AbstractMockServerTest {
                                         s -> {
 
                                         },
-                                        t -> throwable[0] = t),
+                                        throwable::add),
                         0, 1, TimeUnit.SECONDS);
 
         Thread.sleep(2_000);
         future.cancel(true);
         Thread.sleep(2_000);
 
-        Assertions.assertThat(throwable[0]).isNotNull();
-        Assertions.assertThat(throwable[0]).isInstanceOf(InterruptedIOException.class);
+        Assertions.assertThat(throwable).isNotEmpty();
+        Assertions.assertThat(throwable).hasOnlyElementsOfTypes(InterruptedIOException.class, InfluxException.class);
     }
 }
