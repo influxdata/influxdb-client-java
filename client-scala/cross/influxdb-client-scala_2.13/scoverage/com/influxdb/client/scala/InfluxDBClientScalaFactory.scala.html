@@ -60,7 +60,7 @@
 </span>36 <span style=''>
 </span>37 <span style=''>
 </span>38 <span style=''>  /**
-</span>39 <span style=''>   * Create an instance of the InfluxDB 2.0 client that is configured via `influx2.properties`.
+</span>39 <span style=''>   * Create an instance of the InfluxDB 2.x client that is configured via `influx2.properties`.
 </span>40 <span style=''>   * The `influx2.properties` has to be located on classpath.
 </span>41 <span style=''>   *
 </span>42 <span style=''>   * @return client
@@ -75,108 +75,121 @@
 </span>51 <span style=''>  }
 </span>52 <span style=''>
 </span>53 <span style=''>  /**
-</span>54 <span style=''>   * Create an instance of the InfluxDB 2.0 client. The url could be a connection string with various configurations.
+</span>54 <span style=''>   * Create an instance of the InfluxDB 2.x client.
 </span>55 <span style=''>   *
-</span>56 <span style=''>   * e.g.: &quot;http://localhost:8086?readTimeout=5000&amp;amp;connectTimeout=5000&amp;amp;logLevel=BASIC
-</span>57 <span style=''>   *
-</span>58 <span style=''>   * @param connectionString connection string with various configurations.
-</span>59 <span style=''>   * @return client
-</span>60 <span style=''>   */
-</span>61 <span style=''>  @Nonnull def create(connectionString: String): InfluxDBClientScala = {
-</span>62 <span style=''>
-</span>63 <span style=''>    val options = </span><span style='background: #F0ADAD'>InfluxDBClientOptions.builder()
-</span>64 <span style=''></span><span style='background: #F0ADAD'>      .url(connectionString)
-</span>65 <span style=''></span><span style='background: #F0ADAD'>      .build()</span><span style=''>
-</span>66 <span style=''>
-</span>67 <span style=''>    </span><span style='background: #F0ADAD'>create(options)</span><span style=''>
-</span>68 <span style=''>  }
-</span>69 <span style=''>
-</span>70 <span style=''>  /**
-</span>71 <span style=''>   * Create an instance of the InfluxDB 2.0 reactive client.
-</span>72 <span style=''>   *
-</span>73 <span style=''>   * The ''username/password'' auth is based on
-</span>74 <span style=''>   * [[http://bit.ly/http-basic-auth HTTP &quot;Basic&quot; authentication]]. The authorization expires when the
-</span>75 <span style=''>   * [[http://bit.ly/session-length time-to-live (TTL)]] (default 60 minutes) is reached
-</span>76 <span style=''>   * and client produces [[com.influxdb.exceptions.UnauthorizedException]].
-</span>77 <span style=''>   *
-</span>78 <span style=''>   * @param url      the url to connect to the InfluxDB
-</span>79 <span style=''>   * @param username the username to use in the basic auth
-</span>80 <span style=''>   * @param password the password to use in the basic auth
-</span>81 <span style=''>   * @return client
-</span>82 <span style=''>   * @see [[InfluxDBClientOptions.Builder]]
-</span>83 <span style=''>   */
-</span>84 <span style=''>  @Nonnull def create(url: String, username: String, password: Array[Char]): InfluxDBClientScala = {
-</span>85 <span style=''>
-</span>86 <span style=''>    val options = </span><span style='background: #F0ADAD'>InfluxDBClientOptions.builder()
-</span>87 <span style=''></span><span style='background: #F0ADAD'>      .url(url)
-</span>88 <span style=''></span><span style='background: #F0ADAD'>      .authenticate(username, password)
-</span>89 <span style=''></span><span style='background: #F0ADAD'>      .build()</span><span style=''>
-</span>90 <span style=''>
-</span>91 <span style=''>    </span><span style='background: #F0ADAD'>create(options)</span><span style=''>
-</span>92 <span style=''>  }
-</span>93 <span style=''>
-</span>94 <span style=''>  /**
-</span>95 <span style=''>   * Create an instance of the InfluxDB 2.0 reactive client.
-</span>96 <span style=''>   *
-</span>97 <span style=''>   * @param url   the url to connect to the InfluxDB
-</span>98 <span style=''>   * @param token the token to use for the authorization
-</span>99 <span style=''>   * @return client
-</span>100 <span style=''>   * @see [[InfluxDBClientOptions.Builder]]
-</span>101 <span style=''>   */
-</span>102 <span style=''>  @Nonnull def create(url: String, token: Array[Char]): InfluxDBClientScala = {
-</span>103 <span style=''>
-</span>104 <span style=''>    </span><span style='background: #F0ADAD'>create(url, token, null)</span><span style=''>
-</span>105 <span style=''>  }
-</span>106 <span style=''>
-</span>107 <span style=''>  /**
-</span>108 <span style=''>   * Create an instance of the InfluxDB 2.0 reactive client.
-</span>109 <span style=''>   *
-</span>110 <span style=''>   * @param url   the url to connect to the InfluxDB
-</span>111 <span style=''>   * @param token the token to use for the authorization
-</span>112 <span style=''>   * @param org      the name of an organization
-</span>113 <span style=''>   * @return client
-</span>114 <span style=''>   * @see [[InfluxDBClientOptions.Builder]]
-</span>115 <span style=''>   */
-</span>116 <span style=''>  @Nonnull def create(url: String, token: Array[Char], org: String): InfluxDBClientScala = {
-</span>117 <span style=''>
-</span>118 <span style=''>    </span><span style='background: #F0ADAD'>create(url, token, org, null)</span><span style=''>
-</span>119 <span style=''>  }
-</span>120 <span style=''>
-</span>121 <span style=''>  /**
-</span>122 <span style=''>   * Create an instance of the InfluxDB 2.0 reactive client.
-</span>123 <span style=''>   *
-</span>124 <span style=''>   * @param url   the url to connect to the InfluxDB
-</span>125 <span style=''>   * @param token the token to use for the authorization
-</span>126 <span style=''>   * @param org      the name of an organization
-</span>127 <span style=''>   * @param bucket   the name of a bucket
-</span>128 <span style=''>   * @return client
-</span>129 <span style=''>   * @see [[InfluxDBClientOptions.Builder]]
-</span>130 <span style=''>   */
-</span>131 <span style=''>  @Nonnull def create(url: String, token: Array[Char], org: String, bucket: String): InfluxDBClientScala = {
-</span>132 <span style=''>
-</span>133 <span style=''>    val options = </span><span style='background: #F0ADAD'>InfluxDBClientOptions.builder()
-</span>134 <span style=''></span><span style='background: #F0ADAD'>      .url(url)
-</span>135 <span style=''></span><span style='background: #F0ADAD'>      .authenticateToken(token)
-</span>136 <span style=''></span><span style='background: #F0ADAD'>      .org(org)
-</span>137 <span style=''></span><span style='background: #F0ADAD'>      .bucket(bucket)
-</span>138 <span style=''></span><span style='background: #F0ADAD'>      .build()</span><span style=''>
-</span>139 <span style=''>
-</span>140 <span style=''>    </span><span style='background: #F0ADAD'>create(options)</span><span style=''>
-</span>141 <span style=''>  }
-</span>142 <span style=''>
-</span>143 <span style=''>  /**
-</span>144 <span style=''>   * Create an instance of the InfluxDB 2.0 reactive client.
-</span>145 <span style=''>   *
-</span>146 <span style=''>   * @param options the connection configuration
-</span>147 <span style=''>   * @return client
-</span>148 <span style=''>   */
-</span>149 <span style=''>  @Nonnull def create(@Nonnull options: InfluxDBClientOptions): InfluxDBClientScala = {
-</span>150 <span style=''>
-</span>151 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(options, &quot;InfluxDBClientOptions&quot;)</span><span style=''>
+</span>56 <span style=''>   * The url could be a connection string with various configurations. For more info
+</span>57 <span style=''>   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
+</span>58 <span style=''>   *
+</span>59 <span style=''>   * @param connectionString connection string with various configurations.
+</span>60 <span style=''>   * @return client
+</span>61 <span style=''>   */
+</span>62 <span style=''>  @Nonnull def create(connectionString: String): InfluxDBClientScala = {
+</span>63 <span style=''>
+</span>64 <span style=''>    val options = </span><span style='background: #F0ADAD'>InfluxDBClientOptions.builder()
+</span>65 <span style=''></span><span style='background: #F0ADAD'>      .url(connectionString)
+</span>66 <span style=''></span><span style='background: #F0ADAD'>      .build()</span><span style=''>
+</span>67 <span style=''>
+</span>68 <span style=''>    </span><span style='background: #F0ADAD'>create(options)</span><span style=''>
+</span>69 <span style=''>  }
+</span>70 <span style=''>
+</span>71 <span style=''>  /**
+</span>72 <span style=''>   * Create an instance of the InfluxDB 2.x reactive client.
+</span>73 <span style=''>   *
+</span>74 <span style=''>   * The ''username/password'' auth is based on
+</span>75 <span style=''>   * [[http://bit.ly/http-basic-auth HTTP &quot;Basic&quot; authentication]]. The authorization expires when the
+</span>76 <span style=''>   * [[http://bit.ly/session-length time-to-live (TTL)]] (default 60 minutes) is reached
+</span>77 <span style=''>   * and client produces [[com.influxdb.exceptions.UnauthorizedException]].
+</span>78 <span style=''>   *
+</span>79 <span style=''>   * The url could be a connection string with various configurations. For more info
+</span>80 <span style=''>   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
+</span>81 <span style=''>   *
+</span>82 <span style=''>   * @param url      the url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
+</span>83 <span style=''>   * @param username the username to use in the basic auth
+</span>84 <span style=''>   * @param password the password to use in the basic auth
+</span>85 <span style=''>   * @return client
+</span>86 <span style=''>   * @see [[InfluxDBClientOptions.Builder]]
+</span>87 <span style=''>   */
+</span>88 <span style=''>  @Nonnull def create(url: String, username: String, password: Array[Char]): InfluxDBClientScala = {
+</span>89 <span style=''>
+</span>90 <span style=''>    val options = </span><span style='background: #F0ADAD'>InfluxDBClientOptions.builder()
+</span>91 <span style=''></span><span style='background: #F0ADAD'>      .url(url)
+</span>92 <span style=''></span><span style='background: #F0ADAD'>      .authenticate(username, password)
+</span>93 <span style=''></span><span style='background: #F0ADAD'>      .build()</span><span style=''>
+</span>94 <span style=''>
+</span>95 <span style=''>    </span><span style='background: #F0ADAD'>create(options)</span><span style=''>
+</span>96 <span style=''>  }
+</span>97 <span style=''>
+</span>98 <span style=''>  /**
+</span>99 <span style=''>   * Create an instance of the InfluxDB 2.x reactive client.
+</span>100 <span style=''>   *
+</span>101 <span style=''>   * The url could be a connection string with various configurations. For more info
+</span>102 <span style=''>   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
+</span>103 <span style=''>   *
+</span>104 <span style=''>   * @param url   the url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
+</span>105 <span style=''>   * @param token the token to use for the authorization
+</span>106 <span style=''>   * @return client
+</span>107 <span style=''>   * @see [[InfluxDBClientOptions.Builder]]
+</span>108 <span style=''>   */
+</span>109 <span style=''>  @Nonnull def create(url: String, token: Array[Char]): InfluxDBClientScala = {
+</span>110 <span style=''>
+</span>111 <span style=''>    </span><span style='background: #F0ADAD'>create(url, token, null)</span><span style=''>
+</span>112 <span style=''>  }
+</span>113 <span style=''>
+</span>114 <span style=''>  /**
+</span>115 <span style=''>   * Create an instance of the InfluxDB 2.x reactive client.
+</span>116 <span style=''>   *
+</span>117 <span style=''>   * The url could be a connection string with various configurations. For more info
+</span>118 <span style=''>   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
+</span>119 <span style=''>   *
+</span>120 <span style=''>   * @param url   the url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
+</span>121 <span style=''>   * @param token the token to use for the authorization
+</span>122 <span style=''>   * @param org      the name of an organization
+</span>123 <span style=''>   * @return client
+</span>124 <span style=''>   * @see [[InfluxDBClientOptions.Builder]]
+</span>125 <span style=''>   */
+</span>126 <span style=''>  @Nonnull def create(url: String, token: Array[Char], org: String): InfluxDBClientScala = {
+</span>127 <span style=''>
+</span>128 <span style=''>    </span><span style='background: #F0ADAD'>create(url, token, org, null)</span><span style=''>
+</span>129 <span style=''>  }
+</span>130 <span style=''>
+</span>131 <span style=''>  /**
+</span>132 <span style=''>   * Create an instance of the InfluxDB 2.x reactive client.
+</span>133 <span style=''>   *
+</span>134 <span style=''>   * The url could be a connection string with various configurations. For more info
+</span>135 <span style=''>   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
+</span>136 <span style=''>   *
+</span>137 <span style=''>   * @param url   the url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
+</span>138 <span style=''>   * @param token the token to use for the authorization
+</span>139 <span style=''>   * @param org      the name of an organization
+</span>140 <span style=''>   * @param bucket   the name of a bucket
+</span>141 <span style=''>   * @return client
+</span>142 <span style=''>   * @see [[InfluxDBClientOptions.Builder]]
+</span>143 <span style=''>   */
+</span>144 <span style=''>  @Nonnull def create(url: String, token: Array[Char], org: String, bucket: String): InfluxDBClientScala = {
+</span>145 <span style=''>
+</span>146 <span style=''>    val options = </span><span style='background: #F0ADAD'>InfluxDBClientOptions.builder()
+</span>147 <span style=''></span><span style='background: #F0ADAD'>      .url(url)
+</span>148 <span style=''></span><span style='background: #F0ADAD'>      .authenticateToken(token)
+</span>149 <span style=''></span><span style='background: #F0ADAD'>      .org(org)
+</span>150 <span style=''></span><span style='background: #F0ADAD'>      .bucket(bucket)
+</span>151 <span style=''></span><span style='background: #F0ADAD'>      .build()</span><span style=''>
 </span>152 <span style=''>
-</span>153 <span style=''>    </span><span style='background: #F0ADAD'>new InfluxDBClientScalaImpl(options)</span><span style=''>
+</span>153 <span style=''>    </span><span style='background: #F0ADAD'>create(options)</span><span style=''>
 </span>154 <span style=''>  }
-</span>155 <span style=''>}
+</span>155 <span style=''>
+</span>156 <span style=''>  /**
+</span>157 <span style=''>   * Create an instance of the InfluxDB 2.x reactive client.
+</span>158 <span style=''>   *
+</span>159 <span style=''>   * @param options the connection configuration
+</span>160 <span style=''>   * @return client
+</span>161 <span style=''>   */
+</span>162 <span style=''>  @Nonnull def create(@Nonnull options: InfluxDBClientOptions): InfluxDBClientScala = {
+</span>163 <span style=''>
+</span>164 <span style=''>    </span><span style='background: #F0ADAD'>Arguments.checkNotNull(options, &quot;InfluxDBClientOptions&quot;)</span><span style=''>
+</span>165 <span style=''>
+</span>166 <span style=''>    </span><span style='background: #F0ADAD'>new InfluxDBClientScalaImpl(options)</span><span style=''>
+</span>167 <span style=''>  }
+</span>168 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -232,15 +245,15 @@
         </td>
       </tr><tr>
         <td>
-          65
+          66
         </td>
         <td>
           3
         </td>
         <td>
-          2271
+          2293
           -
-          2346
+          2368
         </td>
         <td>
           Apply
@@ -253,15 +266,15 @@
         </td>
       </tr><tr>
         <td>
-          67
+          68
         </td>
         <td>
           4
         </td>
         <td>
-          2352
+          2374
           -
-          2367
+          2389
         </td>
         <td>
           Apply
@@ -274,15 +287,15 @@
         </td>
       </tr><tr>
         <td>
-          89
+          93
         </td>
         <td>
           5
         </td>
         <td>
-          3130
+          3403
           -
-          3232
+          3505
         </td>
         <td>
           Apply
@@ -295,15 +308,15 @@
         </td>
       </tr><tr>
         <td>
-          91
+          95
         </td>
         <td>
           6
         </td>
         <td>
-          3238
+          3511
           -
-          3253
+          3526
         </td>
         <td>
           Apply
@@ -316,15 +329,15 @@
         </td>
       </tr><tr>
         <td>
-          104
+          111
         </td>
         <td>
           7
         </td>
         <td>
-          3596
+          4120
           -
-          3620
+          4144
         </td>
         <td>
           Apply
@@ -337,15 +350,15 @@
         </td>
       </tr><tr>
         <td>
-          118
+          128
         </td>
         <td>
           8
         </td>
         <td>
-          4025
+          4800
           -
-          4054
+          4829
         </td>
         <td>
           Apply
@@ -358,15 +371,15 @@
         </td>
       </tr><tr>
         <td>
-          138
+          151
         </td>
         <td>
           9
         </td>
         <td>
-          4531
+          5557
           -
-          4663
+          5689
         </td>
         <td>
           Apply
@@ -379,15 +392,15 @@
         </td>
       </tr><tr>
         <td>
-          140
+          153
         </td>
         <td>
           10
         </td>
         <td>
-          4669
+          5695
           -
-          4684
+          5710
         </td>
         <td>
           Apply
@@ -400,15 +413,15 @@
         </td>
       </tr><tr>
         <td>
-          151
+          164
         </td>
         <td>
           11
         </td>
         <td>
-          4930
+          5956
           -
-          4986
+          6012
         </td>
         <td>
           Apply
@@ -421,15 +434,15 @@
         </td>
       </tr><tr>
         <td>
-          153
+          166
         </td>
         <td>
           12
         </td>
         <td>
-          4992
+          6018
           -
-          5028
+          6054
         </td>
         <td>
           Apply

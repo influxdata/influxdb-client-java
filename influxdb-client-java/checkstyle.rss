@@ -19,13 +19,13 @@ under the License.
 -->
 <rss version="0.91">
   <channel>
-    <title>The Java InfluxDB 2.0 Client - Checkstyle report</title>
+    <title>The Java InfluxDB 2.x Client - Checkstyle report</title>
     <link>https://github.com/influxdata/influxdb-client-java/tree/master/client</link>
-    <description>The Java InfluxDB 2.0 Client - Checkstyle report</description>
+    <description>The Java InfluxDB 2.x Client - Checkstyle report</description>
     <language>en-us</language>
     <copyright>&#169;2018 - 2022 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 62,
+      <title>File: 66,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -242,6 +242,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.internal.InvocableScriptsApiImpl.java">com/influxdb/client/internal/InvocableScriptsApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.internal.WriteApiImpl.java">com/influxdb/client/internal/WriteApiImpl.java</a>
                 </td>
                 <td>
@@ -340,6 +354,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.write.WriteParameters.java">com/influxdb/client/write/WriteParameters.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.internal.ScraperTargetsApiImpl.java">com/influxdb/client/internal/ScraperTargetsApiImpl.java</a>
                 </td>
                 <td>
@@ -410,6 +438,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.InvocableScriptsApi.java">com/influxdb/client/InvocableScriptsApi.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.ChecksApi.java">com/influxdb/client/ChecksApi.java</a>
                 </td>
                 <td>
@@ -439,6 +481,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.write.events.EventListener.java">com/influxdb/client/write/events/EventListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/client/checkstyle.html#com.influxdb.client.InvocableScriptsQuery.java">com/influxdb/client/InvocableScriptsQuery.java</a>
                 </td>
                 <td>
                   0

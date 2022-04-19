@@ -19,13 +19,13 @@ under the License.
 -->
 <rss version="0.91">
   <channel>
-    <title>The InfluxDB 2.0 JVM Based Clients - Checkstyle report</title>
+    <title>The InfluxDB 2.x JVM Based Clients - Checkstyle report</title>
     <link>https://github.com/influxdata/influxdb-client-java</link>
-    <description>The InfluxDB 2.0 JVM Based Clients - Checkstyle report</description>
+    <description>The InfluxDB 2.x JVM Based Clients - Checkstyle report</description>
     <language>en-us</language>
     <copyright>&#169;2018 - 2022 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 172,
+      <title>File: 176,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -676,6 +676,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.WriteParameters.java">com/influxdb/client/write/WriteParameters.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.RequestEntityTooLargeException.java">com/influxdb/exceptions/RequestEntityTooLargeException.java</a>
                 </td>
                 <td>
@@ -747,6 +761,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.SourcesApiImpl.java">com/influxdb/client/internal/SourcesApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.InvocableScriptsApi.java">com/influxdb/client/InvocableScriptsApi.java</a>
                 </td>
                 <td>
                   0
@@ -1670,6 +1698,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.InvocableScriptsApiImpl.java">com/influxdb/client/internal/InvocableScriptsApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.reactive.InfluxDBClientReactiveFactory.java">com/influxdb/client/reactive/InfluxDBClientReactiveFactory.java</a>
                 </td>
                 <td>
@@ -1993,6 +2035,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.events.EventListener.java">com/influxdb/client/write/events/EventListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.InvocableScriptsQuery.java">com/influxdb/client/InvocableScriptsQuery.java</a>
                 </td>
                 <td>
                   0

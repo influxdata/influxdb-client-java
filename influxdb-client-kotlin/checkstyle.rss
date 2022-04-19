@@ -19,9 +19,9 @@ under the License.
 -->
 <rss version="0.91">
   <channel>
-    <title>The Kotlin InfluxDB 2.0 Client - Checkstyle report</title>
+    <title>The Kotlin InfluxDB 2.x Client - Checkstyle report</title>
     <link>https://github.com/influxdata/influxdb-client-java/tree/master/client-kotlin</link>
-    <description>The Kotlin InfluxDB 2.0 Client - Checkstyle report</description>
+    <description>The Kotlin InfluxDB 2.x Client - Checkstyle report</description>
     <language>en-us</language>
     <copyright>&#169;2018 - 2022 InfluxData, Inc.</copyright>
     <item>
