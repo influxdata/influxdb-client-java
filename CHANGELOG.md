@@ -1,3 +1,5 @@
+## 6.1.0 [unreleased]
+
 ## 6.0.0 [2022-04-19]
 
 ### Migration Notice
