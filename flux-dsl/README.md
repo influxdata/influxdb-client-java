@@ -106,6 +106,19 @@ Flux flux = Flux
             .withEvery(5L, ChronoUnit.MINUTES)
             .withFunction("tables |> quantile(q: 0.99, column:column)");
 ```
+
+### columns
+The columns() function lists the column labels of input tables [[doc](http://bit.ly/flux-spec#columns)].
+- `column` - The name of the output column in which to store the column labels. Defaults to `_value`. [string]
+
+```java
+Flux flux = Flux
+    .from("telegraf")
+    .range(-12L, ChronoUnit.HOURS)
+    .window(10L, ChronoUnit.MINUTES)
+    .columns();
+```
+
 ### count
 Counts the number of results [[doc](http://bit.ly/flux-spec#count)].
 - `column` - The column to aggregate. Defaults to `_value`. [string]
