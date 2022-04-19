@@ -32,7 +32,10 @@ import com.influxdb.utils.Arguments;
  *
  * <h3>Options</h3>
  * <ul>
- * <li><b>column</b> - The name of the output column in which to store the column labels. [string]. Default is <i>_value</i>.
+ * <li>
+ *     <b>column</b> -
+ *     The name of the output column in which to store the column labels. [string]. Default is <i>_value</i>.
+ * </li>
  * </ul>
  *
  * <h3>Example</h3>
