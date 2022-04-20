@@ -118,4 +118,18 @@ class InfluxDBClientOptionsTest {
         Assertions.assertThat(options.getBucket()).isEqualTo("my-bucket");
         Assertions.assertThat(options.getOrg()).isEqualTo("my-org");
     }
+
+    @Test
+    void keepBucketOrgSettingsIfAreBeforeURL()
+    {
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .bucket("my-bucket")
+                .org("my-org")
+                .url("http://localhost:8086")
+                .authenticateToken("my-token".toCharArray())
+                .build();
+
+        Assertions.assertThat(options.getOrg()).isEqualTo("my-org");
+        Assertions.assertThat(options.getBucket()).isEqualTo("my-bucket");
+    }
 }

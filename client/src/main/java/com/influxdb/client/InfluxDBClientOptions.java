@@ -569,8 +569,12 @@ public final class InfluxDBClientOptions {
                                                         @Nullable final String consistency) {
 
             this.url = new ParsedUrl(url).urlWithoutParams;
-            org(org);
-            bucket(bucket);
+            if (org != null) {
+                org(org);
+            }
+            if (bucket != null) {
+                bucket(bucket);
+            }
 
             if (token != null) {
                 authenticateToken(token.toCharArray());
