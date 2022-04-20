@@ -592,8 +592,10 @@ public final class InfluxDBClientOptions {
                 consistency(Enum.valueOf(WriteConsistency.class, consistency));
             }
 
-            okHttpClient = new OkHttpClient.Builder()
-                    .protocols(Collections.singletonList(Protocol.HTTP_1_1));
+            if (okHttpClient == null) {
+                okHttpClient = new OkHttpClient.Builder()
+                        .protocols(Collections.singletonList(Protocol.HTTP_1_1));
+            }
             if (readTimeout != null) {
                 okHttpClient.readTimeout(toDuration(readTimeout));
             }
