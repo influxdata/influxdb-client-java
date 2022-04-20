@@ -1,5 +1,8 @@
 ## 6.1.0 [unreleased]
 
+### Features
+1. [#337](https://github.com/influxdata/influxdb-client-java/pull/337): Supports `columns` function [FluxDSL]
+
 ## 6.0.0 [2022-04-19]
 
 ### Migration Notice
