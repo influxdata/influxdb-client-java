@@ -40,7 +40,7 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 
 public class InfluxDB2ReactiveExample {
 
@@ -88,7 +88,7 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 
 public class InfluxDB2ReactiveExampleRaw {
 
@@ -136,7 +136,7 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 import org.reactivestreams.Publisher;
 
 public class InfluxDB2ReactiveExamplePojo {
@@ -223,8 +223,8 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.WriteReactiveApi;
 
-import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import org.reactivestreams.Publisher;
 
 public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
@@ -391,6 +391,8 @@ import com.influxdb.client.reactive.QueryReactiveApi;
 import com.influxdb.query.dsl.Flux;
 import com.influxdb.query.dsl.functions.restriction.Restrictions;
 
+import io.reactivex.rxjava3.core.Flowable;
+
 public class InfluxDB2ReactiveExampleDSL {
 
     private static char[] token = "my-token".toCharArray();
@@ -409,8 +411,7 @@ public class InfluxDB2ReactiveExampleDSL {
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
-        queryApi
-                .query(flux.toString())
+        Flowable.fromPublisher(queryApi.query(flux.toString()))
                 .subscribe(fluxRecord -> {
                     //
                     // The callback to consume a FluxRecord.
