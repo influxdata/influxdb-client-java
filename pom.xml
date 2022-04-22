@@ -525,6 +525,12 @@
                 <groupId>com.squareup.retrofit2</groupId>
                 <artifactId>converter-gson</artifactId>
                 <version>${dependency.retrofit.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.code.gson</groupId>
+                        <artifactId>gson</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -561,6 +567,12 @@
                 <groupId>io.gsonfire</groupId>
                 <artifactId>gson-fire</artifactId>
                 <version>1.8.5</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.code.gson</groupId>
+                        <artifactId>gson</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -627,6 +639,12 @@
                 <groupId>com.moandjiezana.toml</groupId>
                 <artifactId>toml4j</artifactId>
                 <version>0.7.2</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.code.gson</groupId>
+                        <artifactId>gson</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
