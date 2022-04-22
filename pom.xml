@@ -537,6 +537,20 @@
                 <groupId>com.squareup.retrofit2</groupId>
                 <artifactId>adapter-rxjava3</artifactId>
                 <version>${dependency.retrofit.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.squareup.okhttp3</groupId>
+                        <artifactId>okhttp</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.squareup.retrofit2</groupId>
+                        <artifactId>retrofit</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.reactivex.rxjava3</groupId>
+                        <artifactId>rxjava</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
