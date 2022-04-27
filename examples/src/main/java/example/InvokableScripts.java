@@ -27,7 +27,7 @@ import java.util.List;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
-import com.influxdb.client.InvocableScriptsApi;
+import com.influxdb.client.InvokableScriptsApi;
 import com.influxdb.client.domain.Script;
 import com.influxdb.client.domain.ScriptCreateRequest;
 import com.influxdb.client.domain.ScriptLanguage;
@@ -36,7 +36,7 @@ import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 
-public class InvocableScripts {
+public class InvokableScripts {
 
     //
     // Define credentials
@@ -56,10 +56,10 @@ public class InvocableScripts {
             Point point2 = Point.measurement("my_measurement").addTag("location", "New York").addField("temperature", 24.3);
             client.getWriteApiBlocking().writePoints(bucket, org, Arrays.asList(point1, point2));
 
-            InvocableScriptsApi scriptsApi = client.getInvocableScriptsApi();
+            InvokableScriptsApi scriptsApi = client.getInvokableScriptsApi();
 
             //
-            // Create Invocable Script
+            // Create Invokable Script
             //
             System.out.println("------- Create -------\n");
             ScriptCreateRequest createRequest = new ScriptCreateRequest()
@@ -71,7 +71,7 @@ public class InvocableScripts {
             System.out.println(createdScript);
 
             //
-            // Update Invocable Script
+            // Update Invokable Script
             //
             System.out.println("------- Update -------\n");
             ScriptUpdateRequest updateRequest = new ScriptUpdateRequest().description("my updated description");
