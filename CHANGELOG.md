@@ -1,5 +1,8 @@
 ## 6.1.0 [unreleased]
 
+### Breaking Changes
+1. [#344](https://github.com/influxdata/influxdb-client-java/pull/344): Rename `InvocableScripts` to `InvokableScripts`
+
 ### Features
 1. [#337](https://github.com/influxdata/influxdb-client-java/pull/337): Supports `columns` function [FluxDSL]
 
