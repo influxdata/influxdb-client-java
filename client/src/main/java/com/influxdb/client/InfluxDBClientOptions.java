@@ -569,8 +569,12 @@ public final class InfluxDBClientOptions {
                                                         @Nullable final String consistency) {
 
             this.url = new ParsedUrl(url).urlWithoutParams;
-            org(org);
-            bucket(bucket);
+            if (org != null) {
+                org(org);
+            }
+            if (bucket != null) {
+                bucket(bucket);
+            }
 
             if (token != null) {
                 authenticateToken(token.toCharArray());
@@ -588,8 +592,10 @@ public final class InfluxDBClientOptions {
                 consistency(Enum.valueOf(WriteConsistency.class, consistency));
             }
 
-            okHttpClient = new OkHttpClient.Builder()
-                    .protocols(Collections.singletonList(Protocol.HTTP_1_1));
+            if (okHttpClient == null) {
+                okHttpClient = new OkHttpClient.Builder()
+                        .protocols(Collections.singletonList(Protocol.HTTP_1_1));
+            }
             if (readTimeout != null) {
                 okHttpClient.readTimeout(toDuration(readTimeout));
             }
