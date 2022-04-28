@@ -30,14 +30,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.influxdb.Cancellable;
-import com.influxdb.client.InvocableScriptsApi;
-import com.influxdb.client.InvocableScriptsQuery;
+import com.influxdb.client.InvokableScriptsApi;
+import com.influxdb.client.InvokableScriptsQuery;
 import com.influxdb.client.domain.Script;
 import com.influxdb.client.domain.ScriptCreateRequest;
 import com.influxdb.client.domain.ScriptInvocationParams;
 import com.influxdb.client.domain.ScriptUpdateRequest;
 import com.influxdb.client.domain.Scripts;
-import com.influxdb.client.service.InvocableScriptsService;
+import com.influxdb.client.service.InvokableScriptsService;
 import com.influxdb.internal.AbstractQueryApi;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
@@ -50,11 +50,11 @@ import retrofit2.Call;
 /**
  * @author Jakub Bednar (bednar@github) (03/21/2022 07:54)
  */
-final class InvocableScriptsApiImpl extends AbstractQueryApi implements InvocableScriptsApi {
+final class InvokableScriptsApiImpl extends AbstractQueryApi implements InvokableScriptsApi {
 
-    private final InvocableScriptsService service;
+    private final InvokableScriptsService service;
 
-    InvocableScriptsApiImpl(@Nonnull final InvocableScriptsService service) {
+    InvokableScriptsApiImpl(@Nonnull final InvokableScriptsService service) {
         super(new FluxCsvParser(FluxCsvParser.ResponseMetadataMode.ONLY_NAMES));
 
         Arguments.checkNotNull(service, "service");
@@ -85,12 +85,12 @@ final class InvocableScriptsApiImpl extends AbstractQueryApi implements Invocabl
     @Nonnull
     @Override
     public List<Script> findScripts() {
-        return findScripts(new InvocableScriptsQuery());
+        return findScripts(new InvokableScriptsQuery());
     }
 
     @Nonnull
     @Override
-    public List<Script> findScripts(@Nonnull final InvocableScriptsQuery query) {
+    public List<Script> findScripts(@Nonnull final InvokableScriptsQuery query) {
 
         Arguments.checkNotNull(query, "query");
 

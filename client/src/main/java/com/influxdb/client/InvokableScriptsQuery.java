@@ -23,7 +23,7 @@ package com.influxdb.client;
 
 import javax.annotation.Nullable;
 
-public class InvocableScriptsQuery {
+public class InvokableScriptsQuery {
 
     /**
      * Offset. (optional)

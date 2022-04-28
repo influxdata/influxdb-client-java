@@ -38,26 +38,26 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
-class InvocableScriptsApiTest extends AbstractInfluxDBClientTest {
+class InvokableScriptsApiTest extends AbstractInfluxDBClientTest {
 
     static final String SUCCESS_DATA = ",result,table,_start,_stop,_time,_value,_field,_measurement,host,value\n"
             + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,12.25\n"
             + ",,1,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,15.55\n";
 
-    private InvocableScriptsApi invocableScriptsApi;
+    private InvokableScriptsApi invokableScriptsApi;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
 
-        invocableScriptsApi = influxDBClient.getInvocableScriptsApi();
+        invokableScriptsApi = influxDBClient.getInvokableScriptsApi();
     }
 
     @Test
     public void queryFluxTable() {
         mockServer.enqueue(createResponse(SUCCESS_DATA));
 
-        List<FluxTable> tables = invocableScriptsApi.invokeScript("script_id", new HashMap<>());
+        List<FluxTable> tables = invokableScriptsApi.invokeScript("script_id", new HashMap<>());
         Assertions.assertThat(tables).hasSize(2);
         Assertions.assertThat(tables.get(0).getRecords()).hasSize(1);
         Assertions.assertThat(tables.get(0).getRecords().get(0).getValues().get("value")).isEqualTo("12.25");
@@ -71,7 +71,7 @@ class InvocableScriptsApiTest extends AbstractInfluxDBClientTest {
 
         List<FluxRecord> records = new ArrayList<>();
         CountDownLatch recordsCountDown = new CountDownLatch(2);
-        invocableScriptsApi.invokeScript("script_id", new HashMap<>(), (cancellable, fluxRecord) -> {
+        invokableScriptsApi.invokeScript("script_id", new HashMap<>(), (cancellable, fluxRecord) -> {
             records.add(fluxRecord);
             recordsCountDown.countDown();
         });
@@ -87,7 +87,7 @@ class InvocableScriptsApiTest extends AbstractInfluxDBClientTest {
     public void queryMeasurements() {
         mockServer.enqueue(createResponse(SUCCESS_DATA));
 
-        List<InvocableScriptsPojo> pojos = invocableScriptsApi.invokeScript("script_id", new HashMap<>(), InvocableScriptsPojo.class);
+        List<InvokableScriptsPojo> pojos = invokableScriptsApi.invokeScript("script_id", new HashMap<>(), InvokableScriptsPojo.class);
         Assertions.assertThat(pojos).hasSize(2);
         Assertions.assertThat(pojos.get(0).value).isEqualTo("12.25");
         Assertions.assertThat(pojos.get(0).host).isEqualTo("A");
@@ -99,10 +99,10 @@ class InvocableScriptsApiTest extends AbstractInfluxDBClientTest {
     public void queryStreamMeasurements() {
         mockServer.enqueue(createResponse(SUCCESS_DATA));
 
-        List<InvocableScriptsPojo> pojos = new ArrayList<>();
+        List<InvokableScriptsPojo> pojos = new ArrayList<>();
         CountDownLatch measurementsCountDown = new CountDownLatch(2);
-        invocableScriptsApi.invokeScript("script_id", new HashMap<>(), InvocableScriptsPojo.class, (cancellable, invocableScriptsPojo) -> {
-            pojos.add(invocableScriptsPojo);
+        invokableScriptsApi.invokeScript("script_id", new HashMap<>(), InvokableScriptsPojo.class, (cancellable, invokableScriptsPojo) -> {
+            pojos.add(invokableScriptsPojo);
             measurementsCountDown.countDown();
         });
 
@@ -119,7 +119,7 @@ class InvocableScriptsApiTest extends AbstractInfluxDBClientTest {
     public void queryRaw() {
         mockServer.enqueue(createResponse(SUCCESS_DATA));
 
-        String response = invocableScriptsApi.invokeScriptRaw("script_id", new HashMap<>());
+        String response = invokableScriptsApi.invokeScriptRaw("script_id", new HashMap<>());
         Assertions.assertThat(response).isEqualToIgnoringNewLines(SUCCESS_DATA);
     }
 
@@ -129,7 +129,7 @@ class InvocableScriptsApiTest extends AbstractInfluxDBClientTest {
 
         List<String> lines = new ArrayList<>();
         CountDownLatch linesCountDown = new CountDownLatch(3);
-        invocableScriptsApi.invokeScriptRaw("script_id", new HashMap<>(), (cancellable, line) -> {
+        invokableScriptsApi.invokeScriptRaw("script_id", new HashMap<>(), (cancellable, line) -> {
             lines.add(line);
             linesCountDown.countDown();
         });
@@ -143,7 +143,7 @@ class InvocableScriptsApiTest extends AbstractInfluxDBClientTest {
     }
 
     @SuppressWarnings("NewClassNamingConvention")
-    public static class InvocableScriptsPojo {
+    public static class InvokableScriptsPojo {
 
         @Column(name = "host", tag = true)
         String host;
