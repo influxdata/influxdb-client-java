@@ -21,14 +21,21 @@
  */
 package com.influxdb.client.scala
 
+import akka.actor.ActorSystem
+import akka.stream.scaladsl.{Keep, Source}
 import com.influxdb.LogLevel
 import com.influxdb.client.domain.HealthCheck
 import org.scalatest.matchers.should.Matchers
+
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 /**
  * @author Jakub Bednar (bednar@github) (06/11/2018 09:52)
  */
 class ITInfluxDBClientScala extends AbstractITQueryScalaApi with Matchers {
+
+  implicit val system: ActorSystem = ActorSystem("unit-tests")
 
   before {
     setUp()
@@ -111,5 +118,16 @@ class ITInfluxDBClientScala extends AbstractITQueryScalaApi with Matchers {
 
     influxDBClient.disableGzip()
     influxDBClient.isGzipEnabled should be(false)
+  }
+
+  test("prototype write api") {
+    influxDBClient.close()
+    influxDBClient = InfluxDBClientScalaFactory.create(influxDBUtils.getUrl, "my-token".toCharArray)
+    influxDBClient.setLogLevel(LogLevel.BODY)
+    val source = Source.single("m2m,tag=a value=1i")
+    val sink = influxDBClient.getWriteScalaApi.writeRecord()
+    val materialized = source.toMat(sink)(Keep.right)
+
+    Await.ready(materialized.run(), Duration.Inf)
   }
 }

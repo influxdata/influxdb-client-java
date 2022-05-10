@@ -40,6 +40,13 @@ trait InfluxDBClientScala {
   @Nonnull def getQueryScalaApi(): QueryScalaApi
 
   /**
+   * Create a new WriteApi client.
+   *
+   * @return the new client instance for the Write API
+   */
+  @Nonnull def getWriteScalaApi: WriteScalaApi
+
+  /**
    * Get the health of an instance.
    *
    * @return health of an instance
