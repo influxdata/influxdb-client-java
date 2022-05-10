@@ -96,13 +96,12 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       "cpu,host=A,region=west usage_system=35i,user_usage=45i 10000000000",
       "cpu,host=A,region=west usage_system=38i,user_usage=49i 20000000000",
       "cpu,host=A,hyper-threading=true,region=west usage_system=55i,user_usage=65i 20000000000")
-      .mkString("\n")
 
     client.close()
 
     influxDBClient.close()
     influxDBClient = InfluxDBClientScalaFactory.create(influxDBUtils.getUrl, token.toCharArray, organization.getId, bucket.getName)
-    val sink = influxDBClient.getWriteScalaApi.writeRecord()
+    val sink = influxDBClient.getWriteScalaApi.writeRecords()
     val future = Source.single(records).toMat(sink)(Keep.right)
     Await.ready(future.run(), Duration.Inf)
 
