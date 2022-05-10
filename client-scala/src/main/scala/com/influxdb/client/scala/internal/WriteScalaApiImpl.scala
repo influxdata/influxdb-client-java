@@ -86,7 +86,6 @@ class WriteScalaApiImpl(@Nonnull service: WriteService, @Nonnull options: Influx
 
     //TODO test check exception
     //TODO add variant with WriteParameters
-    //TODO not working for records
     write(new WriteParameters(bucket.orNull, org.orNull, precision.orNull, null), batch.toList.asJava.stream())
 
     Done.done()

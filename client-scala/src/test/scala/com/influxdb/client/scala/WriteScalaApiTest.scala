@@ -22,46 +22,55 @@
 package com.influxdb.client.scala
 
 import akka.actor.ActorSystem
-import akka.stream.testkit.scaladsl.TestSink
-import com.influxdb.query.FluxRecord
+import akka.stream.scaladsl.{Keep, Source}
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-/**
- * @author Jakub Bednar (09/06/2020 07:19)
- */
-class InfluxDBClientScalaTest extends AnyFunSuite with Matchers with BeforeAndAfter {
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+
+class WriteScalaApiTest extends AnyFunSuite with Matchers with BeforeAndAfter {
 
   implicit val system: ActorSystem = ActorSystem("unit-tests")
 
   var utils: InfluxDBUtils = _
+  var client: InfluxDBClientScala = _
 
   before {
     utils = new InfluxDBUtils {}
+    client = InfluxDBClientScalaFactory.create(utils.serverStart)
   }
 
   after {
     utils.serverStop()
   }
 
-  test("userAgent") {
+  test("write record") {
 
-    val url = utils.serverStart
     utils.serverMockResponse()
 
-    val client = InfluxDBClientScalaFactory.create(url)
+    val source = Source.single("m2m,tag=a value=1i")
+    val sink = client.getWriteScalaApi.writeRecord()
+    val materialized = source.toMat(sink)(Keep.right)
 
-    val queryScalaApi = client.getQueryScalaApi()
-    val flux = "from(bucket:\"my-bucket\")\n\t" +
-      "|> range(start: 1970-01-01T00:00:00.000000001Z)\n\t" +
-      "|> filter(fn: (r) => (r[\"_measurement\"] == \"mem\" and r[\"_field\"] == \"free\" and r[\"host\"] == \"A\"))" +
-      "|> sum()"
+    Await.ready(materialized.run(), Duration.Inf)
 
-    val source = queryScalaApi.query(flux, "my-org").runWith(TestSink.probe[FluxRecord])
-    source.expectSubscriptionAndComplete()
+    utils.getRequestCount should be(1)
+    utils.serverTakeRequest().getBody.readUtf8() should be("m2m,tag=a value=1i")
+  }
 
-    val request = utils.serverTakeRequest()
-    request.getHeader("User-Agent") should startWith("influxdb-client-scala/")
+  test("write records") {
+
+    utils.serverMockResponse()
+
+    val source = Source.single(Seq("m2m,tag=a value=1i 1", "m2m,tag=a value=2i 2"))
+    val sink = client.getWriteScalaApi.writeRecords()
+    val materialized = source.toMat(sink)(Keep.right)
+
+    Await.ready(materialized.run(), Duration.Inf)
+
+    utils.getRequestCount should be(1)
+    utils.serverTakeRequest().getBody.readUtf8() should be("m2m,tag=a value=1i 1\nm2m,tag=a value=2i 2")
   }
 }

@@ -59,7 +59,7 @@ trait WriteScalaApi {
    * @param org       Specifies the destination organization for writes.
    *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
    *                  if the `org` is not specified.
-   * @return the sink that accept the records specified in InfluxDB Line Protocol.
+   * @return the sink that accept the records specified in InfluxDB Line Protocol. The `records` are considered as one batch unit.
    */
   def writeRecords(precision: Option[WritePrecision] = None, bucket: Option[String] = None, org: Option[String] = None): Sink[Seq[String], Future[Done]]
 }

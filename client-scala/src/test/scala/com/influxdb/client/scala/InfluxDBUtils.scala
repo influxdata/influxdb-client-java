@@ -39,6 +39,8 @@ class InfluxDBUtils extends AbstractMockServerTest {
 
   def serverTakeRequest(): RecordedRequest = super.takeRequest()
 
+  def getRequestCount: Int = mockServer.getRequestCount
+
   override def generateName(prefix: String): String = super.generateName(prefix)
 
   override def getDeclaredField[V](obj: Any, field: String, `type`: Class[_]): V = super.getDeclaredField(obj, field, `type`)
