@@ -24,7 +24,9 @@ package com.influxdb.client.scala
 import akka.Done
 import akka.stream.scaladsl.Sink
 import com.influxdb.client.domain.WritePrecision
+import com.influxdb.client.write.WriteParameters
 
+import javax.annotation.Nonnull
 import scala.concurrent.Future
 
 /**
@@ -62,4 +64,12 @@ trait WriteScalaApi {
    * @return the sink that accept the records specified in InfluxDB Line Protocol. The `records` are considered as one batch unit.
    */
   def writeRecords(precision: Option[WritePrecision] = None, bucket: Option[String] = None, org: Option[String] = None): Sink[Seq[String], Future[Done]]
+
+  /**
+   * Write Line Protocol records into specified bucket.
+   *
+   * @param parameters specify InfluxDB Write endpoint parameters
+   * @return the sink that accept the records specified in InfluxDB Line Protocol. The `records` are considered as one batch unit.
+   */
+  def writeRecords(@Nonnull parameters: WriteParameters): Sink[Seq[String], Future[Done]]
 }

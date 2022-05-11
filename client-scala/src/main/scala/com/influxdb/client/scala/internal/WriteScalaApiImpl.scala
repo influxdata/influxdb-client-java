@@ -76,17 +76,31 @@ class WriteScalaApiImpl(@Nonnull service: WriteService, @Nonnull options: Influx
    * @return the sink that accept the records specified in InfluxDB Line Protocol.
    */
   override def writeRecords(precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[Seq[String], Future[Done]] = {
+    writeRecords(new WriteParameters(bucket.orNull, org.orNull, precision.orNull, null))
+  }
+
+  /**
+   * Write Line Protocol records into specified bucket.
+   *
+   * @param parameters specify InfluxDB Write endpoint parameters
+   * @return the sink that accept the records specified in InfluxDB Line Protocol. The `records` are considered as one batch unit.
+   */
+  override def writeRecords(parameters: WriteParameters): Sink[Seq[String], Future[Done]] = {
     Flow[Seq[String]]
       .map(records => records.map(record => new AbstractWriteClient.BatchWriteDataRecord(record)))
-      .map(batch => writeHttp(precision, bucket, org, batch))
+      .map(batch => writeHttp(parameters, batch))
       .toMat(Sink.head)(Keep.right)
   }
 
   private def writeHttp(precision: Option[WritePrecision], bucket: Option[String], org: Option[String], batch: Seq[AbstractWriteClient.BatchWriteData]): Done = {
+    writeHttp(new WriteParameters(bucket.orNull, org.orNull, precision.orNull, null), batch)
+  }
 
-    //TODO test check exception
-    //TODO add variant with WriteParameters
-    write(new WriteParameters(bucket.orNull, org.orNull, precision.orNull, null), batch.toList.asJava.stream())
+  private def writeHttp(parameters: WriteParameters, batch: Seq[AbstractWriteClient.BatchWriteData]): Done = {
+
+    parameters.check(options)
+
+    write(parameters, batch.toList.asJava.stream())
 
     Done.done()
   }

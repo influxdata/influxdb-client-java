@@ -23,14 +23,18 @@ package com.influxdb.client.scala
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Keep, Source}
+import com.influxdb.client.write.WriteParameters
+import com.influxdb.exceptions.InternalServerErrorException
 import org.scalatest.BeforeAndAfter
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
+import scala.language.postfixOps
 
-class WriteScalaApiTest extends AnyFunSuite with Matchers with BeforeAndAfter {
+class WriteScalaApiTest extends AnyFunSuite with Matchers with BeforeAndAfter with ScalaFutures {
 
   implicit val system: ActorSystem = ActorSystem("unit-tests")
 
@@ -39,7 +43,7 @@ class WriteScalaApiTest extends AnyFunSuite with Matchers with BeforeAndAfter {
 
   before {
     utils = new InfluxDBUtils {}
-    client = InfluxDBClientScalaFactory.create(utils.serverStart)
+    client = InfluxDBClientScalaFactory.create(utils.serverStart, "my-token".toCharArray, "my-org", "my-bucket")
   }
 
   after {
@@ -57,7 +61,12 @@ class WriteScalaApiTest extends AnyFunSuite with Matchers with BeforeAndAfter {
     Await.ready(materialized.run(), Duration.Inf)
 
     utils.getRequestCount should be(1)
-    utils.serverTakeRequest().getBody.readUtf8() should be("m2m,tag=a value=1i")
+    val request = utils.serverTakeRequest()
+    // check request
+    request.getBody.readUtf8() should be("m2m,tag=a value=1i")
+    request.getRequestUrl.queryParameter("bucket") should be("my-bucket")
+    request.getRequestUrl.queryParameter("org") should be("my-org")
+    request.getRequestUrl.queryParameter("precision") should be("ns")
   }
 
   test("write records") {
@@ -72,5 +81,36 @@ class WriteScalaApiTest extends AnyFunSuite with Matchers with BeforeAndAfter {
 
     utils.getRequestCount should be(1)
     utils.serverTakeRequest().getBody.readUtf8() should be("m2m,tag=a value=1i 1\nm2m,tag=a value=2i 2")
+  }
+
+  test("write records custom params") {
+
+    utils.serverMockResponse()
+
+    val source = Source.single("m2m,tag=a value=1i 1").map(it => Seq(it))
+    val sink = client.getWriteScalaApi.writeRecords(new WriteParameters("my-bucket-2", null, null, null))
+    val materialized = source.toMat(sink)(Keep.right)
+
+    Await.ready(materialized.run(), Duration.Inf)
+
+    utils.getRequestCount should be(1)
+    val request = utils.serverTakeRequest()
+    request.getBody.readUtf8() should be("m2m,tag=a value=1i 1")
+    request.getRequestUrl.queryParameter("bucket") should be("my-bucket-2")
+  }
+
+  test("write records error propagation") {
+
+    utils.serverMockErrorResponse("line protocol poorly formed and no points were written")
+
+    val source = Source.single(Seq("m2m,tag=a value=1i 1", "m2m,tag=a value=2i 2"))
+    val sink = client.getWriteScalaApi.writeRecords()
+    val materialized = source.toMat(sink)(Keep.right)
+
+    whenReady(materialized.run().failed) { exc => {
+      exc.getMessage should be("line protocol poorly formed and no points were written")
+      exc.getClass should be(classOf[InternalServerErrorException])
+    }
+    }
   }
 }
