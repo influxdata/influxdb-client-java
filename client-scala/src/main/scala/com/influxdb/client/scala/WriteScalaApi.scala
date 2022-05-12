@@ -76,8 +76,6 @@ trait WriteScalaApi {
   /**
    * Write Data points into specified bucket.
    *
-   * @param precision Precision for the unix timestamps within the body line-protocol.
-   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
    * @param bucket    Specifies the destination bucket for writes.
    *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
    *                  `bucket` if the `bucket` is not specified.
@@ -86,13 +84,11 @@ trait WriteScalaApi {
    *                  if the `org` is not specified.
    * @return the sink that accept the Data points. The `point` is considered as one batch unit.
    */
-  def writePoint(precision: Option[WritePrecision] = None, bucket: Option[String] = None, org: Option[String] = None): Sink[Point, Future[Done]]
+  def writePoint(bucket: Option[String] = None, org: Option[String] = None): Sink[Point, Future[Done]]
 
   /**
    * Write Data points into specified bucket.
    *
-   * @param precision Precision for the unix timestamps within the body line-protocol.
-   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
    * @param bucket    Specifies the destination bucket for writes.
    *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
    *                  `bucket` if the `bucket` is not specified.
@@ -101,7 +97,7 @@ trait WriteScalaApi {
    *                  if the `org` is not specified.
    * @return the sink that accept the Data points. The `points` are considered as one batch unit.
    */
-  def writePoints(precision: Option[WritePrecision] = None, bucket: Option[String] = None, org: Option[String] = None): Sink[Seq[Point], Future[Done]]
+  def writePoints(bucket: Option[String] = None, org: Option[String] = None): Sink[Seq[Point], Future[Done]]
 
   /**
    * Write Data points into specified bucket.

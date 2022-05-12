@@ -96,8 +96,6 @@ class WriteScalaApiImpl(@Nonnull service: WriteService, @Nonnull options: Influx
   /**
    * Write Data points into specified bucket.
    *
-   * @param precision Precision for the unix timestamps within the body line-protocol.
-   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
    * @param bucket    Specifies the destination bucket for writes.
    *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
    *                  `bucket` if the `bucket` is not specified.
@@ -106,18 +104,16 @@ class WriteScalaApiImpl(@Nonnull service: WriteService, @Nonnull options: Influx
    *                  if the `org` is not specified.
    * @return the sink that accept the Data points. The `point` is considered as one batch unit.
    */
-  override def writePoint(precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[Point, Future[Done]] = {
+  override def writePoint(bucket: Option[String], org: Option[String]): Sink[Point, Future[Done]] = {
     Flow[Point]
-      .map(point => Seq(new AbstractWriteClient.BatchWriteDataPoint(point, options)))
-      .map(batch => writeHttp(precision, bucket, org, batch))
+      .map(point => (point.getPrecision, Seq(new AbstractWriteClient.BatchWriteDataPoint(point, options))))
+      .map(batch => writeHttp(Some(batch._1), bucket, org, batch._2))
       .toMat(Sink.head)(Keep.right)
   }
 
   /**
    * Write Data points into specified bucket.
    *
-   * @param precision Precision for the unix timestamps within the body line-protocol.
-   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
    * @param bucket    Specifies the destination bucket for writes.
    *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
    *                  `bucket` if the `bucket` is not specified.
@@ -126,8 +122,8 @@ class WriteScalaApiImpl(@Nonnull service: WriteService, @Nonnull options: Influx
    *                  if the `org` is not specified.
    * @return the sink that accept the Data points. The `points` are considered as one batch unit.
    */
-  override def writePoints(precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[Seq[Point], Future[Done]] = {
-    writePoints(new WriteParameters(bucket.orNull, org.orNull, precision.orNull, null))
+  override def writePoints(bucket: Option[String], org: Option[String]): Sink[Seq[Point], Future[Done]] = {
+    writePoints(new WriteParameters(bucket.orNull, org.orNull, null, null))
   }
 
   /**
