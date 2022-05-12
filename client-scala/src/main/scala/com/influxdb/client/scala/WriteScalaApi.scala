@@ -24,7 +24,7 @@ package com.influxdb.client.scala
 import akka.Done
 import akka.stream.scaladsl.Sink
 import com.influxdb.client.domain.WritePrecision
-import com.influxdb.client.write.WriteParameters
+import com.influxdb.client.write.{Point, WriteParameters}
 
 import javax.annotation.Nonnull
 import scala.concurrent.Future
@@ -72,4 +72,42 @@ trait WriteScalaApi {
    * @return the sink that accept the records specified in InfluxDB Line Protocol. The `records` are considered as one batch unit.
    */
   def writeRecords(@Nonnull parameters: WriteParameters): Sink[Seq[String], Future[Done]]
+
+  /**
+   * Write Data points into specified bucket.
+   *
+   * @param precision Precision for the unix timestamps within the body line-protocol.
+   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
+   * @param bucket    Specifies the destination bucket for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+   *                  `bucket` if the `bucket` is not specified.
+   * @param org       Specifies the destination organization for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+   *                  if the `org` is not specified.
+   * @return the sink that accept the Data points. The `point` is considered as one batch unit.
+   */
+  def writePoint(precision: Option[WritePrecision] = None, bucket: Option[String] = None, org: Option[String] = None): Sink[Point, Future[Done]]
+
+  /**
+   * Write Data points into specified bucket.
+   *
+   * @param precision Precision for the unix timestamps within the body line-protocol.
+   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
+   * @param bucket    Specifies the destination bucket for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+   *                  `bucket` if the `bucket` is not specified.
+   * @param org       Specifies the destination organization for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+   *                  if the `org` is not specified.
+   * @return the sink that accept the Data points. The `points` are considered as one batch unit.
+   */
+  def writePoints(precision: Option[WritePrecision] = None, bucket: Option[String] = None, org: Option[String] = None): Sink[Seq[Point], Future[Done]]
+
+  /**
+   * Write Data points into specified bucket.
+   *
+   * @param parameters specify InfluxDB Write endpoint parameters
+   * @return the sink that accept the Data points. The `points` are considered as one batch unit.
+   */
+  def writePoints(@Nonnull parameters: WriteParameters): Sink[Seq[Point], Future[Done]]
 }

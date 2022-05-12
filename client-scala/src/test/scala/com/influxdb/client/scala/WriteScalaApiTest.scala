@@ -23,7 +23,8 @@ package com.influxdb.client.scala
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Keep, Source}
-import com.influxdb.client.write.WriteParameters
+import com.influxdb.client.domain.WritePrecision
+import com.influxdb.client.write.{Point, WriteParameters}
 import com.influxdb.exceptions.InternalServerErrorException
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
@@ -112,5 +113,84 @@ class WriteScalaApiTest extends AnyFunSuite with Matchers with BeforeAndAfter wi
       exc.getClass should be(classOf[InternalServerErrorException])
     }
     }
+  }
+
+  test("write point") {
+
+    utils.serverMockResponse()
+
+    val point = Point
+      .measurement("h2o")
+      .addTag("location", "europe")
+      .addField("level", 1)
+      .time(1L, WritePrecision.NS)
+
+    val source = Source.single(point)
+    val sink = client.getWriteScalaApi.writePoint()
+    val materialized = source.toMat(sink)(Keep.right)
+
+    Await.ready(materialized.run(), Duration.Inf)
+
+    utils.getRequestCount should be(1)
+    val request = utils.serverTakeRequest()
+    // check request
+    request.getBody.readUtf8() should be("h2o,location=europe level=1i 1")
+    request.getRequestUrl.queryParameter("bucket") should be("my-bucket")
+    request.getRequestUrl.queryParameter("org") should be("my-org")
+    request.getRequestUrl.queryParameter("precision") should be("ns")
+  }
+
+  test("write points") {
+
+    utils.serverMockResponse()
+
+    val point1 = Point
+      .measurement("h2o")
+      .addTag("location", "europe")
+      .addField("level", 1)
+      .time(1L, WritePrecision.NS)
+
+    val point2 = Point
+      .measurement("h2o")
+      .addTag("location", "europe")
+      .addField("level", 2)
+      .time(2L, WritePrecision.NS)
+
+    val source = Source.single(Seq(point1, point2))
+    val sink = client.getWriteScalaApi.writePoints()
+    val materialized = source.toMat(sink)(Keep.right)
+
+    Await.ready(materialized.run(), Duration.Inf)
+
+    utils.getRequestCount should be(1)
+    utils.serverTakeRequest().getBody.readUtf8() should be("h2o,location=europe level=1i 1\nh2o,location=europe level=2i 2")
+  }
+
+  test("write points different precision") {
+
+    utils.serverMockResponse()
+    utils.serverMockResponse()
+
+    val point1 = Point
+      .measurement("h2o")
+      .addTag("location", "europe")
+      .addField("level", 1)
+      .time(1L, WritePrecision.NS)
+
+    val point2 = Point
+      .measurement("h2o")
+      .addTag("location", "europe")
+      .addField("level", 2)
+      .time(2L, WritePrecision.S)
+
+    val source = Source.single(Seq(point1, point2))
+    val sink = client.getWriteScalaApi.writePoints()
+    val materialized = source.toMat(sink)(Keep.right)
+
+    Await.ready(materialized.run(), Duration.Inf)
+
+    utils.getRequestCount should be(2)
+    utils.serverTakeRequest().getBody.readUtf8() should be("h2o,location=europe level=1i 1")
+    utils.serverTakeRequest().getBody.readUtf8() should be("h2o,location=europe level=2i 2")
   }
 }
