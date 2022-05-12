@@ -56,7 +56,6 @@ class WriteScalaApiImpl(@Nonnull service: WriteService, @Nonnull options: Influx
    * @return the sink that accept the record specified in InfluxDB Line Protocol. The `record` is considered as one batch unit.
    */
   override def writeRecord(precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[String, Future[Done]] = {
-
     Flow[String]
       .map(record => Seq(new AbstractWriteClient.BatchWriteDataRecord(record)))
       .map(batch => writeHttp(precision, bucket, org, batch))
@@ -77,7 +76,7 @@ class WriteScalaApiImpl(@Nonnull service: WriteService, @Nonnull options: Influx
    * @return the sink that accept the records specified in InfluxDB Line Protocol.
    */
   override def writeRecords(precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[Seq[String], Future[Done]] = {
-    writeRecords(new WriteParameters(bucket.orNull, org.orNull, precision.orNull, null))
+    writeRecords(toWriteParameters(precision, bucket, org))
   }
 
   /**
@@ -96,12 +95,12 @@ class WriteScalaApiImpl(@Nonnull service: WriteService, @Nonnull options: Influx
   /**
    * Write Data points into specified bucket.
    *
-   * @param bucket    Specifies the destination bucket for writes.
-   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
-   *                  `bucket` if the `bucket` is not specified.
-   * @param org       Specifies the destination organization for writes.
-   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
-   *                  if the `org` is not specified.
+   * @param bucket Specifies the destination bucket for writes.
+   *               The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+   *               `bucket` if the `bucket` is not specified.
+   * @param org    Specifies the destination organization for writes.
+   *               The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+   *               if the `org` is not specified.
    * @return the sink that accept the Data points. The `point` is considered as one batch unit.
    */
   override def writePoint(bucket: Option[String], org: Option[String]): Sink[Point, Future[Done]] = {
@@ -114,12 +113,12 @@ class WriteScalaApiImpl(@Nonnull service: WriteService, @Nonnull options: Influx
   /**
    * Write Data points into specified bucket.
    *
-   * @param bucket    Specifies the destination bucket for writes.
-   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
-   *                  `bucket` if the `bucket` is not specified.
-   * @param org       Specifies the destination organization for writes.
-   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
-   *                  if the `org` is not specified.
+   * @param bucket Specifies the destination bucket for writes.
+   *               The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+   *               `bucket` if the `bucket` is not specified.
+   * @param org    Specifies the destination organization for writes.
+   *               The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+   *               if the `org` is not specified.
    * @return the sink that accept the Data points. The `points` are considered as one batch unit.
    */
   override def writePoints(bucket: Option[String], org: Option[String]): Sink[Seq[Point], Future[Done]] = {
@@ -144,16 +143,74 @@ class WriteScalaApiImpl(@Nonnull service: WriteService, @Nonnull options: Influx
       .toMat(Sink.head)(Keep.right)
   }
 
+  /**
+   * Write Measurement into specified bucket.
+   *
+   * @param precision Precision for the unix timestamps within the body line-protocol.
+   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
+   * @param bucket    Specifies the destination bucket for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+   *                  `bucket` if the `bucket` is not specified.
+   * @param org       Specifies the destination organization for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+   *                  if the `org` is not specified.
+   * @tparam M the type of the measurement (POJO)
+   * @return the sink that accept the measurement. The `measurement` is considered as one batch unit.
+   */
+  override def writeMeasurement[M](precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[M, Future[Done]] = {
+    Flow[M]
+      .map(measurement => {
+        val parameters = toWriteParameters(precision, bucket, org)
+        Seq(toMeasurementBatch(measurement, parameters.precisionSafe(options)))
+      })
+      .map(batch => writeHttp(precision, bucket, org, batch))
+      .toMat(Sink.head)(Keep.right)
+  }
+
+  /**
+   * Write Measurements into specified bucket.
+   *
+   * @param precision Precision for the unix timestamps within the body line-protocol.
+   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
+   * @param bucket    Specifies the destination bucket for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+   *                  `bucket` if the `bucket` is not specified.
+   * @param org       Specifies the destination organization for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+   *                  if the `org` is not specified.
+   * @tparam M the type of the measurement (POJO)
+   * @return the sink that accept the measurements. The `measurements` are considered as one batch unit.
+   */
+  override def writeMeasurements[M](precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[Seq[M], Future[Done]] = {
+    writeMeasurements(toWriteParameters(precision, bucket, org))
+  }
+
+  /**
+   * Write Measurements into specified bucket.
+   *
+   * @param parameters specify InfluxDB Write endpoint parameters
+   * @tparam M the type of the measurement (POJO)
+   * @return the sink that accept the measurements. The `measurements` are considered as one batch unit.
+   */
+  override def writeMeasurements[M](parameters: WriteParameters): Sink[Seq[M], Future[Done]] = {
+    Flow[Seq[M]]
+      .map(records => records.map(record => toMeasurementBatch(record, parameters.precisionSafe(options))))
+      .map(batch => writeHttp(parameters, batch))
+      .toMat(Sink.head)(Keep.right)
+  }
+
   private def writeHttp(precision: Option[WritePrecision], bucket: Option[String], org: Option[String], batch: Seq[AbstractWriteClient.BatchWriteData]): Done = {
-    writeHttp(new WriteParameters(bucket.orNull, org.orNull, precision.orNull, null), batch)
+    writeHttp(toWriteParameters(precision, bucket, org), batch)
   }
 
   private def writeHttp(parameters: WriteParameters, batch: Seq[AbstractWriteClient.BatchWriteData]): Done = {
-
-    parameters.check(options)
-
     write(parameters, batch.toList.asJava.stream())
-
     Done.done()
+  }
+
+  private def toWriteParameters(precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): WriteParameters = {
+    val parameters = new WriteParameters(bucket.orNull, org.orNull, precision.orNull, null)
+    parameters.check(options)
+    parameters
   }
 }

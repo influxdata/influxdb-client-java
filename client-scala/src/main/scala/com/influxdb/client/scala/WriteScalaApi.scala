@@ -106,4 +106,45 @@ trait WriteScalaApi {
    * @return the sink that accept the Data points. The `points` are considered as one batch unit.
    */
   def writePoints(@Nonnull parameters: WriteParameters): Sink[Seq[Point], Future[Done]]
+
+  /**
+   * Write Measurement into specified bucket.
+   *
+   * @param precision Precision for the unix timestamps within the body line-protocol.
+   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
+   * @param bucket    Specifies the destination bucket for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+   *                  `bucket` if the `bucket` is not specified.
+   * @param org       Specifies the destination organization for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+   *                  if the `org` is not specified.
+   * @tparam M the type of the measurement (POJO)
+   * @return the sink that accept the measurement. The `measurement` is considered as one batch unit.
+   */
+  def writeMeasurement[M](precision: Option[WritePrecision] = None, bucket: Option[String] = None, org: Option[String] = None): Sink[M, Future[Done]]
+
+  /**
+   * Write Measurements into specified bucket.
+   *
+   * @param precision Precision for the unix timestamps within the body line-protocol.
+   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
+   * @param bucket    Specifies the destination bucket for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+   *                  `bucket` if the `bucket` is not specified.
+   * @param org       Specifies the destination organization for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+   *                  if the `org` is not specified.
+   * @tparam M the type of the measurement (POJO)
+   * @return the sink that accept the measurements. The `measurements` are considered as one batch unit.
+   */
+  def writeMeasurements[M](precision: Option[WritePrecision] = None, bucket: Option[String] = None, org: Option[String] = None): Sink[Seq[M], Future[Done]]
+
+  /**
+   * Write Measurements into specified bucket.
+   *
+   * @param parameters specify InfluxDB Write endpoint parameters
+   * @tparam M the type of the measurement (POJO)
+   * @return the sink that accept the measurements. The `measurements` are considered as one batch unit.
+   */
+  def writeMeasurements[M](@Nonnull parameters: WriteParameters): Sink[Seq[M], Future[Done]]
 }
