@@ -43,6 +43,7 @@ import com.influxdb.client.domain.ResourceOwner;
 import com.influxdb.client.domain.Run;
 import com.influxdb.client.domain.RunManually;
 import com.influxdb.client.domain.Task;
+import com.influxdb.client.domain.TaskCreateRequest;
 import com.influxdb.client.domain.TaskStatusType;
 import com.influxdb.client.domain.User;
 import com.influxdb.exceptions.NotFoundException;
@@ -181,6 +182,53 @@ class ITTasksApi extends AbstractITClientTest {
         Assertions.assertThat(task.getLinks().getRuns()).isEqualTo("/api/v2/tasks/" + task.getId() + "/runs");
         Assertions.assertThat(task.getLinks().getSelf()).isEqualTo("/api/v2/tasks/" + task.getId());
         Assertions.assertThat(task.getLinks().getLabels()).isEqualTo("/api/v2/tasks/" + task.getId() + "/labels");
+    }
+
+    @Test
+    void createTaskByTaskCreateRequest() {
+        String taskName = generateName("it task");
+        String taskFlux = "import \"experimental\"\n"
+                + "\n"
+                + "option task = {name: \""+taskName+"\", cron: \"12 0 * * * *\"}"
+                + "\n"
+                + "from(bucket: \"my-bucket\")\n"
+                + "    |> range(start: experimental.addDuration(d: -1d, to: today()), stop: today())\n"
+                + "    |> max()";
+
+        TaskCreateRequest taskCreateRequest = new TaskCreateRequest()
+                .orgID(organization.getId())
+                .flux(taskFlux)
+                .status(TaskStatusType.ACTIVE);
+
+        Task task = tasksApi.createTask(taskCreateRequest);
+
+        Assertions.assertThat(task).isNotNull();
+        Assertions.assertThat(task.getId()).isNotBlank();
+        Assertions.assertThat(task.getName()).isEqualTo(taskName);
+        Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
+        Assertions.assertThat(task.getStatus()).isEqualTo(TaskStatusType.ACTIVE);
+        Assertions.assertThat(task.getCron()).isEqualTo("12 0 * * * *");
+        Assertions.assertThat(task.getFlux()).isEqualToIgnoringWhitespace(taskFlux);
+    }
+
+    @Test
+    void createTaskWithImport() {
+        String taskName = generateName("it task");
+        String taskFlux = "import \"experimental\"\n"
+                + "\n"
+                + "from(bucket: \"my-bucket\")\n"
+                + "    |> range(start: experimental.addDuration(d: -1d, to: today()), stop: today())\n"
+                + "    |> max()";
+
+        Task task = tasksApi.createTaskCron(taskName, taskFlux, "10 0 * * * *", organization.getId());
+
+        Assertions.assertThat(task).isNotNull();
+        Assertions.assertThat(task.getId()).isNotBlank();
+        Assertions.assertThat(task.getName()).isEqualTo(taskName);
+        Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
+        Assertions.assertThat(task.getStatus()).isEqualTo(TaskStatusType.ACTIVE);
+        Assertions.assertThat(task.getCron()).isEqualTo("10 0 * * * *");
+        Assertions.assertThat(task.getFlux()).contains("import \"experimental\"\n");
     }
 
     @Test
