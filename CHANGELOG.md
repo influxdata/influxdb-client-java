@@ -8,6 +8,7 @@
 
 ### Bug Fixes
 1. [#339](https://github.com/influxdata/influxdb-client-java/pull/339): Evaluation of connection string
+1. [#352](https://github.com/influxdata/influxdb-client-java/pull/352): Creating `Tasks` with `import` statements
 
 ## 6.0.0 [2022-04-19]
 
