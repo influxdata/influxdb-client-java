@@ -46,6 +46,8 @@ Flux flux = Flux
         .withPropertyNamed("every")
         .withPropertyNamed("period")
     .sum();
+
+String query = flux.toString(properties);
 ```
 
 ## Supported functions
