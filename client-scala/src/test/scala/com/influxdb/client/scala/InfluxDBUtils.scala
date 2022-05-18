@@ -37,7 +37,11 @@ class InfluxDBUtils extends AbstractMockServerTest {
 
   def serverMockResponse(): Unit = super.enqueuedResponse()
 
+  def serverMockErrorResponse(influxError: String): Unit = mockServer.enqueue(super.createErrorResponse(influxError))
+
   def serverTakeRequest(): RecordedRequest = super.takeRequest()
+
+  def getRequestCount: Int = mockServer.getRequestCount
 
   override def generateName(prefix: String): String = super.generateName(prefix)
 

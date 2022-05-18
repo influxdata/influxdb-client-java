@@ -5,6 +5,7 @@
 
 ### Features
 1. [#337](https://github.com/influxdata/influxdb-client-java/pull/337): Supports `columns` function [FluxDSL]
+1. [#347](https://github.com/influxdata/influxdb-client-java/pull/347): Add `Scala` WriteApi
 
 ### Bug Fixes
 1. [#339](https://github.com/influxdata/influxdb-client-java/pull/339): Evaluation of connection string

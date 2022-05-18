@@ -22,7 +22,7 @@
 package com.influxdb.client.scala
 
 import akka.actor.ActorSystem
-import akka.stream.scaladsl.FileIO
+import akka.stream.scaladsl.{FileIO, Keep, Source}
 import akka.stream.testkit.scaladsl.TestSink
 import akka.util.ByteString
 import com.influxdb.annotations.Column
@@ -96,15 +96,15 @@ class ITQueryScalaApiQuery extends AbstractITQueryScalaApi with Matchers {
       "cpu,host=A,region=west usage_system=35i,user_usage=45i 10000000000",
       "cpu,host=A,region=west usage_system=38i,user_usage=49i 20000000000",
       "cpu,host=A,hyper-threading=true,region=west usage_system=55i,user_usage=65i 20000000000")
-      .mkString("\n")
-
-    val writeApi = client.getWriteApiBlocking
-    writeApi.writeRecord(bucket.getName, organization.getId, WritePrecision.NS, records)
 
     client.close()
 
     influxDBClient.close()
-    influxDBClient = InfluxDBClientScalaFactory.create(influxDBUtils.getUrl, token.toCharArray)
+    influxDBClient = InfluxDBClientScalaFactory.create(influxDBUtils.getUrl, token.toCharArray, organization.getId, bucket.getName)
+    val sink = influxDBClient.getWriteScalaApi.writeRecords()
+    val future = Source.single(records).toMat(sink)(Keep.right)
+    Await.ready(future.run(), Duration.Inf)
+
     queryScalaApi = influxDBClient.getQueryScalaApi()
   }
 

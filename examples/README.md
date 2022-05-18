@@ -20,4 +20,13 @@ This directory contains Java, Kotlin and Scala examples.
 ### Writes
 - [KotlinWriteApi.kt](src/main/java/example/KotlinWriteApi.kt) - How to ingest data by `DataPoint`, `LineProtocol` or `Data class`
 - [KotlinWriteBatchingByFlow.kt](src/main/java/example/KotlinWriteBatchingByFlow.kt) - How to use [Flow](https://kotlinlang.org/docs/flow.html) operators to prepare batches for synchronous write into InfluxDB
-  
+
+## Scala
+
+### Query
+- [ScalaQuery.scala](src/main/java/example/ScalaQuery.scala) - How to query data into a stream of `FluxRecord` and filter them by `Flow` operators
+- [ScalaQueryRaw.scala](src/main/java/example/ScalaQueryRaw.scala) - How to query data into a stream of `String`
+- [ScalaQueryDSL.scala](src/main/java/example/ScalaQueryDSL.scala) - How to use the [FluxDSL](../flux-dsl) to query data
+
+### Writes   
+- [ScalaWriteApi.scala](src/main/java/example/ScalaWriteApi.scala) - How to ingest data by `DataPoint`, `LineProtocol` or `POJO`

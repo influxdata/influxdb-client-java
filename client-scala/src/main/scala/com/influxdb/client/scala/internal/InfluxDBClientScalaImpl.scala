@@ -25,8 +25,8 @@ import com.influxdb.LogLevel
 import com.influxdb.client.InfluxDBClientOptions
 import com.influxdb.client.domain.HealthCheck
 import com.influxdb.client.internal.AbstractInfluxDBClient
-import com.influxdb.client.scala.{InfluxDBClientScala, QueryScalaApi}
-import com.influxdb.client.service.QueryService
+import com.influxdb.client.scala.{InfluxDBClientScala, QueryScalaApi, WriteScalaApi}
+import com.influxdb.client.service.{QueryService, WriteService}
 
 import javax.annotation.Nonnull
 
@@ -40,6 +40,14 @@ class InfluxDBClientScalaImpl(@Nonnull options: InfluxDBClientOptions) extends A
    * @return the new client instance for the Query API
    */
   override def getQueryScalaApi(): QueryScalaApi = new QueryScalaApiImpl(retrofit.create(classOf[QueryService]), options)
+
+
+  /**
+   * Create a new WriteApi client.
+   *
+   * @return the new client instance for the Write API
+   */
+  override def getWriteScalaApi: WriteScalaApi = new WriteScalaApiImpl(retrofit.create(classOf[WriteService]), options)
 
   /**
    * Get the health of an instance.
