@@ -1238,14 +1238,14 @@ The latest version for Maven dependency:
 <dependency>
   <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-java</artifactId>
-  <version>6.0.0</version>
+  <version>6.1.0</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    implementation "com.influxdb:influxdb-client-java:6.0.0"
+    implementation "com.influxdb:influxdb-client-java:6.1.0"
 }
 ```
 

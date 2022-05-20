@@ -1,4 +1,4 @@
-## 6.1.0 [unreleased]
+## 6.1.0 [2022-05-20]
 
 ### Breaking Changes
 1. [#344](https://github.com/influxdata/influxdb-client-java/pull/344): Rename `InvocableScripts` to `InvokableScripts`
