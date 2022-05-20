@@ -1,4 +1,21 @@
-## 6.0.0 [unreleased]
+## 6.2.0 [unreleased]
+
+1. [#353](https://github.com/influxdata/influxdb-client-java/pull/353): Add `contains` filter
+
+## 6.1.0 [2022-05-20]
+
+### Breaking Changes
+1. [#344](https://github.com/influxdata/influxdb-client-java/pull/344): Rename `InvocableScripts` to `InvokableScripts`
+
+### Features
+1. [#337](https://github.com/influxdata/influxdb-client-java/pull/337): Supports `columns` function [FluxDSL]
+1. [#347](https://github.com/influxdata/influxdb-client-java/pull/347): Add `Scala` WriteApi
+
+### Bug Fixes
+1. [#339](https://github.com/influxdata/influxdb-client-java/pull/339): Evaluation of connection string
+1. [#352](https://github.com/influxdata/influxdb-client-java/pull/352): Creating `Tasks` with `import` statements
+
+## 6.0.0 [2022-04-19]
 
 ### Migration Notice
 :warning: The InfluxDB Client Library uses internally `RxJava` to support write with batching, retry and backpressure.
@@ -6,7 +23,19 @@
 
 - see [What is different in RxJava3](https://github.com/ReactiveX/RxJava/wiki/What's-different-in-3.0)
 
- 
+#### Spring
+
+:warning: The client upgrades the `OkHttp` library to version `4.9.3`. The version `3.12.x` is no longer supported - [okhttp#requirements](https://github.com/square/okhttp#requirements).
+
+The `spring-boot` supports the `OkHttp:4.9.3` from the version `2.7.0.M2` - [spring-boot/OkHttp 4.9.3](https://github.com/spring-projects/spring-boot/commit/fc8f55fbf44bd54e8e09de5858f8dbedb21fa9a5).
+For the older version of `spring-boot` you have to configure Spring Boot's `okhttp3.version` property:
+
+```xml
+<properties>
+    <okhttp3.version>4.9.3</okhttp3.version>
+</properties>
+```
+
 ### Changes in public API
 
   - `WriteService` imports:
@@ -64,9 +93,35 @@ This release also uses new version of InfluxDB OSS API definitions - [oss.yml](h
 ### Features
 1. [#324](https://github.com/influxdata/influxdb-client-java/pull/298) Removed dependency on `io.swagger:swagger-annotations` and updated swagger to the latest version
 1. [#289](https://github.com/influxdata/influxdb-client-java/pull/298): Upgrade `RxJava2` -> `RxJava3`, update outdated dependencies
-1. [#316](https://github.com/influxdata/influxdb-client-java/pull/316): Add `InvocableScriptsApi` to create, update, list, delete and invoke scripts by seamless way
+1. [#316](https://github.com/influxdata/influxdb-client-java/pull/316): Add `InvokableScriptsApi` to create, update, list, delete and invoke scripts by seamless way
 1. [#315](https://github.com/influxdata/influxdb-client-java/pull/315): Add support for timezones [FluxDSL]
-1. [#317](https://github.com/influxdata/influxdb-client-java/pull/317): Gets HTTP headers from the unsuccessful HTTP reques
+1. [#317](https://github.com/influxdata/influxdb-client-java/pull/317): Gets HTTP headers from the unsuccessful HTTP request
+1. [#334](https://github.com/influxdata/influxdb-client-java/pull/334): Supports not operator [FluxDSL]
+1. [#335](https://github.com/influxdata/influxdb-client-java/pull/335): URL to connect to the InfluxDB is always evaluate as a connection string
+1. [#329](https://github.com/influxdata/influxdb-client-java/pull/329): Add support for write `consistency` parameter [InfluxDB Enterprise]
+    
+    Configure `consistency` via `Write API`:
+    ```diff
+    - writeApi.writeRecord(WritePrecision.NS, "cpu_load_short,host=server02 value=0.67");
+    + WriteParameters parameters = new WriteParameters(WritePrecision.NS, WriteConsistency.ALL);
+    + 
+    + writeApi.writeRecord("cpu_load_short,host=server02 value=0.67", parameters);
+    ```
+    
+    Configure `consistency` via client options:
+    ```diff
+    - InfluxDBClient client = InfluxDBClientFactory.createV1("http://influxdb_enterpriser:8086",
+    -    "my-username",
+    -    "my-password".toCharArray(),
+    -    "my-db",
+    -    "autogen");
+    + InfluxDBClient client = InfluxDBClientFactory.createV1("http://influxdb_enterpriser:8086",
+    +    "my-username",
+    +    "my-password".toCharArray(),
+    +    "my-db",
+    +    "autogen", 
+    +    WriteConsistency.ALL);
+    ```
 
 ### Bug Fixes
 1. [#313](https://github.com/influxdata/influxdb-client-java/pull/313): Do not deliver `exception` when the consumer is already disposed [influxdb-client-reactive]

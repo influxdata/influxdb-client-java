@@ -21,7 +21,10 @@
  */
 package com.influxdb.client;
 
+import java.util.Collections;
 import java.util.List;
+
+import com.influxdb.client.domain.WritePrecision;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
@@ -46,6 +49,7 @@ class InfluxDBClientOptionsTest {
         Assertions.assertThat(options.getUrl()).isEqualTo("http://localhost:9999/");
         Assertions.assertThat(options.getAuthScheme()).isEqualTo(InfluxDBClientOptions.AuthScheme.TOKEN);
         Assertions.assertThat(options.getOkHttpClient()).isNotNull();
+        Assertions.assertThat(options.getPrecision()).isEqualTo(WritePrecision.NS);
     }
 
     @Test
@@ -102,5 +106,40 @@ class InfluxDBClientOptionsTest {
         List<Protocol> protocols = options.getOkHttpClient().build().protocols();
         Assertions.assertThat(protocols).hasSize(1);
         Assertions.assertThat(protocols).contains(Protocol.HTTP_1_1);
+    }
+
+    @Test
+    void parseURLAsConnectionString() {
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url("http://localhost:9999?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS&token=my-token&bucket=my-bucket&org=my-org")
+                .build();
+
+        Assertions.assertThat(options.getAuthScheme()).isEqualTo(InfluxDBClientOptions.AuthScheme.TOKEN);
+        Assertions.assertThat(options.getToken()).isEqualTo("my-token".toCharArray());
+        Assertions.assertThat(options.getBucket()).isEqualTo("my-bucket");
+        Assertions.assertThat(options.getOrg()).isEqualTo("my-org");
+    }
+
+    @Test
+    void keepBucketOrgSettingsIfAreBeforeURL() {
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .bucket("my-bucket")
+                .org("my-org")
+                .url("http://localhost:8086")
+                .authenticateToken("my-token".toCharArray())
+                .build();
+
+        Assertions.assertThat(options.getOrg()).isEqualTo("my-org");
+        Assertions.assertThat(options.getBucket()).isEqualTo("my-bucket");
+    }
+
+    @Test
+    void okHttpBeforeURL() {
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .okHttpClient(new OkHttpClient.Builder().protocols(Collections.singletonList(Protocol.H2_PRIOR_KNOWLEDGE)))
+                .url("http://localhost:8086")
+                .build();
+
+        Assertions.assertThat(options.getOkHttpClient().build().protocols()).containsExactly(Protocol.H2_PRIOR_KNOWLEDGE);
     }
 }

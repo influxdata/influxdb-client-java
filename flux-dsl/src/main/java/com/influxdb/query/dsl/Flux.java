@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 
 import com.influxdb.query.dsl.functions.AbstractParametrizedFlux;
 import com.influxdb.query.dsl.functions.AggregateWindow;
+import com.influxdb.query.dsl.functions.ColumnsFlux;
 import com.influxdb.query.dsl.functions.CountFlux;
 import com.influxdb.query.dsl.functions.CovarianceFlux;
 import com.influxdb.query.dsl.functions.CumulativeSumFlux;
@@ -340,6 +341,27 @@ public abstract class Flux {
     @Nonnull
     public final KeepFlux keep(@Nonnull final String function) {
         return new KeepFlux(this).withFunction(function);
+    }
+
+    /**
+     * Lists the column labels of input tables.
+     *
+     * @return {@link ColumnsFlux}
+     */
+    @Nonnull
+    public final ColumnsFlux columns() {
+        return new ColumnsFlux(this);
+    }
+
+    /**
+     * Lists the column labels of input tables.
+     *
+     * @param column The name of the output column in which to store the column labels.
+     * @return {@link ColumnsFlux}
+     */
+    @Nonnull
+    public final ColumnsFlux columns(@Nonnull final String column) {
+        return new ColumnsFlux(this).withColumn(column);
     }
 
     /**

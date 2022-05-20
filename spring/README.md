@@ -8,6 +8,19 @@
 - [Actuator for InfluxDB2 micrometer registry](#actuator-for-influxdb2-micrometer-registry)
 - [Actuator for InfluxDB2 health](#actuator-for-influxdb2-health)
 
+## Spring Boot Compatibility
+
+:warning: The client version `6.0.0` upgrades the `OkHttp` library to version `4.9.3`. The version `3.12.x` is no longer supported - [okhttp#requirements](https://github.com/square/okhttp#requirements).
+
+The `spring-boot` supports the `OkHttp:4.9.3` from the version `2.7.0.M2` - [spring-boot/OkHttp 4.9.3](https://github.com/spring-projects/spring-boot/commit/fc8f55fbf44bd54e8e09de5858f8dbedb21fa9a5).
+For the older version of `spring-boot` you have to configure Spring Boot's `okhttp3.version` property:
+
+```xml
+<properties>
+    <okhttp3.version>4.9.3</okhttp3.version>
+</properties>
+```
+
 ## InfluxDB2 auto-configuration
 
 To enable `InfluxDBClient` support you need to set a `influx.url` property, and include `influxdb-client-java` on your classpath. 
@@ -86,13 +99,13 @@ The latest version for Maven dependency:
 <dependency>
   <groupId>com.influxdb</groupId>
   <artifactId>influxdb-spring</artifactId>
-  <version>5.0.0</version>
+  <version>6.1.0</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    implementation "com.influxdb:influxdb-spring:5.0.0"
+    implementation "com.influxdb:influxdb-spring:6.1.0"
 }
 ```

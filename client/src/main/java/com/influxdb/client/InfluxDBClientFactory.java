@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 
 import com.influxdb.client.domain.OnboardingRequest;
 import com.influxdb.client.domain.OnboardingResponse;
+import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.internal.InfluxDBClientImpl;
 import com.influxdb.utils.Arguments;
 
@@ -83,7 +84,12 @@ public final class InfluxDBClientFactory {
      * and client produces {@link com.influxdb.exceptions.UnauthorizedException}.
      * </p>
      *
-     * @param url      the url to connect to the InfluxDB
+     * <p>
+     * The url could be a connection string with various configurations. For more info
+     * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+     * </p>
+     *
+     * @param url      url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
      * @param username the username to use in the basic auth
      * @param password the password to use in the basic auth
      * @return client
@@ -105,7 +111,12 @@ public final class InfluxDBClientFactory {
     /**
      * Create an instance of the InfluxDB 2.x client.
      *
-     * @param url   the url to connect to the InfluxDB
+     * <p>
+     * The url could be a connection string with various configurations. For more info
+     * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+     * </p>
+     *
+     * @param url   url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
      * @param token the token to use for the authorization
      * @return client
      * @see InfluxDBClientOptions.Builder#url(String)
@@ -119,7 +130,12 @@ public final class InfluxDBClientFactory {
     /**
      * Create an instance of the InfluxDB 2.x client.
      *
-     * @param url   the url to connect to the InfluxDB
+     * <p>
+     * The url could be a connection string with various configurations. For more info
+     * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+     * </p>
+     *
+     * @param url   url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
      * @param token the token to use for the authorization
      * @param org   the name of an organization
      * @return client
@@ -136,7 +152,12 @@ public final class InfluxDBClientFactory {
     /**
      * Create an instance of the InfluxDB 2.x client.
      *
-     * @param url    the url to connect to the InfluxDB
+     * <p>
+     * The url could be a connection string with various configurations. For more info
+     * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+     * </p>
+     *
+     * @param url    url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
      * @param token  the token to use for the authorization
      * @param org    the name of an organization
      * @param bucket the name of a bucket
@@ -160,9 +181,14 @@ public final class InfluxDBClientFactory {
     }
 
     /**
-     * Create a instance of the InfluxDB 2.x client to connect into InfluxDB 1.8.
+     * Create an instance of the InfluxDB 2.x client to connect into InfluxDB 1.8.
      *
-     * @param url             the url to connect to the InfluxDB 1.8
+     * <p>
+     * The url could be a connection string with various configurations. For more info
+     * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+     * </p>
+     *
+     * @param url             the url to connect to InfluxDB 1.8 (required). http://localhost:8086?readTimeout=5000
      * @param username        authorization username
      * @param password        authorization password
      * @param database        database name
@@ -175,6 +201,36 @@ public final class InfluxDBClientFactory {
                                           final char[] password,
                                           @Nonnull final String database,
                                           @Nullable final String retentionPolicy) {
+        return createV1(url, username, password, database, retentionPolicy, null);
+    }
+
+    /**
+     * Create an instance of the InfluxDB 2.x client to connect into InfluxDB 1.8.
+     *
+     * <p>
+     * The url could be a connection string with various configurations. For more info
+     * see: {@link InfluxDBClientOptions.Builder#connectionString(String)}.
+     * </p>
+     *
+     * @param url             the url to connect to InfluxDB 1.8 (required). http://localhost:8086?readTimeout=5000
+     * @param username        authorization username
+     * @param password        authorization password
+     * @param database        database name
+     * @param retentionPolicy retention policy
+     * @param consistency     Specify the write consistency for the point.
+     *                        InfluxDB assumes that the write consistency is {@link  WriteConsistency#ONE} if you
+     *                        do not specify consistency. See the <a href="https://bit.ly/enterprise-consistency">
+     *                        InfluxDB Enterprise documentation</a> for detailed descriptions of each consistency
+     *                        option. <b>Available with InfluxDB Enterprise clusters only!</b>
+     * @return client
+     */
+    @Nonnull
+    public static InfluxDBClient createV1(@Nonnull final String url,
+                                          @Nullable final String username,
+                                          final char[] password,
+                                          @Nonnull final String database,
+                                          @Nullable final String retentionPolicy,
+                                          @Nullable final WriteConsistency consistency) {
 
         Arguments.checkNonEmpty(database, "database");
 
@@ -185,6 +241,7 @@ public final class InfluxDBClientFactory {
                         username == null ? "" : username,
                         password == null ? "" : String.valueOf(password)).toCharArray())
                 .bucket(String.format("%s/%s", database, retentionPolicy == null ? "" : retentionPolicy))
+                .consistency(consistency)
                 .build();
 
         return create(options);

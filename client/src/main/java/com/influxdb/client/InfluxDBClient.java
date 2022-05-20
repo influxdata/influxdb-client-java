@@ -245,12 +245,12 @@ public interface InfluxDBClient extends AutoCloseable {
     DeleteApi getDeleteApi();
 
     /**
-     * Create an InvocableScripts API instance.
+     * Create an InvokableScripts API instance.
      *
-     * @return InvocableScripts API instance
+     * @return InvokableScripts API instance
      */
     @Nonnull
-    InvocableScriptsApi getInvocableScriptsApi();
+    InvokableScriptsApi getInvokableScriptsApi();
 
     /**
      * Create an implementation of the API endpoints defined by the {@code service} interface.

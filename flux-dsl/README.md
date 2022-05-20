@@ -46,6 +46,8 @@ Flux flux = Flux
         .withPropertyNamed("every")
         .withPropertyNamed("period")
     .sum();
+
+String query = flux.toString(properties);
 ```
 
 ## Supported functions
@@ -106,6 +108,19 @@ Flux flux = Flux
             .withEvery(5L, ChronoUnit.MINUTES)
             .withFunction("tables |> quantile(q: 0.99, column:column)");
 ```
+
+### columns
+The columns() function lists the column labels of input tables [[doc](http://bit.ly/flux-spec#columns)].
+- `column` - The name of the output column in which to store the column labels. Defaults to `_value`. [string]
+
+```java
+Flux flux = Flux
+    .from("telegraf")
+    .range(-12L, ChronoUnit.HOURS)
+    .window(10L, ChronoUnit.MINUTES)
+    .columns();
+```
+
 ### count
 Counts the number of results [[doc](http://bit.ly/flux-spec#count)].
 - `column` - The column to aggregate. Defaults to `_value`. [string]
@@ -240,6 +255,7 @@ Supported Record columns:
 
 Supported Record restrictions:
 - `equal`
+- `not`
 - `notEqual`
 - `less`
 - `greater`
@@ -897,4 +913,46 @@ option location = timezone.location(name: "America/Los_Angeles")
 
 from(bucket:"telegraf")
     |> count()
+```
+
+## Version
+
+The latest version for Maven dependency:
+```xml
+<dependency>
+  <groupId>com.influxdb</groupId>
+  <artifactId>flux-dsl</artifactId>
+  <version>6.1.0</version>
+</dependency>
+```
+
+Or when using with Gradle:
+```groovy
+dependencies {
+    implementation "com.influxdb:flux-dsl:6.1.0"
+}
+```
+
+### Snapshot Repository
+The snapshots are deployed into [OSS Snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/).
+
+#### Maven
+```xml
+<repository>
+    <id>ossrh</id>
+    <name>OSS Snapshot repository</name>
+    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    <releases>
+        <enabled>false</enabled>
+    </releases>
+    <snapshots>
+        <enabled>true</enabled>
+    </snapshots>
+</repository>
+```
+#### Gradle
+```
+repositories {
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+}
 ```

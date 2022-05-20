@@ -43,12 +43,12 @@ FluxClient fluxClient = FluxClientFactory.create("http://localhost:8086?readTime
 ```
 The following options are supported:
 
-| Property name | default | description |
-| --------------|-------------|-------------| 
-| readTimeout       | 10000 ms| read timeout |
-| writeTimeout      | 10000 ms| write timeout |
-| connectTimeout    | 10000 ms| socket timeout |
-| logLevel          | NONE | rest client verbosity level |
+| Property name  | default  | description                 |
+|----------------|----------|-----------------------------| 
+| readTimeout    | 10000 ms | read timeout                |
+| writeTimeout   | 10000 ms | write timeout               |
+| connectTimeout | 10000 ms | socket timeout              |
+| logLevel       | NONE     | rest client verbosity level |
 
 ## Query using the Flux language
 
@@ -162,14 +162,14 @@ The latest version for Maven dependency:
 <dependency>
   <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-flux</artifactId>
-  <version>5.0.0</version>
+  <version>6.1.0</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    implementation "com.influxdb:influxdb-client-flux:5.0.0"
+    implementation "com.influxdb:influxdb-client-flux:6.1.0"
 }
 ```
 

@@ -73,7 +73,7 @@ public class FluxCsvParser {
     public enum ResponseMetadataMode {
         FULL,
 
-        // useful for Invocable scripts
+        // useful for Invokable scripts
         ONLY_NAMES
     }
 

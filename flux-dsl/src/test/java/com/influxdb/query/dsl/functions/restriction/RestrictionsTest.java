@@ -73,6 +73,13 @@ class RestrictionsTest {
     }
 
     @Test
+    void not() {
+
+        Restrictions restrictions = Restrictions.not(Restrictions.value().exists());
+        Assertions.assertThat(restrictions.toString()).isEqualTo("not exists r[\"_value\"]");
+    }
+
+    @Test
     void emptyLogical() {
 
         Restrictions restrictions = Restrictions.and(

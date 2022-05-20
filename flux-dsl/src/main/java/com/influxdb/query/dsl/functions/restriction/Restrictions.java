@@ -43,6 +43,11 @@ public abstract class Restrictions {
         return new Logical("or", restrictions);
     }
 
+    @Nonnull
+    public static Restrictions not(@Nonnull final Restrictions restrictions) {
+        return new Not(restrictions);
+    }
+
     /**
      * Create Record measurement restriction.
      *
@@ -147,6 +152,21 @@ public abstract class Restrictions {
                             StringJoiner::add,
                             StringJoiner::merge)
                     .toString();
+        }
+    }
+
+    private static class Not extends Restrictions {
+
+        private final Restrictions restriction;
+
+        Not(@Nonnull final Restrictions restrictions) {
+            super();
+            this.restriction = restrictions;
+        }
+
+        @Override
+        public String toString() {
+            return "not " + restriction.toString();
         }
     }
 }

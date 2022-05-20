@@ -151,7 +151,6 @@ public final class ColumnRestriction {
      *
      * @return restriction
      */
-    //contains(value:r["symbol"], set:["BTC/USDT", "TRX/USDT"]))
     @Nonnull
     public Restrictions contains(@Nonnull final String[] set) {
         return new ContainsRestrictions(fieldName, set);

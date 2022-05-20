@@ -27,7 +27,7 @@
 
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client</artifactId>
-    <version>6.0.0-SNAPSHOT</version>
+    <version>6.2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -475,38 +475,38 @@
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-test</artifactId>
-                <version>6.0.0-SNAPSHOT</version>
+                <version>6.2.0-SNAPSHOT</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-core</artifactId>
-                <version>6.0.0-SNAPSHOT</version>
+                <version>6.2.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-utils</artifactId>
-                <version>6.0.0-SNAPSHOT</version>
+                <version>6.2.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-java</artifactId>
-                <version>6.0.0-SNAPSHOT</version>
+                <version>6.2.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-reactive</artifactId>
-                <version>6.0.0-SNAPSHOT</version>
+                <version>6.2.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-flux</artifactId>
-                <version>6.0.0-SNAPSHOT</version>
+                <version>6.2.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
@@ -525,12 +525,32 @@
                 <groupId>com.squareup.retrofit2</groupId>
                 <artifactId>converter-gson</artifactId>
                 <version>${dependency.retrofit.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.code.gson</groupId>
+                        <artifactId>gson</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
                 <groupId>com.squareup.retrofit2</groupId>
                 <artifactId>adapter-rxjava3</artifactId>
                 <version>${dependency.retrofit.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.squareup.okhttp3</groupId>
+                        <artifactId>okhttp</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.squareup.retrofit2</groupId>
+                        <artifactId>retrofit</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.reactivex.rxjava3</groupId>
+                        <artifactId>rxjava</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -561,6 +581,12 @@
                 <groupId>io.gsonfire</groupId>
                 <artifactId>gson-fire</artifactId>
                 <version>1.8.5</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.code.gson</groupId>
+                        <artifactId>gson</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -627,6 +653,12 @@
                 <groupId>com.moandjiezana.toml</groupId>
                 <artifactId>toml4j</artifactId>
                 <version>0.7.2</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.code.gson</groupId>
+                        <artifactId>gson</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>

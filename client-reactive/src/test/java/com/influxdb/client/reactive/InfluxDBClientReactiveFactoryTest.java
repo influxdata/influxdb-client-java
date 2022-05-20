@@ -91,4 +91,16 @@ class InfluxDBClientReactiveFactoryTest extends AbstractTest {
             Assertions.assertThat(client).isNotNull();
         } 
     }
+
+    @Test
+    void connectionStringConfiguration() throws NoSuchFieldException, IllegalAccessException {
+        InfluxDBClientReactive client = InfluxDBClientReactiveFactory.create("http://localhost:8086?readTimeout=15000", "xyz".toCharArray());
+
+        Assertions.assertThat(client).isNotNull();
+
+        Retrofit retrofit = getDeclaredField(client, "retrofit", AbstractInfluxDBClient.class);
+        OkHttpClient okHttpClient = (OkHttpClient) retrofit.callFactory();
+
+        Assertions.assertThat(okHttpClient.readTimeoutMillis()).isEqualTo(15_000);
+    }
 }

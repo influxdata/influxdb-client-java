@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.Run;
+import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractInfluxDBClientTest;
 
@@ -384,6 +385,38 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
         // dispose
         client.close();
         proxy.shutdown();
+    }
+
+    @Test
+    public void connectionStringPrecision() {
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .connectionString("https://us-west-2-1.aws.cloud2.influxdata.com?precision=US")
+                .build();
+        
+        Assertions.assertThat(options.getPrecision()).isEqualTo(WritePrecision.US);
+    }
+
+    @Test
+    public void propertiesPrecision() {
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder().loadProperties().build();
+        
+        Assertions.assertThat(options.getPrecision()).isEqualTo(WritePrecision.US);
+    }
+
+    @Test
+    public void connectionStringConsistency() {
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .connectionString("https://us-west-2-1.aws.cloud2.influxdata.com?consistency=QUORUM")
+                .build();
+
+        Assertions.assertThat(options.getConsistency()).isEqualTo(WriteConsistency.QUORUM);
+    }
+
+    @Test
+    public void propertiesConsistency() {
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder().loadProperties().build();
+
+        Assertions.assertThat(options.getConsistency()).isEqualTo(WriteConsistency.QUORUM);
     }
 
     private void queryAndTest(final String expected) throws InterruptedException {

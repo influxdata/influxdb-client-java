@@ -24,17 +24,17 @@ package com.influxdb.client.scala
 import akka.actor.ActorSystem
 import akka.stream.testkit.scaladsl.TestSink
 import com.influxdb.query.FluxRecord
+import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.BeforeAndAfter
 
 /**
  * @author Jakub Bednar (09/06/2020 07:19)
  */
-class InfluxDBClientScalaTest extends AnyFunSuite with Matchers with BeforeAndAfter{
+class InfluxDBClientScalaTest extends AnyFunSuite with Matchers with BeforeAndAfter {
 
   implicit val system: ActorSystem = ActorSystem("unit-tests")
-  
+
   var utils: InfluxDBUtils = _
 
   before {

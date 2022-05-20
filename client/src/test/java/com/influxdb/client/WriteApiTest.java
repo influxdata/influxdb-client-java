@@ -33,9 +33,11 @@ import javax.annotation.Nonnull;
 
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
+import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractInfluxDBClientTest;
 import com.influxdb.client.write.Point;
+import com.influxdb.client.write.WriteParameters;
 import com.influxdb.client.write.events.WriteErrorEvent;
 import com.influxdb.client.write.events.WriteRetriableErrorEvent;
 import com.influxdb.client.write.events.WriteSuccessEvent;
@@ -1018,6 +1020,61 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         String userAgent = recordedRequest.getHeader("User-Agent");
 
         Assertions.assertThat(userAgent).startsWith("influxdb-client-java/6.");
+    }
+
+    @Test
+    void writeParameters() {
+
+        writeApi = influxDBClient.makeWriteApi();
+
+        Runnable assertParameters = () -> {
+            RecordedRequest request;
+            try {
+                request = takeRequest();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            Assertions.assertThat(request.getRequestUrl()).isNotNull();
+            Assertions.assertThat("s").isEqualTo(request.getRequestUrl().queryParameter("precision"));
+            Assertions.assertThat("e").isEqualTo(request.getRequestUrl().queryParameter("bucket"));
+            Assertions.assertThat("f").isEqualTo(request.getRequestUrl().queryParameter("org"));
+            Assertions.assertThat("any").isEqualTo(request.getRequestUrl().queryParameter("consistency"));
+        };
+
+        WriteParameters parameters = new WriteParameters("e", "f", WritePrecision.S, WriteConsistency.ANY);
+
+        // record
+        mockServer.enqueue(createResponse("{}"));
+        writeApi.writeRecord("h2o,location=europe level=1i 1", parameters);
+        assertParameters.run();
+
+        // records
+        mockServer.enqueue(createResponse("{}"));
+        writeApi.writeRecords(Collections.singletonList("h2o,location=europe level=1i 1"), parameters);
+        assertParameters.run();
+
+        // point
+        Point point = Point.measurement("h2o").addTag("location", "europe").addField("level", 1).time(1L, WritePrecision.S);
+        mockServer.enqueue(createResponse("{}"));
+        writeApi.writePoint(point, parameters);
+        assertParameters.run();
+
+        // points
+        mockServer.enqueue(createResponse("{}"));
+        writeApi.writePoints(Collections.singletonList(point), parameters);
+        assertParameters.run();
+
+        // measurement
+        H2OFeetMeasurement measurement = new H2OFeetMeasurement("coyote_creek", 2.927, "below 3 feet", 1440046800L);
+        mockServer.enqueue(createResponse("{}"));
+        writeApi.writeMeasurement(measurement, parameters);
+        assertParameters.run();
+
+        // measurements
+        mockServer.enqueue(createResponse("{}"));
+        writeApi.writeMeasurements(Collections.singletonList(measurement), parameters);
+        assertParameters.run();
     }
 
     public abstract class Metric {

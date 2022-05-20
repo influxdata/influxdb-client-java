@@ -40,7 +40,7 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 
 public class InfluxDB2ReactiveExample {
 
@@ -88,7 +88,7 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 
 public class InfluxDB2ReactiveExampleRaw {
 
@@ -136,7 +136,7 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.QueryReactiveApi;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 import org.reactivestreams.Publisher;
 
 public class InfluxDB2ReactiveExamplePojo {
@@ -223,8 +223,8 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
 import com.influxdb.client.reactive.WriteReactiveApi;
 
-import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import org.reactivestreams.Publisher;
 
 public class InfluxDB2ReactiveExampleWriteEveryTenSeconds {
@@ -302,16 +302,17 @@ A client can be configured via configuration file. The configuration file has to
 
 The following options are supported:
 
-| Property name             | default   | description |
-| --------------------------|-----------|-------------| 
-| influx2.url               | -         | the url to connect to InfluxDB |
-| influx2.org               | -         | default destination organization for writes and queries |
-| influx2.bucket            | -         | default destination bucket for writes |
-| influx2.token             | -         | the token to use for the authorization |
-| influx2.logLevel          | NONE      | rest client verbosity level |
-| influx2.readTimeout       | 10000 ms  | read timeout |
-| influx2.writeTimeout      | 10000 ms  | write timeout |
-| influx2.connectTimeout    | 10000 ms  | socket timeout |
+| Property name            | default    | description                                                |
+|--------------------------|------------|------------------------------------------------------------| 
+| influx2.url              | -          | the url to connect to InfluxDB                             |
+| influx2.org              | -          | default destination organization for writes and queries    |
+| influx2.bucket           | -          | default destination bucket for writes                      |
+| influx2.token            | -          | the token to use for the authorization                     |
+| influx2.logLevel         | NONE       | rest client verbosity level                                |
+| influx2.readTimeout      | 10000 ms   | read timeout                                               |
+| influx2.writeTimeout     | 10000 ms   | write timeout                                              |
+| influx2.connectTimeout   | 10000 ms   | socket timeout                                             |
+| influx2.precision        | NS         | default precision for unix timestamps in the line protocol |
 
 The `influx2.readTimeout`, `influx2.writeTimeout` and `influx2.connectTimeout` supports `ms`, `s` and `m` as unit. Default is milliseconds.
 
@@ -345,15 +346,16 @@ InfluxDBClientReactive influxDBClient = InfluxDBClientReactiveFactory
 ```
 The following options are supported:
 
-| Property name     | default   | description |
-| ------------------|-----------|-------------| 
-| org               | -         | default destination organization for writes and queries |
-| bucket            | -         | default destination bucket for writes |
-| token             | -         | the token to use for the authorization |
-| logLevel          | NONE      | rest client verbosity level |
-| readTimeout       | 10000 ms  | read timeout |
-| writeTimeout      | 10000 ms  | write timeout |
-| connectTimeout    | 10000 ms  | socket timeout |
+| Property name    | default    | description                                                |
+|------------------|------------|------------------------------------------------------------| 
+| org              | -          | default destination organization for writes and queries    |
+| bucket           | -          | default destination bucket for writes                      |
+| token            | -          | the token to use for the authorization                     |
+| logLevel         | NONE       | rest client verbosity level                                |
+| readTimeout      | 10000 ms   | read timeout                                               |
+| writeTimeout     | 10000 ms   | write timeout                                              |
+| connectTimeout   | 10000 ms   | socket timeout                                             |
+| precision        | NS         | default precision for unix timestamps in the line protocol |
 
 The `readTimeout`, `writeTimeout` and `connectTimeout` supports `ms`, `s` and `m` as unit. Default is milliseconds.
 
@@ -389,6 +391,8 @@ import com.influxdb.client.reactive.QueryReactiveApi;
 import com.influxdb.query.dsl.Flux;
 import com.influxdb.query.dsl.functions.restriction.Restrictions;
 
+import io.reactivex.rxjava3.core.Flowable;
+
 public class InfluxDB2ReactiveExampleDSL {
 
     private static char[] token = "my-token".toCharArray();
@@ -407,8 +411,7 @@ public class InfluxDB2ReactiveExampleDSL {
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
 
-        queryApi
-                .query(flux.toString())
+        Flowable.fromPublisher(queryApi.query(flux.toString()))
                 .subscribe(fluxRecord -> {
                     //
                     // The callback to consume a FluxRecord.
@@ -428,14 +431,14 @@ The latest version for Maven dependency:
 <dependency>
   <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-reactive</artifactId>
-  <version>5.0.0</version>
+  <version>6.1.0</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    implementation "com.influxdb:influxdb-client-reactive:5.0.0"
+    implementation "com.influxdb:influxdb-client-reactive:6.1.0"
 }
 ```
 

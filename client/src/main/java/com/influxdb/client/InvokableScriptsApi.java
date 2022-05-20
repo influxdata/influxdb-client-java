@@ -45,7 +45,7 @@ import com.influxdb.query.FluxTable;
  * @author Jakub Bednar (bednar@github) (03/21/2022 07:54)
  */
 @ThreadSafe
-public interface InvocableScriptsApi {
+public interface InvokableScriptsApi {
 
     /**
      * Create a script.
@@ -81,7 +81,7 @@ public interface InvocableScriptsApi {
      * @return scripts
      */
     @Nonnull
-    List<Script> findScripts(@Nonnull final InvocableScriptsQuery query);
+    List<Script> findScripts(@Nonnull final InvokableScriptsQuery query);
 
     /**
      * Delete a script.
@@ -94,7 +94,7 @@ public interface InvocableScriptsApi {
      * Executes the script and synchronously map whole response to {@code List<FluxTable>}.
      * <p>
      * NOTE: This method is not intended for large query results.
-     * Use {@link InvocableScriptsApi#invokeScript(String, Map, BiConsumer, Consumer, Runnable)}
+     * Use {@link InvokableScriptsApi#invokeScript(String, Map, BiConsumer, Consumer, Runnable)}
      * for large data streaming.
      *
      * @param scriptId The ID of the script to invoke. (required)
@@ -136,7 +136,7 @@ public interface InvocableScriptsApi {
      * Executes the script and synchronously map whole response to list of object with given type. <p>
      * <p>
      * NOTE: This method is not intended for large query results.
-     * Use {@link InvocableScriptsApi#invokeScript(String, Map, Class, BiConsumer, Consumer, Runnable)}
+     * Use {@link InvokableScriptsApi#invokeScript(String, Map, Class, BiConsumer, Consumer, Runnable)}
      * for large data streaming.
      *
      * @param scriptId        The ID of the script to invoke. (required)
@@ -188,7 +188,7 @@ public interface InvocableScriptsApi {
      * Executes the script and synchronously map whole response to {@link String} result.
      * <p>
      * NOTE: This method is not intended for large query results.
-     * Use {@link InvocableScriptsApi#invokeScriptRaw(String, Map, BiConsumer, Consumer, Runnable)}
+     * Use {@link InvokableScriptsApi#invokeScriptRaw(String, Map, BiConsumer, Consumer, Runnable)}
      * for large data streaming.
      *
      * @param scriptId The ID of the script to invoke. (required)

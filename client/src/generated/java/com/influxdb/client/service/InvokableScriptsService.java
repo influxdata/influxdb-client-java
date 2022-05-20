@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public interface InvocableScriptsService {
+public interface InvokableScriptsService {
   /**
    * Delete a script
    * Deletes a script and all associated records.
@@ -44,7 +44,7 @@ public interface InvocableScriptsService {
 
   /**
    * Retrieve a script
-   * Uses script ID to retrieve details of an invocable script.
+   * Uses script ID to retrieve details of an invokable script.
    * @param scriptID The script ID. (required)
    * @return Call&lt;Script&gt;
    */
@@ -55,7 +55,7 @@ public interface InvocableScriptsService {
 
   /**
    * Update a script
-   * Updates properties (&#x60;name&#x60;, &#x60;description&#x60;, and &#x60;script&#x60;) of an invocable script.
+   * Updates properties (&#x60;name&#x60;, &#x60;description&#x60;, and &#x60;script&#x60;) of an invokable script.
    * @param scriptID The script ID. (required)
    * @param scriptUpdateRequest Script update to apply (required)
    * @return Call&lt;Script&gt;

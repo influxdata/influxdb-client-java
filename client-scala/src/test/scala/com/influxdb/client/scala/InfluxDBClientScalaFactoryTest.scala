@@ -62,4 +62,16 @@ class InfluxDBClientScalaFactoryTest extends AnyFunSuite with Matchers {
     okHttpClient.writeTimeoutMillis should be(10000)
     okHttpClient.connectTimeoutMillis should be(18000)
   }
+
+  test("connectionStringConfiguration") {
+
+    val utils = new InfluxDBUtils {}
+
+    val client = InfluxDBClientScalaFactory.create("http://localhost:8086?readTimeout=55000", "xyz".toCharArray)
+
+    val retrofit = utils.getDeclaredField(client, "retrofit", classOf[AbstractInfluxDBClient]).asInstanceOf[Retrofit]
+    val okHttpClient = retrofit.callFactory.asInstanceOf[OkHttpClient]
+
+    okHttpClient.readTimeoutMillis should be(55000)
+  }
 }
