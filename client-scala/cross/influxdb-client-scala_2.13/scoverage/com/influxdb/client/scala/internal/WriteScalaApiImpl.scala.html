@@ -1,0 +1,2142 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          com/influxdb/client/scala/internal/WriteScalaApiImpl.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier, monospace;'>1 <span style=''>/**
+</span>2 <span style=''> * The MIT License
+</span>3 <span style=''> *
+</span>4 <span style=''> * Permission is hereby granted, free of charge, to any person obtaining a copy
+</span>5 <span style=''> * of this software and associated documentation files (the &quot;Software&quot;), to deal
+</span>6 <span style=''> * in the Software without restriction, including without limitation the rights
+</span>7 <span style=''> * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+</span>8 <span style=''> * copies of the Software, and to permit persons to whom the Software is
+</span>9 <span style=''> * furnished to do so, subject to the following conditions:
+</span>10 <span style=''> *
+</span>11 <span style=''> * The above copyright notice and this permission notice shall be included in
+</span>12 <span style=''> * all copies or substantial portions of the Software.
+</span>13 <span style=''> *
+</span>14 <span style=''> * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+</span>15 <span style=''> * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+</span>16 <span style=''> * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+</span>17 <span style=''> * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+</span>18 <span style=''> * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+</span>19 <span style=''> * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+</span>20 <span style=''> * THE SOFTWARE.
+</span>21 <span style=''> */
+</span>22 <span style=''>package com.influxdb.client.scala.internal
+</span>23 <span style=''>
+</span>24 <span style=''>import akka.Done
+</span>25 <span style=''>import akka.stream.scaladsl.{Flow, Keep, Sink}
+</span>26 <span style=''>import com.influxdb.client.InfluxDBClientOptions
+</span>27 <span style=''>import com.influxdb.client.domain.WritePrecision
+</span>28 <span style=''>import com.influxdb.client.internal.{AbstractWriteBlockingClient, AbstractWriteClient}
+</span>29 <span style=''>import com.influxdb.client.scala.WriteScalaApi
+</span>30 <span style=''>import com.influxdb.client.service.WriteService
+</span>31 <span style=''>import com.influxdb.client.write.{Point, WriteParameters}
+</span>32 <span style=''>
+</span>33 <span style=''>import javax.annotation.Nonnull
+</span>34 <span style=''>import scala.collection.immutable.ListMap
+</span>35 <span style=''>import scala.concurrent.Future
+</span>36 <span style=''>import scala.jdk.CollectionConverters._
+</span>37 <span style=''>
+</span>38 <span style=''>/**
+</span>39 <span style=''> * @author Jakub Bednar (bednar@github) (05/09/2022 09:48)
+</span>40 <span style=''> */
+</span>41 <span style=''>class WriteScalaApiImpl(@Nonnull service: WriteService, @Nonnull options: InfluxDBClientOptions)
+</span>42 <span style=''>
+</span>43 <span style=''>  extends AbstractWriteBlockingClient(service, options) with WriteScalaApi {
+</span>44 <span style=''>
+</span>45 <span style=''>  /**
+</span>46 <span style=''>   * Write Line Protocol record into specified bucket.
+</span>47 <span style=''>   *
+</span>48 <span style=''>   * @param precision Precision for the unix timestamps within the body line-protocol.
+</span>49 <span style=''>   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
+</span>50 <span style=''>   * @param bucket    Specifies the destination bucket for writes.
+</span>51 <span style=''>   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+</span>52 <span style=''>   *                  `bucket` if the `bucket` is not specified.
+</span>53 <span style=''>   * @param org       Specifies the destination organization for writes.
+</span>54 <span style=''>   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+</span>55 <span style=''>   *                  if the `org` is not specified.
+</span>56 <span style=''>   * @return the sink that accept the record specified in InfluxDB Line Protocol. The `record` is considered as one batch unit.
+</span>57 <span style=''>   */
+</span>58 <span style=''>  override def writeRecord(precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[String, Future[Done]] = {
+</span>59 <span style=''>    </span><span style='background: #F0ADAD'>Flow[String]
+</span>60 <span style=''></span><span style='background: #F0ADAD'>      .map(record =&gt; Seq(new AbstractWriteClient.BatchWriteDataRecord(record)))
+</span>61 <span style=''></span><span style='background: #F0ADAD'>      .map(batch =&gt; writeHttp(precision, bucket, org, batch))
+</span>62 <span style=''></span><span style='background: #F0ADAD'>      .toMat(Sink.head)(Keep.right)</span><span style=''>
+</span>63 <span style=''>  }
+</span>64 <span style=''>
+</span>65 <span style=''>  /**
+</span>66 <span style=''>   * Write Line Protocol records into specified bucket.
+</span>67 <span style=''>   *
+</span>68 <span style=''>   * @param precision Precision for the unix timestamps within the body line-protocol.
+</span>69 <span style=''>   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
+</span>70 <span style=''>   * @param bucket    Specifies the destination bucket for writes.
+</span>71 <span style=''>   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+</span>72 <span style=''>   *                  `bucket` if the `bucket` is not specified.
+</span>73 <span style=''>   * @param org       Specifies the destination organization for writes.
+</span>74 <span style=''>   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+</span>75 <span style=''>   *                  if the `org` is not specified.
+</span>76 <span style=''>   * @return the sink that accept the records specified in InfluxDB Line Protocol.
+</span>77 <span style=''>   */
+</span>78 <span style=''>  override def writeRecords(precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[Seq[String], Future[Done]] = {
+</span>79 <span style=''>    </span><span style='background: #F0ADAD'>writeRecords(toWriteParameters(precision, bucket, org))</span><span style=''>
+</span>80 <span style=''>  }
+</span>81 <span style=''>
+</span>82 <span style=''>  /**
+</span>83 <span style=''>   * Write Line Protocol records into specified bucket.
+</span>84 <span style=''>   *
+</span>85 <span style=''>   * @param parameters specify InfluxDB Write endpoint parameters
+</span>86 <span style=''>   * @return the sink that accept the records specified in InfluxDB Line Protocol. The `records` are considered as one batch unit.
+</span>87 <span style=''>   */
+</span>88 <span style=''>  override def writeRecords(parameters: WriteParameters): Sink[Seq[String], Future[Done]] = {
+</span>89 <span style=''>    </span><span style='background: #F0ADAD'>Flow[Seq[String]]
+</span>90 <span style=''></span><span style='background: #F0ADAD'>      .map(records =&gt; records.map(record =&gt; new AbstractWriteClient.BatchWriteDataRecord(record)))
+</span>91 <span style=''></span><span style='background: #F0ADAD'>      .map(batch =&gt; writeHttp(parameters, batch))
+</span>92 <span style=''></span><span style='background: #F0ADAD'>      .toMat(Sink.head)(Keep.right)</span><span style=''>
+</span>93 <span style=''>  }
+</span>94 <span style=''>
+</span>95 <span style=''>  /**
+</span>96 <span style=''>   * Write Data points into specified bucket.
+</span>97 <span style=''>   *
+</span>98 <span style=''>   * @param bucket Specifies the destination bucket for writes.
+</span>99 <span style=''>   *               The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+</span>100 <span style=''>   *               `bucket` if the `bucket` is not specified.
+</span>101 <span style=''>   * @param org    Specifies the destination organization for writes.
+</span>102 <span style=''>   *               The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+</span>103 <span style=''>   *               if the `org` is not specified.
+</span>104 <span style=''>   * @return the sink that accept the Data points. The `point` is considered as one batch unit.
+</span>105 <span style=''>   */
+</span>106 <span style=''>  override def writePoint(bucket: Option[String], org: Option[String]): Sink[Point, Future[Done]] = {
+</span>107 <span style=''>    </span><span style='background: #F0ADAD'>Flow[Point]
+</span>108 <span style=''></span><span style='background: #F0ADAD'>      .map(point =&gt; (point.getPrecision, Seq(new AbstractWriteClient.BatchWriteDataPoint(point, options))))
+</span>109 <span style=''></span><span style='background: #F0ADAD'>      .map(batch =&gt; writeHttp(Some(batch._1), bucket, org, batch._2))
+</span>110 <span style=''></span><span style='background: #F0ADAD'>      .toMat(Sink.head)(Keep.right)</span><span style=''>
+</span>111 <span style=''>  }
+</span>112 <span style=''>
+</span>113 <span style=''>  /**
+</span>114 <span style=''>   * Write Data points into specified bucket.
+</span>115 <span style=''>   *
+</span>116 <span style=''>   * @param bucket Specifies the destination bucket for writes.
+</span>117 <span style=''>   *               The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+</span>118 <span style=''>   *               `bucket` if the `bucket` is not specified.
+</span>119 <span style=''>   * @param org    Specifies the destination organization for writes.
+</span>120 <span style=''>   *               The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+</span>121 <span style=''>   *               if the `org` is not specified.
+</span>122 <span style=''>   * @return the sink that accept the Data points. The `points` are considered as one batch unit.
+</span>123 <span style=''>   */
+</span>124 <span style=''>  override def writePoints(bucket: Option[String], org: Option[String]): Sink[Seq[Point], Future[Done]] = {
+</span>125 <span style=''>    </span><span style='background: #F0ADAD'>writePoints(new WriteParameters(bucket.orNull, org.orNull, null, null))</span><span style=''>
+</span>126 <span style=''>  }
+</span>127 <span style=''>
+</span>128 <span style=''>  /**
+</span>129 <span style=''>   * Write Data points into specified bucket.
+</span>130 <span style=''>   *
+</span>131 <span style=''>   * @param parameters specify InfluxDB Write endpoint parameters
+</span>132 <span style=''>   * @return the sink that accept the Data points. The `points` are considered as one batch unit.
+</span>133 <span style=''>   */
+</span>134 <span style=''>  override def writePoints(parameters: WriteParameters): Sink[Seq[Point], Future[Done]] = {
+</span>135 <span style=''>    </span><span style='background: #F0ADAD'>Flow[Seq[Point]]
+</span>136 <span style=''></span><span style='background: #F0ADAD'>      // create ordered Map&lt;Precision, Seq[Point]&gt;
+</span>137 <span style=''></span><span style='background: #F0ADAD'>      .map(records =&gt; records.foldRight(ListMap.empty[WritePrecision, Seq[Point]]) {
+</span>138 <span style=''></span><span style='background: #F0ADAD'>        case (point, map) =&gt; map.updated(point.getPrecision, point +: map.getOrElse(point.getPrecision, Seq()))
+</span>139 <span style=''></span><span style='background: #F0ADAD'>      }.toList.reverse)
+</span>140 <span style=''></span><span style='background: #F0ADAD'>      .map(grouped =&gt; grouped.map(group =&gt; (group._1, group._2.map(point =&gt; new AbstractWriteClient.BatchWriteDataPoint(point, options)))))
+</span>141 <span style=''></span><span style='background: #F0ADAD'>      .map(batches =&gt; batches.foreach(batch =&gt; writeHttp(parameters.copy(batch._1, options), batch._2)))
+</span>142 <span style=''></span><span style='background: #F0ADAD'>      .map(_ =&gt; Done.done())
+</span>143 <span style=''></span><span style='background: #F0ADAD'>      .toMat(Sink.head)(Keep.right)</span><span style=''>
+</span>144 <span style=''>  }
+</span>145 <span style=''>
+</span>146 <span style=''>  /**
+</span>147 <span style=''>   * Write Measurement into specified bucket.
+</span>148 <span style=''>   *
+</span>149 <span style=''>   * @param precision Precision for the unix timestamps within the body line-protocol.
+</span>150 <span style=''>   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
+</span>151 <span style=''>   * @param bucket    Specifies the destination bucket for writes.
+</span>152 <span style=''>   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+</span>153 <span style=''>   *                  `bucket` if the `bucket` is not specified.
+</span>154 <span style=''>   * @param org       Specifies the destination organization for writes.
+</span>155 <span style=''>   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+</span>156 <span style=''>   *                  if the `org` is not specified.
+</span>157 <span style=''>   * @tparam M the type of the measurement (POJO)
+</span>158 <span style=''>   * @return the sink that accept the measurement. The `measurement` is considered as one batch unit.
+</span>159 <span style=''>   */
+</span>160 <span style=''>  override def writeMeasurement[M](precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[M, Future[Done]] = {
+</span>161 <span style=''>    </span><span style='background: #F0ADAD'>Flow[M]
+</span>162 <span style=''></span><span style='background: #F0ADAD'>      .map(measurement =&gt; {
+</span>163 <span style=''></span><span style='background: #F0ADAD'>        val parameters = toWriteParameters(precision, bucket, org)
+</span>164 <span style=''></span><span style='background: #F0ADAD'>        Seq(toMeasurementBatch(measurement, parameters.precisionSafe(options)))
+</span>165 <span style=''></span><span style='background: #F0ADAD'>      })
+</span>166 <span style=''></span><span style='background: #F0ADAD'>      .map(batch =&gt; writeHttp(precision, bucket, org, batch))
+</span>167 <span style=''></span><span style='background: #F0ADAD'>      .toMat(Sink.head)(Keep.right)</span><span style=''>
+</span>168 <span style=''>  }
+</span>169 <span style=''>
+</span>170 <span style=''>  /**
+</span>171 <span style=''>   * Write Measurements into specified bucket.
+</span>172 <span style=''>   *
+</span>173 <span style=''>   * @param precision Precision for the unix timestamps within the body line-protocol.
+</span>174 <span style=''>   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
+</span>175 <span style=''>   * @param bucket    Specifies the destination bucket for writes.
+</span>176 <span style=''>   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+</span>177 <span style=''>   *                  `bucket` if the `bucket` is not specified.
+</span>178 <span style=''>   * @param org       Specifies the destination organization for writes.
+</span>179 <span style=''>   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+</span>180 <span style=''>   *                  if the `org` is not specified.
+</span>181 <span style=''>   * @tparam M the type of the measurement (POJO)
+</span>182 <span style=''>   * @return the sink that accept the measurements. The `measurements` are considered as one batch unit.
+</span>183 <span style=''>   */
+</span>184 <span style=''>  override def writeMeasurements[M](precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[Seq[M], Future[Done]] = {
+</span>185 <span style=''>    </span><span style='background: #F0ADAD'>writeMeasurements(toWriteParameters(precision, bucket, org))</span><span style=''>
+</span>186 <span style=''>  }
+</span>187 <span style=''>
+</span>188 <span style=''>  /**
+</span>189 <span style=''>   * Write Measurements into specified bucket.
+</span>190 <span style=''>   *
+</span>191 <span style=''>   * @param parameters specify InfluxDB Write endpoint parameters
+</span>192 <span style=''>   * @tparam M the type of the measurement (POJO)
+</span>193 <span style=''>   * @return the sink that accept the measurements. The `measurements` are considered as one batch unit.
+</span>194 <span style=''>   */
+</span>195 <span style=''>  override def writeMeasurements[M](parameters: WriteParameters): Sink[Seq[M], Future[Done]] = {
+</span>196 <span style=''>    </span><span style='background: #F0ADAD'>Flow[Seq[M]]
+</span>197 <span style=''></span><span style='background: #F0ADAD'>      .map(records =&gt; records.map(record =&gt; toMeasurementBatch(record, parameters.precisionSafe(options))))
+</span>198 <span style=''></span><span style='background: #F0ADAD'>      .map(batch =&gt; writeHttp(parameters, batch))
+</span>199 <span style=''></span><span style='background: #F0ADAD'>      .toMat(Sink.head)(Keep.right)</span><span style=''>
+</span>200 <span style=''>  }
+</span>201 <span style=''>
+</span>202 <span style=''>  private def writeHttp(precision: Option[WritePrecision], bucket: Option[String], org: Option[String], batch: Seq[AbstractWriteClient.BatchWriteData]): Done = {
+</span>203 <span style=''>    </span><span style='background: #F0ADAD'>writeHttp(toWriteParameters(precision, bucket, org), batch)</span><span style=''>
+</span>204 <span style=''>  }
+</span>205 <span style=''>
+</span>206 <span style=''>  private def writeHttp(parameters: WriteParameters, batch: Seq[AbstractWriteClient.BatchWriteData]): Done = {
+</span>207 <span style=''>    </span><span style='background: #F0ADAD'>write(parameters, batch.toList.asJava.stream())</span><span style=''>
+</span>208 <span style=''>    </span><span style='background: #F0ADAD'>Done.done()</span><span style=''>
+</span>209 <span style=''>  }
+</span>210 <span style=''>
+</span>211 <span style=''>  private def toWriteParameters(precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): WriteParameters = {
+</span>212 <span style=''>    val parameters = </span><span style='background: #F0ADAD'>new WriteParameters(bucket.orNull, org.orNull, precision.orNull, null)</span><span style=''>
+</span>213 <span style=''>    </span><span style='background: #F0ADAD'>parameters.check(options)</span><span style=''>
+</span>214 <span style=''>    parameters
+</span>215 <span style=''>  }
+</span>216 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          60
+        </td>
+        <td>
+          122
+        </td>
+        <td>
+          3023
+          -
+          3080
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.SeqFactory.Delegate.apply
+        </td>
+        <td style="background: #F0ADAD">
+          scala.`package`.Seq.apply[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord](new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord(record))
+        </td>
+      </tr><tr>
+        <td>
+          60
+        </td>
+        <td>
+          121
+        </td>
+        <td>
+          3027
+          -
+          3079
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord(record)
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          123
+        </td>
+        <td>
+          3102
+          -
+          3142
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.writeHttp
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.writeHttp(precision, bucket, org, batch)
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          125
+        </td>
+        <td>
+          3168
+          -
+          3178
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          akka.stream.scaladsl.Keep.right
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]]
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          124
+        </td>
+        <td>
+          3157
+          -
+          3166
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          akka.stream.scaladsl.Sink.head
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Sink.head[akka.Done]
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          126
+        </td>
+        <td>
+          2989
+          -
+          3179
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.Flow.toMat
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Flow.apply[String].map[Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord]](((record: String) =&gt; scala.`package`.Seq.apply[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord](new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord(record)))).map[akka.Done](((batch: Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord]) =&gt; WriteScalaApiImpl.this.writeHttp(precision, bucket, org, batch))).toMat[scala.concurrent.Future[akka.Done], scala.concurrent.Future[akka.Done]](akka.stream.scaladsl.Sink.head[akka.Done])(akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]])
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          128
+        </td>
+        <td>
+          4198
+          -
+          4253
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.writeRecords
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.writeRecords(WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org))
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          127
+        </td>
+        <td>
+          4211
+          -
+          4252
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.toWriteParameters
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org)
+        </td>
+      </tr><tr>
+        <td>
+          90
+        </td>
+        <td>
+          130
+        </td>
+        <td>
+          4667
+          -
+          4742
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.IterableOps.map
+        </td>
+        <td style="background: #F0ADAD">
+          records.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord](((record: String) =&gt; new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord(record)))
+        </td>
+      </tr><tr>
+        <td>
+          90
+        </td>
+        <td>
+          129
+        </td>
+        <td>
+          4689
+          -
+          4741
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord(record)
+        </td>
+      </tr><tr>
+        <td>
+          91
+        </td>
+        <td>
+          131
+        </td>
+        <td>
+          4764
+          -
+          4792
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.writeHttp
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.writeHttp(parameters, batch)
+        </td>
+      </tr><tr>
+        <td>
+          92
+        </td>
+        <td>
+          134
+        </td>
+        <td>
+          4627
+          -
+          4829
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.Flow.toMat
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Flow.apply[Seq[String]].map[Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord]](((records: Seq[String]) =&gt; records.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord](((record: String) =&gt; new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord(record))))).map[akka.Done](((batch: Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord]) =&gt; WriteScalaApiImpl.this.writeHttp(parameters, batch))).toMat[scala.concurrent.Future[akka.Done], scala.concurrent.Future[akka.Done]](akka.stream.scaladsl.Sink.head[akka.Done])(akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]])
+        </td>
+      </tr><tr>
+        <td>
+          92
+        </td>
+        <td>
+          133
+        </td>
+        <td>
+          4818
+          -
+          4828
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          akka.stream.scaladsl.Keep.right
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]]
+        </td>
+      </tr><tr>
+        <td>
+          92
+        </td>
+        <td>
+          132
+        </td>
+        <td>
+          4807
+          -
+          4816
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          akka.stream.scaladsl.Sink.head
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Sink.head[akka.Done]
+        </td>
+      </tr><tr>
+        <td>
+          108
+        </td>
+        <td>
+          137
+        </td>
+        <td>
+          5637
+          -
+          5696
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options)
+        </td>
+      </tr><tr>
+        <td>
+          108
+        </td>
+        <td>
+          136
+        </td>
+        <td>
+          5688
+          -
+          5695
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.options
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.options
+        </td>
+      </tr><tr>
+        <td>
+          108
+        </td>
+        <td>
+          139
+        </td>
+        <td>
+          5612
+          -
+          5698
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Tuple2.apply
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Tuple2.apply[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint]](point.getPrecision(), scala.`package`.Seq.apply[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint](new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options)))
+        </td>
+      </tr><tr>
+        <td>
+          108
+        </td>
+        <td>
+          138
+        </td>
+        <td>
+          5633
+          -
+          5697
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.SeqFactory.Delegate.apply
+        </td>
+        <td style="background: #F0ADAD">
+          scala.`package`.Seq.apply[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint](new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options))
+        </td>
+      </tr><tr>
+        <td>
+          108
+        </td>
+        <td>
+          135
+        </td>
+        <td>
+          5613
+          -
+          5631
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.write.Point.getPrecision
+        </td>
+        <td style="background: #F0ADAD">
+          point.getPrecision()
+        </td>
+      </tr><tr>
+        <td>
+          109
+        </td>
+        <td>
+          140
+        </td>
+        <td>
+          5735
+          -
+          5743
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Tuple2._1
+        </td>
+        <td style="background: #F0ADAD">
+          batch._1
+        </td>
+      </tr><tr>
+        <td>
+          109
+        </td>
+        <td>
+          142
+        </td>
+        <td>
+          5759
+          -
+          5767
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Tuple2._2
+        </td>
+        <td style="background: #F0ADAD">
+          batch._2
+        </td>
+      </tr><tr>
+        <td>
+          109
+        </td>
+        <td>
+          141
+        </td>
+        <td>
+          5730
+          -
+          5744
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Some.apply
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Some.apply[com.influxdb.client.domain.WritePrecision](batch._1)
+        </td>
+      </tr><tr>
+        <td>
+          109
+        </td>
+        <td>
+          143
+        </td>
+        <td>
+          5720
+          -
+          5768
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.writeHttp
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.writeHttp(scala.Some.apply[com.influxdb.client.domain.WritePrecision](batch._1), bucket, org, batch._2)
+        </td>
+      </tr><tr>
+        <td>
+          110
+        </td>
+        <td>
+          146
+        </td>
+        <td>
+          5580
+          -
+          5805
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.Flow.toMat
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Flow.apply[com.influxdb.client.write.Point].map[(com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint])](((point: com.influxdb.client.write.Point) =&gt; scala.Tuple2.apply[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint]](point.getPrecision(), scala.`package`.Seq.apply[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint](new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options))))).map[akka.Done](((batch: (com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint])) =&gt; WriteScalaApiImpl.this.writeHttp(scala.Some.apply[com.influxdb.client.domain.WritePrecision](batch._1), bucket, org, batch._2))).toMat[scala.concurrent.Future[akka.Done], scala.concurrent.Future[akka.Done]](akka.stream.scaladsl.Sink.head[akka.Done])(akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]])
+        </td>
+      </tr><tr>
+        <td>
+          110
+        </td>
+        <td>
+          145
+        </td>
+        <td>
+          5794
+          -
+          5804
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          akka.stream.scaladsl.Keep.right
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]]
+        </td>
+      </tr><tr>
+        <td>
+          110
+        </td>
+        <td>
+          144
+        </td>
+        <td>
+          5783
+          -
+          5792
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          akka.stream.scaladsl.Sink.head
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Sink.head[akka.Done]
+        </td>
+      </tr><tr>
+        <td>
+          125
+        </td>
+        <td>
+          149
+        </td>
+        <td>
+          6615
+          -
+          6615
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          scala.&lt;:&lt;.refl
+        </td>
+        <td style="background: #F0ADAD">
+          scala.this.&lt;:&lt;.refl[Null]
+        </td>
+      </tr><tr>
+        <td>
+          125
+        </td>
+        <td>
+          151
+        </td>
+        <td>
+          6623
+          -
+          6627
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          null
+        </td>
+      </tr><tr>
+        <td>
+          125
+        </td>
+        <td>
+          154
+        </td>
+        <td>
+          6564
+          -
+          6635
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.writePoints
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.writePoints(new com.influxdb.client.write.WriteParameters(bucket.orNull[String](scala.this.&lt;:&lt;.refl[Null]), org.orNull[String](scala.this.&lt;:&lt;.refl[Null]), null, null))
+        </td>
+      </tr><tr>
+        <td>
+          125
+        </td>
+        <td>
+          148
+        </td>
+        <td>
+          6596
+          -
+          6609
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.Option.orNull
+        </td>
+        <td style="background: #F0ADAD">
+          bucket.orNull[String](scala.this.&lt;:&lt;.refl[Null])
+        </td>
+      </tr><tr>
+        <td>
+          125
+        </td>
+        <td>
+          147
+        </td>
+        <td>
+          6603
+          -
+          6603
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          scala.&lt;:&lt;.refl
+        </td>
+        <td style="background: #F0ADAD">
+          scala.this.&lt;:&lt;.refl[Null]
+        </td>
+      </tr><tr>
+        <td>
+          125
+        </td>
+        <td>
+          150
+        </td>
+        <td>
+          6611
+          -
+          6621
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.Option.orNull
+        </td>
+        <td style="background: #F0ADAD">
+          org.orNull[String](scala.this.&lt;:&lt;.refl[Null])
+        </td>
+      </tr><tr>
+        <td>
+          125
+        </td>
+        <td>
+          153
+        </td>
+        <td>
+          6576
+          -
+          6634
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.write.WriteParameters.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new com.influxdb.client.write.WriteParameters(bucket.orNull[String](scala.this.&lt;:&lt;.refl[Null]), org.orNull[String](scala.this.&lt;:&lt;.refl[Null]), null, null)
+        </td>
+      </tr><tr>
+        <td>
+          125
+        </td>
+        <td>
+          152
+        </td>
+        <td>
+          6629
+          -
+          6633
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          null
+        </td>
+      </tr><tr>
+        <td>
+          137
+        </td>
+        <td>
+          155
+        </td>
+        <td>
+          7072
+          -
+          7113
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          scala.collection.immutable.ListMap.empty
+        </td>
+        <td style="background: #F0ADAD">
+          scala.collection.immutable.ListMap.empty[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.write.Point]]
+        </td>
+      </tr><tr>
+        <td>
+          138
+        </td>
+        <td>
+          158
+        </td>
+        <td>
+          7146
+          -
+          7228
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.immutable.ListMap.updated
+        </td>
+        <td style="background: #F0ADAD">
+          map.updated[Seq[com.influxdb.client.write.Point]](point.getPrecision(), {
+  final &lt;synthetic&gt; &lt;artifact&gt; val rassoc$1: com.influxdb.client.write.Point = point;
+  map.getOrElse[Seq[com.influxdb.client.write.Point]](point.getPrecision(), scala.`package`.Seq.apply[Nothing]()).+:[com.influxdb.client.write.Point](rassoc$1)
+})
+        </td>
+      </tr><tr>
+        <td>
+          138
+        </td>
+        <td>
+          157
+        </td>
+        <td>
+          7184
+          -
+          7227
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.SeqOps.+:
+        </td>
+        <td style="background: #F0ADAD">
+          map.getOrElse[Seq[com.influxdb.client.write.Point]](point.getPrecision(), scala.`package`.Seq.apply[Nothing]()).+:[com.influxdb.client.write.Point](rassoc$1)
+        </td>
+      </tr><tr>
+        <td>
+          138
+        </td>
+        <td>
+          156
+        </td>
+        <td>
+          7158
+          -
+          7176
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.write.Point.getPrecision
+        </td>
+        <td style="background: #F0ADAD">
+          point.getPrecision()
+        </td>
+      </tr><tr>
+        <td>
+          139
+        </td>
+        <td>
+          159
+        </td>
+        <td>
+          7054
+          -
+          7251
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.collection.immutable.List.reverse
+        </td>
+        <td style="background: #F0ADAD">
+          records.foldRight[scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]]](scala.collection.immutable.ListMap.empty[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.write.Point]])(((x0$1: com.influxdb.client.write.Point, x1$1: scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]]) =&gt; scala.Tuple2.apply[com.influxdb.client.write.Point, scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]]](x0$1, x1$1) match {
+  case (_1: com.influxdb.client.write.Point, _2: scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]]): (com.influxdb.client.write.Point, scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]])((point @ _), (map @ _)) =&gt; map.updated[Seq[com.influxdb.client.write.Point]](point.getPrecision(), {
+    final &lt;synthetic&gt; &lt;artifact&gt; val rassoc$1: com.influxdb.client.write.Point = point;
+    map.getOrElse[Seq[com.influxdb.client.write.Point]](point.getPrecision(), scala.`package`.Seq.apply[Nothing]()).+:[com.influxdb.client.write.Point](rassoc$1)
+  })
+})).toList.reverse
+        </td>
+      </tr><tr>
+        <td>
+          140
+        </td>
+        <td>
+          164
+        </td>
+        <td>
+          7296
+          -
+          7390
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Tuple2.apply
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Tuple2.apply[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint]](group._1, group._2.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint](((point: com.influxdb.client.write.Point) =&gt; new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options))))
+        </td>
+      </tr><tr>
+        <td>
+          140
+        </td>
+        <td>
+          160
+        </td>
+        <td>
+          7297
+          -
+          7305
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Tuple2._1
+        </td>
+        <td style="background: #F0ADAD">
+          group._1
+        </td>
+      </tr><tr>
+        <td>
+          140
+        </td>
+        <td>
+          163
+        </td>
+        <td>
+          7307
+          -
+          7389
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.IterableOps.map
+        </td>
+        <td style="background: #F0ADAD">
+          group._2.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint](((point: com.influxdb.client.write.Point) =&gt; new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options)))
+        </td>
+      </tr><tr>
+        <td>
+          140
+        </td>
+        <td>
+          165
+        </td>
+        <td>
+          7275
+          -
+          7391
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.immutable.List.map
+        </td>
+        <td style="background: #F0ADAD">
+          grouped.map[(com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint])](((group: (com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.write.Point])) =&gt; scala.Tuple2.apply[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint]](group._1, group._2.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint](((point: com.influxdb.client.write.Point) =&gt; new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options))))))
+        </td>
+      </tr><tr>
+        <td>
+          140
+        </td>
+        <td>
+          162
+        </td>
+        <td>
+          7329
+          -
+          7388
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options)
+        </td>
+      </tr><tr>
+        <td>
+          140
+        </td>
+        <td>
+          161
+        </td>
+        <td>
+          7380
+          -
+          7387
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.options
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.options
+        </td>
+      </tr><tr>
+        <td>
+          141
+        </td>
+        <td>
+          167
+        </td>
+        <td>
+          7476
+          -
+          7483
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.options
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.options
+        </td>
+      </tr><tr>
+        <td>
+          141
+        </td>
+        <td>
+          166
+        </td>
+        <td>
+          7466
+          -
+          7474
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Tuple2._1
+        </td>
+        <td style="background: #F0ADAD">
+          batch._1
+        </td>
+      </tr><tr>
+        <td>
+          141
+        </td>
+        <td>
+          169
+        </td>
+        <td>
+          7486
+          -
+          7494
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Tuple2._2
+        </td>
+        <td style="background: #F0ADAD">
+          batch._2
+        </td>
+      </tr><tr>
+        <td>
+          141
+        </td>
+        <td>
+          168
+        </td>
+        <td>
+          7450
+          -
+          7484
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.write.WriteParameters.copy
+        </td>
+        <td style="background: #F0ADAD">
+          parameters.copy(batch._1, WriteScalaApiImpl.this.options)
+        </td>
+      </tr><tr>
+        <td>
+          141
+        </td>
+        <td>
+          171
+        </td>
+        <td>
+          7415
+          -
+          7496
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.immutable.List.foreach
+        </td>
+        <td style="background: #F0ADAD">
+          batches.foreach[akka.Done](((batch: (com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint])) =&gt; WriteScalaApiImpl.this.writeHttp(parameters.copy(batch._1, WriteScalaApiImpl.this.options), batch._2)))
+        </td>
+      </tr><tr>
+        <td>
+          141
+        </td>
+        <td>
+          170
+        </td>
+        <td>
+          7440
+          -
+          7495
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.writeHttp
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.writeHttp(parameters.copy(batch._1, WriteScalaApiImpl.this.options), batch._2)
+        </td>
+      </tr><tr>
+        <td>
+          142
+        </td>
+        <td>
+          172
+        </td>
+        <td>
+          7514
+          -
+          7525
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.Done.done
+        </td>
+        <td style="background: #F0ADAD">
+          akka.Done.done()
+        </td>
+      </tr><tr>
+        <td>
+          143
+        </td>
+        <td>
+          173
+        </td>
+        <td>
+          7540
+          -
+          7549
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          akka.stream.scaladsl.Sink.head
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Sink.head[akka.Done]
+        </td>
+      </tr><tr>
+        <td>
+          143
+        </td>
+        <td>
+          175
+        </td>
+        <td>
+          6964
+          -
+          7562
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.Flow.toMat
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Flow.apply[Seq[com.influxdb.client.write.Point]].map[List[(com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.write.Point])]](((records: Seq[com.influxdb.client.write.Point]) =&gt; records.foldRight[scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]]](scala.collection.immutable.ListMap.empty[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.write.Point]])(((x0$1: com.influxdb.client.write.Point, x1$1: scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]]) =&gt; scala.Tuple2.apply[com.influxdb.client.write.Point, scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]]](x0$1, x1$1) match {
+  case (_1: com.influxdb.client.write.Point, _2: scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]]): (com.influxdb.client.write.Point, scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]])((point @ _), (map @ _)) =&gt; map.updated[Seq[com.influxdb.client.write.Point]](point.getPrecision(), {
+    final &lt;synthetic&gt; &lt;artifact&gt; val rassoc$1: com.influxdb.client.write.Point = point;
+    map.getOrElse[Seq[com.influxdb.client.write.Point]](point.getPrecision(), scala.`package`.Seq.apply[Nothing]()).+:[com.influxdb.client.write.Point](rassoc$1)
+  })
+})).toList.reverse)).map[List[(com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint])]](((grouped: List[(com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.write.Point])]) =&gt; grouped.map[(com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint])](((group: (com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.write.Point])) =&gt; scala.Tuple2.apply[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint]](group._1, group._2.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint](((point: com.influxdb.client.write.Point) =&gt; new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options)))))))).map[Unit](((batches: List[(com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint])]) =&gt; batches.foreach[akka.Done](((batch: (com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint])) =&gt; WriteScalaApiImpl.this.writeHttp(parameters.copy(batch._1, WriteScalaApiImpl.this.options), batch._2))))).map[akka.Done](((x$1: Unit) =&gt; akka.Done.done())).toMat[scala.concurrent.Future[akka.Done], scala.concurrent.Future[akka.Done]](akka.stream.scaladsl.Sink.head[akka.Done])(akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]])
+        </td>
+      </tr><tr>
+        <td>
+          143
+        </td>
+        <td>
+          174
+        </td>
+        <td>
+          7551
+          -
+          7561
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          akka.stream.scaladsl.Keep.right
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]]
+        </td>
+      </tr><tr>
+        <td>
+          163
+        </td>
+        <td>
+          176
+        </td>
+        <td>
+          8698
+          -
+          8739
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.toWriteParameters
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org)
+        </td>
+      </tr><tr>
+        <td>
+          164
+        </td>
+        <td>
+          178
+        </td>
+        <td>
+          8784
+          -
+          8817
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.write.WriteParameters.precisionSafe
+        </td>
+        <td style="background: #F0ADAD">
+          parameters.precisionSafe(WriteScalaApiImpl.this.options)
+        </td>
+      </tr><tr>
+        <td>
+          164
+        </td>
+        <td>
+          180
+        </td>
+        <td>
+          8748
+          -
+          8819
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.SeqFactory.Delegate.apply
+        </td>
+        <td style="background: #F0ADAD">
+          scala.`package`.Seq.apply[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement](WriteScalaApiImpl.this.toMeasurementBatch[M](measurement, parameters.precisionSafe(WriteScalaApiImpl.this.options)))
+        </td>
+      </tr><tr>
+        <td>
+          164
+        </td>
+        <td>
+          177
+        </td>
+        <td>
+          8809
+          -
+          8816
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.options
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.options
+        </td>
+      </tr><tr>
+        <td>
+          164
+        </td>
+        <td>
+          179
+        </td>
+        <td>
+          8752
+          -
+          8818
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.internal.AbstractWriteBlockingClient.toMeasurementBatch
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.toMeasurementBatch[M](measurement, parameters.precisionSafe(WriteScalaApiImpl.this.options))
+        </td>
+      </tr><tr>
+        <td>
+          166
+        </td>
+        <td>
+          181
+        </td>
+        <td>
+          8849
+          -
+          8889
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.writeHttp
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.writeHttp(precision, bucket, org, batch)
+        </td>
+      </tr><tr>
+        <td>
+          167
+        </td>
+        <td>
+          182
+        </td>
+        <td>
+          8904
+          -
+          8913
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          akka.stream.scaladsl.Sink.head
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Sink.head[akka.Done]
+        </td>
+      </tr><tr>
+        <td>
+          167
+        </td>
+        <td>
+          184
+        </td>
+        <td>
+          8637
+          -
+          8926
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.Flow.toMat
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Flow.apply[M].map[Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement]](((measurement: M) =&gt; {
+  val parameters: com.influxdb.client.write.WriteParameters = WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org);
+  scala.`package`.Seq.apply[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement](WriteScalaApiImpl.this.toMeasurementBatch[M](measurement, parameters.precisionSafe(WriteScalaApiImpl.this.options)))
+})).map[akka.Done](((batch: Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement]) =&gt; WriteScalaApiImpl.this.writeHttp(precision, bucket, org, batch))).toMat[scala.concurrent.Future[akka.Done], scala.concurrent.Future[akka.Done]](akka.stream.scaladsl.Sink.head[akka.Done])(akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]])
+        </td>
+      </tr><tr>
+        <td>
+          167
+        </td>
+        <td>
+          183
+        </td>
+        <td>
+          8915
+          -
+          8925
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          akka.stream.scaladsl.Keep.right
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]]
+        </td>
+      </tr><tr>
+        <td>
+          185
+        </td>
+        <td>
+          185
+        </td>
+        <td>
+          10029
+          -
+          10070
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.toWriteParameters
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org)
+        </td>
+      </tr><tr>
+        <td>
+          185
+        </td>
+        <td>
+          186
+        </td>
+        <td>
+          10011
+          -
+          10071
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.writeMeasurements
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.writeMeasurements[M](WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org))
+        </td>
+      </tr><tr>
+        <td>
+          197
+        </td>
+        <td>
+          187
+        </td>
+        <td>
+          10572
+          -
+          10579
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.options
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.options
+        </td>
+      </tr><tr>
+        <td>
+          197
+        </td>
+        <td>
+          190
+        </td>
+        <td>
+          10498
+          -
+          10582
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.IterableOps.map
+        </td>
+        <td style="background: #F0ADAD">
+          records.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement](((record: M) =&gt; WriteScalaApiImpl.this.toMeasurementBatch[M](record, parameters.precisionSafe(WriteScalaApiImpl.this.options))))
+        </td>
+      </tr><tr>
+        <td>
+          197
+        </td>
+        <td>
+          189
+        </td>
+        <td>
+          10520
+          -
+          10581
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.internal.AbstractWriteBlockingClient.toMeasurementBatch
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.toMeasurementBatch[M](record, parameters.precisionSafe(WriteScalaApiImpl.this.options))
+        </td>
+      </tr><tr>
+        <td>
+          197
+        </td>
+        <td>
+          188
+        </td>
+        <td>
+          10547
+          -
+          10580
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.write.WriteParameters.precisionSafe
+        </td>
+        <td style="background: #F0ADAD">
+          parameters.precisionSafe(WriteScalaApiImpl.this.options)
+        </td>
+      </tr><tr>
+        <td>
+          198
+        </td>
+        <td>
+          191
+        </td>
+        <td>
+          10604
+          -
+          10632
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.writeHttp
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.writeHttp(parameters, batch)
+        </td>
+      </tr><tr>
+        <td>
+          199
+        </td>
+        <td>
+          194
+        </td>
+        <td>
+          10463
+          -
+          10669
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.stream.scaladsl.Flow.toMat
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Flow.apply[Seq[M]].map[Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement]](((records: Seq[M]) =&gt; records.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement](((record: M) =&gt; WriteScalaApiImpl.this.toMeasurementBatch[M](record, parameters.precisionSafe(WriteScalaApiImpl.this.options)))))).map[akka.Done](((batch: Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement]) =&gt; WriteScalaApiImpl.this.writeHttp(parameters, batch))).toMat[scala.concurrent.Future[akka.Done], scala.concurrent.Future[akka.Done]](akka.stream.scaladsl.Sink.head[akka.Done])(akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]])
+        </td>
+      </tr><tr>
+        <td>
+          199
+        </td>
+        <td>
+          193
+        </td>
+        <td>
+          10658
+          -
+          10668
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          akka.stream.scaladsl.Keep.right
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]]
+        </td>
+      </tr><tr>
+        <td>
+          199
+        </td>
+        <td>
+          192
+        </td>
+        <td>
+          10647
+          -
+          10656
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          akka.stream.scaladsl.Sink.head
+        </td>
+        <td style="background: #F0ADAD">
+          akka.stream.scaladsl.Sink.head[akka.Done]
+        </td>
+      </tr><tr>
+        <td>
+          203
+        </td>
+        <td>
+          196
+        </td>
+        <td>
+          10841
+          -
+          10900
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.writeHttp
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.writeHttp(WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org), batch)
+        </td>
+      </tr><tr>
+        <td>
+          203
+        </td>
+        <td>
+          195
+        </td>
+        <td>
+          10851
+          -
+          10892
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.toWriteParameters
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org)
+        </td>
+      </tr><tr>
+        <td>
+          207
+        </td>
+        <td>
+          198
+        </td>
+        <td>
+          11021
+          -
+          11068
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.internal.AbstractWriteBlockingClient.write
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.write(parameters, scala.jdk.CollectionConverters.SeqHasAsJava[com.influxdb.client.internal.AbstractWriteClient.BatchWriteData](batch.toList).asJava.stream())
+        </td>
+      </tr><tr>
+        <td>
+          207
+        </td>
+        <td>
+          197
+        </td>
+        <td>
+          11039
+          -
+          11067
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.util.Collection.stream
+        </td>
+        <td style="background: #F0ADAD">
+          scala.jdk.CollectionConverters.SeqHasAsJava[com.influxdb.client.internal.AbstractWriteClient.BatchWriteData](batch.toList).asJava.stream()
+        </td>
+      </tr><tr>
+        <td>
+          208
+        </td>
+        <td>
+          199
+        </td>
+        <td>
+          11073
+          -
+          11084
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.Done.done
+        </td>
+        <td style="background: #F0ADAD">
+          akka.Done.done()
+        </td>
+      </tr><tr>
+        <td>
+          212
+        </td>
+        <td>
+          200
+        </td>
+        <td>
+          11271
+          -
+          11271
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          scala.&lt;:&lt;.refl
+        </td>
+        <td style="background: #F0ADAD">
+          scala.this.&lt;:&lt;.refl[Null]
+        </td>
+      </tr><tr>
+        <td>
+          212
+        </td>
+        <td>
+          202
+        </td>
+        <td>
+          11283
+          -
+          11283
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          scala.&lt;:&lt;.refl
+        </td>
+        <td style="background: #F0ADAD">
+          scala.this.&lt;:&lt;.refl[Null]
+        </td>
+      </tr><tr>
+        <td>
+          212
+        </td>
+        <td>
+          205
+        </td>
+        <td>
+          11291
+          -
+          11307
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.Option.orNull
+        </td>
+        <td style="background: #F0ADAD">
+          precision.orNull[com.influxdb.client.domain.WritePrecision](scala.this.&lt;:&lt;.refl[Null])
+        </td>
+      </tr><tr>
+        <td>
+          212
+        </td>
+        <td>
+          207
+        </td>
+        <td>
+          11244
+          -
+          11314
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.write.WriteParameters.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new com.influxdb.client.write.WriteParameters(bucket.orNull[String](scala.this.&lt;:&lt;.refl[Null]), org.orNull[String](scala.this.&lt;:&lt;.refl[Null]), precision.orNull[com.influxdb.client.domain.WritePrecision](scala.this.&lt;:&lt;.refl[Null]), null)
+        </td>
+      </tr><tr>
+        <td>
+          212
+        </td>
+        <td>
+          201
+        </td>
+        <td>
+          11264
+          -
+          11277
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.Option.orNull
+        </td>
+        <td style="background: #F0ADAD">
+          bucket.orNull[String](scala.this.&lt;:&lt;.refl[Null])
+        </td>
+      </tr><tr>
+        <td>
+          212
+        </td>
+        <td>
+          204
+        </td>
+        <td>
+          11301
+          -
+          11301
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          scala.&lt;:&lt;.refl
+        </td>
+        <td style="background: #F0ADAD">
+          scala.this.&lt;:&lt;.refl[Null]
+        </td>
+      </tr><tr>
+        <td>
+          212
+        </td>
+        <td>
+          203
+        </td>
+        <td>
+          11279
+          -
+          11289
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.Option.orNull
+        </td>
+        <td style="background: #F0ADAD">
+          org.orNull[String](scala.this.&lt;:&lt;.refl[Null])
+        </td>
+      </tr><tr>
+        <td>
+          212
+        </td>
+        <td>
+          206
+        </td>
+        <td>
+          11309
+          -
+          11313
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          null
+        </td>
+      </tr><tr>
+        <td>
+          213
+        </td>
+        <td>
+          209
+        </td>
+        <td>
+          11319
+          -
+          11344
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.write.WriteParameters.check
+        </td>
+        <td style="background: #F0ADAD">
+          parameters.check(WriteScalaApiImpl.this.options)
+        </td>
+      </tr><tr>
+        <td>
+          213
+        </td>
+        <td>
+          208
+        </td>
+        <td>
+          11336
+          -
+          11343
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.options
+        </td>
+        <td style="background: #F0ADAD">
+          WriteScalaApiImpl.this.options
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

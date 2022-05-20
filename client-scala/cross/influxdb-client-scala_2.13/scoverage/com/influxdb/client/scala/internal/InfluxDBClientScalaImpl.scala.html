@@ -49,8 +49,8 @@
 </span>25 <span style=''>import com.influxdb.client.InfluxDBClientOptions
 </span>26 <span style=''>import com.influxdb.client.domain.HealthCheck
 </span>27 <span style=''>import com.influxdb.client.internal.AbstractInfluxDBClient
-</span>28 <span style=''>import com.influxdb.client.scala.{InfluxDBClientScala, QueryScalaApi}
-</span>29 <span style=''>import com.influxdb.client.service.QueryService
+</span>28 <span style=''>import com.influxdb.client.scala.{InfluxDBClientScala, QueryScalaApi, WriteScalaApi}
+</span>29 <span style=''>import com.influxdb.client.service.{QueryService, WriteService}
 </span>30 <span style=''>
 </span>31 <span style=''>import javax.annotation.Nonnull
 </span>32 <span style=''>
@@ -65,74 +65,82 @@
 </span>41 <span style=''>   */
 </span>42 <span style=''>  override def getQueryScalaApi(): QueryScalaApi = </span><span style='background: #F0ADAD'>new QueryScalaApiImpl(retrofit.create(classOf[QueryService]), options)</span><span style=''>
 </span>43 <span style=''>
-</span>44 <span style=''>  /**
-</span>45 <span style=''>   * Get the health of an instance.
-</span>46 <span style=''>   *
-</span>47 <span style=''>   * @return health of an instance
-</span>48 <span style=''>   */
-</span>49 <span style=''>  override def health: HealthCheck = </span><span style='background: #F0ADAD'>health(healthService.getHealth(null))</span><span style=''>
-</span>50 <span style=''>
-</span>51 <span style=''>  /**
-</span>52 <span style=''>   * Check the status of InfluxDB Server.
-</span>53 <span style=''>   *
-</span>54 <span style=''>   * @return true if server is healthy otherwise return false
-</span>55 <span style=''>   */
-</span>56 <span style=''>  override def ping: Boolean = </span><span style='background: #F0ADAD'>ping(pingService.getPing)</span><span style=''>
-</span>57 <span style=''>
-</span>58 <span style=''>  /**
-</span>59 <span style=''>   * Returns the version of the connected InfluxDB Server.
-</span>60 <span style=''>   *
-</span>61 <span style=''>   * @return the version String, otherwise unknown.
-</span>62 <span style=''>   */
-</span>63 <span style=''>  override def version: String = </span><span style='background: #F0ADAD'>version(pingService.getPing)</span><span style=''>
-</span>64 <span style=''>
-</span>65 <span style=''>  /**
-</span>66 <span style=''>   * Gets the [[LogLevel]] that is used for logging requests and responses.
-</span>67 <span style=''>   *
-</span>68 <span style=''>   * @return the [[LogLevel]] that is used for logging requests and responses
-</span>69 <span style=''>   */
-</span>70 <span style=''>  override def getLogLevel: LogLevel = </span><span style='background: #F0ADAD'>getLogLevel(loggingInterceptor)</span><span style=''>
-</span>71 <span style=''>
-</span>72 <span style=''>  /**
-</span>73 <span style=''>   * Sets the log level for the request and response information.
-</span>74 <span style=''>   *
-</span>75 <span style=''>   * @param logLevel the log level to set.
-</span>76 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
+</span>44 <span style=''>
+</span>45 <span style=''>  /**
+</span>46 <span style=''>   * Create a new WriteApi client.
+</span>47 <span style=''>   *
+</span>48 <span style=''>   * @return the new client instance for the Write API
+</span>49 <span style=''>   */
+</span>50 <span style=''>  override def getWriteScalaApi: WriteScalaApi = </span><span style='background: #F0ADAD'>new WriteScalaApiImpl(retrofit.create(classOf[WriteService]), options)</span><span style=''>
+</span>51 <span style=''>
+</span>52 <span style=''>  /**
+</span>53 <span style=''>   * Get the health of an instance.
+</span>54 <span style=''>   *
+</span>55 <span style=''>   * @return health of an instance
+</span>56 <span style=''>   */
+</span>57 <span style=''>  override def health: HealthCheck = </span><span style='background: #F0ADAD'>health(healthService.getHealth(null))</span><span style=''>
+</span>58 <span style=''>
+</span>59 <span style=''>  /**
+</span>60 <span style=''>   * Check the status of InfluxDB Server.
+</span>61 <span style=''>   *
+</span>62 <span style=''>   * @return true if server is healthy otherwise return false
+</span>63 <span style=''>   */
+</span>64 <span style=''>  override def ping: Boolean = </span><span style='background: #F0ADAD'>ping(pingService.getPing)</span><span style=''>
+</span>65 <span style=''>
+</span>66 <span style=''>  /**
+</span>67 <span style=''>   * Returns the version of the connected InfluxDB Server.
+</span>68 <span style=''>   *
+</span>69 <span style=''>   * @return the version String, otherwise unknown.
+</span>70 <span style=''>   */
+</span>71 <span style=''>  override def version: String = </span><span style='background: #F0ADAD'>version(pingService.getPing)</span><span style=''>
+</span>72 <span style=''>
+</span>73 <span style=''>  /**
+</span>74 <span style=''>   * Gets the [[LogLevel]] that is used for logging requests and responses.
+</span>75 <span style=''>   *
+</span>76 <span style=''>   * @return the [[LogLevel]] that is used for logging requests and responses
 </span>77 <span style=''>   */
-</span>78 <span style=''>  override def setLogLevel(logLevel: LogLevel): InfluxDBClientScala = {
-</span>79 <span style=''>    </span><span style='background: #F0ADAD'>setLogLevel(loggingInterceptor, logLevel)</span><span style=''>
-</span>80 <span style=''>    this
-</span>81 <span style=''>  }
-</span>82 <span style=''>
-</span>83 <span style=''>  /**
-</span>84 <span style=''>   * Enable Gzip compress for http requests.
-</span>85 <span style=''>   *
-</span>86 <span style=''>   * Currently only the &quot;Write&quot; and &quot;Query&quot; endpoints supports the Gzip compression.
-</span>87 <span style=''>   *
-</span>88 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
-</span>89 <span style=''>   */
-</span>90 <span style=''>  override def enableGzip(): InfluxDBClientScala = {
-</span>91 <span style=''>    </span><span style='background: #F0ADAD'>gzipInterceptor.enableGzip()</span><span style=''>
-</span>92 <span style=''>    this
-</span>93 <span style=''>  }
-</span>94 <span style=''>
-</span>95 <span style=''>  /**
-</span>96 <span style=''>   * Disable Gzip compress for http request body.
-</span>97 <span style=''>   *
-</span>98 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
-</span>99 <span style=''>   */
-</span>100 <span style=''>  override def disableGzip(): InfluxDBClientScala = {
-</span>101 <span style=''>    </span><span style='background: #F0ADAD'>gzipInterceptor.disableGzip()</span><span style=''>
-</span>102 <span style=''>    this
-</span>103 <span style=''>  }
-</span>104 <span style=''>
-</span>105 <span style=''>  /**
-</span>106 <span style=''>   * Returns whether Gzip compress for http request body is enabled.
-</span>107 <span style=''>   *
-</span>108 <span style=''>   * @return true if gzip is enabled.
-</span>109 <span style=''>   */
-</span>110 <span style=''>  override def isGzipEnabled: Boolean = </span><span style='background: #F0ADAD'>gzipInterceptor.isEnabledGzip</span><span style=''>
-</span>111 <span style=''>}
+</span>78 <span style=''>  override def getLogLevel: LogLevel = </span><span style='background: #F0ADAD'>getLogLevel(loggingInterceptor)</span><span style=''>
+</span>79 <span style=''>
+</span>80 <span style=''>  /**
+</span>81 <span style=''>   * Sets the log level for the request and response information.
+</span>82 <span style=''>   *
+</span>83 <span style=''>   * @param logLevel the log level to set.
+</span>84 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
+</span>85 <span style=''>   */
+</span>86 <span style=''>  override def setLogLevel(logLevel: LogLevel): InfluxDBClientScala = {
+</span>87 <span style=''>    </span><span style='background: #F0ADAD'>setLogLevel(loggingInterceptor, logLevel)</span><span style=''>
+</span>88 <span style=''>    this
+</span>89 <span style=''>  }
+</span>90 <span style=''>
+</span>91 <span style=''>  /**
+</span>92 <span style=''>   * Enable Gzip compress for http requests.
+</span>93 <span style=''>   *
+</span>94 <span style=''>   * Currently only the &quot;Write&quot; and &quot;Query&quot; endpoints supports the Gzip compression.
+</span>95 <span style=''>   *
+</span>96 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
+</span>97 <span style=''>   */
+</span>98 <span style=''>  override def enableGzip(): InfluxDBClientScala = {
+</span>99 <span style=''>    </span><span style='background: #F0ADAD'>gzipInterceptor.enableGzip()</span><span style=''>
+</span>100 <span style=''>    this
+</span>101 <span style=''>  }
+</span>102 <span style=''>
+</span>103 <span style=''>  /**
+</span>104 <span style=''>   * Disable Gzip compress for http request body.
+</span>105 <span style=''>   *
+</span>106 <span style=''>   * @return the [[InfluxDBClientScala]] instance to be able to use it in a fluent manner.
+</span>107 <span style=''>   */
+</span>108 <span style=''>  override def disableGzip(): InfluxDBClientScala = {
+</span>109 <span style=''>    </span><span style='background: #F0ADAD'>gzipInterceptor.disableGzip()</span><span style=''>
+</span>110 <span style=''>    this
+</span>111 <span style=''>  }
+</span>112 <span style=''>
+</span>113 <span style=''>  /**
+</span>114 <span style=''>   * Returns whether Gzip compress for http request body is enabled.
+</span>115 <span style=''>   *
+</span>116 <span style=''>   * @return true if gzip is enabled.
+</span>117 <span style=''>   */
+</span>118 <span style=''>  override def isGzipEnabled: Boolean = </span><span style='background: #F0ADAD'>gzipInterceptor.isEnabledGzip</span><span style=''>
+</span>119 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -152,9 +160,9 @@
           14
         </td>
         <td>
-          1907
+          1938
           -
-          1914
+          1945
         </td>
         <td>
           Select
@@ -173,9 +181,9 @@
           13
         </td>
         <td>
-          1867
+          1898
           -
-          1905
+          1936
         </td>
         <td>
           Apply
@@ -194,9 +202,9 @@
           15
         </td>
         <td>
-          1845
+          1876
           -
-          1915
+          1946
         </td>
         <td>
           Apply
@@ -209,15 +217,78 @@
         </td>
       </tr><tr>
         <td>
-          49
+          50
         </td>
         <td>
           17
         </td>
         <td>
-          2042
+          2167
           -
-          2079
+          2174
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.InfluxDBClientScalaImpl.options
+        </td>
+        <td style="background: #F0ADAD">
+          InfluxDBClientScalaImpl.this.options
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          16
+        </td>
+        <td>
+          2127
+          -
+          2165
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          retrofit2.Retrofit.create
+        </td>
+        <td style="background: #F0ADAD">
+          InfluxDBClientScalaImpl.this.retrofit.create[com.influxdb.client.service.WriteService](classOf[com.influxdb.client.service.WriteService])
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          18
+        </td>
+        <td>
+          2105
+          -
+          2175
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.influxdb.client.scala.internal.WriteScalaApiImpl.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new WriteScalaApiImpl(InfluxDBClientScalaImpl.this.retrofit.create[com.influxdb.client.service.WriteService](classOf[com.influxdb.client.service.WriteService]), InfluxDBClientScalaImpl.this.options)
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          20
+        </td>
+        <td>
+          2302
+          -
+          2339
         </td>
         <td>
           Apply
@@ -230,15 +301,15 @@
         </td>
       </tr><tr>
         <td>
-          49
+          57
         </td>
         <td>
-          16
+          19
         </td>
         <td>
-          2049
+          2309
           -
-          2078
+          2338
         </td>
         <td>
           Apply
@@ -251,15 +322,15 @@
         </td>
       </tr><tr>
         <td>
-          56
+          64
         </td>
         <td>
-          20
+          23
         </td>
         <td>
-          2233
+          2493
           -
-          2258
+          2518
         </td>
         <td>
           ApplyImplicitView
@@ -272,15 +343,15 @@
         </td>
       </tr><tr>
         <td>
-          56
+          64
         </td>
         <td>
-          19
+          22
         </td>
         <td>
-          2233
+          2493
           -
-          2258
+          2518
         </td>
         <td>
           Apply
@@ -293,15 +364,15 @@
         </td>
       </tr><tr>
         <td>
-          56
+          64
         </td>
         <td>
-          18
+          21
         </td>
         <td>
-          2238
+          2498
           -
-          2257
+          2517
         </td>
         <td>
           Apply
@@ -314,15 +385,15 @@
         </td>
       </tr><tr>
         <td>
-          63
+          71
         </td>
         <td>
-          22
+          25
         </td>
         <td>
-          2421
+          2681
           -
-          2449
+          2709
         </td>
         <td>
           Apply
@@ -335,15 +406,15 @@
         </td>
       </tr><tr>
         <td>
-          63
+          71
         </td>
         <td>
-          21
+          24
         </td>
         <td>
-          2429
+          2689
           -
-          2448
+          2708
         </td>
         <td>
           Apply
@@ -356,15 +427,15 @@
         </td>
       </tr><tr>
         <td>
-          70
+          78
         </td>
         <td>
-          23
+          26
         </td>
         <td>
-          2673
+          2933
           -
-          2691
+          2951
         </td>
         <td>
           Select
@@ -377,15 +448,15 @@
         </td>
       </tr><tr>
         <td>
-          70
+          78
         </td>
         <td>
-          24
+          27
         </td>
         <td>
-          2661
+          2921
           -
-          2692
+          2952
         </td>
         <td>
           Apply
@@ -398,15 +469,15 @@
         </td>
       </tr><tr>
         <td>
-          79
+          87
         </td>
         <td>
-          26
+          29
         </td>
         <td>
-          2987
+          3247
           -
-          3028
+          3288
         </td>
         <td>
           Apply
@@ -419,15 +490,15 @@
         </td>
       </tr><tr>
         <td>
-          79
+          87
         </td>
         <td>
-          25
+          28
         </td>
         <td>
-          2999
+          3259
           -
-          3017
+          3277
         </td>
         <td>
           Select
@@ -440,15 +511,15 @@
         </td>
       </tr><tr>
         <td>
-          91
+          99
         </td>
         <td>
-          27
+          30
         </td>
         <td>
-          3343
+          3603
           -
-          3371
+          3631
         </td>
         <td>
           Apply
@@ -461,15 +532,15 @@
         </td>
       </tr><tr>
         <td>
-          101
+          109
         </td>
         <td>
-          28
+          31
         </td>
         <td>
-          3602
+          3862
           -
-          3631
+          3891
         </td>
         <td>
           Apply
@@ -482,15 +553,15 @@
         </td>
       </tr><tr>
         <td>
-          110
+          118
         </td>
         <td>
-          29
+          32
         </td>
         <td>
-          3810
+          4070
           -
-          3839
+          4099
         </td>
         <td>
           Apply
