@@ -26,6 +26,9 @@ import javax.annotation.Nonnull;
 import com.influxdb.query.dsl.functions.properties.FunctionsParameters;
 import com.influxdb.utils.Arguments;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * The column restrictions.
  *
@@ -140,6 +143,33 @@ public final class ColumnRestriction {
         @Override
         public String toString() {
             return "exists r[\"" + fieldName + "\"]";
+        }
+    }
+
+    /**
+     * Check if an record contains a key or if that key’s value is null.
+     *
+     * @return restriction
+     */
+    //contains(value:r["symbol"], set:["BTC/USDT", "TRX/USDT"]))
+    @Nonnull
+    public Restrictions contains(@Nonnull final String[] set) {
+        return new ContainsRestrictions(fieldName, set);
+    }
+
+    private final class ContainsRestrictions extends Restrictions {
+        private final String fieldName;
+        private final String[] set;
+
+        public ContainsRestrictions(@Nonnull final String fieldName, @Nonnull final String[] set) {
+            this.fieldName = fieldName;
+            this.set = set;
+        }
+
+        @Override
+        public String toString() {
+            return "contains(value: r[\"" + fieldName + "\"], set:[" +
+                    Arrays.stream(set).collect(Collectors.joining("\", \"", "\"", "\"")) + "])";
         }
     }
 
