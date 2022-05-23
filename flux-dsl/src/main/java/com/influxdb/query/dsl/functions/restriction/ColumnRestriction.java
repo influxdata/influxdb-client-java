@@ -166,7 +166,7 @@ public final class ColumnRestriction {
 
         @Override
         public String toString() {
-            return "contains(value: r[\"" + fieldName + "\"], set:[" 
+            return "contains(value: r[\"" + fieldName + "\"], set:["
                     + Arrays.stream(set).collect(Collectors.joining("\", \"", "\"", "\"")) + "])";
         }
     }
