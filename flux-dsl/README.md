@@ -263,6 +263,7 @@ Supported Record restrictions:
 - `exists`
 - `lessOrEqual`
 - `greaterOrEqual`
+- `contains`
 - `custom` - the custom restriction by `Restrictions.value().custom(15L, "=~")`
 
 ```java
