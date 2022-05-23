@@ -21,13 +21,12 @@
  */
 package com.influxdb.query.dsl.functions.restriction;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 import com.influxdb.query.dsl.functions.properties.FunctionsParameters;
 import com.influxdb.utils.Arguments;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 /**
  * The column restrictions.
@@ -167,8 +166,8 @@ public final class ColumnRestriction {
 
         @Override
         public String toString() {
-            return "contains(value: r[\"" + fieldName + "\"], set:[" +
-                    Arrays.stream(set).collect(Collectors.joining("\", \"", "\"", "\"")) + "])";
+            return "contains(value: r[\"" + fieldName + "\"], set:[" 
+                    + Arrays.stream(set).collect(Collectors.joining("\", \"", "\"", "\"")) + "])";
         }
     }
 
