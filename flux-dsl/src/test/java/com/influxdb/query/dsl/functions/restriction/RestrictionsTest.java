@@ -68,7 +68,7 @@ class RestrictionsTest {
     void contains() {
 
         Restrictions restrictions = Restrictions.value().contains(new String[]{"value1", "value2"});
-        System.out.println(restrictions);
+
         Assertions.assertThat(restrictions.toString()).isEqualTo("contains(value: r[\"_value\"], set:[\"value1\", \"value2\"])");
     }
 
