@@ -516,8 +516,8 @@ and aligns them horizontally (row-wise) into logical sets [[doc](http://bit.ly/f
 Flux flux = Flux.from("telegraf")
     .pivot()
         .withRowKey(new String[]{"_time"})
-        .withColKey(new String[]{"_field"})
-        .withValueCol("_value");
+        .withColumnKey(new String[]{"_field"})
+        .withValueColumn("_value");
 ```
 
 ### range
