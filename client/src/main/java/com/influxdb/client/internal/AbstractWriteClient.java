@@ -172,6 +172,11 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                 //
                 .compose(jitter(processorScheduler, writeOptions))
                 //
+                // Add backpressure to GroupBy. For more info see:
+                //      https://github.com/ReactiveX/RxJava/wiki/What's-different-in-3.0#backpressure-in-groupby
+                //
+                .flatMap(Flowable::just, Integer.MAX_VALUE)
+                //
                 // To WritePoints "request creator"
                 //
                 .concatMapMaybe(new ToWritePointsMaybe(processorScheduler))
