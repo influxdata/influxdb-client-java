@@ -238,7 +238,9 @@ workflows:
             - jdk-8-nightly
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - groupBy
 
   nightly:
     triggers:
