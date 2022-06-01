@@ -35,6 +35,7 @@ import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.client.write.events.WriteErrorEvent;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -47,6 +48,7 @@ import org.junit.runner.RunWith;
 public class PublishRuntimeErrorAsWriteErrorEventTest extends AbstractInfluxDBClientTest {
 
     @Test
+    @Disabled
     void publishRuntimeErrorAsWriteErrorEvent() {
         WriteApi writeApi = influxDBClient.makeWriteApi();
 
