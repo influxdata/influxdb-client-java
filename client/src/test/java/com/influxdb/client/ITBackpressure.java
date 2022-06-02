@@ -28,6 +28,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
@@ -36,6 +37,8 @@ import com.influxdb.client.write.events.BackpressureEvent;
 import com.influxdb.client.write.events.WriteErrorEvent;
 import com.influxdb.client.write.events.WriteSuccessEvent;
 
+import io.reactivex.rxjava3.core.BackpressureOverflowStrategy;
+import io.reactivex.rxjava3.exceptions.MissingBackpressureException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -45,7 +48,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (24/01/2020 09:40)
  */
 @RunWith(JUnitPlatform.class)
-class ITWriteTooManyData extends AbstractITWrite {
+class ITBackpressure extends AbstractITWrite {
 
     private static final Logger LOG = Logger.getLogger(WriteApiTest.class.getName());
 
@@ -56,32 +59,10 @@ class ITWriteTooManyData extends AbstractITWrite {
     @Test
     public void backpressureAndBufferConsistency() throws InterruptedException {
 
-        AtomicBoolean stopped = new AtomicBoolean(false);
-        List<AbstractWriteEvent> events = new CopyOnWriteArrayList<>();
-
-        WriteApi api = influxDBClient
-                .makeWriteApi(WriteOptions.builder().batchSize(BATCH_SIZE).flushInterval(1_000_000).build());
-
-        api.listenEvents(AbstractWriteEvent.class, events::add)                        ;
-
-        ExecutorService executorService = Executors.newFixedThreadPool(WRITER_COUNT);
-
-        for (int i = 1; i <= WRITER_COUNT; i++) {
-            executorService.submit(new Writer(i, stopped, api));
-        }
-
-        long start = System.currentTimeMillis();
-
-        while (System.currentTimeMillis() - start <= SECONDS_COUNT *1_000) {
-            Thread.sleep(100);
-        }
-
-        //
-        // Shutdown writers
-        //
-        stopped.set(true);
-        executorService.shutdownNow();
-        Thread.sleep(1000);
+        List<AbstractWriteEvent> events = stressfulWrite(WriteOptions.builder()
+                .batchSize(BATCH_SIZE)
+                .flushInterval(1_000_000)
+                .build());
 
         //
         // Test backpressure presents
@@ -127,8 +108,60 @@ class ITWriteTooManyData extends AbstractITWrite {
                 .collect(Collectors.toList());
 
         Assertions.assertThat(error).isEmpty();
+    }
 
-        influxDBClient.close();
+    @Test
+    void publishRuntimeErrorAsWriteErrorEvent() throws InterruptedException {
+        
+        List<AbstractWriteEvent> events = stressfulWrite(WriteOptions.builder()
+                .batchSize(BATCH_SIZE)
+                .backpressureStrategy(BackpressureOverflowStrategy.ERROR)
+                .flushInterval(1_000_000)
+                .build());
+
+        // propagated BackPressure error
+        List<WriteErrorEvent> errors = events.stream()
+                .filter(it -> it instanceof WriteErrorEvent)
+                .map(it -> (WriteErrorEvent) it)
+                .filter(this::isNotInterruptedException)
+                .collect(Collectors.toList());
+
+        Assertions.assertThat(errors).hasSize(1);
+        Assertions.assertThat(errors.get(0).getThrowable().getCause())
+                .isInstanceOf(MissingBackpressureException.class)
+                .hasMessage(null);
+    }
+
+    @Nonnull
+    private List<AbstractWriteEvent> stressfulWrite(@Nonnull final WriteOptions options) throws InterruptedException {
+
+        AtomicBoolean stopped = new AtomicBoolean(false);
+        List<AbstractWriteEvent> events = new CopyOnWriteArrayList<>();
+
+        WriteApi api = influxDBClient
+                .makeWriteApi(options);
+
+        api.listenEvents(AbstractWriteEvent.class, events::add)                        ;
+
+        ExecutorService executorService = Executors.newFixedThreadPool(WRITER_COUNT);
+
+        for (int i = 1; i <= WRITER_COUNT; i++) {
+            executorService.submit(new Writer(i, stopped, api));
+        }
+
+        long start = System.currentTimeMillis();
+
+        while (System.currentTimeMillis() - start <= SECONDS_COUNT *1_000) {
+            Thread.sleep(100);
+        }
+
+        //
+        // Shutdown writers
+        //
+        stopped.set(true);
+        executorService.shutdownNow();
+        Thread.sleep(1000);
+        return events;
     }
 
     private boolean isNotInterruptedException(final WriteErrorEvent it) {
@@ -156,7 +189,7 @@ class ITWriteTooManyData extends AbstractITWrite {
                         .addField("value", 1)
                         .time(time, WritePrecision.NS);
                 api.writePoint(point);
-                if (id == 1 && time % 25_000 == 0) {
+                if (id == 1 && time % 250_000 == 0) {
                     LOG.info("Generated point: " + point.toLineProtocol());
                 }
                 time += 1;
