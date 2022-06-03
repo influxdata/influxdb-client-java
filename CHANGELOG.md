@@ -2,7 +2,11 @@
 
 ## 6.1.1 [unreleased]
 
-1. [#353](https://github.com/influxdata/influxdb-client-java/pull/353): Supports `contains` filter [FluxDSL]
+### Features
+1. [#354](https://github.com/influxdata/influxdb-client-java/pull/354): Supports `contains` filter [FluxDSL]
+
+### Bug Fixes
+1. [#359](https://github.com/influxdata/influxdb-client-java/pull/359): Enable `OkHttp` retries for connection failure
 
 ## 6.1.0 [2022-05-20]
 
