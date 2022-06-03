@@ -94,8 +94,13 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
         this.gzipInterceptor = new GzipInterceptor();
 
         this.okHttpClient = options.getOkHttpClient()
-                // Connection errors are handled by RetryAttempt in AbstractWriteClient.
-                .retryOnConnectionFailure(false)
+                //
+                // We don't need to disable the `retryOnConnectionFailure`. The retry logic
+                // in the OkHttp is not in a collision with our "exponential backoff strategy"
+                // for writes. OkHttp logic uses the possibility of routing to another "routes"
+                // - e.g. network loopback or multiple proxies.
+                //
+                //.retryOnConnectionFailure(false)
                 .addInterceptor(new UserAgentInterceptor(clientType))
                 .addInterceptor(this.loggingInterceptor)
                 .addInterceptor(this.authenticateInterceptor)
