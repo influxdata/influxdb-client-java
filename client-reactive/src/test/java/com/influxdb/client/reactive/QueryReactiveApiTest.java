@@ -62,7 +62,7 @@ class QueryReactiveApiTest extends AbstractMockServerTest {
     @Test
     public void doNotPropagateErrorOnCanceledConsumer() throws InterruptedException {
 
-        mockServer.enqueue(createErrorResponse("Request Timeout", true, 408)
+        mockServer.enqueue(createErrorResponse("Conflict", true, 409)
                 .setBodyDelay(3, TimeUnit.SECONDS));
 
         QueryReactiveApi queryApi = influxDBClient.getQueryReactiveApi();
