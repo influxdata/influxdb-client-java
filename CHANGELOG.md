@@ -1,5 +1,7 @@
 ## 6.2.0 [unreleased]
 
+## 6.1.1 [unreleased]
+
 1. [#353](https://github.com/influxdata/influxdb-client-java/pull/353): Supports `contains` filter [FluxDSL]
 
 ## 6.1.0 [2022-05-20]
