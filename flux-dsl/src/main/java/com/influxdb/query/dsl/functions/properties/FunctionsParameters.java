@@ -54,6 +54,10 @@ public final class FunctionsParameters {
 
     private Map<String, Property> properties = new LinkedHashMap<>();
 
+    public static String escapeDoubleQuotes(final String val) {
+        return val.replace("\"", "\\\"");
+    }
+
     private FunctionsParameters() {
     }
 
@@ -86,7 +90,7 @@ public final class FunctionsParameters {
             }
 
             serializedValue = collection.stream()
-                    .map(host -> "\"" + host + "\"")
+                    .map(host -> "\"" + escapeDoubleQuotes(host.toString()) + "\"")
                     .collect(Collectors.joining(", ", "[", "]"));
         }
 
@@ -97,7 +101,7 @@ public final class FunctionsParameters {
             Map map = (Map) serializedValue;
             //noinspection unchecked
             map.keySet().forEach(key -> {
-                joiner.add(String.format("%s: \"%s\"", key, map.get(key)));
+                joiner.add(String.format("%s: \"%s\"", key, escapeDoubleQuotes(map.get(key).toString())));
             });
 
             serializedValue = joiner;
@@ -337,7 +341,7 @@ public final class FunctionsParameters {
                 return null;
             }
 
-            return "\"" + value + "\"";
+            return "\"" + escapeDoubleQuotes(value) + "\"";
         }
     }
 

@@ -21,10 +21,14 @@
  */
 package com.influxdb.query.dsl.functions.restriction;
 
+import com.influxdb.query.dsl.Flux;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Jakub Bednar (bednar@github) (09/10/2018 10:33)
@@ -97,12 +101,35 @@ class RestrictionsTest {
     }
 
     @Test
-    void escapeStringValues() {
+    void escaping() {
+
         Restrictions restrictions = Restrictions.tag("my-tag").equal("escaped\"tag");
         Assertions.assertThat(restrictions.toString()).isEqualTo("r[\"my-tag\"] == \"escaped\\\"tag\"");
 
         restrictions = Restrictions.column("my\"column").exists();
         Assertions.assertThat(restrictions.toString()).isEqualTo("exists r[\"my\\\"column\"]");
+
+        restrictions = Restrictions.tag("_value").contains(new String[]{"val\"ue1", "value2"});
+
+        Assertions.assertThat(restrictions.toString()).isEqualTo("contains(value: r[\"_value\"], set:[\"val\\\"ue1\", \"value2\"])");
+
+        Flux flux = Flux
+                .from("telegraf")
+                .drop(new String[]{"host", "ta\"g"});
+
+        Assertions.assertThat(flux.toString())
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> drop(columns:[\"host\", \"ta\\\"g\"])");
+
+        Map<String, String> map = new HashMap<>();
+        map.put("host", "ser\"ver");
+        map.put("_value", "va\"l");
+
+        flux = Flux
+                .from("tel\"egraf")
+                .rename(map);
+
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"tel\\\"egraf\") |> rename(columns: {host: \"ser\\\"ver\", _value: \"va\\\"l\"})");
+
     }
 
 }

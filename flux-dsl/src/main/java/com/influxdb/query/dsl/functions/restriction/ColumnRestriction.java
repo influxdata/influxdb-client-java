@@ -28,6 +28,8 @@ import javax.annotation.Nonnull;
 import com.influxdb.query.dsl.functions.properties.FunctionsParameters;
 import com.influxdb.utils.Arguments;
 
+import static com.influxdb.query.dsl.functions.properties.FunctionsParameters.escapeDoubleQuotes;
+
 /**
  * The column restrictions.
  *
@@ -166,8 +168,9 @@ public final class ColumnRestriction {
 
         @Override
         public String toString() {
-            return "contains(value: r[\"" + fieldName + "\"], set:["
-                    + Arrays.stream(set).collect(Collectors.joining("\", \"", "\"", "\"")) + "])";
+            return "contains(value: r[\"" + escapeDoubleQuotes(fieldName) + "\"], set:["
+                    + Arrays.stream(set).map(FunctionsParameters::escapeDoubleQuotes)
+                    .collect(Collectors.joining("\", \"", "\"", "\"")) + "])";
         }
     }
 
@@ -196,8 +199,5 @@ public final class ColumnRestriction {
 
             return "r[\"" + escapeDoubleQuotes(fieldName) + "\"] " + operator + " " + value;
         }
-    }
-    private static String escapeDoubleQuotes(final String val) {
-        return val.replace("\"", "\\\"");
     }
 }
