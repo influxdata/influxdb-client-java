@@ -95,4 +95,14 @@ class RestrictionsTest {
         restrictions = Restrictions.or(Restrictions.or());
         Assertions.assertThat(restrictions.toString()).isEqualTo("");
     }
+
+    @Test
+    void escapeStringValues() {
+        Restrictions restrictions = Restrictions.tag("my-tag").equal("escaped\"tag");
+        Assertions.assertThat(restrictions.toString()).isEqualTo("r[\"my-tag\"] == \"escaped\\\"tag\"");
+
+        restrictions = Restrictions.column("my\"column").exists();
+        Assertions.assertThat(restrictions.toString()).isEqualTo("exists r[\"my\\\"column\"]");
+    }
+
 }

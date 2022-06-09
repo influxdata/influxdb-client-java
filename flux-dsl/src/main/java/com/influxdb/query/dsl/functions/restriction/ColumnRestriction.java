@@ -141,7 +141,7 @@ public final class ColumnRestriction {
 
         @Override
         public String toString() {
-            return "exists r[\"" + fieldName + "\"]";
+            return "exists r[\"" + escapeDoubleQuotes(fieldName) + "\"]";
         }
     }
 
@@ -189,12 +189,15 @@ public final class ColumnRestriction {
 
             String value;
             if (fieldValue instanceof String) {
-                value = "\"" + fieldValue + "\"";
+                value = "\"" + escapeDoubleQuotes((String) fieldValue) + "\"";
             } else {
                 value = FunctionsParameters.serializeValue(fieldValue);
             }
 
-            return "r[\"" + fieldName + "\"] " + operator + " " + value;
+            return "r[\"" + escapeDoubleQuotes(fieldName) + "\"] " + operator + " " + value;
         }
+    }
+    private static String escapeDoubleQuotes(final String val) {
+        return val.replace("\"", "\\\"");
     }
 }
