@@ -7,6 +7,7 @@
 
 ### Bug Fixes
 1. [#359](https://github.com/influxdata/influxdb-client-java/pull/359): Enable `OkHttp` retries for connection failure
+1. [#360](https://github.com/influxdata/influxdb-client-java/pull/360): Fix double quote escape in flux-dsl
 
 ## 6.1.0 [2022-05-20]
 
