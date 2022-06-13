@@ -28,6 +28,8 @@ import javax.annotation.Nonnull;
 import com.influxdb.query.dsl.functions.properties.FunctionsParameters;
 import com.influxdb.utils.Arguments;
 
+import static com.influxdb.query.dsl.functions.properties.FunctionsParameters.escapeDoubleQuotes;
+
 /**
  * The column restrictions.
  *
@@ -141,7 +143,7 @@ public final class ColumnRestriction {
 
         @Override
         public String toString() {
-            return "exists r[\"" + fieldName + "\"]";
+            return "exists r[\"" + escapeDoubleQuotes(fieldName) + "\"]";
         }
     }
 
@@ -166,8 +168,9 @@ public final class ColumnRestriction {
 
         @Override
         public String toString() {
-            return "contains(value: r[\"" + fieldName + "\"], set:["
-                    + Arrays.stream(set).collect(Collectors.joining("\", \"", "\"", "\"")) + "])";
+            return "contains(value: r[\"" + escapeDoubleQuotes(fieldName) + "\"], set:["
+                    + Arrays.stream(set).map(FunctionsParameters::escapeDoubleQuotes)
+                    .collect(Collectors.joining("\", \"", "\"", "\"")) + "])";
         }
     }
 
@@ -189,12 +192,12 @@ public final class ColumnRestriction {
 
             String value;
             if (fieldValue instanceof String) {
-                value = "\"" + fieldValue + "\"";
+                value = "\"" + escapeDoubleQuotes((String) fieldValue) + "\"";
             } else {
                 value = FunctionsParameters.serializeValue(fieldValue);
             }
 
-            return "r[\"" + fieldName + "\"] " + operator + " " + value;
+            return "r[\"" + escapeDoubleQuotes(fieldName) + "\"] " + operator + " " + value;
         }
     }
 }
