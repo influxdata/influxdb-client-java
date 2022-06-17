@@ -21,7 +21,6 @@
  */
 package com.influxdb.client;
 
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -65,7 +64,7 @@ class ITBackpressure extends AbstractITWrite {
                 .flushInterval(1_000_000)
                 .build();
 
-        stressfulWriteValidate(build, 15);
+        stressfulWriteValidate(build);
     }
 
     @Test
@@ -77,7 +76,7 @@ class ITBackpressure extends AbstractITWrite {
                 .flushInterval(1_000_000)
                 .build();
 
-        stressfulWriteValidate(build, 15);
+        stressfulWriteValidate(build);
     }
 
     @Test
@@ -87,7 +86,7 @@ class ITBackpressure extends AbstractITWrite {
                 .batchSize(BATCH_SIZE)
                 .backpressureStrategy(BackpressureOverflowStrategy.ERROR)
                 .flushInterval(1_000_000)
-                .build(), SECONDS_COUNT);
+                .build());
 
         // propagated BackPressure error
         List<WriteErrorEvent> errors = events.stream()
@@ -102,10 +101,9 @@ class ITBackpressure extends AbstractITWrite {
                 .hasMessage(null);
     }
 
-    private void stressfulWriteValidate(@Nonnull final WriteOptions writeOptions,
-                                        @Nonnull final Integer secondsCount) throws InterruptedException {
+    private void stressfulWriteValidate(@Nonnull final WriteOptions writeOptions) throws InterruptedException {
 
-        List<AbstractWriteEvent> events = stressfulWrite(writeOptions, secondsCount);
+        List<AbstractWriteEvent> events = stressfulWrite(writeOptions);
 
         //
         // Test backpressure presents
@@ -154,8 +152,7 @@ class ITBackpressure extends AbstractITWrite {
     }
 
     @Nonnull
-    private List<AbstractWriteEvent> stressfulWrite(@Nonnull final WriteOptions options,
-                                                    @Nonnull final Integer secondsCount) throws InterruptedException {
+    private List<AbstractWriteEvent> stressfulWrite(@Nonnull final WriteOptions options) throws InterruptedException {
 
         AtomicBoolean stopped = new AtomicBoolean(false);
         List<AbstractWriteEvent> events = new CopyOnWriteArrayList<>();
@@ -172,7 +169,7 @@ class ITBackpressure extends AbstractITWrite {
 
         long start = System.currentTimeMillis();
 
-        while (System.currentTimeMillis() - start <= secondsCount * 1_000) {
+        while (System.currentTimeMillis() - start <= SECONDS_COUNT * 1_000) {
             Thread.sleep(100);
         }
 
