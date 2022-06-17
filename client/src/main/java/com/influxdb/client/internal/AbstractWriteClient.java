@@ -168,14 +168,14 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                         .map(StringBuilder::toString)
                         .map(it -> new BatchWriteItem(grouped.getKey(), new BatchWriteDataRecord(it))))
                 //
-                // Jitter interval
-                //
-                .compose(jitter(processorScheduler, writeOptions))
-                //
                 // Add backpressure to GroupBy. For more info see:
                 //      https://github.com/ReactiveX/RxJava/wiki/What's-different-in-3.0#backpressure-in-groupby
                 //
                 .flatMap(Flowable::just, Integer.MAX_VALUE)
+                //
+                // Jitter interval
+                //
+                .compose(jitter(processorScheduler, writeOptions))
                 //
                 // To WritePoints "request creator"
                 //

@@ -21,6 +21,7 @@
  */
 package com.influxdb.client;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -59,10 +60,52 @@ class ITBackpressure extends AbstractITWrite {
     @Test
     public void backpressureAndBufferConsistency() throws InterruptedException {
 
-        List<AbstractWriteEvent> events = stressfulWrite(WriteOptions.builder()
+        WriteOptions build = WriteOptions.builder()
                 .batchSize(BATCH_SIZE)
                 .flushInterval(1_000_000)
-                .build());
+                .build();
+
+        stressfulWriteValidate(build, 15);
+    }
+
+    @Test
+    public void backpressureAndBufferConsistencyWithJitter() throws InterruptedException {
+
+        WriteOptions build = WriteOptions.builder()
+                .batchSize(BATCH_SIZE)
+                .jitterInterval(1_000)
+                .flushInterval(1_000_000)
+                .build();
+
+        stressfulWriteValidate(build, 15);
+    }
+
+    @Test
+    void publishRuntimeErrorAsWriteErrorEvent() throws InterruptedException {
+
+        List<AbstractWriteEvent> events = stressfulWrite(WriteOptions.builder()
+                .batchSize(BATCH_SIZE)
+                .backpressureStrategy(BackpressureOverflowStrategy.ERROR)
+                .flushInterval(1_000_000)
+                .build(), SECONDS_COUNT);
+
+        // propagated BackPressure error
+        List<WriteErrorEvent> errors = events.stream()
+                .filter(it -> it instanceof WriteErrorEvent)
+                .map(it -> (WriteErrorEvent) it)
+                .filter(this::isNotInterruptedException)
+                .collect(Collectors.toList());
+
+        Assertions.assertThat(errors).hasSize(1);
+        Assertions.assertThat(errors.get(0).getThrowable().getCause())
+                .isInstanceOf(MissingBackpressureException.class)
+                .hasMessage(null);
+    }
+
+    private void stressfulWriteValidate(@Nonnull final WriteOptions writeOptions,
+                                        @Nonnull final Integer secondsCount) throws InterruptedException {
+
+        List<AbstractWriteEvent> events = stressfulWrite(writeOptions, secondsCount);
 
         //
         // Test backpressure presents
@@ -110,38 +153,16 @@ class ITBackpressure extends AbstractITWrite {
         Assertions.assertThat(error).isEmpty();
     }
 
-    @Test
-    void publishRuntimeErrorAsWriteErrorEvent() throws InterruptedException {
-        
-        List<AbstractWriteEvent> events = stressfulWrite(WriteOptions.builder()
-                .batchSize(BATCH_SIZE)
-                .backpressureStrategy(BackpressureOverflowStrategy.ERROR)
-                .flushInterval(1_000_000)
-                .build());
-
-        // propagated BackPressure error
-        List<WriteErrorEvent> errors = events.stream()
-                .filter(it -> it instanceof WriteErrorEvent)
-                .map(it -> (WriteErrorEvent) it)
-                .filter(this::isNotInterruptedException)
-                .collect(Collectors.toList());
-
-        Assertions.assertThat(errors).hasSize(1);
-        Assertions.assertThat(errors.get(0).getThrowable().getCause())
-                .isInstanceOf(MissingBackpressureException.class)
-                .hasMessage(null);
-    }
-
     @Nonnull
-    private List<AbstractWriteEvent> stressfulWrite(@Nonnull final WriteOptions options) throws InterruptedException {
+    private List<AbstractWriteEvent> stressfulWrite(@Nonnull final WriteOptions options,
+                                                    @Nonnull final Integer secondsCount) throws InterruptedException {
 
         AtomicBoolean stopped = new AtomicBoolean(false);
         List<AbstractWriteEvent> events = new CopyOnWriteArrayList<>();
 
-        WriteApi api = influxDBClient
-                .makeWriteApi(options);
+        WriteApi api = influxDBClient.makeWriteApi(options);
 
-        api.listenEvents(AbstractWriteEvent.class, events::add)                        ;
+        api.listenEvents(AbstractWriteEvent.class, events::add);
 
         ExecutorService executorService = Executors.newFixedThreadPool(WRITER_COUNT);
 
@@ -151,7 +172,7 @@ class ITBackpressure extends AbstractITWrite {
 
         long start = System.currentTimeMillis();
 
-        while (System.currentTimeMillis() - start <= SECONDS_COUNT *1_000) {
+        while (System.currentTimeMillis() - start <= secondsCount * 1_000) {
             Thread.sleep(100);
         }
 
