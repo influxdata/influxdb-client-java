@@ -225,12 +225,10 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             throw new InfluxException(CLOSED_EXCEPTION);
         }
 
-        stream.subscribe(
-                dataPoint -> {
-                    WritePrecision precision = dataPoint.point.getPrecision();
-                    write(writeParameters.copy(precision, options), Flowable.just(dataPoint));
-                },
-                throwable -> publish(new WriteErrorEvent(throwable)));
+        Flowable<BatchWriteItem> flowable = Flowable.fromPublisher(stream)
+                .map(it -> new BatchWriteItem(writeParameters.copy(it.point.getPrecision(), options), it));
+
+        write(flowable);
     }
 
     public void write(@Nonnull final WriteParameters writeParameters,
@@ -243,9 +241,18 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             throw new InfluxException(CLOSED_EXCEPTION);
         }
 
-        Flowable.fromPublisher(stream)
-                .map(it -> new BatchWriteItem(writeParameters, it))
-                .subscribe(processor::onNext, throwable -> publish(new WriteErrorEvent(throwable)));
+        Flowable<BatchWriteItem> flowable = Flowable.fromPublisher(stream)
+                .map(it -> new BatchWriteItem(writeParameters, it));
+
+        write(flowable);
+    }
+
+    private void write(@Nonnull final Flowable<BatchWriteItem> stream) {
+        if (processor.hasComplete()) {
+            throw new InfluxException(CLOSED_EXCEPTION);
+        }
+
+        stream.subscribe(processor::onNext, throwable -> publish(new WriteErrorEvent(throwable)));
     }
 
     private <T extends AbstractWriteEvent> void publish(@Nonnull final T event) {
