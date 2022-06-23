@@ -50,6 +50,7 @@ import retrofit2.Response;
 public class InfluxException extends RuntimeException {
 
     private static final Logger LOG = Logger.getLogger(InfluxException.class.getName());
+    private static final String HTTP_STATUS_CODE_MESSAGE = "HTTP status code: %d; Message: %s";
 
     private final Response<?> response;
     private final String message;
@@ -155,6 +156,7 @@ public class InfluxException extends RuntimeException {
     @Nullable
     private String messageFromResponse() {
         if (response != null) {
+            int code = response.code();
             try {
                 ResponseBody body = response.errorBody();
                 if (body != null) {
@@ -163,7 +165,7 @@ public class InfluxException extends RuntimeException {
                         errorBody = new Gson().fromJson(json, new TypeToken<Map<String, Object>>() {
                         }.getType());
                         if (errorBody.containsKey("message")) {
-                            return errorBody.get("message").toString();
+                            return String.format(HTTP_STATUS_CODE_MESSAGE, code, errorBody.get("message").toString());
                         }
                     }
                 }
@@ -177,7 +179,7 @@ public class InfluxException extends RuntimeException {
                     .orElse(null);
 
             if (value != null) {
-                return value;
+                return String.format(HTTP_STATUS_CODE_MESSAGE, code, value);
             }
         }
 

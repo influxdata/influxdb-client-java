@@ -32,6 +32,7 @@ import com.influxdb.LogLevel;
 import com.influxdb.exceptions.BadGatewayException;
 import com.influxdb.exceptions.BadRequestException;
 import com.influxdb.exceptions.ForbiddenException;
+import com.influxdb.exceptions.GatewayTimeoutException;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.InternalServerErrorException;
 import com.influxdb.exceptions.MethodNotAllowedException;
@@ -138,6 +139,8 @@ public abstract class AbstractRestClient {
                 return new BadGatewayException(response);
             case 503:
                 return new ServiceUnavailableException(response);
+            case 504:
+                return new GatewayTimeoutException(response);
             default:
                 return new InfluxException(response);
         }
