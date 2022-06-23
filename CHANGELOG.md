@@ -4,6 +4,8 @@
 
 ### Features
 1. [#354](https://github.com/influxdata/influxdb-client-java/pull/354): Supports `contains` filter [FluxDSL]
+1. [#367](https://github.com/influxdata/influxdb-client-java/pull/367): Add HTTP status code to detail message of `InfluxException`
+1. [#367](https://github.com/influxdata/influxdb-client-java/pull/367): Add `GatewayTimeoutException` for HTTP status code 504
 
 ### Bug Fixes
 1. [#359](https://github.com/influxdata/influxdb-client-java/pull/359): Enable `OkHttp` retries for connection failure
