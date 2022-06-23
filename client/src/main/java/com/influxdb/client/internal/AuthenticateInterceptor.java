@@ -73,7 +73,13 @@ class AuthenticateInterceptor implements Interceptor {
         final String requestPath = request.url().encodedPath();
 
         // Is no authentication path?
-        if (NO_AUTH_ROUTE.stream().anyMatch(requestPath::endsWith) || signout.get()) {
+        if (NO_AUTH_ROUTE.stream().anyMatch(requestPath::endsWith)) {
+            return chain.proceed(request);
+        }
+
+        if (signout.get()) {
+            LOG.log(Level.WARNING, "Authorization interception failed. Already signed out.");
+            // Still make the request in order to maintain backward compatibility.
             return chain.proceed(request);
         }
 
