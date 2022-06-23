@@ -172,7 +172,7 @@ class QueryAbstractApiTest extends AbstractMockServerTest {
         Assertions.assertThatThrownBy(() -> queryClient.query(createCall(), consumer, AbstractQueryApi.ERROR_CONSUMER, () -> {
         }, false))
                 .isInstanceOf(InfluxException.class)
-                .hasMessage("Flux query is not valid");
+                .hasMessage("HTTP status code: 500; Message: Flux query is not valid");
     }
 
     @Test
@@ -238,7 +238,7 @@ class QueryAbstractApiTest extends AbstractMockServerTest {
         Assertions.assertThatThrownBy(() -> queryClient.queryRaw(createCall(), consumer, AbstractQueryApi.ERROR_CONSUMER, () -> {
         }, false))
                 .isInstanceOf(InfluxException.class)
-                .hasMessage("Flux query is not valid");
+                .hasMessage("HTTP status code: 500; Message: Flux query is not valid");
     }
 
     @Test
