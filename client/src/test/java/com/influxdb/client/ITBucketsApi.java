@@ -142,7 +142,7 @@ class ITBucketsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> bucketsApi.findBucketByID("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("bucket not found");
+                .hasMessage("HTTP status code: 404; Message: bucket not found");
     }
 
     @Test
@@ -237,7 +237,7 @@ class ITBucketsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> bucketsApi.findBucketByID(createBucket.getId()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("bucket not found");
+                .hasMessage("HTTP status code: 404; Message: bucket not found");
     }
 
     @Test
@@ -408,6 +408,6 @@ class ITBucketsApi extends AbstractITClientTest {
     void cloneBucketNotFound() {
          Assertions.assertThatThrownBy(() -> bucketsApi.cloneBucket(generateName("cloned"), "020f755c3c082000"))
                  .isInstanceOf(NotFoundException.class)
-                 .hasMessage("bucket not found");
+                 .hasMessage("HTTP status code: 404; Message: bucket not found");
     }
 }

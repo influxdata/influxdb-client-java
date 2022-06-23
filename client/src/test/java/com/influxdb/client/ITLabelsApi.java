@@ -107,7 +107,7 @@ class ITLabelsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> labelsApi.findLabelByID("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("label not found");
+                .hasMessage("HTTP status code: 404; Message: label not found");
     }
 
     @Test
@@ -153,7 +153,7 @@ class ITLabelsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> labelsApi.findLabelByID(createdLabel.getId()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("label not found");
+                .hasMessage("HTTP status code: 404; Message: label not found");
     }
 
     @Test
@@ -212,6 +212,6 @@ class ITLabelsApi extends AbstractITClientTest {
     void cloneLabelNotFound() {
         Assertions.assertThatThrownBy(() -> labelsApi.cloneLabel(generateName("cloned"), "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("label not found");
+                .hasMessage("HTTP status code: 404; Message: label not found");
     }
 }

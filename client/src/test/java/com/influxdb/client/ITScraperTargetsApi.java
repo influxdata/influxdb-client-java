@@ -142,7 +142,7 @@ class ITScraperTargetsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> scraperTargetsApi.findScraperTargetByID("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("scraper target is not found");
+                .hasMessage("HTTP status code: 404; Message: scraper target is not found");
     }
 
     @Test
@@ -160,7 +160,7 @@ class ITScraperTargetsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> scraperTargetsApi.findScraperTargetByID(createdScraper.getId()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("scraper target is not found");
+                .hasMessage("HTTP status code: 404; Message: scraper target is not found");
     }
 
     @Test
@@ -290,6 +290,6 @@ class ITScraperTargetsApi extends AbstractITClientTest {
     void cloneScraperTargetNotFound() {
         Assertions.assertThatThrownBy(() -> scraperTargetsApi.cloneScraperTarget(generateName("cloned"), "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("scraper target is not found");
+                .hasMessage("HTTP status code: 404; Message: scraper target is not found");
     }
 }

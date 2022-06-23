@@ -160,7 +160,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> telegrafsApi.findTelegrafByID(createdConfig.getId()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("telegraf configuration not found");
+                .hasMessage("HTTP status code: 404; Message: telegraf configuration not found");
     }
 
     @Test
@@ -168,7 +168,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> telegrafsApi.deleteTelegraf("020f755c3d082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("telegraf configuration not found");
+                .hasMessage("HTTP status code: 404; Message: telegraf configuration not found");
     }
 
     @Test
@@ -193,7 +193,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> telegrafsApi.findTelegrafByID("020f755c3d082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("telegraf configuration not found");
+                .hasMessage("HTTP status code: 404; Message: telegraf configuration not found");
     }
 
     @Test
@@ -247,7 +247,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> telegrafsApi.getTOML("020f755c3d082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("telegraf configuration not found");
+                .hasMessage("HTTP status code: 404; Message: telegraf configuration not found");
     }
 
     @Test
@@ -397,7 +397,7 @@ class ITTelegrafsApi extends AbstractITClientTest {
     void cloneTelegrafConfigNotFound() {
         Assertions.assertThatThrownBy(() -> telegrafsApi.cloneTelegraf(generateName("cloned"), "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("telegraf configuration not found");
+                .hasMessage("HTTP status code: 404; Message: telegraf configuration not found");
     }
 
     @Nonnull

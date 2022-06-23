@@ -29,7 +29,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
@@ -46,12 +45,9 @@ import com.influxdb.exceptions.ForbiddenException;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.RequestEntityTooLargeException;
 import com.influxdb.exceptions.UnauthorizedException;
-import com.influxdb.query.FluxRecord;
-import com.influxdb.query.FluxTable;
 
 import io.reactivex.rxjava3.schedulers.TestScheduler;
 import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
@@ -611,7 +607,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         Assertions.assertThat(listener.getValue().getThrowable()).isNotNull();
         Assertions.assertThat(listener.getValue().getThrowable())
                 .isInstanceOf(ForbiddenException.class)
-                .hasMessage("no token was sent and they are required");
+                .hasMessage("HTTP status code: 403; Message: no token was sent and they are required");
     }
 
     @Test
@@ -655,7 +651,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         retriableListener.awaitCount(1);
         Assertions.assertThat(retriableListener.getValue().getThrowable())
                 .isInstanceOf(InfluxException.class)
-                .hasMessage("token is temporarily over quota");
+                .hasMessage("HTTP status code: 429; Message: token is temporarily over quota");
         
         Assertions.assertThat(retriableListener.getValue().getRetryInterval()).isEqualTo(5000);
 
@@ -747,17 +743,17 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         writeApi.writePoint("b1", "org1", Point.measurement("h2o").addTag("location", "europe").addField("level", 2));
 
         WriteRetriableErrorEvent error = retriableListener.awaitCount(1).popValue();
-        Assertions.assertThat(error.getThrowable()).isInstanceOf(InfluxException.class).hasMessage("attempt1");
+        Assertions.assertThat(error.getThrowable()).isInstanceOf(InfluxException.class).hasMessage("HTTP status code: 429; Message: attempt1");
         Assertions.assertThat(error.getRetryInterval()).isGreaterThanOrEqualTo(100);
         Assertions.assertThat(error.getRetryInterval()).isLessThanOrEqualTo(200);
 
         error = retriableListener.awaitCount(1).popValue();
-        Assertions.assertThat(error.getThrowable()).isInstanceOf(InfluxException.class).hasMessage("attempt2");
+        Assertions.assertThat(error.getThrowable()).isInstanceOf(InfluxException.class).hasMessage("HTTP status code: 429; Message: attempt2");
         Assertions.assertThat(error.getRetryInterval()).isGreaterThanOrEqualTo(200);
         Assertions.assertThat(error.getRetryInterval()).isLessThanOrEqualTo(400);
 
         error = retriableListener.awaitCount(1).popValue();
-        Assertions.assertThat(error.getThrowable()).isInstanceOf(InfluxException.class).hasMessage("attempt3");
+        Assertions.assertThat(error.getThrowable()).isInstanceOf(InfluxException.class).hasMessage("HTTP status code: 429; Message: attempt3");
         Assertions.assertThat(error.getRetryInterval()).isGreaterThanOrEqualTo(400);
         Assertions.assertThat(error.getRetryInterval()).isLessThanOrEqualTo(800);
 
@@ -798,7 +794,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         WriteErrorEvent error = listener.awaitCount(1).popValue();
         Assertions.assertThat(error.getThrowable())
                 .isInstanceOf(BadRequestException.class)
-                .hasMessage("line protocol poorly formed and no points were written");
+                .hasMessage("HTTP status code: 400; Message: line protocol poorly formed and no points were written");
 
         //
         // 401
@@ -809,7 +805,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         error = listener.awaitCount(1).popValue();
         Assertions.assertThat(error.getThrowable())
                 .isInstanceOf(UnauthorizedException.class)
-                .hasMessage("token does not have sufficient permissions to write to this organization and bucket or the organization and bucket do not exist");
+                .hasMessage("HTTP status code: 401; Message: token does not have sufficient permissions to write to this organization and bucket or the organization and bucket do not exist");
 
         //
         // 403
@@ -820,7 +816,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         error = listener.awaitCount(1).popValue();
         Assertions.assertThat(error.getThrowable())
                 .isInstanceOf(ForbiddenException.class)
-                .hasMessage("no token was sent and they are required");
+                .hasMessage("HTTP status code: 403; Message: no token was sent and they are required");
 
         //
         // 413
@@ -831,7 +827,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         error = listener.awaitCount(1).popValue();
         Assertions.assertThat(error.getThrowable())
                 .isInstanceOf(RequestEntityTooLargeException.class)
-                .hasMessage("write has been rejected because the payload is too large. Error message returns max size supported. All data in body was rejected and not written");
+                .hasMessage("HTTP status code: 413; Message: write has been rejected because the payload is too large. Error message returns max size supported. All data in body was rejected and not written");
 
         Assertions.assertThat(mockServer.getRequestCount())
                 .isEqualTo(4);
@@ -887,7 +883,7 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         Assertions.assertThat(records.get(0).getMessage())
                 .isEqualTo("The retriable error occurred during writing of data. Reason: ''{0}''. Retry in: {1}s.");
         Assertions.assertThat(records.get(0).getParameters()).hasSize(2);
-        Assertions.assertThat(records.get(0).getParameters()[0]).isEqualTo("org 04014de4ed590000 has exceeded limited_write plan limit");
+        Assertions.assertThat(records.get(0).getParameters()[0]).isEqualTo("HTTP status code: 429; Message: org 04014de4ed590000 has exceeded limited_write plan limit");
         Assertions.assertThat(records.get(0).getParameters()[1]).isEqualTo(5.0);
     }
 

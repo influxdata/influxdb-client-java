@@ -126,7 +126,7 @@ class ITSourcesApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> sourcesApi.findSourceByID(createdSource.getId()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("source not found");
+                .hasMessage("HTTP status code: 404; Message: source not found");
 
     }
 
@@ -151,7 +151,7 @@ class ITSourcesApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> sourcesApi.findSourceByID("020f755c3d082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("source not found");
+                .hasMessage("HTTP status code: 404; Message: source not found");
     }
 
     @Test
@@ -182,7 +182,7 @@ class ITSourcesApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> sourcesApi.findBucketsBySourceID("020f755c3d082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("source not found");
+                .hasMessage("HTTP status code: 404; Message: source not found");
     }
 
     @Test
@@ -224,7 +224,7 @@ class ITSourcesApi extends AbstractITClientTest {
     void cloneSourceNotFound() {
         Assertions.assertThatThrownBy(() -> sourcesApi.cloneSource(generateName("cloned"), "da7aba5e5d81e550"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("source not found");
+                .hasMessage("HTTP status code: 404; Message: source not found");
     }
 
     @Nonnull

@@ -58,7 +58,7 @@ class FluxClientQueryRawTest extends AbstractFluxClientTest {
         mockServer.enqueue(createErrorResponse());
 
         Assertions.assertThatThrownBy(() -> fluxClient.queryRaw("from(bucket:\"telegraf\")"))
-                .hasMessage("Flux query is not valid")
+                .hasMessage("HTTP status code: 500; Message: Flux query is not valid")
                 .isInstanceOf(InfluxException.class);
     }
 

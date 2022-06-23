@@ -142,7 +142,7 @@ class ITDashboardsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> dashboardsApi.findDashboardByID("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("dashboard not found");
+                .hasMessage("HTTP status code: 404; Message: dashboard not found");
     }
 
     @Test
@@ -351,7 +351,7 @@ class ITDashboardsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> dashboardsApi.addCell(createCell, "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("dashboard not found");
+                .hasMessage("HTTP status code: 404; Message: dashboard not found");
     }
 
     @Test
@@ -462,7 +462,7 @@ class ITDashboardsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> dashboardsApi.deleteCell("020f755c3c082000", dashboard.getId()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("cell not found");
+                .hasMessage("HTTP status code: 404; Message: cell not found");
     }
 
     @Test
@@ -482,7 +482,7 @@ class ITDashboardsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> dashboardsApi.deleteCell(cell.getId(), "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("dashboard not found");
+                .hasMessage("HTTP status code: 404; Message: dashboard not found");
     }
 
     @Test
@@ -582,7 +582,7 @@ class ITDashboardsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> dashboardsApi.addCellView(view, cell.getId(), "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("dashboard not found");
+                .hasMessage("HTTP status code: 404; Message: dashboard not found");
 
         //TODO https://github.com/influxdata/influxdb/issues/13083
         // Assertions.assertThatThrownBy(() -> dashboardsApi.addCellView(view, "020f755c3c082000", dashboard.getId()))
@@ -607,7 +607,7 @@ class ITDashboardsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> dashboardsApi.getCellView(cell.getId(), "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("dashboard not found");
+                .hasMessage("HTTP status code: 404; Message: dashboard not found");
 
         //TODO https://github.com/influxdata/influxdb/issues/13083
         // Assertions.assertThatThrownBy(() -> dashboardsApi.getCellView("ffffffffffffffff", dashboard.getId()))

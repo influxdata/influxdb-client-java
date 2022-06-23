@@ -257,7 +257,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> tasksApi.findTaskByID("020f755c3d082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("failed to find task: task not found");
+                .hasMessage("HTTP status code: 404; Message: failed to find task: task not found");
     }
 
     @Test
@@ -332,7 +332,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> tasksApi.findTaskByID(createdTask.getId()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("failed to find task: task not found");
+                .hasMessage("HTTP status code: 404; Message: failed to find task: task not found");
     }
 
     @Test
@@ -466,7 +466,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> tasksApi.getRuns("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("failed to find runs: task not found");
+                .hasMessage("HTTP status code: 404; Message: failed to find runs: task not found");
     }
 
     @Test
@@ -559,7 +559,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> tasksApi.getRun(task.getId(), "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("failed to find run: run not found");
+                .hasMessage("HTTP status code: 404; Message: failed to find run: run not found");
     }
 
     @Test
@@ -578,7 +578,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> tasksApi.runManually("020f755c3c082000", new RunManually()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("failed to force run: task not found");
+                .hasMessage("HTTP status code: 404; Message: failed to force run: task not found");
     }
 
     @Test
@@ -611,7 +611,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> tasksApi.retryRun(task.getId(), "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("failed to retry run: run not found");
+                .hasMessage("HTTP status code: 404; Message: failed to retry run: run not found");
     }
 
     @Test
@@ -644,7 +644,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> tasksApi.getLogs("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("failed to find task logs: task not found");
+                .hasMessage("HTTP status code: 404; Message: failed to find task logs: task not found");
     }
 
     @Test
@@ -674,7 +674,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> tasksApi.getRunLogs(task.getId(), "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("failed to find task logs: run not found");
+                .hasMessage("HTTP status code: 404; Message: failed to find task logs: run not found");
     }
 
     @Test
@@ -690,7 +690,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> tasksApi.cancelRun(runs.get(0)))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("failed to cancel run: run not found");
+                .hasMessage("HTTP status code: 404; Message: failed to cancel run: run not found");
     }
 
     @Test
@@ -698,7 +698,7 @@ class ITTasksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> tasksApi.cancelRun("020f755c3c082000", "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("failed to cancel run: task not found");
+                .hasMessage("HTTP status code: 404; Message: failed to cancel run: task not found");
     }
 
     @Test
@@ -771,7 +771,7 @@ class ITTasksApi extends AbstractITClientTest {
     void cloneTaskNotFound() {
         Assertions.assertThatThrownBy(() -> tasksApi.cloneTask("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("failed to find task: task not found");
+                .hasMessage("HTTP status code: 404; Message: failed to find task: task not found");
     }
 
     @Nonnull

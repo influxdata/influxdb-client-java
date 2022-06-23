@@ -225,7 +225,7 @@ class ITChecksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> checksApi.updateCheck("020f755c3c082000", update))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("check not found for key \"020f755c3c082000\"");
+                .hasMessage("HTTP status code: 404; Message: check not found for key \"020f755c3c082000\"");
     }
 
     @Test
@@ -247,7 +247,7 @@ class ITChecksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> checksApi.findCheckByID(found.getId()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("check not found for key \"" + found.getId() + "\"");
+                .hasMessage("HTTP status code: 404; Message: check not found for key \"" + found.getId() + "\"");
     }
 
     @Test
@@ -255,7 +255,7 @@ class ITChecksApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> checksApi.deleteCheck("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("check not found for key \"020f755c3c082000\"");
+                .hasMessage("HTTP status code: 404; Message: check not found for key \"020f755c3c082000\"");
     }
 
     @Test
@@ -280,7 +280,7 @@ class ITChecksApi extends AbstractITClientTest {
     public void findCheckByIDNotFound() {
         Assertions.assertThatThrownBy(() -> checksApi.findCheckByID("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("check not found for key \"020f755c3c082000\"");
+                .hasMessage("HTTP status code: 404; Message: check not found for key \"020f755c3c082000\"");
     }
 
     @Test

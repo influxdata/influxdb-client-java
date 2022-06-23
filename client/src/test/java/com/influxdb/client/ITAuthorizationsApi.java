@@ -223,7 +223,7 @@ class ITAuthorizationsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> authorizationsApi.findAuthorizationByID("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("authorization not found");
+                .hasMessage("HTTP status code: 404; Message: authorization not found");
     }
 
     @Test
@@ -321,7 +321,7 @@ class ITAuthorizationsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> authorizationsApi.findAuthorizationByID(createdAuthorization.getId()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("authorization not found");
+                .hasMessage("HTTP status code: 404; Message: authorization not found");
     }
 
     @Test
@@ -350,7 +350,7 @@ class ITAuthorizationsApi extends AbstractITClientTest {
         
         Assertions.assertThatThrownBy(() -> authorizationsApi.cloneAuthorization("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("authorization not found");
+                .hasMessage("HTTP status code: 404; Message: authorization not found");
     }
 
     @Nonnull
