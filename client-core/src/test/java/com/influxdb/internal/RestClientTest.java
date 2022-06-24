@@ -30,6 +30,7 @@ import com.influxdb.LogLevel;
 import com.influxdb.exceptions.BadGatewayException;
 import com.influxdb.exceptions.BadRequestException;
 import com.influxdb.exceptions.ForbiddenException;
+import com.influxdb.exceptions.GatewayTimeoutException;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.InternalServerErrorException;
 import com.influxdb.exceptions.MethodNotAllowedException;
@@ -114,6 +115,7 @@ class RestClientTest extends AbstractMockServerTest {
         Assertions.assertThatThrownBy(() -> errorResponse(501)).isInstanceOf(NotImplementedException.class);
         Assertions.assertThatThrownBy(() -> errorResponse(502)).isInstanceOf(BadGatewayException.class);
         Assertions.assertThatThrownBy(() -> errorResponse(503)).isInstanceOf(ServiceUnavailableException.class);
+        Assertions.assertThatThrownBy(() -> errorResponse(504)).isInstanceOf(GatewayTimeoutException.class);
         Assertions.assertThatThrownBy(() -> errorResponse(550)).isInstanceOf(InfluxException.class);
     }
 
@@ -202,7 +204,7 @@ class RestClientTest extends AbstractMockServerTest {
 
         Assertions.assertThatThrownBy(() -> restClient.execute(call))
                 .isInstanceOf(InfluxException.class)
-                .hasMessage("flower not found");
+                .hasMessage("HTTP status code: 500; Message: flower not found");
     }
     
     @Test

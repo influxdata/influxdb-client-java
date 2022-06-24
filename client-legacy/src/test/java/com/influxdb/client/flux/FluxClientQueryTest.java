@@ -90,7 +90,7 @@ class FluxClientQueryTest extends AbstractFluxClientTest {
 
         Assertions.assertThatThrownBy(() -> fluxClient.query("from(bucket:\"telegraf\")"))
                 .isInstanceOf(InfluxException.class)
-                .hasMessage("Flux query is not valid");
+                .hasMessage("HTTP status code: 500; Message: Flux query is not valid");
     }
 
     @Test

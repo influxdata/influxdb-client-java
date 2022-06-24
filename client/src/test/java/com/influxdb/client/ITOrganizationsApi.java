@@ -124,7 +124,7 @@ class ITOrganizationsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> organizationsApi.findOrganizationByID("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("organization not found");
+                .hasMessage("HTTP status code: 404; Message: organization not found");
     }
 
     @Test
@@ -152,7 +152,7 @@ class ITOrganizationsApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> organizationsApi.findOrganizationByID(createdOrganization.getId()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("organization not found");
+                .hasMessage("HTTP status code: 404; Message: organization not found");
     }
 
     @Test
@@ -280,6 +280,6 @@ class ITOrganizationsApi extends AbstractITClientTest {
     void cloneOrganizationNotFound() {
         Assertions.assertThatThrownBy(() -> organizationsApi.cloneOrganization(generateName("cloned"), "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("organization not found");
+                .hasMessage("HTTP status code: 404; Message: organization not found");
     }
 }

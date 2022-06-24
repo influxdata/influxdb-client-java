@@ -278,7 +278,7 @@ class ITNotificationRulesApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> notificationRulesApi.updateNotificationRule("020f755c3c082000", update))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("notification rule not found");
+                .hasMessage("HTTP status code: 404; Message: notification rule not found");
     }
 
     @Test
@@ -298,7 +298,7 @@ class ITNotificationRulesApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> notificationRulesApi.findNotificationRuleByID(created.getId()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("notification rule not found");
+                .hasMessage("HTTP status code: 404; Message: notification rule not found");
     }
 
     @Test
@@ -306,7 +306,7 @@ class ITNotificationRulesApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> notificationRulesApi.deleteNotificationRule("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("notification rule not found");
+                .hasMessage("HTTP status code: 404; Message: notification rule not found");
     }
 
     @Test
@@ -330,7 +330,7 @@ class ITNotificationRulesApi extends AbstractITClientTest {
     public void findRuleByIDNotFound() {
         Assertions.assertThatThrownBy(() -> notificationRulesApi.findNotificationRuleByID("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("notification rule not found");
+                .hasMessage("HTTP status code: 404; Message: notification rule not found");
     }
 
     @Test

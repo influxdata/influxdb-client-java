@@ -183,7 +183,7 @@ class WriteKotlinApiTest : AbstractMockServerTest() {
                 runBlocking {
                     writeApi.writeRecord("h2o_feet,location=coyote_creek water_level=1.0 1", WritePrecision.S)
                 }
-            }.hasMessageStartingWith("token does not have sufficient permissions")
+            }.hasMessageStartingWith("HTTP status code: 401; Message: token does not have sufficient permissions")
             .isInstanceOf(UnauthorizedException::class.java)
     }
 

@@ -78,7 +78,7 @@ class InfluxExceptionTest {
                 })
                 .isInstanceOf(InfluxException.class)
                 .hasCauseInstanceOf(HttpException.class)
-                .hasMessage("Wrong query");
+                .hasMessage("HTTP status code: 500; Message: Wrong query");
     }
 
     @Test
@@ -172,7 +172,7 @@ class InfluxExceptionTest {
                     Response<Object> response = errorResponse("not found", 404, 15, "{\"code\":\"not found\",\"message\":\"user not found\"}", "X-Platform-Error-Code");
                     throw new InfluxException(new HttpException(response));
                 })
-                .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals("user not found"));
+                .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals("HTTP status code: 404; Message: user not found"));
     }
 
     @Test
@@ -182,7 +182,7 @@ class InfluxExceptionTest {
                     Response<Object> response = errorResponse("not found", 404, 15, "{\"code\":\"not found\"}", "X-Platform-Error-Code");
                     throw new InfluxException(new HttpException(response));
                 })
-                .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals("not found"));
+                .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals("HTTP status code: 404; Message: not found"));
     }
 
     @Test
@@ -192,7 +192,7 @@ class InfluxExceptionTest {
                     Response<Object> response = errorResponse("not found", 404, 15, "not-json", "X-Platform-Error-Code");
                     throw new InfluxException(new HttpException(response));
                 })
-                .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals("not found"));
+                .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals("HTTP status code: 404; Message: not found"));
     }
 
     @Test
@@ -312,6 +312,17 @@ class InfluxExceptionTest {
                 .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).status() == 0)
                 .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).reference() == 0)
                 .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).errorBody().isEmpty());
+    }
+
+    @Test
+    void messageContainsHttpErrorCode() {
+        Assertions
+                .assertThatThrownBy(() -> {
+                    Response<Object> response = errorResponse("Wrong query", 501, 15, "{\"error\": \"error-body\"}");
+                    throw new InfluxException(new HttpException(response));
+                })
+                .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals("HTTP status code: 501; Message: Wrong query"))
+                .matches((Predicate<Throwable>) throwable -> throwable.toString().equals("com.influxdb.exceptions.InfluxException: HTTP status code: 501; Message: Wrong query"));
     }
 
     @Nonnull

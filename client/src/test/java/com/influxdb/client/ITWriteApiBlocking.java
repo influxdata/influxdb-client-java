@@ -131,7 +131,7 @@ class ITWriteApiBlocking extends AbstractITWrite {
         WriteApiBlocking api = influxDBClient.getWriteApiBlocking();
 
         Assertions.assertThatThrownBy(() -> api.writeRecord(WritePrecision.NS, "h2o,location=coyote_creek"))
-                .hasMessageStartingWith("unable to parse 'h2o,location=coyote_creek': missing fields")
+                .hasMessageStartingWith("HTTP status code: 400; Message: unable to parse 'h2o,location=coyote_creek': missing fields")
                 .isInstanceOf(BadRequestException.class);
     }
 

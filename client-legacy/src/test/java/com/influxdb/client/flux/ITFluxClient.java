@@ -182,7 +182,7 @@ class ITFluxClient extends AbstractITFluxClient {
 
         Assertions.assertThatThrownBy(() -> fluxClient.query("from(bucket:\"telegraf\")"))
                 .isInstanceOf(InfluxException.class)
-                .hasMessageStartingWith("error in building plan while starting program:")
+                .hasMessageStartingWith("HTTP status code: 500; Message: error in building plan while starting program:")
                 .hasMessageEndingWith("try bounding 'from' with a call to 'range'");
     }
 

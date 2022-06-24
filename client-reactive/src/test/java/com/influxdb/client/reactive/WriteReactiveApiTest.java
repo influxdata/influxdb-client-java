@@ -313,7 +313,7 @@ class WriteReactiveApiTest extends AbstractMockServerTest {
                 .assertValueCount(0)
                 .assertError(throwable -> {
                     Assertions.assertThat(throwable).isInstanceOf(InfluxException.class);
-                    Assertions.assertThat(throwable).hasMessage("token is temporarily over quota");
+                    Assertions.assertThat(throwable).hasMessage("HTTP status code: 429; Message: token is temporarily over quota");
                     return true;
                 })
                 .assertNotComplete();

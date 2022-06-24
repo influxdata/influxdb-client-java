@@ -111,7 +111,7 @@ class WriteScalaApiTest extends AnyFunSuite with Matchers with BeforeAndAfter wi
     val materialized = source.toMat(sink)(Keep.right)
 
     whenReady(materialized.run().failed) { exc => {
-      exc.getMessage should be("line protocol poorly formed and no points were written")
+      exc.getMessage should be("HTTP status code: 500; Message: line protocol poorly formed and no points were written")
       exc.getClass should be(classOf[InternalServerErrorException])
     }
     }

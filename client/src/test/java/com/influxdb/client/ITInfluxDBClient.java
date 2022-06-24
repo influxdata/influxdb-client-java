@@ -194,7 +194,7 @@ class ITInfluxDBClient extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> influxDBClient.onBoarding(onboarding))
                 .isInstanceOf(UnprocessableEntityException.class)
-                .hasMessage("onboarding has already been completed");
+                .hasMessage("HTTP status code: 422; Message: onboarding has already been completed");
     }
 
     @Test

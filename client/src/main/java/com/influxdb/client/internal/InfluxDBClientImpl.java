@@ -79,7 +79,6 @@ import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.UnprocessableEntityException;
 import com.influxdb.utils.Arguments;
 
-import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
 
 /**
@@ -242,7 +241,7 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
         return new DeleteApiImpl(retrofit.create(DeleteService.class));
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public InvokableScriptsApi getInvokableScriptsApi() {
         return new InvokableScriptsApiImpl(retrofit.create(InvokableScriptsService.class));

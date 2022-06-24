@@ -87,7 +87,7 @@ class ITUsersApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> usersApi.findUserByID("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("user not found");
+                .hasMessage("HTTP status code: 404; Message: user not found");
     }
 
     @Test
@@ -115,7 +115,7 @@ class ITUsersApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> usersApi.findUserByID(createdUser.getId()))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("user not found");
+                .hasMessage("HTTP status code: 404; Message: user not found");
     }
 
     @Test
@@ -147,7 +147,7 @@ class ITUsersApi extends AbstractITClientTest {
 
         Assertions.assertThatThrownBy(() -> usersApi.me())
                 .isInstanceOf(UnauthorizedException.class)
-                .hasMessage("unauthorized access");
+                .hasMessage("HTTP status code: 401; Message: unauthorized access");
     }
 
     @Test
@@ -232,6 +232,6 @@ class ITUsersApi extends AbstractITClientTest {
     void cloneUserNotFound() {
         Assertions.assertThatThrownBy(() -> usersApi.cloneUser(generateName("cloned"), "020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("user not found");
+                .hasMessage("HTTP status code: 404; Message: user not found");
     }
 }
