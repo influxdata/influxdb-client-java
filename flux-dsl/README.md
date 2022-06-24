@@ -922,14 +922,14 @@ The latest version for Maven dependency:
 <dependency>
   <groupId>com.influxdb</groupId>
   <artifactId>flux-dsl</artifactId>
-  <version>6.1.0</version>
+  <version>6.2.0</version>
 </dependency>
 ```
 
 Or when using with Gradle:
 ```groovy
 dependencies {
-    implementation "com.influxdb:flux-dsl:6.1.0"
+    implementation "com.influxdb:flux-dsl:6.2.0"
 }
 ```
 
